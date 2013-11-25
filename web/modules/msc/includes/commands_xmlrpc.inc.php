@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -22,8 +23,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-function get_all_commands_for_consult($min = 0, $max = 10, $filt = '') {
-    return xmlCall('msc.get_all_commands_for_consult', array($min, $max, $filt));
+function get_all_commands_for_consult($min = 0, $max = 10, $filt = '', $expired) {
+    return xmlCall('msc.get_all_commands_for_consult', array($min, $max, $filt, $expired));
 }
 
 function get_all_commandsonhost_currentstate() {
@@ -111,18 +112,23 @@ function getCommandsFilter() {
 }
 
 /* Command on host handling */
+
 function start_command_on_host($id) {
     return xmlCall('msc.start_command_on_host', array($id));
 }
+
 function stop_command_on_host($id) {
     return xmlCall('msc.stop_command_on_host', array($id));
 }
+
 function pause_command_on_host($id) {
     return xmlCall('msc.pause_command_on_host', array($id));
 }
+
 function restart_command_on_host($id) {
     return xmlCall('msc.restart_command_on_host', array($id));
 }
+
 /* /Command on host handling */
 
 function start_command($id) {
@@ -146,7 +152,7 @@ function stop_bundle($bundle_id) {
 }
 
 function pause_bundle($bundle_id) {
-        return xmlCall('msc.pause_bundle', array($bundle_id));
+    return xmlCall('msc.pause_bundle', array($bundle_id));
 }
 
 function get_command_on_group_by_state($cmd_id, $state, $min = 0, $max = -1) {
@@ -184,7 +190,6 @@ function getMachineNamesOnGroupStatus($cmd_id, $state) {
 function getMachineNamesOnBundleStatus($bundle_id, $state) {
     return xmlCall("msc.getMachineNamesOnBundleStatus", array($bundle_id, $state));
 }
-
 
 function get_new_bundle_title($nb = 0) {
     return xmlCall('msc.get_new_bundle_title', array($nb));

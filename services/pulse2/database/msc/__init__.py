@@ -651,9 +651,17 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn("User %s does not have good permissions to access '%s'" % (ctx.userid, uuid))
         return []
 
-    def getAllCommandsConsult(self, ctx, min, max, filt):
+    def getAllCommandsConsult(self, ctx, min, max, filt, expired = True):
         filtering2_1 = and_(self.commands.c.fk_bundle == None, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
         filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+
+        if expired:
+            filtering2_1 = and_(filtering2_1, self.commands.c.end_date <= func.now())
+            filtering2_2 = and_(filtering2_2, self.commands.c.end_date <= func.now())
+        else:
+            filtering2_1 = and_(filtering2_1, self.commands.c.end_date > func.now())
+            filtering2_2 = and_(filtering2_2, self.commands.c.end_date > func.now())
+
 
         session = create_session()
         size1 = session.query(func.count(Commands.id)).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).scalar() or 0
@@ -661,6 +669,7 @@ class MscDatabase(DatabaseHelper):
 
         conn = self.getDbConnection()
         size2 = conn.execute(size2).fetchone()
+
 
         size = int(size1) + int(size2[0])
 

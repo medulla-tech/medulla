@@ -29,13 +29,27 @@ require_once('modules/msc/includes/functions.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
-$p = new PageGenerator(_T("Consolidated view", 'msc'));
+$p = new PageGenerator(_T("", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-//include("modules/msc/logs/ajaxConsultLogsFilter.php");
+print '<h2>' . _T('Current tasks', 'msc') . '</h2>';
 
-$ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"));
+//include("modules/msc/logs/ajaxConsultLogsFilter.php");
+// Running commands
+$ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"), "divRunning", "commands", array('expired' => 0, 'divID' => 'divRunning'), 'formRunning');
+$ajax->setRefresh(web_def_refresh_time());
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
+
+print "<br/><br/><br/>";
+
+// Expired commands
+
+print '<h2>' . _T('Expired tasks', 'msc') . '</h2>';
+
+$ajax = new AjaxFilterCommands(urlStrRedirect("msc/logs/ajaxConsultLogsFilter"), "divExpired", "commands", array('expired' => 1, 'divID' => 'divExpired'), 'formExpired');
 $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
 print "<br/><br/><br/>";

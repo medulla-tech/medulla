@@ -368,7 +368,7 @@ class AjaxFilterCommands extends AjaxFilter {
         global $conf;
         $root = $conf["global"]["root"];
         ?>
-        <form name="Form" id="Form" action="#" onsubmit="return false;">
+        <form name="Form" id="<?php print $this->formid; ?>" action="#" onsubmit="return false;">
 
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
@@ -385,11 +385,11 @@ class AjaxFilterCommands extends AjaxFilter {
                     ?>
                 </span>&nbsp;
 
-                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
                                 return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                                         pushSearch();
+                                         pushSearch<?php echo $this->divid; ?>();
                                          return false;" />
                 </span>
 
@@ -419,7 +419,7 @@ class AjaxFilterCommands extends AjaxFilter {
             <script type="text/javascript">
                 var $ = jQuery;
                 $(function() {
-                    $('#Form input[type=checkbox]').click(pushSearch);
+                    $('#Form input[type=checkbox]').click(pushSearch<?php echo $this->divid; ?>);
                 });
                 jQuery('#param').focus();
                 var refreshtimer = null;
@@ -429,14 +429,14 @@ class AjaxFilterCommands extends AjaxFilter {
         <?php
         if (isset($this->storedfilter)) {
             ?>
-                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+                    jQuery('#<?php echo $this->formid; ?> input#param').val("<?php echo $this->storedfilter; ?>");
             <?php
         }
         ?>
                 /**
                  * Clear the timers set vith setTimeout
                  */
-                function clearTimers() {
+                function clearTimers<?php echo $this->divid; ?>() {
                     if (refreshtimer != null) {
                         clearTimeout(refreshtimer);
                     }
@@ -448,13 +448,13 @@ class AjaxFilterCommands extends AjaxFilter {
                 /**
                  * Update div
                  */
-                function updateSearch() {
-                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
+                function updateSearch<?php echo $this->divid; ?>() {
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(jQuery('#<?php echo $this->formid; ?> input#param').val()) + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + <?php print json_encode($this->params); ?> + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
 
         <?php
         if ($this->refresh) {
             ?>
-                        refreshtimer = setTimeout("updateSearch()", refreshdelay)
+                        refreshtimer = setTimeout("updateSearch<?php echo $this->divid; ?>()", refreshdelay)
             <?php
         }
         ?>
@@ -463,14 +463,14 @@ class AjaxFilterCommands extends AjaxFilter {
                 /**
                  * Update div when clicking previous / next
                  */
-                function updateSearchParam(filter, start, end) {
-                    clearTimers();
-                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&start=' + start + '&end=' + end + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
+                function updateSearchParam<?php echo $this->divid; ?>(filter, start, end) {
+                    clearTimers<?php echo $this->divid; ?>();
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + <?php echo json_encode($this->params); ?> + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + '&start=' + start + '&end=' + end + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
 
         <?php
         if ($this->refresh) {
             ?>
-                        refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+                        refreshparamtimer = setTimeout("updateSearchParam<?php echo $this->divid; ?>('" + filter + "'," + start + "," + end + ")", refreshdelay);
             <?php
         }
         ?>
@@ -479,12 +479,12 @@ class AjaxFilterCommands extends AjaxFilter {
                 /**
                  * wait 500ms and update search
                  */
-                function pushSearch() {
-                    clearTimers();
-                    refreshtimer = setTimeout("updateSearch()", 500);
+                function pushSearch<?php echo $this->divid; ?>() {
+                    clearTimers<?php echo $this->divid; ?>();
+                    refreshtimer = setTimeout("updateSearch<?php echo $this->divid; ?>()", 500);
                 }
 
-                pushSearch();
+                pushSearch<?php echo $this->divid; ?>();
             </script>
 
         </form>
@@ -570,7 +570,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 /**
                  * Clear the timers set vith setTimeout
                  */
-                function clearTimers() {
+                function clearTimers<?php echo $this->divid; ?>() {
                     if (refreshtimer != null) {
                         clearTimeout(refreshtimer);
                     }
@@ -582,14 +582,14 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 /**
                  * Update div
                  */
-                function updateSearch() {
-                    clearTimers();
+                function updateSearch<?php echo $this->divid; ?>() {
+                    clearTimers<?php echo $this->divid; ?>();
                     jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value);
 
         <?php
         if ($this->refresh) {
             ?>
-                        refreshtimer = setTimeout("updateSearch()", refreshdelay)
+                        refreshtimer = setTimeout("updateSearch<?php echo $this->divid; ?>()", refreshdelay)
             <?php
         }
         ?>
@@ -598,24 +598,24 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 /**
                  *
                  */
-                function updateStates() {
+                function updateStates<?php echo $this->divid; ?>() {
                     var ind = document.getElementById('<?php echo $this->paramname2; ?>');
                     var val = ind.options[ind.selectedIndex].value;
                     jQuery('#<?php echo $this->paramname2; ?>').load('<?php echo urlStrRedirect('msc/logs/state_list', array('paramname2' => $this->paramname2)); ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&selected=' + document.Form.<?php echo $this->paramname2 ?>.value);
-                    refreshtimer = setTimeout("updateSearch()", 500);
+                    refreshtimer = setTimeout("updateSearch<?php echo $this->divid; ?>()", 500);
                 }
 
                 /**
                  * Update div when clicking previous / next
                  */
-                function updateSearchParam(filter, start, end) {
-                    clearTimers();
+                function updateSearchParam<?php echo $this->divid; ?>(filter, start, end) {
+                    clearTimers<?php echo $this->divid; ?>();
                     jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + '<?php echo $this->params ?>&<?php echo $this->paramname1 ?>=' + document.Form.<?php echo $this->paramname1 ?>.value + '&<?php echo $this->paramname2 ?>=' + document.Form.<?php echo $this->paramname2 ?>.value + '&start=' + start + '&end=' + end);
 
         <?php
         if ($this->refresh) {
             ?>
-                        refreshparamtimer = setTimeout("updateSearchParam('" + filter + "'," + start + "," + end + ")", refreshdelay);
+                        refreshparamtimer = setTimeout("updateSearchParam<?php echo $this->divid; ?>('" + filter + "'," + start + "," + end + ")", refreshdelay);
             <?php
         }
         ?>
@@ -624,17 +624,17 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 /**
                  * wait 500ms and update search
                  */
-                function pushSearch2() {
-                    clearTimers();
-                    refreshtimer = setTimeout("updateSearch()", 750);
+                function pushSearch2<?php echo $this->divid; ?>() {
+                    clearTimers<?php echo $this->divid; ?>();
+                    refreshtimer = setTimeout("updateSearch<?php echo $this->divid; ?>()", 750);
                 }
 
-                function pushSearch() {
-                    clearTimers();
-                    setTimeout("updateStates()", 100);
+                function pushSearch<?php echo $this->divid; ?>() {
+                    clearTimers<?php echo $this->divid; ?>();
+                    setTimeout("updateStates<?php echo $this->divid; ?>()", 100);
                 }
 
-                pushSearch2();
+                pushSearch2<?php echo $this->divid; ?>();
             </script>
 
         </form>

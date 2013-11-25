@@ -157,7 +157,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
         network = computer[1]
-        
+
         interfaces = {"uuid"      : uuid,
                       "fqdn"      : network["cn"][0],
                       "shortname" : network["cn"][0],
@@ -167,7 +167,7 @@ class RpcProxy(RpcProxyI):
                       }
         return xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
 
- 
+
     ##
     # commands
     ##
@@ -360,9 +360,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
 
-    def get_all_commands_for_consult(self, min = 0, max = 10, filt = ''):
+    def get_all_commands_for_consult(self, min = 0, max = 10, filt = '', expired = True):
         ctx = self.currentContext
-        size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt)
+        size, ret1 = MscDatabase().getAllCommandsConsult(ctx, min, max, filt, expired)
         ret = []
         logger = logging.getLogger()
         cache = {}
@@ -569,7 +569,7 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_probe_order_on_demand(self):
         return xmlrpcCleanup(MscConfig().web_probe_order_on_demand)
- 
+
     def get_web_def_refresh_time(self):
         return xmlrpcCleanup(MscConfig().web_def_refresh_time)
 

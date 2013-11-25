@@ -34,8 +34,10 @@ if (!empty($_GET["commands"])) {
     setCommandsFilter($_GET["commands"]);
 }
 
+$expired = isset($_GET['expired']) ? $_GET['expired'] == 1 : FALSE;
+
 # $count = count_all_commands_for_consult($filter);
-list($count, $cmds) = get_all_commands_for_consult($start, $start + $maxperpage, $filter);
+list($count, $cmds) = get_all_commands_for_consult($start, $start + $maxperpage, $filter, $expired);
 
 $a_cmd = array();
 $a_date = array();
