@@ -23,7 +23,6 @@
 nodist_init_SCRIPTS = mmc-agent
 
 EXTRA_DIST = mmc-agent.in
-
 CLEANFILES = mmc-agent
 
 edit = sed \
@@ -42,5 +41,3 @@ mmc-agent: Makefile
 	  $(edit) $${srcdir}$@.in >$@.tmp
 	test "$@ = mmc-agent" && test -f /etc/mandriva-release && sed -i 's!slapd!ldap!g' $@.tmp || echo Continue
 	mv $@.tmp $@
-
-mmc-agent: $(srcdir)/mmc-agent.in
