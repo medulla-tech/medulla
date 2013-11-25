@@ -356,7 +356,6 @@ class CoHManager :
         """
         cmd_groups = {}
         session = sqlalchemy.orm.create_session()
-        count = 0
         for id in ids :
             coh = session.query(CommandsOnHost).get(id)
             if coh :
