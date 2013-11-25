@@ -44,6 +44,12 @@ table {
     width: 550px;
     border-radius:15px;
 }
+
+th{
+   background: #324C96;
+   color: #FFF;
+}
+
 td.title {
     text-align: left;
 }
