@@ -224,7 +224,11 @@ class PDFGenerator(object):
         string += self._css_file_content
         return CSS(string=string)
 
+    def add_page_break(self):
+        self.content += '<div style="page-break-before: always"></div>'
+
     def get_simple_sheet(self, title, datas):
+        self.add_page_break()
         self.h3(title)
 
         headers = datas['headers']
@@ -259,6 +263,7 @@ class PDFGenerator(object):
         self.content += '</table>'
 
     def get_period_sheet(self, title, datas):
+        self.add_page_break()
         self.h3(title)
         titles = datas['titles']
         dates = datas['dates']
