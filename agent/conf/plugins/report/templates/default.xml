@@ -181,9 +181,21 @@
             </item>
         </table>
         <!-- State table example
-        <table type="period" title="Computer states" name="table_states">
-            <item module="glpi" indicator="state_count" title="states">
-                <item module="glpi" indicator="state_count_production" title="Production" selected="yes" />
+        <table 
+            type = "period|key_value"
+            title = "Table title" 
+            name = "table_identifier"
+            chart_type = "bar|line|pie"
+        >
+            <item 
+                module="MODULE_NAME"
+                indicator="indicator_name"
+                title="Indicator label"
+                selected = "yes|no" // optional
+                >
+                    # Subitems example
+                    <item module="glpi" indicator="state_count_production" title="Production" selected="yes" />
+                    <item module="glpi" indicator="state_count_hs" title="HS" selected="yes" />
             </item>
         </table>
         -->
