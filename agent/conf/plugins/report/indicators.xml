@@ -8,8 +8,9 @@
         params = "_params_"             # params to pass to request_function
                                         # can be a string, a list, a dict
                                         # or any type supported by python
-        data_type = "0"                 # 0 : numeric
+        data_type = "0"                 # 0 : int
                                         # 1 : text
+                                        # 2 : float
         active = "1"                    # Active or not
         keep_history = "1"              # 0 : Historization disabled
                                         # 1 : Historization enabled

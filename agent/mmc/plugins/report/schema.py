@@ -70,19 +70,25 @@ class Indicator(Base, DBObj):
         ret = ret.filter(ReportingData.timestamp.between(ts_min, ts_max))
         # Avoid having multiple values per entity and per date
         ret = ret.group_by(ReportingData.entity_id).all()
-        # data_type == 0 > numeric
+        # data_type == 0 > int
         if self.data_type == 0:
             result = 0
             for row in ret:
-                result += float(row[0])
+                result += int(row[0])
             if len(ret) == 0:
                 result = None
-        # data_type == 0 > string
+        # data_type == 1 > string
         if self.data_type == 1:
             result = ''
             for row in ret:
                 result += row[0] + '\n'
             if len(ret) == 0:
                 result = None
+        # data_type == 1 > float
+        if self.data_type == 2:
+            result = 0
+            for row in ret:
+                result += float(row[0])
+            if len(ret) == 0:
+                result = None
         return result
-
