@@ -180,6 +180,8 @@ class RpcProxy(RpcProxyI):
         pdf_vars = {
             '__USERNAME__': self.currentContext.userid,
             '__COMPANY__': self.config.company,
+            '__COMPANY_LOGO_PATH__': self.config.company_logo_path,
+            '__PULSE_LOGO_PATH__': self.config.pulse_logo_path,
         }
 
         xls = XLSGenerator(path=xls_path)
@@ -224,7 +226,7 @@ class RpcProxy(RpcProxyI):
                     background-repeat: no-repeat;
                     background-size: Auto 50px;
                     width: 200px;
-                    """ % logo
+                    """ % _replace_pdf_vars(logo)
                     try:
                         setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
                     except Exception, e:

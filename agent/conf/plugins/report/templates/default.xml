@@ -14,7 +14,7 @@
         the second is the total page count
     -->
     <header>
-        <left logo="file:///etc/mmc/plugins/report/img/mandriva.png" />
+        <left logo="__COMPANY_LOGO_PATH__" />
         <center />
         <right>Activity report from __PERIOD_START__ to __PERIOD_END__</right>
     </header>
@@ -27,18 +27,15 @@
 
     <!-- Homepage HTML -->
     <homepage><![CDATA[
-        <table style="width:600px;border:0">
-            <tr>
-                <td style="border:0;text-align:left">
-                    <img style="max-width:250px;" src="file:///etc/mmc/plugins/report/img/mandriva.png" />
-                </td>
-            </tr>
-        </table>
-        <div style="height:200px" />
+        <p>
+            <img style="max-width:250px; float: left;" src="__COMPANY_LOGO_PATH__" />
+            <img style="max-width:250px; max-height: 80px; float: right;" src="__PULSE_LOGO_PATH__" />
+        </p>
+        <div style="height:400px" />
         <h1>Activity report</h1>
         Period from <b>__PERIOD_START__</b> to <b>__PERIOD_END__</b>
-        <div style="height:100px" />
-        edited by <b>__USERNAME__</b>
+        <div style="height:300px" />
+        <span style="float: right;">edited by <b>__COMPANY__</b></span>
 
         <div style="height:700px; page-break-before: always" />
         <h3>Confidentiality</h3>
