@@ -295,7 +295,7 @@ class PDFGenerator(object):
         for x in xrange(len(titles)):
             self.content += '<tr>'
 
-            self.content += '<td>'
+            self.content += '<td class="title">'
             self.content += titles[x]
             self.content += '</td>'
             for v in values:

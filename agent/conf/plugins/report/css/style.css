@@ -44,10 +44,11 @@ table {
     width: 550px;
     border-radius:15px;
 }
-td {
+td.title {
+    text-align: left;
 }
 td, th {
     border-width:1px;
     border-style:solid;
-    border-color:black;
+    border-color:#CCCCCC;
 }
