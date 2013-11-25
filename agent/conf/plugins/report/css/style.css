@@ -48,7 +48,11 @@ td.title {
     text-align: left;
 }
 td, th {
+    padding: 3px;
     border-width:1px;
     border-style:solid;
-    border-color:#CCCCCC;
+    border-color:#CCC;
 }
+
+tr:nth-child(even) {background: #EEE}
+tr:nth-child(odd) {background: #FFF}
