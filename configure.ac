@@ -36,10 +36,8 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 
 dnl check for programs
-AC_PROG_CC
 AC_PROG_MAKE_SET
 AC_PROG_LN_S
-AC_PROG_LIBTOOL
 
 dnl Check for GNU install (for file backup)
 AC_MSG_CHECKING([for GNU install])
