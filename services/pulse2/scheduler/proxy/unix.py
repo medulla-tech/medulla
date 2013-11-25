@@ -85,7 +85,7 @@ class Forwarder:
             # TODO - log something
         return self._protocol
 
-    @protocol.setter
+    @protocol.setter # pyflakes.ignore
     def protocol(self, value):
         self._protocol = value
 

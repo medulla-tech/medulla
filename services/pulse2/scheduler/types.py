@@ -612,8 +612,8 @@ class CircuitBase(object):
         return self._phases
 
 
-    @phases.setter 
-    def phases(self, value):  # pyflakes.ignore
+    @phases.setter # pyflakes.ignore 
+    def phases(self, value):
         """
         Phases property set processing.
 
