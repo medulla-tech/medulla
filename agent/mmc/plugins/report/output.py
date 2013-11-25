@@ -245,12 +245,14 @@ class PDFGenerator(object):
         for line in values:
             self.content += '<tr>'
             for td in line:
-                if isinstance(td, (int, float)):
-                    td = str(td)
-                    if td.endswith('.0'):
-                        td = td[:-2]
+                if isinstance(td, int):
+                    td = '%d' % td
+                elif isinstance(td, float):
+                    td = '%.2f' % td
+                elif td is None:
+                    td = ''
                 self.content += '<td>'
-                self.content += td if td is not None else ''
+                self.content += td
                 self.content += '</td>'
             self.content += '</tr>'
 
@@ -279,12 +281,12 @@ class PDFGenerator(object):
             self.content += '</td>'
             for v in values:
                 value = v[x]
-                if value is None:
+                if isinstance(value, int):
+                    value = '%d' % value
+                elif isinstance(value, float):
+                    value = '%.2f' % value
+                elif value is None:
                     value = ''
-                elif isinstance(value, (int, float)):
-                    value = str(value)
-                    if value.endswith('.0'):
-                        value = value[:-2]
                 self.content += '<td>'
                 self.content += value
                 self.content += '</td>'
