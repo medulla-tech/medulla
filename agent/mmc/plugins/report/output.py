@@ -119,15 +119,23 @@ class PDFGenerator(object):
         self.config = ReportConfig("report")
 
         self.content = ''
-        self.header_left = ''
-        self.header_right = ''
-        self.header_center = ''
-        self.footer_left = ''
-        self.footer_right = ''
-        self.footer_left = ''
+
+        # Instanciate headers and footers attributes
+        self._hf()
+
         self.path = path
         # Localization strings
         self.locale = locale
+
+    def _hf(self):
+        """
+        Instanciate header and footer attributes
+        """
+        places = ['left', 'center', 'right']
+        for hf in ['header', 'footer']:
+            for place in places:
+                setattr(self, '_'.join([hf, place]), '""')
+                setattr(self, '_'.join([hf, place, 'background']), '')
 
     def h1(self, str):
         self.content += '<h1>%s</h1>' % str
@@ -137,24 +145,6 @@ class PDFGenerator(object):
 
     def h3(self, str):
         self.content += '<h3>%s</h3>' % str
-
-    def set_header_left(self, str):
-        self.header_left = str.strip()
-
-    def set_header_center(self, str):
-        self.header_center = str.strip()
-
-    def set_header_right(self, str):
-        self.header_right = str.strip()
-
-    def set_footer_left(self, str):
-        self.footer_left = str.strip()
-
-    def set_footer_center(self, str):
-        self.footer_center = str.strip()
-
-    def set_footer_right(self, str):
-        self.footer_right = str.strip()
 
     @property
     def _css_file_content(self):
@@ -181,45 +171,69 @@ class PDFGenerator(object):
             /*size: letter;*/
 
             @top-left {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
+                vertical-align: middle;
             }
 
             @top-center {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
+                vertical-align: middle;
             }
 
             @top-right {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
+                vertical-align: middle;
             }
 
             @bottom-left {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
                 padding-bottom: 6mm;
+                vertical-align: middle;
             }
 
             @bottom-center {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
                 padding-bottom: 6mm;
+                vertical-align: middle;
             }
 
             @bottom-right {
+                %s
+                height: 50px;
                 content: %s;
                 font-size: .75em;
                 padding-bottom: 6mm;
+                vertical-align: middle;
             }
         }
         """ % (
+            self.header_left_background,
             self.header_left,
+            self.header_center_background,
             self.header_center,
+            self.header_right_background,
             self.header_right,
+            self.footer_left_background,
             self.footer_left,
+            self.footer_center_background,
             self.footer_center,
-            self.footer_right
+            self.footer_right_background,
+            self.footer_right,
         )
         string += self._css_file_content
         return CSS(string=string)

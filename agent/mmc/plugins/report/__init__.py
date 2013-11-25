@@ -206,7 +206,7 @@ class RpcProxy(RpcProxyI):
                 str = '"' + str + '"'
             return _replace_pdf_vars(str)
 
-        def _hf_feeder(tag, to_feed):
+        def _hf_feeder(tag):
             """
             This function feed header or footer
 
@@ -217,14 +217,25 @@ class RpcProxy(RpcProxyI):
             @type to_feed: str
             """
             for entry in tag:
-                if entry.tag.lower() != 'entry':
-                    continue
-                try:
-                    func = getattr(pdf, '_'.join(['set', to_feed, entry.attrib['name']]))
-                    func(_hf_format(entry.attrib['value']))
-                except Exception, e:
-                    logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", to_feed, tag)
-                    logging.getLogger().warn("Exception: %s", e)
+                if 'logo' in entry.attrib:
+                    logo = entry.attrib['logo']
+                    background_css = """
+                    background: url(%s);
+                    background-repeat: no-repeat;
+                    background-size: Auto 50px;
+                    width: 200px;
+                    """ % logo
+                    try:
+                        setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
+                    except Exception, e:
+                        logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn("Exception: %s", e)
+                if entry.text is not None:
+                    try:
+                        setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
+                    except Exception, e:
+                        logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn("Exception: %s", e)
 
         def _localization(loc_tag):
             for entry in loc_tag:
@@ -396,10 +407,8 @@ class RpcProxy(RpcProxyI):
             ## =========< HTML >===================
             if level1.tag.lower() == 'homepage':
                 _homepage(level1.text)
-            if level1.tag.lower() == 'header':
-                _hf_feeder(level1, 'header')
-            if level1.tag.lower() == 'footer':
-                _hf_feeder(level1, 'footer')
+            if level1.tag.lower() in ['footer', 'header']:
+                _hf_feeder(level1)
             ## =========< SECTION >===================
             if level1.tag.lower() == 'section':
                 # Checking if section is present in sections
