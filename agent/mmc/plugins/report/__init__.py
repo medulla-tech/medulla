@@ -288,7 +288,7 @@ class RpcProxy(RpcProxyI):
                     indicator_name = item.attrib['indicator']
                     #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
-                        data_dict['titles'].append('> ' * level + ' ' + _T("templates", item.attrib['title']))
+                        data_dict['titles'].append(_T("templates", item.attrib['title']))
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
@@ -308,7 +308,7 @@ class RpcProxy(RpcProxyI):
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
-                        data_dict['titles'].append('> ' * (level + 1) + ' %s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
+                        data_dict['titles'].append('%s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
                             other_value = (values[i] - child_sum) if child_sum else None
@@ -337,14 +337,14 @@ class RpcProxy(RpcProxyI):
                     #    else:
                     #        entity_name = entry['entity_id']
                     #    if not items or indicator_name in items:
-                    #        data_dict['values'].append([ '> ' * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
+                    #        data_dict['values'].append([ indicator_label + (' (%s)' % entity_name ), entry['value']])
                     # =================================================================
                     # Calculating sum value for entities
                     logging.getLogger().warning(indicator_value)
                     value = _sum_None([x['value'] for x in indicator_value])
                     values.append(value)
                     if not items or indicator_name in items:
-                        data_dict['values'].append(['> ' * level + indicator_label, value])
+                        data_dict['values'].append([indicator_label, value])
 
                     # TODO: Calculate other cols
                     # Fetch this item subitems
@@ -353,7 +353,7 @@ class RpcProxy(RpcProxyI):
                 if parent and values:
                     logging.getLogger().warning(values)
                     others_value = parent_value - _sum_None(values)
-                    data_dict['values'].append(['> ' * level + ' Other %s' % parent.attrib['title'], others_value])
+                    data_dict['values'].append(['Other %s' % parent.attrib['title'], others_value])
             _fetchSubs(item_root)
             return data_dict
 
