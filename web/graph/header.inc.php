@@ -35,7 +35,7 @@ $root = $conf["global"]["root"];
         <script src="jsframework/deployJava.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery.cookie.js" type="text/javascript"></script>
-        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+        <script src="jsframework/lib/jquery-ui-1.10.3.custom.min.js"></script>
         <script type="text/javascript">
             // Avoid prototype <> jQuery conflicts
             jQuery.noConflict();
