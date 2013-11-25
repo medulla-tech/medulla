@@ -53,7 +53,11 @@ function readfile_chunked($filename, $retbytes = true) {
     return $status;
 }
 
-if (isset($_GET['path'])) {
+function startswith($haystack, $needle) {
+    return substr($haystack, 0, strlen($needle)) === $needle;
+}
+
+if (isset($_GET['path']) && startswith($_GET['path'], '/var/tmp/report-')) {
     // Prevent download to stop after PHP timeout
     set_time_limit(0);
 
