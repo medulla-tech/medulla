@@ -1,4 +1,5 @@
 <?php
+
 /*
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  *
@@ -21,14 +22,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
-$sidemenu= new SideMenu();
-$sidemenu->setClass("logs");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Consolidated view", 'msc'), "msc", "logs", "consult"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all logs", 'msc'), "msc", "logs", "all"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all pending task's logs", 'msc'), "msc", "logs", "pending"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all running task's logs", 'msc'), "msc", "logs", "running"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all finished task's logs", 'msc'), "msc", "logs", "finished"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Show custom state task's logs", 'msc'), "msc", "logs", "custom"));
 
+$sidemenu = new SideMenu();
+$sidemenu->setClass("logs");
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My commands", 'msc'), "msc", "logs", "consult"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All user commands", 'msc'), "msc", "logs", "consultAll"));
+
+
+// TODO: Remove all these files
+/* $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all logs", 'msc'), "msc", "logs", "all"));
+  $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all pending task's logs", 'msc'), "msc", "logs", "pending"));
+  $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all running task's logs", 'msc'), "msc", "logs", "running"));
+  $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show all finished task's logs", 'msc'), "msc", "logs", "finished"));
+  $sidemenu->addSideMenuItem(new SideMenuItem(_T("Show custom state task's logs", 'msc'), "msc", "logs", "custom")); */
 ?>

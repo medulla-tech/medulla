@@ -379,7 +379,8 @@ class AjaxFilterCommands extends AjaxFilter {
                     <?php
                     /* if (isset($_GET['cmd_id'], $_GET['gid']))
                       print '<div style="display:none">'; */
-                    $this->commands->display();
+
+                    //$this->commands->display();
                     /* if (isset($_GET['cmd_id'], $_GET['gid']))
                       print '</div>'; */
                     ?>
@@ -449,7 +450,11 @@ class AjaxFilterCommands extends AjaxFilter {
                  * Update div
                  */
                 function updateSearch<?php echo $this->divid; ?>() {
-                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(jQuery('#<?php echo $this->formid; ?> input#param').val()) + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + <?php print json_encode($this->params); ?> + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + encodeURIComponent(jQuery('#<?php echo $this->formid; ?> input#param').val()) + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + <?php print json_encode($this->params); ?> + '&' + jQuery('#<?php echo $this->formid; ?>').serialize(), function() {
+                        jQuery('#container').unmask();
+                    });
+                    jQuery('#<?php echo $this->divid; ?>').mask("");
+                    jQuery('#<?php echo $this->divid; ?>').width('100%');
 
         <?php
         if ($this->refresh) {
@@ -465,7 +470,11 @@ class AjaxFilterCommands extends AjaxFilter {
                  */
                 function updateSearchParam<?php echo $this->divid; ?>(filter, start, end) {
                     clearTimers<?php echo $this->divid; ?>();
-                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + <?php echo json_encode($this->params); ?> + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + '&start=' + start + '&end=' + end + '&' + jQuery('#<?php echo $this->formid; ?>').serialize());
+                    jQuery('#<?php echo $this->divid; ?>').load('<?php echo $this->url; ?>filter=' + filter + <?php echo json_encode($this->params); ?> + '&<?php echo $this->paramname ?>=' + jQuery('#<?php echo $this->formid; ?> input#<?php echo $this->paramname ?>').val() + '&start=' + start + '&end=' + end + '&' + jQuery('#<?php echo $this->formid; ?>').serialize(), function() {
+                        jQuery('#<?php echo $this->divid; ?>').unmask();
+                    });
+                    jQuery('#<?php echo $this->divid; ?>').mask("");
+                    jQuery('#<?php echo $this->divid; ?>').width('100%');
 
         <?php
         if ($this->refresh) {
