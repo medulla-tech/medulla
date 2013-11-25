@@ -1,3 +1,7 @@
+* {
+    font-family: "DejaVu Sans", sans-serif;
+}
+
 #homepage table {
     border-width:1px;
     border-style:solid;
