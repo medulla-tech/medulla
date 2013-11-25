@@ -58,6 +58,7 @@ from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.checks import getAnnounceCheck
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
 from pulse2.scheduler.stats import StatisticsProcessing
+from pulse2.scheduler.bundles import BundleReferences
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
@@ -806,6 +807,8 @@ class Circuit (CircuitBase):
         """ Start the workflow scenario. """
 
         self.logger.debug("circuit #%s - assigned network: %s" % (self.id, self.network_address))
+        self.logger.debug("circuit #%s - command: #%s / order: %s" % 
+                (self.id, str(self.cohq.cmd.id), str(self.cohq.cmd.order_in_bundle)))
  
         try :
             if not self.running_phase:
@@ -930,7 +933,7 @@ class Circuit (CircuitBase):
         elif res == DIRECTIVE.OVER_TIMED :
 
             if self.on_last_phase() :
-                self.logger.info("Circuit #%s: forced finish" % self.id)
+                self.logger.info("Circuit #%s: forced finish %s" % (self.id, self.running_phase.name))
                 return self.phase_step(DIRECTIVE.NEXT)
 
 
@@ -942,6 +945,8 @@ class Circuit (CircuitBase):
                 self.cohq.coh.setStateOverTimed()
                 self.logger.info("Circuit #%s: overtimed" % self.id)
 
+            if self.cohq.cmd.fk_bundle:
+                self.dispatcher.bundles.clean_up(coh_id=self.id)
             self.schedule_last_stats()
             
             self.release()
@@ -1089,8 +1094,13 @@ class MscContainer (object):
         self.logger = logging.getLogger()
         self.config = config
 
+        # provides the global statistics 
         self.statistics = StatisticsProcessing(config)
 
+        # bundles tracking container
+        self.bundles = BundleReferences(config)
+
+        # launchers driving and slots detect
         self.groups = [net for (net, mask) in self.config.preferred_network]
         self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask]) 
                   for (launcher,net_and_mask) in self.config.launchers_networks.items()])

@@ -300,7 +300,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
                      database.commands_on_host.c.scheduler == None))
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
-    commands_query = commands_query.order_by(database.commands_on_host.c.current_state.desc())
+    commands_query = commands_query.order_by(database.commands.c.order_in_bundle.asc(),
+                                             database.commands_on_host.c.current_state.desc())
     if top :
         commands_query = commands_query.limit(top)
         # IMPORTANT NOTE : This ordering is not alphabetical!

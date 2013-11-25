@@ -47,7 +47,7 @@ class MethodProxy(MscContainer):
         @param cmd_ids: list of commands ids
         @type cmd_ids: list
         """
-        self.logger.info("Prepare %d circuits to START..." % len(cmds))
+        self.logger.info("Prepare %d commands to START..." % len(cmds))
 
         scheduler = self.config.name
 
@@ -60,7 +60,7 @@ class MethodProxy(MscContainer):
                     
                     active_cohs = [c.id for c in active_circuits]
                     new_cohs = [id for id in cohs if id not in active_cohs]
-
+                    self.logger.info("Starting %s circuits" % len(new_cohs)) 
                     self.start_all(new_cohs, True)
 
                     for circuit in active_circuits :
@@ -144,6 +144,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         d1 = d2 = Deferred()
 
+        banned = self.bundles.get_banned_cohs()
+        ids = [id for id in ids if id not in banned]
+
         already_initialized_ids = [c.id for c in self.waiting_circuits 
                                         if c.id in ids and c.initialized
                                   ]
@@ -159,13 +162,16 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
         if len(new_ids) > 0 :
             d1 = self._setup_all(new_ids)
+
             d1.addCallback(self._assign_launcher)
+            d1.addCallback(self._class_bundles)
             d1.addCallback(self._class_all)
             d1.addCallback(self._revolve_all)
             d1.addCallback(self._run_all)
             d1.addErrback(self._start_failed)
         if len(already_initialized_ids) > 0 :
             d2 = maybeDeferred(self._consolidate, already_initialized_ids)
+            d2.addCallback(self._class_bundles)
             d2.addCallback(self._class_all)
             d2.addCallback(self._revolve_all)
             d2.addCallback(self._run_all)
@@ -317,6 +323,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @return: circuits to start with assigned launcher provider
         @rtype: list
         """
+        circuits = []
+
         for circuit in self._setup_check(incoming_circuits):
             if self.launchers_provider.single_mode :
                 launcher = self.config.launchers.keys()[0]
@@ -335,7 +343,21 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                                                                  launcher)
                     self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" % 
                                   (launcher, circuit.id))
-            yield circuit
+            circuits.append(circuit)
+        return circuits
+
+    def _class_bundles(self, incoming_circuits):
+        """
+        Adds the bundled circuits into the bundle tracking.
+
+        @param incoming_circuits: circuits to start 
+        @type incoming_circuits: list
+        """
+        for circuit in incoming_circuits :
+            self.bundles.update(circuit)
+
+        return incoming_circuits    
+
 
     def _class_all(self, incoming_circuits):
         """
@@ -349,6 +371,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @type incoming_circuits: deferred list
         """
         new_circuits = []
+        banned = self.bundles.get_banned_cohs()
         circuits_to_start = []
         for circuit in incoming_circuits :
             circuit.status = CC_STATUS.WAITING
@@ -359,8 +382,12 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         for group, total in grouped.items() :
             circuits_to_run = []
 
-            count = 0 # FIXME - need really ?
+            count = 0
             for circuit in [c for c in new_circuits if c.network_address==group] :
+
+                # bundle banned excluding
+                if circuit.id in banned:
+                    continue
                 if circuit.network_address == group :
                     if count == total :
                         break
@@ -503,16 +530,19 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         if len(circuits) > 0 :
             ids = [c.id for c in circuits if c.network_address==slightest_network]
-            if len(ids) > 0 :
-                circuit = self.get(ids[0])
+
+            # queued bundled circuits to exclude
+            banned = self.bundles.get_banned_cohs()
+            for id in [id for id in ids if id not in banned] :
+    
+                circuit = self.get(id)
                 if circuit :
                     self.logger.info("Circuit #%s: (group %s) is going to start" %  
                             (circuit.id, slightest_network))
                     circuit.status = CC_STATUS.ACTIVE
                     return circuit
         return None
-     
-
+    
     def launch_next_waiting(self):
         """
         Launch the next candidate to start.
@@ -523,7 +553,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
     
         running = self._analyze_groups(self.circuits)
-        #remaining = self._analyze_groups(self.waiting_circuits)
         remaining = self._analyze_groups(self.get_valid_waitings())
 
         for _ in xrange(self.nbr_groups):
@@ -565,6 +594,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         self.statistics.update()
 
         self.logger.debug("Command stats - %s" % self.statistics.stats)
+
+        b_ids = self.get_all_running_bundles()
+        self.logger.debug("Bundles to hold: %s" % str(b_ids))
+        self.bundles.clean_up_remaining(b_ids)
         
         
     def mainloop(self):

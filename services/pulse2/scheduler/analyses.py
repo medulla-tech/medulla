@@ -34,10 +34,6 @@ class MscQueryManager(MscContainer):
     def nbr_groups(self):
         return len(self.config.preferred_network)
 
-    #@property
-    #def groups(self): 
-    #    return [ip for (ip, mask) in self.config.preferred_network]
-
     def _analyze_groups(self, circuits):
         """
         Counts the circuits by network (equivalent to SQL group by clause).
@@ -142,12 +138,14 @@ class MscQueryManager(MscContainer):
         return [c for c in self.waiting_circuits if c.initialized and not c.is_running]
  
     def get_valid_waitings(self):
-
+        banned = self.bundles.get_banned_cohs()
+ 
         now = time.time()
         circuits = [c for c in self.waiting_circuits if c.initialized and c.is_running]
         circuits = [c for c in circuits
                                if c.qm.coh.get_next_launch_timestamp() < now
                                   and not c.qm.coh.is_out_of_attempts()
+                                  and c.id not in banned
                    ]
         return circuits
 
@@ -173,6 +171,13 @@ class MscQueryManager(MscContainer):
             
         return grouped
 
+    def get_all_running_bundles(self):
+        b_ids = []
+        [b_ids.append(c.cohq.cmd.fk_bundle) for c in self.circuits 
+                                          if c.cohq.cmd.fk_bundle
+                                          and c.cohq.cmd.fk_bundle not in b_ids
+                ]
+        return b_ids
 
 
     def get_unfinished_circuits(self):
