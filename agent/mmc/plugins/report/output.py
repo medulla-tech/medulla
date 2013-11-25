@@ -247,6 +247,8 @@ class PDFGenerator(object):
             for td in line:
                 if isinstance(td, (int, float)):
                     td = str(td)
+                    if td.endswith('.0'):
+                        td = td[:-2]
                 self.content += '<td>'
                 self.content += td if td is not None else ''
                 self.content += '</td>'
@@ -281,6 +283,8 @@ class PDFGenerator(object):
                     value = ''
                 elif isinstance(value, (int, float)):
                     value = str(value)
+                    if value.endswith('.0'):
+                        value = value[:-2]
                 self.content += '<td>'
                 self.content += value
                 self.content += '</td>'
