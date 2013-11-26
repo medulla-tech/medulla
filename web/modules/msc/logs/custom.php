@@ -21,7 +21,6 @@
  * along with LMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require("modules/msc/logs/localSidebar.php");
 require("graph/navbar.inc.php");
 
@@ -35,11 +34,11 @@ $p = new PageGenerator(_T("Show custom status task's logs", 'msc'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$params = array("type"=>-1, "from"=>"custom");
+$params = array("type" => -1, "from" => "custom", 'divID' => 'container');
 
 $ajax = new AjaxFilterCommandsStates(urlStrRedirect("msc/logs/ajaxLogsFilter"), "container", "commands", "currentstate", $params);
 
-$res = get_all_commandsonhost_currentstate(); 
+$res = get_all_commandsonhost_currentstate();
 $list = array();
 $labels = array();
 foreach ($res as $name) {
@@ -53,8 +52,5 @@ $ajax->setRefresh(web_def_refresh_time());
 $ajax->display();
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
-
-
-
 ?>
 

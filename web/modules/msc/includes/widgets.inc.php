@@ -395,7 +395,7 @@ class AjaxFilterCommands extends AjaxFilter {
                 </span>
 
 
-                <?php if (isset($_GET['cmd_id'], $_GET['gid'])) { ?>
+                <?php if (isset($_GET['cmd_id'], $_GET['gid']) && !isset($_GET['bundle_id'])) { ?>
                     <!-- <form id="cbx_form"> -->
                     <span class="searchfield">
                         <br/>

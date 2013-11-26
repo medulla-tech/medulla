@@ -232,7 +232,7 @@ if ($areCommands) { // display several commands
     $n->addExtraInfo($a_percent, _T("Success percent", "msc"));
     // If $a_current is empty, we don't display it
     if (count(array_filter($a_current, 'strlen')))
-        $n->addExtraInfo($a_current, _T("current_state", "msc"));
+        $n->addExtraInfo($a_current, _T("Current state", "msc"));
     /* $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
       $n->addExtraInfo($a_executed, _T("executed", "msc"));
       $n->addExtraInfo($a_deleted, _T("deleted", "msc")); */
