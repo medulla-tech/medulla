@@ -39,7 +39,7 @@ function launch_bundle($cible, $orders, $gid = null, $proxy = array()) {
         $params[$param] = $_POST[$param];
     }
     $halt_to = array();
-    foreach ($_POST as $p=>$v) {
+    foreach ($_POST as $p => $v) {
         if (preg_match('/^issue_halt_to_/', $p)) {
             $p = preg_replace('/^issue_halt_to_/', '', $p);
             if ($v == 'on') {
@@ -82,7 +82,7 @@ if (isset($_POST["bconfirmproxy"])) {
     if (isset($_POST["lpmembers"])) {
         if ($_POST["local_proxy_selection_mode"] == "semi_auto") {
             $members = unserialize(base64_decode($_POST["lpmachines"]));
-            foreach($members as $member => $name) {
+            foreach ($members as $member => $name) {
                 $computer = preg_split("/##/", $member);
                 $proxy[] = $computer[1];
             }
@@ -91,7 +91,7 @@ if (isset($_POST["bconfirmproxy"])) {
             $proxy = array_splice($proxy, 0, $_POST['proxy_number']);
         } elseif ($_POST["local_proxy_selection_mode"] == "manual") {
             $members = unserialize(base64_decode($_POST["lpmembers"]));
-            foreach($members as $member => $name) {
+            foreach ($members as $member => $name) {
                 $computer = preg_split("/##/", $member);
                 $proxy[] = $computer[1];
             }
@@ -105,7 +105,7 @@ if (isset($_POST["bconfirmproxy"])) {
     $orders = $sort->get_sort_order();
 
     $bundle_id = launch_bundle(array(), $orders, $gid, $proxy);
-    header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$gid, 'bundle_id'=>$id_bundle[0])));
+    header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $gid, 'bundle_id' => $id_bundle[0])));
     exit;
 }
 
@@ -117,7 +117,7 @@ if (isset($_POST["local_proxy"]) && isset($_POST["blaunch_bundle"])) {
 
 /* single target handling */
 if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launchAction'])) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']));
+    $machine = getMachine(array('uuid' => $_GET['uuid']));
     if ($machine->uuid != $_GET['uuid']) { // Not matching computer found, show error
         $msc_host = new RenderedMSCHostDontExists($_GET['hostname']);
         $msc_host->headerDisplay();
@@ -127,7 +127,7 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
             $members = unserialize(base64_decode($_POST["lmembers"]));
             $sort = new RenderedMSCBundleSortM($machine, $members);
             $sort->display();
-        // stage 4a: user choosed to run the bundle without going to advanced mode
+            // stage 4a: user choosed to run the bundle without going to advanced mode
         } elseif (isset($_POST["blaunch_bundle"])) { // send the cmd to msc plugin, launch all commands, and then goes on the logs page
             $members = unserialize(base64_decode($_POST["lmembers"]));
             $sort = new RenderedMSCBundleSortM($machine, $members);
@@ -138,15 +138,15 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
             } else {
                 $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
-                header("Location: " . urlStrRedirect("base/computers/msctabs", array('tab'=>'tablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
+                header("Location: " . urlStrRedirect("msc/logs/log_running", array('tab' => 'tablogs', 'uuid' => $machine->uuid, 'hostname' => $machine->hostname, 'bundle_id' => $id_bundle[0])));
                 exit;
             }
-        // stage 3: user choosed to go into advanced mode
+            // stage 3: user choosed to go into advanced mode
         } elseif (isset($_POST["badvanced_bundle"])) {
             $members = unserialize(base64_decode($_POST["lmembers"]));
             $sort = new RenderedMSCBundleSortAdvM($machine, $members);
             $sort->display();
-        // stage 4b: user choosed to run the bundle while in advanced mode
+            // stage 4b: user choosed to run the bundle while in advanced mode
         } elseif (isset($_POST["badvanced_bundle_valid"])) {
             $members = unserialize(base64_decode($_POST["lmembers"]));
             $sort = new RenderedMSCBundleSortAdvM($machine, $members);
@@ -157,10 +157,10 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
             } else {
                 $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
-                header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'uuid'=>$machine->uuid, 'hostname'=>$machine->hostname, 'bundle_id'=>$id_bundle[0])));
+                header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'uuid' => $machine->uuid, 'hostname' => $machine->hostname, 'bundle_id' => $id_bundle[0])));
                 exit;
             }
-        // stage 1: packages selection
+            // stage 1: packages selection
         } else {
             // display packages which may be put in the bundle
             $list = new RenderedMSCBundleChoiceM($machine);
@@ -177,7 +177,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $sort = new RenderedMSCBundleSortG($group, $members);
         $sort->display();
-    // stage 4a: user choosed to run the bundle without going to advanced mode
+        // stage 4a: user choosed to run the bundle without going to advanced mode
     } elseif (isset($_POST["blaunch_bundle"])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $sort = new RenderedMSCBundleSortG($group, $members);
@@ -187,15 +187,15 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
+            header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
             exit;
         }
-    // stage 3: user choosed to go into advanced mode
+        // stage 3: user choosed to go into advanced mode
     } elseif (isset($_POST["badvanced_bundle"])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $sort = new RenderedMSCBundleSortAdvG($group, $members);
         $sort->display();
-    // stage 4b: user choosed to run the bundle while in advanced mode
+        // stage 4b: user choosed to run the bundle while in advanced mode
     } elseif (isset($_POST["badvanced_bundle_valid"])) {
         $members = unserialize(base64_decode($_POST["lmembers"]));
         $sort = new RenderedMSCBundleSortAdvG($group, $members);
@@ -206,14 +206,13 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: ".urlStrRedirect("base/computers/groupmsctabs", array('tab'=>'grouptablogs', 'gid'=>$group->id, 'bundle_id'=>$id_bundle[0])));
+            header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
             exit;
         }
-    // stage 1: packages selection
+        // stage 1: packages selection
     } else {
         $list = new RenderedMSCBundleChoiceG($group);
         $list->display();
-   }
+    }
 }
-
 ?>

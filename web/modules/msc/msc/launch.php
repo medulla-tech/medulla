@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -33,8 +32,12 @@ require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 function quick_get($param, $is_checkbox = False) {
-    if ($is_checkbox) { return $_GET[$param]; }
-    if (isset($_POST[$param]) && $_POST[$param] != '') { return $_POST[$param]; }
+    if ($is_checkbox) {
+        return $_GET[$param];
+    }
+    if (isset($_POST[$param]) && $_POST[$param] != '') {
+        return $_POST[$param];
+    }
     return $_GET[$param];
 }
 
@@ -51,22 +54,22 @@ function start_a_command($proxy = array()) {
         foreach ($_GET as $k => $v) {
             $url .= "$v=$k";
         }
-        header("Location: " . urlStrRedirect("base/computers/msctabs", array_merge($_GET, $_POST, array('failure'=>True))));
+        header("Location: " . urlStrRedirect("msc/logs/logs_running", array_merge($_GET, $_POST, array('failure' => True))));
         exit;
     }
     // Vars seeding
     $post = $_POST;
     $from = $post['from'];
-    $path =  explode('|', $from);
+    $path = explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
     $params = array();
-    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay','max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy', 'launchAction') as $param) {
+    foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy', 'launchAction') as $param) {
         $params[$param] = $post[$param];
     }
     $halt_to = array();
-    foreach ($post as $p=>$v) {
+    foreach ($post as $p => $v) {
         if (preg_match('/^issue_halt_to_/', $p)) {
             $p = preg_replace('/^issue_halt_to_/', '', $p);
             if ($v == 'on') {
@@ -100,11 +103,11 @@ function start_a_command($proxy = array()) {
         if (!isXMLRPCError()) {
             scheduler_start_these_commands('', array($id));
             /* then redirect to the logs page */
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'cmd_id'=>$id)));
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'cmd_id' => $id)));
             exit;
         } else {
             /* Return to the launch tab, the backtrace will be displayed */
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname)));
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
             exit;
         }
     } else { # command on a whole group
@@ -132,22 +135,24 @@ function start_a_command($proxy = array()) {
         $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => $tab, 'gid' => $gid, 'cmd_id' => $id, 'proxy' => $proxy)));
         exit;
     }
 }
+
 function complete_post() {
-    foreach (array( 'start_script', 'clean_on_success', 'do_wol', 'do_inventory', 'issue_halt_to_done') as $mandatory) {
+    foreach (array('start_script', 'clean_on_success', 'do_wol', 'do_inventory', 'issue_halt_to_done') as $mandatory) {
         if (!isset($_POST[$mandatory])) {
             $_POST[$mandatory] = '';
         }
     }
 }
+
 function check_date($post) {
     $start = "0000-00-00 00:00:00";
     $end = "0000-00-00 00:00:00";
     $now = getdate();
-    $now = $now['year'].'-'.$now['mon'].'-'.$now['mday'].' '.$now['hours'].':'.$now['minutes'].':'.$now['seconds'];
+    $now = $now['year'] . '-' . $now['mon'] . '-' . $now['mday'] . ' ' . $now['hours'] . ':' . $now['minutes'] . ':' . $now['seconds'];
     if ($post['start_date'] != _T("now", "msc") && $post['start_date'] != "") {
         $start = $post['start_date'];
     }
@@ -158,13 +163,16 @@ function check_date($post) {
         return True;
     }
     if ($start == "0000-00-00 00:00:00" and $end != "0000-00-00 00:00:00") {
-        if (!check_for_real($now, $end)) { return False; } # start now, but finish in the past
+        if (!check_for_real($now, $end)) {
+            return False;
+        } # start now, but finish in the past
     }
     return check_for_real($start, $end);
 }
+
 function check_for_real($s, $e) {
     $start = preg_split("/[ :-]/", $s);
-    $end   = preg_split("/[ :-]/", $e);
+    $end = preg_split("/[ :-]/", $e);
 
     for ($i = 0; $i < 6; $i++) {
         if ($start[$i] > $end[$i]) {
@@ -176,14 +184,13 @@ function check_for_real($s, $e) {
     return False;
 }
 
-
 /* Validation on local proxies selection page */
 if (isset($_POST["bconfirmproxy"])) {
     $proxy = array();
     if (isset($_POST["lpmembers"])) {
         if ($_POST["local_proxy_selection_mode"] == "semi_auto") {
             $members = unserialize(base64_decode($_POST["lpmachines"]));
-            foreach($members as $member => $name) {
+            foreach ($members as $member => $name) {
                 $computer = preg_split("/##/", $member);
                 $proxy[] = $computer[1];
             }
@@ -192,7 +199,7 @@ if (isset($_POST["bconfirmproxy"])) {
             $proxy = array_splice($proxy, 0, $_POST['proxy_number']);
         } elseif ($_POST["local_proxy_selection_mode"] == "manual") {
             $members = unserialize(base64_decode($_POST["lpmembers"]));
-            foreach($members as $member => $name) {
+            foreach ($members as $member => $name) {
                 $computer = preg_split("/##/", $member);
                 $proxy[] = $computer[1];
             }
@@ -205,16 +212,16 @@ if (isset($_POST["bconfirmproxy"])) {
 /* cancel button handling */
 if (isset($_POST['bback'])) {
     $from = $_POST['from'];
-    $path =  explode('|', $from);
+    $path = explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
     if (isset($_POST["gid"])) {
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"grouptablaunch", 'gid'=>$_POST["gid"])));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
         exit;
     }
     if (isset($_POST["uuid"])) {
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>"msctabs", 'uuid'=>$_POST["uuid"])));
+        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "msctabs", 'uuid' => $_POST["uuid"])));
         exit;
     }
 }
@@ -247,32 +254,32 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (isset($_GET['uuid']) && $_GET['uuid']) {
         $hostname = $_GET['hostname'];
         $uuid = $_GET['uuid'];
-        $machine = getMachine(array('uuid'=>$uuid), True);
+        $machine = getMachine(array('uuid' => $uuid), True);
 
         $hostname = $machine->hostname;
         $label = new RenderedLabel(3, sprintf(_T('Single advanced launch : action "%s" on "%s"', 'msc'), $name, $machine->hostname));
 
         $f->push(new Table());
-        $f->add(new HiddenTpl("uuid"),  array("value" => $uuid,         "hide" => True));
-        $f->add(new HiddenTpl("name"),  array("value" => $hostname,     "hide" => True));
+        $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
+        $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
     } else {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
         if ($group->exists != False) {
             $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
             $f->push(new Table());
-            $f->add(new HiddenTpl("gid"),   array("value" => $gid,          "hide" => True));
+            $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
         }
     }
     $label->display();
 
-    $f->add(new HiddenTpl("pid"),   array("value" => $pid,          "hide" => True));
-    $f->add(new HiddenTpl("papi"),  array("value" => quick_get("papi"), "hide" => True));
-    $f->add(new HiddenTpl("from"),  array("value" => $from,         "hide" => True));
+    $f->add(new HiddenTpl("pid"), array("value" => $pid, "hide" => True));
+    $f->add(new HiddenTpl("papi"), array("value" => quick_get("papi"), "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
 
     $action = quick_get('launchAction');
     if (isset($action) && $action != '') {
-        $f->add(new HiddenTpl('launchAction'),  array("value" => quick_get('launchAction'),         "hide" => True));
+        $f->add(new HiddenTpl('launchAction'), array("value" => quick_get('launchAction'), "hide" => True));
     }
 
     $start_script = 'on';
@@ -291,45 +298,46 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
 
     $max_bw = quick_get('maxbw');
-    if (!isset($max_bw) || $max_bw == '') { $max_bw = web_def_maxbw(); }
+    if (!isset($max_bw) || $max_bw == '') {
+        $max_bw = web_def_maxbw();
+    }
 
     $type_input = 0;
     $type_checkbox = 1;
     $type_date = 2;
     $type_numeric = 3;
-    
+
     # FIXME: is quick_get() methods still used ??
     // $start_date is now()
     $start_date = (quick_get('start_date')) ? quick_get('start_date') : date("Y-m-d H:i:s");
     // $end_date = now() + 24h by default (set in web_def_coh_life_time msc ini value)
     $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60);
-    
+
     $parameters = array(
-        'ltitle'=>array($type_input, _T('Command name', 'msc'), $name),
-        'parameters'=>array($type_input, _T('Script parameters', 'msc'), quick_get('parameters')),
-        'do_wol'=>array($type_checkbox, _T('Start "Wake On Lan" query if connection fails', 'msc'), quick_get('do_wol', True)),
-        'start_script'=>array($type_checkbox, _T('Start script', 'msc'), $start_script),
-        'clean_on_success'=>array($type_checkbox, _T('Delete files after a successful execution', 'msc'), $clean_on_success),
-        'do_inventory'=>array($type_checkbox, _T('Do an inventory after a successful execution', 'msc'), quick_get('do_inventory', True)),
-        'do_reboot'=>array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
-        "issue_halt_to_done"=>array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True)),
+        'ltitle' => array($type_input, _T('Command name', 'msc'), $name),
+        'parameters' => array($type_input, _T('Script parameters', 'msc'), quick_get('parameters')),
+        'do_wol' => array($type_checkbox, _T('Start "Wake On Lan" query if connection fails', 'msc'), quick_get('do_wol', True)),
+        'start_script' => array($type_checkbox, _T('Start script', 'msc'), $start_script),
+        'clean_on_success' => array($type_checkbox, _T('Delete files after a successful execution', 'msc'), $clean_on_success),
+        'do_inventory' => array($type_checkbox, _T('Do an inventory after a successful execution', 'msc'), quick_get('do_inventory', True)),
+        'do_reboot' => array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
+        "issue_halt_to_done" => array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True)),
 #        "issue_halt_to_failed"=>array($type_checkbox, '', $_GET['issue_halt_to_failed'], _T("failed", "msc")),
 #        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
 #        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
-        'start_date'=>array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
-        'end_date'=>array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
-        'maxbw'=>array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
-
+        'start_date' => array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
+        'end_date' => array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
+        'maxbw' => array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
     );
     $macro_hide = array(
-        'issue_halt_to_done'=>'issue_halt',
-        'issue_halt_to_failed'=>'issue_halt',
-        'issue_halt_to_over_time'=>'issue_halt',
-        'issue_halt_to_out_of_interval'=>'issue_halt',
+        'issue_halt_to_done' => 'issue_halt',
+        'issue_halt_to_failed' => 'issue_halt',
+        'issue_halt_to_over_time' => 'issue_halt',
+        'issue_halt_to_out_of_interval' => 'issue_halt',
     );
 
-    foreach ($parameters as $p=>$value) {
-        if (quick_get('hide_'.$p) || (isset($macro_hide[$p]) && quick_get('hide_'.$macro_hide[$p]))) {
+    foreach ($parameters as $p => $value) {
+        if (quick_get('hide_' . $p) || (isset($macro_hide[$p]) && quick_get('hide_' . $macro_hide[$p]))) {
             $f->add(new HiddenTpl($p), array("value" => $parameters[$p][2], "hide" => True));
         } else {
             if ($parameters[$p][0] == $type_input) {
@@ -350,7 +358,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
 
     if (web_force_mode() || quick_get('hide_copy_mode')) {
-        $f->add(new HiddenTpl("copy_mode"),         array("value" => web_def_mode(), "hide" => True));
+        $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
     } else {
         $rb = new RadioTpl("copy_mode");
         $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
@@ -361,48 +369,44 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
     /* Only display local proxy button on a group and if allowed */
     if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy() && !quick_get('hide_local_proxy')) {
-        $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'),
-                                  new CheckboxTpl("local_proxy")), array("value" => ''));
+        $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
     }
 
     $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
-
 }
 ### /Advanced actions handling ###
 
 /* single target: form display */
 if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
     $machine = new Machine(array(
-                                 'uuid' => $_GET['uuid'],
-                                 'hostname' => array('0' => $_GET['hostname']),
-                                 'displayName' => $_GET['hostname'])
-			 );
-    if (strlen(web_probe_order()) > 0){
+        'uuid' => $_GET['uuid'],
+        'hostname' => array('0' => $_GET['hostname']),
+        'displayName' => $_GET['hostname'])
+    );
+    if (strlen(web_probe_order()) > 0) {
         $msc_host = new RenderedMSCHost($machine, web_probe_order());
         $msc_host->ajaxDisplay();
     } else { // nothing set : do not probe
-        if(!isset($_POST["bprobe"])){
+        if (!isset($_POST["bprobe"])) {
             $fprobe = new ValidatingForm();
             $fprobe->addButton("bprobe", _T("Probe status", "msc"));
             $fprobe->display();
-	    print "<br/>";
+            print "<br/>";
         } else {
             $msc_host = new RenderedMSCHost($machine, web_probe_order_on_demand());
             $msc_host->ajaxDisplay();
- 	}
- 
+        }
     }
 
-    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid'=>$_GET['uuid']));
+    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid' => $_GET['uuid']));
     $msc_actions->display();
 
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("uuid" => $machine->uuid, "hostname" => $machine->hostname));
     $ajax->display();
     $ajax->displayDivToUpdate();
-
 }
 
 /* group display */
@@ -410,10 +414,10 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     $group = new Group($_GET['gid'], true);
     if ($group->exists != False) {
         // Display the actions list
-        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid"=>$_GET['gid']));
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
         $msc_actions->display();
 
-        $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("gid"=>$_GET['gid']));
+        $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("gid" => $_GET['gid']));
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();
@@ -422,13 +426,11 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         $msc_host->headerDisplay();
     }
 }
-
-
 ?>
 <style>
-.primary_list { }
-.secondary_list {
-    background-color: #e1e5e6 !important;
-}
+    .primary_list { }
+    .secondary_list {
+        background-color: #e1e5e6 !important;
+    }
 
 </style>

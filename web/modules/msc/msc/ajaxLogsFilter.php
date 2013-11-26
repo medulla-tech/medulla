@@ -58,7 +58,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
-    $action = "msctabs";
+    $action = "logs_running";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
         $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history);
@@ -69,7 +69,8 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
-    $action = "groupmsctabs";
+    $action = "logs_running";
+
 
     $sum_running = intval($cmds[0][0]['sum_running']);
     $sum_done = intval($cmds[0][0]['sum_done']);
@@ -95,11 +96,7 @@ $actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", 
 $actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
 $actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
 $actionstatus->setWidth("400");
-if (strlen($gid)) {
-    $actiondetails = new ActionItem(_T("Details", "msc"), "groupmsctabs", "display", "msc", "base", "computers");
-} else {
-    $actiondetails = new ActionItem(_T("Details", "msc"), "msctabs", "display", "msc", "base", "computers");
-}
+$actiondetails = new ActionItem(_T("Details", "msc"), "logs_running", "display", "msc", "msc", "logs");
 $actionempty = new EmptyActionItem();
 
 $a_start = array();
@@ -116,7 +113,7 @@ if ($areCommands) { // display several commands
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
+        $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'msc|logs|' . $action . '|' . $tab, 'gid' => $gid);
 
         ### gathering command components ###
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case

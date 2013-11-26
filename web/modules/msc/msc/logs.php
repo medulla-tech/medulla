@@ -43,10 +43,10 @@ if (strlen($_GET['uuid'])) {
             $params = array(
                 "uuid" => $_GET['uuid'],
                 "bundle_id" => $_GET['bundle_id'],
-                'divID' => 'container',
+                'divID' => 'divLogs',
                 "tab" => "tablogs",
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divLogs", "commands", $params);
 
             $ajax->display();
             print "<br/><br/><br/>";
@@ -86,10 +86,10 @@ if (strlen($_GET['uuid'])) {
         $params = array(
             "uuid" => $_GET['uuid'],
             "hostname" => $_GET['hostname'],
-            'divID' => 'container',
+            'divID' => 'divLogs',
             "tab" => "tablogs",
         );
-        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divLogs", "commands", $params);
         $ajax->setRefresh(web_def_refresh_time());
         $ajax->display();
         print "<br/><br/><br/>";
@@ -107,10 +107,10 @@ if (strlen($_GET['uuid'])) {
             $params = array(
                 "gid" => $_GET['gid'],
                 "bundle_id" => $_GET['bundle_id'],
-                'divID' => 'container',
+                'divID' => 'divLogs',
                 "tab" => "grouptablogs",
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divLogs", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -164,11 +164,11 @@ if (strlen($_GET['uuid'])) {
             $params = array(
                 "gid" => $_GET['gid'] . $bdlink,
                 "cmd_id" => $_GET['cmd_id'],
-                'divID' => 'container',
+                'divID' => 'divLogs',
                 "tab" => "grouptablogs",
             );
 
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divLogs", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -178,10 +178,10 @@ if (strlen($_GET['uuid'])) {
         //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=grouptablogs&action=groupmsctabs");
         $params = array(
             "gid" => $_GET['gid'],
-            'divID' => 'container',
+            'divID' => 'divLogs',
             "tab" => "grouptablogs",
         );
-        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divLogs", "commands", $params);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
@@ -189,6 +189,9 @@ if (strlen($_GET['uuid'])) {
 } else {
     // Display an error message
 }
+
+
+//include_once dirname(__FILE__) . '/history.php';
 ?>
 <script type="text/javascript">
 

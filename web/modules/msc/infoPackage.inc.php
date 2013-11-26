@@ -53,6 +53,12 @@ if (!empty($submod)) {
     $page = new Page("consultAll", _T('All user commands', 'msc'));
     $submodmsc->addPage($page);
 
+    $page = new Page("logs_running", _T('Running commands log', 'msc'));
+    $submodmsc->addPage($page);
+
+    $page = new Page("logs_finished", _T('Finished commands log', 'msc'));
+    $submodmsc->addPage($page);
+
     $page = new Page("all", _T('Show all logs', 'msc'));
     $submodmsc->addPage($page);
     $page = new Page("pending", _T('Show pending task\'s logs', 'msc'));

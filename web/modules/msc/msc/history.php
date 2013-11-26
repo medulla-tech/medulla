@@ -28,6 +28,7 @@ require_once('modules/msc/includes/functions.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+//include_once dirname(__FILE__) . '/logs.php';
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
@@ -44,10 +45,10 @@ if (strlen($_GET['uuid'])) {
                 "uuid" => $_GET['uuid'],
                 "bundle_id" => $_GET['bundle_id'],
                 "tab" => "tabhistory",
-                'divID' => 'container',
+                'divID' => 'divHistory',
                 "history" => 1
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divHistory", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -70,10 +71,10 @@ if (strlen($_GET['uuid'])) {
             "uuid" => $_GET['uuid'],
             "hostname" => $_GET['hostname'],
             "tab" => "tabhistory",
-            'divID' => 'container',
+            'divID' => 'divHistory',
             "history" => 1
         );
-        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divHistory", "commands", $params);
         $ajax->setRefresh(web_def_refresh_time());
         $ajax->display();
         print "<br/><br/><br/>";
@@ -92,10 +93,10 @@ if (strlen($_GET['uuid'])) {
                 "gid" => $_GET['gid'],
                 "bundle_id" => $_GET['bundle_id'],
                 "tab" => "grouptabhistory",
-                'divID' => 'container',
+                'divID' => 'divHistory',
                 "history" => 1
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divHistory", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -150,10 +151,10 @@ if (strlen($_GET['uuid'])) {
                 "gid" => $_GET['gid'] . $bdlink,
                 "cmd_id" => $_GET['cmd_id'],
                 "tab" => "grouptabhistory",
-                'divID' => 'container',
+                'divID' => 'divHistory',
                 "history" => 1
             );
-            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+            $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divHistory", "commands", $params);
             $ajax->display();
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
@@ -164,10 +165,10 @@ if (strlen($_GET['uuid'])) {
         $params = array(
             "gid" => $_GET['gid'],
             "tab" => "grouptabhistory",
-            'divID' => 'container',
+            'divID' => 'divHistory',
             "history" => 1
         );
-        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "container", "commands", $params);
+        $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), "divHistory", "commands", $params);
         $ajax->display();
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();

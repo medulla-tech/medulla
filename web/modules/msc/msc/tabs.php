@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
@@ -22,20 +21,22 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 if ($_GET['module'] == 'base' && $_GET['submod'] == 'computers') {
     require("modules/base/computers/localSidebar.php");
-}
-else {
+} else {
     require("modules/imaging/manage/localSidebar.php");
 }
 require_once('graph/navbar.inc.php');
 require_once("modules/pulse2/includes/utilities.php");
 
-if (!isset($_GET['hostname'])) { $_GET['hostname'] = $_GET['cn']; }
-if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
+if (!isset($_GET['hostname'])) {
+    $_GET['hostname'] = $_GET['cn'];
+}
+if (!isset($_GET['uuid'])) {
+    $_GET['uuid'] = $_GET['objectUUID'];
+}
 
 /*
  * Display right top shortcuts menu
@@ -43,21 +44,22 @@ if (!isset($_GET['uuid'])) { $_GET['uuid'] = $_GET['objectUUID']; }
 right_top_shortcuts_display();
 
 if ($_GET['uuid']) {
-    $machine = getMachine(array('uuid'=>$_GET['uuid']));
+    $machine = getMachine(array('uuid' => $_GET['uuid']));
     if ($machine->uuid != $_GET['uuid']) {
         $p = new PageGenerator(sprintf(_T("%s's computer secure control", 'msc'), $_GET['hostname']));
         $p->setSideMenu($sidemenu);
         $p->display();
         include('modules/msc/msc/header.php');
     } else {
-        if (empty($_GET['hostname'])) $_GET['hostname'] = $machine->hostname;
+        if (empty($_GET['hostname']))
+            $_GET['hostname'] = $machine->hostname;
         $p = new TabbedPageGenerator();
         $p->setSideMenu($sidemenu);
         $p->addTop(sprintf(_T("%s's computer secure control", 'msc'), $machine->hostname), "modules/msc/msc/header.php");
-        $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
-        $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
-        $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
-        $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('uuid'=>$machine->uuid, 'hostname'=>$machine->hostname));
+        $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
+        $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
+        $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
+        $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         $p->display();
     }
 } elseif ($_GET['gid']) {
@@ -71,11 +73,11 @@ if ($_GET['uuid']) {
     } else {
         $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
         if (!$group->all_params['ro']) {
-            $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid'=>$_GET['gid']));
-            $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid'=>$_GET['gid']));
+            $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
+            $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
         }
-        $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid'=>$_GET['gid']));
-        $p->addTab("grouptabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid'=>$_GET['gid']));
+        $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
+        $p->addTab("grouptabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid' => $_GET['gid']));
     }
     $p->display();
 } else {
@@ -84,7 +86,6 @@ if ($_GET['uuid']) {
     $p->display();
     print _T("Not enough informations", "msc");
 }
-
 ?>
 <script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>

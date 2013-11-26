@@ -108,11 +108,11 @@ foreach ($cmds as $item) {
         } else {
             $param['gid'] = $gid;
         }
-        $linkdetail = urlStr("base/computers/msctabs/$tab", $param);
-        $linklogs = urlStr("base/computers/msctabs/$tab", array('uuid' => $target_uuid, 'gid' => $gid));
+        $linkdetail = urlStr("msc/logs/logs_running", $param);
+        $linklogs = urlStr("msc/logs/logs_running", array('uuid' => $target_uuid, 'gid' => $gid));
     } else {
-        $linkdetail = urlStr("base/computers/groupmsctabs/group$tab", array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid, 'gid' => $gid));
-        $linklogs = urlStr("base/computers/groupmsctabs/group$tab", array('uuid' => $target_uuid, 'gid' => $gid));
+        $linkdetail = urlStr("msc/logs/logs_running", array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid, 'gid' => $gid));
+        $linklogs = urlStr("msc/logs/logs_running", array('uuid' => $target_uuid, 'gid' => $gid));
     }
     $a_date[] = $creation_date;
     $start_dates[] = _toDate($start_date);
