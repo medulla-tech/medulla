@@ -63,7 +63,6 @@ from pulse2.scheduler.bundles import BundleReferences
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
 
-
 def enum(*args, **kwargs):
     """
     Returns a named enumerator based on simple list of integers.
@@ -87,7 +86,8 @@ DIRECTIVE = enum("GIVE_UP",
                  )
 # status of circuit
 CC_STATUS = enum("ACTIVE",
-                 "WAITING"
+                 "WAITING",
+                 "RECURRENT",
                  )
 
 
@@ -540,6 +540,8 @@ class CircuitBase(object):
     running_phase = None
     # detected IP address of target
     host = None
+    # detected network address of target
+    network_address = None
     # first initialisation flag 
     initialized = False
     # A callable to self-releasing from the container 
@@ -574,15 +576,23 @@ class CircuitBase(object):
     def is_running(self):
         return isinstance(self.running_phase, Phase)
 
-    def setup(self):
-        """Post-init - detecting the networking info of target. """
+    def setup(self, recurrent=False):
+        """
+        Post-init - detecting the networking info of target. 
+
+        @param recurrent: if True, the circuit is on pull mode
+        @type recurrent: bool
+        """
+        self.recurrent = recurrent
 
         if not self.initialized :
             d = maybeDeferred(self._flow_create)
- 
-            d.addCallback(self._chooseClientNetwork)
-            d.addCallback(self._host_detect) 
-            d.addCallback(self._network_detect)
+
+            if not recurrent :
+                d.addCallback(self._chooseClientNetwork)
+                d.addCallback(self._host_detect) 
+                d.addCallback(self._network_detect)
+
             d.addCallback(self._init_end)
             d.addErrback(self._init_failed)
 
@@ -669,6 +679,8 @@ class CircuitBase(object):
         Called by MscContainer which contains list of processing circuits.
         This method is called when the circuits ends.  
         """
+        if self.recurrent :
+            return
         try :
             self.releaser(self.cohq.coh.id, suspend_to_waitings)
             self.update_stats()
@@ -817,7 +829,8 @@ class Circuit (CircuitBase):
                 self.running_phase = first(self.cohq, 
                                            self.host,
                                            self.config)
-                self.running_phase.launchers_provider = self.launchers_provider
+                if not self.recurrent:
+                    self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
 
         except StopIteration :
@@ -901,7 +914,8 @@ class Circuit (CircuitBase):
                 self.running_phase = next_phase(self.cohq, 
                                                 self.host,
                                                 self.config)
-                self.running_phase.launchers_provider = self.launchers_provider
+                if not self.recurrent :
+                    self.running_phase.launchers_provider = self.launchers_provider
                 self.running_phase.dispatcher = self.dispatcher
                 self.logger.debug("next phase :%s" % (self.running_phase))
             except StopIteration :

@@ -35,7 +35,7 @@ from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import get_ids_to_start, get_commands
-
+from pulse2.scheduler.dlp import DownloadQuery
 
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
@@ -86,12 +86,12 @@ class MethodProxy(MscContainer):
  
 
  
-    def run_proxymethod(self, launcher, id, name, args):
+    def run_proxymethod(self, launcher, id, name, args, from_dlp):
         """
         Calls the proxy method.
         
         This call is invoked by proxy processing the parsing results 
-        from the launcher. 
+        from the launcher or download provider. 
         Invoked method tagged as @launcher_proxymethod 
         
         @param launcher: launcher which calls this method
@@ -103,8 +103,47 @@ class MethodProxy(MscContainer):
         @param args: argumets of called method
         @type args: list
 
+        @param from_dlp: if True, response is coming from DLP
+        @type from_dlp: bool
         """
-        circuit = self.get(id)
+        if from_dlp :
+            # Recurrent phase parsing which does not exists in the container
+            # The circuit is created out of container
+            circuit = Circuit(id, self.installed_phases, self.config)
+            circuit.install_dispatcher(self)
+            d = circuit.setup(True)
+            @d.addCallback
+            def _setup(result):
+                dth = maybeDeferred(circuit.run)
+                return dth
+            @d.addCallback
+            def _post_setup(result):
+                return self._run_proxymethod(launcher, id, name, args, circuit)
+            @d.addErrback
+            def _eb(result):
+                self.logger.warn("Recurrent phase result parsing failed: %s" % result)
+        else :
+
+            return self._run_proxymethod(launcher, id, name, args)
+
+    def _run_proxymethod(self, launcher, id, name, args, circuit=None):
+        """
+        Calls the proxy method.
+        
+        @param launcher: launcher which calls this method
+        @type launcher: str
+
+        @param id: commands_on_host id
+        @type id: int
+
+        @param args: argumets of called method
+        @type args: list
+
+        @param circuit: Recurrent circuit
+        @type circuit: Circuit
+        """
+        if not circuit : 
+            circuit = self.get(id)
         if not circuit :
             if id in [c.id for c in self.get_valid_waitings()]:
                  circuit = [c for c in self.get_valid_waitings() if c.id == id]
@@ -129,6 +168,24 @@ class MethodProxy(MscContainer):
 
                 circuit.phase_process(result)
                 return "OK"
+
+
+    def get_available_downloads(self, hostname, mac):
+        """
+        Gets the all available downloads for the requested machine.
+
+        @param hostname: hostname of computer
+        @type hostname: str
+
+        @param mac: MAC address of computer
+        @type mac: str
+
+        @return: list of available download URLs
+        @rtype: list
+        """
+        dq = DownloadQuery(self.config)
+        return dq.get_available_downloads(hostname, mac)
+                         
 
 
 class MscDispatcher (MscQueryManager, MethodProxy):

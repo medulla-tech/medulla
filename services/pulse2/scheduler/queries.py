@@ -316,6 +316,40 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     session.close()
     return commands_to_perform
 
+def get_available_downloads(scheduler_name, hostname, mac):
+    database = MscDatabase()
+    session = create_session()
+  
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+    soon = time.strftime("0000-00-00 00:00:00")
+
+    commands_query = session.query(CommandsOnHost, Commands, Target).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target)
+        ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
+        ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
+        ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(or_(database.commands.c.start_date == soon,
+                     database.commands.c.start_date <= now)
+        ).filter(or_(database.commands.c.end_date == soon,
+                     database.commands.c.end_date > now)
+        ).filter(or_(database.commands_on_host.c.scheduler == '',
+                     database.commands_on_host.c.scheduler == scheduler_name,
+                     database.commands_on_host.c.scheduler == None)
+        ).filter(database.target.c.target_name == hostname
+        ).filter(database.target.c.target_macaddr.like("%%%s%%" % mac))
+        
+
+    for coh, cmd, target in commands_query.all():
+        yield (coh.id, 
+               target.mirrors,
+               cmd.start_file,
+               cmd.files,
+               cmd.parameters,
+               cmd.package_id)
+   
+    session.close()
+
+
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()

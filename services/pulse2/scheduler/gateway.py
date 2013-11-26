@@ -140,59 +140,71 @@ class SchedulerGateway(UnixProtocol):
 
 
 
-    def completed_quick_action(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_quick_action(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_quick_action", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_push(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_push(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_push", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_pull(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_pull(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_pull", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_execution(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_execution(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_execution", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_deletion(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_deletion(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_deletion", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_inventory(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_inventory(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_inventory", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_reboot(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_reboot(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_reboot", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
-    def completed_halt(self, launcher, (exitcode, stdout, stderr), id):
+    def completed_halt(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
                                               "completed_halt", 
-                                              (exitcode, stdout, stderr)
+                                              (exitcode, stdout, stderr),
+                                              from_dlp
                                               )
     def get_health(self):
         return getHealth()
 
     def choose_client_ip(self, interfaces):
         return chooseClientNetwork(interfaces)
+
+    def get_available_downloads(self, hostname, mac):
+        return MscDispatcher().get_available_downloads(hostname, mac)
+
 
 class SchedulerGatewayFactory(Factory):
     protocol = SchedulerGateway
