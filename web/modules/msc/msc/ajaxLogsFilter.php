@@ -86,6 +86,7 @@ $a_uploaded = array();
 $a_executed = array();
 $a_deleted = array();
 $a_current = array();
+$a_percent = array();
 $params = array();
 
 /* available buttons */
@@ -171,6 +172,7 @@ if ($areCommands) { // display several commands
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
             }
+
             if (isset($statusTable[$coh['current_state']])) {
                 $a_current[] = $statusTable[$coh['current_state']];
             } else {
@@ -207,6 +209,19 @@ if ($areCommands) { // display several commands
             $a_enddates[] = _toDate(array(1970, 1, 1, 0, 0, 0));
         else
             $a_enddates[] = _toDate($cmd['end_date']);
+
+        $sum_running = $cmd['sum_running'];
+        $sum_done = $cmd['sum_done'];
+        $sum_failed = $cmd['sum_failed'];
+        $sum_stopped = $cmd['sum_stopped'];
+        $sum_overtimed = $cmd['sum_overtimed'];
+        $total_machines = $sum_running + $sum_done + $sum_failed + $sum_stopped + $sum_overtimed;
+        if ($total_machines != 0)
+            $done_percent = round(100 * $sum_done / $total_machines) . '%';
+        else
+            $done_percent = '-';
+
+        $a_percent[] = $done_percent;
     }
 
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
@@ -214,10 +229,13 @@ if ($areCommands) { // display several commands
         $n->addExtraInfo($a_date, _T("Start date", "msc"));
         $n->addExtraInfo($a_enddates, _T("End date", "msc"));
     }
-    $n->addExtraInfo($a_current, _T("current_state", "msc"));
-    $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
-    $n->addExtraInfo($a_executed, _T("executed", "msc"));
-    $n->addExtraInfo($a_deleted, _T("deleted", "msc"));
+    $n->addExtraInfo($a_percent, _T("Success percent", "msc"));
+    // If $a_current is empty, we don't display it
+    if (count(array_filter($a_current, 'strlen')))
+        $n->addExtraInfo($a_current, _T("current_state", "msc"));
+    /* $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
+      $n->addExtraInfo($a_executed, _T("executed", "msc"));
+      $n->addExtraInfo($a_deleted, _T("deleted", "msc")); */
 
     $n->addActionItemArray($a_details);
     if (!$history) {
