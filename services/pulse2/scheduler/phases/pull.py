@@ -21,13 +21,12 @@
 
 from pulse2.scheduler.types import Phase, DIRECTIVE
 from pulse2.scheduler.utils import launcher_proxymethod
-from pulse2.scheduler.queries import CoHQuery
 
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 
 class PullPhase(Phase):
-    """Recurrent phase frame""""
+    """Recurrent phase frame"""
 
     def perform(self):
         """ Perform the phase action. """
