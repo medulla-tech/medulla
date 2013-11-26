@@ -81,6 +81,7 @@ if ($uuid) {
 
 $a_cmd = array();
 $a_date = array();
+$a_enddates = array();
 $a_uploaded = array();
 $a_executed = array();
 $a_deleted = array();
@@ -201,10 +202,17 @@ if ($areCommands) { // display several commands
             $a_date[] = _toDate(array(1970, 1, 1, 0, 0, 0));
         else
             $a_date[] = _toDate($cmd['start_date']);
+
+        if (!is_array($cmd['end_date']))
+            $a_enddates[] = _toDate(array(1970, 1, 1, 0, 0, 0));
+        else
+            $a_enddates[] = _toDate($cmd['end_date']);
     }
+
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
     if (!$history) {
-        $n->addExtraInfo($a_date, _T("start_date", "msc"));
+        $n->addExtraInfo($a_date, _T("Start date", "msc"));
+        $n->addExtraInfo($a_enddates, _T("End date", "msc"));
     }
     $n->addExtraInfo($a_current, _T("current_state", "msc"));
     $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));

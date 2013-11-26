@@ -817,10 +817,12 @@ class MscDatabase(DatabaseHelper):
 
         # Get query parts
         if count:
-            query = session.query(func.count(Commands.id)).select_from(self.commands.join(self.commands_on_host).join(self.target))
+            query = session.query(func.count('*')).select_from(self.commands.join(self.commands_on_host).join(self.target))
         else:
             query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
             query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+
+
 
         if params['cmd_id'] != None: # COH
             filter = [self.commands.c.id == params['cmd_id']]
@@ -863,7 +865,12 @@ class MscDatabase(DatabaseHelper):
         if group_by:
             query = query.group_by(group_clause)
 
-        return query if not count else query.scalar()
+        if not count:
+            return query
+        else:
+            logging.getLogger().error(query.all()[0][0])
+            return query.all()[0][0]
+
 
     def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1, params = {}):
         i = 0

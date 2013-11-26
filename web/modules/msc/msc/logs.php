@@ -81,6 +81,7 @@ if (strlen($_GET['uuid'])) {
         $ch->display();
     } else { # Display history for a specific host
         //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&hostname=".$_GET['hostname']."&tab=tablogs&action=msctabs");
+        // Bundle on a single host is treaten here
         $params = array(
             "uuid" => $_GET['uuid'],
             "hostname" => $_GET['hostname'],
