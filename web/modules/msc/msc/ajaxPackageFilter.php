@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
@@ -85,11 +84,11 @@ foreach ($packages as $c_package) {
         $a_pversions[] = $package->version;
         $a_sizes[] = prettyOctetDisplay($package->size);
         if (!empty($_GET['uuid'])) {
-            $params[] = array('name'=>$package->label, 'version'=>$package->version,'pid'=>$package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from'=>'base|computers|msctabs|tablogs', 'papi'=>$p_api->toURI());
+            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
         } else {
-            $params[] = array('name'=>$package->label, 'version'=>$package->version, 'pid'=>$package->id, 'gid'=>$group->id, 'from'=>'base|computers|groupmsctabs|tablogs', 'papi'=>$p_api->toURI());
+            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
         }
-        if ($type==0) {
+        if ($type == 0) {
             $a_css[] = 'primary_list';
         } else {
             $a_css[] = 'secondary_list';
@@ -118,15 +117,13 @@ $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "s
 $n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
-
-
 ?>
 <style>
-.primary_list { }
-.secondary_list {
-    background-color: #e1e5e6 !important;
-}
-li.detail a {
+    .primary_list { }
+    .secondary_list {
+        background-color: #e1e5e6 !important;
+    }
+    li.detail a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/msc/graph/images/actions/info.png");
@@ -135,8 +132,8 @@ li.detail a {
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
-}
-li.advanced a {
+    }
+    li.advanced a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/msc/graph/images/actions/run.png");
@@ -145,7 +142,7 @@ li.advanced a {
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
-}
+    }
 
 
 </style>

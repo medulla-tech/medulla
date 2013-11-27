@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -21,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require('modules/msc/includes/utilities.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
@@ -29,7 +29,7 @@ require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
 
 $from = $_GET['from'];
-$path =  explode('|', $from);
+$path = explode('|', $from);
 $module = $path[0];
 $submod = $path[1];
 $page = $path[2];
@@ -51,7 +51,7 @@ if (!empty($_GET['gid'])) {
     $gid = null;
 }
 
-    
+
 $pid = $_GET['pid'];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET["papi"]);
@@ -64,9 +64,9 @@ if ($gid) {
 }
 
 $params["papi"] = $p_api;
-$params["name"] = $hostname; 
-$params["hostname"] = $hostname; 
-$params["uuid"] = $uuid; 
+$params["name"] = $hostname;
+$params["hostname"] = $hostname;
+$params["uuid"] = $uuid;
 $params["gid"] = $gid;
 $params["from"] = $from;
 $params["pid"] = $pid;
@@ -74,7 +74,7 @@ $params["ltitle"] = get_def_package_label($name, $version);
 $params["create_directory"] = 'on';
 $params["start_script"] = 'on';
 $params["clean_on_success"] = 'on';
-$params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
+$params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on' : '';
 $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
 $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
 $params["next_connection_delay"] = web_def_delay();
@@ -84,13 +84,13 @@ $params["deployment_intervals"] = web_def_deployment_intervals();
 
 $prefix = '';
 if (strlen($_POST["gid"])) {
-        $prefix = 'group';
+    $prefix = 'group';
 }
 
-$params['tab'] = $prefix.'tablaunch';
+$params['tab'] = $prefix . 'tablaunch';
 
 $halt_to = array();
-foreach ($_POST as $p=>$v) {
+foreach ($_POST as $p => $v) {
     if (preg_match('/^issue_halt_to_/', $p)) {
         $p = preg_replace('/^issue_halt_to_/', '', $p);
         if ($v == 'on') {
@@ -111,16 +111,14 @@ $cible = array($uuid);
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
 $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-if (!isXMLRPCError()) { 
+if (!isXMLRPCError()) {
     scheduler_start_these_commands('', array($id_command));
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.$tab, 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
     exit;
-} else 
-{
-    ## Return to the launch tab, the backtrace will be displayed 
-    header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$prefix.'tablaunch', 'uuid'=>$uuid, 'hostname'=>$hostname, 'gid'=>$gid, 'cmd_id'=>$id_command)));
+} else {
+    ## Return to the launch tab, the backtrace will be displayed
+    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
     exit;
 }
-
 ?>
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -21,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require('modules/msc/includes/utilities.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
@@ -30,7 +30,7 @@ require('modules/msc/includes/mscoptions_xmlrpc.php');
 
 
 $from = $_GET['from'];
-$path =  explode('|', $from);
+$path = explode('|', $from);
 $module = $path[0];
 $submod = $path[1];
 $page = $path[2];
@@ -53,9 +53,9 @@ if (!empty($_GET['gid'])) {
 } else {
     $gid = null;
 }
-    
+
 $pid = $_GET['pid'];
-$papi =  $_GET["papi"];
+$papi = $_GET["papi"];
 $p_api = new ServerAPI();
 $p_api->fromURI($papi);
 
@@ -68,9 +68,9 @@ if ($gid) {
 }
 
 $params["papi"] = $papi;
-$params["name"] = $hostname; 
-$params["hostname"] = $hostname; 
-$params["uuid"] = $uuid; 
+$params["name"] = $hostname;
+$params["hostname"] = $hostname;
+$params["uuid"] = $uuid;
 $params["gid"] = $gid;
 $params["from"] = $from;
 $params["pid"] = $pid;
@@ -78,7 +78,7 @@ $params["ltitle"] = get_def_package_label($name, $version);
 $params["create_directory"] = 'on';
 $params["start_script"] = 'on';
 $params["clean_on_success"] = 'on';
-$params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
+$params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on' : '';
 $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
 $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
 $params["next_connection_delay"] = web_def_delay();
@@ -89,19 +89,18 @@ $params["deployment_intervals"] = web_def_deployment_intervals();
 
 $halt = web_def_issue_halt_to();
 foreach ($halt as $h) {
-    $params["issue_halt_to_".$h] = 'on';
+    $params["issue_halt_to_" . $h] = 'on';
 }
 
 $prefix = '';
 if (strlen($_POST["gid"])) {
-        $prefix = 'group';
+    $prefix = 'group';
 }
 
-$params['tab'] = $prefix.'tablaunch';
+$params['tab'] = $prefix . 'tablaunch';
 $params['badvanced'] = True;
 
 header("Location: " . urlStrRedirect("$module/$submod/$page", $params));
 exit;
-
 ?>
 

@@ -93,7 +93,7 @@ if (strlen($_GET['uuid'])) {
 
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
-            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "msctabs", "detail", "msc", "base", "computers")), $params);
+            $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
         print "<hr/><br/>";
         if ($_GET['cmd_id'] == -2) {

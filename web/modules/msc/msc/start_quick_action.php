@@ -22,7 +22,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once('modules/msc/includes/qactions.inc.php');
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
@@ -32,7 +31,7 @@ require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
 function action($action, $target, $is_advanced) {
     $from = $_GET['from'];
-    $path =  explode('|', $from);
+    $path = explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
@@ -52,7 +51,7 @@ function action($action, $target, $is_advanced) {
 
     if ($is_advanced) {
         $group = (isset($_GET['gid'])) ? 'group' : '';
-        $params = array('from'=> 'base|computers|' . $group . 'msctabs|tablaunch');
+        $params = array('from' => 'base|computers|' . $group . 'msctabs|tablaunch');
         foreach (array('gid', 'uuid', 'hostname') as $param) {
             $params[$param] = $_GET[$param];
         }
@@ -62,10 +61,10 @@ function action($action, $target, $is_advanced) {
             $qa = $qa[1];
 
             $params['badvanced'] = True;
-            if (isset($qa['title'.$current_lang])) {
-                $params['ltitle'] = trim('[QA] '.$qa['title'.$current_lang]);
+            if (isset($qa['title' . $current_lang])) {
+                $params['ltitle'] = trim('[QA] ' . $qa['title' . $current_lang]);
             } else {
-                $params['ltitle'] = trim('[QA] '.$qa['title']);
+                $params['ltitle'] = trim('[QA] ' . $qa['title']);
             }
 
             if (in_array($action, array('007wake_on_lan.msc', '010wol_with_imaging.msc'))) {
@@ -82,23 +81,23 @@ function action($action, $target, $is_advanced) {
                 $params['max_connection_attempt'] = 1;
                 $params['attempts_left'] = 1;
                 foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'copy_mode', 'deployment_intervals', 'issue_halt', 'parameters', 'local_proxy', 'maxbw') as $p) {
-                     $params['hide_'.$p] = True;
+                    $params['hide_' . $p] = True;
                 }
             } else {
                 $params['do_reboot'] = '';
-                $params["next_connection_delay"]  = web_def_delay();
+                $params["next_connection_delay"] = web_def_delay();
                 $params["max_connection_attempt"] = web_def_attempts();
-                $params["maxbw"]                  = web_def_maxbw();
-                $params["copy_mode"]              = web_def_mode();
-                $params["deployment_intervals"]   = web_def_deployment_intervals();
+                $params["maxbw"] = web_def_maxbw();
+                $params["copy_mode"] = web_def_mode();
+                $params["deployment_intervals"] = web_def_deployment_intervals();
                 $halt = web_def_issue_halt_to();
                 foreach ($halt as $h) {
-                    $params["issue_halt_to_".$h] = 'on';
+                    $params["issue_halt_to_" . $h] = 'on';
                 }
             }
             $params['launchAction'] = $action;
 
-            header("Location: ".urlStrRedirect("base/computers/".$type."msctabs", $params));
+            header("Location: " . urlStrRedirect("base/computers/" . $type . "msctabs", $params));
             exit;
         } else {
             new NotifyWidgetFailure(_T('Failed to retrieve this quick action.', 'msc'));
@@ -115,7 +114,7 @@ function action($action, $target, $is_advanced) {
                 $actionpage = 'msctabs';
                 $tab = 'tablogs';
             }
-            header("Location: ".urlStrRedirect("base/computers/$actionpage", array('tab'=>$tab, 'uuid'=>$_GET['uuid'], 'hostname'=>$_GET['hostname'], 'cmd_id'=>$id, 'gid'=>$_GET['gid'])));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'cmd_id' => $id, 'gid' => $_GET['gid'])));
             exit;
         }
     }
@@ -127,7 +126,7 @@ if (isset($_POST["bconfirm"]) || isset($_POST["badvanced"])) {
     $is_advanced = isset($_POST["badvanced"]);
     /* quick action on a single target */
     if (isset($_GET['uuid'])) {
-        $machine = getMachine(array('uuid'=>$_GET['uuid']), True);
+        $machine = getMachine(array('uuid' => $_GET['uuid']), True);
         action($_GET['launchAction'], array($machine->uuid), $is_advanced);
     }
 

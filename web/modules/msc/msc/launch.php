@@ -103,11 +103,11 @@ function start_a_command($proxy = array()) {
         if (!isXMLRPCError()) {
             scheduler_start_these_commands('', array($id));
             /* then redirect to the logs page */
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'cmd_id' => $id)));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'cmd_id' => $id)));
             exit;
         } else {
             /* Return to the launch tab, the backtrace will be displayed */
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
             exit;
         }
     } else { # command on a whole group
@@ -135,7 +135,7 @@ function start_a_command($proxy = array()) {
         $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
         scheduler_start_these_commands('', array($id));
         // then redirect to the logs page
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => $tab, 'gid' => $gid, 'cmd_id' => $id, 'proxy' => $proxy)));
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'gid' => $gid, 'cmd_id' => $id, 'proxy' => $proxy)));
         exit;
     }
 }
