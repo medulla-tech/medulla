@@ -59,7 +59,6 @@ if ($_GET['uuid']) {
         $p->addTab("tablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         $p->addTab("tabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         $p->addTab("tablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
-        $p->addTab("tabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('uuid' => $machine->uuid, 'hostname' => $machine->hostname));
         $p->display();
     }
 } elseif ($_GET['gid']) {
@@ -77,7 +76,6 @@ if ($_GET['uuid']) {
             $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
         }
         $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
-        $p->addTab("grouptabhistory", _T("History", 'msc'), "", "modules/msc/msc/history.php", array('gid' => $_GET['gid']));
     }
     $p->display();
 } else {

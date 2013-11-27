@@ -54,7 +54,7 @@ function start_a_command($proxy = array()) {
         foreach ($_GET as $k => $v) {
             $url .= "$v=$k";
         }
-        header("Location: " . urlStrRedirect("msc/logs/logs_running", array_merge($_GET, $_POST, array('failure' => True))));
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array_merge($_GET, $_POST, array('failure' => True))));
         exit;
     }
     // Vars seeding

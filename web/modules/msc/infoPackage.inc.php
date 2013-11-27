@@ -53,10 +53,7 @@ if (!empty($submod)) {
     $page = new Page("consultAll", _T('All user commands', 'msc'));
     $submodmsc->addPage($page);
 
-    $page = new Page("logs_running", _T('Running commands log', 'msc'));
-    $submodmsc->addPage($page);
-
-    $page = new Page("logs_finished", _T('Finished commands log', 'msc'));
+    $page = new Page("viewLogs", _T('Commands logs', 'msc'));
     $submodmsc->addPage($page);
 
     $page = new Page("all", _T('Show all logs', 'msc'));
@@ -99,9 +96,6 @@ if (!empty($submod)) {
     $tab = new Tab("grouptablogs", _T("MSC logs tab for a group", "msc"));
     $page->addTab($tab);
 
-    $tab = new Tab("grouptabhistory", _T("MSC history tab for a group", "msc"));
-    $page->addTab($tab);
-
     $submod->addPage($page);
 
     $page = new Page("msctabs", _T("Secure control on computer", "msc"));
@@ -115,9 +109,6 @@ if (!empty($submod)) {
     $page->addTab($tab);
 
     $tab = new Tab("tablogs", _T("MSC logs tab for a machine", "msc"));
-    $page->addTab($tab);
-
-    $tab = new Tab("tabhistory", _T("MSC history tab for a machine", "msc"));
     $page->addTab($tab);
 
     $submod->addPage($page);

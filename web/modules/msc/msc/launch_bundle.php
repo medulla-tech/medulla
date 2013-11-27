@@ -105,7 +105,7 @@ if (isset($_POST["bconfirmproxy"])) {
     $orders = $sort->get_sort_order();
 
     $bundle_id = launch_bundle(array(), $orders, $gid, $proxy);
-    header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $gid, 'bundle_id' => $id_bundle[0])));
+    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'grouptablogs', 'gid' => $gid, 'bundle_id' => $id_bundle[0])));
     exit;
 }
 
@@ -157,7 +157,7 @@ if (isset($_GET['uuid']) and !isset($_GET['badvanced']) and !isset($_POST['launc
             } else {
                 $cible = array($machine->uuid);
                 $id_bundle = launch_bundle($cible, $orders);
-                header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'uuid' => $machine->uuid, 'hostname' => $machine->hostname, 'bundle_id' => $id_bundle[0])));
+                header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'grouptablogs', 'uuid' => $machine->uuid, 'hostname' => $machine->hostname, 'bundle_id' => $id_bundle[0])));
                 exit;
             }
             // stage 1: packages selection
@@ -187,7 +187,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
             exit;
         }
         // stage 3: user choosed to go into advanced mode
@@ -206,7 +206,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
         } else {
             $cible = array_map("onlyValues", $group->getResult(0, -1));
             $id_bundle = launch_bundle($cible, $orders, $group->id);
-            header("Location: " . urlStrRedirect("msc/logs/logs_running", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'grouptablogs', 'gid' => $group->id, 'bundle_id' => $id_bundle[0])));
             exit;
         }
         // stage 1: packages selection

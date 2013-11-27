@@ -58,7 +58,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
-    $action = "logs_running";
+    $action = "viewLogs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
         $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history);
@@ -69,7 +69,7 @@ if ($uuid) {
         list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
         $areCommands = True;
     }
-    $action = "logs_running";
+    $action = "viewLogs";
 
 
     $sum_running = intval($cmds[0][0]['sum_running']);
@@ -96,7 +96,7 @@ $actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", 
 $actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
 $actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
 $actionstatus->setWidth("400");
-$actiondetails = new ActionItem(_T("Details", "msc"), "logs_running", "display", "msc", "msc", "logs");
+$actiondetails = new ActionItem(_T("Details", "msc"), "viewLogs", "display", "msc", "msc", "logs");
 $actionempty = new EmptyActionItem();
 
 $a_start = array();
