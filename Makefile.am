@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 ACLOCAL_AMFLAGS = -I m4
-DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup
+DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup --disable-python-check
 
 SUBDIRS  = agent web
 
