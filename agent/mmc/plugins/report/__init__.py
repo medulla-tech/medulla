@@ -325,7 +325,7 @@ class RpcProxy(RpcProxyI):
                         data_dict['titles'].append(indent_str * (level + 1) + ' %s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
-                            other_value = (values[i] - child_sum) if child_sum else None
+                            other_value = (values[i] - child_sum) if child_sum and values[i] else None
                             data_dict['values'][i].append(other_value)
                 return GValues
             _fetchSubs(item_root)
