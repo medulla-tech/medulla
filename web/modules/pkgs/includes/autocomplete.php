@@ -50,12 +50,6 @@ class Autocomplete extends InputTpl {
         if ($this->extracriterion != ''){
             $extra = '+jQuery(\'#'.$this->extracriterion.'\').val()';
         }
-        file_put_contents('php://stderr', print_r("################# autocomplete.php::display #################\n", TRUE));
-        file_put_contents('php://stderr', print_r("criterion name:" . $this->criterion . '. extracriterion name:' . $this->extracriterion, TRUE));
-        file_put_contents('php://stderr', print_r("\n#################\n", TRUE));
-        file_put_contents('php://stderr', print_r($extra, TRUE));
-        file_put_contents('php://stderr', print_r("\n#################\n", TRUE));
-        
         ?>
 <script src="jsframework/lib/jquery.jqEasySuggest.min.js"
     type="text/javascript">
@@ -65,7 +59,6 @@ class Autocomplete extends InputTpl {
     jQuery(function(){
         jQuery('#<?php echo $this->name?>').jqEasySuggest({
             ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='<?php echo  $extra ?>,
-            //ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='+jQuery('#<?php echo  $this->extracriterion ?>').val(),
             min_keyword_length	: <?php echo $this->limit?>,
             showLoadingImage     : false,
             //focus_color		: "red",
