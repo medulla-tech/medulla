@@ -28,18 +28,7 @@ require("graph/navbar.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
-
-include ("modules/pkgs/includes/autocomplete.php");
-function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '') {
-    $module = clean ( quickGet ( 'req' ) );
-    $criterion = clean ( quickGet ( 'add_param' ) );
-    $auto = new Autocomplete ( $p [0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', "glpi", $field, $value = $pack [$p [0]]/*quickGet ( 'value' )*/, $limit, $extracriterion, $subedition );
-    $Form->add ( new TrFormElement ( $p [1], $auto, array (
-            "value" => $pack [$p [0]]
-    ) ) );
-    //     $Form->pop();
-}
-
+require_once("modules/pkgs/includes/query.php");
 
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -275,22 +264,7 @@ $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "dele
 
 /* =================   END FILE LIST   ===================== */
 
-/* =================    BEGIN QUERY    ===================== */
-$Fquery = new DivForModule(_T("Query","pkgs"));
-$Tquery = new Table();
-
-addQuery ( $Tquery, array ('Qvendor', _T ( 'Vendor', 'pkgs' )), $package, 'Vendors');
-addQuery ( $Tquery, array ('Qsoftware', _T ( 'Software', 'pkgs' )), $package, 'Installed+software', 3, Qvendor);
-addQuery ( $Tquery, array ('Qversion', _T ( 'Version', 'pkgs' )), $package , 'Software versions', 1, Qsoftware );
-$Fquery->push($Tquery);
-
-$f->push ( $Fquery );
-$Bool = new TrFormElement ( _T ( 'Bool', 'pkgs' ), new InputTpl ( 'boolcnd' ));
-$Bool->setStyle ( "display:none" );
-
-$f->add ( $Bool, array (
-        "value" => $package ['boolcnd']) );
-/* =================     END QUERY    ===================== */
+addQuerySection($f, $package);
 
 
 // =========================================================================

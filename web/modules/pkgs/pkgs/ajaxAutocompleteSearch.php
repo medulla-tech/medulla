@@ -30,9 +30,9 @@ $criterion = quickGet("criterion");
 $search = quickGet("data");
 $extracriterion = quickGet("extracriterion");
 
-file_put_contents('php://stderr', print_r("#################", TRUE));
+file_put_contents('php://stderr', print_r("################# ajaxAutocompleteSearch.php #################\n", TRUE));
 file_put_contents('php://stderr', print_r($extracriterion, TRUE));
-file_put_contents('php://stderr', print_r("#################", TRUE));
+file_put_contents('php://stderr', print_r("\n#################", TRUE));
 
 if (!$search) { $search = '' ; }
 
