@@ -118,13 +118,15 @@ foreach ($cmds as $item) {
     $start_dates[] = _toDate($start_date);
     $end_dates[] = _toDate($end_date);
     $a_creator[] = $creator;
-    $a_donepercent[] = $done_percent;
+
     $param = array('cmd_id' => $cmd_id, 'title' => $label, 'bundle_id' => $bid, 'from' => 'msc|logs|consult');
     $no_actions = False;
     if (!isset($bid) || $bid == '') {
+        $a_donepercent[] = $done_percent;
         $img = draw_image("modules/msc/graph/images/install_package.png", _T('Package', 'msc'));
     } else {
         $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('Bundle', 'msc'));
+        $a_donepercent[] = '-';
     }
     // If NOW> end_dates, we hide start/stop buttons
     if (mktime() > _toTimestamp($end_date))

@@ -1034,7 +1034,6 @@ class MscDatabase(DatabaseHelper):
             ret = {}
             session = create_session()
             for e in cohs:
-                logging.getLogger().warning(e)
                 # Loading coh phases
                 e[0].phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = e[1]).all()
                 e[0].phases = [phase.toDict() for phase in e[0].phases]

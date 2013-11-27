@@ -112,13 +112,36 @@ class Bundle {
         if (!strlen($this->db_bundle[0]['title'])) {
             $this->db_bundle[0]['title'] = "Bundle #" . $this->db_bundle[0]['id'];
         }
+
+        $bdl_done = $bdl_failed = $bdl_sum_failed = $bdl_running = $bdl_stopped = 0;
+
+        // Counting all commands sum
+        foreach ($this->db_bundle[1] as $cmd) {
+            $bdl_done += $cmd['sum_done'];
+            $bdl_failed += $cmd['sum_failed'];
+            $bdl_sum_failed += $cmd['sum_overtimed'];
+            $bdl_running += $cmd['sum_running'];
+            $bdl_stopped += $cmd['sum_stopped'];
+        }
+
+        $bdl_total = $bdl_done + $bdl_failed + $bdl_sum_failed + $bdl_running + $bdl_stopped;
+        if ($bdl_total != 0)
+            $bdl_percent = intval(100 * $bdl_done / $bdl_total) . '%';
+        else
+            $bdl_percent = '-';
+
         $n = new ListInfos(array($this->db_bundle[0]['title']), _T('Bundle', 'msc'));
-        $n->addExtraInfo(array(_toDate($this->db_bundle[0]['creation_date'])), _T('Creation date', 'msc'));
+        $n->addExtraInfo(array(_toDate($this->db_bundle[1][0]['start_date'])), _T('Start date', 'msc'));
+        $n->addExtraInfo(array(_toDate($this->db_bundle[1][0]['end_date'])), _T('End date', 'msc'));
+        $n->addExtraInfo(array($bdl_percent), _T('Bundle success percent', 'msc'));
+
+
         $n->setParamInfo(array($params));
         foreach ($actions as $a) {
             $n->addActionItem($a);
         }
         $n->drawTable(0);
+        print '<br/><br/>';
         return true;
     }
 

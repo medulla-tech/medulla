@@ -51,6 +51,7 @@ if (isset($_GET["commands"])) {
 }
 
 if ($uuid) {
+
     $hostname = $_GET['hostname'];
     if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
         list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'cmd_id' => $_GET['cmd_id'], 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
@@ -114,7 +115,6 @@ if ($areCommands) { // display several commands
         $coh = $cmd[3];
         $cmd = $cmd[0];
         $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'msc|logs|' . $action . '|' . $tab, 'gid' => $gid);
-
         ### gathering command components ###
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case
             $p['bundle_id'] = $cmd['bundle_id'];
@@ -216,6 +216,10 @@ if ($areCommands) { // display several commands
         if ($total_machines != 0)
             $done_percent = round(100 * $sum_done / $total_machines) . '%';
         else
+            $done_percent = '-';
+
+        // If bundle, no percent
+        if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id']))
             $done_percent = '-';
 
         $a_percent[] = $done_percent;
@@ -385,30 +389,36 @@ if ($areCommands) { // display several commands
     $n->end = $maxperpage;
     $n->disableFirstColumnActionLink();
 
-    $pieChart = new raphaelPie('deploy-pie');
 
-    $total = $sum_running + $sum_done + $sum_failed + $sum_stopped + $sum_overtimed;
-    $labels = array(
-        _T('Running', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_running / $total, $sum_running),
-        _T('Done', 'msc') . sprintf(' %d%% (%d)', 100 * $sum_done / $total, $sum_done),
-        _T('Failed', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_failed / $total, $sum_failed),
-        _T('Stopped', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_stopped / $total, $sum_stopped),
-        _T('Overtime', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_overtimed / $total, $sum_overtimed)
-    );
 
-    $pieChart->addData($sum_running, $labels[0], '000-#7991F2-#3D61F2');
-    $pieChart->addData($sum_done, $labels[1], '000-#1C9139-#105722');
-    $pieChart->addData($sum_failed, $labels[2], '000-#D93D11-#752008');
-    $pieChart->addData($sum_stopped, $labels[3], '000-#F2B87E-#ED7D0C');
-    $pieChart->addData($sum_overtimed, $labels[4], '000-#919191-#292829');
+    if (isset($sum_running)) {
 
-    $pieChart->legendpos = 'south';
-    $pieChart->title = _T('Deploy status', 'msc');
+        $pieChart = new raphaelPie('deploy-pie');
 
-    $mc = new multicol();
-    $mc->add($n)
-            ->add($pieChart, array('width' => '200px', 'padding' => '30px 0 0 0', 'valign' => 'top'))->display();
-    $DISPLAY_TABLE = FALSE;
+        $total = $sum_running + $sum_done + $sum_failed + $sum_stopped + $sum_overtimed;
+        $labels = array(
+            _T('Running', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_running / $total, $sum_running),
+            _T('Done', 'msc') . sprintf(' %d%% (%d)', 100 * $sum_done / $total, $sum_done),
+            _T('Failed', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_failed / $total, $sum_failed),
+            _T('Stopped', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_stopped / $total, $sum_stopped),
+            _T('Overtime', 'msc') . sprintf(' %d%%  (%d)', 100 * $sum_overtimed / $total, $sum_overtimed)
+        );
+
+
+        $pieChart->addData($sum_running, $labels[0], '000-#7991F2-#3D61F2');
+        $pieChart->addData($sum_done, $labels[1], '000-#1C9139-#105722');
+        $pieChart->addData($sum_failed, $labels[2], '000-#D93D11-#752008');
+        $pieChart->addData($sum_stopped, $labels[3], '000-#F2B87E-#ED7D0C');
+        $pieChart->addData($sum_overtimed, $labels[4], '000-#919191-#292829');
+
+        $pieChart->legendpos = 'south';
+        $pieChart->title = _T('Deploy status', 'msc');
+
+        $mc = new multicol();
+        $mc->add($n)
+                ->add($pieChart, array('width' => '200px', 'padding' => '30px 0 0 0', 'valign' => 'top'))->display();
+        $DISPLAY_TABLE = FALSE;
+    }
 }
 
 if ($n != null && $DISPLAY_TABLE) {
