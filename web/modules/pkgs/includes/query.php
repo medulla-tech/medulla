@@ -27,7 +27,11 @@ require_once ("modules/pkgs/includes/autocomplete.php");
 function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '') {
     $module = clean ( quickGet ( 'req' ) );
     $criterion = clean ( quickGet ( 'add_param' ) );
-    $auto = new Autocomplete ( $p [0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', "glpi", $field, $value = $pack [$p [0]]/*quickGet ( 'value' )*/, $limit, $extracriterion, $subedition );
+    file_put_contents('php://stderr', print_r("################# query.php #################\n", TRUE));
+    file_put_contents('php://stderr', print_r('extracriterion: ' . $extracriterion, TRUE));
+    file_put_contents('php://stderr', print_r("\n#################", TRUE));
+    
+    $auto = new Autocomplete ( $p [0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', "glpi", $field, $value = $pack [$p [0]]/*quickGet ( 'value' )*/, $limit, $extracriterion );
     $Form->add ( new TrFormElement ( $p [1], $auto, array (
             "value" => $pack [$p [0]]
     ) ) );

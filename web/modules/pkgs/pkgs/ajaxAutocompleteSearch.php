@@ -31,12 +31,20 @@ $search = quickGet("data");
 $extracriterion = quickGet("extracriterion");
 
 file_put_contents('php://stderr', print_r("################# ajaxAutocompleteSearch.php #################\n", TRUE));
+if (isset($_POST['extracriterion'])){
+    file_put_contents('php://stderr', print_r("################# isset(_POST[extracriterion]) #################\n", TRUE));
+}
+if (isset($_GET['extracriterion'])){
+    file_put_contents('php://stderr', print_r("################# isset(_GET[extracriterion]) #################\n", TRUE));
+}
+
 file_put_contents('php://stderr', print_r($extracriterion, TRUE));
-file_put_contents('php://stderr', print_r("\n#################", TRUE));
+file_put_contents('php://stderr', print_r("\n################\n#", TRUE));
 
 if (!$search) { $search = '' ; }
 
-$value1 = quickGet("value1");
+//$value1 = quickGet("value1");
+$value1 = $extracriterion;
 $res = array();
 if (strlen($search) >= 1) { //TODO: the limit should be passed as an argument, moreover it is already partly controlled by 'min keyword length' in autocomplete.php
     if (strlen($value1)) {

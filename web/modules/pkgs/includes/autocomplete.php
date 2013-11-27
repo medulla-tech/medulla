@@ -21,7 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 class Autocomplete extends InputTpl {
-    function Autocomplete($name, $ajaxfile, $module, $criterion, $value = '', $limit, $extracriterion, $edition = false) {
+    function Autocomplete($name, $ajaxfile, $module, $criterion, $value = '', $limit, $extracriterion = '', $edition = false) {
         parent::InputTpl ( $name );
         $this->ajaxfile = $ajaxfile;
         $this->module = $module;
@@ -44,8 +44,16 @@ class Autocomplete extends InputTpl {
         parent::display ( array (
                 "value" => $this->val 
         ) );
-        file_put_contents('php://stderr', print_r("################# autocomplete.php #################\n", TRUE));
-        file_put_contents('php://stderr', print_r("criterion name:" . $this->criterion . ' extracriterion name:' . $this->extracriterion, TRUE));
+        
+
+        $extra = '';
+        if ($this->extracriterion != ''){
+            $extra = '+jQuery(\'#'.$this->extracriterion.'\').val()';
+        }
+        file_put_contents('php://stderr', print_r("################# autocomplete.php::display #################\n", TRUE));
+        file_put_contents('php://stderr', print_r("criterion name:" . $this->criterion . '. extracriterion name:' . $this->extracriterion, TRUE));
+        file_put_contents('php://stderr', print_r("\n#################\n", TRUE));
+        file_put_contents('php://stderr', print_r($extra, TRUE));
         file_put_contents('php://stderr', print_r("\n#################\n", TRUE));
         
         ?>
@@ -56,9 +64,8 @@ class Autocomplete extends InputTpl {
 <script type="text/javascript">
     jQuery(function(){
         jQuery('#<?php echo $this->name?>').jqEasySuggest({
-            //ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion=value',
-            //ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='+extravalue,
-            ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='+jQuery('#<?php echo  $this->extracriterion ?>').val(),
+            ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='<?php echo  $extra ?>,
+            //ajax_file_path       : '<?php echo $this->ajaxfile?>&modulename=<?php echo  $this->module ?>&criterion=<?php echo  $this->criterion ?>&extracriterion='+jQuery('#<?php echo  $this->extracriterion ?>').val(),
             min_keyword_length	: <?php echo $this->limit?>,
             showLoadingImage     : false,
             //focus_color		: "red",

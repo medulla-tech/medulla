@@ -151,8 +151,8 @@ def getAllOs(ctx, value = ''):
 def getAllEntities(ctx, value = ''):
     return [x.name for x in Glpi().getAllEntities(ctx, value)]
 
-def getAllSoftwares(ctx, value = ''):
-    ret = unique([x.name for x in Glpi().getAllSoftwares(ctx, value)])
+def getAllSoftwares(ctx, value = '', vendor = None):
+    ret = unique([x.name for x in Glpi().getAllSoftwares(ctx, value, vendor)])
     ret.sort()
     return ret
 
@@ -217,6 +217,6 @@ def getAllSoftwareVendors(ctx, value = ''):
     res = Glpi().getAllSoftwareVendors(ctx, value)
     return unique([x.name for x in res])
 
-def getAllSoftwareVersions(ctx, value = ''):
-    res = Glpi().getAllSoftwareVersions(ctx, value)
+def getAllSoftwareVersions(ctx, value = '', software = None):
+    res = Glpi().getAllSoftwareVersions(ctx, value, software)
     return unique([x.name for x in res])

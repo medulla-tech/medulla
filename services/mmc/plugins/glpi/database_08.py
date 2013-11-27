@@ -2426,7 +2426,7 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwares(self, ctx, softname = ''):
+    def getAllSoftwares(self, ctx, vendor = None, softname = ''):
         """
         @return: all softwares defined in the GLPI database
         """
@@ -2437,7 +2437,8 @@ class Glpi08(DyngroupDatabaseHelper):
         query = query.select_from(
             self.software \
             .join(self.softwareversions) \
-            .join(self.inst_software)
+            .join(self.inst_software) \
+            .join(self.manufacturers)
         )
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(
@@ -2449,6 +2450,8 @@ class Glpi08(DyngroupDatabaseHelper):
                 )
             )
         )
+        if vendor:
+            query = query.filter(self.manufacturers.c.name == vendor)
 
         if softname != '':
             query = query.filter(self.software.c.name.like('%'+softname+'%'))
@@ -2659,16 +2662,19 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwareVersions(self, ctx, filt=''):
+    def getAllSoftwareVersions(self, ctx, software, filt=''):
         """ @return: all software versions defined in the GPLI database"""
         session = create_session()
         query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
         query = self.__filter_on_entity(query, ctx)
+        if software:
+            query = query.filter(self.software.c.name == software)
         if filt != '':
             query = query.filter(self.softwareversions.c.name.like('%' + filt + '%'))
         ret = query.group_by(self.softwareversions.c.name).all()
         session.close()
         return ret
+
     def getAllStates(self, ctx, filt = ''):
         """ @return: all machine models defined in the GLPI database """
         session = create_session()
