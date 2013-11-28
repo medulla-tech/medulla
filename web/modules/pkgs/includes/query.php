@@ -36,24 +36,22 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
 }
 function addQuerySection($Form, $p){
     /* ================= BEGIN QUERY ===================== */
-    $Fquery = new DivForModule ( _T ( "Query", "pkgs" ) );
-    $Tquery = new Table ();
+    $span = new SpanElement( _T ( "Query", "pkgs" ) , "pkgs-title");
+    $Form->add(new TrFormElement("", $span), array());
 
-    addQuery ( $Tquery, array (
+    addQuery ( $Form, array (
     'Qvendor',
     _T ( 'Vendor', 'pkgs' )
     ), $p, 'Vendors' );
-    addQuery ( $Tquery, array (
+    addQuery ( $Form, array (
     'Qsoftware',
     _T ( 'Software', 'pkgs' )
     ), $p, 'Installed+software', 3, 'Qvendor' );
-    addQuery ( $Tquery, array (
+    addQuery ( $Form, array (
     'Qversion',
     _T ( 'Version', 'pkgs' )
     ), $p, 'Software versions', 1, 'Qsoftware' );
-    $Fquery->push ( $Tquery );
 
-    $Form->push ( $Fquery );
     $Bool = new TrFormElement ( _T ( 'Bool', 'pkgs' ), new InputTpl ( 'boolcnd' ) );
     $Bool->setStyle ( "display:none" );
 
