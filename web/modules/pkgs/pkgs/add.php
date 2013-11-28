@@ -191,12 +191,12 @@ You may also ask Google for the silent installation switches. If you\'re feeling
         );
     }
 
-    foreach ( array ('Qvendor', 'Qsoftware', 'Qversion' ) as $k ) {
-        if (! isset($package[$k])) {
-            $package[$k] = '*' ;
+    foreach (array('Qvendor', 'Qsoftware', 'Qversion') as $k) {
+        if (!isset($package[$k])) {
+            $package[$k] = '*';
         }
     }
-    addQuerySection ( $f, $package );
+    addQuerySection($f, $package);
 
     $f->pop();
 
@@ -206,10 +206,10 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 ?>
 
 <script src="modules/pkgs/lib/fileuploader/fileuploader.js"
-    type="text/javascript"></script>
+type="text/javascript"></script>
 <!-- js for file upload -->
 <link href="modules/pkgs/lib/fileuploader/fileuploader.css"
-    rel="stylesheet" type="text/css">
+      rel="stylesheet" type="text/css">
 <!-- css for file upload -->
 
 <script type="text/javascript">
@@ -319,6 +319,9 @@ You may also ask Google for the silent installation switches. If you\'re feeling
             }
 
         });
+
+        // Set easySuggest on software field with the new ajax url
+        jQuery('#Qvendor').focusout(window.completeQsoftware);
 
     });
 <?php
