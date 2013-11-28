@@ -37,8 +37,6 @@ from pulse2.database.msc.config import MscDatabaseConfig
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
 from pulse2.apis import makeURL
 
-# Pulse 2 stuff
-import pulse2.time_intervals
 
 class MscConfig(MscDatabaseConfig):
     disable = True
