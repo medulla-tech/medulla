@@ -634,6 +634,11 @@ class Glpi07(DyngroupDatabaseHelper):
                 return base + [self.inst_software, self.softwareversions, self.software]
             else:
                 return base + [self.inst_software, self.licenses, self.software]
+        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+            if self.glpi_version_new():
+                return base + [self.inst_software, self.softwareversions, self.software, self.glpi_dropdown_manufacturer]
+            else:
+                return base + [self.inst_software, self.licences, self.software, self.glpi_dropdown_manufacturer]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -726,6 +731,11 @@ class Glpi07(DyngroupDatabaseHelper):
                 return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
             else:
                 return [[self.software.c.name, query[3][0]], [self.licenses.c.version, query[3][1]]]
+        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+            if self.glpi_version_new():
+                return [[self.glpi_dropdown_manufacturer.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
+            else:
+                return [[self.glpi_dropdown_manufacturer.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.licences.c.name, query[3][2]]]
         return []
 
 

@@ -773,6 +773,8 @@ class Glpi084(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software]
         elif query[2] == 'Installed software (specific version)':
             return base + [self.inst_software, self.softwareversions, self.software]
+        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+            return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -863,6 +865,8 @@ class Glpi084(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Installed software (specific version)': # TODO double join on Entity
             return [[self.software.c.name, query[3][0]], [self.softwareversions.c.name, query[3][1]]]
+        elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
+            return [[self.manufacturers.c.name, query[3][0]], [self.software.c.name, query[3][1]], [self.softwareversions.c.name, query[3][2]]]
         return []
 
 
