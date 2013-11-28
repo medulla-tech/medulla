@@ -28,14 +28,13 @@
 # big modules
 import logging
 import sqlalchemy
-import time
 import datetime
 
 # ORM mappings
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, stopCommandOnHost
 from pulse2.database.msc.orm.commands_on_host import CoHManager
 # Pulse 2 stuff
-import pulse2.time_intervals
+from pulse2.scheduler.timeaxis import LaunchTimeResolver
 
 class Commands(object):
     """ Mapping between msc.commands and SA
@@ -160,7 +159,7 @@ class Commands(object):
         if not self.deployment_intervals: # no interval given => always perform
             result = True
         else:
-            result = pulse2.time_intervals.intimeinterval(self.deployment_intervals, time.strftime("%H:%M:%S"))
+            result = LaunchTimeResolver().in_deployment_interval(self.deployment_intervals, datetime.datetime.today())
         if not result:
             logging.getLogger().debug("inDeploymentInterval(#%s): %s" % (self.id, result))
         return result

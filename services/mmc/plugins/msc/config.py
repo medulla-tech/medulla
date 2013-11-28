@@ -267,7 +267,7 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("web", "web_def_dlmaxbw"):
             self.web_def_dlmaxbw = self.cp.getint("web", "web_def_dlmaxbw")
         if self.cp.has_option("web", "web_def_deployment_intervals"):
-            time_intervals = pulse2.time_intervals.normalizeinterval(self.cp.get("web", "web_def_deployment_intervals"))
+            time_intervals = self.cp.get("web", "web_def_deployment_intervals")
             if time_intervals:
                 self.web_def_deployment_intervals = time_intervals
             else:

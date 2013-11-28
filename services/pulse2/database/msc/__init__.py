@@ -47,7 +47,6 @@ from mmc.database.database_helper import DatabaseHelper
 
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager
-import pulse2.time_intervals
 
 # Imported last
 import logging
@@ -233,7 +232,7 @@ class MscDatabase(DatabaseHelper):
         cmd.max_connection_attempt = max_connection_attempt
         #cmd.do_inventory = do_inventory
         cmd.maxbw = maxbw
-        cmd.deployment_intervals = pulse2.time_intervals.normalizeinterval(deployment_intervals)
+        cmd.deployment_intervals = deployment_intervals
         cmd.fk_bundle = fk_bundle
         cmd.order_in_bundle = order_in_bundle
         cmd.proxy_mode = proxy_mode # FIXME: we may add some code to check everything is OK

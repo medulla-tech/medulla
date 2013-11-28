@@ -181,20 +181,29 @@ class CommandsOnHost(object):
             return int(datetime.datetime.strptime(self.next_launch_date,"%Y-%m-%d %H:%M:%S").strftime("%s"))
 
     def is_out_of_attempts(self):
-        return self.attempts_failed == self.attempts_left
+        return self.attempts_failed == self.attempts_total
 
-### /Handle local proxy stuff ###
+    @property
+    def days_delta(self):
+        """ number of days between start date and end_date"""
+        return (self.end_date - self.start_date).days + 1
+    
+    @property
+    def attempts_total(self):
+        """ Total of attempts for all days """
+        return self.days_delta * self.attempts_left
+
 
 ### Misc state changes handling  ###
-    def reSchedule(self, delay, decrement):
+    def reSchedule(self, launch_date, decrement):
         """ Reschedule when something went wrong
             return True if processing can continue
             else return False
         """
         if decrement:
-            if self.attempts_left > self.attempts_failed :
+            if self.attempts_total > self.attempts_failed :
                 self.attempts_failed += 1
-        self.next_launch_date = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(time.time() + delay * 60))
+        self.next_launch_date = launch_date 
         self.flush()
         return True
 

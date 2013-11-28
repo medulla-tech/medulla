@@ -286,10 +286,9 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
 
-    commands_query = session.query(CommandsOnHost).\
+    commands_query = session.query(Commands, CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands)
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
-        ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(or_(database.commands.c.start_date == soon,
                      database.commands.c.start_date <= now)
@@ -311,7 +310,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         # using of descending order allows to favouring the commands
         # which state is approaching to end of worklow.
 
-    commands_to_perform = [q.id for q in commands_query.all()]
+    commands_to_perform = [coh.id for (cmd, coh) in commands_query.all() if cmd.inDeploymentInterval()]
  
     session.close()
     return commands_to_perform
@@ -326,7 +325,6 @@ def get_available_downloads(scheduler_name, hostname, mac):
     commands_query = session.query(CommandsOnHost, Commands, Target).\
         select_from(database.commands_on_host.join(database.commands).join(database.target)
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
-        ).filter(database.commands_on_host.c.attempts_left > database.commands_on_host.c.attempts_failed
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(or_(database.commands.c.start_date == soon,
                      database.commands.c.start_date <= now)
@@ -340,6 +338,8 @@ def get_available_downloads(scheduler_name, hostname, mac):
         
 
     for coh, cmd, target in commands_query.all():
+        if not cmd.inDeploymentInterval():
+            continue
         yield (coh.id, 
                target.mirrors,
                cmd.start_file,

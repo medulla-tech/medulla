@@ -59,6 +59,7 @@ from pulse2.scheduler.checks import getAnnounceCheck
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
 from pulse2.scheduler.stats import StatisticsProcessing
 from pulse2.scheduler.bundles import BundleReferences
+from pulse2.scheduler.timeaxis import LaunchTimeResolver
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
@@ -269,53 +270,6 @@ class PhaseBase (PhaseProxyMethodContainer):
     def failed(self):
         raise NotImplementedError
 
-    def calc_next_attempt_delay(self):
-        """
-        Schedules the next deploiment attempt.
-
-        This calcul is based on statistics of previous failed attempts.
-        The frequency of attempts has a parabolic progression, on other words
-        the occurence of attempts is more frequently on start and end 
-        of the lifecycle of command.
-        """
-        try :
-
-            attempts_total = self.coh.attempts_left
-            self.logger.debug("Number of failed attempts %d / %d" % (self.coh.attempts_failed, attempts_total))
-            now = time.time()
-            start_timestamp = time.mktime(self.cmd.start_date.timetuple())
-            end_timestamp = time.mktime(self.cmd.end_date.timetuple())
-
-            total_secs = end_timestamp - start_timestamp
-            # ---------* just for debug display *----------------- 
-            # TODO - determine DEBUG level from log.FileHandler...
-            self.logger.debug("Execution plan for CoH %s :" %str(self.coh.id))
-            _exec_plan = ParabolicBalance(attempts_total)
-            _deltas = map(lambda x: x * total_secs, _exec_plan.balances)
-            _next = start_timestamp
-            for _attempt_nbr, _delta in enumerate(_deltas) :
-                _next += _delta
-                _nxt_date = datetime.datetime.fromtimestamp(_next).strftime("%Y-%m-%d %H:%M:%S")
-                self.logger.debug("- next date : %s" % str(_nxt_date))
-            # -----------------------------------------------------
-            if self.coh.attempts_failed +1 <= attempts_total :
-                b = ParabolicBalance(attempts_total)
-                coef = b.balances[self.coh.attempts_failed] * 1.0
-                delay_in_seconds = coef * total_secs
-            else :
-                return 0
-
-            if now + delay_in_seconds + self.config.max_wol_time > end_timestamp :
-                delay_in_seconds = (end_timestamp - self.config.max_wol_time) - now 
-            delay = delay_in_seconds // 60
-
-
-            self.logger.debug("Next delay for CoH %s : + %s min" %(str(self.coh.id),str(delay)))
-            return delay
-
-        except Exception, e:
-            self.logger.error("Next delay calculation failed: %s"  % str(e))
-
 class Phase (PhaseBase):
     """ Main phase frame providing all the actions"""
 
@@ -464,8 +418,16 @@ class Phase (PhaseBase):
         @param decrement: decrements the number of failed attempts
         @type decrement: bool
         """
-        delay = self.calc_next_attempt_delay()
-        self.coh.reSchedule(delay, decrement)
+        ltr = LaunchTimeResolver(start_date=self.coh.start_date,
+                                 end_date=self.coh.end_date,
+                                 attempts_failed=self.coh.attempts_failed,
+                                 attempts_left=self.coh.attempts_left,
+                                 max_wol_time=self.config.max_wol_time,
+                                 deployment_intervals=self.cmd.deployment_intervals,
+                                 now=time.time()
+                                 )
+
+        self.coh.reSchedule(ltr.get_launch_date(), decrement)
         
         self.phase.switch_to_failed()
         if self.coh.is_out_of_attempts():
