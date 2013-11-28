@@ -92,7 +92,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if type(join_tab) == list:
                     for table in join_tab:
                         if table != join_query:
-                            join_q = join_q.join(table)
+                            join_q = join_q.outerjoin(table)
                 else:
                     join_q = join_q.join(join_tab)
 
@@ -129,7 +129,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if type(join_tab) == list:
                     for table in join_tab:
                         if table != join_query:
-                            join_q = join_q.join(table)
+                            join_q = join_q.outerjoin(table)
                 else:
                     join_q = join_q.join(join_tab)
 
@@ -172,7 +172,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 if type(join_tab) == list:
                     for table in join_tab:
                         if table != join_query:
-                            join_q = join_q.join(table)
+                            join_q = join_q.outerjoin(table)
                 else:
                     join_q = join_q.join(join_tab)
 
