@@ -669,6 +669,8 @@ class MscDatabase(DatabaseHelper):
         conn = self.getDbConnection()
         size2 = conn.execute(size2).fetchone()
 
+        #logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
+
 
         size = int(size1) + int(size2[0])
 
@@ -790,9 +792,17 @@ class MscDatabase(DatabaseHelper):
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
-            if params['b_id'] == None:
-                query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+            #if params['b_id'] == None:
+            #    query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+            pass
         query = self.__queryUsersFilter(ctx, query)
+
+        # Finished param
+        if 'finished' in params and params['finished'] == '1':
+            query = query.filter(self.commands.c.end_date <= func.now())
+        else:
+            query = query.filter(self.commands.c.end_date > func.now())
+
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
     def __doneBundle(self, params, session):
@@ -802,7 +812,7 @@ class MscDatabase(DatabaseHelper):
             filter = [self.commands.c.fk_bundle == params['b_id']]
         elif params['cmd_id'] != None:
             filter = [self.commands.c.id == params['cmd_id']]
-        filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
+        #filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
         query = query.filter(and_(*filter))
         how_much = query.count()
         if how_much > 0:
@@ -841,6 +851,12 @@ class MscDatabase(DatabaseHelper):
 
         if params['filt'] != None: # Filter on a commande names
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')) | self.target.c.target_name.like('%s%s%s' % ('%', params['filt'], '%')) )
+
+        # Finished param
+        if 'finished' in params and params['finished'] == '1':
+            filter.append(self.commands.c.end_date <= func.now())
+        else:
+            filter.append(self.commands.c.end_date > func.now())
 
         # Filtering on COH State
         if 'state' in params and params['state']:
