@@ -445,6 +445,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 # bundle banned excluding
                 if circuit.id in banned:
                     continue
+                if not circuit.cohq.cmd.inDeploymentInterval():
+                    circuit.release()
+                    continue
                 if circuit.network_address == group :
                     if count == total :
                         break

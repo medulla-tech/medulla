@@ -145,6 +145,7 @@ class MscQueryManager(MscContainer):
         circuits = [c for c in circuits
                                if c.qm.coh.get_next_launch_timestamp() < now
                                   and not c.qm.coh.is_out_of_attempts()
+                                  and not c.qm.cmd.inDeploymentInterval()
                                   and c.id not in banned
                    ]
         return circuits
