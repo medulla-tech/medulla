@@ -148,10 +148,10 @@
                 </item>
                 <item module="glpi" indicator="soft_count_office_2013" title="Microsoft Office 2013" selected="yes">
                     <item module="glpi" indicator="soft_count_office_2013_home_student" title="Microsoft Office Home and Student 2013" />
-                    <item module="glpi" indicator="soft_count_office_2010_home_business" title="Microsoft Office Home and Business 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_standard" title="Microsoft Office Standard 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_pro" title="Microsoft Office Professional 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_pro_plus" title="Microsoft Office Professional Plus 2010" />
+                    <item module="glpi" indicator="soft_count_office_2013_home_business" title="Microsoft Office Home and Business 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_standard" title="Microsoft Office Standard 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_pro" title="Microsoft Office Professional 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_pro_plus" title="Microsoft Office Professional Plus 2013" />
                 </item>
                 <item module="glpi" indicator="soft_count_office_mac_2004" title="Microsoft Office Mac 2004" />
                 <item module="glpi" indicator="soft_count_office_mac_2008" title="Microsoft Office Mac 2008" />
