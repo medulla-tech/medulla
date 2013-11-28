@@ -135,6 +135,17 @@ class Bundle {
         $n->addExtraInfo(array(_toDate($this->db_bundle[1][0]['end_date'])), _T('End date', 'msc'));
         $n->addExtraInfo(array($bdl_percent), _T('Bundle success percent', 'msc'));
 
+        $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
+        $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
+
+        $params['title'] = $this->db_bundle[0]['title'];
+        $params['bundle_id'] = $this->db_bundle[1][0]['fk_bundle'];
+        $params['from'] = 'msc|logs|viewLogs';
+        if (isset($_GET['uuid']))
+            $params['uuid'] = $_GET['uuid'];
+        if (isset($_GET['gid']))
+            $params['gid'] = $_GET['gid'];
+        //debug($this->db_bundle[1][0]['fk_bundle']);
 
         $n->setParamInfo(array($params));
         foreach ($actions as $a) {

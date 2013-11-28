@@ -84,9 +84,6 @@ if ($uuid) {
 $a_cmd = array();
 $a_date = array();
 $a_enddates = array();
-$a_uploaded = array();
-$a_executed = array();
-$a_deleted = array();
 $a_current = array();
 $a_percent = array();
 $params = array();
@@ -147,9 +144,6 @@ if ($areCommands) { // display several commands
                 (strlen($uuid) and strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) or
                 (strlen($gid) and !strlen($_GET['cmd_id']))
         ) {
-            $a_uploaded[] = '';
-            $a_executed[] = '';
-            $a_deleted[] = '';
             if (!$history) {
                 if (strlen($cmd['bundle_id']) and !strlen($_GET['bundle_id'])) {
                     $status = get_command_on_bundle_status($cmd['bundle_id']);
@@ -163,9 +157,6 @@ if ($areCommands) { // display several commands
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
             $a_current[] = '';
         } else {
-            $a_uploaded[] = '<img style="vertical-align: middle;" alt="' . $coh['uploaded'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['uploaded']) . '"/> ';
-            $a_executed[] = '<img style="vertical-align: middle;" alt="' . $coh['executed'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['executed']) . '"/> ';
-            $a_deleted[] = '<img style="vertical-align: middle;" alt="' . $coh['deleted'] . '" src="modules/msc/graph/images/status/' . return_icon($coh['deleted']) . '"/> ';
             if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
                 $coh['current_state'] = 'rescheduled';
             }
@@ -226,22 +217,18 @@ if ($areCommands) { // display several commands
     }
 
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
-    if (!$history) {
-        $n->addExtraInfo($a_date, _T("Start date", "msc"));
-        $n->addExtraInfo($a_enddates, _T("End date", "msc"));
-    }
+
+    $n->addExtraInfo($a_date, _T("Start date", "msc"));
+    $n->addExtraInfo($a_enddates, _T("End date", "msc"));
     $n->addExtraInfo($a_percent, _T("Success percent", "msc"));
     // If $a_current is empty, we don't display it
     if (count(array_filter($a_current, 'strlen')))
         $n->addExtraInfo($a_current, _T("Current state", "msc"));
-    /* $n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
-      $n->addExtraInfo($a_executed, _T("executed", "msc"));
-      $n->addExtraInfo($a_deleted, _T("deleted", "msc")); */
 
     $n->addActionItemArray($a_details);
     if (!$history) {
         $n->addActionItemArray($a_start);
-        $n->addActionItemArray($a_pause);
+        //$n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
     $n->addActionItemArray($a_status);
@@ -377,7 +364,7 @@ if ($areCommands) { // display several commands
     $n->addActionItemArray($a_details);
     if (!$history) {
         $n->addActionItemArray($a_start);
-        $n->addActionItemArray($a_pause);
+        //$n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
     $n->col_width = array("30px", "", "", "", "", "");

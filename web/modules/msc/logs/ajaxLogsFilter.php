@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -22,12 +21,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-/*require("../../../includes/PageGenerator.php");
-require("../../../includes/config.inc.php");
-require("../../../includes/i18n.inc.php");
-require("../../../includes/acl.inc.php");
-require("../../../includes/session.inc.php");*/
+/* require("../../../includes/PageGenerator.php");
+  require("../../../includes/config.inc.php");
+  require("../../../includes/i18n.inc.php");
+  require("../../../includes/acl.inc.php");
+  require("../../../includes/session.inc.php"); */
 
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
@@ -36,16 +34,16 @@ require_once("modules/msc/includes/command_history.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-$history = empty($_GET['history'])              ? ''    : $_GET['history'];
-$filter = empty($_GET["filter"])                ? ''    : $_GET['filter'];
-$start = empty($_GET["start"])                  ? 0     : $_GET["start"];
-$type = empty($_GET["type"])                    ? 0     : $_GET["type"];
-$current_state = empty($_GET['currentstate'])   ? ''    : $_GET['currentstate'];
-$from = empty($_GET["from"])                    ? ''    : $_GET["from"];
+$history = empty($_GET['history']) ? '' : $_GET['history'];
+$filter = empty($_GET["filter"]) ? '' : $_GET['filter'];
+$start = empty($_GET["start"]) ? 0 : $_GET["start"];
+$type = empty($_GET["type"]) ? 0 : $_GET["type"];
+$current_state = empty($_GET['currentstate']) ? '' : $_GET['currentstate'];
+$from = empty($_GET["from"]) ? '' : $_GET["from"];
 
 if (!empty($_GET["commands"]))
     setCommandsFilter($_GET["commands"]);
-    
+
 if ($type == -1) {
     $count = count_all_commandsonhost_by_currentstate($current_state, $filter);
     $cmds = get_all_commandsonhost_by_currentstate($current_state, $start, $start + $maxperpage, $filter);
@@ -56,17 +54,14 @@ if ($type == -1) {
 
 $a_cmd = array();
 $a_date = array();
-$a_uploaded = array();
-$a_executed = array();
-$a_deleted  = array();
-$a_current  = array();
+$a_current = array();
 $params = array();
 
-$actionplay = new ActionPopupItem(_T("Start", "msc"),"msctabsplay","start","msc", "base", "computers");
-$actionpause = new ActionPopupItem(_T("Pause", "msc"),"msctabspause","pause","msc", "base", "computers");
-$actionstop = new ActionPopupItem(_T("Stop", "msc"),"msctabsstop","stop","msc", "base", "computers");
-$actiondetails_logs = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tablogs');
-$actiondetails_hist = new ActionItem(_T("Details", "msc"),"msctabs","display","msc", "base", "computers", 'tabhistory');
+$actionplay = new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers");
+$actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", "msc", "base", "computers");
+$actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
+$actiondetails_logs = new ActionItem(_T("Details", "msc"), "msctabs", "display", "msc", "base", "computers", 'tablogs');
+$actiondetails_hist = new ActionItem(_T("Details", "msc"), "msctabs", "display", "msc", "base", "computers", 'tabhistory');
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
@@ -92,9 +87,7 @@ foreach ($cmds as $item) {
     }
 
     $a_cmd[] = sprintf(_T("%s on %s %s", 'msc'), $cmd['title'], $coh['host'], $bundle_str);
-    $a_uploaded[] ='<img style="vertical-align: middle;" alt="'.$coh['uploaded'].'" src="modules/msc/graph/images/status/'.return_icon($coh['uploaded']).'"/> ';
-    $a_executed[] ='<img style="vertical-align: middle;" alt="'.$coh['executed'].'" src="modules/msc/graph/images/status/'.return_icon($coh['executed']).'"/> ';
-    $a_deleted[] = '<img style="vertical-align: middle;" alt="'.$coh['deleted'].'" src="modules/msc/graph/images/status/'.return_icon($coh['deleted']).'"/> ';
+
     if ($coh['current_state'] == 'scheduled' && $cmd['max_connection_attempt'] != $coh['attempts_left']) {
         $coh['current_state'] = 'rescheduled';
     }
@@ -103,13 +96,25 @@ foreach ($cmds as $item) {
     } else {
         $a_current[] = $coh['current_state'];
     }
-    $params[] = array('coh_id'=>$coh_id, 'cmd_id'=>$cmd['id'], 'uuid'=>$target['target_uuid'], 'from'=>"msc|logs|$from", 'hostname'=>$target['target_name'], 'title'=>$cmd['title']);
+    $params[] = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'uuid' => $target['target_uuid'], 'from' => "msc|logs|$from", 'hostname' => $target['target_name'], 'title' => $cmd['title']);
 
 
     $icons = state_tmpl($coh['current_state']);
-    if ($icons['play'] == '') { $a_start[] = $actionempty; } else { $a_start[] = $actionplay; }
-    if ($icons['stop'] == '') { $a_stop[] = $actionempty; } else { $a_stop[] = $actionstop; }
-    if ($icons['pause'] == '') { $a_pause[] = $actionempty; } else { $a_pause[] = $actionpause; }
+    if ($icons['play'] == '') {
+        $a_start[] = $actionempty;
+    } else {
+        $a_start[] = $actionplay;
+    }
+    if ($icons['stop'] == '') {
+        $a_stop[] = $actionempty;
+    } else {
+        $a_stop[] = $actionstop;
+    }
+    if ($icons['pause'] == '') {
+        $a_pause[] = $actionempty;
+    } else {
+        $a_pause[] = $actionpause;
+    }
     if (isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) {
         $a_details[] = $actionempty;
     } elseif ($coh['current_state'] != 'done') {
@@ -130,9 +135,6 @@ if ($type == -1 || $type == 0) {
 $n = new OptimizedListInfos($a_date, $datelabel);
 $n->addExtraInfo($a_cmd, _T("Command", "msc"));
 $n->addExtraInfo($a_current, _T("Current state", "msc"));
-$n->addExtraInfo($a_uploaded, _T("uploaded", "msc"));
-$n->addExtraInfo($a_executed, _T("executed", "msc"));
-$n->addExtraInfo($a_deleted, _T("deleted", "msc"));
 
 $n->addActionItemArray($a_details);
 $n->addActionItemArray($a_start);
@@ -148,14 +150,12 @@ $n->start = 0;
 $n->end = $maxperpage;
 
 $n->display();
-
-
 ?>
 <!-- inject styles -->
 <link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />
 
 <style>
-li.pause_old a {
+    li.pause_old a {
         padding: 3px 0px 5px 20px;
         margin: 0 0px 0 0px;
         background-image: url("modules/msc/graph/images/stock_media-pause.png");
@@ -164,11 +164,11 @@ li.pause_old a {
         line-height: 18px;
         text-decoration: none;
         color: #FFF;
-}
-a.bundle {
-    text-decoration: none;
-    color: #222222;
-}
+    }
+    a.bundle {
+        text-decoration: none;
+        color: #222222;
+    }
 
 
 </style>
