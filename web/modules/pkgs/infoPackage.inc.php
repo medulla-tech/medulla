@@ -81,6 +81,11 @@ $page->setFile("modules/pkgs/pkgs/ajaxPackageList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("ajaxAutocompleteSearch");
+$page->setFile("modules/pkgs/pkgs/ajaxAutocompleteSearch.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

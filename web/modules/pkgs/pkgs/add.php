@@ -26,6 +26,7 @@ require("graph/navbar.inc.php");
 
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
+require_once("modules/pkgs/includes/query.php");
 
 $p = new PageGenerator(_T("Add package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -45,7 +46,7 @@ if (isset($_POST['bconfirm'])) {
         $level = 1;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'mode') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware', 'Qversion', 'boolcnd') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -190,6 +191,13 @@ You may also ask Google for the silent installation switches. If you\'re feeling
         );
     }
 
+    foreach ( array ('Qvendor', 'Qsoftware', 'Qversion' ) as $k ) {
+        if (! isset($package[$k])) {
+            $package[$k] = '*' ;
+        }
+    }
+    addQuerySection ( $f, $package );
+
     $f->pop();
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
@@ -197,8 +205,12 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 }
 ?>
 
-<script src="modules/pkgs/lib/fileuploader/fileuploader.js" type="text/javascript"></script> <!-- js for file upload -->
-<link href="modules/pkgs/lib/fileuploader/fileuploader.css" rel="stylesheet" type="text/css"> <!-- css for file upload -->
+<script src="modules/pkgs/lib/fileuploader/fileuploader.js"
+    type="text/javascript"></script>
+<!-- js for file upload -->
+<link href="modules/pkgs/lib/fileuploader/fileuploader.css"
+    rel="stylesheet" type="text/css">
+<!-- css for file upload -->
 
 <script type="text/javascript">
     jQuery(function() { // load this piece of code when page is loaded

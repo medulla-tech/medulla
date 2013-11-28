@@ -99,6 +99,14 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
+            query = root.getElementsByTagName('query')
+            queries = {'Qvendor': '*', 'Qsoftware': '*', 'Qversion': '*', 'boolcnd': '*'}
+            if query.length >= 1 and query[0].firstChild:
+                for k in queries:
+                    tmp = query[0].getElementsByTagName(k)
+                    if tmp.length >= 1 and tmp[0].firstChild:
+                        queries[k] = tmp[0].firstChild.wholeText.strip()
+
             p = Package()
             p.init(
                 pid,
@@ -111,7 +119,11 @@ class PackageParserXML:
                 cmds['preCommand'],
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
-                reboot
+                reboot,
+                queries['Qvendor'],
+                queries['Qsoftware'],
+                queries['Qversion'],
+                queries['boolcnd']
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -198,11 +210,27 @@ class PackageParserXML:
 
         docr.appendChild(commands)
 
+        query = doc.createElement('query')
+        Qvendor = doc.createElement('Qvendor')
+        Qvendor.appendChild(doc.createTextNode(package.Qvendor))
+        query.appendChild(Qvendor)
+        Qsoftware = doc.createElement('Qsoftware')
+        Qsoftware.appendChild(doc.createTextNode(package.Qsoftware))
+        query.appendChild(Qsoftware)
+        Qversion = doc.createElement('Qversion')
+        Qversion.appendChild(doc.createTextNode(package.Qversion))
+        query.appendChild(Qversion)
+        boolcnd = doc.createElement('boolcnd')
+        boolcnd.appendChild(doc.createTextNode(package.boolcnd))
+        query.appendChild(boolcnd)
+        
+        docr.appendChild(query)
+
         return doc.toprettyxml(encoding = 'utf-8')
 
     def doctype(self):
         return """
-    <!ELEMENT package (name,version,description?,commands,files?)>
+    <!ELEMENT package (name,version,description?,commands,files?, group?)>
     <!ATTLIST package id ID #REQUIRED>
 
     <!ELEMENT name (#PCDATA)>
@@ -229,6 +257,11 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
+    <!ELEMENT query (Qvendor, Qsoftware, Qversion, boolnd)>
+    <!ELEMENT Qvendor (#PCDATA)>
+    <!ELEMENT Qsoftware (#PCDATA)>
+    <!ELEMENT Qversion (#PCDATA)>
+    <!ELEMENT boolcnd (#PCDATA)>
 """
 
 

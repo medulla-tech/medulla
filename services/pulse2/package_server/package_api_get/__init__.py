@@ -118,6 +118,18 @@ class PackageApiGet(MyXmlrpc):
     def xmlrpc_getPackageHasToReboot(self, pid):
         return Common().package(pid, self.mp).reboot
 
+    def xmlrpc_getPackageQvendor(self, pid):
+        return Common().package(pid, self.mp).Qvendor
+
+    def xmlrpc_getPackageQsoftware(self, pid):
+        return Common().package(pid, self.mp).Qsoftware
+
+    def xmlrpc_getPackageQversion(self, pid):
+        return Common().package(pid, self.mp).Qversion
+
+    def xmlrpc_getPackageBoolcnd(self, pid):
+        return Common().package(pid, self.mp).boolcnd
+
     def xmlrpc_getPackageFiles(self, pid): # TODO remove the internals
         return map(lambda x: x.toH(), Common().package(pid, self.mp).files.internals)
 

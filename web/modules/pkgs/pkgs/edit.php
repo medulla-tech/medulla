@@ -28,6 +28,7 @@ require("graph/navbar.inc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
+require_once("modules/pkgs/includes/query.php");
 
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
@@ -48,7 +49,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'boolcnd') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -262,6 +263,9 @@ $n->setParamInfo($params); // Setting url params
 $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "delete", "filename", "pkgs", "pkgs", _T('Are you sure you want to delete this file?', 'pkgs')));
 
 /* =================   END FILE LIST   ===================== */
+
+addQuerySection($f, $package);
+
 
 // =========================================================================
 // UPLOAD FORM

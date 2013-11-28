@@ -96,7 +96,7 @@ class Package:
         self.files = AFiles()
         self.specifiedFiles = []
 
-    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0):
+    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0, Qvendor = '', Qsoftware = '', Qversion = '', boolcnd = ''):
         self.label = label
         self.version = version
         self.size = size
@@ -111,6 +111,10 @@ class Package:
         self.reboot = reboot
         self.id = id
         self.root = ''
+        self.Qvendor = Qvendor
+        self.Qsoftware = Qsoftware
+        self.Qversion = Qversion
+        self.boolcnd = boolcnd
 
     def addFile(self, file):
         self.files.append(file)
@@ -137,7 +141,11 @@ class Package:
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
             'reboot':self.reboot,
-            'files':self.files.toH()
+            'files':self.files.toH(),
+            'Qvendor':self.Qvendor,
+            'Qsoftware':self.Qsoftware,
+            'Qversion':self.Qversion,
+            'boolcnd':self.boolcnd
         }
         if self.root != '':
             # The package root is decoded using the current encoding to get a Python
@@ -192,6 +200,14 @@ class Package:
         self.root = ''
         if h.has_key('basepath'):
             self.root = h['basepath']
+        if h.has_key('Qvendor'):
+            self.Qvendor = h['Qvendor']
+        if h.has_key('Qsoftware'):
+            self.Qsoftware = h['Qsoftware']
+        if h.has_key('Qversion'):
+            self.Qversion = h['Qversion']
+        if h.has_key('boolcnd'):
+            self.boolcnd = h['boolcnd']
         return self
 
     def equal(self, p):

@@ -2334,7 +2334,7 @@ class Glpi07(DyngroupDatabaseHelper):
         return ret
 
     # TODO ! maybe you need to link on machine here, or you need to add some liberties in the previous query
-    def getAllSoftwares(self, ctx, softname = ''):
+    def getAllSoftwares(self, ctx, softname = '', vendor = None):
         """
         @return: all softwares defined in the GLPI database
         """
@@ -2550,6 +2550,16 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.group_by(self.glpi_dropdown_manufacturer.c.name).all()
         session.close()
         return ret
+
+    def getAllSoftwareVendors(self, ctx, filt=''):
+        """ @return: all software vendors defined in the GPLI database"""
+        logging.debug('datbase_07.getAllSoftwareVendors')
+        pass
+
+    def getAllSoftwareVersions(self, ctx, software, filt=''):
+        """ @return: all software versions defined in the GPLI database"""
+        logging.debug('datbase_07.getAllSoftwareVendors')
+        pass
 
     def getAllStates(self, ctx, filt = ''):
         """ @return: all machine states defined in the GLPI database """
