@@ -96,7 +96,9 @@ class Package:
         self.files = AFiles()
         self.specifiedFiles = []
 
-    def init(self, id, label, version, size, description, cmd, initcmd = '', precmd = '', postcmd_ok = '', postcmd_ko = '', reboot = 0, Qvendor = '', Qsoftware = '', Qversion = '', boolcnd = ''):
+    def init(self, id, label, version, size, description, cmd, initcmd='',
+             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, Qvendor='',
+             Qsoftware='', Qversion='', boolcnd='', licenses=''):
         self.label = label
         self.version = version
         self.size = size
@@ -115,6 +117,7 @@ class Package:
         self.Qsoftware = Qsoftware
         self.Qversion = Qversion
         self.boolcnd = boolcnd
+        self.licenses = licenses
 
     def addFile(self, file):
         self.files.append(file)
@@ -145,7 +148,8 @@ class Package:
             'Qvendor':self.Qvendor,
             'Qsoftware':self.Qsoftware,
             'Qversion':self.Qversion,
-            'boolcnd':self.boolcnd
+            'boolcnd':self.boolcnd,
+            'licenses': self.licenses
         }
         if self.root != '':
             # The package root is decoded using the current encoding to get a Python
@@ -208,6 +212,8 @@ class Package:
             self.Qversion = h['Qversion']
         if h.has_key('boolcnd'):
             self.boolcnd = h['boolcnd']
+        if h.has_key('licenses'):
+            self.licenses = h['licenses']
         return self
 
     def equal(self, p):
