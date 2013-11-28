@@ -38,6 +38,9 @@ if (!isset($_skipPage)) {
     $p->display();
 }
 
+// Breadcrumb div (to be fill by javascript
+print '<br/><div id="breadcrumb"></div><br/>';
+
 // ajax refresh div according to history var
 $divName = isset($_history) ? 'divHistory' : 'divLogs';
 
@@ -50,6 +53,7 @@ if (strlen($_GET['uuid'])) {
      */
     if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) { # bundle display
         $bdl = new Bundle($_GET['bundle_id']);
+        displayBreadCrumb();
         $act = $bdl->quickDisplay();
         if ($act) {
             //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs&action=msctabs");
@@ -77,11 +81,13 @@ if (strlen($_GET['uuid'])) {
 
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
+            displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
         print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $coh = new CommandOnHost($coh_id);
+        displayBreadCrumb();
         $coh->quickDisplay();
         $ch = new CommandHistory($coh_id);
         $ch->display();
@@ -93,6 +99,7 @@ if (strlen($_GET['uuid'])) {
 
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
+            displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
         print "<hr/><br/>";
@@ -102,6 +109,7 @@ if (strlen($_GET['uuid'])) {
         $coh_ids = get_command_on_host_in_commands($_GET['cmd_id']);
         $coh_id = $coh_ids[0]; # we know there is only one because we are in uuid (one machine)
         $coh = new CommandOnHost($coh_id);
+        displayBreadCrumb();
         $coh->quickDisplay();
         $ch = new CommandHistory($coh_id);
         $ch->display();
@@ -129,6 +137,7 @@ if (strlen($_GET['uuid'])) {
      */
     if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle
         $bdl = new Bundle($_GET['bundle_id']);
+        displayBreadCrumb();
         $act = $bdl->quickDisplay();
         if ($act) {
             $params = array(
@@ -156,6 +165,7 @@ if (strlen($_GET['uuid'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
             // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
+            displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
 
@@ -164,9 +174,11 @@ if (strlen($_GET['uuid'])) {
         }
         // display the selected command
         $cmd = new Command($_GET['cmd_id']);
+        displayBreadCrumb();
         // Don't display command table only COH table
         // display the selected command on host
         $coh = new CommandOnHost($_GET['coh_id']);
+        displayBreadCrumb();
         $coh->quickDisplay(array(), $params); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
         // display the command on host details
         print "<hr/><br/>";
@@ -185,6 +197,7 @@ if (strlen($_GET['uuid'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
             // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
+            displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
             $bdlink = "&bundle_id=" . $_GET['bundle_id'];
         }
@@ -194,6 +207,7 @@ if (strlen($_GET['uuid'])) {
         }
         // display just the selected command
         $cmd = new Command($_GET['cmd_id']);
+        displayBreadCrumb();
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts

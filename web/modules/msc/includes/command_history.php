@@ -33,8 +33,8 @@ class CommandOnHost {
         $this->db_coh = get_commands_on_host($coh);
         $this->db_cmd = command_detail($this->db_coh['fk_commands']);
         $this->values = array(
-            array(_T('Host', 'msc'), $this->db_coh['host'], 1),
             array(_T('Command name', 'msc'), $this->db_cmd['title'], 1),
+            array(_T('Host', 'msc'), $this->db_coh['host'], 1),
             array(_T('Start date', 'msc'), _toDate($this->db_cmd['start_date']), 1),
             array(_T('End date', 'msc'), _toDate($this->db_cmd['end_date']), 1),
                 //array(_T('Current State', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
@@ -46,6 +46,8 @@ class CommandOnHost {
                   array(_T('rebooted', 'msc'), _plusIcon($this->db_coh['rebooted']), 1),
                   array(_T('halted', 'msc'), _plusIcon($this->db_coh['halted']), 1) */
         );
+        // Add this page to breadcrumb
+        addtoBreadcrumb($this->db_cmd['title'] . _T(' on ', 'msc') . $this->db_coh['host']);
     }
 
     function display() {
@@ -80,6 +82,7 @@ class CommandOnHost {
                 }
             }
         }
+
         $n->setParamInfo(array($params));
         $n->disableFirstColumnActionLink();
         $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
@@ -98,6 +101,7 @@ class Bundle {
 
     function Bundle($bundle_id) {
         $this->db_bundle = bundle_detail($bundle_id);
+        addtoBreadcrumb($this->db_bundle[0]['title']);
         if (!$this->db_cmd) { # use does not have the good permissions
             return false;
         }
@@ -130,6 +134,7 @@ class Bundle {
         else
             $bdl_percent = '-';
 
+
         $n = new ListInfos(array($this->db_bundle[0]['title']), _T('Bundle', 'msc'));
         $n->addExtraInfo(array(_toDate($this->db_bundle[1][0]['start_date'])), _T('Start date', 'msc'));
         $n->addExtraInfo(array(_toDate($this->db_bundle[1][0]['end_date'])), _T('End date', 'msc'));
@@ -137,6 +142,7 @@ class Bundle {
 
         $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
         $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
+        $n->disableFirstColumnActionLink();
 
         $params['title'] = $this->db_bundle[0]['title'];
         $params['bundle_id'] = $this->db_bundle[1][0]['fk_bundle'];
@@ -181,6 +187,8 @@ class Command {
             array(_T('Command start date', 'msc'), _toDate($this->db_cmd['start_date']), 0),
             array(_T('Command expiry date', 'msc'), _toDate($this->db_cmd['end_date']), 0),
         );
+        // Adding to breadcrumb
+        addtoBreadcrumb($this->db_cmd['title']);
     }
 
     function display() {
@@ -188,10 +196,8 @@ class Command {
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
             return false;
-        }
-        $name = array_map("_names", $this->values);
+        } $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
-
         $n = new ListInfos($name, _T('Name', 'msc'));
         $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($this->values));
@@ -271,6 +277,7 @@ class CommandHistory {
         if (!$this->db_cmd) { # use does not have the good permissions
             $widget = new RenderedMSCCommandDontExists();
             $widget->display();
+
             return;
         }
 
@@ -280,8 +287,7 @@ class CommandHistory {
                 $validity = sprintf(_T('<i>from</i> %s <i>to</i> %s', 'msc'), _toDate($this->db_cmd['start_date']), _toDate($this->db_cmd['end_date']));
             else
                 $validity = sprintf(_T('<i>from</i> %s', 'msc'), _toDate($this->db_cmd['start_date']));
-        else
-        if ($this->db_cmd['end_date'])
+        else if ($this->db_cmd['end_date'])
             $validity = sprintf(_T('<i>to</i> %s', 'msc'), _toDate($this->db_cmd['end_date']));
         else
             $validity = _T('<i>forever</i>', 'msc');
@@ -331,7 +337,6 @@ class CommandHistory {
             $proxy_priority = _T('None (Local Proxy Client)', 'msc');
         else
             $proxy_priority = sprintf(_T('%s (Local Proxy Server)', 'msc'), $this->db_coh['order_in_proxy']);
-
         if ($this->db_cmd['proxy_mode'] == 'split')
             $proxy_mode = _T('Multiple', 'msc');
         elseif ($this->db_cmd['proxy_mode'] == 'queue')
@@ -419,7 +424,6 @@ class CommandHistory {
             }
             $raw_errors = array_map('_colorise', array_filter($hist["stderr"]));
             $purge_errors = array();
-
             foreach ($raw_errors as $error)
                 if (isset($error))
                     array_push($purge_errors, $error);
@@ -432,9 +436,7 @@ class CommandHistory {
         $phases = $this->db_coh['phases'];
         $phase_labels = getPhaseLabels();
 
-        $hidden_phases = array(
-            'done'
-        );
+        $hidden_phases = array('done');
 
         $phase_names = array();
         $phase_dates = array();
@@ -474,7 +476,6 @@ class CommandHistory {
 
                 $phase_dates[] = $last_try_time;
                 $phase_logs[] = '';
-
                 continue;
             }
 
@@ -490,7 +491,6 @@ class CommandHistory {
             $text .= "</div>";
             $f = new NotifyWidget(FALSE);
             $f->add($text, FALSE);
-
 
             $divid = $phase['name'] . '_log';
             printf('<div id="%s" style="display:none">%s</div>', $divid, $f->begin() . $f->content() . $f->end());
@@ -539,8 +539,6 @@ class CommandHistory {
         $n->drawTable(0);
         print "<br/>";
 
-
-
         ### Display command environment ###
         $values = array(
             array(_T('Reserved bandwidth', 'msc'), $this->db_cmd['maxbw'] == '0' ? _T('<i>none</i>', 'msc') : prettyOctetDisplay($this->db_cmd['maxbw'], 1024, _T('bit/s', 'msc'))),
@@ -560,6 +558,7 @@ class CommandHistory {
 
         # display command history
         # display log files
+
         $statusTable = getStatusTable();
         $i = 1;
     }
@@ -624,13 +623,11 @@ function _toTimestamp($a) {
     $asap = array(1970, 1, 1, 0, 0, 0);
 
     if (is_array($a) && (count($a) == 6 || count($a) == 9)) {
-
         if (count(array_diff(array_slice($a, 0, 6), $never)) == 0)
             return _T('Never', 'msc');
 
         if (count(array_diff(array_slice($a, 0, 6), $asap)) == 0)
             return _T('As soon as possible', 'msc');
-
         return mktime($a[3], $a[4], $a[5], $a[1], $a[2], $a[0]);
     } else
         return 0;

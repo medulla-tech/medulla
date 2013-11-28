@@ -33,6 +33,9 @@ $p = new PageGenerator('');
 $p->setSideMenu($sidemenu);
 $p->display();
 
+// Reset Breadcrumb
+$_SESSION['msc_breadcrumb'] = array();
+
 print '<h2>' . _T('Current tasks', 'msc') . '</h2>';
 
 //

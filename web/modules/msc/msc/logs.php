@@ -22,6 +22,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+// Reset Breadcrumb
+$_SESSION['msc_breadcrumb'] = array();
+
 // Tab mode
 $_skipPage = 1;
 

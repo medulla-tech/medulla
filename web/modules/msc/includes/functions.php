@@ -333,4 +333,66 @@ function getPhaseStatesLabels() {
     );
 }
 
+function addtoBreadcrumb($title, $link = '') {
+
+    if ($link == '') {
+        $link = $_SERVER['QUERY_STRING'];
+    }
+    // If the item already exists, exit
+    foreach ($_SESSION['msc_breadcrumb'] as $item)
+        if ($title == $item[0]) {
+            return;
+        }
+
+    $_SESSION['msc_breadcrumb'][] = array($title, $link, 1);
+}
+
+function displayBreadCrumb() {
+
+    $unset = 0;
+    // Setting current link
+    for ($i = 0; $i < count($_SESSION['msc_breadcrumb']); $i++) {
+
+        if ($unset == 1) {
+            unset($_SESSION['msc_breadcrumb'][$i]);
+            continue;
+        }
+
+        if ($_SESSION['msc_breadcrumb'][$i][1] == $_SERVER['QUERY_STRING']) {
+            $_SESSION['msc_breadcrumb'][$i][2] = 1;
+
+            // We are on a parent element, delete all childs
+            $unset = 1;
+        } else {
+            $_SESSION['msc_breadcrumb'][$i][2] = 0;
+        }
+    }
+
+    $breadcrum = json_encode($_SESSION['msc_breadcrumb']);
+
+    print <<<EOS
+    <script type="text/javascript">
+        jQuery(function(){
+            // Clear breadcrumb div
+            jQuery('#breadcrumb').html('');
+
+            // Generating links
+            var breadcrumb = $breadcrum, links = [];
+
+            for (var i = 0; i < breadcrumb.length ; i++) {
+                if (breadcrumb[i][2] == 1)
+                    links.push('<a href="#" style="color:#0B5AB0">'+breadcrumb[i][0]+'</a>');
+                else
+                    links.push('<a style="color:#333" href="main.php?'+ breadcrumb[i][1] +'">'+ breadcrumb[i][0] +'</a>');
+            }
+
+            jQuery('#breadcrumb').append(links.join(' &gt; '));
+            jQuery('#breadcrumb li:first').addClass('first');
+            jQuery('#breadcrumb li:last').addClass('last');
+
+        });
+    </script>
+EOS;
+}
+
 ?>
