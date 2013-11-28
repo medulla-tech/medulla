@@ -74,7 +74,7 @@ class MscDatabase(DatabaseHelper):
         self.logger.info("Msc database is connecting")
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, \
-		pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
+                pool_size = self.config.dbpoolsize, pool_timeout = self.config.dbpooltimeout, convert_unicode = True)
         if not self.db_check():
             return False
         self.metadata = MetaData(self.db)
@@ -785,8 +785,8 @@ class MscDatabase(DatabaseHelper):
             query = query.filter(self.target.c.target_uuid == params['uuid'])
         if params['filt'] != None:
             query = query.filter(self.commands.c.title.like('%'+params['filt']+'%'))
-        if params['finished']:
-            query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
+        #if params['finished']:
+        #    query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
@@ -848,12 +848,12 @@ class MscDatabase(DatabaseHelper):
 
         if params['b_id'] == None:
             is_done = self.__doneBundle(params, session)
-            if params['finished'] and not is_done: # Filter on finished commands only
-                filter.append(1 == 0) # send nothing
-            elif not params['finished'] and is_done:
+            #if params['finished'] and not is_done: # Filter on finished commands only
+            #    filter.append(1 == 0) # send nothing
+            #elif not params['finished'] and is_done:
                 # If we are querying on a bundle, we also want to display the
                 # commands_on_host flagged as done
-                filter.append(1 == 0) # send nothing
+            #    filter.append(1 == 0) # send nothing
 #        else:
 #            is_done = self.__doneBundle(params, session)
 #            self.logger.debug("is the bundle done ? %s"%(str(is_done)))
@@ -890,26 +890,6 @@ class MscDatabase(DatabaseHelper):
                 continue
             if fk_bundle != 'NULL' and fk_bundle != None and not defined.has_key(fk_bundle):
                 defined[fk_bundle] = id
-                if 'finished' in params and params['finished']:
-                    # Check that the bundle has all its commands_on_host set
-                    # to state done or failed.
-                    session = create_session()
-                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))).count()
-                    session.close()
-                    if count_query > 0:
-                        # Some CoH are not in the done or failed states, so
-                        # we won't display this bundle.
-                        continue
-                else:
-                    # Check that the bundle has all its commands_on_host set
-                    # to state done or failed.
-                    session = create_session()
-                    count_query = session.query(CommandsOnHost).select_from(self.commands_on_host.join(self.commands)).filter(self.commands.c.fk_bundle == fk_bundle).filter(not_(self.commands_on_host.c.current_state.in_( ('done', 'failed', 'over_timed') ))).count()
-                    session.close()
-                    if count_query == 0:
-                        # Some CoH are not in the done or failed states, so
-                        # we won't display this bundle.
-                        continue
                 ids.append(id)
                 i += 1
             elif fk_bundle == 'NULL' or fk_bundle == None:
@@ -940,8 +920,8 @@ class MscDatabase(DatabaseHelper):
             params['min'] = 0
         if not params.has_key('max'):
             params['max'] = -1
-        if not params.has_key('finished') or params['finished'] == '':
-            params['finished'] = False
+        #if not params.has_key('finished') or params['finished'] == '':
+        #    params['finished'] = False
         try:
             params['order_by'] = getattr(self.commands_on_host.c, params['order_by'])
         except:
@@ -971,8 +951,7 @@ class MscDatabase(DatabaseHelper):
                 ret = self.__displayLogsQuery(ctx, params, session).order_by(asc(params['order_by'])).all()
                 cmds = []
                 for c in ret:
-                    if self.__doneBundle({'cmd_id':c.id, 'b_id':None}, session) and params['finished'] or not self.__doneBundle({'cmd_id':c.id, 'b_id':None}, session) and not params['finished']:
-                        cmds.append((c.id, c.fk_bundle))
+                    cmds.append((c.id, c.fk_bundle))
 
                 size = []
                 size.extend(cmds)
@@ -1292,15 +1271,15 @@ class MscDatabase(DatabaseHelper):
                 if isinstance(f[1], str): # f[1] must be a list
                     f[1] = [f[1]]
                 if len(f) == 3:
-		    if isinstance(f[2], bool):
-			if f[2]:
-                    	    query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
-			else:
+                    if isinstance(f[2], bool):
+                        if f[2]:
+                                query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
+                        else:
                             query = query.filter(not_(getattr(self.commands_on_host.c, f[0]).in_(f[1])))
                     elif f[2] == '<=':
-                    	query = query.filter(getattr(self.commands_on_host.c, f[0]) <= f[1][0])
+                            query = query.filter(getattr(self.commands_on_host.c, f[0]) <= f[1][0])
                     elif f[2] == '>=':
-                    	query = query.filter(getattr(self.commands_on_host.c, f[0]) >= f[1][0])
+                            query = query.filter(getattr(self.commands_on_host.c, f[0]) >= f[1][0])
                 else:
                     query = query.filter(getattr(self.commands_on_host.c, f[0]).in_(f[1]))
             return int(query.scalar())
@@ -1328,37 +1307,37 @@ class MscDatabase(DatabaseHelper):
         stopped = self.__getAllStatus()['stopped']
         paused = self.__getAllStatus()['paused']
         success = self.__getAllStatus()['success']
-	now = time.strftime("%Y-%m-%d %H:%M:%S")
+        now = time.strftime("%Y-%m-%d %H:%M:%S")
 
         sec_up = self.getStateLen(query, [
-	    ["current_state", ["over_timed"], False],
-	    ["end_date", [now], '>='],
-	    ["current_state", paused, False],
-	    ["current_state", stopped, False],
+            ["current_state", ["over_timed"], False],
+            ["end_date", [now], '>='],
+            ["current_state", paused, False],
+            ["current_state", stopped, False],
             ["attempts_left", [0], False],
             ["uploaded", ["FAILED"]],
         ])
         sec_ex = self.getStateLen(query, [
-	    ["current_state", ["over_timed"], False],
-	    ["end_date", [now], '>='],
-	    ["current_state", paused, False],
-	    ["current_state", stopped, False],
+            ["current_state", ["over_timed"], False],
+            ["end_date", [now], '>='],
+            ["current_state", paused, False],
+            ["current_state", stopped, False],
             ["attempts_left", [0], False],
             ["executed", ["FAILED"]],
         ])
         sec_rm = self.getStateLen(query, [
-	    ["current_state", ["over_timed"], False],
-	    ["end_date", [now], '>='],
-	    ["current_state", paused, False],
-	    ["current_state", stopped, False],
+            ["current_state", ["over_timed"], False],
+            ["end_date", [now], '>='],
+            ["current_state", paused, False],
+            ["current_state", stopped, False],
             ["attempts_left", [0], False],
             ["deleted", ["FAILED"]],
         ])
         sec_inv = self.getStateLen(query, [
-	    ["current_state", ["over_timed"], False],
-	    ["end_date", [now], '>='],
-	    ["current_state", paused, False],
-	    ["current_state", stopped, False],
+            ["current_state", ["over_timed"], False],
+            ["end_date", [now], '>='],
+            ["current_state", paused, False],
+            ["current_state", stopped, False],
             ["attempts_left", [0], False],
             ["inventoried", ["FAILED"]],
         ])
