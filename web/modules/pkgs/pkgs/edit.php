@@ -298,3 +298,9 @@ $f->addValidateButton("bcreate");
 
 $f->display();
 ?>
+<script type="text/javascript">
+    jQuery(function() { // load this piece of code when page is loaded
+        // Set easySuggest on software field with the new ajax url
+        jQuery('#Qvendor').focusout(window.completeQsoftware);
+    });
+</script>
