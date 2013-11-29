@@ -68,7 +68,7 @@ class CommandOnHost {
             'bundle_id' => $_GET['bundle_id'],
             'coh_id' => $_GET['coh_id'],
             'uuid' => $_GET['uuid'],
-            'from' => 'msc|logs|consult',
+            'from' => 'msc|logs|viewLogs',
             'tab' => 'tablogs',
             'hostname' => $this->db_coh['host']
                 )
@@ -227,7 +227,7 @@ class Command {
         $params = array_merge($params, array(
             'cmd_id' => $_GET['cmd_id'],
             'gid' => $_GET['gid'],
-            'from' => 'msc|logs|consult'
+            'from' => 'msc|logs|viewLogs'
                 )
         );
 

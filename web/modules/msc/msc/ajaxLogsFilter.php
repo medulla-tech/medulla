@@ -29,7 +29,6 @@ require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/command_history.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
-
 $DISPLAY_TABLE = TRUE;
 
 $filter = $_GET["filter"];
@@ -121,7 +120,10 @@ if ($areCommands) { // display several commands
         $coh_id = $cmd[1];
         $coh = $cmd[3];
         $cmd = $cmd[0];
-        $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'msc|logs|' . $action . '|' . $tab, 'gid' => $gid);
+        if ($history == '')
+            $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'msc|logs|viewLogs', 'gid' => $gid);
+        else
+            $p = array('tab' => $tab, 'hostname' => $hostname, 'uuid' => $uuid, 'from' => 'base|computers|groupmsctabs|grouptablogs', 'gid' => $gid);
         ### gathering command components ###
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id'])) { // BUNDLE case
             $p['bundle_id'] = $cmd['bundle_id'];
@@ -176,7 +178,7 @@ if ($areCommands) { // display several commands
             } else {
                 $a_current[] = $coh['current_state'];
             }
-            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
+            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'from' => 'msc|logs|viewLogs', 'gid' => $gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
@@ -336,7 +338,7 @@ if ($areCommands) { // display several commands
 
 
             $a_current[] = $global_state;
-            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $coh['host'], 'from' => 'base|computers|' . $action . '|' . $tab, 'gid' => $gid);
+            $p = array('coh_id' => $coh_id, 'cmd_id' => $cmd['id'], 'tab' => $tab, 'uuid' => $uuid, 'hostname' => $coh['host'], 'from' => 'msc|logs|viewLogs', 'gid' => $gid);
             if (strlen($cmd['bundle_id'])) {
                 $p['bundle_id'] = $cmd['bundle_id'];
             }
