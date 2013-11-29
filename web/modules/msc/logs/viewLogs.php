@@ -42,7 +42,7 @@ if (!isset($_skipPage)) {
 print '<br/><div id="breadcrumb"></div><br/>';
 
 // ajax refresh div according to history var
-$divName = isset($_history) ? 'divHistory' : 'divLogs';
+$divName = (isset($_history) && $_history == '1') ? 'divHistory' : 'divLogs';
 
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
@@ -65,7 +65,7 @@ if (strlen($_GET['uuid'])) {
             );
 
             if (isset($_history))
-                $params['history'] = 1;
+                $params['history'] = $_history;
 
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
 
@@ -77,7 +77,7 @@ if (strlen($_GET['uuid'])) {
         $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
@@ -95,7 +95,7 @@ if (strlen($_GET['uuid'])) {
         $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         if (strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
@@ -123,7 +123,7 @@ if (strlen($_GET['uuid'])) {
         );
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
         $ajax->setRefresh(web_def_refresh_time());
@@ -148,7 +148,7 @@ if (strlen($_GET['uuid'])) {
             );
 
             if (isset($_history))
-                $params['history'] = 1;
+                $params['history'] = $_history;
 
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
             $ajax->display();
@@ -159,7 +159,7 @@ if (strlen($_GET['uuid'])) {
         $params = array('cmd_id' => $_GET['cmd_id'], 'tab' => $_GET['tab'], 'gid' => $_GET['gid']);
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         if (strlen($_GET['bundle_id'])) {
             $params['bundle_id'] = $_GET['bundle_id'];
@@ -190,7 +190,7 @@ if (strlen($_GET['uuid'])) {
         $params = array('tab' => $_GET['tab'], 'gid' => $_GET['gid']);
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         $bdlink = '';
         if (strlen($_GET['bundle_id'])) {
@@ -220,7 +220,7 @@ if (strlen($_GET['uuid'])) {
             );
 
             if (isset($_history))
-                $params['history'] = 1;
+                $params['history'] = $_history;
 
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
             $ajax->display();
@@ -237,7 +237,7 @@ if (strlen($_GET['uuid'])) {
         );
 
         if (isset($_history))
-            $params['history'] = 1;
+            $params['history'] = $_history;
 
         $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
         $ajax->display();

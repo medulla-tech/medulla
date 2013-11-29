@@ -800,7 +800,7 @@ class MscDatabase(DatabaseHelper):
         # Finished param
         if 'finished' in params and params['finished'] == '1':
             query = query.filter(self.commands.c.end_date <= func.now())
-        else:
+        elif 'finished' in params and params['finished'] == '0':
             query = query.filter(self.commands.c.end_date > func.now())
 
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
@@ -855,7 +855,7 @@ class MscDatabase(DatabaseHelper):
         # Finished param
         if 'finished' in params and params['finished'] == '1':
             filter.append(self.commands.c.end_date <= func.now())
-        else:
+        elif 'finished' in params and params['finished'] == '0':
             filter.append(self.commands.c.end_date > func.now())
 
         # Filtering on COH State

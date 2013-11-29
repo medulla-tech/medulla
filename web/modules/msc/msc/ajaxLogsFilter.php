@@ -27,7 +27,6 @@ require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/command_history.php");
-
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -54,20 +53,31 @@ if ($uuid) {
 
     $hostname = $_GET['hostname'];
     if (strlen($_GET['bundle_id']) or strlen($_GET['cmd_id'])) {
-        list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'cmd_id' => $_GET['cmd_id'], 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
+        $_params = array('uuid' => $uuid, 'cmd_id' => $_GET['cmd_id'], 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
+        if ($history == 1 || $history == 0)
+            $_params['finished'] = $history;
+        list($count, $cmds) = displayLogs($_params);
     } else {
-        list($count, $cmds) = displayLogs(array('uuid' => $uuid, 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
+        $_params = array('uuid' => $uuid, 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
+        if ($history == 1 || $history == 0)
+            $_params['finished'] = $history;
+        list($count, $cmds) = displayLogs($_params);
         $areCommands = True;
     }
     $action = "viewLogs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
-        $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history);
+        $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
+        if ($history == 1 || $history == 0)
+            $_params['finished'] = $history;
         if (isset($_GET['cbx_state']))
             $_params['state'] = $_GET['cbx_state'];
         list($count, $cmds) = displayLogs($_params);
     } else {
-        list($count, $cmds) = displayLogs(array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter, 'finished' => $history));
+        $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
+        if ($history == 1 || $history == 0)
+            $_params['finished'] = $history;
+        list($count, $cmds) = displayLogs($_params);
         $areCommands = True;
     }
     $action = "viewLogs";

@@ -29,6 +29,7 @@ $_SESSION['msc_breadcrumb'] = array();
 $_skipPage = 1;
 
 // Current commands
+$_history = 0;
 print '<h2>' . _T('Current tasks', 'msc') . '</h2>';
 include "modules/msc/logs/viewLogs.php";
 
