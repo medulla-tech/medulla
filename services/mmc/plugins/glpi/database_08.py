@@ -2492,10 +2492,17 @@ class Glpi08(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
 
-        query = query.filter(self.software.c.name == name)
-        if version:
+        if '%' in name:
+            query = query.filter(self.software.c.name.like(name))
+        else:
+            query = query.filter(self.software.c.name == name)
+        if version and '%' in version:
+            query = query.filter(self.softwareversions.c.name.like(version))
+        elif version:
             query = query.filter(self.softwareversions.c.name == version)
-        if vendor:
+        if vendor and '%' in vendor:
+            query = query.filter(self.manufacturers.c.name.like(vendor))
+        elif vendor:
             query = query.filter(self.manufacturers.c.name == vendor)
 
         if int(count) == 1:
