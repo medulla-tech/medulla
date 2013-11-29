@@ -159,13 +159,11 @@
             </item>
         </table>
         <table type="period" title="Software installations" name="table_soft" chart_type="line">
-            <item module="glpi" indicator="soft_count" title="softwares">
-                <item module="glpi" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
-                    <item module="glpi" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
-                </item>
-                <item module="glpi" indicator="soft_count_business_objects" title="Business Objects" />
-                <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
+            <item module="glpi" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
+                <item module="glpi" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
             </item>
+            <item module="glpi" indicator="soft_count_business_objects" title="Business Objects" />
+            <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
         </table>
         <table type="period" title="Computer types" name="table_types" chart_type="bar">
             <item module="glpi" indicator="type_count" title="types">

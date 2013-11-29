@@ -843,15 +843,6 @@
         />
         <!-- Other softwares -->
         <indicator
-            name="soft_count"
-            label="Software"
-            request_function="getComputerCountBySoftwares"
-            params="'*'"
-            data_type="0"
-            active="1"
-            keep_history="1"
-        />
-        <indicator
             name="soft_count_photoshop"
             label="Adobe Photoshop"
             request_function="getComputerCountBySoftwares"
