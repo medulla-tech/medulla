@@ -63,7 +63,10 @@ if (!array_intersect_key($_POST, array('generate_report' => '', 'get_xls' => '',
     list($list, $values) = getEntitiesSelectableElements();
     $entities->setElements($list);
     $entities->setElementsVal($values);
-    $entities->setFullHeight();
+    if (count($list) > 15)
+        $entities->setHeight(15);
+    else
+        $entities->setFullHeight();
     $f->add(
         new TrFormElement(_T('Entities', 'report'), $entities),
         array("required" => true));
