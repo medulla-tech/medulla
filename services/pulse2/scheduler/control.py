@@ -35,7 +35,6 @@ from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import get_ids_to_start, get_commands
-from pulse2.scheduler.dlp import DownloadQuery
 
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
@@ -149,7 +148,7 @@ class MethodProxy(MscContainer):
                  circuit = [c for c in self.get_valid_waitings() if c.id == id]
             else :
                  self.logger.debug("Aborted execution of method <%s> (Circuit #%d)" % (name, id))
-            return None
+            return False 
 
         if hasattr(circuit.running_phase, "proxy_methods"):
             px_dict = getattr(circuit.running_phase, "proxy_methods")
@@ -167,27 +166,11 @@ class MethodProxy(MscContainer):
                  result = method(circuit.running_phase, args)
 
                 circuit.phase_process(result)
-                return "OK"
+                return True
+        return False
 
 
-    def get_available_downloads(self, hostname, mac):
-        """
-        Gets the all available downloads for the requested machine.
-
-        @param hostname: hostname of computer
-        @type hostname: str
-
-        @param mac: MAC address of computer
-        @type mac: str
-
-        @return: list of available download URLs
-        @rtype: list
-        """
-        dq = DownloadQuery(self.config)
-        return dq.get_available_downloads(hostname, mac)
-                         
-
-
+ 
 class MscDispatcher (MscQueryManager, MethodProxy):
     """Core of scheduler """
             
