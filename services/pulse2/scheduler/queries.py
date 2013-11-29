@@ -291,6 +291,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         select_from(database.commands_on_host.join(database.commands)
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
         ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(database.commands_on_host.c.pull_mode == 0
         ).filter(or_(database.commands.c.start_date == soon,
                      database.commands.c.start_date <= now)
         ).filter(or_(database.commands.c.end_date == soon,
@@ -327,6 +328,7 @@ def __available_downloads_query(scheduler_name, uuid):
         select_from(database.commands_on_host.join(database.commands).join(database.target)
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
         ).filter(database.commands_on_host.c.next_launch_date <= now
+        ).filter(database.commands_on_host.c.pull_mode == 1
         ).filter(or_(database.commands.c.start_date == soon,
                      database.commands.c.start_date <= now)
         ).filter(or_(database.commands.c.end_date == soon,
