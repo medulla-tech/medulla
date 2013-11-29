@@ -42,6 +42,7 @@ from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 from pulse2.database.msc.orm.target import Target
+from pulse2.database.msc.orm.pull_targets import PullTargets
 from pulse2.database.msc.orm.bundle import Bundle
 from mmc.database.database_helper import DatabaseHelper
 
@@ -112,6 +113,12 @@ class MscDatabase(DatabaseHelper):
                 self.metadata,
                 autoload = True
             )
+            # pull_targets
+            self.pull_targets = Table(
+                "pull_targets",
+                self.metadata,
+                autoload = True
+            )
             # bundle
             self.bundle = Table(
                 "bundle",
@@ -150,6 +157,7 @@ class MscDatabase(DatabaseHelper):
         """
         mapper(CommandsHistory, self.commands_history)
         mapper(CommandsOnHostPhase, self.commands_on_host_phase)
+        mapper(PullTargets, self.pull_targets)
         mapper(CommandsOnHost, self.commands_on_host, properties = {
             'historys' : relation(CommandsHistory),
             }
