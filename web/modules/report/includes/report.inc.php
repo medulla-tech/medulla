@@ -161,15 +161,16 @@ class ReportIndicator extends HtmlContainer {
         $this->title = $indicator['title'];
         $this->level = $level;
         $this->selected = isset($indicator['selected']) ? $indicator['selected'] : "no";
+        $this->hidden = isset($indicator['hidden']) ? $indicator['hidden'] : "no";
         foreach($indicator['items'] as $indicator) {
             $this->elements[] = new ReportIndicator($indicator, ($this->level + 1));
         }
     }
 
     function display() {
-        // Dont show the first level
+        // Dont show hidden indicators
         // Only used to calculate "other" value
-        if ($this->level > 0) {
+        if ($this->hidden == "no") {
             echo '<div class="report-indicators report-indicator-level-' . $this->level .'" style="margin-left: 15px;';
             if ($this->level > 1)
                 echo 'display: none;';
@@ -188,7 +189,7 @@ class ReportIndicator extends HtmlContainer {
             foreach ($this->elements as $element)
                 $element->display();
         }
-        if ($this->level > 0) {
+        if ($this->hidden == "no") {
             echo '</div>';
         }
     }
