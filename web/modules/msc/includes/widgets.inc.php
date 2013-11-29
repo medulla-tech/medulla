@@ -387,15 +387,15 @@ class AjaxFilterCommands extends AjaxFilter {
                 </span>&nbsp;
 
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
-                                return false;" />
+                        return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                                         pushSearch<?php echo $this->divid; ?>();
-                                         return false;" />
+                                 pushSearch<?php echo $this->divid; ?>();
+                                 return false;" />
                 </span>
 
 
-                <?php if (isset($_GET['cmd_id'], $_GET['gid']) && !isset($_GET['bundle_id'])) { ?>
+                <?php if (isset($_GET['cmd_id'], $_GET['gid']) && !(isset($_GET['bundle_id']) && $_GET['bundle_id'])) { ?>
                     <!-- <form id="cbx_form"> -->
                     <span class="searchfield">
                         <br/>
@@ -555,11 +555,11 @@ class AjaxFilterCommandsStates extends AjaxFilter {
                 </span>&nbsp;
 
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
-                                return false;" />
+                        return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                                         pushSearch();
-                                         return false;" />
+                                 pushSearch();
+                                 return false;" />
                 </span>
             </div>
 
