@@ -47,7 +47,7 @@ if (!isset($command_type))
 
 $params = array(
     'expired' => 0,
-    'command' => $command_type,
+    'commands' => $command_type,
     'divID' => 'divRunning'
 );
 
@@ -66,7 +66,7 @@ print '<h2>' . _T('Expired tasks', 'msc') . '</h2>';
 
 $params = array(
     'expired' => 1,
-    'command' => $command_type,
+    'commands' => $command_type,
     'divID' => 'divExpired'
 );
 
