@@ -1,95 +1,95 @@
 h1
 {
- font-size: 14px;
- padding: 6px;
- border: 1px dotted #FF3300;
- background-color: #f9f3f2;
+    font-size: 14px;
+    padding: 6px;
+    border: 1px dotted #FF3300;
+    background-color: #f9f3f2;
 }
 
 
 ul.sshd
 {
- list-style-image: url(/mmc/modules/msc/graph/images/cub4.gif);
+    list-style-image: url(/mmc/modules/msc/graph/images/cub4.gif);
 }
 
 li
 {
- margin: 5px;
+    margin: 5px;
 }
 
 form
 {
- margin-left: 10px;
- padding: 0;
+    margin-left: 10px;
+    padding: 0;
 }
 
 input, select
 {
-  margin-left: 5px;
-  vertical-align: middle;
+    margin-left: 5px;
+    vertical-align: middle;
 }
 
 input[type=image]
 {
- border: 0;
- vertical-align: middle;
+    border: 0;
+    vertical-align: middle;
 }
 
 input:hover
 {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 table * .filter
 {
- text-align: left;
+    text-align: left;
 }
 
 img
 {
- vertical-align: bottom;
+    vertical-align: bottom;
 }
 
 .iconified
 {
-  width: 35px;
-  text-align: center;
+    width: 35px;
+    text-align: center;
 }
 
 .group_iconified
 {
- width: 125px;
- text-align: center;
+    width: 125px;
+    text-align: center;
 }
 
 .group_iconified img
 {
- margin: 0px 2px;
+    margin: 0px 2px;
 }
 
 .row_size
 {
- text-align: right;
+    text-align: right;
 }
 
 .background0
 {
- background-color: #fce6e0;
+    background-color: #fce6e0;
 }
 
 .background1
 {
- background-color: #dddddd;
+    background-color: #dddddd;
 }
 
 /* used to center all the page */
 #sshd_center
 {
-  left: 50%;
-  margin-left: -350px;
-  padding: 0px;
-  position: relative;
-  width: 680px;
+    left: 50%;
+    margin-left: -350px;
+    padding: 0px;
+    position: relative;
+    width: 680px;
 }
 
 /* hack to don't have some probleme
@@ -97,14 +97,14 @@ img
   and the footer of the page */
 #sshd_center hr
 {
-  clear: both;
-  visibility: hidden;
+    clear: both;
+    visibility: hidden;
 }
 
 #sshd_center p
 {
- margin: 0;
- padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 
@@ -112,515 +112,515 @@ img
   you can find some data as the hostname */
 #sshd_exp_header
 {
-  background-color: #f9f3f2;
-  border: 1px solid #E9EEF1;
-  margin: 0;
-  padding: 7px;
-  position: relative;
-  width: 680px;
+    background-color: #f9f3f2;
+    border: 1px solid #E9EEF1;
+    margin: 0;
+    padding: 7px;
+    position: relative;
+    width: 680px;
 }
 
 /* used for the hostname where you're
    connected */
 #sshd_exp_header h1
 {
-  background-color: none;
-  border: none;
-  color: #000;
-  font-size: 18px;
-  font-weight: bold;
-  margin: 0;
-  text-align: center;
+    background-color: none;
+    border: none;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    text-align: center;
 }
 
 
 /* the directory list */
 #sshd_dir_list, #sshd_key_list
 {
-  background-color: #f9f3f2;
-  border: 1px solid #E9EEF1;
-  float: left;
-  margin: 15px 0px;
-  overflow: auto;
-  padding-left: 10px;
-  width: 140px;
+    background-color: #f9f3f2;
+    border: 1px solid #E9EEF1;
+    float: left;
+    margin: 15px 0px;
+    overflow: auto;
+    padding-left: 10px;
+    width: 140px;
 }
 
 #sshd_key_list
 {
- width: 200px;
- font-size: 10px;
- margin: 15px 0 0 -1px;
+    width: 200px;
+    font-size: 10px;
+    margin: 15px 0 0 -1px;
 }
 
 #sshd_dir_list ul, #sshd_key_list ul
 {
-  list-style-image: url(/mmc/modules/msc/graph/images/folder.png);
-  margin-left: 7px;
-  padding-left: 7px;
+    list-style-image: url(/mmc/modules/msc/graph/images/folder.png);
+    margin-left: 7px;
+    padding-left: 7px;
 }
 
 #sshd_dir_list ul li, #sshd_key_list ul li
 {
-  list-style-image: url(/mmc/modules/msc/graph/images/folder.png);
-  margin: 0 0.5em;
-  padding-left: 0 0.5em;
+    list-style-image: url(/mmc/modules/msc/graph/images/folder.png);
+    margin: 0 0.5em;
+    padding-left: 0 0.5em;
 }
 
 #sshd_dir_list ul li.open, #sshd_key_list ul li.open
 {
-  list-style-image: url(/mmc/modules/msc/graph/images/folder_open.png);
+    list-style-image: url(/mmc/modules/msc/graph/images/folder_open.png);
 }
 
 #sshd_dir_list ul li.open a, #sshd_key_list ul li.open a
 {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 #sshd_dir_list ul li.active,  #sshd_key_list ul li.active
 {
-  list-style-image: url(/mmc/modules/msc/graph/images/folder_open.png);
+    list-style-image: url(/mmc/modules/msc/graph/images/folder_open.png);
 }
 
 #sshd_dir_list ul li.active a,  #sshd_key_list ul li.active a
 {
-  font-style: italic;
-  font-weight: bold;
+    font-style: italic;
+    font-weight: bold;
 }
 
 #sshd_dir_list * a:link, #sshd_dir_list * a:active,
 #sshd_dir_list * a:visited
 {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 /* used to display the
    current directory */
 #sshd_cur_dir
 {
-  background-color: #f9f3f2;
-  border: 1px dotted #FF3300;
-  margin: 15px 0 0 165px;
-  padding-left: 10px;
-  width: 520px;
+    background-color: #f9f3f2;
+    border: 1px dotted #FF3300;
+    margin: 15px 0 0 165px;
+    padding-left: 10px;
+    width: 520px;
 }
 
 .reg#sshd_cur_dir
 {
- margin: 15px 0 0 225px;
- width: 455px;
+    margin: 15px 0 0 225px;
+    width: 455px;
 }
 
 #sshd_cur_dir h1, #sshd_cur_key h1
 {
-  border: none;
-  background-color: none;
-  font-size: 14px;
-  margin: 5px;
+    border: none;
+    background-color: none;
+    font-size: 14px;
+    margin: 5px;
 }
 
 #sshd_cur_dir img, #sshd_cur_key h1
 {
-  vertical-align: bottom;
+    vertical-align: bottom;
 }
 
 /* block to display all files
    in current directory */
 #sshd_list_file
 {
-  border: 1px solid #E9EEF1;
-  margin: 15px 0 0 165px;
-  width: 530px;
+    border: 1px solid #E9EEF1;
+    margin: 15px 0 0 165px;
+    width: 530px;
 }
 
 .reg#sshd_list_file
 {
- margin: 15px 0 0 225px;
- width: 464px;
+    margin: 15px 0 0 225px;
+    width: 464px;
 }
 
 #sshd_list_file table
 {
-  border : 1px solid #fff;
-  font-size: 10px;
-  margin: 0;
-  text-align: center;
-  width: 100%;
+    border : 1px solid #fff;
+    font-size: 10px;
+    margin: 0;
+    text-align: center;
+    width: 100%;
 }
 
 #sshd_list_file th
 {
- background-color: #E0E0E0;
- border: 1px solid #fff;
- color: red;
+    background-color: #E0E0E0;
+    border: 1px solid #fff;
+    color: red;
 }
 
 
 
 #sshd_list_file td
 {
- border: 1px solid #fff;
+    border: 1px solid #fff;
 }
 
 #sshd_list_file input
 {
- margin: 0;
- padding: 0 6px;
+    margin: 0;
+    padding: 0 6px;
 }
 
 /* block displaying explorer
  * advenced actions */
 #sshd_exp_advactions
 {
-  background-color: #fce6e0;
-  border: 1px dotted #FF3300;
-  margin: 15px 0 0 165px;
-  padding: 0px 10px;
-  width: 510px;
+    background-color: #fce6e0;
+    border: 1px dotted #FF3300;
+    margin: 15px 0 0 165px;
+    padding: 0px 10px;
+    width: 510px;
 }
 
 #sshd_exp_advactions table *
 {
-  text-align: left;
+    text-align: left;
 }
 
 .reg#sshd_exp_advactions
 {
- margin: 15px 0 0 225px;
- width: 444px;
+    margin: 15px 0 0 225px;
+    width: 444px;
 }
 
 #sshd_exp_advactions form
 {
- margin: 0;
- padding: 0px
+    margin: 0;
+    padding: 0px
 }
 
 #sshd_exp_advactions input
 {
- margin: 8px 4px;
- padding: 0px;
+    margin: 8px 4px;
+    padding: 0px;
 }
 
 .sshd_info#sshd_exp_advactions
 {
- border: 1px solid #E9EEF1;
- border-top: 1px dashed #E9EEF1;
+    border: 1px solid #E9EEF1;
+    border-top: 1px dashed #E9EEF1;
 }
 
 /* block displaying file/dir
  * informations */
 #sshd_info
 {
- border: 1px solid #E9EEF1;
- border-top: 1px dashed #fff;
- margin: -1px 0 -16px 155px;
- width: 530px;
+    border: 1px solid #E9EEF1;
+    border-top: 1px dashed #fff;
+    margin: -1px 0 -16px 155px;
+    width: 530px;
 }
 
 
 #sshd_info p
 {
-  font-size: 12px;
-  padding: 7px 5px;
-  position: relative;
+    font-size: 12px;
+    padding: 7px 5px;
+    position: relative;
 }
 
 #sshd_info p span
 {
-  left: 80px;
-  margin: 0px;
-  padding; 0px;
-  position: absolute;
+    left: 80px;
+    margin: 0px;
+    padding; 0px;
+    position: absolute;
 }
 
 #sshd_info hr
 {
- clear: right;
- margin: 16px 0;
+    clear: right;
+    margin: 16px 0;
 }
 
 #sshd_info .secu
 {
-  float: left;
-  margin-left: 350px;
-  margin-top: -15px;
-  border: 1px solid #E9EEF1;
-  background-color: #FCD3C2;
-  padding: 2px 0;
+    float: left;
+    margin-left: 350px;
+    margin-top: -15px;
+    border: 1px solid #E9EEF1;
+    background-color: #FCD3C2;
+    padding: 2px 0;
 }
 
 #sshd_info .secu a
 {
- text-decoration: none;
- padding: 6px;
- padding-top: 2px;
- padding-bottom: 2px;
+    text-decoration: none;
+    padding: 6px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 #sshd_info .secu a:hover
 {
- background-color: #fff;
+    background-color: #fff;
 }
 
 #sshd_info_perms .secu
 {
-  margin-left: 280px;
-  margin-top: -50px;
+    margin-left: 280px;
+    margin-top: -50px;
 }
 
 #sshd_info_perms .secu_moins
 {
- margin-left: 330px;
+    margin-left: 330px;
 }
 
 #sshd_info_perms
 {
-  margin: 5px;
+    margin: 5px;
 }
 
 #sshd_info_perms h1
 {
-  background-color: #E0E0E0;
-  color: red;
-  border: 1px solid #E9EEF1;
-  font-size: 12px;
-  font-weight: normal;
-  margin: 0px;
-  padding: 7px;
-  text-align: center;
+    background-color: #E0E0E0;
+    color: red;
+    border: 1px solid #E9EEF1;
+    font-size: 12px;
+    font-weight: normal;
+    margin: 0px;
+    padding: 7px;
+    text-align: center;
 }
 
 #sshd_info_perms table, tr, td, th
 {
- border: none;
- padding: 2 10px;
- text-align: center;
- font-weight: normal;
- font-size: 10px;
+    border: none;
+    padding: 2 10px;
+    text-align: center;
+    font-weight: normal;
+    font-size: 10px;
 }
 
 #sshd_info_perms .left
 {
- text-align: left;
+    text-align: left;
 }
 
 #sshd_sys_menu ul
 {
- list-style-type: none;
- padding-left: 5px;
- padding-bottom: 25px;
- border-bottom: 1px solid #E9EEF1;
- margin: 0px;
- width: 690px;
+    list-style-type: none;
+    padding-left: 5px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #E9EEF1;
+    margin: 0px;
+    width: 690px;
 }
 
 #sshd_sys_menu ul li
 {
- float: left;
- height: 21px;
- background-color: #FCF7F5;
- margin: 3px 3px 0px 3px;
- border: 1px solid #E9EEF1;
+    float: left;
+    height: 21px;
+    background-color: #FCF7F5;
+    margin: 3px 3px 0px 3px;
+    border: 1px solid #E9EEF1;
 }
 
 #sshd_sys_menu ul li.selected
 {
- border-bottom: 1px solid #FCD3C2;
- background-color: #FCD3C2;
+    border-bottom: 1px solid #FCD3C2;
+    background-color: #FCD3C2;
 }
 
 #sshd_sys_menu a {
- font: normal 12px fixed;
- display: block;
- text-decoration: none;
- margin: 0px;
- padding: 6px;
- padding-top: 2px;
- padding-bottom: 5px;
+    font: normal 12px fixed;
+    display: block;
+    text-decoration: none;
+    margin: 0px;
+    padding: 6px;
+    padding-top: 2px;
+    padding-bottom: 5px;
 }
 
 #sshd_sys_menu a.selected:hover
 {
- color: darkgray;
- padding-bottom: 4px;
- border-bottom: 1px dashed #E9EEF1;
+    color: darkgray;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #E9EEF1;
 }
 
 #sshd_sys_menu a:hover
 {
- color: darkgray;
- background-color: #FCD3C2;
- padding-bottom: 4px;
- border-bottom: 1px dashed #E9EEF1;
+    color: darkgray;
+    background-color: #FCD3C2;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed #E9EEF1;
 }
 
 #sshd_sys_content
 {
- border: 1px solid #E9EEF1;
- padding: 0px;
- margin: -1px 0 0 0;
- width: 693px;
+    border: 1px solid #E9EEF1;
+    padding: 0px;
+    margin: -1px 0 0 0;
+    width: 693px;
 }
 
 #sshd_sys_content table
 {
- border: 1px solid #fcd3c2;
- padding: 0px;
- margin: 0px;
- font-size: 10px;
- width: 100%;
- text-align: left;
+    border: 1px solid #fcd3c2;
+    padding: 0px;
+    margin: 0px;
+    font-size: 10px;
+    width: 100%;
+    text-align: left;
 }
 
 
 #sshd_sys_content thead, tfoot
 {
- background-color: #fcd3c2;
+    background-color: #fcd3c2;
 }
 
 #sshd_sys_content td
 {
- border-width: 0px;
- border-left: 1px solid #FCD3C2;
- padding-left: 1em;
- padding-right: 1em;
- text-align: left;
+    border-width: 0px;
+    border-left: 1px solid #FCD3C2;
+    padding-left: 1em;
+    padding-right: 1em;
+    text-align: left;
 }
 
 
 #sshd_sys_content table.proc tr, table.syslog tr
 {
- border-bottom: 1px solid #fcd3c2;
+    border-bottom: 1px solid #fcd3c2;
 }
 
 
 #sshd_sys_content table .err
 {
-  background-color: #da8a8a;
+    background-color: #da8a8a;
 }
 
 #sshd_sys_content table .warn
 {
- background-color: #daaaaa;
+    background-color: #daaaaa;
 }
 
 #sshd_log_content
 {
-  border: 1px solid #ff3300;
-  margin: 15px 0;
-  padding: 0;
-  width: 695px;
+    border: 1px solid #ff3300;
+    margin: 15px 0;
+    padding: 0;
+    width: 695px;
 }
 
 #sshd_log_content table
 {
- background-color: #fcd3c2;
- font-size: 10px;
- text-align: left;
- width: 100%;
+    background-color: #fcd3c2;
+    font-size: 10px;
+    text-align: left;
+    width: 100%;
 }
 
 #sshd_log_content thead, #sshd_log_content tfoot
 {
- background-color: #E0E0E0;
- color: red;
+    background-color: #E0E0E0;
+    color: red;
 }
 
 #sshd_log_content tfoot, #sshd_log_content thead td
 {
- color: black;
+    color: black;
 }
 
 #sshd_log_content td
 {
- border: 1px solid white;
- padding: 2px 1em;
- text-align: left;
- vertical-align: top;
+    border: 1px solid white;
+    padding: 2px 1em;
+    text-align: left;
+    vertical-align: top;
 }
 
 #sshd_log_advactions
 {
-  background-color: #fce6e0;
-  border: 1px dotted #FF3300;
-  margin: 15px 0px;
-  padding: 0px 10px;
-  width: 675px;
+    background-color: #fce6e0;
+    border: 1px dotted #FF3300;
+    margin: 15px 0px;
+    padding: 0px 10px;
+    width: 675px;
 }
 
 #sshd_log_advactions form
 {
- margin: 0;
- padding: 0px
+    margin: 0;
+    padding: 0px
 }
 
 #sshd_log_advactions input
 {
- margin: 2px;
- padding: 0px;
+    margin: 2px;
+    padding: 0px;
 }
 
 #msc_msg
 {
-  background-color: #f9f3f2;
-  border: 1px solid #E9EEF1;
-  margin: 15px 0 0 165px;
-  padding: 7px;
-  position: relative;
-  width: 515px;
+    background-color: #f9f3f2;
+    border: 1px solid #E9EEF1;
+    margin: 15px 0 0 165px;
+    padding: 7px;
+    position: relative;
+    width: 515px;
 }
 
 #msc_confirm
 {
-  background-color: #f9f3f2;
-  border: 1px solid #E9EEF1;
-  margin: 5px 0;
-  padding: 7px;
-  position: relative;
-  width: 680px;
+    background-color: #f9f3f2;
+    border: 1px solid #E9EEF1;
+    margin: 5px 0;
+    padding: 7px;
+    position: relative;
+    width: 680px;
 }
 
 
 .lettrine {
-  float: left;
+    float: left;
 }
 
 #msc_msg p
 {
-  font-size: 14px;
-  font-weight: bold;
-  line-height: 1em;
-  margin-top: 1em;
-  height: 2em;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1em;
+    margin-top: 1em;
+    height: 2em;
 }
 
 #msc_msg em, #msc_confirm em
 {
-  color: red;
+    color: red;
 }
 
 #msc_msg form
 {
-  display: inline;
+    display: inline;
 }
 
 #exec_list
 {
-  background-color: #f9f3f2;
-  border: 1px solid #E9EEF1;
-  margin: 1px;
-  padding: 7px;
-  width: 680px;
+    background-color: #f9f3f2;
+    border: 1px solid #E9EEF1;
+    margin: 1px;
+    padding: 7px;
+    width: 680px;
 }
 
 #edit_cadre
 {
-  background-color: #f9f3f2;
-  border: 1px dotted #FF3300;
-  margin-top: 15px;
-  padding: 10px;
-  width: 675px;
+    background-color: #f9f3f2;
+    border: 1px dotted #FF3300;
+    margin-top: 15px;
+    padding: 10px;
+    width: 675px;
 }
 
 table.table-vertical td {

@@ -1,43 +1,54 @@
 li.start a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../images/actions/start.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/start.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.stop a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../images/actions/stop.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/stop.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.pause a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../images/actions/pause.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/pause.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }
 
 li.status a {
-        padding: 3px 0px 5px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("../images/actions/info.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/actions/info.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.reschedule a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../images/status/todo.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
 }

@@ -21,14 +21,13 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/commands_xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
     /* Form handling */
     $from = $_POST['from'];
-    $path =  explode('|', $from);
+    $path = explode('|', $from);
     $module = $path[0];
     $submod = $path[1];
     $page = $path[2];
@@ -46,7 +45,7 @@ if (isset($_POST["bconfirm"])) {
         if (strlen($_POST['gid'])) {
             if (!strlen($_POST["coh_id"]) and !strlen($_POST["cmd_id"])) {
                 start_bundle($bundle_id);
-                
+
                 header("Location: " . urlStrRedirect("$module/$submod/$page", $url)); // array('tab'=>$tab, 'gid'=>$gid)));
                 exit;
             } elseif (strlen($_POST["cmd_id"]) and !strlen($_POST["coh_id"])) {
@@ -85,7 +84,7 @@ if (isset($_POST["bconfirm"])) {
             exit;
         } else if (strlen($_POST['gid'])) {
             /* The start command is done on a commands_on_host for a group of
-               computers */
+              computers */
             $coh_id = $_POST["coh_id"];
             $cmd_id = $_POST["cmd_id"];
             $gid = $_POST["gid"];
@@ -101,6 +100,8 @@ if (isset($_POST["bconfirm"])) {
             exit;
         }
     }
+
+    return;
 } else {
     /* Form displaying */
     $from = $_GET['from'];
@@ -111,23 +112,37 @@ if (isset($_POST["bconfirm"])) {
     $coh_id = $_GET["coh_id"];
     $gid = $_GET["gid"];
     $bundle_id = $_GET['bundle_id'];
-    
+
     if (empty($gid)) {
         $title = sprintf(_T("Start action on host %s", 'msc'), $hostname);
     } else {
         $title = _T("Start action on this group", 'msc');
     }
 
-    $f = new PopupForm($title);
-    $f->add(new HiddenTpl("name"),      array("value" => $hostname, "hide" => True));
-    $f->add(new HiddenTpl("from"),      array("value" => $from,     "hide" => True));
-    $f->add(new HiddenTpl("cmd_id"),    array("value" => $cmd_id,   "hide" => True));
-    $f->add(new HiddenTpl("coh_id"),    array("value" => $coh_id,   "hide" => True));
-    $f->add(new HiddenTpl("uuid"),      array("value" => $uuid,     "hide" => True));
-    $f->add(new HiddenTpl("gid"),       array("value" => $gid,      "hide" => True));
-    $f->add(new HiddenTpl("bundle_id"), array("value" => $bundle_id,"hide" => True));
+    $f = new PopupForm($title, 'playPopupForm');
+    $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->add(new HiddenTpl("cmd_id"), array("value" => $cmd_id, "hide" => True));
+    $f->add(new HiddenTpl("coh_id"), array("value" => $coh_id, "hide" => True));
+    $f->add(new HiddenTpl("uuid"), array("value" => $uuid, "hide" => True));
+    $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
+    $f->add(new HiddenTpl("bundle_id"), array("value" => $bundle_id, "hide" => True));
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
 ?>
+<script type="text/javascript">
+    jQuery(function() {
+        var $ = jQuery;
+        $('form#playPopupForm').submit(function() {
+            $.ajax($(this).attr('action'), {
+                type: $(this).attr('method'),
+                data: $(this).serialize() + '&bconfirm=1'
+            }).success(function() {
+                window.location.reload();
+            });
+            return false;
+        });
+    })
+</script>

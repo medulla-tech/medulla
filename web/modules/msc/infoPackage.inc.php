@@ -161,6 +161,12 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 
+    /* Reschedule popup */
+    $page = new Page("reschedule", _T("Reschedule a command", "msc"));
+    $page->setFile("modules/msc/msc/reschedule.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
+
     /* Status for a command on one machine */
     $page = new Page("msctabssinglestatus", _T("Single command status", "msc"));
     $page->setFile("modules/msc/msc/msctabssinglestatus.php");

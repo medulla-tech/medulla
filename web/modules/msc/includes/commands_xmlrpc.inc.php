@@ -195,4 +195,8 @@ function get_new_bundle_title($nb = 0) {
     return xmlCall('msc.get_new_bundle_title', array($nb));
 }
 
+function extend_command($cmd_id, $start_date, $end_date) {
+    return xmlCall('msc.extend_command', array($cmd_id, $start_date, $end_date));
+}
+
 ?>
