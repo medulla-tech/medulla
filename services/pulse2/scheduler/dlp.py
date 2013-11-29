@@ -21,140 +21,100 @@
 
 import logging
 
-from twisted.internet.defer import DeferredList
+from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.queries import get_available_commands
+from pulse2.scheduler.queries import machine_has_commands, verify_target
 
-from pulse2.apis.clients.mirror import Mirror
-from pulse2.scheduler.queries import get_available_downloads
 
 class DownloadQuery :
     """ Provides the remote queries from a DLP to the msc database """
 
-    def __init__(self, config):
+    def __init__(self):
         self.logger = logging.getLogger()
-        self.config = config
+        self.config = SchedulerConfig()
 
-    def get_available_downloads(self, hostname, mac):
+    def get_available_commands(self, uuid):
         """
         Checks for available packages to deploy.
 
-        @param hostname: hostname of computer
-        @type hostname: str
+        @param uuid: UUID computer
+        @type uuid: str
 
         @param mac: MAC address of computer
         @type mac: str
 
         @return: list of available download URLs
-        @rtype: DeferredList
+        @rtype: 
         """
-        d = self._get_available_downloads(hostname, mac)
-        d.addCallback(self._parse_list_result, hostname)
-        return d
-
-
-    def _get_available_downloads(self, hostname, mac):
-        """
-        Checks for available packages to deploy.
-
-        @param hostname: hostname of computer
-        @type hostname: str
-
-        @param mac: MAC address of computer
-        @type mac: str
-
-        @return: list of available download URLs
-        @rtype: DeferredList
-        """
-        dl = []
-
-        for rec in get_available_downloads(self.config.name, hostname, mac):
+        cont = []
+        for rec in get_available_commands(self.config.name, uuid):
             (coh_id, 
              target_mirrors,
              start_file,
              files,
              parameters,
+             creation_date,
+             phases,
              package_id) = rec
 
-            mirrors = target_mirrors.split('||')
-            # TODO - control the fallback mirrors
-            ma = Mirror(mirrors[0])
-            d = ma.isAvailable(package_id)
-            d.addCallback(self._cb_uri_check, ma, files)
-            d.addCallback(self._cb_uri_get, coh_id)
-            d.addErrback(self._eb_uri)
-            dl.append(d)
-            
-        return DeferredList(dl)
+            urls = target_mirrors.split('||')
 
-    def _parse_list_result(self, list_result, hostname):
+
+            cont.append({"id": coh_id, 
+                         "created": creation_date,
+                         "steps" : phases,
+                         "params" : parameters,
+                         "start_file" : start_file,
+                         "non_fatal_steps": self.config.non_fatal_steps,
+                         "urls": urls,
+                         "files": files,
+                         })
+        return cont
+
+
+    def machine_has_commands(self, uuid):
         """
-        Parsing the results from the list of deffereds.
+        Checks the downloads for requested machine.
 
-        @param list_result: results from a list of deferreds
-        @type list_result: DeferredList
+        @param uuid: UUID of computer
+        @type uuid: str
+
+        @param macs: MAC addresses of computer
+        @type macs: list
+
+        @return: True if at least one download 
+        @rtype: bool
+        """
+        return machine_has_commands(self.config.name, uuid)
+
+    def pull_target_awake(self, hostname, macs):
+        """
+        Checks requested machine exists in pull targets.
 
         @param hostname: hostname of computer
         @type hostname: str
+
+        @param macs: MAC addresses of computer
+        @type macs: list
+
+        @return: UUID 
+        @rtype: str
         """
-        urls = []
-        for success, result in list_result :
-            if success :
-                urls.append(result)
-            else :
-                self.logger.warn("An error occured when getting the URL of package for computer %s: %s" %
-                        (hostname, result))
-        return urls
+        pass
 
-
-
-    def _cb_uri_check(self, result, ma, files):
+    def verify_target(self, id, hostname, mac):
         """
-        Checks the availability of a mirror.
+        @param id: commands_on_host id 
+        @type id: int
 
-        @param result: True if available, otherwise a error container
-        @type result: bool or list
+        @param hostname: hostname of computer
+        @type hostname: str
 
-        @param ma: Mirror Api instance
-        @type ma: Mirror
+        @param mac: MAC address of computer
+        @type mac: str
 
-        @param files: list of files to deploy
-        @type files: str
-
-        @return: list of URLs to download
-        @rtype: Deferred
+        @return: True if at least one dowload disponible
+        @rtype: bool
         """
-        if isinstance(result,list) and result[0] == 'PULSE2_ERR':
-            self.logger.error("Mirror not available: %s" % result[3])
-        else :
-            fids = []
-            for line in files.split("\n"):
-                fids.append(line.split('##')[0])
-            return ma.getFilesURI(fids)
-
-    def _cb_uri_get(self, result, coh_id):
-        """
-        Receives a list of download URLs.
-
-        @param result: list of URLs 
-        @type result: list
-
-        @param coh_id: id of circuit
-        @type coh_id: int
-
-        @return: list of URLs to download
-        @rtype: Deferred
-        """
+        return verify_target(id, hostname, mac)
  
-        if isinstance(result,list) and result[0] == 'PULSE2_ERR':
-            self.logger.error("URI get failed: %s" % result[3])
-        else :
-            urls = result
-            return coh_id, urls
-
-    def _eb_uri(self, failure):
-        """ Errorback attached to get the available downloads """
-        self.logger.error("Available downloads get failed: %s" % failure)
-        return failure
-
-
-
-

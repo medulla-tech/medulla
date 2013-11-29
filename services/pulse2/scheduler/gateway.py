@@ -42,15 +42,21 @@ import logging
 from twisted.internet.protocol import Factory
 from twisted.internet.defer import Deferred
 
+from pulse2.utils import xmlrpcCleanup
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.control import MscDispatcher
 from pulse2.scheduler.health import getHealth
 from pulse2.scheduler.utils import chooseClientNetwork, UnixProtocol
+from pulse2.scheduler.dlp import DownloadQuery
 
 class SchedulerGateway(UnixProtocol):
     """
     Provides incomming requests from scheduler-proxy trough the unix socket.
     """
+
+    def __init__(self):
+        self.dlq = DownloadQuery()
+
     def _nok(self):
         """A negative deferred response"""
         d = Deferred()
@@ -202,10 +208,51 @@ class SchedulerGateway(UnixProtocol):
     def choose_client_ip(self, interfaces):
         return chooseClientNetwork(interfaces)
 
-    def get_available_downloads(self, hostname, mac):
-        return MscDispatcher().get_available_downloads(hostname, mac)
+    ### Download Provider methods ###
+    def _get_dlp_method(self, phase):
+        methods = {"upload": "completed_pull",
+                   "execute": "completed_execution",
+                   "delete": "completed_deletion",
+                   "inventory": "completed_inventory",
+                   "reboot": "completed_reboot",
+                   "halt": "completed_halt",
+                  }
+        return methods[phase]
 
+    def get_available_commands(self, uuid):
+        return self.dlq.get_available_commands(uuid)
 
+    def machine_has_commands(self, uuid):
+        return self.dlq.machine_has_commands(uuid)
+
+    def pull_target_awake(self, hostname, macs):
+        return MscDispatcher().pull_target_awake(hostname, macs)
+    
+    def completed_step(self, id, phase, stdout, stderr, exitcode):
+        method = self._get_dlp_method(phase)
+        return xmlrpcCleanup(MscDispatcher().run_proxymethod("dlp", 
+                                               id, 
+                                               method, 
+                                               (exitcode, stdout, stderr),
+                                               True
+                                               ))
+        
+    def verify_target(self, id, hostname, mac):
+        """
+        @param id: commands_on_host id 
+        @type id: int
+
+        @param hostname: hostname of computer
+        @type hostname: str
+
+        @param mac: MAC address of computer
+        @type mac: str
+
+        @return: True if at least one dowload disponible
+        @rtype: bool
+        """
+        return self.dlq.verify_target(id, hostname, mac)
+ 
 class SchedulerGatewayFactory(Factory):
     protocol = SchedulerGateway
 

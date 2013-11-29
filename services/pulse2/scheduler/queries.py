@@ -31,6 +31,7 @@ from pulse2.database.msc.orm.commands import Commands, stop_commands_on_host
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.target import Target
+from pulse2.database.msc.orm.pull_targets import PullTargets
 
 
 
@@ -315,7 +316,7 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     session.close()
     return commands_to_perform
 
-def get_available_downloads(scheduler_name, hostname, mac):
+def __available_downloads_query(scheduler_name, uuid):
     database = MscDatabase()
     session = create_session()
   
@@ -333,23 +334,72 @@ def get_available_downloads(scheduler_name, hostname, mac):
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None)
-        ).filter(database.target.c.target_name == hostname
-        ).filter(database.target.c.target_macaddr.like("%%%s%%" % mac))
-        
+        ).filter(database.target.c.target_uuid == uuid)
+    session.close()
+    return commands_query
+
+
+def get_available_commands(scheduler_name, uuid):
+  
+    commands_query = __available_downloads_query(scheduler_name, uuid)   
 
     for coh, cmd, target in commands_query.all():
         if not cmd.inDeploymentInterval():
             continue
+        phases = [p.name for p in get_all_phases(coh.id)]
+ 
         yield (coh.id, 
                target.mirrors,
                cmd.start_file,
                cmd.files,
                cmd.parameters,
+               time.mktime(cmd.creation_date.timetuple()),
+               phases,
                cmd.package_id)
-   
+
+def pull_target_update(scheduler_name, uuid):
+    database = MscDatabase()
+    session = create_session()
+
+    now = time.strftime("%Y-%m-%d %H:%M:%S")
+
+    query = session.query(PullTargets)
+    query = query.select_from(database.pull_targets)
+    query = query.filter(database.pull_targets.c.target_uuid == uuid)
+    query = query.filter(database.pull_targets.c.scheduler == scheduler_name)
+    pt = query.first()
     session.close()
 
+    if not pt :
+        pt = PullTargets()
+        pt.target_uuid = uuid
+        pt.scheduler = scheduler_name
+    pt.last_seen_time = now
+    pt.flush()
 
+
+def machine_has_commands(scheduler_name, uuid):
+    commands = __available_downloads_query(scheduler_name, uuid).all()
+    return len([cmd for (coh, cmd, target) in commands if cmd.inDeploymentInterval()]) > 0
+
+def verify_target(coh_id, hostname, mac):
+    database = MscDatabase()
+    session = create_session()
+  
+    query = session.query(CommandsOnHost, Target)
+    query = query.select_from(database.commands_on_host.join(database.commands).join(database.target))
+    query = query.filter(database.commands_on_host.c.id==coh_id)
+    query = query.filter(database.target.c.target_name==hostname)
+    query = query.filter(database.target.c.target_macaddr.like("%%%s%%" % mac))
+
+    session.close()
+    if query.first() :
+        return True
+    else : 
+        return False
+    
+
+ 
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()
