@@ -46,11 +46,11 @@ class DownloadQuery :
         @type mac: str
 
         @return: list of available download URLs
-        @rtype: 
+        @rtype:
         """
         cont = []
         for rec in get_available_commands(self.config.name, uuid):
-            (coh_id, 
+            (coh_id,
              target_mirrors,
              start_file,
              files,
@@ -60,14 +60,17 @@ class DownloadQuery :
              package_id) = rec
 
             urls = target_mirrors.split('||')
+            files = files.split("\n")
+            for index, file in enumerate(files):
+                files[index] = file.split("##")[1]
 
-
-            cont.append({"id": coh_id, 
-                         "created": creation_date,
+            cont.append({"id": coh_id,
+                         "created": int(creation_date),
                          "steps" : phases,
                          "params" : parameters,
                          "start_file" : start_file,
                          "non_fatal_steps": self.config.non_fatal_steps,
+                         "package_uuid": package_id,
                          "urls": urls,
                          "files": files,
                          })
@@ -84,7 +87,7 @@ class DownloadQuery :
         @param macs: MAC addresses of computer
         @type macs: list
 
-        @return: True if at least one download 
+        @return: True if at least one download
         @rtype: bool
         """
         return machine_has_commands(self.config.name, uuid)
@@ -99,7 +102,7 @@ class DownloadQuery :
         @param macs: MAC addresses of computer
         @type macs: list
 
-        @return: UUID 
+        @return: UUID
         @rtype: str
         """
         d = RPCClient().rpc_execute("msc.pull_target_awake", hostname, macs)
@@ -120,10 +123,10 @@ class DownloadQuery :
 
 
 
- 
+
     def verify_target(self, id, hostname, mac):
         """
-        @param id: commands_on_host id 
+        @param id: commands_on_host id
         @type id: int
 
         @param hostname: hostname of computer
@@ -136,4 +139,4 @@ class DownloadQuery :
         @rtype: bool
         """
         return verify_target(id, hostname, mac)
- 
+
