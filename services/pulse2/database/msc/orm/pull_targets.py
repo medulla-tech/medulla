@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import sqlalchemy
+from sqlalchemy.orm import create_session
 
 
 class PullTargets(object):
@@ -27,7 +27,7 @@ class PullTargets(object):
 
     def flush(self):
         """ Handle SQL flushing """
-        session = sqlalchemy.create_session()
+        session = create_session()
         session.add(self)
         session.flush()
         session.close()

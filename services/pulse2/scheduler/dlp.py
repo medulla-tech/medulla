@@ -22,7 +22,9 @@
 import logging
 
 from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.api.mmc_client import RPCClient
 from pulse2.scheduler.queries import get_available_commands
+from pulse2.scheduler.queries import pull_target_update
 from pulse2.scheduler.queries import machine_has_commands, verify_target
 
 
@@ -100,8 +102,25 @@ class DownloadQuery :
         @return: UUID 
         @rtype: str
         """
-        pass
+        d = RPCClient().rpc_execute("pull_target_awake", hostname, macs)
+        d.addCallback(self._cb_pull_target_awake, hostname)
+        d.addErrback(self._eb_pull_target_awake, hostname)
 
+        return d
+
+    def _cb_pull_target_awake(self, uuid, hostname):
+        if uuid :
+            pull_target_update(self.config.name, uuid)
+            return uuid
+        else :
+            self.logger.warn("Cannot detect the UUID of %s" % hostname)
+
+    def _eb_pull_target_awake(self, failure, hostname):
+        self.logger.warn("An error occurred when detect the UUID of %s: %s" % (hostname, str(failure)))
+
+
+
+ 
     def verify_target(self, id, hostname, mac):
         """
         @param id: commands_on_host id 

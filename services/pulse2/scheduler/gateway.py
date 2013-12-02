@@ -226,7 +226,7 @@ class SchedulerGateway(UnixProtocol):
         return self.dlq.machine_has_commands(uuid)
 
     def pull_target_awake(self, hostname, macs):
-        return MscDispatcher().pull_target_awake(hostname, macs)
+        return self.dlq.pull_target_awake(hostname, macs)
     
     def completed_step(self, id, phase, stdout, stderr, exitcode):
         method = self._get_dlp_method(phase)
