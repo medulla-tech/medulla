@@ -105,6 +105,12 @@ class PackageParserXML:
                 else:
                     cmds[c] = ''
 
+            associateinventory = 0
+            tmp = root.getElementsByTagName('associateinventory')
+            if len(tmp) == 1 and tmp[0].firstChild != None:
+                tmp = tmp[0]
+                associateinventory = tmp.firstChild.wholeText.strip()
+
             query = root.getElementsByTagName('query')
             queries = {'Qvendor': '*', 'Qsoftware': '*', 'Qversion': '*', 'boolcnd': '*'}
             if query.length >= 1 and query[0].firstChild:
@@ -130,7 +136,8 @@ class PackageParserXML:
                 queries['Qsoftware'],
                 queries['Qversion'],
                 queries['boolcnd'],
-                licenses
+                licenses,
+                associateinventory
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -221,6 +228,11 @@ class PackageParserXML:
 
         docr.appendChild(commands)
 
+        associateinventory = doc.createElement('associateinventory')
+        appenchild = doc.createTextNode(str(package.associateinventory))
+        associateinventory.appendChild(appenchild)
+        docr.appendChild(associateinventory)
+
         query = doc.createElement('query')
         Qvendor = doc.createElement('Qvendor')
         Qvendor.appendChild(doc.createTextNode(package.Qvendor))
@@ -234,14 +246,21 @@ class PackageParserXML:
         boolcnd = doc.createElement('boolcnd')
         boolcnd.appendChild(doc.createTextNode(package.boolcnd))
         query.appendChild(boolcnd)
-        
+
         docr.appendChild(query)
 
         return doc.toprettyxml(encoding = 'utf-8')
 
     def doctype(self):
         return """
-    <!ELEMENT package (name,version,description?,licenses?,commands,files?, query?)>
+    <!ELEMENT package (name,\
+                       version,\
+                       description?,\
+                       commands,\
+                       files?,\
+                       associateinventory,\
+                       query?,\
+                       licenses?)>
     <!ATTLIST package id ID #REQUIRED>
 
     <!ELEMENT name (#PCDATA)>
@@ -269,6 +288,7 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
+    <!ELEMENT associateinventory (#PCDATA)>
     <!ELEMENT query (Qvendor, Qsoftware, Qversion, boolnd)>
     <!ELEMENT Qvendor (#PCDATA)>
     <!ELEMENT Qsoftware (#PCDATA)>

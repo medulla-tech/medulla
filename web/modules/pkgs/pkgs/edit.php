@@ -49,14 +49,15 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id','label','version','description','Qvendor','Qsoftware','Qversion','boolcnd',
-            'licenses') as $post) {
+
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 
+            'boolcnd', 'licenses') as $post) {
         $package[$post] = $_POST[$post];
     }
-    foreach (array('reboot') as $post) {
+
+    foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-
     // Package command
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 

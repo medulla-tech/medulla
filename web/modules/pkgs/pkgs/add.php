@@ -46,11 +46,11 @@ if (isset($_POST['bconfirm'])) {
         $level = 1;
     }
 
-    foreach (array('id','label','version','description','mode','Qvendor','Qsoftware','Qversion',
-            'boolcnd','licenses') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware', 
+            'Qversion', 'boolcnd', 'licenses') as $post) {
         $package[$post] = $_POST[$post];
     }
-    foreach (array('reboot') as $post) {
+    foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
     // Package command
