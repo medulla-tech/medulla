@@ -102,7 +102,7 @@ class DownloadQuery :
         @return: UUID 
         @rtype: str
         """
-        d = RPCClient().rpc_execute("pull_target_awake", hostname, macs)
+        d = RPCClient().rpc_execute("msc.pull_target_awake", hostname, macs)
         d.addCallback(self._cb_pull_target_awake, hostname)
         d.addErrback(self._eb_pull_target_awake, hostname)
 

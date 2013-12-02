@@ -69,6 +69,7 @@ APIVERSION = '0:0:0'
 NOAUTHNEEDED = [
     'get_web_def_coh_life_time',
     'get_web_def_attempts_per_day',
+    'pull_target_awake'
 ]
 
 def getApiVersion(): return APIVERSION
@@ -356,6 +357,24 @@ class RpcProxy(RpcProxyI):
         """
         return xmlrpcCleanup(MscDatabase().extend_command(cmd_id, start_date, end_date))
 
+    def pull_target_awake(self, hostname, macs):
+        """
+        Gets the requested machine for UUID.
+
+        @param hostname: hostname of computer
+        @type hostname: str
+
+        @param macs: MAC addresses of computer
+        @type macs: list
+
+        @return: UUID 
+        @rtype: str
+        """
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
+                                                                            hostname, 
+                                                                            macs))
+ 
     def displayLogs(self, params = {}):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
