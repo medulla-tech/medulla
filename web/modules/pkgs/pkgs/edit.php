@@ -216,11 +216,6 @@ foreach ($options as $p) {
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
     );
 }
-/* ================= BEGIN LICENCE ===================== */
-$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')), 
-        array("value" => $package['licenses'])
-);
-/* ==================   END LICENCE  ====================== */
 
 foreach ($cmds as $p) {
     $f->add(
@@ -271,6 +266,11 @@ $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "dele
 /* =================   END FILE LIST   ===================== */
 
 addQuerySection($f, $package);
+/* =================   BEGIN LICENSE   ===================== */
+$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
+        array("value" => $package['licenses'])
+);
+/* ==================   END LICENSE   ====================== */
 
 
 // =========================================================================

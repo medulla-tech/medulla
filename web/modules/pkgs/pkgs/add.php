@@ -182,11 +182,6 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => '')
         );
     }
-/* ================= BEGIN LICENCE ===================== */
-    $f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')), 
-            array("value" => '')
-    );
-/* ==================   END LICENCE  ====================== */
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
@@ -202,7 +197,12 @@ You may also ask Google for the silent installation switches. If you\'re feeling
         }
     }
     addQuerySection($f, $package);
-
+    /* =================   BEGIN LICENSE   ===================== */
+    $f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
+            array("value" => '')
+    );
+    /* ==================   END LICENSE   ====================== */
+    
     $f->pop();
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
