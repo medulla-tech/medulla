@@ -279,3 +279,20 @@ class GlpiComputers(ComputerI):
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         return self.glpi.isComputerNameAvailable(ctx, locationUUID, name)
 
+    def getComputerByHostnameAndMacs(self, ctx, hostname, macs):
+        """
+        Get machine who match given hostname and at least one of macs
+
+        @param ctx: context
+        @type ctx: dict
+
+        @param hostname: hostname of wanted machine
+        @type hostname: str
+
+        @param macs: list of macs
+        @type macs: list
+
+        @return: UUID of wanted machine or False
+        @rtype: str or None
+        """
+        return self.glpi.getMachineByHostnameAndMacs(ctx, hostname, macs)

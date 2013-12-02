@@ -37,12 +37,14 @@ from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 
 # GLPI Historical tab needed imports
 from mmc.site import mmcconfdir
+from mmc.database.database_helper import DatabaseHelper
 import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, ForeignKey, asc, or_, not_, desc, func
 from sqlalchemy.orm import create_session, mapper
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.sql.expression import ColumnOperators
 
 import logging
@@ -2360,6 +2362,19 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    @DatabaseHelper._session
+    def getAllSoftwaresByManufacturer(self, session, ctx, vendor):
+        """
+        Return all softwares of a vendor
+        """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
+        query = session.query(Software)
+        query = query.join(self.klass['glpi_dropdown_manufacturer'])
+        query = query.filter(self.klass['glpi_dropdown_manufacturer'].name.like(vendor))
+        ret = query.group_by(Software.name).order_by(Software.name).all()
+        return ret
+
     def getMachineBySoftware(self, ctx, swname, count=0):
         """
         @return: all machines that have this software
@@ -2755,6 +2770,37 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.all()
         session.close()
         return ret
+
+    @DatabaseHelper._session
+    def getMachineByHostnameAndMacs(self, session, ctx, hostname, macs):
+        """
+        Get machine who match given hostname and at least one of macs
+
+        @param ctx: context
+        @type ctx: dict
+
+        @param hostname: hostname of wanted machine
+        @type hostname: str
+
+        @param macs: list of macs
+        @type macs: list
+
+        @return: UUID of wanted machine or False
+        @rtype: str or None
+        """
+        query = session.query(Machine).select_from(self.machine.join(self.network))
+        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+        query = query.filter(self.network.c.ifmac.in_(macs))
+        query = query.filter(self.machine.c.name == hostname)
+        query = self.__filter_on(query)
+        if ctx != 'imaging_module':
+            query = self.__filter_on_entity(query, ctx)
+        try:
+            ret = query.one()
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn('I can\'t get any UUID for machine %s and macs %s: %s' % (hostname, macs, e))
+            return None
+        return toUUID(ret.ID)
 
     def getComputersOS(self, uuids):
         if isinstance(uuids, str):

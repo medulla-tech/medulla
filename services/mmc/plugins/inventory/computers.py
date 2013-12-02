@@ -256,3 +256,21 @@ class InventoryComputers(ComputerI):
         Computers list header is just hostname as Computer Name and Description as Description
         """
         return self.config.display
+
+    def getComputerByHostnameAndMacs(self, ctx, hostname, macs):
+        """
+        Get machine who match given hostname and at least one of macs
+
+        @param ctx: context
+        @type ctx: dict
+
+        @param hostname: hostname of wanted machine
+        @type hostname: str
+
+        @param macs: list of macs
+        @type macs: list
+
+        @return: UUID of wanted machine or False
+        @rtype: str or None
+        """
+        return self.inventory.getMachineByHostnameAndMacs(ctx, hostname, macs)

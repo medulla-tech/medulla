@@ -103,6 +103,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineListByAntivirusState(ctx, groupName))
 
+    def getMachineByHostnameAndMacs(self, hostname, macs):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Glpi().getMachineByHostnameAndMacs(ctx, hostname, macs))
+
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
 

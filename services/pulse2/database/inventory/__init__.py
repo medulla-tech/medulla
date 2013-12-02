@@ -758,7 +758,7 @@ class Inventory(DyngroupDatabaseHelper):
                 if "MACAddress" in network:
                     mac = network["MACAddress"]
                     logging.getLogger().debug("Searching for a machine with MAC %s" % mac)
-                    machines = self.getMachinesBy(self.ctx,
+                    machines = self.getMachinesBy(ctx,
                                                   "Network",
                                                   "MACAddress",
                                                   mac,
@@ -776,6 +776,14 @@ class Inventory(DyngroupDatabaseHelper):
                         logging.getLogger().debug("Cannot find a machine with MAC %s" % mac)
 
         return None, None, None
+
+    def getMachineByHostnameAndMacs(self, ctx, hostname, macs):
+        inventory = {'Network': [{'MACAddress': mac} for mac in macs]}
+        machine_mac, machine_uuid, machine_name = self.getMachineByInventory(ctx, inventory)
+        if machine_name == hostname:
+            return machine_uuid
+        self.logger.warn('I can\'t get any UUID for machine %s and macs %s' % (hostname, macs))
+        return None
 
     def getValues(self, table, field):
         """
