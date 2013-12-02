@@ -81,6 +81,12 @@ class PackageParserXML:
             else:
                 desc = ""
 
+            licenses = ''
+            tmp = root.getElementsByTagName('licenses')
+            if len(tmp) == 1 and tmp[0].firstChild != None:
+                tmp = tmp[0]
+                licenses = tmp.firstChild.wholeText.strip()
+
             cmd = root.getElementsByTagName('commands')[0]
             reboot = 0
             if cmd.hasAttribute('reboot'):
@@ -123,7 +129,8 @@ class PackageParserXML:
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],
-                queries['boolcnd']
+                queries['boolcnd'],
+                licenses
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -166,6 +173,10 @@ class PackageParserXML:
         description = doc.createElement('description')
         description.appendChild(doc.createTextNode(package.description))
         docr.appendChild(description)
+
+        licenses = doc.createElement('licenses')
+        licenses.appendChild(doc.createTextNode(package.licenses))
+        docr.appendChild(licenses)
 
         commands = doc.createElement('commands')
         reboot = doc.createAttribute('reboot')
@@ -230,7 +241,7 @@ class PackageParserXML:
 
     def doctype(self):
         return """
-    <!ELEMENT package (name,version,description?,commands,files?, group?)>
+    <!ELEMENT package (name,version,description?,licenses?,commands,files?, query?)>
     <!ATTLIST package id ID #REQUIRED>
 
     <!ELEMENT name (#PCDATA)>
@@ -238,6 +249,7 @@ class PackageParserXML:
     <!ELEMENT numeric (#PCDATA)>
     <!ELEMENT label (#PCDATA)>
     <!ELEMENT description (#PCDATA)>
+    <!ELEMENT licenses (#PCDATA)>
 
     <!ELEMENT commands (preCommand?,installInit?,command,postCommandSuccess?,postCommandFailure?)>
     <!ATTLIST commands reboot (0|1) "0">

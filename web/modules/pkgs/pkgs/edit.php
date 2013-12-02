@@ -49,7 +49,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 'boolcnd') as $post) {
+    foreach (array('id','label','version','description','Qvendor','Qsoftware','Qversion','boolcnd',
+            'licenses') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot') as $post) {
@@ -215,6 +216,11 @@ foreach ($options as $p) {
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
     );
 }
+/* ================= BEGIN LICENCE ===================== */
+$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')), 
+        array("value" => $package['licenses'])
+);
+/* ==================   END LICENCE  ====================== */
 
 foreach ($cmds as $p) {
     $f->add(
@@ -298,3 +304,9 @@ $f->addValidateButton("bcreate");
 
 $f->display();
 ?>
+<script type="text/javascript">
+    jQuery(function() { // load this piece of code when page is loaded
+        // Set easySuggest on software field with the new ajax url
+        jQuery('#Qvendor').focusout(window.completeQsoftware);
+    });
+</script>

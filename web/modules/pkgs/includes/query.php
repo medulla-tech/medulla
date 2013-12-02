@@ -34,30 +34,17 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
     ) ) );
     //     $Form->pop();
 }
-function addQuerySection($Form, $p){
+function addQuerySection($Form, $p) {
     /* ================= BEGIN QUERY ===================== */
-    $span = new SpanElement( _T ( "Query", "pkgs" ) , "pkgs-title");
+    $span = new SpanElement(_T("Query", "pkgs"), "pkgs-title");
     $Form->add(new TrFormElement("", $span), array());
-
-    addQuery ( $Form, array (
-    'Qvendor',
-    _T ( 'Vendor', 'pkgs' )
-    ), $p, 'Vendors' );
-    addQuery ( $Form, array (
-    'Qsoftware',
-    _T ( 'Software', 'pkgs' )
-    ), $p, 'Installed+software', 3, 'Qvendor' );
-    addQuery ( $Form, array (
-    'Qversion',
-    _T ( 'Version', 'pkgs' )
-    ), $p, 'Software versions', 1, 'Qsoftware' );
-
-    $Bool = new TrFormElement ( _T ( 'Bool', 'pkgs' ), new InputTpl ( 'boolcnd' ) );
-    $Bool->setStyle ( "display:none" );
-
-    $Form->add ( $Bool, array (
-            "value" => $p ['boolcnd']
-    ) );
-    /* =================     END QUERY    ===================== */
+    
+    addQuery($Form, array('Qvendor',_T('Vendor', 'pkgs')), $p, 'Vendors');
+    addQuery($Form, array('Qsoftware',_T('Software', 'pkgs')), $p, 'Installed+software', 3, 'Qvendor');
+    $Form->add(new TrFormElement(_T('Version', 'pkgs'), new InputTpl('Qversion')), array("value" => $p['Qversion']));
+    $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
+    $Bool->setStyle("display:none");
+    $Form->add($Bool, array("value" => $p['boolcnd']));
+    /* ================= END QUERY ===================== */
 }
 ?>

@@ -89,7 +89,7 @@ class PackageApiGet(MyXmlrpc):
             # Another unknown error
             self.logger.exception(e)
             ret = {}
-        return ret            
+        return ret
 
     def xmlrpc_getPackageLabel(self, pid):
         return Common().package(pid, self.mp).label
@@ -117,6 +117,9 @@ class PackageApiGet(MyXmlrpc):
 
     def xmlrpc_getPackageHasToReboot(self, pid):
         return Common().package(pid, self.mp).reboot
+
+    def xmlrpc_getPackageLicensest(self, pid):
+        return Common().package(pid, self.mp).licenses
 
     def xmlrpc_getPackageQvendor(self, pid):
         return Common().package(pid, self.mp).Qvendor
