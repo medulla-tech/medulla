@@ -392,3 +392,22 @@ class ComputerManager(Singleton):
             ret = [['cn', 'Computer Name'], ['displayName', 'Description']]
         return ret
 
+    def getComputerByHostnameAndMacs(self, ctx, hostname, macs):
+        """
+        Get machine who match given hostname and at least one of macs
+
+        @param ctx: context
+        @type ctx: dict
+
+        @param hostname: hostname of wanted machine
+        @type hostname: str
+
+        @param macs: list of macs
+        @type macs: list
+
+        @return: UUID of wanted machine or False
+        @rtype: str or None
+        """
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputerByHostnameAndMacs(ctx, hostname, macs)
