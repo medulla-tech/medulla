@@ -24,7 +24,7 @@ mmcconfdir = $(sysconfdir)/mmc
 nobase_dist_mmcconf_DATA = plugins/ppolicy.ini plugins/dashboard.ini plugins/report.ini \
 	agent/keys/cacert.pem agent/keys/localcert.pem plugins/report/indicators.xml \
 	plugins/report/templates/default.xml plugins/report/img/mandriva.png \
-	plugins/report/css/style.css plugins/report/css/graph.css
+	plugins/report/img/pulse.png plugins/report/css/style.css plugins/report/css/graph.css
 nobase_nodist_mmcconf_DATA = agent/config.ini plugins/base.ini plugins/services.ini
 
 EXTRA_DIST = agent/config.ini.in plugins/base.ini.in plugins/services.ini.in
