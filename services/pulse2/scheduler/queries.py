@@ -123,25 +123,16 @@ class Refresh (object):
 def get_cohs(cmd_id, scheduler):
     database = MscDatabase()
     session = create_session()
-    cohs = session.query(CommandsOnHost, Target)
-    cohs = cohs.select_from(database.commands_on_host.join(database.target))
+    cohs = session.query(CommandsOnHost, Target, PullTargets)
+    cohs = cohs.select_from(database.commands_on_host.join(database.target).
+                            outerjoin(database.pull_targets,
+            Target.target_uuid == database.pull_targets.c.target_uuid))
     cohs = cohs.filter(database.commands_on_host.c.fk_commands == cmd_id)
     cohs = cohs.filter(database.commands_on_host.c.scheduler == scheduler)
+    cohs = cohs.filter(database.pull_targets.c.target_uuid == None)
 
-    uuids = []
-    # exclude the pull_targets
-    commands = cohs.all()
-    for (coh, target) in commands :
-        if target.target_uuid not in uuids :
-            uuids.append(target.target_uuid)
 
-    pull_mode_targets = get_pull_targets(scheduler, uuids)
-    pull_mode_uuids = [t.target_uuid for t in pull_mode_targets]
-
-    commands_to_perform = [coh.id for (coh, target) in commands 
-                                   if target.target_uuid not in pull_mode_uuids
-                                  and coh.pull_mode == 0
-                          ]
+    commands_to_perform = [coh.id for (coh, target, pt) in cohs.all()] 
     
     session.close()
     return commands_to_perform
@@ -303,8 +294,10 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
 
-    commands_query = session.query(Commands, CommandsOnHost, Target).\
-        select_from(database.commands_on_host.join(database.commands).join(database.target)
+    commands_query = session.query(Commands, CommandsOnHost, Target, PullTargets).\
+                select_from(database.commands_on_host.join(database.commands).join(database.target).
+                    outerjoin(database.pull_targets, Target.target_uuid == database.pull_targets.c.target_uuid)
+
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(or_(database.commands.c.start_date == soon,
@@ -313,7 +306,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
                      database.commands.c.end_date > now)
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None))
+                     database.commands_on_host.c.scheduler == None)
+        ).filter(database.pull_targets.c.target_uuid == None)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     commands_query = commands_query.order_by(database.commands.c.order_in_bundle.asc(),
@@ -327,22 +321,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         # using of descending order allows to favouring the commands
         # which state is approaching to end of worklow.
 
-    uuids = []
-    # exclude the pull_targets
     commands = commands_query.all()
-    for (cmd, coh, target) in commands :
-        if target.target_uuid not in uuids :
-            uuids.append(target.target_uuid)
-
-    pull_mode_targets = get_pull_targets(scheduler_name, uuids)
-    pull_mode_uuids = [t.target_uuid for t in pull_mode_targets]
-
-    commands_to_perform = [coh.id for (cmd, coh, target) in commands 
-                                   if cmd.inDeploymentInterval()
-                                  and target.target_uuid not in pull_mode_uuids
-                                  and coh.pull_mode == 0
-                          ]
- 
+    commands_to_perform = [coh.id for (cmd, coh, target, pt) in commands if cmd.inDeploymentInterval()] 
     session.close()
     return commands_to_perform
 
@@ -381,8 +361,9 @@ def __available_downloads_query(scheduler_name, uuid):
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
 
-    commands_query = session.query(CommandsOnHost, Commands, Target).\
-        select_from(database.commands_on_host.join(database.commands).join(database.target)
+    commands_query = session.query(CommandsOnHost, Commands, Target, PullTargets).\
+        select_from(database.commands_on_host.join(database.commands).join(database.target). \
+                    outerjoin(database.pull_targets, Target.target_uuid == database.pull_targets.c.target_uuid)
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(or_(database.commands.c.start_date == soon,
@@ -392,7 +373,8 @@ def __available_downloads_query(scheduler_name, uuid):
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None)
-        ).filter(database.target.c.target_uuid == uuid)
+        ).filter(database.target.c.target_uuid == uuid
+        ).filter(database.pull_targets.c.target_uuid == uuid)
     session.close()
     return commands_query
 
@@ -401,12 +383,8 @@ def get_available_commands(scheduler_name, uuid):
   
     commands_query = __available_downloads_query(scheduler_name, uuid)   
 
-    is_pull_machine = in_pull_targets(scheduler_name, uuid)
-
-    for coh, cmd, target in commands_query.all():
+    for coh, cmd, target, pt in commands_query.all():
         if not cmd.inDeploymentInterval():
-            continue
-        if coh.pull_mode == 0 and not is_pull_machine:
             continue
         phases = [p.name for p in get_all_phases(coh.id)]
  
