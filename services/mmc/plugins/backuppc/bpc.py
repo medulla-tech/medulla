@@ -646,8 +646,8 @@ def unset_backup_for_host(uuid):
         for i in config['Hosts'].keys():
             if config['Hosts'][i]['host'].lower() == uuid.lower():
                 del config['Hosts'][i]
-                res = set_host_config('',config,1,server_url)
-                if res['err']: return res
+                set_host_config('', config, 1, server_url)
+                #if res['err']: return res
                 break
         else:
             logger.warning('Host is already removed from BackupPC')
