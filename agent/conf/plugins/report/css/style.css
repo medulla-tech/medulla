@@ -41,13 +41,18 @@ table {
     font-family: "DejaVu Sans";
     font-weight: normal;
     text-align: center;
-    width: 550px;
+    width: 630px;
     border-radius:15px;
+    margin:10px 0 30px 0;
 }
 
 th{
    background: #324C96;
    color: #FFF;
+}
+
+th.date{
+    font-size:8px;
 }
 
 td.title {
@@ -62,3 +67,8 @@ td, th {
 
 tr:nth-child(even) {background: #EEE}
 tr:nth-child(odd) {background: #FFF}
+
+div.graph{
+    width: 630px;
+    text-align: center;
+}

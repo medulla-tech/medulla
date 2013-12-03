@@ -285,13 +285,19 @@ class PDFGenerator(object):
 
         # Table
         self.content += '<table>'
+        self.content += '<thead>'
         self.content += '<tr>'
         self.content += '<th>'
         self.content += '</th>'
         for d in dates:
-            self.content += '<th>'
+            self.content += '<th class="date">'
             self.content += d
             self.content += '</th>'
+
+        self.content += '</tr>'
+        self.content += '</thead>'
+        self.content += '<tbody>'
+
         for x in xrange(len(titles)):
             self.content += '<tr>'
 
@@ -312,7 +318,7 @@ class PDFGenerator(object):
 
             self.content += '</tr>'
 
-        self.content += '</tr>'
+        self.content += '</tbody>'
         self.content += '</table>'
 
     def pushHomePageHTML(self, html):
@@ -328,7 +334,10 @@ class PDFGenerator(object):
             return self.get_period_sheet(title, datas)
 
     def pushSVG(self, svg):
+        self.content += '<div class="graph">'
         self.content += '<img src="data:image/svg+xml;charset=utf-8;base64,%s" />' % b64encode(svg.encode('utf8'))
+        self.content += '</div>'
+
 
     def save(self):
         # PDF report is a list of all documents
