@@ -177,7 +177,7 @@ class MethodProxy(MscContainer):
                 else: 
                     result = method(circuit.running_phase, args)
 
-                    circuit.phase_process(result)
+                circuit.phase_process(result)
                 return True
         return False
 
