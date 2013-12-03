@@ -46,7 +46,7 @@ from pulse2.utils import xmlrpcCleanup
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.control import MscDispatcher
 from pulse2.scheduler.health import getHealth
-from pulse2.scheduler.utils import chooseClientNetwork, UnixProtocol
+from pulse2.scheduler.utils import UnixProtocol
 from pulse2.scheduler.dlp import DownloadQuery
 
 class SchedulerGateway(UnixProtocol):
@@ -206,7 +206,7 @@ class SchedulerGateway(UnixProtocol):
         return getHealth()
 
     def choose_client_ip(self, interfaces):
-        return chooseClientNetwork(interfaces)
+        return chooseClientIP(interfaces)
 
     ### Download Provider methods ###
     def _get_dlp_method(self, phase):
