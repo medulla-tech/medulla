@@ -190,6 +190,21 @@ class MscQueryManager(MscContainer):
 
         return self._group_by_command(failed + overtimed)
 
+    def contains_running_target(self, circuit):
+        """
+        Checks if another deployment is not running on the same machine
+
+        @param circuit: circuit checked with checked target
+        @type circuit: Circuit
+
+        @return: True if another deployment is running on checked target
+        @rtype: bool
+        """
+        uuid = circuit.cohq.target.target_uuid
+        return uuid in [c.cohq.target.target_uuid for c in self.circuits]
+
+
+
 
     def is_last_in_bundle(self, cmd, target, phase_name):
         """

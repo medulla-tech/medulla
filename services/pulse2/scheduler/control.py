@@ -431,6 +431,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 if not circuit.cohq.cmd.inDeploymentInterval():
                     circuit.release()
                     continue
+                if self.contains_running_target(circuit):
+                    # if another deployment running on the same machine
+                    continue
                 if circuit.network_address == group :
                     if count == total :
                         break
@@ -576,10 +579,16 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
             # queued bundled circuits to exclude
             banned = self.bundles.get_banned_cohs()
-            for id in [id for id in ids if id not in banned] :
+            for id in ids :
+                if id in banned :
+                    continue
     
                 circuit = self.get(id)
                 if circuit :
+                    if self.contains_running_target(circuit):
+                        # if another deployment running on the same machine
+                        continue
+
                     self.logger.info("Circuit #%s: (group %s) is going to start" %  
                             (circuit.id, slightest_network))
                     circuit.status = CC_STATUS.ACTIVE
