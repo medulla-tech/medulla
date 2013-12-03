@@ -66,7 +66,10 @@ def dictToURL(params):
     for k in params.keys():
         if type(params[k]) == type([]):
             for val in params[k]:
-                s+= '&%s=%s' % (k,val)
+		if val is None:
+  		    s+= '&%s=' % k
+		else:
+                    s+= '&%s=%s' % (k,val)
             del params[k]
     return urllib.urlencode(params)+s
 
@@ -140,6 +143,14 @@ def getHTMLerr(html):
         # Printing error text
         logger.warning(d('.h1').text())
         return {'err':15,'errtext':d('.h1').text()}
+    else:
+	if len(d('.editError')):
+	    errors = []
+	    for i in xrange(len(d('.editError'))):
+		errors.append(d('.editError').eq(i).text())
+	    error_text = '\n'.join(errors)
+	    logger.warning(error_text)
+	    return {'err':15,'errtext':error_text}
 
 
 # ==========================================================================
@@ -240,7 +251,7 @@ def list_files(host,backup_num,share_name,dir,filter,recursive=0):
                 result[3] += [cols.eq(1).text()] # type (str)
                 result[4] += [cols.eq(2).text()] # mode
                 result[5] += [cols.eq(4).text()] # size
-                result[6] += [cols.eq(5).text()] # last modification 
+                result[6] += [cols.eq(5).text()] # last modification
             # if recursive is on, we add directories to dirs array to browse them
             if recursive and cols.eq(1).text()=='dir':
                 subdir = urllib.unquote(cols.eq(0).find('input').val())
@@ -477,6 +488,8 @@ def get_host_config(host,backupserver=''):
     for i in xrange(len(inputs)):
         key = inputs.eq(i).attr('name')
         value = inputs.eq(i).val()
+	if value is None:
+	    continue
         # Isolating host config params
         if 'v_zZ_' in key:
             host_config[key.replace('v_zZ_','')]= value
@@ -589,8 +602,8 @@ def set_backup_for_host(uuid):
         config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
     except:
         config['Hosts'] = [{'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}]
-    res = set_host_config('',config,1,server_url)
-    if res['err']: return res
+    res = set_host_config('', config, 1, server_url)
+    #if res['err']: return res
     # Checking if host has been added, then add it to DB
     config = get_host_config('',server_url)['general_config']
     is_added = 0
@@ -724,7 +737,7 @@ def build_fileindex(host):
             return getHTMLerr(html)
         #
         d=pq(html)
-        # 
+        #
         if not d('pre:first'):
             return _FORMAT_ERROR
         #
@@ -735,7 +748,7 @@ def build_fileindex(host):
         file_index[host][backupnum] = {}
         for line in lines:
             if len(line)<3:
-                continue 
+                continue
             if line[0:2]!= '  ':
                 if 'backup started' in line:
                     r1 = re.search('for directory ([^(^)]+) \(baseline backup.+\)',line)
@@ -792,7 +805,7 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
                 _type = file_index[host][backupnum][sharename]['types'][i]
                 # if symlink, we pass
                 if _type == "l": continue
-                if type_0 and _type != type_0: continue 
+                if type_0 and _type != type_0: continue
                 # ========== FILENAME FILTERING =============================
                 filepath = file_index[host][backupnum][sharename]['paths'][i]
                 filename = os.path.basename(filepath).lower()
@@ -810,7 +823,7 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
                                     'type'      : _type
                                 })
     return {'err':0, 'data' : result}
-        
+
 
 def apply_backup_profile(profileid):
     # Hosts corresponding to selected profile
