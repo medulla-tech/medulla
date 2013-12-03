@@ -48,7 +48,7 @@ class PullPhase(Phase):
     def parse_pull_phase_result(self,(exitcode, stdout, stderr)):
 
         if exitcode == PULSE2_SUCCESS_ERROR: # success
-            self.logger.info("Circuit #%s: %s done (exitcode == 0)" % (self.coh.id, self.name))
+            self.logger.info("Circuit #%s: pull %s done (exitcode == 0)" % (self.coh.id, self.name))
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
                 return DIRECTIVE.KILLED
@@ -58,13 +58,13 @@ class PullPhase(Phase):
             return self.give_up()
 
         elif self.name in self.config.non_fatal_steps:
-            self.logger.info("Circuit #%s: %s failed (exitcode != 0), but non fatal according to scheduler config file" % (self.coh.id, self.name))
+            self.logger.info("Circuit #%s: pull %s failed (exitcode != 0), but non fatal according to scheduler config file" % (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             self.phase.set_done()
             return self.next()
 
         else: # failure: immediately give up
-            self.logger.info("Circuit #%s: %s failed (exitcode != 0)" % (self.coh.id, self.name))
+            self.logger.info("Circuit #%s: pull %s failed (exitcode != 0)" % (self.coh.id, self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
 
@@ -78,7 +78,7 @@ class PullPhase(Phase):
 class UploadPhase(PullPhase):
     name = "upload"
 
-    @launcher_proxymethod("completed_pull")
+    @launcher_proxymethod("pull_completed_pull")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -86,7 +86,7 @@ class UploadPhase(PullPhase):
 class ExecutionPhase(PullPhase):
     name = "execute"
 
-    @launcher_proxymethod("completed_execution")
+    @launcher_proxymethod("pull_completed_execution")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -94,7 +94,7 @@ class ExecutionPhase(PullPhase):
 class DeletePhase(PullPhase):
     name = "delete"
 
-    @launcher_proxymethod("completed_deletion")
+    @launcher_proxymethod("pull_completed_deletion")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -102,7 +102,7 @@ class DeletePhase(PullPhase):
 class InventoryPhase(PullPhase):
     name = "inventory"
 
-    @launcher_proxymethod("completed_inventory")
+    @launcher_proxymethod("pull_completed_inventory")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -110,7 +110,7 @@ class InventoryPhase(PullPhase):
 class RebootPhase(PullPhase):
     name = "reboot"
 
-    @launcher_proxymethod("completed_reboot")
+    @launcher_proxymethod("pull_completed_reboot")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -118,7 +118,7 @@ class RebootPhase(PullPhase):
 class HaltPhase(PullPhase):
     name = "halt"
 
-    @launcher_proxymethod("completed_halt")
+    @launcher_proxymethod("pull_completed_halt")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 

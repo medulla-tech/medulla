@@ -108,7 +108,7 @@ class MethodProxy(MscContainer):
         if from_dlp :
             # Recurrent phase parsing which does not exists in the container
             # The circuit is created out of container
-            circuit = Circuit(id, self.installed_phases, self.config)
+            circuit = Circuit(id, self.installed_phases, self.config, True)
             circuit.install_dispatcher(self)
             d = circuit.setup(True)
             @d.addCallback

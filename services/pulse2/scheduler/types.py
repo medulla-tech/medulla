@@ -90,7 +90,7 @@ CC_STATUS = enum("ACTIVE",
                  )
 
 
-class PhaseProxyMethodContainer :
+class PhaseProxyMethodContainer(object):
     """
     Identification of methods tagged by launcher_proxymethod decorator.
 
@@ -491,7 +491,7 @@ class CircuitBase(object):
     # methods called by scheduler-proxy
     _proxy_methods = {}
     # list of phases to refer phase objects 
-    installed_phases = []
+    installed_phases = {}
     # Main container of selected phases
     _phases = None
     # msc data persistence model
@@ -512,16 +512,19 @@ class CircuitBase(object):
     launcher = None
     launchers_provider = None
 
-    def __init__(self, _id, installed_phases, config):
+    def __init__(self, _id, installed_phases, config, pull=False):
         """
         @param id: CommandOnHost id
         @type id: int
 
         @param installed_phases: all possible phases classes to use
-        @type installed_phases: list
+        @type installed_phases: dict
 
         @param config: scheduler's configuration container
         @type config: SchedulerConfig
+
+        @param pull: True if pull mode
+        @type pull: bool
         """
         self.logger = logging.getLogger()
         self.id = _id
@@ -531,6 +534,7 @@ class CircuitBase(object):
         self.cmd_id = self.cohq.cmd.id
 
         self.installed_phases = installed_phases
+        self.pull = pull
 
     @property 
     def is_running(self):
@@ -565,8 +569,15 @@ class CircuitBase(object):
         
         phases = []
         selected = self.cohq.get_phases()
+        if self.pull:
+            d_mode = "pull"
+        else :
+            d_mode = "push"
+
+        self.logger.debug("Circuit #%s: started on %s mode" %(self.id, d_mode))
+
         for phase_name in selected :
-            matches = [p for p in self.installed_phases if p.name==phase_name]
+            matches = [p for p in self.installed_phases[d_mode] if p.name==phase_name]
             if len(matches) == 1:
                 phases.append(matches[0])
             else :

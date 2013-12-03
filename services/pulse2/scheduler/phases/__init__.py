@@ -19,23 +19,44 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from pulse2.scheduler.phases.remote import WOLPhase, UploadPhase, ExecutionPhase
-from pulse2.scheduler.phases.remote import DeletePhase, InventoryPhase
-from pulse2.scheduler.phases.remote import RebootPhase, HaltPhase, DonePhase
-from pulse2.scheduler.phases.imaging import PreImagingMenuPhase
-from pulse2.scheduler.phases.imaging import PostImagingMenuPhase
+def push_phases():
+    from pulse2.scheduler.phases.remote import WOLPhase, UploadPhase, ExecutionPhase
+    from pulse2.scheduler.phases.remote import DeletePhase, InventoryPhase
+    from pulse2.scheduler.phases.remote import RebootPhase, HaltPhase, DonePhase
+    from pulse2.scheduler.phases.imaging import PreImagingMenuPhase
+    from pulse2.scheduler.phases.imaging import PostImagingMenuPhase
 
-installed_phases = [PreImagingMenuPhase,
-                    WOLPhase,
-                    PostImagingMenuPhase,
-                    UploadPhase,
-                    ExecutionPhase,
-                    DeletePhase,
-                    InventoryPhase,
-                    RebootPhase,
-                    HaltPhase, 
-                    DonePhase,
-                   ]
+    return [PreImagingMenuPhase,
+            WOLPhase,
+            PostImagingMenuPhase,
+            UploadPhase,
+            ExecutionPhase,
+            DeletePhase,
+            InventoryPhase,
+            RebootPhase,
+            HaltPhase, 
+            DonePhase,
+           ]
+def pull_phases():
+    from pulse2.scheduler.phases.pull import UploadPhase, ExecutionPhase
+    from pulse2.scheduler.phases.pull import DeletePhase, InventoryPhase
+    from pulse2.scheduler.phases.pull import RebootPhase, HaltPhase
+    from pulse2.scheduler.phases.remote import DonePhase
+
+    return [UploadPhase,
+            ExecutionPhase,
+            DeletePhase,
+            InventoryPhase,
+            RebootPhase,
+            HaltPhase, 
+            DonePhase,
+           ]
+
+installed_phases = {"push": push_phases(),
+                    "pull": pull_phases(),
+                   } 
+
+
 
 __all__ = ["installed_phases"]
 
