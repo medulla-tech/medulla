@@ -117,10 +117,22 @@ class MethodProxy(MscContainer):
                 return dth
             @d.addCallback
             def _post_setup(result):
-                return self._run_proxymethod(launcher, id, name, args, circuit)
+                dps = maybeDeferred(self._run_proxymethod, launcher, id, name, args, circuit)
+                @dps.addCallback
+                def result_proxy(res):
+                    return True
+                @dps.addErrback
+                def failed_proxy(failure):
+                    self.logger.warn("Proxymethod execution failed: %s" % failure)
+                    return False
+                return dps
+
+
             @d.addErrback
             def _eb(result):
                 self.logger.warn("Recurrent phase result parsing failed: %s" % result)
+                return False
+            return d
         else :
 
             return self._run_proxymethod(launcher, id, name, args)
@@ -163,9 +175,9 @@ class MethodProxy(MscContainer):
                     stderr = unicode(b64decode(_stderr),'utf-8', 'strict')
                     result = method(circuit.running_phase, (exitcode, stdout, stderr))
                 else: 
-                 result = method(circuit.running_phase, args)
+                    result = method(circuit.running_phase, args)
 
-                circuit.phase_process(result)
+                    circuit.phase_process(result)
                 return True
         return False
 
