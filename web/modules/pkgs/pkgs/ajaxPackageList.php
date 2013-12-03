@@ -45,8 +45,9 @@ $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 $count = $packages[0];
 $packages = $packages[1];
 
-$desc = $params = $names = $versions = $size = array();
+$desc = $params = $names = $versions = $licenses = $size = array();
 $err = array();
+
 foreach ($packages as $p) {
     $p = $p[0];
     if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
@@ -55,6 +56,12 @@ foreach ($packages as $p) {
         $names[] = $p['label'];
         $versions[] = $p['version'];
         $desc[] = $p['description'];
+        if ($p['associateinventory'] == 1 && isset($p['licenses']) && ! empty($p['licenses'])) {
+            $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion']);
+            $licenses[] = $licensescount . '/' . $p['licenses'];
+        } else {
+            $licenses[] = '';
+        }
         $size[] = prettyOctetDisplay($p['size']);
         $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
     }
@@ -68,6 +75,7 @@ $n->setCssClass("package");
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));
+$n->addExtraInfo($licenses, _T("Licenses", "pkgs"));
 $n->addExtraInfo($size, _T("Package size", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));

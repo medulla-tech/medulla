@@ -193,7 +193,7 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 
     foreach (array('Qvendor', 'Qsoftware', 'Qversion') as $k) {
         if (!isset($package[$k])) {
-            $package[$k] = '*';
+            $package[$k] = '';
         }
     }
     addQuerySection($f, $package);

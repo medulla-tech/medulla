@@ -112,7 +112,10 @@ class PackageParserXML:
                 associateinventory = tmp.firstChild.wholeText.strip()
 
             query = root.getElementsByTagName('query')
-            queries = {'Qvendor': '*', 'Qsoftware': '*', 'Qversion': '*', 'boolcnd': '*'}
+            queries = {'Qvendor': '',
+                       'Qsoftware': '',
+                       'Qversion': '',
+                       'boolcnd': ''}
             if query.length >= 1 and query[0].firstChild:
                 for k in queries:
                     tmp = query[0].getElementsByTagName(k)
