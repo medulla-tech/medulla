@@ -675,13 +675,19 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         b_ids = self.get_all_running_bundles()
         self.logger.debug("Bundles to hold: %s" % str(b_ids))
         self.bundles.clean_up_remaining(b_ids)
-        
+
+    def done_cleanup(self, reason):
+        for circuit in self.get_circuits_on_done():
+            circuit.release()
+
+
         
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.launch_remaining_waitings)
         d.addCallback(self.update_stats)
+        d.addCallback(self.done_cleanup)
         d.addErrback(self.eb_mainloop)
 
         return d

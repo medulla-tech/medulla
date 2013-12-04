@@ -273,7 +273,9 @@ class MscDatabase(DatabaseHelper):
             session.add(cmd)
             session.flush()
 
-        self._extendCommandsOnHost(session, cmd_id, start_date, end_date)
+            self._extendCommandsOnHost(session, cmd_id, start_date, end_date)
+            self.logger.info("msc: re-scheduling command id = <%s> from %s to %s" % (cmd_id, start_date, end_date))
+
 
         session.close()
 
@@ -297,6 +299,7 @@ class MscDatabase(DatabaseHelper):
         for coh in query.all():
             coh.start_date = start_date
             coh.end_date = end_date
+            coh.next_launch_date = start_date
             coh.attempts_failed = 0
             coh.current_state = "scheduled"
             session.add(coh)

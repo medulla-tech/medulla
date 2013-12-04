@@ -203,7 +203,8 @@ class MscQueryManager(MscContainer):
         uuid = circuit.cohq.target.target_uuid
         return uuid in [c.cohq.target.target_uuid for c in self.circuits]
 
-
+    def get_circuits_on_done(self):
+        return [c for c in self.circuits if c.cohq.coh.isStateDone()]
 
 
     def is_last_in_bundle(self, cmd, target, phase_name):
