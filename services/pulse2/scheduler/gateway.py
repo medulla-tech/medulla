@@ -210,7 +210,8 @@ class SchedulerGateway(UnixProtocol):
 
     ### Download Provider methods ###
     def _get_dlp_method(self, phase):
-        methods = {"upload": "pull_completed_pull",
+        methods = {"wol": "pull_completed_wol",
+                   "upload": "pull_completed_pull",
                    "execute": "pull_completed_execution",
                    "delete": "pull_completed_deletion",
                    "inventory": "pull_completed_inventory",

@@ -38,12 +38,13 @@ def push_phases():
             DonePhase,
            ]
 def pull_phases():
-    from pulse2.scheduler.phases.pull import UploadPhase, ExecutionPhase
+    from pulse2.scheduler.phases.pull import WOLPhase, UploadPhase, ExecutionPhase
     from pulse2.scheduler.phases.pull import DeletePhase, InventoryPhase
     from pulse2.scheduler.phases.pull import RebootPhase, HaltPhase
     from pulse2.scheduler.phases.remote import DonePhase
 
-    return [UploadPhase,
+    return [WOLPhase,
+            UploadPhase,
             ExecutionPhase,
             DeletePhase,
             InventoryPhase,

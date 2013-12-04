@@ -74,6 +74,13 @@ class PullPhase(Phase):
     def parse_pull_order(self, taken_in_account):
         self.parse_order(taken_in_account)
 
+class WOLPhase(PullPhase):
+    name = "wol"
+
+    @launcher_proxymethod("pull_completed_wol")
+    def parse_result(self, (exitcode, stdout, stderr)):
+        return self.parse_pull_phase_result((exitcode, stdout, stderr))
+
 
 class UploadPhase(PullPhase):
     name = "upload"
