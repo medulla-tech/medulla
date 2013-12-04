@@ -80,4 +80,7 @@ function getRsyncStatus($p_api, $pid) {
     return xmlCall("pkgs.ppa_getRsyncStatus", array($p_api, $pid));
 }
 
+function getLicensesCount($vendor, $software, $version) {
+    return XmlCall("glpi.getLicensesCount", array($vendor, $software, $version));
+}
 ?>

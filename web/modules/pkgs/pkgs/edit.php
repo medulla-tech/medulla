@@ -49,14 +49,15 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if ($_GET["action"] == "add") {
         $need_assign = True;
     }
-    foreach (array('id','label','version','description','Qvendor','Qsoftware','Qversion','boolcnd',
-            'licenses') as $post) {
+
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 
+            'boolcnd', 'licenses') as $post) {
         $package[$post] = $_POST[$post];
     }
-    foreach (array('reboot') as $post) {
+
+    foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-
     // Package command
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 
@@ -216,11 +217,6 @@ foreach ($options as $p) {
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
     );
 }
-/* ================= BEGIN LICENCE ===================== */
-$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')), 
-        array("value" => $package['licenses'])
-);
-/* ==================   END LICENCE  ====================== */
 
 foreach ($cmds as $p) {
     $f->add(
@@ -271,6 +267,11 @@ $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "dele
 /* =================   END FILE LIST   ===================== */
 
 addQuerySection($f, $package);
+/* =================   BEGIN LICENSE   ===================== */
+$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
+        array("value" => $package['licenses'])
+);
+/* ==================   END LICENSE   ====================== */
 
 
 // =========================================================================

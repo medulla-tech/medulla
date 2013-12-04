@@ -37,7 +37,8 @@ class PackageParser:
         if config.parser == None or config.parser == 'XML':
             self.parser = PackageParserXML()
         else:
-            self.logger.error("don't know how to parse this kind of package configuration %s" % (config.parser))
+            self.logger.error("don't know how to parse this kind of package configuration %s" %
+                              (config.parser))
             raise Exception("UKNPKGCNF")
 
     def parse(self, file):
@@ -48,6 +49,7 @@ class PackageParser:
 
     def concat(self, package):
         return self.parser.to_xml(package)
+
 
 class PackageParserXML:
     def parse_str(self, file):
@@ -70,12 +72,12 @@ class PackageParserXML:
             version = root.getElementsByTagName('version')[0]
             tmp = version.getElementsByTagName('numeric')[0]
             tmp = version.getElementsByTagName('label')[0]
-            if tmp.firstChild != None:
+            if tmp.firstChild is not None:
                 v_txt = tmp.firstChild.wholeText.strip()
             else:
                 v_txt = "0"
             tmp = root.getElementsByTagName('description')
-            if len(tmp) == 1 and tmp[0].firstChild != None:
+            if len(tmp) == 1 and tmp[0].firstChild is not None:
                 tmp = tmp[0]
                 desc = tmp.firstChild.wholeText.strip()
             else:
@@ -83,7 +85,7 @@ class PackageParserXML:
 
             licenses = ''
             tmp = root.getElementsByTagName('licenses')
-            if len(tmp) == 1 and tmp[0].firstChild != None:
+            if len(tmp) == 1 and tmp[0].firstChild is not None:
                 tmp = tmp[0]
                 licenses = tmp.firstChild.wholeText.strip()
 
@@ -93,20 +95,33 @@ class PackageParserXML:
                 reboot = cmd.getAttribute('reboot')
 
             cmds = {}
-            for c in ['installInit', 'preCommand', 'command', 'postCommandSuccess', 'postCommandFailure']:
+            for c in ['installInit',
+                      'preCommand',
+                      'command',
+                      'postCommandSuccess',
+                      'postCommandFailure']:
                 tmp = cmd.getElementsByTagName(c)
-                if len(tmp) == 1 and tmp[0].firstChild != None:
+                if len(tmp) == 1 and tmp[0].firstChild is not None:
                     command = tmp[0].firstChild.wholeText.strip()
                     if tmp[0].hasAttribute('name'):
                         ncmd = tmp[0].getAttribute('name')
                     else:
                         ncmd = ''
-                    cmds[c] = {'command':command, 'name':ncmd}
+                    cmds[c] = {'command': command, 'name': ncmd}
                 else:
                     cmds[c] = ''
 
+            associateinventory = 0
+            tmp = root.getElementsByTagName('associateinventory')
+            if len(tmp) == 1 and tmp[0].firstChild is not None:
+                tmp = tmp[0]
+                associateinventory = tmp.firstChild.wholeText.strip()
+
             query = root.getElementsByTagName('query')
-            queries = {'Qvendor': '*', 'Qsoftware': '*', 'Qversion': '*', 'boolcnd': '*'}
+            queries = {'Qvendor': '',
+                       'Qsoftware': '',
+                       'Qversion': '',
+                       'boolcnd': ''}
             if query.length >= 1 and query[0].firstChild:
                 for k in queries:
                     tmp = query[0].getElementsByTagName(k)
@@ -130,7 +145,8 @@ class PackageParserXML:
                 queries['Qsoftware'],
                 queries['Qversion'],
                 queries['boolcnd'],
-                licenses
+                licenses,
+                associateinventory
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -221,6 +237,11 @@ class PackageParserXML:
 
         docr.appendChild(commands)
 
+        associateinventory = doc.createElement('associateinventory')
+        appenchild = doc.createTextNode(str(package.associateinventory))
+        associateinventory.appendChild(appenchild)
+        docr.appendChild(associateinventory)
+
         query = doc.createElement('query')
         Qvendor = doc.createElement('Qvendor')
         Qvendor.appendChild(doc.createTextNode(package.Qvendor))
@@ -234,14 +255,21 @@ class PackageParserXML:
         boolcnd = doc.createElement('boolcnd')
         boolcnd.appendChild(doc.createTextNode(package.boolcnd))
         query.appendChild(boolcnd)
-        
+
         docr.appendChild(query)
 
-        return doc.toprettyxml(encoding = 'utf-8')
+        return doc.toprettyxml(encoding='utf-8')
 
     def doctype(self):
         return """
-    <!ELEMENT package (name,version,description?,licenses?,commands,files?, query?)>
+    <!ELEMENT package (name,\
+                       version,\
+                       description?,\
+                       commands,\
+                       files?,\
+                       associateinventory,\
+                       query?,\
+                       licenses?)>
     <!ATTLIST package id ID #REQUIRED>
 
     <!ELEMENT name (#PCDATA)>
@@ -269,14 +297,10 @@ class PackageParserXML:
     <!ATTLIST file fid ID #IMPLIED>
     <!ATTLIST file md5sum CDATA "">
     <!ATTLIST file size CDATA "">
+    <!ELEMENT associateinventory (#PCDATA)>
     <!ELEMENT query (Qvendor, Qsoftware, Qversion, boolnd)>
     <!ELEMENT Qvendor (#PCDATA)>
     <!ELEMENT Qsoftware (#PCDATA)>
     <!ELEMENT Qversion (#PCDATA)>
     <!ELEMENT boolcnd (#PCDATA)>
 """
-
-
-
-
-

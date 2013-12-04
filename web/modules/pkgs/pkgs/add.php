@@ -46,11 +46,11 @@ if (isset($_POST['bconfirm'])) {
         $level = 1;
     }
 
-    foreach (array('id','label','version','description','mode','Qvendor','Qsoftware','Qversion',
-            'boolcnd','licenses') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware', 
+            'Qversion', 'boolcnd', 'licenses') as $post) {
         $package[$post] = $_POST[$post];
     }
-    foreach (array('reboot') as $post) {
+    foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
     // Package command
@@ -182,11 +182,6 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => '')
         );
     }
-/* ================= BEGIN LICENCE ===================== */
-    $f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')), 
-            array("value" => '')
-    );
-/* ==================   END LICENCE  ====================== */
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
@@ -198,11 +193,16 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 
     foreach (array('Qvendor', 'Qsoftware', 'Qversion') as $k) {
         if (!isset($package[$k])) {
-            $package[$k] = '*';
+            $package[$k] = '';
         }
     }
     addQuerySection($f, $package);
-
+    /* =================   BEGIN LICENSE   ===================== */
+    $f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
+            array("value" => '')
+    );
+    /* ==================   END LICENSE   ====================== */
+    
     $f->pop();
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));

@@ -39,6 +39,12 @@ function addQuerySection($Form, $p) {
     $span = new SpanElement(_T("Query", "pkgs"), "pkgs-title");
     $Form->add(new TrFormElement("", $span), array());
     
+    $check = (($p['associateinventory'] == 1 || $p['associateinventory'] === 'on') ? 'checked' : '');
+    $Form->add(
+            new TrFormElement(_T('Associate inventory', 'pkgs'), 
+                    new CheckboxTpl('associateinventory')), array("value" => $check)
+    );
+
     addQuery($Form, array('Qvendor',_T('Vendor', 'pkgs')), $p, 'Vendors');
     addQuery($Form, array('Qsoftware',_T('Software', 'pkgs')), $p, 'Installed+software', 3, 'Qvendor');
     $Form->add(new TrFormElement(_T('Version', 'pkgs'), new InputTpl('Qversion')), array("value" => $p['Qversion']));

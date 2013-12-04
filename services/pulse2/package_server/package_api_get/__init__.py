@@ -118,8 +118,11 @@ class PackageApiGet(MyXmlrpc):
     def xmlrpc_getPackageHasToReboot(self, pid):
         return Common().package(pid, self.mp).reboot
 
-    def xmlrpc_getPackageLicensest(self, pid):
+    def xmlrpc_getPackageLicenses(self, pid):
         return Common().package(pid, self.mp).licenses
+
+    def xmlrpc_getPackageAssociateinventory(self, pid):
+        return Common().package(pid, self.mp).associateinventory
 
     def xmlrpc_getPackageQvendor(self, pid):
         return Common().package(pid, self.mp).Qvendor
