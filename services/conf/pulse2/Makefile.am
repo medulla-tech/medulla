@@ -39,12 +39,13 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/06_Laptop_type.py \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
+	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf \
 	$(certca) $(certpriv)
 
 EXTRA_DIST = $(nobase_pulseconf_DATA) \
              scheduler/scheduler.ini.in launchers/launchers.ini.in
 CLEANFILES = scheduler/scheduler.ini \
-             launchers/launchers.ini 
+             launchers/launchers.ini
 
 scheduler/scheduler.ini launchers/launchers.ini: Makefile
 	rm -f $@ $@.tmp

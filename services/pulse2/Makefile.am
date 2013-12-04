@@ -27,7 +27,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	launcher managers package_server package_server.assign_algo \
 	package_server.assign_algo.default \
 	package_server.assign_algo.terminal_type \
-        package_server.common package_server.description \
+    package_server.common package_server.description \
 	package_server.imaging package_server.imaging.api \
 	package_server.imaging.pxe \
 	package_server.imaging.common package_server.mirror \
@@ -36,13 +36,14 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	package_server.user_package_api scheduler \
 	scheduler.phases scheduler.proxy scheduler.cache \
 	scheduler.tracking scheduler.api scheduler.tests \
-	database.backuppc
+	database.backuppc \
+	dlp dlp.api dlp.tests
 
 all-local: site.py version.py
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
-nobase_modpython_DATA = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules))))
+nobase_modpython_DATA = $(wildcard $(srcdir)/*.py $(patsubst %,$(srcdir)/%/*.py ,$(subst .,/,$(pythonmodules)))) dlp/tests/config.ini
 nodist_modpython_DATA = site.py
 
 examplesdir = @examplesdir@

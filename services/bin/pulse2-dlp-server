@@ -1,0 +1,68 @@
+#!/usr/bin/python
+"""
+Used to run the dlp server with the
+cherrypy web server
+"""
+import os
+import cherrypy
+import logging
+from optparse import OptionParser
+
+from mmc.site import mmcconfdir
+
+from pulse2.dlp.api.v1 import rootV1
+from pulse2.dlp.config import default_conf, app_config
+
+dlp_server_config = os.path.join(mmcconfdir, 'pulse2', 'dlp-server', 'dlp-server.ini')
+
+parser = OptionParser()
+parser.add_option('-c', '--config', dest="config", action="store",
+                  default=dlp_server_config,
+                  help="Path to config file (default: %s)" % dlp_server_config)
+parser.add_option('-d', '--debug', dest="debug", action="store_true", default=False,
+                  help="Enable debug mode")
+
+(options, args) = parser.parse_args()
+
+cherrypy.config.update(default_conf)
+cherrypy.config.update({
+    'global': {
+        'server.socket_host': '0.0.0.0',
+        'server.socket_port': 8080,
+    }
+})
+cherrypy.config.update(options.config)
+
+if options.debug:
+    cherrypy.config.update({
+        'global': {
+            'engine.autoreload.on': False,
+            'dlp.loglevel': "DEBUG",
+            'request.show_traceback': True
+        }
+    })
+
+# Cleanup locked sessions
+sessions_path = cherrypy.config.get('tools.sessions.storage_path', False)
+if sessions_path:
+    for file in os.listdir(sessions_path):
+        if file.endswith('.lock'):
+            try:
+                os.unlink(os.path.join(sessions_path, file))
+            except OSError:
+                cherrypy.log("Can't remove session file lock: %s\n" % file, severity=logging.WARNING, traceback=True)
+
+application = cherrypy.tree.mount(rootV1, '/api/v1', app_config)
+application.log.error_log.setLevel(getattr(logging, cherrypy.config.get("dlp.loglevel")))
+application.log.access_log.setLevel(getattr(logging, cherrypy.config.get("dlp.loglevel")))
+cherrypy.log.error_log.setLevel(getattr(logging, cherrypy.config.get("dlp.loglevel")))
+cherrypy.log.access_log.setLevel(getattr(logging, cherrypy.config.get("dlp.loglevel")))
+
+# Run the server
+if hasattr(cherrypy.engine, "signal_handler"):
+    cherrypy.engine.signal_handler.subscribe()
+if hasattr(cherrypy.engine, "console_control_handler"):
+    cherrypy.engine.console_control_handler.subscribe()
+
+cherrypy.engine.start()
+cherrypy.engine.block()
