@@ -108,9 +108,13 @@ class ServerAPI {
 class Package {
     function Package($h_pkg) {
         $this->label = $h_pkg['label'];
+        $this->description = $h_pkg['description'];
         $this->version = $h_pkg['version'];
         $this->size = $h_pkg['size'];
         $this->id = $h_pkg['id'];
+        $this->Qsoftware = $h_pkg['Qsoftware'];
+        $this->Qversion = $h_pkg['Qversion'];
+        $this->Qvendor = $h_pkg['Qvendor'];
     }
 }
 

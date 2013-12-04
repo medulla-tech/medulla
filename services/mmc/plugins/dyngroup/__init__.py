@@ -176,9 +176,9 @@ class RpcProxy(RpcProxyI):
             ComputerProfileManager().delProfile(profile_UUID)
         return xmlrpcCleanup(DyngroupDatabase().delete_group(ctx, id))
 
-    def create_group(self, name, visibility):
+    def create_group(self, name, visibility, type=0, parent_id=None):
         ctx = self.currentContext
-        return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility))
+        return xmlrpcCleanup(DyngroupDatabase().create_group(ctx, name, visibility, type, parent_id))
 
     def create_profile(self, name, visibility): #NEW
         ctx = self.currentContext
@@ -480,6 +480,33 @@ class RpcProxy(RpcProxyI):
         else:
             return queryManager.getExtended(moduleName, criterion)
 
+    def add_convergence_datas(self, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active):
+        ret = DyngroupDatabase().add_convergence_datas(parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active)
+        return xmlrpcCleanup(ret)
+
+    def edit_convergence_datas(self, gid, papi, package_id, datas):
+        ret = DyngroupDatabase().edit_convergence_datas(gid, papi, package_id, datas)
+        return xmlrpcCleanup(ret)
+
+    def getConvergenceStatus(self, gid):
+        ret = DyngroupDatabase().getConvergenceStatus(gid)
+        return xmlrpcCleanup(ret)
+
+    def get_convergence_groups_to_update(self, papi_id, package_id):
+        ret = DyngroupDatabase().get_convergence_groups_to_update(papi_id, package_id)
+        return xmlrpcCleanup(ret)
+
+    def get_convergence_command_id(self, gid, papi, package_id):
+        ret = DyngroupDatabase().get_convergence_command_id(gid, papi, package_id)
+        return xmlrpcCleanup(ret)
+
+    def is_convergence_active(self, gid, papi, package_id):
+        ret = DyngroupDatabase().is_convergence_active(gid, papi, package_id)
+        return xmlrpcCleanup(ret)
+
+    def get_deploy_group_id(self, gid, papi, package_id):
+        ret = DyngroupDatabase().get_deploy_group_id(gid, papi, package_id)
+        return xmlrpcCleanup(ret)
 
 def __onlyIn(query, module):
     for q in query[1]:

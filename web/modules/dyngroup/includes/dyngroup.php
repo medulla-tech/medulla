@@ -75,6 +75,96 @@ function getPGobject($id, $load = false) {
     }
 }
 
+
+class ConvergenceGroup extends Group {
+    function __Construct($id = null, $load = false) {
+        parent::Group($id, $load);
+        $this->type = 2;
+        $this->isDeployGroup = True;
+        $this->isDoneGroup = False;
+    }
+
+    function setDoneGroup() {
+        $this->isDeployGroup = False;
+        $this->isDoneGroup = True;
+    }
+
+    function setPackage($package) {
+        $this->package = $package;
+    }
+
+    function setParentGroup($group_object) {
+        $this->parentGroup = $group_object;
+        $this->parent_id = $this->parentGroup->id;
+    }
+
+    function create() {
+        $group_name = ($this->isDeployGroup) ? 'deploy' : 'done';
+        parent::create($group_name . '-' . time(), False);
+    }
+
+    function getParentRequestAndBool() {
+        /* Get parent group request and bool */
+        $this->parentRequest = parse_request($this->parentGroup->getRequest());
+        $this->parentBool = $this->parentGroup->getBool();
+        if (!$this->parentBool) {
+            /* We need a bool.
+             * if bool is not set, create it.
+             * Bool is a AND of all sub requests
+             */
+            $this->parentBool = sprintf('AND(%s)', implode(', ', array_keys($this->parentRequest->subs)));
+        }
+    }
+
+    function setRequest() {
+        $this->request = new Request();
+        /* Create dyngroup based on parent group's name */
+        $subReqModule = 'dyngroup';
+        $subReqCriterion = 'groupname';
+        $subReqValue = $this->parentGroup->name;
+        $subReqValue2 = '';
+        $subReqOperator = '=';
+        $subReq = new SubRequest($subReqModule, $subReqCriterion, $subReqValue, $subReqValue2, $subReqOperator);
+        /* Add subrequest */
+        $this->request->addSub($subReq);
+
+        /* Create convergence groups subrequest */
+        $subReqModule = (in_array('glpi', $_SESSION['modulesList'])) ? 'glpi' : 'inventory';
+        $subReqCriterion = 'Installed software (specific vendor and version)';
+        $subReqValue = sprintf('>%s, %s, %s<', $this->package->Qvendor, $this->package->Qsoftware, $this->package->Qversion);
+        $subReqValue2 = '';
+        $subReqOperator = '=';
+        $subReq = new SubRequest($subReqModule, $subReqCriterion, $subReqValue, $subReqValue2, $subReqOperator);
+
+        /* Add convergence subrequest to main request */
+        $this->request->addSub($subReq);
+        parent::setRequest($this->request->toS());
+    }
+
+    function setBool() {
+        /* create convergence groups bools */
+        if ($this->isDeployGroup) {
+            $this->bool = 'AND(1, NOT(2))';
+        }
+        else {
+            $this->bool = 'AND(1, 2)';
+        }
+        parent::setBool($this->bool);
+    }
+
+    function setRequestAndBool() {
+        $this->setRequest();
+        $this->setBool();
+    }
+
+    /*
+     * Get deploy sub-group id for given group
+     */
+    function getDeployGroupId() {
+        return xmlrpc_getDeployGroupId($this->parentGroup->id, $this->package->id);
+    }
+}
+
 class Profile extends Group {
     # use the same methods as Group except for the creation
     function Profile($id = null, $load = false) {
@@ -107,10 +197,39 @@ class Group {
             $this->all_params = array();
         }
         $this->type = 0;
+        $this->parent_id = null;
     }
+
+    function createConvergenceGroups($package) {
+        $deployGroup = new ConvergenceGroup();
+        $doneGroup = new ConvergenceGroup();
+
+        $deployGroup->setPackage($package);
+        $doneGroup->setPackage($package);
+
+        $doneGroup->setDoneGroup();
+
+        $deployGroup->setParentGroup($this);
+        $doneGroup->setParentGroup($this);
+
+        $deployGroup->create();
+        $doneGroup->create();
+
+        $deployGroup->setRequestAndBool();
+        $doneGroup->setRequestAndBool();
+        return array(
+            'done_group_id' => $doneGroup->id,
+            'deploy_group_id' => $deployGroup->id,
+        );
+    }
+
+    function getDeployGroupId($package) {
+        return xmlrpc_getDeployGroupId($this->id, $package->id);
+    }
+
     function can_modify() { if (isset($this->all_params['ro']) && $this->all_params['ro']) { return False; } return True; }
     function delete() { if ($this->can_modify()) { return __xmlrpc_delete_group($this->id); } return False; }
-    function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility); return $this->id; }
+    function create($name, $visibility) { $this->id =  __xmlrpc_create_group($name, $visibility, $this->type, $this->parent_id); return $this->id; }
     function toS() { return __xmlrpc_tos_group($this->id); }
 
     function getName() { return $this->name; }
@@ -200,7 +319,7 @@ function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofi
 function __xmlrpc_get_group($id, $ro) { return xmlCall("dyngroup.get_group", array($id, $ro)); }
 
 function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
-function __xmlrpc_create_group($name, $visibility) { return xmlCall("dyngroup.create_group", array($name, $visibility)); }
+function __xmlrpc_create_group($name, $visibility, $type = 0, $parent_id = null) { return xmlCall("dyngroup.create_group", array($name, $visibility, $type, $parent_id)); }
 function __xmlrpc_create_profile($name, $visibility) { return xmlCall("dyngroup.create_profile", array($name, $visibility)); }
 function __xmlrpc_tos_group($id) { return xmlCall("dyngroup.tos_group", array($id)); }
 function __xmlrpc_setname_group($id, $name) { return xmlCall("dyngroup.setname_group", array($id, $name)); }
@@ -259,5 +378,51 @@ function __xmlrpc_set_profile_entity($gid, $entity_uuid) { return xmlCall("dyngr
 function __xmlrpc_get_profile_entity($gid) { return xmlCall("dyngroup.get_profile_entity", array($gid)); }
 
 function xmlrpc_isProfileAssociatedToImagingServer($gid) { return xmlCall("dyngroup.isProfileAssociatedToImagingServer", array($gid)); }
+
+/*
+ * Get deploy sub-group id for given group
+ */
+function xmlrpc_getDeployGroupId($gid, $package_id) {
+    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $package_id));
+}
+
+function xmlrpc_add_convergence_datas($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active) {
+    return xmlCall("dyngroup.add_convergence_datas", array($parent_group_id, $deploy_group_id, $done_group_id, $pid, $p_api, $command_id, $active));
+}
+
+function xmlrpc_getConvergenceStatus($gid) {
+    return xmlCall("dyngroup.getConvergenceStatus", array($gid));
+}
+
+function xmlrpc_get_convergence_groups_to_update($papi_id, $package) {
+    return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
+}
+
+function update_convergence_groups_request($papi_id, $package) {
+    $package = (object) $package;
+    // Get convergence groups to update
+    $group_ids = xmlrpc_get_convergence_groups_to_update($papi_id, $package->id);
+    foreach ($group_ids as $gid) {
+        $convergence_group = new ConvergenceGroup($gid);
+        $convergence_group->setPackage($package);
+        $convergence_group->setRequest();
+    }
+}
+
+function xmlrpc_get_convergence_command_id($gid, $p_api, $pid) {
+    return xmlCall("dyngroup.get_convergence_command_id", array($gid, $p_api, $pid));
+}
+
+function xmlrpc_is_convergence_active($gid, $p_api, $pid) {
+    return xmlCall("dyngroup.is_convergence_active", array($gid, $p_api, $pid));
+}
+
+function xmlrpc_get_deploy_group_id($gid, $p_api, $pid) {
+    return xmlCall("dyngroup.get_deploy_group_id", array($gid, $p_api, $pid));
+}
+
+function xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $datas) {
+    return xmlCall("dyngroup.edit_convergence_datas", array($gid, $p_api, $pid, $datas));
+}
 
 ?>

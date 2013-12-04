@@ -46,9 +46,41 @@ if ($_GET['uuid']) {
 }
 $label->display();
 
+function getConvergenceStatus($mountpoint, $pid, $group_convergence_status) {
+    $return = 0;
+    if (array_key_exists($mountpoint, $group_convergence_status)) {
+        if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
+            if ($group_convergence_status[$mountpoint][$pid]) {
+                $return = 1;
+            }
+            else {
+                $return = 2;
+            }
+        }
+    }
+    return $return;
+}
+
+function prettyConvergenceStatusDisplay($status) {
+    switch ($status) {
+        case 0:
+            return _T('Available', 'msc');
+        case 1:
+            return _T('Active', 'msc');
+        case 2:
+            return _T('Inactive', 'msc');
+        default:
+            return _T('Not available', 'msc');
+    }
+}
+
+$group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
+
 $a_packages = array();
+$a_description = array();
 $a_pversions = array();
 $a_sizes = array();
+$a_convergence_status = array();
 $a_css = array();
 $params = array();
 
@@ -81,12 +113,17 @@ foreach ($packages as $c_package) {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "msc"), $c_package[0]['mirror']);
     } else {
         $a_packages[] = $package->label;
+        $a_description[] = $package->description;
         $a_pversions[] = $package->version;
         $a_sizes[] = prettyOctetDisplay($package->size);
+        $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status);
+        // set param_convergence_edit to True if convergence status is active or inactive
+        $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
+        $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
         if (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
         } else {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
+            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI(), 'editConvergence' => $param_convergence_edit);
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
@@ -101,8 +138,10 @@ if ($err) {
 }
 
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
+$n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->addExtraInfo($a_sizes, _T("Package size", "msc"));
+$n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
 $n->setCssClasses($a_css);
 $n->setParamInfo($params);
 $n->setItemCount($count);
@@ -114,7 +153,8 @@ $n->end = $count;
 
 $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
-$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
+$n->addActionItem(new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers"));
+//$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
 ?>
@@ -144,6 +184,16 @@ $n->display();
         color: #FFF;
     }
 
+li.convergence a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/msc/graph/images/actions/convergence.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 
 </style>
 

@@ -190,6 +190,12 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
 
+    /* Software convergence configuration for a group */
+    $page = new Page("convergence", _T("Software convergence configuration", "msc"));
+    $page->setFile("modules/msc/msc/convergence.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
+
     /* Confirm popup when attempting a quick action */
     $page = new Page("start_quick_action", _T("Launch a quick action command", "msc"));
     $page->setFile("modules/msc/msc/start_quick_action.php");

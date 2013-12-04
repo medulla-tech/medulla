@@ -30,17 +30,20 @@ import logging
 # SqlAlchemy
 from sqlalchemy import and_, or_, asc, select
 from sqlalchemy.orm import create_session
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
 from mmc.plugins.base import getUserGroups
 import mmc.plugins.dyngroup
+from mmc.database.database_helper import DatabaseHelper
 # PULSE2 modules
 import pulse2.database.dyngroup
-from pulse2.database.dyngroup import Groups, Machines, Results, Users
+from pulse2.database.dyngroup import Groups, Machines, Results, Users, Convergence, ProfilesData, ProfilesResults, ShareGroup
 # Imported last
 import re
+import cPickle
 
-log = logging.getLogger()
+logger = logging.getLogger()
 
 class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     """
@@ -381,7 +384,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return group
         return False
 
-    def delete_group(self, ctx, id):
+    @DatabaseHelper._session
+    def delete_group(self, session, ctx, id):
         """
         delete a group defined by it's id
         delete the results and the machines linked to that group if needed
@@ -389,29 +393,35 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         # Is current group a profile ?
         if self.isprofile(ctx, id):
             resultTable = self.profilesResults
+            resultKlass = ProfilesResults
         else:
             resultTable = self.results
+            resultKlass = Results
 
         self.__getOrCreateUser(ctx)
         connection = self.getDbConnection()
         trans = connection.begin()
         # get machines to possibly delete
-        session = create_session()
         to_delete = [x.id for x in session.query(Machines).select_from(self.machines.join(resultTable)).filter(resultTable.c.FK_groups == id)]
-        session.close()
         # Delete the previous results for this group in the Results table
-        connection.execute(resultTable.delete(resultTable.c.FK_groups == id))
+        session.query(resultKlass).filter_by(FK_groups = id).delete()
         # Delete all shares on the group before delete group
         self.__deleteShares(id, session)
         # Update the Machines table to remove ghost records
         self.__updateMachinesTable(connection, to_delete)
         # Delete the group from the Groups table
-        connection.execute(self.profilesData.delete(self.profilesData.c.FK_groups == id))
-        connection.execute(self.groups.delete(self.groups.c.id == id))
+        session.query(ProfilesData).filter_by(FK_groups = id).delete()
+        session.query(Groups).filter_by(id = id).delete()
+        # Delete convergence groups
+        convergence_group_ids = [cgroup.id for cgroup in session.query(Groups).filter_by(parent_id = id)]
+        session.query(ShareGroup).filter(ShareGroup.FK_groups.in_(convergence_group_ids)).delete(synchronize_session='fetch')
+        session.query(Groups).filter_by(parent_id = id).delete()
+        session.query(Convergence).filter_by(parentGroupId = id).delete()
+        session.flush()
         trans.commit()
         return True
 
-    def create_group(self, ctx, name, visibility, type = 0):
+    def create_group(self, ctx, name, visibility, type = 0, parent_id = None):
         """
         create a new group with the name, visibility and type (0 = group, 1 = profile)
         the owner will be the ctx
@@ -423,6 +433,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         group.name = name.encode('utf-8')
         group.FK_users = user_id
         group.type = type
+        group.parent_id = parent_id
         session.add(group)
         session.flush()
         session.close()
@@ -816,3 +827,106 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         trans.commit()
         return True
 
+    @DatabaseHelper._session
+    def get_deploy_group_id(self, session, gid, papi, package_id):
+        query = session.query(Convergence).filter_by(
+            parentGroupId = gid,
+            papi = cPickle.dumps(papi),
+            packageUUID = package_id
+        )
+        try:
+            query = query.one()
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.error('Error where fetching deploy group for group %s (package %s): %s' % (gid, package_id, e))
+            return False
+
+        return query.deployGroupId
+
+    @DatabaseHelper._session
+    def add_convergence_datas(self, session, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active):
+        convergence = Convergence()
+        convergence.parentGroupId = parent_group_id
+        convergence.deployGroupId = deploy_group_id
+        convergence.doneGroupId = done_group_id
+        convergence.papi = cPickle.dumps(p_api) # cPickle.loads() to read datas
+        convergence.packageUUID = pid
+        convergence.commandId = command_id
+        convergence.active = active
+        session.add(convergence)
+        session.flush()
+        return True
+
+    @DatabaseHelper._session
+    def edit_convergence_datas(self, session, gid, papi, package_id, datas):
+        return session.query(Convergence).filter_by(
+            parentGroupId = gid,
+            papi = cPickle.dumps(papi),
+            packageUUID = package_id
+        ).update(datas)
+
+    @DatabaseHelper._session
+    def getConvergenceStatus(self, session, gid):
+        """
+        Get Convergence status for given group id
+
+        ret = {
+            papi_mountpoint: {
+                packageUUID1: active,
+                packageUUID2: active,
+                etc..
+            }
+        }
+        """
+        query = session.query(Convergence).filter_by(parentGroupId = gid)
+        ret = {}
+        for line in query:
+            papi = cPickle.loads(line.papi)
+            if not papi['mountpoint'] in ret:
+                ret[papi['mountpoint']] = {}
+            ret[papi['mountpoint']][line.packageUUID] = line.active
+        return ret
+
+    @DatabaseHelper._session
+    def get_convergence_groups_to_update(self, session, mountpoint, package_id):
+        if mountpoint.startswith('UUID/'):
+            # mountpoint param is normally package API UUID
+            # package API UUID = UUID/mountpoint
+            # So remove this silly UUID/
+            mountpoint = mountpoint[5:]
+        ret = []
+        query = session.query(Convergence)
+        query = query.filter(and_(
+                    Convergence.papi.like('%' + mountpoint + '%'),
+                    Convergence.packageUUID == package_id,
+                ))
+        for line in query:
+            ret = ret + [line.deployGroupId, line.doneGroupId]
+        return ret
+
+    @DatabaseHelper._session
+    def get_convergence_command_id(self, session, gid, papi, package_id):
+        query = session.query(Convergence).filter_by(
+            parentGroupId = gid,
+            papi = cPickle.dumps(papi),
+            packageUUID = package_id
+        )
+        try:
+            ret = query.one()
+            return ret.commandId
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
+            return None
+
+    @DatabaseHelper._session
+    def is_convergence_active(self, session, gid, papi, package_id):
+        query = session.query(Convergence).filter_by(
+            parentGroupId = gid,
+            papi = cPickle.dumps(papi),
+            packageUUID = package_id
+        )
+        try:
+            ret = query.one()
+            return ret.active
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
+            return None

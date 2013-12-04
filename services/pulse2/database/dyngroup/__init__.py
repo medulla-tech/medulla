@@ -73,8 +73,6 @@ class DyngroupDatabase(DatabaseHelper):
         Initialize all SQLalchemy mappers needed for the inventory database
         """
 
-        self.version = Table("version", self.metadata, autoload = True)
-
         # types
         self.shareGroupType = Table("ShareGroupType", self.metadata,autoload = True)
         mapper(ShareGroupType, self.shareGroupType)
@@ -93,11 +91,19 @@ class DyngroupDatabase(DatabaseHelper):
         self.groups = Table("Groups", self.metadata,
                             Column('FK_users', Integer, ForeignKey('Users.id')),
                             Column('type', Integer, ForeignKey('GroupType.id')),
+                            Column('parent_id', Integer, ForeignKey('Groups.id')),
                             autoload = True)
         mapper(Groups, self.groups, properties = {
                 'results' : relation(Results),
             }
         )
+
+        # Convergence
+        self.convergence = Table("Convergence", self.metadata,
+                            Column('deployGroupId', Integer, ForeignKey('Groups.id')),
+                            Column('doneGroupId', Integer, ForeignKey('Groups.id')),
+                            autoload = True)
+        mapper(Convergence, self.convergence)
 
         # ShareGroup
         self.shareGroup = Table("ShareGroup", self.metadata,
@@ -805,3 +811,4 @@ class Users(object):
         }
 class UsersType(object): pass
 
+class Convergence(object): pass

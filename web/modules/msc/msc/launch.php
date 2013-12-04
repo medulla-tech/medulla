@@ -41,7 +41,38 @@ function quick_get($param, $is_checkbox = False) {
     return $_GET[$param];
 }
 
+function startswith($haystack, $needle) {
+    return substr($haystack, 0, strlen($needle)) === $needle;
+}
+
+/*
+ * Get all params of POST request prefixed by old_
+ */
+function getOldParams($post) {
+    $old_params = array();
+    foreach ($post as $key => $value){
+        if (startswith($key, 'old_')) $old_params[] = substr($key, 4);
+    }
+    return $old_params;
+}
+
+/*
+ * Get params who where changed (old_param is different than param)
+ */
+function getChangedParams($post) {
+    $old_params = getOldParams($post);
+    $changed_params = array();
+    foreach ($old_params as $param) {
+        if ($post['old_' . $param] != $post[$param]) $changed_params[] = $param;
+    }
+    return $changed_params;
+}
+
 function start_a_command($proxy = array()) {
+    if ($_POST['editConvergence']) {
+        $changed_params = getChangedParams($_POST);
+        if ($changed_params == array('active')) print "We have to edit command....";
+    }
     $error = "";
     if (!check_date($_POST)) {
         $error .= _T("Your start and end dates are not coherent, please check them.<br/>", "msc");
@@ -82,12 +113,15 @@ function start_a_command($proxy = array()) {
     $p_api->fromURI($post['papi']);
 
     foreach (array('start_date', 'end_date') as $param) {
-        if ($post[$param] == _T("now", "msc")) {
+        if (quick_get('convergence')) {
+            $params[$param] = "0000-00-00 00:00:00";
+        } elseif ($post[$param] == _T("now", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
         } elseif ($post[$param] == _T("never", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
-        } else
+        } else {
             $params[$param] = $post[$param];
+        }
     }
 
     $pid = $post['pid'];
@@ -132,11 +166,54 @@ function start_a_command($proxy = array()) {
             $params['proxy_mode'] = 'queue';
         }
 
-        $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
-        scheduler_start_these_commands('', array($id));
-        // then redirect to the logs page
-        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'gid' => $gid, 'cmd_id' => $id, 'proxy' => $proxy)));
-        exit;
+        if (quick_get('convergence')) {
+            $active = ($_POST['active'] == 'on') ? 1 : 0;
+            if (quick_get('editConvergence')) {
+                /* edit convergence */
+                /* Stop command */
+                // TODO Update end date with current date
+                $cmd_id = xmlrpc_get_convergence_command_id($gid, $p_api, $pid);
+                stop_command($cmd_id);
+                /* Create new command */
+                // Get deploy group ID
+                $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
+                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies);
+                scheduler_start_these_commands('', array($command_id));
+                /* Update convergence DB */
+                $updated_datas = array(
+                    'active' => $active,
+                    'commandId' => intval($command_id),
+                );
+                xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $updated_datas);
+            }
+            else {
+                /* Create convergence */
+                // create sub-groups
+                $group = new Group($gid, True);
+                $package = to_package(getPackageDetails($p_api, $pid));
+
+                $convergence_groups = $group->createConvergenceGroups($package);
+
+                $deploy_group_id = $convergence_groups['deploy_group_id'];
+                $done_group_id = $convergence_groups['done_group_id'];
+
+                // Add command on sub-group
+                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies);
+                scheduler_start_these_commands('', array($command_id));
+
+                // feed convergence db
+                xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active);
+            }
+            header("Location: " . urlStrRedirect("base/computers/msctabs", array('gid' => $gid)));
+            exit;
+        }
+        else {
+            $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
+            scheduler_start_these_commands('', array($id));
+            // then redirect to the logs page
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
+            exit;
+        }
     }
 }
 
@@ -266,7 +343,12 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
         if ($group->exists != False) {
-            $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
+            if (quick_get('convergence')) {
+                $label = new RenderedLabel(3, sprintf(_T('Software Convergence: action "%s" on "%s"', 'msc'), $name, $group->getName()));
+            }
+            else {
+                $label = new RenderedLabel(3, sprintf(_T('Group Advanced launch : action "%s" on "%s"', 'msc'), $name, $group->getName()));
+            }
             $f->push(new Table());
             $f->add(new HiddenTpl("gid"), array("value" => $gid, "hide" => True));
         }
@@ -282,12 +364,8 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $f->add(new HiddenTpl('launchAction'), array("value" => quick_get('launchAction'), "hide" => True));
     }
 
-    $start_script = 'on';
-    $clean_on_success = 'on';
-    if (quick_get('failure') == '1') {
-        $start_script = quick_get('start_script', True);
-        $clean_on_success = quick_get('clean_on_success', True);
-    }
+    $start_script = quick_get('start_script', True);
+    $clean_on_success = quick_get('clean_on_success', True);
 
     if (web_def_show_reboot() && quick_get('hide_do_reboot') != 1) {
         $_POST['hide_do_reboot'] = 0;
@@ -307,7 +385,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $type_date = 2;
     $type_numeric = 3;
 
-    # FIXME: is quick_get() methods still used ??
     // $start_date is now()
     $start_date = (quick_get('start_date')) ? quick_get('start_date') : date("Y-m-d H:i:s");
     // $end_date = now() + 24h by default (set in web_def_coh_life_time msc ini value)
@@ -330,6 +407,20 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 	'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
         'maxbw' => array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
     );
+
+    if (quick_get('convergence')) {
+        unset($parameters['start_date']);
+        unset($parameters['end_date']);
+        $f->add(
+            new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
+        );
+        $parameters['active'] = array($type_checkbox, _T('Active', 'msc'), quick_get('active'));
+    }
+    if(quick_get('editConvergence')) {
+        $f->add(
+            new HiddenTpl('editConvergence'), array("value" => quick_get('editConvergence'), "hide" => True)
+        );
+    }
     $macro_hide = array(
         'issue_halt_to_done' => 'issue_halt',
         'issue_halt_to_failed' => 'issue_halt',

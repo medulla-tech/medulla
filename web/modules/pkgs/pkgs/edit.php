@@ -30,6 +30,10 @@ require_once("modules/pkgs/includes/functions.php");
 require_once("modules/pkgs/includes/html.inc.php");
 require_once("modules/pkgs/includes/query.php");
 
+if (in_array('dyngroup', $_SESSION['modulesList'])) {
+    require_once("modules/dyngroup/includes/dyngroup.php");
+}
+
 $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -65,6 +69,11 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
+
+    if (in_array('dyngroup', $_SESSION['modulesList'])) {
+        // update convergence groups request if any
+        update_convergence_groups_request($p_api_id, $package);
+    }
 
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
