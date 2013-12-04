@@ -95,6 +95,7 @@ if ($_GET['editConvergence']) {
     $params["parameters"] = $command_details['parameters'];
     $params["editConvergence"] = True;
     $params["active"] = (xmlrpc_is_convergence_active($gid, $ServerAPI, $pid)) ? 'on' : '';
+    $params["issue_halt_to_done"] = ($command_details['do_halt'] == 'enable') ? 'on': '';
 }
 else {
     $params["ltitle"] = get_def_package_label($name, $version);

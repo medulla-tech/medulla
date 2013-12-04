@@ -1106,10 +1106,29 @@ class MscDatabase(DatabaseHelper):
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):
+            def _update_command(command, phases):
+                """
+                New scheduler introduce phase table and some statuses are no longer
+                updated in command table, but in phase table
+                So, put these missing results in return
+                """
+                __statuses = {
+                    'do_wol': 'wol',
+                    'clean_on_success': 'delete',
+                    'do_inventory': 'inventory',
+                    'do_reboot': 'reboot',
+                    'do_halt': 'halt',
+                }
+                for step in ['do_wol', 'clean_on_success', 'do_inventory', 'do_reboot', 'do_halt']:
+                    setattr(command, step, __statuses[step] in phases and 'enable' or 'disable')
+                return command
+
             session = create_session()
-            ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
-            session.close()
-            return ret
+            command, coh = session.query(Commands).add_entity(CommandsOnHost).join(self.commands_on_host).group_by(self.commands.c.id).filter(self.commands.c.id == cmd_id).first()
+            phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh.id).all()
+            phases = [phase.toDict()['name'] for phase in phases]
+            # _update_command call for missing statuses
+            return _update_command(command, phases)
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
 
