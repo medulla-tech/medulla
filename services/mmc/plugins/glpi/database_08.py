@@ -2097,12 +2097,12 @@ class Glpi08(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineInventoryPart(self, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineInventoryPart(self, uuid, part, minbound = 0, maxbound = -1, filt = None, options = {}, count = False):
         session = create_session()
 
         ret = None
         if hasattr(self, 'getLastMachine%sPart' % part):
-            ret = getattr(self, 'getLastMachine%sPart' % part)(session, uuid, part, min, max, filt, options, count)
+            ret = getattr(self, 'getLastMachine%sPart' % part)(session, uuid, part, minbound, maxbound, filt, options, count)
 
         session.close()
         return ret
@@ -2455,12 +2455,12 @@ class Glpi08(DyngroupDatabaseHelper):
                 )
             )
         )
-        if vendor:
+        if vendor is not None:
             query = query.filter(self.manufacturers.c.name == vendor)
 
         if softname != '':
-            query = query.filter(self.software.c.name.like('%'+softname+'%'))
-        ret = query.group_by(self.software.c.name).order_by(self.software.c.name).all()
+            query = query.filter(self.software.c.name.like('%' + softname + '%'))
+        ret = query.group_by(self.software.c.name).all()
         session.close()
         return ret
 
