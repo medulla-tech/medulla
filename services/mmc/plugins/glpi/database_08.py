@@ -2431,18 +2431,20 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwares(self, ctx, vendor = None, softname = ''):
+    def getAllSoftwares(self, ctx, softname='', vendor=None, limit=None):
         """
         @return: all softwares defined in the GLPI database
         """
+        logging.debug('######################################')
+        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         session = create_session()
         query = session.query(Software)
         query = query.select_from(
-            self.software \
-            .join(self.softwareversions) \
-            .join(self.inst_software) \
+            self.software
+            .join(self.softwareversions)
+            .join(self.inst_software)
             .join(self.manufacturers)
         )
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
@@ -2459,8 +2461,13 @@ class Glpi08(DyngroupDatabaseHelper):
             query = query.filter(self.manufacturers.c.name == vendor)
 
         if softname != '':
-            query = query.filter(self.software.c.name.like('%' + softname + '%'))
-        ret = query.group_by(self.software.c.name).all()
+            query = query.filter(self.software.c.name.like('%' +
+                                                           softname +
+                                                           '%'))
+        if limit is None:
+            ret = query.group_by(self.software.c.name).all()
+        else:
+            ret = query.group_by(self.software.c.name).limit(limit)
         session.close()
         return ret
 
@@ -2662,17 +2669,27 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwareVendors(self, ctx, filt=''):
+    def getAllSoftwareVendors(self, ctx, filt='', limit=20):
         """ @return: all software vendors defined in the GPLI database"""
         session = create_session()
-        query = session.query(Manufacturers).select_from(self.manufacturers.join(self.software))
-        query = self.__filter_on(query.filter(self.software.c.is_deleted == 0).filter(self.software.c.is_template == 0))
-        query = self.__filter_on_entity(query, ctx)
+        query = session.query(Manufacturers).select_from(self.manufacturers
+                                                         .join(self.software))
+        #the 3 lines below seems to cause severe performance issues
+        #they've been replaced by a simple filter
+        #query = self.__filter_on(query.filter(self.software.c.is_deleted == 0)
+        #                         .filter(self.software.c.is_template == 0))
+        #query = self.__filter_on_entity(query, ctx)
+        query = query.filter(self.software.c.is_deleted == 0)
+        query = query.filter(self.software.c.is_template == 0)
         if filt != '':
-            query = query.filter(self.manufacturers.c.name.like('%' + filt + '%'))
-        ret = query.group_by(self.manufacturers.c.name).all()
+            query = query.filter(self.manufacturers.c.name.like('%' +
+                                                                filt +
+                                                                '%'))
+        query = query.group_by(self.manufacturers.c.name)
+        ret = query.order_by(asc(self.manufacturers.c.name)).limit(limit)
         session.close()
         return ret
+
 
     def getAllSoftwareVersions(self, ctx, software, filt=''):
         """ @return: all software versions defined in the GPLI database"""

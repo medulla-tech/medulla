@@ -32,12 +32,10 @@ $extracriterion = quickGet("extracriterion");
 
 if (!$search) { $search = '' ; }
 
-//$value1 = quickGet("value1");
-$value1 = $extracriterion;
 $res = array();
-if (strlen($search) >= 1) { //TODO: the limit should be passed as an argument, moreover it is already partly controlled by 'min keyword length' in autocomplete.php
-    if (strlen($value1)) {
-        $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $value1, $search);
+if (strlen($search) >= 2) { //TODO: the limit should be passed as an argument, moreover it is already partly controlled by 'min keyword length' in autocomplete.php
+    if (strlen($extracriterion)) {
+        $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $search, $extracriterion);
     } else {
         $res = getPossiblesValuesForCriterionInModuleFuzzy($module, $criterion, $search);
     }

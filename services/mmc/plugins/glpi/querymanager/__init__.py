@@ -170,7 +170,10 @@ def getAllEntities(ctx, value=''):
 
 
 def getAllSoftwares(ctx, value='', vendor=None):
-    ret = unique([x.name for x in Glpi().getAllSoftwares(ctx, value, vendor)])
+    ret = unique([x.name for x in Glpi().getAllSoftwares(ctx,
+                                                         softname=value,
+                                                         vendor=vendor,
+                                                         limit=20)])
     ret.sort()
     return ret
 
@@ -178,7 +181,8 @@ def getAllSoftwares(ctx, value='', vendor=None):
 def getAllSoftwaresAndVersions(ctx, softname="", version=None):
     ret = []
     if version == None:
-        ret = unique([x.name for x in Glpi().getAllSoftwares(ctx, softname)])
+        ret = unique([x.name for x in
+                      Glpi().getAllSoftwares(ctx, softname=softname)])
     else:
         if Glpi().glpi_chosen_version().find('0.8') == 0:  # glpi in 0.8
             ret = unique([x.name for x in
@@ -209,7 +213,7 @@ def getAllContacts(ctx, value=''):
 
 
 def getAllContactNums(ctx, value=''):
-    return unique([x.contact_num for x in 
+    return unique([x.contact_num for x in
                    Glpi().getAllContactNums(ctx, value)])
 
 
