@@ -47,7 +47,7 @@ from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.control import MscDispatcher
 from pulse2.scheduler.health import getHealth
 from pulse2.scheduler.utils import UnixProtocol
-from pulse2.scheduler.dlp import DownloadQuery
+from pulse2.scheduler.dlp import DownloadQuery, get_dlp_method
 
 class SchedulerGateway(UnixProtocol):
     """
@@ -209,16 +209,6 @@ class SchedulerGateway(UnixProtocol):
         return chooseClientIP(interfaces)
 
     ### Download Provider methods ###
-    def _get_dlp_method(self, phase):
-        methods = {"wol": "pull_completed_wol",
-                   "upload": "pull_completed_pull",
-                   "execute": "pull_completed_execution",
-                   "delete": "pull_completed_deletion",
-                   "inventory": "pull_completed_inventory",
-                   "reboot": "pull_completed_reboot",
-                   "halt": "pull_completed_halt",
-                  }
-        return methods[phase]
 
     def get_available_commands(self, uuid):
         return self.dlq.get_available_commands(uuid)
@@ -231,7 +221,7 @@ class SchedulerGateway(UnixProtocol):
     
     def completed_step(self, id, phase, stdout, stderr, exitcode):
         try: 
-            method = self._get_dlp_method(phase)
+            method = get_dlp_method(phase)
         except KeyError:
             logging.getLogger().warn("Method %s not declared" % phase)
             return False

@@ -35,6 +35,7 @@ from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
 from pulse2.scheduler.queries import switch_commands_to_stop
 from pulse2.scheduler.queries import get_ids_to_start, get_commands
+from pulse2.scheduler.dlp import get_dlp_method
 
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
@@ -109,6 +110,9 @@ class MethodProxy(MscContainer):
             # Recurrent phase parsing which does not exists in the container
             # The circuit is created out of container
             circuit = Circuit(id, self.installed_phases, self.config, True)
+            if not circuit :
+                self.logger.warn("Circuit #%s: not found" % id)
+                return False
             circuit.install_dispatcher(self)
             d = circuit.setup(True)
             @d.addCallback
@@ -117,6 +121,15 @@ class MethodProxy(MscContainer):
                 return dth
             @d.addCallback
             def _post_setup(result):
+                if not circuit.running_phase :
+                    self.logger.warn("Method <%s> call for current phase is not valid" % name)
+                    return False
+
+                valid_method_name = get_dlp_method(circuit.running_phase.name)
+
+                if valid_method_name != name :
+                    self.logger.warn("Recurrent phase %s ignored" % name)
+                    return False
                 dps = maybeDeferred(self._run_proxymethod, launcher, id, name, args, circuit)
                 @dps.addCallback
                 def result_proxy(res):
@@ -176,7 +189,7 @@ class MethodProxy(MscContainer):
                     result = method(circuit.running_phase, (exitcode, stdout, stderr))
                 else: 
                     result = method(circuit.running_phase, args)
-
+                
                 circuit.phase_process(result)
                 return True
         return False

@@ -27,6 +27,17 @@ from pulse2.scheduler.queries import get_available_commands
 from pulse2.scheduler.queries import pull_target_update
 from pulse2.scheduler.queries import machine_has_commands, verify_target
 
+def get_dlp_method(phase):
+    methods = {"wol": "pull_completed_wol",
+               "upload": "pull_completed_pull",
+               "execute": "pull_completed_execution",
+               "delete": "pull_completed_deletion",
+               "inventory": "pull_completed_inventory",
+               "reboot": "pull_completed_reboot",
+               "halt": "pull_completed_halt",
+              }
+    return methods[phase]
+
 
 class DownloadQuery :
     """ Provides the remote queries from a DLP to the msc database """
