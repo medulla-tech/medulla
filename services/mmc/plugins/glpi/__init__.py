@@ -107,13 +107,15 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(Glpi().getMachineByHostnameAndMacs(ctx, hostname, macs))
 
-    def getLicensesCount(self, vendor, software, version):
-        ctx = self.currentContext
-        return xmlrpcCleanup(Glpi().getMachineBySoftware(ctx,
-                                                         software,
-                                                         vendor=vendor,
-                                                         version=version,
-                                                         count=1))
+
+def getLicensesCount(vendor, software, version):
+    ctx = SecurityContext()
+    ctx.userid = "root"
+    return xmlrpcCleanup(Glpi().getMachineBySoftware(ctx,
+                                                     software,
+                                                     vendor=vendor,
+                                                     version=version,
+                                                     count=1))
 
 
 def getLastMachineInventoryFull(uuid):
