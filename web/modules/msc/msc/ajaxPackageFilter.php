@@ -74,13 +74,15 @@ function prettyConvergenceStatusDisplay($status) {
     }
 }
 
-$group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
+if ($group != null) {
+    $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
+    $a_convergence_status = array();
+}
 
 $a_packages = array();
 $a_description = array();
 $a_pversions = array();
 $a_sizes = array();
-$a_convergence_status = array();
 $a_css = array();
 $params = array();
 
@@ -116,10 +118,12 @@ foreach ($packages as $c_package) {
         $a_description[] = $package->description;
         $a_pversions[] = $package->version;
         $a_sizes[] = prettyOctetDisplay($package->size);
-        $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status);
-        // set param_convergence_edit to True if convergence status is active or inactive
-        $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
-        $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
+        if ($group != null) {
+            $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status);
+            // set param_convergence_edit to True if convergence status is active or inactive
+            $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
+            $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
+        }
         if (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
         } else {
@@ -141,7 +145,9 @@ $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
 $n->addExtraInfo($a_description, _T("Description", "msc"));
 $n->addExtraInfo($a_pversions, _T("Version", "msc"));
 $n->addExtraInfo($a_sizes, _T("Package size", "msc"));
-$n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
+if ($group != null) {
+    $n->addExtraInfo($a_convergence_status, _T("Convergence", "msc"));
+}
 $n->setCssClasses($a_css);
 $n->setParamInfo($params);
 $n->setItemCount($count);
@@ -153,7 +159,9 @@ $n->end = $count;
 
 $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers"));
+if ($group != null) {
+    $n->addActionItem(new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers"));
+}
 //$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
