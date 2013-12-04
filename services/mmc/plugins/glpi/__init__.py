@@ -48,7 +48,10 @@ NOAUTHNEEDED = [
     'hasKnownOS',
 ]
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
+
 
 def activate():
     config = GlpiConfig("glpi")
@@ -57,7 +60,7 @@ def activate():
         logger.warning("Plugin glpi: disabled by configuration.")
         return False
 
-    if not GlpiLocation().init(config): # does Glpi().activate()
+    if not GlpiLocation().init(config):  # does Glpi().activate()
         return False
     if not Glpi().db_check():
         return False
@@ -72,11 +75,13 @@ def activate():
 
     return True
 
+
 class ContextMaker(ContextMakerI):
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
         return s
+
 
 class RpcProxy(RpcProxyI):
     def getMachineNumberByState(self):
@@ -95,17 +100,20 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return Glpi().getRestrictedComputersListLen(ctx, {})
 
-    def getMachineByOsLike(self,osname,count):
+    def getMachineByOsLike(self, osname, count):
         ctx = self.currentContext
-        return xmlrpcCleanup(Glpi().getMachineByOsLike(ctx,osname,count))
+        return xmlrpcCleanup(Glpi().getMachineByOsLike(ctx, osname, count))
 
     def getMachineListByAntivirusState(self, groupName):
         ctx = self.currentContext
-        return xmlrpcCleanup(Glpi().getMachineListByAntivirusState(ctx, groupName))
+        return xmlrpcCleanup(Glpi().getMachineListByAntivirusState(ctx,
+                                                                   groupName))
 
     def getMachineByHostnameAndMacs(self, hostname, macs):
         ctx = self.currentContext
-        return xmlrpcCleanup(Glpi().getMachineByHostnameAndMacs(ctx, hostname, macs))
+        return xmlrpcCleanup(Glpi().getMachineByHostnameAndMacs(ctx,
+                                                                hostname,
+                                                                macs))
 
 
 def getLicensesCount(vendor, software, version):
@@ -121,36 +129,60 @@ def getLicensesCount(vendor, software, version):
 def getLastMachineInventoryFull(uuid):
     return xmlrpcCleanup(Glpi().getLastMachineInventoryFull(uuid))
 
+
 def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
 
-def getLastMachineInventoryPart(uuid, part, min = 0, max = -1, filt = None, options = {}):
-    return xmlrpcCleanup(Glpi().getLastMachineInventoryPart(uuid, part, min, max, filt, options))
 
-def countLastMachineInventoryPart(uuid, part, filt = None, options = {}):
-    return xmlrpcCleanup(Glpi().countLastMachineInventoryPart(uuid, part, filt, options))
+def getLastMachineInventoryPart(uuid,
+                                part,
+                                minbound=0,
+                                maxbound=-1,
+                                filt=None,
+                                options={}):
+    return xmlrpcCleanup(Glpi().getLastMachineInventoryPart(uuid,
+                                                            part,
+                                                            minbound,
+                                                            maxbound,
+                                                            filt,
+                                                            options))
+
+
+def countLastMachineInventoryPart(uuid, part, filt=None, options={}):
+    return xmlrpcCleanup(Glpi().countLastMachineInventoryPart(uuid,
+                                                              part,
+                                                              filt,
+                                                              options))
+
 
 def getMachineMac(uuid):
     return xmlrpcCleanup(Glpi().getMachineMac(uuid))
 
+
 def getMachineIp(uuid):
     return xmlrpcCleanup(Glpi().getMachineIp(uuid))
 
+
 def setGlpiEditableValue(uuid, name, value):
     return xmlrpcCleanup(Glpi().setGlpiEditableValue(uuid, name, value))
+
 
 # TODO
 def getInventoryEM(part):
     return []
 
+
 def getGlpiMachineUri():
     return Glpi().config.glpi_computer_uri
+
 
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
 
+
 def getMachinesLocations(uuids):
     return xmlrpcCleanup(Glpi().getMachinesLocations(uuids))
+
 
 def hasKnownOS(uuid):
     return xmlrpcCleanup(Glpi().hasKnownOS(uuid))
