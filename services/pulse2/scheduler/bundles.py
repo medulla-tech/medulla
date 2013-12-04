@@ -93,11 +93,10 @@ class BundleReferences :
         @param circuit: circuit to insert or update
         @type circuit: Circuit
         """
-        self.logger.debug("Circuit #%s: added to bundle control" % circuit.id)
         if circuit.cohq.cmd.fk_bundle :
             c = circuit.cohq
             if c.coh.id not in [b.coh_id for b in self.content] :
-            #if c.cmd.fk_bundle not in self.content :
+                self.logger.debug("Circuit #%s: added to bundle control" % circuit.id)
                 bundle = BundleElement(c.cmd.fk_bundle, 
                                        circuit.cmd_id,
                                        circuit.id,
