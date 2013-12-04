@@ -81,6 +81,6 @@ function getRsyncStatus($p_api, $pid) {
 }
 
 function getLicensesCount($vendor, $software, $version) {
-    return myXmlCall("glpi.getLicensesCount", array($vendor, $software, $version));
+    return XmlCall("glpi.getLicensesCount", array($vendor, $software, $version));
 }
 ?>

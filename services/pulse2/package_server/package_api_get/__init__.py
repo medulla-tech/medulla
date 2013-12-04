@@ -121,7 +121,7 @@ class PackageApiGet(MyXmlrpc):
     def xmlrpc_getPackageLicenses(self, pid):
         return Common().package(pid, self.mp).licenses
 
-    def xmlrpc_getPackageAssociateinvetory(self, pid):
+    def xmlrpc_getPackageAssociateinventory(self, pid):
         return Common().package(pid, self.mp).associateinventory
 
     def xmlrpc_getPackageQvendor(self, pid):
