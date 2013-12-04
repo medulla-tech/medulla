@@ -229,8 +229,13 @@ class SchedulerGateway(UnixProtocol):
         return self.dlq.pull_target_awake(hostname, macs)
     
     def completed_step(self, id, phase, stdout, stderr, exitcode):
-        method = self._get_dlp_method(phase)
-        return xmlrpcCleanup(MscDispatcher().run_proxymethod("dlp", 
+        try: 
+            method = self._get_dlp_method(phase)
+        except KeyError:
+            logging.getLogger().warn("Method %s not declared" % phase)
+            return False
+        else : 
+            return xmlrpcCleanup(MscDispatcher().run_proxymethod("dlp", 
                                                id, 
                                                method, 
                                                (exitcode, stdout, stderr),
