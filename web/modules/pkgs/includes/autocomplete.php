@@ -59,22 +59,23 @@ class Autocomplete extends InputTpl {
 
         <script type="text/javascript">
             jQuery(function() {
-                window.complete<?php echo $this->name ?> = function() {
-                    jQuery('#<?php echo $this->name ?>').jqEasySuggest({
-                        ajax_file_path: '<?php echo $this->ajaxfile ?>&modulename=<?php echo $this->module ?>&criterion=<?php echo $this->criterion ?>&extracriterion='<?php echo $extra ?>,
-                        min_keyword_length: <?php echo $this->limit ?>,
-                        showLoadingImage: false,
-                        //focus_color		: "red",
-                        keyupDelay: 100,
-                        sql_match_type: "starts",
-                        es_width: "215",
-                        es_opacity: 0.95,
-                        es_max_results: 10,
-                        es_offset_left: 0,
-                        es_offset_top: 0
-                    });
-                }
-                window.complete<?php echo $this->name ?>();
+                jQuery('#<?php echo $this->name ?>').jqEasySuggest({
+                    ajax_file_path: function(){
+                        return('<?php echo $this->ajaxfile?>' +
+                                '&modulename=<?php echo $this->module?>' +
+                                '&criterion=<?php echo $this->criterion?>' +
+                                '&extracriterion='<?php echo $extra ?>)},
+                    min_keyword_length: <?php echo $this->limit ?>,
+                    showLoadingImage: false,
+                    //focus_color		: "red",
+                    keyupDelay: 100,
+                    sql_match_type: "starts",
+                    es_width: "215",
+                    es_opacity: 0.95,
+                    es_max_results: 10,
+                    es_offset_left: 0,
+                    es_offset_top: 0
+                });
             });
         </script>
 

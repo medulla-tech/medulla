@@ -324,10 +324,6 @@ You may also ask Google for the silent installation switches. If you\'re feeling
             }
 
         });
-
-        // Set easySuggest on software field with the new ajax url
-        jQuery('#Qvendor').focusout(window.completeQsoftware);
-
     });
 <?php
 // if one package API, hide field
