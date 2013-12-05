@@ -212,7 +212,7 @@ class MscDatabase(DatabaseHelper):
             max_connection_attempt,
             maxbw, deployment_intervals,
             fk_bundle, order_in_bundle, proxies, proxy_mode,
-            state, sum_running):
+            state, sum_running, cmd_type=0):
         """
         Return a Command object
         """
@@ -246,6 +246,7 @@ class MscDatabase(DatabaseHelper):
         cmd.proxy_mode = proxy_mode # FIXME: we may add some code to check everything is OK
         cmd.state = state
         cmd.sum_running = sum_running
+        cmd.type= cmd_type
         session.add(cmd)
         session.flush()
         return cmd

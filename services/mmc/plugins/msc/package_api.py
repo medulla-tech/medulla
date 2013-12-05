@@ -294,7 +294,7 @@ def prepareCommand(pinfos, params):
 
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = []):
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
         self.ctx = ctx
         self.p_api = p_api.copy()
         self.pid = pid
@@ -305,6 +305,7 @@ class SendPackageCommand:
         self.bundle_id = bundle_id
         self.order_in_bundle = order_in_bundle
         self.proxies = proxies
+        self.cmd_type = cmd_type
 
     def onError(self, error):
         logging.getLogger().error("SendPackageCommand: %s", str(error))
@@ -397,7 +398,8 @@ class SendPackageCommand:
             self.order_in_bundle,
             cmd['proxy_mode'],
             self.proxies,
-            cmd['state']
+            cmd['state'],
+            cmd_type = self.cmd_type
         )
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)

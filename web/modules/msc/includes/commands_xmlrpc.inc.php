@@ -75,8 +75,8 @@ function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
 }
 
-function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array()) {
-    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy));
+function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
+    return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy, $cmd_type));
 }
 
 function add_bundle_api($porders, $target, $params, $mode, $gid = null, $proxy = array()) {

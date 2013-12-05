@@ -425,7 +425,8 @@ class MscDatabase(msc.MscDatabase):
                 proxy_mode = 'none',
                 proxies = [],
                 state = 'active',
-                is_quick_action=False
+                is_quick_action=False,
+                cmd_type=0
             ):
         """
         Main func to inject a new command in our MSC database
@@ -504,7 +505,7 @@ class MscDatabase(msc.MscDatabase):
                                      maxbw, 
                                      deployment_intervals, fk_bundle, 
                                      order_in_bundle, proxies, proxy_mode, 
-                                     state, len(targets))
+                                     state, len(targets), cmd_type=cmd_type)
             session.flush()
 
             for atarget, target_name, ascheduler in targets_to_insert :

@@ -168,6 +168,7 @@ function start_a_command($proxy = array()) {
 
         if (quick_get('convergence')) {
             $active = ($_POST['active'] == 'on') ? 1 : 0;
+            $cmd_type = 2; // Convergence command type
             if (quick_get('editConvergence')) {
                 /* edit convergence */
                 /* Stop command */
@@ -177,8 +178,10 @@ function start_a_command($proxy = array()) {
                 /* Create new command */
                 // Get deploy group ID
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies);
-                scheduler_start_these_commands('', array($command_id));
+                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                if ($active) {
+                    scheduler_start_these_commands('', array($command_id));
+                }
                 /* Update convergence DB */
                 $updated_datas = array(
                     'active' => $active,
@@ -198,8 +201,10 @@ function start_a_command($proxy = array()) {
                 $done_group_id = $convergence_groups['done_group_id'];
 
                 // Add command on sub-group
-                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies);
-                scheduler_start_these_commands('', array($command_id));
+                $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                if ($active) {
+                    scheduler_start_these_commands('', array($command_id));
+                }
 
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active);

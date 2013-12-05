@@ -132,7 +132,6 @@ foreach ($packages as $c_package) {
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
-            debug($package->associateinventory);
             $a_convergence_action[] = ($package->associateinventory) ? $convergenceAction : $emptyAction;
         }
         if (!empty($_GET['uuid'])) {

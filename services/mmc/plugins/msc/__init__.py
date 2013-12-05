@@ -312,17 +312,16 @@ class RpcProxy(RpcProxyI):
         d.addCallbacks(xmlrpcCleanup, lambda err: err)
         return d
 
-    def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = []):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = [], cmd_type = 0):
         """
         @param target: must be list of UUID
         @type target: list
         """
         ctx = self.currentContext
-        #get_group_results(self, ctx, gid, min, max, filter):
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
-        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, proxies = proxy)
+        g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type)
         g.deferred = defer.Deferred()
         g.send()
         g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
