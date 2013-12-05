@@ -114,7 +114,12 @@ function start_a_command($proxy = array()) {
 
     foreach (array('start_date', 'end_date') as $param) {
         if (quick_get('convergence')) {
-            $params[$param] = "0000-00-00 00:00:00";
+            if ($param == 'start_date') {
+                $params[$param] = date("Y-m-d H:i:s");
+            }
+            elseif ($param == 'end_date') {
+                $params[$param] = date("Y-m-d 23:59:59");
+            }
         } elseif ($post[$param] == _T("now", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
         } elseif ($post[$param] == _T("never", "msc")) {
@@ -170,13 +175,15 @@ function start_a_command($proxy = array()) {
             $active = ($_POST['active'] == 'on') ? 1 : 0;
             $cmd_type = 2; // Convergence command type
             if (quick_get('editConvergence')) {
-                /* edit convergence */
                 /* Stop command */
-                // TODO Update end date with current date
                 $cmd_id = xmlrpc_get_convergence_command_id($gid, $p_api, $pid);
                 stop_command($cmd_id);
+                /* Set end date of this command to now(), don't touch to start date */
+                $command_details = command_detail($cmd_id);
+                list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
+                $start_date = sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
+                extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
-                // Get deploy group ID
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if ($active) {
