@@ -45,5 +45,6 @@ dist_sql_DATA = clean-db.sql purge-old-rows.sql README \
         schema-021.sql \
         schema-022.sql \
         schema-023.sql \
-        schema-024.sql
+        schema-024.sql \
+        schema-025.sql
 
