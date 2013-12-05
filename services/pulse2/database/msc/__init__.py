@@ -725,6 +725,7 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
+                            'deployment_intervals': cmd.deployment_intervals,
                             'status':self.getCommandOnBundleStatus(ctx, bid)
                     })
                 else:
@@ -744,6 +745,7 @@ class MscDatabase(DatabaseHelper):
                             'target':target_name,
                             'uuid':target_uuid,
                             'gid':'',
+                            'deployment_intervals': cmd.deployment_intervals,
                             'status':self.getCommandOnBundleStatus(ctx, bid)
                     })
             else: # we are not in a bundle
@@ -764,6 +766,7 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
+                            'deployment_intervals': cmd.deployment_intervals,
                             'status':self.getCommandOnGroupStatus(ctx, cmd.id)
                     })
                 else:
@@ -785,6 +788,7 @@ class MscDatabase(DatabaseHelper):
                             'uuid':target_uuid,
                             'gid':'',
                             'status':{},
+                            'deployment_intervals': cmd.deployment_intervals,
                             'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)
                     })
 

@@ -43,6 +43,7 @@ $a_cmd = array();
 $a_date = array();
 $start_dates = array();
 $end_dates = array();
+$a_deployment_intervals = array();
 $a_donepercent = array();
 $a_creator = array();
 $a_target = array();
@@ -70,6 +71,7 @@ foreach ($cmds as $item) {
     $label = $item['title'];
     $creation_date = $item['creation_date'];
     $start_date = $item['start_date'];
+    $deployment_intervals = $item['deployment_intervals'];
     $end_date = $item['end_date'];
     $sum_running = $item['sum_running'];
     $sum_done = $item['sum_done'];
@@ -117,6 +119,7 @@ foreach ($cmds as $item) {
     $a_date[] = $creation_date;
     $start_dates[] = _toDate($start_date);
     $end_dates[] = _toDate($end_date);
+    $a_deployment_intervals[] = $deployment_intervals;
     $a_creator[] = $creator;
 
     $param = array('cmd_id' => $cmd_id, 'title' => $label, 'bundle_id' => $bid, 'from' => 'msc|logs|consult');
@@ -199,6 +202,7 @@ $n->addExtraInfo($a_creator, _T("Creator", "msc"));
 //$n->addExtraInfo($a_date, _T("Creation date", "msc"));
 $n->addExtraInfo($start_dates, _T("Start date", "msc"));
 $n->addExtraInfo($end_dates, _T("End date", "msc"));
+$n->addExtraInfo($a_deployment_intervals, _T("Deployment interval", "msc"));
 $n->addExtraInfo($a_target, _T("Target", "msc"));
 $n->addExtraInfo($a_donepercent, _T("Success percent", "msc"));
 
