@@ -30,9 +30,10 @@ import logging
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
 from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
-from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoSuchTableError
 
+Session = sessionmaker()
 logger = logging.getLogger()
 NB_DB_CONN_TRY = 2
 
@@ -54,7 +55,7 @@ class DatabaseHelper(Singleton):
 
         conn = self.connected()
         if conn:
-            if required_version > conn :
+            if required_version > conn:
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
                 logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
@@ -79,7 +80,7 @@ class DatabaseHelper(Singleton):
 
     def connected(self):
         try:
-            if self.db != None:
+            if self.db is not None:
                 if hasattr(self, "version"):
                     return self.version.select().execute().fetchone()[0]
                 elif hasattr(self, "Version"):
@@ -99,7 +100,7 @@ class DatabaseHelper(Singleton):
 
         @rtype: str
         """
-        if self.config == None:
+        if self.config is None:
             raise Exception("Object must have a config attribute")
         if self.config.dbport:
             port = ":" + str(self.config.dbport)
@@ -170,7 +171,7 @@ class DatabaseHelper(Singleton):
             if not self.session:
                 self.session = Session(bind=self.db)
                 created = True
-            result = func(self, self.session,*args, **kw)
+            result = func(self, self.session, *args, **kw)
             if created:
                 self.session.close()
                 self.session = None
@@ -186,13 +187,13 @@ class DBObject(object):
     def getUUID(self):
         if hasattr(self, 'id'):
             return id2uuid(self.id)
-        logging.getLogger().warn("try to get %s uuid!"%(type(self)))
+        logging.getLogger().warn("try to get %s uuid!" % type(self))
         return False
 
     def to_h(self):
         return self.toH()
 
-    def toH(self, level = 0):
+    def toH(self, level=0):
         ret = {}
         for i in dir(self):
             if i in self.i18n:
@@ -207,10 +208,10 @@ class DBObject(object):
                 if type(attr) == list:
                     new_attr = []
                     for a in attr:
-                        new_attr.append(a.toH(level+1))
+                        new_attr.append(a.toH(level + 1))
                     ret[i] = new_attr
                 else:
-                    ret[i] = attr.toH(level+1)
+                    ret[i] = attr.toH(level + 1)
         if hasattr(self, 'id'):
             ret['db_uuid'] = self.getUUID()
         return ret
@@ -220,7 +221,7 @@ class DBObject(object):
 class DBObj(object):
     # Function to convert mapped object to Dict
     # TODO : Do the same for relations [convert relations to subdicts]
-    def toDict(self, relations = True):
+    def toDict(self, relations=True):
         d = self.__dict__
         # Convert relations to dict, if 'relations'
         for k in d.keys():
@@ -230,15 +231,17 @@ class DBObj(object):
                 else:
                     del d[k]
         # Delete Sqlachemy instance state
-        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        if '_sa_instance_state' in d:
+            del d['_sa_instance_state']
         return d
 
-    def fromDict(self, d, relations = False):
+    def fromDict(self, d, relations=False):
         #TODO: Test if d is dict
-        if '_sa_instance_state' in d: del d['_sa_instance_state']
+        if '_sa_instance_state' in d:
+            del d['_sa_instance_state']
         # Actually we don't support relations
         for key, value in d.iteritems():
-            if key and type(value) not in [type({}),type([])]:
+            if key and type(value) not in [type({}), type([])]:
                 setattr(self, key, value)
 
 

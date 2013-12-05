@@ -28,7 +28,6 @@ import os
 import re
 import logging
 from subprocess import Popen, PIPE
-
 import MySQLdb
 
 from mmc.site import prefix
@@ -36,10 +35,11 @@ from mmc.site import prefix
 
 SCHEMA_MASK = "schema-xxx.sql"
 
+
 # This logger is created only for the case when this module
 # is called as standallone.
 # (usualy is called by pulse2-setup with a passed logger)
-def myLogger ():
+def myLogger():
     """ Default logging instance """
     log = logging.getLogger("DDL")
     handler = logging.StreamHandler()
@@ -47,7 +47,7 @@ def myLogger ():
     return log
 
 
-class DBEngine :
+class DBEngine:
     def __init__(self, user, passwd, host, db, port=None, log=None):
         """
         @param user: database user
@@ -80,7 +80,7 @@ class DBEngine :
                                         passwd=self.passwd,
                                         host=self.host,
                                         port=self.port,
-                                        db= self.db)
+                                        db=self.db)
         except Exception, exc:
             self.log.error("Can't connect to the database: %s" % str(exc))
             return None
@@ -95,13 +95,13 @@ class DBEngine :
         except Exception, exc:
             self.log.error("Error while creating cursor: %s" % str(exc))
 
-
     def __del__(self):
         """ Closing the session """
-        if self.conn :
+        if self.conn:
             self.conn.close()
 
-class DBScriptLaunchInterface :
+
+class DBScriptLaunchInterface:
     """To launch a SQL script, we need the command line mysql executable"""
 
     def __init__(self, user, passwd, host, port, db, log=None):
@@ -126,9 +126,9 @@ class DBScriptLaunchInterface :
         """
         self.log = log or myLogger()
         self.cmd = "mysql %s -u%s -h%s" % (db, user, host)
-        if len(passwd) > 0 :
+        if len(passwd) > 0:
             self.cmd += " -p%s" % passwd
-        if port :
+        if port:
             self.cmd += " -P%d" % port
 
     def execute(self, filename):
@@ -149,7 +149,8 @@ class DBScriptLaunchInterface :
             self.log.error("Error while execute script '%s': %s" % (filename, str(exc)))
             return None
 
-class DDLContentManager :
+
+class DDLContentManager:
     """ Class to manage DDL scripts content """
 
     # ommitting of checking the following databases :
@@ -173,10 +174,10 @@ class DDLContentManager :
         @return: number of script in fix format xxx
         @rtype: str
         """
-        numbers = re.findall(r'\d{3}', '%s' %(filename))
-        if len(numbers) == 1 :
+        numbers = re.findall(r'\d{3}', '%s' % filename)
+        if len(numbers) == 1:
             return numbers[0]
-        else :
+        else:
             return None
 
     @classmethod
@@ -191,7 +192,7 @@ class DDLContentManager :
         @rtype: bool
         """
         number = cls.get_script_number(filename)
-        if number :
+        if number:
             return filename.replace(number, "xxx") == SCHEMA_MASK
         return False
 
@@ -246,7 +247,7 @@ class DDLContentManager :
         return max(numbers)
 
 
-class DBControl :
+class DBControl:
     """ Main base to check and update the database """
 
     def __init__(self, user, passwd, host, port,
@@ -276,9 +277,9 @@ class DBControl :
 
         self.log = log or myLogger()
 
-        if use_same_db :
+        if use_same_db:
             db = module
-        else :
+        else:
             db = "mysql"
         self.db = DBEngine(user,
                            passwd,
@@ -297,7 +298,7 @@ class DBControl :
                                                       log)
 
     @property
-    def db_exists (self):
+    def db_exists(self):
         """
         Test if database exists.
 
@@ -308,7 +309,7 @@ class DBControl :
         statement += " WHERE schema_name = '%s';" % self.module
         c = self.db.cursor()
         c.execute(statement)
-        if len(c.fetchall()) == 1 :
+        if len(c.fetchall()) == 1:
             return True
         return False
 
@@ -326,12 +327,12 @@ class DBControl :
         c = self.db.cursor()
         c.execute(statement)
         dataset = c.fetchall()
-        if len(dataset) == 1 :
+        if len(dataset) == 1:
             return dataset[0][0]
         return False
 
     @property
-    def db_version (self):
+    def db_version(self):
         """
         Getting of version installed in database.
 
@@ -343,16 +344,15 @@ class DBControl :
         c = self.db.cursor()
         c.execute(statement)
         dataset = c.fetchall()
-        if len(dataset) == 1 :
+        if len(dataset) == 1:
             return dataset[0][0]
         return False
 
-    def _db_create (self):
+    def _db_create(self):
         """ Creating the database """
         statement = "CREATE DATABASE %s;" % self.module
         c = self.db.cursor()
         c.execute(statement)
-
 
     def _get_scripts_to_install(self, version_in_db, version_to_install):
         """
@@ -372,33 +372,31 @@ class DBControl :
 
         for script in self.ddl_manager.get_scripts(self.module, fullpath=True):
             script_number = self.ddl_manager.get_script_number(script)
-            if script_number :
+            if script_number:
                 version = int(script_number)
-                if version in version_slice :
+                if version in version_slice:
                     self.log.debug("Installing schema version: v.%s" % (script_number))
                     yield script
 
-
-
-    def process (self):
+    def process(self):
         """ Processing all the actions """
         version_to_install = self.ddl_manager.get_version(self.module)
-        if not self.db_exists :
+        if not self.db_exists:
             self._db_create()
             version_in_db = 0
-        else :
+        else:
             version_in_db = self.db_version
 
-        if version_in_db == version_to_install :
+        if version_in_db == version_to_install:
             self.log.debug("Database '%s' is up-to-date" % (self.module))
             return True
 
-        elif version_in_db < version_to_install :
+        elif version_in_db < version_to_install:
             self.log.info("'%s' database updated from version %d to %d" %
-                              (self.module, version_in_db, version_to_install))
+                          (self.module, version_in_db, version_to_install))
             scripts = self._get_scripts_to_install(version_in_db,
                                                    version_to_install)
-            for script in scripts :
+            for script in scripts:
                 if self.script_manager.execute(script) is None:
                     if self.module == 'dyngroup':
                         self.log.warn('Dyngroup known issue: Maybe your SQL engine is MyISAM, you can check with: SHOW TABLE STATUS')
@@ -406,10 +404,8 @@ class DBControl :
                         self.log.warn('SELECT CONCAT("ALTER TABLE ",table_schema,".",table_name," ENGINE=InnoDB;") FROM information_schema.tables WHERE table_schema="dyngroup";')
                     return False
             return True
-        else :
+        else:
             self.log.error("Database '%s' version conflict" % self.module)
             self.log.error("Installed version is %d, but you are trying to install the version %d." %
-                                                  (self.module, version_in_db, version_to_install))
+                           (self.module, version_in_db, version_to_install))
             return False
-
-
