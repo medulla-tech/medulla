@@ -113,14 +113,7 @@ function start_a_command($proxy = array()) {
     $p_api->fromURI($post['papi']);
 
     foreach (array('start_date', 'end_date') as $param) {
-        if (quick_get('convergence')) {
-            if ($param == 'start_date') {
-                $params[$param] = date("Y-m-d H:i:s");
-            }
-            elseif ($param == 'end_date') {
-                $params[$param] = date("Y-m-d 23:59:59");
-            }
-        } elseif ($post[$param] == _T("now", "msc")) {
+        if ($post[$param] == _T("now", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
         } elseif ($post[$param] == _T("never", "msc")) {
             $params[$param] = "0000-00-00 00:00:00";
