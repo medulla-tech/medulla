@@ -276,12 +276,6 @@ $n->addActionItem(new ActionConfirmItem(_T("Delete file", 'pkgs'), "edit", "dele
 /* =================   END FILE LIST   ===================== */
 
 addQuerySection($f, $package);
-/* =================   BEGIN LICENSE   ===================== */
-$f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
-        array("value" => $package['licenses'])
-);
-/* ==================   END LICENSE   ====================== */
-
 
 // =========================================================================
 // UPLOAD FORM

@@ -196,13 +196,9 @@ You may also ask Google for the silent installation switches. If you\'re feeling
             $package[$k] = '';
         }
     }
+
     addQuerySection($f, $package);
-    /* =================   BEGIN LICENSE   ===================== */
-    $f->add(new TrFormElement(_T('Number of licenses', 'pkgs'), new InputTpl('licenses')),
-            array("value" => '')
-    );
-    /* ==================   END LICENSE   ====================== */
-    
+
     $f->pop();
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
