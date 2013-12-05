@@ -364,14 +364,13 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return user
         return False
 
-    def get_group(self, ctx, id, ro = False):
+    @DatabaseHelper._session
+    def get_group(self, session, ctx, id, ro = False):
         """
         get the group defined by it's id only if you can have access!
         """
-        session = create_session()
         group = self.__getGroupInSession(ctx, session, id, ro)
         if not group:
-            session.close()
             return False
         if ro: # do tests to put the flag ro
             r = self.__getGroupInSession(ctx, session, id, False)
@@ -379,10 +378,16 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 setattr(group, 'ro', False)
             else:
                 setattr(group, 'ro', True)
-        session.close()
         if group:
+            if group.type == 2: # Convergence
+                setattr(group, 'name', self._get_parent_group_name(group.parent_id))
             return group
         return False
+
+    @DatabaseHelper._session
+    def _get_parent_group_name(self, session, gid):
+        query = session.query(Groups).filter_by(id = gid)
+        return query.first().name
 
     @DatabaseHelper._session
     def delete_group(self, session, ctx, id):
