@@ -25,4 +25,4 @@
 
 ALTER TABLE `commands` ADD `type` INT NOT NULL DEFAULT '0';
 
-UPDATE version SET Number = 24;
+UPDATE version SET Number = 25;
