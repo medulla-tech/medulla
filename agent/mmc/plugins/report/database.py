@@ -51,7 +51,9 @@ class ReportDatabase(DatabaseHelper):
 
         logger.info("Report database is connecting")
         self.config = config
-        self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        self.db = create_engine(self.makeConnectionPath(),
+                                pool_recycle=self.config.dbpoolrecycle,
+                                pool_size=self.config.dbpoolsize)
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
@@ -59,6 +61,8 @@ class ReportDatabase(DatabaseHelper):
         # Uncomment this line to connect to mysql and parse tables
         self.is_activated = True
         logger.debug("Report database connected")
+        if not self.db_check():
+            return self.db_update()
         return True
 
     def initMappers(self):
@@ -78,7 +82,7 @@ class ReportDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def add_indicator(self, session, indicator_attr):
         try:
-            indicator = session.query(Indicator).filter_by(name = indicator_attr['name']).first()
+            indicator = session.query(Indicator).filter_by(name=indicator_attr['name']).first()
             if indicator:
                 indicator.fromDict(indicator_attr)
             else:
