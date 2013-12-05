@@ -115,6 +115,7 @@ class Package {
         $this->Qsoftware = $h_pkg['Qsoftware'];
         $this->Qversion = $h_pkg['Qversion'];
         $this->Qvendor = $h_pkg['Qvendor'];
+        $this->associateinventory = $h_pkg['associateinventory'];
     }
 }
 

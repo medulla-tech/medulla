@@ -46,17 +46,22 @@ if ($_GET['uuid']) {
 }
 $label->display();
 
-function getConvergenceStatus($mountpoint, $pid, $group_convergence_status) {
+function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
     $return = 0;
-    if (array_key_exists($mountpoint, $group_convergence_status)) {
-        if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
-            if ($group_convergence_status[$mountpoint][$pid]) {
-                $return = 1;
-            }
-            else {
-                $return = 2;
+    if ($associateinventory) {
+        if (array_key_exists($mountpoint, $group_convergence_status)) {
+            if (array_key_exists($pid, $group_convergence_status[$mountpoint])) {
+                if ($group_convergence_status[$mountpoint][$pid]) {
+                    $return = 1;
+                }
+                else {
+                    $return = 2;
+                }
             }
         }
+    }
+    else {
+        $return = 3;
     }
     return $return;
 }
@@ -69,6 +74,7 @@ function prettyConvergenceStatusDisplay($status) {
             return _T('Active', 'msc');
         case 2:
             return _T('Inactive', 'msc');
+        case 3:
         default:
             return _T('Not available', 'msc');
     }
@@ -79,6 +85,9 @@ if ($group != null) {
     $a_convergence_status = array();
 }
 
+$emptyAction = new EmptyActionItem();
+$convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
+$a_convergence_action = array();
 $a_packages = array();
 $a_description = array();
 $a_pversions = array();
@@ -119,10 +128,12 @@ foreach ($packages as $c_package) {
         $a_pversions[] = $package->version;
         $a_sizes[] = prettyOctetDisplay($package->size);
         if ($group != null) {
-            $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status);
+            $current_convergence_status = getConvergenceStatus($p_api->mountpoint, $package->id, $group_convergence_status, $package->associateinventory);
             // set param_convergence_edit to True if convergence status is active or inactive
             $param_convergence_edit = (in_array($current_convergence_status, array(1, 2))) ? True : False;
             $a_convergence_status[] = prettyConvergenceStatusDisplay($current_convergence_status);
+            debug($package->associateinventory);
+            $a_convergence_action[] = ($package->associateinventory) ? $convergenceAction : $emptyAction;
         }
         if (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
@@ -160,7 +171,7 @@ $n->end = $count;
 $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
 $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 if ($group != null) {
-    $n->addActionItem(new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers"));
+    $n->addActionItem($a_convergence_action);
 }
 //$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
