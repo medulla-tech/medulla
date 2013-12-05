@@ -148,7 +148,7 @@ class exportedReport(object):
         """
         name = version = vendor = None
         if soft and isinstance(soft, basestring):
-            name = soft
+            name = soft.replace('*', '%')
         elif type(soft) == dict:
             name = soft.get('name', None)
             if name:
