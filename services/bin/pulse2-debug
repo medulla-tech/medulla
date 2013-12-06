@@ -27,6 +27,7 @@ import subprocess
 import pprint
 import readline
 import mmc.plugins
+import atexit
 
 from ConfigParser import ConfigParser
 
@@ -36,6 +37,7 @@ from twisted.internet.threads import deferToThread
 from twisted.web import xmlrpc
 deferred = deferToThread.__get__ #Create a decorator for deferred functions
 
+HISTFILE = os.path.join(os.path.expanduser("~"), ".pulse2debughist")
 COOKIES_FILE = '/tmp/pulse2-debug-cookies'
 host = ''
 module = ''
@@ -373,6 +375,14 @@ if __name__ == "__main__" :
     readline.parse_and_bind("tab: complete")
     readline.set_completer(completer)
     
+    try:
+        readline.read_history_file(HISTFILE)
+    except IOError:
+        pass
+
+    # Saving history file
+    atexit.register(readline.write_history_file, HISTFILE)
+
     # Activating log sniffer
     logSniffer()
 
