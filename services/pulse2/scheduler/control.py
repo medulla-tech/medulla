@@ -194,6 +194,32 @@ class MethodProxy(MscContainer):
                 return True
         return False
 
+    def extend_command(self, cmd_id, start_date, end_date):
+        """
+        Custom command re-scheduling.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+
+        @param start_date: new start date of command
+        @type start_date: str
+
+        @param end_date: new end date of command
+        @type end_date: str
+        """
+        self.logger.info("re-scheduling command id = <%s> from %s to %s" % 
+                (cmd_id, start_date, end_date))
+        circuits = self.get_circuits_by_command(cmd_id)
+
+        for circuit in circuits :
+            circuit.cohq.coh.refresh()
+            circuit.cohq.cmd.refresh()
+            self.logger.info("\033[32mCircuit #%s: from %s to %s" % (
+                circuit.id, circuit.cohq.coh.start_date, circuit.cohq.coh.end_date))
+
+        return True
+
+
 
  
 class MscDispatcher (MscQueryManager, MethodProxy):
@@ -677,8 +703,16 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         self.bundles.clean_up_remaining(b_ids)
 
     def done_cleanup(self, reason):
+        for circuit in self._get_candidats_to_overtimed(self._circuits):
+            self.logger.debug("Circuit #%s: cleanup" % circuit.id)
+            circuit.release()
+        for circuit in self._get_candidats_to_failed(self._circuits):
+            circuit.release()
         for circuit in self.get_circuits_on_done():
             circuit.release()
+        for circuit in self.get_unfinished_circuits():
+            circuit.release()
+
 
 
         

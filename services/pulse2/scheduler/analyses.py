@@ -188,7 +188,7 @@ class MscQueryManager(MscContainer):
         failed = [c for c in circuits if c.qm.coh.isStateFailed()]
         overtimed = [c for c in circuits if c.qm.coh.isStateOverTimed()]
 
-        return self._group_by_command(failed + overtimed)
+        return failed + overtimed
 
     def contains_running_target(self, circuit):
         """
@@ -205,6 +205,10 @@ class MscQueryManager(MscContainer):
 
     def get_circuits_on_done(self):
         return [c for c in self.circuits if c.cohq.coh.isStateDone()]
+
+    def get_circuits_by_command(self, cmd_id):
+        return [c for c in self._circuits if c.cmd_id == cmd_id]
+
 
 
     def is_last_in_bundle(self, cmd, target, phase_name):

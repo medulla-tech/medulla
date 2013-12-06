@@ -138,6 +138,9 @@ class SchedulerGateway(UnixProtocol):
  
     def stop_commands(self, ids):
         return MscDispatcher().stop_commands(ids)
+    
+    def extend_command(self, id, start_date, end_date):
+        return MscDispatcher().extend_command(id, start_date, end_date)
  
     ### XMLRPC functions used from a launcher ###
     def tell_i_am_alive(self, launcher):

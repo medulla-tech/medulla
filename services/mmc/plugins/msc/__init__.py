@@ -354,8 +354,33 @@ class RpcProxy(RpcProxyI):
         @param end_date: new end date of command
         @type end_date: str
         """
-        return xmlrpcCleanup(MscDatabase().extend_command(cmd_id, start_date, end_date))
+        d = defer.maybeDeferred(MscDatabase().extend_command,
+                                cmd_id, 
+                                start_date, 
+                                end_date)
 
+        
+        @d.addCallback
+        def scheduler_select(result):
+
+            dl = []
+            schedulers = MscDatabase().getCommandsonhostsAndSchedulers(cmd_id)
+
+            method = mmc.plugins.msc.client.scheduler.extend_command
+
+            for scheduler in schedulers.keys():
+                d_scheduler = method(scheduler, cmd_id, start_date, end_date)
+                dl.append(d_scheduler)
+
+            return defer.DeferredList(dl)
+
+        @d.addErrback
+        def scheduler_call(failure):
+            logging.getLogger().warn("Command extend signal sending failed: %s" % str(failure))
+        
+        return d
+
+ 
     def pull_target_awake(self, hostname, macs):
         """
         Gets the requested machine for UUID.

@@ -1162,7 +1162,7 @@ class MscContainer (object):
         @param id: commands_on_host id
         @type id: int
         """
-        if id in self :
+        if any([True for c in self._circuits if c.id == id]):
             self.logger.debug("circuit #%d finished" % id)
             circuit = self.get(id)
             if suspend_to_waitings :

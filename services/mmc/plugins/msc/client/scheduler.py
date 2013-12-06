@@ -266,6 +266,29 @@ def startCommand(scheduler, command_id):
     else:
         logging.getLogger().error("startCommand: no target associated to coh %s" % command_id)
 
+def extend_command(scheduler, command_id, start_date, end_date):
+
+    def parseResult(result):
+        logging.getLogger().debug('Extending command %s on %s' % (command_id, scheduler))
+        return result
+
+    def parseError(reason):
+        logging.getLogger().warn('Extending command %s on %s failed: %s' % 
+                (command_id, scheduler, reason))
+        return False
+
+    d = getProxy(__select_scheduler(scheduler)).callRemote(
+        'extend_command',
+        command_id,
+        start_date,
+        end_date
+    )
+    d.addCallback(parseResult)
+    d.addErrback(parseResult)
+
+    return d
+
+
 
 def __select_scheduler(scheduler_name):
     if not scheduler_name:
