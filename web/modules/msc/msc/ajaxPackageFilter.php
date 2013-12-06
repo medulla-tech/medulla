@@ -137,7 +137,7 @@ foreach ($packages as $c_package) {
         if (!empty($_GET['uuid'])) {
             $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI());
         } else {
-            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|msctabs|tablogs', 'papi' => $p_api->toURI(), 'editConvergence' => $param_convergence_edit);
+            $params[] = array('name' => $package->label, 'version' => $package->version, 'pid' => $package->id, 'gid' => $group->id, 'from' => 'base|computers|groupmsctabs|tablogs', 'papi' => $p_api->toURI(), 'editConvergence' => $param_convergence_edit);
         }
         if ($type == 0) {
             $a_css[] = 'primary_list';
