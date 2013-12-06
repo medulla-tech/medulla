@@ -1,4 +1,5 @@
 <?php
+
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
@@ -38,7 +39,7 @@ require("includes/PageGenerator.php");
 require("modules/base/includes/edit.inc.php");
 
 /**
- Lookup and load all MMC modules
+  Lookup and load all MMC modules
  */
 function autoInclude() {
     global $redirArray;
@@ -70,27 +71,27 @@ function autoInclude() {
 
     /* Check filter info */
     // we must be in a ajax call
-    if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) and
-       $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest" and
-       isset($_GET['filter'])) {
+    if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) and
+            $_SERVER['HTTP_X_REQUESTED_WITH'] == "XMLHttpRequest" and
+            isset($_GET['filter'])) {
         // get the page who called us
         preg_match('/module=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
-        if(isset($matches[1]))
+        if (isset($matches[1]))
             $module = $matches[1];
         else
             $module = "default";
         preg_match('/submod=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
-        if(isset($matches[1]))
+        if (isset($matches[1]))
             $submod = $matches[1];
         else
             $submod = "default";
         preg_match('/action=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
-        if(isset($matches[1]))
+        if (isset($matches[1]))
             $action = $matches[1];
         else
             $action = "default";
         preg_match('/tab=([^&]+)/', $_SERVER["HTTP_REFERER"], $matches);
-        if(isset($matches[1]))
+        if (isset($matches[1]))
             $tab = $matches[1];
         else
             $tab = "default";
@@ -98,20 +99,20 @@ function autoInclude() {
         // extra arguments of the request so we don't cache filters for another
         // page
         $extra = "";
-        foreach($_GET as $key => $value) {
+        foreach ($_GET as $key => $value) {
             if (!in_array($key, array('module', 'submod', 'tab', 'action', 'filter', 'start', 'end', 'maxperpage')))
                 $extra .= $key . "_" . $value;
         }
         // store the filter
-        if(isset($_GET['filter']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_filter_".$extra] = $_GET['filter'];
+        if (isset($_GET['filter']))
+            $_SESSION[$module . "_" . $submod . "_" . $action . "_" . $tab . "_filter_" . $extra] = $_GET['filter'];
         // store pagination info
-        if(isset($_GET['maxperpage']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_max_".$extra] = $_GET['maxperpage'];
-        if(isset($_GET['start']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_start_".$extra] = $_GET['start'];
-        if(isset($_GET['end']))
-            $_SESSION[$module."_".$submod."_".$action."_".$tab."_end_".$extra] = $_GET['end'];
+        if (isset($_GET['maxperpage']))
+            $_SESSION[$module . "_" . $submod . "_" . $action . "_" . $tab . "_max_" . $extra] = $_GET['maxperpage'];
+        if (isset($_GET['start']))
+            $_SESSION[$module . "_" . $submod . "_" . $action . "_" . $tab . "_start_" . $extra] = $_GET['start'];
+        if (isset($_GET['end']))
+            $_SESSION[$module . "_" . $submod . "_" . $action . "_" . $tab . "_end_" . $extra] = $_GET['end'];
 
         unset($module);
         unset($submod);
@@ -120,9 +121,8 @@ function autoInclude() {
     }
 
     /* Redirect user to a default page. */
-    if (!isset($redirArray[$__module][$__submod][$__action])
-        && !isset($redirAjaxArray[$__module][$__submod][$__action])
-       ) {
+    if (!isset($redirArray[$__module][$__submod][$__action]) && !isset($redirAjaxArray[$__module][$__submod][$__action])
+    ) {
         header("Location: " . getDefaultPage());
         exit;
     }
@@ -146,6 +146,7 @@ function autoInclude() {
 
     if (!empty($redirArray[$__module][$__submod][$__action])) {
         require($redirArray[$__module][$__submod][$__action]);
+        //debug($redirArray[$__module][$__submod][$__action]);
     } else if (!empty($redirAjaxArray[$__module][$__submod][$__action])) {
         require($redirAjaxArray[$__module][$__submod][$__action]);
     }
@@ -163,6 +164,8 @@ $maxperpage = $conf["global"]["maxperpage"];
 
 autoInclude();
 
-if (strlen(ob_get_contents())) ob_end_flush();
+//debug(get_included_files());
 
+if (strlen(ob_get_contents()))
+    ob_end_flush();
 ?>
