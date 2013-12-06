@@ -359,7 +359,7 @@ def initFuncDB():
 
 @deferred
 def logSniffer():
-    subprocess.call('tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user root:"',shell=True)
+    subprocess.call('tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user\|WARNING\|ERROR"', shell=True)
     
 
 if __name__ == "__main__" :
