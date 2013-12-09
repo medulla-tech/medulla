@@ -33,7 +33,7 @@ import datetime
 import calendar
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func
+        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -2485,17 +2485,28 @@ class Glpi08(DyngroupDatabaseHelper):
         return ret
 
     @DatabaseHelper._session
-    def getMachineBySoftware(self, session, ctx, name, vendor=None, version=None, count=0):
+    def getMachineBySoftware(self,
+                             session,
+                             ctx,
+                             name,
+                             vendor=None,
+                             version=None,
+                             count=0):
         """
         @return: all machines that have this software
         """
         if int(count) == 1:
-            query = session.query(func.count(Machine))
+            query = session.query(func.count(distinct(self.machine.c.id)))
         else:
-            query = session.query(Machine)
+            query = session.query(distinct(self.machine.c.id))
 
-        query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software).join(self.manufacturers))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = query.select_from(self.machine
+                                  .join(self.inst_software)
+                                  .join(self.softwareversions)
+                                  .join(self.software)
+                                  .join(self.manufacturers))
+        query = query.filter(self.machine.c.is_deleted == 0)
+        query = query.filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
 
