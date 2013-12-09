@@ -671,23 +671,30 @@ class MscDatabase(DatabaseHelper):
         # User context filter
         filters = self.__queryUsersFilterBis(ctx)
         # search text Filtering
+
         if filt:
-            filters = filters & or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)) )
+            filters = and_(filters, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)) ))
         # Bundle join filtering
         #filters = filters & (self.commands.c.fk_bundle == self.bundle.c.id)
 
         if expired:
-            filters = filters & (self.commands.c.end_date <= func.now())
+            filters = and_(filters, (self.commands.c.end_date <= func.now()))
         else:
-            filters = filters & (self.commands.c.end_date > func.now())
+            filters = and_(filters, (self.commands.c.end_date > func.now()))
 
         # ====== CALCULATING COUNT ============================
 
-        # Command count without bundles (fk_bundle = None)
-        size1 = session.query(func.count(Commands.id)).filter(self.commands.c.fk_bundle == None).filter(filters).scalar() or 0
-        # Bundle count (grouping commands by fk_bundle field)
-        size2 = session.query(func.count(distinct(self.commands.c.fk_bundle))).filter(filters).scalar() or 0
-        size = size1 + size2
+        query = session.query(func.count(distinct(Commands.id)))
+        query = query.select_from(self.commands.join(self.commands_on_host, self.commands_on_host.c.fk_commands == self.commands.c.id)\
+                    .join(self.target, self.commands_on_host.c.fk_target == self.target.c.id)\
+                    .outerjoin(self.bundle, self.commands.c.fk_bundle == self.bundle.c.id))
+        # Filtering on filters
+        query = query.filter(filters)
+        # Grouping bundle commands by fk_bundle only if fk_bundle is not null
+        # So we generate random md5 hash for command that have null fk_bundle
+        query = query.group_by(func.ifnull(self.commands.c.fk_bundle, func.md5(self.commands.c.id)))
+        size = len(query.all())
+
 
         # ====== MAIN QUERY ============================
         query = session.query(Commands)
@@ -696,6 +703,8 @@ class MscDatabase(DatabaseHelper):
         query = query.select_from(self.commands.join(self.commands_on_host, self.commands_on_host.c.fk_commands == self.commands.c.id)\
                     .join(self.target, self.commands_on_host.c.fk_target == self.target.c.id)\
                     .outerjoin(self.bundle, self.commands.c.fk_bundle == self.bundle.c.id))
+        # Filtering on filters
+        query = query.filter(filters)
         # Grouping bundle commands by fk_bundle only if fk_bundle is not null
         # So we generate random md5 hash for command that have null fk_bundle
         query = query.group_by(func.ifnull(self.commands.c.fk_bundle, func.md5(self.commands.c.id))) #.group_by(self.commands.c.id)
