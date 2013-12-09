@@ -351,6 +351,16 @@ class CoHManager :
         """
         CoHManager.setCoHsStates(ids, "over_timed")
 
+    @classmethod
+    def setCoHsStateScheduled(cls, ids):
+        """
+        Multiple setting the current state to 'scheduled'.
+
+        @param ids: list of ids to update
+        @type ids: list
+        """
+        CoHManager.setCoHsStates(ids, "scheduled")
+
 
     @classmethod
     def setCoHsStateStopped(cls, ids):

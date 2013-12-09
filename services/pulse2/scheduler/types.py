@@ -650,6 +650,7 @@ class CircuitBase(object):
         Called by MscContainer which contains list of processing circuits.
         This method is called when the circuits ends.  
         """
+        self.dispatcher.stopped_track.remove(self.id)
         if self.recurrent :
             return
         try :
@@ -839,7 +840,7 @@ class Circuit (CircuitBase):
                 self.schedule_last_stats()
             self.release()
             return
-        elif result == DIRECTIVE.STOPPED :
+        elif result == DIRECTIVE.STOPPED and not self.running_phase.is_running():
             self.logger.info("Circuit #%s: stopping" % self.id)
             self.cohq.cmd.inc_stopped()
             self.cohq.coh.setStateStopped()
@@ -1170,6 +1171,7 @@ class MscContainer (object):
                 self.logger.info("Circuit #%d: failed and queued" % id)
             else :
                 self.remove_circuit(circuit)
+                self.stopped_track.remove(circuit.id)
             self.logger.info("Remaining content: %d circuits (+%d waitings)" % ((len(self.circuits)),len(self.waiting_circuits)))
             return True
         

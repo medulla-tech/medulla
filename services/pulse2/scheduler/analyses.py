@@ -63,7 +63,7 @@ class MscQueryManager(MscContainer):
         @return: list of all circuits
         @rtype: list
         """
-        return [c for c in self.circuits if c.id in ids]
+        return [c for c in self._circuits if c.id in ids]
 
     def get_running_circuits(self):
         """
@@ -133,7 +133,9 @@ class MscQueryManager(MscContainer):
         self.logger.info("total %s circuits(%d) not started yet(%d)" % (c_name, len(cics), non_started)) 
         self.logger.info("- ready=%d running=%d failed=%d done=%d" % (ready, running, failed, done))
 
-
+    def get_unprocessed_circuits(self):
+        return [c for c in self.circuits if not c.initialized]
+ 
     def get_unprocessed_waitings(self):
         return [c for c in self.waiting_circuits if c.initialized and not c.is_running]
  
@@ -141,11 +143,11 @@ class MscQueryManager(MscContainer):
         banned = self.bundles.get_banned_cohs()
  
         now = time.time()
-        circuits = [c for c in self.waiting_circuits if c.initialized and c.is_running]
+        circuits = [c for c in self.waiting_circuits]
         circuits = [c for c in circuits
-                               if c.qm.coh.get_next_launch_timestamp() < now
-                                  and not c.qm.coh.is_out_of_attempts()
-                                  and not c.qm.cmd.inDeploymentInterval()
+                               if c.cohq.coh.get_next_launch_timestamp() < now
+                                  and not c.cohq.coh.is_out_of_attempts()
+                                  and c.cohq.cmd.inDeploymentInterval()
                                   and c.id not in banned
                    ]
         return circuits

@@ -27,7 +27,7 @@ from sqlalchemy import not_, or_, func
 
 from pulse2.database.msc import MscDatabase
 
-from pulse2.database.msc.orm.commands import Commands, stop_commands_on_host
+from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.target import Target
@@ -130,7 +130,10 @@ def get_cohs(cmd_id, scheduler):
     cohs = cohs.filter(database.commands_on_host.c.fk_commands == cmd_id)
     cohs = cohs.filter(database.commands_on_host.c.scheduler == scheduler)
     cohs = cohs.filter(database.pull_targets.c.target_uuid == None)
-
+    cohs = cohs.filter(not_(database.commands_on_host.c.current_state.in_(("failed", 
+                                                                            "over_timed", 
+                                                                            "done", 
+                                                                            "stopped"))))
 
     commands_to_perform = [coh.id for (coh, target, pt) in cohs.all()] 
     
@@ -202,7 +205,6 @@ class CoHQuery :
         phase = session.query(CommandsOnHostPhase)
         phase = phase.filter(database.commands_on_host_phase.c.fk_commands_on_host == self._id)
         phase = phase.filter(database.commands_on_host_phase.c.name == name)
-        #phase = phase.all()
         phase = phase.first()
         session.close()
         if isinstance(phase, list):
@@ -514,8 +516,10 @@ def is_command_finished(scheduler_name, id):
         return True
 
 def switch_commands_to_stop(cohs):
-    stop_commands_on_host(cohs)
-    #CoHManager.setCoHsStateStopped(cohs)
+    CoHManager.setCoHsStateStopped(cohs)
+
+def switch_commands_to_start(cohs):
+    CoHManager.setCoHsStateScheduled(cohs)
  
 def get_commands_stats(scheduler_name, cmd_id=None):
     database = MscDatabase()

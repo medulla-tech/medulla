@@ -131,7 +131,7 @@ class SchedulerGateway(UnixProtocol):
         return MscDispatcher().start_commands([id])
 
     def start_commands(self, ids):
-        return MscDispatcher().start_commands(ids)
+        return MscDispatcher().start_commands_on_host(ids)
 
     def stop_command(self, id):
         return MscDispatcher().stop_commands([id])
