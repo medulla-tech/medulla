@@ -31,7 +31,7 @@ import time
 
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, select, asc, or_, desc, func, not_
+        Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.sql import union
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
@@ -663,45 +663,45 @@ class MscDatabase(DatabaseHelper):
         return []
 
     def getAllCommandsConsult(self, ctx, min, max, filt, expired = True):
-        filtering2_1 = and_(self.commands.c.fk_bundle == None, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
-        filtering2_2 = and_(self.commands.c.fk_bundle == self.bundle.c.id, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt))), self.__queryUsersFilterBis(ctx))
+
+        session = create_session()
+
+        # ====== GENERATING FILTERS ============================
+
+        # User context filter
+        filters = self.__queryUsersFilterBis(ctx)
+        # search text Filtering
+        if filt:
+            filters = filters & or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)) )
+        # Bundle join filtering
+        #filters = filters & (self.commands.c.fk_bundle == self.bundle.c.id)
 
         if expired:
-            filtering2_1 = and_(filtering2_1, self.commands.c.end_date <= func.now())
-            filtering2_2 = and_(filtering2_2, self.commands.c.end_date <= func.now())
+            filters = filters & (self.commands.c.end_date <= func.now())
         else:
-            filtering2_1 = and_(filtering2_1, self.commands.c.end_date > func.now())
-            filtering2_2 = and_(filtering2_2, self.commands.c.end_date > func.now())
+            filters = filters & (self.commands.c.end_date > func.now())
 
+        # ====== CALCULATING COUNT ============================
 
-        session = create_session()
-        size1 = session.query(func.count(Commands.id)).filter(filtering2_1).filter(self.commands.c.fk_bundle == None).scalar() or 0
-        size2 = select(['bid'], True, select([self.commands.c.fk_bundle.label('bid')], and_(filtering2_2, self.commands.c.fk_bundle != None)).group_by('bid').alias('BIDS') ).alias('C').count()
+        # Command count without bundles (fk_bundle = None)
+        size1 = session.query(func.count(Commands.id)).filter(self.commands.c.fk_bundle == None).filter(filters).scalar() or 0
+        # Bundle count (grouping commands by fk_bundle field)
+        size2 = session.query(func.count(distinct(self.commands.c.fk_bundle))).filter(filters).scalar() or 0
+        size = size1 + size2
 
-        conn = self.getDbConnection()
-        size2 = conn.execute(size2).fetchone()
-
-        #logging.getLogger('sqlalchemy.engine').setLevel(logging.DEBUG)
-
-
-        size = int(size1) + int(size2[0])
-
-        u2 = union(
-                select([self.commands.c.id, func.concat('CMD_', self.commands.c.id).label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done, self.commands.c.sum_stopped, self.commands.c.sum_overtimed], filtering2_1),
-                select([self.commands.c.id, self.commands.c.fk_bundle.label('bid'), self.commands.c.creation_date, self.commands.c.start_date, self.commands.c.end_date, self.commands.c.sum_running, self.commands.c.sum_failed, self.commands.c.sum_done, self.commands.c.sum_stopped, self.commands.c.sum_overtimed], filtering2_2)
-        ).group_by('bid').order_by(desc('creation_date')).offset(int(min)).limit(int(max)-int(min))
-
-        conn = self.getDbConnection()
-        cmds = map(lambda e: e[0], conn.execute(u2).fetchall())
-        conn.close()
-
-        session = create_session()
-
-        query = session.query(Commands).add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
+        # ====== MAIN QUERY ============================
+        query = session.query(Commands)
+        query = query.add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
         query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
-        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.bundle))
-
-        cmds = query.filter(self.commands.c.id.in_(cmds)).group_by(self.commands.c.id).order_by(desc(self.commands.c.creation_date)).all()
+        query = query.select_from(self.commands.join(self.commands_on_host, self.commands_on_host.c.fk_commands == self.commands.c.id)\
+                    .join(self.target, self.commands_on_host.c.fk_target == self.target.c.id)\
+                    .outerjoin(self.bundle, self.commands.c.fk_bundle == self.bundle.c.id))
+        # Grouping bundle commands by fk_bundle only if fk_bundle is not null
+        # So we generate random md5 hash for command that have null fk_bundle
+        query = query.group_by(func.ifnull(self.commands.c.fk_bundle, func.md5(self.commands.c.id))) #.group_by(self.commands.c.id)
+        query = query.order_by(desc(self.commands.c.id))
+        # Limit result
+        cmds = query.offset(int(min)).limit(int(max)-int(min)).all()
 
         session.close()
 
@@ -725,8 +725,7 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
-                            'deployment_intervals': cmd.deployment_intervals,
-                            'status':self.getCommandOnBundleStatus(ctx, bid)
+                            'deployment_intervals': cmd.deployment_intervals
                     })
                 else:
                     ret.append({
@@ -745,8 +744,7 @@ class MscDatabase(DatabaseHelper):
                             'target':target_name,
                             'uuid':target_uuid,
                             'gid':'',
-                            'deployment_intervals': cmd.deployment_intervals,
-                            'status':self.getCommandOnBundleStatus(ctx, bid)
+                            'deployment_intervals': cmd.deployment_intervals
                     })
             else: # we are not in a bundle
                 if gid != None and gid != '':
@@ -766,8 +764,7 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
-                            'deployment_intervals': cmd.deployment_intervals,
-                            'status':self.getCommandOnGroupStatus(ctx, cmd.id)
+                            'deployment_intervals': cmd.deployment_intervals
                     })
                 else:
                     ret.append({
@@ -788,8 +785,7 @@ class MscDatabase(DatabaseHelper):
                             'uuid':target_uuid,
                             'gid':'',
                             'status':{},
-                            'deployment_intervals': cmd.deployment_intervals,
-                            'current_state':self.getCommandOnHostCurrentState(ctx, cmd.id)
+                            'deployment_intervals': cmd.deployment_intervals
                     })
 
         return [size, ret]
