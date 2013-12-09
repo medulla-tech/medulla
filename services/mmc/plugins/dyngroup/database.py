@@ -34,6 +34,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
 from mmc.plugins.base import getUserGroups
+from mmc.plugins.base.computers import ComputerManager
 import mmc.plugins.dyngroup
 from mmc.database.database_helper import DatabaseHelper
 # PULSE2 modules
@@ -935,3 +936,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
             return None
+
+    def _get_machines_in_deploy_group(self, session, ctx, cmd_id):
+        try:
+            deploy_group_id = session.query(Convergence).filter_by(commandId = cmd_id).one().deployGroupId
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.error("Error while fetching deploy group id for command %s: %s" % (cmd_id, e))
+            return None
+        return [deploy_group_id, ComputerManager().getRestrictedComputersList(ctx, filt={'gid': deploy_group_id}, justId=True)]
