@@ -30,6 +30,7 @@ import logging
 from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
 from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
+from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoSuchTableError
 
@@ -177,6 +178,45 @@ class DatabaseHelper(Singleton):
                 self.session = None
             return result
         return __session
+
+
+    # listinfo decorator to handle offsets, limits and output serialization
+    # for XMLRPC, can handle multiple entities queries, multiple columns
+    # and mapped relationships
+    @classmethod
+    def _listinfo(self, func_):
+        @functools.wraps(func_)
+        def __listinfo(self, params, *args, **kw):
+            query = func_(self, params, *args, **kw)
+
+            # Calculating count without limit and offset
+            count = query.with_entities(func.count('*')).scalar()
+            # Applying limit and offset
+            if 'max' in params and 'min' in params:
+                query = query.limit(params['max'] - params['min']).offset(params['min'])
+
+            data = []
+
+            # Serializing query output
+            for line in query:
+                if isinstance(line, DBObj):
+                    data.append(line.toDict())
+                elif isinstance(line, tuple):
+                    # Fetching all tuple items
+                    line_ = []
+                    for item in line:
+                        if isinstance(item, DBObj):
+                            line_.append(item.toDict())
+                        else:
+                            line_.append(item)
+                    data.append(line_)
+                else:
+                    # Base types
+                    data.append(line)
+
+            return {'count': count, 'data': data}
+
+        return __listinfo
 
 
 class DBObject(object):
