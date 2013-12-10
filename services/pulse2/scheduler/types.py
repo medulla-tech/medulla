@@ -212,6 +212,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         if self.phase.is_running(): 
             # phase still running, immediately returns, do nothing
             self.logger.debug("command_on_host #%s: %s still running" % (self.coh.id, self.name))
+            return self.give_up()
         return DIRECTIVE.PERFORM
 
     def _switch_on(self):
@@ -842,7 +843,6 @@ class Circuit (CircuitBase):
             return
         elif result == DIRECTIVE.STOPPED:
             self.logger.info("Circuit #%s: stopping" % self.id)
-            self.cohq.cmd.inc_stopped()
             self.cohq.coh.setStateStopped()
             self.release()
             return

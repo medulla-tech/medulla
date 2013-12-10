@@ -33,7 +33,7 @@ from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS
 from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
-from pulse2.scheduler.queries import switch_commands_to_stop, switch_commands_to_start
+from pulse2.scheduler.queries import switch_commands_to_start
 from pulse2.scheduler.queries import get_ids_to_start, get_commands
 from pulse2.scheduler.dlp import get_dlp_method
 
@@ -116,17 +116,15 @@ class MethodProxy(MscContainer):
         @param cohs: list of commands_on_host
         @type cohs: list
         """
-        scheduler = self.config.name
         cmd_ids = get_commands(cohs)
-        cohs = []
-        for cmd_id in cmd_ids :
-            cohs.extend(get_cohs(cmd_id, scheduler))
-
-        self.logger.info("Prepare %d circuits to STOP ..." % len(cohs))
-        switch_commands_to_stop(cohs)
+        active_circuits = [c for c in self._circuits if c.id in cohs]
+        
+        active_cohs = [c.id for c in active_circuits]
+ 
+        self.logger.info("Prepare %d circuits to STOP ..." % len(active_cohs))
 
         dl = [] 
-        for id in cohs :
+        for id in active_cohs :
             circuit = self.get(id)
             if circuit:
                 self.stopped_track.add([id])
@@ -148,7 +146,7 @@ class MethodProxy(MscContainer):
         return stopd
 
         
-        for cmd_id in get_commands(cohs):
+        for cmd_id in cmd_ids:
             # final statistics calculate
             self.statistics.watchdog_schedule(cmd_id)
             
@@ -433,6 +431,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @rtype: list
         """
         try :
+            if len(circuits) == 0:
+                self.logger.info("Nothing to execute")
+                return True
+
             self._circuits.extend(circuits)
             self.loop = LoopingCall(self._run_later, iter(circuits))
             d = self.loop.start(self.config.emitting_period)
