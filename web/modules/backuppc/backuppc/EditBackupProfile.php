@@ -145,7 +145,7 @@ for ($i = 0 ; $i < count($sharenames) ; $i++) {
     );
     
     $f->add(
-        new TrFormElement(_T('Folder','backuppc'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Folder','backuppc'), new multifieldTpl2($fields)),
         array("value" => $values,"required" => True)
     );
 }

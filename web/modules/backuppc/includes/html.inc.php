@@ -70,10 +70,10 @@ class MultipleSelect extends SelectItem{
     }
 }
 
-class multifieldTpl extends AbstractTpl {
+class multifieldTpl2 extends AbstractTpl {
     var $fields;
 
-    function multifieldTpl($fields) {
+    function multifieldTpl2($fields) {
         $this->fields = $fields;
     }
 
@@ -96,20 +96,6 @@ class multifieldTpl extends AbstractTpl {
             
     }
 }
-
-
-class textTpl extends AbstractTpl {
-    
-    function textTpl($text) {
-        $this->text = $text;
-    }
-
-
-    function display($arrParam) {      
-        echo $this->text;
-    }
-}
-
 
 class hourInputTpl extends InputTpl{
 

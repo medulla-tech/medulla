@@ -157,7 +157,7 @@ foreach ($exclude_periods as $period) {
     );
     
     $f->add(
-        new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Do not backup from','backuppc'), new multifieldTpl2($fields)),
         array("value" => $values,"required" => True)
     );
 
