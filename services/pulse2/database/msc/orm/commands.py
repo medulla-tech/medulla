@@ -33,6 +33,8 @@ import datetime
 # ORM mappings
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, stopCommandOnHost
 from pulse2.database.msc.orm.commands_on_host import CoHManager
+from pulse2.database.msc.orm.target import Target
+
 # Pulse 2 stuff
 from pulse2.scheduler.timeaxis import LaunchTimeResolver
 
@@ -169,12 +171,17 @@ class Commands(object):
         return now > self.start_date and now < self.end_date
 
 
-    def getCohIds(self):
+    def getCohIds(self, target_uuids=[]):
         """
         Returns the list of commands_on_host linked to this command
+        If list of target_uuids, returns only uuids of this list
         """
         session = sqlalchemy.orm.create_session()
-        myCommandOnHosts = session.query(CommandsOnHost).filter(CommandsOnHost.fk_commands == self.getId())
+        myCommandOnHosts = session.query(CommandsOnHost)
+        if target_uuids:
+            myCommandOnHosts = myCommandOnHosts.join(Target)
+            myCommandOnHosts = myCommandOnHosts.filter(Target.target_uuid.in_(target_uuids))
+        myCommandOnHosts = myCommandOnHosts.filter(CommandsOnHost.fk_commands == self.getId())
         session.close()
         return myCommandOnHosts.all()
 

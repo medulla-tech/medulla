@@ -37,7 +37,9 @@ from twisted.internet import defer
 # Helpers
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.plugins.base import LdapUserGroupControl
 
+from mmc.core.tasks import TaskManager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.group import ComputerGroupManager
 from pulse2.managers.location import ComputerLocationManager
@@ -95,6 +97,10 @@ def activate():
     if config.check_db_enable:
         scheduleCheckStatus(config.check_db_interval)
 
+    # Add convergence reschedule task in the task manager
+    TaskManager().addTask("msc.convergence_reschedule",
+                          (convergence_reschedule,),
+                          cron_expression=config.convergence_reschedule)
     return True
 
 def activate_2():
@@ -380,46 +386,6 @@ class RpcProxy(RpcProxyI):
         return d
 
  
-    def _get_convergence_soon_ended_commands(self):
-        ret = MscDatabase()._get_convergence_soon_ended_commands()
-        return xmlrpcCleanup(ret)
-
-    def _get_convergence_new_machines_to_add(self, ctx, cmd_id):
-        ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id)
-        return xmlrpcCleanup(ret)
-
-    def _add_machines_to_convergence_command(self, ctx, cmd_id, new_machine_ids, convergence_group_id):
-        return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id)
-
-    def _update_command_end_date(self, cmd_id):
-        return MscDatabase()._update_command_end_date(cmd_id)
-
-    def _get_machines_in_command(self, cmd_id):
-        return MscDatabase()._get_machines_in_command(cmd_id)
-
-    def _get_machines_in_deploy_group(self, cmd_id):
-        ctx = self.currentContext
-        return MscDatabase()._get_machines_in_deploy_group(ctx, cmd_id)
-
-    def convergence_reschedule(self):
-        """
-        Check convergence commands who will be ended soon
-        and re-schedule them
-        """
-        logger = logging.getLogger()
-        ctx = self.currentContext
-        cmd_ids = self._get_convergence_soon_ended_commands()
-        if cmd_ids:
-            logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))
-            for cmd_id in cmd_ids:
-                convergence_deploy_group_id, new_machine_ids = self._get_convergence_new_machines_to_add(ctx, cmd_id)
-                if new_machine_ids:
-                    logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
-                    self._add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
-                self._update_command_end_date(cmd_id)
-        else:
-            logger.info("Convergence cron: no convergence commands will be rescheduled")
-
     def pull_target_awake(self, hostname, macs):
         """
         Gets the requested machine for UUID.
@@ -837,3 +803,52 @@ def xmlrpcCleanup2(obj):
         return xmlrpcCleanup(obj.toH())
     except:
         return xmlrpcCleanup(obj)
+
+#############################
+
+def _get_convergence_soon_ended_commands():
+    ret = MscDatabase()._get_convergence_soon_ended_commands()
+    return xmlrpcCleanup(ret)
+
+def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
+    ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+    return xmlrpcCleanup(ret)
+
+def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id):
+    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id)
+
+def _update_command_end_date(cmd_id):
+    return MscDatabase()._update_command_end_date(cmd_id)
+
+def _get_machines_in_command(cmd_id):
+    return MscDatabase()._get_machines_in_command(cmd_id)
+
+def _get_convergence_deploy_group_id_and_user(cmd_id):
+    return DyngroupDatabase()._get_convergence_deploy_group_id_and_user(cmd_id)
+
+def getContext(user='root'):
+        s = SecurityContext()
+        s.userid = user
+        s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
+        return s
+
+def convergence_reschedule():
+    """
+    Check convergence commands who will be ended soon
+    and re-schedule them
+    """
+    logger = logging.getLogger()
+    cmd_ids = _get_convergence_soon_ended_commands()
+    if cmd_ids:
+        logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))
+        for cmd_id in cmd_ids:
+            convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
+            ctx = getContext(user=user)
+            new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+            if new_machine_ids:
+                logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
+                _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
+            _update_command_end_date(cmd_id)
+    else:
+        logger.info("Convergence cron: no convergence commands will be rescheduled")
+

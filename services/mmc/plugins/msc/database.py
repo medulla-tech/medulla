@@ -829,15 +829,11 @@ class MscDatabase(msc.MscDatabase):
         query = query.filter(CommandsOnHost.fk_commands == cmd_id)
         return [x[1].target_uuid for x in query]
 
-    def _get_machines_in_deploy_group(self, session, ctx, cmd_id):
-        return DyngroupDatabase()._get_machines_in_deploy_group(session, ctx, cmd_id)
-
     @DatabaseHelper._session
-    def _get_convergence_new_machines_to_add(self, session, ctx, cmd_id):
+    def _get_convergence_new_machines_to_add(self, session, ctx, cmd_id, convergence_deploy_group_id):
         machines_in_command = self._get_machines_in_command(session, cmd_id)
-        deploy_group_id, machines_in_deploy_group = self._get_machines_in_deploy_group(session, ctx, cmd_id)
-        return [deploy_group_id, [x for x in machines_in_deploy_group if x not in machines_in_command]]
-
+        machines_in_deploy_group = ComputerManager().getRestrictedComputersList(ctx, filt={'gid': convergence_deploy_group_id}, justId=True)
+        return [x for x in machines_in_deploy_group if x not in machines_in_command]
 
     def addMachinesToCommand(self,
                              ctx,
@@ -860,6 +856,7 @@ class MscDatabase(msc.MscDatabase):
         targets_to_insert = []
         targets_name = []
         coh_to_insert = []
+        target_uuids = targets
 
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
         if len(targets) == 0:
@@ -911,6 +908,7 @@ class MscDatabase(msc.MscDatabase):
                                           targets[i][1],    
                                           schedulers[i]))
             session = create_session()
+            session.begin()
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()
                 target.target_macaddr = atarget["target_macaddr"]
@@ -940,27 +938,27 @@ class MscDatabase(msc.MscDatabase):
                                                                atarget, 
                                                                target.id, 
                                                                target_name, 
-                                                               cmd['max_connection_attempt'],
-                                                               cmd['start_date'],
-                                                               cmd['end_date'],
+                                                               cmd.max_connection_attempt,
+                                                               cmd.start_date,
+                                                               cmd.end_date,
                                                                ascheduler, 
                                                                order_in_proxy, 
                                                                max_clients_per_proxy))
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
 
-            cohs = cmd.getCohIds()
+            cohs = cmd.getCohIds(target_uuids=target_uuids)
             session = create_session()
             self._createPhases(session,
                                cohs,
-                               cmd['do_imaging_menu'],
-                               cmd['do_wol'],
-                               cmd['files'],
-                               cmd['start_script'],
-                               cmd['clean_on_success'],
-                               cmd['do_inventory'],
-                               cmd['do_halt'],
-                               cmd['do_reboot'],
+                               cmd.do_imaging_menu,
+                               cmd.do_wol,
+                               cmd.files,
+                               cmd.start_script,
+                               cmd.clean_on_success,
+                               cmd.do_inventory,
+                               cmd.do_halt,
+                               cmd.do_reboot,
                                is_quick_action = False)
 
             return cmd_id

@@ -133,6 +133,7 @@ class MscConfig(MscDatabaseConfig):
     wol_macaddr_blacklist = ""
 
     default_scheduler = ""
+    convergence_reschedule = "42 * * * *"
 
     schedulers = {
     }
@@ -194,6 +195,10 @@ class MscConfig(MscDatabaseConfig):
         # schedulers
         if self.cp.has_option("msc", "default_scheduler"):
             self.default_scheduler = self.cp.get("msc", "default_scheduler")
+
+        # convergence_reschedule
+        if self.cp.has_option("msc", "convergence_reschedule"):
+            self.convergence_reschedule = self.cp.get("msc", "convergence_reschedule")
 
         for section in self.cp.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):

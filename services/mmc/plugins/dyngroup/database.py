@@ -937,10 +937,19 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
             return None
 
-    def _get_machines_in_deploy_group(self, session, ctx, cmd_id):
+    @DatabaseHelper._session
+    def _get_convergence_deploy_group_id_and_user(self, session, command_id):
+        query = session.query(Convergence).filter_by(commandId=command_id)
         try:
-            deploy_group_id = session.query(Convergence).filter_by(commandId = cmd_id).one().deployGroupId
+            deploy_group_id = query.one().deployGroupId
         except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.error("Error while fetching deploy group id for command %s: %s" % (cmd_id, e))
+            self.logger.warn("Error while fetching convergence deploy group id for command %s: %s" % (command_id, e))
             return None
-        return [deploy_group_id, ComputerManager().getRestrictedComputersList(ctx, filt={'gid': deploy_group_id}, justId=True)]
+        query = session.query(Users).join(Groups).filter(Groups.id == deploy_group_id)
+
+        try:
+            user = query.one().login
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("Error while fetching user for deploy group %s: %s" % (deploy_group_id, e))
+            return None
+        return deploy_group_id, user
