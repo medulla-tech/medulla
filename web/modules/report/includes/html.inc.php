@@ -70,45 +70,6 @@ class MultipleSelect extends SelectItem {
 
 }
 
-class multifieldTpl extends AbstractTpl {
-
-    var $fields;
-
-    function multifieldTpl($fields) {
-        $this->fields = $fields;
-    }
-
-    function display($arrParam) {
-
-        if (!isset($this->fields))
-            return;
-
-        $separator = isset($arrParam['separator']) ? $arrParam['separator'] : ' &nbsp;&nbsp; ';
-
-        for ($i = 0; $i < count($this->fields); $i++) {
-            if (count($arrParam[$i])) {
-                $this->fields[$i]->display($arrParam[$i]);
-            } else {
-                $this->fields[$i]->display(array('value' => ''));
-            }
-            echo $separator;
-        }
-    }
-
-}
-
-class textTpl extends AbstractTpl {
-
-    function textTpl($text) {
-        $this->text = $text;
-    }
-
-    function display($arrParam) {
-        echo $this->text;
-    }
-
-}
-
 class dateInputTpl extends InputTpl {
 
     function dateInputTpl($name, $regexp='/(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/(\d\d\d\d)/') {

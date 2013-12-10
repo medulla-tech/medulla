@@ -1404,7 +1404,6 @@ class SingleLocationTpl extends AbstractTpl {
 }
 
 class multifieldTpl extends AbstractTpl {
-
     var $fields;
 
     function multifieldTpl($fields) {
