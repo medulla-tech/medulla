@@ -193,7 +193,7 @@ class DatabaseHelper(Singleton):
             count = query.with_entities(func.count('*')).scalar()
             # Applying limit and offset
             if 'max' in params and 'min' in params:
-                query = query.limit(params['max'] - params['min']).offset(params['min'])
+                query = query.limit(int(params['max']) - int(params['min'])).offset(int(params['min']))
 
             data = []
 
