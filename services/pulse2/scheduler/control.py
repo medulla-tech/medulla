@@ -99,13 +99,11 @@ class MethodProxy(MscContainer):
         active_cohs = [c.id for c in active_circuits]
         new_cohs = [id for id in cohs if id not in active_cohs and not id in self.stopped_track]
         self.logger.info("Starting %s circuits" % len(new_cohs)) 
-        self.start_all(new_cohs, True)
 
         for circuit in active_circuits :
             self.logger.info("Circuit #%s: start" % circuit.id)
             # set the next_launch_date for now
             circuit.cohq.coh.reSchedule(0, False)
-            circuit.cohq.coh.setStateScheduled()
         return True
 
 
@@ -128,14 +126,19 @@ class MethodProxy(MscContainer):
             circuit = self.get(id)
             if circuit:
                 self.stopped_track.add([id])
-                d = maybeDeferred(circuit.cohq.coh.setStateStopped)
+                d = Deferred()
+                d.callback(True)
                 dl.append(d)
+
         stopd = DeferredList(dl)
 
         @stopd.addCallback
         def stop_finished(result):
 
             self.logger.info("stopped circuits: %d" % len(result))
+            for cmd_id in cmd_ids:
+                # final statistics calculate
+                self.statistics.watchdog_schedule(cmd_id)
             return True
 
         @stopd.addErrback
@@ -145,10 +148,6 @@ class MethodProxy(MscContainer):
 
         return stopd
 
-        
-        for cmd_id in cmd_ids:
-            # final statistics calculate
-            self.statistics.watchdog_schedule(cmd_id)
             
  
     def run_proxymethod(self, launcher, id, name, args, from_dlp):
