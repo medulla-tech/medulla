@@ -33,6 +33,7 @@ from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERS
 from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import NoSuchTableError
+from sqlalchemy.orm.util import _entity_descriptor
 
 Session = sessionmaker()
 logger = logging.getLogger()
@@ -188,6 +189,17 @@ class DatabaseHelper(Singleton):
         @functools.wraps(func_)
         def __listinfo(self, params, *args, **kw):
             query = func_(self, params, *args, **kw)
+
+            # The type testing is ugly, but can't use isinstance in this context
+            if query.__class__.__name__ != 'Query':
+                logging.getLogger().error('@_listinfo methods must return a Query object')
+                return {'count': 0, 'data': []}
+
+            # Applying filters on primary entity
+            if 'filters' in params:
+                clauses = [_entity_descriptor(query._mapper_zero(), key) == value
+                    for key, value in params['filters'].iteritems()]
+                query = query.filter(*clauses)
 
             # Calculating count without limit and offset
             count = query.with_entities(func.count('*')).scalar()
