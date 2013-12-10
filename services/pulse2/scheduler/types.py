@@ -840,7 +840,7 @@ class Circuit (CircuitBase):
                 self.schedule_last_stats()
             self.release()
             return
-        elif result == DIRECTIVE.STOPPED and not self.running_phase.is_running():
+        elif result == DIRECTIVE.STOPPED:
             self.logger.info("Circuit #%s: stopping" % self.id)
             self.cohq.cmd.inc_stopped()
             self.cohq.coh.setStateStopped()

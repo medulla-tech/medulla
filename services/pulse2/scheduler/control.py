@@ -401,7 +401,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         d = deferToThread(circuit.run)
         @d.addErrback
         def eb(reason):
-            self.logger.error("\033[31mCircuit #%s: start failed: %s\033[0m" % (circuit.id, reason))
+            self.logger.error("Circuit #%s: start failed: %s" % (circuit.id, reason))
         return d
 
     # looping call reference
@@ -420,7 +420,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             self._run_one(circuit)
         except StopIteration :
             self.loop.stop()
-            self.logger.info("\033[35mcircuits started\033[0m")
+            self.logger.debug("circuits started")
 
     def _run_all(self, circuits):
         """
@@ -433,15 +433,20 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @rtype: list
         """
         try :
-            self.logger.info("\033[35mStart %d circuits\033[0m" % len(circuits))
             self._circuits.extend(circuits)
             self.loop = LoopingCall(self._run_later, iter(circuits))
-            self.loop.start(self.config.emitting_period)
+            d = self.loop.start(self.config.emitting_period)
+            d.addErrback(self._loop_fail)
+
             return True
 
         except Exception, e :
             self.logger.error("Circuits start failed: %s" % str(e))
             return False
+
+    def _loop_fail(self, failure):
+        self.logger.error("Loop call starting failed: %s" % str(failure))
+
 
 
     def get_launchers_by_network(self, network):

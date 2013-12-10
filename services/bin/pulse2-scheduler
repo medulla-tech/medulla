@@ -28,12 +28,11 @@ import os
 import sys
 import optparse
 import time
-import random
 
 from twisted.internet import epollreactor
 epollreactor.install()
 from twisted.internet import reactor
-from twisted.internet.defer import maybeDeferred, fail
+from twisted.internet.defer import maybeDeferred
 from twisted.internet.task import LoopingCall, deferLater
 
  
@@ -50,14 +49,12 @@ from pulse2.database.msc import MscDatabase
 from pulse2.scheduler.control import MscDispatcher
 from pulse2.scheduler.phases import installed_phases
 from pulse2.scheduler.utils import SpawnProxy
-from pulse2.scheduler.queries import get_ids_to_start, process_non_valid
 from pulse2.scheduler.gateway import SchedulerGatewayFactory
  
 
 import logging
 import logging.config
 
-import traceback
 
 class SchedulerSetupError(Exception):
     def __init__(self, msg):
@@ -69,6 +66,7 @@ class SchedulerSetupError(Exception):
 class App :
     listen_unix = None
     socket_file = None
+    proxy_pid = None
 
     def __init__(self, config):
         self.config = config
@@ -92,8 +90,8 @@ class App :
  
     def start(self):
         d = self.setup()
-        d.addCallback(self._schedule_dispatcher)
         d.addCallback(self.spawn_proxy)
+        d.addCallback(self._schedule_dispatcher)
         d.addErrback(self.eb_start)
         return d
 
@@ -139,8 +137,12 @@ class App :
         """ """
         self.logger.info("Starting the main dispatcher ...")
         loop = LoopingCall(MscDispatcher().mainloop)
-        loop.start(self.config.awake_time, now=True)
+        d = loop.start(self.config.awake_time, now=True)
+        d.addErrback(self.eb_loop)
+        return d
 
+    def eb_loop(self, failure):
+        self.logger.error("Main loop runtime failed: %s" % str(failure))
 
     def spawn_proxy(self, reason):
         """ Starts the scheduler-proxy as a child process. """
