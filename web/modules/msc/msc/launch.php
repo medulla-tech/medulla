@@ -209,7 +209,7 @@ function start_a_command($proxy = array()) {
                 // feed convergence db
                 xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active);
             }
-            header("Location: " . urlStrRedirect("base/computers/msctabs", array('gid' => $gid)));
+            header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
             exit;
         }
         else {
