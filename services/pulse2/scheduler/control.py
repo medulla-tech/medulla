@@ -39,16 +39,33 @@ from pulse2.scheduler.dlp import get_dlp_method
 
 
 class StoppedTracker(object):
+    """
+    Tracking the ids of stopped circuits.
+
+    Ids to stop are immediately added here and stays until the circuit release.
+    """
 
     ids = []
 
     def add(self, ids):
+        """
+        Adding the circuits ids.
+
+        @param ids: circuits ids
+        @type ids: list
+        """
         for id in ids :
             if id not in self.ids:
                 self.ids.append(id)
 
 
     def remove(self, id):
+        """
+        Removes a circuit id.
+
+        @param id: id of released circuit
+        @type ids: int
+        """
         if id in self.ids:
             self.ids.remove(id)
 
@@ -120,35 +137,14 @@ class MethodProxy(MscContainer):
         active_cohs = [c.id for c in active_circuits]
  
         self.logger.info("Prepare %d circuits to STOP ..." % len(active_cohs))
+        for cmd_id in cmd_ids:
+            # final statistics calculate
+            self.statistics.watchdog_schedule(cmd_id)
+ 
+        self.stopped_track.add(active_cohs)
 
-        dl = [] 
-        for id in active_cohs :
-            circuit = self.get(id)
-            if circuit:
-                self.stopped_track.add([id])
-                d = Deferred()
-                d.callback(True)
-                dl.append(d)
+        return True
 
-        stopd = DeferredList(dl)
-
-        @stopd.addCallback
-        def stop_finished(result):
-
-            self.logger.info("stopped circuits: %d" % len(result))
-            for cmd_id in cmd_ids:
-                # final statistics calculate
-                self.statistics.watchdog_schedule(cmd_id)
-            return True
-
-        @stopd.addErrback
-        def stop_failed(failure):
-            self.logger.error("Stop failed: %s" % (failure))
-            return False
-
-        return stopd
-
-            
  
     def run_proxymethod(self, launcher, id, name, args, from_dlp):
         """
@@ -416,7 +412,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             circuit = next(circuits)
             self._run_one(circuit)
         except StopIteration :
-            self.loop.stop()
+            if self.loop.running:
+                self.loop.stop()
             self.logger.debug("circuits started")
 
     def _run_all(self, circuits):
@@ -761,6 +758,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if len(self.get_valid_waitings()) > 0 :
                 circuit = self.get_valid_waitings()[0]
                 if circuit :
+                    self.logger.debug("Remaining waiting circuit #%s: start" % circuit.id)
+                    circuit.status = CC_STATUS.ACTIVE
                     circuit.run()
                     return True
             return False
@@ -770,10 +769,15 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
     def launch_remaining_waitings(self, reason):
         """ Calls the next waiting circuit. """
-        while self.has_free_slots():
+        while True:
+            self.logger.debug("Looking for remaining circuits...") 
+            if not self.has_free_slots():
+                break
             started_next = self.launch_next_waiting()
             if not started_next :
                 break
+            else :
+                self.logger.debug("Next circuit started") 
 
     def update_stats(self, result):
         """ Update of global statistics of all valid running commands """
@@ -850,6 +854,4 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
             return True
-
-
 
