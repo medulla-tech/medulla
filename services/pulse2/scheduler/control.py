@@ -108,6 +108,7 @@ class MethodProxy(MscContainer):
         cohs = []
         for cmd_id in cmd_ids :
             cohs.extend(get_cohs(cmd_id, scheduler))
+            self.statistics.watchdog_schedule(cmd_id)
         switch_commands_to_start(cohs)
 
 
@@ -121,6 +122,7 @@ class MethodProxy(MscContainer):
             self.logger.info("Circuit #%s: start" % circuit.id)
             # set the next_launch_date for now
             circuit.cohq.coh.reSchedule(0, False)
+            circuit.cohq.cmd.refresh()
         return True
 
 
@@ -142,6 +144,12 @@ class MethodProxy(MscContainer):
             self.statistics.watchdog_schedule(cmd_id)
  
         self.stopped_track.add(active_cohs)
+
+        for circuit in active_circuits :
+            circuit.cohq.coh.refresh()
+            circuit.cohq.cmd.refresh()
+            circuit.release()
+
 
         return True
 
