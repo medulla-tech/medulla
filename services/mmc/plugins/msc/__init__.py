@@ -842,13 +842,16 @@ def convergence_reschedule():
     if cmd_ids:
         logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))
         for cmd_id in cmd_ids:
-            convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
-            ctx = getContext(user=user)
-            new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
-            if new_machine_ids:
-                logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
-                _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
-            _update_command_end_date(cmd_id)
+            try:
+                convergence_deploy_group_id, user = _get_convergence_deploy_group_id_and_user(cmd_id)
+                ctx = getContext(user=user)
+                new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
+                if new_machine_ids:
+                    logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
+                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
+                _update_command_end_date(cmd_id)
+            except TypeError, e:
+                logger.warn("Error while fetching deploy_group_id and user for command %s: %s" % (cmd_id, e))
     else:
         logger.info("Convergence cron: no convergence commands will be rescheduled")
 
