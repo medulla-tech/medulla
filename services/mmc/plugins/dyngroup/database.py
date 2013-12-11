@@ -938,6 +938,18 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             return None
 
     @DatabaseHelper._session
+    def _get_group_user(self, session, gid):
+        """
+        Return User of a group
+        """
+        query = session.query(Users).join(Groups).filter(Groups.id == gid)
+        try:
+            return query.one().login
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("Error while fetching user for group %s: %s" % (gid, e))
+            return None
+
+    @DatabaseHelper._session
     def _get_convergence_deploy_group_id_and_user(self, session, command_id):
         query = session.query(Convergence).filter_by(commandId=command_id)
         try:
@@ -945,8 +957,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.warn("Error while fetching convergence deploy group id for command %s: %s" % (command_id, e))
             return None
-        query = session.query(Users).join(Groups).filter(Groups.id == deploy_group_id)
 
+        query = session.query(Users).join(Groups).filter(Groups.id == deploy_group_id)
         try:
             user = query.one().login
         except (MultipleResultsFound, NoResultFound) as e:
