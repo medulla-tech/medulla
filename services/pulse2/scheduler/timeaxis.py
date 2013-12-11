@@ -204,7 +204,7 @@ class LaunchTimeResolver :
                 if start > end:
                     intervals.append((start, 0))
                     intervals.append((0, end))
-                elif start == end:
+                elif start == end and start != 0:
                     raise ValueError("<start> must be less or great than to <end>")
                 else:
                     intervals.append((start, end))
