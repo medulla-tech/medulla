@@ -139,7 +139,7 @@ foreach ($sharenames as $sharename) {
     );
 
     $f->add(
-            new TrFormElement(_T('Folder', 'backuppc'), new multifieldTpl2($fields)), array("value" => $values, "required" => True)
+            new TrFormElement(_T('Folder', 'backuppc'), new multifieldTpl($fields)), array("value" => $values, "required" => True)
     );
 }
 
@@ -224,7 +224,7 @@ foreach ($host_config['BlackoutPeriods'] as $period) {
     );
 
     $f->add(
-            new TrFormElement(_T('Do not backup from', 'backuppc'), new multifieldTpl2($fields)), array("value" => $values, "required" => True)
+            new TrFormElement(_T('Do not backup from', 'backuppc'), new multifieldTpl($fields)), array("value" => $values, "required" => True)
     );
 }
 
