@@ -1403,45 +1403,6 @@ class SingleLocationTpl extends AbstractTpl {
 
 }
 
-class multifieldTpl extends AbstractTpl {
-
-    var $fields;
-
-    function multifieldTpl($fields) {
-        $this->fields = $fields;
-    }
-
-    function display($arrParam) {
-
-        if (!isset($this->fields))
-            return;
-
-        $separator = isset($arrParam['separator']) ? $arrParam['separator'] : ' &nbsp;&nbsp; ';
-
-        for ($i = 0; $i < count($this->fields); $i++) {
-            if (count($arrParam[$i])) {
-                $this->fields[$i]->display($arrParam[$i]);
-            } else {
-                $this->fields[$i]->display(array('value' => ''));
-            }
-            echo $separator;
-        }
-    }
-
-}
-class textTpl extends AbstractTpl {
-
-    function textTpl($text) {
-        $this->text = $text;
-    }
-
-    function display($arrParam) {
-        echo $this->text;
-    }
-
-}
-
-
 class AjaxFilterLocation extends AjaxFilter {
 
     function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
