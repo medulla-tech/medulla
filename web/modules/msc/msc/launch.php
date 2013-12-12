@@ -409,7 +409,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 #        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
         'start_date' => array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
 	'end_date' => array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
-	'deployment_intervals'=>array($type_input, _T('Deployment interval (Example: 12-14, 20-8)', 'msc'), quick_get('deployment_intervals'), sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc'))),
+	'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
         'maxbw' => array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
     );
 
@@ -438,8 +438,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             $f->add(new HiddenTpl($p), array("value" => $parameters[$p][2], "hide" => True));
         } else {
             if ($parameters[$p][0] == $type_input) {
-                $helper = (isset($value[3])) ? $value[3] : '';
-                $f->add(new TrFormElement($parameters[$p][1], new multifieldTpl(array(new InputTpl($p), new textTpl($helper)))), array("value" => $parameters[$p][2]));
+                $f->add(new TrFormElement($parameters[$p][1], new InputTpl($p)), array("value" => $parameters[$p][2]));
             } elseif ($parameters[$p][0] == $type_checkbox) {
                 if (count($parameters[$p] == 4)) {
                     $f->add(new TrFormElement($parameters[$p][1], new CheckboxTpl($p, $parameters[$p][3])), array("value" => $parameters[$p][2] == 'on' ? 'checked' : ''));
