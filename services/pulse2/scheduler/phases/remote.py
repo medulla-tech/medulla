@@ -891,12 +891,20 @@ class DeletePhase(RemoteControlPhase):
 class InventoryPhase(RemoteControlPhase):
     name = "inventory"
 
+    @launcher_proxymethod("completed_inventory")
+    def parseInventoryResult(self, (exitcode, stdout, stderr)):#, id=None):
+        return self.parse_remote_phase_result((exitcode, stdout, stderr))
+
+#  -------------------------- REBOOT ----------------------------------
+class RebootPhase(RemoteControlPhase):
+    name = "reboot"
+
     def apply_initial_rules(self):
         ret = self._apply_initial_rules()
 
         if self.cmd.isPartOfABundle() and not self.dispatcher.bundles.is_last(self.coh.id):
-            # there is still a coh in the same bundle that has to launch inventory, jump to next stage
-            self.logger.info("Circuit #%s: another circuit from the same bundle will launch the inventory" % self.coh.id)
+            # there is still a coh in the same bundle that has to reboot, jump to next stage
+            self.logger.info("Circuit #%s: another circuit from the same bundle will launch the reboot" % self.coh.id)
             if not self.coh.isStateStopped():
                 self.coh.setStateScheduled()
             else :
@@ -911,15 +919,6 @@ class InventoryPhase(RemoteControlPhase):
                        DIRECTIVE.OVER_TIMED) :
             return self._switch_on()
         return ret
-
-
-    @launcher_proxymethod("completed_inventory")
-    def parseInventoryResult(self, (exitcode, stdout, stderr)):#, id=None):
-        return self.parse_remote_phase_result((exitcode, stdout, stderr))
-
-#  -------------------------- REBOOT ----------------------------------
-class RebootPhase(RemoteControlPhase):
-    name = "reboot"
 
 
     @launcher_proxymethod("completed_reboot")
