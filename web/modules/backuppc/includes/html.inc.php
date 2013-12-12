@@ -22,14 +22,13 @@
 
 
 class MultipleSelect extends SelectItem{
-    
     function setSelected($elemnt) {
         if (isset($this->selected))
             $this->selected[]= $elemnt;
         else
             $this->selected = array($elemnt);
     }
-    
+
     function content_to_string($paramArray = null) {
         if (!isset($this->elementsVal)) {
             $this->elementsVal = $this->elements;
@@ -50,7 +49,7 @@ class MultipleSelect extends SelectItem{
         }
         return $ret;
     }
-    
+
     function to_string($paramArray = null) {
         $ret = "<select multiple=\"true\" ";
         if ($this->style) {
@@ -70,54 +69,13 @@ class MultipleSelect extends SelectItem{
     }
 }
 
-class multifieldTpl extends AbstractTpl {
-    var $fields;
-
-    function multifieldTpl($fields) {
-        $this->fields = $fields;
-    }
-
-
-
-    function display($arrParam) {
-        
-        if (!isset($this->fields))
-            return;
-        
-        $separator = isset($arrParam['separator'])?$arrParam['separator']:' &nbsp;&nbsp; ';
-        
-        for ($i = 0 ; $i < count($this->fields) ; $i++) {
-            if (isset($arrParam['value'][$i]) && $arrParam['value'][$i] != '')
-                $this->fields[$i]->display(array('value'=>$arrParam['value'][$i]));
-            else
-                $this->fields[$i]->display(array('value'=>''));
-            echo $separator;
-        }
-            
-    }
-}
-
-
-class textTpl extends AbstractTpl {
-    
-    function textTpl($text) {
-        $this->text = $text;
-    }
-
-
-    function display($arrParam) {      
-        echo $this->text;
-    }
-}
-
-
 class hourInputTpl extends InputTpl{
 
     function hourInputTpl($name, $regexp = '/[0-2]*[0-9]:[0-5][0-9]/') {
         $this->InputTpl($name, $regexp);
         $this->fieldType = "text";
     }
-    
+
     function display($arrParam) {
         $arrParam['disabled']= ' style="width:40px;" ';
         parent::display($arrParam);
@@ -126,10 +84,9 @@ class hourInputTpl extends InputTpl{
 }
 
 class buttonTpl extends AbstractTpl {
-    
     var $class = '';
     var $cssClass = 'btn btn-small';
-    
+
     function buttonTpl($id,$text,$class='') {
         $this->id = $id;
         $this->text = $text;
@@ -140,13 +97,10 @@ class buttonTpl extends AbstractTpl {
     function setClass($class) {
         $this->cssClass = $class;
     }
-    
+
     function display($arrParam) {      
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
-    
-    
 }
-
 ?>
