@@ -894,7 +894,7 @@ class InventoryPhase(RemoteControlPhase):
     def apply_initial_rules(self):
         ret = self._apply_initial_rules()
 
-        if self.cmd.isPartOfABundle() and self.dispatcher.bundles.is_last(self.coh.id):
+        if self.cmd.isPartOfABundle() and not self.dispatcher.bundles.is_last(self.coh.id):
             # there is still a coh in the same bundle that has to launch inventory, jump to next stage
             self.logger.info("Circuit #%s: another circuit from the same bundle will launch the inventory" % self.coh.id)
             if not self.coh.isStateStopped():
@@ -934,11 +934,7 @@ class HaltPhase(RemoteControlPhase):
 
     def apply_initial_rules(self):
         ret = self._apply_initial_rules()
-        if self.cmd.isPartOfABundle() and self.dispatcher.bundles.is_last(self.coh.id):
-        #if self.cmd.isPartOfABundle() and \
-           #not self.dispatcher.is_last_in_bundle(self.cmd, 
-           #                                      self.target, 
-           #                                      self.name): 
+        if self.cmd.isPartOfABundle() and not self.dispatcher.bundles.is_last(self.coh.id):
             # there is still a coh in the same bundle that has to halt, jump to next stage
             self.logger.info("Circuit #%s: another circuit from the same bundle will do the halt" % self.coh.id)
             return self.next()
