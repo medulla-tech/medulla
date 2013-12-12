@@ -80,9 +80,6 @@ function action($action, $target, $is_advanced) {
                 $params['next_connection_delay'] = 0;
                 $params['max_connection_attempt'] = 1;
                 $params['attempts_left'] = 1;
-                foreach (array('create_directory', 'start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'copy_mode', 'deployment_intervals', 'issue_halt', 'parameters', 'local_proxy', 'maxbw') as $p) {
-                    $params['hide_' . $p] = True;
-                }
             } else {
                 $params['do_reboot'] = '';
                 $params["next_connection_delay"] = web_def_delay();

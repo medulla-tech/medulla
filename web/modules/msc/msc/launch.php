@@ -309,8 +309,9 @@ if (isset($_POST['bback'])) {
 }
 
 /* local proxy selection handling */
-if (isset($_POST['local_proxy']))
+if (isset($_POST['local_proxy'])) {
     require('modules/msc/msc/local_proxy.php');
+}
 
 /* Advanced Action Post Handling */
 if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['local_proxy'])) {
@@ -372,101 +373,160 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     $start_script = quick_get('start_script', True);
     $clean_on_success = quick_get('clean_on_success', True);
 
-    if (web_def_show_reboot() && quick_get('hide_do_reboot') != 1) {
-        $_POST['hide_do_reboot'] = 0;
-        $_GET['hide_do_reboot'] = 0;
-    } else {
-        $_POST['hide_do_reboot'] = 1;
-        $_GET['hide_do_reboot'] = 1;
-    }
-
     $max_bw = quick_get('maxbw');
     if (!isset($max_bw) || $max_bw == '') {
         $max_bw = web_def_maxbw();
     }
-
-    $type_input = 0;
-    $type_checkbox = 1;
-    $type_date = 2;
-    $type_numeric = 3;
 
     // $start_date is now()
     $start_date = (quick_get('start_date')) ? quick_get('start_date') : date("Y-m-d H:i:s");
     // $end_date = now() + 24h by default (set in web_def_coh_life_time msc ini value)
     $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60);
 
-    $parameters = array(
-        'ltitle' => array($type_input, _T('Command name', 'msc'), $name),
-        'parameters' => array($type_input, _T('Script parameters', 'msc'), quick_get('parameters')),
-        'do_wol' => array($type_checkbox, _T('Start "Wake On Lan" query if connection fails', 'msc'), quick_get('do_wol', True)),
-        'start_script' => array($type_checkbox, _T('Start script', 'msc'), $start_script),
-        'clean_on_success' => array($type_checkbox, _T('Delete files after a successful execution', 'msc'), $clean_on_success),
-        'do_inventory' => array($type_checkbox, _T('Do an inventory after a successful execution', 'msc'), quick_get('do_inventory', True)),
-        'do_reboot' => array($type_checkbox, _T('Reboot client', 'msc'), quick_get('do_reboot', True)),
-        "issue_halt_to_done" => array($type_checkbox, _T('Halt client after', 'msc'), quick_get('issue_halt_to_done', True)),
-#        "issue_halt_to_failed"=>array($type_checkbox, '', $_GET['issue_halt_to_failed'], _T("failed", "msc")),
-#        "issue_halt_to_over_time"=>array($type_checkbox, '', $_GET['issue_halt_to_over_time'], _T("over time", "msc")),
-#        "issue_halt_to_out_of_interval"=>array($type_checkbox, '', $_GET['issue_halt_to_out_of_interval'], _T("out of interval", "msc")),
-        'start_date' => array($type_date, _T('The command must start after', 'msc'), $start_date, array('ask_for_now' => 0)),
-	'end_date' => array($type_date, _T('The command must stop before', 'msc'), $end_date, array('ask_for_never' => 0)),
-	'deployment_intervals'=>array($type_input, _T('Deployment interval', 'msc'), quick_get('deployment_intervals')),
-        'maxbw' => array($type_numeric, _T('Max bandwidth (kbits/s)', 'msc'), $max_bw),
-    );
-
-    if (quick_get('convergence')) {
-        unset($parameters['start_date']);
-        unset($parameters['end_date']);
+    if (quick_get('launchAction')) { // Advanced Quick Action
         $f->add(
-            new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
+            new TrFormElement(
+                _T('The command must start after', 'msc'), new DynamicDateTpl('start_date')
+            ), array(
+                "value" => $start_date,
+                "ask_for_now" => 0
+            )
         );
-        $parameters['active'] = array($type_checkbox, _T('Active', 'msc'), quick_get('active'));
-    }
-    if(quick_get('editConvergence')) {
-        $f->add(
-            new HiddenTpl('editConvergence'), array("value" => quick_get('editConvergence'), "hide" => True)
-        );
-    }
-    $macro_hide = array(
-        'issue_halt_to_done' => 'issue_halt',
-        'issue_halt_to_failed' => 'issue_halt',
-        'issue_halt_to_over_time' => 'issue_halt',
-        'issue_halt_to_out_of_interval' => 'issue_halt',
-    );
 
-    foreach ($parameters as $p => $value) {
-        if (quick_get('hide_' . $p) || (isset($macro_hide[$p]) && quick_get('hide_' . $macro_hide[$p]))) {
-            $f->add(new HiddenTpl($p), array("value" => $parameters[$p][2], "hide" => True));
-        } else {
-            if ($parameters[$p][0] == $type_input) {
-                $f->add(new TrFormElement($parameters[$p][1], new InputTpl($p)), array("value" => $parameters[$p][2]));
-            } elseif ($parameters[$p][0] == $type_checkbox) {
-                if (count($parameters[$p] == 4)) {
-                    $f->add(new TrFormElement($parameters[$p][1], new CheckboxTpl($p, $parameters[$p][3])), array("value" => $parameters[$p][2] == 'on' ? 'checked' : ''));
-                } else {
-                    $f->add(new TrFormElement($parameters[$p][1], new CheckboxTpl($p)), array("value" => $parameters[$p][2] == 'on' ? 'checked' : ''));
-                }
-            } elseif ($parameters[$p][0] == $type_date) {
-                $parameters[$p][3]['value'] = $parameters[$p][2];
-                $f->add(new TrFormElement($parameters[$p][1], new DynamicDateTpl($p)), $parameters[$p][3]);
-            } elseif ($parameters[$p][0] == $type_numeric) {
-                $f->add(new TrFormElement($parameters[$p][1], new NumericInputTpl($p)), array("value" => $parameters[$p][2]));
-            }
+        $f->add(
+            new TrFormElement(
+                _T('The command must stop before', 'msc'), new DynamicDateTpl('end_date')
+            ), array(
+                "value" => $end_date,
+                "ask_for_never" => 0
+            )
+        );
+        $f->add(new HiddenTpl('ltitle'), array("value" => $name, "hide" => True));
+        $f->add(new HiddenTpl('parameters'), array("value" => quick_get('parameters'), "hide" => True));
+        $f->add(new HiddenTpl('do_wol'), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('start_script'), array("value" => $start_script == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('clean_on_success'), array("value" => $clean_on_success == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('do_inventory'), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('do_reboot'), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('issue_halt_to_done'), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '', "hide" => True));
+        $f->add(new HiddenTpl('maxbw'), array("value" => $max_bw, "hide" => True));
+    }
+    else {
+        $f->add(
+            new TrFormElement(
+                _T('Command name', 'msc'), new InputTpl('ltitle')
+            ), array("value" => $name)
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Script parameters', 'msc'), new InputTpl('parameters')
+            ), array("value" => quick_get('parameters'))
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl('do_wol')
+            ), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '')
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Start script', 'msc'), new CheckboxTpl('start_script')
+            ), array("value" => $start_script == 'on' ? 'checked' : '')
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Delete files after a successful execution', 'msc'), new CheckboxTpl('clean_on_success')
+            ), array("value" => $clean_on_success == 'on' ? 'checked' : '')
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Do an inventory after a successful execution', 'msc'), new CheckboxTpl('do_inventory')
+            ), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '')
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Reboot client', 'msc'), new CheckboxTpl('do_reboot')
+            ), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '')
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Halt client', 'msc'), new CheckboxTpl('issue_halt_to_done')
+            ), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '')
+        );
+
+        /*
+         * If convergence set, hide start and end date
+         * and display "active convergence" checkbox
+         */
+        if (quick_get('convergence')) {
+            $f->add(
+                new HiddenTpl('convergence'), array("value" => quick_get('convergence'), "hide" => True)
+            );
+
+            $f->add(
+                new TrFormElement(
+                    _T('Convergence is active', 'msc'), new CheckboxTpl('active')
+                ), array("value" => quick_get('active') == 'on' ? 'checked' : '')
+            );
         }
-    }
+        else {
+            $f->add(
+                new TrFormElement(
+                    _T('The command must start after', 'msc'), new DynamicDateTpl('start_date')
+                ), array(
+                    "value" => $start_date,
+                    "ask_for_now" => 0
+                )
+            );
 
-    if (web_force_mode() || quick_get('hide_copy_mode')) {
-        $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
-    } else {
-        $rb = new RadioTpl("copy_mode");
-        $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-        $rb->setvalues(array('push', 'push_pull'));
-        $rb->setSelected($_GET['copy_mode']);
-        $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-    }
+            $f->add(
+                new TrFormElement(
+                    _T('The command must stop before', 'msc'), new DynamicDateTpl('end_date')
+                ), array(
+                    "value" => $end_date,
+                    "ask_for_never" => 0
+                )
+            );
+        }
 
-    /* Only display local proxy button on a group and if allowed */
-    if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy() && !quick_get('hide_local_proxy')) {
-        $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
+        if(quick_get('editConvergence')) {
+            $f->add(
+                new HiddenTpl('editConvergence'), array("value" => quick_get('editConvergence'), "hide" => True)
+            );
+        }
+
+        $f->add(
+            new TrFormElement(
+                _T('Deployment interval', 'msc'), new InputTpl('deployment_intervals')
+            ), array("value" => quick_get('deployment_intervals'))
+        );
+
+        $f->add(
+            new TrFormElement(
+                _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
+            ), array("value" => $max_bw)
+        );
+
+        if (web_force_mode()) {
+            $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
+        } else {
+            $rb = new RadioTpl("copy_mode");
+            $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+            $rb->setvalues(array('push', 'push_pull'));
+            $rb->setSelected($_GET['copy_mode']);
+            $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+        }
+
+        /* Only display local proxy button on a group and if allowed */
+        if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+            $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
+        }
     }
 
     $f->pop();
