@@ -182,18 +182,6 @@ class SendBundleCommand:
             else:
                 params['do_wol'] = 'off'
 
-            if int(order) == int(self.last_order):
-                params['do_inventory'] = self.do_inventory
-                if len(self.issue_halt_to) > 0 :
-                    if self.issue_halt_to[0] == "done":
-                        params['issue_halt_to'] = "enable"
-                    else :
-                        params['issue_halt_to'] = "disable"
-                else :
-                    params['issue_halt_to'] = "disable"
-            else:
-                params['do_inventory'] = 'off'
-                params['issue_halt_to'] = 'disable'
 
             # override possible choice of do_reboot from the gui by the one declared in the package
             # (in bundle mode, the gui does not offer enough choice to say when to reboot)
