@@ -501,10 +501,20 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
         }
 
+        $deployment_fields = array(
+            new InputTpl('deployment_intervals'),
+            new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
+        );
+        $deployment_values = array(
+            "value" => array(
+                quick_get('deployment_intervals'),
+                '',
+            ),
+        );
         $f->add(
             new TrFormElement(
-                _T('Deployment interval', 'msc'), new InputTpl('deployment_intervals')
-            ), array("value" => quick_get('deployment_intervals'))
+                _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
+            ), $deployment_values
         );
 
         $f->add(
