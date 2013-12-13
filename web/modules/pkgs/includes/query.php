@@ -29,11 +29,15 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
     $criterion = clean ( quickGet ( 'add_param' ) );
     $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', 
             "glpi", $field, $value = $pack[$p[0]]/*quickGet ( 'value' )*/, $limit, $extracriterion);
+    $tooltip = _T(
+            'Please type 3 characters for suggestion.<br>
+            Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
+            If unsure, leave Vendor and Version fields blank.', 
+            pkgs);
     $Form->add(
             new TrFormElement($p[1], $auto, 
-                    array('class' => 'associateinventory', 'style' => $style)), 
-            array("value" => $pack[$p[0]])
-    );
+                    array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)), 
+            array("value" => $pack[$p[0]]));
 }
 function addQuerySection($Form, $p) {
     /* ================= BEGIN QUERY ===================== */
