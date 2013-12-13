@@ -2435,8 +2435,8 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         @return: all softwares defined in the GLPI database
         """
-        logging.debug('######################################')
-        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
+#        logging.debug('######################################')
+#        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         session = create_session()
@@ -2445,7 +2445,7 @@ class Glpi08(DyngroupDatabaseHelper):
             self.software
             .join(self.softwareversions)
             .join(self.inst_software)
-            .join(self.manufacturers)
+            .join(self.manufacturers, isouter=True)
         )
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(
@@ -2464,6 +2464,8 @@ class Glpi08(DyngroupDatabaseHelper):
             query = query.filter(self.software.c.name.like('%' +
                                                            softname +
                                                            '%'))
+#            logging.debug('statement=%s' % str(query.statement))
+
         if limit is None:
             ret = query.group_by(self.software.c.name).all()
         else:
