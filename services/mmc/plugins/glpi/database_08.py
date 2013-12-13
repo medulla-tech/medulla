@@ -2705,16 +2705,26 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-
-    def getAllSoftwareVersions(self, ctx, software, filt=''):
+    def getAllSoftwareVersions(self, ctx, software=None, filt=''):
         """ @return: all software versions defined in the GPLI database"""
+        logging.debug('######################################')
+        logging.debug('software=%s, version=%s' % (software, filt))
+
         session = create_session()
-        query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
-        query = self.__filter_on_entity(query, ctx)
-        if software:
-            query = query.filter(self.software.c.name == software)
+        query = session.query(SoftwareVersion)
+        query = query.select_from(self.softwareversions
+                                  .join(self.software))
+#         query = self.__filter_on_entity(query, ctx)
+        if software is not None:
+            if '%' in software:
+                query = query.filter(self.software.c.name.like(software))
+            else:
+                query = query.filter(self.software.c.name == software)
         if filt != '':
-            query = query.filter(self.softwareversions.c.name.like('%' + filt + '%'))
+            query = query.filter(self.softwareversions.c.name.like('%' +
+                                                                   filt +
+                                                                   '%'))
+        logging.debug('query=%s' % query.statement)
         ret = query.group_by(self.softwareversions.c.name).all()
         session.close()
         return ret

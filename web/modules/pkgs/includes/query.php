@@ -55,11 +55,9 @@ function addQuerySection($Form, $p) {
     addQuery($Form, array('Qvendor', _T('Vendor', 'pkgs')), $p, 'Vendors', 3, '', $style);
     addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, 'Installed+software', 3, 
             'Qvendor', $style);
-    $Form->add(
-            new TrFormElement(_T('Version', 'pkgs'), new InputTpl('Qversion'), 
-                    array('class' => 'associateinventory', 'style' => $style)), 
-            array("value" => $p['Qversion'])
-    );
+    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, 'Software versions', 2, 'Qsoftware', 
+            $style);
+
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
     $Bool->setStyle("display:none");
     $Form->add($Bool, array("value" => $p['boolcnd']));
