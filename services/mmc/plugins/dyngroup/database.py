@@ -849,6 +849,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return query.deployGroupId
 
     @DatabaseHelper._session
+    def get_convergence_group_parent_id(self, session, gid):
+        query = session.query(Groups).filter_by(id=gid)
+        try:
+            query = query.one()
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.error('Error while fetching parent id for convergence group %s: %s' % (gid, e))
+            return None
+
+        return query.parent_id
+
+    @DatabaseHelper._session
     def add_convergence_datas(self, session, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active):
         convergence = Convergence()
         convergence.parentGroupId = parent_group_id

@@ -82,6 +82,7 @@ class ConvergenceGroup extends Group {
         $this->type = 2;
         $this->isDeployGroup = True;
         $this->isDoneGroup = False;
+        $this->parentGroup = Null;
     }
 
     function setDoneGroup() {
@@ -117,6 +118,11 @@ class ConvergenceGroup extends Group {
     }
 
     function setRequest() {
+        if ($this->parentGroup == Null) {
+            $parent_gid = xmlrpc_get_convergence_parent_group_id($this->id);
+            $parent_group = new Group($parent_gid, True);
+            $this->setParentGroup($parent_group);
+        }
         $this->request = new Request();
         /* Create dyngroup based on parent group's name */
         $subReqModule = 'dyngroup';
@@ -423,6 +429,10 @@ function xmlrpc_get_deploy_group_id($gid, $p_api, $pid) {
 
 function xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $datas) {
     return xmlCall("dyngroup.edit_convergence_datas", array($gid, $p_api, $pid, $datas));
+}
+
+function xmlrpc_get_convergence_parent_group_id($gid) {
+    return xmlCall("dyngroup.get_convergence_group_parent_id", array($gid));
 }
 
 ?>

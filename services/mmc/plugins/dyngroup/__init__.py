@@ -519,6 +519,10 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_deploy_group_id(gid, papi, package_id)
         return xmlrpcCleanup(ret)
 
+    def get_convergence_group_parent_id(self, gid):
+        ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
+        return xmlrpcCleanup(ret)
+
 def __onlyIn(query, module):
     for q in query[1]:
         if len(q) == 4:
