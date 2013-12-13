@@ -34,7 +34,6 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
 
 
-
 log = logging.getLogger()
 
 class MscQuerySession :
@@ -396,6 +395,9 @@ def get_available_commands(scheduler_name, uuid):
                cmd.files,
                cmd.parameters,
                time.mktime(cmd.creation_date.timetuple()),
+               time.mktime(cmd.start_date.timetuple()),
+               time.mktime(cmd.end_date.timetuple()),
+               coh.attempts_left,
                phases,
                cmd.package_id)
 
@@ -557,4 +559,4 @@ def update_commands_stats(cmd_id, stats):
     session.add(cmd)
     session.flush()
     session.close()
- 
+

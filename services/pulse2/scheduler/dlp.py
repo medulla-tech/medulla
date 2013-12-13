@@ -67,6 +67,9 @@ class DownloadQuery :
              files,
              parameters,
              creation_date,
+             start_date,
+             end_date,
+             attempts_left,
              phases,
              package_id) = rec
 
@@ -77,6 +80,9 @@ class DownloadQuery :
 
             cont.append({"id": coh_id,
                          "created": int(creation_date),
+                         "start_date": int(start_date),
+                         "end_date": int(end_date),
+                         "max_failures": attempts_left,
                          "steps" : phases,
                          "params" : parameters,
                          "start_file" : start_file,
