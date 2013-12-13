@@ -56,14 +56,19 @@ foreach ($packages as $p) {
         $names[] = $p['label'];
         $versions[] = $p['version'];
         $desc[] = $p['description'];
+        // #### begin licenses ####
+        $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && ! empty($p['licenses'])) {
             $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion']);
-            $licenses[] = $licensescount . '/' . $p['licenses'];
-        } else {
-            $licenses[] = '';
+            $tmp_licenses = $licensescount . '/' . $p['licenses'];
+            if ($licensescount > $p['licenses']) { // highlights the exceeded license count 
+                $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
+            }
         }
+        $licenses[] = $tmp_licenses;
+        // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
-        $params[] = array('p_api'=>$_GET['location'], 'pid'=>base64_encode($p['id']));
+        $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
     }
 }
 if ($err) {
