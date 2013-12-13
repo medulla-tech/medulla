@@ -78,6 +78,7 @@ foreach ($cmds as $item) {
     $sum_failed = $item['sum_failed'];
     $sum_stopped = $item['sum_stopped'];
     $sum_overtimed = $item['sum_overtimed'];
+    $type = $item['type'];
     $total_machines = $sum_running + $sum_done + $sum_failed + $sum_stopped + $sum_overtimed;
     if ($total_machines != 0)
         $done_percent = round(100 * $sum_done / $total_machines) . '%';
@@ -130,6 +131,9 @@ foreach ($cmds as $item) {
     } else {
         $img = draw_image("modules/msc/graph/images/install_bundle.png", _T('Bundle', 'msc'));
         $a_donepercent[] = '-';
+    }
+    if (isset($type) && $type == 2) {
+        $img = draw_image("modules/msc/graph/images/install_convergence.png", _T('Package', 'msc'));
     }
     // If NOW> end_dates, we hide start/stop buttons
     if (mktime() > _toTimestamp($end_date))

@@ -285,7 +285,8 @@ class Commands(object):
             'bundle_id': self.fk_bundle, # keep it for compatibility
             'fk_bundle': self.fk_bundle,
             'order_in_bundle': self.order_in_bundle,
-            'proxy_mode': self.proxy_mode
+            'proxy_mode': self.proxy_mode,
+            'type': self.type
         }
 
 def stop_commands_on_host(cohs):
