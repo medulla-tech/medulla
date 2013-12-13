@@ -25,7 +25,8 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.inventory plugins.inventory.provisioning_plugins \
 	plugins.inventory.provisioning_plugins.network_to_entity \
 	plugins.inventory.querymanager plugins.msc plugins.msc.client \
-	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.pulse2
+	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.pulse2 \
+	plugins.update plugins.update.report
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
