@@ -2506,7 +2506,7 @@ class Glpi08(DyngroupDatabaseHelper):
                                   .join(self.inst_software)
                                   .join(self.softwareversions)
                                   .join(self.software)
-                                  .join(self.manufacturers))
+                                  .outerjoin(self.manufacturers))
         query = query.filter(self.machine.c.is_deleted == 0)
         query = query.filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -2526,6 +2526,8 @@ class Glpi08(DyngroupDatabaseHelper):
             query = query.filter(self.manufacturers.c.name == vendor)
 
         if int(count) == 1:
+#             logging.debug('############################')
+#             logging.debug('statement=%s' % str(query.statement))
             ret = int(query.scalar())
         else:
             ret = query.all()
