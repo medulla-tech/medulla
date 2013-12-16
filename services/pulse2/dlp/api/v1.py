@@ -179,7 +179,7 @@ class Step(object):
     @cherrypy.popargs('coh_id', 'step_id')
     def POST(self, coh_id, step_id, stdout, stderr, return_code):
         hostname = cherrypy.session.get(HOSTNAME_KEY)
-        commands = cherrypy.session.get(COMMANDS_KEY, [])
+        #commands = cherrypy.session.get(COMMANDS_KEY, [])
 
         try:
             coh_id = int(coh_id)
@@ -191,15 +191,15 @@ class Step(object):
         except ValueError:
             raise cherrypy.HTTPError(400, "Bad return code")
 
-        if not coh_id in [c['id'] for c in commands]:
-            raise cherrypy.HTTPError(401, "Not authorized")
+        #if not coh_id in [c['id'] for c in commands]:
+            #raise cherrypy.HTTPError(401, "Not authorized")
 
-        for command in commands:
-            if coh_id == command['id']:
-                break
+        #for command in commands:
+            #if coh_id == command['id']:
+                #break
 
-        if step_id not in command['steps']:
-            raise cherrypy.HTTPError(401, "Not a valid step")
+        #if step_id not in command['steps']:
+            #raise cherrypy.HTTPError(401, "Not a valid step")
 
         try:
             log("Saving result for step %s of command %s (hostname: %s)" % (step_id, coh_id, hostname))
