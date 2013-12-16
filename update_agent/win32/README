@@ -1,0 +1,7 @@
+To build win32 executable file (or 64), you must have:
+- A python installation
+- cx_freeze for python scripts installed
+- pywin32 module installed
+
+Edit build.bat and replace python exe path with yours
+Launch build.bat to build
