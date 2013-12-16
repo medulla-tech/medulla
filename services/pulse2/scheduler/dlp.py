@@ -71,6 +71,7 @@ class DownloadQuery :
              end_date,
              attempts_left,
              phases,
+             todo,
              package_id) = rec
 
             urls = target_mirrors.split('||')
@@ -84,6 +85,7 @@ class DownloadQuery :
                          "end_date": int(end_date),
                          "max_failures": attempts_left,
                          "steps" : phases,
+                         "todo": todo,
                          "params" : parameters,
                          "start_file" : start_file,
                          "non_fatal_steps": self.config.non_fatal_steps,

@@ -388,6 +388,7 @@ def get_available_commands(scheduler_name, uuid):
         if not cmd.inDeploymentInterval():
             continue
         phases = [p.name for p in get_all_phases(coh.id)]
+        todo = [p.name for p in get_all_phases(coh.id) if p.state != "done"]
  
         yield (coh.id, 
                target.mirrors,
@@ -399,6 +400,7 @@ def get_available_commands(scheduler_name, uuid):
                time.mktime(cmd.end_date.timetuple()),
                coh.attempts_left,
                phases,
+               todo,
                cmd.package_id)
 
 def pull_target_update(scheduler_name, uuid):
@@ -559,4 +561,5 @@ def update_commands_stats(cmd_id, stats):
     session.add(cmd)
     session.flush()
     session.close()
+
 
