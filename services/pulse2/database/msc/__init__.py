@@ -773,7 +773,8 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
-                            'deployment_intervals': cmd.deployment_intervals
+                            'deployment_intervals': cmd.deployment_intervals,
+                            'type': cmd.type
                     })
                 else:
                     ret.append({
@@ -794,7 +795,8 @@ class MscDatabase(DatabaseHelper):
                             'uuid':target_uuid,
                             'gid':'',
                             'status':{},
-                            'deployment_intervals': cmd.deployment_intervals
+                            'deployment_intervals': cmd.deployment_intervals,
+                            'type': cmd.type
                     })
 
         return [size, ret]

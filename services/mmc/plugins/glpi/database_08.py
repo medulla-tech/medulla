@@ -2435,8 +2435,8 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         @return: all softwares defined in the GLPI database
         """
-        logging.debug('######################################')
-        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
+#        logging.debug('######################################')
+#        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         session = create_session()
@@ -2445,7 +2445,7 @@ class Glpi08(DyngroupDatabaseHelper):
             self.software
             .join(self.softwareversions)
             .join(self.inst_software)
-            .join(self.manufacturers)
+            .join(self.manufacturers, isouter=True)
         )
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(
@@ -2464,6 +2464,8 @@ class Glpi08(DyngroupDatabaseHelper):
             query = query.filter(self.software.c.name.like('%' +
                                                            softname +
                                                            '%'))
+#            logging.debug('statement=%s' % str(query.statement))
+
         if limit is None:
             ret = query.group_by(self.software.c.name).all()
         else:
@@ -2504,7 +2506,7 @@ class Glpi08(DyngroupDatabaseHelper):
                                   .join(self.inst_software)
                                   .join(self.softwareversions)
                                   .join(self.software)
-                                  .join(self.manufacturers))
+                                  .outerjoin(self.manufacturers))
         query = query.filter(self.machine.c.is_deleted == 0)
         query = query.filter(self.machine.c.is_template == 0)
         query = self.__filter_on(query)
@@ -2524,6 +2526,8 @@ class Glpi08(DyngroupDatabaseHelper):
             query = query.filter(self.manufacturers.c.name == vendor)
 
         if int(count) == 1:
+#             logging.debug('############################')
+#             logging.debug('statement=%s' % str(query.statement))
             ret = int(query.scalar())
         else:
             ret = query.all()
@@ -2701,16 +2705,26 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-
-    def getAllSoftwareVersions(self, ctx, software, filt=''):
+    def getAllSoftwareVersions(self, ctx, software=None, filt=''):
         """ @return: all software versions defined in the GPLI database"""
+        logging.debug('######################################')
+        logging.debug('software=%s, version=%s' % (software, filt))
+
         session = create_session()
-        query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
-        query = self.__filter_on_entity(query, ctx)
-        if software:
-            query = query.filter(self.software.c.name == software)
+        query = session.query(SoftwareVersion)
+        query = query.select_from(self.softwareversions
+                                  .join(self.software))
+#         query = self.__filter_on_entity(query, ctx)
+        if software is not None:
+            if '%' in software:
+                query = query.filter(self.software.c.name.like(software))
+            else:
+                query = query.filter(self.software.c.name == software)
         if filt != '':
-            query = query.filter(self.softwareversions.c.name.like('%' + filt + '%'))
+            query = query.filter(self.softwareversions.c.name.like('%' +
+                                                                   filt +
+                                                                   '%'))
+        logging.debug('query=%s' % query.statement)
         ret = query.group_by(self.softwareversions.c.name).all()
         session.close()
         return ret

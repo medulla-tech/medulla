@@ -29,11 +29,15 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
     $criterion = clean ( quickGet ( 'add_param' ) );
     $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', 
             "glpi", $field, $value = $pack[$p[0]]/*quickGet ( 'value' )*/, $limit, $extracriterion);
+    $tooltip = _T(
+            'Please type 3 characters for suggestion.<br>
+            Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
+            If unsure, leave Vendor and Version fields blank.', 
+            pkgs);
     $Form->add(
             new TrFormElement($p[1], $auto, 
-                    array('class' => 'associateinventory', 'style' => $style)), 
-            array("value" => $pack[$p[0]])
-    );
+                    array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)), 
+            array("value" => $pack[$p[0]]));
 }
 function addQuerySection($Form, $p) {
     /* ================= BEGIN QUERY ===================== */
@@ -55,11 +59,9 @@ function addQuerySection($Form, $p) {
     addQuery($Form, array('Qvendor', _T('Vendor', 'pkgs')), $p, 'Vendors', 3, '', $style);
     addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, 'Installed+software', 3, 
             'Qvendor', $style);
-    $Form->add(
-            new TrFormElement(_T('Version', 'pkgs'), new InputTpl('Qversion'), 
-                    array('class' => 'associateinventory', 'style' => $style)), 
-            array("value" => $p['Qversion'])
-    );
+    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, 'Software versions', 2, 'Qsoftware', 
+            $style);
+
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));
     $Bool->setStyle("display:none");
     $Form->add($Bool, array("value" => $p['boolcnd']));
