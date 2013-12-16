@@ -63,7 +63,9 @@ class MscDatabase(msc.MscDatabase):
         Return a deferred object resulting to a scheduler or a list of
         schedulers.
         """
-        if type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
+        if not target: # We can have this case with a convergence command without targets
+            return SchedulerApi().getDefaultScheduler()
+        elif type(target[0]) == list: # target = [[uuid, hostname], [uuid, target]]
             return SchedulerApi().getSchedulers(map(lambda t: t[0], target))
         else: # target = [uuid, hostname]
             return SchedulerApi().getScheduler(target[0])
@@ -448,7 +450,10 @@ class MscDatabase(msc.MscDatabase):
         coh_to_insert = []
 
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
-        if len(targets) == 0:
+        # type 2 is convergence command
+        # a convergence command can contains no targets
+        # not other commands type
+        if not targets and cmd_type != 2:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
             return -2
 
@@ -510,6 +515,10 @@ class MscDatabase(msc.MscDatabase):
                                      order_in_bundle, proxies, proxy_mode, 
                                      state, len(targets), cmd_type=cmd_type)
             session.flush()
+            # Convergence command (type 2) can have no targets
+            # so return command_id if no targets
+            if not targets and cmd_type == 2:
+                return cmd.getId()
 
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()

@@ -65,6 +65,9 @@ class SchedulerApi(Pulse2Api): # Singleton
         else:
             return self.convert2id(result)
 
+    def getDefaultScheduler(self):
+        return defer.succeed(self.default_scheduler)
+
     def getScheduler(self, machine):
         if self.config.sa_enable:
             machine = self.convertMachineIntoH(machine)

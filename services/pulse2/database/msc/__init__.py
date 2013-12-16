@@ -1113,7 +1113,8 @@ class MscDatabase(DatabaseHelper):
             ret['creation_date'] = ''
         return [ret, cmds]
 
-    def getCommands(self, ctx, cmd_id):
+    @DatabaseHelper._session
+    def getCommands(self, session, ctx, cmd_id):
         if cmd_id == None or cmd_id == '':
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
@@ -1135,12 +1136,18 @@ class MscDatabase(DatabaseHelper):
                     setattr(command, step, __statuses[step] in phases and 'enable' or 'disable')
                 return command
 
-            session = create_session()
-            command, coh = session.query(Commands).add_entity(CommandsOnHost).join(self.commands_on_host).group_by(self.commands.c.id).filter(self.commands.c.id == cmd_id).first()
-            phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh.id).all()
-            phases = [phase.toDict()['name'] for phase in phases]
-            # _update_command call for missing statuses
-            return _update_command(command, phases)
+            try:
+                command, coh = session.query(Commands).add_entity(CommandsOnHost).join(self.commands_on_host).group_by(self.commands.c.id).filter(self.commands.c.id == cmd_id).first()
+                phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh.id).all()
+                phases = [phase.toDict()['name'] for phase in phases]
+                # _update_command call for missing statuses
+                return _update_command(command, phases)
+            except TypeError:
+                # we can enter here if this method is called for a convergence command without machines
+                ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
+                session.close()
+                return ret
+
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
 
