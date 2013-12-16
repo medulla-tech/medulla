@@ -906,7 +906,6 @@ class MscDatabase(DatabaseHelper):
         if not count:
             return query
         else:
-            logging.getLogger().error(query.all()[0][0])
             return query.all()[0][0]
 
 
