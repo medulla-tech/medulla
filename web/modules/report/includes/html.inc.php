@@ -207,12 +207,8 @@ JQUERY;
         $from_id_timestamp = mktime(0, 0, 0, date('m', $from_ts), date('d', $from_ts), date('Y', $from_ts));
         $to_id_timestamp = mktime(0, 0, 0, date('m', $to_ts), date('d', $to_ts), date('Y', $to_ts));
         $arrParam = array(
-            array(), // from_txt
-            array(), // from_id
-            array(), // to_txt
-            array(), // to_id
-            array('value' => $from_id_timestamp, 'hide' => True),
-            array('value' => $to_id_timestamp, 'hide' => True),
+            "value" => array('','','','',$from_id_timestamp, $to_id_timestamp),
+            "hide" => array('', '', '', '', True, True)
         );
         parent::display($arrParam);
     }

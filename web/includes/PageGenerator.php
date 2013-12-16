@@ -1373,12 +1373,11 @@ class multifieldTpl extends AbstractTpl {
         $separator = isset($arrParam['separator'])?$arrParam['separator']:' &nbsp;&nbsp; ';
 
         for ($i = 0 ; $i < count($this->fields) ; $i++) {
-            if (isset($arrParam['value'][$i]) && $arrParam['value'][$i] != '') {
-                $this->fields[$i]->display(array('value'=>$arrParam['value'][$i]));
+            $params = array();
+            foreach($arrParam as $key => $value) {
+                $params[$key] = $value[$i];
             }
-            else {
-                $this->fields[$i]->display(array('value'=>''));
-            }
+            $this->fields[$i]->display($params);
             echo $separator;
         }
     }
