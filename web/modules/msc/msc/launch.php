@@ -68,6 +68,12 @@ function getChangedParams($post) {
     return $changed_params;
 }
 
+function _get_command_start_date($cmd_id) {
+    $command_details = command_detail($cmd_id);
+    list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
+    return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
+}
+
 function start_a_command($proxy = array()) {
     if ($_POST['editConvergence']) {
         $changed_params = getChangedParams($_POST);
@@ -172,15 +178,15 @@ function start_a_command($proxy = array()) {
                 $cmd_id = xmlrpc_get_convergence_command_id($gid, $p_api, $pid);
                 stop_command($cmd_id);
                 /* Set end date of this command to now(), don't touch to start date */
-                $command_details = command_detail($cmd_id);
-                list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
-                $start_date = sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
+                $start_date = _get_command_start_date($cmd_id);
                 extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
                 /* Create new command */
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
-                if ($active) {
-                    scheduler_start_these_commands('', array($command_id));
+                if (!$active) {
+                    // If this convergence is not active, expire this command
+                    $start_date = _get_command_start_date($command_id);
+                    extend_command($command_id, $start_date, date("Y-m-d H:i:s"));
                 }
                 /* Update convergence DB */
                 $updated_datas = array(
@@ -202,8 +208,10 @@ function start_a_command($proxy = array()) {
 
                 // Add command on sub-group
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
-                if ($active) {
-                    scheduler_start_these_commands('', array($command_id));
+                if (!$active) {
+                    // If this convergence is not active, expire this command
+                    $start_date = _get_command_start_date($command_id);
+                    extend_command($command_id, $start_date, date("Y-m-d H:i:s"));
                 }
 
                 // feed convergence db

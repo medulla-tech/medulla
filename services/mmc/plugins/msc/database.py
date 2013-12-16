@@ -36,13 +36,13 @@ import datetime
 # SqlAlchemy
 from sqlalchemy import and_, select
 from sqlalchemy.orm import create_session
+from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.msc.mirror_api import MirrorApi
 from mmc.plugins.msc.scheduler_api import SchedulerApi
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.dyngroup.database import DyngroupDatabase
 
 # blacklists
 from mmc.plugins.msc import blacklist
@@ -815,14 +815,13 @@ class MscDatabase(msc.MscDatabase):
     def _update_command_end_date(self, session, cmd_id):
         fmt = "%Y-%m-%d %H:%M:%S"
         end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
-
-        # update commands end_date
-        session.query(Commands).filter_by(id = cmd_id).update({'end_date': end_date})
-
-        # update commands_on_host end_date
-        session.query(CommandsOnHost).filter_by(fk_commands = cmd_id).update({'end_date': end_date})
-        session.flush()
-        return True
+        try:
+            start_date = session.query(Commands.start_date).filter_by(id = cmd_id).one()
+            start_date = start_date[0].strftime(fmt)
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("I can't get start_date for command id %s: %s" % (cmd_id, e))
+            return False
+        return self.extendCommand(cmd_id, start_date, end_date)
 
     def _get_machines_in_command(self, session, cmd_id):
         query = session.query(CommandsOnHost).add_entity(Target).join(Target)

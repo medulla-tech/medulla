@@ -34,7 +34,6 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
 from mmc.plugins.base import getUserGroups
-from mmc.plugins.base.computers import ComputerManager
 import mmc.plugins.dyngroup
 from mmc.database.database_helper import DatabaseHelper
 # PULSE2 modules
@@ -976,3 +975,14 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             self.logger.warn("Error while fetching user for deploy group %s: %s" % (deploy_group_id, e))
             return None
         return deploy_group_id, user
+
+    @DatabaseHelper._session
+    def _get_convergence_active_commands_ids(self, session, cmd_ids=[]):
+        """
+        Get all convergence command ids
+        If a list of cmd_ids is passed, return only cmd_ids of this list
+        """
+        query = session.query(Convergence).filter_by(active=1)
+        if cmd_ids:
+            query = query.filter(Convergence.commandId.in_(cmd_ids))
+        return [x.commandId for x in query]

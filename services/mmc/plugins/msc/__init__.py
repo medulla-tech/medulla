@@ -807,7 +807,8 @@ def xmlrpcCleanup2(obj):
 #############################
 
 def _get_convergence_soon_ended_commands():
-    ret = MscDatabase()._get_convergence_soon_ended_commands()
+    cmd_ids = MscDatabase()._get_convergence_soon_ended_commands()
+    ret = DyngroupDatabase()._get_convergence_active_commands_ids(cmd_ids=cmd_ids)
     return xmlrpcCleanup(ret)
 
 def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
