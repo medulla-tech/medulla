@@ -1135,17 +1135,16 @@ class MscDatabase(DatabaseHelper):
                     setattr(command, step, __statuses[step] in phases and 'enable' or 'disable')
                 return command
 
-            try:
-                command, coh = session.query(Commands).add_entity(CommandsOnHost).join(self.commands_on_host).group_by(self.commands.c.id).filter(self.commands.c.id == cmd_id).first()
+            command, coh = session.query(Commands).filter_by(id=cmd_id) \
+                    .add_entity(CommandsOnHost) \
+                    .outerjoin(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands).first()
+            if coh is not None:
                 phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh.id).all()
                 phases = [phase.toDict()['name'] for phase in phases]
                 # _update_command call for missing statuses
                 return _update_command(command, phases)
-            except TypeError:
-                # we can enter here if this method is called for a convergence command without machines
-                ret = session.query(Commands).filter(self.commands.c.id == cmd_id).first()
-                session.close()
-                return ret
+            else:
+                return command
 
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
