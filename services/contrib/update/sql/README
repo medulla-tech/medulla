@@ -1,0 +1,8 @@
+This directory contains every material needed to create the database
+required by the BACKUPPC module to store its informations.
+
+As the PULSE2 evolve, so does the BACKUPPC database. This directory contains the
+base schema (schema-001.sql) and subsequents evolutions (schema-xxx.sql).
+
+To obtain a state-of-the-art BACKUPPC database, just run the install script.
+
