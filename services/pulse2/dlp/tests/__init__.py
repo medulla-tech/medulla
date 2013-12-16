@@ -76,7 +76,6 @@ class TestCommands(unittest.TestCase):
         result = self.client.get('/commands')
         self.assertEqual(result.code, 200)
         self.assertEqual(result.data[0]['package_uuid'], u'd13d3eaa-587a-11e3-adfa-080027fd96ca')
-        self.assertEqual(result.data[0]['files'][0], u'http://127.0.0.1:48999/api/v1/file/d13d3eaa-587a-11e3-adfa-080027fd96ca.zip')
 
     def testGetCommandsNoAuth(self):
         with self.assertRaises(HTTPError) as context:
@@ -110,7 +109,7 @@ class TestFile(unittest.TestCase):
     def testFileDownload(self):
         self.client.post('/auth', {'authkey': 'TEST', 'hostname': 'test1', 'mac_list': 'AA:BB:CC:DD:EE:FF'})
         result = self.client.get('/commands')
-        result = self.client.get('/file/%s' % result.data[0]['files'][0])
+        result = self.client.get('/file/%s' % result.data[0]['package_uuid'] + ".zip")
         fd, tmp_file = tempfile.mkstemp()
         f = os.fdopen(fd, 'w+')
         f.write(result.data)

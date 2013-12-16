@@ -136,17 +136,8 @@ class Commands(object):
                         log("Using cached package at %s" % package_path)
                     else:
                         self.create_package(package_uuid, package_path, command)
-
-                    listen_to = cherrypy.config.get("dlp.listen_to", None)
-                    if listen_to is None:
-                        log("Please configure the dlp.listen_to setting.", logging.ERROR)
-                        raise cherrypy.HTTPError(400, "Incorrect configuration")
-
-                    if os.path.exists(package_path):
-                        command['files'] = ["http://%s%s/api/v1/file/%s.zip" % (listen_to,
-                                                                                cherrypy.config.get("virtual_root", ""),
-                                                                                package_uuid)]
-                        del command['urls']
+                    del command['files']
+                    del command['urls']
             log("Result: %s" % commands)
             cherrypy.session[COMMANDS_KEY] = commands
             cherrypy.session.save()
