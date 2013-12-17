@@ -401,6 +401,8 @@ class SVGGenerator(object):
         self.config.no_data_text = 'No result found'
         self.config.no_data_font_size = 13
         self.config.x_label_rotation = 45
+        self.config.truncate_legend = 255
+        self.config.truncate_label = 255
         for css in extra_css:
             self.config.css.append(css)
         if 'STR_NODATA' in self.locale:
