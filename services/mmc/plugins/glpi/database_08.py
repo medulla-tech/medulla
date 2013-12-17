@@ -2497,6 +2497,25 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         @return: all machines that have this software
         """
+        def all_elem_are_none(params):
+            for param in params:
+                if param is not None:
+                    return False
+            return True
+        def check_list(param):
+            if param is not None and not isinstance(param, list):
+                return [param]
+            elif all_elem_are_none(param):
+                return None
+            elif not param:
+                return None
+            else:
+                return param
+
+        name = check_list(name)
+        vendor = check_list(vendor)
+        version = check_list(version)
+
         if int(count) == 1:
             query = session.query(func.count(distinct(self.machine.c.id)))
         else:
@@ -2507,27 +2526,23 @@ class Glpi08(DyngroupDatabaseHelper):
                                   .join(self.softwareversions)
                                   .join(self.software)
                                   .outerjoin(self.manufacturers))
-        query = query.filter(self.machine.c.is_deleted == 0)
-        query = query.filter(self.machine.c.is_template == 0)
+        query = query.filter(Machine.is_deleted == 0)
+        query = query.filter(Machine.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
 
-        if '%' in name:
-            query = query.filter(self.software.c.name.like(name))
-        else:
-            query = query.filter(self.software.c.name == name)
-        if version and '%' in version:
-            query = query.filter(self.softwareversions.c.name.like(version))
-        elif version:
-            query = query.filter(self.softwareversions.c.name == version)
-        if vendor and '%' in vendor:
-            query = query.filter(self.manufacturers.c.name.like(vendor))
-        elif vendor:
-            query = query.filter(self.manufacturers.c.name == vendor)
+        name_filter = [Software.name.like(n) for n in name]
+        query = query.filter(or_(*name_filter))
+
+        if version is not None:
+            version_filter = [SoftwareVersion.name.like(v) for v in version]
+            query = query.filter(or_(*version_filter))
+
+        if vendor is not None:
+            vendor_filter = [Manufacturers.name.like(v) for v in vendor]
+            query = query.filter(or_(*vendor_filter))
 
         if int(count) == 1:
-#             logging.debug('############################')
-#             logging.debug('statement=%s' % str(query.statement))
             ret = int(query.scalar())
         else:
             ret = query.all()

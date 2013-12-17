@@ -179,25 +179,24 @@ class exportedReport(object):
             return [self._constructSoftwareTuple(softs)]
         return []
 
-    def _getComputerCountBySoftware(self, entities, soft):
-        result = []
-        for entity in self._getEntitiesIds(entities):
-            self.ctx.locationsid = [entity]
-            soft_count = self.db.getMachineBySoftware(self.ctx, soft[0], version=soft[1], vendor=soft[2], count=1)
-            result.append({'entity_id': toUUID(entity), 'value': soft_count})
-        return result
-
     def _getComputerCountBySoftwares(self, entities, softs, results, oper=operator.add):
-        for soft in softs:
-            soft_results = self._getComputerCountBySoftware(entities, soft)
-            for soft_result in soft_results:
-                count = False
-                for result in results:
-                    if soft_result['entity_id'] == result['entity_id']:
-                        result['value'] = oper(result['value'], soft_result['value'])
-                        count = True
-                if not count and oper == operator.add:
-                    results.append(soft_result)
+        soft_results= []
+        if softs:
+            for entity in self._getEntitiesIds(entities):
+                self.ctx.locationsid = [entity]
+                soft_count = self.db.getMachineBySoftware(self.ctx, [soft[0] for soft in softs],
+                        version=[soft[1] for soft in softs],
+                        vendor=[soft[2] for soft in softs],
+                        count=1)
+                soft_results.append({'entity_id': toUUID(entity), 'value': soft_count})
+        for soft_result in soft_results:
+            count = False
+            for result in results:
+                if soft_result['entity_id'] == result['entity_id']:
+                    result['value'] = oper(result['value'], soft_result['value'])
+                    count = True
+            if not count and oper == operator.add:
+                results.append(soft_result)
         return results
 
     def getComputerCountBySoftwares(self, entities, soft_names, exclude_names={}):
