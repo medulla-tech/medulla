@@ -54,7 +54,16 @@ CREATE TABLE IF NOT EXISTS `os_classes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumping data for table `os_classes`
+--
+
+INSERT INTO `os_classes` (`id`, `name`) VALUES
+(1, 'Windows XP'),
+(2, 'Windows Vista'),
+(3, 'Windows 7');
 
 -- --------------------------------------------------------
 
@@ -67,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `targets` (
   `update_id` int(11) NOT NULL,
   `uuid` int(11) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
+  `is_installed` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -78,11 +88,15 @@ CREATE TABLE IF NOT EXISTS `targets` (
 
 CREATE TABLE IF NOT EXISTS `updates` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `guid` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `kb_number` varchar(255) NOT NULL,
   `os_class_id` int(11) NOT NULL,
   `type_id` int(11) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
+  `need_reboot` int(11) NOT NULL,
+  `request_user_input` int(11) NOT NULL,
+  `info_url` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
 
@@ -97,7 +111,15 @@ CREATE TABLE IF NOT EXISTS `update_types` (
   `name` varchar(255) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `update_types`
+--
+
+INSERT INTO `update_types` (`id`, `name`, `status`) VALUES
+(1, 'Software', 0),
+(2, 'Driver', 0);
 
 -- --------------------------------------------------------
 
