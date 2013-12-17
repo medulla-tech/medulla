@@ -413,7 +413,7 @@ class SVGGenerator(object):
                   '#FF69B4', '#F0E68C', '#D2B48C', '#8FBC8B', '#6495ED', '#DDA0DD', '#5F9EA0',
                   '#FFDAB9', '#FFA07A')
         return Style(
-            background='#fff',
+            background='transparent',
             plot_background='#f7f7f7',
             foreground='#333',
             foreground_light='#555',
