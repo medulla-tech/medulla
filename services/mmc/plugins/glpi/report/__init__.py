@@ -56,25 +56,21 @@ class exportedReport(object):
             entities = [entity.toH()['uuid'] for entity in self.db.getAllEntities(self.ctx)]
         return [fromUUID(str(entity)) for entity in entities]
 
-    def _getComputerCountByOS(self, entities, os_name):
-        result = []
-        for entity in self._getEntitiesIds(entities):
-            self.ctx.locationsid = [entity]
-            os_count = self.db.getMachineByOsLike(self.ctx, os_name, count=1)
-            result.append({'entity_id': toUUID(entity), 'value': os_count})
-        return result
-
     def _getComputerCountByOSes(self, entities, os_names, results, oper=operator.add):
-        for os_name in os_names:
-            os_results = self._getComputerCountByOS(entities, os_name)
-            for os_result in os_results:
-                count = False
-                for result in results:
-                    if os_result['entity_id'] == result['entity_id']:
-                        result['value'] = oper(result['value'], os_result['value'])
-                        count = True
-                if not count and oper == operator.add:
-                    results.append(os_result)
+        os_results = []
+        if os_names:
+            for entity in self._getEntitiesIds(entities):
+                self.ctx.locationsid = [entity]
+                os_count = self.db.getMachineByOsLike(self.ctx, os_names, count=1)
+                os_results.append({'entity_id': toUUID(entity), 'value': os_count})
+        for os_result in os_results:
+            count = False
+            for result in results:
+                if os_result['entity_id'] == result['entity_id']:
+                    result['value'] = oper(result['value'], os_result['value'])
+                    count = True
+            if not count and oper == operator.add:
+                results.append(os_result)
         return results
 
     def getComputerCountByOSes(self, entities, os_names, exclude_names=[]):

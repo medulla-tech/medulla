@@ -2305,39 +2305,43 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByOsLike(self, ctx, osname, count = 0):
+    @DatabaseHelper._session
+    def getMachineByOsLike(self, session, ctx, osnames, count = 0):
         """
         @return: all machines that have this os using LIKE
         """
-        # TODO use the ctx...
-        session = create_session()
+        if isinstance(osnames, basestring):
+            osnames = [osnames]
+
         if int(count) == 1:
             query = session.query(func.count(Machine.id)).select_from(self.machine.outerjoin(self.os))
         else:
             query = session.query(Machine).select_from(self.machine.outerjoin(self.os))
 
-        if osname == "other":
-            query = query.filter(
-                or_(
-                    not_(self.os.c.name.like('%Microsoft%Windows%')),
-                    self.machine.c.operatingsystems_id == 0,
-                )
-            )
-        elif osname == "otherw":
-            query = query.filter(and_(not_(self.os.c.name.like('%Microsoft%Windows%7%')),\
-                not_(self.os.c.name.like('%Microsoft%Windows%XP%')), self.os.c.name.like('%Microsoft%Windows%')))
-        else:
-            query = query.filter(self.os.c.name.like('%'+osname+'%'))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = query.filter(Machine.is_deleted == 0).filter(Machine.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
+
+        if osnames == ["other"]:
+            query = query.filter(
+                or_(
+                    not_(OS.name.like('%Microsoft%Windows%')),
+                    Machine.operatingsystems_id == 0,
+                )
+            )
+        elif osnames == ["otherw"]:
+            query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%7%')),\
+                not_(OS.name.like('%Microsoft%Windows%XP%')), self.os.c.name.like('%Microsoft%Windows%')))
+        else:
+            os_filter = [OS.name.like('%' + osname + '%') for osname in osnames]
+            query = query.filter(or_(*os_filter))
 
         session.close()
 
         if int(count) == 1:
             return int(query.scalar())
         else:
-            return [[q.id,q.name] for q in query]
+            return [[q.id, q.name] for q in query]
 
     def getAllEntities(self, ctx, filt = ''):
         """
