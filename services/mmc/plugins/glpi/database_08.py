@@ -2698,25 +2698,17 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwareVendors(self, ctx, filt='', limit=20):
+    @DatabaseHelper._session
+    def getAllSoftwareVendors(self, session, ctx, filt='', limit=20):
         """ @return: all software vendors defined in the GPLI database"""
-        session = create_session()
         query = session.query(Manufacturers).select_from(self.manufacturers
                                                          .join(self.software))
-        #the 3 lines below seems to cause severe performance issues
-        #they've been replaced by a simple filter
-        #query = self.__filter_on(query.filter(self.software.c.is_deleted == 0)
-        #                         .filter(self.software.c.is_template == 0))
-        #query = self.__filter_on_entity(query, ctx)
-        query = query.filter(self.software.c.is_deleted == 0)
-        query = query.filter(self.software.c.is_template == 0)
+        query = query.filter(Software.is_deleted == 0)
+        query = query.filter(Software.is_template == 0)
         if filt != '':
-            query = query.filter(self.manufacturers.c.name.like('%' +
-                                                                filt +
-                                                                '%'))
-        query = query.group_by(self.manufacturers.c.name)
-        ret = query.order_by(asc(self.manufacturers.c.name)).limit(limit)
-        session.close()
+            query = query.filter(Manufacturers.name.like('%' + filt + '%'))
+        query = query.group_by(Manufacturers.name)
+        ret = query.order_by(asc(Manufacturers.name)).limit(limit)
         return ret
 
     def getAllSoftwareVersions(self, ctx, software=None, filt=''):

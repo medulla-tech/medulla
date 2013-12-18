@@ -2581,10 +2581,21 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwareVendors(self, ctx, filt=''):
+    @DatabaseHelper._session
+    def getAllSoftwareVendors(self, session, ctx, filt='', limit=20):
         """ @return: all software vendors defined in the GPLI database"""
-        logging.debug('datbase_07.getAllSoftwareVendors')
-        pass
+        query = session.query(self.klass['glpi_dropdown_manufacturer']) \
+                .select_from(
+                    self.glpi_dropdown_manufacturer
+                    .join(self.software)
+                )
+        query = query.filter(Software.is_deleted == 0)
+        query = query.filter(Software.is_template == 0)
+        if filt != '':
+            query = query.filter(self.glpi_dropdown_manufacturer.c.name.like('%' + filt + '%'))
+        query = query.group_by(self.glpi_dropdown_manufacturer.c.name)
+        ret = query.order_by(asc(self.glpi_dropdown_manufacturer.c.name)).limit(limit)
+        return ret
 
     def getAllSoftwareVersions(self, ctx, software, filt=''):
         """ @return: all software versions defined in the GPLI database"""
