@@ -2785,25 +2785,27 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByType(self, ctx, filt, count=0):
+    @DatabaseHelper._session
+    def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this type """
-        session = create_session()
+        if isinstance(types, basestring):
+            types = [types]
+
         if int(count) == 1:
             query = session.query(func.count(Machine.id)).select_from(self.machine.join(self.glpi_computertypes))
         else:
             query = session.query(Machine).select_from(self.machine.join(self.glpi_computertypes))
-        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = query.filter(Machine.is_deleted == 0).filter(Machine.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        if '%' in filt:
-            query = query.filter(self.glpi_computertypes.c.name.like(filt))
-        else:
-            query = query.filter(self.glpi_computertypes.c.name == filt)
+
+        type_filter = [self.klass['glpi_computertypes'].name.like(type) for type in types]
+        query = query.filter(or_(*type_filter))
+
         if int(count) == 1:
             ret = int(query.scalar())
         else:
             ret = query.all()
-        session.close()
         return ret
 
     def getMachineByInventoryNumber(self, ctx, filt):

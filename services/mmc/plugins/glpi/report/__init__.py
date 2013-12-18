@@ -98,14 +98,6 @@ class exportedReport(object):
 
         return results
 
-    def _getComputerCountByType(self, entities, type):
-        result = []
-        for entity in self._getEntitiesIds(entities):
-            self.ctx.locationsid = [entity]
-            type_count = self.db.getMachineByType(self.ctx, type, count=1)
-            result.append({'entity_id': toUUID(entity), 'value': type_count})
-        return result
-
     def getComputerCountByTypes(self, entities, types):
         """
         Get computer count for types
@@ -119,16 +111,20 @@ class exportedReport(object):
         types = [type.replace("*", "%") for type in types]
 
         results = []
-        for type in types:
-            type_results = self._getComputerCountByType(entities, type)
-            for type_result in type_results:
-                count = False
-                for result in results:
-                    if type_result['entity_id'] == result['entity_id']:
-                        result['value'] += type_result['value']
-                        count = True
-                if not count:
-                    results.append(type_result)
+        type_results = []
+        if types:
+            for entity in self._getEntitiesIds(entities):
+                self.ctx.locationsid = [entity]
+                type_count = self.db.getMachineByType(self.ctx, types, count=1)
+                type_results.append({'entity_id': toUUID(entity), 'value': type_count})
+        for type_result in type_results:
+            count = False
+            for result in results:
+                if type_result['entity_id'] == result['entity_id']:
+                    result['value'] += type_result['value']
+                    count = True
+            if not count:
+                results.append(type_result)
         return results
 
     def getComputerCountByState(self, entities, state):
