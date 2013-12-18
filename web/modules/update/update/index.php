@@ -36,8 +36,6 @@ $os_classes = get_os_classes();
 $sidemenu = new SideMenu();
 $sidemenu->setClass("update");
 
-debug(get_update_types());
-
 $sidemenu->addSideMenuItem(new SideMenuItem(_T('All updates', 'update'), "update", "update", "index"));
 foreach ($os_classes['data'] as $os) {
     $item = new SideMenuItem($os['name'], "update", "update", "index&os_class_id=" . $os['id']);

@@ -45,11 +45,15 @@ class Update(Base, DBObj):
     __tablename__ = 'updates'
     # ====== Fields =============================
     id = Column(Integer, primary_key=True)
-    name = Column(String(255))
-    guid = Column(String(255), default = '')
+    title = Column(String(255))
+    uuid = Column(String(255), default = '')
+    kb_number = Column(String(255), default = '')
     os_class_id = Column(Integer, ForeignKey('os_classes.id'))
     type_id = Column(Integer, ForeignKey('update_types.id'))
     status = Column(Integer, default = 0)
+    need_reboot = Column(Integer, default = 0)
+    request_user_input = Column(Integer, default = 0)
+    info_url = Column(String(255), default = '')
 
     # Relations
     update_type = relationship('UpdateType', backref = 'updates')
@@ -80,4 +84,5 @@ class Target(Base, DBObj):
     uuid = Column(Integer)
     update_id = Column(Integer, ForeignKey('updates.id'))
     status = Column(Integer, default = 0)
+    is_installed = Column(Integer, default = 0)
 

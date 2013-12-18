@@ -72,8 +72,8 @@ $data = listInfoFriendly($data);
 // Update types strings
 $data['type_str'] = array_map('getUpdateTypeLabel', $data['type_id']);
 
-$n = new OptimizedListInfos($data['name'], _T("Update name", "msc"));
-$n->addExtraInfo($data['guid'], _T("GUID", "msc"));
+$n = new OptimizedListInfos($data['title'], _T("Update title", "msc"));
+$n->addExtraInfo($data['uuid'], _T("UUID", "msc"));
 $n->addExtraInfo($data['type_str'], _T("Type", "msc"));
 //$n->addActionItemArray($a_details);
 $n->addActionItem($action);
