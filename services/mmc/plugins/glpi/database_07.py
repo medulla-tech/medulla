@@ -42,7 +42,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func
+        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.sql.expression import ColumnOperators
@@ -2390,36 +2390,72 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.group_by(Software.name).order_by(Software.name).all()
         return ret
 
-    def getMachineBySoftware(self, ctx, swname, count=0):
+    @DatabaseHelper._session
+    def getMachineBySoftware(self,
+                             session,
+                             ctx,
+                             name,
+                             vendor=None,
+                             version=None,
+                             count=0):
         """
         @return: all machines that have this software
         """
-        # TODO use the ctx...
-        session = create_session()
+        def all_elem_are_none(params):
+            for param in params:
+                if param is not None:
+                    return False
+            return True
+        def check_list(param):
+            if param is not None and not isinstance(param, list):
+                return [param]
+            elif all_elem_are_none(param):
+                return None
+            elif not param:
+                return None
+            else:
+                return param
+
+        name = check_list(name)
+        vendor = check_list(vendor)
+        version = check_list(version)
+
         if int(count) == 1:
-            query = session.query(func.count(Machine))
+            query = session.query(func.count(distinct(self.machine.c.id)))
         else:
-            query = session.query(Machine)
+            query = session.query(distinct(self.machine.c.id))
         if self.glpi_version_new():
-            query = query.select_from(self.machine.join(self.inst_software).join(self.softwareversions).join(self.software))
+            query = query.select_from(self.machine
+                                      .join(self.inst_software)
+                                      .join(self.softwareversions)
+                                      .join(self.software)
+                                      .outerjoin(self.glpi_dropdown_manufacturer))
         else:
-            query = query.select_from(self.machine.join(self.inst_software).join(self.licenses).join(self.software))
-        query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
+            query = query.select_from(self.machine
+                                      .join(self.inst_software)
+                                      .join(self.licenses)
+                                      .join(self.software)
+                                      .outerjoin(self.glpi_dropdown_manufacturer))
+        query = query.filter(self.machine.c.deleted == 0)
+        query = query.filter(Machine.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
-        if type(swname) == list:
-            # FIXME: the way the web interface process dynamic group sub-query
-            # is wrong, so for the moment we need this loop:
-            while type(swname[0]) == list:
-                swname = swname[0]
-            query = query.filter(and_(self.software.c.name == swname[0], self.licenses.version == swname[1]))
-        else:
-            query = query.filter(self.software.c.name == swname).order_by(self.licenses.version)
+
+        name_filter = [Software.name.like(n) for n in name]
+        query = query.filter(or_(*name_filter))
+
+        if version is not None:
+            version_filter = [SoftwareVersion.name.like(v) for v in version]
+            query = query.filter(or_(*version_filter))
+
+        if vendor is not None:
+            vendor_filter = [self.glpi_dropdown_manufacturer.c.name.like(v) for v in vendor]
+            query = query.filter(or_(*vendor_filter))
+
         if int(count) == 1:
             ret = int(query.scalar())
         else:
             ret = query.all()
-        session.close()
         return ret
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
