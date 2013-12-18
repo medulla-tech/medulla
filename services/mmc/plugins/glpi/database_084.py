@@ -2755,17 +2755,17 @@ class Glpi084(DyngroupDatabaseHelper):
         ret = query.order_by(asc(Manufacturers.name)).limit(limit)
         return ret
 
-    def getAllSoftwareVersions(self, ctx, software, filt=''):
+    @DatabaseHelper._session
+    def getAllSoftwareVersions(self, session, ctx, software=None, filt=''):
         """ @return: all software versions defined in the GPLI database"""
-        session = create_session()
-        query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
-        query = self.__filter_on_entity(query, ctx)
-        if software:
-            query = query.filter(self.software.c.name == software)
+        query = session.query(SoftwareVersion)
+        query = query.select_from(self.softwareversions
+                                  .join(self.software))
+        if software is not None:
+            query = query.filter(Software.name.like(software))
         if filt != '':
-            query = query.filter(self.softwareversions.c.name.like('%' + filt + '%'))
-        ret = query.group_by(self.softwareversions.c.name).all()
-        session.close()
+            query = query.filter(SoftwareVersion.name.like('%' + filt + '%'))
+        ret = query.group_by(SoftwareVersion.name).all()
         return ret
 
     def getAllStates(self, ctx, filt = ''):

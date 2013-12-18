@@ -2589,7 +2589,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     self.glpi_dropdown_manufacturer
                     .join(self.software)
                 )
-        query = query.filter(Software.is_deleted == 0)
+        query = query.filter(Software.deleted == 0)
         query = query.filter(Software.is_template == 0)
         if filt != '':
             query = query.filter(self.glpi_dropdown_manufacturer.c.name.like('%' + filt + '%'))
@@ -2597,10 +2597,18 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = query.order_by(asc(self.glpi_dropdown_manufacturer.c.name)).limit(limit)
         return ret
 
-    def getAllSoftwareVersions(self, ctx, software, filt=''):
+    @DatabaseHelper._session
+    def getAllSoftwareVersions(self, session, ctx, software=None, filt=''):
         """ @return: all software versions defined in the GPLI database"""
-        logging.debug('datbase_07.getAllSoftwareVendors')
-        pass
+        query = session.query(SoftwareVersion)
+        query = query.select_from(self.softwareversions
+                                  .join(self.software))
+        if software is not None:
+            query = query.filter(Software.name.like(software))
+        if filt != '':
+            query = query.filter(SoftwareVersion.name.like('%' + filt + '%'))
+        ret = query.group_by(SoftwareVersion.name).all()
+        return ret
 
     def getAllStates(self, ctx, filt = ''):
         """ @return: all machine states defined in the GLPI database """
