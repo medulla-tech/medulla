@@ -2359,7 +2359,7 @@ class Glpi08(DyngroupDatabaseHelper):
         query = query.order_by(self.location.c.name)
         ret = query.all()
         session.close()
-        if 0 in ctx.locationsid:
+        if 0 in ctx.locationsid and not hasattr(ctx, 'qmanager_request'):
             # Append a fake entity record for the root entity
             # since it isn't referenced in the entity table.
             ret.insert(0, rootLocation())
