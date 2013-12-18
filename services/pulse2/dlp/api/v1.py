@@ -28,6 +28,9 @@ import logging
 import tempfile
 import shutil
 import time
+import urllib2
+import urllib
+from base64 import b64decode
 
 from pulse2.utils import isMACAddress
 from pulse2.dlp.tools import HOSTNAME_KEY, MAC_KEY, UUID_KEY, COMMANDS_KEY
@@ -178,7 +181,6 @@ class Step(object):
 
     @cherrypy.popargs('coh_id', 'step_id')
     def POST(self, coh_id, step_id, stdout, stderr, return_code):
-        hostname = cherrypy.session.get(HOSTNAME_KEY)
         #commands = cherrypy.session.get(COMMANDS_KEY, [])
 
         try:
@@ -202,7 +204,7 @@ class Step(object):
             #raise cherrypy.HTTPError(401, "Not a valid step")
 
         try:
-            log("Saving result for step %s of command %s (hostname: %s)" % (step_id, coh_id, hostname))
+            log("Saving result for step %s of command %s" % (step_id, coh_id))
             if not cherrypy.request.xmlrpc_client.completed_step(coh_id, step_id, stdout, stderr, return_code):
                 raise cherrypy.HTTPError(503, "Failed to save the result")
             cherrypy.response.status = 201
@@ -214,8 +216,32 @@ class Step(object):
             raise cherrypy.HTTPError(503, "Service Unavailable")
 
 
+class Inventory(object):
+    exposed = True
+    _cp_config = {'tools.is_authorized.on': True}
+
+    def POST(self, inventory):
+        inventory_uri = cherrypy.config.get("inventory.uri")
+        data = {'inventory': b64decode(inventory)}
+        try:
+            request = urllib2.Request(inventory_uri,
+                                      urllib.urlencode(data, True),
+                                      headers={'User-Agent': 'DLP service'})
+            opener = urllib2.build_opener()
+            urllib2.install_opener(opener)
+            response = opener.open(request)
+            if response.code == 200:
+                cherrypy.response.status = 201
+            else:
+                raise cherrypy.HTTPError(response.code, "Inventory server returned an error.")
+        except (urllib2.URLError, urllib2.HTTPError):
+            log("Failed to send the inventory to the inventory server", logging.ERROR, True)
+            raise cherrypy.HTTPError(503, "Service Unavailable")
+
+
 rootV1 = Root()
 rootV1.auth = Auth()
 rootV1.commands = Commands()
 rootV1.step = Step()
 rootV1.file = File()
+rootV1.inventory = Inventory()

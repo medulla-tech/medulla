@@ -37,6 +37,7 @@ default_conf = {
     'dlp.cache_dir': "/var/lib/pulse2/dlp_packages/",
     'dlp.cache_expire': 108000,
     'dlp.loglevel': "ERROR",
+    'inventory.uri': 'http://localhost:9999'
 }
 
 app_config = {
