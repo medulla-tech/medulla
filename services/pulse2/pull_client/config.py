@@ -87,3 +87,4 @@ DISPLAY_NAME = "Pulse Pull Client (%s)"
 MODULE_NAME = "service"
 CLASS_NAME = "Handler"
 DESCRIPTION = "Pulse service for Pull-mode deployment"
+AUTO_START = True
