@@ -31,7 +31,7 @@ from mmc.support.mmctools import Singleton
 from mmc.database.ddl import DDLContentManager, DBControl
 from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERSION, CUR_VERSION
 from sqlalchemy import func
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Query
 from sqlalchemy.exc import NoSuchTableError
 from sqlalchemy.orm.util import _entity_descriptor
 
@@ -190,9 +190,9 @@ class DatabaseHelper(Singleton):
         def __listinfo(self, params, *args, **kw):
             query = func_(self, params, *args, **kw)
 
-            # The type testing is ugly, but can't use isinstance in this context
-            if query.__class__.__name__ != 'Query':
-                logging.getLogger().error('@_listinfo methods must return a Query object')
+            # Testing if result is a Query statement
+            if not isinstance(query, Query):
+                logging.getLogger().error('@_listinfo methods must return a Query object, got %s', query.__class__.__name__)
                 return {'count': 0, 'data': []}
 
             # Applying filters on primary entity
@@ -201,8 +201,10 @@ class DatabaseHelper(Singleton):
                     for key, value in params['filters'].iteritems()]
                 query = query.filter(*clauses)
 
-            # Calculating count without limit and offset
-            count = query.with_entities(func.count('*')).scalar()
+            # Calculating count without limit and offset on primary entity id
+            primary_id = _entity_descriptor(query._mapper_zero(), "id")
+            count = query.with_entities(func.count(primary_id)).scalar()
+
             # Applying limit and offset
             if 'max' in params and 'min' in params:
                 query = query.limit(int(params['max']) - int(params['min'])).offset(int(params['min']))
@@ -229,6 +231,56 @@ class DatabaseHelper(Singleton):
             return {'count': count, 'data': data}
 
         return __listinfo
+
+
+    @classmethod
+    def _logquery(self, func_):
+        """
+        print a query, with values filled in
+        for debugging purposes *only*
+        for security, you should always separate queries from their values
+        please also note that this function is quite slow
+        """
+        @functools.wraps(func_)
+        def __logquery(self, *args, **kw):
+            query = func_(self, *args, **kw)
+
+            # ===========================================
+            # Begin query logging
+            # ===========================================
+            if isinstance(query, Query):
+                bind = query.session.get_bind(
+                        query._mapper_zero_or_none()
+                )
+                statement = query.statement
+            else:
+                logging.getLogger().error('@_logquery methods must return a Query object, got %s', query.__class__.__name__)
+                return query
+
+            dialect = bind.dialect
+            compiler = statement._compiler(dialect)
+            class LiteralCompiler(compiler.__class__):
+                def visit_bindparam(
+                        self, bindparam, within_columns_clause=False,
+                        literal_binds=False, **kwargs
+                ):
+                    return super(LiteralCompiler, self).render_literal_bindparam(
+                            bindparam, within_columns_clause=within_columns_clause,
+                            literal_binds=literal_binds, **kwargs
+                    )
+
+            compiler = LiteralCompiler(dialect, statement)
+            query_str = compiler.process(statement)
+            logging.getLogger().debug('Result query for %s:' % func_.__name__)
+            logging.getLogger().debug(query_str)
+
+            # ===========================================
+            # End query logging
+            # ===========================================
+
+            return query
+        
+        return __logquery
 
 
 class DBObject(object):
