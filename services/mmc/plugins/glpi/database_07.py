@@ -441,7 +441,7 @@ class Glpi07(DyngroupDatabaseHelper):
 
                 join_query = join_query.outerjoin(self.location)
 
-                if location != None:
+                if location is not None:
                     # Imaging group case
                     if isinstance(location, list):
                         locationids = [int(x.replace('UUID', '')) for x in location]
@@ -2335,31 +2335,46 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    # TODO ! maybe you need to link on machine here, or you need to add some liberties in the previous query
-    def getAllSoftwares(self, ctx, softname = '', vendor = None):
+    @DatabaseHelper._session
+    def getAllSoftwares(self, session, ctx, softname='', vendor=None, limit=None):
         """
         @return: all softwares defined in the GLPI database
         """
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        session = create_session()
+
         query = session.query(Software)
         query = query.select_from(
             self.software \
             .join(self.softwareversions) \
             .join(self.inst_software)
+            .join(self.glpi_dropdown_manufacturer, isouter=True)
         )
         if self.glpi_version_new():
             my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
-            query = query.filter(or_(self.software.c.FK_entities.in_(ctx.locationsid), and_(self.software.c.recursive == 1, self.software.c.FK_entities.in_(my_parents_ids))))
+            query = query.filter(
+                or_(
+                    Software.FK_entities.in_(ctx.locationsid),
+                    and_(
+                        Software.recursive == 1,
+                        Software.FK_entities.in_(my_parents_ids)
+                    )
+                )
+            )
         else:
             query = query.select_from(self.software.join(self.licenses))
-            query = query.filter(self.software.c.FK_entities.in_(ctx.locationsid))
+            query = query.filter(Software.FK_entities.in_(ctx.locationsid))
+
+        if vendor is not None:
+            query = query.filter(self.glpi_dropdown_manufacturer.c.name == vendor)
 
         if softname != '':
-            query = query.filter(self.software.c.name.like('%'+softname+'%'))
-        ret = query.group_by(self.software.c.name).all()
-        session.close()
+            query = query.filter(Software.name.like('%'+softname+'%'))
+
+        if limit is None:
+            ret = query.group_by(Software.name).all()
+        else:
+            ret = query.group_by(Software.name).limit(limit)
         return ret
 
     @DatabaseHelper._session

@@ -2435,15 +2435,14 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllSoftwares(self, ctx, softname='', vendor=None, limit=None):
+    @DatabaseHelper._session
+    def getAllSoftwares(self, session, ctx, softname='', vendor=None, limit=None):
         """
         @return: all softwares defined in the GLPI database
         """
-#        logging.debug('######################################')
-#        logging.debug('softname=%s, vendor=%s, limit=%s' % (softname, vendor, limit))
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        session = create_session()
+
         query = session.query(Software)
         query = query.select_from(
             self.software
@@ -2454,27 +2453,23 @@ class Glpi08(DyngroupDatabaseHelper):
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
         query = query.filter(
             or_(
-                self.software.c.entities_id.in_(ctx.locationsid),
+                Software.entities_id.in_(ctx.locationsid),
                 and_(
-                    self.software.c.is_recursive == 1,
-                    self.software.c.entities_id.in_(my_parents_ids)
+                    Software.is_recursive == 1,
+                    Software.entities_id.in_(my_parents_ids)
                 )
             )
         )
         if vendor is not None:
-            query = query.filter(self.manufacturers.c.name == vendor)
+            query = query.filter(Manufacturers.name == vendor)
 
         if softname != '':
-            query = query.filter(self.software.c.name.like('%' +
-                                                           softname +
-                                                           '%'))
-#            logging.debug('statement=%s' % str(query.statement))
+            query = query.filter(Software.name.like('%' + softname + '%'))
 
         if limit is None:
-            ret = query.group_by(self.software.c.name).all()
+            ret = query.group_by(Software.name).all()
         else:
-            ret = query.group_by(self.software.c.name).limit(limit)
-        session.close()
+            ret = query.group_by(Software.name).limit(limit)
         return ret
 
     @DatabaseHelper._session
