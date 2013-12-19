@@ -321,7 +321,8 @@ class RpcProxy(RpcProxyI):
                     GValues.append(values)
                     childGValues = _fetchSubs(item, container, level + 1)
                     # Calcating "other" line if indicator type is numeric
-                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
+                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues\
+                            and (not items or indicator_name in items):
                         data_dict['titles'].append(indent_str * (level + 1) + ' %s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
