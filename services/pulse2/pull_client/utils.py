@@ -54,7 +54,7 @@ def get_registry_value(key, subkey, value):
         handle = _winreg.OpenKey(key, subkey, 0, _winreg.KEY_READ | _winreg.KEY_WOW64_32KEY)
         (value, type) = _winreg.QueryValueEx(handle, value)
         return value
-    except WindowsError:
+    except WindowsError:  # pyflakes.ignore
         return None
 
 
