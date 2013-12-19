@@ -169,37 +169,17 @@ def getAllEntities(ctx, value=''):
     return [x.name for x in Glpi().getAllEntities(ctx, value)]
 
 
-def getAllSoftwares(ctx, value='', vendor=None):
+def getAllSoftwares(ctx, softname='', vendor=None):
     return [x[0] for x in Glpi().getAllSoftwares(ctx,
-                                             softname=value,
+                                             softname=softname,
                                              vendor=vendor,
                                              limit=20)]
 
 def getAllSoftwaresAndVersions(ctx, softname="", version=None):
-    ret = []
-    if version == None:
-        ret = [x[0] for x in
-                      Glpi().getAllSoftwares(ctx, softname=softname)]
+    if version is None:
+        return [x[0] for x in Glpi().getAllSoftwares(ctx, softname=softname)]
     else:
-        if Glpi().glpi_chosen_version().find('0.8') == 0:  # glpi in 0.8
-            ret = unique([x.name for x in
-                          Glpi().getAllVersion4Software(ctx,
-                                                        softname,
-                                                        version)])
-        else:
-            if Glpi().glpi_version_new():
-                ret = unique([x.name for x in
-                              Glpi().getAllVersion4Software(ctx,
-                                                            softname,
-                                                            version)])
-            else:
-                ret = unique([x.version for x in
-                              Glpi().getAllVersion4Software(ctx,
-                                                            softname,
-                                                            version)])
-    ret.sort()
-    return ret
-
+        return [x[0] for x in Glpi().getAllVersion4Software(ctx, softname, version)]
 
 def getAllHostnames(ctx, value=''):
     return unique([x.name for x in Glpi().getAllHostnames(ctx, value)])

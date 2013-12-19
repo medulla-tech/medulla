@@ -2475,27 +2475,36 @@ class Glpi084(DyngroupDatabaseHelper):
             ret[i] = t
         return ret
 
-    def getAllVersion4Software(self, ctx, softname, version = ''):
+    @DatabaseHelper._session
+    def getAllVersion4Software(self, session, ctx, softname, version = ''):
         """
         @return: all softwares defined in the GLPI database
         """
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
-        session = create_session()
-        query = session.query(SoftwareVersion).select_from(self.softwareversions.join(self.software))
+        query = session.query(distinct(SoftwareVersion.name)) \
+                .select_from(self.softwareversions.join(self.software))
 
         my_parents_ids = self.getEntitiesParentsAsList(ctx.locationsid)
-        query = query.filter(or_(self.software.c.entities_id.in_(ctx.locationsid), and_(self.software.c.is_recursive == 1, self.software.c.entities_id.in_(my_parents_ids))))
-        r1 = re.compile('\*')
-        if r1.search(softname):
-            softname = r1.sub('%', softname)
-            query = query.filter(self.software.c.name.like(softname))
-        else:
-            query = query.filter(self.software.c.name == softname)
-        if version != '':
-            query = query.filter(self.softwareversions.c.name.like('%'+version+'%'))
-        ret = query.group_by(self.softwareversions.c.name).all()
-        session.close()
+        query = query.filter(
+            or_(
+                Software.entities_id.in_(ctx.locationsid),
+                and_(
+                    Software.is_recursive == 1,
+                    Software.entities_id.in_(my_parents_ids)
+                )
+            )
+        )
+
+        query = query.filter(Software.name.like('%' + softname + '%'))
+
+        if version:
+            query = query.filter(SoftwareVersion.name.like('%' + version + '%'))
+
+        # Last softwareversion entries first
+        query = query.order_by(desc(SoftwareVersion.id))
+
+        ret = query.all()
         return ret
 
     @DatabaseHelper._session
