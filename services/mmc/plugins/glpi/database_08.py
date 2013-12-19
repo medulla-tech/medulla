@@ -2331,12 +2331,10 @@ class Glpi08(DyngroupDatabaseHelper):
             )
         elif osnames == ["otherw"]:
             query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%7%')),\
-                not_(OS.name.like('%Microsoft%Windows%XP%')), self.os.c.name.like('%Microsoft%Windows%')))
+                not_(OS.name.like('%Microsoft%Windows%XP%')), OS.name.like('%Microsoft%Windows%')))
         else:
             os_filter = [OS.name.like('%' + osname + '%') for osname in osnames]
             query = query.filter(or_(*os_filter))
-
-        session.close()
 
         if int(count) == 1:
             return int(query.scalar())
