@@ -26,6 +26,7 @@ XML-RPC server implementation of the MMC agent.
 from resource import RLIMIT_NOFILE, RLIM_INFINITY, getrlimit
 import signal
 import multiprocessing as mp
+from inspect import getargspec
 
 import twisted.internet.error
 import twisted.copyright
@@ -90,11 +91,14 @@ class MmcServer(xmlrpc.XMLRPC, object):
             func = functionPath
         return mod, func
 
-    def _getFunction(self, functionPath, request):
+    def _getFunction(self, functionPath, request=''):
         """Overrided to use functions from our plugins"""
+        print functionPath
+        print request
         mod, func = self._splitFunctionPath(functionPath)
+
         try:
-            if mod:
+            if mod and mod != 'system':
                 try:
                     ret = getattr(self.modules[mod], func)
                 except AttributeError:
@@ -317,6 +321,67 @@ class MmcServer(xmlrpc.XMLRPC, object):
             if context:
                 logger.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
+
+    # ======== XMLRPC Standard Introspection methods ================
+
+    def listMethods(self):
+
+        method_list = []
+
+        for mod in self.modules:
+            instance = self.modules[mod]
+            # Fetching module root methods
+            for m in dir(instance):
+                r = getattr(instance, m)
+                # If attr is callable, we add it to method_list
+                if hasattr(r, '__call__'):
+                    method_list.append(mod + '.' + m)
+            # Doing same thing for module.RPCProxy if exists
+            if hasattr(instance, 'RpcProxy'):
+                for m in dir(instance.RpcProxy):
+                    r = getattr(instance.RpcProxy, m)
+                    # If attr is callable, we add it to method_list
+                    if hasattr(r, '__call__'):
+                        method_list.append(mod + '.' + m)
+
+        return method_list
+
+
+    def __getClassMethod(self,name):
+        mod, func = self._splitFunctionPath(name)
+
+        if not mod in self.modules:
+            return None
+
+        instance = self.modules[mod]
+        if hasattr(instance, 'RpcProxy'):
+            if hasattr(instance.RpcProxy, func):
+                return getattr(instance.RpcProxy, func)
+            elif hasattr(instance, func):
+                return getattr(instance, func)
+            else:
+                return None
+        else:
+            return None
+
+    def methodSignature(self, name):
+        method = self.__getClassMethod(name)
+
+        if method is None:
+            return []
+        else:
+            return getargspec(method)[0]
+        
+
+    def methodHelp(self, name):
+        method = self.__getClassMethod(name)
+
+        if method is None:
+            return ''
+        else:
+            return method.__doc__
+
+    # ===============================================================
 
     def getRevision(self):
         return scmRevision("$Rev$")
