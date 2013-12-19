@@ -64,7 +64,7 @@ class ResultWorker(Thread):
 
         # put back retry_queue step in result_queue for saving
         # all remaining results in cache
-        if not self.retry_queue.empty():
+        if not self.retry_queue.empty() or not self.result_queue.empty():
             results = []
             for queue in (self.retry_queue, self.result_queue):
                 while not queue.empty():

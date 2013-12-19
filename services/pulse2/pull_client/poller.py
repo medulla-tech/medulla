@@ -72,6 +72,7 @@ class Poller(Thread):
 
     def run(self):
         self.restore_state()
+        logger.info("Polling for new commands")
         while not self.stop.is_set():
             for cmd_dict in self.dlp_client.get_commands():
                 if self.is_new_command(cmd_dict):
@@ -105,7 +106,13 @@ class Poller(Thread):
                 results = pickle.load(f)
             for result in results:
                 self.result_queue.put(result)
+            logger.debug("Added %d result(s) in queue" % len(results))
             os.unlink(self.state_path)
+            # Wait to send all results
+            # before getting new commands
+            logger.info("Waiting for all results to be sent")
+            while (not self.result_queue.empty() or self.stop.is_set()):
+                self.stop.wait(5)
 
     def is_new_command(self, cmd_dict):
         for command in list(self.commands):
