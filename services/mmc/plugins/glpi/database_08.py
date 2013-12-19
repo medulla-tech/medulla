@@ -2441,7 +2441,7 @@ class Glpi08(DyngroupDatabaseHelper):
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
 
-        query = session.query(Software)
+        query = session.query(distinct(Software.name))
         query = query.select_from(
             self.software
             .join(self.softwareversions)
@@ -2464,10 +2464,13 @@ class Glpi08(DyngroupDatabaseHelper):
         if softname != '':
             query = query.filter(Software.name.like('%' + softname + '%'))
 
+        # Last software entries first
+        query = query.order_by(desc(Software.id))
+
         if limit is None:
-            ret = query.group_by(Software.name).all()
+            ret = query.all()
         else:
-            ret = query.group_by(Software.name).limit(limit)
+            ret = query.limit(limit).all()
         return ret
 
     @DatabaseHelper._session
