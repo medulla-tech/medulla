@@ -79,14 +79,12 @@ class Glpi084(DyngroupDatabaseHelper):
             logging.getLogger().debug('GLPI higher than version 0.84 was not detected')
             return False
 
+    @property
     def glpi_version(self):
         return self._glpi_version
 
     def glpi_version_new(self):
         return False
-
-    def glpi_chosen_version(self):
-        return "0.8"
 
     def activate(self, config = None):
         self.logger = logging.getLogger()
@@ -112,7 +110,7 @@ class Glpi084(DyngroupDatabaseHelper):
         self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
         self.metadata = MetaData(self.db)
         self.initMappers()
-        self.logger.info("Glpi is in version %s" % (self.glpi_version()))
+        self.logger.info("Glpi is in version %s" % (self.glpi_version))
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")

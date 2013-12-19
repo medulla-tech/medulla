@@ -92,7 +92,7 @@ class Glpi(DyngroupDatabaseHelper):
             'getAllManufacturers', 'getAllStates', 'getAllTypes', 'getAllInventoryNumbers', 'getMachineByManufacturer', 'getMachineByState', 'getMachineByType', 'getMachineByInventoryNumber', \
             'getMachineUUIDByMacAddress', 'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
             'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsLike', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
-            'glpi_chosen_version', 'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount', 'isComputerNameAvailable', 'getMachineNumberByState', \
+            'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount', 'isComputerNameAvailable', 'getMachineNumberByState', \
             'getMachineListByState', 'countLastMachineInventoryPart', 'delMachine', 'setGlpiEditableValue', 'hasKnownOS', 'getComputersOS','getComputersCountByOS', 'getAntivirusStatus', \
             'getMachineListByAntivirusState', 'getLocationName', 'getAllSoftwareVendors', 'getAllSoftwareVersions', 'getMachineByHostnameAndMacs'
             ]

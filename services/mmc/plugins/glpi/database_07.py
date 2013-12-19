@@ -65,16 +65,14 @@ class Glpi07(DyngroupDatabaseHelper):
         self.configfile = "glpi.ini"
         return DyngroupDatabaseHelper.db_check(self)
 
+    @property
     def glpi_version(self):
         return self._glpi_version
 
     def glpi_version_new(self):
         if not hasattr(self, '_glpi_version_new'):
-            self._glpi_version_new = (self.glpi_version() >= '0.72')
+            self._glpi_version_new = (self.glpi_version >= '0.72')
         return self._glpi_version_new
-
-    def glpi_chosen_version(self):
-        return "0.7"
 
     def try_activation(self, config):
         self.config = config
@@ -114,7 +112,7 @@ class Glpi07(DyngroupDatabaseHelper):
             self.logger.warn("Your glpi database is still in version '%s', this version is deprecated in Pulse2, please update your glpi to version '0.72.*'." % (self._glpi_version))
         self.metadata = MetaData(self.db)
         self.initMappers()
-        self.logger.info("Glpi is in version %s" % (self.glpi_version()))
+        self.logger.info("Glpi is in version %s" % (self.glpi_version))
         self.metadata.create_all()
         self.is_activated = True
         self.logger.debug("Glpi finish activation")

@@ -193,11 +193,10 @@ def getAllContactNums(ctx, value=''):
     return unique([x.contact_num for x in
                    Glpi().getAllContactNums(ctx, value)])
 
-
 def getAllComments(ctx, value=''):
-    if Glpi().glpi_chosen_version().find('0.8') == 0:
+    if Glpi().glpi_version[:3] == '0.8':
         return unique([x.comment for x in Glpi().getAllComments(ctx, value)])
-    else:
+    else: # glpi 7
         return unique([x.comments for x in Glpi().getAllComments(ctx, value)])
 
 
