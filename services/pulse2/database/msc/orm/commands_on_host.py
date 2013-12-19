@@ -181,7 +181,7 @@ class CommandsOnHost(object):
             return int(datetime.datetime.strptime(self.next_launch_date,"%Y-%m-%d %H:%M:%S").strftime("%s"))
 
     def is_out_of_attempts(self):
-        return self.attempts_failed == self.attempts_total
+        return self.attempts_failed >= self.attempts_total
 
     @property
     def days_delta(self):
