@@ -93,8 +93,6 @@ class MmcServer(xmlrpc.XMLRPC, object):
 
     def _getFunction(self, functionPath, request=''):
         """Overrided to use functions from our plugins"""
-        print functionPath
-        print request
         mod, func = self._splitFunctionPath(functionPath)
 
         try:
@@ -371,7 +369,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
             return []
         else:
             return getargspec(method)[0]
-        
+
 
     def methodHelp(self, name):
         method = self.__getClassMethod(name)
