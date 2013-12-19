@@ -323,7 +323,11 @@ class RpcProxy(RpcProxyI):
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues\
                             and (not items or indicator_name in items):
-                        data_dict['titles'].append(indent_str * (level + 1) + ' %s %s' % (locale['STR_OTHER'], _T("templates", item.attrib['title'])))
+                        data_dict['titles'].append(indent_str * (level + 1) +
+                                                   ' %s (%s)' %
+                                                   (_T("templates",
+                                                       item.attrib['title']),
+                                                    locale['STR_OTHER']))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
                             other_value = (values[i] - child_sum) if child_sum and values[i] else None
@@ -368,7 +372,11 @@ class RpcProxy(RpcProxyI):
                 if parent and values:
                     logging.getLogger().warning(values)
                     others_value = parent_value - _sum_None(values)
-                    data_dict['values'].append([indent_str * level + ' Other %s' % parent.attrib['title'], others_value])
+                    data_dict['values'].append([indent_str * level +
+                                                ' %s (%s)' %
+                                                (parent.attrib['title'],
+                                                 locale['STR_OTHER']),
+                                                others_value])
             _fetchSubs(item_root)
             return data_dict
 

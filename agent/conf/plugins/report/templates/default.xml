@@ -93,69 +93,69 @@
                 <item module="glpi" indicator="os_count_unix" title="Unix" selected="yes" />
             </item>
         </table>
-        <table type="period" title="Microsoft Office installations" name="table_office" chart_type="bar">
-            <item module="glpi" indicator="soft_count_office" title="Microsoft Office" hidden="yes">
-                <item module="glpi" indicator="soft_count_office_97" title="Microsoft Office 97" />
-                <item module="glpi" indicator="soft_count_office_98" title="Microsoft Office 98" />
-                <item module="glpi" indicator="soft_count_office_2000" title="Microsoft Office 2000">
-                    <item module="glpi" indicator="soft_count_office_2000_standard" title="Microsoft Office 2000 Standard" />
-                    <item module="glpi" indicator="soft_count_office_2000_sbs" title="Microsoft Office 2000 Small Business" />
-                    <item module="glpi" indicator="soft_count_office_2000_pro" title="Microsoft Office 2000 Professional" />
-                    <item module="glpi" indicator="soft_count_office_2000_premium" title="Microsoft Office 2000 Premium" />
-                    <item module="glpi" indicator="soft_count_office_2000_devel" title="Microsoft Office 2000 Developer" />
-                    <item module="glpi" indicator="soft_count_office_2000_standard" title="Microsoft Office 2000 Standard" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_standard" title="Microsoft Office 2000 SR-1 Standard" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_sbs" title="Microsoft Office 2000 SR-1 Small Business" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_pro" title="Microsoft Office 2000 SR-1 Professional" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_premium" title="Microsoft Office 2000 SR-1 Premium" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_devel" title="Microsoft Office 2000 SR-1 Developer" />
-                    <item module="glpi" indicator="soft_count_office_2000_sr1_standard" title="Microsoft Office 2000 SR-1 Standard" />
+        <table type="period" title="Office installations" name="table_office" chart_type="bar">
+            <item module="glpi" indicator="soft_count_office" title="Office" hidden="yes">
+                <item module="glpi" indicator="soft_count_office_97" title="Office 97" />
+                <item module="glpi" indicator="soft_count_office_98" title="Office 98" />
+                <item module="glpi" indicator="soft_count_office_2000" title="Office 2000">
+                    <item module="glpi" indicator="soft_count_office_2000_standard" title="Office 2000 Standard" />
+                    <item module="glpi" indicator="soft_count_office_2000_sbs" title="Office 2000 Small Business" />
+                    <item module="glpi" indicator="soft_count_office_2000_pro" title="Office 2000 Professional" />
+                    <item module="glpi" indicator="soft_count_office_2000_premium" title="Office 2000 Premium" />
+                    <item module="glpi" indicator="soft_count_office_2000_devel" title="Office 2000 Developer" />
+                    <item module="glpi" indicator="soft_count_office_2000_standard" title="Office 2000 Standard" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_standard" title="Office 2000 SR-1 Standard" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_sbs" title="Office 2000 SR-1 Small Business" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_pro" title="Office 2000 SR-1 Professional" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_premium" title="Office 2000 SR-1 Premium" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_devel" title="Office 2000 SR-1 Developer" />
+                    <item module="glpi" indicator="soft_count_office_2000_sr1_standard" title="Office 2000 SR-1 Standard" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_xp" title="Microsoft Office XP">
-                    <item module="glpi" indicator="soft_count_office_xp_standard" title="Microsoft Office XP Standard" />
-                    <item module="glpi" indicator="soft_count_office_xp_sbs" title="Microsoft Office XP Small Business" />
-                    <item module="glpi" indicator="soft_count_office_xp_pro" title="Microsoft Office XP Professional" />
-                    <item module="glpi" indicator="soft_count_office_xp_premium" title="Microsoft Office XP Premium" />
-                    <item module="glpi" indicator="soft_count_office_xp_devel" title="Microsoft Office XP Developer" />
+                <item module="glpi" indicator="soft_count_office_xp" title="Office XP">
+                    <item module="glpi" indicator="soft_count_office_xp_standard" title="Office XP Standard" />
+                    <item module="glpi" indicator="soft_count_office_xp_sbs" title="Office XP Small Business" />
+                    <item module="glpi" indicator="soft_count_office_xp_pro" title="Office XP Professional" />
+                    <item module="glpi" indicator="soft_count_office_xp_premium" title="Office XP Premium" />
+                    <item module="glpi" indicator="soft_count_office_xp_devel" title="Office XP Developer" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_2003" title="Microsoft Office 2003" selected="yes">
-                    <item module="glpi" indicator="soft_count_office_2003_basic" title="Microsoft Office Basic Edition 2003" />
-                    <item module="glpi" indicator="soft_count_office_2003_home" title="Microsoft Office Home and Student Edition 2003" />
-                    <item module="glpi" indicator="soft_count_office_2003_standard" title="Microsoft Office Standard Edition 2003" />
-                    <item module="glpi" indicator="soft_count_office_2003_sbs" title="Microsoft Office Small Business Edition 2003" />
-                    <item module="glpi" indicator="soft_count_office_2003_pro" title="Microsoft Office Professional Edition 2003" />
+                <item module="glpi" indicator="soft_count_office_2003" title="Office 2003" selected="yes">
+                    <item module="glpi" indicator="soft_count_office_2003_basic" title="Office Basic Edition 2003" />
+                    <item module="glpi" indicator="soft_count_office_2003_home" title="Office Home and Student Edition 2003" />
+                    <item module="glpi" indicator="soft_count_office_2003_standard" title="Office Standard Edition 2003" />
+                    <item module="glpi" indicator="soft_count_office_2003_sbs" title="Office Small Business Edition 2003" />
+                    <item module="glpi" indicator="soft_count_office_2003_pro" title="Office Professional Edition 2003" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_2007" title="Microsoft Office 2007" selected="yes">
-                    <item module="glpi" indicator="soft_count_office_2007_basic" title="Microsoft Office Basic 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_home" title="Microsoft Office Home and Student 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_standard" title="Microsoft Office Standard 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_sbs" title="Microsoft Office Small Business 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_pro" title="Microsoft Office Professional 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_pro_plus" title="Microsoft Office Professional Plus 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_ultimate" title="Microsoft Office Ultimate 2007" />
-                    <item module="glpi" indicator="soft_count_office_2007_enterprise" title="Microsoft Office Enterprise 2007" />
+                <item module="glpi" indicator="soft_count_office_2007" title="Office 2007" selected="yes">
+                    <item module="glpi" indicator="soft_count_office_2007_basic" title="Office Basic 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_home" title="Office Home and Student 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_standard" title="Office Standard 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_sbs" title="Office Small Business 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_pro" title="Office Professional 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_pro_plus" title="Office Professional Plus 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_ultimate" title="Office Ultimate 2007" />
+                    <item module="glpi" indicator="soft_count_office_2007_enterprise" title="Office Enterprise 2007" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_2010" title="Microsoft Office 2010" selected="yes">
-                    <item module="glpi" indicator="soft_count_office_2010_starter" title="Microsoft Office Starter 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_personal" title="Microsoft Office Personal 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_home_student" title="Microsoft Office Home and Student 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_home_business" title="Microsoft Office Home and Business 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_standard" title="Microsoft Office Standard 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_pro" title="Microsoft Office Professional 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_pro_plus" title="Microsoft Office Professional Plus 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_pro_academic" title="Microsoft Office Professional Academic 2010" />
-                    <item module="glpi" indicator="soft_count_office_2010_university" title="Microsoft Office University 2010" />
+                <item module="glpi" indicator="soft_count_office_2010" title="Office 2010" selected="yes">
+                    <item module="glpi" indicator="soft_count_office_2010_starter" title="Office Starter 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_personal" title="Office Personal 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_home_student" title="Office Home and Student 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_home_business" title="Office Home and Business 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_standard" title="Office Standard 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_pro" title="Office Professional 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_pro_plus" title="Office Professional Plus 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_pro_academic" title="Office Professional Academic 2010" />
+                    <item module="glpi" indicator="soft_count_office_2010_university" title="Office University 2010" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_2013" title="Microsoft Office 2013" selected="yes">
-                    <item module="glpi" indicator="soft_count_office_2013_home_student" title="Microsoft Office Home and Student 2013" />
-                    <item module="glpi" indicator="soft_count_office_2013_home_business" title="Microsoft Office Home and Business 2013" />
-                    <item module="glpi" indicator="soft_count_office_2013_standard" title="Microsoft Office Standard 2013" />
-                    <item module="glpi" indicator="soft_count_office_2013_pro" title="Microsoft Office Professional 2013" />
-                    <item module="glpi" indicator="soft_count_office_2013_pro_plus" title="Microsoft Office Professional Plus 2013" />
+                <item module="glpi" indicator="soft_count_office_2013" title="Office 2013" selected="yes">
+                    <item module="glpi" indicator="soft_count_office_2013_home_student" title="Office Home and Student 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_home_business" title="Office Home and Business 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_standard" title="Office Standard 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_pro" title="Office Professional 2013" />
+                    <item module="glpi" indicator="soft_count_office_2013_pro_plus" title="Office Professional Plus 2013" />
                 </item>
-                <item module="glpi" indicator="soft_count_office_mac_2004" title="Microsoft Office Mac 2004" />
-                <item module="glpi" indicator="soft_count_office_mac_2008" title="Microsoft Office Mac 2008" />
-                <item module="glpi" indicator="soft_count_office_mac_2011" title="Microsoft Office Mac 2011" />
+                <item module="glpi" indicator="soft_count_office_mac_2004" title="Office Mac 2004" />
+                <item module="glpi" indicator="soft_count_office_mac_2008" title="Office Mac 2008" />
+                <item module="glpi" indicator="soft_count_office_mac_2011" title="Office Mac 2011" />
             </item>
         </table>
         <table type="period" title="Software installations" name="table_soft" chart_type="line">

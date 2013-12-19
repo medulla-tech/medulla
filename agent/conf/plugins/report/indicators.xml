@@ -357,7 +357,7 @@
         <!-- getComputerCountBySoftwares -->
         <indicator
             name="soft_count_office"
-            label="Microsoft Office"
+            label="Office"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office 97*', 'Microsoft Office 98*', 'Microsoft Office 2000*', 'Microsoft Office XP*', 'Microsoft Office Basic Edition 2003', 'Microsoft Office Home and Student Edition 2003', 'Microsoft Office Standard Edition 2003', 'Microsoft Office Small Business Edition 2003', 'Microsoft Office Professional Edition 2003', 'Microsoft Office Basic 2007', 'Microsoft Office Home and Student 2007', 'Microsoft Office Standard 2007', 'Microsoft Office Small Business 2007', 'Microsoft Office Professional 2007', 'Microsoft Office Professional Plus 2007', 'Microsoft Office Ultimate 2007', 'Microsoft Office Enterprise 2007', 'Microsoft Office Starter 2010', 'Microsoft Office Personal 2010', 'Microsoft Office Home and Student 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Famille 2010', 'Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010', 'Microsoft Office Standard 2010', 'Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010', 'Microsoft Office Professional Academic 2010', 'Microsoft Office University 2010', 'Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010', 'Microsoft Office Home and Student 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Famille 2013', 'Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013', 'Microsoft Office Standard 2013', 'Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013', 'Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013', 'Microsoft Office Mac 2004', 'Microsoft Office Mac 2008', 'Microsoft Office Mac 2011']"
             data_type="0"
@@ -366,7 +366,7 @@
         />
         <indicator
             name="soft_count_office_97"
-            label="Microsoft Office 97"
+            label="Office 97"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 97*'"
             data_type="0"
@@ -375,7 +375,7 @@
         />
         <indicator
             name="soft_count_office_98"
-            label="Microsoft Office 98"
+            label="Office 98"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 98*'"
             data_type="0"
@@ -384,7 +384,7 @@
         />
         <indicator
             name="soft_count_office_2000"
-            label="Microsoft Office 2000"
+            label="Office 2000"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000*'"
             data_type="0"
@@ -393,7 +393,7 @@
         />
         <indicator
             name="soft_count_office_2000_standard"
-            label="Microsoft Office 2000 Standard"
+            label="Office 2000 Standard"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 Standard*'"
             data_type="0"
@@ -402,7 +402,7 @@
         />
         <indicator
             name="soft_count_office_2000_sbs"
-            label="Microsoft Office 2000 Small Business"
+            label="Office 2000 Small Business"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 Small Business*'"
             data_type="0"
@@ -411,7 +411,7 @@
         />
         <indicator
             name="soft_count_office_2000_pro"
-            label="Microsoft Office 2000 Professional"
+            label="Office 2000 Professional"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 Professional*'"
             data_type="0"
@@ -420,7 +420,7 @@
         />
         <indicator
             name="soft_count_office_2000_premium"
-            label="Microsoft Office 2000 Premium"
+            label="Office 2000 Premium"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 Premium*'"
             data_type="0"
@@ -429,7 +429,7 @@
         />
         <indicator
             name="soft_count_office_2000_devel"
-            label="Microsoft Office 2000 Developer"
+            label="Office 2000 Developer"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 Developer*'"
             data_type="0"
@@ -438,7 +438,7 @@
         />
         <indicator
             name="soft_count_office_2000_sr1_standard"
-            label="Microsoft Office 2000 SR-1 Standard"
+            label="Office 2000 SR-1 Standard"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 SR-1 Standard*'"
             data_type="0"
@@ -447,7 +447,7 @@
         />
         <indicator
             name="soft_count_office_2000_sr1_sbs"
-            label="Microsoft Office 2000 SR-1 Small Business"
+            label="Office 2000 SR-1 Small Business"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 SR-1 Small Business*'"
             data_type="0"
@@ -456,7 +456,7 @@
         />
         <indicator
             name="soft_count_office_2000_sr1_pro"
-            label="Microsoft Office 2000 SR-1 Professional"
+            label="Office 2000 SR-1 Professional"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 SR-1 Professional*'"
             data_type="0"
@@ -465,7 +465,7 @@
         />
         <indicator
             name="soft_count_office_2000_sr1_premium"
-            label="Microsoft Office 2000 SR-1 Premium"
+            label="Office 2000 SR-1 Premium"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 SR-1 Premium*'"
             data_type="0"
@@ -474,7 +474,7 @@
         />
         <indicator
             name="soft_count_office_2000_sr1_devel"
-            label="Microsoft Office 2000 SR-1 Developer"
+            label="Office 2000 SR-1 Developer"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office 2000 SR-1 Developer*'"
             data_type="0"
@@ -483,7 +483,7 @@
         />
         <indicator
             name="soft_count_office_xp"
-            label="Microsoft Office XP"
+            label="Office XP"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP*'"
             data_type="0"
@@ -492,7 +492,7 @@
         />
         <indicator
             name="soft_count_office_xp_standard"
-            label="Microsoft Office XP Standard"
+            label="Office XP Standard"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP Standard*'"
             data_type="0"
@@ -501,7 +501,7 @@
         />
         <indicator
             name="soft_count_office_xp_sbs"
-            label="Microsoft Office XP Small Business"
+            label="Office XP Small Business"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP Small Business*'"
             data_type="0"
@@ -510,7 +510,7 @@
         />
         <indicator
             name="soft_count_office_xp_pro"
-            label="Microsoft Office XP Professional"
+            label="Office XP Professional"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP Professional*'"
             data_type="0"
@@ -519,7 +519,7 @@
         />
         <indicator
             name="soft_count_office_xp_premium"
-            label="Microsoft Office XP Premium"
+            label="Office XP Premium"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP Premium*'"
             data_type="0"
@@ -528,7 +528,7 @@
         />
         <indicator
             name="soft_count_office_xp_devel"
-            label="Microsoft Office XP Developer"
+            label="Office XP Developer"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office XP Developer*'"
             data_type="0"
@@ -537,7 +537,7 @@
         />
         <indicator
             name="soft_count_office_2003"
-            label="Microsoft Office 2003"
+            label="Office 2003"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Basic Edition 2003', 'Microsoft Office Home and Student Edition 2003', 'Microsoft Office Standard Edition 2003', 'Microsoft Office Small Business Edition 2003', 'Microsoft Office Professional Edition 2003']"
             data_type="0"
@@ -546,7 +546,7 @@
         />
         <indicator
             name="soft_count_office_2003_basic"
-            label="Microsoft Office 2003 Basic Edition"
+            label="Office 2003 Basic Edition"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Basic Edition 2003'"
             data_type="0"
@@ -555,7 +555,7 @@
         />
         <indicator
             name="soft_count_office_2003_home"
-            label="Microsoft Office Home and Student Edition 2003"
+            label="Office Home and Student Edition 2003"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Home and Student Edition 2003'"
             data_type="0"
@@ -564,7 +564,7 @@
         />
         <indicator
             name="soft_count_office_2003_standard"
-            label="Microsoft Office Standard Edition 2003"
+            label="Office Standard Edition 2003"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Standard Edition 2003'"
             data_type="0"
@@ -573,7 +573,7 @@
         />
         <indicator
             name="soft_count_office_2003_sbs"
-            label="Microsoft Office Small Business Edition 2003"
+            label="Office Small Business Edition 2003"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Small Business Edition 2003'"
             data_type="0"
@@ -582,7 +582,7 @@
         />
         <indicator
             name="soft_count_office_2003_pro"
-            label="Microsoft Office Professional Edition 2003"
+            label="Office Professional Edition 2003"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Professional Edition 2003'"
             data_type="0"
@@ -591,7 +591,7 @@
         />
         <indicator
             name="soft_count_office_2007"
-            label="Microsoft Office 2007"
+            label="Office 2007"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Basic 2007', 'Microsoft Office Home and Student 2007', 'Microsoft Office Standard 2007', 'Microsoft Office Small Business 2007', 'Microsoft Office Professional 2007', 'Microsoft Office Professional Plus 2007', 'Microsoft Office Ultimate 2007', 'Microsoft Office Enterprise 2007']"
             data_type="0"
@@ -600,7 +600,7 @@
         />
         <indicator
             name="soft_count_office_2007_basic"
-            label="Microsoft Office Basic 2007"
+            label="Office Basic 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Basic 2007'"
             data_type="0"
@@ -609,7 +609,7 @@
         />
         <indicator
             name="soft_count_office_2007_home"
-            label="Microsoft Office Home and Student 2007"
+            label="Office Home and Student 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Home and Student 2007'"
             data_type="0"
@@ -618,7 +618,7 @@
         />
         <indicator
             name="soft_count_office_2007_standard"
-            label="Microsoft Office Standard 2007"
+            label="Office Standard 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Standard 2007'"
             data_type="0"
@@ -627,7 +627,7 @@
         />
         <indicator
             name="soft_count_office_2007_sbs"
-            label="Microsoft Office Small Business 2007"
+            label="Office Small Business 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Small Business 2007'"
             data_type="0"
@@ -636,7 +636,7 @@
         />
         <indicator
             name="soft_count_office_2007_pro"
-            label="Microsoft Office Professional 2007"
+            label="Office Professional 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Professional 2007'"
             data_type="0"
@@ -645,7 +645,7 @@
         />
         <indicator
             name="soft_count_office_2007_pro_plus"
-            label="Microsoft Office Professional Plus 2007"
+            label="Office Professional Plus 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Professional Plus 2007'"
             data_type="0"
@@ -654,7 +654,7 @@
         />
         <indicator
             name="soft_count_office_2007_ultimate"
-            label="Microsoft Office Ultimate 2007"
+            label="Office Ultimate 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Ultimate 2007'"
             data_type="0"
@@ -663,7 +663,7 @@
         />
         <indicator
             name="soft_count_office_2007_enterprise"
-            label="Microsoft Office Enterprise 2007"
+            label="Office Enterprise 2007"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Enterprise 2007'"
             data_type="0"
@@ -672,7 +672,7 @@
         />
         <indicator
             name="soft_count_office_2010"
-            label="Microsoft Office 2010"
+            label="Office 2010"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Starter 2010', 'Microsoft Office Personal 2010', 'Microsoft Office Home and Student 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Famille 2010', 'Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010', 'Microsoft Office Standard 2010', 'Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010', 'Microsoft Office Professional Academic 2010', 'Microsoft Office University 2010', 'Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010']"
             data_type="0"
@@ -681,7 +681,7 @@
         />
         <indicator
             name="soft_count_office_2010_starter"
-            label="Microsoft Office Starter 2010"
+            label="Office Starter 2010"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Starter 2010'"
             data_type="0"
@@ -690,7 +690,7 @@
         />
         <indicator
             name="soft_count_office_2010_personal"
-            label="Microsoft Office Personal 2010"
+            label="Office Personal 2010"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Personal 2010'"
             data_type="0"
@@ -699,7 +699,7 @@
         />
         <indicator
             name="soft_count_office_2010_home_student"
-            label="Microsoft Office Home and Student 2010"
+            label="Office Home and Student 2010"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Home and Student 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille 2010']"
             data_type="0"
@@ -708,7 +708,7 @@
         />
         <indicator
             name="soft_count_office_2010_home_business"
-            label="Microsoft Office Home and Business 2010"
+            label="Office Home and Business 2010"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010']"
             data_type="0"
@@ -717,7 +717,7 @@
         />
         <indicator
             name="soft_count_office_2010_standard"
-            label="Microsoft Office Standard 2010"
+            label="Office Standard 2010"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Standard 2010'"
             data_type="0"
@@ -726,7 +726,7 @@
         />
         <indicator
             name="soft_count_office_2010_pro"
-            label="Microsoft Office Professional 2010"
+            label="Office Professional 2010"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010']"
             data_type="0"
@@ -735,7 +735,7 @@
         />
         <indicator
             name="soft_count_office_2010_pro_academic"
-            label="Microsoft Office Professional Academic 2010"
+            label="Office Professional Academic 2010"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Professional Academic 2010'"
             data_type="0"
@@ -744,7 +744,7 @@
         />
         <indicator
             name="soft_count_office_2010_university"
-            label="Microsoft Office University 2010"
+            label="Office University 2010"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office University 2010'"
             data_type="0"
@@ -753,7 +753,7 @@
         />
         <indicator
             name="soft_count_office_2010_pro_plus"
-            label="Microsoft Office Professional Plus 2010"
+            label="Office Professional Plus 2010"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010']"
             data_type="0"
@@ -762,7 +762,7 @@
         />
         <indicator
             name="soft_count_office_2013"
-            label="Microsoft Office 2013"
+            label="Office 2013"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Home and Student 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Famille 2013', 'Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013', 'Microsoft Office Standard 2013', 'Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013', 'Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013']"
             data_type="0"
@@ -771,7 +771,7 @@
         />
         <indicator
             name="soft_count_office_2013_home_student"
-            label="Microsoft Office Home and Student 2013"
+            label="Office Home and Student 2013"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Home and Student 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille 2013']"
             data_type="0"
@@ -780,7 +780,7 @@
         />
         <indicator
             name="soft_count_office_2013_home_business"
-            label="Microsoft Office Home and Business 2013"
+            label="Office Home and Business 2013"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013']"
             data_type="0"
@@ -789,7 +789,7 @@
         />
         <indicator
             name="soft_count_office_2013_standard"
-            label="Microsoft Office Standard 2013"
+            label="Office Standard 2013"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Standard 2013'"
             data_type="0"
@@ -798,7 +798,7 @@
         />
         <indicator
             name="soft_count_office_2013_pro"
-            label="Microsoft Office Professional 2013"
+            label="Office Professional 2013"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013']"
             data_type="0"
@@ -807,7 +807,7 @@
         />
         <indicator
             name="soft_count_office_2013_pro_plus"
-            label="Microsoft Office Professional Plus 2013"
+            label="Office Professional Plus 2013"
             request_function="getComputerCountBySoftwares"
             params="['Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013']"
             data_type="0"
@@ -816,7 +816,7 @@
         />
         <indicator
             name="soft_count_office_mac_2004"
-            label="Microsoft Office Mac 2004"
+            label="Office Mac 2004"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Mac 2004'"
             data_type="0"
@@ -825,7 +825,7 @@
         />
         <indicator
             name="soft_count_office_mac_2008"
-            label="Microsoft Office Mac 2008"
+            label="Office Mac 2008"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Mac 2008'"
             data_type="0"
@@ -834,7 +834,7 @@
         />
         <indicator
             name="soft_count_office_mac_2011"
-            label="Microsoft Office Mac 2011"
+            label="Office Mac 2011"
             request_function="getComputerCountBySoftwares"
             params="'Microsoft Office Mac 2011'"
             data_type="0"
