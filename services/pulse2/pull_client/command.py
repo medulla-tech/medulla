@@ -192,6 +192,12 @@ class Step(object):
         return "<Step(%s, next_run=%s, cmd=%s)>" % (self.name, self.next_run, self.command.id)
 
 
+class NoopStep(Step):
+
+    def run(self):
+        return ("%f O: Ignored in pull mode." % time.time(), 0)
+
+
 class WolStep(Step):
 
     def run(self):
@@ -249,4 +255,6 @@ class Steps:
     EXECUTE = type('Step', (object,), {'name': 'execute', 'klass': ExecuteStep})
     DELETE = type('Step', (object,), {'name': 'delete', 'klass': DeleteStep})
     INVENTORY = type('Step', (object,), {'name': 'inventory', 'klass': InventoryStep})
+    REBOOT = type('Step', (object,), {'name': 'reboot', 'klass': NoopStep})
+    HALT = type('Step', (object,), {'name': 'halt', 'klass': NoopStep})
     DONE = type('Step', (object,), {'name': 'done'})
