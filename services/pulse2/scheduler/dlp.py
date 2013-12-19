@@ -137,6 +137,7 @@ class DownloadQuery :
             return uuid
         else :
             self.logger.warn("Cannot detect the UUID of %s" % hostname)
+            return False
 
     def _eb_pull_target_awake(self, failure, hostname):
         self.logger.warn("An error occurred when detect the UUID of %s: %s" % (hostname, str(failure)))
