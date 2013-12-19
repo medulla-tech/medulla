@@ -75,9 +75,13 @@ class DownloadQuery :
              package_id) = rec
 
             urls = target_mirrors.split('||')
-            files = files.split("\n")
-            for index, file in enumerate(files):
-                files[index] = file.split("##")[1]
+            if package_id is not None:
+                files = files.split("\n")
+                for index, file in enumerate(files):
+                    files[index] = file.split("##")[1]
+            else:
+                files = []
+                package_id = False
 
             cont.append({"id": coh_id,
                          "created": int(creation_date),
