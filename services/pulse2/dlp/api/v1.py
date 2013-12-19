@@ -106,6 +106,8 @@ class Commands(object):
             tmp_dir = tempfile.mkdtemp(suffix=package_uuid)
             # FIXME use first mirror for now
             url = command['urls'][0]
+            if url.startswith('http'):
+                url += "_files"
             for package_file in command.get('files', []):
                 log("Download %s" % url + package_file)
                 download_file(url + package_file, tmp_dir, 0)
