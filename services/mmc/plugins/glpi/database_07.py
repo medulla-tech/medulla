@@ -2387,7 +2387,7 @@ class Glpi07(DyngroupDatabaseHelper):
             query = query.filter(Software.name.like('%' + softname + '%'))
 
         # Last software entries first
-        query = query.order_by(desc(Software.id))
+        query = query.order_by(desc(Software.ID))
 
         if limit is None:
             ret = query.all()
@@ -2439,9 +2439,9 @@ class Glpi07(DyngroupDatabaseHelper):
         version = check_list(version)
 
         if int(count) == 1:
-            query = session.query(func.count(distinct(self.machine.c.id)))
+            query = session.query(func.count(distinct(Machine.ID)))
         else:
-            query = session.query(distinct(self.machine.c.id))
+            query = session.query(distinct(Machine.ID))
         if self.glpi_version_new():
             query = query.select_from(self.machine
                                       .join(self.inst_software)
@@ -2454,7 +2454,7 @@ class Glpi07(DyngroupDatabaseHelper):
                                       .join(self.licenses)
                                       .join(self.software)
                                       .outerjoin(self.glpi_dropdown_manufacturer))
-        query = query.filter(self.machine.c.deleted == 0)
+        query = query.filter(Machine.deleted == 0)
         query = query.filter(Machine.is_template == 0)
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
@@ -2695,7 +2695,7 @@ class Glpi07(DyngroupDatabaseHelper):
             types = [types]
 
         if int(count) == 1:
-            query = session.query(func.count(Machine.id)).select_from(self.machine.join(self.glpi_type_computers))
+            query = session.query(func.count(Machine.ID)).select_from(self.machine.join(self.glpi_type_computers))
         else:
             query = session.query(Machine).select_from(self.machine.join(self.glpi_type_computers))
         query = query.filter(Machine.deleted == 0).filter(Machine.is_template == 0)
