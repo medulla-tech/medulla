@@ -20,7 +20,7 @@ def pprinttable(rows):
         headers = rows[0]._fields
         lens = []
         for i in range(len(rows[0])):
-            lens.append(len(max([x[i] for x in rows] + [headers[i]],key=lambda x:len(str(x)))))
+            lens.append(len(max([str(x[i]) for x in rows] + [headers[i]],key=lambda x:len(str(x)))))
         formats = []
         hformats = []
         for i in range(len(rows[0])):
@@ -90,6 +90,31 @@ def disableWindowsUpdate():
     return new_state == wu_state
 
 
+def showUpdateInfo(uuid, online=True):
+    # Create an Update Searcher instance
+    searcher = session.CreateupdateSearcher()
+    searcher.Online = online
+
+    searchResult = searcher.Search("UpdateID='%s'" % uuid)
+    
+    updates = fetchW32ComArray(searchResult.Updates)
+
+    if not updates:
+        print "Update not found"
+
+    update = updates[0]
+
+    # Printing update info
+    print "======================================================"
+    print "Update ID \t\t: %s" % update.Identity.UpdateID
+    print "Title \t\t\t: %s" % update.Title
+    print "Kb Numbers \t\t: %s" % ' '.join(fetchW32ComArray(update.KBArticleIDs))
+    print "Type \t\t\t: %s" % update.Type
+    print "Need reboot \t\t: %s" % update.InstallationBehavior.RebootBehavior > 0
+    print "Request user input\t: %s" % update.InstallationBehavior.CanRequestUserInput
+    print "Info URL \t\t: %s" % fetchW32ComArray(update.MoreInfoUrls)[0]
+    print "Is installed \t\t: %s" % update.IsInstalled
+
 
 def searchAvaiableUpdates(online=True, returnResultList=False):
     # Create an Update Searcher instance
@@ -97,8 +122,8 @@ def searchAvaiableUpdates(online=True, returnResultList=False):
     searcher.Online = online
 
     # Init updates dict
-    header = 'UUID,KB_Number,Type,Installed'.split(',')
-    header_verbose = 'UUID,Title,KB_Number,url,type,is_installed'.split(',')
+    header = 'uuid,KB_Number,type,is_installed'.split(',')
+    header_verbose = 'uuid,title,KB_Number,type,need_reboot,request_user_input,info_url,is_installed'.split(',')
     content = []
     content_verbose = []
     result = {'header' : header, 'content' : content}
@@ -120,27 +145,40 @@ def searchAvaiableUpdates(online=True, returnResultList=False):
         #update.InstallationBehavior.RebootBehavior > 0
         #update.InstallationBehavior.CanRequestUserInput
 
+        # UUID
         _item.append(update.Identity.UpdateID)
         _item_verbose.append(update.Identity.UpdateID)
 
+        # Title
         #_item.append(update.Title) #.encode('utf-8').decode('ascii', 'ignore')
         _item_verbose.append(update.Title) #.encode('utf-8').decode('ascii', 'ignore')
 
+        # Description
         #_item.append(update.Description) #.encode('utf-8').decode('ascii', 'ignore')
-        _item_verbose.append(update.Description) #.encode('utf-8').decode('ascii', 'ignore')
+        #_item_verbose.append(update.Description) #.encode('utf-8').decode('ascii', 'ignore')
 
         #_item.append(update.EulaText)
         #_item_verbose.append(update.EulaText)
 
+        # Kb_number
         _item.append(' '.join(fetchW32ComArray(update.KBArticleIDs)))
         _item_verbose.append(' '.join(fetchW32ComArray(update.KBArticleIDs)))
 
-        #_item.append(fetchW32ComArray(update.MoreInfoUrls)[0])
-        _item_verbose.append(fetchW32ComArray(update.MoreInfoUrls)[0])
-
+        # Type
         _item.append(update.Type)
         _item_verbose.append(update.Type)
 
+        # Need reboot
+        _item_verbose.append(update.InstallationBehavior.RebootBehavior > 0)
+
+        # Request user input
+        _item_verbose.append(update.InstallationBehavior.CanRequestUserInput)
+
+        # Info URL
+        #_item.append(fetchW32ComArray(update.MoreInfoUrls)[0])
+        _item_verbose.append(fetchW32ComArray(update.MoreInfoUrls)[0])
+
+        # Is_installed
         _item.append(update.IsInstalled)
         _item_verbose.append(update.IsInstalled)
 
@@ -296,6 +334,18 @@ if len(args) < 2:
 
 command = args[1]
 
+# Specific update info
+if command == '-d' or command == '--detail':
+    if (len(args) < 3):
+        print "You must specify update UUID"
+        sys.exit(0)
+    online = not ('--offline' in args)
+    showUpdateInfo(args[2], online)
+
+# Update install switches
+if '-i' in args or '--install' in args:
+    installUpdates(args[1:])
+
 # Update listing switches
 if '--list' in args or '-l' in args:
     # Search all available updates
@@ -317,9 +367,5 @@ if '--list' in args or '-l' in args:
         Row = namedtuple('Row', result['header'])
         pprinttable([Row(*item) for item in result['content']])
 
-
-# Update install switches
-if '-i' in args or '--install' in args:
-    installUpdates(args[1:])
 
 sys.exit(0)
