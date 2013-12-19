@@ -70,6 +70,7 @@ class DownloadQuery :
              start_date,
              end_date,
              attempts_left,
+             attempts_failed,
              phases,
              todo,
              package_id) = rec
@@ -83,7 +84,7 @@ class DownloadQuery :
                          "created": int(creation_date),
                          "start_date": int(start_date),
                          "end_date": int(end_date),
-                         "max_failures": attempts_left,
+                         "max_failures": attempts_left - attempts_failed,
                          "steps" : phases,
                          "todo": todo,
                          "params" : parameters,
