@@ -134,8 +134,9 @@ class Command(object):
 
 class Result(object):
 
-    def __init__(self, step, stdout, stderr, exitcode):
-        self.step = step
+    def __init__(self, step_name, command_id, stdout, stderr, exitcode):
+        self.command_id = command_id
+        self.step_name = step_name
         self.stdout = stdout
         self.stderr = stderr
         self.exitcode = exitcode
@@ -145,7 +146,7 @@ class Result(object):
         return self.exitcode == 0
 
     def __repr__(self):
-        return "<Result(%s, step=%s, cmd=%s)" % (self.exitcode, self.step.name, self.step.command.id)
+        return "<Result(%s, step=%s, cmd=%s)" % (self.exitcode, self.step_name, self.command_id)
 
 
 class Step(object):
@@ -178,7 +179,7 @@ class Step(object):
             out.close()
             exitcode = 1
             logger.exception("Error in %s" % self)
-        result = Result(self, stdout, "", exitcode)
+        result = Result(self.name, self.command.id, stdout, "", exitcode)
         if not result.is_success:
             self.command.failed_step()
             self.next_run = time.time() + self.command.interval

@@ -36,6 +36,7 @@ class PullClientConfig(Singleton):
 
     class Service:
         name = "Pulse Pull Client"
+        state_file = "results_cache.db"
 
     class Poller:
         poll_interval = 5
@@ -55,6 +56,7 @@ class PullClientConfig(Singleton):
         # the python code
         if "library.zip" in location:
             location = os.path.dirname(location)
+        self.Service.path = location
         self.config_file = os.path.join(location, "conf", "pull_client.conf")
 
         self.config = ConfigParser()

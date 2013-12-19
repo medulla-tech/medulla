@@ -61,6 +61,19 @@ class ResultWorker(Thread):
                     # Wait a little before retrying
                     self.stop.wait(10)
                 queue.task_done()
+
+        # put back retry_queue step in result_queue for saving
+        # all remaining results in cache
+        if not self.retry_queue.empty():
+            results = []
+            for queue in (self.retry_queue, self.result_queue):
+                while not queue.empty():
+                    results.append(queue.get())
+                    queue.task_done()
+            # put back all results in queue
+            for result in results:
+                self.result_queue.put(result)
+
         logger.debug("Exiting from %s" % self)
 
 

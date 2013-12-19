@@ -126,7 +126,7 @@ class DlpClient(HTTPClient):
                 'return_code': result.exitcode}
         try:
             logger.debug("Sending result %s to DLP" % result)
-            res = self.post('step/%s/%s' % (result.step.command.id, result.step.name), data=data)
+            res = self.post('step/%s/%s' % (result.command_id, result.step_name), data=data)
         except (urllib2.URLError, urllib2.HTTPError):
             logger.exception("Failed to contact the DLP")
         else:

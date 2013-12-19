@@ -16,9 +16,9 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
-#import os
+import os
 import logging
-#import pickle
+import pickle
 import importlib
 from threading import Thread, Event
 from Queue import Queue
@@ -43,6 +43,9 @@ class Poller(Thread):
         Thread.__init__(self, **kwargs)
         # Get config
         self.config = PullClientConfig.instance()
+        # Results state cache
+        self.state_path = os.path.join(self.config.Service.path,
+                                       self.config.Service.state_file)
         # Instantiate DLP client
         mod_name, class_name = self.config.Dlp.client.rsplit('.', 1)
         module = importlib.import_module(mod_name)
@@ -68,6 +71,7 @@ class Poller(Thread):
             worker.start()
 
     def run(self):
+        self.restore_state()
         while not self.stop.is_set():
             for cmd_dict in self.dlp_client.get_commands():
                 if self.is_new_command(cmd_dict):
@@ -81,17 +85,27 @@ class Poller(Thread):
         self.stop_workers.set()
         for worker in self.workers:
             worker.join()
+        self.save_state()
         logger.info("Done")
 
-    #def save_state(self):
-        #with open(self.state_file, 'w+') as f:
-            #pickle.dump(self.commands, f)
+    def save_state(self):
+        if not self.result_queue.empty():
+            logger.info("Saving not sent results")
+            results = []
+            with open(self.state_path, 'w') as f:
+                while not self.result_queue.empty():
+                    results.append(self.result_queue.get())
+                    self.result_queue.task_done()
+                pickle.dump(results, f)
 
-    #def restore_state(self):
-        #if os.path.exists(self.state_file):
-            #with open(self.state_file, 'r') as f:
-                #self.commands = pickle.load(f)
-            #os.unlink(self.state_file)
+    def restore_state(self):
+        if os.path.exists(self.state_path):
+            logger.info("Adding not sent results in queue")
+            with open(self.state_path, 'r') as f:
+                results = pickle.load(f)
+            for result in results:
+                self.result_queue.put(result)
+            os.unlink(self.state_path)
 
     def is_new_command(self, cmd_dict):
         for command in list(self.commands):
