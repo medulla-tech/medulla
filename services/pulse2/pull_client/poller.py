@@ -125,6 +125,9 @@ class Poller(Thread):
             if command.id == cmd_dict['id'] and command.is_running:
                 logger.info("Command %s is already running, ignoring..." % cmd_dict['id'])
                 return False
+            if command.id == cmd_dict['id'] and command.is_done:
+                logger.info("Command %s is already done, ignoring..." % cmd_dict['id'])
+                return False
         return True
 
 
