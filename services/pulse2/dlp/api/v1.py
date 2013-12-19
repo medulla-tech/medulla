@@ -29,7 +29,6 @@ import tempfile
 import shutil
 import time
 import urllib2
-import urllib
 from base64 import b64decode
 
 from pulse2.utils import isMACAddress
@@ -222,11 +221,13 @@ class Inventory(object):
 
     def POST(self, inventory):
         inventory_uri = cherrypy.config.get("inventory.uri")
-        data = {'inventory': b64decode(inventory)}
+        data = b64decode(inventory)
         try:
             request = urllib2.Request(inventory_uri,
-                                      urllib.urlencode(data, True),
-                                      headers={'User-Agent': 'DLP service'})
+                                      data,
+                                      headers={'User-Agent': 'DLP service',
+                                               'Content-Type': 'application/x-www-form-urlencoded',
+                                               'Content-Length': len(data)})
             opener = urllib2.build_opener()
             urllib2.install_opener(opener)
             response = opener.open(request)
