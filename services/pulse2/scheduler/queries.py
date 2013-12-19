@@ -398,8 +398,7 @@ def get_available_commands(scheduler_name, uuid):
                time.mktime(cmd.creation_date.timetuple()),
                time.mktime(cmd.start_date.timetuple()),
                time.mktime(cmd.end_date.timetuple()),
-               coh.attempts_left,
-               coh.attempts_failed,
+               (coh.attempts_total - coh.attempts_failed),
                phases,
                todo,
                cmd.package_id)
