@@ -27,7 +27,7 @@ import operator
 
 from mmc.support.mmctools import SecurityContext
 from mmc.plugins.glpi.database import Glpi
-from mmc.plugins.glpi.database_utils import toUUID, fromUUID
+from mmc.plugins.glpi.database_utils import fromUUID
 
 
 logger = logging.getLogger()
@@ -62,7 +62,7 @@ class exportedReport(object):
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
                 os_count = self.db.getMachineByOsLike(self.ctx, os_names, count=1)
-                os_results.append({'entity_id': toUUID(entity), 'value': os_count})
+                os_results.append({'entity_id': entity, 'value': os_count})
         for os_result in os_results:
             count = False
             for result in results:
@@ -112,7 +112,7 @@ class exportedReport(object):
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
                 type_count = self.db.getMachineByType(self.ctx, types, count=1)
-                type_results.append({'entity_id': toUUID(entity), 'value': type_count})
+                type_results.append({'entity_id': entity, 'value': type_count})
         for type_result in type_results:
             count = False
             for result in results:
@@ -129,7 +129,7 @@ class exportedReport(object):
         for entity in self._getEntitiesIds(entities):
             self.ctx.locationsid = [entity]
             state_count = self.db.getMachineByState(self.ctx, state, count=1)
-            result.append({'entity_id': toUUID(entity), 'value': state_count})
+            result.append({'entity_id': entity, 'value': state_count})
         return result
 
     def _constructSoftwareTuple(self, soft):
@@ -180,7 +180,7 @@ class exportedReport(object):
                         version=[soft[1] for soft in softs],
                         vendor=[soft[2] for soft in softs],
                         count=1)
-                soft_results.append({'entity_id': toUUID(entity), 'value': soft_count})
+                soft_results.append({'entity_id': entity, 'value': soft_count})
         for soft_result in soft_results:
             count = False
             for result in results:
