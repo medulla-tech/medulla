@@ -26,6 +26,7 @@ nobase_dist_contrib_DATA = audit/sql/install.sh \
 						  audit/sql/schema-2.sql \
 						  report/sql/schema-001.sql \
 						  report/sql/schema-002.sql \
+						  report/sql/schema-003.sql \
 						  report/sql/README \
 						  monit/mmc-agent \
 						  scripts/mmc-check-expired-passwords-example \
