@@ -2595,9 +2595,9 @@ class Glpi08(DyngroupDatabaseHelper):
         if version is not None: version = check_list(version)
 
         if int(count) == 1:
-            query = session.query(func.count(distinct(self.software.c.name)))
+            query = session.query(func.count(self.software.c.name))
         else:
-            query = session.query(distinct(self.software.c.name))
+            query = session.query(self.software.c.name)
 
         query = query.select_from(self.software
                                   .join(self.softwareversions)
@@ -2614,6 +2614,9 @@ class Glpi08(DyngroupDatabaseHelper):
         if vendor is not None:
             vendor_filter = [Manufacturers.name.like(v) for v in vendor]
             query = query.filter(or_(*vendor_filter))
+
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(Software.entities_id.in_(ctx.locationsid))
 
         if int(count) == 1:
             ret = int(query.scalar())
