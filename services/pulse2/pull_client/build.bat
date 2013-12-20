@@ -1,3 +1,3 @@
 python.exe setup.py build
-mkdir build/`ls build`/conf
-cp conf/pull_client.conf.example build/`ls build`/conf/pull_client.conf
+mkdir build\exe.win32-2.7\conf
+copy conf\pull_client.conf.example build\exe.win32-2.7\conf\pull_client.conf
