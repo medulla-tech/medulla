@@ -2555,6 +2555,72 @@ class Glpi08(DyngroupDatabaseHelper):
             ret = query.all()
         return ret
 
+    @DatabaseHelper._session
+    def getAllSoftwaresImproved(self,
+                             session,
+                             ctx,
+                             name,
+                             vendor=None,
+                             version=None,
+                             count=0):
+        """
+        This method is used for reporting and license count
+        it's inspired from getMachineBySoftware method, but instead of count
+        number of machines who have this soft, this method count number of
+        softwares
+
+        Example: 5 firefox with different version on a single machine:
+            getMachineBySoftware: return 1
+            this method: return 5
+
+        I should use getAllSoftwares method, but deadline is yesterday....
+        """
+        def all_elem_are_none(params):
+            for param in params:
+                if param is not None:
+                    return False
+            return True
+        def check_list(param):
+            if not isinstance(param, list):
+                return [param]
+            elif all_elem_are_none(param):
+                return None
+            elif not param:
+                return None
+            else:
+                return param
+
+        name = check_list(name)
+        if vendor is not None: vendor = check_list(vendor)
+        if version is not None: version = check_list(version)
+
+        if int(count) == 1:
+            query = session.query(func.count(distinct(self.software.c.name)))
+        else:
+            query = session.query(distinct(self.software.c.name))
+
+        query = query.select_from(self.software
+                                  .join(self.softwareversions)
+                                  .join(self.inst_software)
+                                  .outerjoin(self.manufacturers))
+
+        name_filter = [Software.name.like(n) for n in name]
+        query = query.filter(or_(*name_filter))
+
+        if version is not None:
+            version_filter = [SoftwareVersion.name.like(v) for v in version]
+            query = query.filter(or_(*version_filter))
+
+        if vendor is not None:
+            vendor_filter = [Manufacturers.name.like(v) for v in vendor]
+            query = query.filter(or_(*vendor_filter))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
+
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
         # FIXME: the way the web interface process dynamic group sub-query
         # is wrong, so for the moment we need this loop:

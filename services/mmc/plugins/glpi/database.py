@@ -94,7 +94,7 @@ class Glpi(DyngroupDatabaseHelper):
             'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsLike', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
             'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount', 'isComputerNameAvailable', 'getMachineNumberByState', \
             'getMachineListByState', 'countLastMachineInventoryPart', 'delMachine', 'setGlpiEditableValue', 'hasKnownOS', 'getComputersOS','getComputersCountByOS', 'getAntivirusStatus', \
-            'getMachineListByAntivirusState', 'getLocationName', 'getAllSoftwareVendors', 'getAllSoftwareVersions', 'getMachineByHostnameAndMacs'
+            'getMachineListByAntivirusState', 'getLocationName', 'getAllSoftwareVendors', 'getAllSoftwareVersions', 'getMachineByHostnameAndMacs', 'getAllSoftwaresImproved'
             ]
         for i in methods:
             setattr(self, i, getattr(self.database, i))

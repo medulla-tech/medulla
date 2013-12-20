@@ -176,7 +176,7 @@ class exportedReport(object):
         if softs:
             for entity in self._getEntitiesIds(entities):
                 self.ctx.locationsid = [entity]
-                soft_count = self.db.getMachineBySoftware(self.ctx, [soft[0] for soft in softs],
+                soft_count = self.db.getAllSoftwaresImproved(self.ctx, [soft[0] for soft in softs],
                         version=[soft[1] for soft in softs],
                         vendor=[soft[2] for soft in softs],
                         count=1)

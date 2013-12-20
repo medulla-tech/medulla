@@ -2474,6 +2474,28 @@ class Glpi07(DyngroupDatabaseHelper):
             ret = query.all()
         return ret
 
+    @DatabaseHelper._session
+    def getAllSoftwaresImproved(self,
+                             session,
+                             ctx,
+                             name,
+                             vendor=None,
+                             version=None,
+                             count=0):
+        """
+        This method is used for reporting and license count
+        it's inspired from getMachineBySoftware method, but instead of count
+        number of machines who have this soft, this method count number of
+        softwares
+
+        Example: 5 firefox with different version on a single machine:
+            getMachineBySoftware: return 1
+            this method: return 5
+
+        I should use getAllSoftwares method, but deadline is yesterday....
+        """
+        pass
+
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
         return self.getMachineBySoftware(ctx, swname, count)
 
