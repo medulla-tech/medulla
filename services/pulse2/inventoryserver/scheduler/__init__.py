@@ -68,7 +68,7 @@ class AttemptToScheduler(object):
             logger.info("<scheduler> : Incoming from PXE : ignore")
             return
 
-        if not self.proxy.msc.is_pull_target(self.uuid):
+        if self.proxy.msc.is_pull_target(self.uuid):
             logger.info("<scheduler> : Pull Client inventory : ignore")
             return
 
