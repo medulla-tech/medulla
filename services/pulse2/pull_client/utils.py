@@ -19,6 +19,7 @@
 import os
 import socket
 import platform
+import copy
 from subprocess import Popen, PIPE
 from threading import Lock
 
@@ -70,7 +71,7 @@ def get_packages_dir():
 
 
 def get_launcher_env():
-    environ = os.environ
+    environ = copy.deepcopy(os.environ)
     if platform.system() == "Windows":
         openssh = get_registry_value("HKEY_LOCAL_MACHINE",
                                      "SOFTWARE\Mandriva\OpenSSH",
