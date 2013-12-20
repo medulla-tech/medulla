@@ -816,8 +816,15 @@ def xmlrpcCleanup2(obj):
 
 #############################
 
-def _get_convergence_soon_ended_commands():
-    cmd_ids = MscDatabase()._get_convergence_soon_ended_commands()
+def _get_convergence_soon_ended_commands(all=False):
+    """
+    @param all: If True, get all convergence active commands
+    @type all: Bool
+
+    @return: list of soon ended convergence commands
+    @rtype: list
+    """
+    cmd_ids = all and [] or MscDatabase()._get_convergence_soon_ended_commands()
     ret = DyngroupDatabase()._get_convergence_active_commands_ids(cmd_ids=cmd_ids)
     return xmlrpcCleanup(ret)
 
@@ -843,13 +850,16 @@ def getContext(user='root'):
         s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
         return s
 
-def convergence_reschedule():
+def convergence_reschedule(all=False):
     """
     Check convergence commands who will be ended soon
     and re-schedule them
+
+    @param all: If True, All convergence commands will be rescheduled
+    @type all: Bool
     """
     logger = logging.getLogger()
-    cmd_ids = _get_convergence_soon_ended_commands()
+    cmd_ids = _get_convergence_soon_ended_commands(all=all)
     if cmd_ids:
         logger.info("Convergence cron: %s convergence commands will be rescheduled: %s" % (len(cmd_ids), cmd_ids))
         for cmd_id in cmd_ids:
