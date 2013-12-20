@@ -361,8 +361,8 @@ class RpcProxy(RpcProxyI):
         @type end_date: str
         """
         d = defer.maybeDeferred(MscDatabase().extend_command,
-                                cmd_id, 
-                                start_date, 
+                                cmd_id,
+                                start_date,
                                 end_date)
 
         @d.addCallback
@@ -382,10 +382,20 @@ class RpcProxy(RpcProxyI):
         @d.addErrback
         def scheduler_call(failure):
             logging.getLogger().warn("Command extend signal sending failed: %s" % str(failure))
-        
+
         return d
 
- 
+    def is_pull_target(self, uuid):
+        """
+        Returns True if the machine is a known pull client
+
+        @param uuid: computer UUID
+        @type uuid: str
+
+        @return: bool
+        """
+        return xmlrpcCleanup(MscDatabase().isPullTarget(uuid))
+
     def pull_target_awake(self, hostname, macs):
         """
         Gets the requested machine for UUID.
@@ -396,14 +406,14 @@ class RpcProxy(RpcProxyI):
         @param macs: MAC addresses of computer
         @type macs: list
 
-        @return: UUID 
+        @return: UUID
         @rtype: str
         """
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
-                                                                            hostname, 
+                                                                            hostname,
                                                                             macs))
- 
+
     def displayLogs(self, params = {}):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))

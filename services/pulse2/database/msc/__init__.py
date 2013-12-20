@@ -31,10 +31,10 @@ import time
 
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
+                       Integer, ForeignKey, select, asc, or_, desc, func, not_, distinct
 from sqlalchemy.orm import create_session, mapper, relation
-from sqlalchemy.sql import union
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
+from sqlalchemy.orm.exc import NoResultFound
 
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
@@ -1161,6 +1161,14 @@ class MscDatabase(DatabaseHelper):
         ret = session.query(Target).filter(self.target.c.id_group == gid).all()
         session.close()
         return ret
+
+    @DatabaseHelper._session
+    def isPullTarget(self, session, uuid):
+        try:
+            session.query(PullTargets).filter(PullTargets.target_uuid == uuid).one()
+            return True
+        except NoResultFound:
+            return False
 
     def getTargets(self, cmd_id, onlyId = False):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         if onlyId:
