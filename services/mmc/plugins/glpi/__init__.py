@@ -119,6 +119,20 @@ class RpcProxy(RpcProxyI):
 def getLicensesCount(vendor, software, version):
     ctx = SecurityContext()
     ctx.userid = "root"
+
+    def replace_splat(param):
+        if '*' in param:
+            return param.replace('*', '%')
+        return param
+
+    def check_param(param):
+        if param == '' or param == '*' or param == '%':
+            return None
+        return replace_splat(param)
+
+    software = check_param(software)
+    vendor = check_param(vendor)
+    version = check_param(version)
     return xmlrpcCleanup(Glpi().getMachineBySoftware(ctx,
                                                      software,
                                                      vendor=vendor,

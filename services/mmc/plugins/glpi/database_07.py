@@ -2423,7 +2423,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     return False
             return True
         def check_list(param):
-            if param is not None and not isinstance(param, list):
+            if not isinstance(param, list):
                 return [param]
             elif all_elem_are_none(param):
                 return None
@@ -2433,8 +2433,8 @@ class Glpi07(DyngroupDatabaseHelper):
                 return param
 
         name = check_list(name)
-        vendor = check_list(vendor)
-        version = check_list(version)
+        vendor = vendor is not None and check_list(vendor) or vendor
+        version = version is not None and check_list(version) or version
 
         if int(count) == 1:
             query = session.query(func.count(distinct(Machine.ID)))
