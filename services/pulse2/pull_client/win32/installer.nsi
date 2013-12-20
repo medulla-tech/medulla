@@ -1,6 +1,6 @@
 ; Basic variables
 !define PRODUCT_NAME "Mandriva Pulse Pull Client"
-!define PRODUCT_VERSION "0.1.0"
+!define PRODUCT_VERSION "0.2.0"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 !define PRODUCT_DIR_REGKEY "Software\Mandriva\Pulse-Pull-Client"
@@ -43,13 +43,15 @@ Var /GLOBAL PREVIOUSINSTDIR
 ; Pulse DLP address
 Var /GLOBAL DLP_SERVER
 Var /GLOBAL DLP_PORT
+Var /GLOBAL DLP_KEY
 
 ; Default values for DLP
 !define DEFAULT_DLP_SERVER "dlp.domain.com"
 !define DEFAULT_DLP_PORT "80"
+!define DEFAULT_DLP_KEY "secret"
 
 ; Service name (from the Windows view)
-!define WINSVCNAME "pulse_pull_clientpulse_pull_client"
+!define WINSVCNAME "pulse_pull_client"
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -95,6 +97,9 @@ Function CustomOptions
   ${EndIf}
   ${IfNot} $DLP_PORT == ""
     !insertmacro CHANGETEXTFIELD "customoptions.ini" "Field 5" $DLP_PORT
+  ${EndIf}
+  ${IfNot} $DLP_KEY == ""
+    !insertmacro CHANGETEXTFIELD "customoptions.ini" "Field 7" $DLP_KEY
   ${EndIf}
   !insertmacro INSTALLOPTIONS_SHOW
 FunctionEnd
@@ -165,7 +170,7 @@ Function .onInit
   ${GetParameters} $R0
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ; Handle /SERVER option ;
+  ; Handle /DLP_SERVER option ;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ${GetOptions} $R0 "/DLP_SERVER=" $0
   StrCpy $DLP_SERVER $0
@@ -173,12 +178,20 @@ Function .onInit
     StrCpy $DLP_SERVER ${DEFAULT_DLP_SERVER}
   ${EndIf}
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-  ; Handle /PORT option ;
+  ; Handle /DLP_PORT option ;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ${GetOptions} $R0 "/DLP_PORT=" $0
   StrCpy $DLP_PORT $0
   ${If} $DLP_PORT == ""
     StrCpy $DLP_PORT ${DEFAULT_DLP_PORT}
+  ${EndIf}
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; Handle /DLP_KEY option ;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ${GetOptions} $R0 "/DLP_KEY=" $0
+  StrCpy $DLP_KEY $0
+  ${If} $DLP_KEY == ""
+    StrCpy $DLP_KEY ${DEFAULT_DLP_KEY}
   ${EndIf}
   
   ;;;;;;;;;;;;;;;;;;;;
@@ -234,7 +247,6 @@ Section "Core" Core
   File bin\python27.dll
   File bin\win32evtlog.pyd
   File bin\pyexpat.pyd
-  File bin\pulse_pull_client.log
   File bin\unicodedata.pyd
   File bin\win32api.pyd
   File bin\pywintypes27.dll
@@ -245,7 +257,7 @@ Section "Core" Core
   File bin\win32pipe.pyd
   File bin\select.pyd
   File bin\cx_Logging.pyd
-  File bin\pulse_pull_client.exe
+  File bin\service.exe
 
   ;;;;;;;;;;;;;
   ; Conf file ;
@@ -266,23 +278,32 @@ Please fill the field with the right DNS name or IP address."
     StrCpy $DLP_SERVER $0
     ReadINIStr $1 "$PLUGINSDIR\customoptions.ini" "Field 5" "State"
     ${If} $1 == ""
-      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse DownLoad Provider  port is empty! $\n\
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse DownLoad Provider port is empty! $\n\
 Please fill the field with the right port."
       Abort
     ${EndIf}
     StrCpy $DLP_PORT $1
+    ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
+    ${If} $2 == ""
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse DownLoad Provider key is empty! $\n\
+Please fill the field with the right security key."
+      Abort
+    ${EndIf}
+    StrCpy $DLP_KEY $2
   ${EndIF}
 
   ; Fix conf file
   DetailPrint "Using $DLP_SERVER:$DLP_PORT as DLP server."
+  DetailPrint "Using $DLP_KEY as DLP security key."
   !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_SERVER@@" $DLP_SERVER
   !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_PORT@@" $DLP_PORT
+  !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_KEY@@" $DLP_KEY
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;
   ;;;;;;;;;;;;;;;;;;;;
-  DetailPrint "Running $INSTDIR\pulse_pull_client.exe --install pulse_pull_client"
-  nsExec::ExecToLog "$INSTDIR\pulse_pull_client.exe --install pulse_pull_client"
+  DetailPrint "Running $INSTDIR\service.exe --install pulse_pull_client"
+  nsExec::ExecToLog "$INSTDIR\service.exe --install pulse_pull_client"
   Pop $0
   ; May return "error" in $0 if something goes wrong
   ${If} $0 == 'error'
@@ -296,19 +317,6 @@ Please fill the field with the right port."
   ; $0 now contains either 'Yes', 'No' or an error description
   ${If} $0 != 'Yes'
     MessageBox MB_OK|MB_ICONEXCLAMATION 'Something went wrong when trying to register Pulse Pull Client service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\pulse_pull_client.exe" --install'
-    Abort
-  ${EndIf}
-
-  ;;;;;;;;;;;;;;;;;;;
-  ; Start service ;
-  ;;;;;;;;;;;;;;;;;;;
-  DetailPrint "Starting service..."
-  push '${WINSVCNAME}'
-  push 'Start'
-  Services::SendServiceCommand
-  Pop $0
-  ${If} $0 != 'Ok'
-    MessageBox MB_OK|MB_ICONEXCLAMATION 'Something went wrong when trying to start Pulse Pull Client service.$\r$\n$\r$\nYou may try to read the following log file to have more information:$\r$\n  "$INSTDIR\pulse_pull_client.log"'
     Abort
   ${EndIf}
 
