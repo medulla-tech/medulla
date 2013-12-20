@@ -203,7 +203,7 @@ class Step(object):
             #raise cherrypy.HTTPError(401, "Not a valid step")
 
         try:
-            log("Saving result for step %s of command %s" % (step_id, coh_id))
+            log("Saving result (%d) for step %s of command %s" % (return_code, step_id, coh_id))
             if not cherrypy.request.xmlrpc_client.completed_step(coh_id, step_id, stdout, stderr, return_code):
                 raise cherrypy.HTTPError(503, "Failed to save the result")
             cherrypy.response.status = 201
