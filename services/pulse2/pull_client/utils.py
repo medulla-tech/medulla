@@ -130,9 +130,9 @@ def get_mac_addresses():
             # ignore header
             if index == 0:
                 continue
-            line = line.strip().lstrip("|||").rstrip("|||")
+            line = line.strip()
             if line:
-                card, mac, ip, netmask, gateway = line.split("|||")
+                start, card, mac, ip, netmask, gateway, end = line.split("|||")
                 mac_addresses.append(mac)
 
     return [normalize(mac) for mac in mac_addresses]
