@@ -10,7 +10,7 @@
 
 from cx_Freeze import setup, Executable
 
-buildOptions = dict(includes = ["service", "dlp"])
+buildOptions = dict(includes=["service", "dlp"], include_msvcr=1)
 executable = Executable("config.py", base = "Win32Service",
         targetName = "service.exe")
 
