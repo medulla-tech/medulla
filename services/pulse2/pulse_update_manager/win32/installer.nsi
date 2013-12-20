@@ -1,6 +1,6 @@
 ; Basic variables
 !define PRODUCT_NAME "Mandriva Secure Agent [Windows Update plugin]"
-!define PRODUCT_VERSION "0.4.0"
+!define PRODUCT_VERSION "0.5.0"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 !define PRODUCT_DIR_REGKEY "Software\Mandriva\Windows-Update-Plugin"
