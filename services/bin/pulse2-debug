@@ -19,17 +19,21 @@
 # along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-import sys
-import stat
+import sys, traceback
 import re
-from syslog import syslog
+import types
+#from syslog import syslog
 import subprocess
 import pprint
 import readline
-import mmc.plugins
 import atexit
-
+import pager
+import xmlrpclib
+import urlparse
+from collections import namedtuple
+from pydoc import pager as textpager
 from ConfigParser import ConfigParser
+from httplib import CannotSendRequest
 
 from twisted.internet import task, reactor
 from twisted.python import threadable; threadable.init(1)
@@ -40,57 +44,195 @@ deferred = deferToThread.__get__ #Create a decorator for deferred functions
 HISTFILE = os.path.join(os.path.expanduser("~"), ".pulse2debughist")
 COOKIES_FILE = '/tmp/pulse2-debug-cookies'
 host = ''
-module = ''
-funcs = {}
-pluginsdir = os.path.dirname(mmc.plugins.__file__)
+funcs = []
+modules = []
+
 commands = ['cd ','use ','ls','pwd','exit']
+CONSOLE_VARS = {}
+DEFER = None
+rpc_proxy = None
+transport = None
+LOGSNIFFER = None
 
-class MMCQueryProtocol(xmlrpc.QueryProtocol):
 
-    def connectionMade(self):
-        self.sendCommand('POST', self.factory.path)
-        self.sendHeader('User-Agent', 'Twisted/XMLRPClib')
-        self.sendHeader('Host', self.factory.host)
-        self.sendHeader('Content-type', 'text/xml')
-        self.sendHeader('Content-length', str(len(self.factory.payload)))
-        if self.factory.user:
-            auth = '%s:%s' % (self.factory.user, self.factory.password)
-            auth = auth.encode('base64').strip()
-            self.sendHeader('Authorization', 'Basic %s' % (auth,))
+# ====================================================================================
+# PRINTING FUNCTIONS
+# ====================================================================================
+
+def pprinttable(rows):
+    """
+    function to pretty print tables
+    @param rows list of namedtuples
+    @type list
+    """
+    if len(rows) > 1:
+        headers = rows[0]._fields
+        lens = []
+        for i in range(len(rows[0])):
+            lens.append(len(max([str(x[i]) for x in rows] + [headers[i]],key=lambda x:len(str(x)))))
+        formats = []
+        hformats = []
+        for i in range(len(rows[0])):
+            if isinstance(rows[0][i], int):
+                formats.append("%%%dd" % lens[i])
+            else:
+                formats.append("%%-%ds" % lens[i])
+            hformats.append("%%-%ds" % lens[i])
+        pattern = " | ".join(formats)
+        hpattern = " | ".join(hformats)
+        separator = "-+-".join(['-' * n for n in lens])
+        print separator
+        print hpattern % tuple(headers)
+        print separator
+        for line in rows:
+            print pattern % tuple(line)
+    elif len(rows) == 1:
+        row = rows[0]
+        hwidth = len(max(row._fields,key=lambda x: len(x)))
+        for i in range(len(row)):
+            print "%*s = %s" % (hwidth,row._fields[i],row[i])
+
+
+def printListInfo(result):
+    """
+    prettyprint listinfo result using pprinttable
+    @param result @_listinfo function result
+    @type dict
+    """
+    if len(result['data']) == 0:
+        return
+
+    header = result['data'][0].keys()
+    Row = namedtuple('Row', header)
+    try:
+        pprinttable([Row(*(line.values())) for line in result['data']])
+    except Exception, e:
+        print str(e)
+
+
+class bcolors:
+    """
+    static class to handle output colouring
+    """
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    UNDERLINE = '\033[4m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    NORMAL = '\033[0m'
+
+    def disable(self):
+        self.HEADER = ''
+        self.OKBLUE = ''
+        self.OKGREEN = ''
+        self.YELLOW = ''
+        self.RED = ''
+        self.ENDC = ''
+
+BCOLORS = bcolors()
+
+
+# ====================================================================================
+# XMLRPC Client classes
+# ====================================================================================
+
+class cookietransportrequest:
+    """A Transport request method that retains cookies over its lifetime.
+
+    The regular xmlrpclib transports ignore cookies. Which causes
+    a bit of a problem when you need a cookie-based login, as with
+    the Bugzilla XMLRPC interface.
+
+    So this is a helper for defining a Transport which looks for
+    cookies being set in responses and saves them to add to all future
+    requests.
+    """
+
+    # Inspiration drawn from
+    # http://blog.godson.in/2010/09/how-to-make-python-xmlrpclib-client.html
+    # http://www.itkovian.net/base/transport-class-for-pythons-xml-rpc-lib/
+    #
+    # Note this must be an old-style class so that __init__ handling works
+    # correctly with the old-style Transport class. If you make this class
+    # a new-style class, Transport.__init__() won't be called.
+
+    cookies = []
+    def send_cookies(self, connection):
+        if self.cookies:
+            for cookie in self.cookies:
+                connection.putheader("Cookie", cookie)
+
+    def request(self, host, handler, request_body, verbose=0):
+        self.verbose = verbose
+
+        # issue XML-RPC request
+        h = self.make_connection(host)
+        if verbose:
+            h.set_debuglevel(1)
+
+        self.send_request(h, handler, request_body)
+        self.send_host(h, host)
+        self.send_cookies(h)
+        self.send_user_agent(h)
+        self.send_content(h, request_body)
+
+        # Deal with differences between Python 2.4-2.6 and 2.7.
+        # In the former h is a HTTP(S). In the latter it's a
+        # HTTP(S)Connection. Luckily, the 2.4-2.6 implementation of
+        # HTTP(S) has an underlying HTTP(S)Connection, so extract
+        # that and use it.
         try:
-            # Put MMC session cookie
-            if not '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-                h = open(COOKIES_FILE, 'r')
-                self.sendHeader('Cookie', h.read())
-                h.close()
-        except IOError:
-            pass
-        self.endHeaders()
-        self.transport.write(self.factory.payload)
+            response = h.getresponse()
+        except AttributeError:
+            response = h._conn.getresponse()
 
-    def lineReceived(self, line):
-        xmlrpc.QueryProtocol.lineReceived(self, line)
-        if line:
-            if line.startswith("Set-Cookie: "):
-                self._session = line.split()[1]
+        # Add any cookie definitions to our list.
+        for header in response.msg.getallmatchingheaders("Set-Cookie"):
+            val = header.split(": ", 1)[1]
+            cookie = val.split(";", 1)[0]
+            self.cookies.append(cookie)
 
-    def handleResponse(self, contents):
-        xmlrpc.QueryProtocol.handleResponse(self, contents)
-        if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-            h = open(COOKIES_FILE, 'w+')
-            h.write(self._session)
-            h.close()
-            os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+        if response.status != 200:
+            raise xmlrpclib.ProtocolError(host + handler, response.status,
+                                          response.reason, response.msg.headers)
+
+        payload = response.read()
+        parser, unmarshaller = self.getparser()
+        parser.feed(payload)
+        parser.close()
+
+        return unmarshaller.close()
+
+    def transport(self, uri):
+        """Return an appropriate Transport for the URI.
+
+        If the URI type is https, return a CookieSafeTransport.
+        If the type is http, return a CookieTransport.
+        """
+        if urlparse.urlparse(uri, "http")[0] == "https":
+            return cookiesafetransport()
+        else:
+            return cookietransport()
 
 
-class MMCQueryFactory(xmlrpc._QueryFactory):
+class cookietransport(cookietransportrequest, xmlrpclib.Transport):
+    pass
 
-    protocol = MMCQueryProtocol
+class cookiesafetransport(cookietransportrequest, xmlrpclib.SafeTransport):
+    pass
 
-class Proxy(xmlrpc.Proxy):
 
-    queryFactory = MMCQueryFactory
-
+# ====================================================================================
+# ConfigReader class to read config files
+# ====================================================================================
 
 class ConfigReader :
     """Read and parse config files"""
@@ -127,23 +269,12 @@ class ConfigReader :
         """
         return [self._config,self._config2]
 
-class MMCProxy:
-    """ Provider to connect at mmc-agent """
-    def __init__(self, config):
-
-        self._config = config
-
-        self._url = None
-        self._proxy = None
-
-        self._build_url()
-        self._build_proxy()
-
-    def _build_url(self):
-        """ URL building for XML-RPC proxy """
-
-        # Readming mmc.ini config
-        _config = self._config[0]
+    @property
+    def mmc_agent_url(self):
+        """
+        get full URL to pass to XMLRPC proxy
+        """
+        _config = self._config
         if not _config.has_section("global") or not _config.has_section("server_01") :
             print("Error while reading the config file: Section 'login' not exists")
             sys.exit(2)
@@ -155,221 +286,250 @@ class MMCProxy:
         if not 'https://' in url:
             print('Error reading mmc-agent URL')
         self._url = url.replace('https://','https://%s:%s@' % (username,password) )
+        return self._url
 
-
-    def _get_ldap_password(self):
+    @property
+    def ldap_password(self):
         """
         Password for LDAP authentification
 
         @return: string
         """
         # Reading LDAP Config (MMC base plugin base.ini]
-        _config = self._config[1]
+        _config = self._config2
         if not _config.has_section("ldap") :
             print("Error while reading the config file: Section 'ldap'")
             sys.exit(2)
 
         return _config.get("ldap","password")
 
-    def _build_proxy (self):
-        """ Builds the XML-RPC proxy to MMC agent. """
-        try :
-            self._proxy = Proxy(self._url)
-            #D: print("Create a mmc-agent proxy")
-
-        except Exception, err :
-            print("Error while connecting to mmc-agent : %s" % err)
-            sys.exit(2)
-
-    @property
-    def proxy (self):
-        """ Get the XML-RPC proxy to MMC agent. """
-        return self._proxy
-
-class CallMethod :
-    """ XML-RPC Handler to execute remote functions. """
-
-    def __init__(self, config, method, *args, **kwargs) :
-        self._config = config
-
-        mmc_agent = MMCProxy(config)
-
-        self.proxy = mmc_agent.proxy
-
-        self.method = method
-        self.args = args
-        self.kwargs = kwargs
-
-        d = task.deferLater(reactor, 0, self.auth)
-        d.addErrback(self._errorback_proxy)
-
-    def _errorback_proxy(self, failure):
-        print("Proxy call failed : %s" % str(failure))
-        #reactor.stop()
-
-    def auth(self):
-        passwd = self._config[1].get("ldap","password")
-        d = self.proxy.callRemote("base.ldapAuth", "root", passwd)
-
-        d.addCallback(self.call_method)
-        d.addErrback(self._errorback_auth)
-
-    def _errorback_auth(self, failure):
-        print("Authentification failed : %s" % str(failure))
-        d = task.deferLater(reactor, 0, prompt)
-
-    def call_method(self, result=None):
-        d = self.proxy.callRemote(self.method, *self.args, **self.kwargs)
-        d.addCallback(self._method_result)
-        d.addErrback(self._errorback_method)
-
-    def _method_result(self, result):
-        s = pprint.pformat(result)
-        print s
-        d = task.deferLater(reactor, 0, prompt)
-
-    def _errorback_method(self, failure):
-        print("Method call failed")
-        fstr = str(failure)
-        if 'Fault NO_SUCH_FUNCTION' in fstr:
-            print "No such method"
-        d = task.deferLater(reactor, 0, prompt)
 
 
-def _use(args):
-    global module
-    # TODO : check if module exists
-    if len(args):
-        module = args[0]
-    else:
-        module = ''
-    # Return to prompt
-    task.deferLater(reactor, 0, prompt)
+def p2d():
+    s  = '=======================================================================\n'
+    s += 'Pulse2 debug\n'
+    s += '=======================================================================\n'
+    s += '\n'
+    s += 'New in 0.3 :\n'
+    s += '\tBetter threading\n'
+    s += '\tFull python console (try importing modules)\n'
+    s += '\tXMLRPC methods introspection (try help)\n'
+    s += '\tPagination feature for listinfo methods (try update.get_updates({})\n'
+    s += '\n'
+    s += '=======================================================================\n'
 
-
-# PRINT CURRENT MODULE
-def _pwd(args):
-    global module
-    print module
-    task.deferLater(reactor, 0, prompt)
-
-def _ls(args):
-    #print '\t'.join(funcs[module]['names'])
-    if module in funcs:
-        pprint.pprint(funcs[module]['names'])
-    else:
-        print "No entry found"
-    task.deferLater(reactor, 0, prompt)
-
-
-def _showmsg(msg):
-    print msg
-    task.deferLater(reactor, 0, prompt)
-
-
-def _help(args):
-    if len(args) == 0:
-        print 'Base commands: use, ls, pwd, exit\nType help <command_name> to get command help'
-    elif args[0] == 'use':
-        print 'use <module_name>\n\tSwitch to module name'
-    elif args[0] == 'ls':
-        print 'ls\n\tList all exported methods for the selected module'
-    elif args[0] == 'pwd':
-        print 'pwd\n\tPrint selected module name'
-    elif args[0] == 'exit':
-        print 'exit\n\tExit pulse2-debug console'
-    else:
-       try:
-           print 'params\n\t'+funcs[module]['args'][funcs[module]['names'].index(args[1])]
-       except:
-           print "No help entry found"
-    task.deferLater(reactor, 0, prompt)
+    textpager(s)
 
 
 def completer(text, state):
-    possib = commands + funcs.keys()
-    if module in funcs:
-        possib += funcs[module]['names']
+    CONSOLE_VARS.keys()
+    #
+    possib = funcs
+    #if module in funcs:
+    #    possib += funcs[module]['names']
     options = [i for i in possib if i.startswith(text)]
     if state < len(options):
         return options[state]
     else:
         return None
 
+
 # PROMPT FUNCTION ]>
+@deferred
 def prompt():
-    global module
-    input = ''
-    while not input:
-        input = raw_input(module + "]> ").strip()
-    
-    # TODO : Treat final pipes
-
-    # From hereon, we have func(args) syntax
-    if input[-1] != ')':
-        _showmsg('Syntax error')
-        return
-    parts = input[0:-1].split('(')
-    if len(parts) < 2:
-        _showmsg('Syntax error')
-        return
-    #
-    cmd = parts[0]
-    # Parsing args
-    try:
-        args = eval('['+ '('.join(parts[1:])+ ']' )
-    except Exception, e:
-        _showmsg('Syntax error: %s' % str(e))
-        return
-    
-    # Command to switch to specific module
-    if (cmd == "use" or cmd == "cd"):
-        _use(args)
-    elif (cmd == 'pwd'):
-        _pwd(args)
-    elif (cmd == 'ls'):
-        _ls(args)
-    elif (cmd == 'help'):
-        _help(args)
-    elif (cmd == 'x' or cmd == 'exit'):
-        reactor.stop()
-    else:
-        # Call XML rpc Method   "msc.scheduler_choose_client_ip"
-        func = module+'.'+cmd if module else cmd
-        CallMethod(config, func, *args)
+    while 1:
+        input = ''
+        while not input:
+            try:
+                input = raw_input("]> ").strip()
+            except (KeyboardInterrupt, EOFError) as e:
+                # Receive pipe-signal or EOFError
+                print ''
+                # Kill logsniffer
+                if LOGSNIFFER:
+                    LOGSNIFFER.kill()
+                reactor.stop()
+                return
+        try:
+            exec(input, CONSOLE_VARS)
+        except Exception:
+            ex_type, ex, tb = sys.exc_info()
+            print ex_type
+            print ex
+            traceback.print_tb(tb)
+            del tb
 
 
-def initFuncDB():
-    def get_subdirs(dir):
-        return [name for name in os.listdir(dir)
-            if os.path.isdir(os.path.join(dir, name))]
-    modules = get_subdirs(pluginsdir)
-    fpattern = re.compile(r'def ([^ ]+)\((.*)\):')
-    for module in modules:
-        initpath = os.path.join(pluginsdir,module,'__init__.py')
-        if os.path.exists(initpath):
-            funcs[module]={'names':[],'args':[]}
-            f = open(initpath,'r')
-            lines = f.readlines()
-            for line in lines:
-                matches = fpattern.match(line)
-                if matches:
-                    funcs[module]['names'] += [matches.group(1)]
-                    funcs[module]['args'] += [matches.group(2)]
+class RpcProxy:
+    proxy = None
+    url = ''
+    ldap_password = ''
+    config = None
+
+    def __init__(self, config):
+        self.config = config
+        tr = cookietransportrequest()
+        self.url = config.mmc_agent_url
+        self.proxy = xmlrpclib.ServerProxy(self.url, tr.transport(self.url))
+        self.ldap_password = config.ldap_password
+        self.auth()
+
+
+    def auth(self):
+        self.proxy.base.ldapAuth('root', self.ldap_password)
+
+
+
+# ====================================================================================
+# XMLRPC Module caller class
+# ====================================================================================
+
+class xmlrpcModule():
+    min = 0
+    max = 10
+
+    def __init__(self, proxyHandler, module_name):
+        self.proxyHandler = proxyHandler
+        self.module_name = module_name
+
+    def __str__(self):
+        return self.label
+
+    def __getattr__(self, attr_name):
+        
+        def xmlCallfunc(*args, **kw):
+            try:
+                module = getattr(self.proxyHandler.proxy, self.module_name)
+                result = getattr(module, attr_name)(*args, **kw)
+            except CannotSendRequest:
+                # Try reconnect
+                config = self.proxyHandler.config
+                self.proxyHandler = RpcProxy(config)
+                print "Lost connection, reconnecting ..."
+                return
+
+
+            if isinstance(result, dict) and 'listinfo' in result:
+                params = args[0]
+
+                # Calculating delta
+                delta = pager.getheight() - 4
+
+                if not 'min' in params:
+                    params['min'] = 0
+                if not 'max' in params:
+                    params['max'] = delta
+
+                if len(result['data']) != 0:
+                    # Resetting min and max et loop
+                    printListInfo(result)
+                    key = pager.getch()
+                    # TODO: r refresh , f filter
+                    if key == pager.LEFT:
+                        params['min'] -= delta
+                        params['max'] -= delta
+                    if key == pager.RIGHT:
+                        params['min'] += delta
+                        params['max'] += delta
+                    # Ensure that min, max are in limits
+                    params['min'] = min(result['count']-delta, params['min'])
+                    params['min'] = max(0, params['min'])
+
+                    params['max'] = max(delta, params['max'])
+                    params['max'] = min(result['count'], params['max'])
+
+                    # If q is pressed, we quit loop => prompt
+                    if not('q' in key or 'Q' in key):
+                        xmlCallfunc(params)
+            else:
+                s = pprint.pformat(result)
+                # If result is too larger paginate it
+                if len(s.split('\n')) > (pager.getheight() - 4):
+                    textpager(s)
+                else:
+                    print s
+
+            return result
+
+        # TODO: better introspection here : func signature
+        xmlCallfunc.__name__ = attr_name
+        try:
+            xmlCallfunc.__doc__ = self.proxyHandler.proxy\
+                                  .system.methodHelp(self.module_name + '.' + attr_name)
+        except:
+            pass
+        return xmlCallfunc
+
 
 @deferred
 def logSniffer():
-    subprocess.call('tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user\|WARNING\|ERROR"', shell=True)
+    #'tail -f /var/log/mmc/mmc-agent.log|grep "RPC method call from user\|WARNING\|ERROR"',\
+    #print "sniff"
+    global LOGSNIFFER
+    LOGSNIFFER = subprocess.Popen(\
+                         'tail -f /var/log/mmc/mmc-agent.log',\
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,\
+                         shell=True)
+
+    while True:
+        line = LOGSNIFFER.stdout.readline()
+
+        # Hide debug lines
+        if 'DEBUG' in line and not 'RPC method call from user' in line:
+            continue
+        if 'DEBUG' in line:
+            # Strip it
+            line = line.replace('DEBUG', '').strip()+'\n'
+        if 'INFO' in line:
+            continue
+
+        # Errors
+        line = line.replace('ERROR', '%sERROR%s\t' % (BCOLORS.BOLD+BCOLORS.RED, BCOLORS.ENDC))
+        # Warnings
+        line = line.replace('WARNING', '%sWARNING%s\t' % (BCOLORS.BOLD + BCOLORS.YELLOW, BCOLORS.ENDC))
+        # Debugs
+        line = line.replace('DEBUG', '%sDEBUG%s\t' % (BCOLORS.BOLD+ BCOLORS.OKBLUE, BCOLORS.ENDC))
+        # Info
+        line = line.replace('INFO', '%sINFO%s\t' % (BCOLORS.BOLD+BCOLORS.CYAN, BCOLORS.ENDC))
+        # RPCCALL
+        line = line.replace('RPC method call from user', '%sRPCCALL%s from' % (BCOLORS.BOLD+BCOLORS.PURPLE, BCOLORS.ENDC))
+
+
+        sys.stdout.write(line)
+        if line == '' and LOGSNIFFER.poll() != None:
+            break
+    return True
+
+    
     
 
 if __name__ == "__main__" :
 
-    # init all xmlrpc exported methods
-    initFuncDB()
+    # Loading config
+    config = ConfigReader()
 
-    config = ConfigReader().config
-    print "Pulse2 console 0.02 (Oct 11 2013)"
-    print "Type help for more information"
+    # Init proxy
+
+    p = RpcProxy(config)
+    # init funcs for auto completition
+    funcs = p.proxy.system.listMethods()
+    # module list
+    modules = list(set([func.split('.')[0] for func in funcs]))
+
+    CONSOLE_VARS['PROXYCLASS'] = p
+    CONSOLE_VARS['xmlrpcModule'] = xmlrpcModule
+    CONSOLE_VARS['pprint'] = pprint
+    CONSOLE_VARS['p2d'] = p2d
+
+    # init module vars*
+    for module in modules:
+        exec('%s_ = PROXYCLASS.proxy.%s' % (module, module), CONSOLE_VARS)
+        exec('%s = xmlrpcModule(PROXYCLASS, "%s")' % (module, module), CONSOLE_VARS)
+
+
+
+    print "Pulse2 console 0.3 (Dec 18 2013)"
+    print "Type p2d() for more information"
 
     # Setting command completer
     readline.parse_and_bind("tab: complete")
@@ -384,8 +544,17 @@ if __name__ == "__main__" :
     atexit.register(readline.write_history_file, HISTFILE)
 
     # Activating log sniffer
+    prompt()
+    
     logSniffer()
 
-    task.deferLater(reactor, 1, prompt)
-    reactor.run()
+    #DEFER =
+
+
+
+    #task.deferLater(reactor, 1, prompt)
+    try:
+        reactor.run()
+    except:
+        print 'ouuuuuuuuuuuuu'
 
