@@ -75,7 +75,7 @@ class DownloadQuery :
              package_id) = rec
 
             urls = target_mirrors.split('||')
-            if package_id is not None:
+            if len(files.strip()) > 0:
                 files = files.split("\n")
                 for index, file in enumerate(files):
                     files[index] = file.split("##")[1]
