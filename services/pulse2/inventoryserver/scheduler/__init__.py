@@ -141,7 +141,7 @@ class AttemptToScheduler(object):
                 logger.exception("<scheduler> : Error while executing 'msc.start_command_on_host'")
                 return False
 
-            logger.info("<scheduler> : Task id (coH): %d executed on host(uuid=%s)" % (id, self.uuid))
+            logger.info("<scheduler> : Task id (coH): %s executed on host(uuid=%s)" % (str(id), self.uuid))
             sleep(self.BETWEEN_TASKS_DELAY)
 
         return True
