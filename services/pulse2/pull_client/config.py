@@ -39,6 +39,7 @@ class PullClientConfig(Singleton):
         state_file = "results_cache.db"
 
     class Poller:
+        wait_poll = 120
         poll_interval = 5
         result_workers = 1
         parallel_workers = 1

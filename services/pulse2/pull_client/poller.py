@@ -75,7 +75,7 @@ class Poller(Thread):
         # Wait before polling:
         # This is usefull when the agent is deployed in push mode, so it let the
         # push deployment finish before acting as a pull client
-        self.stop.wait(120)
+        self.stop.wait(self.config.Poller.wait_poll)
         logger.info("Polling for new commands")
         while not self.stop.is_set():
             for cmd_dict in self.dlp_client.get_commands():
