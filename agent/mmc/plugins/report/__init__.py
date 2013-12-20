@@ -149,6 +149,8 @@ class RpcProxy(RpcProxyI):
         setup_lang(lang)
         indent_str = ''
 
+        entities = [int(str(entity).replace('UUID','')) for entity in entities]
+
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
         pdf_path = os.path.join(report_path, 'report.pdf')

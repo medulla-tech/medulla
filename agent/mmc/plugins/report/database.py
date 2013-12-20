@@ -28,7 +28,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm.exc import NoResultFound
 
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.report.schema import ReportingData, Indicator
+from mmc.plugins.report.schema import Indicator
 
 
 logger = logging.getLogger()
@@ -101,7 +101,7 @@ class ReportDatabase(DatabaseHelper):
         # TODO: Test if history is 1 if not WARNING
         # Save the indicator values to Db
         for entry in indicator.getCurrentValue():
-            data = ReportingData()
+            data = indicator.dataClass()
             # Import value and enity_id from entry
             data.fromDict(entry)
             data.indicator_id = indicator.id
@@ -111,7 +111,7 @@ class ReportDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def historize_all(self, session):
-        indicators = session.query(Indicator).filter_by(active=1, keep_history=1).all()
+        indicators = session.query(Indicator).filter_by(active=1, keep_history=1)
         for indicator in indicators:
             # Save the indicator values to Db
             try:
@@ -120,7 +120,7 @@ class ReportDatabase(DatabaseHelper):
                 logger.exception('Unable to get data for indicator : %s' % indicator.name)
                 continue
             for entry in values:
-                data = ReportingData()
+                data = indicator.dataClass()
                 # Import value and enity_id from entry
                 data.fromDict(entry)
                 data.indicator_id = indicator.id

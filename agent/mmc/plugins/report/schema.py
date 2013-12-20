@@ -24,21 +24,39 @@
 
 from importlib import import_module
 
-from sqlalchemy import Column, String, Integer, BigInteger
+from sqlalchemy import Column, String, Integer, BigInteger, func, orm
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
 from mmc.database.database_helper import DBObj
 
 
-class ReportingData(Base, DBObj):
-    # ====== Table name =========================
-    __tablename__ = 'data'
+class ReportingData(DBObj):
+    # only for inherit, don't use this class directly
     # ====== Fields =============================
     id = Column(Integer, primary_key=True)
     indicator_id = Column(Integer)
     timestamp = Column(BigInteger)
+    entity_id = Column(Integer)
+
+class ReportingIntData(Base, ReportingData):
+    # ====== Table name =========================
+    __tablename__ = 'data'
+    # ====== Fields =============================
+    value = Column(Integer)
+
+
+class ReportingFloatData(Base, ReportingData):
+    # ====== Table name =========================
+    __tablename__ = 'data_float'
+    # ====== Fields =============================
+    value = Column(Integer)
+
+
+class ReportingTextData(Base, ReportingData):
+    # ====== Table name =========================
+    __tablename__ = 'data_text'
+    # ====== Fields =============================
     value = Column(String(255))
-    entity_id = Column(String(50))
 
 
 class Indicator(Base, DBObj):
@@ -56,39 +74,41 @@ class Indicator(Base, DBObj):
     keep_history = Column(Integer)
 
 
+    @orm.reconstructor
+    def afterLoad(self):
+        """
+        method to set additional fields according to datatype
+        will be called automatically by SQLAlchmey on load
+        """
+        if self.data_type == 0:
+            self.dataClass = ReportingIntData
+            self.aggregate_func = func.sum
+            self.format_func = int
+        elif self.data_type == 1:
+            self.dataClass = ReportingFloatData
+            self.aggregate_func = func.sum
+            self.format_func = float
+        elif self.data_type == 2:
+            self.dataClass = ReportingTextData
+            self.aggregate_func = func.concat
+            self.format_func = str
+
+
     def getCurrentValue(self, entities = []):
         report = import_module('.'.join(['mmc.plugins', self.module, 'report'])).exportedReport()
         args = [entities] + eval('[' + self.params + ']')
         return getattr(report, self.request_function)(*args)
 
     def getValueAtTime(self, session, ts_min, ts_max , entities = []):
-        ret = session.query(ReportingData.value).filter_by(indicator_id = self.id)
+        # DBClass, aggegate and finalformat functions according to DataType
+
+        ret = session.query(self.aggregate_func(self.dataClass.value))\
+                .filter_by(indicator_id = self.id)
         # Selected entities filter, else all entities are included
         if entities:
-            ret = ret.filter(ReportingData.entity_id.in_(entities))
+            ret = ret.filter(self.dataClass.entity_id.in_(entities))
         # Timestamp range filter
-        ret = ret.filter(ReportingData.timestamp.between(ts_min, ts_max))
-        # Avoid having multiple values per entity and per date
-        ret = ret.group_by(ReportingData.entity_id).all()
-        # data_type == 0 > int
-        if self.data_type == 0:
-            result = 0
-            for row in ret:
-                result += int(row[0])
-            if len(ret) == 0:
-                result = None
-        # data_type == 1 > string
-        if self.data_type == 1:
-            result = ''
-            for row in ret:
-                result += row[0] + '\n'
-            if len(ret) == 0:
-                result = None
-        # data_type == 1 > float
-        if self.data_type == 2:
-            result = 0
-            for row in ret:
-                result += float(row[0])
-            if len(ret) == 0:
-                result = None
-        return result
+        ret = ret.filter(self.dataClass.timestamp.between(ts_min, ts_max))
+        
+        result = ret.scalar()
+        return self.format_func(result) if result is not None else None
