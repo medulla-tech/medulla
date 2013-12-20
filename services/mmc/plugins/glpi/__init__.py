@@ -133,6 +133,8 @@ def getLicensesCount(vendor, software, version):
     software = check_param(software)
     vendor = check_param(vendor)
     version = check_param(version)
+    if software is None:
+        software = '%'
     return xmlrpcCleanup(Glpi().getMachineBySoftware(ctx,
                                                      software,
                                                      vendor=vendor,
