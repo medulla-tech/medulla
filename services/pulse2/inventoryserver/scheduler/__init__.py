@@ -23,65 +23,67 @@
 """
 Anticipated executing of scheduled tasks on scheduler.
 """
-import logging 
+import logging
 from time import sleep
 
 from pulse2.inventoryserver.utils import InventoryUtils, MMCProxy
 
 
-class AttemptToScheduler :
+logger = logging.getLogger()
+
+
+class AttemptToScheduler(object):
     """
     Trigger to early executions of scheduled attempts.
 
     This engine is called when an inventory is received.
     """
-
     # First delay after the inventory reception
     # TODO - move the delays in a .ini file ?
-    FIRST_DELAY = 60 
+    FIRST_DELAY = 60
     BETWEEN_TASKS_DELAY = 1
 
     def __init__(self, xml_content, uuid):
         """
-        @param from_ip: IP address of inventory source 
+        @param from_ip: IP address of inventory source
         @type from_ip: string
 
         @param uuid: Host UUID
         @type uuid: string
 
         """
-        # Test to resolve the inventory source
-  
-        if not InventoryUtils.is_coming_from_pxe(xml_content) :
+        self.xml = xml_content
+        self.uuid = uuid
+        mmc = MMCProxy()
+        if not mmc.failure:
+            self.proxy = mmc.proxy
+            self.check_target()
+        else:
+            logger.warn("<scheduler> : Building the mmc proxy failed")
+            logger.warn("<scheduler> : Exit the scheduler trigger")
+        logger.info("<scheduler> : Return to inventory")
 
-            logging.getLogger().info("<scheduler> : Start")
-            self.uuid = uuid
-            mmc = MMCProxy()
-            if not mmc.failure :
-                self.proxy = mmc.proxy
-                self.dispatch_msc()
-            else :
-                logging.getLogger().warn("<scheduler> : Building the mmc proxy failed")
-                logging.getLogger().warn("<scheduler> : Exit the scheduler trigger")
-            logging.getLogger().info("<scheduler> : Return to inventory")
+    def check_target(self):
+        if InventoryUtils.is_coming_from_pxe(self.xml):
+            logger.info("<scheduler> : Incoming from PXE : ignore")
+            return
 
-        else :
+        if not self.proxy.msc.is_pull_target(self.uuid):
+            logger.info("<scheduler> : Pull Client inventory : ignore")
+            return
 
-            logging.getLogger().info("<scheduler> : Incoming from PXE : ignore")
+        logger.info("<scheduler> : Start")
+        self.dispatch_msc()
 
-
-    def dispatch_msc (self):
-        """ 
+    def dispatch_msc(self):
+        """
         Get a filtered list of scheduled tasks and executing each of them.
         """
-
-        params = {"uuid" : self.uuid}
-        try :
+        params = {"uuid": self.uuid}
+        try:
             result = self.proxy.msc.displayLogs(params)
-        except Exception, err :
-
-            logging.getLogger().error("<scheduler> : Error while executing 'msc.displayLogs'")
-            logging.getLogger().error("<scheduler> : %s" % err)                        
+        except:
+            logger.exception("<scheduler> : Error while executing 'msc.displayLogs'")
             return False
 
         _size, _tasks = result
@@ -96,55 +98,50 @@ class AttemptToScheduler :
                                'wol_in_progress',
                                'halt_in_progress',
                                ]
- 
+
         # task queryset structure (single line):
         # commands__columns, id, current_state, command_on_host__columns
 
         # we need only ids (cohs) excluding unauthorised states
         tasks = [a[1] for a in _tasks if a[2] not in unauthorised_states]
 
-        if len(tasks) == 0 :
-            logging.getLogger().debug("<scheduler> : Nothing to execute :")
-            logging.getLogger().debug("<scheduler> : Exit")
+        if len(tasks) == 0:
+            logger.debug("<scheduler> : Nothing to execute :")
+            logger.debug("<scheduler> : Exit")
             return
-        else :
+        else:
             # execute all commands on host :
             total = len(tasks)
-            logging.getLogger().info("<scheduler> : Total tasks to execute: %s" % str(total))
+            logger.info("<scheduler> : Total tasks to execute: %s" % str(total))
 
             success = self.start_all_tasks_on_host(tasks)
 
-            if not success :
+            if not success:
                 return False
-            
+
     def start_all_tasks_on_host(self, tasks):
         """
-        Listing of all the commands to execute, including the delays 
+        Listing of all the commands to execute, including the delays
         before and between the executions.
 
         @param tasks: list of ids (coh) command_on_host.id
         @type tasks: list
 
         @return: bool
-        
+
         """
-        logging.getLogger().info("<scheduler> : All tasks will be executed at %s seconds" % str(self.FIRST_DELAY))
+        logger.info("<scheduler> : All tasks will be executed at %s seconds" % str(self.FIRST_DELAY))
 
         sleep(self.FIRST_DELAY)
 
-        for id in tasks :
-
-            try :
+        for id in tasks:
+            try:
                 self.proxy.msc.start_command_on_host(id)
-
-            except Exception, err :
-
-                logging.getLogger().error("<scheduler> : Error while executing 'msc.start_command_on_host'")
-                logging.getLogger().error("<scheduler> : %s" % err)                        
+            except:
+                logger.exception("<scheduler> : Error while executing 'msc.start_command_on_host'")
                 return False
 
-            logging.getLogger().info("<scheduler> : Task id (coH): %s executed on host(uuid=%s)" % (str(id), self.uuid))
+            logger.info("<scheduler> : Task id (coH): %d executed on host(uuid=%s)" % (id, self.uuid))
             sleep(self.BETWEEN_TASKS_DELAY)
 
         return True
-
