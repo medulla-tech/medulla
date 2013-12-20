@@ -218,8 +218,11 @@ class UploadStep(Step):
 class ExecuteStep(Step):
 
     def run(self):
-        package_dir = os.path.join(get_packages_dir(), self.command.package_uuid)
-        output, exitcode = launcher(self.command.start_file, self.command.params, package_dir)
+        if self.command.package_uuid:
+            workdir = os.path.join(get_packages_dir(), self.command.package_uuid)
+        else:
+            workdir = get_packages_dir()
+        output, exitcode = launcher(self.command.start_file, self.command.params, workdir)
         return (output, exitcode)
 
 
