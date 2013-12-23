@@ -203,6 +203,7 @@ class Command {
         } $name = array_map("_names", $this->values);
         $value = array_map("_values", $this->values);
         $n = new ListInfos($name, _T('Name', 'msc'));
+        $n->first_elt_padding = 0;
         $n->addExtraInfo($value, _T('Value', 'msc'));
         $n->setRowsPerPage(count($this->values));
 
@@ -224,6 +225,7 @@ class Command {
                     $n->addExtraInfo(array($col[1]), $col[0]);
                 } else {
                     $n = new ListInfos(array($col[1]), $col[0]);
+                    $n->first_elt_padding = 0;
                 }
             }
         }
@@ -232,8 +234,7 @@ class Command {
             'cmd_id' => $_GET['cmd_id'],
             'gid' => $_GET['gid'],
             'from' => 'msc|logs|viewLogs'
-                )
-        );
+        ));
 
         $n->setParamInfo(array($params));
         foreach ($actions as $a) {
