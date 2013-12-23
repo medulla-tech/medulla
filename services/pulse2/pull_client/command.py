@@ -37,10 +37,6 @@ class CommandFailed(Exception):
     pass
 
 
-class StepCantRun(Exception):
-    pass
-
-
 class Command(object):
 
     def __init__(self, command, queues, dlp_client):
@@ -51,10 +47,7 @@ class Command(object):
         self.to_do = Queue.Queue()
         self.steps = []
         self.done = False
-        self.failures = 0
-        self.interval = (self.end_date - self.start_date) / float(self.max_failures)
-        self.interval = 5
-        logger.debug("Command fail interval is %s" % self.interval)
+        self.failed = False
         logger.debug("Max failures is: %i" % self.max_failures)
         # get only steps that haven't been done in a previous run
         # because of agent restart for example
@@ -101,19 +94,16 @@ class Command(object):
             logger.info("%s finished." % self)
         else:
             if step.name in (Steps.EXECUTE.name, Steps.INVENTORY.name):
-                logger.debug("Add %s in simple_qeue" % step)
+                logger.debug("Add %s in simple_queue" % step)
                 self.simple_queue.put(step)
             else:
                 logger.debug("Add %s in parallel_queue" % step)
                 self.parallel_queue.put(step)
             self.to_do.task_done()
 
-    def failed_step(self):
-        self.failures += 1
-
     @property
     def is_failed(self):
-        return self.failures >= self.max_failures
+        return self.failed
 
     @property
     def is_done(self):
@@ -126,10 +116,10 @@ class Command(object):
     def __repr__(self):
         d = datetime.now() - datetime.fromtimestamp(self.created)
         d = d.total_seconds()
-        return "<Command(%s, to_do=%s, failures=%s, created=%is ago running=%s)>" % (self.id,
-                                                                                     self.to_do.qsize(),
-                                                                                     self.failures,
-                                                                                     d, self.is_running)
+        return "<Command(%s, to_do=%s, failed=%s, created=%is ago running=%s)>" % (self.id,
+                                                                                   self.to_do.qsize(),
+                                                                                   self.is_failed,
+                                                                                   d, self.is_running)
 
 
 class Result(object):
@@ -150,20 +140,15 @@ class Result(object):
 
 
 class Step(object):
-    prio = 0
 
     def __init__(self, command, name):
         self.command = command
         self.name = name
-        self.next_run = time.time()
 
     def can_run(self):
-        if self.command.failures >= self.command.max_failures:
-            logger.error("%s max failed." % self.command)
+        if self.command.is_failed:
+            logger.error("%s is failed." % self.command)
             raise CommandFailed()
-        if self.next_run > time.time():
-            logger.debug("%s waiting next run." % self)
-            raise StepCantRun()
         return True
 
     def start(self):
@@ -180,16 +165,13 @@ class Step(object):
             exitcode = 1
             logger.exception("Error in %s" % self)
         result = Result(self.name, self.command.id, stdout, "", exitcode)
-        if not result.is_success:
-            self.command.failed_step()
-            self.next_run = time.time() + self.command.interval
         return result
 
     def run(self):
         raise NotImplementedError("Must be implemented in suclass")
 
     def __repr__(self):
-        return "<Step(%s, next_run=%s, cmd=%s)>" % (self.name, self.next_run, self.command.id)
+        return "<Step(%s, cmd=%s)>" % (self.name, self.command.id)
 
 
 class NoopStep(Step):

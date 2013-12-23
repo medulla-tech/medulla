@@ -2,7 +2,7 @@
 name=Pulse Pull Client
 
 [Poller]
-poll_interval=600
+poll_interval=300
 
 [Dlp]
 base_url=http://@@DLP_SERVER@@:@@DLP_PORT@@/api/v1/

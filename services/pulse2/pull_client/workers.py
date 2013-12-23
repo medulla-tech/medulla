@@ -21,7 +21,7 @@ import Queue
 from threading import Thread
 
 
-from command import CommandFailed, StepCantRun
+from command import CommandFailed
 
 
 logger = logging.getLogger(__name__)
@@ -35,6 +35,7 @@ class ResultWorker(Thread):
         self.retry_queue = Queue.Queue()
         self.result_queue = result_queue
         self.dlp_client = dlp_client
+        self.retry_timeout = 20
 
     def run(self):
         logger.debug("%s running" % self)
@@ -50,16 +51,17 @@ class ResultWorker(Thread):
                 # result
                 else:
                     queue = self.result_queue
-                result = queue.get(True, 10)
+                result = queue.get(False)
             except Queue.Empty:
                 # Nothing to do
-                pass
+                # Waiting for new result...
+                self.stop.wait(10)
             else:
                 # Error while sending the result
                 if not self.dlp_client.send_result(result):
                     self.retry_queue.put(result)
                     # Wait a little before retrying
-                    self.stop.wait(10)
+                    self.stop.wait(self.retry_timeout)
                 queue.task_done()
 
         # put back retry_queue step in result_queue for saving
@@ -98,19 +100,19 @@ class StepWorker(Thread):
                     step.can_run()
                 except CommandFailed:
                     # Command is failed, forget step
+                    # Should not happen
                     pass
-                except StepCantRun:
-                    # Requeue step
-                    self.step_queue.put(step)
-                    # Wait a little before retrying
-                    self.stop.wait(5)
                 else:
                     result = step.start()
                     self.result_queue.put(result)
                     if result.is_success:
                         step.command.next_step()
                     else:
-                        self.step_queue.put(step)
+                        # If step failed command is marked as failed
+                        # and we wait to poll the command again
+                        # from the scheduler
+                        step.command.failed = True
+                        logger.error("%s failed." % step.command)
                     logger.debug(result)
                     logger.debug(step.command)
                 self.step_queue.task_done()
