@@ -145,7 +145,7 @@ class RpcProxy(RpcProxyI):
             result[attr_section['module']].append(attr_section)
         return result
 
-    def generate_report(self, period, sections, items, entities, lang):
+    def generate_report(self, period, sections, tables, items, entities, lang):
         setup_lang(lang)
         indent_str = ''
 
@@ -440,6 +440,10 @@ class RpcProxy(RpcProxyI):
                     attr2 = translate_attrs(level2.attrib)
                     ## =========< TABLE >===================
                     if level2.tag.lower() == 'table':
+                        # Checking if table is present in tables
+                        # else we skip it
+                        if not attr2['name'] in tables:
+                            continue
                         # printing table items
                         if attr2['type'] == 'period':
                             data_dict = _periodDict(level2)   # period table type
