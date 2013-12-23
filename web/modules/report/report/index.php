@@ -212,6 +212,9 @@ else if (isset($_POST['generate_report'])) {
                     $f->add(new SpanElement('<br /><hr style="border-top: 1px solid #DDDDDD"/><br />'));
                 $f->pop();
             }
+            else {
+                $f->add($report_objects[$i]);
+            }
         }
     }
 
