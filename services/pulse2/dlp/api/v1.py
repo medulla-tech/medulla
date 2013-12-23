@@ -98,37 +98,44 @@ class Commands(object):
     def create_package(self, package_uuid, package_path, command):
         lock_file = package_path + '.lock'
         if not os.path.exists(lock_file):
-            with file(lock_file, 'a'):
-                os.utime(lock_file, None)
-            log("Creating package %s..." % package_path)
-            if os.path.exists(package_path):
-                os.unlink(package_path)
-            tmp_dir = tempfile.mkdtemp(suffix=package_uuid)
-            # FIXME use first mirror for now
-            url = command['urls'][0]
-            if url.startswith('http'):
-                url += "_files"
-            for package_file in command.get('files', []):
-                log("Download %s" % url + package_file)
-                download_file(url + package_file, tmp_dir, 0)
-            make_zipfile(package_path, tmp_dir)
-            shutil.rmtree(tmp_dir)
-            log("Package %s created" % package_path)
+            try:
+                with file(lock_file, 'a'):
+                    os.utime(lock_file, None)
+                log("Creating package %s..." % package_path)
+                if os.path.exists(package_path):
+                    os.unlink(package_path)
+                tmp_dir = tempfile.mkdtemp(suffix=package_uuid)
+                # FIXME use first mirror for now
+                url = command['urls'][0]
+                if url.startswith('http'):
+                    url += "_files"
+                for package_file in command.get('files', []):
+                    log("Download %s" % url + package_file)
+                    download_file(url + package_file, tmp_dir, 0)
+                make_zipfile(package_path, tmp_dir)
+                shutil.rmtree(tmp_dir)
+                log("Package %s created" % package_path)
+                result = True
+            except:
+                log("Failed to create the package %s" % package_uuid, logging.ERROR, True)
+                result = False
+            # Cleanup before releasing...
             os.unlink(lock_file)
+            return result
         # Another thread is creating the package
         # wait for it....
         else:
             time.sleep(0.5)
             return self.create_package(package_uuid, package_path, command)
-
-        return True
+        # We should not get here
+        return False
 
     def GET(self):
         try:
             log("Get commands")
             commands = cherrypy.request.xmlrpc_client.get_available_commands(cherrypy.session[UUID_KEY])
             # Get package files
-            for command in commands:
+            for index, command in enumerate(list(commands)):
                 package_uuid = command.get('package_uuid', False)
                 if package_uuid:
                     packages_cache = cherrypy.config.get("dlp.cache_dir")
@@ -139,7 +146,11 @@ class Commands(object):
                     if self.check_cache(package_uuid, package_path):
                         log("Using cached package at %s" % package_path)
                     else:
-                        self.create_package(package_uuid, package_path, command)
+                        if not self.create_package(package_uuid, package_path, command):
+                            del commands[index]
+                            log("Command %d removed from list" % command['id'], logging.ERROR)
+                            continue
+                    # Remove not used infos on the client side
                     del command['files']
                     del command['urls']
             log("Result: %s" % commands)
