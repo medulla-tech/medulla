@@ -277,7 +277,7 @@ class RpcProxy(RpcProxyI):
         def _sum_None(lst):
             result = None
             for x in lst:
-                if x:
+                if x is not None:
                     if result is not None:
                         result += x
                     else:
@@ -295,9 +295,10 @@ class RpcProxy(RpcProxyI):
             def _fetchSubs(container, parent=None, level=-1):
                 # If no subelements in container, return
                 if len(container) == 0:
-                    return []
+                    return (0, None)
                 # Adding titles
                 GValues = []
+                selected_items = 0
                 for item in container:
                     if item.tag.lower() != 'item':
                         continue
@@ -305,6 +306,7 @@ class RpcProxy(RpcProxyI):
                     #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
                         data_dict['titles'].append(indent_str * level + ' ' + _T("templates", item.attrib['title']))
+                        selected_items += 1
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
@@ -322,12 +324,12 @@ class RpcProxy(RpcProxyI):
                     #
                     GValues.append(values)
                     if items and not indicator_name in items:
-                        childGValues = _fetchSubs(item, container, level + 1)
+                        (subCount, childGValues) = _fetchSubs(item, container, level + 1)
                     else:
-                        childGValues = None
+                        (subCount, childGValues) = (0, None)
 
                     # Calcating "other" line if indicator type is numeric
-                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
+                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and subCount != 0:
                         #and (not items or indicator_name in items):
                         data_dict['titles'].append(indent_str * (level + 1) +
                                                    ' %s (%s)' %
@@ -336,9 +338,11 @@ class RpcProxy(RpcProxyI):
                                                     locale['STR_OTHER']))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
-                            other_value = (values[i] - child_sum) if child_sum and values[i] else None
+                            other_value = (values[i] - child_sum) if child_sum is not None and values[i] else None
+                            #print other_value
                             data_dict['values'][i].append(other_value)
-                return GValues
+
+                return (selected_items, GValues)
             _fetchSubs(item_root)
             return data_dict
 
@@ -365,7 +369,6 @@ class RpcProxy(RpcProxyI):
                     #        data_dict['values'].append([ indent_str * level + indicator_label + (' (%s)' % entity_name ), entry['value']])
                     # =================================================================
                     # Calculating sum value for entities
-                    logging.getLogger().warning(indicator_value)
                     value = _sum_None([x['value'] for x in indicator_value])
                     values.append(value)
                     if not items or indicator_name in items:
@@ -376,7 +379,6 @@ class RpcProxy(RpcProxyI):
                     _fetchSubs(item, container, level + 1, value)
                 # Generating others value
                 if parent and values:
-                    logging.getLogger().warning(values)
                     others_value = parent_value - _sum_None(values)
                     data_dict['values'].append([indent_str * level +
                                                 ' %s (%s)' %
