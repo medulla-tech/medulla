@@ -119,9 +119,9 @@ class ReportSection extends HtmlContainer {
 
     function begin() {
         echo '<div class="report-section" data-name="' . $this->name . '">' .
-            '<input type="checkbox" id="cbx_' . $this->name . '" name="sections[]" value="" />' .
+            '<input checked=checked type="checkbox" id="cbx_' . $this->name . '" name="sections[]" value="" />' .
              '<label style="display: inline; font-size: 15px; font-weight: bold; margin-top: 15px" for="cbx_' . $this->name  . '"> ' . $this->title . '</label>' .
-                '<div style="margin-left: 15px">';
+                '<div style="margin-left: 15px"><br />';
     }
 
     function end() {
@@ -145,7 +145,7 @@ class ReportTable extends HtmlContainer {
 
     function begin() {
         echo '<div class="report-table">' .
-            '<input type="checkbox" id="cbx_' . $this->title . '" name="tables[]" value="' . $this->name  . '" />' .
+            '<input checked=checked type="checkbox" id="cbx_' . $this->name . '" name="tables[]" value="' . $this->name  . '" />' .
              '<label style="display: inline; font-size: 15px; font-weight: bold; margin-top: 15px" for="cbx_' . $this->name  . '"> ' . $this->title . '</label>';
     }
 
