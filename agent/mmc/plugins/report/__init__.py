@@ -319,12 +319,16 @@ class RpcProxy(RpcProxyI):
                         if not items or indicator_name in items:
                             data_dict['values'][i].append(value)
                     # If item is not selected don't add values to arithmetic table list
-                    #if not items or indicator_name in items:
+                    #
                     GValues.append(values)
-                    childGValues = _fetchSubs(item, container, level + 1)
+                    if items and not indicator_name in items:
+                        childGValues = _fetchSubs(item, container, level + 1)
+                    else:
+                        childGValues = None
+
                     # Calcating "other" line if indicator type is numeric
-                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues\
-                            and (not items or indicator_name in items):
+                    if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and childGValues:
+                        #and (not items or indicator_name in items):
                         data_dict['titles'].append(indent_str * (level + 1) +
                                                    ' %s (%s)' %
                                                    (_T("templates",
