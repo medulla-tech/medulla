@@ -1,6 +1,6 @@
 ; Basic variables
 !define PRODUCT_NAME "Mandriva Pulse Pull Client"
-!define PRODUCT_VERSION "0.2.0"
+!define PRODUCT_VERSION "1.0.0"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 !define PRODUCT_DIR_REGKEY "Software\Mandriva\Pulse-Pull-Client"
@@ -258,6 +258,10 @@ Section "Core" Core
   File bin\select.pyd
   File bin\cx_Logging.pyd
   File bin\service.exe
+  File bin\Microsoft.VC90.CRT.manifest
+  File bin\msvcm90.dll
+  File bin\msvcp90.dll
+  File bin\MSVCR90.dll
 
   ;;;;;;;;;;;;;
   ; Conf file ;
