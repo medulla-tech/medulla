@@ -373,7 +373,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'MMCAgentConfig', 'UUIDResolverConfig' ]
+                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -512,6 +512,9 @@ class PluginsBaseConfig(Pulse2ConfigFile):
 
 class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
+
+class PluginsReportConfig(Pulse2ConfigFile):
+    path = 'plugins/report.ini'
 
 class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
@@ -857,6 +860,11 @@ class SetupApp(object):
         self.confs['plugins/dyngroup.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # report db
+        self.confs['plugins/report.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/report.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/report.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
