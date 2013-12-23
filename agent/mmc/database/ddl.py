@@ -350,7 +350,7 @@ class DBControl:
 
     def _db_create(self):
         """ Creating the database """
-        statement = "CREATE DATABASE %s;" % self.module
+        statement = "CREATE DATABASE `%s`;" % self.module
         c = self.db.cursor()
         c.execute(statement)
 
