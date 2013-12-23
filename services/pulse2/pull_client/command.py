@@ -52,8 +52,10 @@ class Command(object):
         # get only steps that haven't been done in a previous run
         # because of agent restart for example
         for step_name in self.command['todo']:
+            # ignore the "done" step
             if not step_name == Steps.DONE.name:
-                step = getattr(Steps, step_name.upper()).klass(self, step_name)
+                required = not (step_name in self.non_fatal_steps)
+                step = getattr(Steps, step_name.upper()).klass(self, step_name, required)
                 self.to_do.put(step)
         # Put first step in the work queue
         self.next_step()
@@ -85,6 +87,10 @@ class Command(object):
     @property
     def params(self):
         return self.command['params']
+
+    @property
+    def non_fatal_steps(self):
+        return self.command['non_fatal_steps']
 
     def next_step(self):
         try:
@@ -141,9 +147,11 @@ class Result(object):
 
 class Step(object):
 
-    def __init__(self, command, name):
+    def __init__(self, command, name, required=True):
         self.command = command
         self.name = name
+        # is the step required to go to the next step ?
+        self.required = required
 
     def can_run(self):
         if self.command.is_failed:
@@ -235,11 +243,11 @@ class InventoryStep(Step):
 
 
 class Steps:
-    WOL = type('Step', (object,), {'name': 'wol', 'klass': WolStep})
-    UPLOAD = type('Step', (object,), {'name': 'upload', 'klass': UploadStep})
-    EXECUTE = type('Step', (object,), {'name': 'execute', 'klass': ExecuteStep})
-    DELETE = type('Step', (object,), {'name': 'delete', 'klass': DeleteStep})
-    INVENTORY = type('Step', (object,), {'name': 'inventory', 'klass': InventoryStep})
-    REBOOT = type('Step', (object,), {'name': 'reboot', 'klass': NoopStep})
-    HALT = type('Step', (object,), {'name': 'halt', 'klass': NoopStep})
-    DONE = type('Step', (object,), {'name': 'done'})
+    WOL = type('StepInfo', (object,), {'name': 'wol', 'klass': WolStep})
+    UPLOAD = type('StepInfo', (object,), {'name': 'upload', 'klass': UploadStep})
+    EXECUTE = type('StepInfo', (object,), {'name': 'execute', 'klass': ExecuteStep})
+    DELETE = type('StepInfo', (object,), {'name': 'delete', 'klass': DeleteStep})
+    INVENTORY = type('StepInfo', (object,), {'name': 'inventory', 'klass': InventoryStep})
+    REBOOT = type('StepInfo', (object,), {'name': 'reboot', 'klass': NoopStep})
+    HALT = type('StepInfo', (object,), {'name': 'halt', 'klass': NoopStep})
+    DONE = type('StepInfo', (object,), {'name': 'done'})

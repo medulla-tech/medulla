@@ -105,7 +105,10 @@ class StepWorker(Thread):
                 else:
                     result = step.start()
                     self.result_queue.put(result)
-                    if result.is_success:
+                    logger.debug(result)
+                    if result.is_success or not step.required:
+                        # If the step is not required (in non_fatal_steps)
+                        # continue as if the step result is a success
                         step.command.next_step()
                     else:
                         # If step failed command is marked as failed
@@ -113,7 +116,5 @@ class StepWorker(Thread):
                         # from the scheduler
                         step.command.failed = True
                         logger.error("%s failed." % step.command)
-                    logger.debug(result)
-                    logger.debug(step.command)
                 self.step_queue.task_done()
         logger.debug("Exiting from %s" % self)
