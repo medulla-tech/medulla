@@ -373,7 +373,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig']
+                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -516,6 +516,9 @@ class PluginsDyngroupConfig(Pulse2ConfigFile):
 class PluginsReportConfig(Pulse2ConfigFile):
     path = 'plugins/report.ini'
 
+class PluginsUpdateConfig(Pulse2ConfigFile):
+    path = 'plugins/update.ini'
+
 class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
 
@@ -570,7 +573,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -865,6 +868,11 @@ class SetupApp(object):
         self.confs['plugins/report.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/report.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/report.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+        # update db
+        self.confs['plugins/update.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/update.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
