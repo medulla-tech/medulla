@@ -53,6 +53,7 @@ class CommandOnHost {
 
     function display() {
         $n = new ListInfos(array_map("_names", $this->values), _T('Name', 'msc'));
+        $n->first_elt_padding = 0;
         $n->addExtraInfo(array_map("_values", $this->values), _T('Value', 'msc'));
         //$n->addActionItem($objActionItem)
         //$n->setRowsPerPage(count($this->values));
@@ -85,9 +86,11 @@ class CommandOnHost {
         }
 
         $n->setParamInfo(array($params));
+        $n->first_elt_padding = 0;
         $n->disableFirstColumnActionLink();
         $n->addActionItem(new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers"));
-        $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
+        if ($this->db_coh['current_state'] == 'scheduled')
+            $n->addActionItem(new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers"));
         foreach ($actions as $a) {
             $n->addActionItem($a);
         }

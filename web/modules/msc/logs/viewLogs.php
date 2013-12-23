@@ -73,7 +73,8 @@ if (strlen($_GET['uuid'])) {
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
-    } elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific host
+    }
+    elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific host
         $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
 
         if (isset($_history))
@@ -91,7 +92,8 @@ if (strlen($_GET['uuid'])) {
         $coh->quickDisplay();
         $ch = new CommandHistory($coh_id);
         $ch->display();
-    } elseif (strlen($_GET['cmd_id'])) {
+    }
+    elseif (strlen($_GET['cmd_id'])) {
         $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
 
         if (isset($_history))
@@ -113,7 +115,8 @@ if (strlen($_GET['uuid'])) {
         $coh->quickDisplay();
         $ch = new CommandHistory($coh_id);
         $ch->display();
-    } else { # Display history for a specific host
+    }
+    else { # Display history for a specific host
         // Bundle on a single host is treaten here
         $params = array(
             "uuid" => $_GET['uuid'],
