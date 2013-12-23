@@ -193,7 +193,7 @@ class DatabaseHelper(Singleton):
             # Testing if result is a Query statement
             if not isinstance(query, Query):
                 logging.getLogger().error('@_listinfo methods must return a Query object, got %s', query.__class__.__name__)
-                return {'count': 0, 'data': []}
+                return {'count': 0, 'data': [], 'listinfo': 1}
 
             # Applying filters on primary entity
             if 'filters' in params:
@@ -228,7 +228,7 @@ class DatabaseHelper(Singleton):
                     # Base types
                     data.append(line)
 
-            return {'count': count, 'data': data}
+            return {'count': count, 'data': data, 'listinfo': 1}
 
         return __listinfo
 
