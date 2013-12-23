@@ -145,8 +145,8 @@ class DlpClient(HTTPClient):
                 logger.error("Malformed result")
             elif res.code == 401:
                 logger.error("Not authorized")
-            elif res.code == 403 and self.get_commands():
-                self.send_result(result)
+            elif res.code == 403 and self.auth():
+                return self.send_result(result)
             elif res.code == 503:
                 logger.error("Scheduler gone")
             else:

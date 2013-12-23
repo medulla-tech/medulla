@@ -53,6 +53,7 @@ class Poller(Thread):
         # stop event for stopping the DLP poller
         self.stop = stop
         self.stop_workers = Event()
+        self.start_polling = Event()
         # queues for workers
         # self.parallel_queue: wol, upload, delete steps
         # self.simple_queue: execution, inventory step
@@ -60,9 +61,12 @@ class Poller(Thread):
         self.parallel_queue = Queue()
         self.simple_queue = Queue()
         self.result_queue = Queue()
+        self.retry_queue = Queue()
         for n in range(0, self.config.Poller.result_workers):
-            self.workers.append(ResultWorker(self.stop_workers, self.result_queue, self.dlp_client))
-        # only one worker for the execution step
+            self.workers.append(ResultWorker(self.stop_workers, self.start_polling,
+                                             self.result_queue, self.retry_queue,
+                                             self.dlp_client))
+        # only one worker for the execution/inventory step
         self.workers.append(StepWorker(self.stop_workers, self.simple_queue, self.result_queue))
         for n in range(0, self.config.Poller.parallel_workers):
             self.workers.append(StepWorker(self.stop_workers, self.parallel_queue, self.result_queue))
@@ -94,13 +98,14 @@ class Poller(Thread):
         logger.info("Done")
 
     def save_state(self):
-        if not self.result_queue.empty():
+        if not self.result_queue.empty() or not self.retry_queue.empty():
             logger.info("Saving not sent results")
             results = []
             with open(self.state_path, 'w') as f:
-                while not self.result_queue.empty():
-                    results.append(self.result_queue.get())
-                    self.result_queue.task_done()
+                for queue in (self.retry_queue, self.result_queue):
+                    while not queue.empty():
+                        results.append(queue.get())
+                        queue.task_done()
                 pickle.dump(results, f)
 
     def restore_state(self):
@@ -111,11 +116,12 @@ class Poller(Thread):
             for result in results:
                 self.result_queue.put(result)
             logger.debug("Added %d result(s) in queue" % len(results))
+            self.start_polling.clear()
             os.unlink(self.state_path)
             # Wait to send all results
             # before getting new commands
             logger.info("Waiting for all results to be sent")
-            while (not self.result_queue.empty() or self.stop.is_set()):
+            while (not self.start_polling.is_set() and not self.stop.is_set()):
                 self.stop.wait(5)
 
     def is_new_command(self, cmd_dict):

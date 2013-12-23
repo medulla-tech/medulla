@@ -29,11 +29,12 @@ logger = logging.getLogger(__name__)
 
 class ResultWorker(Thread):
 
-    def __init__(self, stop, result_queue, dlp_client, **kwargs):
+    def __init__(self, stop, start_polling, result_queue, retry_queue, dlp_client, **kwargs):
         Thread.__init__(self, **kwargs)
         self.stop = stop
-        self.retry_queue = Queue.Queue()
+        self.start_polling = start_polling
         self.result_queue = result_queue
+        self.retry_queue = retry_queue
         self.dlp_client = dlp_client
         self.retry_timeout = 20
 
@@ -53,6 +54,9 @@ class ResultWorker(Thread):
                     queue = self.result_queue
                 result = queue.get(False)
             except Queue.Empty:
+                # When results queues are empty
+                # we want to poll the DLP
+                self.start_polling.set()
                 # Nothing to do
                 # Waiting for new result...
                 self.stop.wait(10)
@@ -63,19 +67,6 @@ class ResultWorker(Thread):
                     # Wait a little before retrying
                     self.stop.wait(self.retry_timeout)
                 queue.task_done()
-
-        # put back retry_queue step in result_queue for saving
-        # all remaining results in cache
-        if not self.retry_queue.empty() or not self.result_queue.empty():
-            results = []
-            for queue in (self.retry_queue, self.result_queue):
-                while not queue.empty():
-                    results.append(queue.get())
-                    queue.task_done()
-            # put back all results in queue
-            for result in results:
-                self.result_queue.put(result)
-
         logger.debug("Exiting from %s" % self)
 
 
