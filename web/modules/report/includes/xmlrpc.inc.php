@@ -65,8 +65,8 @@ function get_report_sections($lang) {
     return xmlCall("report.get_report_sections", array($lang));
 }
 
-function generate_report($period, $sections, $items, $entities, $lang) {
-    return xmlCall("report.generate_report", array($period, $sections, $items, $entities, $lang));
+function generate_report($period, $sections, $tables, $items, $entities, $lang) {
+    return xmlCall("report.generate_report", array($period, $sections, $tables, $items, $entities, $lang));
 }
 
 ?>

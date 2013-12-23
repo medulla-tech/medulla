@@ -112,6 +112,11 @@ else if (isset($_POST['generate_report'])) {
         if ($section)
             $sections[] = $section;
     }
+    $tables = array();
+    foreach($_POST['tables'] as $table) {
+        if ($table)
+            $tables[] = $table;
+    }
     $entities = array();
     foreach($_POST['entities'] as $uuid) {
         if ($uuid)
@@ -123,7 +128,7 @@ else if (isset($_POST['generate_report'])) {
         redirectTo(urlStrRedirect("report/report/index"));
     }
 
-    $result = generate_report($periods, $sections, $items, $entities, $_SESSION['lang']);
+    $result = generate_report($periods, $sections, $tables, $items, $entities, $_SESSION['lang']);
 
     // display sections
     foreach ($result['sections'] as $section) {

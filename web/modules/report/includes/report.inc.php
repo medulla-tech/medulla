@@ -118,10 +118,10 @@ class ReportSection extends HtmlContainer {
     }
 
     function begin() {
-        echo '<div class="report-section" data-name="' . $this->name . '">
-                <h3>' . $this->title . '</h3>
-                <input type="hidden" name="sections[]" value="" />
-                <div style="margin-left: 15px">';
+        echo '<div class="report-section" data-name="' . $this->name . '">' .
+            '<input type="checkbox" id="cbx_' . $this->name . '" name="sections[]" value="" />' .
+             '<label style="display: inline; font-size: 15px; font-weight: bold; margin-top: 15px" for="cbx_' . $this->name  . '"> ' . $this->title . '</label>' .
+                '<div style="margin-left: 15px">';
     }
 
     function end() {
@@ -137,14 +137,16 @@ class ReportTable extends HtmlContainer {
         $this->HtmlContainer();
         $this->type = $table['type'];
         $this->title = $table['title'];
+        $this->name = $table['name'];
         foreach($table['items'] as $indicator) {
             $this->elements[] = new ReportIndicator($indicator, 0);
         }
     }
 
     function begin() {
-        echo '<div class="report-table">
-                <p><strong>' . $this->title . '</strong></p>';
+        echo '<div class="report-table">' .
+            '<input type="checkbox" id="cbx_' . $this->title . '" name="tables[]" value="' . $this->name  . '" />' .
+             '<label style="display: inline; font-size: 15px; font-weight: bold; margin-top: 15px" for="cbx_' . $this->name  . '"> ' . $this->title . '</label>';
     }
 
     function end() {
