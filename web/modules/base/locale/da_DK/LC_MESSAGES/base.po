@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-11-28 10:54+0100\n"
-"PO-Revision-Date: 2013-12-02 00:01+0000\n"
+"POT-Creation-Date: 2013-12-20 17:37+0100\n"
+"PO-Revision-Date: 2013-12-23 00:06+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -76,7 +76,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:231 includes/PageGenerator.php:2138
+#: graph/header.inc.php:231 includes/PageGenerator.php:2170
 msgid "Close"
 msgstr ""
 
@@ -268,73 +268,73 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: includes/FormGenerator.php:58 includes/FormGenerator.php:274
-#: includes/FormGenerator.php:623 includes/FormGenerator.php:752
+#: includes/FormGenerator.php:60 includes/FormGenerator.php:282
+#: includes/FormGenerator.php:634 includes/FormGenerator.php:761
 msgid "unavailable"
 msgstr ""
 
-#: includes/FormGenerator.php:216
+#: includes/FormGenerator.php:222
 msgid "Delete photo"
 msgstr ""
 
-#: includes/FormGenerator.php:260
+#: includes/FormGenerator.php:268
 msgid "yes"
 msgstr ""
 
-#: includes/FormGenerator.php:263
+#: includes/FormGenerator.php:271
 msgid "no"
 msgstr ""
 
-#: includes/FormGenerator.php:442
+#: includes/FormGenerator.php:456
 msgid "Year: "
 msgstr ""
 
-#: includes/FormGenerator.php:442
+#: includes/FormGenerator.php:456
 msgid "Month: "
 msgstr ""
 
-#: includes/FormGenerator.php:442
+#: includes/FormGenerator.php:456
 msgid "Day: "
 msgstr ""
 
-#: includes/FormGenerator.php:443
+#: includes/FormGenerator.php:457
 msgid "Hour: "
 msgstr ""
 
-#: includes/FormGenerator.php:443
+#: includes/FormGenerator.php:457
 msgid "Min.: "
 msgstr ""
 
-#: includes/FormGenerator.php:443
+#: includes/FormGenerator.php:457
 msgid "Sec.: "
 msgstr ""
 
-#: includes/FormGenerator.php:513 includes/FormGenerator.php:519
+#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 msgid "or <a href='#'"
 msgstr ""
 
-#: includes/FormGenerator.php:515
+#: includes/FormGenerator.php:531
 #: modules/base/includes/AjaxFilterLog.inc.php:170
 msgid "value=\"now\";'>now</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:521
+#: includes/FormGenerator.php:537
 #: modules/base/includes/AjaxFilterLog.inc.php:174
 msgid "value=\"never\";'>never</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:586 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:600 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr ""
 
-#: includes/FormGenerator.php:885
+#: includes/FormGenerator.php:898
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1023 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:1037 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
@@ -361,31 +361,31 @@ msgstr ""
 msgid "Go to page"
 msgstr ""
 
-#: includes/PageGenerator.php:1372
+#: includes/PageGenerator.php:1404
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:1556
+#: includes/PageGenerator.php:1588
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2516 includes/PageGenerator.php:2585
-#: includes/PageGenerator.php:2611 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2548 includes/PageGenerator.php:2617
+#: includes/PageGenerator.php:2643 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:108
 msgid "Confirm"
 msgstr ""
 
-#: includes/PageGenerator.php:2520 includes/PageGenerator.php:2589
+#: includes/PageGenerator.php:2552 includes/PageGenerator.php:2621
 #: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr ""
 
-#: includes/PageGenerator.php:2745
+#: includes/PageGenerator.php:2777
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2746
+#: includes/PageGenerator.php:2778
 msgid "Unselect all"
 msgstr ""
 
