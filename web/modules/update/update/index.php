@@ -24,42 +24,5 @@
  */
 ?>
 <?php
-
-require("graph/navbar.inc.php");
-require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/update/includes/html.inc.php");
-
-$MMCApp = & MMCApp::getInstance();
-
-$os_classes = get_os_classes();
-
-$sidemenu = new SideMenu();
-$sidemenu->setClass("update");
-
-$sidemenu->addSideMenuItem(new SideMenuItem(_T('All updates', 'update'), "update", "update", "index"));
-foreach ($os_classes['data'] as $os) {
-    $item = new SideMenuItem($os['name'], "update", "update", "index&os_class_id=" . $os['id']);
-    $item->setCssId("osClass" . $os['id']);
-    $sidemenu->addSideMenuItem($item);
-}
-
-if (isset($_GET['os_class_id'])) {
-    $sidemenu->forceActiveItem("index&os_class_id=" . $_GET['os_class_id']);
-}
-
-$p = new PageGenerator(_T("Update manager", 'update'));
-$p->setSideMenu($sidemenu);
-$p->display();
-$params = array();
-
-if (isset($_GET["os_class_id"]))
-    $params['os_class_id'] = $_GET["os_class_id"];
-
-$ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
-
-$ajax->setElements(array('Disponibles', 'Autorisées', 'Interdites'));
-$ajax->setElementsVal(array('0', '1', '2'));
-$ajax->display();
-echo "<br/><br/>";
-$ajax->displayDivToUpdate();
+include dirname(__FILE__) . '/viewUpdates.php' ;
 ?>

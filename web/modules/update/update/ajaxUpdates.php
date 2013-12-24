@@ -37,7 +37,8 @@ else
 
 
 /* available buttons */
-$action = new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers");
+//$action = new ActionItem(_T("Enable", "update"), "enableUpdate", "display", "msc", "msc", "logs");
+//$n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "uuid", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc')));
 /*  $actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", "msc", "base", "computers");
   $actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
   $actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
@@ -67,18 +68,26 @@ if (!$count) {
     return;
 }
 
-$data = listInfoFriendly($data);
+//  Listinfo params
+$listinfoParams = array();
+foreach ($data as $row){
+    $listinfoParams[] = array('id' => $row['id']);
+}
+
+$cols = listInfoFriendly($data);
 
 // Update types strings
-$data['type_str'] = array_map('getUpdateTypeLabel', $data['type_id']);
+$cols['type_str'] = array_map('getUpdateTypeLabel', $cols['type_id']);
 
-$n = new OptimizedListInfos($data['title'], _T("Update title", "msc"));
-$n->addExtraInfo($data['uuid'], _T("UUID", "msc"));
-$n->addExtraInfo($data['type_str'], _T("Type", "msc"));
+$n = new OptimizedListInfos($cols['title'], _T("Update title", "msc"));
+$n->addExtraInfo($cols['uuid'], _T("UUID", "msc"));
+$n->addExtraInfo($cols['type_str'], _T("Type", "msc"));
 //$n->addActionItemArray($a_details);
-$n->addActionItem($action);
-//$n->col_width = array("30px", "", "", "", "", "");
-//$n->setParamInfo($params);
+
+$n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
+$n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
+
+$n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $status));
 $n->start = 0;

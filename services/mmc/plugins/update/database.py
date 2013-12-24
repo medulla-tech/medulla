@@ -76,7 +76,6 @@ class updateDatabase(DatabaseHelper):
         """
         Get all os classes
         """
-        logger.error(self.printquery(session.query(OsClass, Update).join(Update)))
         return session.query(OsClass)
 
 

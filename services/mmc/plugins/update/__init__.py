@@ -64,3 +64,6 @@ def get_update_types(params):
 def get_updates(params):
     return updateDatabase().get_updates(params)
 
+def set_update_status(update_id, status):
+    return updateDatabase().set_update_status(update_id, status)
+

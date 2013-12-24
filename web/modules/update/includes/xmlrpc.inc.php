@@ -43,4 +43,9 @@ function get_update_types() {
     return $_SESSION['update_types'];
 }
 
+function set_update_status($update_id, $status) {
+    return xmlCall("update.set_update_status", array($update_id, $status));
+}
+
+
 ?>

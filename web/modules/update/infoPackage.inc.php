@@ -39,7 +39,18 @@ $submod->setPriority(990);
 $page = new Page("index", _T("Update manager", "update"));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdates", _T("Update managment", "report"));
+$page = new Page("viewUpdates", _T("View updates", "update"));
+$submod->addPage($page);
+
+$page = new Page("ajaxUpdates", _T("Update managment", "update"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("enableUpdate", _T("Enable update", "update"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("disableUpdate", _T("Disable update", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
