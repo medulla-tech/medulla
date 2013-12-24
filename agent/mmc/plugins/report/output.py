@@ -376,7 +376,6 @@ class PDFGenerator(object):
         summary = HTML(string=self.summary, encoding="utf-8").render(stylesheets=[self.homepage_css])
 
         pdf_report = [homepage, summary, content]
-        logging.getLogger().warning(pdf_report[2].make_bookmark_tree())
 
         all_pages = [doc.pages for doc in pdf_report]
 
