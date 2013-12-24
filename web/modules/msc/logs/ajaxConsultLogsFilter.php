@@ -68,6 +68,7 @@ function draw_image($url, $label) {
 }
 
 foreach ($cmds as $item) {
+    $machine_pull = $item['machine_pull']; // $machine_pull is machine UUID, else False
     $label = $item['title'];
     $creation_date = $item['creation_date'];
     $start_date = $item['start_date'];
@@ -158,7 +159,12 @@ foreach ($cmds as $item) {
         $a_cmd[] = sprintf("<a href='%s' class='bundle link' title='%s'>%s %s</a>", $linkdetail, $label, $img, $label);
         // the link on the target is finally not wanted // $a_target[] = sprintf("<a href='%s' class='bundle' title='%s'>%s</a>", $linklogs, $target, $target);
         if (!isset($gid) || $gid == '') {
-            $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc')) . " " . $target;
+            if ($machine_pull) {
+                $a_target[] = draw_image("img/machines/icn_machinePull.gif", _T('Machine', 'msc')) . " " . $target;
+            }
+            else {
+                $a_target[] = draw_image("img/machines/icn_machinesList.gif", _T('Machine', 'msc')) . " " . $target;
+            }
             $param['uuid'] = $target_uuid;
             $param['hostname'] = $target;
         } else {
