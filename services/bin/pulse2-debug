@@ -705,7 +705,7 @@ class xmlrpcModule():
         return self.label
 
     def __getattr__(self, attr_name):
-        
+
         def xmlCallfunc(*args, **kw):
             try:
                 module = getattr(self.proxyHandler.proxy, self.module_name)
@@ -802,6 +802,9 @@ def logSniffer():
         line = line.replace('INFO', '%sINFO%s\t' % (BCOLORS.BOLD+BCOLORS.CYAN, BCOLORS.ENDC))
         # RPCCALL
         line = line.replace('RPC method call from user', '%sRPCCALL%s from' % (BCOLORS.BOLD+BCOLORS.PURPLE, BCOLORS.ENDC))
+        # NEWPAGE
+        if 'base.canAddComputer()' in line:
+            line = '\n%sPAGESWITCH ======================<%s\n' % (BCOLORS.BOLD+BCOLORS.YELLOW, BCOLORS.ENDC) + line
 
 
         sys.stdout.write(line)
@@ -809,8 +812,8 @@ def logSniffer():
             break
     return True
 
-    
-    
+
+
 
 if __name__ == "__main__" :
 
@@ -843,7 +846,7 @@ if __name__ == "__main__" :
     # Setting command completer
     readline.parse_and_bind("tab: complete")
     readline.set_completer(completer)
-    
+
     try:
         readline.read_history_file(HISTFILE)
     except IOError:
@@ -854,7 +857,7 @@ if __name__ == "__main__" :
 
     # Activating log sniffer
     prompt()
-    
+
     logSniffer()
 
     #DEFER =
