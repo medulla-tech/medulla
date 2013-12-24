@@ -38,7 +38,7 @@ class CommandOnHost {
             array(_T('Start date', 'msc'), _toDate($this->db_cmd['start_date']), 1),
             array(_T('End date', 'msc'), _toDate($this->db_cmd['end_date']), 1),
             array(_T('Deployment interval', 'msc'), $this->db_cmd['deployment_intervals'], 1),
-                //array(_T('Current State', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
+            array(_T('Current State', 'msc'), $statusTable[$this->db_coh['current_state']], 1),
                 //array(_T('awoken', 'msc'), _plusIcon($this->db_coh['awoken']), 1),
                 /* array(_T('uploaded', 'msc'), _plusIcon($this->db_coh['uploaded']), 1),
                   array(_T('executed', 'msc'), _plusIcon($this->db_coh['executed']), 1),
