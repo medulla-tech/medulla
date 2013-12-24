@@ -32,7 +32,7 @@ from pulse2.database.msc.orm.commands_on_host import CommandsOnHost, CoHManager
 from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
-
+from pulse2.database.msc.orm.commands_history import CommandsHistory
 
 log = logging.getLogger()
 
@@ -562,4 +562,20 @@ def update_commands_stats(cmd_id, stats):
     session.flush()
     session.close()
 
+def get_history_stdout(coh_id, phase):
+ 
+    database = MscDatabase()
+    session = create_session()
+   
+    query = session.query(CommandsHistory)
+    query = query.select_from(database.commands_history)
+    query = query.filter(database.commands_history.c.phase == phase)
+    query = query.filter(database.commands_history.c.fk_commands_on_host == coh_id)
+ 
+    stdout = ""
+    for q in query.all():
+        stdout += q.stdout
+
+    session.close()
+    return stdout
 

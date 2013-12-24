@@ -21,12 +21,13 @@
 import re
 import os
 import time
+import json
 
 from twisted.internet import defer, reactor
 from twisted.internet.task import deferLater
 from twisted.internet.error import TimeoutError, ConnectionRefusedError, ConnectionLost
 
-from pulse2.scheduler.queries import CoHQuery
+from pulse2.scheduler.queries import CoHQuery, get_history_stdout
 
 from pulse2.scheduler.types import Phase, DIRECTIVE
 from pulse2.scheduler.utils import launcher_proxymethod
@@ -37,7 +38,7 @@ from pulse2.apis.consts import PULSE2_ERR_TIMEOUT
 from pulse2.scheduler.tracking.proxy import LocalProxiesUsageTracking
 from pulse2.apis.clients.mirror import Mirror
 from pulse2.scheduler.utils import getClientCheck, getServerCheck
-from pulse2.scheduler.utils import chooseClientInfo 
+from pulse2.scheduler.utils import chooseClientInfo, WUInjectDB
 from pulse2.scheduler.checks import getAnnounceCheck
 
 
@@ -945,6 +946,79 @@ class HaltPhase(RemoteControlPhase):
     @launcher_proxymethod("completed_halt")
     def parseHaltResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
+
+class WUParsePhase(Phase):
+    """ 
+    Windows Update output parser
+
+    This phase parses the stdout of Windows Update agent which looks 
+    for KB's to install.
+    """
+    name = "wu_parse"
+
+    timestamp_pattern = "\d+.\d+\sO:\s"
+    json_pattern = "===JSON_BEGIN===(.*?)===JSON_END==="
+
+    def perform(self):
+        self.logger.info("Circuit #%s: WU Parse phase" % (self.coh.id))
+        stdout = get_history_stdout(self.coh.id, "execute")
+        output = ""
+        for line in stdout.split("\n"):
+            match = re.search(self.timestamp_pattern, line)
+            if match :
+                output += line[match.end():]
+
+        if len(output) > 0:
+            re_slice = re.findall(self.json_pattern, output, re.DOTALL|re.MULTILINE)
+            output = "".join(re_slice)
+            self.logger.debug("WU output: %s" % output)
+            try:
+                parsed = json.loads(output)
+            except ValueError, e:
+                self.logger.warn("Circuit #%s: Cannot parse WU output: %s" % (self.coh.id, str(e)))
+                self.update_history_failed(1, 'Cannot parse WU output', str(e))
+                self.logger.warn("Circuit #%s: WU Parse phase failed and skipped" % (self.coh.id))
+                self.update_history_failed(1, "", str(e))
+                self.switch_phase_failed()
+                return self.next()
+
+            if "content" in parsed:
+                content = parsed["content"]
+                for line in content:
+                    try :
+                        (uuid,
+                         title,
+                         kb_number,
+                         kb_type,
+                         need_reboot,
+                         request_user_input,
+                         info_url,
+                         is_installed) = line
+
+                        wu = WUInjectDB()
+                        wu.inject(self.target.target_uuid.replace('UUID', ''),
+                                     uuid,
+                                     title.encode('ascii','replace'),
+                                     kb_number.encode('ascii','replace'),
+                                     kb_type,
+                                     need_reboot,
+                                     request_user_input,
+                                     info_url.encode('ascii','replace'),
+                                     is_installed)
+
+                    except ValueError:
+                        self.logger.warn("Incompatible format ")
+                    except Exception, e:
+                        self.logger.warn("WU update failed: %s" % str(e))
+
+        self.logger.info("Circuit #%s: WU Parse phase successfully processed" % (self.coh.id))
+        self.update_history_done(stdout="successfully processed")
+        self.phase.set_done()
+        return self.next()
+
+
+
+
 # ----------------------------- DONE ------------------------------------        
 class DonePhase(Phase):
     name = "done"

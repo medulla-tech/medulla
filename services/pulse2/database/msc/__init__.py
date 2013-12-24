@@ -326,6 +326,7 @@ class MscDatabase(DatabaseHelper):
            "post_menu",
            "upload",
            "execute",
+           "wu_parse",
            "delete",
            "inventory",
            "reboot",

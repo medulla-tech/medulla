@@ -26,6 +26,8 @@ except ImportError :
     import pickle # pyflakes.ignore 
 from StringIO import StringIO
 
+import MySQLdb
+
 from twisted.internet.protocol import Factory, ProcessProtocol
 from twisted.protocols.basic import LineReceiver
 from twisted.internet import reactor
@@ -33,7 +35,7 @@ from twisted.internet.defer import maybeDeferred
 
 from pulse2.network import NetUtils
 
-from pulse2.scheduler.config import SchedulerConfig
+from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck
 
@@ -229,3 +231,157 @@ class SpawnProxy :
                                                1 :"r", 
                                                2:'r'}
                                     )
+
+class WUInjectDB :
+    """
+    A shortcut to insert the Windows Updates into the 'update' database.
+    """
+
+    conn = None
+
+    def __init__(self):
+        self.config = SchedulerDatabaseConfig()
+      
+        self.logger = logging.getLogger()
+        self.connect()
+
+
+    def connect(self):
+        try:
+            self.conn = MySQLdb.connect(user=self.config.dbuser,
+                                        passwd=self.config.dbpasswd,
+                                        host=self.config.dbhost,
+                                        port=self.config.dbport,
+                                        db="update")
+        except Exception, exc:
+            self.logger.error("Can't connect to the database: %s" % str(exc))
+            return False
+
+        return True
+
+    @property
+    def cursor(self):
+        """
+        @return: dataset cursor
+        @rtype: object
+        """
+        try:
+            return self.conn.cursor()
+        except Exception, exc:
+            self.logger.error("Error while creating cursor: %s" % str(exc))
+       
+
+    def uuid_exists(self, uuid):
+        query = "SELECT 1 FROM updates WHERE uuid = '%s';" % (uuid)
+    
+        c = self.cursor
+        c.execute(query)
+        if len(c.fetchall()) == 1:
+            return True
+        return False
+
+
+    def get_update_id(self, uuid):
+        query = "SELECT id FROM updates WHERE uuid = '%s';" % (uuid)
+    
+        c = self.cursor
+        c.execute(query)
+
+        result = c.fetchall()
+        if len(result) > 0 :
+            return result[0][0]
+        return None
+
+
+    def target_exists(self, target_uuid, update_id):
+        query = "SELECT 1 FROM targets WHERE uuid = '%s' AND update_id = %d;" % (target_uuid, update_id)
+    
+        c = self.cursor
+        c.execute(query)
+        if len(c.fetchall()) == 1:
+            return True
+        return False
+
+
+    def insert_target(self, update_id, uuid, is_installed):
+        """
+        Inserts the target with a update reference.
+        """
+        
+        stat = "INSERT INTO targets (update_id, uuid, is_installed) "
+        stat += "VALUES (%d, '%s', %d);" % (update_id, uuid, is_installed)
+
+        self.logger.debug("\033[33m%s\033[0m" % stat)
+        try:
+            c = self.cursor
+            c.execute(stat)
+            self.conn.commit()
+        except Exception, exc:
+            self.conn.rollback()
+            self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
+
+    def insert_WU(self, 
+                  uuid,
+                  title,
+                  kb_number,
+                  type_id,
+                  need_reboot,
+                  request_user_input,
+                  info_url):
+        """ Windows Updates insert """
+
+        os_class_id = 3
+        
+        stat = "INSERT INTO updates "
+        stat += "(uuid, title, kb_number, type_id, os_class_id, need_reboot, " 
+        stat += "request_user_input, info_url) "
+        stat += "VALUES ('%s', '%s', '%s', %d, %d, %d, %d, '%s');" 
+        stat = stat % (uuid, 
+                       title,
+                       kb_number,
+                       type_id,
+                       os_class_id,
+                       need_reboot,
+                       request_user_input,
+                       info_url)
+
+        self.logger.debug("\033[33m%s\033[0m" % stat)
+ 
+
+        try:
+            c = self.cursor
+            c.execute(stat)
+            self.conn.commit()
+        except Exception, exc:
+            self.conn.rollback()
+            self.logger.error("Error while insert an update record into 'update' db: %s" % str(exc))
+ 
+
+    def inject(self,
+               target_uuid,
+               uuid,
+               title,
+               kb_number,
+               type_id,
+               need_reboot,
+               request_user_input,
+               info_url,
+               is_installed):
+        """
+        Injects the parsed stdout content into 'update' database.
+        """
+
+        if not self.uuid_exists(uuid):
+            self.insert_WU(uuid,
+                           title,
+                           kb_number,
+                           type_id,
+                           need_reboot,
+                           request_user_input,
+                           info_url)
+
+        update_id = self.get_update_id(uuid)
+
+        if not self.target_exists(target_uuid, update_id):
+            self.insert_target(update_id, target_uuid, is_installed)
+

@@ -23,6 +23,7 @@ def push_phases():
     from pulse2.scheduler.phases.remote import WOLPhase, UploadPhase, ExecutionPhase
     from pulse2.scheduler.phases.remote import DeletePhase, InventoryPhase
     from pulse2.scheduler.phases.remote import RebootPhase, HaltPhase, DonePhase
+    from pulse2.scheduler.phases.remote import WUParsePhase
     from pulse2.scheduler.phases.imaging import PreImagingMenuPhase
     from pulse2.scheduler.phases.imaging import PostImagingMenuPhase
 
@@ -31,6 +32,7 @@ def push_phases():
             PostImagingMenuPhase,
             UploadPhase,
             ExecutionPhase,
+            WUParsePhase,
             DeletePhase,
             InventoryPhase,
             RebootPhase,
@@ -42,10 +44,12 @@ def pull_phases():
     from pulse2.scheduler.phases.pull import DeletePhase, InventoryPhase
     from pulse2.scheduler.phases.pull import RebootPhase, HaltPhase
     from pulse2.scheduler.phases.remote import DonePhase
+    from pulse2.scheduler.phases.remote import WUParsePhase
 
     return [WOLPhase,
             UploadPhase,
             ExecutionPhase,
+            WUParsePhase,
             DeletePhase,
             InventoryPhase,
             RebootPhase,
