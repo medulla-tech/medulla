@@ -300,13 +300,14 @@ class RpcProxy(RpcProxyI):
                 GValues = []
                 selected_items = 0
                 for item in container:
+                    indicator_selected = 0
                     if item.tag.lower() != 'item':
                         continue
                     indicator_name = item.attrib['indicator']
                     #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
                         data_dict['titles'].append(indent_str * level + ' ' + _T("templates", item.attrib['title']))
-                        selected_items += 1
+                        indicator_selected = 1
                     # temp list to do arithmetic operations
                     values = []
                     for i in xrange(len(period)):
@@ -326,11 +327,11 @@ class RpcProxy(RpcProxyI):
                         (subCount, childGValues) = _fetchSubs(item, container, level + 1)
                         if subCount != 0:
                             GValues.append(values)
+                            indicator_selected = 1
                     else:
                         # If parent is checked, we don't look at childs
                         (subCount, childGValues) = (0, None)
                         GValues.append(values)
-
                     # Calcating "other" line if indicator type is numeric
                     if ReportDatabase().get_indicator_datatype(indicator_name) == 0 and subCount != 0:
                         #and (not items or indicator_name in items):
@@ -341,10 +342,14 @@ class RpcProxy(RpcProxyI):
                                                     locale['STR_OTHER']))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
-                            other_value = (values[i] - child_sum) if child_sum is not None and values[i] else None
+                            if child_sum is not None and values[i] is not None:
+                                other_value = values[i] - child_sum
+                            else:
+                                other_value = None
                             #print other_value
                             data_dict['values'][i].append(other_value)
-
+                    if indicator_selected != 0:
+                        selected_items += 1
                 return (selected_items, GValues)
             _fetchSubs(item_root)
             return data_dict
