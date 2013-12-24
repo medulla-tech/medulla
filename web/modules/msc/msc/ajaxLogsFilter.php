@@ -250,10 +250,10 @@ if ($areCommands) { // display several commands
     $phase_labels = getPhaseLabels();
     $state_labels = getPhaseStatesLabels();
     foreach ($cmds as $cmd) {
-
         $coh_id = $cmd[1];
         $coh_status = $cmd[2];
         $coh = $cmd[3];
+        $pull_mode = $cmd[4]; // $pull_mode contains UUID of machine, else False
         $cmd = $cmd[0];
         if ((isset($_GET['coh_id']) && $coh_id == $_GET['coh_id']) || !isset($_GET['coh_id'])) {
             if ($history) {
@@ -283,7 +283,12 @@ if ($areCommands) { // display several commands
             }
 
             if ($cmd['proxy_mode'] == 'none') {
-                $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Normal', 'msc') . '" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
+                if ($pull_mode) {
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Pull', 'msc') . '" src="modules/msc/graph/images/proxy/pull.gif"/> ';
+                }
+                else {
+                    $a_mode[] = '<img style="vertical-align: middle;" title="' . _T('Normal', 'msc') . '" src="modules/msc/graph/images/proxy/no_proxy.png"/> ';
+                }
             } elseif ($cmd['proxy_mode'] == 'split') {
                 if ($coh['order_in_proxy'] == '')
                     $a_mode[] = '<img style="vertical-align: middle;" title="' . sprintf(_T('Multiple, client mode%s', 'msc'), $proxy_str) . '" src="modules/msc/graph/images/proxy/proxy_client.png"/> ';

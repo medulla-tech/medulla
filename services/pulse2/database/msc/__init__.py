@@ -852,8 +852,8 @@ class MscDatabase(DatabaseHelper):
         if count:
             query = session.query(func.count('*')).select_from(self.commands.join(self.commands_on_host).join(self.target))
         else:
-            query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
-            query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state)
+            query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target).outerjoin(self.pull_targets, self.pull_targets.c.target_uuid == self.target.c.target_uuid))
+            query = query.add_column(self.commands_on_host.c.id).add_column(self.commands_on_host.c.current_state).add_column(PullTargets.target_uuid)
 
 
 
@@ -943,7 +943,7 @@ class MscDatabase(DatabaseHelper):
         ret = []
         for element in list:
             if cohs.has_key(element[1]):
-                ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH()))
+                ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH(), element[3]))
             else:
                 ret.append((element[0].toH(), element[1], element[2], False))
         return ret
