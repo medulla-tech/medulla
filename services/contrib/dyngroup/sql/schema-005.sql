@@ -32,9 +32,9 @@ INSERT INTO GroupType values (4, 'Update');
 
 -- Insert pulse internal update groups ids start at 2147483000
 SET @root_id = (SELECT id FROM Users WHERE login = 'root' AND type = 0);
-INSERT INTO Groups (`id`, `name`, `query`, `FK_users`, `type`, `parent_id`) VALUES (2147483000, 'PULSE_INTERNAL_UPDATE_GROUP||Windows XP', '1==glpi::Operating system==*Windows XP*', @root_id, 4, 0);
-INSERT INTO Groups (`id`, `name`, `query`, `FK_users`, `type`, `parent_id`) VALUES (2147483001, 'PULSE_INTERNAL_UPDATE_GROUP||Windows Vista', '1==glpi::Operating system==*Windows Vista*', @root_id, 4, 0);
-INSERT INTO Groups (`id`, `name`, `query`, `FK_users`, `type`, `parent_id`) VALUES (2147483002, 'PULSE_INTERNAL_UPDATE_GROUP||Windows 7', '1==glpi::Operating system==*Windows 7*', @root_id, 4, 0);
-INSERT INTO Groups (`id`, `name`, `query`, `FK_users`, `bool`, `type`, `parent_id`) VALUES (2147483003, 'PULSE_INTERNAL_UPDATE_GROUP||Windows 8', '1==glpi::Operating system==*Windows 8*||2==glpi::Operating system==*Windows RT*', @root_id, 'OR(1, 2)', 4, 0);
+INSERT INTO Groups (`name`, `query`, `FK_users`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows XP', '1==glpi::Operating system==*Windows XP*', @root_id, 4, 0);
+INSERT INTO Groups (`name`, `query`, `FK_users`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows Vista', '1==glpi::Operating system==*Windows Vista*', @root_id, 4, 0);
+INSERT INTO Groups (`name`, `query`, `FK_users`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows 7', '1==glpi::Operating system==*Windows 7*', @root_id, 4, 0);
+INSERT INTO Groups (`name`, `query`, `FK_users`, `bool`, `type`, `parent_id`) VALUES ('PULSE_INTERNAL_UPDATE_GROUP||Windows 8', '1==glpi::Operating system==*Windows 8*||2==glpi::Operating system==*Windows RT*', @root_id, 'OR(1, 2)', 4, 0);
 
 UPDATE version set Number = 5;
