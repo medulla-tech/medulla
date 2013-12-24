@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-04-26 01:01+0200\n"
+"POT-Creation-Date: 2013-12-24 11:35+0100\n"
 "PO-Revision-Date: 2013-04-04 17:04+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
@@ -144,33 +144,6 @@ msgstr ""
 "Achtung: Dein Passwort wurde von einem Administrator zurückgesetzt. Ihre "
 "LDAP-Konto wurde eingeschränkt. Bitte ändern Sie Ihr Kennwort so bald wie "
 "möglich mit der \"Kennwort ändern Seite\"."
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "ppolicy Attribute ändern"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "ppolicy Attribut löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "ppolicy dem Benutzer hinzufügen"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "ppolicy für Benutzer aktualisieren"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "ppolicy bei Benutzer löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "PPolicy"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
@@ -422,6 +395,33 @@ msgstr "Passwort-Policy Attribute aktualisiert."
 #: modules/ppolicy/includes/publicFunc.php:216
 msgid "Apply a password policy for all group users"
 msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "ppolicy Attribute ändern"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "ppolicy Attribut löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "ppolicy dem Benutzer hinzufügen"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "ppolicy für Benutzer aktualisieren"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "ppolicy bei Benutzer löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "PPolicy"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"

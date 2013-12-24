@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-04-26 01:01+0200\n"
+"POT-Creation-Date: 2013-12-24 11:35+0100\n"
 "PO-Revision-Date: 2012-08-29 15:06+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -146,33 +146,6 @@ msgstr ""
 "Attention, votre mot de passe a été réinitialisé par un administrateur. "
 "Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
 " possible en utilisant la page de changement de mot de passe."
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Changer les attributs ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Suppression de l'attribut ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Ajout d'une politique des mots de passe à un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Changement d'une politique des mots de passe d'un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Suppression d'une politique des mots de passe d'un utilisateur"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "ppolicy"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
@@ -420,6 +393,33 @@ msgstr "Attributs de politique des mots de passe mis à jour."
 msgid "Apply a password policy for all group users"
 msgstr ""
 "Appliquer une politique des mots de passe à tous les membres du groupe"
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Changer les attributs ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Suppression de l'attribut ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Ajout d'une politique des mots de passe à un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Changement d'une politique des mots de passe d'un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Suppression d'une politique des mots de passe d'un utilisateur"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-04-26 01:01+0200\n"
+"POT-Creation-Date: 2013-12-24 11:35+0100\n"
 "PO-Revision-Date: 2012-12-11 16:36+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -130,10 +130,12 @@ msgid "The server will be poweroff. Are you sure ?"
 msgstr "Le serveur va être mis hors tension. Êtes-vous sur ?"
 
 #: modules/services/includes/panels/system.inc.php:48
+#: modules/services/infoPackage.inc.php:88
 msgid "Reboot"
 msgstr "Redémarrer"
 
 #: modules/services/includes/panels/system.inc.php:49
+#: modules/services/infoPackage.inc.php:92
 msgid "Poweroff"
 msgstr "Éteindre"
 
