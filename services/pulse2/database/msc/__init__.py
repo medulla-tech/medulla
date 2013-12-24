@@ -1143,7 +1143,7 @@ class MscDatabase(DatabaseHelper):
 
             command, coh = session.query(Commands).filter_by(id=cmd_id) \
                     .add_entity(CommandsOnHost) \
-                    .outerjoin(CommandsOnHost, Commands.id == CommandsOnHost.fk_commands).first()
+                    .outerjoin((CommandsOnHost, Commands.id == CommandsOnHost.fk_commands)).first()
             if coh is not None:
                 phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh.id).all()
                 phases = [phase.toDict()['name'] for phase in phases]
