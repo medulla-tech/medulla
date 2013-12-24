@@ -324,7 +324,10 @@ class RpcProxy(RpcProxyI):
                     #
                     if items and not indicator_name in items:
                         (subCount, childGValues) = _fetchSubs(item, container, level + 1)
+                        if subCount != 0:
+                            GValues.append(values)
                     else:
+                        # If parent is checked, we don't look at childs
                         (subCount, childGValues) = (0, None)
                         GValues.append(values)
 
