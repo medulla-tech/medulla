@@ -3,14 +3,15 @@
 # This file is distributed under the same license as the PROJECT project.
 # 
 ## Translators:
+#   <acecile@mandriva.com>, 2013.
 #   <jpbraun@mandriva.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-11-15 21:43+0100\n"
-"PO-Revision-Date: 2013-11-18 13:48+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"POT-Creation-Date: 2013-12-24 11:58+0100\n"
+"PO-Revision-Date: 2013-12-24 10:36+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,78 +41,454 @@ msgstr "Sommaire"
 msgid "Other"
 msgstr "Autre"
 
-#: conf/plugins/report/templates/default.xml:12
+#: conf/plugins/report/templates/default.xml:16
 msgid ""
 "\n"
-"        <table style=\"width:600px;border:0\">\n"
-"            <tr>\n"
-"                <td style=\"border:0;text-align:left\">\n"
-"                    <img style=\"max-width:250px;\" src=\"file:///etc/mmc/plugins/report/img/mandriva.png\" />\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"        <div style=\"height:200px\" />\n"
+"        "
+msgstr ""
+
+#: conf/plugins/report/templates/default.xml:22
+msgid ""
+"\n"
+"        Printed __NOW_DATE__ at __NOW_HOUR__"
+msgstr ""
+
+#: conf/plugins/report/templates/default.xml:29
+msgid ""
+"\n"
+"        <p>\n"
+"            <img style=\"max-width:250px; float: left;\" src=\"__COMPANY_LOGO_PATH__\" />\n"
+"            <img style=\"max-width:250px; max-height: 80px; float: right;\" src=\"__PULSE_LOGO_PATH__\" />\n"
+"        </p>\n"
+"        <div style=\"height:400px\" />\n"
 "        <h1>Activity report</h1>\n"
 "        Period from <b>__PERIOD_START__</b> to <b>__PERIOD_END__</b>\n"
-"        <div style=\"height:100px\" />\n"
-"        edited by <b>__USERNAME__</b>\n"
+"        <div style=\"height:300px\" />\n"
+"        <span style=\"float: right;\">edited by <b>__COMPANY__</b></span>\n"
+"\n"
+"        <div style=\"height:700px; page-break-before: always\" />\n"
+"        <h3>Confidentiality</h3>\n"
+"        <p>This is a confidential document, in which all content is considered the intellectual property of Mandriva S.A. Written exclusively for <b>__COMPANY__</b> it should not be disclosed or communicated to any third parties without prior written consent from <b>__COMPANY__</b>.\n"
+"        <h3>Caveats and Conditions</h3>\n"
+"        <p>This document was written from data coming from the inventory agent. Although every attempt has been made to ensure the accuracy of this document, Mandriva S.A cannot be held responsible for any omissions, mistakes or errors in the preparation of this document.</p>\n"
 "    \n"
 "    "
 msgstr ""
-"\n"
-"        <table style=\"width:600px;border:0\">\n"
-"            <tr>\n"
-"                <td style=\"border:0;text-align:left\">\n"
-"                    <img style=\"max-width:250px;\" src=\"file:///etc/mmc/plugins/report/img/mandriva.png\" />\n"
-"                </td>\n"
-"            </tr>\n"
-"        </table>\n"
-"        <div style=\"height:200px\" />\n"
-"        <h1>Rapport d'activité</h1>\n"
-"        Période du <b>__PERIOD_START__</b> au <b>__PERIOD_END__</b>\n"
-"        <div style=\"height:100px\" />\n"
-"        édité par <b>__USERNAME__</b>\n"
-"    \n"
-"    "
 
-#: conf/plugins/report/templates/default.xml:28
+#: conf/plugins/report/templates/default.xml:48
 msgid "Device evolution"
 msgstr "Évolution des postes"
 
-#: conf/plugins/report/templates/default.xml:29
+#: conf/plugins/report/templates/default.xml:49
 msgid "Number of devices by OS"
 msgstr "Nombre de postes par OS"
 
-#: conf/plugins/report/templates/default.xml:30
+#: conf/plugins/report/templates/default.xml:50
 msgid "OS"
 msgstr "OS"
 
-#: conf/plugins/report/templates/default.xml:31
+#: conf/plugins/report/templates/default.xml:51
 msgid "Windows"
 msgstr "Windows"
 
-#: conf/plugins/report/templates/default.xml:32
+#: conf/plugins/report/templates/default.xml:52
 msgid "Windows XP"
 msgstr "Windows XP"
 
-#: conf/plugins/report/templates/default.xml:33
-msgid "Windows XP Professional"
-msgstr "Windows XP Professionel"
-
-#: conf/plugins/report/templates/default.xml:34
+#: conf/plugins/report/templates/default.xml:53
 msgid "Windows XP Home"
 msgstr "Windows XP Familial"
 
-#: conf/plugins/report/templates/default.xml:36
+#: conf/plugins/report/templates/default.xml:54
+msgid "Windows XP Professional"
+msgstr "Windows XP Professionel"
+
+#: conf/plugins/report/templates/default.xml:56
+msgid "Windows Vista"
+msgstr "Windows Vista"
+
+#: conf/plugins/report/templates/default.xml:57
+msgid "Windows Vista Home"
+msgstr "Windows Vista Édition Familiale"
+
+#: conf/plugins/report/templates/default.xml:58
+msgid "Windows Vista Professionnal"
+msgstr "Windows Vista Professionnel"
+
+#: conf/plugins/report/templates/default.xml:59
+msgid "Windows Vista Enterprise"
+msgstr "Windows Vista Entreprise"
+
+#: conf/plugins/report/templates/default.xml:60
+msgid "Windows Vista Ultimate"
+msgstr "Windows Vista Édition Intégrale"
+
+#: conf/plugins/report/templates/default.xml:62
 msgid "Windows 7"
 msgstr "Windows 7"
 
-#: conf/plugins/report/templates/default.xml:38
+#: conf/plugins/report/templates/default.xml:63
+msgid "Windows 7 Home"
+msgstr "Windows 7 Édition Familiale"
+
+#: conf/plugins/report/templates/default.xml:64
+msgid "Windows 7 Professionnal"
+msgstr "Windows 7 Professionnel"
+
+#: conf/plugins/report/templates/default.xml:65
+msgid "Windows 7 Enterprise"
+msgstr "Windows 7 Entreprise"
+
+#: conf/plugins/report/templates/default.xml:66
+msgid "Windows 7 Ultimate"
+msgstr "Windows 7 Édition Intégrale"
+
+#: conf/plugins/report/templates/default.xml:68
+#: conf/plugins/report/templates/default.xml:69
+msgid "Windows 8"
+msgstr "Windows 8"
+
+#: conf/plugins/report/templates/default.xml:70
+msgid "Windows 8 Professionnal"
+msgstr "Windows 8 Professionnel"
+
+#: conf/plugins/report/templates/default.xml:71
+msgid "Windows RT"
+msgstr "Windows RT"
+
+#: conf/plugins/report/templates/default.xml:73
+msgid "Windows Server"
+msgstr "Windows Serveur"
+
+#: conf/plugins/report/templates/default.xml:74
+msgid "Windows Server 2000"
+msgstr "Windows Serveur 2000"
+
+#: conf/plugins/report/templates/default.xml:75
+msgid "Windows Server 2003"
+msgstr "Windows Serveur 2003"
+
+#: conf/plugins/report/templates/default.xml:76
+msgid "Windows Server 2008"
+msgstr "Windows Serveur 2008"
+
+#: conf/plugins/report/templates/default.xml:77
+msgid "Windows Server 2012"
+msgstr "Windows Serveur 2012"
+
+#: conf/plugins/report/templates/default.xml:80
+#: conf/plugins/report/templates/default.xml:81
 msgid "Mac OS X"
 msgstr "Mac OS X"
 
-#: conf/plugins/report/templates/default.xml:39
+#: conf/plugins/report/templates/default.xml:82
+msgid "Mac OS X Server"
+msgstr "Mac OS X Server"
+
+#: conf/plugins/report/templates/default.xml:84
 msgid "Linux"
 msgstr "Linux"
+
+#: conf/plugins/report/templates/default.xml:85
+msgid "Debian GNU/Linux"
+msgstr "Debian GNU/Linux"
+
+#: conf/plugins/report/templates/default.xml:86
+msgid "Ubuntu"
+msgstr "Ubuntu"
+
+#: conf/plugins/report/templates/default.xml:87
+msgid "Red Hat"
+msgstr "Red Hat"
+
+#: conf/plugins/report/templates/default.xml:88
+msgid "CentOS"
+msgstr "CentOS"
+
+#: conf/plugins/report/templates/default.xml:89
+msgid "Fedora"
+msgstr "Fedora"
+
+#: conf/plugins/report/templates/default.xml:90
+msgid "Mandriva Linux"
+msgstr "Mandriva Linux"
+
+#: conf/plugins/report/templates/default.xml:91
+msgid "Mageia"
+msgstr "Mageia"
+
+#: conf/plugins/report/templates/default.xml:93
+msgid "Unix"
+msgstr "Unix"
+
+#: conf/plugins/report/templates/default.xml:96
+msgid "Office installations"
+msgstr "Installations d'Office"
+
+#: conf/plugins/report/templates/default.xml:97
+msgid "Office"
+msgstr "Office"
+
+#: conf/plugins/report/templates/default.xml:98
+msgid "Office 97"
+msgstr "Office 97"
+
+#: conf/plugins/report/templates/default.xml:99
+msgid "Office 98"
+msgstr "Office 98"
+
+#: conf/plugins/report/templates/default.xml:100
+msgid "Office 2000"
+msgstr "Office 2000"
+
+#: conf/plugins/report/templates/default.xml:101
+#: conf/plugins/report/templates/default.xml:106
+msgid "Office 2000 Standard"
+msgstr "Office 2000 Standard"
+
+#: conf/plugins/report/templates/default.xml:102
+msgid "Office 2000 Small Business"
+msgstr "Office 2000 Small Business"
+
+#: conf/plugins/report/templates/default.xml:103
+msgid "Office 2000 Professional"
+msgstr "Office 2000 Professional"
+
+#: conf/plugins/report/templates/default.xml:104
+msgid "Office 2000 Premium"
+msgstr "Office 2000 Premium"
+
+#: conf/plugins/report/templates/default.xml:105
+msgid "Office 2000 Developer"
+msgstr "Office 2000 Developer"
+
+#: conf/plugins/report/templates/default.xml:107
+#: conf/plugins/report/templates/default.xml:112
+msgid "Office 2000 SR-1 Standard"
+msgstr "Office 2000 SR-1 Standard"
+
+#: conf/plugins/report/templates/default.xml:108
+msgid "Office 2000 SR-1 Small Business"
+msgstr "Office 2000 SR-1 Small Business"
+
+#: conf/plugins/report/templates/default.xml:109
+msgid "Office 2000 SR-1 Professional"
+msgstr "Office 2000 SR-1 Professional"
+
+#: conf/plugins/report/templates/default.xml:110
+msgid "Office 2000 SR-1 Premium"
+msgstr "Office 2000 SR-1 Premium"
+
+#: conf/plugins/report/templates/default.xml:111
+msgid "Office 2000 SR-1 Developer"
+msgstr "Office 2000 SR-1 Developer"
+
+#: conf/plugins/report/templates/default.xml:114
+msgid "Office XP"
+msgstr "Office XP"
+
+#: conf/plugins/report/templates/default.xml:115
+msgid "Office XP Standard"
+msgstr "Office XP Standard"
+
+#: conf/plugins/report/templates/default.xml:116
+msgid "Office XP Small Business"
+msgstr "Office XP Small Business"
+
+#: conf/plugins/report/templates/default.xml:117
+msgid "Office XP Professional"
+msgstr "Office XP Professional"
+
+#: conf/plugins/report/templates/default.xml:118
+msgid "Office XP Premium"
+msgstr "Office XP Premium"
+
+#: conf/plugins/report/templates/default.xml:119
+msgid "Office XP Developer"
+msgstr "Office XP Developer"
+
+#: conf/plugins/report/templates/default.xml:121
+msgid "Office 2003"
+msgstr "Office 2003"
+
+#: conf/plugins/report/templates/default.xml:122
+msgid "Office Basic Edition 2003"
+msgstr "Office Basic Edition 2003"
+
+#: conf/plugins/report/templates/default.xml:123
+msgid "Office Home and Student Edition 2003"
+msgstr "Office Home and Student Edition 2003"
+
+#: conf/plugins/report/templates/default.xml:124
+msgid "Office Standard Edition 2003"
+msgstr "Office Standard Edition 2003"
+
+#: conf/plugins/report/templates/default.xml:125
+msgid "Office Small Business Edition 2003"
+msgstr "Office Small Business Edition 2003"
+
+#: conf/plugins/report/templates/default.xml:126
+msgid "Office Professional Edition 2003"
+msgstr "Office Professional Edition 2003"
+
+#: conf/plugins/report/templates/default.xml:128
+msgid "Office 2007"
+msgstr "Office 2007"
+
+#: conf/plugins/report/templates/default.xml:129
+msgid "Office Basic 2007"
+msgstr "Office Basic 2007"
+
+#: conf/plugins/report/templates/default.xml:130
+msgid "Office Home and Student 2007"
+msgstr "Office Home and Student 2007"
+
+#: conf/plugins/report/templates/default.xml:131
+msgid "Office Standard 2007"
+msgstr "Office Standard 2007"
+
+#: conf/plugins/report/templates/default.xml:132
+msgid "Office Small Business 2007"
+msgstr "Office Small Business 2007"
+
+#: conf/plugins/report/templates/default.xml:133
+msgid "Office Professional 2007"
+msgstr "Office Professional 2007"
+
+#: conf/plugins/report/templates/default.xml:134
+msgid "Office Professional Plus 2007"
+msgstr "Office Professional Plus 2007"
+
+#: conf/plugins/report/templates/default.xml:135
+msgid "Office Ultimate 2007"
+msgstr "Office Ultimate 2007"
+
+#: conf/plugins/report/templates/default.xml:136
+msgid "Office Enterprise 2007"
+msgstr "Office Enterprise 2007"
+
+#: conf/plugins/report/templates/default.xml:138
+msgid "Office 2010"
+msgstr "Office 2010"
+
+#: conf/plugins/report/templates/default.xml:139
+msgid "Office Starter 2010"
+msgstr "Office Starter 2010"
+
+#: conf/plugins/report/templates/default.xml:140
+msgid "Office Personal 2010"
+msgstr "Office Personal 2010"
+
+#: conf/plugins/report/templates/default.xml:141
+msgid "Office Home and Student 2010"
+msgstr "Office  2010"
+
+#: conf/plugins/report/templates/default.xml:142
+msgid "Office Home and Business 2010"
+msgstr "Office  2010"
+
+#: conf/plugins/report/templates/default.xml:143
+msgid "Office Standard 2010"
+msgstr "Office Standard 2010"
+
+#: conf/plugins/report/templates/default.xml:144
+msgid "Office Professional 2010"
+msgstr "Office  2010"
+
+#: conf/plugins/report/templates/default.xml:145
+msgid "Office Professional Plus 2010"
+msgstr "Office Professionnel Plus 2010"
+
+#: conf/plugins/report/templates/default.xml:146
+msgid "Office Professional Academic 2010"
+msgstr "Office Professional Academic 2010"
+
+#: conf/plugins/report/templates/default.xml:147
+msgid "Office University 2010"
+msgstr "Office University 2010"
+
+#: conf/plugins/report/templates/default.xml:149
+msgid "Office 2013"
+msgstr "Office 2013"
+
+#: conf/plugins/report/templates/default.xml:150
+msgid "Office Home and Student 2013"
+msgstr "Office Famille et Étudiant 2013"
+
+#: conf/plugins/report/templates/default.xml:151
+msgid "Office Home and Business 2013"
+msgstr "Office  2013"
+
+#: conf/plugins/report/templates/default.xml:152
+msgid "Office Standard 2013"
+msgstr "Office Standard 2013"
+
+#: conf/plugins/report/templates/default.xml:153
+msgid "Office Professional 2013"
+msgstr "Office Professionnel 2013"
+
+#: conf/plugins/report/templates/default.xml:154
+msgid "Office Professional Plus 2013"
+msgstr "Office Professionnel Plus 2013"
+
+#: conf/plugins/report/templates/default.xml:156
+msgid "Office Mac 2004"
+msgstr "Office Mac 2004"
+
+#: conf/plugins/report/templates/default.xml:157
+msgid "Office Mac 2008"
+msgstr "Office Mac 2008"
+
+#: conf/plugins/report/templates/default.xml:158
+msgid "Office Mac 2011"
+msgstr "Office Mac 2011"
+
+#: conf/plugins/report/templates/default.xml:161
+msgid "Software installations"
+msgstr "Logiciels installés"
+
+#: conf/plugins/report/templates/default.xml:162
+msgid "Adobe Photoshop CS"
+msgstr "Adobe Photoshop CS"
+
+#: conf/plugins/report/templates/default.xml:163
+msgid "Adobe Photoshop CS6"
+msgstr "Adobe Photoshop CS6"
+
+#: conf/plugins/report/templates/default.xml:165
+msgid "Business Objects"
+msgstr "Business Objects"
+
+#: conf/plugins/report/templates/default.xml:166
+msgid "AutoCAD"
+msgstr "AutoCAD"
+
+#: conf/plugins/report/templates/default.xml:168
+msgid "Computer types"
+msgstr "Types d'ordinateurs"
+
+#: conf/plugins/report/templates/default.xml:169
+msgid "Types"
+msgstr ""
+
+#: conf/plugins/report/templates/default.xml:170
+msgid "Desktop"
+msgstr "Tour"
+
+#: conf/plugins/report/templates/default.xml:171
+msgid "Laptop"
+msgstr "Portable"
+
+#: conf/plugins/report/templates/default.xml:172
+msgid "Server"
+msgstr "Serveur"
+
+#: conf/plugins/report/templates/default.xml:173
+msgid "Virtual Machine"
+msgstr "Machine Virtuelle"
+
+#: conf/plugins/report/templates/default.xml:174
+msgid "Tablet"
+msgstr "Tablette"
 
 

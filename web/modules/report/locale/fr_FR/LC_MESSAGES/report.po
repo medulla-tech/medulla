@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-12-24 11:35+0100\n"
-"PO-Revision-Date: 2013-12-23 09:30+0000\n"
+"POT-Creation-Date: 2013-12-24 11:58+0100\n"
+"PO-Revision-Date: 2013-12-24 12:25+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -202,7 +202,7 @@ msgstr "Sem"
 
 #: modules/report/includes/html.inc.php:142
 msgid "yy/mm/dd"
-msgstr "aa/mm/jj"
+msgstr "dd/mm/yy"
 
 #: modules/report/includes/report.inc.php:36
 #: modules/report/includes/report.inc.php:71
