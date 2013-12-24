@@ -166,7 +166,7 @@
             <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
         </table>
         <table type="period" title="Computer types" name="table_types" chart_type="bar">
-            <item module="glpi" indicator="type_count" title="types" hidden="yes">
+            <item module="glpi" indicator="type_count" title="Types" hidden="yes">
                 <item module="glpi" indicator="type_count_desktop" title="Desktop" selected="yes" />
                 <item module="glpi" indicator="type_count_laptop" title="Laptop" selected="yes" />
                 <item module="glpi" indicator="type_count_server" title="Server" selected="yes" />
