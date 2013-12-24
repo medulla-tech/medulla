@@ -38,6 +38,12 @@ if (!isset($_skipPage)) {
     $p->display();
 }
 
+/*
+ * Display right top shortcuts menu
+ */
+
+right_top_shortcuts_display();
+
 // Breadcrumb div (to be fill by javascript
 print '<br/><div id="breadcrumb"></div><br/>';
 
