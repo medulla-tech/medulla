@@ -700,11 +700,9 @@ class MscDatabase(DatabaseHelper):
         query = session.query(Commands)
         query = query.add_column(self.commands.c.fk_bundle).add_column(self.commands_on_host.c.host).add_column(self.commands_on_host.c.id)
         query = query.add_column(self.target.c.id_group).add_column(self.bundle.c.title).add_column(self.target.c.target_uuid)
-        query = query.add_column(self.pull_targets.c.target_uuid)
         query = query.select_from(self.commands.join(self.commands_on_host, self.commands_on_host.c.fk_commands == self.commands.c.id)\
                     .join(self.target, self.commands_on_host.c.fk_target == self.target.c.id)\
-                    .outerjoin(self.bundle, self.commands.c.fk_bundle == self.bundle.c.id)) \
-                    .outerjoin(self.pull_targets, self.target.c.target_uuid == self.pull_targets.c.target_uuid)
+                    .outerjoin(self.bundle, self.commands.c.fk_bundle == self.bundle.c.id))
         # Filtering on filters
         query = query.filter(filters)
         # Grouping bundle commands by fk_bundle only if fk_bundle is not null
@@ -717,7 +715,7 @@ class MscDatabase(DatabaseHelper):
         session.close()
 
         ret = []
-        for cmd, bid, target_name, cohid, gid, btitle, target_uuid, machine_pull in cmds:
+        for cmd, bid, target_name, cohid, gid, btitle, target_uuid in cmds:
             if bid != None: # we are in a bundle
                 if gid != None and gid != '':
                     ret.append({
@@ -736,7 +734,6 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
-                            'machine_pull': machine_pull,
                             'deployment_intervals': cmd.deployment_intervals
                     })
                 else:
@@ -755,7 +752,6 @@ class MscDatabase(DatabaseHelper):
                             'cmdid':'',
                             'target':target_name,
                             'uuid':target_uuid,
-                            'machine_pull': machine_pull,
                             'gid':'',
                             'deployment_intervals': cmd.deployment_intervals
                     })
@@ -777,7 +773,6 @@ class MscDatabase(DatabaseHelper):
                             'target':'group %s'%gid,
                             'gid':gid,
                             'uuid':'',
-                            'machine_pull': machine_pull,
                             'deployment_intervals': cmd.deployment_intervals,
                             'type': cmd.type
                     })
@@ -798,7 +793,6 @@ class MscDatabase(DatabaseHelper):
                             'cohid':cohid,
                             'target':target_name,
                             'uuid':target_uuid,
-                            'machine_pull': machine_pull,
                             'gid':'',
                             'status':{},
                             'deployment_intervals': cmd.deployment_intervals,
