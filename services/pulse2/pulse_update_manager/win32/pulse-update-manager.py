@@ -4,9 +4,9 @@ import _winreg
 import sys
 from collections import namedtuple
 
-ssDefault = 0 
-ssManagedServer = 1 
-ssWindowsUpdate = 2 
+ssDefault = 0
+ssManagedServer = 1
+ssWindowsUpdate = 2
 ssOthers = 3
 
 
@@ -96,7 +96,7 @@ def showUpdateInfo(uuid, online=True):
     searcher.Online = online
 
     searchResult = searcher.Search("UpdateID='%s'" % uuid)
-    
+
     updates = fetchW32ComArray(searchResult.Updates)
 
     if not updates:
@@ -269,7 +269,7 @@ def installUpdates(uuid_list):
         return
 
     print "Installing updates ..."
-    
+
     # Creating update installer instance
     installer = session.CreateUpdateInstaller()
     # installer.RebootRequiredBeforeInstallation
@@ -357,7 +357,7 @@ if '--list' in args or '-l' in args:
 
     if '--json' in args:
         # Printing JSON
-        print "===JSON_BEGIN=="
+        print "===JSON_BEGIN==="
         print json.dumps(result_verbose)
         print "===JSON_END==="
     elif '--otherformat' in args:
