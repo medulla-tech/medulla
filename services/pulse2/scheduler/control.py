@@ -96,7 +96,7 @@ class MethodProxy(MscContainer):
         return True
  
 
-    def start_commands_on_host(self, _cohs):
+    def start_commands_on_host(self, cohs):
         """
         Starts selected commands on host.
 
@@ -104,13 +104,12 @@ class MethodProxy(MscContainer):
         @type cmd_ids: list
         """
         scheduler = self.config.name
-        cmd_ids = get_commands(_cohs)
-        cohs = []
+        cmd_ids = get_commands(cohs)
         for cmd_id in cmd_ids :
-            cohs.extend(get_cohs(cmd_id, scheduler))
             self.statistics.watchdog_schedule(cmd_id)
         switch_commands_to_start(cohs)
 
+        self.logger.debug("Cohs %s starting" % cohs)
 
         active_circuits = [c for c in self._circuits if c.id in cohs]
         
@@ -309,9 +308,12 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         banned = self.bundles.get_banned_cohs()
         ids = [id for id in ids if id not in banned]
 
-        already_initialized_ids = [c.id for c in self._circuits 
-                                        if c.id in ids #and c.initialized
-                                  ]
+        already_initialized_circuits = [c for c in self._circuits 
+                                          if c.id in ids
+                                       ]
+        self._circuits_activate(already_initialized_circuits)
+
+        already_initialized_ids = [c.id for c in already_initialized_circuits]
         
         new_ids = [id for id in ids if not id in already_initialized_ids]
 
@@ -334,6 +336,19 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
         return DeferredList([d1, d2])
 
+    def _circuits_activate(self, circuits):
+        """
+        Activates already initialized circuits.
+
+        @param circuits: list of circuits to activate
+        @type circuits: list
+        """
+        for circuit in circuits :
+            circuit.status = CC_STATUS.ACTIVE
+            circuit.cohq.coh.refresh()
+            self._run_one(circuit)
+             
+            self.logger.info("Circuit #%s: reactivate" % (circuit.id))
 
     def _consolidate(self, already_initialized_ids):
         """
