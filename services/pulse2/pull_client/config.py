@@ -51,6 +51,12 @@ class PullClientConfig(Singleton):
         hostname = ""
         mac_list = ""
 
+    class Proxy:
+        # override system proxy
+        # eg: http://proxy.mandriva.com:3128/
+        # or: http://user:password@proxy:3129/
+        http= ""
+
     def __init__(self):
         location = os.path.dirname(os.path.abspath(__file__))
         # when compiled with cx_freeze configuration is outside

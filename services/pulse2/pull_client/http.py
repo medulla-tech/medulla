@@ -45,9 +45,15 @@ class HTTPClient(object):
 
     def __init__(self, base_url, identity=None):
         self.cookie_jar = cookielib.CookieJar()
-        self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cookie_jar),
-                                           urllib2.ProxyHandler(),
-                                           HTTPErrorHandler)
+        handlers = [urllib2.HTTPCookieProcessor(self.cookie_jar)]
+        if self.config.Proxy.http:
+            proxy_handler = urllib2.ProxyHandler({'http': self.config.Proxy.http})
+        else:
+            proxy_handler = urllib2.ProxyHandler()
+        handlers.append(proxy_handler)
+        handlers.append(HTTPErrorHandler)
+        self.opener = urllib2.build_opener(*handlers)
+
         if identity:
             self.opener.addheaders = [('User-agent', identity)]
         urllib2.install_opener(self.opener)
