@@ -354,7 +354,8 @@ class MscDatabase(DatabaseHelper):
                     continue
                 if name == "upload" and len(files) == 0:
                     continue
-                if name == "execute" and (start_script == "disable" or is_quick_action):
+                if name == "execute" and (start_script == "disable" \
+                        or is_quick_action) and do_windows_update == "disable":
                     continue
                 if name == "wu_parse" and do_windows_update == "disable":
                     continue
