@@ -39,4 +39,5 @@ EXTRA_DIST = pulse2-msc-clean-database.README \
 	quick_actions/007wake_on_lan.msc \
 	quick_actions/008remote_desktop_without_approval.msc \
 	quick_actions/009remote_desktop_with_approval.msc \
-	quick_actions/010wol_with_imaging.msc
+	quick_actions/010wol_with_imaging.msc \
+	quick_actions/011windows_update.msc
