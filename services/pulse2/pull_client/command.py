@@ -56,7 +56,10 @@ class Command(object):
             # ignore the "done" step
             if not step_name == Steps.DONE.name:
                 required = not (step_name in self.non_fatal_steps)
-                step = getattr(Steps, step_name.upper()).klass(self, step_name, required)
+                try:
+                    step = getattr(Steps, step_name.upper()).klass(self, step_name, required)
+                except AttributeError:
+                    step = NoopStep(step_name, required)
                 self.to_do.put(step)
         # Put first step in the work queue
         self.next_step()
@@ -261,6 +264,4 @@ class Steps:
     EXECUTE = type('StepInfo', (object,), {'name': 'execute', 'klass': ExecuteStep})
     DELETE = type('StepInfo', (object,), {'name': 'delete', 'klass': DeleteStep})
     INVENTORY = type('StepInfo', (object,), {'name': 'inventory', 'klass': InventoryStep})
-    REBOOT = type('StepInfo', (object,), {'name': 'reboot', 'klass': NoopStep})
-    HALT = type('StepInfo', (object,), {'name': 'halt', 'klass': NoopStep})
     DONE = type('StepInfo', (object,), {'name': 'done'})
