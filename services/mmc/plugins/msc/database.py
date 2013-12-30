@@ -386,7 +386,8 @@ class MscDatabase(msc.MscDatabase):
                                cmd['clean_on_success'],
                                cmd['do_inventory'],
                                cmd['issue_halt_to'], 
-                               cmd['do_reboot'])
+                               cmd['do_reboot'],
+                               cmd['do_windows_update'])
 
 
             return ret
@@ -419,6 +420,7 @@ class MscDatabase(msc.MscDatabase):
                 do_reboot = 'disable',
                 do_wol = 'enable',
                 do_wol_with_imaging = 'disable',
+                do_windows_update = 'disable',
                 next_connection_delay = 60,
                 max_connection_attempt = 3,
                 do_inventory = 'disable',
@@ -570,6 +572,7 @@ class MscDatabase(msc.MscDatabase):
                                do_inventory,
                                do_halt, 
                                do_reboot,
+                               do_windows_update,
                                is_quick_action)
 
             return cmd.getId()
@@ -625,6 +628,7 @@ class MscDatabase(msc.MscDatabase):
                 'do_inventory': "disable",
                 'do_wol': "disable",
                 'do_wol_with_imaging': "disable",
+                'do_windows_update': "disable",
             }
 
         if "@@do_reboot@@" in cmd:
@@ -643,7 +647,10 @@ class MscDatabase(msc.MscDatabase):
             patternActions['do_wol'] = "enable"
             patternActions['do_wol_with_imaging'] = "enable"
             cmd = cmd.replace("@@do_wol_with_imaging@@", "")
-
+        if "@@do_windows_update@@" in cmd:
+            patternActions['do_windows_update'] = "enable"
+            cmd = cmd.replace("@@do_windows_update@@", "")
+ 
 
         return [cmd, patternActions]
 
@@ -672,7 +679,6 @@ class MscDatabase(msc.MscDatabase):
         files = []
 
         cmd, patternActions = self.applyCmdPatterns(cmd)
-
         is_quick_action = any([True for a in patternActions.values() if a=="enable"])
 
         # run a built-in script
@@ -699,6 +705,7 @@ class MscDatabase(msc.MscDatabase):
             patternActions['do_reboot'],
             patternActions['do_wol'],
             patternActions['do_wol_with_imaging'],
+            patternActions['do_windows_update'],
             60,
             3,
             patternActions['do_inventory'],
@@ -967,6 +974,7 @@ class MscDatabase(msc.MscDatabase):
                                cmd.do_inventory,
                                cmd.do_halt,
                                cmd.do_reboot,
+                               cmd.do_windows_update,
                                is_quick_action = False)
 
             return cmd_id

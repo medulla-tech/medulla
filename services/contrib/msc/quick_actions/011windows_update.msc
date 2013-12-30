@@ -1,0 +1,4 @@
+title=Windows Update
+titlefr=Windows Update
+titlede=Windows Update
+command=@@do_windows_update@@./pulse-update-manager.exe -l --json

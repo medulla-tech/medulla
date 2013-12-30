@@ -347,15 +347,16 @@ class SendPackageCommand:
         # cmd['maxbw'] is in kbits, set in bits
         cmd['maxbw'] = int(cmd['maxbw']) * 1024
         cmd['do_wol_with_imaging'] = 'disable'
+        cmd['do_windows_update'] = 'disable'
+        _patterns = {'do_reboot': cmd['do_reboot'],
+                     'do_halt': cmd['issue_halt_to'],
+                     'do_wol': cmd['do_wol'],
+                     'do_wol_with_imaging': cmd['do_wol_with_imaging'],
+                     'do_windows_update': cmd['do_windows_update'],
+                     'do_inventory': cmd['do_inventory'],
+                     }
         cmd['start_file'], patternActions = MscDatabase().applyCmdPatterns(cmd['start_file'],
-                                                                           {
-                                                                               'do_reboot': cmd['do_reboot'],
-                                                                               'do_halt': cmd['issue_halt_to'],
-                                                                               'do_wol': cmd['do_wol'],
-                                                                               'do_wol_with_imaging': cmd['do_wol_with_imaging'],
-                                                                               'do_inventory': cmd['do_inventory'],
-                                                                           }
-                                                                          )
+                                                                          _patterns)
 
         addCmd = MscDatabase().addCommand(  # TODO: refactor to get less args
             self.ctx,
@@ -376,6 +377,7 @@ class SendPackageCommand:
             patternActions['do_reboot'],
             patternActions['do_wol'],
             patternActions['do_wol_with_imaging'],
+            patternActions['do_windows_update'],
             cmd['next_connection_delay'],
             cmd['max_connection_attempt'],
             patternActions['do_inventory'],

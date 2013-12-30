@@ -28,7 +28,8 @@ qa_DATA = \
 	007wake_on_lan.msc \
         008remote_desktop_without_approval.msc \
         009remote_desktop_with_approval.msc \
-	010wol_with_imaging.msc
+	010wol_with_imaging.msc \
+	011windows_update.msc
         
 
 qaexamplesdir = $(docdir)/qactions

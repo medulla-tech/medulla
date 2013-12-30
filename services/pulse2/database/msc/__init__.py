@@ -320,12 +320,14 @@ class MscDatabase(DatabaseHelper):
                       do_inventory,
                       do_halt,
                       do_reboot,
+                      do_windows_update,
                       is_quick_action=False):
         wf_list = ["pre_menu",
            "wol",
            "post_menu",
            "upload",
            "execute",
+           "wu_parse",
            "delete",
            "inventory",
            "reboot",
@@ -341,7 +343,6 @@ class MscDatabase(DatabaseHelper):
             raise TypeError("list or int type required")
         phases_values = []
         for coh in cohs :
-            #if coh.id in [k for (k,v) in phases_values]
             order = 0
 
             for name in wf_list:
@@ -354,6 +355,8 @@ class MscDatabase(DatabaseHelper):
                 if name == "upload" and len(files) == 0:
                     continue
                 if name == "execute" and (start_script == "disable" or is_quick_action):
+                    continue
+                if name == "wu_parse" and do_windows_update == "disable":
                     continue
                 if name == "delete" and (clean_on_success == "disable" or is_quick_action):
                     continue
@@ -1130,8 +1133,10 @@ class MscDatabase(DatabaseHelper):
                     'do_inventory': 'inventory',
                     'do_reboot': 'reboot',
                     'do_halt': 'halt',
+                    'do_windows_update': 'windows_update',
                 }
-                for step in ['do_wol', 'clean_on_success', 'do_inventory', 'do_reboot', 'do_halt']:
+                #for step in ['do_wol', 'clean_on_success', 'do_inventory', 'do_reboot', 'do_halt']:
+                for step in __statuses.keys():
                     setattr(command, step, __statuses[step] in phases and 'enable' or 'disable')
                 return command
 

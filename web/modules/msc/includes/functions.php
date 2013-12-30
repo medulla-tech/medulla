@@ -314,6 +314,7 @@ function getPhaseLabels() {
         'wol' => _T('Wake on LAN'),
         'upload' => _T('Upload'),
         'execute' => _T('Execution'),
+        'wu_parse' => _T('Windows Update parse'),
         'delete' => _T('Clean'),
         'inventory' => _T('Inventory'),
         'reboot' => _T('Restart'),
