@@ -65,10 +65,12 @@ class CommandOnHost {
     function quickDisplay($actions = array(), $params = array()) {
         $statusTable = getStatusTable();
         $n = null;
+        $coh_id = isset($_GET['coh_id']) ? $_GET['coh_id'] : $this->db_coh['id'];
+
         $params = array_merge($params, array(
             'cmd_id' => $_GET['cmd_id'],
             'bundle_id' => $_GET['bundle_id'],
-            'coh_id' => $_GET['coh_id'],
+            'coh_id' => $coh_id,
             'uuid' => $_GET['uuid'],
             'from' => 'msc|logs|viewLogs',
             'tab' => 'tablogs',
