@@ -127,7 +127,7 @@ class Poller(Thread):
     def is_new_command(self, cmd_dict):
         for command in list(self.commands):
             # command has been rescheduled
-            if command.id == cmd_dict['id'] and command.is_failed:
+            if command.id == cmd_dict['id'] and (command.is_failed or command.is_stopped):
                 # removing old failed command
                 logger.info("Removing old command %s" % command.id)
                 self.commands.remove(command)

@@ -48,6 +48,7 @@ class Command(object):
         self.steps = []
         self.done = False
         self.failed = False
+        self.stopped = False
         logger.debug("Max failures is: %i" % self.max_failures)
         # get only steps that haven't been done in a previous run
         # because of agent restart for example
@@ -99,6 +100,12 @@ class Command(object):
             self.done = True
             logger.info("%s finished." % self)
         else:
+            # Check if command is still available and was not stopped
+            coh_ids = [c['id'] for c in self.dlp_client.get_commands()]
+            if not self.id in coh_ids:
+                self.stopped = True
+                logger.info("%s stopped." % self)
+                return
             if step.name in (Steps.EXECUTE.name, Steps.INVENTORY.name):
                 logger.debug("Add %s in simple_queue" % step)
                 self.simple_queue.put(step)
@@ -116,8 +123,12 @@ class Command(object):
         return self.done
 
     @property
+    def is_stopped(self):
+        return self.stopped
+
+    @property
     def is_running(self):
-        return not (self.is_failed or self.is_done)
+        return not (self.is_failed or self.is_done or self.is_stopped)
 
     def __repr__(self):
         d = datetime.now() - datetime.fromtimestamp(self.created)
