@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-12-23 10:01+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -20,9 +20,9 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/backuppc/backuppc/hostSummary.php:142
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/BrowseBackups.php:56
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
+#: modules/backuppc/backuppc/hostSummary.php:142
 #: modules/backuppc/backuppc/viewFileVersions.php:47
 msgid "%A, %B %e %Y"
 msgstr "%A, %e %B %Y"
@@ -48,13 +48,13 @@ msgstr "Demande prise en compte"
 msgid "Add exclusion"
 msgstr "Ajouter une exclusion"
 
-#: modules/backuppc/backuppc/localSidebar.php:29
 #: modules/backuppc/backuppc/EditBackupProfile.php:72
+#: modules/backuppc/backuppc/localSidebar.php:29
 msgid "Add fileset"
 msgstr "Ajouter un jeu de fichiers"
 
-#: modules/backuppc/backuppc/edit.php:147
 #: modules/backuppc/backuppc/EditBackupProfile.php:154
+#: modules/backuppc/backuppc/edit.php:147
 msgid "Add folder"
 msgstr "Ajouter dossier"
 
@@ -86,13 +86,13 @@ msgstr "Sauvegarde"
 msgid "Backup Profiles"
 msgstr "Profils de sauvegarde"
 
-#: modules/backuppc/backuppc/hostSummary.php:85
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
+#: modules/backuppc/backuppc/hostSummary.php:85
 msgid "Backup failed"
 msgstr "Echec de la sauvegarde"
 
-#: modules/backuppc/backuppc/hostSummary.php:92
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
+#: modules/backuppc/backuppc/hostSummary.php:92
 msgid "Backup in progress"
 msgstr "Sauvegarde en cours"
 
@@ -113,18 +113,18 @@ msgstr "Statut"
 msgid "Backup time"
 msgstr "Heure de la sauvegarde"
 
-#: modules/backuppc/backuppc/hostSummary.php:87
 #: modules/backuppc/backuppc/ajaxGetStatus.php:46
+#: modules/backuppc/backuppc/hostSummary.php:87
 msgid "Backup up to date"
 msgstr "Sauvegarde à jour"
 
-#: modules/backuppc/backuppc/fileSearch.php:95
 #: modules/backuppc/backuppc/BrowseBackups.php:59
+#: modules/backuppc/backuppc/fileSearch.php:95
 msgid "Backup#"
 msgstr "N° de sauvegarde"
 
-#: modules/backuppc/backuppc/hostSummary.php:162
 #: modules/backuppc/backuppc/BrowseShareNames.php:68
+#: modules/backuppc/backuppc/hostSummary.php:162
 msgid "Browse"
 msgstr "Parcourir"
 
@@ -137,18 +137,18 @@ msgstr "Parcourir la sauvegarde"
 msgid "Browse files"
 msgstr "Parcourir les fichiers"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:34
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
 msgid "Bytes"
 msgstr "Octets"
 
-#: modules/backuppc/backuppc/hostSummary.php:91
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
+#: modules/backuppc/backuppc/hostSummary.php:91
 msgid "Cancelled by user"
 msgstr "Annulé par l'utilisateur"
 
-#: modules/backuppc/backuppc/edit.php:110
 #: modules/backuppc/backuppc/EditBackupProfile.php:118
+#: modules/backuppc/backuppc/edit.php:110
 msgid "Client encoding"
 msgstr "Encodage du client"
 
@@ -199,8 +199,8 @@ msgstr "Date"
 msgid "Daytime"
 msgstr "En journée"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:86
 #: modules/backuppc/backuppc/EditBackupProfile.php:75
+#: modules/backuppc/backuppc/EditPeriodProfile.php:86
 msgid ""
 "Default profiles can't be modified. Your changes will be saved as a new "
 "profile."
@@ -292,8 +292,8 @@ msgstr "Impossible de récupérer l'état."
 msgid "Errors"
 msgstr "Erreurs"
 
-#: modules/backuppc/backuppc/edit.php:129
 #: modules/backuppc/backuppc/EditBackupProfile.php:135
+#: modules/backuppc/backuppc/edit.php:129
 msgid "Excluded files"
 msgstr "Exclusions"
 
@@ -322,8 +322,8 @@ msgstr "Recherche de fichiers"
 msgid "File size"
 msgstr "Taille du fichier"
 
-#: modules/backuppc/backuppc/edit.php:81
 #: modules/backuppc/backuppc/ViewProfiles.php:68
+#: modules/backuppc/backuppc/edit.php:81
 msgid "Fileset"
 msgstr "Jeu de fichier"
 
@@ -331,10 +331,10 @@ msgstr "Jeu de fichier"
 msgid "Filesets"
 msgstr "Jeux de fichiers"
 
-#: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/BrowseShareNames.php:60
-#: modules/backuppc/backuppc/fileSearch.php:127
 #: modules/backuppc/backuppc/EditBackupProfile.php:148
+#: modules/backuppc/backuppc/edit.php:142
+#: modules/backuppc/backuppc/fileSearch.php:127
 msgid "Folder"
 msgstr "Dossier"
 
@@ -351,8 +351,8 @@ msgstr "Nb complètes"
 msgid "Full size (GB)"
 msgstr "Taille (Go)"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
 msgid "GB"
 msgstr "Go"
 
@@ -377,8 +377,8 @@ msgstr "Nom de la machine"
 msgid "Host summary"
 msgstr "Résumé"
 
-#: modules/backuppc/backuppc/hostSummary.php:90
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
+#: modules/backuppc/backuppc/hostSummary.php:90
 msgid "Idle"
 msgstr "Rien à faire"
 
@@ -392,8 +392,8 @@ msgstr "Intervalle entre deux sauvegardes complètes (jours)"
 msgid "Interval between two incr backups (days)"
 msgstr "Intervalle entre deux sauvegardes incrémentales (jours)"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
 msgid "KB"
 msgstr "Ko"
 
@@ -417,8 +417,8 @@ msgstr "Linux (Fichiers utilisateurs)"
 msgid "Linux (Whole / drive)"
 msgstr "Linux (Disque / complet)"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
 msgid "MB"
 msgstr "Mo"
 
@@ -439,8 +439,8 @@ msgstr "Dernière sauvegarde (jours)"
 msgid "Monday"
 msgstr "Lundi"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:97
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
+#: modules/backuppc/backuppc/EditPeriodProfile.php:97
 msgid "Name"
 msgstr "Nom"
 
@@ -460,8 +460,8 @@ msgstr "Aucun fichier sélectionné."
 msgid "No other version."
 msgstr "Pas de version supplémentaire"
 
-#: modules/backuppc/backuppc/hostSummary.php:84
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
+#: modules/backuppc/backuppc/hostSummary.php:84
 msgid "No ping response"
 msgstr "Pas de réponse au ping"
 
@@ -469,10 +469,10 @@ msgstr "Pas de réponse au ping"
 msgid "Profiles"
 msgstr "Profils"
 
+#: modules/backuppc/backuppc/EditBackupProfile.php:137
 #: modules/backuppc/backuppc/EditPeriodProfile.php:148
 #: modules/backuppc/backuppc/edit.php:131
 #: modules/backuppc/backuppc/edit.php:215
-#: modules/backuppc/backuppc/EditBackupProfile.php:137
 msgid "Remove"
 msgstr "Supprimer"
 
@@ -480,13 +480,13 @@ msgstr "Supprimer"
 msgid "Requested restores"
 msgstr "Restaurations"
 
-#: modules/backuppc/backuppc/hostSummary.php:88
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
+#: modules/backuppc/backuppc/hostSummary.php:88
 msgid "Restore done"
 msgstr "Restauration effectuée"
 
-#: modules/backuppc/backuppc/hostSummary.php:86
 #: modules/backuppc/backuppc/ajaxGetStatus.php:45
+#: modules/backuppc/backuppc/hostSummary.php:86
 msgid "Restore failed"
 msgstr "Echec de la restauration"
 
@@ -519,8 +519,8 @@ msgstr "Lancer sauvegarde incrémentale"
 msgid "Saturday"
 msgstr "Samedi"
 
-#: modules/backuppc/backuppc/edit.php:166
 #: modules/backuppc/backuppc/ViewProfiles.php:118
+#: modules/backuppc/backuppc/edit.php:166
 msgid "Schedule"
 msgstr "Planning"
 
@@ -549,8 +549,8 @@ msgstr "Sélectionner les jours"
 msgid "Share names"
 msgstr "Noms des dossiers"
 
-#: modules/backuppc/backuppc/ajaxFileSearch.php:118
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:131
+#: modules/backuppc/backuppc/ajaxFileSearch.php:118
 msgid "Size"
 msgstr "Taille"
 
@@ -558,8 +558,8 @@ msgstr "Taille"
 msgid "Start Full Backup"
 msgstr "Lancer sauvegarde complète"
 
-#: modules/backuppc/backuppc/localSidebar.php:27
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:107
+#: modules/backuppc/backuppc/localSidebar.php:27
 msgid "Status"
 msgstr "Statut"
 
@@ -596,8 +596,8 @@ msgstr "Il n'y a pas encore de sauvegardes de cette machine."
 msgid "There is no backup server assigned for the computer entity."
 msgstr "Pas de serveur de sauvegarde défini pour cette entité."
 
-#: modules/backuppc/backuppc/hostSummary.php:89
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
+#: modules/backuppc/backuppc/hostSummary.php:89
 msgid "This computer has never been backed up"
 msgstr "Cette machine n'a jamais été sauvegardée"
 
@@ -627,8 +627,8 @@ msgstr "Type"
 msgid "Unset backup"
 msgstr "Désactiver la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxHostsList.php:64
 #: modules/backuppc/backuppc/BrowseBackups.php:68
+#: modules/backuppc/backuppc/ajaxHostsList.php:64
 msgid "View"
 msgstr "Afficher"
 
@@ -666,73 +666,73 @@ msgstr "Windows XP (Fichiers utilisateurs)"
 msgid "Windows XP (Whole C: Drive)"
 msgstr "Windows XP (Disque C: complet)"
 
-#: modules/backuppc/backuppc/edit.php:95
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
+#: modules/backuppc/backuppc/edit.php:95
 msgid "Windows-1250 - Latin (Central europe)"
 msgstr "Windows-1250 - Latin (Europe centrale)"
 
-#: modules/backuppc/backuppc/edit.php:96
 #: modules/backuppc/backuppc/EditBackupProfile.php:104
+#: modules/backuppc/backuppc/edit.php:96
 msgid "Windows-1251 - Cyrillic"
 msgstr "Windows-1251 - Cyrillique"
 
-#: modules/backuppc/backuppc/edit.php:89
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
+#: modules/backuppc/backuppc/edit.php:89
 msgid "Windows-1252 - Western europe"
 msgstr "Windows-1252 - Europe de l'ouest"
 
-#: modules/backuppc/backuppc/edit.php:97
 #: modules/backuppc/backuppc/EditBackupProfile.php:105
+#: modules/backuppc/backuppc/edit.php:97
 msgid "Windows-1253 - Greek"
 msgstr "Windows-1253 - Grec"
 
-#: modules/backuppc/backuppc/edit.php:98
 #: modules/backuppc/backuppc/EditBackupProfile.php:106
+#: modules/backuppc/backuppc/edit.php:98
 msgid "Windows-1254 - Turkish"
 msgstr "Windows-1254 - Turc"
 
-#: modules/backuppc/backuppc/edit.php:99
 #: modules/backuppc/backuppc/EditBackupProfile.php:107
+#: modules/backuppc/backuppc/edit.php:99
 msgid "Windows-1255 - Hebrew"
 msgstr "Windows-1255 - Hébreu"
 
-#: modules/backuppc/backuppc/edit.php:100
 #: modules/backuppc/backuppc/EditBackupProfile.php:108
+#: modules/backuppc/backuppc/edit.php:100
 msgid "Windows-1256 - Arabic"
 msgstr "Windows-1256 - Arabe"
 
-#: modules/backuppc/backuppc/edit.php:101
 #: modules/backuppc/backuppc/EditBackupProfile.php:109
+#: modules/backuppc/backuppc/edit.php:101
 msgid "Windows-1257 - Latin (Baltic languages)"
 msgstr "Windows-1257 - Latin (Langues baltes)"
 
-#: modules/backuppc/backuppc/edit.php:102
 #: modules/backuppc/backuppc/EditBackupProfile.php:110
+#: modules/backuppc/backuppc/edit.php:102
 msgid "Windows-1258 - Vietnamese"
 msgstr "Windows-1258 - Vietnamien"
 
-#: modules/backuppc/backuppc/edit.php:90
 #: modules/backuppc/backuppc/EditBackupProfile.php:98
+#: modules/backuppc/backuppc/edit.php:90
 msgid "Windows-874 - Thai"
 msgstr "Windows-874 - Thaï"
 
-#: modules/backuppc/backuppc/edit.php:91
 #: modules/backuppc/backuppc/EditBackupProfile.php:99
+#: modules/backuppc/backuppc/edit.php:91
 msgid "Windows-932 - Japanese"
 msgstr "Windows-932 - Japonais"
 
-#: modules/backuppc/backuppc/edit.php:92
 #: modules/backuppc/backuppc/EditBackupProfile.php:100
+#: modules/backuppc/backuppc/edit.php:92
 msgid "Windows-936 - Chinese (simplified)"
 msgstr "Windows-936 - Chinois (simplifié)"
 
-#: modules/backuppc/backuppc/edit.php:93
 #: modules/backuppc/backuppc/EditBackupProfile.php:101
+#: modules/backuppc/backuppc/edit.php:93
 msgid "Windows-949 - Korean"
 msgstr "Windows-949 - Coréen"
 
-#: modules/backuppc/backuppc/edit.php:94
 #: modules/backuppc/backuppc/EditBackupProfile.php:102
+#: modules/backuppc/backuppc/edit.php:94
 msgid "Windows-950 - Chinese (traditional)"
 msgstr "Windows-950 - Chinois (traditionnel)"
 
@@ -762,7 +762,7 @@ msgid "on"
 msgstr "le"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
-#: modules/backuppc/backuppc/edit.php:211
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
+#: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "à"

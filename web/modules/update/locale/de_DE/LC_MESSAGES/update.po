@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-12-23 09:57+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -18,36 +18,73 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/update/update/index.php:39
+#: modules/update/update/viewUpdates.php:39
 msgid "All updates"
 msgstr ""
 
-#: modules/update/update/ajaxUpdates.php:66
-msgid "No entry found"
-msgstr ""
-
-#: modules/update/update/ajaxUpdates.php:40
-msgid "Start"
+#: modules/update/update/viewUpdates.php:62
+msgid "Available"
 msgstr ""
 
 #: modules/update/update/ajaxUpdates.php:77
-msgid "Type"
+msgid "Disable"
+msgstr ""
+
+#: modules/update/update/disableUpdate.php:33
+msgid "Disable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:53
+msgid "Disable update"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:64
+msgid "Disabled"
 msgstr ""
 
 #: modules/update/update/ajaxUpdates.php:76
+msgid "Enable"
+msgstr ""
+
+#: modules/update/update/enableUpdate.php:33
+msgid "Enable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:49
+msgid "Enable update"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:63
+msgid "Enabled"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:74
+msgid "Type"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:73
 msgid "UUID"
 msgstr ""
 
-#: modules/update/update/index.php:50 modules/update/infoPackage.inc.php:30
-#: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:39
+#: modules/update/infoPackage.inc.php:30 modules/update/infoPackage.inc.php:34
+#: modules/update/infoPackage.inc.php:39
+#: modules/update/update/viewUpdates.php:51
 msgid "Update manager"
 msgstr ""
 
+#: modules/update/infoPackage.inc.php:45
 #: modules/update/update/localSidebar.php:28
-#: modules/update/infoPackage.inc.php:42
 msgid "Update managment"
 msgstr ""
 
-#: modules/update/update/ajaxUpdates.php:75
+#: modules/update/update/ajaxUpdates.php:72
 msgid "Update title"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:42
+msgid "View updates"
 msgstr ""

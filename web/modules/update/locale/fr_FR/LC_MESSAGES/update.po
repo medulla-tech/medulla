@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-12-24 08:46+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -19,36 +19,79 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/update/index.php:39
+#: modules/update/update/viewUpdates.php:39
 msgid "All updates"
 msgstr "Toutes les mises à jour"
 
-#: modules/update/update/ajaxUpdates.php:66
+#: modules/update/update/viewUpdates.php:62
+msgid "Available"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:77
+msgid "Disable"
+msgstr ""
+
+#: modules/update/update/disableUpdate.php:33
+msgid "Disable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:53
+#, fuzzy
+msgid "Disable update"
+msgstr "Toutes les mises à jour"
+
+#: modules/update/update/viewUpdates.php:64
+msgid "Disabled"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:76
+msgid "Enable"
+msgstr ""
+
+#: modules/update/update/enableUpdate.php:33
+msgid "Enable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:49
+#, fuzzy
+msgid "Enable update"
+msgstr "Toutes les mises à jour"
+
+#: modules/update/update/viewUpdates.php:63
+msgid "Enabled"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:57
 msgid "No entry found"
 msgstr "Aucune entrée trouvée"
 
-#: modules/update/update/ajaxUpdates.php:40
-msgid "Start"
-msgstr "Démarrer"
-
-#: modules/update/update/ajaxUpdates.php:77
+#: modules/update/update/ajaxUpdates.php:74
 msgid "Type"
 msgstr "Type"
 
-#: modules/update/update/ajaxUpdates.php:76
+#: modules/update/update/ajaxUpdates.php:73
 msgid "UUID"
 msgstr "UUID"
 
-#: modules/update/update/index.php:50 modules/update/infoPackage.inc.php:30
-#: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:39
+#: modules/update/infoPackage.inc.php:30 modules/update/infoPackage.inc.php:34
+#: modules/update/infoPackage.inc.php:39
+#: modules/update/update/viewUpdates.php:51
 msgid "Update manager"
 msgstr "Gestionnaire de mises à jour"
 
+#: modules/update/infoPackage.inc.php:45
 #: modules/update/update/localSidebar.php:28
-#: modules/update/infoPackage.inc.php:42
 msgid "Update managment"
 msgstr "Gestion des mises à jour"
 
-#: modules/update/update/ajaxUpdates.php:75
+#: modules/update/update/ajaxUpdates.php:72
 msgid "Update title"
 msgstr "Nom de la mise à jour"
+
+#: modules/update/infoPackage.inc.php:42
+#, fuzzy
+msgid "View updates"
+msgstr "Toutes les mises à jour"
+
+#~ msgid "Start"
+#~ msgstr "Démarrer"

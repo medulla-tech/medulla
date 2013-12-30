@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-09-04 15:46+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -73,9 +73,9 @@ msgstr "Disponibilité"
 msgid "Bandwidth"
 msgstr "Bande Passante"
 
+#: modules/inventory/infoPackage.inc.php:44
 #: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/inventory/localSidebar.php:29
-#: modules/inventory/infoPackage.inc.php:44
 msgid "Bios"
 msgstr "Bios"
 
@@ -131,8 +131,8 @@ msgstr "Type de carte"
 msgid "Category"
 msgstr "Catégorie"
 
-#: modules/inventory/inventory/graphs.php:35
 #: modules/inventory/infoPackage.inc.php:91
+#: modules/inventory/inventory/graphs.php:35
 msgid "Chart"
 msgstr "Graphique"
 
@@ -180,9 +180,9 @@ msgstr "Commentaires"
 msgid "Company"
 msgstr "Entreprise"
 
-#: modules/inventory/inventory/i18n_labels.php:96
 #: modules/inventory/inventory/csv.php:67
 #: modules/inventory/inventory/csv.php:107
+#: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr "Machine"
 
@@ -211,9 +211,9 @@ msgstr "La liste des machines a été tronquée à %d"
 msgid "Connector"
 msgstr "Connecteur"
 
+#: modules/inventory/infoPackage.inc.php:50
 #: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/inventory/localSidebar.php:33
-#: modules/inventory/infoPackage.inc.php:50
 msgid "Controller"
 msgstr "Contrôleur"
 
@@ -269,10 +269,10 @@ msgstr "Cylindres"
 msgid "DNS"
 msgstr "DNS"
 
+#: modules/inventory/includes/html.php:65
 #: modules/inventory/inventory/ajaxViewPart.php:188
 #: modules/inventory/inventory/ajaxViewPart.php:530
 #: modules/inventory/inventory/i18n_labels.php:53
-#: modules/inventory/includes/html.php:65
 msgid "Date"
 msgstr "Date"
 
@@ -322,9 +322,9 @@ msgstr "Taille du disque"
 msgid "Domain"
 msgstr "Domaine"
 
+#: modules/inventory/infoPackage.inc.php:56
 #: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/inventory/localSidebar.php:37
-#: modules/inventory/infoPackage.inc.php:56
 msgid "Drive"
 msgstr "Disque"
 
@@ -447,9 +447,9 @@ msgstr "Passerelle"
 msgid "Graphic Cards"
 msgstr "Cartes Videos"
 
+#: modules/inventory/infoPackage.inc.php:46
 #: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
-#: modules/inventory/infoPackage.inc.php:46
 msgid "Hardware"
 msgstr "Matériel"
 
@@ -498,8 +498,8 @@ msgstr "Historique"
 msgid "IP"
 msgstr "IP"
 
-#: modules/inventory/inventory/localSidebar.php:28
 #: modules/inventory/infoPackage.inc.php:42
+#: modules/inventory/inventory/localSidebar.php:28
 msgid "Incoming"
 msgstr "Nouvelles arrivées"
 
@@ -507,15 +507,15 @@ msgstr "Nouvelles arrivées"
 msgid "Incoming Inventories"
 msgstr "Nouveaux inventaires"
 
-#: modules/inventory/inventory/ajaxViewPart.php:462
-#: modules/inventory/inventory/ajaxIncoming.php:85
 #: modules/inventory/infoPackage.inc.php:83
+#: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:462
 msgid "Informations"
 msgstr "Informations"
 
+#: modules/inventory/infoPackage.inc.php:58
 #: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/inventory/localSidebar.php:38
-#: modules/inventory/infoPackage.inc.php:58
 msgid "Input"
 msgstr "Entrée"
 
@@ -523,9 +523,9 @@ msgstr "Entrée"
 msgid "Input device list"
 msgstr "Liste des périphériques d'entrée"
 
-#: modules/inventory/inventory/history.php:80
 #: modules/inventory/infoPackage.inc.php:32
 #: modules/inventory/infoPackage.inc.php:38
+#: modules/inventory/inventory/history.php:80
 msgid "Inventory"
 msgstr "Inventaire"
 
@@ -659,11 +659,11 @@ msgstr "Fabricant"
 msgid "Media"
 msgstr "Média"
 
+#: modules/inventory/infoPackage.inc.php:60
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:528
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
-#: modules/inventory/infoPackage.inc.php:60
 msgid "Memory"
 msgstr "Mémoire"
 
@@ -692,9 +692,9 @@ msgstr "Modèle / Type"
 msgid "Modem"
 msgstr "Modem"
 
+#: modules/inventory/infoPackage.inc.php:62
 #: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/inventory/localSidebar.php:40
-#: modules/inventory/infoPackage.inc.php:62
 msgid "Monitor"
 msgstr "Écran"
 
@@ -716,9 +716,9 @@ msgstr "Nom"
 msgid "Netmask"
 msgstr "Masque"
 
+#: modules/inventory/infoPackage.inc.php:48
 #: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/inventory/localSidebar.php:32
-#: modules/inventory/infoPackage.inc.php:48
 msgid "Network"
 msgstr "Réseau"
 
@@ -825,9 +825,9 @@ msgstr ""
 msgid "Point Type"
 msgstr "Type de périphérique de pointage"
 
+#: modules/inventory/infoPackage.inc.php:64
 #: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/inventory/localSidebar.php:41
-#: modules/inventory/infoPackage.inc.php:64
 msgid "Port"
 msgstr "Port"
 
@@ -839,9 +839,9 @@ msgstr "Type de port"
 msgid "Port list"
 msgstr "Liste des ports"
 
+#: modules/inventory/infoPackage.inc.php:66
 #: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/inventory/localSidebar.php:42
-#: modules/inventory/infoPackage.inc.php:66
 msgid "Printer"
 msgstr "Imprimante"
 
@@ -898,8 +898,8 @@ msgstr "Entreprise"
 msgid "Registered Name"
 msgstr "Nom"
 
-#: modules/inventory/inventory/localSidebar.php:34
 #: modules/inventory/infoPackage.inc.php:76
+#: modules/inventory/inventory/localSidebar.php:34
 msgid "Registry"
 msgstr "Registre"
 
@@ -978,9 +978,9 @@ msgstr "Type (SMB)"
 msgid "Smb Version"
 msgstr "Version (SMB)"
 
+#: modules/inventory/infoPackage.inc.php:74
 #: modules/inventory/inventory/i18n_labels.php:141
 #: modules/inventory/inventory/localSidebar.php:31
-#: modules/inventory/infoPackage.inc.php:74
 msgid "Software"
 msgstr "Logiciel"
 
@@ -1000,9 +1000,9 @@ msgstr "Onglet logiciel pour un ordinateur dans un groupe"
 msgid "Software tab for a group"
 msgstr "Onglet logiciel pour un groupe"
 
+#: modules/inventory/infoPackage.inc.php:68
 #: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/inventory/localSidebar.php:43
-#: modules/inventory/infoPackage.inc.php:68
 msgid "Sound"
 msgstr "Son"
 
@@ -1035,10 +1035,10 @@ msgstr "Type standard"
 msgid "State"
 msgstr "État"
 
+#: modules/inventory/infoPackage.inc.php:70
 #: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
-#: modules/inventory/infoPackage.inc.php:70
 msgid "Storage"
 msgstr "Stockage"
 
@@ -1058,8 +1058,8 @@ msgstr "Onglet stockage pour un groupe"
 msgid "Subnet Mask"
 msgstr "Masque de sous-réseau"
 
-#: modules/inventory/inventory/body.php:41
 #: modules/inventory/infoPackage.inc.php:52
+#: modules/inventory/inventory/body.php:41
 msgid "Summary"
 msgstr "Résumé"
 
@@ -1159,14 +1159,14 @@ msgstr "Version"
 msgid "Video card list"
 msgstr "Liste des cartes vidéo"
 
-#: modules/inventory/inventory/localSidebar.php:45
 #: modules/inventory/infoPackage.inc.php:72
+#: modules/inventory/inventory/localSidebar.php:45
 msgid "VideoCard"
 msgstr "Carte vidéo"
 
-#: modules/inventory/inventory/ajaxViewPart.php:461
-#: modules/inventory/inventory/ajaxIncoming.php:84
 #: modules/inventory/infoPackage.inc.php:79
+#: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/inventory/ajaxViewPart.php:461
 msgid "View"
 msgstr "Voir"
 

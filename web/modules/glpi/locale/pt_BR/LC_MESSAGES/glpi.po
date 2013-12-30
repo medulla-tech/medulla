@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-11-07 17:10+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -101,8 +101,8 @@ msgstr "Tipo do computador"
 msgid "Computers"
 msgstr "Computadores"
 
-#: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
@@ -112,9 +112,9 @@ msgstr "A lista de computadores foi truncada em %d computadores"
 msgid "Controllers"
 msgstr "Controladores"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
+#: modules/glpi/includes/panels/os_repartition.inc.php:91
 msgid "Create a group"
 msgstr "Criar um grupo"
 

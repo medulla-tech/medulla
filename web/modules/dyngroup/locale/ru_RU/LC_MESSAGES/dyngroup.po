@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-09-09 15:28+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -51,9 +51,9 @@ msgid ""
 "be rewritten</strong></p>"
 msgstr ""
 
+#: modules/dyngroup/dyngroup/add_groups.php:218
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
-#: modules/dyngroup/dyngroup/add_groups.php:218
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Группа уже существует с именем '%s'"
@@ -63,8 +63,8 @@ msgstr "Группа уже существует с именем '%s'"
 #: modules/dyngroup/dyngroup/creator.php:265
 #: modules/dyngroup/dyngroup/creator.php:273
 #: modules/dyngroup/dyngroup/creator.php:277
-#: modules/dyngroup/includes/double.php:36
 #: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr "Добавить"
 
@@ -305,8 +305,8 @@ msgstr "Редактировать"
 msgid "Edit a dynamic group"
 msgstr "Редактировать динамическую группу"
 
-#: modules/dyngroup/dyngroup/groupshead.php:37
 #: modules/dyngroup/dyngroup/edithead.php:52
+#: modules/dyngroup/dyngroup/groupshead.php:37
 msgid "Edit a static group"
 msgstr "Редактировать статическую группу"
 
@@ -378,8 +378,8 @@ msgstr "Информация о группе компьютеров"
 msgid "Group share"
 msgstr "Общий доступ к группе"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
 #: modules/dyngroup/dyngroup/add_groups.php:166
+#: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "Группа создана успешно "
 
@@ -506,8 +506,8 @@ msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
 msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:267
-#: modules/dyngroup/includes/double.php:39
 #: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr "Изменить"
 
@@ -749,9 +749,9 @@ msgstr "видимая"
 msgid "Yes"
 msgstr "Да"
 
+#: modules/dyngroup/dyngroup/add_groups.php:213
 #: modules/dyngroup/dyngroup/save.php:100
 #: modules/dyngroup/dyngroup/save.php:102
-#: modules/dyngroup/dyngroup/add_groups.php:213
 msgid "You must specify a group name"
 msgstr "Необходимо указать имя группы"
 

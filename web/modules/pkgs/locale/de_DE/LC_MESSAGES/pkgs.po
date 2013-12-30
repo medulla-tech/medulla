@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-12-24 11:56+0100\n"
+"POT-Creation-Date: 2013-12-30 01:00+0100\n"
 "PO-Revision-Date: 2013-12-16 09:02+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -27,7 +27,7 @@ msgstr "<paketname_eintragen>"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: modules/pkgs/pkgs/localSidebar.php:28 modules/pkgs/infoPackage.inc.php:46
+#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
 msgstr "Hinzufügen eines Pakets"
 
@@ -64,8 +64,8 @@ msgstr ""
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:318
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -77,9 +77,9 @@ msgstr ""
 msgid "Choose package source"
 msgstr "Paketquelle wählen"
 
-#: modules/pkgs/pkgs/edit.php:290
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
 #: modules/pkgs/includes/html.inc.php:59
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
+#: modules/pkgs/pkgs/edit.php:290
 msgid "Click here to select files"
 msgstr "Klicken Sie hier um Dateien zu wählen"
 
@@ -87,7 +87,7 @@ msgstr "Klicken Sie hier um Dateien zu wählen"
 msgid "Command : "
 msgstr "Command:"
 
-#: modules/pkgs/pkgs/edit.php:206 modules/pkgs/pkgs/add.php:163
+#: modules/pkgs/pkgs/add.php:163 modules/pkgs/pkgs/edit.php:206
 msgid "Command's name : "
 msgstr "Command Name:"
 
@@ -95,9 +95,9 @@ msgstr "Command Name:"
 msgid "Command:"
 msgstr "Befehl:"
 
+#: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/ajaxPackageList.php:92
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-#: modules/pkgs/infoPackage.inc.php:70
 msgid "Delete a package"
 msgstr "Paket löschen"
 
@@ -109,14 +109,14 @@ msgstr "Datei löschen"
 msgid "Delete this package"
 msgstr "dieses Paket löschen"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:81 modules/pkgs/pkgs/edit.php:202
+#: modules/pkgs/pkgs/add.php:152 modules/pkgs/pkgs/ajaxPackageList.php:81
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/add.php:152
+#: modules/pkgs/pkgs/edit.php:202
 msgid "Description"
 msgstr "Beschreibung"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:91 modules/pkgs/pkgs/edit.php:152
 #: modules/pkgs/infoPackage.inc.php:48
+#: modules/pkgs/pkgs/ajaxPackageList.php:91 modules/pkgs/pkgs/edit.php:152
 msgid "Edit a package"
 msgstr "Edit einem Paket"
 
@@ -124,13 +124,13 @@ msgstr "Edit einem Paket"
 msgid "Edit package"
 msgstr "Paket bearbeiten"
 
-#: modules/pkgs/pkgs/edit.php:114 modules/pkgs/pkgs/associate_files.php:75
-#: modules/pkgs/pkgs/add.php:97
+#: modules/pkgs/pkgs/add.php:97 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:114
 msgid "Failed to associate files"
 msgstr "Dateiassoziierung fehlgeschlagen"
 
-#: modules/pkgs/pkgs/edit.php:111 modules/pkgs/pkgs/associate_files.php:72
-#: modules/pkgs/pkgs/add.php:94
+#: modules/pkgs/pkgs/add.php:94 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/edit.php:111
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "Dateiassoziierung fehlgeschlagen %s"
@@ -161,13 +161,13 @@ msgstr "Dateien-Verzeichnis"
 msgid "Files successfully added to the package <b>%s (%s)</b>"
 msgstr "Dateien erfolgreich zum Paket  <b>%s (%s)</b> hinzugefügt"
 
-#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:86
+#: modules/pkgs/pkgs/add.php:86 modules/pkgs/pkgs/associate_files.php:64
 #, php-format
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:318
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Dateien Upload (<b><u title='%s'>%sM max</u></b>)"
@@ -176,7 +176,7 @@ msgstr "Dateien Upload (<b><u title='%s'>%sM max</u></b>)"
 msgid "Licenses"
 msgstr ""
 
-#: modules/pkgs/pkgs/index.php:45 modules/pkgs/pkgs/ajaxPackageList.php:54
+#: modules/pkgs/pkgs/ajaxPackageList.php:54 modules/pkgs/pkgs/index.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC konnte sich nicht mit dem Paket-Server %s verbinden"
@@ -189,7 +189,7 @@ msgstr "Ein leeres Paket erstellen"
 msgid "Name"
 msgstr "Name"
 
-#: modules/pkgs/pkgs/edit.php:214 modules/pkgs/pkgs/add.php:171
+#: modules/pkgs/pkgs/add.php:171 modules/pkgs/pkgs/edit.php:214
 msgid "Need a reboot ?"
 msgstr "Braucht einen Neustart?"
 
@@ -197,7 +197,7 @@ msgstr "Braucht einen Neustart?"
 msgid "Number of licenses"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:182 modules/pkgs/pkgs/add.php:137
+#: modules/pkgs/pkgs/add.php:137 modules/pkgs/pkgs/edit.php:182
 msgid "Package API"
 msgstr "Paket API"
 
@@ -250,7 +250,7 @@ msgstr "Pakete Liste"
 msgid "Pending packages list"
 msgstr "noch nicht erledigt Pakete Liste"
 
-#: modules/pkgs/pkgs/index.php:53 modules/pkgs/pkgs/ajaxPackageList.php:75
+#: modules/pkgs/pkgs/ajaxPackageList.php:75 modules/pkgs/pkgs/index.php:53
 msgid "Please contact your administrator."
 msgstr "Bitte wenden Sie sich an Ihren Administrator."
 
@@ -323,9 +323,9 @@ msgstr "Das Paket konnte nicht gelöscht werden"
 msgid "The package has been deleted."
 msgstr "Das Paket wurde gelöscht."
 
-#: modules/pkgs/pkgs/edit.php:291
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
 #: modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/pkgs/edit.php:291
 msgid "Upload Queued Files"
 msgstr "Eingereihte Dateien hochladen"
 
@@ -341,8 +341,8 @@ msgstr "Gewählte Dateien hochladen"
 msgid "Vendor"
 msgstr ""
 
+#: modules/pkgs/includes/query.php:62 modules/pkgs/pkgs/add.php:151
 #: modules/pkgs/pkgs/ajaxPackageList.php:82
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/add.php:151 modules/pkgs/includes/query.php:62
 msgid "Version"
 msgstr "Version"
