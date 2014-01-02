@@ -528,7 +528,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $f->add(
             new TrFormElement(
                 _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
-            ), array("value" => $max_bw)
+            ), array("value" => $max_bw, "required" => true)
         );
 
         if (web_force_mode()) {
