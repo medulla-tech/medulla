@@ -46,11 +46,11 @@ $root = $conf["global"]["root"];
         <link rel="stylesheet" href="jsframework/lib/jquery.ui.css" />
         <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
         <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
-            <script src="jsframework/lib/jquery.mousewheel-3.0.6.pack.js" type="text/javascript"></script>
-            <?php
-            unset($css);
-            ?>
-            <script type="text/javascript">
+        <script src="jsframework/lib/jquery.mousewheel-3.0.6.pack.js" type="text/javascript"></script>
+        <?php
+        unset($css);
+        ?>
+        <script type="text/javascript">
 
             //jQuery ajax response handlers
             function ajaxSend() {
