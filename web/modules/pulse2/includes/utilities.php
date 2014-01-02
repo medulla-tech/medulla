@@ -58,11 +58,13 @@ function idGet() {
 
 function right_top_shortcuts_display() {
     if (
-            (isset($_GET['cn']) and isset($_GET['objectUUID'])) or (isset($_GET['uuid']) and $_GET['uuid'] != "") or (isset($_GET['action']) and in_array($_GET['action'], array('BrowseFiles', 'BrowseShareNames', 'hostStatus')))
+        (isset($_GET['cn']) and isset($_GET['objectUUID'])) or
+        (isset($_GET['uuid']) and $_GET['uuid'] != "") or
+        (isset($_GET['action']) and in_array($_GET['action'], array('BrowseFiles', 'BrowseShareNames', 'hostStatus')))
     ) { // Computers
-        include('modules/pulse2/includes/menu_action.php');
+        include_once('modules/pulse2/includes/menu_action.php');
     } elseif (isset($_GET['gid'])) { // Groups
-        include('modules/pulse2/includes/menu_group_action.php');
+        include_once('modules/pulse2/includes/menu_group_action.php');
     }
 }
 
