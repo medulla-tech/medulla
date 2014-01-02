@@ -44,6 +44,7 @@ function getStatusTable() {
         "halt_done" => _T("Halt done", "msc"),
         "halt_failed" => _T("Halt failed", "msc"),
         "not_reachable" => _T("Not reachable", "msc"),
+        "ready" => _T("Ready", "msc"),
         "done" => _T("Done", "msc"),
         "pause" => _T("Paused", "msc"),
         "stop" => _T("Stopped", "msc"),

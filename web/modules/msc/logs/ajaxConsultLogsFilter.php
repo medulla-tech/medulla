@@ -88,12 +88,12 @@ foreach ($cmds as $item) {
     $target = $item['target'];
     $target_uuid = $item['uuid'];
     $cmd_id = $item['cmdid'];
-    $coh_id = $item['cohid'];
+    $coh_id = isset($item['cohid']) ? $item['cohid'] : null;
     $bid = $item['bid'];
     $gid = $item['gid'];
     $current_state = empty($item['current_state']) ? '' : $item['current_state'];
     $creation_date = _toDate($creation_date);
-    $status = $item['status'];
+    $status = isset($item['status']) ? $item['status'] : null;
     if ($status) {
         $icons = state_tmpl_macro($status);
     } else {
@@ -188,11 +188,11 @@ foreach ($cmds as $item) {
         } else {
             $a_stop[] = $actionstop;
         }
-        if ($icons['pause'] == '') {
-            $a_pause[] = $actionempty;
-        } else {
-            $a_pause[] = $actionpause;
-        }
+        //if ($icons['pause'] == '') {
+            //$a_pause[] = $actionempty;
+        //} else {
+            //$a_pause[] = $actionpause;
+        //}
         if ((!isset($bid) || $bid == '') && (!isset($gid) || $gid == '')) { # gid
             $a_details[] = $actionsinglestatus;
         } else {

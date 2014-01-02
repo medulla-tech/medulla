@@ -2,9 +2,7 @@
 
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
- *
- * $Id$
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com/
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -69,9 +67,9 @@ class CommandOnHost {
 
         $params = array_merge($params, array(
             'cmd_id' => $_GET['cmd_id'],
-            'bundle_id' => $_GET['bundle_id'],
+            'bundle_id' => quickGet('bundle_id'),
             'coh_id' => $coh_id,
-            'uuid' => $_GET['uuid'],
+            'uuid' => quickGet('uuid'),
             'from' => 'msc|logs|viewLogs',
             'tab' => 'tablogs',
             'hostname' => $this->db_coh['host']
@@ -472,7 +470,7 @@ class CommandHistory {
 
             $phase_names[] = $phase_labels[$phase['name']];
             $phase_states[] = _plusIcon($phase['state']);
-            if (count($logs_by_phase[$phase['name']]))
+            if (isset($logs_by_phase[$phase['name']]) && count($logs_by_phase[$phase['name']]))
                 $formatted_logs = array_map('formatLog', $logs_by_phase[$phase['name']]);
             else {
 
@@ -553,7 +551,7 @@ class CommandHistory {
             array(_T('Proxy mode', 'msc'), $proxy_mode),
             array(_T('Proxy priority', 'msc'), $proxy_priority),
             array(_T('Scheduler', 'msc'), $this->db_coh['scheduler']),
-            array(_T('Current launcher', 'msc'), $this->db_coh['launcher'] == '' ? _T('<i>not available</i>', 'msc') : $this->db_coh['launcher']),
+            array(_T('Current launcher', 'msc'), isset($this->db_coh['launcher']) ? $this->db_coh['launcher'] :  _T('<i>not available</i>', 'msc')),
             array(_T('Current proxy', 'msc'), $current_proxy),
         );
         $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
@@ -582,6 +580,7 @@ function _names($a) {
 }
 
 function _colorise($line) {
+    $out = "";
     if (preg_match_all("|^(.*) ([A-Z]): (.*)$|", $line, $matches)) {
         if (strlen($matches[3][0]) == 0)
             return;

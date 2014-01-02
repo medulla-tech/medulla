@@ -21,10 +21,13 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ($_GET['cn']) $_SESSION['cn'] = $_GET['cn'];
-if ($_GET['objectUUID']) $_SESSION['objectUUID'] = $_GET['objectUUID'];
-elseif ($_GET['uuid']) $_SESSION['objectUUID'] = $_GET['uuid'];
-if ($_GET['action']) $_SESSION['action'] = $_GET['action'];
+if (isset($_GET['cn'])) $_SESSION['cn'] = $_GET['cn'];
+if (isset($_GET['objectUUID']))
+    $_SESSION['objectUUID'] = $_GET['objectUUID'];
+else if (isset($_GET['uuid']))
+    $_SESSION['objectUUID'] = $_GET['uuid'];
+if (isset($_GET['action']))
+    $_SESSION['action'] = $_GET['action'];
 
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID']);
 
@@ -35,7 +38,7 @@ $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","comput
 $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
 
-    
+
 $actions = array($inventAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
 
 /*
@@ -81,7 +84,7 @@ foreach ($actions as $action){
             if ($action->action == "vnc_client") {
                 $paramArray['establishproxy'] = "yes";
             }
-        }    
+        }
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
         if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
         else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);

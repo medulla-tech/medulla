@@ -66,7 +66,7 @@ if ($uuid) {
     $action = "viewLogs";
 } elseif ($gid) { # FIXME: same thing to do on groups
     if ($_GET['cmd_id']) {
-        $_params = array('gid' => $gid, 'b_id' => $_GET['bundle_id'], 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
+        $_params = array('gid' => $gid, 'b_id' => quickGet('bundle_id'), 'cmd_id' => $_GET['cmd_id'], 'min' => $start, 'max' => $start + $maxperpage, 'filt' => $filter);
         if ($history == 1 || $history == 0)
             $_params['finished'] = $history;
         if (isset($_GET['cbx_state']))

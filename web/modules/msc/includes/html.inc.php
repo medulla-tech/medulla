@@ -154,7 +154,6 @@ class raphaelPie extends HtmlElement {
 
 
         var data = $_data,
-            //createGroupText = $createGroupText,
             legend = $_labels,
             colors = $_colors,
             href = $_links,

@@ -3,8 +3,6 @@
 /**
  * (c) 2012 Mandriva, http://www.mandriva.com
  *
- * $Id$
- *
  * This file is part of Mandriva Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
@@ -24,10 +22,10 @@
 $paramArray = array(
     // if no $_GET['id'], get the $_GET['gid'] value
     // to be checked with profiles activated...
-    'id' => ($_GET['id']) ? $_GET['id'] : $_GET['gid'],
-    'gid' => $_GET['gid'],
-    'groupname' => $_GET['groupname'],
-    'type' => $_GET['type'],
+    'id' => isset($_GET['id']) ? $_GET['id'] : $_GET['gid'],
+    'gid' => isset($_GET['gid']) ? $_GET['gid'] : "",
+    'groupname' => isset($_GET['groupname']) ? $_GET['groupname'] : "",
+    'type' => isset($_GET['type']) ? $_GET['type'] : "",
 );
 
 $actions = array();
@@ -88,10 +86,10 @@ if ($is_gp != 1) { // Simple group
 }
 
 foreach ($list as $group) {
-    if ($group->id == $_GET['id']) {
+    if ($group->id == $paramArray['id']) {
         if ($group->is_owner == 1) {
             $actions['delete'] = $delete;
-        } 
+        }
     }
 }
 
@@ -101,7 +99,7 @@ echo "<ul class='action'>";
 foreach ($actions as $action){
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
-        }    
+        }
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
         if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
         else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);

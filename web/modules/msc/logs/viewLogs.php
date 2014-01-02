@@ -57,15 +57,15 @@ if (strlen($_GET['uuid'])) {
     /*
      * display stuff for a single client
      */
-    if (strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) { # bundle display
+    if (isset($_GET['bundle_id']) && strlen($_GET['bundle_id']) and !strlen($_GET['coh_id'])) { # bundle display
         $bdl = new Bundle($_GET['bundle_id']);
         displayBreadCrumb();
         $act = $bdl->quickDisplay();
         if ($act) {
             //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs&action=msctabs");
             $params = array(
-                "uuid" => $_GET['uuid'],
-                "bundle_id" => $_GET['bundle_id'],
+                "uuid" => quickGet('uuid'),
+                "bundle_id" => quickGet('bundle_id'),
                 'divID' => $divName,
                 "tab" => "tablogs",
             );
@@ -80,8 +80,8 @@ if (strlen($_GET['uuid'])) {
             $ajax->displayDivToUpdate();
         }
     }
-    elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific host
-        $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
+    else if (isset($_GET['coh_id']) && strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific host
+        $params = array('tab' => quickGet('tab'), 'uuid' => quickGet('uuid'), 'hostname' => quickGet('hostname'), 'bundle_id' => quickGet('bundle_id'));
 
         if (isset($_history))
             $params['history'] = $_history;
@@ -100,12 +100,12 @@ if (strlen($_GET['uuid'])) {
         $ch->display();
     }
     elseif (strlen($_GET['cmd_id'])) {
-        $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => $_GET['bundle_id']);
+        $params = array('tab' => $_GET['tab'], 'uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'bundle_id' => quickGet('bundle_id'));
 
         if (isset($_history))
             $params['history'] = $_history;
 
-        if (strlen($_GET['bundle_id'])) {
+        if (isset($_GET['bundle_id']) && strlen($_GET['bundle_id'])) {
             $bdl = new Bundle($_GET['bundle_id']);
             displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
@@ -140,11 +140,11 @@ if (strlen($_GET['uuid'])) {
         print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
-} elseif (strlen($_GET['gid'])) {
+} elseif (isset($_GET['gid']) && strlen($_GET['gid'])) {
     /*
      * display stuff for a single group
      */
-    if (strlen($_GET['bundle_id']) and !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle
+    if (quickGet('bundle_id') && !strlen($_GET['cmd_id']) and !strlen($_GET['coh_id'])) {// display the selected bundle
         $bdl = new Bundle($_GET['bundle_id']);
         displayBreadCrumb();
         $act = $bdl->quickDisplay();
@@ -164,13 +164,14 @@ if (strlen($_GET['uuid'])) {
             print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
-    } elseif (strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
+    }
+    else if (isset($_GET['coh_id']) && strlen($_GET['coh_id'])) { # Display a specific command_on_host for a specific group
         $params = array('cmd_id' => $_GET['cmd_id'], 'tab' => $_GET['tab'], 'gid' => $_GET['gid']);
 
         if (isset($_history))
             $params['history'] = $_history;
 
-        if (strlen($_GET['bundle_id'])) {
+        if (quickGet('bundle_id')) {
             $params['bundle_id'] = $_GET['bundle_id'];
             // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
@@ -196,7 +197,7 @@ if (strlen($_GET['uuid'])) {
         $ch->display();
     } elseif (strlen($_GET['cmd_id'])) { # Display a specific command for a specific group
         // =========+> HERE DEPLOY ON GROUP
-        $params = array('tab' => $_GET['tab'], 'gid' => $_GET['gid']);
+        $params = array('tab' => quickGet('tab'), 'gid' => $_GET['gid']);
 
         if (isset($_history))
             $params['history'] = $_history;

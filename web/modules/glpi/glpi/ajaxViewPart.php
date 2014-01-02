@@ -74,7 +74,7 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     $i = 0;
     foreach ($inv as $line) {
         foreach ($line as $vals) {
-            /* 
+            /*
              * If $vals[1] is an empty string or an array, don't use the _T() function
              * Empty fields are replaced by a trademark text by transifex
              * if it's an array, it's an editable field
@@ -285,23 +285,23 @@ jQuery('label.editableField').on('click',function(){
     input.val(value).show().focus();
 });
 
-jQuery('input.editableField').bind('keyup focusout',function(e){ 
+jQuery('input.editableField').bind('keyup focusout',function(e){
     // If we receive a keycode (keyup), it must be #13 [return]
     if (e.keyCode != null && e.keyCode != 13) return;
-    
+
     var name = jQuery(this).attr('name');
     var value = jQuery(this).val();
     var input = jQuery(this);
-    
+
     // Special case: computername regex
     var cname_regex = /^([a-zA-Z0-9][a-zA-Z0-9-_]*[a-zA-Z0-9])$/;
     if (name=='computer_name' && !cname_regex.test(value)) {
         alert('<?php print(_T('Invalid hostname','glpi')); ?>');
         return;
     }
-    
+
     // Posting ajax request
-    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php print($_GET['objectUUID']); ?>&name='+name+'&value='+value).success(function(){
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('objectUUID'); ?>&name='+name+'&value='+value).success(function(){
         var label = jQuery('label.editableField[name="'+name+'"]').first();
         label.html(value).show();
         input.hide();
