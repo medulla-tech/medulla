@@ -87,7 +87,7 @@ function return_icon($state) {
             return "inprogress.gif";
             break;
         case "stopped":
-            return "pause.png";
+            return "stopped.png";
             break;
     }
 }
