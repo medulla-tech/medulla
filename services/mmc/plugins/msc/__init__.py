@@ -308,6 +308,40 @@ class RpcProxy(RpcProxyI):
             ret = -1
         return ret
 
+    def create_update_command(self, target, update_list, gid = None):
+        """
+        Create the Windows Update command.
+
+        @param target: list of target UUIDs
+        @type target: list
+
+        @param update_list: list of KB numbers to install
+        @type update_list: list
+
+        @param gid: group id - if not None, apply command to a group of machine
+        @type gid: str
+
+        @return: command id
+        @rtype: Deferred
+        """
+        cmd = "./%s -i %s" % (MscConfig().wu_command,
+                              " ".join(update_list))
+        desc = "Install Windows Updates"
+        
+        ctx = self.currentContext
+        if gid:
+            target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
+
+        d = defer.maybeDeferred(MscDatabase().addCommandQuick, 
+                                ctx, 
+                                cmd, 
+                                target, 
+                                desc, 
+                                gid)
+        d.addCallback(xmlrpcCleanup)
+
+        return d
+
 
     def add_command_quick(self, cmd, target, desc, gid = None):
         """

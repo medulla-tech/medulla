@@ -141,6 +141,9 @@ class MscConfig(MscDatabaseConfig):
     check_db_enable = False
     check_db_interval = 300
 
+    # Windows Update command 
+    wu_command = "pulse-update-manager.exe" 
+
     def init(self, name, conffile = None):
         self.name = name
         if not conffile: self.conffile = mmctools.getConfigFile(name)
@@ -199,6 +202,10 @@ class MscConfig(MscDatabaseConfig):
         # convergence_reschedule
         if self.cp.has_option("msc", "convergence_reschedule"):
             self.convergence_reschedule = self.cp.get("msc", "convergence_reschedule")
+
+        if self.cp.has_option("msc", "wu_command"):
+            self.wu_command = self.cp.get("msc", "wu_command")
+
 
         for section in self.cp.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
