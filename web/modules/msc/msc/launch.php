@@ -339,7 +339,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     }
 
     // form design
-    $f = new Form();
+    $f = new ValidatingForm();
 
     // display top label
     if (isset($_GET['uuid']) && $_GET['uuid']) {
