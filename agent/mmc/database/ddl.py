@@ -210,14 +210,9 @@ class DDLContentManager:
         @return: list generator of filenames
         @rtype: string
         """
-        sqldirs = [os.path.join(prefix, 'share', 'mmc', 'sql', module),
-                   os.path.join(prefix, 'share', 'doc', 'mmc', 'contrib', module, 'sql')]
-        found = False
-        for sqldir in sqldirs:
-            if os.path.exists(sqldir):
-                found = True
-                break
-        if not found:
+        sqldir = os.path.join(prefix, 'share', 'doc', 'mmc', 'contrib', module, 'sql')
+
+        if not os.path.exists(sqldir):
             raise Exception("SQL schemas not found for module %s" % module)
 
         # get only schema scripts - schema-xxx.sql
