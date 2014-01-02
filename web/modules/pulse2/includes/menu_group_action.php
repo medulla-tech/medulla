@@ -101,9 +101,14 @@ foreach ($actions as $action){
             $paramArray['mod'] = $action->mod;
         }
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-        if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
-        else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
-        echo "<a title=\"".$action->desc."\" href=\"" . urlStr($action->path) . $urlChunk . "\">&nbsp;</a>";
+        if (is_array($paramArray) & !empty($paramArray))
+            $urlChunk = $action->buildUrlChunk($paramArray);
+        else
+            $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
+        if ($action instanceOf ActionPopupItem)
+            echo '<a title="' . $action->desc . '" onclick="PopupWindow(event, \'' . urlStr($action->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
+        else
+            echo '<a title="' . $action->desc . '" href="' . urlStr($action->path) . $urlChunk . '">&nbsp;</a>';
         echo "</li>";
 }
 echo "</ul>";
