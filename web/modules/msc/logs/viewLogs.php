@@ -76,7 +76,6 @@ if (strlen($_GET['uuid'])) {
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
 
             $ajax->display();
-            print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     }
@@ -91,7 +90,6 @@ if (strlen($_GET['uuid'])) {
             displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
-        print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $coh = new CommandOnHost($coh_id);
         displayBreadCrumb();
@@ -110,7 +108,6 @@ if (strlen($_GET['uuid'])) {
             displayBreadCrumb();
             $act = $bdl->quickDisplay(array(new ActionItem(_T("Details", "msc"), "viewLogs", "detail", "msc", "msc", "logs")), $params);
         }
-        print "<hr/><br/>";
         if ($_GET['cmd_id'] == -2) {
             new NotifyWidgetFailure(_T("The group you are working on is empty.", "msc"));
         }
@@ -137,7 +134,6 @@ if (strlen($_GET['uuid'])) {
         $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
         $ajax->setRefresh(web_def_refresh_time());
         $ajax->display();
-        print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
 } elseif (isset($_GET['gid']) && strlen($_GET['gid'])) {
@@ -161,7 +157,6 @@ if (strlen($_GET['uuid'])) {
 
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
             $ajax->display();
-            print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     }
@@ -191,7 +186,6 @@ if (strlen($_GET['uuid'])) {
         displayBreadCrumb();
         $coh->quickDisplay(array(), $params); //array(new ActionItem(_T("Details", "msc"),"msctabs","detail","msc", "base", "computers")));
         // display the command on host details
-        print "<hr/><br/>";
         $coh_id = $_GET['coh_id'];
         $ch = new CommandHistory($coh_id);
         $ch->display();
@@ -203,7 +197,7 @@ if (strlen($_GET['uuid'])) {
             $params['history'] = $_history;
 
         $bdlink = '';
-        if (strlen($_GET['bundle_id'])) {
+        if (quickGet('bundle_id')) {
             $params['bundle_id'] = $_GET['bundle_id'];
             // FIXME: the following part (esp. $act) seems to always be overriden by the code below ?!
             $bdl = new Bundle($_GET['bundle_id']);
@@ -234,7 +228,6 @@ if (strlen($_GET['uuid'])) {
 
             $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
             $ajax->display();
-            print "<br/><br/><br/>";
             $ajax->displayDivToUpdate();
         }
     } else { # Display history for a specific group
@@ -251,7 +244,6 @@ if (strlen($_GET['uuid'])) {
 
         $ajax = new AjaxFilterCommands(urlStrRedirect("base/computers/ajaxLogsFilter"), $divName, "commands", $params);
         $ajax->display();
-        print "<br/><br/><br/>";
         $ajax->displayDivToUpdate();
     }
 } else {

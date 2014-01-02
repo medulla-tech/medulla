@@ -369,23 +369,10 @@ class AjaxFilterCommands extends AjaxFilter {
         $root = $conf["global"]["root"];
         ?>
         <form name="Form" id="<?php print $this->formid; ?>" action="#" onsubmit="return false;">
-
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
-
             <div id="searchSpan" class="searchbox" style="float: right;">
                 <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
-
-                <span class="searchfield">
-                    <?php
-                    /* if (isset($_GET['cmd_id'], $_GET['gid']))
-                      print '<div style="display:none">'; */
-
-                    //$this->commands->display();
-                    /* if (isset($_GET['cmd_id'], $_GET['gid']))
-                      print '</div>'; */
-                    ?>
-                </span>&nbsp;
-
+                &nbsp;
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
                         return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
@@ -393,8 +380,6 @@ class AjaxFilterCommands extends AjaxFilter {
                                  pushSearch<?php echo $this->divid; ?>();
                                  return false;" />
                 </span>
-
-
                 <?php if (isset($_GET['cmd_id'], $_GET['gid']) && !(isset($_GET['bundle_id']) && $_GET['bundle_id'])) { ?>
                     <!-- <form id="cbx_form"> -->
                     <span class="searchfield">
@@ -455,6 +440,7 @@ class AjaxFilterCommands extends AjaxFilter {
                     });
                     jQuery('#<?php echo $this->divid; ?>').mask("");
                     jQuery('#<?php echo $this->divid; ?>').width('100%');
+                    jQuery('#<?php echo $this->divid; ?>').css('clear', 'right');
 
         <?php
         if ($this->refresh) {
