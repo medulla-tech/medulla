@@ -670,18 +670,20 @@ class ListInfos extends HtmlElement {
                 echo "</td>";
             }
 
-            if ($this->extraInfo)
+            if ($this->extraInfo) {
                 foreach ($this->extraInfo as $arrayTMP) {
                     echo "<td>";
-                    if (is_subclass_of($arrayTMP[$idx], "HtmlContainer")) {
+                    if (isset($arrayTMP[$idx]) && is_subclass_of($arrayTMP[$idx], "HtmlContainer")) {
                         $arrayTMP[$idx]->display();
-                    } else if (trim($arrayTMP[$idx]) != "") {
+                    } else if (isset($arrayTMP[$idx]) && trim($arrayTMP[$idx]) != "") {
                         echo_obj($arrayTMP[$idx]);
                     } else {
                         echo "&nbsp;";
                     }
                     echo "</td>";
                 }
+            }
+
             if (count($this->arrAction) != 0) {
                 echo "<td class=\"action\">";
                 echo "<ul class=\"action\">";
