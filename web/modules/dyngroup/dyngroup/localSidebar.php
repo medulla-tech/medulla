@@ -26,8 +26,8 @@
 require_once("modules/dyngroup/includes/includes.php");
 require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups", "dyngroup"), "base", "computers",  "list"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "computersgroupcreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups", "dyngroup"), "base", "computers",  "list", "img/machines/icn_allGroups_active.gif", "img/machines/icn_allGroups_ro.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "computersgroupcreator", "img/machines/icn_addGroup_active.gif", "img/machines/icn_addGroup_ro.gif"));
 
 $items = array();
 $groups = getAllGroups(array('canShow'=>true, 'localSidebar'=>true));
