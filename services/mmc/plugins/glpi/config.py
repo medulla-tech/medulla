@@ -106,21 +106,30 @@ class GlpiConfig(PluginConfig):
         # associate manufacturer's names to their warranty url
         # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections
         # for adding its warranty url
-        if 'manufacturer' in self._sections and 'manufacturer_warranty_url' in self._sections:
-            logging.getLogger().debug('[GLPI] Get manufacturers and their warranty urls')
-            for k in self._sections['manufacturer']:
-                if not k in self._sections['manufacturer_warranty_url']:
-                    logging.getLogger().warn('[GLPI] Manufacturer \'%s\': no matching warranty url in glpi.ini file' % k)
-                else:
-                    logging.getLogger().debug('[GLPI] Get \'%s\' warranty url' % k)
-                    for manufacturerName in self._sections['manufacturer'][k].split('||'):
-                        self.manufacturerWarrantyUrl[manufacturerName] = self._sections['manufacturer_warranty_url'][k]
+        self.manufacturerWarranty = {}
+        if 'manufacturers' in self.sections():
+            logging.getLogger().debug('[GLPI] Get manufacturers and their warranty infos')
+            for manufacturer_key in self.options('manufacturers'):
+                if self.has_section('manufacturer_' + manufacturer_key) and self.has_option('manufacturer_' + manufacturer_key, 'url'):
+                    try:
+                        type = self.get('manufacturer_' + manufacturer_key, 'type')
+                    except NoOptionError:
+                        type = "get"
+                    try:
+                        params = self.get('manufacturer_' + manufacturer_key, 'params')
+                    except NoOptionError:
+                        params = ""
+                    self.manufacturerWarranty[manufacturer_key] = {'names': self.get('manufacturers', manufacturer_key).split('||'),
+                                                                   'type': type,
+                                                                   'url': self.get('manufacturer_' + manufacturer_key, 'url'),
+                                                                   'params': params}
+            logging.getLogger().debug(self.manufacturerWarranty)
 
     def _parse_filter_on(self, value):
         """
         Parsing of customized filters.
 
-        Returned value will be parsed as a dictionnary with list of values 
+        Returned value will be parsed as a dictionnary with list of values
         for each filter.
 
         @param value: raw string
@@ -131,7 +140,7 @@ class GlpiConfig(PluginConfig):
         """
         try:
             couples = [f.split("=") for f in value.split(" ")]
-            
+
             filters = dict([(key, values.split("|")) for (key, values) in couples])
             logging.getLogger().debug("will filter machines on %s" % (str(filters)))
             return filters
@@ -139,8 +148,8 @@ class GlpiConfig(PluginConfig):
         except Exception, e:
             logging.getLogger().warn("Parsing on filter_on failed: %s" % str(e))
             return None
-            
- 
+
+
 
 class GlpiQueryManagerConfig(PluginConfig):
     activate = False

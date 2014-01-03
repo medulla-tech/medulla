@@ -1486,11 +1486,14 @@ class Glpi08(DyngroupDatabaseHelper):
 
         return ''
 
-    def getManufacturerWarrantyUrl(self, manufacturer, serial):
-        if manufacturer in self.config.manufacturerWarrantyUrl:
-            return self.config.manufacturerWarrantyUrl[manufacturer].replace('@@SERIAL@@', serial)
-        else:
-            return False
+    def getManufacturerWarranty(self, manufacturer, serial):
+        for manufacturer_key, manufacturer_infos in self.config.manufacturerWarranty.items():
+            if manufacturer in manufacturer_infos['names']:
+                manufacturer_info = manufacturer_infos.copy()
+                manufacturer_info['url'] = manufacturer_info['url'].replace('@@SERIAL@@', serial)
+                manufacturer_info['params'] = manufacturer_info['params'].replace('@@SERIAL@@', serial)
+                return manufacturer_info
+        return False
 
     def getSearchOptionId(self, filter, lang = 'en_US'):
         """
@@ -1801,12 +1804,21 @@ class Glpi08(DyngroupDatabaseHelper):
                 elif len(modelType) == 2:
                     modelType = " / ".join(modelType)
 
-                manufacturerWarrantyUrl = False
+                manufacturerWarranty = False
                 if machine.serial is not None and len(machine.serial) > 0:
-                    manufacturerWarrantyUrl = self.getManufacturerWarrantyUrl(manufacturer, machine.serial)
+                    manufacturerWarranty = self.getManufacturerWarranty(manufacturer, machine.serial)
 
-                if manufacturerWarrantyUrl:
-                    serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, manufacturerWarrantyUrl)
+                if manufacturerWarranty:
+                    if manufacturerWarranty['type'] == 'get':
+                        url = manufacturerWarranty['url'] + '?' + manufacturerWarranty['params']
+                        serialNumber = '%s / <a href="%s" target="_blank">@@WARRANTY_LINK_TEXT@@</a>' % (machine.serial, url)
+                    else:
+                        url = manufacturerWarranty['url']
+                        serialNumber = '%s / <form action="%s" method="post" target="_blank" id="warrantyCheck" style="display: inline">' % (machine.serial, url)
+                        for param in manufacturerWarranty['params'].split('&'):
+                            name, value = param.split('=')
+                            serialNumber += '<input type="hidden" name="%s" value="%s" />' % (name, value)
+                        serialNumber += '<a href="#" onclick="jQuery(\'#warrantyCheck\').submit(); return false;">@@WARRANTY_LINK_TEXT@@</a></form>'
                 else:
                     serialNumber = machine.serial
 
