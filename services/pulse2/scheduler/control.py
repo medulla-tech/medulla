@@ -103,7 +103,6 @@ class MethodProxy(MscContainer):
         @param cmd_ids: list of commands ids
         @type cmd_ids: list
         """
-        scheduler = self.config.name
         cmd_ids = get_commands(cohs)
         for cmd_id in cmd_ids :
             self.statistics.watchdog_schedule(cmd_id)
