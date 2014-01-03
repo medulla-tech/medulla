@@ -156,7 +156,7 @@ class LaunchTimeResolver :
         if self.attempts_failed + 1 <= self.attempts_total :
             b = ParabolicBalance(self.attempts_total)
             delay = 0
-            for i in range(self.attempts_failed):
+            for i in range(self.attempts_failed + 1):
                 coef = b.balances[i] * 1.0
                 delta = int(coef * self.get_total_valid_time())
                 delay += delta
