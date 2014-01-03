@@ -114,6 +114,24 @@ class GlpiPanel extends Panel {
         );
     }
     </script>
+    <style type="text/css">
+        #inventory-graphs ul {
+            padding-left: 0px;
+            margin: 0px;
+            margin-top: 3px;
+        }
+        #inventory-graphs li {
+            list-style: none;
+            font-size: 13px;
+        }
+        #inventory-graphs li:before {
+            content: "•";
+            font-size: 20px;
+            vertical-align: bottom;
+            line-height: 16px;
+            margin-right: 3px;
+        }
+    </style>
 INVENTORY;
     }
 }

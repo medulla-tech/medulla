@@ -92,74 +92,75 @@ class os_repartitionPanel extends Panel {
 
 
         echo <<< SPACE
-        <div id="os-graphs" style="height:250px;"></div>
+        <div id="os-graphs"></div>
         <script type="text/javascript">
-        var    r = Raphael("os-graphs"),
+            var r = Raphael("os-graphs"),
                 radius = 70,
                 margin = 40,
                 x = 100,
-                y = 80;
+                y = 75;
 
+            var data = $osCount,
+                createGroupText = $createGroupText,
+                legend = $osLabels,
+                colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED"],
+                href = $links,
+                title = 'OS Repartition';
 
-        var data = $osCount,
-            createGroupText = $createGroupText,
-            legend = $osLabels,
-            colors = ["000-#000000-#666665","000-#73d216-#42780D","000-#ef2929-#A31A1A","000-#003399-#0251ED"],
-            href = $links,
-            title = 'OS Repartition';
+            /*r.text(5, y - radius - 10, title)
+             .attr({ font: "12px sans-serif" })
+             .attr({ "text-anchor": "start" });*/
+            data = getPercentageData(data);
+            pie = r.piechart(x, y + 5, radius, data,
+                       {colors: colors})
+             .hover(function () {
+                this.sector.stop();
+                this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
 
-        /*r.text(5, y - radius - 10, title)
-         .attr({ font: "12px sans-serif" })
-         .attr({ "text-anchor": "start" });*/
-        data = getPercentageData(data);
-        pie = r.piechart(x, y + 5, radius, data,
-                   {colors: colors})
-         .hover(function () {
-            this.sector.stop();
-            this.sector.animate({ transform: 's1.1 1.1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
+                if (this.label) {
+                    this.label[0].stop();
+                    this.label[0].attr({ r: 7.5 });
+                    this.label[1].attr({ "font-weight": 800 });
+                }
+                //jQuery('#os-graphs ul:first').find('li')
+             }, function () {
+                this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
 
-            if (this.label) {
-                this.label[0].stop();
-                this.label[0].attr({ r: 7.5 });
-                this.label[1].attr({ "font-weight": 800 });
+                if (this.label) {
+                    this.label[0].animate({ r: 5 }, 500, "bounce");
+                    this.label[1].attr({ "font-weight": 400 });
+                }
+             });
+
+            y += (radius * 2) + margin + 5;
+
+            r.setSize(200, (radius * 1 + margin) + 50);
+            // Legend
+            jQuery('#os-graphs').append('<ul></ul>');
+            for (var i = 0; i < legend.length; i++) {
+                jQuery('#os-graphs ul').append(
+                    '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
+                    + '<a href="' + href[i] + '"><img title="' + createGroupText +
+                    '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
+                );
             }
-            //jQuery('#os-graphs ul:first').find('li')
-         }, function () {
-            this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 800, "elastic");
-
-            if (this.label) {
-                this.label[0].animate({ r: 5 }, 500, "bounce");
-                this.label[1].attr({ "font-weight": 400 });
-            }
-         });
-
-        y += (radius * 2) + margin + 5;
-
-        r.setSize(200, (radius * 1 + margin) + 50);
-        // Legend
-        jQuery('#os-graphs').append('<ul></ul>');
-        for (var i = 0; i < legend.length; i++) {
-            jQuery('#os-graphs ul').append(
-                '<li style="color: ' + colors[i].split('-')[1]  + ' ;left 5px;font-size: 24px;height:18px;"><span style="color: #000">' + legend[i]
-                + '<a href="' + href[i] + '"><img title="' + createGroupText +
-                '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
-            );
-        }
         </script>
         <style type="text/css">
-            #os-graphs li{
+            #os-graphs ul {
+                margin: 0px;
+                padding-left: 28px;
+            }
+            #os-graphs li {
                 list-style: none;
                 font-size: 13px;
             }
             #os-graphs li:before {
-            content:"•";
-            font-size:40px;
-            vertical-align:bottom;
-            line-height:20px;
-            margin-right:3px;
+                content: "•";
+                font-size: 20px;
+                vertical-align: bottom;
+                line-height: 16px;
+                margin-right: 3px;
             }
-
-
         </style>
 SPACE;
     }

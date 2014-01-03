@@ -111,6 +111,24 @@ class AntivirusPanel extends Panel {
         );
     }
     </script>
+    <style type="text/css">
+        #antivirus-graphs ul {
+            padding-left: 0px;
+            margin: 0px;
+            margin-top: 3px;
+        }
+        #antivirus-graphs li {
+            list-style: none;
+            font-size: 13px;
+        }
+        #antivirus-graphs li:before {
+            content: "•";
+            font-size: 20px;
+            vertical-align: bottom;
+            line-height: 16px;
+            margin-right: 3px;
+        }
+    </style>
 ANTIVIRUS;
     }
 }

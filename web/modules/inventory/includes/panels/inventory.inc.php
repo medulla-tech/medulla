@@ -117,6 +117,19 @@ class InventoryPanel extends Panel {
     $('inventory-graphs').insert('</ul>');
 
     </script>
+    <style type="text/css">
+        #inventory-graphs li {
+            list-style: none;
+            font-size: 13px;
+        }
+        #inventory-graphs li:before {
+            content: "•";
+            font-size: 20px;
+            vertical-align: bottom;
+            line-height: 16px;
+            margin-right: 3px;
+        }
+    </style>
 INVENTORY;
     }
 }
