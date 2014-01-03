@@ -65,7 +65,7 @@ class GlpiPanel extends Panel {
         var legendText = lessThanText.replace('%s', days.orange).replace('%d', machineCount.green)
         data.push(machineCount.green);
         legend.push(legendText);
-        colors.push("#73d216");
+        colors.push("000-#6AB520-#73d216");
         href.push(urlRedirect + "&group=green&days=" + days.orange);
     }
 
@@ -73,7 +73,7 @@ class GlpiPanel extends Panel {
         var legendText = moreThanText.replace('%s', days.orange).replace('%d', machineCount.orange)
         data.push(machineCount.orange);
         legend.push(legendText);
-        colors.push("#f3602c");
+        colors.push("000-#DA5324-#f3602c");
         href.push(urlRedirect + "&group=orange&days=" + days.orange);
     }
 
@@ -81,7 +81,7 @@ class GlpiPanel extends Panel {
         var legendText = moreThanText.replace('%s', days.red).replace('%d', machineCount.red)
         data.push(machineCount.red);
         legend.push(legendText);
-        colors.push("#ef2929");
+        colors.push("000-#CD1515-#ef2929");
         href.push(urlRedirect + "&group=red&days=" + days.red);
     }
 
@@ -93,14 +93,14 @@ class GlpiPanel extends Panel {
         legend[i] = legend[i].replace('%percent', data[i]);
     }
 
-    var r = Raphael("inventory-graphs", 200, 50);
+    var r = Raphael("inventory-graphs", 200, 25);
         fin = function () {
         },
         fout = function () {
         },
         txtattr = { font: "12px sans-serif" };
 
-    r.hbarchart(0, 10, 200, 30, data, {
+    r.hbarchart(0, 5, 200, 20, data, {
         type: 'round',
         stacked: true,
         colors: colors
@@ -108,7 +108,7 @@ class GlpiPanel extends Panel {
     jQuery('#inventory-graphs').append('<ul></ul>');
     for (var i = 0; i < legend.length; i++) {
         jQuery('#inventory-graphs ul').append(
-            '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
+            '<li style="color: ' + colors[i].split('-')[2] + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
             '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
         );

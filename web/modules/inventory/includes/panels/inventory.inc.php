@@ -66,7 +66,7 @@ class InventoryPanel extends Panel {
         var legendText = lessThanText.replace('%s', days.orange).replace('%d', machineCount.green)
         data.push(machineCount.green);
         legend.push(legendText);
-        colors.push("#73d216");
+        colors.push("000-#6AB520-#73d216");
         href.push(urlRedirect + "&group=green&days=" + days.orange);
     }
 
@@ -74,7 +74,7 @@ class InventoryPanel extends Panel {
         var legendText = moreThanText.replace('%s', days.orange).replace('%d', machineCount.orange)
         data.push(machineCount.orange);
         legend.push(legendText);
-        colors.push("#ff9c00");
+        colors.push("000-#DA5324-#f3602c");
         href.push(urlRedirect + "&group=orange&days=" + days.orange);
     }
 
@@ -82,7 +82,7 @@ class InventoryPanel extends Panel {
         var legendText = moreThanText.replace('%s', days.red).replace('%d', machineCount.red)
         data.push(machineCount.red);
         legend.push(legendText);
-        colors.push("#ef2929");
+        colors.push("000-#CD1515-#ef2929");
         href.push(urlRedirect + "&group=red&days=" + days.red);
     }
 
@@ -109,7 +109,7 @@ class InventoryPanel extends Panel {
     $('inventory-graphs').insert('<ul>');
     for (var i = 0; i < legend.length; i++) {
         $('inventory-graphs').insert(
-            '<li style="color: ' + colors[i]  + '"><span style="color: #000">' + legend[i]
+            '<li style="color: ' + colors[i].split('-')[2] + '"><span style="color: #000">' + legend[i]
             + '<a href="' + href[i] + '"><img title="' + createGroupText +
             '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
         );
