@@ -25,6 +25,17 @@
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.network import IPResolve
 
+
+def u_decode(text):
+    """Normalize the text to str"""
+    if isinstance(text, unicode):
+        return text.encode("ascii", "ignore")
+    else:
+        return text
+
+def u_list_decode(u_list):
+    return [u_decode(a) for a in u_list]
+
 class SchedulerNetUtils :
 
     @classmethod
@@ -38,12 +49,12 @@ class SchedulerNetUtils :
         @return: target common format
         @rtype: tuple
         """
-        hostname = target["shortname"]
-        fqdn = target["fqdn"]
-        ips = target["ips"]
-        macs = target["macs"]
+        hostname = u_decode(target["shortname"])
+        fqdn = u_decode(target["fqdn"])
+        ips = u_list_decode(target["ips"])
+        macs = u_list_decode(target["macs"])
         if "netmasks" in target :
-            netmasks = target["netmasks"]
+            netmasks = u_list_decode(target["netmasks"])
 
         i = 0
         ifaces = []

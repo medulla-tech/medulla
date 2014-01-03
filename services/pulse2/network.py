@@ -717,18 +717,18 @@ class IPResolve (IPResolversContainer) :
         @return: True if format is valid
         @rtype: bool
         """
-        if not isinstance(target, tuple) or not isinstance(target, list):
-            log.warn("Invalid target format.")
+        if not (isinstance(target, tuple) or isinstance(target, list)):
+            log.warn("Invalid target format: Tuple or list required, not %s" % type(target))
             return False
 
         if len(target) != 3 :
-            log.warn("Invalid target format.")
+            log.warn("Invalid target format: Invalid length.")
             return False
 
         hostname, fqdn, ifaces = target
 
-        if not isinstance(ifaces, dict) :
-            log.warn("Invalid target format.")
+        if not isinstance(ifaces, list) :
+            log.warn("Invalid target format: List required, not %s" % type(ifaces))
             return False
 
         for iface in ifaces :
@@ -755,7 +755,7 @@ class IPResolve (IPResolversContainer) :
              interfaces = [iface1, iface2,..., ifacen]
                iface = {"ip":, "mac":, "netmask":, "gateway":,}
         """
-        if len(target) == 0 :
+        if not self._validate_target(target):
             log.error("Bad target format")
             return None
 
