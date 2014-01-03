@@ -55,14 +55,23 @@ class GeneralPanel extends Panel {
                         {axis: "0 0 0 1", colors: ["#ef2929", ""], shade: true}
             );
             var memory = ' . $memory . ',
-                height = 15,
+                height = 20,
                 width = 200,
-                r = Raphael("ram-graph", width, height + 5);
-            r.rect(0, 5, width, height)
-             .attr({fill: "#73d216", stroke: "#fff", "stroke-width": "2px"});
-            r.rect(1, 6, width * (memory.percent / 100), height - 2)
-             .attr({fill: "#ef2929", "stroke-width": "0"});
-            r.text(width - 3, 13, memory.available + " ' . _T("free") . '")
+                r = Raphael("ram-graph", width, height + 5),
+                ram_used = Math.round(width * (memory.percent / 100)),
+                ram_free = width - ram_used;
+
+            colors = [];
+            colors.push("000-#CD1515-#ef2929");
+            colors.push("000-#6AB520-#73d216");
+            data = [[ram_used], [ram_free]];
+
+            r.hbarchart(0, 5, width, height, data, {
+                type: "round",
+                stacked: true,
+                colors: colors
+            });
+            r.text(width - 3, 14, memory.available + " ' . _T("free") . '")
              .attr({ font: "12px sans-serif", "text-anchor": "end", "fill": "white" });
         </script>';
     }
