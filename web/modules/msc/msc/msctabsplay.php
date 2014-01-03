@@ -104,22 +104,29 @@ if (isset($_POST["bconfirm"])) {
     return;
 } else {
     /* Form displaying */
-    $from = $_GET['from'];
-    $hostname = $_GET["hostname"];
-    $groupname = $_GET["groupname"];
-    $uuid = $_GET["uuid"];
-    $cmd_id = $_GET["cmd_id"];
-    $coh_id = $_GET["coh_id"];
-    $gid = $_GET["gid"];
-    $bundle_id = $_GET['bundle_id'];
-
-    if (empty($gid)) {
-        $title = sprintf(_T("Start action on host %s", 'msc'), $hostname);
-    } else {
-        $title = _T("Start action on this group", 'msc');
+    $from = quickGet('from');
+    $hostname = quickGet("hostname");
+    $groupname = quickGet("groupname");
+    $uuid = quickGet("uuid");
+    $cmd_id = quickGet("cmd_id");
+    $coh_id = quickGet("coh_id");
+    $gid = quickGet("gid");
+    $bundle_id = quickGet('bundle_id');
+    $cmd = command_detail($cmd_id);
+    $name = $cmd['title'];
+    if (!$name && quickGet('title')) {
+        $name = $_GET['title'];
     }
-
-    $f = new PopupForm($title, 'playPopupForm');
+    $action_type = _T('action', 'msc');
+    if (strlen($bundle_id)) {
+        $action_type = _T('bundle', 'msc');
+    }
+    if (strlen($gid) && !strlen($coh_id)) {
+        $title = sprintf(_T("Start %s %s on this group", 'msc'), $action_type, $name);
+    } else {
+        $title = sprintf(_T("Start %s %s on host %s", 'msc'), $action_type, $name, $hostname);
+    }
+    $f = new PopupForm($title, 'startPopupForm');
     $f->add(new HiddenTpl("name"), array("value" => $hostname, "hide" => True));
     $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
     $f->add(new HiddenTpl("cmd_id"), array("value" => $cmd_id, "hide" => True));

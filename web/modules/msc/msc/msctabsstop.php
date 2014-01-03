@@ -103,20 +103,19 @@ if (isset($_POST["bconfirm"])) {
     }
 } else {
     /* Form displaying */
-    $from = $_GET['from'];
-    $hostname = $_GET["hostname"];
-    $groupname = $_GET["groupname"];
-    $uuid = $_GET["uuid"];
-    $cmd_id = $_GET["cmd_id"];
-    $coh_id = $_GET["coh_id"];
-    $gid = $_GET["gid"];
-    $bundle_id = $_GET['bundle_id'];
+    $from = quickGet('from');
+    $hostname = quickGet("hostname");
+    $groupname = quickGet("groupname");
+    $uuid = quickGet("uuid");
+    $cmd_id = quickGet("cmd_id");
+    $coh_id = quickGet("coh_id");
+    $gid = quickGet("gid");
+    $bundle_id = quickGet('bundle_id');
     $cmd = command_detail($cmd_id);
     $name = $cmd['title'];
-    if (!$name && $_GET['title']) {
+    if (!$name && quickGet('title')) {
         $name = $_GET['title'];
     }
-
     $action_type = _T('action', 'msc');
     if (strlen($bundle_id)) {
         $action_type = _T('bundle', 'msc');
