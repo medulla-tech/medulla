@@ -243,7 +243,7 @@ class WOLPhase(Phase):
                 self.update_history_done(PULSE2_SUCCESS_ERROR, "skipped: host already up")
 
                 self.phase.set_done()
-                if not self.isStateStopped():
+                if not self.coh.isStateStopped():
                     self.coh.setStateScheduled()
                 return self.next()
             self.logger.info("Circuit #%s: do wol (target not up)" % self.coh.id)
