@@ -347,7 +347,8 @@ class RpcProxy(RpcProxyI):
                                  gid,
                                  title = desc,
                                  do_wol = do_wol,
-                                 do_windows_update = "enable")
+                                 do_windows_update = "enable",
+                                 cmd_type = 4)
   
         d.addCallback(xmlrpcCleanup)
 
