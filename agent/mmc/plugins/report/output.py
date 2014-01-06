@@ -523,6 +523,7 @@ class SVGGenerator(object):
         self.chart.config.major_label_font_size = 11
         self.chart.config.value_font_size = 10
         self.chart.config.title_font_size = 16
+        self.chart.config.print_values = False
 
         self.chart.render_to_png(self.path + '.png')
         chmod(self.path + '.png', 0644)
