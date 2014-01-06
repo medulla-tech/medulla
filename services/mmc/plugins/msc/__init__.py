@@ -324,19 +324,20 @@ class RpcProxy(RpcProxyI):
         @return: command id
         @rtype: Deferred
         """
-        cmd = "./%s -i %s" % (MscConfig().wu_command,
+        cmd = "%s -i %s" % (MscConfig().wu_command,
                               " ".join(update_list))
+        cmd = cmd + ("\n%s -l --json" % MscConfig().wu_command)
         desc = "Install Windows Updates"
-        
+
         ctx = self.currentContext
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
-        d = defer.maybeDeferred(MscDatabase().addCommandQuick, 
-                                ctx, 
-                                cmd, 
-                                target, 
-                                desc, 
+        d = defer.maybeDeferred(MscDatabase().addCommandQuick,
+                                ctx,
+                                cmd,
+                                target,
+                                desc,
                                 gid)
         d.addCallback(xmlrpcCleanup)
 

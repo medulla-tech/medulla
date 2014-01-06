@@ -142,7 +142,7 @@ class MscConfig(MscDatabaseConfig):
     check_db_interval = 300
 
     # Windows Update command
-    wu_command = "/usr/share/pulse-update-manager"
+    wu_command = "/usr/share/pulse-update-manager/pulse-update-manager"
 
     def init(self, name, conffile = None):
         self.name = name
