@@ -169,8 +169,11 @@ def create_update_command(ctx, target, update_list, gid = None):
     @return: command id
     @rtype: Deferred
     """
-    cmd = "%s -i %s" % (MscConfig().wu_command,
-                          " ".join(update_list))
+    if update_list:
+        cmd = "%s -i %s" % (MscConfig().wu_command,
+                              " ".join(update_list))
+    else:
+        cmd = ''
     cmd = cmd + ("\n%s -l --json" % MscConfig().wu_command)
     desc = "Install Windows Updates"
 
