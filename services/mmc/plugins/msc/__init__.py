@@ -333,12 +333,17 @@ class RpcProxy(RpcProxyI):
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
-        d = defer.maybeDeferred(MscDatabase().addCommandQuick,
-                                ctx,
-                                cmd,
-                                target,
-                                desc,
-                                gid)
+        d = defer.maybeDeferred(MscDatabase().addCommand, ctx,
+                                 None,
+                                 cmd,
+                                 "",
+                                 [],
+                                 target,
+                                 'push',
+                                 gid,
+                                 title = desc,
+                                 do_windows_update = "enable")
+  
         d.addCallback(xmlrpcCleanup)
 
         return d
