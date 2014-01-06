@@ -28,6 +28,7 @@
 
 <?php
 require("graph/navbar.inc.php");
+require("localSidebar.php");
 require_once("modules/report/includes/xmlrpc.inc.php");
 require_once("modules/report/includes/html.inc.php");
 require_once("modules/report/includes/report.inc.php");
@@ -35,6 +36,10 @@ require_once("modules/pulse2/includes/utilities.php");
 
 $MMCApp =& MMCApp::getInstance();
 $report = get_report_sections($_SESSION['lang']);
+
+$p = new PageGenerator();
+$p->setSideMenu($sidemenu);
+$p->display();
 
 $t = new TitleElement(_T("Report creation", 'report'));
 $t->display();
