@@ -70,7 +70,7 @@ class MscConfig(MscDatabaseConfig):
     sa_localcert = ""
 
     # WEB interface stuff
-    web_def_awake = 1
+    web_def_awake = 0
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_inventory = 1
     web_def_mode = "push"
@@ -141,8 +141,8 @@ class MscConfig(MscDatabaseConfig):
     check_db_enable = False
     check_db_interval = 300
 
-    # Windows Update command 
-    wu_command = "pulse-update-manager.exe" 
+    # Windows Update command
+    wu_command = "pulse-update-manager.exe"
 
     def init(self, name, conffile = None):
         self.name = name

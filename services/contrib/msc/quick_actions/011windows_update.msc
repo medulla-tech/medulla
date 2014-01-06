@@ -1,4 +1,4 @@
-title=Windows Update
-titlefr=Windows Update
-titlede=Windows Update
-command=@@do_windows_update@@./pulse-update-manager.exe -l --json
+title=Pulse Update Manager
+titlefr=Pulse Update Manager
+titlede=Pulse Update Manager
+command=@@do_windows_update@@/usr/share/pulse-update-manager -l --json
