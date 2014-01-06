@@ -3,6 +3,7 @@ import json
 import _winreg
 import sys
 from collections import namedtuple
+from platform import platform
 
 ssDefault = 0
 ssManagedServer = 1
@@ -128,6 +129,14 @@ def searchAvaiableUpdates(online=True, returnResultList=False):
     content_verbose = []
     result = {'header' : header, 'content' : content}
     result_verbose = {'header' : header_verbose, 'content' : content_verbose}
+
+    # Return OS version
+    if 'windows-xp' in platform().lower():
+        result_verbose['os_class'] = 1
+    elif 'windows-vista' in platform().lower():
+        result_verbose['os_class'] = 2
+    elif 'windows-7' in platform().lower():
+        result_verbose['os_class'] = 3
 
     # Searching not available and not installed updates
     # Search criterions : http://msdn.microsoft.com/en-us/library/windows/desktop/aa386526(v=vs.85).aspx
