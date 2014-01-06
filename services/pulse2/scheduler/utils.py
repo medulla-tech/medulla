@@ -345,10 +345,9 @@ class WUInjectDB :
                   type_id,
                   need_reboot,
                   request_user_input,
+                  os_class_id,
                   info_url):
         """ Windows Updates insert """
-
-        os_class_id = 3
 
         stat = "INSERT INTO updates "
         stat += "(uuid, title, kb_number, type_id, os_class_id, need_reboot, "
@@ -383,6 +382,7 @@ class WUInjectDB :
                type_id,
                need_reboot,
                request_user_input,
+               os_class_id,
                info_url,
                is_installed):
         """
@@ -396,6 +396,7 @@ class WUInjectDB :
                            type_id,
                            need_reboot,
                            request_user_input,
+                           os_class_id,
                            info_url)
 
         update_id = self.get_update_id(uuid)

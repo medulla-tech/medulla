@@ -48,7 +48,7 @@ from pulse2.consts import PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, PULSE2_P
 from pulse2.consts import PULSE2_PSERVER_ISAVAILABLE_MIRROR, PULSE2_PSERVER_MIRRORFAILED_404_ERROR
 from pulse2.consts import PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR
 from pulse2.consts import PULSE2_SUCCESS_ERROR, PULSE2_TARGET_NOTENOUGHINFO_ERROR
-from pulse2.consts import PULSE2_UNKNOWN_ERROR 
+from pulse2.consts import PULSE2_UNKNOWN_ERROR
 
 
 re_file_prot = re.compile('^file://')
@@ -76,7 +76,7 @@ class RemoteControlPhase(Phase):
     def get_remote_command(self):
         """
         Returns the command to execute on launcher. Can be overriden.
-        
+
         @return: command to execute
         @rtype: str
         """
@@ -90,7 +90,7 @@ class RemoteControlPhase(Phase):
     def get_remote_method(self, *args, **kwargs):
         """
         Returns a method to be call on launcher.
-        
+
         @return: remote method to execute
         @rtype: callable
         """
@@ -101,7 +101,7 @@ class RemoteControlPhase(Phase):
 
 
 
-    def get_filelist(self): 
+    def get_filelist(self):
         """
         Method to override when a filelist needed as argument.
 
@@ -109,7 +109,7 @@ class RemoteControlPhase(Phase):
         @rtype: list
         """
         return None
- 
+
     def perform(self):
         """ Perform the phase action """
         return self._perform()
@@ -120,8 +120,8 @@ class RemoteControlPhase(Phase):
 
         if not client['host']: # We couldn't get an IP address for the target host
             fd = defer.fail(Exception("Not enough information about client to perform %s" % self.name))
-            fd.addErrback(self.parse_remote_phase_error, 
-                          decrement_attempts_left = True, 
+            fd.addErrback(self.parse_remote_phase_error,
+                          decrement_attempts_left = True,
                           error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
             fd.addErrback(self.got_error_in_error)
 
@@ -147,7 +147,7 @@ class RemoteControlPhase(Phase):
                     client,
                     self.config.max_command_time,
                    ]
-            
+
         d = self.get_remote_method(*args)
 
         d.addCallback(cb)
@@ -156,12 +156,12 @@ class RemoteControlPhase(Phase):
 
         return d
 
-    def parse_remote_phase_error (self, 
-                               reason, 
+    def parse_remote_phase_error (self,
+                               reason,
                                decrement_attempts_left = False,
                                error_code = PULSE2_UNKNOWN_ERROR):
         """
-        decrement_attempts_left : by default do not decrement tries as the error 
+        decrement_attempts_left : by default do not decrement tries as the error
         has most likeley be produced by an internal condition
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
@@ -178,7 +178,7 @@ class RemoteControlPhase(Phase):
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
                 return DIRECTIVE.KILLED
-     
+
             if self.phase.switch_to_done():
                 return self.next()
             return self.give_up()
@@ -206,7 +206,7 @@ class WOLPhase(Phase):
     name = "wol"
     last_wol_attempt = None
 
-    
+
 
     def _apply_initial_rules(self):
 
@@ -214,10 +214,10 @@ class WOLPhase(Phase):
             self.logger.info("Circuit #%s: wol done" % self.coh.id)
             return self.next()
 
-        if not self.target.hasEnoughInfoToWOL() or not self.host: 
+        if not self.target.hasEnoughInfoToWOL() or not self.host:
             # not enough information to perform WOL: ignoring phase but writting this in DB
             self.logger.warn("Circuit #%s: wol couldn't be performed; not enough information in target table" % self.coh.getId())
-            self.update_history_failed(PULSE2_TARGET_NOTENOUGHINFO_ERROR, 
+            self.update_history_failed(PULSE2_TARGET_NOTENOUGHINFO_ERROR,
                                " skipped : not enough information in target table")
             if not self.coh.isStateStopped():
                 self.coh.setStateScheduled()
@@ -227,9 +227,9 @@ class WOLPhase(Phase):
             self.phase.set_running()
             return DIRECTIVE.PERFORM
 
-     
+
     def perform(self):
- 
+
         def _cb(result):
             """ results
                 0 => ping NOK => do WOL
@@ -240,8 +240,8 @@ class WOLPhase(Phase):
                 self.logger.info("Circuit #%s: do not wol (target already up)" % \
                              self.coh.id)
                 # FIXME: state will be 'wol_ignored' when implemented in database
-                self.update_history_done(PULSE2_SUCCESS_ERROR, "skipped: host already up") 
- 
+                self.update_history_done(PULSE2_SUCCESS_ERROR, "skipped: host already up")
+
                 self.phase.set_done()
                 if not self.isStateStopped():
                     self.coh.setStateScheduled()
@@ -262,7 +262,7 @@ class WOLPhase(Phase):
 
     def _performWOLPhase(self):
         # perform call
-        mac_addrs = self.target.target_macaddr.split('||') 
+        mac_addrs = self.target.target_macaddr.split('||')
         target_bcast = self.target.target_bcast.split('||')
 
         d = self.launchers_provider.wol(mac_addrs, target_bcast)
@@ -273,11 +273,11 @@ class WOLPhase(Phase):
         return d
 
     def parseWOLAttempt(self, attempt_result):
- 
+
         def setstate(stdout, stderr):
             self.logger.info("Circuit #%s: WOL done and done waiting" % (self.coh.id))
             self.update_history_done(PULSE2_SUCCESS_ERROR, stdout, stderr)
-        
+
             if self.phase.switch_to_done():
                 return self.next()
             else:
@@ -314,7 +314,7 @@ class UploadPhase(RemoteControlPhase):
             return self.next()
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
-                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.GIVE_UP,
                        DIRECTIVE.OVER_TIMED,
                        DIRECTIVE.STOPPED,
                        DIRECTIVE.KILLED,
@@ -322,7 +322,7 @@ class UploadPhase(RemoteControlPhase):
             return self._switch_on()
         return ret
 
-       
+
 
     def perform(self):
         """
@@ -347,9 +347,9 @@ class UploadPhase(RemoteControlPhase):
             return self.give_up()
         elif result == 'dead':
             self.logger.warn("Circuit #%s: waiting for a local proxy which will never be ready !" % self.coh.getId())
-            #self.updateHistory('upload_failed', 
-            self.update_history_failed(PULSE2_PROXY_WAITINGFORDEAD_ERROR, 
-                                       '', 
+            #self.updateHistory('upload_failed',
+            self.update_history_failed(PULSE2_PROXY_WAITINGFORDEAD_ERROR,
+                                       '',
                                        'Waiting for a local proxy which will never be ready')
             return self.switch_phase_failed(True)
         elif result == 'server':
@@ -368,23 +368,23 @@ class UploadPhase(RemoteControlPhase):
 
         if not client['host']: # We couldn't get an IP address for the target host
             err = defer.fail(Exception("Not enough information about client to perform upload"))
-            err.addErrback(self.parsePushError, 
-                           decrement_attempts_left = True, 
+            err.addErrback(self.parsePushError,
+                           decrement_attempts_left = True,
                            error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
             err.addErrback(self.got_error_in_error)
             return err
 
         # first attempt to guess is mirror is local (push) or remove (pull) or through a proxy
-        if self.coh.isProxyClient(): 
+        if self.coh.isProxyClient():
             # proxy client
             d = self._runProxyClientPhase(client)
-        elif re_file_prot.match(self.target.mirrors): 
+        elif re_file_prot.match(self.target.mirrors):
             # local mirror starts by "file://" : prepare a remote_push
             d = self._runPushPhase(client)
         else: # remote push/pull
 
-            try: 
-                # mirror is formated like this: 
+            try:
+                # mirror is formated like this:
                 # https://localhost:9990/mirror1||https://localhost:9990/mirror1
                 mirrors = self.target.mirrors.split('||')
             except:
@@ -417,7 +417,7 @@ class UploadPhase(RemoteControlPhase):
 
     def _eb_mirror_check(self, failure):
         if hasattr(failure, "trap"):
-            err = failure.trap(TimeoutError, 
+            err = failure.trap(TimeoutError,
                                ConnectionRefusedError,
                                ConnectionLost)
             if err == TimeoutError :
@@ -436,18 +436,18 @@ class UploadPhase(RemoteControlPhase):
         if result:
             if type(result) == list and result[0] == 'PULSE2_ERR':
                 if result[1] == PULSE2_ERR_CONN_REF:
-                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, 
-                                               'Connection refused', 
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR,
+                                               'Connection refused',
                                                result[2])
                 elif result[1] == PULSE2_ERR_404:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
                 elif result[1] == PULSE2_ERR_LOST:
-                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, 
-                                               'Connection Lost', 
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR,
+                                               'Connection Lost',
                                                result[2])
                 elif result[1] == PULSE2_ERR_TIMEOUT:
-                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, 
-                                               'Timeout', 
+                    self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR,
+                                               'Timeout',
                                                result[2])
                 elif result[1] == PULSE2_UNKNOWN_ERROR:
                     self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
@@ -479,10 +479,10 @@ class UploadPhase(RemoteControlPhase):
         if result:
             if type(result) == list and result[0] == 'PULSE2_ERR':
                 if result[1] == PULSE2_ERR_CONN_REF:
-                    #self.updateHistory('upload_failed', 
+                    #self.updateHistory('upload_failed',
                     self.update_history_failed(PULSE2_PSERVER_FMIRRORFAILED_CONNREF_ERROR, '', result[2])
                 elif result[1] == PULSE2_ERR_404:
-                    #self.updateHistory('upload_failed', 
+                    #self.updateHistory('upload_failed',
                     self.update_history_failed(PULSE2_PSERVER_FMIRRORFAILED_404_ERROR, '', result[2])
                 self.logger.warn("Circuit #%s: Package '%s' is not available on any mirror" % (self.coh.getId(), self.cmd.package_id))
                 self.update_history_failed(PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', self.cmd.package_id)
@@ -505,17 +505,17 @@ class UploadPhase(RemoteControlPhase):
             return defer.fail(Exception("Cant access to CoH")).addErrback(self.parsePushError, decrement_attempts_left = True).addErrback(self.got_error_in_error)
 
         #proxy = self.get_client("transfert")
-        
-        proxy = {'host': chooseClientInfo(proxyCoH.target), 
-                 'uuid': proxyCoH.target.getUUID(), 
-                 'maxbw': proxyCoH.cmd.maxbw, 
-                 'client_check': getClientCheck(proxyCoH.target), 
-                 'server_check': getServerCheck(proxyCoH.target), 
-                 'action': getAnnounceCheck('transfert'), 
+
+        proxy = {'host': chooseClientInfo(proxyCoH.target),
+                 'uuid': proxyCoH.target.getUUID(),
+                 'maxbw': proxyCoH.cmd.maxbw,
+                 'client_check': getClientCheck(proxyCoH.target),
+                 'server_check': getServerCheck(proxyCoH.target),
+                 'action': getAnnounceCheck('transfert'),
                  #'group': getClientGroup(proxyCoH.target)} # TODO - get correct network address
                  'group': ""} # TODO - get from launchers select
-                  
- 
+
+
         if not proxy['host']: # We couldn't get an IP address for the target host
             return defer.fail(Exception("Can't get proxy IP address")).addErrback(self.parsePushError, decrement_attempts_left = True).addErrback(self.got_error_in_error)
         # and fill struct
@@ -609,14 +609,14 @@ class UploadPhase(RemoteControlPhase):
 
     def _runPushPullPhase(self, mirror, fbmirror, client, useFallback = False):
         if useFallback:
-            self.update_history_in_progress(PULSE2_PSERVER_ISAVAILABLE_FALLBACK, 
-                                            '%s\n%s\n%s\n%s' % (self.cmd.package_id, 
-                                                                mirror, 
-                                                                self.cmd.package_id, 
+            self.update_history_in_progress(PULSE2_PSERVER_ISAVAILABLE_FALLBACK,
+                                            '%s\n%s\n%s\n%s' % (self.cmd.package_id,
+                                                                mirror,
+                                                                self.cmd.package_id,
                                                                 fbmirror))
             mirror = fbmirror
         else:
-            self.update_history_in_progress(PULSE2_PSERVER_ISAVAILABLE_MIRROR, 
+            self.update_history_in_progress(PULSE2_PSERVER_ISAVAILABLE_MIRROR,
                                             '%s\n%s' % (self.cmd.package_id, mirror))
         self.logger.debug("Circuit #%s: Package '%s' is available on %s" % (self.coh.getId(), self.cmd.package_id, mirror))
 
@@ -662,17 +662,17 @@ class UploadPhase(RemoteControlPhase):
         if (not file_uris) or (len(file_uris['files']) == 0):
             if useFallback:
                 self.logger.warn("Circuit #%s: can't get files URI from fallback mirror, skipping command" % (self.coh.getId()))
-                #self.updateHistory('upload_failed', 
-                self.update_history_failed(PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR, 
-                                           '', 
+                #self.updateHistory('upload_failed',
+                self.update_history_failed(PULSE2_PSERVER_GETFILEURIFROMPACKAGE_F_ERROR,
+                                           '',
                                            "%s\n%s" % (self.cmd.package_id, fbmirror))
                 # the getFilesURI call failed on the fallback. We have a serious
                 # problem and we better decrement attempts
                 return self.switch_phase_failed(True)
             elif not fbmirror or fbmirror == mirror:
                 self.logger.warn("Circuit #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (self.coh.getId(), mirror))
-                self.update_history_failed(PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR, 
-                                           '', 
+                self.update_history_failed(PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR,
+                                           '',
                                            "%s\n%s" % (self.cmd.package_id, mirror))
                 # the getFilesURI call failed on the only mirror we have. We have a serious
                 # problem and we better decrement attempts
@@ -717,7 +717,7 @@ class UploadPhase(RemoteControlPhase):
 
     @launcher_proxymethod("completed_push")
     def parsePushResult(self, (exitcode, stdout, stderr)):
-            
+
         if exitcode == PULSE2_SUCCESS_ERROR: # success
             self.logger.info("Circuit #%s: push done (exitcode == 0)" % self.coh.id)
             self.update_history_done(exitcode, stdout, stderr)
@@ -728,11 +728,11 @@ class UploadPhase(RemoteControlPhase):
             self.logger.info("Circuit #%s: push failed (exitcode != 0)" % self.coh.id)
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
- 
+
 
     @launcher_proxymethod("completed_pull")
     def parsePullResult(self, (exitcode, stdout, stderr), id=None):
-        
+
         proxy_coh_id = self.coh.getUsedProxy()
         if proxy_coh_id:
             proxy = CoHQuery(proxy_coh_id)
@@ -764,7 +764,7 @@ class UploadPhase(RemoteControlPhase):
 
     def parsePushError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
         """
-        decrement_attempts_left : by default do not decrement tries as the error 
+        decrement_attempts_left : by default do not decrement tries as the error
         has most likeley be produced by an internal condition
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
@@ -821,7 +821,7 @@ class ExecutionPhase(RemoteControlPhase):
                 if not self.isStateStopped():
                     self.coh.setStateScheduled()
         if ret not in (DIRECTIVE.NEXT,
-                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.GIVE_UP,
                        DIRECTIVE.KILLED,
                        DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
@@ -867,7 +867,7 @@ class DeletePhase(RemoteControlPhase):
             return self.next()
 
         if ret not in (DIRECTIVE.NEXT,
-                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.GIVE_UP,
                        DIRECTIVE.KILLED,
                        DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
@@ -882,7 +882,7 @@ class DeletePhase(RemoteControlPhase):
             pass
             # TODO - control also NET, FTP, NFS, SSH, RSYNC protocols
 
-  
+
 
     @launcher_proxymethod("completed_deletion")
     def parseDeleteResult(self, (exitcode, stdout, stderr)):
@@ -910,11 +910,11 @@ class RebootPhase(RemoteControlPhase):
                 self.coh.setStateScheduled()
             else :
                 return self.give_up()
-                
+
             return self.next()
 
         if ret not in (DIRECTIVE.NEXT,
-                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.GIVE_UP,
                        DIRECTIVE.KILLED,
                        DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
@@ -948,10 +948,10 @@ class HaltPhase(RemoteControlPhase):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
 class WUParsePhase(Phase):
-    """ 
+    """
     Windows Update output parser
 
-    This phase parses the stdout of Windows Update agent which looks 
+    This phase parses the stdout of Windows Update agent which looks
     for KB's to install.
     """
     name = "wu_parse"
@@ -982,6 +982,12 @@ class WUParsePhase(Phase):
                 self.switch_phase_failed()
                 return self.next()
 
+            # Set OS Class id from response JSON
+            if "os_class" in parsed:
+                os_class = parsed['os_class']
+            else:
+                os_class = -1
+
             if "content" in parsed:
                 content = parsed["content"]
                 for line in content:
@@ -1003,6 +1009,7 @@ class WUParsePhase(Phase):
                                      kb_type,
                                      need_reboot,
                                      request_user_input,
+                                     os_class,
                                      info_url.encode('ascii','replace'),
                                      is_installed)
 
@@ -1019,12 +1026,12 @@ class WUParsePhase(Phase):
 
 
 
-# ----------------------------- DONE ------------------------------------        
+# ----------------------------- DONE ------------------------------------
 class DonePhase(Phase):
     name = "done"
     def run(self): return self.perform()
 
-    def perform(self): 
+    def perform(self):
        self.phase.set_done()
        self.coh.setStateDone()
        self.dispatcher.bundles.finish(self.coh.id)
