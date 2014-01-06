@@ -333,6 +333,10 @@ class RpcProxy(RpcProxyI):
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
+        do_wol = "disable"
+        if MscConfig().web_def_awake == 1:
+            do_wol = "enable"
+
         d = defer.maybeDeferred(MscDatabase().addCommand, ctx,
                                  None,
                                  cmd,
@@ -342,6 +346,7 @@ class RpcProxy(RpcProxyI):
                                  'push',
                                  gid,
                                  title = desc,
+                                 do_wol = do_wol,
                                  do_windows_update = "enable")
   
         d.addCallback(xmlrpcCleanup)
