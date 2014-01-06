@@ -267,8 +267,8 @@ def installUpdates(uuid_list):
             continue
 
         # Testing if update needs reboot
-        if update.InstallationBehavior.RebootBehavior > 0:
-            reboot_after = True
+        #if update.InstallationBehavior.RebootBehavior > 0:
+        #    reboot_after = True
 
         # Adding update to installation list
         updatesToInstall.Add(update)

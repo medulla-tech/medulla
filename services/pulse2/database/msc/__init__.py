@@ -685,7 +685,7 @@ class MscDatabase(DatabaseHelper):
             filters = and_(filters, (self.commands.c.end_date <= func.now()))
         else:
             filters = and_(filters, (self.commands.c.end_date > func.now()))
-            
+
         # Adding command type filtering
         # Show default commands type=0 and convegence commands type=2
         filters = and_(filters, (self.commands.c.type.in_([0, 2])))
@@ -893,8 +893,8 @@ class MscDatabase(DatabaseHelper):
         if 'state' in params and params['state']:
             filter.append(self.commands_on_host.c.current_state.in_(params['state']))
 
-        if params['b_id'] == None:
-            is_done = self.__doneBundle(params, session)
+        #if params['b_id'] == None:
+        #    is_done = self.__doneBundle(params, session)
             #if params['finished'] and not is_done: # Filter on finished commands only
             #    filter.append(1 == 0) # send nothing
             #elif not params['finished'] and is_done:

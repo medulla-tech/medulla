@@ -20,7 +20,6 @@
 
 from ConfigParser import NoOptionError, NoSectionError
 
-import os
 from mmc.support.config import PluginConfig
 from mmc.database.config import DatabaseConfig
 

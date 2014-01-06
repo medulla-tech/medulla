@@ -22,8 +22,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, BigInteger, ForeignKey
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
 from mmc.database.database_helper import DBObj

@@ -23,8 +23,7 @@ Declare Update database
 
 import logging
 
-from sqlalchemy import create_engine, MetaData, func
-from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import create_engine, MetaData
 
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target,\

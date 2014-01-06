@@ -602,7 +602,7 @@ def set_backup_for_host(uuid):
         config['Hosts'][newid] = {'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}
     except:
         config['Hosts'] = [{'host':uuid,'dhcp':'0','user':'root','moreUsers':'0'}]
-    res = set_host_config('', config, 1, server_url)
+    set_host_config('', config, 1, server_url)
     #if res['err']: return res
     # Checking if host has been added, then add it to DB
     config = get_host_config('',server_url)['general_config']
