@@ -258,7 +258,7 @@ def installUpdates(uuid_list):
     updatesToInstall = w32comCl.Dispatch("Microsoft.Update.UpdateColl")
 
     # This var will be set if there reboot is required for an update
-    reboot_after = False
+    #reboot_after = False
 
     for update in selectedUpdates:
         # If update is not downloaded, skipping it
