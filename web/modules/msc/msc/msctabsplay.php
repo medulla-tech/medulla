@@ -33,7 +33,7 @@ if (isset($_POST["bconfirm"])) {
     $page = $path[2];
     $tab = $path[3];
     $url = array();
-    foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
+    foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname', 'coh_id') as $post) {
         $url[$post] = $_POST[$post];
     }
     if (isset($tab)) {

@@ -949,8 +949,11 @@ class MscDatabase(DatabaseHelper):
         cohs = self.getCommandsOnHosts(ctx, cohids)
         ret = []
         for element in list:
-            if cohs.has_key(element[1]):
-                ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH(), element[3]))
+            if element[1] in cohs:
+                if len(element) == 4:
+                    ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH(), element[3]))
+                else:
+                    ret.append((element[0].toH(), element[1], element[2], cohs[element[1]].toH()))
             else:
                 ret.append((element[0].toH(), element[1], element[2], False))
         return ret
