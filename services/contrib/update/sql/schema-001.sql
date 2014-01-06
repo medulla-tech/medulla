@@ -28,22 +28,6 @@ SET storage_engine=INNODB;
 SET GLOBAL character_set_server=UTF8;
 SET SESSION character_set_server=UTF8;
 
--- phpMyAdmin SQL Dump
--- version 3.4.11.1deb2
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Dec 16, 2013 at 05:55 PM
--- Server version: 5.5.31
--- PHP Version: 5.4.4-14+deb7u5
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
---
--- Database: `update`
---
-
 -- --------------------------------------------------------
 
 --
