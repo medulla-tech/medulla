@@ -142,7 +142,7 @@ if (isset($_POST["bconfirm"])) {
 <script type="text/javascript">
     jQuery(function() {
         var $ = jQuery;
-        $('form#playPopupForm').submit(function() {
+        $('form#startPopupForm').submit(function() {
             $.ajax($(this).attr('action'), {
                 type: $(this).attr('method'),
                 data: $(this).serialize() + '&bconfirm=1'
