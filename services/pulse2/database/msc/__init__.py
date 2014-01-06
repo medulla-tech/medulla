@@ -685,6 +685,10 @@ class MscDatabase(DatabaseHelper):
             filters = and_(filters, (self.commands.c.end_date <= func.now()))
         else:
             filters = and_(filters, (self.commands.c.end_date > func.now()))
+            
+        # Adding command type filtering
+        # Show default commands type=0 and convegence commands type=2
+        filters = and_(filters, (self.commands.c.type.in_([0, 2])))
 
         # ====== CALCULATING COUNT ============================
 
