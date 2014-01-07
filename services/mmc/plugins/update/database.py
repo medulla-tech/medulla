@@ -57,7 +57,7 @@ class updateDatabase(DatabaseHelper):
         # Uncomment this line to connect to mysql and parse tables
         self.is_activated = True
         logger.debug("UpdateMgr database connected")
-        return True
+        return self.db_check()
 
     def initMappers(self):
         """

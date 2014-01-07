@@ -24,10 +24,6 @@
 -- Database version
 -- ----------------------------------------------------------------------
 
-SET storage_engine=INNODB;
-SET GLOBAL character_set_server=UTF8;
-SET SESSION character_set_server=UTF8;
-
 ALTER TABLE  `os_classes` ADD  `enabled` TINYINT NOT NULL;
 UPDATE  `os_classes` SET  `enabled` =  '1' WHERE  `os_classes`.`id` =3;
 UPDATE  `version` SET  `Number` =  '2' WHERE 1;
