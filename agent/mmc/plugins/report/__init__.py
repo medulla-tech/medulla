@@ -131,14 +131,14 @@ class RpcProxy(RpcProxyI):
 
         result = {}
         xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
-        for section in xmltemp.iter('section'):
+        for section in xmltemp.getiterator('section'):
             attr_section = translate_attrs(section.attrib)
             if not attr_section['module'] in result:
                 result[attr_section['module']] = []
             # Adding item to attr
             #attr_section['items'] = _fetchItems(section)
             attr_section['tables'] = []
-            for table in section.iter('table'):
+            for table in section.getiterator('table'):
                 dct = translate_attrs(table.attrib)
                 dct['items'] = _fetchItems(table)
                 attr_section['tables'].append(dct)
