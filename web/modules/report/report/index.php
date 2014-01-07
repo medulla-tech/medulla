@@ -210,7 +210,7 @@ else if (isset($_POST['generate_report'])) {
                 $f->push(new Div());
                 if ($report_types[$i] == 'table' && $report_types[$i + 1] == 'svg') {
                     $multicol = new multicol();
-                    $f->add($multicol()
+                    $f->add($multicol
                                     ->add($report_objects[$i], '60%', '0 2% 0 0')
                                     ->add($report_objects[$i + 1], '40%')
                                 );
