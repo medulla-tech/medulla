@@ -209,11 +209,15 @@ class DatabaseHelper(Singleton):
 
             # Calculating count without limit and offset on primary entity id
             primary_id = _entity_descriptor(query._mapper_zero(), "id")
-            count = query.with_entities(func.count(primary_id)).scalar()
+            count = query.with_entities(func.count(primary_id))
+            # Scalar doesn't work if multiple entities are selected
+            count = sum([c[0] for c in count.all()])
 
             # Applying limit and offset
             if 'max' in params and 'min' in params:
                 query = query.limit(int(params['max']) - int(params['min'])).offset(int(params['min']))
+
+            columns = query.column_descriptions
 
             data = []
 
@@ -223,14 +227,19 @@ class DatabaseHelper(Singleton):
                     data.append(line.toDict())
                 elif isinstance(line, tuple):
                     # Fetching all tuple items
-                    line_ = []
-                    for item in line:
+                    line_ = {}
+                    for i in xrange(len(line)):
+                        item = line[i]
                         if isinstance(item, DBObj):
-                            line_.append(item.toDict())
+                            line_.update(item.toDict())
                         else:
-                            line_.append(item)
+                            if item.__class__.__name__ == 'Decimal':
+                                item = int(item)
+                            line_.update({columns[i]['name'].encode('ascii', 'ignore') : item})
                     data.append(line_)
                 else:
+                    if line.__class__.__name__ == 'Decimal':
+                        line = int(line)
                     # Base types
                     data.append(line)
 
