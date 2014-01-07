@@ -36,14 +36,15 @@ logger = logging.getLogger()
     #logger.warn("report: I can't load Pulse ComputerLocationManager")
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
+from mmc.core.version import scmRevision
 from mmc.plugins.base import LdapUserGroupControl
 from mmc.plugins.report.config import ReportConfig, reportconfdir
 from mmc.plugins.report.database import ReportDatabase
 from mmc.plugins.report.output import XLSGenerator, PDFGenerator, SVGGenerator
 
-VERSION = "0.0.0"
+VERSION = "3.1.0"
 APIVERSION = "0:1:0"
-REVISION = ""
+REVISION = scmRevision("$Rev$")
 
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
