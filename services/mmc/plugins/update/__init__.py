@@ -31,13 +31,11 @@ from mmc.plugins.update.database import updateDatabase
 from mmc.plugins.msc import create_update_command
 from pulse2.managers.group import ComputerGroupManager
 
-VERSION = "0.0.0"
-APIVERSION = "0:1:0"
-REVISION = ""
+from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
-def getVersion(): return VERSION
+APIVERSION = "0:1:0"
+
 def getApiVersion(): return APIVERSION
-def getRevision(): return REVISION
 
 
 def activate():
