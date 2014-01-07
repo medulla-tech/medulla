@@ -46,6 +46,10 @@ def activate():
     if not updateDatabase().activate(config):
         logger.error("UpdateMgr database not activated")
         return False
+    # Add historization task in the task manager
+    TaskManager().addTask("update.create_update_commands",
+                            (create_update_commands,),
+                            cron_expression=config.update_commands_cron)
     return True
 
 def calldb(func, *args, **kw):

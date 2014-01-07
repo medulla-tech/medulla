@@ -35,14 +35,6 @@ class updateConfig(PluginConfig, DatabaseConfig):
         PluginConfig.readConf(self)
         DatabaseConfig.setup(self, self.conffile)
         try:
-            self.historization = self.get('data', 'historization')
+            self.update_commands_cron = self.get('main', 'update_commands_cron')
         except (NoOptionError, NoSectionError):
-            self.historization = '15 2 * * *'
-        try:
-            self.indicators = self.get('data', 'indicators')
-        except (NoOptionError, NoSectionError):
-            self.indicators = 'indicators.xml'
-        try:
-            self.updateTemplate = self.get('data', 'updateTemplate')
-        except (NoOptionError, NoSectionError):
-            self.updateTemplate = 'default.xml'
+            self.update_commands_cron = '10 12 * * *'
