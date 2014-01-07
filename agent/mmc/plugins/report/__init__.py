@@ -76,9 +76,9 @@ def activate():
 def import_indicators():
     config = ReportConfig("report")
     xmltemp = ET.parse(os.path.join(reportconfdir, config.indicators)).getroot()
-    for module in xmltemp.iter('module'):
+    for module in xmltemp.getiterator('module'):
         module_name = module.attrib['name']
-        for indicator in module.iter('indicator'):
+        for indicator in module.getiterator('indicator'):
             indicator_attr = indicator.attrib
             indicator_attr['module'] = module_name
             # Add indicator if not exists
