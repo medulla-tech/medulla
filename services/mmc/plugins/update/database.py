@@ -23,7 +23,7 @@ Declare Update database
 
 import logging
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine, MetaData, func
 
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target,\
@@ -149,10 +149,18 @@ class updateDatabase(DatabaseHelper):
         Status filter is specially treaten
         in this order of priority: Update -> Update Type
         """
-
+        #.add_column(func.count(Target))\
         try:
-            query = session.query(Update)\
-                .join(UpdateType)
+            # Defining subqueries
+            installed_targets = session.query(Target.update_id, func.sum(Target.is_installed).label('total_installed')).group_by(Target.update_id).subquery()
+            all_targets = session.query(Target.update_id, func.count('*').label('total_targets')).group_by(Target.update_id).subquery()
+
+
+            # Main query
+            query = session.query(Update, installed_targets.c.total_installed, all_targets.c.total_targets)\
+                .join(Update.update_type)\
+                .outerjoin(installed_targets, Update.id == installed_targets.c.update_id)\
+                .outerjoin(all_targets, Update.id == all_targets.c.update_id)
 
             # ==== STATUS FILTERING ======================
             if 'filters' in params and 'status' in params['filters']:

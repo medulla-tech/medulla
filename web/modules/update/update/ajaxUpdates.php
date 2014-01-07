@@ -68,10 +68,16 @@ $cols = listInfoFriendly($data);
 
 // Update types strings
 $cols['type_str'] = array_map('getUpdateTypeLabel', $cols['type_id']);
+// Creating installed/total col
+$cols['targets'] = array();
+for ($i = 0; $i < count($cols['total_targets']); $i++){
+    $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
+}
 
 $n = new OptimizedListInfos($cols['title'], _T("Update title", "msc"));
 $n->addExtraInfo($cols['uuid'], _T("UUID", "msc"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "msc"));
+$n->addExtraInfo($cols['targets'], _T("Installed count", "msc"));
 
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
