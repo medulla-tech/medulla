@@ -142,7 +142,6 @@ class QueryManager(Singleton):
 
     def getPossiblesValuesForCriterionInModule(self, ctx, moduleName, criterion, value1 = '', value2 = None):
         ret = self.queryPossibilities[moduleName][criterion]
-        ctx.qmanager_request = 1
         if ret[0] == 'list' and len(ret) == 3:
             if len(value1) < ret[2]:
                 return [ret[0], []]

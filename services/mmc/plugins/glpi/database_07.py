@@ -1139,9 +1139,6 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         for location in q:
             ret.append(location)
-        # Append a fake entity record for the root entity
-        # since it isn't referenced in the entity table.
-        ret.insert(0, rootLocation())
         return ret
 
     def __add_children(self, child):
@@ -1170,9 +1167,6 @@ class Glpi07(DyngroupDatabaseHelper):
         if isinstance(uuid, list):
             uuid = uuid[0]
 
-        # Faking the root entity name
-        if uuid == 'UUID0':
-            return rootLocation().name
         return self.getLocation(uuid).name
 
     def getLocationsList(self, ctx, filt = None):
@@ -2259,10 +2253,6 @@ class Glpi07(DyngroupDatabaseHelper):
         query = query.order_by(self.location.c.name)
         ret = query.all()
         session.close()
-        if 0 in ctx.locationsid:
-            # Append a fake entity record for the root entity
-            # since it isn't referenced in the entity table.
-            ret.insert(0, rootLocation())
         return ret
 
     def getMachineByEntity(self, ctx, enname):
@@ -3287,20 +3277,6 @@ class Location(object):
             'comments':self.comments,
             'level':self.level
         }
-
-# Since the root entity is not defined in GLPI
-# database, use a fake record to make queries in
-# the root entity.
-def rootLocation():
-    """
-    Returns a fake root entity DB entry
-    """
-    root_entity = Location()
-    root_entity.ID = 0L
-    root_entity.name = "root"
-    root_entity.completename = "Root entity"
-    root_entity.level = 0
-    return root_entity
 
 class State(object):
     pass
