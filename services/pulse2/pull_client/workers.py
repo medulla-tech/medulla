@@ -95,7 +95,8 @@ class StepWorker(Thread):
                     pass
                 else:
                     result = step.start()
-                    self.result_queue.put(result)
+                    if result.send:
+                        self.result_queue.put(result)
                     logger.debug(result)
                     if result.is_success or not step.required:
                         # If the step is not required (in non_fatal_steps)

@@ -144,12 +144,13 @@ class Command(object):
 
 class Result(object):
 
-    def __init__(self, step_name, command_id, stdout, stderr, exitcode):
+    def __init__(self, step_name, command_id, stdout, stderr, exitcode, send=True):
         self.command_id = command_id
         self.step_name = step_name
         self.stdout = stdout
         self.stderr = stderr
         self.exitcode = exitcode
+        self.send = send
 
     @property
     def is_success(self):
@@ -160,6 +161,7 @@ class Result(object):
 
 
 class Step(object):
+    send = True
 
     def __init__(self, command, name, required=True):
         self.command = command
@@ -186,7 +188,8 @@ class Step(object):
             out.close()
             exitcode = 1
             logger.exception("Error in %s" % self)
-        result = Result(self.name, self.command.id, stdout, "", exitcode)
+        result = Result(self.name, self.command.id, stdout, "", exitcode,
+                        send=self.send)
         return result
 
     def run(self):
@@ -197,6 +200,7 @@ class Step(object):
 
 
 class NoopStep(Step):
+    send = False
 
     def run(self):
         return ("%f O: Ignored in pull mode." % time.time(), 0)
