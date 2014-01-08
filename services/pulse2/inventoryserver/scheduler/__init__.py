@@ -75,29 +75,17 @@ class AttemptToScheduler(object):
         logger.info("<scheduler> : Start")
         self.dispatch_msc()
 
+
     def dispatch_msc(self):
         """
         Get a filtered list of scheduled tasks and executing each of them.
         """
-        params = {"uuid": self.uuid}
         try:
-            result = self.proxy.msc.displayLogs(params)
+            tasks = self.proxy.msc.checkLightPullCommands(self.uuid)
         except:
-            logger.exception("<scheduler> : Error while executing 'msc.displayLogs'")
+            logger.exception("<scheduler> : Error while executing 'msc.checkLightPullCommands'")
             return False
 
-        _size, _tasks = result
-
-        unauthorised_states = ['failed',
-                               'done',
-                               'stopped'
-                               ]
-
-        # task queryset structure (single line):
-        # commands__columns, id, current_state, command_on_host__columns
-
-        # we need only ids (cohs) excluding unauthorised states
-        tasks = [a[1] for a in _tasks if a[2] not in unauthorised_states]
 
         if len(tasks) == 0:
             logger.debug("<scheduler> : Nothing to execute :")

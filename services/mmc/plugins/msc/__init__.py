@@ -463,6 +463,19 @@ class RpcProxy(RpcProxyI):
                                                                             hostname,
                                                                             macs))
 
+    def checkLightPullCommands(self, uuid):
+        """
+        Returns all coh ids te re-execute.
+
+        @param uuid: uuid of checked computer
+        @type uuid: str
+
+        @return: coh ids to start
+        @rtype: list
+        """
+        return xmlrpcCleanup(MscDatabase().checkLightPullCommands(uuid))
+
+
     def displayLogs(self, params = {}):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))

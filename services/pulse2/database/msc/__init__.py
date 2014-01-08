@@ -958,6 +958,32 @@ class MscDatabase(DatabaseHelper):
                 ret.append((element[0].toH(), element[1], element[2], False))
         return ret
 
+    def checkLightPullCommands(self, uuid):
+        """
+        Returns all coh ids te re-execute.
+
+        @param uuid: uuid of checked computer
+        @type uuid: str
+
+        @return: coh ids to start
+        @rtype: list
+        """
+        session = create_session()
+
+        query = session.query(CommandsOnHost)
+        query = query.select_from(self.commands.join(self.commands_on_host).join(self.target))
+        query = query.filter(self.target.c.target_uuid == uuid)
+        query = query.filter(self.commands_on_host.c.current_state == "scheduled")
+
+        ret = [q.id for q in query.all()]
+
+        session.close()
+
+        return ret
+
+        
+ 
+
     def displayLogs(self, ctx, params = None): # TODO USE ctx
         if params is None: # do not change the default value!
             params = {}
