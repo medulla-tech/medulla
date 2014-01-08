@@ -59,7 +59,7 @@ class Command(object):
                 try:
                     step = getattr(Steps, step_name.upper()).klass(self, step_name, required)
                 except AttributeError:
-                    step = NoopStep(step_name, required)
+                    step = NoopStep(self, step_name, required)
                 self.to_do.put(step)
         # Put first step in the work queue
         self.next_step()
