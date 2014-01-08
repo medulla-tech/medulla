@@ -358,8 +358,8 @@ class RenderedMSCBundleSortAdv extends RenderedMSCBundleSortParent {
         $f->add(new TrFormElement('',                                                       new CheckboxTpl("issue_halt_to_out_of_interval", _T("out of interval", "msc"))), array("value" => $_POST['issue_halt_to_out_of_interval'] == 'on' ? 'checked' : ''));*/
 
         $f->add(new TrFormElement(_T('Command parameters', 'msc'),                          new InputTpl('parameters')), array("value" => ''));
-        $f->add(new TrFormElement(_T('Beginning of validity', 'msc'),                       new DynamicDateTpl('start_date')), array('value' => $start_date, 'ask_for_now' => 0));
-	$f->add(new TrFormElement(_T('End of validity', 'msc'),                             new DynamicDateTpl('end_date')), array('value' => $end_date, 'ask_for_never' => 0));
+        $f->add(new TrFormElement(_T('Beginning of validity', 'msc'),                       new DateTimeTpl('start_date')), array('value' => $start_date, 'ask_for_now' => 0));
+	$f->add(new TrFormElement(_T('End of validity', 'msc'),                             new DateTimeTpl('end_date')), array('value' => $end_date, 'ask_for_never' => 0));
 	$f->add(new TrFormElement(_T('Deployment interval', 'msc'),                         new InputTpl('deployment_intervals')), array("value" => $_POST['deployment_intervals']));
         $f->add(new TrFormElement(_T('Max bandwidth (kbits/s)', 'msc'),                         new NumericInputTpl('maxbw')), array("value" => web_def_maxbw()));
         $f->add(new HiddenTpl("create_directory"),      array("value" => 'on',              "hide" => True));

@@ -394,7 +394,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (quick_get('launchAction')) { // Advanced Quick Action
         $f->add(
             new TrFormElement(
-                _T('The command must start after', 'msc'), new DynamicDateTpl('start_date')
+                _T('The command must start after', 'msc'), new DateTimeTpl('start_date')
             ), array(
                 "value" => $start_date,
                 "ask_for_now" => 0
@@ -403,7 +403,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
         $f->add(
             new TrFormElement(
-                _T('The command must stop before', 'msc'), new DynamicDateTpl('end_date')
+                _T('The command must stop before', 'msc'), new DateTimeTpl('end_date')
             ), array(
                 "value" => $end_date,
                 "ask_for_never" => 0

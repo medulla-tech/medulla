@@ -40,8 +40,8 @@ if (isset($_POST["bconfirm"])) {
 $f = new PopupForm(_T('Reschedule this command', 'msc'), 'reschedulePopupForm');
 $f->add(new HiddenTpl("cmd_id"), array("value" => $_GET['cmd_id'], "hide" => True));
 
-$f->add(new TrFormElement(_T('Start date', 'msc'), new DynamicDateTpl('start_date')), array('value' => date("Y-m-d H:i:s")));
-$f->add(new TrFormElement(_T('<br/>End date', 'msc'), new DynamicDateTpl('end_date')), array('value' => date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60)));
+$f->add(new TrFormElement(_T('Start date', 'msc'), new DateTimeTpl('start_date')), array('value' => date("Y-m-d H:i:s")));
+$f->add(new TrFormElement(_T('<br/>End date', 'msc'), new DateTimeTpl('end_date')), array('value' => date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60)));
 $f->addValidateButton("bconfirm");
 $f->addCancelButton("bback");
 $f->display();
