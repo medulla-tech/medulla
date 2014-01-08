@@ -173,10 +173,10 @@ function createAclAttrTemplate($module_name, $aclattr, $form) {
         $form->add(new TitleElement(_($base->getDescription())));
         // Set all radiobutton
         $str = _('Set value for all radio buttons:&nbsp;&nbsp;');
-        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(\'aclattr\', \'ro\');">'._("read only").'</a>&nbsp;&nbsp;';
-        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(\'aclattr\', \'rw\');">'._("read/write").'</a>&nbsp;&nbsp;';
-        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(\'aclattr\', \'\');">'._("hide").'</a><br /><br />';
-        $form->add(new SpanElement($str));
+        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(this, \'aclattr\', \'ro\');">'._("read only").'</a>&nbsp;&nbsp;';
+        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(this, \'aclattr\', \'rw\');">'._("read/write").'</a>&nbsp;&nbsp;';
+        $str .= '<a href="javascript:void(0);" onclick="checkAllRadio(this, \'aclattr\', \'\');">'._("hide").'</a><br /><br />';
+        $form->add(new ParaElement($str));
         $form->push(new Table());
         $form->add(new TrTitleElement(array(0=>_("Attribute description"),1=>_("read only"),2=>_("read/write"),3=>_("hide"))));
         foreach ($aclArray[$module_name] as $key => $value) {

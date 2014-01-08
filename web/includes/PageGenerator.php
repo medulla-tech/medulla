@@ -2765,6 +2765,24 @@ class SpanElement extends HtmlElement {
         }
         printf('<span%s>%s</span>', $class, $this->content);
     }
+}
+
+class ParaElement extends HtmlElement {
+
+    function ParaElement($content, $class=null) {
+        $this->name = $class;
+        $this->content = $content;
+        $this->class = $class;
+    }
+
+    function display($arrParam = array()) {
+        if ($this->class) {
+            $class = ' class="' . $this->class . '"';
+        } else {
+            $class = '';
+        }
+        printf('<p%s>%s</p>', $class, $this->content);
+    }
 
 }
 
@@ -2776,8 +2794,8 @@ class SelectElement extends HtmlElement {
     }
 
     function display($arrParam = array()) {
-        print '<a href="javascript:void(0);" onclick="checkAll(\'' . $this->name . '\',1);checkAll(\'' . $this->nametab . '\',1);">' . _("Select all") . ' </a> / ';
-        print '<a href="javascript:void(0);" onclick="checkAll(\'' . $this->name . '\',0);checkAll(\'' . $this->nametab . '\',0);">' . _("Unselect all") . '</a><br/>';
+        $p = new ParaElement('<a href="javascript:void(0);" onclick="checkAll(this, \'' . $this->name . '\',1); checkAll(this, \'' . $this->nametab . '\',1);">' . _("Select all") . ' </a> / <a href="javascript:void(0);" onclick="checkAll(this, \'' . $this->name . '\',0); checkAll(this, \'' . $this->nametab . '\',0);">' . _("Unselect all") . '</a>');
+        $p->display();
     }
 
 }

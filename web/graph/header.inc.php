@@ -75,16 +75,18 @@ $root = $conf["global"]["root"];
             }
 
             // prefix: checkbox prefix, check_state 0/1
-            function checkAll(prefix, check_state) {
-                jQuery('input[type=checkbox]').each(function() {
+            function checkAll(elem, prefix, check_state) {
+                elem = jQuery(elem);
+                elem.parent().next('table').find('input[type=checkbox]').each(function() {
                     if (jQuery(this).attr('name').indexOf(prefix) > -1)
                         jQuery(this).prop('checked', check_state);
                 });
             }
 
             // prefix: radio prefix, value null,ro,rw
-            function checkAllRadio(prefix, value) {
-                jQuery('input[type=radio]').each(function() {
+            function checkAllRadio(elem, prefix, value) {
+                elem = jQuery(elem);
+                elem.parent().next('table').find('input[type=radio]').each(function() {
                     if (jQuery(this).attr('name').indexOf(prefix) > -1 && jQuery(this).val() == value)
                         jQuery(this).prop('checked', 1);
                 });
