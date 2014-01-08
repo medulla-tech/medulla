@@ -90,13 +90,7 @@ class AttemptToScheduler(object):
 
         unauthorised_states = ['failed',
                                'done',
-                               'upload_in_progress',
-                               'execution_in_progress',
-                               'delete_in_progress',
-                               'inventory_in_progress',
-                               'reboot_in_progress',
-                               'wol_in_progress',
-                               'halt_in_progress',
+                               'stopped'
                                ]
 
         # task queryset structure (single line):
