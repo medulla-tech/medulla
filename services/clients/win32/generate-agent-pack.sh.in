@@ -54,6 +54,7 @@ sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
 # Others variables
 my_fqdn=`hostname -f`
 download_only=0
+inv_tag=''
 
 # Common cleaning
 rm -f pulse2-win32-agents-pack.exe \
@@ -84,6 +85,8 @@ if [ "${1}" = "clean" ]; then
   exit 0
 elif [ "${1}" = "download-only" ]; then
    download_only=1
+elif [ ! -z ${1} ]; then
+  inv_tag=${1}
 fi
 
 # Sanity checks
@@ -260,6 +263,7 @@ if [ ! ${download_only} -eq 1 ]; then
       -e "s/@@vnc_file@@/${vnc_file}/" \
       -e "s/@@vnc_reg@@/${vnc_reg}/" \
       -e "s/@@inv_file@@/${inv_file}/" \
+      -e "s/@@inv_tag@@/${inv_tag}/" \
       pulse2-win32-agents-installer.nsi.in \
       > pulse2-win32-agents-installer.nsi    
 
