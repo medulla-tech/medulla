@@ -327,7 +327,7 @@ class WUInjectDB :
         """
 
         stat = "UPDATE targets SET is_installed = %d " % is_installed
-        stat += "WHERE update_id = %d AND uuid = %d;" % (update_id, uuid)
+        stat += "WHERE update_id = %s AND uuid = %s;" % (update_id, uuid)
 
         self.logger.debug("\033[33m%s\033[0m" % stat)
         try:
