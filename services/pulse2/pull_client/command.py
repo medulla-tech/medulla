@@ -237,11 +237,12 @@ class ExecuteStep(Step):
 class DeleteStep(Step):
 
     def run(self):
-        package_dir = os.path.join(get_packages_dir(), self.command.package_uuid)
-        if os.path.exists(package_dir):
-            shutil.rmtree(package_dir)
-        if os.path.exists(package_dir + ".zip"):
-            os.unlink(package_dir + ".zip")
+        if self.command.package_uuid:
+            package_dir = os.path.join(get_packages_dir(), self.command.package_uuid)
+            if os.path.exists(package_dir):
+                shutil.rmtree(package_dir)
+            if os.path.exists(package_dir + ".zip"):
+                os.unlink(package_dir + ".zip")
         return ("%f O: Package files removed" % time.time(), 0)
 
 
