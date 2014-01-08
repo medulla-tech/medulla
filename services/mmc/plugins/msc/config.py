@@ -107,7 +107,7 @@ class MscConfig(MscDatabaseConfig):
 
     # Probe behavior
     web_probe_order =  ""
-    web_probe_order_on_demand = "ping_ssh"
+    web_probe_order_on_demand = "ssh"
 
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
