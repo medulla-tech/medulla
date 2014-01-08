@@ -555,6 +555,86 @@ class DynamicDateTpl extends InputTpl {
 
 }
 
+/**
+ * dateTime input template
+ */
+class DateTimeTpl extends AbstractTpl {
+    
+    function __construct($name){
+        $this->name = $name;
+    }
+
+    function display($arrParam = array()) {
+        // Display text input
+        print '<input style="width:110px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $arrParam["value"] . '" readonly=1 />';
+        
+        if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
+            $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
+            print '
+            <script type="text/javascript" src="jsframework/lib/jquery-ui-timepicker-addon.min.js"></script>
+            ';
+
+            /*if (isset($_REQUEST["lang"])) { // EN calendar always read, as the next one may not exists
+                $extention = substr($_REQUEST["lang"], 0, 2); // transpose LANG, f.ex. fr_FR => fr
+                print '
+                <script type="text/javascript" src="graph/jscalendar/lang/calendar-' . $extention . '.js"></script>
+                ';
+            }*/
+        }
+        
+        $months = array(
+            _('January'), _('February'), _('March'), _('April'),
+            _('May'), _('June'), _('July'), _('August'),
+            _('September'), _('October'), _('November'), _('December')
+        );
+        
+        $months_short = array();
+        
+        foreach ($months as $month){
+            $months_short[] = substr($month, 0, 3);
+        }
+        
+        $days = array(
+            _('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'),
+            _('Thursday'), _('Friday'), _('Saturday')
+        );
+        
+        $days_short = array();
+        
+        foreach ($days as $day){
+            $days_short[] = substr($day, 0, 3);
+        }
+        
+        // Set dateTimePicket params
+        $params = array(
+            'closeText' => _('Close'),
+            'prevText' => _('Previous'),
+            'nextText' => _('Next'),
+            'currentText' => _('Now'),
+            'monthNames' => $months,
+            'monthNamesShort' => $months_short,
+            'dayNames' => $days,
+            'dayNamesShort' => $days_short,
+            'dayNamesMin' => $days_short,
+            'firstDay' => 1,
+            'timeFormat' => "HH:mm:ss",
+            'dateFormat' => "yy-mm-dd",
+        );
+        
+        $params_json = json_encode($params);
+        
+
+        // Set dateTimePicker on input
+        print '
+            <script type="text/javascript">
+                jQuery(function(){
+                    jQuery("input#' . $this->name . '").datetimepicker(' . $params_json . ');
+                });
+            </script>';
+    }
+
+}
+
 class MultipleInputTpl extends AbstractTpl {
 
     function MultipleInputTpl($name, $desc = '', $new = false, $formId = "Form") {
