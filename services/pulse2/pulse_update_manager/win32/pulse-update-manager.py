@@ -230,7 +230,7 @@ def installUpdates(uuid_list):
             update.AcceptEula()
 
         # Adding update to updatesToDownload list
-        print 'Adding "%s" to install list' % update.Title
+        print 'Adding "%s" to install list' % update.Identity.UpdateID
         updatesToDownload.Add(update)
         selectedUpdates.append(update)
 
