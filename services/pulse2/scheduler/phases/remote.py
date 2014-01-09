@@ -1004,13 +1004,13 @@ class WUParsePhase(Phase):
                         wu = WUInjectDB()
                         wu.inject(self.target.target_uuid.replace('UUID', ''),
                                      uuid,
-                                     title.encode('ascii','replace'),
-                                     kb_number.encode('ascii','replace'),
+                                     title.encode('utf-8','replace'),
+                                     kb_number.encode('utf-8','replace'),
                                      kb_type,
                                      need_reboot,
                                      request_user_input,
                                      os_class,
-                                     info_url.encode('ascii','replace'),
+                                     info_url.encode('utf-8','replace'),
                                      is_installed)
 
                     except ValueError:
