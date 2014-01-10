@@ -77,8 +77,8 @@ function getPGobject($id, $load = false) {
 
 
 class ConvergenceGroup extends Group {
-    function __Construct($id = null, $load = false) {
-        parent::Group($id, $load);
+    function __Construct($id = null, $load = false, $ro = False, $root_context = false) {
+        parent::Group($id, $load, $ro, $root_context);
         $this->type = 2;
         $this->isDeployGroup = True;
         $this->isDoneGroup = False;
@@ -120,7 +120,9 @@ class ConvergenceGroup extends Group {
     function setRequest() {
         if ($this->parentGroup == Null) {
             $parent_gid = xmlrpc_get_convergence_parent_group_id($this->id);
-            $parent_group = new Group($parent_gid, True);
+            /* Get parent group with root context @see #2240
+               Needed to get parent name for package edition */
+            $parent_group = new Group($parent_gid, True, False, True);
             $this->setParentGroup($parent_group);
         }
         $this->request = new Request();
@@ -186,9 +188,9 @@ class Profile extends Group {
     function isGroup() { return False; }
 }
 class Group {
-    function Group($id = null, $load = false, $ro = false) {
+    function Group($id = null, $load = false, $ro = false, $root_context = false) {
         if ($id && $load) {
-            $params = __xmlrpc_get_group($id, $ro);
+            $params = __xmlrpc_get_group($id, $ro, $root_context);
             if ($params == False) {
                 $this->exists = False;
             } else {
@@ -322,7 +324,7 @@ function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgro
 function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
 function __xmlrpc_countallprofiles($params) { return xmlCall("dyngroup.countallprofiles", array($params)); }
 function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofiles", array($params)); }
-function __xmlrpc_get_group($id, $ro) { return xmlCall("dyngroup.get_group", array($id, $ro)); }
+function __xmlrpc_get_group($id, $ro) { return xmlCall("dyngroup.get_group", array($id, $ro, $root_context)); }
 
 function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
 function __xmlrpc_create_group($name, $visibility, $type = 0, $parent_id = null) { return xmlCall("dyngroup.create_group", array($name, $visibility, $type, $parent_id)); }

@@ -162,8 +162,8 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
 
-    def get_group(self, id, ro = False):
-        ctx = self.currentContext
+    def get_group(self, id, ro = False, root_context = False):
+        ctx = root_context and self.getContext() or self.currentContext
         grp = DyngroupDatabase().get_group(ctx, id, ro)
         if grp:
             return xmlrpcCleanup(grp.toH())
