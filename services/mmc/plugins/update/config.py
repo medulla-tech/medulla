@@ -38,3 +38,7 @@ class updateConfig(PluginConfig, DatabaseConfig):
             self.update_commands_cron = self.get('main', 'update_commands_cron')
         except (NoOptionError, NoSectionError):
             self.update_commands_cron = '10 12 * * *'
+        try:
+            self.enable_update_commands = int(self.get('main', 'enable_update_commands'))
+        except:
+            self.enable_update_commands = 1
