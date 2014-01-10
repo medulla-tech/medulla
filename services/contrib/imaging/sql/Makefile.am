@@ -29,4 +29,5 @@ dist_sql_DATA = README \
 	schema-005.sql \
 	schema-006.sql \
 	schema-007.sql \
-	schema-008.sql
+	schema-008.sql \
+	schema-009.sql
