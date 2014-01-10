@@ -512,6 +512,7 @@ class SVGGenerator(object):
         self.chart.config.value_font_size = 10
         self.chart.config.tooltip_font_size = 10
         self.chart.config.title_font_size = 13
+        self.chart.config.print_values = False
         return self.chart.render()
 
     def toPNG(self):
