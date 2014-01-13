@@ -243,6 +243,9 @@ class DatabaseHelper(Singleton):
                     # Base types
                     data.append(line)
 
+            # Ensure that session will be closed
+            query.session.close()
+
             return {'count': count, 'data': data, 'listinfo': 1}
 
         return __listinfo
