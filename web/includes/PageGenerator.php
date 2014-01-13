@@ -1543,6 +1543,10 @@ class AjaxFilterLocation extends AjaxFilter {
                     }
                     if (jQuery('#maxperpage').length)
                         maxperpage = jQuery('#maxperpage').val();
+		    if (!location)
+			location = document.Form.<?php echo $this->paramname ?>.value;
+		    if (!filter)
+			filter = document.Form.param.value;
 
                     jQuery.ajax({
                         'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
