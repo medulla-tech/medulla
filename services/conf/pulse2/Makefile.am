@@ -37,6 +37,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/04_Adobe_consistency.py \
 	inventory-server/xml-fix/05_HP_consistency.py \
 	inventory-server/xml-fix/06_Laptop_type.py \
+	inventory-server/xml-fix/07_Virtual_machine_type.py \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
 	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf \

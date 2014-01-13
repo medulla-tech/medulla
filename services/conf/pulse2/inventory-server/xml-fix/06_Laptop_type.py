@@ -31,8 +31,7 @@ def xml_fix(xml):
               for subelem3 in subelem2:
                   if subelem3.tag == 'TYPE':
 
-                      # HP vendor name should allways be the same
-                      if subelem3.text in ['Notebook', 'Portable' ]:
+                      if subelem3.text in ['Notebook', 'Portable']:
                           subelem3.text = 'Laptop'
 
   return ET.tostring(root)
