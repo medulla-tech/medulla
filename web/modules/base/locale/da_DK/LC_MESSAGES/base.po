@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-03 11:14+0100\n"
-"PO-Revision-Date: 2014-01-06 00:01+0000\n"
+"POT-Creation-Date: 2014-01-10 11:54+0100\n"
+"PO-Revision-Date: 2014-01-13 00:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -68,19 +68,20 @@ msgid ""
 "application"
 msgstr ""
 
-#: graph/header.inc.php:193 graph/header.inc.php:229
+#: graph/header.inc.php:195 graph/header.inc.php:231
 msgid "Yes"
 msgstr ""
 
-#: graph/header.inc.php:196 graph/header.inc.php:198
+#: graph/header.inc.php:198 graph/header.inc.php:200
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:231 includes/PageGenerator.php:2172
+#: graph/header.inc.php:233 includes/FormGenerator.php:610
+#: includes/PageGenerator.php:2172
 msgid "Close"
 msgstr ""
 
-#: graph/header.inc.php:295
+#: graph/header.inc.php:297
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 
@@ -255,21 +256,23 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:611 includes/PageGenerator.php:871
+#: includes/PageGenerator.php:1118
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr ""
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:612 includes/PageGenerator.php:885
+#: includes/PageGenerator.php:1128
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr ""
 
 #: includes/FormGenerator.php:60 includes/FormGenerator.php:282
-#: includes/FormGenerator.php:634 includes/FormGenerator.php:761
+#: includes/FormGenerator.php:714 includes/FormGenerator.php:841
 msgid "unavailable"
 msgstr ""
 
@@ -325,16 +328,96 @@ msgstr ""
 msgid "value=\"never\";'>never</a>"
 msgstr ""
 
-#: includes/FormGenerator.php:600 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:586
+msgid "January"
+msgstr ""
+
+#: includes/FormGenerator.php:586
+msgid "February"
+msgstr ""
+
+#: includes/FormGenerator.php:586
+msgid "March"
+msgstr ""
+
+#: includes/FormGenerator.php:586
+msgid "April"
+msgstr ""
+
+#: includes/FormGenerator.php:587
+msgid "May"
+msgstr ""
+
+#: includes/FormGenerator.php:587
+msgid "June"
+msgstr ""
+
+#: includes/FormGenerator.php:587
+msgid "July"
+msgstr ""
+
+#: includes/FormGenerator.php:587
+msgid "August"
+msgstr ""
+
+#: includes/FormGenerator.php:588
+msgid "September"
+msgstr ""
+
+#: includes/FormGenerator.php:588
+msgid "October"
+msgstr ""
+
+#: includes/FormGenerator.php:588
+msgid "November"
+msgstr ""
+
+#: includes/FormGenerator.php:588
+msgid "December"
+msgstr ""
+
+#: includes/FormGenerator.php:598
+msgid "Sunday"
+msgstr ""
+
+#: includes/FormGenerator.php:598
+msgid "Monday"
+msgstr ""
+
+#: includes/FormGenerator.php:598
+msgid "Tuesday"
+msgstr ""
+
+#: includes/FormGenerator.php:598
+msgid "Wednesday"
+msgstr ""
+
+#: includes/FormGenerator.php:599
+msgid "Thursday"
+msgstr ""
+
+#: includes/FormGenerator.php:599
+msgid "Friday"
+msgstr ""
+
+#: includes/FormGenerator.php:599
+msgid "Saturday"
+msgstr ""
+
+#: includes/FormGenerator.php:613
+msgid "Now"
+msgstr ""
+
+#: includes/FormGenerator.php:680 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr ""
 
-#: includes/FormGenerator.php:898
+#: includes/FormGenerator.php:978
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1037 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:1117 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
@@ -381,11 +464,11 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/PageGenerator.php:2779
+#: includes/PageGenerator.php:2797
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2780
+#: includes/PageGenerator.php:2797
 msgid "Unselect all"
 msgstr ""
 
@@ -1461,56 +1544,6 @@ msgstr ""
 msgid "Disable account"
 msgstr ""
 
-#: modules/base/users/editacl.php:152
-msgid "User ACLs successfully modified."
-msgstr ""
-
-#: modules/base/users/editacl.php:175
-msgid "Set value for all radio buttons:&nbsp;&nbsp;"
-msgstr ""
-
-#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
-msgid "read only"
-msgstr ""
-
-#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
-msgid "read/write"
-msgstr ""
-
-#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
-msgid "hide"
-msgstr ""
-
-#: modules/base/users/editacl.php:181
-msgid "Attribute description"
-msgstr ""
-
-#: modules/base/users/editacl.php:209
-#, php-format
-msgid " (%s module)"
-msgstr ""
-
-#: modules/base/users/editacl.php:219
-msgid "Web page description"
-msgstr ""
-
-#: modules/base/users/editacl.php:219
-msgid "Authorization"
-msgstr ""
-
-#: modules/base/users/editacl.php:228
-msgid "Warning no desc found in infoPackage.inc.php :"
-msgstr ""
-
-#: modules/base/users/editacl.php:251
-#, php-format
-msgid "Edit ACL of user %s"
-msgstr ""
-
-#: modules/base/users/editacl.php:271
-msgid "Download ACL string"
-msgstr ""
-
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
 msgid "User list"
@@ -1617,6 +1650,56 @@ msgstr ""
 
 #: modules/base/users/backup.php:90
 msgid "Launch backup"
+msgstr ""
+
+#: modules/base/users/editacl.php:152
+msgid "User ACLs successfully modified."
+msgstr ""
+
+#: modules/base/users/editacl.php:175
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr ""
+
+#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
+msgid "read only"
+msgstr ""
+
+#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
+msgid "read/write"
+msgstr ""
+
+#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
+msgid "hide"
+msgstr ""
+
+#: modules/base/users/editacl.php:181
+msgid "Attribute description"
+msgstr ""
+
+#: modules/base/users/editacl.php:209
+#, php-format
+msgid " (%s module)"
+msgstr ""
+
+#: modules/base/users/editacl.php:219
+msgid "Web page description"
+msgstr ""
+
+#: modules/base/users/editacl.php:219
+msgid "Authorization"
+msgstr ""
+
+#: modules/base/users/editacl.php:228
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr ""
+
+#: modules/base/users/editacl.php:251
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr ""
+
+#: modules/base/users/editacl.php:271
+msgid "Download ACL string"
 msgstr ""
 
 #: modules/base/infoPackage.inc.php:36
