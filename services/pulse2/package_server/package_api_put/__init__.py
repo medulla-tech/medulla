@@ -161,6 +161,13 @@ class PackageApiPut(PackageApiGet):
         if not P2PServerCP().package_detect_activate:
             del Common().inEdition[package['id']]
 
+	# Force packavge detection
+	Common().detectNewPackages()
+	# Reload all package info
+	desc = Common().desc
+	Common().init(Common().config)
+	Common().desc = desc
+
         return (True, package['id'], confdir, pa.toH())
 
     def xmlrpc_dropPackage(self, pid):
