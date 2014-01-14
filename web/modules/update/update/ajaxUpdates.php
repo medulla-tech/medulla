@@ -60,8 +60,10 @@ if (!$count) {
 
 //  Listinfo params
 $listinfoParams = array();
+$checkboxes = array();
 foreach ($data as $row) {
     $listinfoParams[] = array('id' => $row['id']);
+    $checkboxes[] = '<input type="checkbox" name="selected_updates[]" value="' . $row['id'] . '">';
 }
 
 $cols = listInfoFriendly($data);
@@ -74,7 +76,12 @@ for ($i = 0; $i < count($cols['total_targets']); $i++){
     $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
 }
 
-$n = new OptimizedListInfos($cols['title'], _T("Update title", "msc"));
+// Printing selected updates form
+print '<form id="sel_updates_form">';
+
+$n = new OptimizedListInfos($checkboxes, '', '', '10px');
+$n->first_elt_padding = '0';
+$n->addExtraInfo($cols['title'], _T("Update title", "msc"));
 $n->addExtraInfo($cols['uuid'], _T("UUID", "msc"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "msc"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "msc"));
@@ -90,4 +97,42 @@ $n->end = $maxperpage;
 $n->disableFirstColumnActionLink();
 
 $n->display();
+
+// End selected updates form
+print '</form>';
+
 ?>
+<input id="btnEnableUpdates" type="button" value="<?php print _T('Enable selected updates', 'update'); ?>" class="btnPrimary">
+<input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
+
+<script type="text/javascript">
+
+jQuery('#btnEnableUpdates').click(function(){
+
+    jQuery.ajax({
+	url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
+	type: 'POST',
+	data: jQuery('#sel_updates_form').serialize(),
+	success: function(result){
+	    pushSearch();
+	}
+    });
+
+});
+
+jQuery('#btnDisableUpdates').click(function(){
+
+    jQuery.ajax({
+        url: '<?php print urlStrRedirect("update/update/disableUpdate"); ?>',
+        type: 'POST',
+        data: jQuery('#sel_updates_form').serialize(),
+        success: function(result){
+            pushSearch();
+        }
+    });
+
+});
+
+
+</script>
+
