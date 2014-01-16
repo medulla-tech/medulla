@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-10 17:37+0100\n"
-"PO-Revision-Date: 2014-01-08 11:24+0000\n"
+"POT-Creation-Date: 2014-01-14 11:52+0100\n"
+"PO-Revision-Date: 2014-01-14 10:14+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -21,42 +21,6 @@ msgstr ""
 #: modules/update/update/localSidebar.php:28
 msgid "Update managment"
 msgstr "Gerenciamento de Atualização"
-
-#: modules/update/update/disableUpdate.php:33
-msgid "Disable this update?"
-msgstr "Desabilitar esta atualização?"
-
-#: modules/update/update/enableUpdate.php:33
-msgid "Enable this update?"
-msgstr "Habilitar esta atualização?"
-
-#: modules/update/update/ajaxUpdates.php:57
-msgid "No entry found"
-msgstr "Nenhuma ocorrência encontrada"
-
-#: modules/update/update/ajaxUpdates.php:77
-msgid "Update title"
-msgstr "Atualizar título"
-
-#: modules/update/update/ajaxUpdates.php:78
-msgid "UUID"
-msgstr "UUID"
-
-#: modules/update/update/ajaxUpdates.php:79
-msgid "Type"
-msgstr "Tipo"
-
-#: modules/update/update/ajaxUpdates.php:80
-msgid "Installed count"
-msgstr ""
-
-#: modules/update/update/ajaxUpdates.php:82
-msgid "Enable"
-msgstr "Habilitar"
-
-#: modules/update/update/ajaxUpdates.php:83
-msgid "Disable"
-msgstr "Desabilitar"
 
 #: modules/update/update/viewUpdates.php:37
 #: modules/update/infoPackage.inc.php:39
@@ -79,6 +43,50 @@ msgstr "Habilitar"
 #: modules/update/update/viewUpdates.php:62
 msgid "Disabled"
 msgstr "Desabilitar"
+
+#: modules/update/update/disableUpdate.php:41
+msgid "Disable this update?"
+msgstr "Desabilitar esta atualização?"
+
+#: modules/update/update/enableUpdate.php:41
+msgid "Enable this update?"
+msgstr "Habilitar esta atualização?"
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr "Nenhuma ocorrência encontrada"
+
+#: modules/update/update/ajaxUpdates.php:84
+msgid "Update title"
+msgstr "Atualizar título"
+
+#: modules/update/update/ajaxUpdates.php:85
+msgid "UUID"
+msgstr "UUID"
+
+#: modules/update/update/ajaxUpdates.php:86
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/update/update/ajaxUpdates.php:87
+msgid "Installed count"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:89
+msgid "Enable"
+msgstr "Habilitar"
+
+#: modules/update/update/ajaxUpdates.php:90
+msgid "Disable"
+msgstr "Desabilitar"
+
+#: modules/update/update/ajaxUpdates.php:105
+msgid "Enable selected updates"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:106
+msgid "Disable selected updates"
+msgstr ""
 
 #: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:42
 msgid "Updates"
