@@ -301,7 +301,7 @@ jQuery('input.editableField').bind('keyup focusout',function(e){
     }
 
     // Posting ajax request
-    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('objectUUID'); ?>&name='+name+'&value='+value).success(function(){
+    jQuery.get('<?php echo urlStrRedirect("base/computers/ajaxSetGlpiEditableValue")?>&uuid=<?php echo quickGet('uuid'); ?>&name='+name+'&value='+value).success(function(){
         var label = jQuery('label.editableField[name="'+name+'"]').first();
         label.html(value).show();
         input.hide();
