@@ -312,26 +312,26 @@ function template_set_cmd_by_page(&$template, $tmpl_name, $number_command_by_pag
 
 function getPhaseLabels() {
     return array(
-        'wol' => _T('Wake on LAN'),
-        'upload' => _T('Upload'),
-        'execute' => _T('Execution'),
-        'wu_parse' => _T('Windows Update parse'),
-        'delete' => _T('Clean'),
-        'inventory' => _T('Inventory'),
-        'reboot' => _T('Restart'),
-        'halt' => _T('Shutdown'),
-        'pre_menu' => _T('Before bootmenu actions'),
-        'post_menu' => _T('After bootmenu actions'),
-        'done' => _T('Finish')
+        'wol' => _T('Wake on LAN', 'msc'),
+        'upload' => _T('Upload', 'msc'),
+        'execute' => _T('Execution', 'msc'),
+        'wu_parse' => _T('Windows Update parse', 'msc'),
+        'delete' => _T('Clean', 'msc'),
+        'inventory' => _T('Inventory', 'msc'),
+        'reboot' => _T('Restart', 'msc'),
+        'halt' => _T('Shutdown', 'msc'),
+        'pre_menu' => _T('Before bootmenu actions', 'msc'),
+        'post_menu' => _T('After bootmenu actions', 'msc'),
+        'done' => _T('Finish', 'msc')
     );
 }
 
 function getPhaseStatesLabels() {
     return array(
-        'ready' => _T('Ready'),
-        'running' => _T('Running'),
-        'failed' => _T('Failed'),
-        'done' => _T('Done')
+        'ready' => _T('Ready', 'msc'),
+        'running' => _T('Running', 'msc'),
+        'failed' => _T('Failed', 'msc'),
+        'done' => _T('Done', 'msc')
     );
 }
 
