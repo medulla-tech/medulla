@@ -79,7 +79,7 @@ class dateInputTpl extends InputTpl {
     }
 
     function display($arrParam) {
-        $arrParam['disabled'] = ' style="width:80px;" ';
+        $arrParam['disabled'] = ' style="width:80px;" readonly=1';
         parent::display($arrParam);
     }
 
@@ -139,7 +139,7 @@ class periodInputTpl extends multifieldTpl {
                          _T("We", "report"), _T("Th", "report"), _T("Fr", "report"),
                          _T("Sa", "report")));
         $weekHeader = json_encode(_T("Wk", "report"));
-        $dateFormat = json_encode(_T("yy/mm/dd", "report"));
+        $dateFormat = json_encode("yy/mm/dd");
 
         echo <<< JQUERY
             <script>
