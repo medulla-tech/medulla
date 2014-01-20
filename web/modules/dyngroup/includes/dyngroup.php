@@ -324,7 +324,7 @@ function __xmlrpc_countallgroups($params) { return xmlCall("dyngroup.countallgro
 function __xmlrpc_getallgroups($params) { return xmlCall("dyngroup.getallgroups", array($params)); }
 function __xmlrpc_countallprofiles($params) { return xmlCall("dyngroup.countallprofiles", array($params)); }
 function __xmlrpc_getallprofiles($params) { return xmlCall("dyngroup.getallprofiles", array($params)); }
-function __xmlrpc_get_group($id, $ro) { return xmlCall("dyngroup.get_group", array($id, $ro, $root_context)); }
+function __xmlrpc_get_group($id, $ro, $root_context) { return xmlCall("dyngroup.get_group", array($id, $ro, $root_context)); }
 
 function __xmlrpc_delete_group($id) { return xmlCall("dyngroup.delete_group", array($id)); }
 function __xmlrpc_create_group($name, $visibility, $type = 0, $parent_id = null) { return xmlCall("dyngroup.create_group", array($name, $visibility, $type, $parent_id)); }
