@@ -135,6 +135,7 @@ class UUIDCache(pulse2.utils.Singleton):
                         updated = 0
                     if int(time.time()) - updated > self.cacheLifetime:
                         self.log.debug("Cachefault on %s/%s (expired), ignoring" % (uuid, mac))
+                        self.delete(uuid)
                         # do not break the flow
                         return False
                     return {
