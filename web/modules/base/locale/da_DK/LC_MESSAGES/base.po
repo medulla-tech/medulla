@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-10 11:54+0100\n"
-"PO-Revision-Date: 2014-01-13 00:01+0000\n"
+"POT-Creation-Date: 2014-01-17 11:40+0100\n"
+"PO-Revision-Date: 2014-01-20 00:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgid "No"
 msgstr ""
 
 #: graph/header.inc.php:233 includes/FormGenerator.php:610
-#: includes/PageGenerator.php:2172
+#: includes/PageGenerator.php:2176
 msgid "Close"
 msgstr ""
 
@@ -448,27 +448,27 @@ msgstr ""
 msgid "No item available"
 msgstr ""
 
-#: includes/PageGenerator.php:1590
+#: includes/PageGenerator.php:1594
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2550 includes/PageGenerator.php:2619
-#: includes/PageGenerator.php:2645 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
+#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:108
 msgid "Confirm"
 msgstr ""
 
-#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
+#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
 #: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr ""
 
-#: includes/PageGenerator.php:2797
+#: includes/PageGenerator.php:2801
 msgid "Select all"
 msgstr ""
 
-#: includes/PageGenerator.php:2797
+#: includes/PageGenerator.php:2801
 msgid "Unselect all"
 msgstr ""
 
