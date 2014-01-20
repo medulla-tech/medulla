@@ -28,9 +28,9 @@ class FormHandler {
     var $arr;
 
     function FormHandler($name, $data) {
-        /*echo "<pre>";
-        print_r($data);
-        echo '</pre>';*/
+        //echo "<pre>";
+        //print_r($data);
+        //echo '</pre>';
         $this->name = $name;
         $this->data = array();
 
@@ -56,9 +56,9 @@ class FormHandler {
         // the LDAP array
         $this->arr = array();
         $this->sanitize();
-        /*echo "<pre>";
-        print_r($this->data);
-        echo '</pre>';*/
+        //echo "<pre>";
+        //print_r($this->data);
+        //echo '</pre>';
     }
 
     /* Create array with updated fields from $_POST
@@ -68,10 +68,13 @@ class FormHandler {
         // get all updated fields
         foreach($this->post_data as $name => $value) {
 
-            // handle checkboxes
+            // handle checkboxes and arrays widgets
             if(preg_match('/^old_/', $name) > 0 and !isset($this->post_data[substr($name, 4)])) {
                 if($value == "on") {
                     $this->data[substr($name, 4)] = "off";
+                }
+                else if (is_array($value)) {
+                    $this->data[substr($name, 4)] = array();
                 }
             }
 
