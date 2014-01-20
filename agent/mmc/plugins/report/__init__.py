@@ -95,11 +95,13 @@ def translate_attrs(attrs):
 
 
 def setup_lang(lang):
+    logger.debug("Using localedir %s" % localedir)
     bindtextdomain("templates", localedir)
     try:
         lang = gettext.translation('templates', localedir, [lang])
         lang.install()
     except IOError:
+        logger.exception("Failed to load langage file")
         pass
 
 
@@ -150,7 +152,7 @@ class RpcProxy(RpcProxyI):
         setup_lang(lang)
         indent_str = ''
 
-        entities = [int(str(entity).replace('UUID','')) for entity in entities]
+        entities = [int(str(entity).replace('UUID', '')) for entity in entities]
 
         temp_path = '/var/tmp/'
         report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
