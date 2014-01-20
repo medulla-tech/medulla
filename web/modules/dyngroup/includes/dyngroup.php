@@ -146,7 +146,10 @@ class ConvergenceGroup extends Group {
 
         /* Add convergence subrequest to main request */
         $this->request->addSub($subReq);
-        parent::setRequest($this->request->toS());
+        /* Set request with root context @see #2240
+         * second param is True
+         * Needed for package edition */
+        parent::setRequest($this->request->toS(), True);
     }
 
     function setBool() {
@@ -243,7 +246,7 @@ class Group {
     function getName() { return $this->name; }
     function setName($name) { if ($this->can_modify()) { $this->name = $name; return __xmlrpc_setname_group($this->id, $name); } return False; }
     function getRequest() { return __xmlrpc_request_group($this->id); }
-    function setRequest($request) { if ($this->can_modify()) { return __xmlrpc_setrequest_group($this->id, $request); } return False; }
+    function setRequest($request, $root_context) { if ($this->can_modify()) { return __xmlrpc_setrequest_group($this->id, $request, $root_context); } return False; }
     function getBool() { return __xmlrpc_bool_group($this->id); }
     function setBool($bool) { if ($this->can_modify()) { return __xmlrpc_setbool_group($this->id, $bool); } return False; }
 
@@ -333,7 +336,7 @@ function __xmlrpc_tos_group($id) { return xmlCall("dyngroup.tos_group", array($i
 function __xmlrpc_setname_group($id, $name) { return xmlCall("dyngroup.setname_group", array($id, $name)); }
 function __xmlrpc_setvisibility_group($id, $visibility) { return xmlCall("dyngroup.setvisibility_group", array($id, $visibility)); }
 function __xmlrpc_request_group($id) { return xmlCall("dyngroup.request_group", array($id)); }
-function __xmlrpc_setrequest_group($id, $request) { return xmlCall("dyngroup.setrequest_group", array($id, $request)); }
+function __xmlrpc_setrequest_group($id, $request, $root_context) { return xmlCall("dyngroup.setrequest_group", array($id, $request, $root_context)); }
 function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array($id)); }
 function __xmlrpc_setbool_group($id, $bool) { return xmlCall("dyngroup.setbool_group", array($id, $bool)); }
 function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }

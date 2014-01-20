@@ -153,16 +153,16 @@ class RpcProxy(RpcProxyI):
         groups = DyngroupDatabase().getallgroups(ctx, params)
         return xmlrpcCleanup(map(lambda g:g.toH(), groups))
 
-    def profile_name_exists(self, name, gid = None):
+    def profile_name_exists(self, name, gid=None):
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid, True)
 
-    def group_name_exists(self, name, gid = None):
+    def group_name_exists(self, name, gid=None):
         #TODO possible risks of collision betwen share/group/profiles...
         ctx = self.currentContext
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
 
-    def get_group(self, id, ro = False, root_context = False):
+    def get_group(self, id, ro=False, root_context=False):
         ctx = root_context and self.getContext() or self.currentContext
         grp = DyngroupDatabase().get_group(ctx, id, ro)
         if grp:
@@ -210,8 +210,8 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().request_group(ctx, id))
 
-    def setrequest_group(self, id, request):
-        ctx = self.currentContext
+    def setrequest_group(self, id, request, root_context=False):
+        ctx = root_context and self.getContext() or self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().setrequest_group(ctx, id, request))
 
     def bool_group(self, id):
