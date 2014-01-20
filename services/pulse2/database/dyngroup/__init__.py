@@ -27,7 +27,7 @@ Dyngroup database handler
 
 # SqlAlchemy
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
-        Integer, ForeignKey, select, not_, bindparam
+        Integer, ForeignKey, select, not_, bindparam, or_
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import DBAPIError
 
@@ -282,13 +282,28 @@ class DyngroupDatabase(DatabaseHelper):
         """
         # Get all Machines id that are not a foreign key in Results
         if uuids:
-            todelete = connection.execute(select([self.machines.c.id], and_(self.machines.c.uuid.in_(uuids), not_(self.machines.c.id.in_(select([self.results.c.FK_machines])))))).fetchall()
+            todelete = connection.execute(
+                select([Machines.id], and_(
+                    Machines.uuid.in_(uuids),
+                    not_(
+                        or_(
+                            Machines.id.in_(select([Results.FK_machines])),
+                            Machines.id.in_(select([ProfilesResults.FK_machines]))
+                        )
+                    )
+                ))).fetchall()
         else:
-            todelete = connection.execute(select([self.machines.c.id], not_(self.machines.c.id.in_(select([self.results.c.FK_machines]))))).fetchall()
-        todelete = map(lambda x: {"id" : x[0]}, todelete)
+            todelete = connection.execute(
+                select([Machines.id], not_(
+                    or_(
+                        Machines.id.in_(select([Results.FK_machines])),
+                        Machines.id.in_(select([ProfilesResults.FK_machines]))
+                    )
+                ))).fetchall()
+        todelete = [{"id" : x[0]} for x in todelete]
         # Delete them if any
         if todelete:
-            connection.execute(self.machines.delete(self.machines.c.id == bindparam("id")), todelete)
+            connection.execute(self.machines.delete(Machines.id == bindparam("id")), todelete)
 
     def delMachine(self, uuid):
         """
