@@ -677,7 +677,11 @@ class MscDatabase(DatabaseHelper):
         # search text Filtering
 
         if filt:
-            filters = and_(filters, or_(self.commands.c.title.like('%%%s%%'%(filt)), self.commands.c.creator.like('%%%s%%'%(filt)), self.bundle.c.title.like('%%%s%%'%(filt)) ))
+            filters = and_(filters, or_(self.commands.c.title.like('%%%s%%'%(filt)),
+                                        self.commands.c.creator.like('%%%s%%'%(filt)),
+                                        self.bundle.c.title.like('%%%s%%'%(filt)),
+                                        self.target.c.target_name.like('%%%s%%'%(filt))))
+
         # Bundle join filtering
         #filters = filters & (self.commands.c.fk_bundle == self.bundle.c.id)
 
@@ -981,8 +985,8 @@ class MscDatabase(DatabaseHelper):
 
         return ret
 
-        
- 
+
+
 
     def displayLogs(self, ctx, params = None): # TODO USE ctx
         if params is None: # do not change the default value!
