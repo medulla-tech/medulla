@@ -679,6 +679,7 @@ class MscDatabase(DatabaseHelper):
         if filt:
             filters = and_(filters, or_(self.commands.c.title.like('%%%s%%'%(filt)),
                                         self.commands.c.creator.like('%%%s%%'%(filt)),
+                                        self.commands.c.start_date.like('%%%s%%'%(filt)),
                                         self.bundle.c.title.like('%%%s%%'%(filt)),
                                         self.target.c.target_name.like('%%%s%%'%(filt))))
 
