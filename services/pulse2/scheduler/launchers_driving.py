@@ -31,7 +31,8 @@ from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.xmlrpc import getProxy
 
-DEFAULT_SLOTS = 300
+# slots default value if initial detetion cannot be processed
+DEFAULT_SLOTS = 20
 
 class Stats :
     """
