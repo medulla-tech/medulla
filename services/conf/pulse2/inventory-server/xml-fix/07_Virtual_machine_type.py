@@ -74,5 +74,9 @@ def xml_fix(xml):
             for subelem3 in subelem2:
               if subelem3.tag == 'CHASSIS_TYPE':
                 subelem3.text = 'Virtual Machine'
+          if subelem2.tag == 'BIOS':
+            for subelem3 in subelem2:
+              if subelem3.tag == 'TYPE':
+                subelem3.text = 'Virtual Machine'
 
   return ET.tostring(root)
