@@ -81,7 +81,7 @@ class SchedulerConfig(object):
 
     # [scheduler] section default values
     announce_check = dict()
-    awake_time = 30
+    awake_time = 5
     cacert = mmcconfdir + "/pulse2/scheduler/keys/cacert.pem"
     client_check = None
     dbencoding = 'utf-8'

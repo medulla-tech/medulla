@@ -33,7 +33,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # initial_wait = 2
 #
 # attempt to start (and stop) commands every n seconds
-# awake_time = 30
+# awake_time = 5
 # cache settings: requests to package managers are cached
 # cache_size = 300
 # cache_timeout = 500
