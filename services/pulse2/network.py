@@ -143,13 +143,12 @@ class NetUtils :
         @return: True if enough info
         @rtype: bool
         """
-        for key in ["ip", "mac", "netmask"] :
-            # if one of required key is missing
-            if key not in iface :
-                return False
-            # if empty
-            if not iface[key] or len(iface[key].strip()) == 0 :
-                return False
+        key = "ip"
+
+        if key not in iface :
+            return False
+        if not iface[key] or len(iface[key].strip()) == 0 :
+            return False
         return True
 
     @classmethod
