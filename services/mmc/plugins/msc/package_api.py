@@ -195,6 +195,7 @@ class SendBundleCommand:
             command['order_in_bundle'] = order
             command['proxies'] = self.proxies
             command['fk_bundle'] = bundle.id
+            command['do_windows_update'] = "disable" 
             commands.append(command)
         add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
         if type(add) != int:
