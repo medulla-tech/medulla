@@ -211,7 +211,7 @@ class RpcProxy(RpcProxyI):
 
     def scheduler_choose_client_ip(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         network = computer[1]
 
         interfaces = {"uuid"      : uuid,
@@ -237,21 +237,21 @@ class RpcProxy(RpcProxyI):
 
     def scheduler_ping_and_probe_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         if not 'fullname' in computer[1]:
             computer[1]['fullname'] = computer[1]['cn'][0]
         return mmc.plugins.msc.client.scheduler.ping_and_probe_client(scheduler, computer)
 
     def scheduler_ping_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         if not 'fullname' in computer[1]:
             computer[1]['fullname'] = computer[1]['cn'][0]
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.ping_client(scheduler, computer))
 
     def scheduler_probe_client(self, scheduler, uuid):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         if not 'fullname' in computer[1]:
             computer[1]['fullname'] = computer[1]['cn'][0]
         return xmlrpcCleanup(mmc.plugins.msc.client.scheduler.probe_client(scheduler, computer))
@@ -268,7 +268,7 @@ class RpcProxy(RpcProxyI):
         else:
             bwlimit = MscConfig().web_def_dlmaxbw
             ctx = self.currentContext
-            computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+            computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
             try: # FIXME: dirty bugfix, should be factorized upstream
                 computer[1]['fullname']
             except KeyError:
@@ -291,7 +291,7 @@ class RpcProxy(RpcProxyI):
 
     def establish_vnc_proxy(self, scheduler, uuid, requestor_ip):
         ctx = self.currentContext
-        computer = ComputerManager().getComputer(ctx, {'uuid': uuid})
+        computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         try: # FIXME: dirty bugfix, should be factorized upstream
             computer[1]['fullname']
         except KeyError:

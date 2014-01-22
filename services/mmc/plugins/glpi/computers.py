@@ -37,7 +37,7 @@ class GlpiComputers(ComputerI):
         self.config = GlpiConfig("glpi", conffile)
         self.glpi = Glpi()
 
-    def getComputer(self, ctx, filt = None):
+    def getComputer(self, ctx, filt = None, empty_macs=False):
         if filt == None or filt == '':
             filt = {}
         try:
@@ -50,7 +50,7 @@ class GlpiComputers(ComputerI):
             pass
 
         try:
-            return self.glpi.getComputer(ctx, filt)
+            return self.glpi.getComputer(ctx, filt, empty_macs)
         except Exception, e:
             if len(e.args) > 0 and e.args[0].startswith('NOPERM##'):
                 machine = e.args[0].replace('NOPERM##', '')

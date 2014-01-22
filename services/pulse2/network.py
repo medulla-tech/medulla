@@ -29,7 +29,7 @@ import inspect
 import os
 import subprocess
 
-from pulse2.utils import isdigit, isMACAddress, get_default_ip, get_default_netif
+from pulse2.utils import isdigit, get_default_ip, get_default_netif
 
 log = logging.getLogger()
 
@@ -735,10 +735,6 @@ class IPResolve (IPResolversContainer) :
                 if not isinstance(value, str) :
                     log.warn("Invalid interface format, section '%s' (hostname='%s')" % (key, hostname))
                     return False
-                if key == "mac" :
-                    if not isMACAddress(value) :
-                        log.warn("Invalid MAC address format : '%s' (hostname='%s')" % (value, hostname))
-                        return False
         return True
  
 

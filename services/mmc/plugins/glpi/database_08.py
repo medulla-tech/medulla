@@ -833,18 +833,28 @@ class Glpi08(DyngroupDatabaseHelper):
         raise Exception("dont know table for %s"%(table))
 
     ##################### machine list management
-    def getComputer(self, ctx, filt):
+    def getComputer(self, ctx, filt, empty_macs=False):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
+        ret = self.getRestrictedComputersList(ctx, 
+                                              0, 
+                                              10, 
+                                              filt, 
+                                              displayList=False, 
+                                              empty_macs=empty_macs)
         if len(ret) != 1:
             for i in ['location', 'ctxlocation']:
                 try:
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 0, 10, filt, displayList=False)
+            ret = self.getRestrictedComputersList(ctx, 
+                                                  0, 
+                                                  10, 
+                                                  filt, 
+                                                  displayList=False, 
+                                                  empty_macs=empty_macs)
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
@@ -908,7 +918,16 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False, displayList = None):
+    def getRestrictedComputersList(self, 
+                                   ctx, 
+                                   min = 0, 
+                                   max = -1, 
+                                   filt = None, 
+                                   advanced = True, 
+                                   justId = False, 
+                                   toH = False, 
+                                   displayList = None,
+                                   empty_macs = False):
         """
         Get the computer list that match filters parameters between min and max
 
@@ -946,9 +965,9 @@ class Glpi08(DyngroupDatabaseHelper):
             ret = map(lambda m: m.toH(), query.all())
         else:
             if filt is not None and filt.has_key('get'):
-                ret = self.__formatMachines(query.all(), advanced, filt['get'])
+                ret = self.__formatMachines(query.all(), advanced, filt['get'], empty_macs)
             else:
-                ret = self.__formatMachines(query.all(), advanced)
+                ret = self.__formatMachines(query.all(), advanced, None, empty_macs)
         session.close()
         return ret
 
@@ -1012,7 +1031,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 ma[field] = machine.name
         return ma
 
-    def __formatMachines(self, machines, advanced, get = None):
+    def __formatMachines(self, machines, advanced, get = None, empty_macs=False):
         """
         Give an LDAP like version of machines
         """
@@ -1089,7 +1108,15 @@ class Glpi08(DyngroupDatabaseHelper):
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
-                    (ret[uuid][1]['macAddress'], ret[uuid][1]['ipHostNumber'], ret[uuid][1]['subnetMask'], ret[uuid][1]['domain'], ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, names[uuid], nets[uuid])
+                    (ret[uuid][1]['macAddress'], 
+                     ret[uuid][1]['ipHostNumber'], 
+                     ret[uuid][1]['subnetMask'], 
+                     ret[uuid][1]['domain'], 
+                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, 
+                                                                          names[uuid], 
+                                                                          nets[uuid],
+                                                                          empty_macs)
+
                     if ret[uuid][1]['domain'] != '' and len(ret[uuid][1]['domain']) > 0 :
                         ret[uuid][1]['fullname'] = ret[uuid][1]['cn'][0]+'.'+ret[uuid][1]['domain'][0]
                     else:
@@ -3178,7 +3205,7 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def orderIpAdresses(self, uuid, hostname, netiface):
+    def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
         ret_ifaddr = []
         ret_netmask = []
@@ -3187,8 +3214,10 @@ class Glpi08(DyngroupDatabaseHelper):
         idx_good = 0
         failure = [True, True]
         for iface in netiface:
-            if 'ifaddr' in iface and iface['ifaddr'] \
-               and 'ifmac' in iface and iface['ifmac']:
+            if not empty_macs :
+                if not ('ifmac' in iface or iface['ifmac']):
+                    continue
+            if 'ifaddr' in iface and iface['ifaddr'] :
                 if iface['gateway'] == None:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
