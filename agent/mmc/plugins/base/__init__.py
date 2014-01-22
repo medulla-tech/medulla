@@ -2338,7 +2338,7 @@ class Computers(ldapUserGroupControl, ComputerI):
         config = PluginConfigFactory.new(BasePluginConfig, "base")
         self.baseComputersDN = config.baseComputersDN
 
-    def getComputer(self, ctx, filt = None):
+    def getComputer(self, ctx, filt = None, empty_macs=False):
         """
         """
         pass # TODO...
@@ -2519,9 +2519,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         ComputerManager().delComputer(ctx, uuid, backup)
 
-    def getComputer(self, filt = None):
+    def getComputer(self, filt = None, empty_macs=False):
         ctx = self.currentContext
-        return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt))
+        return xmlrpcCleanup(ComputerManager().getComputer(ctx, filt, empty_macs))
 
     def getComputersNetwork(self, filt = None):
         ctx = self.currentContext

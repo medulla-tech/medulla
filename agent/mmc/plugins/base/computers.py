@@ -113,7 +113,7 @@ class ComputerI:
         pass
 
 
-    def getComputer(self, ctx, params):
+    def getComputer(self, ctx, params, empty_macs=False):
         """
         Get only one computer
         """
@@ -321,11 +321,11 @@ class ComputerManager(Singleton):
         except:
             return []
 
-    def getComputer(self, ctx, filt = None):
+    def getComputer(self, ctx, filt = None, empty_macs=False):
         self.logger.debug("getComputer %s" % filt)
         klass = self.components[self.main]
         instance = klass()
-        return instance.getComputer(ctx, filt)
+        return instance.getComputer(ctx, filt, empty_macs)
 
     def getMachineMac(self, ctx, filt = None):
         klass = self.components[self.main]
