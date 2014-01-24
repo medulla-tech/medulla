@@ -190,12 +190,20 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
 
 
+        $(function(){
 	    // post clipboard button
 	    $('#toClipboard').click(function(){
 		var clipText = prompt('Enter text to send to machine clipboard:');
 		rfb.clipboardPasteFrom(clipText);	    
 	    });
-	    
+
+        // On close window, disconnect
+
+        window.onbeforeunload = function() {
+            rfb.disconnect();
+        };
+
+        });
 
             WebUtil.init_logging(WebUtil.getQueryVar('logging', 'warn'));
             document.title = unescape(WebUtil.getQueryVar('title', 'noVNC'));
