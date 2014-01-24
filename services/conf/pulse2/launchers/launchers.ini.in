@@ -125,7 +125,7 @@ smart_cleaner_path = @bindir@/pulse2-smart-cleaner.sh
 [launcher_01]
 # bind = 127.0.0.1
 port = 8001
-# slots = 20
+# slots = 300
 # username = username
 # password = password
 # scheduler = scheduler_01
