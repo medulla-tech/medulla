@@ -120,9 +120,14 @@ function web_probe_order_on_demand() {
     return __web_def_in_session_msc("probe_order_on_demand");
 }
 
+function web_def_use_no_vnc() {
+    return __web_def_in_session_msc("use_no_vnc");
+}
+
 function web_def_refresh_time() {
     return __web_def_in_session_msc("refresh_time");
 }
+
 
 function web_def_coh_life_time() {
     return __web_def_in_session_msc("coh_life_time");
