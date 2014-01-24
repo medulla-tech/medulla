@@ -20,29 +20,31 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 """
-Script to establish two proxies to forward the traffic over the SSH tunnel 
+Script to establish two proxies to forward the traffic over the SSH tunnel
 with checking of requestor IP. When the checking of requestor is enabled,
 InputProxy accepts only the requests from passed requestor IP address.
 Otherwise, both proxies are stopped.
 
 +---------+ local_port  +----------+ proxy_port +----------+ to_port +------+
-|Requestor|------------>|InputProxy|----------->|SSH tunnel|-------->|Client| 
+|Requestor|------------>|InputProxy|----------->|SSH tunnel|-------->|Client|
 +---------+             +----------+            +----------+         +------+
 Example:
-192.168.20.14:8101 -> (8101:8102) -> 8102:127.0.0.1:5900 -> 192.168.20.199:5900          
+192.168.20.14:8101 -> (8101:8102) -> 8102:127.0.0.1:5900 -> 192.168.20.199:5900
 """
+
 import os
 import sys
 import logging
-import logging.config 
+import logging.config
 
-from twisted.internet import reactor, task 
+from twisted.internet import reactor, task
 from twisted.protocols import portforward
 from twisted.internet.endpoints import TCP4ServerEndpoint
 
 from mmc.site import mmcconfdir
 from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.process_control import commandProtocol
+from pulse2.launcher.txws import WebSocketFactory
 
 LOCALHOST = "127.0.0.1"
 
@@ -58,7 +60,7 @@ class SSHForwardingProxy(object):
 
     def __init__(self, host, port, command, local_port, endback):
         """
-        @param host: destinated machine 
+        @param host: destinated machine
         @type host: str
 
         @param port: port number of destinated machine to open a VNC session
@@ -75,9 +77,9 @@ class SSHForwardingProxy(object):
         """
         self.host = host
         self.port = port
-        self.command = command.replace(","," -o") 
+        self.command = command.replace(","," -o")
 
-        self.local_port = local_port 
+        self.local_port = local_port
         self.process = commandProtocol(self.command)
         self.process.endback = endback
         self.process.installEndBack()
@@ -98,8 +100,8 @@ class SSHForwardingProxy(object):
         @type switch: str
         """
 
-        args = "-%s %i:127.0.0.1:%i -N -n" % (switch, 
-                                              self.local_port, 
+        args = "-%s %i:127.0.0.1:%i -N -n" % (switch,
+                                              self.local_port,
                                               self.port)
         d = self._spawn(args)
 
@@ -114,10 +116,10 @@ class SSHForwardingProxy(object):
         return d
 
     def _spawn(self, ssh_args):
-        """ 
+        """
         Spawning the process
 
-        @param ssh_args: passed arguments 
+        @param ssh_args: passed arguments
         @type ssh_args: str
         """
 
@@ -128,8 +130,8 @@ class SSHForwardingProxy(object):
 
         self.process.handler = reactor.spawnProcess(self.process, "/usr/bin/ssh", cmds)
 
-        reactor.addSystemEventTrigger('before', 
-                                      'shutdown', 
+        reactor.addSystemEventTrigger('before',
+                                      'shutdown',
                                       self.process.sendSigKill)
         return self.process.deferred
 
@@ -139,7 +141,7 @@ class InputProxyServer(portforward.ProxyServer):
     def connectionMade(self):
         log.info("VNC Proxy: New connection from %s on port %d" % (self.from_ip, self.from_port))
         portforward.ProxyServer.connectionMade(self)
- 
+
     def dataReceived(self, data):
         """Overriden method from ProxyServer"""
         # requestor IP
@@ -158,10 +160,10 @@ class InputProxyServer(portforward.ProxyServer):
 
     @classmethod
     def set_incomming_machine_info(cls, from_machine):
-        """ 
+        """
         Client IP to check.
 
-        @param from_machine: requestor IP address, requestor port 
+        @param from_machine: requestor IP address, requestor port
         @type from_machine: tuple
         """
         cls.from_ip, cls.from_port = from_machine
@@ -179,29 +181,29 @@ class InputProxyServer(portforward.ProxyServer):
 
     @classmethod
     def register_stopper(cls, stopper):
-        """ 
-        Registering of global method to killing all the runtimes 
+        """
+        Registering of global method to killing all the runtimes
 
         @param stopper: method to call if the traffic is inactive
         @type stopper: callable
         """
         cls.stopper = stopper
 
-    @classmethod 
+    @classmethod
     def timeout_refresh(cls):
-        """ 
+        """
         Refreshing of the session.
-        
-        This metho is periodicaly called when data transport is processed 
+
+        This metho is periodicaly called when data transport is processed
         """
         if hasattr(cls, "timeout_defer"):
             cls.timeout_defer.cancel()
-        if hasattr(cls, "stopper"): 
-            cls.timeout_defer = task.deferLater(reactor, 
+        if hasattr(cls, "stopper"):
+            cls.timeout_defer = task.deferLater(reactor,
                                              cls.establish_delay,
                                              cls.stopper)
- 
- 
+
+
 class InputProxyFactory(portforward.ProxyFactory):
     """Factory proxy to provide port forwarding"""
 
@@ -257,8 +259,8 @@ class timeout :
     def __call__(self, fnc, *args):
 
         def wrapped(*args):
-            self.time_defer = task.deferLater(reactor, 
-                                         self.timeout, 
+            self.time_defer = task.deferLater(reactor,
+                                         self.timeout,
                                          self.action)
             fnc_defer = fnc(*args)
             fnc_defer.addCallback(self.endback_fnc)
@@ -269,7 +271,7 @@ class timeout :
 
     def endback_fnc (self, result):
         self.time_defer.cancel()
- 
+
 class DispatchProxies :
     """ Main dispatcher to control our proxies. """
     from_ip = ""
@@ -293,8 +295,8 @@ class DispatchProxies :
         self.start_input_proxy()
 
         # Session expiration
-        d = task.deferLater(reactor, 
-                        self.session_length, 
+        d = task.deferLater(reactor,
+                        self.session_length,
                         self.stop_proxies)
 
         d.addCallback(self._session_expired)
@@ -321,9 +323,9 @@ class DispatchProxies :
             # port to listen from reqestor ip
             self.local_port = int(sys.argv[6])
             # timeout of input proxy
-            self.establish_delay = int(sys.argv[7]) 
+            self.establish_delay = int(sys.argv[7])
             # timeout of output proxy
-            self.connect_delay = int(sys.argv[8]) 
+            self.connect_delay = int(sys.argv[8])
             # valid time of session - will be expired after session_length  
             self.session_length = int(sys.argv[9])
             # name of destinated computer in Pulse 
@@ -365,13 +367,13 @@ class DispatchProxies :
         reactor.stop()
 
     # stop_proxies called when connect_delay passed
-    @timeout(connect_delay, stop_proxies) 
+    @timeout(connect_delay, stop_proxies)
     def start_output_proxy(self):
         """ Start a process spawn which create a SSH tunnel"""
 
-        self.out_proxy = SSHForwardingProxy(self.to_ip, 
-                                            self.to_port, 
-                                            self.command, 
+        self.out_proxy = SSHForwardingProxy(self.to_ip,
+                                            self.to_port,
+                                            self.command,
                                             self.local_port,
                                             self._endback_output_proxy)
 
@@ -387,10 +389,9 @@ class DispatchProxies :
         try:
             if hasattr(self.out_proxy, "process"):
                 self.register_stopper(self.out_proxy.process.sendSigKill)
-        except Exception, e:    
+        except Exception, e:
             log.warn("VNC Proxy: %s" %str(e))
- 
- 
+
     def _eb_output_proxy(self, failure):
         log.warn("VNC Proxy: Start of output proxy failed: %s" % str(failure))
         self.stop_proxies()
@@ -401,22 +402,25 @@ class DispatchProxies :
 
     def _start_input_proxy(self):
         """
-        Creating of input proxy that is checking requestor IP 
+        Creating of input proxy that is checking requestor IP
         and forwarding TCP trafic to binded SSH tunnel.
         """
         server = TCP4ServerEndpoint(reactor, self.proxy_port)
-        self.in_proxy = InputProxyFactory(LOCALHOST, 
-                                          self.local_port, 
+        self.in_proxy = InputProxyFactory(LOCALHOST,
+                                          self.local_port,
                                           self.from_ip,
                                           self.proxy_port,
                                           self.establish_delay,
                                           self.stop_proxies)
-        server.listen(self.in_proxy)
+        if config.create_web_proxy:
+            server.listen(WebSocketFactory(self.in_proxy))
+        else:
+            server.listen(self.in_proxy)
 
-    @timeout(establish_delay, stop_proxies) 
+    @timeout(establish_delay, stop_proxies)
     def start_input_proxy(self):
         """
-        Creating of input proxy that is checking requestor IP 
+        Creating of input proxy that is checking requestor IP
         and forwarding TCP trafic to binded SSH tunnel.
         """
         d = task.deferLater(reactor, 1, self._start_input_proxy)
@@ -435,7 +439,7 @@ class DispatchProxies :
                             self.local_port,
                             self.from_ip,
                             self.proxy_port))
-                
+
         self.register_stopper(self.in_proxy.kill_me)
 
     def _eb_input_proxy(self, failure):
@@ -450,6 +454,3 @@ if __name__ == "__main__" :
     reactor.callWhenRunning(DispatchProxies)
     reactor.run()
     sys.exit(0)
-
-
-
