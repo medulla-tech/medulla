@@ -365,7 +365,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                             'username': username,
                             'password': password,
                             'enablessl': self.getvaluedefaulted(section, 'enablessl', True, 'bool'),
-                            'slots': self.getvaluedefaulted(section, 'slots', 3030300, 'int'),
+                            'slots': self.getvaluedefaulted(section, 'slots', 300, 'int'),
                             'scheduler': self.getvaluedefaulted(section, 'scheduler', self.first_scheduler),
                             'logconffile' : self.getvaluedefaulted(section, 'logconffile', None),
                         }
