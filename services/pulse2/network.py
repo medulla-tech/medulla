@@ -438,11 +438,10 @@ class ChoosePerIP (ResolvingCallable):
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
                 iface_ip = iface["ip"]
-                iface_netmask = iface["netmask"]
                 for pref_ip, pref_netmask in self.networks :
                     
-                    log.debug("Comparing host '%s'(%s/%s) with my preferred network (%s/%s)" % 
-                            (hostname, iface_ip, iface_netmask, pref_ip, pref_netmask))
+                    log.debug("Comparing host '%s'(%s) with my preferred network (%s/%s)" % 
+                            (hostname, iface_ip, pref_ip, pref_netmask))
 
                     if NetUtils.on_same_network(iface_ip, pref_ip, pref_netmask) :
 
