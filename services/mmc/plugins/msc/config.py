@@ -90,6 +90,8 @@ class MscConfig(MscDatabaseConfig):
     web_def_dlmaxbw = 0
     # Refresh time
     web_def_refresh_time = 30000
+    # Use noVNC instead of TightVNC java applet
+    web_def_use_no_vnc = 0
 
     # local proxy
     web_allow_local_proxy = True
@@ -295,6 +297,8 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_proxy_selection_mode")
         if self.cp.has_option("web", "web_def_refresh_time"):
             self.web_def_refresh_time = self.cp.getint("web", "web_def_refresh_time") * 1000
+        if self.cp.has_option("web", "web_def_use_no_vnc"):
+            self.web_def_use_no_vnc = self.cp.getint("web", "web_def_use_no_vnc")
         if self.cp.has_option("web", "web_def_coh_life_time"):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_coh_life_time")
         if self.cp.has_option("web", "web_def_attempts_per_day"):

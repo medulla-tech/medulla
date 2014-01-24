@@ -693,6 +693,9 @@ class RpcProxy(RpcProxyI):
     def get_web_def_refresh_time(self):
         return xmlrpcCleanup(MscConfig().web_def_refresh_time)
 
+    def get_web_def_use_no_vnc(self):
+        return xmlrpcCleanup(MscConfig().web_def_use_no_vnc)
+
     def get_web_def_coh_life_time(self):
         return xmlrpcCleanup(MscConfig().web_def_coh_life_time)
 
