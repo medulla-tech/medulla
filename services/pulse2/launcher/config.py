@@ -122,6 +122,9 @@ class LauncherConfig(pulse2.utils.Singleton):
     tcp_sproxy_connect_delay = 120
     tcp_sproxy_session_lenght = 3600
 
+    # Create or not a web_proxy (to use with noVNC)
+    create_web_proxy = False
+
     # Smart Cleaner Stuff
     is_smart_cleaner_available = True
     smart_cleaner_path = "/usr/bin/pulse2-smart-cleaner.sh"
@@ -283,6 +286,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         self.setoption('tcp_sproxy', 'tcp_sproxy_establish_delay', 'tcp_sproxy_establish_delay', 'int')
         self.setoption('tcp_sproxy', 'tcp_sproxy_connect_delay', 'tcp_sproxy_connect_delay', 'int')
         self.setoption('tcp_sproxy', 'tcp_sproxy_session_lenght', 'tcp_sproxy_session_lenght', 'int')
+        self.setoption('tcp_sproxy', 'create_web_proxy', 'create_web_proxy', 'bool')
         if self.cp.has_section("tcp_sproxy"):
             if self.cp.has_option("tcp_sproxy", "tcp_sproxy_port_range"):
                 range = map(lambda x: int(x), self.cp.get("tcp_sproxy", "tcp_sproxy_port_range").split('-'))

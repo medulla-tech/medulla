@@ -41,7 +41,7 @@ class proxyProtocol(twisted.internet.protocol.ProcessProtocol):
         if hasattr(reason, "trap"):
             if reason.trap(ProcessDone):
                 logging.getLogger().debug("TCP SSH Proxy successfully terminated")
-                return 
+                return
         logging.getLogger().warn("TCP SSH Proxy terminated with exception: %s" % str(reason))
 
 
@@ -113,18 +113,19 @@ def establishProxy(client, requestor_ip, requested_port):
         None, # usePTY
         { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
     )
-    def parse_result(): 
+
+    def parse_result():
         return LauncherConfig().name, LauncherConfig().tcp_sproxy_host, proxy_port
-    # Waiting to establish the proxy 
+    # Waiting to establish the proxy
     ret = task.deferLater(twisted.internet.reactor, 2, parse_result)
     logging.getLogger().debug('about to execute ' + ' '.join(command_list))
-    return ret 
+    return ret
 
 def allocate_port_couple():
     """
     Looking for two free ports to establish SSH proxy.
 
-    @return: two free ports 
+    @return: two free ports
     @rtype: list
     """
     ret_ports = []
