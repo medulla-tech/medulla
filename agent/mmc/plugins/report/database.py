@@ -120,6 +120,10 @@ class ReportDatabase(DatabaseHelper):
                 logger.exception('Unable to get data for indicator : %s' % indicator.name)
                 continue
             for entry in values:
+		if not 'value' in entry:
+		    continue
+		if entry['value'] is None:
+		    entry['value'] = 0
                 data = indicator.dataClass()
                 # Import value and enity_id from entry
                 data.fromDict(entry)
