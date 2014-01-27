@@ -222,36 +222,33 @@ function _base_changeUser($FH, $mode) {
 
     /* Change photo */
     if (!empty($_FILES["photofilename"]["name"])) {
-        if (strtolower(substr($_FILES["photofilename"]["name"], -3)) == "jpg") {
-            $pfile = $_FILES["photofilename"]["tmp_name"];
-            $size = getimagesize($pfile);
-            if ($size["mime"] == "image/jpeg") {
-                $maxwidth = 320;
-                $maxheight = 320;
-                if (in_array("gd", get_loaded_extensions())) {
-                    /* Resize file if GD extension is installed */
-                    $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
-                            $maxwidth, $maxheight);
-                }
-                list($width, $height) = getimagesize($pfile);
-                if (($width <= $maxwidth) && ($height <= $maxheight)) {
-                    $obj = new Trans();
-                    $obj->scalar = "";
-                    $obj->xmlrpc_type = "base64";
-                    $f = fopen($pfile, "r");
-                    while (!feof($f)) $obj->scalar .= fread($f, 4096);
-                    fclose($f);
-                    unlink($pfile);
-                    changeUserAttributes($uid, "jpegPhoto", $obj, False);
-
-                }
-                else {
-                    $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
-                        Install php gd extention to resize the photo automatically"),
-                        $maxwidth, $maxheight) . "<br/>";
-                }
+        $pfile = $_FILES["photofilename"]["tmp_name"];
+        $size = getimagesize($pfile);
+        if ($size["mime"] == "image/jpeg") {
+            $maxwidth = 320;
+            $maxheight = 320;
+            if (in_array("gd", get_loaded_extensions())) {
+                /* Resize file if GD extension is installed */
+                $pfile = resizeJpg($_FILES["photofilename"]["tmp_name"],
+                        $maxwidth, $maxheight);
             }
-            else $base_errors .= _("The photo is not a JPG file") . "<br/>";
+            list($width, $height) = getimagesize($pfile);
+            if (($width <= $maxwidth) && ($height <= $maxheight)) {
+                $obj = new Trans();
+                $obj->scalar = "";
+                $obj->xmlrpc_type = "base64";
+                $f = fopen($pfile, "r");
+                while (!feof($f)) $obj->scalar .= fread($f, 4096);
+                fclose($f);
+                unlink($pfile);
+                changeUserAttributes($uid, "jpegPhoto", $obj, False);
+
+            }
+            else {
+                $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
+                    Install php gd extention to resize the photo automatically"),
+                    $maxwidth, $maxheight) . "<br/>";
+            }
         }
         else $base_errors .= _("The photo is not a JPG file") . "<br/>";
     }
