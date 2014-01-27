@@ -62,7 +62,7 @@ function createAclArray($aclString) {
             }
         }
     }
-    
+
     return array($retacl, $retacltab, $retaclattr);
 }
 
@@ -101,7 +101,7 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
                             $res.=":$modKey#$submodKey#$actionKey#$tabKey";
                         }
                     }
-                }                
+                }
             }
         }
     }
@@ -120,22 +120,11 @@ function createAclString($arrAcl, $arrAclTab, $arrAclAttr) {
     return $combineRes;
 }
 
-function setFormError($name) {
-  global $formErrorArray;
-  $formErrorArray[$name]=1;
-}
-
-function isFormError($name) {
-  global $formErrorArray;
-  return $formErrorArray[$name];
-}
-
-
 /**
  * Set the current interface mode.
  * A cookie that expires in 30 days is used to keep user interface mode between
  * two MMC sessions.
- * 
+ *
  * @param $value 0 to set standard mode, 1 to set expert mode
  */
 function setExpertMode($value) {

@@ -26,11 +26,20 @@
  *  Form generator class
  * ********************************************************************* */
 
+function setFormError($name) {
+    global $formErrorArray;
+    $formErrorArray[$name]=1;
+}
+
+function isFormError($name) {
+    global $formErrorArray;
+    return isset($formErrorArray[$name]) && $formErrorArray[$name] == 1;
+}
+
 function displayErrorCss($name) {
     global $formErrorArray;
-    if (isset($formErrorArray[$name]) && ($formErrorArray[$name] == 1)) {
+    if (isFormError($name))
         print ' style="color: #C00; text-align:right;"';
-    }
 }
 
 /**
@@ -330,7 +339,7 @@ class InputTpl extends AbstractTpl {
         if (isset($arrParam["onchange"])) {
             print '<script type="text/javascript">';
             print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
-            print '</script">';
+            print '</script>';
         }
     }
 
@@ -559,7 +568,7 @@ class DynamicDateTpl extends InputTpl {
  * dateTime input template
  */
 class DateTimeTpl extends AbstractTpl {
-    
+
     function __construct($name){
         $this->name = $name;
     }
@@ -567,7 +576,7 @@ class DateTimeTpl extends AbstractTpl {
     function display($arrParam = array()) {
         // Display text input
         print '<input style="width:110px" name="' . $this->name . '" id="' . $this->name . '" type="text" value="' . $arrParam["value"] . '" readonly=1 />';
-        
+
         if (!isset($GLOBALS["__JSDATETIME_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSDATETIME_SOURCED__"] = 1;
             print '
@@ -581,30 +590,30 @@ class DateTimeTpl extends AbstractTpl {
                 ';
             }*/
         }
-        
+
         $months = array(
             _('January'), _('February'), _('March'), _('April'),
             _('May'), _('June'), _('July'), _('August'),
             _('September'), _('October'), _('November'), _('December')
         );
-        
+
         $months_short = array();
-        
+
         foreach ($months as $month){
             $months_short[] = substr($month, 0, 3);
         }
-        
+
         $days = array(
             _('Sunday'), _('Monday'), _('Tuesday'), _('Wednesday'),
             _('Thursday'), _('Friday'), _('Saturday')
         );
-        
+
         $days_short = array();
-        
+
         foreach ($days as $day){
             $days_short[] = substr($day, 0, 3);
         }
-        
+
         // Set dateTimePicket params
         $params = array(
             'closeText' => _('Close'),
@@ -620,9 +629,9 @@ class DateTimeTpl extends AbstractTpl {
             'timeFormat' => "HH:mm:ss",
             'dateFormat' => "yy-mm-dd",
         );
-        
+
         $params_json = json_encode($params);
-        
+
 
         // Set dateTimePicker on input
         print '
