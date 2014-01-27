@@ -26,7 +26,7 @@ import os
 from datetime import datetime
 import xml.etree.ElementTree as ET
 import gettext
-from gettext import bindtextdomain, dgettext as _T
+from gettext import bindtextdomain
 
 logger = logging.getLogger()
 
@@ -50,11 +50,15 @@ localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 TRANSLATE_ATTRS = ("title", "value")
 TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer")
+_gettext = None
 
 
 def getVersion(): return VERSION
 def getApiVersion(): return APIVERSION
 def getRevision(): return REVISION
+
+def _T(text):
+    return _gettext(text).decode('utf8')
 
 
 def activate():
@@ -90,16 +94,18 @@ def import_indicators():
 def translate_attrs(attrs):
     for key, value in attrs.items():
         if key in TRANSLATE_ATTRS:
-            attrs[key] = _T("templates", value)
+            attrs[key] = _T(value)
     return attrs
 
 
 def setup_lang(lang):
+    global _gettext
     logger.debug("Using localedir %s" % localedir)
     bindtextdomain("templates", localedir)
     try:
-        lang = gettext.translation('templates', localedir, [lang])
+        lang = gettext.translation('templates', localedir, [lang], fallback = True)
         lang.install()
+        _gettext = lang.gettext
     except IOError:
         logger.exception("Failed to load langage file")
         pass
@@ -248,7 +254,7 @@ class RpcProxy(RpcProxyI):
             for entry in loc_tag:
                 if entry.tag.lower() != 'entry':
                     continue
-                locale[entry.attrib['name']] = _T("templates", entry.attrib['value'])
+                locale[entry.attrib['name']] = _T(entry.attrib['value'])
 
             # Setting Period start and period end PDF var
             pdf_vars['__PERIOD_START__'] = datetime.strptime(period[0], "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
@@ -262,20 +268,20 @@ class RpcProxy(RpcProxyI):
             return text
 
         def _h1(text):
-            pdf.h1(_T("templates", text))
+            pdf.h1(_T(text))
 
         def _h2(text):
-            pdf.h2(_T("templates", text))
+            pdf.h2(_T(text))
 
         def _h3(text):
-            pdf.h3(_T("templates", text))
+            pdf.h3(_T(text))
 
         def _html(text):
             #TODO: Add vars replacers
             pdf.pushHTML(_replace_pdf_vars(text))
 
         def _homepage(text):
-            pdf.pushHomePageHTML(_replace_pdf_vars(_T("templates", text)))
+            pdf.pushHomePageHTML(_replace_pdf_vars(_T(text)))
 
         def _sum_None(lst):
             result = None
@@ -309,7 +315,7 @@ class RpcProxy(RpcProxyI):
                     indicator_name = item.attrib['indicator']
                     #if items and not indicator_name in items: continue
                     if not items or indicator_name in items:
-                        data_dict['titles'].append(indent_str * level + ' ' + _T("templates", item.attrib['title']))
+                        data_dict['titles'].append(indent_str * level + ' ' + _T(item.attrib['title']))
                         indicator_selected = 1
                     # temp list to do arithmetic operations
                     values = []
@@ -340,8 +346,7 @@ class RpcProxy(RpcProxyI):
                         #and (not items or indicator_name in items):
                         data_dict['titles'].append(indent_str * (level + 1) +
                                                    ' %s (%s)' %
-                                                   (_T("templates",
-                                                       item.attrib['title']),
+                                                   (_T(item.attrib['title']),
                                                     locale['STR_OTHER']))
                         for i in xrange(len(period)):
                             child_sum = _sum_None([l[i] for l in childGValues])
@@ -366,7 +371,7 @@ class RpcProxy(RpcProxyI):
                     if item.tag.lower() != 'item':
                         continue
                     indicator_name = item.attrib['indicator']
-                    indicator_label = _T("templates", item.attrib['title'])
+                    indicator_label = _T(item.attrib['title'])
                     indicator_value = ReportDatabase().get_indicator_current_value(indicator_name, entities)
                     # indicator_value is a list of dict {'entity_id' : .., 'value' .. }
                     # ==============================================================
