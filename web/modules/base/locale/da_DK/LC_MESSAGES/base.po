@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-17 11:40+0100\n"
-"PO-Revision-Date: 2014-01-20 00:05+0000\n"
+"POT-Creation-Date: 2014-01-27 15:19+0100\n"
+"PO-Revision-Date: 2014-01-27 16:15+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -76,8 +76,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:233 includes/FormGenerator.php:610
-#: includes/PageGenerator.php:2176
+#: graph/header.inc.php:233 includes/PageGenerator.php:2176
+#: includes/FormGenerator.php:619
 msgid "Close"
 msgstr ""
 
@@ -256,171 +256,19 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:611 includes/PageGenerator.php:871
-#: includes/PageGenerator.php:1118
+#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:620
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr ""
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:612 includes/PageGenerator.php:885
-#: includes/PageGenerator.php:1128
+#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:621
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
-msgstr ""
-
-#: includes/FormGenerator.php:60 includes/FormGenerator.php:282
-#: includes/FormGenerator.php:714 includes/FormGenerator.php:841
-msgid "unavailable"
-msgstr ""
-
-#: includes/FormGenerator.php:222
-msgid "Delete photo"
-msgstr ""
-
-#: includes/FormGenerator.php:268
-msgid "yes"
-msgstr ""
-
-#: includes/FormGenerator.php:271
-msgid "no"
-msgstr ""
-
-#: includes/FormGenerator.php:456
-msgid "Year: "
-msgstr ""
-
-#: includes/FormGenerator.php:456
-msgid "Month: "
-msgstr ""
-
-#: includes/FormGenerator.php:456
-msgid "Day: "
-msgstr ""
-
-#: includes/FormGenerator.php:457
-msgid "Hour: "
-msgstr ""
-
-#: includes/FormGenerator.php:457
-msgid "Min.: "
-msgstr ""
-
-#: includes/FormGenerator.php:457
-msgid "Sec.: "
-msgstr ""
-
-#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
-#: modules/base/includes/AjaxFilterLog.inc.php:168
-#: modules/base/includes/AjaxFilterLog.inc.php:172
-msgid "or <a href='#'"
-msgstr ""
-
-#: includes/FormGenerator.php:531
-#: modules/base/includes/AjaxFilterLog.inc.php:170
-msgid "value=\"now\";'>now</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:537
-#: modules/base/includes/AjaxFilterLog.inc.php:174
-msgid "value=\"never\";'>never</a>"
-msgstr ""
-
-#: includes/FormGenerator.php:586
-msgid "January"
-msgstr ""
-
-#: includes/FormGenerator.php:586
-msgid "February"
-msgstr ""
-
-#: includes/FormGenerator.php:586
-msgid "March"
-msgstr ""
-
-#: includes/FormGenerator.php:586
-msgid "April"
-msgstr ""
-
-#: includes/FormGenerator.php:587
-msgid "May"
-msgstr ""
-
-#: includes/FormGenerator.php:587
-msgid "June"
-msgstr ""
-
-#: includes/FormGenerator.php:587
-msgid "July"
-msgstr ""
-
-#: includes/FormGenerator.php:587
-msgid "August"
-msgstr ""
-
-#: includes/FormGenerator.php:588
-msgid "September"
-msgstr ""
-
-#: includes/FormGenerator.php:588
-msgid "October"
-msgstr ""
-
-#: includes/FormGenerator.php:588
-msgid "November"
-msgstr ""
-
-#: includes/FormGenerator.php:588
-msgid "December"
-msgstr ""
-
-#: includes/FormGenerator.php:598
-msgid "Sunday"
-msgstr ""
-
-#: includes/FormGenerator.php:598
-msgid "Monday"
-msgstr ""
-
-#: includes/FormGenerator.php:598
-msgid "Tuesday"
-msgstr ""
-
-#: includes/FormGenerator.php:598
-msgid "Wednesday"
-msgstr ""
-
-#: includes/FormGenerator.php:599
-msgid "Thursday"
-msgstr ""
-
-#: includes/FormGenerator.php:599
-msgid "Friday"
-msgstr ""
-
-#: includes/FormGenerator.php:599
-msgid "Saturday"
-msgstr ""
-
-#: includes/FormGenerator.php:613
-msgid "Now"
-msgstr ""
-
-#: includes/FormGenerator.php:680 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
-msgid "Add"
-msgstr ""
-
-#: includes/FormGenerator.php:978
-msgid "Toggle selection"
-msgstr ""
-
-#: includes/FormGenerator.php:1117 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
 msgstr ""
 
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
@@ -470,6 +318,158 @@ msgstr ""
 
 #: includes/PageGenerator.php:2801
 msgid "Unselect all"
+msgstr ""
+
+#: includes/FormGenerator.php:69 includes/FormGenerator.php:291
+#: includes/FormGenerator.php:723 includes/FormGenerator.php:850
+msgid "unavailable"
+msgstr ""
+
+#: includes/FormGenerator.php:231
+msgid "Delete photo"
+msgstr ""
+
+#: includes/FormGenerator.php:277
+msgid "yes"
+msgstr ""
+
+#: includes/FormGenerator.php:280
+msgid "no"
+msgstr ""
+
+#: includes/FormGenerator.php:465
+msgid "Year: "
+msgstr ""
+
+#: includes/FormGenerator.php:465
+msgid "Month: "
+msgstr ""
+
+#: includes/FormGenerator.php:465
+msgid "Day: "
+msgstr ""
+
+#: includes/FormGenerator.php:466
+msgid "Hour: "
+msgstr ""
+
+#: includes/FormGenerator.php:466
+msgid "Min.: "
+msgstr ""
+
+#: includes/FormGenerator.php:466
+msgid "Sec.: "
+msgstr ""
+
+#: includes/FormGenerator.php:538 includes/FormGenerator.php:544
+#: modules/base/includes/AjaxFilterLog.inc.php:168
+#: modules/base/includes/AjaxFilterLog.inc.php:172
+msgid "or <a href='#'"
+msgstr ""
+
+#: includes/FormGenerator.php:540
+#: modules/base/includes/AjaxFilterLog.inc.php:170
+msgid "value=\"now\";'>now</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:546
+#: modules/base/includes/AjaxFilterLog.inc.php:174
+msgid "value=\"never\";'>never</a>"
+msgstr ""
+
+#: includes/FormGenerator.php:595
+msgid "January"
+msgstr ""
+
+#: includes/FormGenerator.php:595
+msgid "February"
+msgstr ""
+
+#: includes/FormGenerator.php:595
+msgid "March"
+msgstr ""
+
+#: includes/FormGenerator.php:595
+msgid "April"
+msgstr ""
+
+#: includes/FormGenerator.php:596
+msgid "May"
+msgstr ""
+
+#: includes/FormGenerator.php:596
+msgid "June"
+msgstr ""
+
+#: includes/FormGenerator.php:596
+msgid "July"
+msgstr ""
+
+#: includes/FormGenerator.php:596
+msgid "August"
+msgstr ""
+
+#: includes/FormGenerator.php:597
+msgid "September"
+msgstr ""
+
+#: includes/FormGenerator.php:597
+msgid "October"
+msgstr ""
+
+#: includes/FormGenerator.php:597
+msgid "November"
+msgstr ""
+
+#: includes/FormGenerator.php:597
+msgid "December"
+msgstr ""
+
+#: includes/FormGenerator.php:607
+msgid "Sunday"
+msgstr ""
+
+#: includes/FormGenerator.php:607
+msgid "Monday"
+msgstr ""
+
+#: includes/FormGenerator.php:607
+msgid "Tuesday"
+msgstr ""
+
+#: includes/FormGenerator.php:607
+msgid "Wednesday"
+msgstr ""
+
+#: includes/FormGenerator.php:608
+msgid "Thursday"
+msgstr ""
+
+#: includes/FormGenerator.php:608
+msgid "Friday"
+msgstr ""
+
+#: includes/FormGenerator.php:608
+msgid "Saturday"
+msgstr ""
+
+#: includes/FormGenerator.php:622
+msgid "Now"
+msgstr ""
+
+#: includes/FormGenerator.php:689 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr ""
+
+#: includes/FormGenerator.php:987
+msgid "Toggle selection"
+msgstr ""
+
+#: includes/FormGenerator.php:1126 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
 msgstr ""
 
 #: logout/index.php:50
