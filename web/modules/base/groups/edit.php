@@ -35,7 +35,7 @@ if (isset($_POST["badd"])) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully added"), $groupname));
         header("Location: " . urlStrRedirect("base/groups/index"));
         exit;
-    }    
+    }
 } else if (isset($_POST["bmodify"])) {
     $groupname = $_POST["groupname"];
     $groupdesc = stripslashes($_POST["groupdesc"]);
@@ -105,7 +105,7 @@ callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 <input name="badd" type="submit" class="btnPrimary" value="<?php echo  _("Create"); ?>" />
 <?php } else { ?>
 <input name="groupname" type="hidden" value="<?php echo  $groupname; ?>" />
-<input name="bmodify" type="submit" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" /> 
+<input name="bmodify" type="submit" class="btnPrimary" value="<?php echo  _("Confirm"); ?>" />
 <?php
 }
 
@@ -113,7 +113,7 @@ callPluginFunction("baseGroupEdit", array($detailArr, $_POST));
 </form>
 
 <script type="text/javascript">
-jQuery(document).ready(function(){
-    document.groupform.groupname.focus();
+jQuery(document).ready(function() {
+    jQuery('input[name=groupname]').focus();
 });
 </script>
