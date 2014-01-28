@@ -883,10 +883,10 @@ class Glpi084(DyngroupDatabaseHelper):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 
-                                              0, 
-                                              10, 
-                                              filt, 
+        ret = self.getRestrictedComputersList(ctx,
+                                              0,
+                                              10,
+                                              filt,
                                               displayList=False,
                                               empty_macs=empty_macs)
         if len(ret) != 1:
@@ -895,10 +895,10 @@ class Glpi084(DyngroupDatabaseHelper):
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 
-                                                  0, 
-                                                  10, 
-                                                  filt, 
+            ret = self.getRestrictedComputersList(ctx,
+                                                  0,
+                                                  10,
+                                                  filt,
                                                   displayList=False,
                                                   empty_macs=empty_macs)
             if len(ret) > 0:
@@ -964,14 +964,14 @@ class Glpi084(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, 
-                                   ctx, 
-                                   min = 0, 
-                                   max = -1, 
-                                   filt = None, 
-                                   advanced = True, 
-                                   justId = False, 
-                                   toH = False, 
+    def getRestrictedComputersList(self,
+                                   ctx,
+                                   min = 0,
+                                   max = -1,
+                                   filt = None,
+                                   advanced = True,
+                                   justId = False,
+                                   toH = False,
                                    displayList = None,
                                    empty_macs=False):
         """
@@ -1011,14 +1011,14 @@ class Glpi084(DyngroupDatabaseHelper):
             ret = map(lambda m: m.toH(), query.all())
         else:
             if filt is not None and filt.has_key('get'):
-                ret = self.__formatMachines(query.all(), 
-                                            advanced, 
+                ret = self.__formatMachines(query.all(),
+                                            advanced,
                                             filt['get'],
                                             empty_macs=empty_macs)
             else:
-                ret = self.__formatMachines(query.all(), 
-                                            advanced, 
-                                            None, 
+                ret = self.__formatMachines(query.all(),
+                                            advanced,
+                                            None,
                                             empty_macs=empty_macs)
         session.close()
         return ret
@@ -1160,12 +1160,12 @@ class Glpi084(DyngroupDatabaseHelper):
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
-                    (ret[uuid][1]['macAddress'], 
-                     ret[uuid][1]['ipHostNumber'], 
-                     ret[uuid][1]['subnetMask'], 
-                     ret[uuid][1]['domain'], 
-                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, 
-                                                                          names[uuid], 
+                    (ret[uuid][1]['macAddress'],
+                     ret[uuid][1]['ipHostNumber'],
+                     ret[uuid][1]['subnetMask'],
+                     ret[uuid][1]['domain'],
+                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid,
+                                                                          names[uuid],
                                                                           nets[uuid],
                                                                           empty_macs=empty_macs)
                     if ret[uuid][1]['domain'] != '' and len(ret[uuid][1]['domain']) > 0 :
@@ -3199,12 +3199,12 @@ class Glpi084(DyngroupDatabaseHelper):
                     if networkport.networknames.ipaddresses:
                         if len(networkport.networknames.ipaddresses) > 1:
                             self.logger.warn('Machine %s: More than one IP address for Network Port ID %s, we choose the first one' % (machine.name, networkport.networknames.id))
-                        d['ifaddr'] = networkport.networknames.ipaddresses[0].name
-                        if len(networkport.networknames.ipaddresses[0].ipnetworks) > 1:
+                        d['ifaddr'] = networkport.networknames.ipaddresses[-1].name
+                        if len(networkport.networknames.ipaddresses[-1].ipnetworks) > 1:
                             self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
                         if networkport.networknames.ipaddresses:
-                            if networkport.networknames.ipaddresses[0].ipnetworks:
-                                ipnetwork = networkport.networknames.ipaddresses[0].ipnetworks[0]
+                            if networkport.networknames.ipaddresses[-1].ipnetworks:
+                                ipnetwork = networkport.networknames.ipaddresses[-1].ipnetworks[-1]
                                 d['netmask'] = ipnetwork.netmask
                                 d['gateway'] = ipnetwork.gateway
                                 d['subnet'] = ipnetwork.address
