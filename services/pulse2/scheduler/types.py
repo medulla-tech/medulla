@@ -446,15 +446,22 @@ class Phase (PhaseBase):
         """
         if taken_in_account: # success
             self.update_history_in_progress()
-            self.logger.info("Circuit #%s: %s order stacked" %
-                    (self.coh.id, name))
+            self.logger.info("Circuit #%s: (%s on %s) %s order stacked" %
+                    (self.coh.id, 
+                     self.cmd.title, 
+                     self.target.target_name, 
+                     name))
             return self.give_up()
         else: # failed: launcher seems to have rejected it
             if self.coh.isStateStopped():
                 return self.give_up()
 
             self.coh.setStateScheduled()
-            self.logger.warn("Circuit #%s: %s order NOT stacked" % (self.coh.id, name))
+            self.logger.warn("Circuit #%s: (%s on %s) %s order NOT stacked" % 
+                    (self.coh.id,
+                     self.cmd.title,   
+                     self.target.target_name, 
+                     name))
             return self.switch_phase_failed(True)
 
 
@@ -891,7 +898,10 @@ class Circuit (CircuitBase):
                 self.logger.debug("next phase :%s" % (self.running_phase))
             except StopIteration :
                 # end of workflow - done !
-                self.logger.info("Circuit #%d: done" % self.id)
+                self.logger.info("Circuit #%s: (%s on %s) DONE" % 
+                        (self.id,
+                         self.cohq.cmd.title,
+                         self.cohq.target.target_name))
                 self.release()
             except Exception, e:
                 self.logger.error("Next phase get failed: %s"  % str(e))
