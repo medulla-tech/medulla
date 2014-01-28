@@ -33,15 +33,24 @@ if (isset($_POST["badd"])) {
     change_group_desc($groupname, $groupdesc);
     if (!isXMLRPCError()) {
         new NotifyWidgetSuccess(sprintf(_("Group %s successfully added"), $groupname));
-        header("Location: " . urlStrRedirect("base/groups/index"));
-        exit;
+        redirectTo(urlStrRedirect("base/groups/index"));
     }
 } else if (isset($_POST["bmodify"])) {
     $groupname = $_POST["groupname"];
     $groupdesc = stripslashes($_POST["groupdesc"]);
     change_group_desc($groupname, $groupdesc);
-    callPluginFunction("changeGroup", array($_POST));
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(sprintf(_("Group %s successfully modified"), $groupname));
+    $error = false;
+    $ret = callPluginFunction("changeGroup", array($_POST));
+    var_dump($err);
+    foreach($ret as $plugin => $result) {
+        if ($result === false) {
+            $error = true;
+            break;
+        }
+    }
+    if (!$error && !isXMLRPCError())
+        new NotifyWidgetSuccess(sprintf(_("Group %s successfully modified"), $groupname));
+    redirectTo(urlStrRedirect("base/groups/edit", array("group" => $groupname)));
 }
 
 
