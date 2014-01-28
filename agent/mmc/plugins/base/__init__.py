@@ -1036,10 +1036,7 @@ class LdapUserGroupControl:
                     'objectclass':('posixGroup','top')
                      }
         attributes = [ (k,v) for k,v in group_info.items() ]
-        try:
-            self.l.add_s(entry, attributes)
-        except ldap.ALREADY_EXISTS:
-            pass
+        self.l.add_s(entry, attributes)
         r.commit()
         return self.getGroupEntry(cn)
 
