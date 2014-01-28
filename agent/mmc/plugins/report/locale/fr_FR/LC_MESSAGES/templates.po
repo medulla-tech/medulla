@@ -1,17 +1,18 @@
 # Translations template for PROJECT.
-# Copyright (C) 2013 ORGANIZATION
+# Copyright (C) 2014 ORGANIZATION
 # This file is distributed under the same license as the PROJECT project.
 # 
 ## Translators:
 #   <acecile@mandriva.com>, 2013.
-#   <jpbraun@mandriva.com>, 2013.
+#   <ibelahmar@mandriva.com>, 2014.
+#   <jpbraun@mandriva.com>, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-12-24 11:58+0100\n"
-"PO-Revision-Date: 2013-12-24 10:36+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-01-28 16:56+0100\n"
+"PO-Revision-Date: 2014-01-27 16:14+0000\n"
+"Last-Translator: Ishak Belahmar <ibelahmar@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +47,16 @@ msgid ""
 "\n"
 "        "
 msgstr ""
+"\n"
+"        "
 
 #: conf/plugins/report/templates/default.xml:22
 msgid ""
 "\n"
 "        Printed __NOW_DATE__ at __NOW_HOUR__"
 msgstr ""
+"\n"
+"Imprimé le __NOW_DATE__ à __NOW_HOUR__"
 
 #: conf/plugins/report/templates/default.xml:29
 msgid ""
@@ -74,6 +79,21 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"<p><img style=\"max-width:250px; float: left;\" src=\"__COMPANY_LOGO_PATH__\" />\n"
+"            <img style=\"max-width:250px; max-height: 80px; float: right;\" src=\"__PULSE_LOGO_PATH__\" />\n"
+"        </p>\n"
+"        <div style=\"height:400px\" />\n"
+"        <h1>Rapport d'activité</h1>\n"
+"        Du Period from <b>__PERIOD_START__</b>  au <b>__PERIOD_END__</b>\n"
+"        <div style=\"height:300px\" />\n"
+"        <span style=\"float: right;\">Généré par: <b>__COMPANY__</b></span>\n"
+"\n"
+"        <div style=\"height:700px; page-break-before: always\" />\n"
+"        <h3>Confidentialité</h3>\n"
+"        <p>Ceci est un document confidentiel, interne à l'entreprise <b>__COMPANY__</b>et uniquement à destination des personnes ayant droits. Il est la propriété exclusive de l'organisation <b>__COMPANY__</b> et ne peut en aucun cas être diffusé en dehors de ce cadre.\n"
+"        <h3>Conditions d'utilisation</h3>\n"
+"        <p>Ce document a été conçu à partir des données récoltées par l'agent d'inventaire sur le parc informatique. Mandriva S.A. ne peut en aucun cas être tenue pour responsable de l'exactitude des informations remontées par ces agents, ainsi que d'éventuelles erreurs liées à une utilisation inappropriée de la fonctionnalité de reporting.</p>"
 
 #: conf/plugins/report/templates/default.xml:48
 msgid "Device evolution"
@@ -469,7 +489,7 @@ msgstr "Types d'ordinateurs"
 
 #: conf/plugins/report/templates/default.xml:169
 msgid "Types"
-msgstr ""
+msgstr "Types"
 
 #: conf/plugins/report/templates/default.xml:170
 msgid "Desktop"

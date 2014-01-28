@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
-#   <maikwagner@yahoo.com>, 2011, 2012, 2013.
+#   <maikwagner@yahoo.com>, 2011, 2012, 2013, 2014.
 #   <mario.fetka@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-12-24 11:35+0100\n"
-"PO-Revision-Date: 2013-11-08 09:39+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-01-28 16:56+0100\n"
+"PO-Revision-Date: 2014-01-29 08:53+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,27 +74,24 @@ msgstr ""
 "Wenn dieser Satz sich nicht ändert, wird Ihr Browser von der MMC-Anwendung "
 "nicht unterstützt."
 
-#: graph/header.inc.php:193 graph/header.inc.php:229
+#: graph/header.inc.php:195 graph/header.inc.php:231
 msgid "Yes"
 msgstr "Ja"
 
-#: graph/header.inc.php:196 graph/header.inc.php:198
+#: graph/header.inc.php:198 graph/header.inc.php:200
 msgid "No"
 msgstr "Nein"
 
-#: graph/header.inc.php:231 includes/PageGenerator.php:2170
+#: graph/header.inc.php:233 includes/PageGenerator.php:2176
+#: includes/FormGenerator.php:619
 msgid "Close"
 msgstr "Schließen"
 
-#: graph/header.inc.php:295
+#: graph/header.inc.php:297
 msgid "Form cannot be submit. Input errors are highlighted in red."
 msgstr ""
 "Formular kann nicht übermittelt werden. Eingabefehler sind in rot "
 "hervorgehoben."
-
-#: includes/acl.inc.php:124
-msgid "You do not have required rights"
-msgstr "Sie verfügen nicht über die erforderlichen Rechte"
 
 #: includes/commonErrorHandling.php:30
 msgid "This item already exists in your LDAP directory"
@@ -294,139 +291,225 @@ msgstr[0] "Den Dienst neustarten?"
 msgstr[1] "Die Dienste neustarten?"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:869 includes/PageGenerator.php:1116
+#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:620
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "zurück"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:883 includes/PageGenerator.php:1126
+#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:621
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr "nächste"
 
-#: includes/FormGenerator.php:60 includes/FormGenerator.php:282
-#: includes/FormGenerator.php:634 includes/FormGenerator.php:761
-msgid "unavailable"
-msgstr "nicht verfügbar"
-
-#: includes/FormGenerator.php:222
-msgid "Delete photo"
-msgstr "Foto löschen"
-
-#: includes/FormGenerator.php:268
-msgid "yes"
-msgstr "ja"
-
-#: includes/FormGenerator.php:271
-msgid "no"
-msgstr "nein"
-
-#: includes/FormGenerator.php:456
-msgid "Year: "
-msgstr "Jahr:"
-
-#: includes/FormGenerator.php:456
-msgid "Month: "
-msgstr "Monat:"
-
-#: includes/FormGenerator.php:456
-msgid "Day: "
-msgstr "Tag:"
-
-#: includes/FormGenerator.php:457
-msgid "Hour: "
-msgstr "Stunde:"
-
-#: includes/FormGenerator.php:457
-msgid "Min.: "
-msgstr "Min.:"
-
-#: includes/FormGenerator.php:457
-msgid "Sec.: "
-msgstr "Sec.:"
-
-#: includes/FormGenerator.php:529 includes/FormGenerator.php:535
-#: modules/base/includes/AjaxFilterLog.inc.php:168
-#: modules/base/includes/AjaxFilterLog.inc.php:172
-msgid "or <a href='#'"
-msgstr "oder <a href='#'"
-
-#: includes/FormGenerator.php:531
-#: modules/base/includes/AjaxFilterLog.inc.php:170
-msgid "value=\"now\";'>now</a>"
-msgstr "value=\"now\";'>jetzt</a>"
-
-#: includes/FormGenerator.php:537
-#: modules/base/includes/AjaxFilterLog.inc.php:174
-msgid "value=\"never\";'>never</a>"
-msgstr "value=\"never\";'>nie</a>"
-
-#: includes/FormGenerator.php:600 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
-msgid "Add"
-msgstr "hinzufügen"
-
-#: includes/FormGenerator.php:898
-msgid "Toggle selection"
-msgstr ""
-
-#: includes/FormGenerator.php:1037 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr "löschen"
-
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:788
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
 msgstr "zu"
 
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:790
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Gesamt <b>%s </b>"
 
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:793
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
 msgid "page"
 msgstr "Seite"
 
-#: includes/PageGenerator.php:903
+#: includes/PageGenerator.php:905
 msgid "Pagination"
 msgstr "Nummerierung"
 
-#: includes/PageGenerator.php:976
+#: includes/PageGenerator.php:978
 msgid "Go to page"
 msgstr "Gehe zur Seite"
 
-#: includes/PageGenerator.php:1404
+#: includes/PageGenerator.php:1406
 msgid "No item available"
 msgstr "Keine Eintrag vorhanden"
 
-#: includes/PageGenerator.php:1588
+#: includes/PageGenerator.php:1594
 msgid "Select entity"
 msgstr "Wähle Einheit"
 
-#: includes/PageGenerator.php:2548 includes/PageGenerator.php:2617
-#: includes/PageGenerator.php:2643 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:108
+#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
+#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "bestätigen"
 
-#: includes/PageGenerator.php:2552 includes/PageGenerator.php:2621
+#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
 #: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "abbrechen"
 
-#: includes/PageGenerator.php:2777
+#: includes/PageGenerator.php:2801
 msgid "Select all"
 msgstr "alle wählen"
 
-#: includes/PageGenerator.php:2778
+#: includes/PageGenerator.php:2801
 msgid "Unselect all"
 msgstr "alle abwählen"
+
+#: includes/FormGenerator.php:69 includes/FormGenerator.php:291
+#: includes/FormGenerator.php:723 includes/FormGenerator.php:850
+msgid "unavailable"
+msgstr "nicht verfügbar"
+
+#: includes/FormGenerator.php:231
+msgid "Delete photo"
+msgstr "Foto löschen"
+
+#: includes/FormGenerator.php:277
+msgid "yes"
+msgstr "ja"
+
+#: includes/FormGenerator.php:280
+msgid "no"
+msgstr "nein"
+
+#: includes/FormGenerator.php:465
+msgid "Year: "
+msgstr "Jahr:"
+
+#: includes/FormGenerator.php:465
+msgid "Month: "
+msgstr "Monat:"
+
+#: includes/FormGenerator.php:465
+msgid "Day: "
+msgstr "Tag:"
+
+#: includes/FormGenerator.php:466
+msgid "Hour: "
+msgstr "Stunde:"
+
+#: includes/FormGenerator.php:466
+msgid "Min.: "
+msgstr "Min.:"
+
+#: includes/FormGenerator.php:466
+msgid "Sec.: "
+msgstr "Sec.:"
+
+#: includes/FormGenerator.php:538 includes/FormGenerator.php:544
+#: modules/base/includes/AjaxFilterLog.inc.php:168
+#: modules/base/includes/AjaxFilterLog.inc.php:172
+msgid "or <a href='#'"
+msgstr "oder <a href='#'"
+
+#: includes/FormGenerator.php:540
+#: modules/base/includes/AjaxFilterLog.inc.php:170
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"now\";'>jetzt</a>"
+
+#: includes/FormGenerator.php:546
+#: modules/base/includes/AjaxFilterLog.inc.php:174
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"never\";'>nie</a>"
+
+#: includes/FormGenerator.php:595
+msgid "January"
+msgstr "Januar"
+
+#: includes/FormGenerator.php:595
+msgid "February"
+msgstr "Februar"
+
+#: includes/FormGenerator.php:595
+msgid "March"
+msgstr "März"
+
+#: includes/FormGenerator.php:595
+msgid "April"
+msgstr "April"
+
+#: includes/FormGenerator.php:596
+msgid "May"
+msgstr "Mai"
+
+#: includes/FormGenerator.php:596
+msgid "June"
+msgstr "Juni"
+
+#: includes/FormGenerator.php:596
+msgid "July"
+msgstr "Juli"
+
+#: includes/FormGenerator.php:596
+msgid "August"
+msgstr "August"
+
+#: includes/FormGenerator.php:597
+msgid "September"
+msgstr "September"
+
+#: includes/FormGenerator.php:597
+msgid "October"
+msgstr "Oktober"
+
+#: includes/FormGenerator.php:597
+msgid "November"
+msgstr "November"
+
+#: includes/FormGenerator.php:597
+msgid "December"
+msgstr "Dezember"
+
+#: includes/FormGenerator.php:607
+msgid "Sunday"
+msgstr "Sonntag"
+
+#: includes/FormGenerator.php:607
+msgid "Monday"
+msgstr "Montag"
+
+#: includes/FormGenerator.php:607
+msgid "Tuesday"
+msgstr "Dienstag"
+
+#: includes/FormGenerator.php:607
+msgid "Wednesday"
+msgstr "Mittwoch"
+
+#: includes/FormGenerator.php:608
+msgid "Thursday"
+msgstr "Donnerstag"
+
+#: includes/FormGenerator.php:608
+msgid "Friday"
+msgstr "Freitag"
+
+#: includes/FormGenerator.php:608
+msgid "Saturday"
+msgstr "Samstag"
+
+#: includes/FormGenerator.php:622
+msgid "Now"
+msgstr "Jetzt"
+
+#: includes/FormGenerator.php:689 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr "hinzufügen"
+
+#: includes/FormGenerator.php:987
+msgid "Toggle selection"
+msgstr "Auswahl einstellen"
+
+#: includes/FormGenerator.php:1126 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "löschen"
+
+#: includes/acl.inc.php:124
+msgid "You do not have required rights"
+msgstr "Sie verfügen nicht über die erforderlichen Rechte"
 
 #: logout/index.php:50
 msgid "Your session will be closed"
@@ -596,7 +679,7 @@ msgstr "Computer bearbeiten"
 msgid "Computer name"
 msgstr "Computer Name"
 
-#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:93
+#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:102
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -611,15 +694,6 @@ msgstr "Computer Name"
 #: modules/base/computers/trads.php:27
 msgid "Display Name"
 msgstr "Angezeigter Name"
-
-#: modules/base/computers/localSidebar.php:7
-msgid "All computers"
-msgstr "Alle Computer"
-
-#: modules/base/computers/localSidebar.php:10
-#: modules/base/infoPackage.inc.php:282
-msgid "Add computer"
-msgstr "Computer hinzufügen "
 
 #: modules/base/computers/delete.php:30
 msgid ""
@@ -654,6 +728,15 @@ msgstr ""
 msgid "Computer list"
 msgstr "Computerliste"
 
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "Alle Computer"
+
+#: modules/base/computers/localSidebar.php:8
+#: modules/base/infoPackage.inc.php:282
+msgid "Add computer"
+msgstr "Computer hinzufügen "
+
 #: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
 msgid "Groups"
 msgstr "Gruppen"
@@ -666,7 +749,7 @@ msgstr "Kommentare"
 msgid "Edit members"
 msgstr "Mitglieder bearbeiten"
 
-#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:54
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:63
 msgid "Edit group"
 msgstr "Gruppe bearbeiten"
 
@@ -708,36 +791,6 @@ msgstr "Alle Benutzer"
 msgid "Group members"
 msgstr "Gruppenmitglieder"
 
-#: modules/base/groups/edit.php:35
-#, php-format
-msgid "Group %s successfully added"
-msgstr "Gruppe %s erfolgreich hinzugefügt"
-
-#: modules/base/groups/edit.php:44
-#, php-format
-msgid "Group %s successfully modified"
-msgstr "Gruppe %s erfolgreich geändert"
-
-#: modules/base/groups/edit.php:49 modules/base/includes/auditCodes.php:32
-msgid "Add group"
-msgstr "Gruppe hinzufügen"
-
-#: modules/base/groups/edit.php:73
-msgid ""
-"The group name can only contain letters and numeric, and must begin with a "
-"letter"
-msgstr ""
-"Der Gruppenname darf nur Buchstaben und Ziffern enthalten und muss mit einem"
-" Buchstaben beginnen."
-
-#: modules/base/groups/edit.php:90
-msgid "Group name"
-msgstr "Gruppenname"
-
-#: modules/base/groups/edit.php:105
-msgid "Create"
-msgstr "erstellen"
-
 #: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
 msgid "Delete group"
 msgstr "lösche Gruppe"
@@ -749,6 +802,36 @@ msgstr "Sie löschen die Gruppe"
 #: modules/base/groups/delete.php:60
 msgid "This group will be deleted even though it is not empty"
 msgstr "Diese Gruppe wird gelöscht, auch wenn auch wenn es nicht leer ist"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "Gruppe %s erfolgreich hinzugefügt"
+
+#: modules/base/groups/edit.php:52
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "Gruppe %s erfolgreich geändert"
+
+#: modules/base/groups/edit.php:58 modules/base/includes/auditCodes.php:32
+msgid "Add group"
+msgstr "Gruppe hinzufügen"
+
+#: modules/base/groups/edit.php:82
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr ""
+"Der Gruppenname darf nur Buchstaben und Ziffern enthalten und muss mit einem"
+" Buchstaben beginnen."
+
+#: modules/base/groups/edit.php:99
+msgid "Group name"
+msgstr "Gruppenname"
+
+#: modules/base/groups/edit.php:114
+msgid "Create"
+msgstr "erstellen"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -906,229 +989,6 @@ msgstr "Computer : "
 #: modules/base/includes/panels/support.inc.php:56
 msgid "Upgrade"
 msgstr "Upgrade"
-
-#: modules/base/includes/publicFunc.php:46
-#, php-format
-msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
-msgstr ""
-"Gruppe %s kann nicht gelöscht werden. <br/>%s ist die primäre Gruppe von "
-"einigen Benutzern."
-
-#: modules/base/includes/publicFunc.php:49
-#, php-format
-msgid "Group %s successfully deleted."
-msgstr "Gruppe %s erfolgreich gelöscht."
-
-#: modules/base/includes/publicFunc.php:80
-msgid "User's name invalid !"
-msgstr "Benutzername ungültig!"
-
-#: modules/base/includes/publicFunc.php:85
-#, php-format
-msgid "The user %s already exists."
-msgstr "Der Benutzer %s existiert bereits."
-
-#: modules/base/includes/publicFunc.php:90
-msgid "Password is empty."
-msgstr "Passwort ist leer."
-
-#: modules/base/includes/publicFunc.php:95
-msgid "The confirmation password does not match the new password."
-msgstr "Das Bestätigungspasswort stimmt nicht mit dem neuen Passwort überein."
-
-#: modules/base/includes/publicFunc.php:102
-msgid "The primary group field can't be empty."
-msgstr "Das Feld primäre Gruppe darf nicht leer sein."
-
-#: modules/base/includes/publicFunc.php:106
-#, php-format
-msgid "The group %s does not exist, and so can't be set as primary group."
-msgstr ""
-"Die Gruppe %s existiert nicht und kann deshalb nicht als primäre Gruppe "
-"gesetz werden."
-
-#: modules/base/includes/publicFunc.php:183
-msgid "User photo deleted"
-msgstr "Benutzerfoto gelöscht"
-
-#: modules/base/includes/publicFunc.php:197
-msgid "User disabled"
-msgstr "Benutzer deaktiviert"
-
-#: modules/base/includes/publicFunc.php:201
-msgid "User enabled"
-msgstr "Benutzer aktiviert"
-
-#: modules/base/includes/publicFunc.php:249
-#, php-format
-msgid ""
-"The photo is too big. The max size is %s x %s.\n"
-"                        Install php gd extention to resize the photo automatically"
-msgstr ""
-"Das Foto ist zu groß. Die maximales Größe beträgt %s x %s.\n"
-"                        Installieren Sie die php gd Erweiterung um das Foto automatisch anzupassen"
-
-#: modules/base/includes/publicFunc.php:254
-#: modules/base/includes/publicFunc.php:256
-msgid "The photo is not a JPG file"
-msgstr "Das Foto ist keine JPG-Datei"
-
-#: modules/base/includes/publicFunc.php:260
-msgid "User attributes updated"
-msgstr "Benutzerattribute aktualisiert"
-
-#: modules/base/includes/publicFunc.php:276
-msgid "User attributes"
-msgstr "Benutzerattribute"
-
-#: modules/base/includes/publicFunc.php:285
-#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-#: index.php:206
-msgid "Login"
-msgstr "Benutzername"
-
-#: modules/base/includes/publicFunc.php:300
-#: modules/base/infoPackage.inc.php:326 index.php:212
-msgid "Password"
-msgstr "Passwort"
-
-#: modules/base/includes/publicFunc.php:304
-msgid "Confirm password"
-msgstr "Passwort bestätigen"
-
-#: modules/base/includes/publicFunc.php:309
-msgid "Photo"
-msgstr "Foto"
-
-#: modules/base/includes/publicFunc.php:314
-msgid "Last name"
-msgstr "Nachname"
-
-#: modules/base/includes/publicFunc.php:319
-msgid "First name"
-msgstr "Vorname"
-
-#: modules/base/includes/publicFunc.php:324
-msgid "Title"
-msgstr "Titel"
-
-#: modules/base/includes/publicFunc.php:329
-msgid "Email address"
-msgstr "Email-Adresse"
-
-#: modules/base/includes/publicFunc.php:337
-#: modules/base/includes/publicFunc.php:340
-#: modules/base/infoPackage.inc.php:318
-msgid "Telephone number"
-msgstr "Telefonnummer"
-
-#: modules/base/includes/publicFunc.php:347
-msgid "Mobile number"
-msgstr "Mobilfunknummer"
-
-#: modules/base/includes/publicFunc.php:352
-#: modules/base/infoPackage.inc.php:320
-msgid "Fax number"
-msgstr "Faxnummer"
-
-#: modules/base/includes/publicFunc.php:357
-#: modules/base/infoPackage.inc.php:321
-msgid "Home phone number"
-msgstr "Telefonnummer privat"
-
-#: modules/base/includes/publicFunc.php:362
-msgid "Choose language"
-msgstr "Sprache wählen"
-
-#: modules/base/includes/publicFunc.php:367
-msgid "Preferred language"
-msgstr "Bevorzugte Sprache"
-
-#: modules/base/includes/publicFunc.php:375
-msgid "User is disabled, if checked"
-msgstr "Benutzer ist deaktiviert, wenn aktiviert"
-
-#: modules/base/includes/publicFunc.php:376
-msgid ""
-"A disabled user can't log in any UNIX services. <br/>\n"
-"                                Her/his login shell command is replaced by /bin/false"
-msgstr ""
-"Ein deaktivierter Benutzer kann sich in keine UNIX-Dienste einloggen. <br/>\n"
-"                                Seine/ihre Loginshell wird durch /bin/false ersetzt"
-
-#: modules/base/includes/publicFunc.php:408
-#: modules/base/infoPackage.inc.php:322
-msgid "Primary group"
-msgstr "primäre Gruppe"
-
-#: modules/base/includes/publicFunc.php:414
-msgid "User's groups"
-msgstr "Gruppen des Benutzers"
-
-#: modules/base/includes/publicFunc.php:414
-msgid "All groups"
-msgstr "Alle Gruppen"
-
-#: modules/base/includes/publicFunc.php:437
-#: modules/base/infoPackage.inc.php:323
-msgid "Secondary groups"
-msgstr "Sekundäre Gruppen"
-
-#: modules/base/includes/publicFunc.php:446
-#: modules/base/views/index.tpl.php:87
-msgid "Home directory"
-msgstr "Home-Verzeichnis"
-
-#: modules/base/includes/publicFunc.php:452
-msgid "Create home directory on filesystem"
-msgstr "Erstellen des Home-Verzeichnis auf Dateisystem"
-
-#: modules/base/includes/publicFunc.php:456
-msgid "Force to use the home directory if it exists"
-msgstr "Die Nutzung des Home-Verzeichnisses erzwingen wenn es existiert"
-
-#: modules/base/includes/publicFunc.php:457
-msgid "Warning: an existing directory may belong to another user !"
-msgstr ""
-"Warnung: ein bestehendes Verzeichnis kann einem anderen Benutzer gehören !"
-
-#: modules/base/includes/publicFunc.php:463
-#: modules/base/infoPackage.inc.php:315
-msgid "Login shell"
-msgstr "Login-Shell"
-
-#: modules/base/includes/publicFunc.php:468
-#: modules/base/infoPackage.inc.php:324
-msgid "Common name"
-msgstr "Gemeinsamer Name"
-
-#: modules/base/includes/publicFunc.php:469
-msgid ""
-"This field is used by some LDAP clients (for example Thunderbird address "
-"book) to display user entries."
-msgstr ""
-"Dieses Feld wird von einigen LDAP-Clients (z.B. Thunderbird-Adressbuch) "
-"verwendet, um Benutzer-Einträge anzuzeigen."
-
-#: modules/base/includes/publicFunc.php:474
-#: modules/base/infoPackage.inc.php:325
-msgid "Preferred name to be used"
-msgstr "bevorzugter Name der genutzt werden soll"
-
-#: modules/base/includes/publicFunc.php:475
-msgid ""
-"This field is used by SAMBA (and other LDAP clients) to display user name."
-msgstr ""
-"Dieses Feld wird von Samba (und anderen LDAP-Clients) benutzt, um "
-"Benutzernamen anzuzeigen."
-
-#: modules/base/includes/publicFunc.php:481
-msgid "UID"
-msgstr "UID"
-
-#: modules/base/includes/publicFunc.php:486
-msgid "GID"
-msgstr "GID"
 
 #: modules/base/includes/users-xmlrpc.inc.php:46
 msgid "Invalid login"
@@ -1321,6 +1181,228 @@ msgstr "lösche Computer aus Gruppe"
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
 msgstr "aktualisieren"
+
+#: modules/base/includes/publicFunc.php:46
+#, php-format
+msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
+msgstr ""
+"Gruppe %s kann nicht gelöscht werden. <br/>%s ist die primäre Gruppe von "
+"einigen Benutzern."
+
+#: modules/base/includes/publicFunc.php:49
+#, php-format
+msgid "Group %s successfully deleted."
+msgstr "Gruppe %s erfolgreich gelöscht."
+
+#: modules/base/includes/publicFunc.php:80
+msgid "User's name invalid !"
+msgstr "Benutzername ungültig!"
+
+#: modules/base/includes/publicFunc.php:85
+#, php-format
+msgid "The user %s already exists."
+msgstr "Der Benutzer %s existiert bereits."
+
+#: modules/base/includes/publicFunc.php:90
+msgid "Password is empty."
+msgstr "Passwort ist leer."
+
+#: modules/base/includes/publicFunc.php:95
+msgid "The confirmation password does not match the new password."
+msgstr "Das Bestätigungspasswort stimmt nicht mit dem neuen Passwort überein."
+
+#: modules/base/includes/publicFunc.php:102
+msgid "The primary group field can't be empty."
+msgstr "Das Feld primäre Gruppe darf nicht leer sein."
+
+#: modules/base/includes/publicFunc.php:106
+#, php-format
+msgid "The group %s does not exist, and so can't be set as primary group."
+msgstr ""
+"Die Gruppe %s existiert nicht und kann deshalb nicht als primäre Gruppe "
+"gesetz werden."
+
+#: modules/base/includes/publicFunc.php:183
+msgid "User photo deleted"
+msgstr "Benutzerfoto gelöscht"
+
+#: modules/base/includes/publicFunc.php:197
+msgid "User disabled"
+msgstr "Benutzer deaktiviert"
+
+#: modules/base/includes/publicFunc.php:201
+msgid "User enabled"
+msgstr "Benutzer aktiviert"
+
+#: modules/base/includes/publicFunc.php:248
+#, php-format
+msgid ""
+"The photo is too big. The max size is %s x %s.\n"
+"                    Install php gd extention to resize the photo automatically"
+msgstr ""
+"Das Foto ist zu groß. Die maximale Größe ist %s x %s.\n"
+"                    Installieren Sie die php gd Erweiterung um das Foto automatisch anzupassen"
+
+#: modules/base/includes/publicFunc.php:253
+msgid "The photo is not a JPG file"
+msgstr "Das Foto ist keine JPG-Datei"
+
+#: modules/base/includes/publicFunc.php:257
+msgid "User attributes updated"
+msgstr "Benutzerattribute aktualisiert"
+
+#: modules/base/includes/publicFunc.php:273
+msgid "User attributes"
+msgstr "Benutzerattribute"
+
+#: modules/base/includes/publicFunc.php:282
+#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
+#: index.php:207
+msgid "Login"
+msgstr "Benutzername"
+
+#: modules/base/includes/publicFunc.php:297
+#: modules/base/infoPackage.inc.php:326 index.php:213
+msgid "Password"
+msgstr "Passwort"
+
+#: modules/base/includes/publicFunc.php:301
+msgid "Confirm password"
+msgstr "Passwort bestätigen"
+
+#: modules/base/includes/publicFunc.php:306
+msgid "Photo"
+msgstr "Foto"
+
+#: modules/base/includes/publicFunc.php:311
+msgid "Last name"
+msgstr "Nachname"
+
+#: modules/base/includes/publicFunc.php:316
+msgid "First name"
+msgstr "Vorname"
+
+#: modules/base/includes/publicFunc.php:321
+msgid "Title"
+msgstr "Titel"
+
+#: modules/base/includes/publicFunc.php:326
+msgid "Email address"
+msgstr "Email-Adresse"
+
+#: modules/base/includes/publicFunc.php:334
+#: modules/base/includes/publicFunc.php:337
+#: modules/base/infoPackage.inc.php:318
+msgid "Telephone number"
+msgstr "Telefonnummer"
+
+#: modules/base/includes/publicFunc.php:344
+msgid "Mobile number"
+msgstr "Mobilfunknummer"
+
+#: modules/base/includes/publicFunc.php:349
+#: modules/base/infoPackage.inc.php:320
+msgid "Fax number"
+msgstr "Faxnummer"
+
+#: modules/base/includes/publicFunc.php:354
+#: modules/base/infoPackage.inc.php:321
+msgid "Home phone number"
+msgstr "Telefonnummer privat"
+
+#: modules/base/includes/publicFunc.php:359
+msgid "Choose language"
+msgstr "Sprache wählen"
+
+#: modules/base/includes/publicFunc.php:364
+msgid "Preferred language"
+msgstr "Bevorzugte Sprache"
+
+#: modules/base/includes/publicFunc.php:372
+msgid "User is disabled, if checked"
+msgstr "Benutzer ist deaktiviert, wenn aktiviert"
+
+#: modules/base/includes/publicFunc.php:373
+msgid ""
+"A disabled user can't log in any UNIX services. <br/>\n"
+"                                Her/his login shell command is replaced by /bin/false"
+msgstr ""
+"Ein deaktivierter Benutzer kann sich in keine UNIX-Dienste einloggen. <br/>\n"
+"                                Seine/ihre Loginshell wird durch /bin/false ersetzt"
+
+#: modules/base/includes/publicFunc.php:405
+#: modules/base/infoPackage.inc.php:322
+msgid "Primary group"
+msgstr "primäre Gruppe"
+
+#: modules/base/includes/publicFunc.php:411
+msgid "User's groups"
+msgstr "Gruppen des Benutzers"
+
+#: modules/base/includes/publicFunc.php:411
+msgid "All groups"
+msgstr "Alle Gruppen"
+
+#: modules/base/includes/publicFunc.php:434
+#: modules/base/infoPackage.inc.php:323
+msgid "Secondary groups"
+msgstr "Sekundäre Gruppen"
+
+#: modules/base/includes/publicFunc.php:443
+#: modules/base/views/index.tpl.php:87
+msgid "Home directory"
+msgstr "Home-Verzeichnis"
+
+#: modules/base/includes/publicFunc.php:449
+msgid "Create home directory on filesystem"
+msgstr "Erstellen des Home-Verzeichnis auf Dateisystem"
+
+#: modules/base/includes/publicFunc.php:453
+msgid "Force to use the home directory if it exists"
+msgstr "Die Nutzung des Home-Verzeichnisses erzwingen wenn es existiert"
+
+#: modules/base/includes/publicFunc.php:454
+msgid "Warning: an existing directory may belong to another user !"
+msgstr ""
+"Warnung: ein bestehendes Verzeichnis kann einem anderen Benutzer gehören !"
+
+#: modules/base/includes/publicFunc.php:460
+#: modules/base/infoPackage.inc.php:315
+msgid "Login shell"
+msgstr "Login-Shell"
+
+#: modules/base/includes/publicFunc.php:465
+#: modules/base/infoPackage.inc.php:324
+msgid "Common name"
+msgstr "Gemeinsamer Name"
+
+#: modules/base/includes/publicFunc.php:466
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"Dieses Feld wird von einigen LDAP-Clients (z.B. Thunderbird-Adressbuch) "
+"verwendet, um Benutzer-Einträge anzuzeigen."
+
+#: modules/base/includes/publicFunc.php:471
+#: modules/base/infoPackage.inc.php:325
+msgid "Preferred name to be used"
+msgstr "bevorzugter Name der genutzt werden soll"
+
+#: modules/base/includes/publicFunc.php:472
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr ""
+"Dieses Feld wird von Samba (und anderen LDAP-Clients) benutzt, um "
+"Benutzernamen anzuzeigen."
+
+#: modules/base/includes/publicFunc.php:478
+msgid "UID"
+msgstr "UID"
+
+#: modules/base/includes/publicFunc.php:483
+msgid "GID"
+msgstr "GID"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1549,56 +1631,6 @@ msgstr "Konto aktivieren"
 msgid "Disable account"
 msgstr "Konto deaktivieren"
 
-#: modules/base/users/editacl.php:152
-msgid "User ACLs successfully modified."
-msgstr "Benutzer ACLs erfolgreich geändert."
-
-#: modules/base/users/editacl.php:175
-msgid "Set value for all radio buttons:&nbsp;&nbsp;"
-msgstr "Wert für alle Radiobuttons setzen:&nbsp;&nbsp;"
-
-#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
-msgid "read only"
-msgstr "nur lesen"
-
-#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
-msgid "read/write"
-msgstr "lesen/schreiben"
-
-#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
-msgid "hide"
-msgstr "verstecken"
-
-#: modules/base/users/editacl.php:181
-msgid "Attribute description"
-msgstr "Attribut Beschreibung"
-
-#: modules/base/users/editacl.php:209
-#, php-format
-msgid " (%s module)"
-msgstr " (%s Module)"
-
-#: modules/base/users/editacl.php:219
-msgid "Web page description"
-msgstr "Webseite Beschreibung"
-
-#: modules/base/users/editacl.php:219
-msgid "Authorization"
-msgstr "Autorisation"
-
-#: modules/base/users/editacl.php:228
-msgid "Warning no desc found in infoPackage.inc.php :"
-msgstr "Warnung - keine Beschreibung gefunden in infoPackage.inc.php :"
-
-#: modules/base/users/editacl.php:251
-#, php-format
-msgid "Edit ACL of user %s"
-msgstr "ACL des Benutzer %s bearbeiten"
-
-#: modules/base/users/editacl.php:271
-msgid "Download ACL string"
-msgstr "ACL string herunterladen"
-
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
 msgid "User list"
@@ -1715,6 +1747,56 @@ msgstr "Datenträgerkapazität"
 #: modules/base/users/backup.php:90
 msgid "Launch backup"
 msgstr "Sicherung starten"
+
+#: modules/base/users/editacl.php:152
+msgid "User ACLs successfully modified."
+msgstr "Benutzer ACLs erfolgreich geändert."
+
+#: modules/base/users/editacl.php:175
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr "Wert für alle Radiobuttons setzen:&nbsp;&nbsp;"
+
+#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
+msgid "read only"
+msgstr "nur lesen"
+
+#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
+msgid "read/write"
+msgstr "lesen/schreiben"
+
+#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
+msgid "hide"
+msgstr "verstecken"
+
+#: modules/base/users/editacl.php:181
+msgid "Attribute description"
+msgstr "Attribut Beschreibung"
+
+#: modules/base/users/editacl.php:209
+#, php-format
+msgid " (%s module)"
+msgstr " (%s Module)"
+
+#: modules/base/users/editacl.php:219
+msgid "Web page description"
+msgstr "Webseite Beschreibung"
+
+#: modules/base/users/editacl.php:219
+msgid "Authorization"
+msgstr "Autorisation"
+
+#: modules/base/users/editacl.php:228
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr "Warnung - keine Beschreibung gefunden in infoPackage.inc.php :"
+
+#: modules/base/users/editacl.php:251
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr "ACL des Benutzer %s bearbeiten"
+
+#: modules/base/users/editacl.php:271
+msgid "Download ACL string"
+msgstr "ACL string herunterladen"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
@@ -1949,19 +2031,19 @@ msgstr ""
 "und die MMC-Agent abgemeldet.Sie wurden aufgrund der abgelaufenen Sitzung "
 "zwischen der MMC Web-Interface und die MMC-Agent abgemeldet."
 
-#: index.php:182
+#: index.php:183
 msgid "Forgot password ?"
 msgstr "Passwort vergessen ?"
 
-#: index.php:193
+#: index.php:194
 msgid "Server"
 msgstr "Server"
 
-#: index.php:200
+#: index.php:201
 msgid "Language"
 msgstr "Sprache"
 
-#: index.php:225
+#: index.php:226
 msgid "Connect"
 msgstr "verbinden"
 
