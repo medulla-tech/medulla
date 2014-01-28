@@ -83,14 +83,14 @@ function hasCorrectTabAcl($module, $submod, $action, $tab) {
             || (isset($_SESSION["acltab"][$module][$submod][$action][$tab]["right"])));
 }
 
-function hasCorrectModuleAcl($module) {
+function hasCorrectModuleAcl($module, $checkRedir=true) {
   global $redirArray;
   /* if you are root */
   if ($_SESSION["login"]=="root") {return true;}
   /* if you have an ACL set for this module */
   if (isset($_SESSION["acl"][$module])) {return true;}
-  /* FIXME: the next line may be wrong */
-  if (empty($redirArray[$module])) { return true; }
+      /* FIXME: the next line may be wrong */
+  if ($checkRedir && empty($redirArray[$module])) {return true;}
   return false;
 }
 

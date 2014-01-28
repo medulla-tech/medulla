@@ -42,27 +42,29 @@ $z = 1;
 // Search for panels in plugins subdirs...
 foreach(getPanels() as $panelName) {
     foreach($modules as $module) {
-        $basedir = "modules/$module/includes/panels/";
-        if (is_dir($basedir)) {
-            $h = opendir($basedir);
-            while (false !== ($f = readdir($h))) {
-                if (substr($f, 0, 1) != ".") {
-                    if ($f == $panelName . ".inc.php") {
-                        $file = $basedir . $f;
-                        include_once($file);
-                        if (!isset($options["enable"]))
-                            $options["enable"] = True;
-                        if (!isset($options["refresh"]))
-                            $options["refresh"] = 10;
-                        if ($options["enable"]) {
-                            if ($i % 2 == 1)
-                                print '<div class="column" id="col'.$z++.'" style="width: 230px;">';
-                            $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
-                            $panel->class = "portlet";
-                            $panel->display();
-                            if ($i % 2 == 0)
-                                print '</div>';
-                            $i++;
+        if (hasCorrectModuleAcl($module, false) == true) {
+            $basedir = "modules/$module/includes/panels/";
+            if (is_dir($basedir)) {
+                $h = opendir($basedir);
+                while (false !== ($f = readdir($h))) {
+                    if (substr($f, 0, 1) != ".") {
+                        if ($f == $panelName . ".inc.php") {
+                            $file = $basedir . $f;
+                            include_once($file);
+                            if (!isset($options["enable"]))
+                                $options["enable"] = True;
+                            if (!isset($options["refresh"]))
+                                $options["refresh"] = 10;
+                            if ($options["enable"]) {
+                                if ($i % 2 == 1)
+                                    print '<div class="column" id="col'.$z++.'" style="width: 230px;">';
+                                $panel = new AjaxPage(urlStrRedirect('dashboard/main/ajaxPanels'), $options["id"], array("file" => urlencode($file)), $options["refresh"]);
+                                $panel->class = "portlet";
+                                $panel->display();
+                                if ($i % 2 == 0)
+                                    print '</div>';
+                                $i++;
+                            }
                         }
                     }
                 }
