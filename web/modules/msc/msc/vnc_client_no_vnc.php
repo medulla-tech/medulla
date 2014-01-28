@@ -197,11 +197,11 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 		rfb.clipboardPasteFrom(clipText);	    
 	    });
 
-        // On close window, disconnect
+	    // On close window, disconnect
 
-        window.onbeforeunload = function() {
-            rfb.disconnect();
-        };
+            window.onbeforeunload = function() {
+            	rfb.disconnect();
+	    };
 
         });
 
@@ -254,10 +254,14 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 		var contentWidth = $('canvas').width()+10;
 		var contentHeight = $('canvas').height()+100;
 		window.resizeTo(contentWidth,contentHeight);
-		setTimeout(windowResize, 1000);
+
+		if (contentHeight < 300)
+		    setTimeout(windowResize, 1000);
+
 	    }
 
 	    setTimeout(windowResize, 1000);
+	    jQuery('canvas').resize(windowResize);
 
         };
         </script>
