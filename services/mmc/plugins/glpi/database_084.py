@@ -3232,30 +3232,44 @@ class Glpi084(DyngroupDatabaseHelper):
         def getComputerNetwork(machine, domain):
             result = []
             for networkport in machine.networkports:
-                d = {
-                    'uuid': toUUID(networkport.id),
-                    'domain': domain,
-                    'ifmac': networkport.mac,
-                    'name': networkport.name,
-                    'netmask': '',
-                    'subnet': '',
-                    'gateway': '',
-                    'ifaddr': '',
-                }
                 if networkport.networknames is not None:
+
+
                     if networkport.networknames.ipaddresses:
-                        if len(networkport.networknames.ipaddresses) > 1:
-                            self.logger.warn('Machine %s: More than one IP address for Network Port ID %s, we choose the first one' % (machine.name, networkport.networknames.id))
-                        d['ifaddr'] = networkport.networknames.ipaddresses[-1].name
-                        if len(networkport.networknames.ipaddresses[-1].ipnetworks) > 1:
-                            self.logger.warn('Machine %s: More than one IP network for IP %s, we choose the first one' % (machine.name, networkport.networknames.id))
-                        if networkport.networknames.ipaddresses:
-                            if networkport.networknames.ipaddresses[-1].ipnetworks:
-                                ipnetwork = networkport.networknames.ipaddresses[-1].ipnetworks[-1]
-                                d['netmask'] = ipnetwork.netmask
-                                d['gateway'] = ipnetwork.gateway
-                                d['subnet'] = ipnetwork.address
-                result.append(d)
+                        # If there is multiple adresses per interface, we
+                        # create the same number of interfaces
+                        for ipaddress in networkport.networknames.ipaddresses:
+                            d = {
+                                'uuid': toUUID(networkport.id),
+                                'domain': domain,
+                                'ifmac': networkport.mac,
+                                'name': networkport.name,
+                                'netmask': '',
+                                'subnet': '',
+                                'gateway': '',
+                                'ifaddr': '',
+                            }
+
+                            # IP Address
+                            d['ifaddr'] = ipaddress.name
+
+                            # Init old iface dict
+                            z = {}
+
+                            for ipnetwork in ipaddress.ipnetworks:
+                                oz = z
+
+                                if ipnetwork.netmask == '0.0.0.0':
+                                    continue
+                                z = d.copy()
+                                z['netmask'] = ipnetwork.netmask
+                                z['gateway'] = ipnetwork.gateway
+                                z['subnet'] = ipnetwork.address
+
+                                # Add this (network/ip/interface) to result
+                                # and if its not duplicated
+                                if z != oz:
+                                    result.append(z)
             return result
 
         session = create_session()
