@@ -1637,8 +1637,8 @@ class Glpi084(DyngroupDatabaseHelper):
                         gateways = []
                         netmasks = []
                         for ip in networkport.networknames.ipaddresses:
-                            gateways += [ipnetwork.gateway for ipnetwork in ip.ipnetworks if ipnetwork.gateway != '']
-                            netmasks += [ipnetwork.netmask for ipnetwork in ip.ipnetworks if ipnetwork.netmask != '']
+                            gateways += [ipnetwork.gateway for ipnetwork in ip.ipnetworks if ipnetwork.gateway not in ['', '0.0.0.0']]
+                            netmasks += [ipnetwork.netmask for ipnetwork in ip.ipnetworks if ipnetwork.netmask not in ['', '0.0.0.0']]
                         gateways = list(set(gateways))
                         netmasks = list(set(netmasks))
                     l = [
