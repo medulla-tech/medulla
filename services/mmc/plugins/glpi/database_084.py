@@ -2687,7 +2687,54 @@ class Glpi084(DyngroupDatabaseHelper):
 
         I should use getAllSoftwares method, but deadline is yesterday....
         """
-        pass
+        def all_elem_are_none(params):
+            for param in params:
+                if param is not None:
+                    return False
+            return True
+        def check_list(param):
+            if not isinstance(param, list):
+                return [param]
+            elif all_elem_are_none(param):
+                return None
+            elif not param:
+                return None
+            else:
+                return param
+
+        name = check_list(name)
+        if vendor is not None: vendor = check_list(vendor)
+        if version is not None: version = check_list(version)
+
+        if int(count) == 1:
+            query = session.query(func.count(self.software.c.name))
+        else:
+            query = session.query(self.software.c.name)
+
+        query = query.select_from(self.software
+                                  .join(self.softwareversions)
+                                  .join(self.inst_software)
+                                  .outerjoin(self.manufacturers))
+
+        name_filter = [Software.name.like(n) for n in name]
+        query = query.filter(or_(*name_filter))
+
+        if version is not None:
+            version_filter = [SoftwareVersion.name.like(v) for v in version]
+            query = query.filter(or_(*version_filter))
+
+        if vendor is not None:
+            vendor_filter = [Manufacturers.name.like(v) for v in vendor]
+            query = query.filter(or_(*vendor_filter))
+
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(Software.entities_id.in_(ctx.locationsid))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
         # FIXME: the way the web interface process dynamic group sub-query
