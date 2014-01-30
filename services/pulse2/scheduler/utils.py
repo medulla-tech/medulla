@@ -73,21 +73,15 @@ def getServerCheck(target):
     })
 
 def chooseClientInfo(target):
-    ips = target.getIps()
-    if len(ips) > 0 :
-        # if at least one element from list of IPs is IP format
-        if any([NetUtils.is_ipv4_format(ip) for ip in ips]) :
-            host_dict = {'uuid': target.getUUID(),
-                         'fqdn': target.getFQDN(),
-                         'shortname': target.getShortName(),
-                         'ips': ips,
-                         'macs': target.getMacs(),
-                         'netmasks': target.getNetmasks()
-                        }
+    host_dict = {'uuid': target.getUUID(),
+                 'fqdn': target.getFQDN(),
+                 'shortname': target.getShortName(),
+                 'ips': target.getIps(),
+                 'macs': target.getMacs(),
+                 'netmasks': target.getNetmasks()
+                }
 
-            return chooseClientIP(host_dict)
-
-    return None
+    return chooseClientIP(host_dict)
 
 
 class UnixProtocol (object, LineReceiver):
