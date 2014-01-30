@@ -26,8 +26,7 @@ nobase_pkgsysconf_DATA = mmc.ini apache/mmc.conf
 endif
 
 EXTRA_DIST = mmc.ini.in apache/mmc.conf.in
-
-CLEANFILES = mmc.ini apache/mmc.conf pulse2-uuid-resolver.ini
+CLEANFILES = mmc.ini apache/mmc.conf
 
 edit = sed \
         -e 's|@bindir[@]|$(bindir)|g' \
