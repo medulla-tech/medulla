@@ -1,3 +1,15 @@
+mmc-core 3.1.1
+--------------
+
+ * Feature #2170: Create defaultUserGroup when starting
+ * Bug #2115: Mixup between client.async and client.sync cookies
+ * Bug #2155: Change user password for root doesn't work
+ * Bug #2156: Removed deprecated functions
+ * Bug #2186: Users with "no password expiration" policy still have an expiration
+              date on the samba side
+ * Bug #2256: Allow to change SAMBA password when pwdReset is set
+ * Bug #2257: Port to jQuery
+
 mmc-core 3.1.0
 --------------
 
