@@ -3233,8 +3233,6 @@ class Glpi084(DyngroupDatabaseHelper):
             result = []
             for networkport in machine.networkports:
                 if networkport.networknames is not None:
-
-
                     if networkport.networknames.ipaddresses:
                         # If there is multiple adresses per interface, we
                         # create the same number of interfaces
@@ -3259,8 +3257,6 @@ class Glpi084(DyngroupDatabaseHelper):
                             for ipnetwork in ipaddress.ipnetworks:
                                 oz = z
 
-                                if ipnetwork.netmask == '0.0.0.0':
-                                    continue
                                 z = d.copy()
                                 z['netmask'] = ipnetwork.netmask
                                 z['gateway'] = ipnetwork.gateway
@@ -3270,6 +3266,8 @@ class Glpi084(DyngroupDatabaseHelper):
                                 # and if its not duplicated
                                 if z != oz:
                                     result.append(z)
+                            if not ipaddress.ipnetworks:
+                                result.append(d)
             return result
 
         session = create_session()
