@@ -187,7 +187,7 @@ class MethodProxy(MscContainer):
             d = circuit.setup(True)
             @d.addCallback
             def _setup(result):
-                dth = maybeDeferred(circuit.run)
+                dth = deferToThread(circuit.run)
                 return dth
             @d.addCallback
             def _post_setup(result):

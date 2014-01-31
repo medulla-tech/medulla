@@ -359,7 +359,17 @@ class CoHManager :
         @param ids: list of ids to update
         @type ids: list
         """
-        CoHManager.setCoHsStates(ids, "scheduled")
+        session = sqlalchemy.orm.create_session()
+        for id in ids :
+            myCommandOnHost = session.query(CommandsOnHost).get(id)
+            if myCommandOnHost :
+                if myCommandOnHost.current_state in ('done', 'failed', 'over_timed'):
+                    continue
+                myCommandOnHost.current_state = 'scheduled'
+                session.add(myCommandOnHost)
+                session.flush()
+        session.close()
+
 
 
     @classmethod
@@ -378,7 +388,7 @@ class CoHManager :
         for id in ids :
             coh = session.query(CommandsOnHost).get(id)
             if coh :
-                if coh.isStateDone():
+                if coh.isStateDone() or coh.isStateFailed() or coh.isStateOverTimed():
                     continue
                 coh.current_state = "stopped"
                 coh.next_launch_date = coh.end_date
