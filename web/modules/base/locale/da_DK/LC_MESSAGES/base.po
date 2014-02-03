@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-28 16:56+0100\n"
-"PO-Revision-Date: 2014-01-29 13:56+0000\n"
+"POT-Creation-Date: 2014-01-30 11:14+0100\n"
+"PO-Revision-Date: 2014-02-03 00:07+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -76,8 +76,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:233 includes/PageGenerator.php:2176
-#: includes/FormGenerator.php:619
+#: graph/header.inc.php:233 includes/FormGenerator.php:619
+#: includes/PageGenerator.php:2176
 msgid "Close"
 msgstr ""
 
@@ -252,68 +252,19 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:871
+#: includes/PageGenerator.php:1118
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr ""
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
-#: includes/FormGenerator.php:621
+#: includes/FormGenerator.php:621 includes/PageGenerator.php:885
+#: includes/PageGenerator.php:1128
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
-msgstr ""
-
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
-msgid "to"
-msgstr ""
-
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr ""
-
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
-msgid "page"
-msgstr ""
-
-#: includes/PageGenerator.php:905
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:978
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1406
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1594
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
-#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:117
-msgid "Confirm"
-msgstr ""
-
-#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr ""
-
-#: includes/PageGenerator.php:2801
-msgid "Select all"
-msgstr ""
-
-#: includes/PageGenerator.php:2801
-msgid "Unselect all"
 msgstr ""
 
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
@@ -470,6 +421,55 @@ msgstr ""
 
 #: includes/acl.inc.php:124
 msgid "You do not have required rights"
+msgstr ""
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+msgid "to"
+msgstr ""
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr ""
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+msgid "page"
+msgstr ""
+
+#: includes/PageGenerator.php:905
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:978
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1406
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1594
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
+#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
+msgid "Confirm"
+msgstr ""
+
+#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr ""
+
+#: includes/PageGenerator.php:2801
+msgid "Select all"
+msgstr ""
+
+#: includes/PageGenerator.php:2801
+msgid "Unselect all"
 msgstr ""
 
 #: logout/index.php:50
