@@ -1340,7 +1340,8 @@ class LdapUserGroupControl:
 
         if home and self.userHomeAction:
             homedir = self.getDetailedUser(uid)['homeDirectory'][0]
-            shutil.rmtree(homedir)
+            if os.path.exists(homedir):
+                shutil.rmtree(homedir)
 
         self.delRecursiveEntry(userdn)
         r.commit()
