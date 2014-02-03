@@ -1,92 +1,101 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <andre@mandriva.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-01-27 17:17+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-02-03 01:00+0100\n"
 "PO-Revision-Date: 2014-01-14 10:14+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
+"projects/p/pulse2/team/pt_BR/)\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/update/localSidebar.php:28
-msgid "Update managment"
-msgstr "Gerenciamento de Atualização"
-
-#: modules/update/update/viewUpdates.php:37
 #: modules/update/infoPackage.inc.php:39
+#: modules/update/update/viewUpdates.php:37
 msgid "All updates"
 msgstr "Todas as atualizações"
-
-#: modules/update/update/viewUpdates.php:49
-#: modules/update/infoPackage.inc.php:30
-msgid "Update manager"
-msgstr "Gerenciador de Atualização"
 
 #: modules/update/update/viewUpdates.php:60
 msgid "Available"
 msgstr "Disponível"
 
-#: modules/update/update/viewUpdates.php:61
-msgid "Enabled"
-msgstr "Habilitar"
-
-#: modules/update/update/viewUpdates.php:62
-msgid "Disabled"
+#: modules/update/update/ajaxUpdates.php:90
+msgid "Disable"
 msgstr "Desabilitar"
+
+#: modules/update/update/ajaxUpdates.php:106
+msgid "Disable selected updates"
+msgstr ""
 
 #: modules/update/update/disableUpdate.php:41
 msgid "Disable this update?"
 msgstr "Desabilitar esta atualização?"
 
-#: modules/update/update/enableUpdate.php:41
-msgid "Enable this update?"
-msgstr "Habilitar esta atualização?"
+#: modules/update/infoPackage.inc.php:53
+msgid "Disable update"
+msgstr "Desabilitar atualização"
 
-#: modules/update/update/ajaxUpdates.php:57
-msgid "No entry found"
-msgstr "Nenhuma ocorrência encontrada"
-
-#: modules/update/update/ajaxUpdates.php:84
-msgid "Update title"
-msgstr "Atualizar título"
-
-#: modules/update/update/ajaxUpdates.php:85
-msgid "UUID"
-msgstr "UUID"
-
-#: modules/update/update/ajaxUpdates.php:86
-msgid "Type"
-msgstr "Tipo"
-
-#: modules/update/update/ajaxUpdates.php:87
-msgid "Installed count"
-msgstr ""
+#: modules/update/update/viewUpdates.php:62
+msgid "Disabled"
+msgstr "Desabilitar"
 
 #: modules/update/update/ajaxUpdates.php:89
 msgid "Enable"
 msgstr "Habilitar"
 
-#: modules/update/update/ajaxUpdates.php:90
-msgid "Disable"
-msgstr "Desabilitar"
-
 #: modules/update/update/ajaxUpdates.php:105
 msgid "Enable selected updates"
 msgstr ""
 
-#: modules/update/update/ajaxUpdates.php:106
-msgid "Disable selected updates"
+#: modules/update/update/enableUpdate.php:41
+msgid "Enable this update?"
+msgstr "Habilitar esta atualização?"
+
+#: modules/update/infoPackage.inc.php:49
+msgid "Enable update"
+msgstr "Habilitar atualização"
+
+#: modules/update/update/viewUpdates.php:61
+msgid "Enabled"
+msgstr "Habilitar"
+
+#: modules/update/update/ajaxUpdates.php:87
+msgid "Installed count"
 msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr "Nenhuma ocorrência encontrada"
+
+#: modules/update/update/ajaxUpdates.php:86
+msgid "Type"
+msgstr "Tipo"
+
+#: modules/update/update/ajaxUpdates.php:85
+msgid "UUID"
+msgstr "UUID"
+
+#: modules/update/infoPackage.inc.php:30
+#: modules/update/update/viewUpdates.php:49
+msgid "Update manager"
+msgstr "Gerenciador de Atualização"
+
+#: modules/update/update/localSidebar.php:28
+msgid "Update managment"
+msgstr "Gerenciamento de Atualização"
+
+#: modules/update/update/ajaxUpdates.php:84
+msgid "Update title"
+msgstr "Atualizar título"
 
 #: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:42
 msgid "Updates"
@@ -95,13 +104,3 @@ msgstr ""
 #: modules/update/infoPackage.inc.php:45
 msgid "Updates list"
 msgstr ""
-
-#: modules/update/infoPackage.inc.php:49
-msgid "Enable update"
-msgstr "Habilitar atualização"
-
-#: modules/update/infoPackage.inc.php:53
-msgid "Disable update"
-msgstr "Desabilitar atualização"
-
-
