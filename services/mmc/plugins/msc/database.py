@@ -886,6 +886,7 @@ class MscDatabase(msc.MscDatabase):
         targets_name = []
         coh_to_insert = []
         target_uuids = targets
+        existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
 
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
         if len(targets) == 0:
@@ -976,7 +977,7 @@ class MscDatabase(msc.MscDatabase):
             session.execute(self.commands_on_host.insert(), coh_to_insert)
             session.commit()
 
-            cohs = cmd.getCohIds(target_uuids=target_uuids)
+            cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
             session = create_session()
             self._createPhases(session,
                                cohs,
