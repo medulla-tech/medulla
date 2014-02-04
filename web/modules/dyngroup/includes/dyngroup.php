@@ -139,7 +139,10 @@ class ConvergenceGroup extends Group {
         /* Create convergence groups subrequest */
         $subReqModule = (in_array('glpi', $_SESSION['modulesList'])) ? 'glpi' : 'inventory';
         $subReqCriterion = 'Installed software (specific vendor and version)';
-        $subReqValue = sprintf('>%s, %s, %s<', $this->package->Qvendor, $this->package->Qsoftware, $this->package->Qversion);
+        $Qvendor = ($this->package->Qvendor) ? $this->package->Qvendor : '*';
+        $Qsoftware = ($this->package->Qsoftware) ? $this->package->Qsoftware : '*';
+        $Qversion = ($this->package->Qversion) ? $this->package->Qversion : '*';
+        $subReqValue = sprintf('>%s, %s, %s<', $Qvendor, $Qsoftware, $Qversion);
         $subReqValue2 = '';
         $subReqOperator = '=';
         $subReq = new SubRequest($subReqModule, $subReqCriterion, $subReqValue, $subReqValue2, $subReqOperator);
