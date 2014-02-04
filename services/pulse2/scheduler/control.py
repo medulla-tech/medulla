@@ -729,6 +729,13 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             for id in ids :
                 if id in banned :
                     continue
+
+                # do not start a stopped circuit
+	        if id in self.stopped_track:
+	            circuit = self.get(id)
+                    if circuit :
+	                circuit.release()
+ 	            continue
     
                 circuit = self.get(id)
                 if circuit :

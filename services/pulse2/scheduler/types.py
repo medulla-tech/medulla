@@ -834,6 +834,8 @@ class Circuit (CircuitBase):
         """
         self.cohq = CoHQuery(self.id)
         self.update_stats()
+	if self.id in self.dispatcher.stopped_track :
+	    self.release()
         # if give-up - actual phase is probably running - do not move - wait...
         if result == DIRECTIVE.GIVE_UP or result == None :
             return lambda : DIRECTIVE.GIVE_UP
@@ -883,6 +885,9 @@ class Circuit (CircuitBase):
         else :
             # state tests before phase processing to resolving next flow
             res = self.running_phase.apply_initial_rules()
+
+	if self.id in self.dispatcher.stopped_track :
+	    self.release()
 
         # move on the next phase ->
         if res == DIRECTIVE.NEXT :
