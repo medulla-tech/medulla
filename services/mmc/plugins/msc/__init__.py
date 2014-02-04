@@ -890,7 +890,10 @@ def _get_convergence_soon_ended_commands(all=False):
     @rtype: list
     """
     ret = []
-    cmd_ids = all and [] or MscDatabase()._get_convergence_soon_ended_commands()
+    if all:
+        cmd_ids = []
+    else:
+        cmd_ids = MscDatabase()._get_convergence_soon_ended_commands()
     if cmd_ids or all:
         # Get active commands only if there is any cmd_ids
         # or if we want all active commands
