@@ -59,6 +59,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 	// Successful connection, showing VNC plugin
         $host = $result[0];
         $port = $result[1];
+        $auth_key = $result[2];
 	//web_vnc_allow_user_control()
 	//web_vnc_view_only()
 	//web_vnc_network_connectivity() = fiber|lan|cable|dsl[isdn
@@ -95,6 +96,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     <link rel="apple-touch-startup-image" href="mmc/img/common/background.gif" />
     <!-- For iOS devices set the icon to use if user bookmarks app on their homescreen -->
     <link rel="apple-touch-icon" href="mmc/img/common/background.gif">
+    <link href="graph/master.css" rel="stylesheet" media="screen" type="text/css" />
     <!--
     <link rel="apple-touch-icon-precomposed" href="mmc/img/common/background.gif" />
     -->
@@ -116,11 +118,11 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                         Loading
                     </div></td>
                     <td width="1%"><div id="noVNC_buttons">
-                        <input type=button value="Send CtrlAltDel"
+                    <input type=button class="btnPrimary" value="<?php print _T('Send Ctrl+Alt+Del', 'msc'); ?>"
                             id="sendCtrlAltDelButton">
                             </div></td>
 		    <td width="1%"><div id="noVNC_buttons">
-			<input type=button id="toClipboard" value="Send text to Clipboard" />
+            <input type=button id="toClipboard" class="btnPrimary" value="<?php print _T('Send text to clipboard', 'msc'); ?>" />
                         </div></td>
                 </tr></table>
             </div>
@@ -179,6 +181,11 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 
             if (typeof(msg) !== 'undefined') {
                 sb.setAttribute("class", "noVNC_status_" + level);
+                msg = msg.replace('(unencrypted)','(<?php print _T('through SSH tunnel', 'msc'); ?>)');
+                msg = msg.replace('Failed to connect to server','<?php print _T('Connection failed', 'msc'); ?>');
+                msg = msg.replace('reason','<?php print _T('reason', 'msc'); ?>');
+                msg = msg.replace('Connected','<?php print _T('Connected', 'msc'); ?>');
+                msg = msg.replace('to','<?php print _T('to', 'msc'); ?>');
                 s.innerHTML = msg;
             }
         }
@@ -230,7 +237,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
             }
 
             password = WebUtil.getQueryVar('password', '');
-            path = WebUtil.getQueryVar('path', 'websockify');
+            path = '<?php print $auth_key ?>';
 
             if ((!host) || (!port)) {
                 updateState('failed',
@@ -250,9 +257,13 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                            'onPasswordRequired':  passwordRequired});
             rfb.connect(host, port, password, path);
 
+            rfb.set_onDesktopName(function(rfb, name){
+                document.title = name;
+            });
+
 	    function windowResize() {
 		var contentWidth = $('canvas').width()+10;
-		var contentHeight = $('canvas').height()+100;
+		var contentHeight = $('canvas').height()+120;
 		window.resizeTo(contentWidth,contentHeight);
 
 		if (contentHeight < 300)
