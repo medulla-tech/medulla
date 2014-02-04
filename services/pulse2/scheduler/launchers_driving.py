@@ -40,7 +40,7 @@ class Stats :
 
     Example of slice of imported dictionnary :
 
-    {'slots': {'slottotal': 300, 'slotused': 0}, 
+    {'slots': {'slottotal': 300, 'slotused': 0},
     'memory': {'total': 2074884, 'swapused': 512, 'free': 1396152}}
 
     Result :
@@ -97,9 +97,9 @@ class LauncherCallingProvider(type):
     @property
     def single_mode(self):
         return len(self.launchers) == 1
- 
+
     def __new__(cls, name, bases, attrs):
-        """ 
+        """
         A metaclass stuff to implement.
 
         @param name: name of new instance
@@ -111,9 +111,9 @@ class LauncherCallingProvider(type):
         @param attrs: dictionnary of attributtes
         @type attrs: dict
         """
-        my_dict = dict((k, v) for (k, v) in cls.__dict__.items() 
+        my_dict = dict((k, v) for (k, v) in cls.__dict__.items()
                 if not k.startswith("__"))
-        attrs.update(my_dict) 
+        attrs.update(my_dict)
         return type.__new__(cls,name, bases, attrs)
 
 
@@ -161,7 +161,7 @@ class LauncherCallingProvider(type):
             logging.getLogger().warn("Timeout raised on launcher '%s' when calling method '%s'" % (launcher, method))
             logging.getLogger().warn("Call aborted")
         else :
-            logging.getLogger().error("An error occured when calling method %s on launcher %s: %s" % 
+            logging.getLogger().error("An error occured when calling method %s on launcher %s: %s" %
                 (method, launcher, failure))
         return failure
 
@@ -214,7 +214,7 @@ class LauncherCallingProvider(type):
         if err == TCPTimedOutError :
             logging.getLogger().warn("Timeout raised on launcher '%s' when getting the stats" % launcher)
         else :
-            logging.getLogger().error("An error occured when extract the stats from launcher %s: %s" % 
+            logging.getLogger().error("An error occured when extract the stats from launcher %s: %s" %
                 (launcher, failure))
         return failure
 
@@ -252,7 +252,7 @@ class LauncherCallingProvider(type):
             else :
                 logging.getLogger().error("An error occured when getting the slots from launcher: %s" % failure)
         return d
- 
+
 
     def _get_all_stats(self):
         """
@@ -292,13 +292,13 @@ class LauncherCallingProvider(type):
                         logging.getLogger().warn("Getting the slots number failed: %s" % result)
                 else :
                      logging.getLogger().error("Getting the slots number failed: %s" % result)
-                
+
                 logging.getLogger().info("Set slots to default value %d" % DEFAULT_SLOTS)
-                
-                 
- 
+
+
+
         return slots
- 
+
     def _extract_best_candidate(self, results):
         """
         Based on statistics, selects the best launcher.
@@ -318,7 +318,7 @@ class LauncherCallingProvider(type):
                 if score > best_score:
                     best_score = score
                     final_launcher = launcher
-        if best_score > 0 : 
+        if best_score > 0 :
             return final_launcher
         else :
             logging.getLogger().warn("No free slots on launchers, operation aborted")
@@ -361,10 +361,10 @@ class LauncherCallingProvider(type):
                 logging.getLogger().warn("Timeout raised when dispatching the launchers")
             else :
                 logging.getLogger().error("An error occured when dispatch the launchers: %s" % failure)
- 
+
         return d_main
-     
-        
+
+
     def call_method_on_launcher(self, launcher, method, *args):
         """
         forced call method on given launcher.
@@ -400,12 +400,12 @@ class LauncherCallingProvider(type):
         if not self.single_mode :
             return self._dispatch_launchers(method, *args)
         else :
-            return self._call(self.default_launcher, 
-                              method, 
+            return self._call(self.default_launcher,
+                              method,
                               *args)
 
 def same_call(method):
-    """ 
+    """
     Decorates a method to be call having the same call name and arguments
 
     @param method: decorated method
@@ -415,14 +415,14 @@ def same_call(method):
     @rtype: Deferred
     """
     # Example of use :
-    # 
+    #
     # declaration like this
     #
     # @same_call
     # def method_name(self, id, client, command)
     #     pass
-    # 
-    # is equaled to 
+    #
+    # is equaled to
     #
     # def method_name(self, id, client, command):
     #     return self.call_method("method_name", id, client, command)
@@ -437,9 +437,9 @@ class RemoteCallProxy :
     """
     Provides the remote calls to launchers.
 
-    Each launcher method must be declared here and must return 
+    Each launcher method must be declared here and must return
     the implemented providing method call_method which ensures
-    a optimal choice of launcher. 
+    a optimal choice of launcher.
     To avoid repeating declarations (same method name and arguments),
     it's possible to use @same_call decorator.
 
@@ -522,15 +522,15 @@ class RemoteCallProxy :
     def async_remote_halt(self, command_id, client,  wrapper_timeout):
         """ Handle remote halt on target, async mode """
         pass
- 
-    def downloadFile(self, 
-                     uuid, 
-                     fqdn, 
-                     shortname, 
-                     ips, 
-                     macs, 
-                     netmasks, 
-                     path, 
+
+    def downloadFile(self,
+                     uuid,
+                     fqdn,
+                     shortname,
+                     ips,
+                     macs,
+                     netmasks,
+                     path,
                      bwlimit):
         # choose a way to perform the operation
 
@@ -556,22 +556,22 @@ class RemoteCallProxy :
         return self.call_method('download_file', client, path, bwlimit)
 
 
-    def establish_proxy(self, 
-                       uuid, 
-                       fqdn, 
-                       shortname, 
-                       ips, 
-                       macs, 
-                       netmasks, 
-                       requestor_ip, 
+    def establish_proxy(self,
+                       uuid,
+                       fqdn,
+                       shortname,
+                       ips,
+                       macs,
+                       netmasks,
+                       requestor_ip,
                        requested_port):
 
         def _finalize(result):
             if type(result) == list: # got expected struct
-                (launcher, host, port) = result
+                (launcher, host, port, key) = result
                 if host == '':
                     host = SchedulerConfig().launchers[launcher]['host']
-                return (host, port)
+                return (host, port, key)
             else:
                 return False
         # choose a way to perform the operation
@@ -612,7 +612,7 @@ class RemoteCallProxy :
         return self.call_method("probe", client)
 
     def ping_and_probe_client(self, client):
-        """ 
+        """
         returns :
             0 => ping NOK
             1 => ping OK, ssh NOK
@@ -636,14 +636,14 @@ class RemoteCallProxy :
     def getLaunchersBalance(self) : pass
 
     @same_call
-    def get_zombie_ids(self): 
+    def get_zombie_ids(self):
         pass
 
-    
 
 
 
 
 
- 
-   
+
+
+
