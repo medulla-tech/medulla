@@ -326,327 +326,346 @@ def parse_hybi07_frames(buf):
 
     return frames, buf[start:]
 
-class WebSocketProtocol(ProtocolWrapper):
-    """
-    Protocol which wraps another protocol to provide a WebSockets transport
-    layer.
-    """
-
-    buf = ""
-    codec = None
-    location = "/bazboza"
-    host = "example.com"
-    origin = "http://example.com"
-    state = REQUEST
-    flavor = None
-    do_binary_frames = False
-
-    def __init__(self, *args, **kwargs):
-        ProtocolWrapper.__init__(self, *args, **kwargs)
-        self.pending_frames = []
-
-    def setBinaryMode(self, mode):
+def WebSocketProtocolMaker(_auth_key):
+    class WebSocketProtocol(ProtocolWrapper):
         """
-        If True, send str as binary and unicode as text.
-
-        Defaults to false for backwards compatibility.
-        """
-        self.do_binary_frames = bool(mode)
-
-    def isSecure(self):
-        """
-        Borrowed technique for determining whether this connection is over
-        SSL/TLS.
+        Protocol which wraps another protocol to provide a WebSockets transport
+        layer.
         """
 
-        return ISSLTransport(self.transport, None) is not None
+        buf = ""
+        codec = None
+        location = "/bazboza"
+        host = "example.com"
+        origin = "http://example.com"
+        state = REQUEST
+        flavor = None
+        do_binary_frames = False
+        auth_key = _auth_key
 
-    def sendCommonPreamble(self):
-        """
-        Send the preamble common to all WebSockets connections.
+        def __init__(self, *args, **kwargs):
+            ProtocolWrapper.__init__(self, *args, **kwargs)
+            self.pending_frames = []
 
-        This might go away in the future if WebSockets continue to diverge.
-        """
+        def setBinaryMode(self, mode):
+            """
+            If True, send str as binary and unicode as text.
 
-        self.transport.writeSequence([
-            "HTTP/1.1 101 FYI I am not a webserver\r\n",
-            "Server: TwistedWebSocketWrapper/1.0\r\n",
-            "Date: %s\r\n" % datetimeToString(),
-            "Upgrade: WebSocket\r\n",
-            "Connection: Upgrade\r\n",
-        ])
+            Defaults to false for backwards compatibility.
+            """
+            self.do_binary_frames = bool(mode)
 
-    def sendHyBi00Preamble(self):
-        """
-        Send a HyBi-00 preamble.
-        """
+        def isSecure(self):
+            """
+            Borrowed technique for determining whether this connection is over
+            SSL/TLS.
+            """
 
-        protocol = "wss" if self.isSecure() else "ws"
+            return ISSLTransport(self.transport, None) is not None
 
-        self.sendCommonPreamble()
+        def sendCommonPreamble(self):
+            """
+            Send the preamble common to all WebSockets connections.
 
-        self.transport.writeSequence([
-            "Sec-WebSocket-Origin: %s\r\n" % self.origin,
-            "Sec-WebSocket-Location: %s://%s%s\r\n" % (protocol, self.host,
-                                                       self.location),
-            "WebSocket-Protocol: %s\r\n" % self.codec,
-            "Sec-WebSocket-Protocol: %s\r\n" % self.codec,
-            "\r\n",
-        ])
+            This might go away in the future if WebSockets continue to diverge.
+            """
 
-    def sendHyBi07Preamble(self):
-        """
-        Send a HyBi-07 preamble.
-        """
+            self.transport.writeSequence([
+                "HTTP/1.1 101 FYI I am not a webserver\r\n",
+                "Server: TwistedWebSocketWrapper/1.0\r\n",
+                "Date: %s\r\n" % datetimeToString(),
+                "Upgrade: WebSocket\r\n",
+                "Connection: Upgrade\r\n",
+            ])
 
-        self.sendCommonPreamble()
+        def sendHyBi00Preamble(self):
+            """
+            Send a HyBi-00 preamble.
+            """
 
-        if self.codec:
-            self.transport.write("Sec-WebSocket-Protocol: %s\r\n" % self.codec)
+            protocol = "wss" if self.isSecure() else "ws"
 
-        challenge = self.headers["Sec-WebSocket-Key"]
-        response = make_accept(challenge)
+            self.sendCommonPreamble()
 
-        self.transport.write("Sec-WebSocket-Accept: %s\r\n\r\n" % response)
+            self.transport.writeSequence([
+                "Sec-WebSocket-Origin: %s\r\n" % self.origin,
+                "Sec-WebSocket-Location: %s://%s%s\r\n" % (protocol, self.host,
+                                                           '/templocation'),
+                "WebSocket-Protocol: %s\r\n" % self.codec,
+                "Sec-WebSocket-Protocol: %s\r\n" % self.codec,
+                "\r\n",
+            ])
 
-    def parseFrames(self):
-        """
-        Find frames in incoming data and pass them to the underlying protocol.
-        """
+        def sendHyBi07Preamble(self):
+            """
+            Send a HyBi-07 preamble.
+            """
 
-        if self.flavor == HYBI00:
-            parser = parse_hybi00_frames
-        elif self.flavor in (HYBI07, HYBI10, RFC6455):
-            parser = parse_hybi07_frames
-        else:
-            raise WSException("Unknown flavor %r" % self.flavor)
+            self.sendCommonPreamble()
 
-        try:
-            frames, self.buf = parser(self.buf)
-        except WSException, wse:
-            # Couldn't parse all the frames, something went wrong, let's bail.
-            self.close(wse.args[0])
-            return
-
-        for frame in frames:
-            opcode, data = frame
-            if opcode == NORMAL:
-                # Business as usual. Decode the frame, if we have a decoder.
-                if self.codec:
-                    data = decoders[self.codec](data)
-                # Pass the frame to the underlying protocol.
-                ProtocolWrapper.dataReceived(self, data)
-            elif opcode == CLOSE:
-                # The other side wants us to close. I wonder why?
-                reason, text = data
-                log.msg("Closing connection: %r (%d)" % (text, reason))
-
-                # Close the connection.
-                self.close()
-
-    def sendFrames(self):
-        """
-        Send all pending frames.
-        """
-
-        if self.state != FRAMES:
-            return
-
-        if self.flavor == HYBI00:
-            maker = make_hybi00_frame
-        elif self.flavor in (HYBI07, HYBI10, RFC6455):
-            if self.do_binary_frames:
-                maker = make_hybi07_frame_dwim
-            else:
-                maker = make_hybi07_frame
-        else:
-            raise WSException("Unknown flavor %r" % self.flavor)
-
-        for frame in self.pending_frames:
-            # Encode the frame before sending it.
             if self.codec:
-                frame = encoders[self.codec](frame)
-            packet = maker(frame)
-            self.transport.write(packet)
-        self.pending_frames = []
+                self.transport.write("Sec-WebSocket-Protocol: %s\r\n" % self.codec)
 
-    def validateHeaders(self):
-        """
-        Check received headers for sanity and correctness, and stash any data
-        from them which will be required later.
-        """
+            challenge = self.headers["Sec-WebSocket-Key"]
+            response = make_accept(challenge)
 
-        # Obvious but necessary.
-        if not is_websocket(self.headers):
-            log.msg("Not handling non-WS request")
-            return False
-        from syslog import syslog
-        syslog(str(self.headers))
+            self.transport.write("Sec-WebSocket-Accept: %s\r\n\r\n" % response)
 
-        # Stash host and origin for those browsers that care about it.
-        if "Host" in self.headers:
-            self.host = self.headers["Host"]
-        if "Origin" in self.headers:
-            self.origin = self.headers["Origin"]
+        def parseFrames(self):
+            """
+            Find frames in incoming data and pass them to the underlying protocol.
+            """
 
-        # Check whether a codec is needed. WS calls this a "protocol" for
-        # reasons I cannot fathom. Newer versions of noVNC (0.4+) sets
-        # multiple comma-separated codecs, handle this by chosing first one
-        # we can encode/decode.
-        protocols = None
-        if "WebSocket-Protocol" in self.headers:
-            protocols = self.headers["WebSocket-Protocol"]
-        elif "Sec-WebSocket-Protocol" in self.headers:
-            protocols = self.headers["Sec-WebSocket-Protocol"]
+            # If auth key mismatches, leaving
+            if self.location != '/' + self.auth_key:
+                self.close('AUTH_ERROR')
+                return
 
-        if isinstance(protocols, basestring):
-            protocols = [p.strip() for p in protocols.split(',')]
 
-            for protocol in protocols:
-                if protocol in encoders or protocol in decoders:
-                    log.msg("Using WS protocol %s!" % protocol)
-                    self.codec = protocol
-                    break
-
-                log.msg("Couldn't handle WS protocol %s!" % protocol)
-
-            if not self.codec:
-                return False
-
-        # Start the next phase of the handshake for HyBi-00.
-        if is_hybi00(self.headers):
-            log.msg("Starting HyBi-00/Hixie-76 handshake")
-            self.flavor = HYBI00
-            self.state = CHALLENGE
-
-        # Start the next phase of the handshake for HyBi-07+.
-        if "Sec-WebSocket-Version" in self.headers:
-            version = self.headers["Sec-WebSocket-Version"]
-            if version == "7":
-                log.msg("Starting HyBi-07 conversation")
-                self.sendHyBi07Preamble()
-                self.flavor = HYBI07
-                self.state = FRAMES
-            elif version == "8":
-                log.msg("Starting HyBi-10 conversation")
-                self.sendHyBi07Preamble()
-                self.flavor = HYBI10
-                self.state = FRAMES
-            elif version == "13":
-                log.msg("Starting RFC 6455 conversation")
-                self.sendHyBi07Preamble()
-                self.flavor = RFC6455
-                self.state = FRAMES
+            if self.flavor == HYBI00:
+                parser = parse_hybi00_frames
+            elif self.flavor in (HYBI07, HYBI10, RFC6455):
+                parser = parse_hybi07_frames
             else:
-                log.msg("Can't support protocol version %s!" % version)
+                raise WSException("Unknown flavor %r" % self.flavor)
+
+            try:
+                frames, self.buf = parser(self.buf)
+            except WSException, wse:
+                # Couldn't parse all the frames, something went wrong, let's bail.
+                self.close(wse.args[0])
+                return
+
+            for frame in frames:
+                opcode, data = frame
+                if opcode == NORMAL:
+                    # Business as usual. Decode the frame, if we have a decoder.
+                    if self.codec:
+                        data = decoders[self.codec](data)
+                    # Pass the frame to the underlying protocol.
+                    ProtocolWrapper.dataReceived(self, data)
+                elif opcode == CLOSE:
+                    # The other side wants us to close. I wonder why?
+                    reason, text = data
+                    log.msg("Closing connection: %r (%d)" % (text, reason))
+
+                    # Close the connection.
+                    self.close()
+
+        def sendFrames(self):
+            """
+            Send all pending frames.
+            """
+
+            # If auth key mismatches, leaving
+            if self.location != '/' + self.auth_key:
+                self.close('AUTH_ERROR')
+                return
+
+            if self.state != FRAMES:
+                return
+
+            if self.flavor == HYBI00:
+                maker = make_hybi00_frame
+            elif self.flavor in (HYBI07, HYBI10, RFC6455):
+                if self.do_binary_frames:
+                    maker = make_hybi07_frame_dwim
+                else:
+                    maker = make_hybi07_frame
+            else:
+                raise WSException("Unknown flavor %r" % self.flavor)
+
+            for frame in self.pending_frames:
+                # Encode the frame before sending it.
+                if self.codec:
+                    frame = encoders[self.codec](frame)
+                packet = maker(frame)
+                self.transport.write(packet)
+            self.pending_frames = []
+
+        def validateHeaders(self):
+            """
+            Check received headers for sanity and correctness, and stash any data
+            from them which will be required later.
+            """
+
+            # Obvious but necessary.
+            if not is_websocket(self.headers):
+                log.msg("Not handling non-WS request")
                 return False
 
-        return True
+            # Stash host and origin for those browsers that care about it.
+            if "Host" in self.headers:
+                self.host = self.headers["Host"]
+            if "Origin" in self.headers:
+                self.origin = self.headers["Origin"]
 
-    def dataReceived(self, data):
-        self.buf += data
+            # Check whether a codec is needed. WS calls this a "protocol" for
+            # reasons I cannot fathom. Newer versions of noVNC (0.4+) sets
+            # multiple comma-separated codecs, handle this by chosing first one
+            # we can encode/decode.
+            protocols = None
+            if "WebSocket-Protocol" in self.headers:
+                protocols = self.headers["WebSocket-Protocol"]
+            elif "Sec-WebSocket-Protocol" in self.headers:
+                protocols = self.headers["Sec-WebSocket-Protocol"]
 
-        oldstate = None
+            if isinstance(protocols, basestring):
+                protocols = [p.strip() for p in protocols.split(',')]
 
-        while oldstate != self.state:
-            oldstate = self.state
+                for protocol in protocols:
+                    if protocol in encoders or protocol in decoders:
+                        log.msg("Using WS protocol %s!" % protocol)
+                        self.codec = protocol
+                        break
 
-            # Handle initial requests. These look very much like HTTP
-            # requests, but aren't. We need to capture the request path for
-            # those browsers which want us to echo it back to them (Chrome,
-            # mainly.)
-            # These lines look like:
-            # GET /some/path/to/a/websocket/resource HTTP/1.1
-            if self.state == REQUEST:
-                if "\r\n" in self.buf:
-                    request, chaff, self.buf = self.buf.partition("\r\n")
-                    try:
-                        verb, self.location, version = request.split(" ")
-                    except ValueError:
-                        self.loseConnection()
-                    else:
-                        self.state = NEGOTIATING
+                    log.msg("Couldn't handle WS protocol %s!" % protocol)
 
-            elif self.state == NEGOTIATING:
-                # Check to see if we've got a complete set of headers yet.
-                if "\r\n\r\n" in self.buf:
-                    head, chaff, self.buf = self.buf.partition("\r\n\r\n")
-                    from syslog import syslog
-                    syslog(head)
-                    syslog(chaff)
-                    syslog(self.buf)
-                    self.headers = http_headers(head)
-                    # Validate headers. This will cause a state change.
-                    if not self.validateHeaders():
-                        self.loseConnection()
+                if not self.codec:
+                    return False
 
-            elif self.state == CHALLENGE:
-                # Handle the challenge. This is completely exclusive to
-                # HyBi-00/Hixie-76.
-                if len(self.buf) >= 8:
-                    challenge, self.buf = self.buf[:8], self.buf[8:]
-                    response = complete_hybi00(self.headers, challenge)
-                    self.sendHyBi00Preamble()
-                    self.transport.write(response)
-                    log.msg("Completed HyBi-00/Hixie-76 handshake")
-                    # We're all finished here; start sending frames.
+            # Start the next phase of the handshake for HyBi-00.
+            if is_hybi00(self.headers):
+                log.msg("Starting HyBi-00/Hixie-76 handshake")
+                self.flavor = HYBI00
+                self.state = CHALLENGE
+
+            # Start the next phase of the handshake for HyBi-07+.
+            if "Sec-WebSocket-Version" in self.headers:
+                version = self.headers["Sec-WebSocket-Version"]
+                if version == "7":
+                    log.msg("Starting HyBi-07 conversation")
+                    self.sendHyBi07Preamble()
+                    self.flavor = HYBI07
                     self.state = FRAMES
+                elif version == "8":
+                    log.msg("Starting HyBi-10 conversation")
+                    self.sendHyBi07Preamble()
+                    self.flavor = HYBI10
+                    self.state = FRAMES
+                elif version == "13":
+                    log.msg("Starting RFC 6455 conversation")
+                    self.sendHyBi07Preamble()
+                    self.flavor = RFC6455
+                    self.state = FRAMES
+                else:
+                    log.msg("Can't support protocol version %s!" % version)
+                    return False
 
-            elif self.state == FRAMES:
-                self.parseFrames()
+            return True
 
-        # Kick any pending frames. This is needed because frames might have
-        # started piling up early; we can get write()s from our protocol above
-        # when they makeConnection() immediately, before our browser client
-        # actually sends any data. In those cases, we need to manually kick
-        # pending frames.
-        if self.pending_frames:
+        def dataReceived(self, data):
+            self.buf += data
+
+            oldstate = None
+
+            while oldstate != self.state:
+                oldstate = self.state
+
+                # Handle initial requests. These look very much like HTTP
+                # requests, but aren't. We need to capture the request path for
+                # those browsers which want us to echo it back to them (Chrome,
+                # mainly.)
+                # These lines look like:
+                # GET /some/path/to/a/websocket/resource HTTP/1.1
+                if self.state == REQUEST:
+                    if "\r\n" in self.buf:
+                        request, chaff, self.buf = self.buf.partition("\r\n")
+                        try:
+                            verb, self.location, version = request.split(" ")
+                        except ValueError:
+                            self.loseConnection()
+                        else:
+                            self.state = NEGOTIATING
+
+                elif self.state == NEGOTIATING:
+                    # Check to see if we've got a complete set of headers yet.
+                    if "\r\n\r\n" in self.buf:
+                        head, chaff, self.buf = self.buf.partition("\r\n\r\n")
+                        self.headers = http_headers(head)
+                        # Validate headers. This will cause a state change.
+                        if not self.validateHeaders():
+                            self.loseConnection()
+
+                elif self.state == CHALLENGE:
+                    # Handle the challenge. This is completely exclusive to
+                    # HyBi-00/Hixie-76.
+                    if len(self.buf) >= 8:
+                        challenge, self.buf = self.buf[:8], self.buf[8:]
+                        response = complete_hybi00(self.headers, challenge)
+                        self.sendHyBi00Preamble()
+                        self.transport.write(response)
+                        log.msg("Completed HyBi-00/Hixie-76 handshake")
+                        # We're all finished here; start sending frames.
+                        self.state = FRAMES
+
+                elif self.state == FRAMES:
+                    self.parseFrames()
+
+            # Kick any pending frames. This is needed because frames might have
+            # started piling up early; we can get write()s from our protocol above
+            # when they makeConnection() immediately, before our browser client
+            # actually sends any data. In those cases, we need to manually kick
+            # pending frames.
+            if self.pending_frames:
+                self.sendFrames()
+
+        def write(self, data):
+            """
+            Write to the transport.
+
+            This method will only be called by the underlying protocol.
+            """
+            # If auth key mismatches, leaving
+            if self.location != '/' + self.auth_key:
+                self.close('AUTH_ERROR')
+                return
+
+            self.pending_frames.append(data)
             self.sendFrames()
 
-    def write(self, data):
+        def writeSequence(self, data):
+            """
+            Write a sequence of data to the transport.
+
+            This method will only be called by the underlying protocol.
+            """
+            # If auth key mismatches, leaving
+            if self.location != '/' + self.auth_key:
+                self.close('AUTH_ERROR')
+                return
+
+            self.pending_frames.extend(data)
+            self.sendFrames()
+
+        def close(self, reason=""):
+            """
+            Close the connection.
+
+            This includes telling the other side we're closing the connection.
+
+            If the other side didn't signal that the connection is being closed,
+            then we might not see their last message, but since their last message
+            should, according to the spec, be a simple acknowledgement, it
+            shouldn't be a problem.
+            """
+
+            # Send a closing frame. It's only polite. (And might keep the browser
+            # from hanging.)
+            if self.flavor in (HYBI07, HYBI10, RFC6455):
+                frame = make_hybi07_frame(reason, opcode=0x8)
+                self.transport.write(frame)
+
+            self.loseConnection()
+
+    return WebSocketProtocol
+
+def WebSocketFactoryMaker(auth_key):
+    class WebSocketFactory(WrappingFactory):
         """
-        Write to the transport.
-
-        This method will only be called by the underlying protocol.
+        Factory which wraps another factory to provide WebSockets transports for
+        all of its protocols.
         """
 
-        self.pending_frames.append(data)
-        self.sendFrames()
-
-    def writeSequence(self, data):
-        """
-        Write a sequence of data to the transport.
-
-        This method will only be called by the underlying protocol.
-        """
-
-        self.pending_frames.extend(data)
-        self.sendFrames()
-
-    def close(self, reason=""):
-        """
-        Close the connection.
-
-        This includes telling the other side we're closing the connection.
-
-        If the other side didn't signal that the connection is being closed,
-        then we might not see their last message, but since their last message
-        should, according to the spec, be a simple acknowledgement, it
-        shouldn't be a problem.
-        """
-
-        # Send a closing frame. It's only polite. (And might keep the browser
-        # from hanging.)
-        if self.flavor in (HYBI07, HYBI10, RFC6455):
-            frame = make_hybi07_frame(reason, opcode=0x8)
-            self.transport.write(frame)
-
-        self.loseConnection()
-
-class WebSocketFactory(WrappingFactory):
-    """
-    Factory which wraps another factory to provide WebSockets transports for
-    all of its protocols.
-    """
-
-    protocol = WebSocketProtocol
+        protocol = WebSocketProtocolMaker(auth_key)
+    return WebSocketFactory

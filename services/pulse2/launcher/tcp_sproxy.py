@@ -55,6 +55,13 @@ def establishProxy(client, requestor_ip, requested_port):
     client['server_check'] = getServerCheck(client)
     client['action'] = getAnnounceCheck('vnc')
     """
+    def generate_auth_key():
+        import random
+        chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$-_.+!*()'
+        size = 15
+        return ''.join(random.choice(chars) for x in range(size))
+
+    auth_key = generate_auth_key()
     proxy_port, local_port = allocate_port_couple()
     # Built "exec" command
     real_command = [
@@ -69,6 +76,7 @@ def establishProxy(client, requestor_ip, requested_port):
         str(LauncherConfig().tcp_sproxy_connect_delay),
         str(LauncherConfig().tcp_sproxy_session_lenght),
         client['shortname'],
+        auth_key,
     ]
 
     # Built "thru" command
@@ -115,7 +123,7 @@ def establishProxy(client, requestor_ip, requested_port):
     )
 
     def parse_result():
-        return LauncherConfig().name, LauncherConfig().tcp_sproxy_host, proxy_port
+        return LauncherConfig().name, LauncherConfig().tcp_sproxy_host, proxy_port, auth_key
     # Waiting to establish the proxy
     ret = task.deferLater(twisted.internet.reactor, 2, parse_result)
     logging.getLogger().debug('about to execute ' + ' '.join(command_list))
