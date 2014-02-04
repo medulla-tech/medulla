@@ -1062,7 +1062,7 @@ class MscContainer (object):
     @property
     def free_slots(self):
         """ Free slots to use """
-        return self.max_slots - len(self.get_active_circuits())
+        return self.max_slots - len(self.get_running_circuits())
 
     def _in_waitings(self, id):
         """

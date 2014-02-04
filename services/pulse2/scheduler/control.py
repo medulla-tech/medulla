@@ -316,11 +316,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         
         new_ids = [id for id in ids if not id in already_initialized_ids]
 
-        if truncate and len(new_ids) > 2 * self.free_slots :
+        if truncate and len(new_ids) > self.free_slots :
             
             self.logger.info("Number of new circuits was truncated from %d to %d" %
-                    (len(new_ids), 2 * self.free_slots))
-            new_ids = new_ids[:2*self.free_slots]
+                    (len(new_ids), self.free_slots))
+            new_ids = new_ids[:self.free_slots]
             self.logger.info("Remaining circuits will be requested soon")
 
         if len(new_ids) > 0 :
@@ -855,7 +855,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
 
             if self.has_free_slots() : 
-                top = self.free_slots * 2
+                top = self.free_slots
                 if top > 0 :
 
                     starting_ids = [c.id for c in self.circuits if not c.is_running]
