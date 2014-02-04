@@ -44,7 +44,7 @@ from twisted.internet.endpoints import TCP4ServerEndpoint
 from mmc.site import mmcconfdir
 from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.process_control import commandProtocol
-from pulse2.launcher.txws import WebSocketFactory
+from pulse2.launcher.txws import WebSocketFactoryMaker
 
 LOCALHOST = "127.0.0.1"
 
@@ -330,7 +330,8 @@ class DispatchProxies :
             self.session_length = int(sys.argv[9])
             # name of destinated computer in Pulse 
             self.machine_name = sys.argv[10]
-
+            # authentication key
+            self.auth_key = sys.argv[11]
 
         except ValueError, val_exc:
             log.warn("VNC Proxy: Arguments parsing failure: %s" % str(val_exc))
@@ -413,6 +414,7 @@ class DispatchProxies :
                                           self.establish_delay,
                                           self.stop_proxies)
         if config.create_web_proxy:
+            WebSocketFactory = WebSocketFactoryMaker(self.auth_key)
             server.listen(WebSocketFactory(self.in_proxy))
         else:
             server.listen(self.in_proxy)
