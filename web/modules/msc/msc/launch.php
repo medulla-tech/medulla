@@ -224,7 +224,7 @@ function start_a_command($proxy = array()) {
             $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
             scheduler_start_these_commands('', array($id));
             // then redirect to the logs page
-            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
+            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
             exit;
         }
     }
