@@ -37,7 +37,7 @@ class InventoryComputers(ComputerI):
         self.config = InventoryConfig()
         self.inventory = Inventory()
 
-    def getComputer(self, ctx, filt = None):
+    def getComputer(self, ctx, filt = None, empty_macs=False):
         ret = self.inventory.getMachinesOnly(ctx, filt)
 
         if type(ret) == list and len(ret) == 1:
