@@ -34,7 +34,7 @@ import time
 import datetime
 
 # SqlAlchemy
-from sqlalchemy import and_, select
+from sqlalchemy import and_, select, not_
 from sqlalchemy.orm import create_session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
@@ -51,6 +51,7 @@ from mmc.plugins.msc import blacklist
 from pulse2.database import msc
 from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.commands import Commands
+from pulse2.database.msc.orm.commands_on_host_phase import CommandsOnHostPhase
 from pulse2.database.msc import CommandsOnHost
 
 class MscDatabase(msc.MscDatabase):
@@ -840,12 +841,25 @@ class MscDatabase(msc.MscDatabase):
         return self.extendCommand(cmd_id, start_date, end_date)
 
     def _get_machines_in_command(self, session, cmd_id):
-        query = session.query(CommandsOnHost).add_entity(Target).join(Target)
+        """
+        For a given cmd_id, return machines who are part of this command, except these who are
+        in done step in phase table.
+        So, machines who are ready, running or failed
+        """
+        query = session.query(CommandsOnHost).add_entity(Target).join(Target).outerjoin(CommandsOnHostPhase)
         query = query.filter(CommandsOnHost.fk_commands == cmd_id)
+        query = query.filter(not_(CommandsOnHostPhase.state.in_(['done'])))
         return [x[1].target_uuid for x in query]
 
     @DatabaseHelper._session
     def _get_convergence_new_machines_to_add(self, session, ctx, cmd_id, convergence_deploy_group_id):
+        """
+        Check if machines will be added to convergence command
+        Return machines who are part of deploy group, but not already present in convergence command, except these
+        who are in done step in phase table.
+        @see http://projects.mandriva.org/issues/2255:
+            if package were already deployed, but was manually removed by a user, it must be redeployed
+        """
         machines_in_command = self._get_machines_in_command(session, cmd_id)
         machines_in_deploy_group = ComputerManager().getRestrictedComputersList(ctx, filt={'gid': convergence_deploy_group_id}, justId=True)
         return [x for x in machines_in_deploy_group if x not in machines_in_command]
