@@ -32,7 +32,6 @@ from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHe
 from mmc.database.utilities import unique, handle_deconnect
 from mmc.database.utilities import DbObject # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
-from mmc.site import mmcconfdir
 from pulse2.utils import same_network, Singleton, isUUID
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \

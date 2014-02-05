@@ -22,7 +22,6 @@
 Inventory proxy Pulse -> GLPI using Fusion Inventory plugin.
 """
 
-import os
 import urllib2
 import logging
 from xml.dom.minidom import parseString
@@ -117,8 +116,8 @@ class GlpiProxy :
             response = urllib2.urlopen(request)
 
         except Exception, exc:
-            self._result.append("GlpiProxy: Impossible to sending inventory.")
-            self._result.append('Getted response: "%s"' % str(exc))
+            self._result.append("GlpiProxy: Unable to send inventory.")
+            self._result.append('Received response: "%s"' % str(exc))
 
             return
 

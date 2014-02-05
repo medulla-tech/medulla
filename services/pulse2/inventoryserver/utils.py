@@ -25,7 +25,6 @@
 import os
 import logging 
 
-from socket import gethostbyname
 from xml.dom.minidom import parseString
 from configobj import ConfigObj
 
