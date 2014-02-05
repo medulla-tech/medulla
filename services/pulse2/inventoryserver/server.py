@@ -148,6 +148,8 @@ class InventoryServer:
             if len(macaddresses) > 0 :
                 glpi_uuid = None
                 for macaddr in macaddresses :
+                    # Honestly, this can't be a good mac, trust me I'm an engineer
+                    if macaddr == '00:00:00:00:00:00': continue
                     self.logger.debug("GlpiProxy: Trying to resolve a machine with MAC address=%s" % macaddr)
                     try:
                         glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
@@ -157,6 +159,8 @@ class InventoryServer:
                         self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
                         has_known_os = hasKnownOS(glpi_uuid)
                         break
+                else:
+                    self.logger.warning("GLPI machine couldn't be resolved (for mac %s), skipping the light pull." % str(macaddresses))
                 if glpi_uuid and has_known_os and InventoryUtils.is_coming_from_pxe(content):
                     self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
                 else :
@@ -320,7 +324,9 @@ class TreatInv(Thread):
         # GLPI case - inventory creating disabled
         if self.config.enable_forward and len(macaddresses) > 0:
             try :
-                for macaddr in macaddresses :
+                for macaddr in macaddresses:
+                    # Honestly, this can't be a good mac, trust me I'm an engineer
+                    if macaddr == '00:00:00:00:00:00': continue
                     self.logger.debug("Trying to resolve a machine with MAC address=%s" % macaddr)
                     glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     if glpi_machine_uuid :
@@ -328,8 +334,8 @@ class TreatInv(Thread):
                         AttemptToScheduler(content, glpi_machine_uuid)
                         final_macaddr = macaddr
                         break
-                    else :
-                        self.logger.warn("GLPI machine couldn't be resolved, skipping the light pull.")
+                else:
+                    self.logger.warning("GLPI machine couldn't be resolved (for mac %s), skipping the light pull." % str(macaddresses))
             except Exception, exc :
                 self.logger.error("GLPI light pull mode: %s" % str(exc))
         if self.config.enable_forward:
