@@ -149,7 +149,10 @@ class InventoryServer:
                 glpi_uuid = None
                 for macaddr in macaddresses :
                     self.logger.debug("GlpiProxy: Trying to resolve a machine with MAC address=%s" % macaddr)
-                    glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
+                    try:
+                        glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
+                    except Exception, e:
+                        self.logger.error("GlpiProxy: Unable to resolve incoming inventory UUID (check mmc-agent connectivity): error was: %s" % str(e))
                     if glpi_uuid :
                         self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
                         has_known_os = hasKnownOS(glpi_uuid)

@@ -266,7 +266,10 @@ def resolveGlpiMachineUUIDByMAC (mac):
     mmc = MMCProxy()
     if not mmc.failure :
         proxy = mmc.proxy
-        uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
+        try:  
+            uuid = proxy.glpi.getMachineUUIDByMacAddress(mac)
+        except Exception, e:
+            logging.getLogger().error("Unable to resolve machine UUID for mac %s using %s, error was: %s" % (str(mac), str(mmc._url), str(e)))
         return uuid
     return None
  
