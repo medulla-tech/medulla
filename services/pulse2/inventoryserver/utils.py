@@ -29,33 +29,29 @@ from socket import gethostbyname
 from xml.dom.minidom import parseString
 from configobj import ConfigObj
 
-from mmc.client.sync import Proxy
+from mmc.client import sync
 from mmc.site import mmcconfdir
 
-
+# Read inventory-server.ini config file
 class ConfigReader :
-    """Read and parse config files"""
+    """Read and parse config files."""
     def __init__(self):
-        self._base_ini = os.path.join(mmcconfdir, 
-                                "plugins", 
-                                "base.ini")
-        self._pkg_server_ini = os.path.join(mmcconfdir, 
-                                      "pulse2",  
-                                      "package-server", 
-                                      "package-server.ini")
-        
+        self._inv_server_ini = os.path.join(mmcconfdir,
+                                            "pulse2",
+                                            "inventory-server",
+                                            "inventory-server.ini")
 
     @classmethod
     def get_config(cls, inifile):
         """ 
         Get the configuration from config file
-        
+
         @param inifile: path to config file
         @type inifile: string
-    
-        @return: ConfigParser.ConfigParser instance 
+
+        @return: configobj.ConfigObj instance 
         """
-        logging.getLogger().debug("<scheduler> : Load config file %s" % inifile)
+        logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
 
             logging.getLogger().warn("Error while reading the config file:")
@@ -64,36 +60,25 @@ class ConfigReader :
             raise IOError, "Config file '%s' not found" % inifile
 
         return ConfigObj(inifile)
- 
-    @property
-    def pkg_server_config (self):
-        """ 
-        Get the configuration of package server 
-             
-        @return: ConfigParser.ConfigParser instance 
-        """
-        return self.get_config(self._pkg_server_ini)
-
 
     @property
-    def base_config(self):
+    def inv_server_config(self):
         """ 
-        Get the configuration from base.ini
-    
-        @return: ConfigParser.ConfigParser instance 
+        Get the configuration from inventory-server.ini
+        @return: configobj.ConfigObj instance 
         """
-        return self.get_config(self._base_ini)
+        return self.get_config(self._inv_server_ini)
 
 
+# Build XMLRPC connection to MMC-Agent
 class MMCProxy :
     """ Provider to connect at mmc-agent """
     def __init__(self): 
 
         config = ConfigReader()
-        
-        self.pkg_server_config = config.pkg_server_config
-        self.base_config = config.base_config
-        
+
+        self.inv_server_config = config.inv_server_config
+
         self._failure = False
 
         self._url = None
@@ -102,21 +87,18 @@ class MMCProxy :
         self._build_url()
 
         if not self._failure :
-            password = self._get_ldap_password()
-
-        if not self._failure :
-            self._build_proxy(password)
+            self._build_proxy()
 
     def _build_url(self):
         """ URL building for XML-RPC proxy """
-       
-        if not "mmc_agent" in self.pkg_server_config :
+
+        if not "mmc_agent" in self.inv_server_config :
             logging.getLogger().warn("Error while reading the config file:")
             logging.getLogger().warn("Section 'mmc_agent' not exists")
             self._failure = True
             return
 
-        mmc_section =  self.pkg_server_config["mmc_agent"]
+        mmc_section =  self.inv_server_config["mmc_agent"]
 
         for option in ["username", "password", "host", "port"] :
 
@@ -126,12 +108,12 @@ class MMCProxy :
 
                 self._failure = True
                 return
- 
+
         username = mmc_section["username"]
         host = mmc_section["host"]
         password = mmc_section["password"]
         port = mmc_section["port"]
-        
+
         logging.getLogger().debug("Building the connection URL at mmc-agent") 
 
         self._url = 'https://%s:%s@%s:%s' % (username, password, host, port)
@@ -140,74 +122,30 @@ class MMCProxy :
     def failure (self):
         """ 
         Failure flag to indicate the incorrect build of proxy 
-
         @returns: bool
         """
         return self._failure
 
-    def _get_ldap_password(self):
-        """ 
-        Password for LDAP authentification 
-        
-        @return: string
-        """
-       
-        if not "ldap" in self.base_config :
-
-            logging.getLogger().warn("Error while reading the config file: Section 'ldap'")
-
-            self._failure = True
-            return
-                                
-        return self.base_config["ldap"]["password"]
-
-    def _build_proxy (self, password):
+    def _build_proxy (self):
         """ Builds the XML-RPC proxy to MMC agent. """
         try :
-            self._proxy = Proxy(self._url)
-
-            logging.getLogger().debug("LDAP authentification")
-
-            self._proxy.base.ldapAuth('root', password)
-
-            logging.getLogger().debug("Create a mmc-agent proxy") 
+            self._proxy = sync.Proxy(self._url)
 
         except Exception, err :
             logging.getLogger().error("Error while connecting to mmc-agent : %s" % err)
             self._failure = True
-            
 
     @property
     def proxy (self):
         """
         Get the XML-RPC proxy to MMC agent.
-        
         @return: mmc.client.sync.Proxy
         """
         return self._proxy
- 
 
 
 class InventoryUtils :
     """ Common inventory utils """
-
-
-    @classmethod
-    def get_pkg_server_ip(cls):
-        """ 
-        Get the ip address of package server. 
-        
-        @return: string
-        """
-        config = ConfigReader().pkg_server_config
-
-        if "main" in config :
-            if "host" in config["main"] :
-
-                host = config["main"]["host"]
-                return gethostbyname(host)
-
-        return "127.0.0.1"
 
     @classmethod
     def is_coming_from_pxe(cls, xml_content):
