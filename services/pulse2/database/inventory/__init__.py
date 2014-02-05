@@ -33,9 +33,7 @@ from mmc.database.utilities import unique, handle_deconnect
 from mmc.database.utilities import DbObject # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
 from mmc.site import mmcconfdir
-from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.utils import same_network, Singleton, isUUID
-from mmc.plugins.dyngroup.config import DGConfig
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
         Integer, ForeignKey, or_, desc, func, not_
@@ -1957,16 +1955,41 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
         return ret
 
+    def getLastInventoryThresholds(self):
+
+        try:
+            from mmc.plugins.inventory.config import InventoryConfig
+        except:
+            logging.getLogger().error('Cannot import InventoryConfig, make sure that inventory module is installed')
+            return
+
+        # Reading red and orange thresholds
+        config = InventoryConfig()
+        config.init("inventory")
+        if config.cp.has_option("lastinventory", "red"):
+            red = config.cp.getint("lastinventory", "red")
+        else:
+            red = 35
+
+        if config.cp.has_option("lastinventory", "orange"):
+            orange = config.cp.getint("lastinventory", "orange")
+        else:
+            orange = 10
+
+        return (red, orange)
+
+
+
     def getMachineListByState(self, ctx, groupName):
         """
         """
-        # Read config from ini file
-        inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
-        config = Pulse2OcsserverConfigParser()
-        config.setup(inifile)
+        try:
+            from mmc.plugins.dyngroup.config import DGConfig
+        except:
+            logging.getLogger().error('Cannot import DGConfig module, make sure that dyngroup module is installed')
+            return
 
-        orange = int(config.orange)
-        red = int(config.red)
+        (red, orange) = self.getLastInventoryThresholds()
 
         session = create_session()
         now = datetime.datetime.now()
@@ -2006,13 +2029,7 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: dict
         """
 
-        # Read config from ini file
-        inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
-        config = Pulse2OcsserverConfigParser()
-        config.setup(inifile)
-
-        orange = int(config.orange)
-        red = int(config.red)
+        (red, orange) = self.getLastInventoryThresholds()
 
         ret = {
             "days": {
@@ -2026,7 +2043,6 @@ class Inventory(DyngroupDatabaseHelper):
                 "red": {},
             }
         }
-
 
         return ret
 
