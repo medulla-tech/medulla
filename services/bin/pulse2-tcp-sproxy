@@ -452,7 +452,7 @@ class DispatchProxies :
 
 if __name__ == "__main__" :
 
-    log.info("VNC Proxy: Starting")
+    log.info("VNC Proxy: Starting new proxy: "+' '.join(sys.argv))
     reactor.callWhenRunning(DispatchProxies)
     reactor.run()
     sys.exit(0)
