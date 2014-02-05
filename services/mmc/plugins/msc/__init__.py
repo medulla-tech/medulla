@@ -71,7 +71,10 @@ APIVERSION = '0:0:0'
 NOAUTHNEEDED = [
     'get_web_def_coh_life_time',
     'get_web_def_attempts_per_day',
-    'pull_target_awake'
+    'pull_target_awake',
+    'is_pull_target',
+    'checkLightPullCommands',
+    'start_command_on_host',
 ]
 
 def getApiVersion(): return APIVERSION
