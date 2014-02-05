@@ -854,7 +854,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             self.logger.debug("Number of tracked/stopped circuits: %d" % len(self.stopped_track))
 
 
-            if self.has_free_slots() : 
+            if self.has_free_slots() and not self.has_unstarted_circuits(): 
                 top = self.free_slots
                 if top > 0 :
 

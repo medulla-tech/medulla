@@ -1064,6 +1064,10 @@ class MscContainer (object):
         """ Free slots to use """
         return self.max_slots - len(self.get_running_circuits())
 
+    def has_unstarted_circuits(self):
+	"""Checks the unstarted circuits to avoid a next heavy query execution"""
+	return len([c for c in self.circuits if not c.is_running]) > 0
+
     def _in_waitings(self, id):
         """
         Test if a circuit is waiting.
