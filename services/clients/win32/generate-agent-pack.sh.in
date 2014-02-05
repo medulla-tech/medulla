@@ -51,10 +51,63 @@ vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-ag
 inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
 sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
 
-# Others variables
-my_fqdn=`hostname -f`
+# Command line options handling
+
 download_only=0
-inv_tag=''
+clean=0
+tag=''
+my_fqdn=''
+fqdn_overrided=0
+
+# Reset in case getopts has been used previously in the shell
+OPTIND=1
+
+while getopts "hdct:i:" opt; do
+  case "${opt}" in
+    h)
+      echo
+      echo "Usage: ${0} [ -c | -d ] [ -t 'TAG' ] [ -i 'IP Addr' ]"
+      echo
+      echo "  -h: display this help"
+      echo "  -c: clean directory"
+      echo "  -d: download only (no generation)"
+      echo "  -t 'TAG': Use TAG for inventory client"
+      echo "  -i 'IP addr': Use IP addr as inventory server (can be a hostname too)"
+      exit 1
+      ;;
+    d)
+      download_only=1
+      ;;
+    c)
+      clean=1
+      ;;
+    t)
+      tag="${OPTARG}"
+      ;;
+    i)
+      my_fqdn="${OPTARG}"
+      ;;
+    esac
+done
+
+shift $((OPTIND-1))
+[ "${1}" = "--" ] && shift
+
+# Inventory tag detected
+if [ -n "${tag}" ]; then
+  echo
+  echo "Generating with inventory tag '${tag}'..."
+  inv_tag="\/tag=${tag}"
+fi
+
+# Inventory server address override
+if [ -n "${my_fqdn}" ]; then
+  echo
+  echo "Generating with inventory server '${my_fqdn}'..."
+  fqdn_overrided=1
+else
+  my_fqdn=`hostname -f`
+fi
 
 # Common cleaning
 rm -f pulse2-win32-agents-pack.exe \
@@ -70,7 +123,7 @@ rm -f pulse2-win32-agents-pack-*.exe \
       pulse2-win32-agents-installer-*.exe
 
 # Are we cleaning the directory ?
-if [ "${1}" = "clean" ]; then
+if [ ${clean} -eq 1 ]; then
 
   # Clean agents and pack
   rm -f pulse2-secure-agent-*.exe \
@@ -83,10 +136,6 @@ if [ "${1}" = "clean" ]; then
   echo
 
   exit 0
-elif [ "${1}" = "download-only" ]; then
-   download_only=1
-elif [ ! -z ${1} ]; then
-  inv_tag="\/tag=${1}"
 fi
 
 # Sanity checks
@@ -131,8 +180,13 @@ fi
 
 if [ ! ${download_only} -eq 1 ]; then
   # Try to figure out if the DNS configuration is fine or not
-  dig ${my_fqdn} +nosearch +short | tail -n1 | grep -q -E '([0-9]{1,3}\.){3}[0-9]{1,3}'
-  is_dns_working=$?
+  if [ ${fqdn_overrided} -eq 1 ]; then
+    # Manual override, let's assume it's ok
+    is_dns_working=0
+  else
+    dig ${my_fqdn} +nosearch +short | tail -n1 | grep -q -E '([0-9]{1,3}\.){3}[0-9]{1,3}'
+    is_dns_working=${?}
+  fi
 
   # DNS servers haven't replied on i-have-queried-my-own-fqdn, sounds bad.
   if [ ! ${is_dns_working} -eq 0 ]; then
