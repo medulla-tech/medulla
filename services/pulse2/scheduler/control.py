@@ -26,7 +26,6 @@ from base64 import b64decode
 
 from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
 from twisted.internet.threads import deferToThread
-from twisted.internet.task import LoopingCall
 from twisted.internet import reactor
 
 from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS 
@@ -38,50 +37,9 @@ from pulse2.scheduler.queries import get_ids_to_start, get_commands
 from pulse2.scheduler.dlp import get_dlp_method
 
 
-class StoppedTracker(object):
-    """
-    Tracking the ids of stopped circuits.
-
-    Ids to stop are immediately added here and stays until the circuit release.
-    """
-
-    ids = []
-
-    def add(self, ids):
-        """
-        Adding the circuits ids.
-
-        @param ids: circuits ids
-        @type ids: list
-        """
-        for id in ids :
-            if id not in self.ids:
-                self.ids.append(id)
-
-
-    def remove(self, id):
-        """
-        Removes a circuit id.
-
-        @param id: id of released circuit
-        @type ids: int
-        """
-        if id in self.ids:
-            self.ids.remove(id)
-
-
-    def __contains__(self, id):
-        return id in self.ids
-
-
-    def __len__(self):
-        return len(self.ids)
-
-
 class MethodProxy(MscContainer):
     """ Interface to dispatch the circuit operations from exterior. """
 
-    stopped_track = StoppedTracker()
 
     def start_commands(self, cmds):
         self.logger.info("Prepare %d commands to START..." % len(cmds))
@@ -302,7 +260,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @type ids: list
 
         """
-        d1 = d2 = Deferred()
+        d1 = Deferred()
 
         banned = self.bundles.get_banned_cohs()
         ids = [id for id in ids if id not in banned]
@@ -310,7 +268,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         already_initialized_circuits = [c for c in self._circuits 
                                           if c.id in ids
                                        ]
-        self._circuits_activate(already_initialized_circuits)
+	# already initialized circuits will be started
+        aicd = maybeDeferred(self._circuits_activate,
+			     already_initialized_circuits)
+	aicd.addCallback(self._run_all)
+        aicd.addErrback(self._start_failed)
 
         already_initialized_ids = [c.id for c in already_initialized_circuits]
         
@@ -332,8 +294,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             d1.addCallback(self._revolve_all)
             d1.addCallback(self._run_all)
             d1.addErrback(self._start_failed)
+	return d1
 
-        return DeferredList([d1, d2])
 
     def _circuits_activate(self, circuits):
         """
@@ -345,9 +307,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         for circuit in circuits :
             circuit.status = CC_STATUS.ACTIVE
             circuit.cohq.coh.refresh()
-            self._run_one(circuit)
-             
             self.logger.info("Circuit #%s: reactivate" % (circuit.id))
+
+        return circuits 
+             
 
     def _consolidate(self, already_initialized_ids):
         """
@@ -389,7 +352,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if any([True for c in self._circuits if c.id == id]):
                 circuit = self.get(id)
                 if circuit.initialised :
-                    self._run_one(circuit)
+		    deferToThread(circuit.run)
                 else :
                     circuit.install_dispatcher(self)
                     d = circuit.setup()
@@ -402,41 +365,6 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
         return DeferredList(dl)
 
-    def _run_one(self, circuit):
-        """
-        Executes the circuit in the thread.
-
-        @param circuit: circuit to run
-        @type circuit: Circuit
-
-        @return: start result
-        @rtype: Deferred
-        """
- 
-        d = deferToThread(circuit.run)
-        @d.addErrback
-        def eb(reason):
-            self.logger.error("Circuit #%s: start failed: %s" % (circuit.id, reason))
-        return d
-
-    # looping call reference
-    loop = None
-
-    def _run_later(self, circuits):
-        """
-        Starts the each circuit with a predefined delay.
-
-        This periodic call avoids a saturation on the server (i.e. launcher).
-        @param circuits: circuits to start
-        @type circuits: iterator
-        """
-        try :
-            circuit = next(circuits)
-            self._run_one(circuit)
-        except StopIteration :
-            if self.loop.running:
-                self.loop.stop()
-            self.logger.debug("circuits started")
 
     def _run_all(self, circuits):
         """
@@ -448,24 +376,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @return: list of start results
         @rtype: list
         """
-        try :
-            if len(circuits) == 0:
-                self.logger.info("Nothing to execute")
-                return True
-
-            self._circuits.extend(circuits)
-            self.loop = LoopingCall(self._run_later, iter(circuits))
-            d = self.loop.start(self.config.emitting_period)
-            d.addErrback(self._loop_fail)
-
-            return True
-
-        except Exception, e :
-            self.logger.error("Circuits start failed: %s" % str(e))
-            return False
-
-    def _loop_fail(self, failure):
-        self.logger.error("Loop call starting failed: %s" % str(failure))
+	return self.loop_starter.run(circuits)
 
 
 
@@ -495,8 +406,10 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         for success, circuit in circuits :
             if not success :
-                self.logger.warn("Circuit #%s: setup failed" % circuit.id)
-
+                self.logger.warn("Circuit setup failed")
+            if not isinstance(circuit, Circuit):		
+                self.logger.warn("Circuit setup failed - not Circuit instance")
+		continue
             yield circuit
 
  
@@ -586,6 +499,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                         break
                     # include a new circuit to running container
                     circuit.status = CC_STATUS.ACTIVE
+                    self.started_track.add([circuit.id])
                     circuits_to_run.append(circuit)
                     new_circuits.remove(circuit)
                     count += 1
@@ -790,6 +704,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     self.logger.debug("Remaining waiting circuit #%s: start" % circuit.id)
                     circuit.status = CC_STATUS.ACTIVE
                     circuit.run()
+                    self.started_track.add([circuit.id])
                     return True
             return False
         except Exception, e:
@@ -818,16 +733,17 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         self.logger.debug("Bundles to hold: %s" % str(b_ids))
         self.bundles.clean_up_remaining(b_ids)
 
-    def done_cleanup(self, reason):
-        for circuit in self._get_candidats_to_overtimed(self._circuits):
-            self.logger.debug("Circuit #%s: cleanup" % circuit.id)
-            circuit.release()
-        for circuit in self._get_candidats_to_failed(self._circuits):
-            circuit.release()
-        for circuit in self.get_circuits_on_done():
-            circuit.release()
-        for circuit in self.get_unfinished_circuits():
-            circuit.release()
+
+    def remove_expired(self, reason):
+	"""Freezed circuits clean up"""
+	exp_ids = self.started_track.get_expired()
+	for id in exp_ids:
+	    circuit = self.get(id)
+	    if circuit:
+	        if circuit.status == CC_STATUS.ACTIVE:
+                    self.logger.warn("Circuit #%s: EXIPRED -> REMOVED!" % id)
+                    circuit.release()
+                    self.started_track.remove(id)
 
         
     def mainloop(self):
@@ -835,6 +751,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.launch_remaining_waitings)
         d.addCallback(self.update_stats)
+        d.addCallback(self.remove_expired)
         d.addErrback(self.eb_mainloop)
 
         return d
@@ -842,7 +759,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def eb_mainloop(self, failure):
         self.logger.error("Mainloop failed: %s" % str(failure))
 
- 
+
     def _mainloop(self):
         """ The main loop of scheduler """
 
@@ -853,9 +770,13 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
             self.logger.debug("Number of tracked/stopped circuits: %d" % len(self.stopped_track))
 
+	    if self.lock_start.locked:
+		# previous batch not relased yet
+	        self.logger.info("Previous batch not finished, skiping")
+	        return True
 
-            if self.has_free_slots() and not self.has_unstarted_circuits(): 
-                top = self.free_slots
+	    if self.has_free_slots(): 
+                top = self.free_slots * 2
                 if top > 0 :
 
                     starting_ids = [c.id for c in self.circuits if not c.is_running]
@@ -864,16 +785,29 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
                     ids_to_exclude = running_ids + waiting_ids + starting_ids
 
+                    # Looking for new commands 
                     ids = get_ids_to_start(self.config.name,
                                            ids_to_exclude, 
                                            top)
-                    if len(ids) > 0 :
+
+	            if len(ids) > 0 :
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
                         self.logger.debug("Nothing to initialize")
                         return True
 
-                    self.start_all(ids)
+                    # starting of all ids will be locked until the start
+		    # of last circuit launching
+                    dstart = self.lock_start.run(self.start_all, ids)
+
+		    @dstart.addCallback
+		    def _cb(reason):
+                        self.logger.info("Batch completed, ready for next.")
+		    @dstart.addErrback
+		    def _eb(reason):
+                        self.logger.info("Start batch failed! : %s" % reason)
+
+
                 else :
                     self.logger.info("Slots will be filled with by waiting circuits")
             else :

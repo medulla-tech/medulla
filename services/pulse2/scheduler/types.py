@@ -45,7 +45,7 @@ import logging
 import inspect
 import time
 
-from twisted.internet.defer import Deferred, maybeDeferred
+from twisted.internet.defer import Deferred, maybeDeferred, DeferredLock
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
@@ -58,6 +58,9 @@ from pulse2.scheduler.utils import getClientCheck, getServerCheck
 from pulse2.scheduler.stats import StatisticsProcessing
 from pulse2.scheduler.bundles import BundleReferences
 from pulse2.scheduler.timeaxis import LaunchTimeResolver
+from pulse2.scheduler.tracking.circuits import StoppedTracker, StartedTracker
+from pulse2.scheduler.starter import LoopingStarter
+
 
 from pulse2.database.msc.orm.commands_history import CommandsHistory
 
@@ -658,6 +661,7 @@ class CircuitBase(object):
         This method is called when the circuits ends.  
         """
         self.dispatcher.stopped_track.remove(self.id)
+        self.dispatcher.started_track.remove(self.id)
         if self.recurrent :
             return
         try :
@@ -834,6 +838,7 @@ class Circuit (CircuitBase):
         """
         self.cohq = CoHQuery(self.id)
         self.update_stats()
+	self.dispatcher.started_track.update(self.id)
 	if self.id in self.dispatcher.stopped_track :
 	    self.release()
         # if give-up - actual phase is probably running - do not move - wait...
@@ -1101,8 +1106,20 @@ class MscContainer (object):
         # provides the global statistics 
         self.statistics = StatisticsProcessing(config)
 
+        # stopped circuits tracker
+        self.stopped_track = StoppedTracker()
+	# started circuits tracker
+        self.started_track = StartedTracker(self.config.max_command_time)
+
+        # mainloop locker
+        self.lock_start = DeferredLock()  
+
         # bundles tracking container
         self.bundles = BundleReferences(config)
+
+        # dispatching the batchs of start
+	self.loop_starter = LoopingStarter(dispatcher=self,
+			                   emitting_period=config.emitting_period)
 
         # launchers driving and slots detect
         self.groups = [net for (net, mask) in self.config.preferred_network]
