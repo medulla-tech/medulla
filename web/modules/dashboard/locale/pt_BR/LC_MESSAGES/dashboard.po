@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2013-12-24 11:35+0100\n"
+"POT-Creation-Date: 2014-02-06 10:37+0100\n"
 "PO-Revision-Date: 2012-12-12 17:48+0000\n"
 "Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
@@ -17,6 +17,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr "Atalhos"
+
+#: modules/dashboard/includes/panels/space.inc.php:28
+msgid "Disk usage"
+msgstr "Utilização de Disco"
+
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
+msgstr "usado"
+
+#: modules/dashboard/includes/panels/space.inc.php:37
+#: modules/dashboard/includes/panels/general.inc.php:74
+msgid "free"
+msgstr "livre"
 
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
@@ -37,23 +54,6 @@ msgstr "Load"
 #: modules/dashboard/includes/panels/general.inc.php:43
 msgid "RAM"
 msgstr "RAM"
-
-#: modules/dashboard/includes/panels/general.inc.php:65
-#: modules/dashboard/includes/panels/space.inc.php:37
-msgid "free"
-msgstr "livre"
-
-#: modules/dashboard/includes/panels/shortcuts.inc.php:29
-msgid "Shortcuts"
-msgstr "Atalhos"
-
-#: modules/dashboard/includes/panels/space.inc.php:28
-msgid "Disk usage"
-msgstr "Utilização de Disco"
-
-#: modules/dashboard/includes/panels/space.inc.php:36
-msgid "used"
-msgstr "usado"
 
 #: modules/dashboard/infoPackage.inc.php:36
 #: modules/dashboard/infoPackage.inc.php:40
