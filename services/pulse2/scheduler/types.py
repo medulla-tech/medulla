@@ -495,8 +495,6 @@ class CircuitBase(object):
 
 
     status = CC_STATUS.ACTIVE
-    # Main container of selected phases
-    phases = None
  
     # methods called by scheduler-proxy
     _proxy_methods = {}
@@ -545,6 +543,9 @@ class CircuitBase(object):
 
         self.installed_phases = installed_phases
         self.pull = pull
+
+        self.__phases_list = []
+
 
     @property 
     def is_running(self):
@@ -595,17 +596,19 @@ class CircuitBase(object):
                 raise KeyError
 
 
-        self.phases = phases
+        self.set_phases(phases)
         return True
 
     @property
     def phases(self):
-        """Gets the phases iterator"""
+        """
+	Main container of selected phases.
+	Gets the phases iterator.
+	"""
         return self._phases
 
 
-    @phases.setter # pyflakes.ignore 
-    def phases(self, value):
+    def set_phases(self, value):
         """
         Phases property set processing.
 

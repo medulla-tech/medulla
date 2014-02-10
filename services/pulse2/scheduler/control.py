@@ -351,7 +351,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         for id in ids :
             if any([True for c in self._circuits if c.id == id]):
                 circuit = self.get(id)
-                if circuit.initialised :
+                if circuit.initialized :
 		    deferToThread(circuit.run)
                 else :
                     circuit.install_dispatcher(self)
