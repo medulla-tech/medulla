@@ -666,7 +666,7 @@ class MMCHTTPChannel(http.HTTPChannel):
 
     def connectionLost(self, reason):
         if not reason.check(twisted.internet.error.ConnectionDone):
-            logger.error(reason)
+            logger.debug(reason)
         http.HTTPChannel.connectionLost(self, reason)
 
 
