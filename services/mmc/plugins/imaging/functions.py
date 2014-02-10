@@ -2580,7 +2580,7 @@ class ImagingRpcProxy(RpcProxyI):
         def sendResult(results, uuid): return [True, uuid]
 
         if not is_registrated and p == None:
-            logger.info("computer %s (%s) needs to be registered" % (hostname, MACAddress))
+            logger.info("Registering computer %s (%s) in imaging module" % (hostname, MACAddress))
             params = {
                 'target_name': hostname,
             }
