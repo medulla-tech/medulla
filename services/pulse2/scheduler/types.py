@@ -930,7 +930,7 @@ class Circuit (CircuitBase):
             d.addCallback(self.phase_process)
             d.addCallback(self._last_activity_record)
             d.addErrback(self.phase_error)
-            return d
+            return
 
         # give-up - actual phase is probably running
         elif res == DIRECTIVE.GIVE_UP :
