@@ -3558,10 +3558,10 @@ class Glpi084(DyngroupDatabaseHelper):
         for key in self.config.rest_client:
             restconf[key] = self.config.rest_client[key]
 
-        client = RESTClient(baseurl=restconf['baseurl'])
+        client = RESTClient(baseurl=restconf['glpi_base_url'])
         client.connect(
-            restconf['username'],
-            restconf['password']
+            restconf['glpi_username'],
+            restconf['glpi_password']
         )
 
         return client

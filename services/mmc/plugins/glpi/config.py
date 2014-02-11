@@ -109,14 +109,14 @@ class GlpiConfig(PluginConfig):
         if self.has_option("rest_client", "purge_machine"):
             self.rest_client['purge_machine'] = self.getint("rest_client", "purge_machine")
 
-        if self.has_option("rest_client", "baseurl"):
-            self.rest_client['baseurl'] = self.get("rest_client", "baseurl")
+        if self.has_option("rest_client", "glpi_base_url"):
+            self.rest_client['glpi_base_url'] = self.get("rest_client", "glpi_base_url")
 
-        if self.has_option("rest_client", "username"):
-            self.rest_client['username'] = self.get("rest_client", "username")
+        if self.has_option("rest_client", "glpi_username"):
+            self.rest_client['glpi_username'] = self.get("rest_client", "glpi_username")
 
-        if self.has_option("rest_client", "password"):
-            self.rest_client['password'] = self.get("rest_client", "password")
+        if self.has_option("rest_client", "glpi_password"):
+            self.rest_client['glpi_password'] = self.get("rest_client", "glpi_password")
 
         # associate manufacturer's names to their warranty url
         # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections
