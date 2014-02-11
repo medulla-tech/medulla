@@ -16,6 +16,20 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 contribdir = $(datadir)/doc/mmc/contrib
+qactionsdir = $(localstatedir)/lib/pulse2/qactions
+
+dist_qactions_DATA = msc/qactions/101mdv_test_utf8.msc \
+	msc/qactions/102mdv_test_blocking.msc \
+	msc/qactions/103mdv_test_demux.msc \
+	msc/qactions/104mdv_test_sleep_1minute.msc \
+	msc/qactions/001reboot.msc \
+	msc/qactions/002shutdown.msc \
+	msc/qactions/006run_inventory_win32.msc \
+	msc/qactions/007wake_on_lan.msc \
+	msc/qactions/008remote_desktop_without_approval.msc \
+	msc/qactions/009remote_desktop_with_approval.msc \
+	msc/qactions/010wol_with_imaging.msc \
+	msc/qactions/011windows_update.msc
 
 nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	dyngroup/sql/schema-001.sql \
@@ -77,18 +91,6 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/analysis/command_evolution_from_history_table.py \
 	msc/analysis/pulse2_stats.py \
 	msc/pulse2-msc-clean-database.README \
-	msc/quick_actions/101mdv_test_utf8.msc \
-	msc/quick_actions/102mdv_test_blocking.msc \
-	msc/quick_actions/103mdv_test_demux.msc \
-	msc/quick_actions/104mdv_test_sleep_1minute.msc \
-	msc/quick_actions/001reboot.msc \
-	msc/quick_actions/002shutdown.msc \
-	msc/quick_actions/006run_inventory_win32.msc \
-	msc/quick_actions/007wake_on_lan.msc \
-	msc/quick_actions/008remote_desktop_without_approval.msc \
-	msc/quick_actions/009remote_desktop_with_approval.msc \
-	msc/quick_actions/010wol_with_imaging.msc \
-	msc/quick_actions/011windows_update.msc \
 	msc/sql/README \
 	msc/sql/clean-db.sql \
 	msc/sql/purge-old-rows.sql \
