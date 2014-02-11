@@ -28,6 +28,8 @@ require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     // Check if we're here thru a proxy defining HTTP_X_FORWARDED_FOR
     $remoteaddr = isset($_SERVER["HTTP_X_FORWARDED_FOR"])? $_SERVER["HTTP_X_FORWARDED_FOR"]: $_SERVER["REMOTE_ADDR"];
+
+
     $result = scheduler_establish_vnc_proxy('', $_GET['objectUUID'], $remoteaddr);
 
     # $result is expected to be an array containing host, port, let's check it:
@@ -109,6 +111,16 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     <script type="text/javascript">INCLUDE_URI = "modules/msc/noVNC/include/"</script>
     <script src="modules/msc/noVNC/include/util.js"></script>
 </head>
+
+<?php
+if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+?>
+    <script type="text/javascript">
+        alert("<?php printf(_T('An HTTP Proxy has been detected. Try disabling proxy for local addresses in your browser settings or add Pulse Server address (%s) to the excluded hosts list.', 'msc'), $host); ?>");
+    </script>
+<?php
+}
+?>
 
 <body style="margin: 0px; background: url(mmc/img/common/background.gif)">
     <div id="noVNC_screen">
