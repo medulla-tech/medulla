@@ -49,7 +49,7 @@ REVISION = scmRevision("$Rev$")
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 TRANSLATE_ATTRS = ("title", "value")
-TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer")
+TRANSLATE_ELEMS = ("homepage", "h1", "h2", "h3", "p", "header", "footer", "left", "right", "center")
 _gettext = None
 
 
@@ -206,6 +206,7 @@ class RpcProxy(RpcProxyI):
 
             @return: well formated content for header or footer
             """
+            str = _T(str)
             if str.count('###css_counter###') == 2:
                 # 1st css_counter is current page
                 str = str.replace('###css_counter###', '" counter(page) "', 1)
