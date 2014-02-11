@@ -3459,13 +3459,11 @@ class Glpi08(DyngroupDatabaseHelper):
         return client
 
     def purgeMachine(self, id):
-        to_delete = [
-            {
-                'type': 'Computer',
-                'id': id,
-                'purge': 1
+        to_delete = {
+            'Computer': {
+                id: 1
             }
-        ]
+        }
 
         self.logger.debug('machine ID %s will be purged from GLPI' % (id))
         webservices_client = self._get_webservices_client()

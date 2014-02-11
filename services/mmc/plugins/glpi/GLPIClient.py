@@ -131,17 +131,6 @@ class RESTClient(object):
         response = urllib2.urlopen(request).read()
         return json.loads(response)
 
-    def delete(self, id):
-        params = {
-                'method':'glpi.deleteObjects',
-                'session': self.session,
-                'fields[Computer][%s]' % id: 1,
-                }
-        print (self.url + urllib.urlencode(params))
-        request = urllib2.Request(self.url + urllib.urlencode(params))
-        response = urllib2.urlopen(request).read()
-        return json.loads(response)
-
     def test(self,_help=None):
         """
         Simple ping test method.
@@ -1193,8 +1182,9 @@ class RESTClient(object):
                 'method':'glpi.deleteObjects',
                 'session':self.session,
         }
-        for f in fields:
-            params['fields[%s][%s]' % (f['type'], f['id'])] = f['purge']
+        for type in fields:
+            for id in fields[type]:
+                params['fields[%s][%s]' % (type, id)] = fields[type][id]
         if _help: params['help'] = _help
 
         response = urllib2.urlopen(self.__request__(params))
