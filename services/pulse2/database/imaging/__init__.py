@@ -2971,6 +2971,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.add(menu_item)
             ret.append(menu_item)
             session.flush()
+            for (counter, elem) in enumerate(mi):
+                # Duplication of menu items will fail if no default bootmenu is set
+                # for WOL or normal boot, so raise an exception if this is not the case
+                if elem is None:
+                    raise Exception("No default bootmenu entry has been selected for %s" % (counter and "WOL" or "normal boot"))
             if mi[0].id == default_menu_item.id:
                 mi_out[0] = menu_item.id
             if mi[1].id == default_menu_item.id:
