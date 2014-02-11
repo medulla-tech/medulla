@@ -24,6 +24,14 @@
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+
+$proxy_headers = explode(',', "HTTP_VIA,HTTP_X_FORWARDED_FOR,HTTP_FORWARDED_FOR,HTTP_X_FORWARDED,HTTP_FORWARDED,HTTP_CLIENT_IP,HTTP_FORWARDED_FOR_IP,HTTP_X_SURFCACHE_FOR,VIA,X_FORWARDED_FOR,FORWARDED_FOR,X_FORWARDED,FORWARDED,CLIENT_IP,FORWARDED_FOR_IP,HTTP_PROXY_CONNECTION");    
+
+$proxyActive = False;
+foreach ($proxy_headers as $header)
+    if (array_key_exists($header, $_SERVER))
+        $proxyActive = True;
+
 # FIXME: I'm not really proud of this piece of code :/
 if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
     // Check if we're here thru a proxy defining HTTP_X_FORWARDED_FOR
@@ -113,7 +121,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 </head>
 
 <?php
-if (isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
+if ($proxyActive) {
 ?>
     <script type="text/javascript">
         alert("<?php printf(_T('An HTTP Proxy has been detected. Try disabling proxy for local addresses in your browser settings or add Pulse Server address (%s) to the excluded hosts list.', 'msc'), $host); ?>");
