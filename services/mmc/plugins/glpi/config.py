@@ -49,6 +49,9 @@ class GlpiConfig(PluginConfig):
 
     # manufacturer section
     manufacturerWarrantyUrl = {}
+    rest_client = {
+        'purge_machine': 0
+    }
 
     def readConf(self):
         self.dbdriver = self.get("main", "dbdriver")
@@ -102,6 +105,18 @@ class GlpiConfig(PluginConfig):
 
         if self.has_option("computer_list", "ordered"):
             self.ordered = self.getint("computer_list", "ordered")
+
+        if self.has_option("rest_client", "purge_machine"):
+            self.rest_client['purge_machine'] = self.getint("rest_client", "purge_machine")
+
+        if self.has_option("rest_client", "baseurl"):
+            self.rest_client['baseurl'] = self.get("rest_client", "baseurl")
+
+        if self.has_option("rest_client", "username"):
+            self.rest_client['username'] = self.get("rest_client", "username")
+
+        if self.has_option("rest_client", "password"):
+            self.rest_client['password'] = self.get("rest_client", "password")
 
         # associate manufacturer's names to their warranty url
         # manufacturer must have same key in 'manufacturer' and 'manufacturer_warranty_url' sections
