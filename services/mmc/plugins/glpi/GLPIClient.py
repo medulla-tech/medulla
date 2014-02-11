@@ -1168,15 +1168,24 @@ class RESTClient(object):
         Delete or purge objects from GLPI.
 
         User must be super admin to run this method.
-        @param fields: list of fields to delete
-            fields = [{
-                'type': 'computer',
-                'id': id,
-                'purge': 1
-            }]
-        @type fields: list
 
-        TODO: what does this thing return?
+         @type fields: dict
+         @param fields: dict of fields to delete
+         Example from deleteObjects doc:
+             https://forge.indepnet.net/projects/webservices/wiki/GlpideleteObjects:
+
+             fields = {
+                 'Computer': {
+                     27: 1,
+                     28: 0,
+                 },
+                 'Monitor': {
+                     5: 1,
+                     6: 1,
+                 }
+             }
+
+         @return: a list of deleted fields
         """
         params = {
                 'method':'glpi.deleteObjects',
