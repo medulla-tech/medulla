@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-02-10 11:51+0100\n"
-"PO-Revision-Date: 2014-02-06 10:06+0000\n"
+"POT-Creation-Date: 2014-02-11 10:52+0100\n"
+"PO-Revision-Date: 2014-02-11 09:54+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -217,7 +217,7 @@ msgstr "Création de rapport"
 
 #: modules/report/report/index.php:62
 msgid "Period"
-msgstr ""
+msgstr "Période"
 
 #: modules/report/report/index.php:63
 msgid "from"
