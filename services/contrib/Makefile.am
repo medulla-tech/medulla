@@ -117,7 +117,6 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/schema-017.sql \
 	msc/sql/schema-018.sql \
 	msc/sql/schema-020.sql \
-	msc/pulse2-msc-clean-database \
 	package-server/some_examples/ff02000009/conf.xml \
 	package-server/some_examples/ff02000009/install.bat \
 	package-server/some_examples/ff02000012/conf.xml \
