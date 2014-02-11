@@ -358,13 +358,46 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     d = circuit.setup()
                     dl.append(d)
             else :
-                circuit = Circuit(id, self.installed_phases, self.config)
-                circuit.install_dispatcher(self)
-                d = circuit.setup()
+                d = maybeDeferred(self._circuit_pre_setup, id)
+                d.addCallback(self._circuit_setup)
+                @d.addErrback
+                def _err(failure):
+                    self.logger.error("Circuit pre-setup failed: %s" % failure)
                 dl.append(d)
-
         return DeferredList(dl)
 
+
+    def _circuit_pre_setup(self, id):
+	"""
+	Circuit pre-setup step.
+
+	This method encapsuled as deferred avoids to go directly on the setup
+	without terminating all the operations in the Circuit's constructor,
+	especialy the creation oh CohQuery object needed for setup.
+
+	@param id: circuit id
+        @type id: int
+
+        @return: initialized Circuit object
+        @rtype: Circuit
+        """
+        circuit = Circuit(id, self.installed_phases, self.config)
+        circuit.install_dispatcher(self)
+        return circuit
+
+
+    def _circuit_setup(self, circuit):
+	"""
+	Final circuit's setup step.
+        
+        @param circuit: initialized Circuit object
+        @type circuit: Circuit
+
+        @return: deferred containing circuit's instance ready to run
+        @rtype: Deferred
+	"""
+        return circuit.setup()
+																	    
 
     def _run_all(self, circuits):
         """
