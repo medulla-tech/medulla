@@ -28,7 +28,7 @@ from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
 from twisted.internet.threads import deferToThread
 from twisted.internet import reactor
 
-from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS 
+from pulse2.scheduler.types import MscContainer, Circuit, CC_STATUS
 from pulse2.scheduler.analyses import MscQueryManager
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.queries import get_cohs, is_command_in_valid_time
@@ -46,13 +46,13 @@ class MethodProxy(MscContainer):
 
         scheduler = self.config.name
 
-        if len(cmds) > 0 : 
+        if len(cmds) > 0 :
             for cmd_id in cmds :
                 if is_command_in_valid_time(cmd_id):
                     cohs = get_cohs(cmd_id, scheduler)
                     self.start_commands_on_host(cohs)
         return True
- 
+
 
     def start_commands_on_host(self, cohs):
         """
@@ -69,10 +69,10 @@ class MethodProxy(MscContainer):
         self.logger.debug("Cohs %s starting" % cohs)
 
         active_circuits = [c for c in self._circuits if c.id in cohs]
-        
+
         active_cohs = [c.id for c in active_circuits]
         new_cohs = [id for id in cohs if id not in active_cohs and not id in self.stopped_track]
-        self.logger.info("Starting %s circuits" % len(new_cohs)) 
+        self.logger.info("Starting %s circuits" % len(new_cohs))
 
         for circuit in active_circuits :
             self.logger.info("Circuit #%s: start" % circuit.id)
@@ -91,14 +91,14 @@ class MethodProxy(MscContainer):
         """
         cmd_ids = get_commands(cohs)
         active_circuits = [c for c in self._circuits if c.id in cohs]
-        
+
         active_cohs = [c.id for c in active_circuits]
- 
+
         self.logger.info("Prepare %d circuits to STOP ..." % len(active_cohs))
         for cmd_id in cmd_ids:
             # final statistics calculate
             self.statistics.watchdog_schedule(cmd_id)
- 
+
         self.stopped_track.add(active_cohs)
 
         for circuit in active_circuits :
@@ -109,15 +109,15 @@ class MethodProxy(MscContainer):
 
         return True
 
- 
+
     def run_proxymethod(self, launcher, id, name, args, from_dlp):
         """
         Calls the proxy method.
-        
-        This call is invoked by proxy processing the parsing results 
-        from the launcher or download provider. 
-        Invoked method tagged as @launcher_proxymethod 
-        
+
+        This call is invoked by proxy processing the parsing results
+        from the launcher or download provider.
+        Invoked method tagged as @launcher_proxymethod
+
         @param launcher: launcher which calls this method
         @type launcher: str
 
@@ -158,11 +158,11 @@ class MethodProxy(MscContainer):
                     if valid_method_name != name :
                         self.logger.warn("Recurrent phase %s ignored" % name)
                         return False
-                dps = maybeDeferred(self._run_proxymethod, 
-                                    launcher, 
-                                    id, 
-                                    name, 
-                                    args, 
+                dps = maybeDeferred(self._run_proxymethod,
+                                    launcher,
+                                    id,
+                                    name,
+                                    args,
                                     circuit)
                 @dps.addCallback
                 def result_proxy(res):
@@ -185,7 +185,7 @@ class MethodProxy(MscContainer):
     def _run_proxymethod(self, launcher, id, name, args, circuit=None):
         """
         Calls the proxy method.
-        
+
         @param launcher: launcher which calls this method
         @type launcher: str
 
@@ -215,14 +215,14 @@ class MethodProxy(MscContainer):
                     stdout = unicode(b64decode(_stdout),'utf-8', 'strict')
                     stderr = unicode(b64decode(_stderr),'utf-8', 'strict')
                     result = method(circuit.running_phase, (exitcode, stdout, stderr))
-                else: 
+                else:
                     result = method(circuit.running_phase, args)
-                
+
                 circuit.phase_process(result)
                 return True
         return False
 
- 
+
     def extend_command(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.
@@ -236,7 +236,7 @@ class MethodProxy(MscContainer):
         @param end_date: new end date of command
         @type end_date: str
         """
-        self.logger.info("re-scheduling command id = <%s> from %s to %s" % 
+        self.logger.info("re-scheduling command id = <%s> from %s to %s" %
                 (cmd_id, start_date, end_date))
         circuits = self.get_circuits_by_command(cmd_id)
 
@@ -248,10 +248,10 @@ class MethodProxy(MscContainer):
 
 
 
- 
+
 class MscDispatcher (MscQueryManager, MethodProxy):
     """Core of scheduler """
-            
+
     def start_all(self, ids, truncate=False):
         """
         A starting point of the workflow.
@@ -265,7 +265,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         banned = self.bundles.get_banned_cohs()
         ids = [id for id in ids if id not in banned]
 
-        already_initialized_circuits = [c for c in self._circuits 
+        already_initialized_circuits = [c for c in self._circuits
                                           if c.id in ids
                                        ]
 	# already initialized circuits will be started
@@ -275,11 +275,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         aicd.addErrback(self._start_failed)
 
         already_initialized_ids = [c.id for c in already_initialized_circuits]
-        
+
         new_ids = [id for id in ids if not id in already_initialized_ids]
 
         if truncate and len(new_ids) > self.free_slots :
-            
+
             self.logger.info("Number of new circuits was truncated from %d to %d" %
                     (len(new_ids), self.free_slots))
             new_ids = new_ids[:self.free_slots]
@@ -309,8 +309,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             circuit.cohq.coh.refresh()
             self.logger.info("Circuit #%s: reactivate" % (circuit.id))
 
-        return circuits 
-             
+        return circuits
+
 
     def _consolidate(self, already_initialized_ids):
         """
@@ -389,7 +389,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def _circuit_setup(self, circuit):
 	"""
 	Final circuit's setup step.
-        
+
         @param circuit: initialized Circuit object
         @type circuit: Circuit
 
@@ -397,7 +397,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @rtype: Deferred
 	"""
         return circuit.setup()
-																	    
+
 
     def _run_all(self, circuits):
         """
@@ -423,7 +423,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         @return: list of the best launchers
         @rtype: list
         """
-        return [launcher for (launcher, networks) in self.launchers_networks.items() 
+        return [launcher for (launcher, networks) in self.launchers_networks.items()
                          if network in networks]
 
 
@@ -440,17 +440,17 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         for success, circuit in circuits :
             if not success :
                 self.logger.warn("Circuit setup failed")
-            if not isinstance(circuit, Circuit):		
+            if not isinstance(circuit, Circuit):
                 self.logger.warn("Circuit setup failed - not Circuit instance")
 		continue
             yield circuit
 
- 
+
     def _assign_launcher(self, incoming_circuits):
         """
         Assigning the launcher provider favorizing the best launcher.
 
-        @param incoming_circuits: circuits to start 
+        @param incoming_circuits: circuits to start
         @type incoming_circuits: DeferredList results
 
         @return: circuits to start with assigned launcher provider
@@ -461,20 +461,20 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         for circuit in self._setup_check(incoming_circuits):
             if self.launchers_provider.single_mode :
                 launcher = self.config.launchers.keys()[0]
-                circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
                                                              launcher)
             else :
                 launchers = self.get_launchers_by_network(circuit.network_address)
                 if len(launchers) > 0 :
-                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
                                                                  launchers[0])
-                    self.logger.debug("Circuit #%s: assigned launcher <%s>" % 
+                    self.logger.debug("Circuit #%s: assigned launcher <%s>" %
                             (circuit.id, launchers[0]))
                 else:
                     launcher = self.config.launchers.keys()[0]
-                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri, 
+                    circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
                                                                  launcher)
-                    self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" % 
+                    self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" %
                                   (launcher, circuit.id))
             circuits.append(circuit)
         return circuits
@@ -483,13 +483,13 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         Adds the bundled circuits into the bundle tracking.
 
-        @param incoming_circuits: circuits to start 
+        @param incoming_circuits: circuits to start
         @type incoming_circuits: list
         """
         for circuit in incoming_circuits :
             self.bundles.update(circuit)
 
-        return incoming_circuits    
+        return incoming_circuits
 
 
     def _class_all(self, incoming_circuits):
@@ -549,7 +549,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 (len(self.circuits), len(self.waiting_circuits)))
 
         return circuits_to_start
- 
+
     def _revolve_all(self, circuits_to_start):
         """ Randomizing the deployment orders by group """
 
@@ -598,7 +598,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         # sorted statistics from running circuits
         running_grps_stat = self._analyze_groups(self.circuits)
 
-        to_add = None 
+        to_add = None
 
         if len(self.circuits) < self.max_slots :
             # number of new circuits to add
@@ -613,7 +613,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 zero_blacklist = []
                 while True :
 
-                    masked = dict((group, value + to_add[group]) 
+                    masked = dict((group, value + to_add[group])
                                     for (group, value) in running_grps_stat.items()
                                     if group not in zero_blacklist)
                     # group having minimum circuits
@@ -631,21 +631,21 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
         return to_add
 
-         
+
 
     def release(self, id, suspend_to_waitings=False):
         """
         Circuit releasing from container.
-        
+
         Called typicaly when last phase ends or overtimed.
 
         @param id: commands_on_host id
         @type id: int
         """
-        reactor.callFromThread(self._release_and_launch_next, 
-                               id, 
+        reactor.callFromThread(self._release_and_launch_next,
+                               id,
                                suspend_to_waitings)
- 
+
 
     def _release_and_launch_next(self, id, suspend_to_waitings=False):
         self._release(id, suspend_to_waitings)
@@ -683,19 +683,19 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     if circuit :
 	                circuit.release()
  	            continue
-    
+
                 circuit = self.get(id)
                 if circuit :
                     if self.contains_running_target(circuit):
                         # if another deployment running on the same machine
                         continue
 
-                    self.logger.info("Circuit #%s: (group %s) is going to start" %  
+                    self.logger.info("Circuit #%s: (group %s) is going to start" %
                             (circuit.id, slightest_network))
                     circuit.status = CC_STATUS.ACTIVE
                     return circuit
         return None
-    
+
     def launch_next_waiting(self):
         """
         Launch the next candidate to start.
@@ -704,7 +704,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         Like on start, goal is selecting a circuit destinated to a computer
         which is located at least saturated network.
         """
-        try:  
+        try:
             running = self._analyze_groups(self.circuits)
             remaining = self._analyze_groups(self.get_valid_waitings())
 
@@ -715,8 +715,8 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                      # waiting circuits not processed yet
                      unprocessed_circuits = self.get_unprocessed_waitings()
                      # waiting circuits already processed (recycling of failed attempts)
-                     already_treated_circuits = self.get_valid_waitings() 
-     
+                     already_treated_circuits = self.get_valid_waitings()
+
                      for circuits in [unprocessed_circuits, already_treated_circuits]:
                          if self.has_free_slots():
                              circuit = self._get_next_waiting(circuits, slightest_group)
@@ -747,14 +747,15 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def launch_remaining_waitings(self, reason):
         """ Calls the next waiting circuit. """
         while True:
-            self.logger.debug("Looking for remaining circuits...") 
+            #self.logger.debug("Looking for remaining circuits...")
+            self.logger.info("Looking for remaining circuits...")
             if not self.has_free_slots():
                 break
             started_next = self.launch_next_waiting()
             if not started_next :
                 break
             else :
-                self.logger.debug("Next circuit started") 
+                self.logger.debug("Next circuit started")
 
     def update_stats(self, result):
         """ Update of global statistics of all valid running commands """
@@ -789,12 +790,12 @@ class MscDispatcher (MscQueryManager, MethodProxy):
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
-        d.addCallback(self.launch_remaining_waitings)
+        #d.addCallback(self.launch_remaining_waitings)
         d.addCallback(self.update_stats)
         d.addCallback(self.remove_expired)
-        d.addCallback(self.unlock_when_empty)
+        #d.addCallback(self.unlock_when_empty)
         d.addErrback(self.eb_mainloop)
-   
+
         return d
 
     def eb_mainloop(self, failure):
@@ -812,12 +813,16 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             self.logger.debug("Number of tracked/stopped circuits: %d" % len(self.stopped_track))
 
 	    if self.lock_start.locked:
-		# previous batch not relased yet
-	        self.logger.info("Previous batch not finished, skiping")
-	        return True
+	        if len(self.circuits) == 0:
+	            self.lock_start.release()
+	            self.logger.info("Previous batch unlocked")
+	        else:   
+		    # previous batch not relased yet
+	            self.logger.info("Previous batch not finished, skiping")
+	            return True
 
-	    if self.has_free_slots(): 
-                top = self.free_slots * 2
+	    if self.has_free_slots():
+                top = self.free_slots
                 if top > 0 :
 
                     starting_ids = [c.id for c in self.circuits if not c.is_running]
@@ -826,9 +831,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
                     ids_to_exclude = running_ids + waiting_ids + starting_ids
 
-                    # Looking for new commands 
+                    # Looking for new commands
                     ids = get_ids_to_start(self.config.name,
-                                           ids_to_exclude, 
+                                           ids_to_exclude,
                                            top)
 
 	            if len(ids) > 0 :
