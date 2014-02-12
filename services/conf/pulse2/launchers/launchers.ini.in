@@ -153,10 +153,10 @@ level = NOTSET
 handlers = hand01
 
 [handler_hand01]
-class = FileHandler
+class = handlers.TimedRotatingFileHandler
 level = INFO
 formatter = form01
-args = ("/var/log/mmc/pulse2-launchers.log",)
+args = ("/var/log/mmc/pulse2-launchers.log", 'midnight', 1, 7)
 
 [formatter_form01]
 format = %(asctime)s %(levelname)s %(message)s
