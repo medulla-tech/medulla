@@ -3575,7 +3575,7 @@ class Glpi084(DyngroupDatabaseHelper):
 
         self.logger.debug('machine ID %s will be purged from GLPI' % (id))
         webservices_client = self._get_webservices_client()
-        result = webservices_client.delete_objects(to_delete)
+        result = webservices_client.deleteObjects(fields=to_delete)
         if isinstance(result, dict):
             delete_result = False
             try:
