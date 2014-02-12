@@ -778,15 +778,23 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                     circuit.release()
                     self.started_track.remove(id)
 
-        
+
+    def unlock_when_empty(self, reason):
+        """Unlocks empty startloops """
+        if self.lock_start.locked and len(self.circuits)==0:
+            self.lock_start.release()
+            self.logger.info("Previous batch unlocked")
+
+
     def mainloop(self):
         """ The main loop of scheduler """
         d = maybeDeferred(self._mainloop)
         d.addCallback(self.launch_remaining_waitings)
         d.addCallback(self.update_stats)
         d.addCallback(self.remove_expired)
+        d.addCallback(self.unlock_when_empty)
         d.addErrback(self.eb_mainloop)
-
+   
         return d
 
     def eb_mainloop(self, failure):
