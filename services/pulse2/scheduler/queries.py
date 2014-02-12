@@ -22,7 +22,7 @@ import logging
 import time
 
 from sqlalchemy.orm import create_session
-from sqlalchemy import not_, or_, func 
+from sqlalchemy import not_, or_, func
 
 
 from pulse2.database.msc import MscDatabase
@@ -57,13 +57,13 @@ class MscQuerySession :
         self._session.expire_on_commit = False
 
         self.query = self._session.query(self._cls).get(self._id)
-        
+
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
         self._session.close()
 
-#TODO - these classes are simply 'object' instances 
+#TODO - these classes are simply 'object' instances
 #       instead of Table SqlAlchemy object
 MSC_TABLES = [CommandsOnHost, Commands, Target]
 
@@ -72,7 +72,7 @@ class Refresh (object):
     A common extender to add refresh() method to SqlAlchemy Table object.
 
     This class must be instantiated as first before SqlAlchemy table class.
-   
+
     """
     _id = None
 
@@ -129,13 +129,13 @@ def get_cohs(cmd_id, scheduler):
     cohs = cohs.filter(database.commands_on_host.c.fk_commands == cmd_id)
     cohs = cohs.filter(database.commands_on_host.c.scheduler == scheduler)
     cohs = cohs.filter(database.pull_targets.c.target_uuid == None)
-    cohs = cohs.filter(not_(database.commands_on_host.c.current_state.in_(("failed", 
-                                                                            "over_timed", 
-                                                                            "done", 
+    cohs = cohs.filter(not_(database.commands_on_host.c.current_state.in_(("failed",
+                                                                            "over_timed",
+                                                                            "done",
                                                                             "stopped"))))
 
-    commands_to_perform = [coh.id for (coh, target, pt) in cohs.all()] 
-    
+    commands_to_perform = [coh.id for (coh, target, pt) in cohs.all()]
+
     session.close()
     return commands_to_perform
 
@@ -144,7 +144,7 @@ def get_commands(cohs):
     session = create_session()
     query = session.query(CommandsOnHost)
     query = query.filter(database.commands_on_host.c.id.in_(cohs))
-        
+
     session.close()
 
     cmd_ids = []
@@ -158,7 +158,7 @@ def get_phases(id):
     session = create_session()
     cohs = session.query(CommandsOnHostPhase)
     cohs = cohs.filter(database.commands_on_host_phase.c.fk_commands_on_host == id)
-    
+
     session.close()
     return cohs.all()
 
@@ -181,7 +181,7 @@ class CoHQuery :
     """
     Container keeping CommandsOnHost, Commands and Target records.
 
-    Based on CommandsOnHost id, all related records are initialised 
+    Based on CommandsOnHost id, all related records are initialised
     by constructor and still in memory.
     All records are accessibles as properties having a refresh() method
     to re-query...
@@ -291,14 +291,13 @@ def any_failed(id, non_fatal_steps=[]):
 def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     database = MscDatabase()
     session = create_session()
-  
+
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
 
     commands_query = session.query(Commands, CommandsOnHost, Target, PullTargets).\
                 select_from(database.commands_on_host.join(database.commands).join(database.target).
                     outerjoin(database.pull_targets, Target.target_uuid == database.pull_targets.c.target_uuid)
-
         ).filter(not_(database.commands_on_host.c.current_state.in_(("failed", "over_timed", "done", "stopped")))
         ).filter(database.commands_on_host.c.next_launch_date <= now
         ).filter(or_(database.commands.c.start_date == soon,
@@ -308,7 +307,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None)
-        ).filter(database.pull_targets.c.target_uuid == None)
+        ).filter(database.pull_targets.c.target_uuid == None
+        ).filter(database.commands.c.type != -1)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
     commands_query = commands_query.order_by(database.commands.c.order_in_bundle.asc(),
@@ -318,12 +318,12 @@ def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
         # IMPORTANT NOTE : This ordering is not alphabetical!
         # Field 'current_state' is ENUM type, so decisive condition
         # is order of element in the declaration of field.
-        # Because this order of elements is suitable on workflow, 
+        # Because this order of elements is suitable on workflow,
         # using of descending order allows to favouring the commands
         # which state is approaching to end of worklow.
 
     commands = commands_query.all()
-    commands_to_perform = [coh.id for (cmd, coh, target, pt) in commands if cmd.inDeploymentInterval()] 
+    commands_to_perform = [coh.id for (cmd, coh, target, pt) in commands if cmd.inDeploymentInterval()]
     session.close()
     return commands_to_perform
 
@@ -337,8 +337,8 @@ def get_pull_targets(scheduler_name, uuids):
     query = query.filter(database.pull_targets.c.target_uuid.in_(uuids))
 
     session.close()
-    return query.all() 
- 
+    return query.all()
+
 def in_pull_targets(scheduler_name, uuid):
     database = MscDatabase()
     session = create_session()
@@ -351,14 +351,14 @@ def in_pull_targets(scheduler_name, uuid):
     session.close()
     if query.first() :
         return True
-    else : 
+    else :
         return False
- 
+
 
 def __available_downloads_query(scheduler_name, uuid):
     database = MscDatabase()
     session = create_session()
-  
+
     now = time.strftime("%Y-%m-%d %H:%M:%S")
     soon = time.strftime("0000-00-00 00:00:00")
 
@@ -381,16 +381,16 @@ def __available_downloads_query(scheduler_name, uuid):
 
 
 def get_available_commands(scheduler_name, uuid):
-  
-    commands_query = __available_downloads_query(scheduler_name, uuid)   
+
+    commands_query = __available_downloads_query(scheduler_name, uuid)
 
     for coh, cmd, target, pt in commands_query.all():
         if not cmd.inDeploymentInterval():
             continue
         phases = [p.name for p in get_all_phases(coh.id)]
         todo = [p.name for p in get_all_phases(coh.id) if p.state != "done"]
- 
-        yield (coh.id, 
+
+        yield (coh.id,
                target.mirrors,
                cmd.start_file,
                cmd.files,
@@ -431,7 +431,7 @@ def machine_has_commands(scheduler_name, uuid):
 def verify_target(coh_id, hostname, mac):
     database = MscDatabase()
     session = create_session()
-  
+
     query = session.query(CommandsOnHost, Target)
     query = query.select_from(database.commands_on_host.join(database.commands).join(database.target))
     query = query.filter(database.commands_on_host.c.id==coh_id)
@@ -441,15 +441,15 @@ def verify_target(coh_id, hostname, mac):
     session.close()
     if query.first() :
         return True
-    else : 
+    else :
         return False
-    
 
- 
+
+
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     database = MscDatabase()
     session = create_session()
-  
+
     now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     commands_query = session.query(CommandsOnHost).\
@@ -459,7 +459,7 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
                      database.commands_on_host.c.scheduler == None))
-    
+
     #commands_query = commands_query.limit(top)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
@@ -482,12 +482,12 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     if len(fls) > 0 :
         logging.getLogger().info("Switching %d circuits to failed" % len(fls))
         CoHManager.setCoHsStateFailed(fls)
-    
+
 
 def get_cohs_with_failed_phase(id, phase_name):
     database = MscDatabase()
     session = create_session()
-  
+
     query = session.query(CommandsOnHost).\
         select_from(database.commands_on_host.join(database.commands).\
         join(database.commands_on_host_phase)
@@ -496,12 +496,12 @@ def get_cohs_with_failed_phase(id, phase_name):
         ).filter(database.commands_on_host_phase.c.state=="failed")
     return [q.id for q in query.all()]
     session.close()
- 
+
 
 def is_command_finished(scheduler_name, id):
     database = MscDatabase()
     session = create_session()
-  
+
     now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     query = session.query(CommandsOnHost).\
@@ -524,11 +524,11 @@ def switch_commands_to_stop(cohs):
 
 def switch_commands_to_start(cohs):
     CoHManager.setCoHsStateScheduled(cohs)
- 
+
 def get_commands_stats(scheduler_name, cmd_id=None):
     database = MscDatabase()
     session = create_session()
-  
+
     now = time.strftime("%Y-%m-%d %H:%M:%S")
 
     query = session.query(CommandsOnHost.fk_commands,
@@ -554,7 +554,7 @@ def get_commands_stats(scheduler_name, cmd_id=None):
 
 def update_commands_stats(cmd_id, stats):
     session = create_session()
-  
+
     cmd = session.query(Commands).get(cmd_id)
     cmd.update_stats(session, **stats)
 
@@ -563,15 +563,15 @@ def update_commands_stats(cmd_id, stats):
     session.close()
 
 def get_history_stdout(coh_id, phase):
- 
+
     database = MscDatabase()
     session = create_session()
-   
+
     query = session.query(CommandsHistory)
     query = query.select_from(database.commands_history)
     query = query.filter(database.commands_history.c.phase == phase)
     query = query.filter(database.commands_history.c.fk_commands_on_host == coh_id)
- 
+
     stdout = ""
     for q in query.all():
         stdout += q.stdout

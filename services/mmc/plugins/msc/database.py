@@ -35,7 +35,7 @@ import datetime
 
 # SqlAlchemy
 from sqlalchemy import and_, select, not_
-from sqlalchemy.orm import create_session
+from sqlalchemy.orm import create_session, object_session
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 
 # MMC modules
@@ -195,28 +195,28 @@ class MscDatabase(msc.MscDatabase):
         return tmp, targetsdata
 
     def __getTimeDefaults (self, start_date, end_date):
-        """ time stuff to calculate number of attempts and keep 
+        """ time stuff to calculate number of attempts and keep
             the default values
         """
         fmt = "%Y-%m-%d %H:%M:%S"
-        
+
         if start_date == "0000-00-00 00:00:00":
             start_timestamp = time.time()
             start_date = datetime.datetime.fromtimestamp(start_timestamp).strftime(fmt)
         else :
             start_timestamp = time.mktime(datetime.datetime.strptime(start_date, fmt).timetuple())
-            
+
         if end_date == "0000-00-00 00:00:00":
             delta = int(self.config.web_def_coh_life_time) * 60 * 60
             end_timestamp = start_timestamp + delta
             end_date = datetime.datetime.fromtimestamp(end_timestamp).strftime(fmt)
         else :
             end_timestamp = time.mktime(datetime.datetime.strptime(end_date, fmt).timetuple())
-         
+
         total_time = end_timestamp - start_timestamp
         seconds_per_day = 60 * 60 * 24
         days_nbr = total_time // seconds_per_day
-        if days_nbr == 0 : 
+        if days_nbr == 0 :
             days_nbr = 1
 
         max_connection_attempt = days_nbr * self.config.web_def_attempts_per_day
@@ -269,13 +269,13 @@ class MscDatabase(msc.MscDatabase):
                         # FIXME: we only take the the first mirrors
                         mirror = mirrors[i]
                         fallback = fbmirrors[i]
-                        uri = '%s://%s:%s%s' % (mirror['protocol'], 
-                                                mirror['server'], 
-                                                str(mirror['port']), 
+                        uri = '%s://%s:%s%s' % (mirror['protocol'],
+                                                mirror['server'],
+                                                str(mirror['port']),
                                                 mirror['mountpoint']) + \
-                              '||' + '%s://%s:%s%s' % (fallback['protocol'], 
-                                                       fallback['server'], 
-                                                       str(fallback['port']), 
+                              '||' + '%s://%s:%s%s' % (fallback['protocol'],
+                                                       fallback['server'],
+                                                       str(fallback['port']),
                                                        fallback['mountpoint'])
                     else:
                         uri = '%s://%s' % ('file', root)
@@ -303,22 +303,24 @@ class MscDatabase(msc.MscDatabase):
                 cmd["start_date"], cmd["end_date"], cmd["max_connection_attempt"] = time_defaults
                 cmd["do_wol_with_imaging"] = "disable"
 
-                cobj = self.createCommand(session, 
-                                          cmd['package_id'], 
-                                          cmd['start_file'], cmd['parameters'], 
-                                          cmd['files'], cmd['start_script'], 
-                                          cmd['clean_on_success'], 
-                                          cmd['start_date'], cmd['end_date'], 
-                                          cmd['connect_as'], ctx.userid, 
-                                          cmd['title'],  
-                                          cmd['next_connection_delay'], 
-                                          cmd['max_connection_attempt'], 
-                                          cmd['maxbw'], 
-                                          cmd['deployment_intervals'], 
-                                          cmd['fk_bundle'], cmd['order_in_bundle'], 
+                cobj = self.createCommand(session,
+                                          cmd['package_id'],
+                                          cmd['start_file'], cmd['parameters'],
+                                          cmd['files'], cmd['start_script'],
+                                          cmd['clean_on_success'],
+                                          cmd['start_date'], cmd['end_date'],
+                                          cmd['connect_as'], ctx.userid,
+                                          cmd['title'],
+                                          cmd['next_connection_delay'],
+                                          cmd['max_connection_attempt'],
+                                          cmd['maxbw'],
+                                          cmd['deployment_intervals'],
+                                          cmd['fk_bundle'], cmd['order_in_bundle'],
                                           cmd['proxies'], cmd['proxy_mode'],
                                           cmd['state'],
-                                          len(targets_to_insert))
+                                          len(targets_to_insert),
+                                          cmd_type=-1
+                                          )
                 session.flush()
                 ret.append(cobj.getId())
 
@@ -340,7 +342,7 @@ class MscDatabase(msc.MscDatabase):
                     session.flush()
                     if hasattr(session, "refresh"):
                         session.refresh(target)
-                   
+
                     try:
                         candidates = filter(lambda(x): x['uuid'] == atarget["target_uuid"], cmd['proxies'])
                         if len(candidates) == 1:
@@ -350,55 +352,68 @@ class MscDatabase(msc.MscDatabase):
                         self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
                     coh_to_insert.append(self.createCommandsOnHost(cobj.getId(),
                                                                    atarget,
-                                                                   target.id, 
+                                                                   target.id,
                                                                    target_name,
                                                                    cmd['max_connection_attempt'],
-                                                                   cmd['start_date'], 
-                                                                   cmd['end_date'], 
-                                                                   ascheduler, 
-                                                                   order_in_proxy, 
+                                                                   cmd['start_date'],
+                                                                   cmd['end_date'],
+                                                                   ascheduler,
+                                                                   order_in_proxy,
                                                                    max_clients_per_proxy))
-                    
+
             session.execute(self.commands_on_host.insert(), coh_to_insert)
-            session.commit()
 
             __cmd_ids = [[v for (k, v) in coh.items() if k=="fk_commands"] for coh in [c for c in coh_to_insert]]
             cmd_ids = []
             [cmd_ids.append(i) for i in __cmd_ids if not cmd_ids.count(i)]
 
 
-            session = create_session()
             cohs = []
             for id in cmd_ids:
-                
+
                 _cohs = session.query(Commands).get(id).getCohIds()
                 cohs.extend(_cohs)
-            session.close()
 
-                #for coh_id in command_obj.getCohIds():
-                #    cohs.append(coh_id)
-            session = create_session()
             self._createPhases(session,
-                               cohs, 
-                               cmd['do_wol_with_imaging'], 
+                               cohs,
+                               cmd['do_wol_with_imaging'],
                                cmd['do_wol'],
                                cmd['files'],
                                cmd['start_script'],
                                cmd['clean_on_success'],
                                cmd['do_inventory'],
-                               cmd['issue_halt_to'], 
+                               cmd['issue_halt_to'],
                                cmd['do_reboot'],
                                cmd['do_windows_update'])
 
-
+            session.commit()
             return ret
-        
+
+
+        def cbSwitchCommandsAsReady(cmd_ids):
+            """
+            Switchs all commands in bundle as ready.
+
+            @param cmd_ids: ids of commands
+            @type cmd_ids: list
+            """
+            for cmd_id in cmd_ids:
+                cmd = self.getCommands(ctx, cmd_id)
+                if cmd:
+                    session = object_session(cmd)
+                    cmd.type = 0
+                    session.add(cmd)
+                    session.flush()
+            return cmd_ids
+
+
         d = self.getMachinesSchedulers(targets)
         mode = commands[0]['mode']
         if mode == 'push_pull':
             d.addCallback(cbGetTargetsMirrors, session)
         else:
             d.addCallback(cbPushModeCreateTargets, session)
+        d.addCallback(cbSwitchCommandsAsReady)
         d.addErrback(lambda err: err)
         return d
 
@@ -478,19 +493,19 @@ class MscDatabase(msc.MscDatabase):
             return cbCreateTargets(None, None, schedulers, push_pull = False)
 
         def cbCreateTargets(fbmirrors, mirrors, schedulers, push_pull = True):
- 
+
             for i in range(len(targets)):
                 if push_pull:
                     # FIXME: we only take the the first mirrors
                     mirror = mirrors[i]
                     fallback = fbmirrors[i]
-                    uri = '%s://%s:%s%s' % (mirror['protocol'], 
-                                            mirror['server'], 
-                                            str(mirror['port']), 
+                    uri = '%s://%s:%s%s' % (mirror['protocol'],
+                                            mirror['server'],
+                                            str(mirror['port']),
                                             mirror['mountpoint']) \
-                        + '||' + '%s://%s:%s%s' % (fallback['protocol'], 
+                        + '||' + '%s://%s:%s%s' % (fallback['protocol'],
                                                    fallback['server'],
-                                                   str(fallback['port']), 
+                                                   str(fallback['port']),
                                                    fallback['mountpoint'])
                 else:
                     uri = '%s://%s' % ('file', root)
@@ -502,21 +517,23 @@ class MscDatabase(msc.MscDatabase):
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
 
-                targets_to_insert.append((targetsdata[i], 
-                                          targets[i][1],    
+                targets_to_insert.append((targetsdata[i],
+                                          targets[i][1],
                                           schedulers[i]))
             session = create_session()
             session.begin()
-            cmd = self.createCommand(session, package_id, start_file, parameters, 
-                                     files, start_script, clean_on_success, 
-                                     start_date, end_date, connect_as, ctx.userid, 
-                                     title, 
-                                     next_connection_delay, 
-                                     max_connection_attempt, 
-                                     maxbw, 
-                                     deployment_intervals, fk_bundle, 
-                                     order_in_bundle, proxies, proxy_mode, 
-                                     state, len(targets), cmd_type=cmd_type)
+
+            origin_type = cmd_type
+            cmd = self.createCommand(session, package_id, start_file, parameters,
+                                     files, start_script, clean_on_success,
+                                     start_date, end_date, connect_as, ctx.userid,
+                                     title,
+                                     next_connection_delay,
+                                     max_connection_attempt,
+                                     maxbw,
+                                     deployment_intervals, fk_bundle,
+                                     order_in_bundle, proxies, proxy_mode,
+                                     state, len(targets), cmd_type=-1)
             session.flush()
             # Convergence command (type 2) can have no targets
             # so return command_id if no targets
@@ -548,34 +565,34 @@ class MscDatabase(msc.MscDatabase):
                         order_in_proxy = candidates[0]['priority']
                 except ValueError:
                     self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
-                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(), 
-                                                               atarget, 
-                                                               target.id, 
-                                                               target_name, 
-                                                               max_connection_attempt, 
+                coh_to_insert.append(self.createCommandsOnHost(cmd.getId(),
+                                                               atarget,
+                                                               target.id,
+                                                               target_name,
+                                                               max_connection_attempt,
                                                                start_date,
-                                                               end_date, 
-                                                               ascheduler, 
-                                                               order_in_proxy, 
+                                                               end_date,
+                                                               ascheduler,
+                                                               order_in_proxy,
                                                                max_clients_per_proxy))
             session.execute(self.commands_on_host.insert(), coh_to_insert)
-            session.commit()
 
             cohs = cmd.getCohIds()
-            session = create_session()
             self._createPhases(session,
-                               cohs, 
-                               do_wol_with_imaging, 
+                               cohs,
+                               do_wol_with_imaging,
                                do_wol,
                                files,
                                start_script,
                                clean_on_success,
                                do_inventory,
-                               do_halt, 
+                               do_halt,
                                do_reboot,
                                do_windows_update,
                                is_quick_action)
 
+            cmd.type = origin_type
+            session.commit()
             return cmd.getId()
 
         d = self.getMachinesSchedulers(targets)
@@ -599,14 +616,14 @@ class MscDatabase(msc.MscDatabase):
         @param end_date: new end date of command
         @type end_date: str
         """
-       
+
         self.extendCommand(cmd_id, start_date, end_date)
 
     def applyCmdPatterns(self, cmd, patternActions = None):
         """
         Replace special patterns in command by special action
         Return a list who contains command and special actions
-        
+
         special actions are:
             @@do_reboot@@
             @@do_halt@@
@@ -618,14 +635,14 @@ class MscDatabase(msc.MscDatabase):
 
         @patternActions: dictionnary of special actions
         @type: dict
-        
+
         @return list of command and special actions
         """
 
         if patternActions is None:
             patternActions = {
                 'do_reboot': "disable",
-                'do_halt': "disable",  
+                'do_halt': "disable",
                 'do_inventory': "disable",
                 'do_wol': "disable",
                 'do_wol_with_imaging': "disable",
@@ -651,7 +668,7 @@ class MscDatabase(msc.MscDatabase):
         if "@@do_windows_update@@" in cmd:
             patternActions['do_windows_update'] = "enable"
             cmd = cmd.replace("@@do_windows_update@@", "")
- 
+
 
         return [cmd, patternActions]
 
@@ -916,13 +933,13 @@ class MscDatabase(msc.MscDatabase):
                     # FIXME: we only take the the first mirrors
                     mirror = mirrors[i]
                     fallback = fbmirrors[i]
-                    uri = '%s://%s:%s%s' % (mirror['protocol'], 
-                                            mirror['server'], 
-                                            str(mirror['port']), 
+                    uri = '%s://%s:%s%s' % (mirror['protocol'],
+                                            mirror['server'],
+                                            str(mirror['port']),
                                             mirror['mountpoint']) \
-                        + '||' + '%s://%s:%s%s' % (fallback['protocol'], 
+                        + '||' + '%s://%s:%s%s' % (fallback['protocol'],
                                                    fallback['server'],
-                                                   str(fallback['port']), 
+                                                   str(fallback['port']),
                                                    fallback['mountpoint'])
                 else:
                     uri = '%s://%s' % ('file', root)
@@ -934,11 +951,14 @@ class MscDatabase(msc.MscDatabase):
                 # Maybe could be done in prepareTarget
                 targetsdata[i] = self.blacklistTargetHostname(targetsdata[i])
 
-                targets_to_insert.append((targetsdata[i], 
-                                          targets[i][1],    
+                targets_to_insert.append((targetsdata[i],
+                                          targets[i][1],
                                           schedulers[i]))
             session = create_session()
             session.begin()
+            origin_type = cmd.type
+            cmd.type = -1
+
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()
                 target.target_macaddr = atarget["target_macaddr"]
@@ -965,20 +985,18 @@ class MscDatabase(msc.MscDatabase):
                 except ValueError:
                     self.logger.warn("Failed to get values 'order_in_proxy' or 'max_clients'")
                 coh_to_insert.append(self.createCommandsOnHost(cmd_id,
-                                                               atarget, 
-                                                               target.id, 
-                                                               target_name, 
+                                                               atarget,
+                                                               target.id,
+                                                               target_name,
                                                                cmd.max_connection_attempt,
                                                                cmd.start_date,
                                                                cmd.end_date,
-                                                               ascheduler, 
-                                                               order_in_proxy, 
+                                                               ascheduler,
+                                                               order_in_proxy,
                                                                max_clients_per_proxy))
             session.execute(self.commands_on_host.insert(), coh_to_insert)
-            session.commit()
 
             cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
-            session = create_session()
             self._createPhases(session,
                                cohs,
                                cmd.do_imaging_menu,
@@ -991,7 +1009,8 @@ class MscDatabase(msc.MscDatabase):
                                cmd.do_reboot,
                                cmd.do_windows_update,
                                is_quick_action = False)
-
+            cmd.type = origin_type
+            session.commit()
             return cmd_id
 
         d = self.getMachinesSchedulers(targets)
