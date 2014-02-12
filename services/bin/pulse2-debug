@@ -29,6 +29,7 @@ import readline
 import atexit
 import xmlrpclib
 import urlparse
+import argparse
 from collections import namedtuple
 from pydoc import pager as textpager
 from ConfigParser import ConfigParser
@@ -816,6 +817,15 @@ def logSniffer():
 
 
 if __name__ == "__main__" :
+    
+    # Setting argparse
+    parser = argparse.ArgumentParser()
+    
+    parser.add_argument("-c", "--command", help="Run the specified code")
+    parser.add_argument("-f", "--file", help="Load an run a script file")
+
+    # Parsing args
+    args = parser.parse_args()
 
     # Loading config
     config = ConfigReader()
@@ -827,6 +837,7 @@ if __name__ == "__main__" :
     funcs = p.proxy.system.listMethods()
     # module list
     modules = list(set([func.split('.')[0] for func in funcs]))
+    modules.append('system')
 
     CONSOLE_VARS['PROXYCLASS'] = p
     CONSOLE_VARS['xmlrpcModule'] = xmlrpcModule
@@ -838,9 +849,28 @@ if __name__ == "__main__" :
         exec('%s_ = PROXYCLASS.proxy.%s' % (module, module), CONSOLE_VARS)
         exec('%s = xmlrpcModule(PROXYCLASS, "%s")' % (module, module), CONSOLE_VARS)
 
+    if args.command:
+        try:
+            exec(args.command, CONSOLE_VARS)
+            sys.exit(0)
+        except Exception, e:
+            print str(e)
+            sys.exit(1)
 
+    if args.file:
+        try:
+            f = open(args.file, 'r')
+            for line in f.readlines():
+                exec(line, CONSOLE_VARS)
+            sys.exit(0)
+        except IOError:
+            print 'Error while reading script file'
+        except Exception, e:
+            print str(e)
+            sys.exit(1)
+        
 
-    print "Pulse2 console 0.3 (Dec 18 2013)"
+    print "Pulse2 console 0.3.1 (Fev 12 2014)"
     print "Type p2d() for more information"
 
     # Setting command completer
@@ -868,5 +898,5 @@ if __name__ == "__main__" :
     try:
         reactor.run()
     except:
-        print 'ouuuuuuuuuuuuu'
+        print 'Unknown error occured'
 
