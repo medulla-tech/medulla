@@ -162,7 +162,7 @@ class getCommand(object):
                 return self.getInnoCommand()
             elif installer == "Nullsoft.NSIS.exehead":
                 self.logger.debug("NSIS detected")
-                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)):
+                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)) and not re.search('plugin', basename(self.file)):
                     self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
                     return self.getNSISUpdateCommand()
                 return self.getNSISCommand()
