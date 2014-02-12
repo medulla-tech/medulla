@@ -201,7 +201,10 @@ class ImagingRpcProxy(RpcProxyI):
         old_bootMenu = self.getComputerBootMenu(uuid)
         # Adding location default menu entries
         # get computer location
-        entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+        try:
+            entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+        except KeyError:
+            raise Exception("Unable to generate menu for computer %s: deleted but still present in imaging database" % uuid)
         # get location bootMenu
         locationBM = self.getLocationBootMenu(entity_uuid)
         #return locationBM
