@@ -53,10 +53,10 @@ propagate=0
 handlers=
 
 [handler_hand01]
-class=FileHandler
+class=handlers.TimedRotatingFileHandler
 level=INFO
 formatter=form01
-args=("@localstatedir@/log/mmc/mmc-agent.log",)
+args=("@localstatedir@/log/mmc/mmc-agent.log",'midnight', 1, 7)
 
 [handler_hand02]
 class=StreamHandler
