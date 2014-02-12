@@ -7,6 +7,8 @@ import logging
 from xml.dom import minidom
 from optparse import OptionParser
 
+basename = os.path.basename
+
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE = range(8)
 
 #The background is set with 40 plus the number of the color, and the foreground with 30
@@ -83,46 +85,46 @@ class getCommand(object):
         return d
 
     def getAdobeCommand(self):
-        return './"%s" /sAll' % self.file.split('/').pop()
+        return './"%s" /sAll' % basename(self.file)
 
     def getInnoCommand(self):
-        return './"%s" /SP /VERYSILENT /NORESTART' % self.file.split('/').pop()
+        return './"%s" /SP /VERYSILENT /NORESTART' % basename(self.file)
 
     def getNSISCommand(self):
-        return './"%s" /S' % self.file.split('/').pop()
+        return './"%s" /S' % basename(self.file)
 
     def getNSISUpdateCommand(self):
-        return './"%s" /S /UPDATE' % self.file.split('/').pop()
+        return './"%s" /S /UPDATE' % basename(self.file)
 
     def getMozillaCommand(self):
-        return './"%s" -ms' % self.file.split('/').pop()
+        return './"%s" -ms' % basename(self.file)
 
     def getMSI32Command(self):
-        return 'msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
+        return 'msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % basename(self.file)
 
     def getMSI32UpdateCommand(self):
         """
         Command for *.msp files (MSI update packages)
         """
-        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % self.file.split('/').pop()
+        return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getMSI64Command(self):
-        return '$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % self.file.split('/').pop()
+        return '$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % basename(self.file)
 
     def getMSI64UpdateCommand(self):
         """
         Command for *.msp files (MSI update packages 64-bits)
         """
-        return '$(cygpath -W)/sysnative/msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % self.file.split('/').pop()
+        return '$(cygpath -W)/sysnative/msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getRegCommand(self):
-        return 'regedit /s "%s"' % self.file.split('/').pop()
+        return 'regedit /s "%s"' % basename(self.file)
 
     def getBatCommand(self):
-        return 'cmd.exe /c "%s"' % self.file.split('/').pop()
+        return 'cmd.exe /c "%s"' % basename(self.file)
 
     def getShCommand(self):
-        return './"%s"' % self.file.split('/').pop()
+        return './"%s"' % basename(self.file)
 
     def getCommand(self):
         self.logger.debug("Parsing %s:" % self.file)
@@ -160,7 +162,7 @@ class getCommand(object):
                 return self.getInnoCommand()
             elif installer == "Nullsoft.NSIS.exehead":
                 self.logger.debug("NSIS detected")
-                if re.match('^pulse2-secure-agent-.*\.exe$', self.file):
+                if re.match('^pulse2-secure-agent-.*\.exe$', basename(self.file)):
                     self.logger.debug("Pulse Secure Agent detected, add /UPDATE flag")
                     return self.getNSISUpdateCommand()
                 return self.getNSISCommand()
