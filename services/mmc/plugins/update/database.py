@@ -200,8 +200,10 @@ class updateDatabase(DatabaseHelper):
         """
         Set the global update status
         """
+	if not isinstance(update_id, list):
+	    update_id = [update_id]
         try:
-            session.query(Update).get(update_id).status = status
+            session.query(Update).filter(Update.id.in_(update_id)).update({'status': status}, synchronize_session = False)
             session.commit()
             return True
 

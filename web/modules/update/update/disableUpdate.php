@@ -27,8 +27,7 @@ require_once("modules/update/includes/xmlrpc.inc.php");
 // Disabling Multiple updates
 if (isset($_POST["selected_updates"])) {
 
-    foreach($_POST["selected_updates"] as $update_id);
-        set_update_status($update_id, 2);
+    set_update_status($_POST["selected_updates"] , 2);
     return;
 }
 
