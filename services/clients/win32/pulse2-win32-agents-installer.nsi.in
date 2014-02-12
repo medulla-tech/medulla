@@ -85,7 +85,7 @@ ShowInstDetails show
 Section "Secure Agent" SSH
   DetailPrint "Secure Agent Installation...."
   DetailPrint "------------------------------------------------------"
-  StrCpy $0 "$EXEDIR\${SSH_AGENT_EXE} /S"
+  StrCpy $0 "$EXEDIR\${SSH_AGENT_EXE} /S /FORCE"
   ${IfNot} ${FileExists} "$EXEDIR\id_dsa.pub"
     ${IfNot} ${FileExists} "$EXEDIR\id_rsa.pub"
       ${If} ${FileExists} "$ARCHIVE_DIR\id_dsa.pub"
