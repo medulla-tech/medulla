@@ -31,6 +31,7 @@ from mmc.plugins.glpi.utilities import complete_ctx
 from pulse2.utils import same_network, unique, noNone
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
+from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.dyngroup.config import DGConfig
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
@@ -3229,6 +3230,38 @@ class Glpi07(DyngroupDatabaseHelper):
         raise Exception("need to be implemented when we would be able to add computers")
 
 
+    def _get_webservices_client(self):
+        client = XMLRPCClient(baseurl=self.config.webservices['glpi_base_url'])
+        client.connect(
+            self.config.webservices['glpi_username'],
+            self.config.webservices['glpi_password']
+        )
+
+        return client
+
+    def purgeMachine(self, id):
+        to_delete = {
+            'Computer': {
+                str(id): 1
+            }
+        }
+
+        self.logger.debug('machine ID %s will be purged from GLPI' % (id))
+        webservices_client = self._get_webservices_client()
+        result = webservices_client.deleteObjects(fields=to_delete)
+        if isinstance(result, dict):
+            delete_result = False
+            try:
+                delete_result = result['Computer'][0]
+            except KeyError, e:
+                self.logger.error('Failed to delete machine ID %s: %s' % (id, e))
+            return delete_result
+
+        if isinstance(result, list) and not result[0]:
+            self.logger.error('Failed to delete machine ID %s: %s' % (id, result[1]))
+
+        return False
+
     def delMachine(self, uuid):
         """
         Deleting a machine in GLPI (only the flag 'is_deleted' updated)
@@ -3245,6 +3278,9 @@ class Glpi07(DyngroupDatabaseHelper):
         machine = session.query(Machine).filter(self.machine.c.ID == id).first()
 
         if machine :
+            if self.config.webservices['purge_machine']:
+                return self.purgeMachine(machine.id)
+
             connection = self.getDbConnection()
             trans = connection.begin()
             try:

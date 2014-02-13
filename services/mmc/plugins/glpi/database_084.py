@@ -45,7 +45,7 @@ from pulse2.utils import same_network, unique, noNone
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.glpi.config import GlpiConfig
-from mmc.plugins.glpi.GLPIClient import RESTClient
+from mmc.plugins.glpi.GLPIClient import XMLRPCClient
 from mmc.plugins.glpi.utilities import complete_ctx
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
@@ -3554,14 +3554,10 @@ class Glpi084(DyngroupDatabaseHelper):
         raise Exception("need to be implemented when we would be able to add computers")
 
     def _get_webservices_client(self):
-        restconf = {}
-        for key in self.config.rest_client:
-            restconf[key] = self.config.rest_client[key]
-
-        client = RESTClient(baseurl=restconf['glpi_base_url'])
+        client = XMLRPCClient(baseurl=self.config.webservices['glpi_base_url'])
         client.connect(
-            restconf['glpi_username'],
-            restconf['glpi_password']
+            self.config.webservices['glpi_username'],
+            self.config.webservices['glpi_password']
         )
 
         return client
@@ -3569,7 +3565,7 @@ class Glpi084(DyngroupDatabaseHelper):
     def purgeMachine(self, id):
         to_delete = {
             'Computer': {
-                id: 1
+                str(id): 1
             }
         }
 
@@ -3579,7 +3575,7 @@ class Glpi084(DyngroupDatabaseHelper):
         if isinstance(result, dict):
             delete_result = False
             try:
-                delete_result = result['Computer'][str(id)]
+                delete_result = result['Computer'][0]
             except KeyError, e:
                 self.logger.error('Failed to delete machine ID %s: %s' % (id, e))
             return delete_result
@@ -3605,7 +3601,7 @@ class Glpi084(DyngroupDatabaseHelper):
         machine = session.query(Machine).filter(self.machine.c.id == id).first()
 
         if machine :
-            if self.config.rest_client['purge_machine']:
+            if self.config.webservices['purge_machine']:
                 return self.purgeMachine(machine.id)
 
             connection = self.getDbConnection()
