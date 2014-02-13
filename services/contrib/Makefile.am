@@ -67,8 +67,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	inventory/lrs-to-pulse2-inventory \
 	inventory/pulse2-inventory-clean-database.README \
 	inventory/sql/schema-001.sql \
-	inventory/sql/schema-003.sql \
 	inventory/sql/schema-002.sql \
+	inventory/sql/schema-003.sql \
 	inventory/sql/schema-004.sql \
 	inventory/sql/schema-005.sql \
 	inventory/sql/schema-006.sql \
@@ -90,8 +90,10 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/README \
 	msc/sql/clean-db.sql \
 	msc/sql/purge-old-rows.sql \
+	msc/sql/schema-001.sql \
 	msc/sql/schema-002.sql \
 	msc/sql/schema-003.sql \
+	msc/sql/schema-004.sql \
 	msc/sql/schema-005.sql \
 	msc/sql/schema-006.sql \
 	msc/sql/schema-007.sql \
@@ -104,16 +106,9 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/schema-014.sql \
 	msc/sql/schema-015.sql \
 	msc/sql/schema-016.sql \
-	msc/sql/schema-019.sql \
-	msc/sql/schema-021.sql \
-	msc/sql/schema-022.sql \
-	msc/sql/schema-023.sql \
-	msc/sql/schema-024.sql \
-	msc/sql/schema-025.sql \
-	msc/sql/schema-001.sql \
-	msc/sql/schema-004.sql \
 	msc/sql/schema-017.sql \
 	msc/sql/schema-018.sql \
+	msc/sql/schema-019.sql \
 	msc/sql/schema-020.sql \
 	msc/sql/schema-021.sql \
 	msc/sql/schema-022.sql \
