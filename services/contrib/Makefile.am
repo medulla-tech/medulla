@@ -18,11 +18,7 @@
 contribdir = $(datadir)/doc/mmc/contrib
 qactionsdir = $(localstatedir)/lib/pulse2/qactions
 
-dist_qactions_DATA = msc/qactions/101mdv_test_utf8.msc \
-	msc/qactions/102mdv_test_blocking.msc \
-	msc/qactions/103mdv_test_demux.msc \
-	msc/qactions/104mdv_test_sleep_1minute.msc \
-	msc/qactions/001reboot.msc \
+dist_qactions_DATA = msc/qactions/001reboot.msc \
 	msc/qactions/002shutdown.msc \
 	msc/qactions/006run_inventory_win32.msc \
 	msc/qactions/007wake_on_lan.msc \
@@ -119,6 +115,10 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/schema-017.sql \
 	msc/sql/schema-018.sql \
 	msc/sql/schema-020.sql \
+	msc/qactions/101mdv_test_utf8.msc \
+	msc/qactions/102mdv_test_blocking.msc \
+	msc/qactions/103mdv_test_demux.msc \
+	msc/qactions/104mdv_test_sleep_1minute.msc \
 	package-server/some_examples/ff02000009/conf.xml \
 	package-server/some_examples/ff02000009/install.bat \
 	package-server/some_examples/ff02000012/conf.xml \
