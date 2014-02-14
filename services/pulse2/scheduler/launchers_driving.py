@@ -134,7 +134,7 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         if launcher :
-        #    logging.getLogger().info("Calling on launcher: method %s(%s)" % (method, str(args)))
+            logging.getLogger().debug("Calling on launcher: method %s(%s)" % (method, str(args)))
             uri = self.launchers[launcher]
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
@@ -278,11 +278,10 @@ class LauncherCallingProvider(type):
         @return: total of slots per launcher
         @rtype: dict
         """
-        slots = dict((name, DEFAULT_SLOTS) for name in self.launchers.keys())
         for success, result in results :
             if success :
                 stats, launcher = result
-                slots[launcher] = stats.slots.slottotal
+                self.slots[launcher] = stats.slots.slottotal
             else :
                 if hasattr(result, "trap"):
                     err = result.trap(ConnectionRefusedError, ConnectError)
@@ -293,11 +292,11 @@ class LauncherCallingProvider(type):
                 else :
                      logging.getLogger().error("Getting the slots number failed: %s" % result)
 
-                logging.getLogger().info("Set slots to default value %d" % DEFAULT_SLOTS)
+                logging.getLogger().info("Set slots to default value from scheduler's config file")
 
 
 
-        return slots
+        return self.slots
 
     def _extract_best_candidate(self, results):
         """
@@ -339,22 +338,21 @@ class LauncherCallingProvider(type):
         return failure
 
     def _dispatch_launchers(self, method, *args):
+        """
+        Extract the balance statistics and select of a launcher
 
-        d_main = self.is_default_free()
+        @param method: method name to call
+        @type method: str
 
-        @d_main.addCallback
-        def _cb(is_free):
-            if is_free :
-                d = self._call(self.default_launcher, method, *args)
-                d.addErrback(self._eb_select)
-            else :
-                d = self._get_all_stats()
-                d.addCallback(self._extract_best_candidate)
-                d.addCallback(self._call, method, *args)
-                d.addErrback(self._eb_select)
+        @param args: arguments of called method
+        @type args: list
+        """
+        d = self._get_all_stats()
+        d.addCallback(self._extract_best_candidate)
+        d.addCallback(self._call, method, *args)
+        d.addErrback(self._eb_select)
 
-            return d
-        @d_main.addErrback
+        @d.addErrback
         def _eb(failure):
             err = failure.trap(TCPTimedOutError)
             if err == TCPTimedOutError :
@@ -362,8 +360,27 @@ class LauncherCallingProvider(type):
             else :
                 logging.getLogger().error("An error occured when dispatch the launchers: %s" % failure)
 
-        return d_main
+        return d
 
+        # TODO - create a parameter to switch between standard launchers
+        #        balancing and this 'forcing' of default launcher bellow
+        #        (based on preferred_network in launchers section)
+        #d_main = self.is_default_free()
+        #
+        #@d_main.addCallback
+        #def _cb(is_free):
+        #    if is_free :
+        #        d = self._call(self.default_launcher, method, *args)
+        #        d.addErrback(self._eb_select)
+        #    else :
+        #        d = self._get_all_stats()
+        #        d.addCallback(self._extract_best_candidate)
+        #        d.addCallback(self._call, method, *args)
+        #        d.addErrback(self._eb_select)
+        #
+        #    return d
+        #
+        #return d_main
 
     def call_method_on_launcher(self, launcher, method, *args):
         """
@@ -449,13 +466,14 @@ class RemoteCallProxy :
     # implements the remote calls with a optimal choice of launcher
     __metaclass__ = LauncherCallingProvider
 
-    def __init__(self, launchers, default_launcher=None):
+    def __init__(self, launchers, slots, default_launcher=None):
         """
         @param launchers: a dictionnary of all URL addresses of used launchers
         @type launchers: dict
         """
         self.launchers = launchers
         self.default_launcher = default_launcher
+        self.slots = slots
 
 
     @same_call

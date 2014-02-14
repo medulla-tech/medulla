@@ -156,6 +156,7 @@ port=8001
 username = username
 password = password
 enablessl = True
+slots = 20
 # networks near the launcher which can be compared with the IP addresses of machines
 # for pre-detecting a preferred launcher.
 # preferred_network =

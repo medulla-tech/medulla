@@ -19,13 +19,13 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-""" 
-Definitions of base types of scheduler. 
+"""
+Definitions of base types of scheduler.
 
 Atomic structure / relationships:
 
 <MscDispatcher> (inherited from <MscContainer>) is the core of scheduler.
-Internal container stocks at least one <Circuit> instance which represents 
+Internal container stocks at least one <Circuit> instance which represents
 in database model one record in commands_on_host table.
 
 <MscDispatcher> provides all the operations trough the circuits
@@ -34,7 +34,7 @@ and communicates with these external services :
     - incoming responses from launchers (on push_pull mode)
     - incoming requests from mmc-agent
 
-<Circuit> represents the workflow with custom steps personnalized 
+<Circuit> represents the workflow with custom steps personnalized
 on creation. One circuit is destinated on one target (machine)
 
 <Phase> represents a step of circuit, which can be an action
@@ -70,17 +70,17 @@ def enum(*args, **kwargs):
     Returns a named enumerator based on simple list of integers.
 
     @param *args: list of names of constants to create
-    @type *args: list 
+    @type *args: list
     """
-    return type('Enum', 
-                (), 
+    return type('Enum',
+                (),
                 dict((y, x) for x, y in enumerate(args), **kwargs)
-               ) 
+               )
 
-# List of phase actions 
-DIRECTIVE = enum("GIVE_UP", 
-                 "PERFORM", 
-                 "NEXT", 
+# List of phase actions
+DIRECTIVE = enum("GIVE_UP",
+                 "PERFORM",
+                 "NEXT",
                  "OVER_TIMED",
                  "FAILED",
                  "STOPPED",
@@ -99,8 +99,8 @@ class PhaseProxyMethodContainer(object):
 
     Each phase checks occurences the tagged methods and registers them
     to internal dictionnary (_proxy_methods).
-    This methods represents an interface for incoming responses 
-    from launchers. 
+    This methods represents an interface for incoming responses
+    from launchers.
     """
 
     _register_only = False
@@ -126,8 +126,8 @@ class PhaseProxyMethodContainer(object):
 
 
         self._register_only = True
- 
-        
+
+
 class PhaseBase (PhaseProxyMethodContainer):
     """A base frame of phase """
 
@@ -158,14 +158,14 @@ class PhaseBase (PhaseProxyMethodContainer):
     def __init__(self, cohq, host, config):
         """
         @param cohq: database reference
-        @type cohq: CoHQuery 
+        @type cohq: CoHQuery
 
         @param host: hostname or IP address
         @type host: str
 
         """
         self.register()
-        
+
         self.logger = logging.getLogger()
         self.host = host
         if cohq:
@@ -177,7 +177,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         CoHQuery setter.
 
         @param cohq: database reference
-        @type cohq: CoHQuery 
+        @type cohq: CoHQuery
         """
 
         if not isinstance(cohq, CoHQuery):
@@ -193,26 +193,26 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
         Checks the phase states and decides on next behavoir.
 
-        @return: action or state of phase 
+        @return: action or state of phase
         @rtype: DIRECTIVE
         """
         if self.coh.isStateStopped():
             self.logger.info("Circuit #%s: Stop"  %self.coh.id)
             return DIRECTIVE.STOPPED
-        if not self.cmd.in_valid_time(): 
+        if not self.cmd.in_valid_time():
             return DIRECTIVE.OVER_TIMED
- 
+
         if self.coh.is_out_of_attempts() and self.phase.is_failed():
             self.coh.setStateFailed()
             return DIRECTIVE.KILLED
- 
+
         self.logger.debug("Circuit #%s: %s phase" % (self.coh.id, self.name))
 
-        if self.phase.is_done(): 
+        if self.phase.is_done():
             # phase has already already done, jump to next phase
             self.logger.debug("command_on_host #%s: %s done" % (self.coh.id, self.name))
             return self.next()
-        if self.phase.is_running(): 
+        if self.phase.is_running():
             # phase still running, immediately returns, do nothing
             self.logger.debug("command_on_host #%s: %s still running" % (self.coh.id, self.name))
         return DIRECTIVE.PERFORM
@@ -230,12 +230,12 @@ class PhaseBase (PhaseProxyMethodContainer):
         """
         Checks the phase states and decides on next behavoir.
 
-        @return: action or state of phase 
+        @return: action or state of phase
         @rtype: DIRECTIVE
         """
         ret = self._apply_initial_rules()
         if ret not in (DIRECTIVE.NEXT,
-                       DIRECTIVE.GIVE_UP, 
+                       DIRECTIVE.GIVE_UP,
                        DIRECTIVE.KILLED,
                        DIRECTIVE.STOPPED,
                        DIRECTIVE.OVER_TIMED) :
@@ -244,9 +244,9 @@ class PhaseBase (PhaseProxyMethodContainer):
 
 
     def run(self):
-        """ 
+        """
         Method to be overriden, but always returning perform() method.
-        
+
         Contains usually a command state checks and eventual shortcuts
         to final or give_up phases.
 
@@ -262,7 +262,7 @@ class PhaseBase (PhaseProxyMethodContainer):
         pass
 
     def next(self):
-        return DIRECTIVE.NEXT 
+        return DIRECTIVE.NEXT
 
     def give_up(self):
         """ Releasing the circuit. """
@@ -279,15 +279,15 @@ class Phase (PhaseBase):
         An errorback called if an error occured in an error response.
 
         @param failure: reason of error
-        @type failure: twisted failure 
+        @type failure: twisted failure
         """
 
         logging.getLogger().error("Circuit #%s: got an error within an error: %s" %
                 (self.coh.id, extractExceptionMessage(failure)))
         return self.give_up()
 
-    def update_history_in_progress(self, 
-                            error_code = PULSE2_SUCCESS_ERROR, 
+    def update_history_in_progress(self,
+                            error_code = PULSE2_SUCCESS_ERROR,
                             stdout = '',
                             stderr = ''):
         """
@@ -304,8 +304,8 @@ class Phase (PhaseBase):
         """
         self._update_history("running", error_code, stdout, stderr)
 
-    def update_history_done(self, 
-                            error_code = PULSE2_SUCCESS_ERROR, 
+    def update_history_done(self,
+                            error_code = PULSE2_SUCCESS_ERROR,
                             stdout = '',
                             stderr = ''):
         """
@@ -322,8 +322,8 @@ class Phase (PhaseBase):
         """
         self._update_history("done", error_code, stdout, stderr)
 
-    def update_history_failed(self, 
-                            error_code = PULSE2_SUCCESS_ERROR, 
+    def update_history_failed(self,
+                            error_code = PULSE2_SUCCESS_ERROR,
                             stdout = '',
                             stderr = ''):
         """
@@ -376,17 +376,17 @@ class Phase (PhaseBase):
                     break
         else :
             if len(self.config.preferred_network) > 0 :
-                (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
-                client_group = pref_net_ip 
-            
+                (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
+                client_group = pref_net_ip
 
-        return {'host': self.host, 
-                'uuid': self.target.getUUID(), 
-                'maxbw': self.cmd.maxbw, 
-                'protocol': 'ssh', 
-                'client_check': getClientCheck(self.target), 
-                'server_check': getServerCheck(self.target), 
-                'action': getAnnounceCheck(announce), 
+
+        return {'host': self.host,
+                'uuid': self.target.getUUID(),
+                'maxbw': self.cmd.maxbw,
+                'protocol': 'ssh',
+                'client_check': getClientCheck(self.target),
+                'server_check': getServerCheck(self.target),
+                'action': getAnnounceCheck(announce),
                 'group': client_group
                }
 
@@ -429,14 +429,14 @@ class Phase (PhaseBase):
                                  )
 
         self.coh.reSchedule(ltr.get_launch_date(), decrement)
-        
+
         self.phase.switch_to_failed()
         if self.coh.is_out_of_attempts():
             logging.getLogger().info("Circuit #%s: failed" % (self.coh.id))
             self.coh.setStateFailed()
             return DIRECTIVE.KILLED
-        return self.failed() 
-           
+        return self.failed()
+
     def parse_order(self, name, taken_in_account):
         """
         Resolves if remote call on push_pull mode is successfull.
@@ -450,9 +450,9 @@ class Phase (PhaseBase):
         if taken_in_account: # success
             self.update_history_in_progress()
             self.logger.info("Circuit #%s: (%s on %s) %s order stacked" %
-                    (self.coh.id, 
-                     self.cmd.title, 
-                     self.target.target_name, 
+                    (self.coh.id,
+                     self.cmd.title,
+                     self.target.target_name,
                      name))
             return self.give_up()
         else: # failed: launcher seems to have rejected it
@@ -460,10 +460,10 @@ class Phase (PhaseBase):
                 return self.give_up()
 
             self.coh.setStateScheduled()
-            self.logger.warn("Circuit #%s: (%s on %s) %s order NOT stacked" % 
+            self.logger.warn("Circuit #%s: (%s on %s) %s order NOT stacked" %
                     (self.coh.id,
-                     self.cmd.title,   
-                     self.target.target_name, 
+                     self.cmd.title,
+                     self.target.target_name,
                      name))
             return self.switch_phase_failed(True)
 
@@ -478,12 +478,12 @@ class QueryContext :
         self.phase = running_phase.phase
         self.target = running_phase.target
 
-  
+
 
 class CircuitBase(object):
-    """ 
+    """
     Data container of circuit.
-    
+
     Provides the base operations with phases and builds all the needed
     references between phases and dispatcher.
     """
@@ -495,10 +495,10 @@ class CircuitBase(object):
 
 
     status = CC_STATUS.ACTIVE
- 
+
     # methods called by scheduler-proxy
     _proxy_methods = {}
-    # list of phases to refer phase objects 
+    # list of phases to refer phase objects
     installed_phases = {}
     # Main container of selected phases
     _phases = None
@@ -510,13 +510,13 @@ class CircuitBase(object):
     host = None
     # detected network address of target
     network_address = None
-    # first initialisation flag 
+    # first initialisation flag
     initialized = False
-    # A callable to self-releasing from the container 
+    # A callable to self-releasing from the container
     releaser = None
     # last activity timestamp
     last_activity_time = None
-    # 
+    #
     launcher = None
     launchers_provider = None
 
@@ -547,13 +547,13 @@ class CircuitBase(object):
         self.__phases_list = []
 
 
-    @property 
+    @property
     def is_running(self):
         return isinstance(self.running_phase, Phase)
 
     def setup(self, recurrent=False):
         """
-        Post-init - detecting the networking info of target. 
+        Post-init - detecting the networking info of target.
 
         @param recurrent: if True, the circuit is on pull mode
         @type recurrent: bool
@@ -565,7 +565,7 @@ class CircuitBase(object):
 
             if not recurrent :
                 d.addCallback(self._chooseClientNetwork)
-                d.addCallback(self._host_detect) 
+                d.addCallback(self._host_detect)
                 d.addCallback(self._network_detect)
 
             d.addCallback(self._init_end)
@@ -574,10 +574,10 @@ class CircuitBase(object):
             return d
         else :
             return Deferred()
-     
+
     def _flow_create(self):
         """ Builds the workflow of circuit """
-        
+
         phases = []
         selected = self.cohq.get_phases()
         if self.pull:
@@ -621,7 +621,7 @@ class CircuitBase(object):
             raise TypeError("All elements must be <Phase> type")
 
         self.__phases_list = value
- 
+
     def on_last_phase(self):
         try:
             last_phase_names = [p.name for p in self.__phases_list[-2:]]
@@ -649,7 +649,7 @@ class CircuitBase(object):
         Link to dispatcher.
 
         @param dispatcher: link to main dispatcher
-        @type dispatcher: MscDispatcher 
+        @type dispatcher: MscDispatcher
         """
         self.dispatcher = dispatcher
 
@@ -661,7 +661,7 @@ class CircuitBase(object):
         A 'self-destroy' method called on end of circuit.
 
         Called by MscContainer which contains list of processing circuits.
-        This method is called when the circuits ends.  
+        This method is called when the circuits ends.
         """
         self.dispatcher.stopped_track.remove(self.id)
         self.dispatcher.started_track.remove(self.id)
@@ -691,7 +691,7 @@ class CircuitBase(object):
         """
         Handle the collected statistics from global collector.
 
-        Statistics are collected each awake_time period and 
+        Statistics are collected each awake_time period and
         updated when the circuit is processed.
         """
         self.dispatcher.statistics.update(self.cmd_id)
@@ -717,11 +717,11 @@ class CircuitBase(object):
         """
         return chooseClientInfo(self.cohq.target)
 
-      
+
     def _host_detect(self, host):
         """
         Network address detect callback.
-        
+
         Invoked by correct IP address of machine.
 
         @param host: IP address
@@ -740,18 +740,18 @@ class CircuitBase(object):
 
             if len(self.config.preferred_network) > 0 :
                 self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-                (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
+                (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
                 return pref_net_ip
         else:
             self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
 
         if len(self.config.preferred_network) > 0 :
             self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-            (pref_net_ip, pref_netmask) = self.config.preferred_network[0] 
+            (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
             return pref_net_ip
 
- 
- 
+
+
     def _network_detect(self, address):
         """
         Network detect callback.
@@ -797,22 +797,22 @@ class Circuit (CircuitBase):
     """
     This frame represets the workflow destinated on one machine.
 
-    All steps is provided with Phase instances which represents several actions 
+    All steps is provided with Phase instances which represents several actions
     destinated to a computer.
     """
- 
+
     def run(self):
         """ Start the workflow scenario. """
 
         self.logger.debug("circuit #%s - assigned network: %s" % (self.id, self.network_address))
-        self.logger.debug("circuit #%s - command: #%s / order: %s" % 
+        self.logger.debug("circuit #%s - command: #%s / order: %s" %
                 (self.id, str(self.cohq.cmd.id), str(self.cohq.cmd.order_in_bundle)))
- 
+
         try :
             if not self.running_phase:
 
                 first = next(self.phases)
-                self.running_phase = first(self.cohq, 
+                self.running_phase = first(self.cohq,
                                            self.host,
                                            self.config)
                 if not self.recurrent:
@@ -825,13 +825,13 @@ class Circuit (CircuitBase):
             self.cohq.coh.setStateDone()
             self.release()
             return
- 
-        return self.phase_process(True) 
+
+        return self.phase_process(True)
 
     def phase_process(self, result):
         """
         A callback to recursive phase processing.
-        Can be called as an ordinnary routine (i.e. on start) 
+        Can be called as an ordinnary routine (i.e. on start)
 
         @param result: returned result from initial phase tests
         @type result: str
@@ -863,10 +863,10 @@ class Circuit (CircuitBase):
             self.release()
             return
         else :
-            return self.phase_step() 
+            return self.phase_step()
 
 
-    def phase_error(self, failure): 
+    def phase_error(self, failure):
         """
         Phase processing errorback.
 
@@ -876,7 +876,7 @@ class Circuit (CircuitBase):
         self.logger.error("Phase error: %s" % str(failure))
 
 
-    def phase_step(self, forced_directive=None): 
+    def phase_step(self, forced_directive=None):
         """
         Main workflow processing.
 
@@ -902,7 +902,7 @@ class Circuit (CircuitBase):
 
             try :
                 next_phase = next(self.phases)
-                self.running_phase = next_phase(self.cohq, 
+                self.running_phase = next_phase(self.cohq,
                                                 self.host,
                                                 self.config)
                 if not self.recurrent :
@@ -911,7 +911,7 @@ class Circuit (CircuitBase):
                 self.logger.debug("next phase :%s" % (self.running_phase))
             except StopIteration :
                 # end of workflow - done !
-                self.logger.info("Circuit #%s: (%s on %s) DONE" % 
+                self.logger.info("Circuit #%s: (%s on %s) DONE" %
                         (self.id,
                          self.cohq.cmd.title,
                          self.cohq.target.target_name))
@@ -925,7 +925,7 @@ class Circuit (CircuitBase):
                 d.addCallback(self.phase_process)
                 d.addErrback(self.phase_error)
                 d.callback(True)
- 
+
         # perform the phase (initial rules allready passed)
         elif res == DIRECTIVE.PERFORM :
             d = maybeDeferred(self.running_phase.perform)
@@ -956,7 +956,7 @@ class Circuit (CircuitBase):
             if self.cohq.cmd.fk_bundle:
                 self.dispatcher.bundles.clean_up(coh_id=self.id)
             self.schedule_last_stats()
-            
+
             self.release()
             return
         elif res == DIRECTIVE.KILLED :
@@ -975,7 +975,7 @@ class Circuit (CircuitBase):
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
             self.release(True)
         else :
-            self.logger.error("UNRECOGNIZED DIRECTIVE") 
+            self.logger.error("UNRECOGNIZED DIRECTIVE")
 
     def _last_activity_record(self, reason):
         now = time.time()
@@ -983,7 +983,7 @@ class Circuit (CircuitBase):
         self.running_phase.last_activity_time = now
 
         return reason
-               
+
     def gotErrorInResult(self, id, reason):
         self.logger.error("Circuit #%s: got an error within an result: %s" % (id, extractExceptionMessage(reason)))
         return DIRECTIVE.GIVE_UP
@@ -998,7 +998,7 @@ class MscContainer (object):
     All circuits to run are stocked here.
     """
     slots = {}
- 
+
     # All the workflow circuits are stocked here
     _circuits = []
 
@@ -1042,19 +1042,19 @@ class MscContainer (object):
         @type cmd_id: int
         """
         self.candidats_to_cleanup[cmd_id] = True
-    
-    @property 
+
+    @property
     def circuits(self):
         """Shortcut to all active circuits"""
         return [c for c in self._circuits if c.status == CC_STATUS.ACTIVE]
-    @property 
+    @property
     def waiting_circuits(self):
         """Shortcut to all waiting circuits"""
         return [c for c in self._circuits if c.status == CC_STATUS.WAITING]
 
     def remove_circuit(self, circuit):
-        """ 
-        Release the circuit from container 
+        """
+        Release the circuit from container
 
         @param circuit: circuit to remove
         @type circuit: Circuit
@@ -1065,7 +1065,7 @@ class MscContainer (object):
     @property
     def max_slots(self):
         """ All slots from all detected launchers """
-        return reduce(lambda x, y: (x + y), self.slots.values()) 
+        return reduce(lambda x, y: (x + y), self.slots.values())
 
     @property
     def free_slots(self):
@@ -1087,9 +1087,9 @@ class MscContainer (object):
         @rtype: bool
         """
         return id in [wf.id for wf in self.waiting_circuits]
- 
+
     def __contains__(self, id):
-        """ 
+        """
         Test if a circuit is already running,
         that means not released yet or added.
 
@@ -1106,7 +1106,7 @@ class MscContainer (object):
         self.logger = logging.getLogger()
         self.config = config
 
-        # provides the global statistics 
+        # provides the global statistics
         self.statistics = StatisticsProcessing(config)
 
         # stopped circuits tracker
@@ -1115,7 +1115,7 @@ class MscContainer (object):
         self.started_track = StartedTracker(self.config.max_command_time)
 
         # mainloop locker
-        self.lock_start = DeferredLock()  
+        self.lock_start = DeferredLock()
 
         # bundles tracking container
         self.bundles = BundleReferences(config)
@@ -1126,13 +1126,19 @@ class MscContainer (object):
 
         # launchers driving and slots detect
         self.groups = [net for (net, mask) in self.config.preferred_network]
-        self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask]) 
+        self.launchers_networks = dict([(launcher,[n[0] for n in net_and_mask])
                   for (launcher,net_and_mask) in self.config.launchers_networks.items()])
         self.logger.info("preferred networks by launchers: %s" % str(self.launchers_networks))
         self.launchers = self.config.launchers_uri
         # FIXME - main default launcher
         temp_launcher = self.launchers.keys()[0]
-        self.launchers_provider = RemoteCallProxy(self.config.launchers_uri, temp_launcher)
+
+        default_slots = dict([(name, line["slots"]) \
+                for (name, line) in self.config.launchers.items()])
+
+        self.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
+                                                  default_slots,
+                                                  temp_launcher)
         return self._get_all_slots()
 
 
@@ -1152,7 +1158,7 @@ class MscContainer (object):
             self.logger.error("An error occured when getting the slots:  %s" % failure)
 
         return d
-     
+
 
     def _set_slots(self, slots):
         """
@@ -1172,7 +1178,7 @@ class MscContainer (object):
     def has_free_slots(self):
         """ Checks if at least one slot is free"""
         return len(self.get_running_circuits()) < self.max_slots
- 
+
     def get(self, id):
         """
         Get the circuit if exists.
@@ -1180,7 +1186,7 @@ class MscContainer (object):
         @param id: commands_on_host id
         @type id: int
 
-        @return: requested circuit 
+        @return: requested circuit
         @rtype: Circuit object
         """
         matches = [wf for wf in self._circuits if wf.id == id]
@@ -1193,8 +1199,8 @@ class MscContainer (object):
     def _release(self, id, suspend_to_waitings=False):
         """
         Circuit releasing from the main container.
-        
-        Called typicaly when last phase ends or overtimed. 
+
+        Called typicaly when last phase ends or overtimed.
         A reference of this method is passed on each running phase to call
         when finished or overtimed.
 
@@ -1212,7 +1218,7 @@ class MscContainer (object):
                 self.stopped_track.remove(circuit.id)
             self.logger.info("Remaining content: %d circuits (+%d waitings)" % ((len(self.circuits)),len(self.waiting_circuits)))
             return True
-        
+
         return False
 
 

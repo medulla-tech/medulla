@@ -271,7 +271,7 @@ class SchedulerConfig(object):
             self.scheduler_proxy_socket_path = self.cp.get("scheduler", "scheduler_proxy_socket_path")
         if self.cp.has_option("scheduler", "scheduler_proxy_buffer_tmp"):
             self.scheduler_proxy_buffer_tmp = self.cp.get("scheduler", "scheduler_proxy_buffer_tmp")
- 
+
 
         if self.cp.has_option("scheduler", "client_check"):
             self.client_check = {}
@@ -350,12 +350,18 @@ class SchedulerConfig(object):
                         log.warning("your version of twisted is not high enough to use password (%s/password)"%(section))
                         password = ''
 
+                if self.cp.has_option(section, "slots"):
+                    slots = self.cp.getint(section, "slots")
+                else:
+                    slots = 20
+
                 self.launchers[section] = {
                         'enablessl': self.cp.getboolean(section, "enablessl"),
                         'host': self.cp.get(section, "host"),
                         'username': username,
                         'password': password,
-                        'port': self.cp.get(section, "port")
+                        'port': self.cp.get(section, "port"),
+                        'slots': slots,
                     }
                 if self.launchers[section]["enablessl"]:
                     uri = "https://"
@@ -373,6 +379,6 @@ class SchedulerConfig(object):
                     _networks = pnp.get_default()
                 self.launchers_networks.update({section: _networks})
 
-               
+
 
 
