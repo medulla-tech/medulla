@@ -239,9 +239,16 @@ def searchUserAdvanced(searchFilter = "", start = None, end = None):
     Used by the MMC web interface to get a user list
     """
     ldapObj = ldapUserGroupControl()
-    searchFilter = cleanFilter(searchFilter)
-    if searchFilter:
-        searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s)(telephoneNumber=%s)(mail=%s))" % (searchFilter, searchFilter, searchFilter, searchFilter, searchFilter)
+    if '=' in searchFilter:
+        if searchFilter.startswith('*') and searchFilter.endswith('*'):
+            searchFilter = searchFilter[1:-1]
+        terms = ["(%s)" % term for term in searchFilter.split() if '=' in term]
+        searchFilter = "(&%s)" % "".join(terms)
+    else:
+        searchFilter = cleanFilter(searchFilter)
+        if searchFilter:
+            searchFilter = "(|(uid=%s)(givenName=%s)(sn=%s)(telephoneNumber=%s)(mail=%s))" % \
+                (searchFilter, searchFilter, searchFilter, searchFilter, searchFilter)
     return ldapObj.searchUserAdvance(searchFilter, None, start, end)
 
 def getGroupEntry(cn):
