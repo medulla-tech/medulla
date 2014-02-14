@@ -462,6 +462,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             if self.launchers_provider.single_mode :
                 launcher = self.config.launchers.keys()[0]
                 circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
+                                                             self.slots,
                                                              launcher)
             else :
                 launchers = self.get_launchers_by_network(circuit.network_address)
@@ -816,7 +817,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 	        if len(self.circuits) == 0:
 	            self.lock_start.release()
 	            self.logger.info("Previous batch unlocked")
-	        else:   
+	        else:
 		    # previous batch not relased yet
 	            self.logger.info("Previous batch not finished, skiping")
 	            return True
