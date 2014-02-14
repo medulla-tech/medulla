@@ -31,8 +31,6 @@ from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
 from pulse2.scheduler.xmlrpc import getProxy
 
-# slots default value if initial detetion cannot be processed
-DEFAULT_SLOTS = 300
 
 class Stats :
     """
@@ -351,16 +349,16 @@ class LauncherCallingProvider(type):
         d.addCallback(self._extract_best_candidate)
         d.addCallback(self._call, method, *args)
         d.addErrback(self._eb_select)
-
-        @d.addErrback
-        def _eb(failure):
-            err = failure.trap(TCPTimedOutError)
-            if err == TCPTimedOutError :
-                logging.getLogger().warn("Timeout raised when dispatching the launchers")
-            else :
-                logging.getLogger().error("An error occured when dispatch the launchers: %s" % failure)
-
         return d
+
+        #@d.addErrback
+        #def _eb(failure):
+        #    err = failure.trap(TCPTimedOutError)
+        #    if err == TCPTimedOutError :
+        #        logging.getLogger().warn("Timeout raised when dispatching the launchers")
+        #    else :
+        #        logging.getLogger().error("An error occured when dispatch the launchers: %s" % failure)
+
 
         # TODO - create a parameter to switch between standard launchers
         #        balancing and this 'forcing' of default launcher bellow
