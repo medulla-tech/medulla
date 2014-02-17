@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-11 10:32+0100\n"
+"POT-Creation-Date: 2014-02-17 01:00+0100\n"
 "PO-Revision-Date: 2014-02-04 17:04+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -320,6 +320,14 @@ msgstr "Alle Benutzerbefehle"
 msgid "All users commands"
 msgstr "Alle Befehle der Benutzer"
 
+#: modules/msc/msc/vnc_client_no_vnc.php:127
+#, php-format
+msgid ""
+"An HTTP Proxy has been detected. Try disabling proxy for local addresses in "
+"your browser settings or add Pulse Server address (%s) to the excluded hosts "
+"list."
+msgstr ""
+
 #: modules/msc/includes/command_history.php:418
 #, php-format
 msgid ""
@@ -534,12 +542,12 @@ msgstr "Logs von Befehlen"
 msgid "Computers in this command"
 msgstr "Computer in diesem Befehl"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:187
+#: modules/msc/msc/vnc_client_no_vnc.php:207
 msgid "Connected"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_java.php:46
-#: modules/msc/msc/vnc_client_no_vnc.php:47
+#: modules/msc/msc/vnc_client_no_vnc.php:57
 msgid "Connection Failed !"
 msgstr "Verbindung fehlgeschlagen !"
 
@@ -547,7 +555,7 @@ msgstr "Verbindung fehlgeschlagen !"
 msgid "Connection Succeedeed !"
 msgstr "Verbindung erfolgreich !"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:185
+#: modules/msc/msc/vnc_client_no_vnc.php:205
 msgid "Connection failed"
 msgstr ""
 
@@ -567,7 +575,7 @@ msgstr ""
 "untersucht wurde"
 
 #: modules/msc/msc/vnc_client_java.php:48
-#: modules/msc/msc/vnc_client_no_vnc.php:49
+#: modules/msc/msc/vnc_client_no_vnc.php:59
 msgid "Connection was refused by the other side."
 msgstr "Verbindung wurde von Gegenseite abgelehnt."
 
@@ -1376,11 +1384,11 @@ msgstr "Sichere Kontrolle auf einer Gruppe von Rechnern"
 msgid "Secure control on computer"
 msgstr "Sichere Kontrolle auf Rechner"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:121
+#: modules/msc/msc/vnc_client_no_vnc.php:141
 msgid "Send Ctrl+Alt+Del"
 msgstr ""
 
-#: modules/msc/msc/vnc_client_no_vnc.php:125
+#: modules/msc/msc/vnc_client_no_vnc.php:145
 msgid "Send text to clipboard"
 msgstr ""
 
@@ -1609,7 +1617,7 @@ msgid "Take control of a computer"
 msgstr "Kontrolle über einen Rechner übernehmen"
 
 #: modules/msc/msc/vnc_client_java.php:173
-#: modules/msc/msc/vnc_client_no_vnc.php:290
+#: modules/msc/msc/vnc_client_no_vnc.php:310
 msgid "Take control of this computer"
 msgstr "Die Kontrolle über diesen Computer übernehmen"
 
@@ -1992,7 +2000,7 @@ msgstr "push"
 msgid "push / pull"
 msgstr "push / pull"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:186
+#: modules/msc/msc/vnc_client_no_vnc.php:206
 msgid "reason"
 msgstr ""
 
@@ -2020,7 +2028,7 @@ msgstr "unterdrückt"
 msgid "the state list"
 msgstr "die Zustand-Liste"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:184
+#: modules/msc/msc/vnc_client_no_vnc.php:204
 msgid "through SSH tunnel"
 msgstr ""
 
@@ -2028,7 +2036,7 @@ msgstr ""
 msgid "title"
 msgstr "Titel"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:188
+#: modules/msc/msc/vnc_client_no_vnc.php:208
 msgid "to"
 msgstr ""
 

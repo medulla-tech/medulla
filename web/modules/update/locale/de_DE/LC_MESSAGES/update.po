@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-11 10:32+0100\n"
+"POT-Creation-Date: 2014-02-17 01:00+0100\n"
 "PO-Revision-Date: 2014-01-18 16:12+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -36,7 +36,7 @@ msgstr "Deaktivieren"
 msgid "Disable selected updates"
 msgstr "Deaktivierung gewählter Updates"
 
-#: modules/update/update/disableUpdate.php:41
+#: modules/update/update/disableUpdate.php:40
 msgid "Disable this update?"
 msgstr "Dieses Update deaktivieren?"
 
@@ -56,7 +56,7 @@ msgstr "Aktivieren"
 msgid "Enable selected updates"
 msgstr "Aktivieren gewählter Updates"
 
-#: modules/update/update/enableUpdate.php:41
+#: modules/update/update/enableUpdate.php:40
 msgid "Enable this update?"
 msgstr "Dieses Update aktivieren?"
 
