@@ -849,7 +849,7 @@ class Circuit (CircuitBase):
             return lambda : DIRECTIVE.GIVE_UP
         elif result == DIRECTIVE.FAILED :
             self.logger.info("Circuit #%s: failed - releasing" % self.id)
-            self.release(True)
+            self.release()
             return
         elif result in (DIRECTIVE.KILLED, DIRECTIVE.OVER_TIMED) :
             self.logger.info("Circuit #%s: releasing" % self.id)
