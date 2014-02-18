@@ -28,7 +28,7 @@ from twisted.internet.task import LoopingCall
 
 
 class LoopingStarter(object):
-    """ 
+    """
     Dispatching the batchs of start.
 
     Each circuit must be started in a separated thread and each launching
@@ -61,14 +61,17 @@ class LoopingStarter(object):
         @return: start result
         @rtype: Deferred
         """
- 
+
         d = deferToThread(circuit.run)
         @d.addErrback
         def eb(reason):
 	    """ Thread start fallback """
             self.logger.error("Circuit #%s: start failed: %s" % (circuit.id, reason))
 
-        self.dispatcher._circuits.append(circuit)
+        @d.addCallback
+        def cb(reason):
+	    """ Thread start callback """
+            self.dispatcher._circuits.append(circuit)
 
         return d
 

@@ -813,16 +813,11 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
             self.logger.debug("Number of tracked/stopped circuits: %d" % len(self.stopped_track))
 
-	    if self.lock_start.locked:
-	        if len(self.circuits) == 0:
-	            self.lock_start.release()
-	            self.logger.info("Previous batch unlocked")
-	        else:
-		    # previous batch not relased yet
-	            self.logger.info("Previous batch not finished, skiping")
-	            return True
+            if self.lock_start.locked:
+                self.logger.info("Previous batch not finished, skiping")
+                return True
 
-	    if self.has_free_slots():
+            if self.has_free_slots():
                 top = self.free_slots
                 if top > 0 :
 
@@ -837,21 +832,21 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                                            ids_to_exclude,
                                            top)
 
-	            if len(ids) > 0 :
+                    if len(ids) > 0 :
                         self.logger.info("Prepare %d new commands to initialize" % len(ids))
                     else :
                         self.logger.debug("Nothing to initialize")
                         return True
 
                     # starting of all ids will be locked until the start
-		    # of last circuit launching
+                    # of last circuit launching
                     dstart = self.lock_start.run(self.start_all, ids)
 
-		    @dstart.addCallback
-		    def _cb(reason):
+                    @dstart.addCallback
+                    def _cb(reason):
                         self.logger.info("Batch completed, ready for next.")
-		    @dstart.addErrback
-		    def _eb(reason):
+                    @dstart.addErrback
+                    def _eb(reason):
                         self.logger.info("Start batch failed! : %s" % reason)
 
 

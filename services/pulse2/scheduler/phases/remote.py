@@ -158,7 +158,7 @@ class RemoteControlPhase(Phase):
 
     def parse_remote_phase_error (self,
                                reason,
-                               decrement_attempts_left = False,
+                               decrement_attempts_left = True,
                                error_code = PULSE2_UNKNOWN_ERROR):
         """
         decrement_attempts_left : by default do not decrement tries as the error
@@ -166,11 +166,11 @@ class RemoteControlPhase(Phase):
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
         # something goes really wrong: immediately give up
-        self.logger.warn("Circuit #%s: (%s on %s) %s failed, unattented reason: %s" % 
-                (self.coh.id, 
-                 self.cmd.title,   
-                 self.target.target_name, 
-                 self.name, 
+        self.logger.warn("Circuit #%s: (%s on %s) %s failed, unattented reason: %s" %
+                (self.coh.id,
+                 self.cmd.title,
+                 self.target.target_name,
+                 self.name,
                  reason))
         self.update_history_failed(error_code, '', reason.getErrorMessage())
         return self.switch_phase_failed(decrement_attempts_left)
@@ -181,8 +181,8 @@ class RemoteControlPhase(Phase):
         if exitcode == PULSE2_SUCCESS_ERROR: # success
             self.logger.info("Circuit #%s: (%s on %s) %s done (exitcode == 0)" %
                     (self.coh.id,
-                     self.cmd.title,   
-                     self.target.target_name, 
+                     self.cmd.title,
+                     self.target.target_name,
                      self.name))
             self.update_history_done(exitcode, stdout, stderr)
             if self.coh.isStateStopped():
@@ -193,10 +193,10 @@ class RemoteControlPhase(Phase):
             return self.give_up()
 
         elif self.name in self.config.non_fatal_steps:
-            self.logger.info("Circuit #%s: (%s on %s) %s failed (exitcode != 0), but non fatal according to scheduler config file" % 
+            self.logger.info("Circuit #%s: (%s on %s) %s failed (exitcode != 0), but non fatal according to scheduler config file" %
                     (self.coh.id,
-                     self.cmd.title,   
-                     self.target.target_name, 
+                     self.cmd.title,
+                     self.target.target_name,
                      self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             #self.switch_phase_failed()
@@ -204,10 +204,10 @@ class RemoteControlPhase(Phase):
             return self.next()
 
         else: # failure: immediately give up
-            self.logger.info("Circuit #%s: (%s on %s) %s failed (exitcode != 0)" % 
+            self.logger.info("Circuit #%s: (%s on %s) %s failed (exitcode != 0)" %
                      (self.coh.id,
-                     self.cmd.title,   
-                     self.target.target_name, 
+                     self.cmd.title,
+                     self.target.target_name,
                      self.name))
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
@@ -267,7 +267,7 @@ class WOLPhase(Phase):
                 if not self.coh.isStateStopped():
                     self.coh.setStateScheduled()
                 return self.next()
-            self.logger.info("Circuit #%s: (%s on %s) do wol (target not up)" % 
+            self.logger.info("Circuit #%s: (%s on %s) do wol (target not up)" %
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
@@ -279,7 +279,7 @@ class WOLPhase(Phase):
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
- 
+
             return self._performWOLPhase()
 
 
@@ -307,7 +307,7 @@ class WOLPhase(Phase):
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
- 
+
             self.update_history_done(PULSE2_SUCCESS_ERROR, stdout, stderr)
 
             if self.phase.switch_to_done():
@@ -751,7 +751,7 @@ class UploadPhase(RemoteControlPhase):
     def parsePushResult(self, (exitcode, stdout, stderr)):
 
         if exitcode == PULSE2_SUCCESS_ERROR: # success
-            self.logger.info("Circuit #%s: (%s on %s) push done (exitcode == 0)" % 
+            self.logger.info("Circuit #%s: (%s on %s) push done (exitcode == 0)" %
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
@@ -760,11 +760,11 @@ class UploadPhase(RemoteControlPhase):
                 return self.next()
             return self.give_up()
         else: # failure: immediately give up
-            self.logger.info("Circuit #%s: (%s on %s) push failed (exitcode != 0)" % 
+            self.logger.info("Circuit #%s: (%s on %s) push failed (exitcode != 0)" %
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
- 
+
             self.update_history_failed(exitcode, stdout, stderr)
             return self.switch_phase_failed()
 
@@ -783,7 +783,7 @@ class UploadPhase(RemoteControlPhase):
                     self.coh.id, proxy_coh_id, LocalProxiesUsageTracking().how_much_left_for(proxy_uuid, self.cmd.getId())))
 
         if exitcode == PULSE2_SUCCESS_ERROR: # success
-            self.logger.info("Circuit #%s: (%s on %s) pull done (exitcode == 0)" % 
+            self.logger.info("Circuit #%s: (%s on %s) pull done (exitcode == 0)" %
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
@@ -792,7 +792,7 @@ class UploadPhase(RemoteControlPhase):
                 return self.next()
             return self.give_up()
         else: # failure: immediately give up
-            self.logger.info("Circuit #%s: (%s on %s) pull failed (exitcode != 0)" % 
+            self.logger.info("Circuit #%s: (%s on %s) pull failed (exitcode != 0)" %
                     (self.coh.id,
                      self.cmd.title,
                      self.target.target_name))
@@ -807,7 +807,7 @@ class UploadPhase(RemoteControlPhase):
         return self.parse_order("pull", taken_in_account)
 
 
-    def parsePushError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    def parsePushError(self, reason, decrement_attempts_left = True, error_code = PULSE2_UNKNOWN_ERROR):
         """
         decrement_attempts_left : by default do not decrement tries as the error
         has most likeley be produced by an internal condition
@@ -819,7 +819,7 @@ class UploadPhase(RemoteControlPhase):
         self.update_history_failed(error_code, '', reason.getErrorMessage())
         return self.switch_phase_failed(decrement_attempts_left)
 
-    def parsePullError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    def parsePullError(self, reason, decrement_attempts_left = True, error_code = PULSE2_UNKNOWN_ERROR):
         """
            decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
            error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
