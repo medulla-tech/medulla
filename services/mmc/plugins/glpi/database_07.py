@@ -1552,11 +1552,14 @@ class Glpi07(DyngroupDatabaseHelper):
             for infocoms, supplierName in query:
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
+                    dateOfPurchase = ''
+                    if infocoms.buy_date is not None:
+                        dateOfPurchase = infocoms.buy_date.strftime('%Y-%m-%d')
 
                     l = [
                         ['Supplier', supplierName],
                         ['Invoice Number', infocoms.bill],
-                        ['Date Of Purchase', infocoms.buy_date.strftime('%Y-%m-%d')],
+                        ['Date Of Purchase', dateOfPurchase],
                         ['Warranty End Date', endDate],
                     ]
                     ret.append(l)
