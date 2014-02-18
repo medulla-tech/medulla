@@ -948,10 +948,17 @@ class Inventory(DyngroupDatabaseHelper):
             bios = Inventory().getLastMachineInventoryPart(ctx, "Bios", params)
             if bios:
                 bios = bios[0][1][0]
-                if hardware and hardware['Type'] is not None:
-                    fields.append(['Model / Type', ' / '.join([bios['Chipset'],hardware['Type']])])
+                # XML HARDWARE/CHASSIS_TYPE (FusionInventory)
+                if hardware and hardware['Type'] is not None and str(hardware['Type']) != "0":
+                    machine_type = hardware['Type']
+                # XML BIOS/TYPE (OCS ?)
+                # May be NULL, or "0" (int ?)
+                elif bios and bios['TypeMachine'] is not None and str(bios['TypeMachine']) != "0":
+                    machine_type = bios['TypeMachine']
                 else:
-                    fields.append(['Model / Type', bios['Chipset']])
+                    # Valid SMBIOS type
+                    machine_type = 'Unknown'
+                fields.append(['Model / Type', ' / '.join([bios['Chipset'],machine_type])])
                 fields.append(['Manufacturer', bios['ChipVendor']])
                 fields.append(['Serial Number', bios['Serial']])
             entity = Inventory().getComputersLocations([params['uuid']])
