@@ -22,7 +22,7 @@
 		<MappedField from="WINOWNER" to="RegisteredName" />
 		<MappedField from="WINPRODID" to="OSSerialNumber" />
 		<MappedField from="DESCRIPTION" to="Description" />
-		<MappedField from="TYPE" to="Type" />
+		<MappedField from="CHASSIS_TYPE" to="Type" />
 
 	</MappedObject>
 

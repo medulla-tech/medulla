@@ -948,7 +948,10 @@ class Inventory(DyngroupDatabaseHelper):
             bios = Inventory().getLastMachineInventoryPart(ctx, "Bios", params)
             if bios:
                 bios = bios[0][1][0]
-                fields.append(['Model / Type', bios['Chipset']])
+                if hardware and hardware['Type'] is not None:
+                    fields.append(['Model / Type', ' / '.join([bios['Chipset'],hardware['Type']])])
+                else:
+                    fields.append(['Model / Type', bios['Chipset']])
                 fields.append(['Manufacturer', bios['ChipVendor']])
                 fields.append(['Serial Number', bios['Serial']])
             entity = Inventory().getComputersLocations([params['uuid']])
