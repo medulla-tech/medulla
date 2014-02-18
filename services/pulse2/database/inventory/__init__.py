@@ -31,6 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.database.utilities import unique, handle_deconnect
 from mmc.database.utilities import DbObject # pyflakes.ignore
+from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, Singleton, isUUID
 
@@ -1537,6 +1538,170 @@ class Inventory(DyngroupDatabaseHelper):
             ret = False
         session.close()
         return ret
+
+    @DatabaseHelper._session
+    def getMachineByOsLike(self, session, ctx, osnames, count = 0):
+        """
+        @return: all machines that have this os using LIKE
+        """
+        if isinstance(osnames, basestring):
+            osnames = [osnames]
+
+        # Freely inspired from getComputersOS() for get machines in DB
+
+        if int(count) == 1:
+            query = session.query(func.count(Machine.id))
+        else:
+            query = session.query(Machine)
+
+        query = query.select_from(self.machine
+                    .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine) \
+                    .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                    .join(
+                        self.table['hasEntity'],
+                        self.table['hasEntity'].c.machine == self.machine.c.id,
+                        self.table['hasEntity'].c.inventory == self.table['Inventory'].c.id,
+                    )
+                )
+
+        query = query.filter(self.inventory.c.Last == 1)
+
+        if osnames == ["other"]:
+            query = query.filter(
+                    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%')),
+            )
+        elif osnames == ["otherw"]:
+            query = query.filter(
+                and_(
+                    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%7%')),\
+                    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%XP%')),
+                    self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%')
+                )
+            )
+        else:
+            os_filter = [self.table['Hardware'].c.OperatingSystem.like('%' + osname + '%') for osname in osnames]
+            query = query.filter(or_(*os_filter))
+
+        if int(count) == 1:
+            return int(query.scalar())
+        else:
+            return [[q.id, q.Name] for q in query]
+
+    def getMachineByState(self):
+        """
+        Get machine by state is not supported
+        """
+        pass
+
+    @DatabaseHelper._session
+    def getMachineByType(self, session, ctx, types, count=0):
+        """ @return: all machines that have this type """
+        if isinstance(types, basestring):
+            types = [types]
+
+        if int(count) == 1:
+            query = session.query(func.count(Machine.id))
+        else:
+            query = session.query(Machine)
+
+        query = query.select_from(self.machine
+                    .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine) \
+                    .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                    .join(
+                        self.table['hasEntity'],
+                        self.table['hasEntity'].c.machine == self.machine.c.id,
+                        self.table['hasEntity'].c.inventory == self.table['Inventory'].c.id,
+                    )
+                )
+
+        query = query.filter(self.inventory.c.Last == 1)
+
+        type_filter = [self.table['Hardware'].c.Type.like(type) for type in types]
+        query = query.filter(or_(*type_filter))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
+
+    @DatabaseHelper._session
+    def getAllSoftwaresImproved(self,
+                             session,
+                             ctx,
+                             name,
+                             vendor=None,
+                             version=None,
+                             count=0):
+        """
+        This method is used for reporting and license count
+        it's inspired from getMachineBySoftware method, but instead of count
+        number of machines who have this soft, this method count number of
+        softwares
+
+        Example: 5 firefox with different version on a single machine:
+            getMachineBySoftware: return 1
+            this method: return 5
+
+        I should use getAllSoftwares method, but deadline is yesterday....
+        """
+        def all_elem_are_none(params):
+            for param in params:
+                if param is not None:
+                    return False
+            return True
+        def check_list(param):
+            if not isinstance(param, list):
+                return [param]
+            elif all_elem_are_none(param):
+                return None
+            elif not param:
+                return None
+            else:
+                return param
+
+        name = check_list(name)
+        if vendor is not None: vendor = check_list(vendor)
+        if version is not None: version = check_list(version)
+
+        if int(count) == 1:
+            query = session.query(func.count(self.software.c.ProductName))
+        else:
+            query = session.query(self.software.c.ProductName)
+
+        query = query.select_from(
+            self.software
+            .join(self.table['hasSoftware'], self.table['hasSoftware'].c.software == self.software.c.id)
+            .join(self.table['hasEntity'], self.table['hasEntity'].c.inventory == self.table['hasSoftware'].c.inventory)
+            .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasSoftware'].c.inventory)
+        )
+
+        query = query.filter(self.inventory.c.Last == 1)
+
+        name_filter = [self.software.c.ProductName.like(n) for n in name]
+        query = query.filter(or_(*name_filter))
+
+        if version is not None:
+            version_filter = [self.software.c.ProductVersion.like(v) for v in version]
+            query = query.filter(or_(*version_filter))
+
+        if vendor is not None:
+            vendor_filter = [self.software.c.Company.like(v) for v in vendor]
+            query = query.filter(or_(*vendor_filter))
+
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
+
+    def getAllEntities(self, ctx):
+        return self.getUserLocations(ctx.userid, with_level=True)
 
     def getUserLocations(self, userid, with_level = False):
         """
