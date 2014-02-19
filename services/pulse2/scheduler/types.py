@@ -412,12 +412,12 @@ class Phase (PhaseBase):
         """
         return DIRECTIVE.FAILED
 
-    def switch_phase_failed(self, decrement=True):
+    def switch_phase_failed(self):
         """
         Toggles phase to failed.
 
-        @param decrement: decrements the number of failed attempts
-        @type decrement: bool
+        @return: command directive
+        @rtype: DIRECTIVE
         """
         ltr = LaunchTimeResolver(start_date=self.coh.start_date,
                                  end_date=self.coh.end_date,
@@ -428,7 +428,7 @@ class Phase (PhaseBase):
                                  now=time.time()
                                  )
 
-        self.coh.reSchedule(ltr.get_launch_date(), decrement)
+        self.coh.reSchedule(ltr.get_launch_date(), True)
 
         self.phase.switch_to_failed()
         if self.coh.is_out_of_attempts():

@@ -121,7 +121,6 @@ class RemoteControlPhase(Phase):
         if not client['host']: # We couldn't get an IP address for the target host
             fd = defer.fail(Exception("Not enough information about client to perform %s" % self.name))
             fd.addErrback(self.parse_remote_phase_error,
-                          decrement_attempts_left = True,
                           error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
             fd.addErrback(self.got_error_in_error)
 
@@ -158,10 +157,8 @@ class RemoteControlPhase(Phase):
 
     def parse_remote_phase_error (self,
                                reason,
-                               decrement_attempts_left = True,
                                error_code = PULSE2_UNKNOWN_ERROR):
         """
-        decrement_attempts_left : by default do not decrement tries as the error
         has most likeley be produced by an internal condition
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
@@ -173,7 +170,7 @@ class RemoteControlPhase(Phase):
                  self.name,
                  reason))
         self.update_history_failed(error_code, '', reason.getErrorMessage())
-        return self.switch_phase_failed(decrement_attempts_left)
+        return self.switch_phase_failed()
 
 
     def parse_remote_phase_result(self,(exitcode, stdout, stderr)):
@@ -199,7 +196,6 @@ class RemoteControlPhase(Phase):
                      self.target.target_name,
                      self.name))
             self.update_history_failed(exitcode, stdout, stderr)
-            #self.switch_phase_failed()
             self.phase.set_done()
             return self.next()
 
@@ -328,14 +324,13 @@ class WOLPhase(Phase):
         d = deferLater(reactor, self.config.max_wol_time, setstate, stdout, stderr)
         return d
 
-    def parseWOLError(self, reason, decrement_attempts_left = False, error_code = PULSE2_UNKNOWN_ERROR):
+    def parseWOLError(self, reason, error_code = PULSE2_UNKNOWN_ERROR):
         """
-           decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
            error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
         self.logger.warn("Circuit #%s: WOL failed" % self.coh.id)
         self.update_history_failed(error_code, '', reason.getErrorMessage())
-        return self.switch_phase_failed(decrement_attempts_left)
+        return self.switch_phase_failed()
 # ---------------------------------- UPLOAD -------------------------------------
 class UploadPhase(RemoteControlPhase):
     name = "upload"
@@ -383,7 +378,7 @@ class UploadPhase(RemoteControlPhase):
             self.update_history_failed(PULSE2_PROXY_WAITINGFORDEAD_ERROR,
                                        '',
                                        'Waiting for a local proxy which will never be ready')
-            return self.switch_phase_failed(True)
+            return self.switch_phase_failed()
         elif result == 'server':
             self.logger.info("Circuit #%s: becoming local proxy server" % self.coh.getId())
             self.coh.setUsedProxy(self.coh.getId()) # special case: this way we know we were server
@@ -401,7 +396,6 @@ class UploadPhase(RemoteControlPhase):
         if not client['host']: # We couldn't get an IP address for the target host
             err = defer.fail(Exception("Not enough information about client to perform upload"))
             err.addErrback(self.parsePushError,
-                           decrement_attempts_left = True,
                            error_code = PULSE2_TARGET_NOTENOUGHINFO_ERROR)
             err.addErrback(self.got_error_in_error)
             return err
@@ -422,7 +416,7 @@ class UploadPhase(RemoteControlPhase):
             except:
                 self.logger.warn("Circuit #%s: target.mirror do not seems to be as expected, got '%s', skipping command" % (self.coh.getId(), self.target.mirrors))
                 err = defer.fail(Exception("Mirror uri %s is not well-formed" % self.target.mirrors))
-                err.addErrback(self.parsePushError, decrement_attempts_left = True)
+                err.addErrback(self.parsePushError)
                 err.addErrback(self.got_error_in_error)
                 return err
 
@@ -430,7 +424,7 @@ class UploadPhase(RemoteControlPhase):
             if len(mirrors) != 2:
                 self.logger.warn("Circuit #%s: we need two mirrors ! '%s'" % (self.coh.getId(), self.target.mirrors))
                 err = defer.fail(Exception("Mirror uri %s do not contains two mirrors" % self.target.mirrors))
-                err.addErrback(self.parsePushError, decrement_attempts_left = True)
+                err.addErrback(self.parsePushError)
                 err.addErrback(self.got_error_in_error)
                 return err
             mirror = mirrors[0]
@@ -518,14 +512,14 @@ class UploadPhase(RemoteControlPhase):
                     self.update_history_failed(PULSE2_PSERVER_FMIRRORFAILED_404_ERROR, '', result[2])
                 self.logger.warn("Circuit #%s: Package '%s' is not available on any mirror" % (self.coh.getId(), self.cmd.package_id))
                 self.update_history_failed(PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', self.cmd.package_id)
-                return self.switch_phase_failed(True) # better decrement attemps, as package can't be found
+                return self.switch_phase_failed()
             else:
                 # The package is available on a mirror, start upload phase
                 return self._runPushPullPhase(mirror, fbmirror, client, useFallback)
         else:
             self.logger.warn("Circuit #%s: Package '%s' is not available on any mirror" % (self.coh.getId(), self.cmd.package_id))
             self.update_history_failed(PULSE2_PSERVER_PACKAGEISUNAVAILABLE_ERROR, '', self.cmd.package_id)
-            return self.switch_phase_failed(True) # better decrement attemps, as package can't be found
+            return self.switch_phase_failed()
 
     def _runProxyClientPhase(self, client):
         # fulfill protocol
@@ -534,7 +528,7 @@ class UploadPhase(RemoteControlPhase):
         proxyCoH = CoHQuery(self.coh.getUsedProxy())
         # get informations about our proxy
         if proxyCoH == None:
-            return defer.fail(Exception("Cant access to CoH")).addErrback(self.parsePushError, decrement_attempts_left = True).addErrback(self.got_error_in_error)
+            return defer.fail(Exception("Cant access to CoH")).addErrback(self.parsePushError).addErrback(self.got_error_in_error)
 
         #proxy = self.get_client("transfert")
 
@@ -549,7 +543,7 @@ class UploadPhase(RemoteControlPhase):
 
 
         if not proxy['host']: # We couldn't get an IP address for the target host
-            return defer.fail(Exception("Can't get proxy IP address")).addErrback(self.parsePushError, decrement_attempts_left = True).addErrback(self.got_error_in_error)
+            return defer.fail(Exception("Can't get proxy IP address")).addErrback(self.parsePushError).addErrback(self.got_error_in_error)
         # and fill struct
         # only proxy['host'] used until now
         client['proxy'] = {'command_id': self.coh.getUsedProxy(),
@@ -668,7 +662,7 @@ class UploadPhase(RemoteControlPhase):
                 self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_CONNREF_ERROR, '', result[2])
             elif result[1] == PULSE2_ERR_404:
                 self.update_history_failed(PULSE2_PSERVER_MIRRORFAILED_404_ERROR, '', result[2])
-            return self.switch_phase_failed(True)
+            return self.switch_phase_failed()
 
         files_list = result
         file_uris = {}
@@ -699,16 +693,14 @@ class UploadPhase(RemoteControlPhase):
                                            '',
                                            "%s\n%s" % (self.cmd.package_id, fbmirror))
                 # the getFilesURI call failed on the fallback. We have a serious
-                # problem and we better decrement attempts
-                return self.switch_phase_failed(True)
+                return self.switch_phase_failed()
             elif not fbmirror or fbmirror == mirror:
                 self.logger.warn("Circuit #%s: can't get files URI from mirror %s, and not fallback mirror to try" % (self.coh.getId(), mirror))
                 self.update_history_failed(PULSE2_PSERVER_GETFILEURIFROMPACKAGE_ERROR,
                                            '',
                                            "%s\n%s" % (self.cmd.package_id, mirror))
                 # the getFilesURI call failed on the only mirror we have. We have a serious
-                # problem and we better decrement attempts
-                return self.switch_phase_failed(True)
+                return self.switch_phase_failed()
             else:
                 # Use the fallback mirror
                 self.logger.warn("Circuit #%s: can't get files URI from mirror %s, trying with fallback mirror %s" % (self.coh.getId(), mirror, fbmirror))
@@ -807,9 +799,8 @@ class UploadPhase(RemoteControlPhase):
         return self.parse_order("pull", taken_in_account)
 
 
-    def parsePushError(self, reason, decrement_attempts_left = True, error_code = PULSE2_UNKNOWN_ERROR):
+    def parsePushError(self, reason, error_code = PULSE2_UNKNOWN_ERROR):
         """
-        decrement_attempts_left : by default do not decrement tries as the error
         has most likeley be produced by an internal condition
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
@@ -817,11 +808,10 @@ class UploadPhase(RemoteControlPhase):
         if self.coh == None:
             return self.give_up()
         self.update_history_failed(error_code, '', reason.getErrorMessage())
-        return self.switch_phase_failed(decrement_attempts_left)
+        return self.switch_phase_failed()
 
-    def parsePullError(self, reason, decrement_attempts_left = True, error_code = PULSE2_UNKNOWN_ERROR):
+    def parsePullError(self, reason, error_code = PULSE2_UNKNOWN_ERROR):
         """
-           decrement_attempts_left : by default do not decrement tries as the error has most likeley be produced by an internal condition
            error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
         # something goes really wrong: immediately give up
@@ -841,7 +831,7 @@ class UploadPhase(RemoteControlPhase):
                         self.cmd.getId())))
 
         self.update_history_failed(error_code, '', reason.getErrorMessage())
-        return self.switch_phase_failed(decrement_attempts_left)
+        return self.switch_phase_failed()
 
 
 
