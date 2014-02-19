@@ -307,12 +307,19 @@ function xmlCall($method, $params = null) {
               Fault 8003 means the session with the XML-RPC server has expired.
               So we make the current PHP session expire, so that the user is
               redirected to the login page.
-            */
-            unset($_SESSION["expire"]);
-            $_SESSION["agentsessionexpired"] = 1;
-            $root = $conf["global"]["root"];
-            header("Location: $root" . "main.php");
-            exit;
+             */
+            require_once 'modules/base/includes/users-xmlrpc.inc.php';
+            if (auth_user($_SESSION['login'], $_SESSION['pass']) ){
+                // Retry call after relogin
+                return xmlCall($method, $params);
+            }
+            else{
+                unset($_SESSION["expire"]);
+                $_SESSION["agentsessionexpired"] = 1;
+                $root = $conf["global"]["root"];
+                header("Location: $root" . "main.php");
+                exit;
+            }
         }
         /* Try to find an error handler */
         $result = findErrorHandling($xmlResponse["faultCode"]);
