@@ -25,7 +25,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 ## SCHEDULING ##
 # delay between requests during command launching - this lag avoids a huge load
 # on the reqested side, i.e. on a launcher 
-# emitting_period = .3
+# emitting_period = .1
 # proxy buffer emitting period 
 # proxy_buffer_period = .1
 #

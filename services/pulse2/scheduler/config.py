@@ -86,7 +86,7 @@ class SchedulerConfig(object):
     client_check = None
     dbencoding = 'utf-8'
     enablessl = True
-    emitting_period = .3
+    emitting_period = .1
     proxy_buffer_period = .1
     proxy_buffer_start_delay = 4
     initial_wait = 2
