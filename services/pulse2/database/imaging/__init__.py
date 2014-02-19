@@ -2199,7 +2199,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             targets_uuid = [targets_uuid]
 
         for target_uuid in targets_uuid:
-            self.logger.info("Going to unregister target %s"%target_uuid)
+            self.logger.info("Going to unregister target %s from imaging"%target_uuid)
             mis = session.query(MenuItem).select_from(self.menu_item \
                 .join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu) \
                 .join(self.target, self.target.c.fk_menu == self.menu.c.id) \

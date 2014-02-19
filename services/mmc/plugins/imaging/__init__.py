@@ -125,8 +125,11 @@ def purge_removed_computers():
             # we unregister it from imaging
             to_delete.append(uuid)
 
-    # Unregistering targets without backup
-    computersUnregister(to_delete, False)
+    # Unregistering orphan targets without backup
+    if to_delete:
+        logging.getLogger().info('Orphan imaging computer(s) found')
+        logging.getLogger().info('Going to purge %s' % ' '.join(to_delete))
+        computersUnregister(to_delete, False)
 
     return True
 
