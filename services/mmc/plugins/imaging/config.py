@@ -26,6 +26,7 @@ Configuration reader for imaging
 from mmc.support.config import PluginConfig
 from pulse2.database.imaging.config import ImagingDatabaseConfig
 from pulse2.network import PreferredNetworkParser
+from ConfigParser import NoOptionError, NoSectionError
 
 class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
 

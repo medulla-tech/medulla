@@ -93,7 +93,7 @@ def activate():
     ComputerManager().register('imaging', InventoryComputers)
 
     TaskManager().addTask("imaging.purge_removed_computers",
-                        (purge_removed_computers),
+                        (purge_removed_computers,),
                         cron_expression=config.purge_interval)
 
     return True
