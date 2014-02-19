@@ -49,8 +49,10 @@ from pulse2.managers.location import ComputerLocationManager
 class ImagingException(Exception):
     pass
 
+
 class NoImagingServerError(ImagingException):
     pass
+
 
 class ImagingDatabase(DyngroupDatabaseHelper):
     """
@@ -479,6 +481,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return l
 
 ###########################################################
+
+    def getAllRegisteredComputers(self):
+        session = create_session()
+        ret = session.query(Target.uuid).filter(Target.type.in_([P2IT.COMPUTER, P2IT.COMPUTER_IN_PROFILE])).all()
+        session.close()
+        return [m[0] for m in ret]
+
     def getRegisteredComputersForEntity(self, loc_uuid):
         session = create_session()
         ret = session.query(Target.uuid).select_from(self.target.join(self.entity, self.target.c.fk_entity == self.entity.c.id)) \

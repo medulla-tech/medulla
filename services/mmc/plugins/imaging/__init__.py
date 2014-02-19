@@ -35,13 +35,13 @@ from mmc.plugins.imaging.profile import ImagingProfile
 from mmc.plugins.imaging.computer import InventoryComputers
 from mmc.plugins.imaging.imaging import ComputerImagingImaging
 from mmc.plugins.imaging.pulse import ImagingPulse2Manager
-from mmc.plugins.imaging.functions import ImagingRpcProxy
+from mmc.plugins.imaging.functions import ImagingRpcProxy, computersUnregister
 from pulse2.managers.profile import ComputerProfileManager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.imaging import ComputerImagingManager
 from pulse2.managers.pulse import Pulse2Manager
 from pulse2.database.imaging import ImagingDatabase
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
@@ -103,12 +103,41 @@ def activate_2():
         ret = True
     return ret
 
+
+def purge_removed_computers():
+    from mmc.plugins.base.computers import ComputerManager
+    from mmc.plugins.base import LdapUserGroupControl
+
+    # Get all imaging targets
+    targets = ImagingDatabase().getAllRegisteredComputers()
+
+    # Creating root context to query ComputerManager
+    ctx = SecurityContext()
+    ctx.userid = 'root'
+    ctx.userdn = LdapUserGroupControl().searchUserDN(ctx.userid)
+
+    # Init to_delete computer list
+    to_delete = []
+
+    for uuid in targets:
+        if ComputerManager().getComputerCount(ctx, {'uuid': uuid}) == 0:
+            # If the target computer is not in ComputerManager database anymore
+            # we unregister it from imaging
+            to_delete.append(uuid)
+
+    # Unregistering targets without backup
+    computersUnregister(to_delete, False)
+
+    return True
+
+
 class ContextMaker(ContextMakerI):
 
     def getContext(self):
         s = SecurityContext()
         s.userid = self.userid
         return s
+
 
 class RpcProxy(ImagingRpcProxy):
     pass
