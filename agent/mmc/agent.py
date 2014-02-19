@@ -67,7 +67,6 @@ Fault = xmlrpclib.Fault
 ctx = None
 VERSION = "3.1.1"
 
-
 class MmcServer(xmlrpc.XMLRPC, object):
     """
     MMC Server implemented as a XML-RPC server.
@@ -339,6 +338,26 @@ class MmcServer(xmlrpc.XMLRPC, object):
             if context:
                 logger.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
+
+
+    # ======== Reload method ================
+
+    def reloadModulesConfiguration(self):
+        import gc
+        from mmc.support.config import PluginConfig
+
+        for obj in gc.get_objects():
+            if isinstance(obj, PluginConfig):
+                try:
+                    # Reloading configuration file
+                    fid = file(obj.conffile, "r")
+                    obj.readfp(fid, obj.conffile)
+                    # Refresh config attributes
+                    obj.readConf()
+                except Exception, e:
+                    logger.error('Error while reloading configuration file %s', obj.conffile)
+                    logger.error(str(e))
+        return True
 
     # ======== XMLRPC Standard Introspection methods ================
 
