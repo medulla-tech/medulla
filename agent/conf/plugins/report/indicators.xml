@@ -954,4 +954,941 @@
         />
         -->
     </module>
+    <!-- Inventory indicators -->
+    <module name="inventory">
+        <!-- getComputerCountByOSes -->
+         <indicator
+            name="os_count"
+            label="All OS"
+            request_function="getComputerCountByOSes"
+            params="'*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+         <indicator
+            name="os_count_windows"
+            label="Windows"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp"
+            label="Windows XP"
+            request_function="getComputerCountByOSes"
+            params="'*Windows XP*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp_pro"
+            label="Windows XP Professional"
+            request_function="getComputerCountByOSes"
+            params="'*Windows XP Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_xp_home"
+            label="Windows XP Home"
+            request_function="getComputerCountByOSes"
+            params="['*Windows XP Home', '*Windows XP*Familiale']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista"
+            label="Windows Vista"
+            request_function="getComputerCountByOSes"
+            params="'*Windows Vista*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_home"
+            label="Windows Vista Home"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Home', '*Windows Vista*Familiale*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_business"
+            label="Windows Vista Business"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Pro*', '*Windows Vista Business*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_enterprise"
+            label="Windows Vista Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista Enterprise*', '*Windows Vista Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_vista_ultimate"
+            label="Windows Vista Ultimate"
+            request_function="getComputerCountByOSes"
+            params="['*Windows Vista*Intégrale*', '*Windows Vista Ultimate*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7"
+            label="Windows 7"
+            request_function="getComputerCountByOSes"
+            params="'*Windows*7*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_home"
+            label="Windows 7 Home"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 7 Home', 'Windows 7*Familiale']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_pro"
+            label="Windows 7 Professional"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 7 Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_enterprise"
+            label="Windows 7 Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 7 Enterprise*', '*Windows 7 Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_7_ultimate"
+            label="Windows 7 Ultimate"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 7 Ultimate*', '*Windows 7*Intégrale*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8"
+            label="Windows 8"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 8*', '*Windows RT*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_home"
+            label="Windows 8"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 8'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_pro"
+            label="Windows 8 Professional"
+            request_function="getComputerCountByOSes"
+            params="'*Windows 8 Pro*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_enterprise"
+            label="Windows 8 Enterprise"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 8 Enterprise*', '*Windows 8 Entreprise*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_8_rt"
+            label="Windows RT"
+            request_function="getComputerCountByOSes"
+            params="'*Windows RT*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server"
+            label="Windows Server"
+            request_function="getComputerCountByOSes"
+            params="['*Windows*Server*', '*Windows*Serveur*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- Treat all Win2k as servers -->
+        <indicator
+            name="os_count_windows_server_2000"
+            label="Windows Server 2000"
+            request_function="getComputerCountByOSes"
+            params="['*Windows 2000*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2003"
+            label="Windows Server 2003"
+            request_function="getComputerCountByOSes"
+            params="['*Windows*Server 2003*', '*Windows*Serveur 2003*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2008"
+            label="Windows Server 2008"
+            request_function="getComputerCountByOSes"
+            params="['*Windows*Server 2008*', '*Windows*Serveur 2008*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_windows_server_2012"
+            label="Windows Server 2012"
+            request_function="getComputerCountByOSes"
+            params="['*Windows*Server 2012*', '*Windows*Serveur 2012*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos"
+            label="Mac OS X"
+            request_function="getComputerCountByOSes"
+            params="'*OS X*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos_desktop"
+            label="Mac OS X"
+            request_function="getComputerCountByOSes"
+            params="'*OS X 10*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_macos_server"
+            label="Mac OS X Server"
+            request_function="getComputerCountByOSes"
+            params="'*OS X Server*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux"
+            label="Linux"
+            request_function="getComputerCountByOSes"
+            params="['*Linux*', 'Mageia*', 'Fedora*', 'CentOS*', 'Ubuntu*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_debian"
+            label="Debian GNU/Linux"
+            request_function="getComputerCountByOSes"
+            params="'Debian*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_ubuntu"
+            label="Ubuntu"
+            request_function="getComputerCountByOSes"
+            params="'Ubuntu*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_redhat"
+            label="Red Hat"
+            request_function="getComputerCountByOSes"
+            params="'Red Hat*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_centos"
+            label="CentOS"
+            request_function="getComputerCountByOSes"
+            params="'CentOS*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_fedora"
+            label="Fedora"
+            request_function="getComputerCountByOSes"
+            params="'Fedora*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_mageia"
+            label="Mageia"
+            request_function="getComputerCountByOSes"
+            params="'Mageia*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_linux_mandriva"
+            label="Mandriva Linux"
+            request_function="getComputerCountByOSes"
+            params="['Mandriva Linux*', 'Mandrakelinux*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="os_count_unix"
+            label="Unix"
+            request_function="getComputerCountByOSes"
+            params="['AIX*', 'SunOs*', 'Solaris*', 'HP-UX*', 'IRIX*']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- getComputerCountBySoftwares -->
+        <indicator
+            name="soft_count_office"
+            label="Office"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office 97*', 'Microsoft Office 98*', 'Microsoft Office 2000*', 'Microsoft Office XP*', 'Microsoft Office Basic Edition 2003', 'Microsoft Office Home and Student Edition 2003', 'Microsoft Office Standard Edition 2003', 'Microsoft Office Small Business Edition 2003', 'Microsoft Office Professional Edition 2003', 'Microsoft Office Basic 2007', 'Microsoft Office Home and Student 2007', 'Microsoft Office Standard 2007', 'Microsoft Office Small Business 2007', 'Microsoft Office Professional 2007', 'Microsoft Office Professional Plus 2007', 'Microsoft Office Ultimate 2007', 'Microsoft Office Enterprise 2007', 'Microsoft Office Starter 2010', 'Microsoft Office Personal 2010', 'Microsoft Office Home and Student 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Famille 2010', 'Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010', 'Microsoft Office Standard 2010', 'Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010', 'Microsoft Office Professional Academic 2010', 'Microsoft Office University 2010', 'Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010', 'Microsoft Office Home and Student 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Famille 2013', 'Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013', 'Microsoft Office Standard 2013', 'Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013', 'Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013', 'Microsoft Office Mac 2004', 'Microsoft Office Mac 2008', 'Microsoft Office Mac 2011']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_97"
+            label="Office 97"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 97*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_98"
+            label="Office 98"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 98*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000"
+            label="Office 2000"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_standard"
+            label="Office 2000 Standard"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 Standard*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sbs"
+            label="Office 2000 Small Business"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 Small Business*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_pro"
+            label="Office 2000 Professional"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 Professional*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_premium"
+            label="Office 2000 Premium"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 Premium*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_devel"
+            label="Office 2000 Developer"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 Developer*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sr1_standard"
+            label="Office 2000 SR-1 Standard"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 SR-1 Standard*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sr1_sbs"
+            label="Office 2000 SR-1 Small Business"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 SR-1 Small Business*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sr1_pro"
+            label="Office 2000 SR-1 Professional"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 SR-1 Professional*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sr1_premium"
+            label="Office 2000 SR-1 Premium"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 SR-1 Premium*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2000_sr1_devel"
+            label="Office 2000 SR-1 Developer"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office 2000 SR-1 Developer*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp"
+            label="Office XP"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp_standard"
+            label="Office XP Standard"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP Standard*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp_sbs"
+            label="Office XP Small Business"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP Small Business*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp_pro"
+            label="Office XP Professional"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP Professional*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp_premium"
+            label="Office XP Premium"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP Premium*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_xp_devel"
+            label="Office XP Developer"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office XP Developer*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003"
+            label="Office 2003"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Basic Edition 2003', 'Microsoft Office Home and Student Edition 2003', 'Microsoft Office Standard Edition 2003', 'Microsoft Office Small Business Edition 2003', 'Microsoft Office Professional Edition 2003']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003_basic"
+            label="Office 2003 Basic Edition"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Basic Edition 2003'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003_home"
+            label="Office Home and Student Edition 2003"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Home and Student Edition 2003'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003_standard"
+            label="Office Standard Edition 2003"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Standard Edition 2003'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003_sbs"
+            label="Office Small Business Edition 2003"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Small Business Edition 2003'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2003_pro"
+            label="Office Professional Edition 2003"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Professional Edition 2003'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007"
+            label="Office 2007"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Basic 2007', 'Microsoft Office Home and Student 2007', 'Microsoft Office Standard 2007', 'Microsoft Office Small Business 2007', 'Microsoft Office Professional 2007', 'Microsoft Office Professional Plus 2007', 'Microsoft Office Ultimate 2007', 'Microsoft Office Enterprise 2007']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_basic"
+            label="Office Basic 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Basic 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_home"
+            label="Office Home and Student 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Home and Student 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_standard"
+            label="Office Standard 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Standard 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_sbs"
+            label="Office Small Business 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Small Business 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_pro"
+            label="Office Professional 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Professional 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_pro_plus"
+            label="Office Professional Plus 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Professional Plus 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_ultimate"
+            label="Office Ultimate 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Ultimate 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2007_enterprise"
+            label="Office Enterprise 2007"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Enterprise 2007'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010"
+            label="Office 2010"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Starter 2010', 'Microsoft Office Personal 2010', 'Microsoft Office Home and Student 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Famille 2010', 'Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010', 'Microsoft Office Standard 2010', 'Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010', 'Microsoft Office Professional Academic 2010', 'Microsoft Office University 2010', 'Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_starter"
+            label="Office Starter 2010"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Starter 2010'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_personal"
+            label="Office Personal 2010"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Personal 2010'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_home_student"
+            label="Office Home and Student 2010"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Home and Student 2010', 'Microsoft Office Famille et Étudiant 2010', 'Microsoft Office Home 2010', 'Microsoft Office Famille 2010']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_home_business"
+            label="Office Home and Business 2010"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Home and Business 2010', 'Microsoft Office Famille et Petite Entreprise 2010']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_standard"
+            label="Office Standard 2010"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Standard 2010'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_pro"
+            label="Office Professional 2010"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Professional 2010', 'Microsoft Office Professionnel 2010']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_pro_academic"
+            label="Office Professional Academic 2010"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Professional Academic 2010'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_university"
+            label="Office University 2010"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office University 2010'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2010_pro_plus"
+            label="Office Professional Plus 2010"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Professional Plus 2010', 'Microsoft Office Professionnel Plus 2010']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013"
+            label="Office 2013"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Home and Student 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Famille 2013', 'Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013', 'Microsoft Office Standard 2013', 'Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013', 'Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013_home_student"
+            label="Office Home and Student 2013"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Home and Student 2013', 'Microsoft Office Famille et Étudiant 2013', 'Microsoft Office Home 2013', 'Microsoft Office Famille 2013']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013_home_business"
+            label="Office Home and Business 2013"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Home and Business 2013', 'Microsoft Office Famille et Petite Entreprise 2013']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013_standard"
+            label="Office Standard 2013"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Standard 2013'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013_pro"
+            label="Office Professional 2013"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Professional 2013', 'Microsoft Office Professionnel 2013']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_2013_pro_plus"
+            label="Office Professional Plus 2013"
+            request_function="getComputerCountBySoftwares"
+            params="['Microsoft Office Professional Plus 2013', 'Microsoft Office Professionnel Plus 2013']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_mac_2004"
+            label="Office Mac 2004"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Mac 2004'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_mac_2008"
+            label="Office Mac 2008"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Mac 2008'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_office_mac_2011"
+            label="Office Mac 2011"
+            request_function="getComputerCountBySoftwares"
+            params="'Microsoft Office Mac 2011'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- Other softwares -->
+        <indicator
+            name="soft_count_photoshop"
+            label="Adobe Photoshop"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'Adobe Photoshop CS*', 'vendor': 'Adobe'}, {'name': 'Adobe Photoshop CS*Support', 'vendor': 'Adobe'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_photoshop_cs6"
+            label="Adobe Photoshop CS6"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'Adobe Photoshop CS6*', 'vendor': 'Adobe'}, {'name': 'Adobe Photoshop CS6*Support', 'vendor': 'Adobe'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_business_objects"
+            label="Business Objects"
+            request_function="getComputerCountBySoftwares"
+            params="[{'name': '*BusinessObjects*XI*', 'vendor': '*Business*Objects*'}, {'name': '*BusinessObjects*XI*', 'vendor': '*SAP*'}]"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="soft_count_autocad"
+            label="AutoCAD"
+            request_function="getComputerCountBySoftwares"
+            params="{'name': 'AutoCAD*', 'vendor': 'Autodesk'}"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- getComputerCountByType -->
+        <indicator
+            name="type_count"
+            label="Types"
+            request_function="getComputerCountByTypes"
+            params="'*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_desktop"
+            label="Desktop"
+            request_function="getComputerCountByTypes"
+            params="['Desktop', 'Mini Tower', 'Lunch Box', 'Low Profile Desktop', 'Tower']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_laptop"
+            label="Laptop"
+            request_function="getComputerCountByTypes"
+            params="['Laptop', 'Notebook', 'Portable', 'Netbook']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_server"
+            label="Server"
+            request_function="getComputerCountByTypes"
+            params="['Server*', 'Serveur*', 'Rack Mount Chassis', 'Main System Chassis']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_vm"
+            label="Virtual Machine"
+            request_function="getComputerCountByTypes"
+            params="['Virtual Machine', 'Machine virtuelle']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="type_count_tablet"
+            label="Tablet"
+            request_function="getComputerCountByTypes"
+            params="['Tablet', 'Tablette tactile']"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <!-- getComputerCountByState example
+        <indicator
+            name="state_count"
+            label="States"
+            request_function="getComputerCountByState"
+            params="'*'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        <indicator
+            name="state_count_product"
+            label="Desktop"
+            request_function="getComputerCountByState"
+            params="'Production'"
+            data_type="0"
+            active="1"
+            keep_history="1"
+        />
+        -->
+    </module>
 </indicators>

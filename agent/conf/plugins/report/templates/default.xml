@@ -194,4 +194,153 @@
         </table>
         -->
     </section>
+    <section module="inventory" title="Device evolution" name="inventory">
+        <table type="period" title="Number of devices by OS" name="table_os" chart_type="bar">
+            <item module="inventory" indicator="os_count" title="OS" hidden="yes">
+                <item module="inventory" indicator="os_count_windows" title="Windows">
+                    <item module="inventory" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
+                        <item module="inventory" indicator="os_count_windows_xp_home" title="Windows XP Home" />
+                        <item module="inventory" indicator="os_count_windows_xp_pro" title="Windows XP Professional" />
+                    </item>
+                    <item module="inventory" indicator="os_count_windows_vista" title="Windows Vista" selected="yes">
+                        <item module="inventory" indicator="os_count_windows_vista_home" title="Windows Vista Home" />
+                        <item module="inventory" indicator="os_count_windows_vista_business" title="Windows Vista Professionnal" />
+                        <item module="inventory" indicator="os_count_windows_vista_enterprise" title="Windows Vista Enterprise" />
+                        <item module="inventory" indicator="os_count_windows_vista_ultimate" title="Windows Vista Ultimate" />
+                    </item>
+                    <item module="inventory" indicator="os_count_windows_7" title="Windows 7" selected="yes">
+                        <item module="inventory" indicator="os_count_windows_7_home" title="Windows 7 Home" />
+                        <item module="inventory" indicator="os_count_windows_7_pro" title="Windows 7 Professionnal" />
+                        <item module="inventory" indicator="os_count_windows_7_enterprise" title="Windows 7 Enterprise" />
+                        <item module="inventory" indicator="os_count_windows_7_ultimate" title="Windows 7 Ultimate" />
+                    </item>
+                    <item module="inventory" indicator="os_count_windows_8" title="Windows 8" selected="yes">
+                        <item module="inventory" indicator="os_count_windows_8_home" title="Windows 8" />
+                        <item module="inventory" indicator="os_count_windows_8_pro" title="Windows 8 Professionnal" />
+                        <item module="inventory" indicator="os_count_windows_8_rt" title="Windows RT" />
+                    </item>
+                    <item module="inventory" indicator="os_count_windows_server" title="Windows Server" selected="yes">
+                        <item module="inventory" indicator="os_count_windows_server_2000" title="Windows Server 2000" />
+                        <item module="inventory" indicator="os_count_windows_server_2003" title="Windows Server 2003" />
+                        <item module="inventory" indicator="os_count_windows_server_2008" title="Windows Server 2008" />
+                        <item module="inventory" indicator="os_count_windows_server_2012" title="Windows Server 2012" />
+                    </item>
+                </item>
+                <item module="inventory" indicator="os_count_macos" title="Mac OS X" selected="yes">
+                    <item module="inventory" indicator="os_count_macos_desktop" title="Mac OS X" />
+                    <item module="inventory" indicator="os_count_macos_server" title="Mac OS X Server" />
+                </item>
+                <item module="inventory" indicator="os_count_linux" title="Linux" selected="yes">
+                    <item module="inventory" indicator="os_count_linux_debian" title="Debian GNU/Linux" />
+                    <item module="inventory" indicator="os_count_linux_ubuntu" title="Ubuntu" />
+                    <item module="inventory" indicator="os_count_linux_redhat" title="Red Hat" />
+                    <item module="inventory" indicator="os_count_linux_centos" title="CentOS" />
+                    <item module="inventory" indicator="os_count_linux_fedora" title="Fedora" />
+                    <item module="inventory" indicator="os_count_linux_mandriva" title="Mandriva Linux" />
+                    <item module="inventory" indicator="os_count_linux_mageia" title="Mageia" />
+                </item>
+                <item module="inventory" indicator="os_count_unix" title="Unix" selected="yes" />
+            </item>
+        </table>
+        <table type="period" title="Office installations" name="table_office" chart_type="bar">
+            <item module="inventory" indicator="soft_count_office" title="Office" hidden="yes">
+                <item module="inventory" indicator="soft_count_office_97" title="Office 97" />
+                <item module="inventory" indicator="soft_count_office_98" title="Office 98" />
+                <item module="inventory" indicator="soft_count_office_2000" title="Office 2000">
+                    <item module="inventory" indicator="soft_count_office_2000_standard" title="Office 2000 Standard" />
+                    <item module="inventory" indicator="soft_count_office_2000_sbs" title="Office 2000 Small Business" />
+                    <item module="inventory" indicator="soft_count_office_2000_pro" title="Office 2000 Professional" />
+                    <item module="inventory" indicator="soft_count_office_2000_premium" title="Office 2000 Premium" />
+                    <item module="inventory" indicator="soft_count_office_2000_devel" title="Office 2000 Developer" />
+                    <item module="inventory" indicator="soft_count_office_2000_standard" title="Office 2000 Standard" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_standard" title="Office 2000 SR-1 Standard" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_sbs" title="Office 2000 SR-1 Small Business" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_pro" title="Office 2000 SR-1 Professional" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_premium" title="Office 2000 SR-1 Premium" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_devel" title="Office 2000 SR-1 Developer" />
+                    <item module="inventory" indicator="soft_count_office_2000_sr1_standard" title="Office 2000 SR-1 Standard" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_xp" title="Office XP">
+                    <item module="inventory" indicator="soft_count_office_xp_standard" title="Office XP Standard" />
+                    <item module="inventory" indicator="soft_count_office_xp_sbs" title="Office XP Small Business" />
+                    <item module="inventory" indicator="soft_count_office_xp_pro" title="Office XP Professional" />
+                    <item module="inventory" indicator="soft_count_office_xp_premium" title="Office XP Premium" />
+                    <item module="inventory" indicator="soft_count_office_xp_devel" title="Office XP Developer" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_2003" title="Office 2003" selected="yes">
+                    <item module="inventory" indicator="soft_count_office_2003_basic" title="Office Basic Edition 2003" />
+                    <item module="inventory" indicator="soft_count_office_2003_home" title="Office Home and Student Edition 2003" />
+                    <item module="inventory" indicator="soft_count_office_2003_standard" title="Office Standard Edition 2003" />
+                    <item module="inventory" indicator="soft_count_office_2003_sbs" title="Office Small Business Edition 2003" />
+                    <item module="inventory" indicator="soft_count_office_2003_pro" title="Office Professional Edition 2003" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_2007" title="Office 2007" selected="yes">
+                    <item module="inventory" indicator="soft_count_office_2007_basic" title="Office Basic 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_home" title="Office Home and Student 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_standard" title="Office Standard 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_sbs" title="Office Small Business 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_pro" title="Office Professional 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_pro_plus" title="Office Professional Plus 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_ultimate" title="Office Ultimate 2007" />
+                    <item module="inventory" indicator="soft_count_office_2007_enterprise" title="Office Enterprise 2007" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_2010" title="Office 2010" selected="yes">
+                    <item module="inventory" indicator="soft_count_office_2010_starter" title="Office Starter 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_personal" title="Office Personal 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_home_student" title="Office Home and Student 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_home_business" title="Office Home and Business 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_standard" title="Office Standard 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_pro" title="Office Professional 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_pro_plus" title="Office Professional Plus 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_pro_academic" title="Office Professional Academic 2010" />
+                    <item module="inventory" indicator="soft_count_office_2010_university" title="Office University 2010" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_2013" title="Office 2013" selected="yes">
+                    <item module="inventory" indicator="soft_count_office_2013_home_student" title="Office Home and Student 2013" />
+                    <item module="inventory" indicator="soft_count_office_2013_home_business" title="Office Home and Business 2013" />
+                    <item module="inventory" indicator="soft_count_office_2013_standard" title="Office Standard 2013" />
+                    <item module="inventory" indicator="soft_count_office_2013_pro" title="Office Professional 2013" />
+                    <item module="inventory" indicator="soft_count_office_2013_pro_plus" title="Office Professional Plus 2013" />
+                </item>
+                <item module="inventory" indicator="soft_count_office_mac_2004" title="Office Mac 2004" />
+                <item module="inventory" indicator="soft_count_office_mac_2008" title="Office Mac 2008" />
+                <item module="inventory" indicator="soft_count_office_mac_2011" title="Office Mac 2011" />
+            </item>
+        </table>
+        <table type="period" title="Software installations" name="table_soft" chart_type="line">
+            <item module="inventory" indicator="soft_count_photoshop" title="Adobe Photoshop CS" selected="yes">
+                <item module="inventory" indicator="soft_count_photoshop_cs6" title="Adobe Photoshop CS6" />
+            </item>
+            <item module="inventory" indicator="soft_count_business_objects" title="Business Objects" />
+            <item module="inventory" indicator="soft_count_autocad" title="AutoCAD" />
+        </table>
+        <table type="period" title="Computer types" name="table_types" chart_type="bar">
+            <item module="inventory" indicator="type_count" title="Types" hidden="yes">
+                <item module="inventory" indicator="type_count_desktop" title="Desktop" selected="yes" />
+                <item module="inventory" indicator="type_count_laptop" title="Laptop" selected="yes" />
+                <item module="inventory" indicator="type_count_server" title="Server" selected="yes" />
+                <item module="inventory" indicator="type_count_vm" title="Virtual Machine" selected="yes" />
+                <item module="inventory" indicator="type_count_tablet" title="Tablet" selected="yes" />
+            </item>
+        </table>
+        <!-- State table example
+        <table
+            type = "period|key_value"
+            title = "Table title"
+            name = "table_identifier"
+            chart_type = "bar|line|pie"
+        >
+            <item
+                module="MODULE_NAME"
+                indicator="indicator_name"
+                title="Indicator label"
+                selected = "yes|no" // optional
+                >
+                    # Subitems example
+                    <item module="inventory" indicator="state_count_production" title="Production" selected="yes" />
+                    <item module="inventory" indicator="state_count_hs" title="HS" selected="yes" />
+            </item>
+        </table>
+        -->
+    </section>
 </template>
