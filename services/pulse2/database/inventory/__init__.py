@@ -525,6 +525,13 @@ class Inventory(DyngroupDatabaseHelper):
                 self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
                 self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')])
             )
+        elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
+            value = PossibleQueries().possibleQueries('triple')[query[2]]
+            return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
+                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')]),
+                self.mapping(ctx, [None, None, value[2][0], query[3][2].replace(')', '')])
+            )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
                 partKlass = Machine
@@ -2373,6 +2380,7 @@ class PossibleQueries(Singleton):
     def init(self, config):
         self.list = config.list
         self.double = config.double
+        self.triple = config.triple
         self.halfstatic = config.halfstatic
 
     def possibleQueries(self, value = None): # TODO : need to put this in the conf file
@@ -2380,6 +2388,7 @@ class PossibleQueries(Singleton):
             return {
                 'list':self.list,
                 'double':self.double,
+                'triple':self.triple,
                 'halfstatic':self.halfstatic
             }
         else:

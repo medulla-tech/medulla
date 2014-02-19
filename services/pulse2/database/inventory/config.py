@@ -71,6 +71,13 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
                 ['Software/ProductVersion', 'string']
             ]
     }
+    triple = {
+            'Software/Company:ProductName:ProductVersion': [
+                ['Software/Company', 'string'],
+                ['Software/ProductName', 'string'],
+                ['Software/ProductVersion', 'string']
+            ]
+    }
     doubledetail = {
             'Software/ProductVersion' : 'string'
     }

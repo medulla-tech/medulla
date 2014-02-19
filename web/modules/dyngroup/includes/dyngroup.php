@@ -139,6 +139,9 @@ class ConvergenceGroup extends Group {
         /* Create convergence groups subrequest */
         $subReqModule = (in_array('glpi', $_SESSION['modulesList'])) ? 'glpi' : 'inventory';
         $subReqCriterion = 'Installed software (specific vendor and version)';
+        if (in_array('inventory', $_SESSION['modulesList'])) {
+            $subReqCriterion = 'Software/Company:ProductName:ProductVersion';
+        }
         $Qvendor = ($this->package->Qvendor) ? $this->package->Qvendor : '*';
         $Qsoftware = ($this->package->Qsoftware) ? $this->package->Qsoftware : '*';
         $Qversion = ($this->package->Qversion) ? $this->package->Qversion : '*';
