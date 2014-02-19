@@ -53,6 +53,7 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     web_def_service_default_wol = 0
     resolv_order = ['ip','netbios', 'dns', 'fqdn', 'hosts', 'first']
     preferred_network = (None, None)
+    purge_interval = '23 0 * * 0'
  
     def __init__(self, name = 'imaging', conffile = None):
         if not hasattr(self, 'initdone'):
@@ -81,5 +82,10 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
             self.preferred_network = pnp.parse(self.get("network", "preferred_network"))
         else :
             self.preferred_network = pnp.get_default()
+
+        try:
+            self.purge_interval = self.get('main', 'purge_interval')
+        except (NoOptionError, NoSectionError):
+            self.purge_interval = '23 0 * * 0'
 
 

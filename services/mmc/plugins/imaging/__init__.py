@@ -36,6 +36,7 @@ from mmc.plugins.imaging.computer import InventoryComputers
 from mmc.plugins.imaging.imaging import ComputerImagingImaging
 from mmc.plugins.imaging.pulse import ImagingPulse2Manager
 from mmc.plugins.imaging.functions import ImagingRpcProxy, computersUnregister
+from mmc.core.tasks import TaskManager
 from pulse2.managers.profile import ComputerProfileManager
 from mmc.plugins.base.computers import ComputerManager
 from pulse2.managers.imaging import ComputerImagingManager
@@ -64,6 +65,7 @@ NOAUTHNEEDED = ['computerRegister',
 def getApiVersion():
     return APIVERSION
 
+
 def activate():
     """
     Read the plugin configuration, initialize it, and run some tests to ensure
@@ -90,7 +92,12 @@ def activate():
 
     ComputerManager().register('imaging', InventoryComputers)
 
+    TaskManager().addTask("imaging.purge_removed_computers",
+                        (purge_removed_computers),
+                        cron_expression=config.purge_interval)
+
     return True
+
 
 def activate_2():
     """
