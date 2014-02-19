@@ -25,10 +25,10 @@
 
 require_once ("modules/pkgs/includes/autocomplete.php");
 function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '', $style = '') {
-    $module = clean(quickGet('req'));
+    $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';
     $criterion = clean ( quickGet ( 'add_param' ) );
     $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', 
-            "glpi", $field, $value = $pack[$p[0]]/*quickGet ( 'value' )*/, $limit, $extracriterion);
+            $module, $field, $value = $pack[$p[0]]/*quickGet ( 'value' )*/, $limit, $extracriterion);
     $tooltip = _T(
             'Please type 3 characters for suggestion.<br>
             Wildcard is \'%\', %text% matches any string containing \'text\'.<br>
@@ -39,13 +39,31 @@ function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $
                     array('class' => 'associateinventory', 'style' => $style, 'tooltip' => $tooltip)), 
             array("value" => $pack[$p[0]]));
 }
+
+/*
+ * Get correct dyngroup fields
+ */
+function getQFields() {
+    if (in_array('inventory', $_SESSION['modulesList'])) {
+        return array(
+            'Qvendor' => 'Software/Company',
+            'Qsoftware' => 'Software/ProductName:ProductVersion',
+            'Qversion' => 'Software/ProductName:ProductVersion',
+        );
+    }
+    return array(
+        'Qvendor' => 'Vendors',
+        'Qsoftware' => 'Installed+software',
+        'Qversion' => 'Software versions',
+    );
+}
 function addQuerySection($Form, $p) {
     /* ================= BEGIN QUERY ===================== */
     $span = new SpanElement(_T("Query", "pkgs"), "pkgs-title");
     $Form->add(new TrFormElement("", $span), array());
 
     $check = '';
-    $style = 'display:none'; 
+    $style = 'display:none';
     if ($p['associateinventory'] == 1){
         $check = 'checked';
         $style = '';
@@ -55,11 +73,14 @@ function addQuerySection($Form, $p) {
             new TrFormElement(_T('Associate inventory', 'pkgs'), 
                     new CheckboxTpl('associateinventory')), 
             array("value" => $check)
-    );
-    addQuery($Form, array('Qvendor', _T('Vendor', 'pkgs')), $p, 'Vendors', 3, '', $style);
-    addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, 'Installed+software', 3, 
+        );
+
+    $Qfields = getQFields();
+
+    addQuery($Form, array('Qvendor', _T('Vendor', 'pkgs')), $p, $Qfields['Qvendor'], 3, '', $style);
+    addQuery($Form, array('Qsoftware', _T('Software', 'pkgs')), $p, $Qfields['Qsoftware'], 3, 
             'Qvendor', $style);
-    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, 'Software versions', 2, 'Qsoftware', 
+    addQuery($Form, array('Qversion', _T('Version', 'pkgs')), $p, $Qfields['Qversion'], 2, 'Qsoftware', 
             $style);
 
     $Bool = new TrFormElement(_T('Bool', 'pkgs'), new InputTpl('boolcnd'));

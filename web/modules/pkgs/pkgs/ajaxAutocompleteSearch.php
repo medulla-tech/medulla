@@ -35,7 +35,12 @@ if (!$search) { $search = '' ; }
 $res = array();
 if (strlen($search) >= 2) { //TODO: the limit should be passed as an argument, moreover it is already partly controlled by 'min keyword length' in autocomplete.php
     if (strlen($extracriterion)) {
-        $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $search, $extracriterion);
+        if (in_array('inventory', $_SESSION['modulesList'])) {
+            $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $extracriterion, $search);
+        }
+        else {
+            $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $search, $extracriterion);
+        }
     } else {
         $res = getPossiblesValuesForCriterionInModuleFuzzy($module, $criterion, $search);
     }

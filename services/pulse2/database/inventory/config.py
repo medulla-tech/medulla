@@ -59,6 +59,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
 class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     list = {
             'Software/ProductName':['string'],
+            'Software/Company':['string'],
             'Hardware/ProcessorType':['string'],
             'Hardware/OperatingSystem':['string'],
             'Entity/Label':['string'],
