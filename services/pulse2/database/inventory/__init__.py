@@ -36,7 +36,7 @@ from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, Singleton, isUUID
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
-        Integer, ForeignKey, or_, desc, func, not_
+        Integer, ForeignKey, or_, desc, func, not_, distinct
 from sqlalchemy.orm import create_session, mapper
 import sqlalchemy.databases
 
@@ -1560,7 +1560,6 @@ class Inventory(DyngroupDatabaseHelper):
                     .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                     .join(
                         self.table['hasEntity'],
-                        self.table['hasEntity'].c.machine == self.machine.c.id,
                         self.table['hasEntity'].c.inventory == self.table['Inventory'].c.id,
                     )
                 )
@@ -1601,24 +1600,26 @@ class Inventory(DyngroupDatabaseHelper):
             types = [types]
 
         if int(count) == 1:
-            query = session.query(func.count(Machine.id))
+            query = session.query(func.count(distinct(Machine.id)))
         else:
             query = session.query(Machine)
 
         query = query.select_from(self.machine
                     .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine) \
+                    .join(self.table['hasBios'], self.machine.c.id == self.table['hasBios'].c.machine) \
                     .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
                     .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
                     .join(
                         self.table['hasEntity'],
-                        self.table['hasEntity'].c.machine == self.machine.c.id,
                         self.table['hasEntity'].c.inventory == self.table['Inventory'].c.id,
                     )
                 )
 
         query = query.filter(self.inventory.c.Last == 1)
 
-        type_filter = [self.table['Hardware'].c.Type.like(type) for type in types]
+        hardwareType = self.table['Hardware'].c.Type
+        biosType = self.table['Bios'].c.TypeMachine
+        type_filter = [or_(hardwareType.like(type), biosType.like(type)) for type in types]
         query = query.filter(or_(*type_filter))
 
         if int(count) == 1:
@@ -1701,7 +1702,7 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def getAllEntities(self, ctx):
-        return self.getUserLocations(ctx.userid, with_level=True)
+        return self.getUserLocations(ctx.userid)
 
     def getUserLocations(self, userid, with_level = False):
         """
