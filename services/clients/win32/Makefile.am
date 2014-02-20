@@ -41,7 +41,6 @@ clients_DATA = \
 	sfx.conf.in \
 	sfx.noprompt.conf.in \
 	sfx.silent.conf.in \
-	remote-desktop-agent-vnc2.reg \
 	$(installernsi)
 nobase_clients_DATA =  $(installerdata)
 
@@ -51,7 +50,6 @@ EXTRA_DIST = \
 	sfx.conf.in \
 	sfx.noprompt.conf.in \
 	sfx.silent.conf.in \
-	remote-desktop-agent-vnc2.reg \
 	$(installernsi) \
 	$(installerdata)
 
