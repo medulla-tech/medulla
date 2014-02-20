@@ -170,6 +170,20 @@ def getAllEntities(ctx, value=''):
 
 
 def getAllSoftwares(ctx, softname='', vendor=None):
+    def replace_splat(param):
+        if '*' in param:
+            return param.replace('*', '%')
+        return param
+
+    def check_param(param):
+        if param == '' or param == '*' or param == '%':
+            return None
+        return replace_splat(param)
+
+    software = check_param(softname)
+    vendor = check_param(vendor)
+    if software is None:
+        software = '%'
     return [x[0] for x in Glpi().getAllSoftwares(ctx,
                                              softname=softname,
                                              vendor=vendor,

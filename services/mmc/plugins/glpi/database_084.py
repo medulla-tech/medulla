@@ -2579,7 +2579,7 @@ class Glpi084(DyngroupDatabaseHelper):
             )
         )
         if vendor is not None:
-            query = query.filter(Manufacturers.name == vendor)
+            query = query.filter(Manufacturers.name.like(vendor))
 
         if softname != '':
             query = query.filter(Software.name.like('%' + softname + '%'))

@@ -2411,7 +2411,7 @@ class Glpi07(DyngroupDatabaseHelper):
             query = query.filter(Software.FK_entities.in_(ctx.locationsid))
 
         if vendor is not None:
-            query = query.filter(self.glpi_dropdown_manufacturer.c.name == vendor)
+            query = query.filter(self.glpi_dropdown_manufacturer.c.name.like(vendor))
 
         if softname != '':
             query = query.filter(Software.name.like('%' + softname + '%'))
