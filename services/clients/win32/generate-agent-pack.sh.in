@@ -34,13 +34,12 @@ cd "`dirname $0`"
 
 # Latest version of agents
 ssh_ver=2.1.0
-vnc_ver=2.0.2
+vnc_ver=2.7.10
 inv_ver=2.3.5
 
 # Compute filenames
 ssh_file=pulse2-secure-agent-${ssh_ver}.exe
-vnc_file=pulse2-rda-agent-${vnc_ver}.exe
-vnc_reg=remote-desktop-agent-vnc2.reg
+vnc_file=pulse2-rda-agent-${vnc_ver}.msi
 inv_file=inventory-agent-${inv_ver}.exe
 sfx_file=7zsd.sfx
 
@@ -315,7 +314,6 @@ if [ ! ${download_only} -eq 1 ]; then
   # Generate pulse2-win32-agents-installer.exe
   sed -e "s/@@ssh_file@@/${ssh_file}/" \
       -e "s/@@vnc_file@@/${vnc_file}/" \
-      -e "s/@@vnc_reg@@/${vnc_reg}/" \
       -e "s/@@inv_file@@/${inv_file}/" \
       -e "s/@@inv_tag@@/${inv_tag}/" \
       pulse2-win32-agents-installer.nsi.in \
@@ -329,7 +327,7 @@ if [ ! ${download_only} -eq 1 ]; then
 
   # Creating base.7z archive
   echo "Creating base 7z archive..."
-  7z a base.7z ${ssh_file} ${vnc_file} ${vnc_reg} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
+  7z a base.7z ${ssh_file} ${vnc_file} ${inv_file} pulse2-win32-agents-installer.exe /root/.ssh/id_rsa.pub
 
   # Create agents pack exe
   sed -e "s/@@inv_server@@/${my_fqdn}/" \

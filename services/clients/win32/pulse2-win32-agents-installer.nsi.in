@@ -27,7 +27,6 @@
 ; Agents defines
 !define SSH_AGENT_EXE "@@ssh_file@@"
 !define VNC_AGENT_EXE "@@vnc_file@@"
-!define VNC_AGENT_REG "@@vnc_reg@@"
 !define INVENTORY_AGENT_EXE "@@inv_file@@"
 
 ; Useful modules
@@ -104,6 +103,8 @@ Section "Secure Agent" SSH
   ${EndIf}
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
+  Pop $1 # return value/error/timeout
+  DetailPrint "Return code was: $1"
   DetailPrint ""
   DetailPrint ""
 SectionEnd
@@ -111,36 +112,69 @@ SectionEnd
 Section "Remote Desktop Agent" VNC
   DetailPrint "Remote Desktop Agent Installation...."
   DetailPrint "------------------------------------------------------"
-  StrCpy $0 "$EXEDIR\${VNC_AGENT_EXE} /S"
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; Create installation command line                                                          ;
+  ; http://www.tightvnc.com/doc/win/TightVNC_2.7_for_Windows_Installing_from_MSI_Packages.pdf ;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  StrCpy $0 `msiexec /i "$EXEDIR\${VNC_AGENT_EXE}" /quiet /norestart`
+  StrCpy $0 `$0 ADDLOCAL=Server SERVER_REGISTER_AS_SERVICE=1 SERVER_ADD_FIREWALL_EXCEPTION=0 SERVER_ALLOW_SAS=1`
+  ; Disable embedded Java WebSrv on port 5800
+  StrCpy $0 `$0 SET_ACCEPTHTTPCONNECTIONS=1 VALUE_OF_ACCEPTHTTPCONNECTIONS=0`
+  ; Enable RFB on port 5900
+  StrCpy $0 `$0 SET_ACCEPTRFBCONNECTIONS=1 VALUE_OF_ACCEPTRFBCONNECTIONS=1`
+  ; Enable loopback connection
+  StrCpy $0 `$0 SET_ALLOWLOOPBACK=1 VALUE_OF_ALLOWLOOPBACK=1`
+  ; Loopback only
+  StrCpy $0 `$0 SET_LOOPBACKONLY=1 VALUE_OF_LOOPBACKONLY=1`
+  ; Only allow from 127.0.0.1 and query user
+  StrCpy $0 `$0 SET_IPACCESSCONTROL=1 VALUE_OF_IPACCESSCONTROL=127.0.0.1:2`
+  ; Default answser on timeout is reject
+  StrCpy $0 `$0 SET_QUERYACCEPTONTIMEOUT=1 VALUE_OF_QUERYACCEPTONTIMEOUT=1`
+  ; Timeout is 20s
+  StrCpy $0 `$0 SET_QUERYTIMEOUT=1 VALUE_OF_QUERYTIMEOUT=20`
+  ; Show service icon
+  StrCpy $0 `$0 SET_RUNCONTROLINTERFACE=1 VALUE_OF_RUNCONTROLINTERFACE=1`
+  ; Hide wallpaper
+  StrCpy $0 `$0 SET_REMOVEWALLPAPER=1 VALUE_OF_REMOVEWALLPAPER=1`
+  ; Share between multiple connection
+  StrCpy $0 `$0 SET_ALWASHARED=1 SET_NEVERSHARED=1 VALUE_OF_ALWASHARED=1 VALUE_OF_NEVERSHARED=0`
+  ; Disable authentication
+  StrCpy $0 `$0 SET_USEVNCAUTHENTICATION=1 VALUE_OF_USEVNCAUTHENTICATION=0`
+  ; Ensure remote inputs are enabled
+  StrCpy $0 `$0 SET_BLOCKREMOTEINPUT=1 VALUE_OF_BLOCKREMOTEINPUT=0`
+  ; Don't do anything when terminating VNC session
+  StrCpy $0 `$0 SET_DISCONNECTACTION=1 VALUE_OF_DISCONNECTACTION=0`
+
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
-  ${If} ${FileExists} "$EXEDIR\${VNC_AGENT_REG}"
-    DetailPrint "Merging custom registry settings"
-    StrCpy $0 "regedit /S ${VNC_AGENT_REG}"
-    DetailPrint "Running $0"
-    nsExec::ExecToLog $0
-  ${EndIF}
-  StrCpy $1 "tvnserver"
-  !insertmacro SERVICE "status" $1 ""
-  Pop $0
-  ${IfNot} $0 == "stopped"
-    DetailPrint "Stopping Remote Desktop Agent service"
-    !insertmacro SERVICE "stop" $1 ""
-    Sleep 1000
-  ${EndIf}
-  DetailPrint "Starting Remote Desktop Agent service"
-  !insertmacro SERVICE "start" $1 ""
-  Sleep 1000
+  Pop $1 # return value/error/timeout
+  DetailPrint "Return code was: $1"
+
+  ; \o/ New TightVNC seems to handle everything by itself
+  ;
+  ; StrCpy $1 "tvnserver"
+  ; !insertmacro SERVICE "status" $1 ""
+  ; Pop $0
+  ; ${IfNot} $0 == "stopped"
+  ;   DetailPrint "Stopping Remote Desktop Agent service"
+  ;   !insertmacro SERVICE "stop" $1 ""
+  ;   Sleep 1000
+  ; ${EndIf}
+  ; DetailPrint "Starting Remote Desktop Agent service"
+  ; !insertmacro SERVICE "start" $1 ""
+  ; Sleep 1000
   ; Run service helper (trayicon for current session)
-  ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\$1" "ImagePath"
+  ; ReadRegStr $0 HKLM "SYSTEM\CurrentControlSet\Services\$1" "ImagePath"
   ; Remove "-service" from command line
-  ${StrReplace} $2 "-service" " " $0
+  ; ${StrReplace} $2 "-service" " " $0
   ; New VNC systray icon doesn't background itself
   ; Let's help it with a bit of windows shell magic...
-  StrCpy $1 `cmd.exe /C start "" $2 -controlservice -slave`
-  DetailPrint "Starting Remote Desktop Agent service helper for current session"
-  DetailPrint "Running $1"
-  nsExec::ExecToLog $1
+  ; StrCpy $1 `cmd.exe /C start "" $2 -controlservice -slave`
+  ; DetailPrint "Starting Remote Desktop Agent service helper for current session"
+  ; DetailPrint "Running $1"
+  ; nsExec::ExecToLog $1
+
   DetailPrint ""
   DetailPrint ""
 SectionEnd
@@ -171,6 +205,8 @@ Please fill the field with the right port."
   StrCpy $0 "$EXEDIR\${INVENTORY_AGENT_EXE} /S @@inv_tag@@ /installtasks=Minimal /acceptlicense /runnow /server=$\"http://$INV_SERVER:$INV_SERVER_PORT$\""
   DetailPrint "Running $0"
   nsExec::ExecToLog $0
+  Pop $1 # return value/error/timeout
+  DetailPrint "Return code was: $1"
   DetailPrint ""
   DetailPrint ""
 SectionEnd
