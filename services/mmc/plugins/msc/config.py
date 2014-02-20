@@ -111,6 +111,9 @@ class MscConfig(MscDatabaseConfig):
     web_probe_order =  ""
     web_probe_order_on_demand = "ssh"
 
+    # Display root commands (or not)
+    show_root_commands = 1
+
     # IP blacklists settings
     # To filter out everything which is not a valid unicast address
     ignore_non_rfc2780 = True
@@ -320,7 +323,8 @@ class MscConfig(MscDatabaseConfig):
             self.web_probe_order = self.cp.get("web", "probe_order")
         if self.cp.has_option("web", "probe_order_on_demand"):
             self.web_probe_order_on_demand = self.cp.get("web", "probe_order_on_demand")
-
+        if self.cp.has_option("web", "show_root_commands"):
+            self.show_root_commands = self.cp.get("web", "show_root_commands")
 
         # API Package
         if self.cp.has_option("package_api", "mserver"):

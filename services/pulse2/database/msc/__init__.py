@@ -468,19 +468,23 @@ class MscDatabase(DatabaseHelper):
             # User want to get all commands she/he has the right to see
             if ctx.userid == "root":
                 # root can see everything, so no filter for root
-                return 1 == 1
+                return True
             elif ctx.locationsCount not in [None, 0, 1] and ctx.userids:
                 # We have multiple locations, and a list of userids sharing the
                 # same locations of the current user
-                return self.commands.c.creator.in_(ctx.userids)
+                userids = ctx.userids
+                # If show root commands is activated, we add it
+                if self.config.show_root_commands:
+                    userids.append('root')
+                return self.commands.c.creator.in_(userids)
         else:
             # Unknown filter type
-            self.logger.warn("Unknown filter type when querying commands")
+            self.logger.debug("Unknown filter type when querying commands")
             if ctx.locationsCount not in [None, 0, 1]:
                 # We have multiple locations (entities) in database, so we
                 # filter the results using the current userid
                 return self.commands.c.creator == ctx.userid
-        return 1 == 1
+        return True
 
     def __queryUsersFilter(self, ctx, q):
         """
@@ -498,13 +502,17 @@ class MscDatabase(DatabaseHelper):
             elif ctx.locationsCount not in [None, 0, 1] and ctx.userids:
                 # We have multiple locations, and a list of userids sharing the
                 # same locations of the current user
-                q = q.filter(self.commands.c.creator.in_(ctx.userids))
+                userids = ctx.userids
+                # If show root commands is activated, we add it
+                if self.config.show_root_commands:
+                    userids.append('root')
+                q = q.filter(self.commands.c.creator.in_(userids))
             # else if we have just one location, we don't apply any filter. The
             #     user can see the commands of all users
 
         else:
             # Unknown filter type
-            self.logger.warn("Unknown filter type when querying commands")
+            self.logger.debug("Unknown filter type when querying commands")
             if ctx.locationsCount not in [None, 0, 1]:
                 # We have multiple locations (entities) in database, so we
                 # filter the results using the current userid
