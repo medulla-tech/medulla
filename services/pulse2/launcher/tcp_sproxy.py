@@ -61,7 +61,11 @@ def establishProxy(client, requestor_ip, requested_port):
         size = 15
         return ''.join(random.choice(chars) for x in range(size))
 
-    auth_key = generate_auth_key()
+    if LauncherConfig().create_web_proxy:
+        auth_key = generate_auth_key()
+    else:
+        auth_key = '-'
+
     proxy_port, local_port = allocate_port_couple()
     # Built "exec" command
     real_command = [

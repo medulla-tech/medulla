@@ -583,9 +583,18 @@ class RemoteCallProxy :
                        requested_port):
 
         def _finalize(result):
-            if type(result) == list: # got expected struct
+            if type(result) == list:  # got expected struct
                 (launcher, host, port, key) = result
-		logging.getLogger().info('VNC Proxy: launcher "%s" created new WebSocket to "%s:%s" with key "%s"' % (str(launcher), str(host), str(port), str(key)))
+                if key == '-':
+                    # Key not provided => TCP Proxy
+                    logging.getLogger().info(
+                        'VNC Proxy: launcher "%s" created new TCP Proxy to "%s:%s"'
+                        % (launcher, host, str(port)))
+                else:
+                    # Key provided => Websocket Proxy
+                    logging.getLogger().info(
+                        'VNC Proxy: launcher "%s" created new WebSocket Proxy to "%s:%s" with key "%s"'
+                        % (str(launcher), str(host), str(port), str(key)))
                 if host == '':
                     host = SchedulerConfig().launchers[launcher]['host']
                 return (host, port, key)
