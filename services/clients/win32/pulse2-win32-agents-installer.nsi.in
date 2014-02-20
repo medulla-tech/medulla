@@ -113,6 +113,29 @@ Section "Remote Desktop Agent" VNC
   DetailPrint "Remote Desktop Agent Installation...."
   DetailPrint "------------------------------------------------------"
 
+  ; Clean old TightVNC 2.0.2 if installed
+  ClearErrors
+  ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\TightVNC" "DisplayVersion"
+  ${IfNot} ${Errors}
+    ; Seems TightVNC 2.0.2 is installed
+    ClearErrors
+    ${IfNot} ${Errors}
+      ReadRegStr $0 HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\TightVNC" "UninstallString"
+      DetailPrint "TightVNC 2.0.2 seems to be installed. Uninstalling..."
+      ; Silent uninstall
+      StrCpy $0 `"$0" /S`
+      DetailPrint "Running $0"
+      nsExec::ExecToLog $0
+      Pop $1 # return value/error/timeout
+      DetailPrint "Return code was: $1"
+      DetailPrint ""
+    ${Else}
+      DetailPrint "Uh? Skipping TightVNC 2.0.2 uninstallation."
+      DetailPrint "Got DisplayVersion from registry without UninstallString, that's weird."
+      DetailPrint ""
+    ${EndIf}
+  ${EndIf}
+
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Create installation command line                                                          ;
   ; http://www.tightvnc.com/doc/win/TightVNC_2.7_for_Windows_Installing_from_MSI_Packages.pdf ;
