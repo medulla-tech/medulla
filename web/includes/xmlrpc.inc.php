@@ -309,11 +309,36 @@ function xmlCall($method, $params = null) {
               redirected to the login page.
              */
             require_once 'modules/base/includes/users-xmlrpc.inc.php';
-            if (auth_user($_SESSION['login'], $_SESSION['pass']) ){
-                // Retry call after relogin
+            // Create a template array to store important session vars
+            $temp = array();
+            // Session keys to keep
+            $keys = array('ip_addr', 'XMLRPC_agent', 'agent', 'XMLRPC_server_description',
+                          'AUTH_METHOD', 'login', 'pass', 'expire', 'lang', 'RPCSESSION',
+                          'aclattr', 'acltab', 'acl', 'supportModList', 'modListVersion',
+                          'doeffect', 'modulesList'
+                          );
+
+            // Saving session params
+            foreach ($keys as $key)
+                if (isset($_SESSION[$key]))
+                    $temp[$key] = $_SESSION[$key];
+
+            // Destroy and recreate session to eliminate
+            // modules session params
+            session_destroy();
+            session_start();
+
+            // Restoring session params
+            foreach ($keys as $key)
+                if (isset($temp[$key]))
+                    $_SESSION[$key] = $temp[$key];
+
+            if (auth_user($temp['login'], $temp['pass']) ){
+                // If login succeed, retry call after relogin
                 return xmlCall($method, $params);
             }
             else{
+                // Logout and request a new login
                 unset($_SESSION["expire"]);
                 $_SESSION["agentsessionexpired"] = 1;
                 $root = $conf["global"]["root"];
