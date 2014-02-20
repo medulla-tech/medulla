@@ -181,7 +181,8 @@ def getAllSoftwares(ctx, softname='', vendor=None):
         return replace_splat(param)
 
     software = check_param(softname)
-    vendor = check_param(vendor)
+    if vendor is not None:
+        vendor = check_param(vendor)
     if software is None:
         software = '%'
     return [x[0] for x in Glpi().getAllSoftwares(ctx,
