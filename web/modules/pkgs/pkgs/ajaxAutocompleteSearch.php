@@ -29,6 +29,7 @@ $module = quickGet("modulename");
 $criterion = quickGet("criterion");
 $search = quickGet("data");
 $extracriterion = quickGet("extracriterion");
+$field = quickGet("field");
 
 if (!$search) { $search = '' ; }
 
@@ -36,6 +37,7 @@ $res = array();
 if (strlen($search) >= 2) { //TODO: the limit should be passed as an argument, moreover it is already partly controlled by 'min keyword length' in autocomplete.php
     if (strlen($extracriterion)) {
         if (in_array('inventory', $_SESSION['modulesList'])) {
+            $criterion = ($field == 'Qsoftware') ? 'Software/Company:ProductName' : $criterion;
             $res = getPossiblesValuesForCriterionInModuleFuzzyWhere($module, $criterion, $extracriterion, $search);
         }
         else {

@@ -64,6 +64,7 @@ class Autocomplete extends InputTpl {
                         return('<?php echo $this->ajaxfile?>' +
                                 '&modulename=<?php echo $this->module?>' +
                                 '&criterion=<?php echo $this->criterion?>' +
+                                '&field=<?php echo $this->name?>' +
                                 '&extracriterion='<?php echo $extra ?>)},
                     min_keyword_length: <?php echo $this->limit ?>,
                     showLoadingImage: false,

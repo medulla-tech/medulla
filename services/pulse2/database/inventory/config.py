@@ -69,6 +69,10 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
             'Software/ProductName:ProductVersion': [
                 ['Software/ProductName', 'string'],
                 ['Software/ProductVersion', 'string']
+            ],
+            'Software/Company:ProductName': [
+                ['Software/Company', 'string'],
+                ['Software/ProductName', 'string']
             ]
     }
     triple = {
