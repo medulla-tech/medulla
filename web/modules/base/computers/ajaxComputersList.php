@@ -121,7 +121,7 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
     }
 </style>
 <script type="text/javascript">
-    jQuery('tbody tr td:not(.action)').click(function() {
+    jQuery('tbody tr td').not(":has(a)").click(function() {
         jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
         pushSearch();
     });
