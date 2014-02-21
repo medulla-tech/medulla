@@ -77,6 +77,9 @@ class MmcServer(xmlrpc.XMLRPC, object):
     "plugins/" directory
     """
 
+    # Attribute to keep traces of all running sessions
+    sessions = set()
+
     def __init__(self, modules, config):
         xmlrpc.XMLRPC.__init__(self)
         self.modules = modules
@@ -339,6 +342,9 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 logger.debug("Attaching module '%s' context to user session" % mod)
                 session.contexts[mod] = context
 
+        # Add associated context session to sessions set
+        if session not in self.sessions:
+            self.sessions.add(session)
 
     # ======== Reload method ================
 
@@ -357,6 +363,11 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 except Exception, e:
                     logger.error('Error while reloading configuration file %s', obj.conffile)
                     logger.error(str(e))
+
+        # Manually expiring all logged sessions
+        for session in self.sessions:
+            session.expire()
+        self.sessions = set()
         return True
 
     # ======== XMLRPC Standard Introspection methods ================
