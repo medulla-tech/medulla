@@ -1228,6 +1228,11 @@ class MscDatabase(DatabaseHelper):
         except NoResultFound:
             return False
 
+    @DatabaseHelper._session
+    def getPullTargets(self, session):
+        query = session.query(PullTargets)
+        return [uuid.target_uuid for uuid in query]
+
     def getTargets(self, cmd_id, onlyId = False):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         if onlyId:
             connection = self.getDbConnection()

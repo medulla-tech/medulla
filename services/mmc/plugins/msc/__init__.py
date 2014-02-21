@@ -448,6 +448,14 @@ class RpcProxy(RpcProxyI):
         """
         return xmlrpcCleanup(MscDatabase().isPullTarget(uuid))
 
+    def get_pull_targets(self):
+        """
+        Returns list of Pull target UUIDs
+
+        @return: list
+        """
+        return xmlrpcCleanup(MscDatabase().getPullTargets())
+
     def pull_target_awake(self, hostname, macs):
         """
         Gets the requested machine for UUID.
