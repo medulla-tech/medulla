@@ -153,7 +153,7 @@ Section "Remote Desktop Agent" VNC
   ; Only allow from 127.0.0.1 and query user
   StrCpy $0 `$0 SET_IPACCESSCONTROL=1 VALUE_OF_IPACCESSCONTROL=127.0.0.1:2`
   ; Default answser on timeout is reject
-  StrCpy $0 `$0 SET_QUERYACCEPTONTIMEOUT=1 VALUE_OF_QUERYACCEPTONTIMEOUT=1`
+  StrCpy $0 `$0 SET_QUERYACCEPTONTIMEOUT=1 VALUE_OF_QUERYACCEPTONTIMEOUT=0`
   ; Timeout is 20s
   StrCpy $0 `$0 SET_QUERYTIMEOUT=1 VALUE_OF_QUERYTIMEOUT=20`
   ; Show service icon
