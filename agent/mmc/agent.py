@@ -363,12 +363,13 @@ class MmcServer(xmlrpc.XMLRPC, object):
                 except Exception, e:
                     logger.error('Error while reloading configuration file %s', obj.conffile)
                     logger.error(str(e))
+                    return 'Failed'
 
         # Manually expiring all logged sessions
         for session in self.sessions:
             session.expire()
         self.sessions = set()
-        return True
+        return 'Done'
 
     # ======== XMLRPC Standard Introspection methods ================
 
