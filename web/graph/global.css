@@ -669,6 +669,7 @@ td.printerName,
 td.shareName,
 td.groupName,
 td.machineName,
+td.machinePull,
 td.userName {
     color: #666;
     font-weight: bold;
@@ -677,6 +678,7 @@ td.userName {
 
 td a,
 td.machineName a,
+td.machinePull a,
 td.userName a {
     color: #666;
     font-weight: bold;
@@ -684,6 +686,7 @@ td.userName a {
 }
 td a:link,
 td.machineName a:link,
+td.machinePull a:link,
 td.userName a:link {
     color: #666;
     font-weight: bold;
@@ -691,6 +694,7 @@ td.userName a:link {
 }
 td a:visited,
 td.machineName a:visited,
+td.machinePull a:visited,
 td.userName a:visited {
     color: #666;
     font-weight: bold;
@@ -776,6 +780,12 @@ td.userAction { text-align: right; }
 td.machineName {
     padding: 0 0 0 37px;
     background-image: url("../img/machines/icn_machinesList.gif");
+    background-position: 7px 7px;
+}
+
+td.machinePull {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_machinePull.gif");
     background-position: 7px 7px;
 }
 

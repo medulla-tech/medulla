@@ -23,6 +23,8 @@
  */
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false, $msc_vnc_show_icon = false) {
+    /* $pull_list is an array with UUIDs of pull machines */
+    $pull_list = (in_array("msc", $_SESSION["modulesList"])) ? xmlcall('msc.get_pull_targets') : array();
 
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
@@ -42,6 +44,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $actionVncClient = array();
     $actionProfile = array();
     $params = array();
+    $cssClasses = array();
 
     $headers = getComputersListHeaders();
     $columns = array();
@@ -61,6 +64,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
     }*/
     foreach($names as $value) {
+        $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
+
         foreach ($headers as $header) {
             if (!empty($value[$header[0]])) {
                 $v = $value[$header[0]];
@@ -147,7 +152,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     }
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
-    $n->setCssClass("machineName");
+    //$n->setCssClass("machineName");
+    $n->setMainActionClasses($cssClasses);
 
     $n->addActionItemArray($actionInventory);
     if ($msc_can_download_file) {
