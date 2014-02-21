@@ -24,7 +24,7 @@
 
 from importlib import import_module
 
-from sqlalchemy import Column, String, Integer, BigInteger, func, orm
+from sqlalchemy import Column, String, Integer, Float, BigInteger, func, orm
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
 from mmc.database.database_helper import DBObj
@@ -49,7 +49,7 @@ class ReportingFloatData(Base, ReportingData):
     # ====== Table name =========================
     __tablename__ = 'data_float'
     # ====== Fields =============================
-    value = Column(Integer)
+    value = Column(Float)
 
 
 class ReportingTextData(Base, ReportingData):
@@ -109,6 +109,6 @@ class Indicator(Base, DBObj):
             ret = ret.filter(self.dataClass.entity_id.in_(entities))
         # Timestamp range filter
         ret = ret.filter(self.dataClass.timestamp.between(ts_min, ts_max))
-        
+
         result = ret.scalar()
         return self.format_func(result) if result is not None else None
