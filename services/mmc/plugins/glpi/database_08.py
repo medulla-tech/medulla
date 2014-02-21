@@ -759,14 +759,31 @@ class Glpi08(DyngroupDatabaseHelper):
 
             for part in parts:
                 partA, partB = part
+                partBcanBeNone = partB == '%' and True or False
                 if invert:
                     if like:
-                        ret.append(not_(partA.like(self.encode(partB))))
+                        if partBcanBeNone:
+                            ret.append(not_(
+                                or_(
+                                    partA.like(self.encode(partB)),
+                                    partA == None,
+                                )
+                            ))
+                        else:
+                            ret.append(not_(partA.like(self.encode(partB))))
                     else:
                         ret.append(partA != self.encode(partB))
                 else:
                     if like:
-                        ret.append(partA.like(self.encode(partB)))
+                        if partBcanBeNone:
+                            ret.append(
+                                or_(
+                                    partA.like(self.encode(partB)),
+                                    partA == None,
+                                )
+                            )
+                        else:
+                            ret.append(partA.like(self.encode(partB)))
                     else:
                         ret.append(partA == self.encode(partB))
             if ctx.userid != 'root':
