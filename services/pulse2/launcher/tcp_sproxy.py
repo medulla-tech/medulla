@@ -23,6 +23,9 @@
 # MA 02110-1301, USA.
 
 import logging
+import socket
+import fcntl
+import struct
 
 import twisted.internet.reactor
 import twisted.internet.protocol
@@ -126,8 +129,23 @@ def establishProxy(client, requestor_ip, requested_port):
         { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
     )
 
+    def get_ip_address(ifname):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        return socket.inet_ntoa(fcntl.ioctl(
+            s.fileno(),
+            0x8915,  # SIOCGIFADDR
+            struct.pack('256s', ifname[:15])
+        )[20:24])
+
     def parse_result():
-        return LauncherConfig().name, LauncherConfig().tcp_sproxy_host, proxy_port, auth_key
+        if LauncherConfig().tcp_sproxy_host:
+            tcp_sproxy_host = LauncherConfig().tcp_sproxy_host
+        else:
+            # Take the first network interface
+            logging.getLogger().info('tcp_sproxy_host param was not specified in launcher config')
+            logging.getLogger().info('taking first interface IP Address')
+            tcp_sproxy_host = get_ip_address('eth0')
+        return LauncherConfig().name, tcp_sproxy_host, proxy_port, auth_key
     # Waiting to establish the proxy
     ret = task.deferLater(twisted.internet.reactor, 2, parse_result)
     logging.getLogger().debug('about to execute ' + ' '.join(command_list))
