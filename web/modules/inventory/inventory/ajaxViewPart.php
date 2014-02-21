@@ -324,9 +324,9 @@ if ($_GET['uuid'] != '') {
                 }
             }
 
-            // Replace Database table names by human names
-            $k = ($tabTitles[$k] != NULL) ? $tabTitles[$k] : $k;
             if (!in_array($k, $disabled_columns)) {
+                // Replace Database table names by human names
+                $k = ($tabTitles[$k] != NULL) ? $tabTitles[$k] : $k;
                 if (in_array($k, $graph) && count($v) > 1) {
                     $type = ucfirst($_GET['part']);
                     # TODO should give the tab in the from param
