@@ -17,8 +17,8 @@
     />
 -->
 <indicators>
-    <!-- GLPI indicators -->
-    <module name="glpi">
+    <!-- Inventory indicators -->
+    <module name="inventory">
         <!-- getComputerCountByOSes -->
          <indicator
             name="os_count"
