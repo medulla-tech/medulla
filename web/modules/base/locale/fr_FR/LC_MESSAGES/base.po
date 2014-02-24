@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-02-13 11:03+0100\n"
+"POT-Creation-Date: 2014-02-21 17:29+0100\n"
 "PO-Revision-Date: 2014-01-27 16:46+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -168,72 +168,6 @@ msgstr ""
 "Vérifiez que smbpasswd est correctement configuré: <ul>    <li>Votre serveur"
 " LDAP n'est pas joignable</li>    <li>Votre serveur SAMBA n'est pas "
 "correctement configuré</li> </ul>"
-
-#: includes/xmlrpc.inc.php:166
-msgid "Can't connect to MMC agent"
-msgstr "Impossible de se connecter à l'agent MMC"
-
-#: includes/xmlrpc.inc.php:167
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr ""
-"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
-
-#: includes/xmlrpc.inc.php:179
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
-
-#: includes/xmlrpc.inc.php:180
-msgid "MMC agent seems to be not correctly configured."
-msgstr "L'agent MMC semble ne pas être correctement configuré."
-
-#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
-#: includes/xmlrpc.inc.php:244
-msgid "MMC agent communication problem"
-msgstr "Problème de communication avec l'agent MMC"
-
-#: includes/xmlrpc.inc.php:197
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
-"Veuillez vérifier les connexions réseau et la charge du serveur."
-
-#: includes/xmlrpc.inc.php:206
-msgid "Error while reading MMC agent XML-RPC response."
-msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
-
-#: includes/xmlrpc.inc.php:207
-msgid "Please check network connectivity."
-msgstr "Veuillez vérifier les connexions réseau."
-
-#: includes/xmlrpc.inc.php:222
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
-"le bon port TCP et le bon protocole."
-
-#: includes/xmlrpc.inc.php:245
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
-"version de l'agent MMC."
-
-#: includes/xmlrpc.inc.php:322
-msgid "unknown error"
-msgstr "erreur inconnue"
-
-#: includes/xmlrpc.inc.php:323
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
-msgstr ""
-"Cette exception est inconnue. Veuillez nous contacter pour correctement "
-"gérer cette erreur."
 
 #: includes/auditCodesManager.php:33
 msgid "Daemon start"
@@ -451,6 +385,72 @@ msgstr "Suppression"
 #: includes/acl.inc.php:124
 msgid "You do not have required rights"
 msgstr "Vous n'avez pas les droits requis !"
+
+#: includes/xmlrpc.inc.php:166
+msgid "Can't connect to MMC agent"
+msgstr "Impossible de se connecter à l'agent MMC"
+
+#: includes/xmlrpc.inc.php:167
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr ""
+"L'agent MMC semble ne pas répondre ou n'est pas correctement configuré."
+
+#: includes/xmlrpc.inc.php:179
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "Impossible d'envoyer la requête XML-RPC à l'agent"
+
+#: includes/xmlrpc.inc.php:180
+msgid "MMC agent seems to be not correctly configured."
+msgstr "L'agent MMC semble ne pas être correctement configuré."
+
+#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
+#: includes/xmlrpc.inc.php:244
+msgid "MMC agent communication problem"
+msgstr "Problème de communication avec l'agent MMC"
+
+#: includes/xmlrpc.inc.php:197
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+"Temps dépassé lors de la réception de données en provenance de l'agent MMC. "
+"Veuillez vérifier les connexions réseau et la charge du serveur."
+
+#: includes/xmlrpc.inc.php:206
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "Erreur lors de la réception de la réponse XML-RPC de l'agent."
+
+#: includes/xmlrpc.inc.php:207
+msgid "Please check network connectivity."
+msgstr "Veuillez vérifier les connexions réseau."
+
+#: includes/xmlrpc.inc.php:222
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+"Impossible de dialoguer avec l'agent MMC. Vérifiez que vous avez configuré "
+"le bon port TCP et le bon protocole."
+
+#: includes/xmlrpc.inc.php:245
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+"L'agent MMC n'a pas fourni de numéro de session. Veuillez vérifier la "
+"version de l'agent MMC."
+
+#: includes/xmlrpc.inc.php:354
+msgid "unknown error"
+msgstr "erreur inconnue"
+
+#: includes/xmlrpc.inc.php:355
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+"Cette exception est inconnue. Veuillez nous contacter pour correctement "
+"gérer cette erreur."
 
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
@@ -1125,54 +1125,6 @@ msgstr "Adresse MAC de l'ordinateur"
 msgid "Computer's netmask address"
 msgstr "Masque réseau de l'ordinateur"
 
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr "Inventaire"
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr "Inventaire GLPI"
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr "Consulter le journal"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr "Déploiement de logiciels"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr "Gestion de l'imaging"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr "Téléchargement de fichiers"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr "Prise en main à distance"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr "Voir le profil"
-
-#: modules/base/includes/computers_list.inc.php:148
-msgid "Computers list"
-msgstr "Liste des ordinateurs"
-
-#: modules/base/includes/computers_list.inc.php:158
-msgid "Backup status"
-msgstr "Statut de la sauvegarde"
-
-#: modules/base/includes/computers_list.inc.php:175
-msgid "Delete computer"
-msgstr "Supprimer un ordinateur"
-
-#: modules/base/includes/computers_list.inc.php:178
-msgid "Remove machine from group"
-msgstr "Enlever un ordinateur du groupe"
-
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
 msgstr "Rafraîchir"
@@ -1399,6 +1351,54 @@ msgstr "UID"
 #: modules/base/includes/publicFunc.php:483
 msgid "GID"
 msgstr "GID"
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Inventaire"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "Inventaire GLPI"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Consulter le journal"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Déploiement de logiciels"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "Gestion de l'imaging"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "Téléchargement de fichiers"
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr "Prise en main à distance"
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr "Voir le profil"
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr "Liste des ordinateurs"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr "Statut de la sauvegarde"
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr "Supprimer un ordinateur"
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
+msgstr "Enlever un ordinateur du groupe"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"

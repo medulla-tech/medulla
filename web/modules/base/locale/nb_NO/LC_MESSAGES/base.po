@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-02-13 11:03+0100\n"
+"POT-Creation-Date: 2014-02-21 17:29+0100\n"
 "PO-Revision-Date: 2014-01-27 16:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -159,63 +159,6 @@ msgid ""
 "                            <li> Your Ldap server can be down</li>\n"
 "                            <li> Your Samba server is not properly configured</li>\n"
 "                        </ul>"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:166
-msgid "Can't connect to MMC agent"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:167
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:179
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:180
-msgid "MMC agent seems to be not correctly configured."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
-#: includes/xmlrpc.inc.php:244
-msgid "MMC agent communication problem"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:197
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:206
-msgid "Error while reading MMC agent XML-RPC response."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:207
-msgid "Please check network connectivity."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:222
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:245
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:322
-msgid "unknown error"
-msgstr "ukjent feil"
-
-#: includes/xmlrpc.inc.php:323
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
 msgstr ""
 
 #: includes/auditCodesManager.php:33
@@ -434,6 +377,63 @@ msgstr "Slett"
 #: includes/acl.inc.php:124
 msgid "You do not have required rights"
 msgstr "Du har ikke tilstrekkelig rettigheter"
+
+#: includes/xmlrpc.inc.php:166
+msgid "Can't connect to MMC agent"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:167
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:179
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:180
+msgid "MMC agent seems to be not correctly configured."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
+#: includes/xmlrpc.inc.php:244
+msgid "MMC agent communication problem"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:197
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:206
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:207
+msgid "Please check network connectivity."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:222
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:245
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:354
+msgid "unknown error"
+msgstr "ukjent feil"
+
+#: includes/xmlrpc.inc.php:355
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
 
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
@@ -1076,54 +1076,6 @@ msgstr ""
 msgid "Computer's netmask address"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:28
-msgid "Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:29
-msgid "GLPI Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Read log"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "Software deployment"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:148
-msgid "Computers list"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:158
-msgid "Backup status"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:175
-msgid "Delete computer"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:178
-msgid "Remove machine from group"
-msgstr ""
-
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
 msgstr ""
@@ -1339,6 +1291,54 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:483
 msgid "GID"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
 msgstr ""
 
 #: modules/base/logview/ajax_showlog.php:43
