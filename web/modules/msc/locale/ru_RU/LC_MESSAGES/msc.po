@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-17 01:00+0100\n"
+"POT-Creation-Date: 2014-02-24 01:00+0100\n"
 "PO-Revision-Date: 2014-02-04 17:04+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -395,7 +395,7 @@ msgid "Beginning of validity"
 msgstr "Начало срока действия"
 
 #: modules/msc/includes/command_history.php:142
-#: modules/msc/logs/ajaxConsultLogsFilter.php:132
+#: modules/msc/logs/ajaxConsultLogsFilter.php:133
 msgid "Bundle"
 msgstr "набор пакетов"
 
@@ -495,7 +495,7 @@ msgstr ""
 msgid "Client"
 msgstr "Клиент"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:204
+#: modules/msc/logs/ajaxConsultLogsFilter.php:210
 #: modules/msc/logs/ajaxLogsFilter.php:134
 #: modules/msc/msc/ajaxLogsFilter.php:231
 #: modules/msc/msc/ajaxLogsFilter.php:373
@@ -595,7 +595,7 @@ msgstr ""
 msgid "Copy Mode"
 msgstr "Режим копирования"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:205
+#: modules/msc/logs/ajaxConsultLogsFilter.php:211
 msgid "Creator"
 msgstr "Создатель"
 
@@ -675,7 +675,7 @@ msgstr "Развернуть, используя локальный прокси
 
 #: modules/msc/includes/bundle_widgets.php:363
 #: modules/msc/includes/command_history.php:38
-#: modules/msc/logs/ajaxConsultLogsFilter.php:209
+#: modules/msc/logs/ajaxConsultLogsFilter.php:215
 #: modules/msc/msc/launch.php:524
 msgid "Deployment interval"
 msgstr ""
@@ -726,7 +726,7 @@ msgstr "Загрузка"
 #: modules/msc/includes/command_history.php:37
 #: modules/msc/includes/command_history.php:144
 #: modules/msc/includes/command_history.php:183
-#: modules/msc/logs/ajaxConsultLogsFilter.php:208
+#: modules/msc/logs/ajaxConsultLogsFilter.php:214
 #: modules/msc/logs/ajaxLogsFilter.php:129
 #: modules/msc/msc/ajaxLogsFilter.php:234
 #: modules/msc/msc/ajaxLogsFilter.php:366
@@ -846,8 +846,8 @@ msgstr "Получить загруженный файл"
 msgid "Global State"
 msgstr ""
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:155
-#: modules/msc/logs/ajaxConsultLogsFilter.php:165
+#: modules/msc/logs/ajaxConsultLogsFilter.php:156
+#: modules/msc/logs/ajaxConsultLogsFilter.php:171
 msgid "Group"
 msgstr "Группа"
 
@@ -1032,8 +1032,9 @@ msgstr "Вкладка журналов MSC для группы"
 msgid "MSC logs tab for a machine"
 msgstr "Вкладка журналов MSC для машины"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:150
-#: modules/msc/logs/ajaxConsultLogsFilter.php:161
+#: modules/msc/logs/ajaxConsultLogsFilter.php:151
+#: modules/msc/logs/ajaxConsultLogsFilter.php:163
+#: modules/msc/logs/ajaxConsultLogsFilter.php:166
 msgid "Machine"
 msgstr "Машина"
 
@@ -1138,8 +1139,8 @@ msgstr ""
 msgid "Overtime"
 msgstr ""
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:130
-#: modules/msc/logs/ajaxConsultLogsFilter.php:136
+#: modules/msc/logs/ajaxConsultLogsFilter.php:131
+#: modules/msc/logs/ajaxConsultLogsFilter.php:137
 #: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "Пакет"
@@ -1508,7 +1509,7 @@ msgstr ""
 #: modules/msc/includes/command_history.php:36
 #: modules/msc/includes/command_history.php:143
 #: modules/msc/includes/command_history.php:182
-#: modules/msc/logs/ajaxConsultLogsFilter.php:207
+#: modules/msc/logs/ajaxConsultLogsFilter.php:213
 #: modules/msc/logs/ajaxLogsFilter.php:131
 #: modules/msc/msc/ajaxLogsFilter.php:233
 #: modules/msc/msc/ajaxLogsFilter.php:368 modules/msc/msc/reschedule.php:43
@@ -1596,7 +1597,7 @@ msgstr ""
 msgid "Stopped: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:211
+#: modules/msc/logs/ajaxConsultLogsFilter.php:217
 #: modules/msc/msc/ajaxLogsFilter.php:235
 msgid "Success percent"
 msgstr ""
@@ -1618,7 +1619,7 @@ msgstr "Управлять компьютером"
 msgid "Take control of this computer"
 msgstr ""
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:210
+#: modules/msc/logs/ajaxConsultLogsFilter.php:216
 msgid "Target"
 msgstr "пользователь"
 
@@ -1715,11 +1716,11 @@ msgstr "Время создания"
 msgid "To do"
 msgstr "Для выполнения"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:148
+#: modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Unavailable computer"
 msgstr "Доступный компьютер"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:153
+#: modules/msc/logs/ajaxConsultLogsFilter.php:154
 msgid "Unavailable group"
 msgstr "Доступная группа"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-11 10:32+0100\n"
+"POT-Creation-Date: 2014-02-24 01:00+0100\n"
 "PO-Revision-Date: 2014-02-10 00:12+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Are you sure you want to delete this file?"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:55
+#: modules/pkgs/includes/query.php:73
 msgid "Associate inventory"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Associate package"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:65
+#: modules/pkgs/includes/query.php:86
 msgid "Bool"
 msgstr ""
 
@@ -190,7 +190,7 @@ msgstr ""
 msgid "Need a reboot ?"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:71
+#: modules/pkgs/includes/query.php:92
 msgid "Number of licenses"
 msgstr ""
 
@@ -272,7 +272,7 @@ msgid ""
 "<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:44
+#: modules/pkgs/includes/query.php:62
 msgid "Query"
 msgstr ""
 
@@ -292,7 +292,7 @@ msgstr ""
 msgid "Show mirrors"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:60
+#: modules/pkgs/includes/query.php:81
 msgid "Software"
 msgstr ""
 
@@ -323,11 +323,11 @@ msgstr ""
 msgid "Upload selected files"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:59
+#: modules/pkgs/includes/query.php:80
 msgid "Vendor"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:62 modules/pkgs/pkgs/add.php:151
+#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/add.php:151
 #: modules/pkgs/pkgs/ajaxPackageList.php:82
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"

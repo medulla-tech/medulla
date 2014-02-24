@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-17 01:00+0100\n"
+"POT-Creation-Date: 2014-02-24 01:00+0100\n"
 "PO-Revision-Date: 2014-02-04 17:04+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -399,7 +399,7 @@ msgid "Beginning of validity"
 msgstr "Início da validade"
 
 #: modules/msc/includes/command_history.php:142
-#: modules/msc/logs/ajaxConsultLogsFilter.php:132
+#: modules/msc/logs/ajaxConsultLogsFilter.php:133
 msgid "Bundle"
 msgstr "conjunto"
 
@@ -497,7 +497,7 @@ msgstr ""
 msgid "Client"
 msgstr "Cliente"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:204
+#: modules/msc/logs/ajaxConsultLogsFilter.php:210
 #: modules/msc/logs/ajaxLogsFilter.php:134
 #: modules/msc/msc/ajaxLogsFilter.php:231
 #: modules/msc/msc/ajaxLogsFilter.php:373
@@ -596,7 +596,7 @@ msgstr "Convergência está ativada"
 msgid "Copy Mode"
 msgstr "Modo de Transferência"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:205
+#: modules/msc/logs/ajaxConsultLogsFilter.php:211
 msgid "Creator"
 msgstr "Criador"
 
@@ -676,7 +676,7 @@ msgstr "Implantação utilizando um proxy local"
 
 #: modules/msc/includes/bundle_widgets.php:363
 #: modules/msc/includes/command_history.php:38
-#: modules/msc/logs/ajaxConsultLogsFilter.php:209
+#: modules/msc/logs/ajaxConsultLogsFilter.php:215
 #: modules/msc/msc/launch.php:524
 msgid "Deployment interval"
 msgstr "Intervalo de instalação"
@@ -727,7 +727,7 @@ msgstr "Baixando"
 #: modules/msc/includes/command_history.php:37
 #: modules/msc/includes/command_history.php:144
 #: modules/msc/includes/command_history.php:183
-#: modules/msc/logs/ajaxConsultLogsFilter.php:208
+#: modules/msc/logs/ajaxConsultLogsFilter.php:214
 #: modules/msc/logs/ajaxLogsFilter.php:129
 #: modules/msc/msc/ajaxLogsFilter.php:234
 #: modules/msc/msc/ajaxLogsFilter.php:366
@@ -848,8 +848,8 @@ msgstr "Obter um arquivo baixado"
 msgid "Global State"
 msgstr "Estado Global"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:155
-#: modules/msc/logs/ajaxConsultLogsFilter.php:165
+#: modules/msc/logs/ajaxConsultLogsFilter.php:156
+#: modules/msc/logs/ajaxConsultLogsFilter.php:171
 msgid "Group"
 msgstr "Grupo"
 
@@ -1039,8 +1039,9 @@ msgstr "Aba de logs MSC para um grupo"
 msgid "MSC logs tab for a machine"
 msgstr "Aba de logs MSC para uma máquina"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:150
-#: modules/msc/logs/ajaxConsultLogsFilter.php:161
+#: modules/msc/logs/ajaxConsultLogsFilter.php:151
+#: modules/msc/logs/ajaxConsultLogsFilter.php:163
+#: modules/msc/logs/ajaxConsultLogsFilter.php:166
 msgid "Machine"
 msgstr "Máquina"
 
@@ -1145,8 +1146,8 @@ msgstr "Não foram processadas a tempo: %percent% (%d pacotes)"
 msgid "Overtime"
 msgstr "Tempo ultrapassado"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:130
-#: modules/msc/logs/ajaxConsultLogsFilter.php:136
+#: modules/msc/logs/ajaxConsultLogsFilter.php:131
+#: modules/msc/logs/ajaxConsultLogsFilter.php:137
 #: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "Pacote"
@@ -1514,7 +1515,7 @@ msgstr "Iniciar %s %s neste grupo"
 #: modules/msc/includes/command_history.php:36
 #: modules/msc/includes/command_history.php:143
 #: modules/msc/includes/command_history.php:182
-#: modules/msc/logs/ajaxConsultLogsFilter.php:207
+#: modules/msc/logs/ajaxConsultLogsFilter.php:213
 #: modules/msc/logs/ajaxLogsFilter.php:131
 #: modules/msc/msc/ajaxLogsFilter.php:233
 #: modules/msc/msc/ajaxLogsFilter.php:368 modules/msc/msc/reschedule.php:43
@@ -1602,7 +1603,7 @@ msgstr "Parados: %percent% (%d computadores)"
 msgid "Stopped: %percent% (%d packages)"
 msgstr "Parados: %percent% (%d pacotes)"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:211
+#: modules/msc/logs/ajaxConsultLogsFilter.php:217
 #: modules/msc/msc/ajaxLogsFilter.php:235
 msgid "Success percent"
 msgstr "Percentual completado"
@@ -1624,7 +1625,7 @@ msgstr "Obter controle de computador"
 msgid "Take control of this computer"
 msgstr "Assumir o controle deste computador"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:210
+#: modules/msc/logs/ajaxConsultLogsFilter.php:216
 msgid "Target"
 msgstr "Alvo"
 
@@ -1722,11 +1723,11 @@ msgstr "Timestamp"
 msgid "To do"
 msgstr "A fazer"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:148
+#: modules/msc/logs/ajaxConsultLogsFilter.php:149
 msgid "Unavailable computer"
 msgstr "Computador não disponível"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:153
+#: modules/msc/logs/ajaxConsultLogsFilter.php:154
 msgid "Unavailable group"
 msgstr "Grupo não disponível"
 
