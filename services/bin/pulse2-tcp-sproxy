@@ -363,7 +363,6 @@ class DispatchProxies :
                 log.warn("VNC Proxy: Stopping failed: %s" % str(exc))
 
         log.info("VNC Proxy: Proxy for %s (%s) closed" % (self.to_ip, self.machine_name))
-        log.info("VNC Proxy: Stopping")
 
         reactor.stop()
 
