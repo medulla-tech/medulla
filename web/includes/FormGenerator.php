@@ -614,8 +614,7 @@ class DateTimeTpl extends AbstractTpl {
             $days_short[] = substr($day, 0, 3);
         }
 
-        // Set dateTimePicket params
-        $params = array(
+        $params_json = json_encode(array(
             'closeText' => _('Close'),
             'prevText' => _('Previous'),
             'nextText' => _('Next'),
@@ -628,10 +627,16 @@ class DateTimeTpl extends AbstractTpl {
             'firstDay' => 1,
             'timeFormat' => "HH:mm:ss",
             'dateFormat' => "yy-mm-dd",
-        );
+        ));
 
-        $params_json = json_encode($params);
-
+        // Dirty workaround (PHP gettext issue ?)
+        // May happen, at least it did once...
+        if ($params_json === FALSE)
+    	   $params_json = json_encode(array(
+               'firstDay' => 1,
+               'timeFormat' => "HH:mm:ss",
+               'dateFormat' => "yy-mm-dd",
+        ));
 
         // Set dateTimePicker on input
         print '
