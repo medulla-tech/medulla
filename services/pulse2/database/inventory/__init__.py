@@ -350,7 +350,7 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(self.machine.c.id.in_(machines))
                 if not ComputerGroupManager().isrequest_group(ctx, gid):
                     if count:
-                        return query.count()
+                        return query.scalar()
                     else:
                         return query
 
