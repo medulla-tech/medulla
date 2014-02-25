@@ -69,7 +69,7 @@ class ImagingRpcPhase(Phase):
                                    '', 
                                    reason.getErrorMessage()
                                   )
-        return self.switch_phase_failed(False)
+        return self.switch_phase_failed()
 
 class PreImagingMenuPhase(ImagingRpcPhase):
     name = "pre_menu"
