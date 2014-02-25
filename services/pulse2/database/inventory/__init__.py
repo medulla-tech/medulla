@@ -522,15 +522,15 @@ class Inventory(DyngroupDatabaseHelper):
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
-                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')])
+                self.mapping(ctx, [None, None, value[0][0], query[3][0]]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1]])
             )
         elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
             value = PossibleQueries().possibleQueries('triple')[query[2]]
             return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
-                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')]),
-                self.mapping(ctx, [None, None, value[2][0], query[3][2].replace(')', '')])
+                self.mapping(ctx, [None, None, value[0][0], query[3][0]]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1]]),
+                self.mapping(ctx, [None, None, value[2][0], query[3][2]])
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
