@@ -29,6 +29,7 @@ Dyngroup database handler
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
         Integer, ForeignKey, select, not_, bindparam, or_
 from sqlalchemy.orm import create_session, mapper, relation
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
@@ -231,6 +232,38 @@ class DyngroupDatabase(DatabaseHelper):
         s = session.query(UsersType).filter(self.userType.c.id == id).first()
         session.close()
         return s
+
+    ##############################################################
+
+    def deleteMachineFromAllGroups(self, uuid):
+        """
+        delete a machine from dyngroup database
+        and clears all static groups and imaging group linked
+        to the machine
+        """
+        logging.getLogger().info('Removing all groups associated to machine %s.' % uuid)
+        session = create_session()
+        # First get machine id
+        mid = session.query(Machines.id).filter_by(uuid = uuid).scalar()
+        if not mid:
+            logging.getLogger().info('Machine not found in dyngroup database, skipping.')
+            return False
+
+        # Deleting all entries in Results and ProfileResults
+        try:
+            session.query(Results).filter_by(FK_machines=mid).delete()
+            session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
+        except Exception, e:
+            logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
+            logging.getLogger().error(str(e))
+            return False
+        session.close()
+
+        return True
+
+        if profile:
+            return profile.FK_groups
+        return False
 
     ####################################
     ## MACHINES ACCESS

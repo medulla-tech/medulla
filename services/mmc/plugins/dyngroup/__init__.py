@@ -80,6 +80,7 @@ def activate():
 
     return True
 
+
 def activate_2():
     if isDynamicEnable():
         logger = logging.getLogger()
@@ -89,6 +90,9 @@ def activate_2():
         queryManager.activate()
     return True
 
+
+def calldb(func, *args, **kw):
+    return getattr(DyngroupDatabase(), func).__call__(*args, **kw)
 
 class ContextMaker(ContextMakerI):
     def getContext(self):
@@ -522,6 +526,10 @@ class RpcProxy(RpcProxyI):
     def get_convergence_group_parent_id(self, gid):
         ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
         return xmlrpcCleanup(ret)
+
+    def deleteMachineFromAllGroups(self, uuid):
+        return DyngroupDatabase().deleteMachineFromAllGroups(uuid)
+
 
 def __onlyIn(query, module):
     for q in query[1]:
