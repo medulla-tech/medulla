@@ -40,6 +40,10 @@ if (isset($_POST["bconfirm"])) {
             include_once("modules/backuppc/includes/xmlrpc.php");
             unset_backup_for_host($uuid);
         }
+        if (in_array("dyngroup", $_SESSION["supportModList"])) {
+            include_once("modules/dyngroup/includes/xmlrpc.php");
+            xmlrpc_deleteMachineFromAllGroups($uuid);
+        }
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
         exit;
