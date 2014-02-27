@@ -561,9 +561,7 @@ class Inventory(DyngroupDatabaseHelper):
             elif invert:
                 return and_(getattr(partKlass, field) != value, self.inventory.c.Last == 1)
             else:
-                if re.compile('\*').search(value):
-                    value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
+                value = value.replace('*', '%')
                 return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
@@ -597,10 +595,8 @@ class Inventory(DyngroupDatabaseHelper):
             elif invert:
                 return and_(getattr(partKlass, field) != value, condition, self.inventory.c.Last == 1)
             else:
-                if re.compile('\*').search(value):
-                    value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
-                return and_(getattr(partKlass, field) == value, condition, self.inventory.c.Last == 1)
+                value = value.replace('*', '%')
+                return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
 
     def getMachines(self, ctx, pattern = None):
         """
@@ -646,7 +642,6 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[table]
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
-        import re
         p1 = re.compile('\*')
         p2 = re.compile('<')
         p3 = re.compile('>')
