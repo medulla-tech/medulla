@@ -251,6 +251,22 @@ class MscDatabase(DatabaseHelper):
         session.flush()
         return cmd
 
+    @DatabaseHelper._session
+    def _force_command_type(self, session, cmd_id, type):
+        """
+        Force type of command cmd_id, usually used for reschedule
+        convergence commands
+        """
+        cmd = session.query(Commands).get(cmd_id)
+        if cmd:
+            self.logger.debug('Force command %s to type %s' % (cmd_id, type))
+            cmd.type = type
+            session.add(cmd)
+            session.flush()
+            return True
+        self.logger.warn('Failed to set command %s to type %s' % (cmd, type))
+        return False
+
     def extendCommand(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.

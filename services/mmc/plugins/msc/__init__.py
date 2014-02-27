@@ -918,6 +918,9 @@ def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_i
 def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id):
     return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id)
 
+def _force_command_type(cmd_id, type):
+    return MscDatabase()._force_command_type(cmd_id, type)
+
 def _update_command_end_date(cmd_id):
     return MscDatabase()._update_command_end_date(cmd_id)
 
@@ -953,6 +956,9 @@ def convergence_reschedule(all=False):
                 if new_machine_ids:
                     logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
                     _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
+                    # Convergence commands can have type -1 if no machines were added previiously
+                    # We just add machine(s), so force type to 2
+                    _force_command_type(cmd_id, 2)
                 _update_command_end_date(cmd_id)
             except TypeError, e:
                 logger.warn("Error while fetching deploy_group_id and user for command %s: %s" % (cmd_id, e))
