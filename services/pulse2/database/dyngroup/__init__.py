@@ -233,38 +233,6 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return s
 
-    ##############################################################
-
-    def deleteMachineFromAllGroups(self, uuid):
-        """
-        delete a machine from dyngroup database
-        and clears all static groups and imaging group linked
-        to the machine
-        """
-        logging.getLogger().info('Removing all groups associated to machine %s.' % uuid)
-        session = create_session()
-        # First get machine id
-        mid = session.query(Machines.id).filter_by(uuid = uuid).scalar()
-        if not mid:
-            logging.getLogger().info('Machine not found in dyngroup database, skipping.')
-            return False
-
-        # Deleting all entries in Results and ProfileResults
-        try:
-            session.query(Results).filter_by(FK_machines=mid).delete()
-            session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
-        except Exception, e:
-            logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
-            logging.getLogger().error(str(e))
-            return False
-        session.close()
-
-        return True
-
-        if profile:
-            return profile.FK_groups
-        return False
-
     ####################################
     ## MACHINES ACCESS
 
@@ -340,26 +308,29 @@ class DyngroupDatabase(DatabaseHelper):
 
     def delMachine(self, uuid):
         """
-        Delete a computer from all the dyngroup database tables
-
-        @returns: True if the machine has been successfully deleted
+        delete a machine from dyngroup database
+        and clears all static groups and imaging group linked
+        to the machine
         """
-        ret = False
+        logging.getLogger().info('Removing all groups associated to machine %s.' % uuid)
         session = create_session()
-        m = self.__getMachine(uuid, session)
-        if m:
-            session.begin()
-            try:
-                mid = m.id
-                session.delete(m)
-                self.__deleteResult4AllGroups(mid, session)
-                session.commit()
-                ret = True
-            except:
-                session.rollback()
-                raise
-            session.close()
-        return ret
+        # First get machine id
+        mid = session.query(Machines.id).filter_by(uuid = uuid).scalar()
+        if not mid:
+            logging.getLogger().info('Machine not found in dyngroup database, skipping.')
+            return False
+
+        # Deleting all entries in Results and ProfileResults
+        try:
+            session.query(Results).filter_by(FK_machines=mid).delete()
+            session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
+        except Exception, e:
+            logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
+            logging.getLogger().error(str(e))
+            return False
+        session.close()
+
+        return True
 
     def getAllMachinesUuid(self):
         """
@@ -637,20 +608,6 @@ class DyngroupDatabase(DatabaseHelper):
         session.close()
         return still_linked
 
-    def __deleteResult4AllGroups(self, machine_id, session = None):
-        """
-        Delete a computer from the result of all groups
-        """
-        open_session = False
-        if not session:
-            open_session = True
-            session = create_session()
-        session.execute(self.results.delete(self.results.c.FK_machines == machine_id))
-        session.execute(self.profilesResults.delete(self.profilesResults.c.FK_machines == machine_id))
-        if open_session:
-            session.flush()
-            session.close()
-        return True
 
     #####################################
     ## GROUP ACCESS

@@ -70,8 +70,4 @@ function getMaxElementsForStaticList() {
 }
 
 
-function xmlrpc_deleteMachineFromAllGroups($uuid){
-    return xmlCall("dyngroup.deleteMachineFromAllGroups", array($uuid));
-}
-
 ?>

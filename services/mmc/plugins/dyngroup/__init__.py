@@ -527,9 +527,6 @@ class RpcProxy(RpcProxyI):
         ret = DyngroupDatabase().get_convergence_group_parent_id(gid)
         return xmlrpcCleanup(ret)
 
-    def deleteMachineFromAllGroups(self, uuid):
-        return DyngroupDatabase().deleteMachineFromAllGroups(uuid)
-
 
 def __onlyIn(query, module):
     for q in query[1]:
