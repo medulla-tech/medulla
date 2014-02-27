@@ -526,11 +526,25 @@ class Inventory(DyngroupDatabaseHelper):
                 self.mapping(ctx, [None, None, value[1][0], query[3][1]])
             )
         elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
-            value = PossibleQueries().possibleQueries('triple')[query[2]]
-            return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
-                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('*', '%')]),
-                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace('*', '%')]),
-                self.mapping(ctx, [None, None, value[2][0], query[3][2].replace('*', '%')])
+            queries = PossibleQueries().possibleQueries('triple')[query[2]]
+
+            vendor_query = queries[0][0]
+            software_query = queries[1][0]
+            version_query = queries[2][0]
+
+            vendor_value = query[3][0].replace('*', '%')
+            software_value = query[3][1].replace('*', '%')
+            version_value = query[3][2].replace('*', '%')
+
+            def _getMapping(query, value):
+                if value == '%':
+                    return None
+                return self.mapping(ctx, [None, None, query, value])
+
+            return and_(
+                _getMapping(vendor_query, vendor_value),
+                _getMapping(software_query, software_value),
+                _getMapping(version_query, version_value),
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
@@ -550,7 +564,7 @@ class Inventory(DyngroupDatabaseHelper):
                 if re.compile('\*').search(value):
                     value = re.compile('\*').sub('%', value)
                     return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
-                return and_(getattr(partKlass, field) == value, self.inventory.c.Last == 1)
+                return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
