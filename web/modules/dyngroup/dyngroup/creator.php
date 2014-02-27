@@ -20,6 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once("modules/dyngroup/includes/includes.php");
 $groupedit = True;
 if (strpos($_GET['action'], 'profile') !== false) {
@@ -48,11 +49,9 @@ if (strlen($_GET['subedition']) && $_GET['subedition'] == '1') {
 $id = idGet();
 $imaging_server = quickGet('imaging_server');
 $group = new Group($id, true);
-$request = quickGet('request');
-if ($request == 'stored_in_session') {
-    $request = $_SESSION['request'];
-    unset($_SESSION['request']);
-}
+$request = $_SESSION['request'];
+unset($_SESSION['request']);
+
 if (strlen($request)) {
     $r = new Request();
     $r->parse($request);
