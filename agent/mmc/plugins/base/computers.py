@@ -283,10 +283,7 @@ class ComputerManager(Singleton):
             klass = self.components[plugin]
             instance = klass()
             if klass().canDelComputer():
-                try:
-                    instance.delComputer(ctx, uuid, backup)
-                except TypeError:
-                    instance.delComputer(uuid, backup)
+                instance.delComputer(ctx, uuid, backup)
 
     def editComputerName(self, ctx, uuid, name):
         """
