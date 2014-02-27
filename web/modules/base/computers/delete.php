@@ -36,13 +36,10 @@ if (isset($_POST["bconfirm"])) {
         $backup = ($_POST["backup"]?True:False);
         delComputer($uuid, $backup);
         // Unset computer backup if BackupPC module is activated
+        // TODO: Implement this using ComputerI inheritance
         if (in_array("backuppc", $_SESSION["supportModList"])) {
             include_once("modules/backuppc/includes/xmlrpc.php");
             unset_backup_for_host($uuid);
-        }
-        if (in_array("dyngroup", $_SESSION["supportModList"])) {
-            include_once("modules/dyngroup/includes/xmlrpc.php");
-            xmlrpc_deleteMachineFromAllGroups($uuid);
         }
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
