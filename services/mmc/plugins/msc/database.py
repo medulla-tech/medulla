@@ -846,15 +846,10 @@ class MscDatabase(msc.MscDatabase):
         return [x.id for x in query]
 
     @DatabaseHelper._session
-    def _update_command_end_date(self, session, cmd_id):
+    def _update_convergence_dates(self, session, cmd_id):
         fmt = "%Y-%m-%d %H:%M:%S"
+        start_date = datetime.datetime.now().strftime(fmt)
         end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
-        try:
-            start_date = session.query(Commands.start_date).filter_by(id = cmd_id).one()
-            start_date = start_date[0].strftime(fmt)
-        except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("I can't get start_date for command id %s: %s" % (cmd_id, e))
-            return False
         return self.extendCommand(cmd_id, start_date, end_date)
 
     def _get_machines_in_command(self, session, cmd_id):
