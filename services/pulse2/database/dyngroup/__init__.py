@@ -66,7 +66,7 @@ class DyngroupDatabase(DatabaseHelper):
             self.is_activated = True
             version = self.version.select().execute().fetchone()[0]
             self.logger.debug("Dyngroup database connected (version:%s)" % version)
-            
+
         return self.is_activated
 
     def initMappers(self):
@@ -324,6 +324,7 @@ class DyngroupDatabase(DatabaseHelper):
         try:
             session.query(Results).filter_by(FK_machines=mid).delete()
             session.query(ProfilesResults).filter_by(FK_machines=mid).delete()
+            session.query(Machines).filter_by(id = mid).delete()
         except Exception, e:
             logging.getLogger().error('Cannot delete machine %s from associated groups.' % uuid)
             logging.getLogger().error(str(e))
@@ -674,7 +675,7 @@ class DyngroupDatabase(DatabaseHelper):
                            self.machines.c.uuid.in_(comp_dict.keys())
                            ).all()
         results_ids = []
- 
+
         for comp in existing :
             # if the hostname was changed, we change this name in the db
             if comp.name != comp_dict[comp.uuid] :
@@ -684,7 +685,7 @@ class DyngroupDatabase(DatabaseHelper):
             results_ids.append(comp.id)
 
         existing_uuids = [q.uuid for q in existing]
-        # inserting non-existing computers 
+        # inserting non-existing computers
         for uuid, name in comp_dict.items() :
             if uuid not in existing_uuids :
                 id = self.__getOrCreateMachine(uuid, name, session)
