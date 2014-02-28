@@ -597,6 +597,23 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 value = value.replace('*', '%')
                 return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
+        elif query[2] == 'Software/ProductVersion': # third criteria of triple search
+            if table == 'Machine':
+                partKlass = Machine
+            else:
+                partKlass = self.klass[table]
+            value = query[3]
+            if value.startswith('>') and not invert or value.startswith('<') and invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass, field) > value, self.inventory.c.Last == 1)
+            elif value.startswith('>') and invert or value.startswith('<') and not invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass, field) < value, self.inventory.c.Last == 1)
+            elif invert:
+                return and_(getattr(partKlass, field) != value, self.inventory.c.Last == 1)
+            else:
+                value = value.replace('*', '%')
+                return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
     def getMachines(self, ctx, pattern = None):
         """
