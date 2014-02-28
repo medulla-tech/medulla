@@ -28,12 +28,13 @@ import logging
 
 from mmc.plugins.backuppc.config import BackuppcConfig
 from mmc.plugins.backuppc import bpc
-#from mmc.agent import PluginManager
-#from mmc.support.mmctools import ContextMakerI, SecurityContext
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from mmc.plugins.base import ComputerI
+from mmc.plugins.base.computers import ComputerManager
 
 # Database
 from pulse2.database.backuppc import BackuppcDatabase
+
 
 
 VERSION = "2.0.0"
@@ -207,3 +208,19 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
 
 def calldb(func, *args, **kw):
     return getattr(BackuppcDatabase(),func).__call__(*args, **kw)
+
+######################
+
+
+class BackupComputers(ComputerI):
+    def __init__(self, conffile=None):
+        self.logger = logging.getLogger()
+
+    def canDelComputer(self):
+        return True
+
+    def delComputer(self, ctx, uuid, backup):
+        return bpc.unset_backup_for_host(uuid)
+
+# Registering BackupComputers in ComputerManager
+ComputerManager().register('imaging', BackupComputers)
