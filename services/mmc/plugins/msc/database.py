@@ -835,12 +835,12 @@ class MscDatabase(msc.MscDatabase):
         return target
 
     @DatabaseHelper._session
-    def _get_convergence_soon_ended_commands(self, session):
+    def _get_convergence_soon_ended_commands(self, session, cmd_ids=[]):
         fmt = "%Y-%m-%d %H:%M:%S"
         now_plus_one_hour = (datetime.datetime.now() + datetime.timedelta(hours=1)).strftime(fmt)
         query = session.query(Commands)
         query = query.filter(and_(
-            Commands.type == 2,
+            Commands.id.in_(cmd_ids),
             Commands.end_date < now_plus_one_hour,
         ))
         return [x.id for x in query]

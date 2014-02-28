@@ -901,14 +901,13 @@ def _get_convergence_soon_ended_commands(all=False):
     @rtype: list
     """
     ret = []
+    active_convergence_cmd_ids = DyngroupDatabase()._get_convergence_active_commands_ids()
     if all:
-        cmd_ids = []
-    else:
-        cmd_ids = MscDatabase()._get_convergence_soon_ended_commands()
-    if cmd_ids or all:
-        # Get active commands only if there is any cmd_ids
-        # or if we want all active commands
-        ret = DyngroupDatabase()._get_convergence_active_commands_ids(cmd_ids=cmd_ids)
+        # Return all active_convergence_cmd_ids
+        return active_convergence_cmd_ids
+    elif active_convergence_cmd_ids:
+        # Get active_convergence_cmd_ids who are soon expired
+        ret = MscDatabase()._get_convergence_soon_ended_commands(cmd_ids=active_convergence_cmd_ids)
     return xmlrpcCleanup(ret)
 
 def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
