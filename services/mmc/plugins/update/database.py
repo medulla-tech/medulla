@@ -216,7 +216,7 @@ class updateDatabase(DatabaseHelper):
     #========================================================================
 
     @DatabaseHelper._session
-    def get_updates_for_host_by_dominant_status(self, session, uuid, dStatus):
+    def get_updates_for_host_by_dominant_status(self, session, uuid, dStatus, is_installed=None):
         """
         Get all update to install for host,
         this function return all updates for the host
@@ -234,6 +234,9 @@ class updateDatabase(DatabaseHelper):
                 .add_entity(Update).join(Update)\
                 .join(UpdateType)\
                 .filter(Target.uuid == uuid)
+
+            if is_installed is not None:
+                query = query.filter(Target.is_installed == is_installed)
 
             # ============================================
             # ==== STATUS FILTERING ======================
@@ -306,7 +309,7 @@ class updateDatabase(DatabaseHelper):
         this function return all eligible updates for the host
         in this order of priority: Target -> Update -> Update Type
         """
-        return self.get_updates_for_host_by_dominant_status(uuid, STATUS_ENABLED)
+        return self.get_updates_for_host_by_dominant_status(uuid, STATUS_ENABLED, 1)
 
 
     @DatabaseHelper._session

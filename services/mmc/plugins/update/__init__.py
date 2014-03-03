@@ -29,6 +29,7 @@ from mmc.core.tasks import TaskManager
 from mmc.plugins.update.config import updateConfig
 from mmc.plugins.update.database import updateDatabase
 from mmc.plugins.msc import create_update_command
+from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.base.computers import ComputerManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
