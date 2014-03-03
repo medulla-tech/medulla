@@ -309,7 +309,7 @@ class updateDatabase(DatabaseHelper):
         this function return all eligible updates for the host
         in this order of priority: Target -> Update -> Update Type
         """
-        return self.get_updates_for_host_by_dominant_status(uuid, STATUS_ENABLED, 1)
+        return self.get_updates_for_host_by_dominant_status(uuid, STATUS_ENABLED, 0)
 
 
     @DatabaseHelper._session
