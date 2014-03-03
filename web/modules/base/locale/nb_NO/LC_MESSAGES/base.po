@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-02-21 17:29+0100\n"
+"POT-Creation-Date: 2014-02-28 12:34+0100\n"
 "PO-Revision-Date: 2014-01-27 16:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,8 +78,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:233 includes/FormGenerator.php:619
-#: includes/PageGenerator.php:2176
+#: graph/header.inc.php:233 includes/PageGenerator.php:2176
+#: includes/FormGenerator.php:618
 msgid "Close"
 msgstr ""
 
@@ -207,23 +207,133 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:871
-#: includes/PageGenerator.php:1118
+#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:619
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Forrige"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:621 includes/PageGenerator.php:885
-#: includes/PageGenerator.php:1128
+#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:620
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
 msgstr "Neste"
 
+#: includes/acl.inc.php:124
+msgid "You do not have required rights"
+msgstr "Du har ikke tilstrekkelig rettigheter"
+
+#: includes/xmlrpc.inc.php:166
+msgid "Can't connect to MMC agent"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:167
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:179
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:180
+msgid "MMC agent seems to be not correctly configured."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
+#: includes/xmlrpc.inc.php:244
+msgid "MMC agent communication problem"
+msgstr ""
+
+#: includes/xmlrpc.inc.php:197
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:206
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:207
+msgid "Please check network connectivity."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:222
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:245
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr ""
+
+#: includes/xmlrpc.inc.php:354
+msgid "unknown error"
+msgstr "ukjent feil"
+
+#: includes/xmlrpc.inc.php:355
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr ""
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+msgid "to"
+msgstr "til"
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Totalt <b>%s </b>"
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+msgid "page"
+msgstr "side"
+
+#: includes/PageGenerator.php:905
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:978
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1406
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1594
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
+#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
+msgid "Confirm"
+msgstr "Bekreft"
+
+#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: includes/PageGenerator.php:2801
+msgid "Select all"
+msgstr "Velg alt"
+
+#: includes/PageGenerator.php:2801
+msgid "Unselect all"
+msgstr ""
+
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
-#: includes/FormGenerator.php:723 includes/FormGenerator.php:850
+#: includes/FormGenerator.php:728 includes/FormGenerator.php:855
 msgid "unavailable"
 msgstr "utilgjengelig"
 
@@ -355,134 +465,24 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: includes/FormGenerator.php:622
+#: includes/FormGenerator.php:621
 msgid "Now"
 msgstr ""
 
-#: includes/FormGenerator.php:689 modules/base/groups/localSidebar.php:29
+#: includes/FormGenerator.php:694 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr "Legg til"
 
-#: includes/FormGenerator.php:987
+#: includes/FormGenerator.php:992
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1126 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:1131 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "Slett"
-
-#: includes/acl.inc.php:124
-msgid "You do not have required rights"
-msgstr "Du har ikke tilstrekkelig rettigheter"
-
-#: includes/xmlrpc.inc.php:166
-msgid "Can't connect to MMC agent"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:167
-msgid "MMC agent seems to be down or not correctly configured."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:179
-msgid "Can't send XML-RPC request to MMC agent"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:180
-msgid "MMC agent seems to be not correctly configured."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
-#: includes/xmlrpc.inc.php:244
-msgid "MMC agent communication problem"
-msgstr ""
-
-#: includes/xmlrpc.inc.php:197
-msgid ""
-"Timeout when reading data from the MMC agent. Please check network "
-"connectivity and server load."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:206
-msgid "Error while reading MMC agent XML-RPC response."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:207
-msgid "Please check network connectivity."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:222
-msgid ""
-"Can't communicate with MMC agent. Please check you're using the right TCP "
-"port and the right protocol."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:245
-msgid ""
-"The MMC agent didn't give us a session number. Please check the MMC agent "
-"version."
-msgstr ""
-
-#: includes/xmlrpc.inc.php:354
-msgid "unknown error"
-msgstr "ukjent feil"
-
-#: includes/xmlrpc.inc.php:355
-msgid ""
-"This exception is unknown. Please contact us to add an error handling on "
-"this error."
-msgstr ""
-
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
-msgid "to"
-msgstr "til"
-
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Totalt <b>%s </b>"
-
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
-msgid "page"
-msgstr "side"
-
-#: includes/PageGenerator.php:905
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:978
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1406
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1594
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
-#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:117
-msgid "Confirm"
-msgstr "Bekreft"
-
-#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: includes/PageGenerator.php:2801
-msgid "Select all"
-msgstr "Velg alt"
-
-#: includes/PageGenerator.php:2801
-msgid "Unselect all"
-msgstr ""
 
 #: logout/index.php:50
 msgid "Your session will be closed"
@@ -668,30 +668,6 @@ msgstr ""
 msgid "Display Name"
 msgstr ""
 
-#: modules/base/computers/delete.php:30
-msgid ""
-"You have to check the box <b>\"I am aware that all related images (non-"
-"master) will be deleted\"</b> if you want to remove this computer."
-msgstr ""
-
-#: modules/base/computers/delete.php:43
-msgid "The computer has been deleted."
-msgstr ""
-
-#: modules/base/computers/delete.php:49
-msgid "Delete this computer"
-msgstr ""
-
-#: modules/base/computers/delete.php:52
-msgid "Do you want a backup to be done ?"
-msgstr ""
-
-#: modules/base/computers/delete.php:58
-msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr ""
-
 #: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:279
 msgid "Computer list"
 msgstr ""
@@ -703,6 +679,30 @@ msgstr ""
 #: modules/base/computers/localSidebar.php:8
 #: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
+msgstr ""
+
+#: modules/base/computers/delete.php:30
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+
+#: modules/base/computers/delete.php:38
+msgid "The computer has been deleted."
+msgstr ""
+
+#: modules/base/computers/delete.php:44
+msgid "Delete this computer"
+msgstr ""
+
+#: modules/base/computers/delete.php:47
+msgid "Do you want a backup to be done ?"
+msgstr ""
+
+#: modules/base/computers/delete.php:53
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
