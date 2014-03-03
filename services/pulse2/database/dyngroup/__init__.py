@@ -29,7 +29,6 @@ Dyngroup database handler
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
         Integer, ForeignKey, select, not_, bindparam, or_
 from sqlalchemy.orm import create_session, mapper, relation
-from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
