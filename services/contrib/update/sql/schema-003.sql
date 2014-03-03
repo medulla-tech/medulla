@@ -25,9 +25,9 @@
 -- ----------------------------------------------------------------------
 
 ALTER TABLE  `os_classes` ADD  `pattern` TEXT NOT NULL;
-UPDATE  `os_classes` SET  `pattern` =  '*windows xp*' WHERE  `os_classes`.`id` =1;
-UPDATE  `os_classes` SET  `pattern` =  '*windows vista*' WHERE  `os_classes`.`id` =2;
-UPDATE  `os_classes` SET  `pattern` =  '*windows 7*' WHERE  `os_classes`.`id` =3;
+UPDATE  `os_classes` SET  `pattern` =  '*windows*xp*' WHERE  `os_classes`.`id` =1;
+UPDATE  `os_classes` SET  `pattern` =  '*windows*vista*' WHERE  `os_classes`.`id` =2;
+UPDATE  `os_classes` SET  `pattern` =  '*windows*7*' WHERE  `os_classes`.`id` =3;
 
 UPDATE  `version` SET  `Number` =  '3';
 
