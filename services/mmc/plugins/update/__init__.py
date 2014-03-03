@@ -30,6 +30,7 @@ from mmc.plugins.update.config import updateConfig
 from mmc.plugins.update.database import updateDatabase
 from mmc.plugins.msc import create_update_command
 from pulse2.managers.group import ComputerGroupManager
+from mmc.plugins.base.computers import ComputerManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
@@ -53,20 +54,26 @@ def activate():
                             cron_expression=config.update_commands_cron)
     return True
 
+
 def calldb(func, *args, **kw):
     return getattr(updateDatabase(), func).__call__(*args, **kw)
+
 
 def get_os_classes(params):
     return updateDatabase().get_os_classes(params)
 
+
 def get_update_types(params):
     return updateDatabase().get_update_types(params)
+
 
 def get_updates(params):
     return updateDatabase().get_updates(params)
 
+
 def set_update_status(update_id, status):
     return updateDatabase().set_update_status(update_id, status)
+
 
 def create_update_commands():
     # TODO: ensure that this method is called by taskmanager
@@ -75,15 +82,35 @@ def create_update_commands():
     # Creating root context
     ctx = SecurityContext()
     ctx.userid = 'root'
+    # Get active computer manager
+    computer_manager = ComputerManager().getManagerName()
+
+    if computer_manager == 'inventory':
+        dyngroup_pattern = '%d==inventory::Hardware/OperatingSystem==%s'
+    elif computer_manager == 'glpi':
+        dyngroup_pattern = '%d==glpi::Operating system==%s'
+    else:
+        logging.getLogger().error('Update module: Unsupported computer manager %s' % computer_manager)
+        return False
 
     # Get all enabled os_classes
-    os_classes = updateDatabase().get_os_classes({'filters': {'enabled' : 1}})
+    os_classes = updateDatabase().get_os_classes({'filters': {'enabled': 1}})
 
     # Create update command for enabled os_classes
     for os_class in os_classes['data']:
-        # Get all OS dyngroup machines
-        dyngroup_name = 'PULSE_INTERNAL_UPDATE_GROUP||' + os_class['name']
-        targets = ComputerGroupManager().result_group_by_name(ctx, dyngroup_name)
+
+        patterns = os_class['pattern'].split('||')
+        request = []
+        equ_bool = []
+
+        for i in xrange(len(patterns)):
+            request.append(dyngroup_pattern % (i+1, patterns[i]))
+            equ_bool.append(str(i+1))
+
+        request = '||'.join(request)
+        equ_bool = 'OR(%s)' % ','.join(equ_bool)
+
+        targets = ComputerManager().getComputersList(ctx, {'request':  request, 'equ_bool': equ_bool}).keys()
 
         # Fetching all targets
         for uuid in targets:

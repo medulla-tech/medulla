@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy import Column, String, Integer, ForeignKey, Text
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
 
@@ -40,6 +40,7 @@ class OsClass(Base, DBObj):
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
     enabled = Column(Integer)
+    pattern = Column(Text())
 
 class Update(Base, DBObj):
     # ====== Table name =========================
