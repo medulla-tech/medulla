@@ -589,6 +589,7 @@ class MscDatabase(msc.MscDatabase):
                                do_reboot,
                                do_windows_update,
                                is_quick_action)
+            cmd.type = cmd_type
             cmd.ready = True
             session.commit()
             return cmd.getId()
