@@ -156,7 +156,7 @@ class DatabaseHelper(Singleton):
             logger.warn('The table %s does not exists.' % str(e))
             return False
         except:
-            logger.exception(e)
+            logger.exception('Error when initializing mappers')
             return False
         return True
 
