@@ -247,6 +247,7 @@ class MscDatabase(DatabaseHelper):
         cmd.state = state
         cmd.sum_running = sum_running
         cmd.type= cmd_type
+        cmd.ready = False
         session.add(cmd)
         session.flush()
         return cmd

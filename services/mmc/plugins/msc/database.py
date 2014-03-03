@@ -318,8 +318,7 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['fk_bundle'], cmd['order_in_bundle'],
                                           cmd['proxies'], cmd['proxy_mode'],
                                           cmd['state'],
-                                          len(targets_to_insert),
-                                          cmd_type=-1
+                                          len(targets_to_insert)
                                           )
                 session.flush()
                 ret.append(cobj.getId())
@@ -386,6 +385,7 @@ class MscDatabase(msc.MscDatabase):
                                cmd['do_reboot'],
                                cmd['do_windows_update'])
 
+
             session.commit()
             return ret
 
@@ -401,7 +401,7 @@ class MscDatabase(msc.MscDatabase):
                 cmd = self.getCommands(ctx, cmd_id)
                 if cmd:
                     session = object_session(cmd)
-                    cmd.type = 0
+                    cmd.ready = True
                     session.add(cmd)
                     session.flush()
             return cmd_ids
@@ -523,7 +523,6 @@ class MscDatabase(msc.MscDatabase):
             session = create_session()
             session.begin()
 
-            origin_type = cmd_type
             cmd = self.createCommand(session, package_id, start_file, parameters,
                                      files, start_script, clean_on_success,
                                      start_date, end_date, connect_as, ctx.userid,
@@ -533,7 +532,7 @@ class MscDatabase(msc.MscDatabase):
                                      maxbw,
                                      deployment_intervals, fk_bundle,
                                      order_in_bundle, proxies, proxy_mode,
-                                     state, len(targets), cmd_type=-1)
+                                     state, len(targets))
             session.flush()
             # Convergence command (type 2) can have no targets
             # so return command_id if no targets
@@ -590,8 +589,7 @@ class MscDatabase(msc.MscDatabase):
                                do_reboot,
                                do_windows_update,
                                is_quick_action)
-
-            cmd.type = origin_type
+            cmd.ready = True
             session.commit()
             return cmd.getId()
 
@@ -951,8 +949,6 @@ class MscDatabase(msc.MscDatabase):
                                           schedulers[i]))
             session = create_session()
             session.begin()
-            origin_type = cmd.type
-            cmd.type = -1
 
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()
@@ -1004,7 +1000,7 @@ class MscDatabase(msc.MscDatabase):
                                cmd.do_reboot,
                                cmd.do_windows_update,
                                is_quick_action = False)
-            cmd.type = origin_type
+            cmd.ready = True
             session.commit()
             return cmd_id
 
