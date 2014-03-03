@@ -154,6 +154,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	update/sql/README \
 	update/sql/schema-001.sql \
 	update/sql/schema-002.sql \
+	update/sql/schema-003.sql \
 	monit/pulse2 \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \
