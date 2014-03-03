@@ -43,7 +43,7 @@ class NetUtils :
     @classmethod
     def get_netmask(cls):
         """
-        Getting the server's netmask  
+        Getting the server's netmask
 
         @return: netmask
         @rtype: str
@@ -72,13 +72,13 @@ class NetUtils :
         @type netmask: string
 
         @return: True if IP address are in the same network.
-        @rtype: bool      
+        @rtype: bool
         """
         if not cls.check_netmask(network, netmask):
             log.warn("network %s is not matching to netmask %s !" % (network, netmask))
 
         ip_num = struct.unpack('>L',socket.inet_aton(ip))[0]
-        
+
         cidr = cls.netmask_to_cidr(netmask)
         netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
 
@@ -98,15 +98,15 @@ class NetUtils :
         @type netmask: string
 
         @return: True if IP address are in the same network.
-        @rtype: bool      
+        @rtype: bool
         """
-        
+
         cidr = cls.netmask_to_cidr(netmask)
         netmask_of_network = struct.unpack('>L',socket.inet_aton(network))[0]
 
         return netmask_of_network == netmask_of_network & (4294967295<<(32-int(cidr)))
 
- 
+
     @classmethod
     def netmask_to_cidr(cls, netmask):
         """
@@ -159,7 +159,7 @@ class NetUtils :
         @param candidate: candidate string to validate
         @str candidate: str
 
-        @return: True if correct IPv4 format 
+        @return: True if correct IPv4 format
         @rtype: bool
         """
         if "." in candidate :
@@ -200,7 +200,7 @@ class NetUtils :
         @param address: address to extract
         @type address: string
 
-        @return: ip address in list of integers 
+        @return: ip address in list of integers
         @rtype: list
         """
         return [int(a) for a in address.split(".")]
@@ -231,7 +231,7 @@ class NetUtils :
 
 class NetworkDetect :
     """ Detecting of the network/broadcast addresses """
-    
+
     def __init__(self, ip, netmask):
         """
         @param ip: IP address of any computer on checked network
@@ -303,7 +303,7 @@ class NetworkDetect :
         end = 0
 
         for attempt in range(0, nbr) :
-          
+
             end = attempt * last_bit - 1
 
             if value in range(start, end) :
@@ -322,7 +322,7 @@ class NetworkDetect :
         """
 
         ip_dec = NetUtils.ipv4_to_dec(self.ip)
-        
+
         i = 0
         for nbr, last_bit in self.get_subnets(self.netmask) :
 
@@ -333,7 +333,7 @@ class NetworkDetect :
 
             i += 1
 
-    @property 
+    @property
     def network(self):
         """
         @return: calculated IPv4 network address
@@ -342,7 +342,7 @@ class NetworkDetect :
         decimals = [ str(min(r)) for r in self.get_ranges() ]
         return ".".join(decimals)
 
-    @property 
+    @property
     def broadcast(self):
         """
         @return: calculated IPv4 broadcast address
@@ -353,29 +353,29 @@ class NetworkDetect :
 
 
 class ResolvingCallable :
-    """ 
+    """
     An abstract class to implement a resolving callable.
 
     Inheriting this class ensure the creating a resolving method.
-    This instance is identified by 'name' attribute and code placed 
+    This instance is identified by 'name' attribute and code placed
     in __call__ method try to resolve a correct IP address.
 
     To pre-check of validity before the register a resolver
-    use the 'validate' method which allows to prevent 
+    use the 'validate' method which allows to prevent
     an unauthorised execution.
     """
 
     name = None
 
     def __init__(self, networks, **kwargs):
-        
+
         self.networks = networks
 
         for attr, value in kwargs.items():
             setattr(self, attr, value)
 
     def validate(self):
-        """ 
+        """
         Method to pre-check when the resolver is installed.
 
         Can be used to check the dependencies and prerequisites before
@@ -397,7 +397,7 @@ class ResolvingCallable :
         @return: stdout of command
         @rtype: str
         """
-        ps = subprocess.Popen(cmd, shell=True, 
+        ps = subprocess.Popen(cmd, shell=True,
                               stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE)
         try :
@@ -422,7 +422,7 @@ class ChoosePerIP (ResolvingCallable):
     name = "ip"
 
     def __call__(self, target):
-        """ 
+        """
         Test when checked interface is on the same network
 
         @param target: container having complete networking info.
@@ -430,7 +430,7 @@ class ChoosePerIP (ResolvingCallable):
 
         @return: IP address of reachable interface
         @rtype: string
- 
+
         """
         hostname, fqdn, ifaces = target
         last_ip = last_netmask = None
@@ -438,9 +438,12 @@ class ChoosePerIP (ResolvingCallable):
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
                 iface_ip = iface["ip"]
+                if not NetUtils.is_ipv4_format(iface_ip):
+                    log.debug("Interface %s not matching to IPv4 format, skiping" % iface_ip)
+                    continue
                 for pref_ip, pref_netmask in self.networks :
-                    
-                    log.debug("Comparing host '%s'(%s) with my preferred network (%s/%s)" % 
+
+                    log.debug("Comparing host '%s'(%s) with my preferred network (%s/%s)" %
                             (hostname, iface_ip, pref_ip, pref_netmask))
 
                     if NetUtils.on_same_network(iface_ip, pref_ip, pref_netmask) :
@@ -453,7 +456,7 @@ class ChoosePerIP (ResolvingCallable):
         if not last_ip and not last_netmask :
             log.debug("Not enough info to check host='%s'" % hostname)
         else :
-            log.debug("No match host='%s'with preferred network(%s/%s)" % 
+            log.debug("No match host='%s'with preferred network(%s/%s)" %
                      (hostname, last_ip, last_netmask))
 
 
@@ -475,15 +478,15 @@ class ChoosePerShortname (ResolvingCallable):
 
 
     def __call__(self, target):
-        """ 
-        Request to "hosts" database using the shortname as key. 
+        """
+        Request to "hosts" database using the shortname as key.
 
         @param target: container having complete networking info.
         @type target: list
 
         @return: IP address of reachable interface
         @rtype: string
- 
+
         """
         hostname, fqdn, ifaces = target
 
@@ -492,7 +495,7 @@ class ChoosePerShortname (ResolvingCallable):
         out = self.run_command(cmd)
         # <example of a positive response> :
         # 192.168.127.3   <hostname>
-        # if negative, response empty 
+        # if negative, response empty
         if out :
             if len(out.split()) > 1 :
                 ip = out.split()[0] # 1st place is ip
@@ -516,15 +519,15 @@ class ChoosePerFQDN (ResolvingCallable):
 
 
     def __call__(self, target):
-        """ 
-        Request to "hosts" database using the fqdn as key. 
+        """
+        Request to "hosts" database using the fqdn as key.
 
         @param target: container having complete networking info.
         @type target: list
 
         @return: IP address of reachable interface
         @rtype: string
- 
+
         """
         hostname, fqdn, ifaces = target
 
@@ -533,7 +536,7 @@ class ChoosePerFQDN (ResolvingCallable):
         out = self.run_command(cmd)
         # <example of a positive response> :
         # 192.168.127.3   <hostname>
-        # if negative, response empty 
+        # if negative, response empty
         if out :
             if len(out.split()) > 1 :
                 ip = out.split()[0] # 1st place is ip
@@ -542,7 +545,7 @@ class ChoosePerFQDN (ResolvingCallable):
 
         return None
 
-    
+
 
 
 class ChooseFirstComplete (ResolvingCallable) :
@@ -550,8 +553,8 @@ class ChooseFirstComplete (ResolvingCallable) :
     name = "first"
 
     def __call__(self, target):
-        """ 
-        A "last chance" method. 
+        """
+        A "last chance" method.
         Selected a first interface having enough networking info
 
         @param target: container having complete networking info.
@@ -559,9 +562,9 @@ class ChooseFirstComplete (ResolvingCallable) :
 
         @return: IP address of reachable interface
         @rtype: string
- 
+
         """
-        hostname, fqdn, ifaces = target 
+        hostname, fqdn, ifaces = target
         for iface in ifaces :
             if NetUtils.has_enough_info(iface) :
                 return iface["ip"]
@@ -582,8 +585,8 @@ class ChoosePerNMBLookup (ResolvingCallable) :
 
 
     def __call__(self, target):
-        """ 
-        Samba based method - NetBIOS  
+        """
+        Samba based method - NetBIOS
 
         @param target: container having complete networking info.
         @type target: list
@@ -592,7 +595,7 @@ class ChoosePerNMBLookup (ResolvingCallable) :
         @rtype: string
 
         """
-        hostname, fqdn, ifaces = target 
+        hostname, fqdn, ifaces = target
 
         cmd = "%s '%s'" % (self.netbios_path, hostname)
 
@@ -619,11 +622,11 @@ class ChoosePerNMBLookup (ResolvingCallable) :
                     return ip
 
         return None
-        
- 
+
+
 class IPResolversContainer :
-    """ 
-    Registering of all resolvers to get a correct network interface 
+    """
+    Registering of all resolvers to get a correct network interface
     of a client machine.
     """
     resolvers = []
@@ -643,14 +646,14 @@ class IPResolversContainer :
 
     @classmethod
     def get_all_resolvers(cls):
-        """ 
+        """
         Get of the all possibles resolvers in this module.
 
         return: list of resolvers
         rtype: list
         """
         return [r for r in globals().values() if cls.is_resolver(r)]
- 
+
     def register_resolvers (self, resolve_order, resolvers=None, **kwargs) :
         """
         Registering of resolvers.
@@ -661,8 +664,8 @@ class IPResolversContainer :
         @param resolvers: resolvers to register
         @type resolvers: list
 
-        kwargs parameters can be passed to resolvers from IPResolve constructor 
-        to precize some parameters (typicaly command paths, etc.) 
+        kwargs parameters can be passed to resolvers from IPResolve constructor
+        to precize some parameters (typicaly command paths, etc.)
         To prevent name conflicts, please use the name of resolver
         as a prefix, like 'dns_value', 'nmblookup_path', etc.
         """
@@ -674,12 +677,12 @@ class IPResolversContainer :
                 if not self.is_resolver(candidate) :
                     log.warn("Candidate %s isn't a resolver - ignoring" % str(candidate))
                     resolvers.pop(i)
-            
+
         for name in resolve_order :
-            
+
             for resolver_class in resolvers :
                 resolver = resolver_class(self.networks, **kwargs)
-                
+
                 if name == resolver.name :
                     if resolver.validate():
                         self.resolvers.append(resolver)
@@ -688,7 +691,7 @@ class IPResolversContainer :
 
 class IPResolve (IPResolversContainer) :
     """
-    Detecting a reachable network interface on local network 
+    Detecting a reachable network interface on local network
     based on inventory info ("network" section).
     """
 
@@ -706,8 +709,8 @@ class IPResolve (IPResolversContainer) :
         self.register_resolvers(resolve_order, resolvers=None, **kwargs)
 
     def _validate_target (self, target):
-        """ 
-        Validating of target format 
+        """
+        Validating of target format
 
         @param target: target container
         @type target: list
@@ -735,7 +738,7 @@ class IPResolve (IPResolversContainer) :
                     log.warn("Invalid interface format, section '%s' (hostname='%s')" % (key, hostname))
                     return False
         return True
- 
+
 
     def get_from_target(self, target) :
         """
@@ -753,22 +756,22 @@ class IPResolve (IPResolversContainer) :
             log.error("Bad target format")
             return None
 
-        for resolver in self.resolvers :    
+        for resolver in self.resolvers :
 
             log.debug("Trying to apply '%s' method ..." % resolver.name)
             result = resolver(target)
             if result :
                 log.info("IP address resolved by '%s' method : %s" % (resolver.name, result))
-                return result 
+                return result
             else :
                 log.debug("No match, method '%s' ignored, trying the next one..." % resolver.name)
                 continue
 
         return None
-    
+
 class PreferredNetworkParser :
 
-    def __init__(self, default_ip, default_netmask): 
+    def __init__(self, default_ip, default_netmask):
         if not default_ip :
             default_ip = get_default_ip()
         if not default_netmask :
@@ -801,7 +804,7 @@ class PreferredNetworkParser :
                 ip, mask = ip_slash_mask.split("/")
                 net_detect = NetworkDetect(ip, mask)
                 if ip != net_detect.network :
-                    log.warn("Incorrect network address '%s' for netmask '%s', correcting to: '%s'" % 
+                    log.warn("Incorrect network address '%s' for netmask '%s', correcting to: '%s'" %
                             (ip, mask, net_detect.network))
                     network.append((net_detect.network, mask))
                 else :
