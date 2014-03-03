@@ -914,8 +914,11 @@ def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_i
     ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
     return xmlrpcCleanup(ret)
 
-def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id):
-    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id)
+def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}):
+    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases)
+
+def _get_convergence_phases(cmd_id, deploy_group_id):
+    return DyngroupDatabase()._get_convergence_phases(cmd_id, deploy_group_id)
 
 def _force_command_type(cmd_id, type):
     return MscDatabase()._force_command_type(cmd_id, type)
@@ -954,7 +957,8 @@ def convergence_reschedule(all=False):
                 new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
                 if new_machine_ids:
                     logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
-                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
+                    phases = _get_convergence_phases(cmd_id, convergence_deploy_group_id)
+                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id, phases=phases)
                     # Convergence commands can have type -1 if no machines were added previiously
                     # We just add machine(s), so force type to 2
                     _force_command_type(cmd_id, 2)

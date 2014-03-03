@@ -908,7 +908,8 @@ class MscDatabase(msc.MscDatabase):
                              group_id='',
                              root=None,
                              mode='push',
-                             proxies=[]
+                             proxies=[],
+                             phases={}
             ):
         """
         Main func to inject a new command in our MSC database
@@ -1016,17 +1017,20 @@ class MscDatabase(msc.MscDatabase):
             session.execute(self.commands_on_host.insert(), coh_to_insert)
 
             cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
+            def _get_phase(name):
+                return phases.get(name, False) == 'on' and 'enable' or 'disable'
+
             self._createPhases(session,
                                cohs,
                                cmd.do_imaging_menu,
-                               cmd.do_wol,
+                               _get_phase('do_wol'),
                                cmd.files,
-                               cmd.start_script,
-                               cmd.clean_on_success,
-                               cmd.do_inventory,
-                               cmd.do_halt,
-                               cmd.do_reboot,
-                               cmd.do_windows_update,
+                               _get_phase('start_script'),
+                               _get_phase('clean_on_success'),
+                               _get_phase('do_inventory'),
+                               _get_phase('do_halt'),
+                               _get_phase('do_reboot'),
+                               _get_phase('do_windows_update'),
                                is_quick_action = False)
             cmd.ready = True
             session.commit()
