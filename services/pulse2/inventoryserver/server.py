@@ -55,7 +55,7 @@ from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDBy
 
 class InventoryServer:
     def log_message(self, format, *args):
-        self.logger.info(format % args)
+        self.logger.debug(format % args)
 
     def do_GET(self):
         self.logger.debug("GET http method - ignore")
@@ -100,6 +100,7 @@ class InventoryServer:
             query = 'FAILS'
 
         if query == 'PROLOG':
+            self.logger.info("PROLOG received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             config = InventoryGetService().config
             if len(config.options.keys()) == 0:
                 resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>SEND</RESPONSE></REPLY>'
@@ -120,10 +121,10 @@ class InventoryServer:
                         self.logger.error('please check your %s config parameter' % (section))
                 resp = resp + '<RESPONSE>SEND</RESPONSE></REPLY>'
         elif query == 'UPDATE':
-            self.logger.debug("Inventory update from %s" % from_ip)
+            self.logger.info("UPDATE received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_update</RESPONSE></REPLY>'
         elif query == 'INVENTORY':
-            self.logger.debug("New inventory from %s" % from_ip)
+            self.logger.info("INVENTORY received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
             Common().addInventory(deviceid, from_ip, cont)
 
@@ -144,7 +145,7 @@ class InventoryServer:
         try:
             has_known_os = False
             macaddresses = InventoryUtils.getMACs(content)
-            self.logger.debug("GlpiProxy: MAC addresses found: %s" % str(macaddresses))
+            self.logger.info("<GlpiProxy> MAC addresses found: %s" % ', '.join(macaddresses))
             if len(macaddresses) > 0 :
                 glpi_uuid = None
                 for macaddr in macaddresses :
@@ -248,7 +249,7 @@ class InventoryFix :
         for fnc in self.fixers :
             try :
                 self._inventory = fnc(self._inventory)
-                self.logger.info("Inventory fixed by '%s' script" % fnc.__module__)
+                self.logger.debug("Inventory fixed by '%s' script" % fnc.__module__)
             except :
                 info = sys.exc_info()
                 for fname, linenumber, fnc_name, text in traceback.extract_tb(info[2]):
@@ -277,7 +278,7 @@ class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer
         self.config.setup(cfgfile)
         BaseHTTPServer.BaseHTTPRequestHandler.__init__(self, *args)
     def log_message(self, format, *args):
-        self.logger.info(format % args)
+        self.logger.debug(format % args)
 
 class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
@@ -287,7 +288,7 @@ class HttpsInventoryServer(SecureHTTPRequestHandler, InventoryServer):
         self.config.setup(cfgfile)
         SecureHTTPRequestHandler.__init__(self, *args)
     def log_message(self, format, *args):
-        self.logger.info(format % args)
+        self.logger.debug(format % args)
 
 
 class TreatInv(Thread):
@@ -298,7 +299,7 @@ class TreatInv(Thread):
         self.config = config
 
     def log_message(self, format, *args):
-        self.logger.info(format % args)
+        self.logger.debug(format % args)
 
     def run(self):
         while 1:
@@ -316,7 +317,7 @@ class TreatInv(Thread):
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
         macaddresses = InventoryUtils.getMACs(content)
-        self.logger.debug("MAC addresses found: %s" % str(macaddresses))
+        self.logger.info("MAC addresses found: %s" % ', '.join(macaddresses))
         final_macaddr = None
 
         setLastFlag = True
@@ -338,9 +339,11 @@ class TreatInv(Thread):
                     self.logger.warning("GLPI machine couldn't be resolved (for mac %s), skipping the light pull." % str(macaddresses))
             except Exception, exc :
                 self.logger.error("GLPI light pull mode: %s" % str(exc))
+
         if self.config.enable_forward:
-            self.logger.debug("Access to database disabled - exit the inventory creator")
             return False
+
+        # Native case - inventory handling
 
         if InventoryUtils.is_coming_from_pxe(content):
             self.logger.debug("Inventory is coming from PXE")
@@ -360,7 +363,6 @@ class TreatInv(Thread):
             except AttributeError, e:
                 # we can not work without it!
                 self.logger.warn("Could not get any CONTENT section in inventory from %s"%(from_ip))
-                self.logger.error("no inventory created!")
                 return False
 
             try:
@@ -378,7 +380,7 @@ class TreatInv(Thread):
                 current_entity = re.compile(r'<TAG>(.+)</TAG>', re.DOTALL).search(content).group(1)
             except AttributeError, e:
                 # we can work without it
-                self.logger.warn("Could not get any TAG section in inventory from %s" % from_ip)
+                self.logger.debug("Could not get any TAG section in inventory from %s" % from_ip)
 
             self.logger.debug("Thread %s : regex : %s " % (threadname, time.time()))
             inventory = '<?xml version="1.0" encoding="%s" ?><Inventory>%s</Inventory>' % (encoding, inv_data)
@@ -428,7 +430,7 @@ class TreatInv(Thread):
             if entity == InventoryCreator().config.default_entity and current_entity:
                 entity = current_entity
 
-            self.logger.debug("Computer '%s' assigned to entity '%s'" % (hostname, entity))
+            self.logger.info("Computer %s assigned to entity %s" % (hostname, entity))
             inventory['Entity'] = [{'Label' : entity}]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))

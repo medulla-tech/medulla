@@ -766,7 +766,7 @@ class Inventory(DyngroupDatabaseHelper):
             })
         return res
 
-    def getMachineByInventory (self, ctx, inventory) :
+    def getMachineByInventory(self, ctx, inventory):
         """
         Return the machine resolved by inventory content.
 
@@ -788,7 +788,7 @@ class Inventory(DyngroupDatabaseHelper):
             for network in networks:
                 if "MACAddress" in network:
                     mac = network["MACAddress"]
-                    logging.getLogger().debug("Searching for a machine with MAC %s" % mac)
+                    logging.getLogger().info("Trying to associate to an existing machine using MAC %s" % mac)
                     machines = self.getMachinesBy(ctx,
                                                   "Network",
                                                   "MACAddress",
@@ -798,8 +798,8 @@ class Inventory(DyngroupDatabaseHelper):
                     if len(machines) == 1 :
                         uuid = machines[0]["uuid"]
                         name = machines[0]["hostname"]
-                        message = "Resolved machine name: %s (%s)/ MAC: %s" % (name, uuid, mac)
-                        logging.getLogger().debug(message)
+                        message = "Match found using MAC %s! UUID: %s Hostname: %s" % (mac, uuid, name)
+                        logging.getLogger().info(message)
                         return mac, uuid, name
                     elif len(machines) > 1 :
                         logging.getLogger().warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)

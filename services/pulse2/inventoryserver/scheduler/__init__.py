@@ -45,9 +45,6 @@ class AttemptToScheduler(object):
 
     def __init__(self, xml_content, uuid):
         """
-        @param from_ip: IP address of inventory source
-        @type from_ip: string
-
         @param uuid: Host UUID
         @type uuid: string
 
@@ -59,20 +56,20 @@ class AttemptToScheduler(object):
             self.proxy = mmc.proxy
             self.check_target()
         else:
-            logger.warn("<scheduler> : Building the mmc proxy failed")
-            logger.warn("<scheduler> : Exit the scheduler trigger")
-        logger.info("<scheduler> : Return to inventory")
+            logger.warn("<Inventory2Scheduler> Unable to contact MMC Agent using XMLRPC (check host/port and credentials)")
+            logger.warn("<Inventory2Scheduler> Scheduler actions aborted")
+        logger.info("<Inventory2Scheduler> Scheduler actions finished")
 
     def check_target(self):
         if InventoryUtils.is_coming_from_pxe(self.xml):
-            logger.info("<scheduler> : Incoming from PXE : ignore")
+            logger.info("<Inventory2Scheduler> Ignoring inventory for %s received (Minimal PXE inventory)" % self.uuid)
             return
 
         if self.proxy.msc.is_pull_target(self.uuid):
-            logger.info("<scheduler> : Pull Client inventory : ignore")
+            logger.info("<Inventory2Scheduler> Ignoring inventory for %s received (Client is in Pull mode)" % self.uuid)
             return
 
-        logger.info("<scheduler> : Start")
+        logger.info("<Inventory2Scheduler> Valid inventory for %s received" % self.uuid)
         self.dispatch_msc()
 
 
@@ -82,19 +79,18 @@ class AttemptToScheduler(object):
         """
         try:
             tasks = self.proxy.msc.checkLightPullCommands(self.uuid)
-        except:
-            logger.exception("<scheduler> : Error while executing 'msc.checkLightPullCommands'")
+        except Exception, e:
+            logger.exception("<Inventory2Scheduler> Unable to start Light Pull, error was: %s" % str(e))
             return False
 
 
         if len(tasks) == 0:
-            logger.debug("<scheduler> : Nothing to execute :")
-            logger.debug("<scheduler> : Exit")
+            logger.debug("<Inventory2Scheduler> Light Pull: No deployments scheduled, skipping")
             return
         else:
             # execute all commands on host :
             total = len(tasks)
-            logger.info("<scheduler> : Total tasks to execute: %s" % str(total))
+            logger.info("<Inventory2Scheduler> Light Pull: %d deployments to start" % total)
 
             success = self.start_all_tasks_on_host(tasks)
 
@@ -112,18 +108,18 @@ class AttemptToScheduler(object):
         @return: bool
 
         """
-        logger.info("<scheduler> : All tasks will be executed at %s seconds" % str(self.FIRST_DELAY))
+        logger.info("<Inventory2Scheduler> Light Pull: Waiting %d seconds before awaking deployments" % self.FIRST_DELAY)
 
         sleep(self.FIRST_DELAY)
 
         for id in tasks:
             try:
                 self.proxy.msc.start_command_on_host(id)
-            except:
-                logger.exception("<scheduler> : Error while executing 'msc.start_command_on_host'")
+            except Exception, e:
+                logger.exception("<Inventory2Scheduler> Light Pull: Unable to start command %d on host %s, error was: %s" % (id, self.uuid, str(e)))
                 return False
 
-            logger.info("<scheduler> : Task id (coH): %s executed on host(uuid=%s)" % (str(id), self.uuid))
+            logger.info("<Inventory2Scheduler> Light Pull: Task %d on host %s successfully re-queued)" % (id, self.uuid))
             sleep(self.BETWEEN_TASKS_DELAY)
 
         return True
