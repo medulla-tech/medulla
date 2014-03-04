@@ -495,8 +495,8 @@ class RpcProxy(RpcProxyI):
         else:
             return queryManager.getExtended(moduleName, criterion)
 
-    def add_convergence_datas(self, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active):
-        ret = DyngroupDatabase().add_convergence_datas(parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active)
+    def add_convergence_datas(self, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, params):
+        ret = DyngroupDatabase().add_convergence_datas(parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, params)
         return xmlrpcCleanup(ret)
 
     def edit_convergence_datas(self, gid, papi, package_id, datas):
@@ -513,6 +513,10 @@ class RpcProxy(RpcProxyI):
 
     def get_convergence_command_id(self, gid, papi, package_id):
         ret = DyngroupDatabase().get_convergence_command_id(gid, papi, package_id)
+        return xmlrpcCleanup(ret)
+
+    def get_convergence_phases(self, gid, papi, package_id):
+        ret = DyngroupDatabase().get_convergence_phases(gid, papi, package_id)
         return xmlrpcCleanup(ret)
 
     def is_convergence_active(self, gid, papi, package_id):

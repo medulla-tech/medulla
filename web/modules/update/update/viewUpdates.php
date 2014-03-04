@@ -22,15 +22,29 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
 
+require("graph/navbar.inc.php");
 require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/html.inc.php");
 
 $MMCApp = & MMCApp::getInstance();
 
-include dirname(__FILE__) . '/sidebar.php';
+$os_classes = get_os_classes();
+
+$sidemenu = new SideMenu();
+$sidemenu->setClass("update");
+
+$sidemenu->addSideMenuItem(new SideMenuItem(_T('All updates', 'update'), "update", "update", "index"));
+
+foreach ($os_classes['data'] as $os) {
+    $item = new SideMenuItemNoAclCheck($os['name'], "update", "update", "viewUpdates&os_class_id=" . $os['id']);
+    $item->setCssId("osClass" . $os['id']);
+    $sidemenu->addSideMenuItem($item);
+}
+
+if (isset($_GET['os_class_id'])) {
+    $sidemenu->forceActiveItem("viewUpdates&os_class_id=" . $_GET['os_class_id']);
+}
 
 $p = new PageGenerator(_T("Update manager", 'update'));
 $p->setSideMenu($sidemenu);

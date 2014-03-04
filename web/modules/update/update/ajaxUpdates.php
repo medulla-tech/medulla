@@ -60,18 +60,31 @@ if (!$count) {
 
 //  Listinfo params
 $listinfoParams = array();
+$checkboxes = array();
 foreach ($data as $row) {
     $listinfoParams[] = array('id' => $row['id']);
+    $checkboxes[] = '<input type="checkbox" name="selected_updates[]" value="' . $row['id'] . '">';
 }
 
 $cols = listInfoFriendly($data);
 
 // Update types strings
 $cols['type_str'] = array_map('getUpdateTypeLabel', $cols['type_id']);
+// Creating installed/total col
+$cols['targets'] = array();
+for ($i = 0; $i < count($cols['total_targets']); $i++){
+    $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
+}
 
-$n = new OptimizedListInfos($cols['title'], _T("Update title", "msc"));
-$n->addExtraInfo($cols['uuid'], _T("UUID", "msc"));
-$n->addExtraInfo($cols['type_str'], _T("Type", "msc"));
+// Printing selected updates form
+print '<form id="sel_updates_form">';
+
+$n = new OptimizedListInfos($checkboxes, '', '', '10px');
+$n->first_elt_padding = '0';
+$n->addExtraInfo($cols['title'], _T("Update title", "update"));
+$n->addExtraInfo($cols['uuid'], _T("UUID", "update"));
+$n->addExtraInfo($cols['type_str'], _T("Type", "update"));
+$n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
 
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
@@ -84,4 +97,42 @@ $n->end = $maxperpage;
 $n->disableFirstColumnActionLink();
 
 $n->display();
+
+// End selected updates form
+print '</form>';
+
 ?>
+<input id="btnEnableUpdates" type="button" value="<?php print _T('Enable selected updates', 'update'); ?>" class="btnPrimary">
+<input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
+
+<script type="text/javascript">
+
+jQuery('#btnEnableUpdates').click(function(){
+
+    jQuery.ajax({
+	url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
+	type: 'POST',
+	data: jQuery('#sel_updates_form').serialize(),
+	success: function(result){
+	    pushSearch();
+	}
+    });
+
+});
+
+jQuery('#btnDisableUpdates').click(function(){
+
+    jQuery.ajax({
+        url: '<?php print urlStrRedirect("update/update/disableUpdate"); ?>',
+        type: 'POST',
+        data: jQuery('#sel_updates_form').serialize(),
+        success: function(result){
+            pushSearch();
+        }
+    });
+
+});
+
+
+</script>
+

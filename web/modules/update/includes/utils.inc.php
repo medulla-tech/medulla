@@ -38,7 +38,10 @@ function listInfoFriendly($data) {
 
 function getUpdateTypeLabel($update_type_id) {
     $types = get_update_types();
-    return _T($types[$update_type_id]['name'], 'update');
+
+    foreach ($types as $type)
+        if ($type['id'] == $update_type_id)
+            return _T($type['name'], 'update');
 }
 
 ?>

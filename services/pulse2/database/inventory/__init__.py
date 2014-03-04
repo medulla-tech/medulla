@@ -522,15 +522,29 @@ class Inventory(DyngroupDatabaseHelper):
         if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
-                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')])
+                self.mapping(ctx, [None, None, value[0][0], query[3][0]]),
+                self.mapping(ctx, [None, None, value[1][0], query[3][1]])
             )
         elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
-            value = PossibleQueries().possibleQueries('triple')[query[2]]
-            return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
-                self.mapping(ctx, [None, None, value[0][0], query[3][0].replace('(', '')]),
-                self.mapping(ctx, [None, None, value[1][0], query[3][1].replace(')', '')]),
-                self.mapping(ctx, [None, None, value[2][0], query[3][2].replace(')', '')])
+            queries = PossibleQueries().possibleQueries('triple')[query[2]]
+
+            vendor_query = queries[0][0]
+            software_query = queries[1][0]
+            version_query = queries[2][0]
+
+            vendor_value = query[3][0].replace('*', '%')
+            software_value = query[3][1].replace('*', '%')
+            version_value = query[3][2].replace('*', '%')
+
+            def _getMapping(query, value):
+                if value == '%':
+                    return None
+                return self.mapping(ctx, [None, None, query, value])
+
+            return and_(
+                _getMapping(vendor_query, vendor_value),
+                _getMapping(software_query, software_value),
+                _getMapping(version_query, version_value),
             )
         elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
@@ -547,10 +561,8 @@ class Inventory(DyngroupDatabaseHelper):
             elif invert:
                 return and_(getattr(partKlass, field) != value, self.inventory.c.Last == 1)
             else:
-                if re.compile('\*').search(value):
-                    value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
-                return and_(getattr(partKlass, field) == value, self.inventory.c.Last == 1)
+                value = value.replace('*', '%')
+                return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
         elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
@@ -583,10 +595,25 @@ class Inventory(DyngroupDatabaseHelper):
             elif invert:
                 return and_(getattr(partKlass, field) != value, condition, self.inventory.c.Last == 1)
             else:
-                if re.compile('\*').search(value):
-                    value = re.compile('\*').sub('%', value)
-                    return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
-                return and_(getattr(partKlass, field) == value, condition, self.inventory.c.Last == 1)
+                value = value.replace('*', '%')
+                return and_(getattr(partKlass, field).like(value), condition, self.inventory.c.Last == 1)
+        elif query[2] == 'Software/ProductVersion': # third criteria of triple search
+            if table == 'Machine':
+                partKlass = Machine
+            else:
+                partKlass = self.klass[table]
+            value = query[3]
+            if value.startswith('>') and not invert or value.startswith('<') and invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass, field) > value, self.inventory.c.Last == 1)
+            elif value.startswith('>') and invert or value.startswith('<') and not invert:
+                value = value.replace('>', '').replace('<', '')
+                return and_(getattr(partKlass, field) < value, self.inventory.c.Last == 1)
+            elif invert:
+                return and_(getattr(partKlass, field) != value, self.inventory.c.Last == 1)
+            else:
+                value = value.replace('*', '%')
+                return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
     def getMachines(self, ctx, pattern = None):
         """
@@ -632,7 +659,6 @@ class Inventory(DyngroupDatabaseHelper):
         partKlass = self.klass[table]
         partTable = self.table[table]
         haspartTable = self.table["has" + table]
-        import re
         p1 = re.compile('\*')
         p2 = re.compile('<')
         p3 = re.compile('>')

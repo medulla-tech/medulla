@@ -669,7 +669,7 @@ class Glpi07(DyngroupDatabaseHelper):
             ret = []
             for part in parts:
                 partA, partB = part
-                partBcanBeNone = partB == '%' and True or False
+                partBcanBeNone = partB == '%'
                 if invert:
                     if like:
                         if partBcanBeNone:

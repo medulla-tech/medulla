@@ -79,7 +79,6 @@ if ($_GET['action'] == 'computersgroupsubedit' || $_GET['action'] == 'computersg
 if ($_GET['action'] == 'computersgroupsubdel' || $_GET['action'] == 'computersgroupcreatesubdel') {
     $request->removeSub(quickGet('sub_id'));
 }
-debug($request->subs);
 
 // a new part has to be added to the request
 // if the part is extended, check the validity of data or parse the date

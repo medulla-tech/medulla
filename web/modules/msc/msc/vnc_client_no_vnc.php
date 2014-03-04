@@ -314,3 +314,6 @@ else {
     $f->display();
 }
 ?>
+<script type="text/javascript">
+    jQuery('input[name=bconfirm]').click(closePopup);
+</script>
