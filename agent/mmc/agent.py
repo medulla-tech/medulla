@@ -118,6 +118,9 @@ class MmcServer(xmlrpc.XMLRPC, object):
         @rtype: boolean
         """
         mod, func = self._splitFunctionPath(functionPath)
+        # Special case: reload mehod
+        if (mod, func) == ('system', 'reloadModulesConfiguration'):
+            return False
         ret = True
         if mod:
             try:
@@ -558,13 +561,14 @@ class MMCApp(object):
                                    self.config.login,
                                    self.config.password,
                                    self.config.host,
-                                   self.config.password
+                                   self.config.port
                                    )
         )
         try:
             client.system.reloadModulesConfiguration()
             return 0
         except Exception, e:
+            print "Unable to reload configuration: %s" % str(e)
             return 1
 
     def readPid(self):

@@ -48,6 +48,8 @@ if __name__ == "__main__":
                       help="Path to configuration file", metavar="INIFILE")
     parser.add_option("-k", "--kill", dest="kill", default=False, action="store_true",
                       help="Kill running daemon, if any")
+    parser.add_option("-r", "--reload", dest="reload", default=False, action="store_true",
+                      help="Reload configuration")
 
     # Parse arguments
     (options, args) = parser.parse_args()
@@ -69,6 +71,8 @@ if __name__ == "__main__":
     app = mmc.agent.MMCApp(cp, options)
     if options.kill:
         ret = app.kill()
+    elif options.reload:
+        ret = app.reload()
     else:
         ret = app.run()
     sys.exit(ret)
