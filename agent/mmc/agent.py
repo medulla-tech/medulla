@@ -67,6 +67,7 @@ Fault = xmlrpclib.Fault
 ctx = None
 VERSION = "3.1.1"
 
+
 class MmcServer(xmlrpc.XMLRPC, object):
     """
     MMC Server implemented as a XML-RPC server.
@@ -545,6 +546,26 @@ class MMCApp(object):
             return 1
 
         return 0
+
+    def reload(self):
+        if self.config.enablessl:
+            protocol = 'https'
+        else:
+            protocol = 'http'
+
+        client = xmlrpclib.ServerProxy(
+            "%s://%s:%s@%s:%s/" % (protocol,
+                                   self.config.login,
+                                   self.config.password,
+                                   self.config.host,
+                                   self.config.password
+                                   )
+        )
+        try:
+            client.system.reloadModulesConfiguration()
+            return 0
+        except Exception, e:
+            return 1
 
     def readPid(self):
         """ Try to read pid of running mmc-agent in pidfile
