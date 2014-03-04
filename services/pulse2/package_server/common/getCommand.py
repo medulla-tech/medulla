@@ -120,9 +120,6 @@ class getCommand(object):
     def getRegCommand(self):
         return 'regedit /s "%s"' % basename(self.file)
 
-    def getDpkgCommand(self):
-        return 'DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes dpkg -i --force-confdef --force-confold "%s"' % basename(self.file)
-
     def getBatCommand(self):
         return 'cmd.exe /c "%s"' % basename(self.file)
 
@@ -200,9 +197,6 @@ class getCommand(object):
                     return self.logger.info("I can't get a command for %s" % self.file)
             else:
                 return self.logger.info("No Template Key for %s" % self.file)
-        elif "Debian binary package" in file_data[self.file]:
-            self.logger.debug("Debian package detected")
-            return self.getDpkgCommand()
         elif self.file.endswith(".reg"):
             self.logger.debug("Reg file detected")
             return self.getRegCommand()

@@ -31,18 +31,18 @@ $mod->setDescription(_T("Update manager", "update"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(990);
 
-$submod = new SubModule("update", _T("Updates", "update"));
+$submod = new SubModule("update", _T("Update manager", "update"));
 $submod->setDefaultPage("update/update/index");
 $submod->setImg('modules/update/graph/navbar/update');
 $submod->setPriority(990);
 
-$page = new Page("index", _T("All updates", "update"));
+$page = new Page("index", _T("Update manager", "update"));
 $submod->addPage($page);
 
-$page = new Page("viewUpdates", _T("Updates", "update"));
+$page = new Page("viewUpdates", _T("View updates", "update"));
 $submod->addPage($page);
 
-$page = new Page("ajaxUpdates", _T("Updates list", "update"));
+$page = new Page("ajaxUpdates", _T("Update managment", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
@@ -52,6 +52,9 @@ $submod->addPage($page);
 
 $page = new Page("disableUpdate", _T("Disable update", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("settings", _T("Settings", "update"));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);

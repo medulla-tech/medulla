@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-import logging, re
+import logging
 try :
     import cPickle as pickle
 except ImportError :
@@ -36,17 +36,6 @@ from twisted.internet.defer import maybeDeferred
 from pulse2.scheduler.config import SchedulerConfig, SchedulerDatabaseConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck
-
-def sqladdslashes(s):
-    return re.sub("(\\\\|'|\")", lambda o: "\\" + o.group(1), s)
-
-def stripbrokenchars(s):
-    bad_map = {
-        u"\u2019":  u"'",
-        u"\u2013":  u"-",
-    }
-    utf_map = dict([(ord(k), ord(v)) for k,v in bad_map.items()])
-    return s.translate(utf_map)
 
 class PackUtils :
     @classmethod
@@ -356,22 +345,7 @@ class WUInjectDB :
         stat += "(uuid, title, kb_number, type_id, os_class_id, need_reboot, "
         stat += "request_user_input, info_url) "
         stat += "VALUES ('%s', '%s', '%s', %d, %d, %d, %d, '%s');"
-
-        try:
-            title = sqladdslashes(stripbrokenchars(title.decode('utf-8', 'ignore')))
-        except Exception, e:
-            self.logger.warn("WU Unable to decode title: %s" % str(e))
-        try:
-            kb_number = sqladdslashes(stripbrokenchars(kb_number.decode('utf-8', 'ignore')))
-        except Exception, e:
-            self.logger.warn("WU Unable to decode KB number: %s" % str(e))
-        try:
-            info_url = sqladdslashes(stripbrokenchars(info_url.decode('utf-8', 'ignore')))
-        except Exception, e:
-            self.logger.warn("WU Unable to decode info URL: %s" % str(e))
-
-        try:
-            stat = stat % (uuid,
+        stat = stat % (uuid,
                        title,
                        kb_number,
                        type_id,
@@ -379,9 +353,6 @@ class WUInjectDB :
                        need_reboot,
                        request_user_input,
                        info_url)
-        except Exception, e:
-            import sys
-            self.logger.error('Unable to parse WU item, traceback was: '+str(sys.exc_info()))
 
         self.logger.debug("\033[33m%s\033[0m" % stat)
 

@@ -1037,33 +1037,21 @@ class WUParsePhase(Phase):
                          is_installed) = line
 
                         wu = WUInjectDB()
-
-                        try:
-                            title = title.encode('utf-8', 'ignore')
-                        except Exception, e:
-                            self.logger.warn("WU Unable to encode title: %s" % str(e))
-                        try:
-                            kb_number = kb_number.encode('utf-8', 'ignore')
-                        except Exception, e:
-                            self.logger.warn("WU Unable to encode KB number: %s" % str(e))
-                        try:
-                            info_url = info_url.encode('utf-8', 'ignore')
-                        except Exception, e:
-                            self.logger.warn("WU Unable to encode info URL: %s" % str(e))
-
                         wu.inject(self.target.target_uuid.replace('UUID', ''),
                                      uuid,
-                                     title,
-                                     kb_number,
+                                     title.encode('utf-8','replace'),
+                                     kb_number.encode('utf-8','replace'),
                                      kb_type,
                                      need_reboot,
                                      request_user_input,
                                      os_class,
-                                     info_url,
+                                     info_url.encode('utf-8','replace'),
                                      is_installed)
 
+                    except ValueError:
+                        self.logger.warn("Incompatible format ")
                     except Exception, e:
-                        self.logger.error("WU Unable to insert update: %s" % str(e))
+                        self.logger.warn("WU update failed: %s" % str(e))
 
         self.logger.info("Circuit #%s: WU Parse phase successfully processed" % (self.coh.id))
         self.update_history_done(stdout="successfully processed")

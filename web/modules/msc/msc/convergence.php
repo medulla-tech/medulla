@@ -82,35 +82,20 @@ if ($_GET['editConvergence']) {
     $ServerAPI->fromURI($papi);
     $cmd_id = xmlrpc_get_convergence_command_id($gid, $ServerAPI, $pid);
     $command_details = command_detail($cmd_id);
-    $command_phases = xmlrpc_get_convergence_phases($gid, $ServerAPI, $pid);
 
     $params["ltitle"] = $command_details['title'];
+    $params["start_script"] = ($command_details['start_script'] == 'enable') ? 'on' : '';
+    $params["clean_on_success"] = ($command_details['clean_on_success'] == 'enable') ? 'on' : '';
+    $params["do_reboot"] = ($command_details['do_reboot'] == 'enable') ? 'on' : '';
+    $params["do_wol"] = ($command_details['do_wol'] == 'enable') ? 'on' : '';
+    $params["do_inventory"] = ($command_details['do_inventory'] == 'enable') ? 'on' : '';
     $params["maxbw"] = $command_details['maxbw'] / 1024;
     $params["copy_mode"] = $command_details['copy_mode'];
     $params["deployment_intervals"] = $command_details['deployment_intervals'];
     $params["parameters"] = $command_details['parameters'];
     $params["editConvergence"] = True;
     $params["active"] = (xmlrpc_is_convergence_active($gid, $ServerAPI, $pid)) ? 'on' : '';
-
-    // phases
-    foreach(array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'do_inventory', 'do_halt') as $key) {
-        if ($command_phases) { // $command_phases is False with old convergence implementation (without phases stored in Convergence DB)
-            if ($key == 'do_halt') {
-                $params['issue_halt_to_done'] = (in_array('done', $command_phases['issue_halt_to'])) ? 'on' : '';
-            }
-            else {
-                $params[$key] = $command_phases[$key];
-            }
-        }
-        else {
-            if ($key == 'do_halt') {
-                $params['issue_halt_to_done'] = ($command_details[$key] == 'enable') ? 'on' : '';
-            }
-            else {
-                $params[$key] = ($command_details[$key] == 'enable') ? 'on' : '';
-            }
-        }
-    }
+    $params["issue_halt_to_done"] = ($command_details['do_halt'] == 'enable') ? 'on': '';
 }
 else {
     $params["ltitle"] = get_def_package_label($name, $version);

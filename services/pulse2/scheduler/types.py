@@ -465,7 +465,7 @@ class Phase (PhaseBase):
                      self.cmd.title,
                      self.target.target_name,
                      name))
-            return self.switch_phase_failed()
+            return self.switch_phase_failed(True)
 
 
 

@@ -26,7 +26,7 @@ from pulse2.scheduler.balance import ParabolicBalance
 
 class LaunchTimeResolver :
 
-    now = None
+    now = None 
     start_date = None
     end_date = None
     attempts_failed = 0
@@ -61,7 +61,7 @@ class LaunchTimeResolver :
     def days_delta(self):
         """ number of days between start date and end_date"""
         return (self.end_date - self.start_date).days + 1
-
+    
     @property
     def attempts_total(self):
         """ Total of attempts for all days """
@@ -72,7 +72,7 @@ class LaunchTimeResolver :
         """
         Creates a list of valid deployment intervals.
 
-        @return: time axe of datetime intervals
+        @return: time axe of datetime intervals 
         @rtype: list
         """
         if not self.deployment_intervals :
@@ -80,23 +80,22 @@ class LaunchTimeResolver :
         axe = []
 
         start_date = self.start_date
-
+    
         while True :
             if start_date > self.end_date :
                 break
             for start_hour, end_hour in self.intervals :
-                start = datetime(year=start_date.year,
+                start = datetime(year=start_date.year, 
                                  month=start_date.month,
                                  day=start_date.day,
                                  hour=start_hour)
 
-                end = datetime(year=start_date.year,
+                end = datetime(year=start_date.year, 
                                month=start_date.month,
                                day=start_date.day,
                                hour=end_hour)
                 if end_hour == 0 :
-                    # seconds=86399 => (one day) 00:00:00 - 23:59:59
-                    end += timedelta(seconds=86399)
+                    end += timedelta(days=1)
 
                 if start < self.start_date :
                     start = self.start_date
@@ -105,21 +104,21 @@ class LaunchTimeResolver :
 
                 if end < self.start_date :
                     continue
-                if start > self.end_date :
+                if start > self.end_date : 
                     break
 
-
+                
                 axe.append((start, end))
 
-            midnight = datetime(year=start_date.year,
+            midnight = datetime(year=start_date.year, 
                                 month=start_date.month,
                                 day=start_date.day)
-
+ 
             start_date = midnight + timedelta(days=1)
-
+            
         return axe
 
-
+         
 
     def get_total_valid_time(self):
         """
@@ -148,7 +147,7 @@ class LaunchTimeResolver :
 
 
     def get_launch_date(self):
-        """
+        """ 
         Detects a valid date for the next command launch.
 
         @return: next launch date
@@ -162,7 +161,7 @@ class LaunchTimeResolver :
                 delta = int(coef * self.get_total_valid_time())
                 delay += delta
             return self._get_date(delay)
-
+ 
     def _get_date(self, delay):
         """
         Applying the calculated delay on milestone pattern.
@@ -172,7 +171,7 @@ class LaunchTimeResolver :
 
         @return: valid launch date
         @rtype: datetime
-        """
+        """        
         previous = 0
         for i, stamp in enumerate(self.get_milestone_stamps()):
             if delay in range(previous, stamp):
@@ -186,7 +185,7 @@ class LaunchTimeResolver :
         """Extracts the intervals from string to the list of tuples"""
         self.intervals = self.extract_intervals(self.deployment_intervals)
 
-    @classmethod
+    @classmethod 
     def extract_intervals(cls, deployment_intervals):
         """
         Extracts the intervals from string to the list of tuples.

@@ -24,13 +24,6 @@
 
 require_once("modules/update/includes/xmlrpc.inc.php");
 
-// Disabling Multiple updates
-if (isset($_POST["selected_updates"])) {
-
-    set_update_status($_POST["selected_updates"] , 2);
-    return;
-}
-
 if (isset($_POST["bconfirm"], $_POST["id"])) {
     // Setting update status
     set_update_status($_POST["id"], 2);

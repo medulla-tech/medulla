@@ -901,30 +901,25 @@ def _get_convergence_soon_ended_commands(all=False):
     @rtype: list
     """
     ret = []
-    active_convergence_cmd_ids = DyngroupDatabase()._get_convergence_active_commands_ids()
     if all:
-        # Return all active_convergence_cmd_ids
-        return active_convergence_cmd_ids
-    elif active_convergence_cmd_ids:
-        # Get active_convergence_cmd_ids who are soon expired
-        ret = MscDatabase()._get_convergence_soon_ended_commands(cmd_ids=active_convergence_cmd_ids)
+        cmd_ids = []
+    else:
+        cmd_ids = MscDatabase()._get_convergence_soon_ended_commands()
+    if cmd_ids or all:
+        # Get active commands only if there is any cmd_ids
+        # or if we want all active commands
+        ret = DyngroupDatabase()._get_convergence_active_commands_ids(cmd_ids=cmd_ids)
     return xmlrpcCleanup(ret)
 
 def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id):
     ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
     return xmlrpcCleanup(ret)
 
-def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}):
-    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases)
+def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id):
+    return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id)
 
-def _get_convergence_phases(cmd_id, deploy_group_id):
-    return DyngroupDatabase()._get_convergence_phases(cmd_id, deploy_group_id)
-
-def _force_command_type(cmd_id, type):
-    return MscDatabase()._force_command_type(cmd_id, type)
-
-def _update_convergence_dates(cmd_id):
-    return MscDatabase()._update_convergence_dates(cmd_id)
+def _update_command_end_date(cmd_id):
+    return MscDatabase()._update_command_end_date(cmd_id)
 
 def _get_machines_in_command(cmd_id):
     return MscDatabase()._get_machines_in_command(cmd_id)
@@ -957,12 +952,8 @@ def convergence_reschedule(all=False):
                 new_machine_ids = _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
                 if new_machine_ids:
                     logger.debug("%s machines will be added to convergence group %s" % (len(new_machine_ids), convergence_deploy_group_id))
-                    phases = _get_convergence_phases(cmd_id, convergence_deploy_group_id)
-                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id, phases=phases)
-                    # Convergence commands can have type -1 if no machines were added previiously
-                    # We just add machine(s), so force type to 2
-                    _force_command_type(cmd_id, 2)
-                _update_convergence_dates(cmd_id)
+                    _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_deploy_group_id)
+                _update_command_end_date(cmd_id)
             except TypeError, e:
                 logger.warn("Error while fetching deploy_group_id and user for command %s: %s" % (cmd_id, e))
     else:

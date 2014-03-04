@@ -859,7 +859,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return query.parent_id
 
     @DatabaseHelper._session
-    def add_convergence_datas(self, session, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active, cmdPhases):
+    def add_convergence_datas(self, session, parent_group_id, deploy_group_id, done_group_id, pid, p_api, command_id, active):
         convergence = Convergence()
         convergence.parentGroupId = parent_group_id
         convergence.deployGroupId = deploy_group_id
@@ -868,34 +868,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         convergence.packageUUID = pid
         convergence.commandId = command_id
         convergence.active = active
-        convergence.cmdPhases = cPickle.dumps(cmdPhases)
         session.add(convergence)
         session.flush()
         return True
 
     @DatabaseHelper._session
     def edit_convergence_datas(self, session, gid, papi, package_id, datas):
-        datas['cmdPhases'] = cPickle.dumps(datas['cmdPhases'])
         return session.query(Convergence).filter_by(
             parentGroupId = gid,
             papi = cPickle.dumps(papi),
             packageUUID = package_id
         ).update(datas)
-
-    @DatabaseHelper._session
-    def _get_convergence_phases(self, session, cmd_id, deploy_group_id):
-        ret = False
-        try:
-            ret = session.query(Convergence).filter_by(
-                commandId = cmd_id,
-                deployGroupId = deploy_group_id
-            ).one()
-        except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn('Error while fetching convergence phases for command %s: %s' % (cmd_id, e))
-        if ret:
-            return cPickle.loads(ret.cmdPhases)
-        else:
-            return {}
 
     @DatabaseHelper._session
     def getConvergenceStatus(self, session, gid):
@@ -949,23 +932,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
             return None
-
-    @DatabaseHelper._session
-    def get_convergence_phases(self, session, gid, papi, package_id):
-        query = session.query(Convergence).filter_by(
-            parentGroupId = gid,
-            papi = cPickle.dumps(papi),
-            packageUUID = package_id
-        )
-        try:
-            ret = query.one()
-        except (MultipleResultsFound, NoResultFound) as e:
-            self.logger.warn("Error while fetching convergence command id for group %s (package UUID %s): %s" % (gid, package_id, e))
-            return None
-        try:
-            return cPickle.loads(ret.cmdPhases)
-        except EOFError, e:
-            return False
 
     @DatabaseHelper._session
     def is_convergence_active(self, session, gid, papi, package_id):

@@ -318,7 +318,8 @@ class MscDatabase(msc.MscDatabase):
                                           cmd['fk_bundle'], cmd['order_in_bundle'],
                                           cmd['proxies'], cmd['proxy_mode'],
                                           cmd['state'],
-                                          len(targets_to_insert)
+                                          len(targets_to_insert),
+                                          cmd_type=-1
                                           )
                 session.flush()
                 ret.append(cobj.getId())
@@ -385,7 +386,6 @@ class MscDatabase(msc.MscDatabase):
                                cmd['do_reboot'],
                                cmd['do_windows_update'])
 
-
             session.commit()
             return ret
 
@@ -401,7 +401,7 @@ class MscDatabase(msc.MscDatabase):
                 cmd = self.getCommands(ctx, cmd_id)
                 if cmd:
                     session = object_session(cmd)
-                    cmd.ready = True
+                    cmd.type = 0
                     session.add(cmd)
                     session.flush()
             return cmd_ids
@@ -523,6 +523,7 @@ class MscDatabase(msc.MscDatabase):
             session = create_session()
             session.begin()
 
+            origin_type = cmd_type
             cmd = self.createCommand(session, package_id, start_file, parameters,
                                      files, start_script, clean_on_success,
                                      start_date, end_date, connect_as, ctx.userid,
@@ -532,7 +533,7 @@ class MscDatabase(msc.MscDatabase):
                                      maxbw,
                                      deployment_intervals, fk_bundle,
                                      order_in_bundle, proxies, proxy_mode,
-                                     state, len(targets))
+                                     state, len(targets), cmd_type=-1)
             session.flush()
             # Convergence command (type 2) can have no targets
             # so return command_id if no targets
@@ -589,8 +590,8 @@ class MscDatabase(msc.MscDatabase):
                                do_reboot,
                                do_windows_update,
                                is_quick_action)
-            cmd.type = cmd_type
-            cmd.ready = True
+
+            cmd.type = origin_type
             session.commit()
             return cmd.getId()
 
@@ -834,21 +835,26 @@ class MscDatabase(msc.MscDatabase):
         return target
 
     @DatabaseHelper._session
-    def _get_convergence_soon_ended_commands(self, session, cmd_ids=[]):
+    def _get_convergence_soon_ended_commands(self, session):
         fmt = "%Y-%m-%d %H:%M:%S"
         now_plus_one_hour = (datetime.datetime.now() + datetime.timedelta(hours=1)).strftime(fmt)
         query = session.query(Commands)
         query = query.filter(and_(
-            Commands.id.in_(cmd_ids),
+            Commands.type == 2,
             Commands.end_date < now_plus_one_hour,
         ))
         return [x.id for x in query]
 
     @DatabaseHelper._session
-    def _update_convergence_dates(self, session, cmd_id):
+    def _update_command_end_date(self, session, cmd_id):
         fmt = "%Y-%m-%d %H:%M:%S"
-        start_date = datetime.datetime.now().strftime(fmt)
         end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
+        try:
+            start_date = session.query(Commands.start_date).filter_by(id = cmd_id).one()
+            start_date = start_date[0].strftime(fmt)
+        except (MultipleResultsFound, NoResultFound) as e:
+            self.logger.warn("I can't get start_date for command id %s: %s" % (cmd_id, e))
+            return False
         return self.extendCommand(cmd_id, start_date, end_date)
 
     def _get_machines_in_command(self, session, cmd_id):
@@ -882,8 +888,7 @@ class MscDatabase(msc.MscDatabase):
                              group_id='',
                              root=None,
                              mode='push',
-                             proxies=[],
-                             phases={}
+                             proxies=[]
             ):
         """
         Main func to inject a new command in our MSC database
@@ -951,6 +956,8 @@ class MscDatabase(msc.MscDatabase):
                                           schedulers[i]))
             session = create_session()
             session.begin()
+            origin_type = cmd.type
+            cmd.type = -1
 
             for atarget, target_name, ascheduler in targets_to_insert :
                 target = Target()
@@ -990,22 +997,19 @@ class MscDatabase(msc.MscDatabase):
             session.execute(self.commands_on_host.insert(), coh_to_insert)
 
             cohs = [coh for coh in cmd.getCohIds(target_uuids=target_uuids) if coh.id not in existing_coh_ids]
-            def _get_phase(name):
-                return phases.get(name, False) == 'on' and 'enable' or 'disable'
-
             self._createPhases(session,
                                cohs,
                                cmd.do_imaging_menu,
-                               _get_phase('do_wol'),
+                               cmd.do_wol,
                                cmd.files,
-                               _get_phase('start_script'),
-                               _get_phase('clean_on_success'),
-                               _get_phase('do_inventory'),
-                               _get_phase('do_halt'),
-                               _get_phase('do_reboot'),
-                               _get_phase('do_windows_update'),
+                               cmd.start_script,
+                               cmd.clean_on_success,
+                               cmd.do_inventory,
+                               cmd.do_halt,
+                               cmd.do_reboot,
+                               cmd.do_windows_update,
                                is_quick_action = False)
-            cmd.ready = True
+            cmd.type = origin_type
             session.commit()
             return cmd_id
 

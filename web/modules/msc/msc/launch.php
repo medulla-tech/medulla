@@ -192,7 +192,6 @@ function start_a_command($proxy = array()) {
                 $updated_datas = array(
                     'active' => $active,
                     'commandId' => intval($command_id),
-                    'cmdPhases' => $params,
                 );
                 xmlrpc_edit_convergence_datas($gid, $p_api, $pid, $updated_datas);
             }
@@ -216,7 +215,7 @@ function start_a_command($proxy = array()) {
                 }
 
                 // feed convergence db
-                xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active, $params);
+                xmlrpc_add_convergence_datas($gid, $deploy_group_id, $done_group_id, $pid, $p_api, intval($command_id), $active);
             }
             header("Location: " . urlStrRedirect("base/computers/groupmsctabs", array('gid' => $gid)));
             exit;
