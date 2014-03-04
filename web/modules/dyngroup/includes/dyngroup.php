@@ -430,6 +430,10 @@ function xmlrpc_get_convergence_command_id($gid, $p_api, $pid) {
     return xmlCall("dyngroup.get_convergence_command_id", array($gid, $p_api, $pid));
 }
 
+function xmlrpc_get_convergence_phases($gid, $p_api, $pid) {
+    return xmlCall("dyngroup.get_convergence_phases", array($gid, $p_api, $pid));
+}
+
 function xmlrpc_is_convergence_active($gid, $p_api, $pid) {
     return xmlCall("dyngroup.is_convergence_active", array($gid, $p_api, $pid));
 }
