@@ -119,7 +119,7 @@ class AttemptToScheduler(object):
                 logger.exception("<Inventory2Scheduler> Light Pull: Unable to start command %d on host %s, error was: %s" % (id, self.uuid, str(e)))
                 return False
 
-            logger.info("<Inventory2Scheduler> Light Pull: Task %d on host %s successfully re-queued)" % (id, self.uuid))
+            logger.info("<Inventory2Scheduler> Light Pull: Task %d on host %s successfully re-queued)" % (int(id), self.uuid))
             sleep(self.BETWEEN_TASKS_DELAY)
 
         return True
