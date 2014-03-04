@@ -21,6 +21,6 @@
 -- MA 02110-1301, USA.
 
 
-ALTER TABLE  `Convergence` ADD  `cmdPhases` TEXT NOT NULL
+ALTER TABLE  `Convergence` ADD  `cmdPhases` TEXT NOT NULL;
 
 UPDATE version set Number = 6;
