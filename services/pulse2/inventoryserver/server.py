@@ -82,14 +82,11 @@ class InventoryServer:
 
         cont = [content, self.headers['Content-Type']]
 
-        # Forwarding the inventories to GLPI
-        if self.config.enable_forward :
-            self.glpi_forward(content, from_ip)
-
+        # Let's figure out a few things about this incoming XML...
         try:
             query = re.search(r'<QUERY>([\w-]+)</QUERY>', content).group(1)
         except AttributeError, e:
-            self.logger.warn("Could not get any QUERY section in inventory from %s"%(from_ip))
+            self.logger.warn("Could not get any QUERY section in inventory from %s" % from_ip)
             query = 'FAILS'
         try:
             if query != 'UPDATE':
@@ -128,67 +125,107 @@ class InventoryServer:
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
             Common().addInventory(deviceid, from_ip, cont)
 
+        # Forwarding the inventories to GLPI (if enabled)
+        if self.config.enable_forward :
+            self.glpi_forward(content, from_ip, query)
+
         self.send_response(200)
         self.end_headers()
         self.wfile.write(compress(resp))
 
-    def glpi_forward(self, content, from_ip):
+    def glpi_forward(self, content, from_ip, query):
         """
         Some checks and controls before the forwarding the invontory to GLPI
 
-        @param content: invntory on XML format
+        @param content: inventory in XML format
         @type content: str
 
         @param from_ip: IP address of machine which is sending the inventory
         @type from_ip: str
+
+        @param query: query type (ie: PROLOG, INVENTORY...)
+        @type query: str
         """
         try:
-            has_known_os = False
-            macaddresses = InventoryUtils.getMACs(content)
-            self.logger.info("<GlpiProxy> MAC addresses found: %s" % ', '.join(macaddresses))
-            if len(macaddresses) > 0 :
+            # Light Pull mode and/or decide to forward or not if coming for PXE
+            if query == 'INVENTORY':
+
+                has_known_os = False
+                macaddresses = InventoryUtils.getMACs(content)
+                # Honestly, 00:00:00:00:00:00 can't be a good mac, trust me I'm an engineer
+                macaddresses = [x for x in macaddresses if not x == '00:00:00:00:00:00']
+                self.logger.info("<GlpiProxy> MAC addresses found: %s" % ', '.join(macaddresses))
                 glpi_uuid = None
-                for macaddr in macaddresses :
-                    # Honestly, this can't be a good mac, trust me I'm an engineer
-                    if macaddr == '00:00:00:00:00:00': continue
-                    self.logger.debug("GlpiProxy: Trying to resolve a machine with MAC address=%s" % macaddr)
+
+                for macaddr in macaddresses:
+                    self.logger.info("<GlpiProxy> Trying to associate to an existing machine using MAC %s" % macaddr)
                     try:
                         glpi_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     except Exception, e:
-                        self.logger.error("GlpiProxy: Unable to resolve incoming inventory UUID (check mmc-agent connectivity): error was: %s" % str(e))
+                        self.logger.error("<GlpiProxy> Unable to resolve incoming inventory UUID (check mmc-agent connectivity): error was: %s" % str(e))
                     if glpi_uuid :
-                        self.logger.debug("GlpiProxy: Resolved machine UUID='%s'" % str(glpi_uuid))
+                        self.logger.debug("<GlpiProxy> Match found using %s! UUID: %s" % (macaddr, str(glpi_uuid)))
                         has_known_os = hasKnownOS(glpi_uuid)
                         break
                 else:
-                    self.logger.warning("GLPI machine couldn't be resolved (for mac %s), skipping the light pull." % str(macaddresses))
-                if glpi_uuid and has_known_os and InventoryUtils.is_coming_from_pxe(content):
-                    self.logger.info("GlpiProxy: Incoming from PXE, ignoring the forward for a existing machine")
-                else :
-                    if not has_known_os:
-                        self.logger.info("GlpiProxy: This machine has no known operating system")
-                    glpi_proxy = GlpiProxy(self.config.url_to_forward)
-                    self.logger.info("GlpiProxy: Forwarding the inventory to GLPI")
+                    self.logger.info("<GlpiProxy> Unable to resolve machine ID using MAC %s New machine?" % ', '.join(macaddresses))
+
+                do_forward = False
+                # Machine found in database
+                if glpi_uuid:
+                    # Machine found in database with real OS
+                    if has_known_os:
+                        # Machine found in database with real OS and new inventory is PXE
+                        if InventoryUtils.is_coming_from_pxe(content):
+                            self.logger.info("<GlpiProxy> Machine %s received a new PXE inventory from %s: skipping (don't overwrite real inventory)" % (str(glpi_uuid), str(from_ip)))
+                            do_forward = False
+                        # Machine found in database with real OS and new inventory is real inventory
+                        else:
+                            self.logger.info("<GlpiProxy> Machine %s received a new inventory from %s: forwarding" % (str(glpi_uuid), str(from_ip)))
+                            do_forward = True
+                    # Machine found in database with PXE OS
+                    else:
+                        # Machine found in database with PXE OS and new inventory is PXE
+                        if InventoryUtils.is_coming_from_pxe(content):
+                            self.logger.info("<GlpiProxy> Machine %s received a new PXE inventory from %s: forwarding (overwrite PXE inventory)" % (str(glpi_uuid), str(from_ip)))
+                            do_forward = True
+                        # Machine found in database with PXE OS and new inventory real inventory
+                        else:
+                            self.logger.info("<GlpiProxy> Machine %s received a new inventory from %s: forwarding (overwrite PXE inventory)" % (str(glpi_uuid), str(from_ip)))
+                            do_forward = True
+                # Machine is not known, forward anyway
+                else:
+                    if InventoryUtils.is_coming_from_pxe(content):
+                        self.logger.info("<GlpiProxy> PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                        do_forward = True
+                    else:
+                        self.logger.info("<GlpiProxy> Inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                        do_forward = True
+
+                # Let's forward if needed
+                if do_forward:
 
                     # Let's fix the XML using py config scripts
                     invfix = InventoryFix(self.config, content)
                     content = invfix.get()
 
+                    # And forward
+                    glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
-                        self.logger.warn("GlpiProxy: %s" % msg)
-            else :
-                self.logger.debug("GlpiProxy: New machine inscription or forwarding the prolog")
-                glpi_proxy = GlpiProxy(self.config.url_to_forward)
-                invfix = InventoryFix(self.config, content)
-                content = invfix.get()
+                        self.logger.warn("<GlpiProxy> %s" % msg)
 
+            # Not an INVENTORY request, forwarding anyway
+            else:
+                self.logger.info("<GlpiProxy> Forwarding query %s from %s" % (str(query), str(from_ip)))
+
+                glpi_proxy = GlpiProxy(self.config.url_to_forward)
                 glpi_proxy.send(content)
                 for msg in glpi_proxy.result :
-                    self.logger.warn("GlpiProxy: %s" % msg)
+                    self.logger.warn("<GlpiProxy> %s" % msg)
 
         except Exception, e :
-            self.logger.error("GlpiProxy: %s" % str(e))
+            self.logger.error("<GlpiProxy> %s" % str(e))
 
 
 class InventoryFix :
@@ -317,6 +354,8 @@ class TreatInv(Thread):
         self.logger.debug('%s' % cont)
         self.logger.debug('### END INVENTORY')
         macaddresses = InventoryUtils.getMACs(content)
+        # Honestly, 00:00:00:00:00:00 can't be a good mac, trust me I'm an engineer
+        macaddresses = [x for x in macaddresses if not x == '00:00:00:00:00:00']
         self.logger.info("MAC addresses found: %s" % ', '.join(macaddresses))
         final_macaddr = None
 
@@ -326,19 +365,17 @@ class TreatInv(Thread):
         if self.config.enable_forward and len(macaddresses) > 0:
             try :
                 for macaddr in macaddresses:
-                    # Honestly, this can't be a good mac, trust me I'm an engineer
-                    if macaddr == '00:00:00:00:00:00': continue
-                    self.logger.debug("Trying to resolve a machine with MAC address=%s" % macaddr)
+                    self.logger.debug("LightPull: Trying to associate %s to an existing GLPI machine using MAC %s" % (deviceid, macaddr))
                     glpi_machine_uuid = resolveGlpiMachineUUIDByMAC(macaddr)
                     if glpi_machine_uuid :
-                        self.logger.debug("Resolved machine UUID='%s'" % str(glpi_machine_uuid))
+                        self.logger.debug("LightPull: Machine %s resolved as GLPI %s using MAC %s" % (deviceid, str(glpi_machine_uuid), macaddr))
                         AttemptToScheduler(content, glpi_machine_uuid)
                         final_macaddr = macaddr
                         break
                 else:
-                    self.logger.warning("GLPI machine couldn't be resolved (for mac %s), skipping the light pull." % str(macaddresses))
+                    self.logger.info("LightPull: Unable to resolve %s from GLPI using MAC %s, new machine?" % (deviceid, ', '.join(macaddresses)))
             except Exception, exc :
-                self.logger.error("GLPI light pull mode: %s" % str(exc))
+                self.logger.error("LightPull: An error occurred when trying to resolve UUID from GLPI: %s" % str(exc))
 
         if self.config.enable_forward:
             return False

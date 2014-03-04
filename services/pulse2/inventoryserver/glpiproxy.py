@@ -116,8 +116,8 @@ class GlpiProxy :
             response = urllib2.urlopen(request)
 
         except Exception, exc:
-            self._result.append("GlpiProxy: Unable to send inventory.")
-            self._result.append('Received response: "%s"' % str(exc))
+            self._result.append("Unable to send inventory to GLPI")
+            self._result.append('Response was: %s' % str(exc))
 
             return
 
