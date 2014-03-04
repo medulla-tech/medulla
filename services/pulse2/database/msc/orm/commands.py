@@ -221,7 +221,7 @@ class Commands(object):
         if "done" in kwargs:
             self.sum_done = kwargs["done"]
         else:
-            self.dum_done = 0
+            self.sum_done = 0
 
         if "stopped" in kwargs:
             self.sum_stopped = kwargs["stopped"]
