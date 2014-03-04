@@ -327,7 +327,7 @@ class MscDatabase(msc.MscDatabase):
                     order_in_proxy = None
                     max_clients_per_proxy = 0
 
-                    target = self.getOrCreateTarget(session, atarget["target_uuid"])
+                    target = Target()
                     target.target_macaddr = atarget["target_macaddr"]
                     target.id_group = atarget["id_group"]
                     target.target_uuid = atarget["target_uuid"]
@@ -416,31 +416,6 @@ class MscDatabase(msc.MscDatabase):
         d.addCallback(cbSwitchCommandsAsReady)
         d.addErrback(lambda err: err)
         return d
-
-
-    def getOrCreateTarget(self, session, uuid):
-        """
-        Gets existing target or create a new.
-
-        @param session: session
-        @type session: SA session
-
-        @param uuid: UUID of computer
-        @type uuid: str
-
-        @return: new or existing target
-        @rtype: Target
-        """
-        query = session.query(Target)
-        query = query.filter(Target.target_uuid == uuid)
-        target = query.first()
-
-        if target is not None:
-            return target
-        else:
-            return Target()
-
-
 
     def addCommand(self,
                 ctx,
@@ -565,8 +540,7 @@ class MscDatabase(msc.MscDatabase):
                 return cmd.getId()
 
             for atarget, target_name, ascheduler in targets_to_insert :
-
-                target = self.getOrCreateTarget(session, atarget["target_uuid"])
+                target = Target()
                 target.target_macaddr = atarget["target_macaddr"]
                 target.id_group = atarget["id_group"]
                 target.target_uuid = atarget["target_uuid"]
@@ -979,8 +953,7 @@ class MscDatabase(msc.MscDatabase):
             session.begin()
 
             for atarget, target_name, ascheduler in targets_to_insert :
-
-                target = self.getOrCreateTarget(session, atarget["target_uuid"])
+                target = Target()
                 target.target_macaddr = atarget["target_macaddr"]
                 target.id_group = atarget["id_group"]
                 target.target_uuid = atarget["target_uuid"]
