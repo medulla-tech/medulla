@@ -415,6 +415,75 @@ function xmlrpc_get_convergence_groups_to_update($papi_id, $package) {
     return xmlCall("dyngroup.get_convergence_groups_to_update", array($papi_id, $package));
 }
 
+function xmlrpc_get_active_convergence_commands($papi_id, $package) {
+    return xmlCall("dyngroup.get_active_convergence_commands", array($papi_id, $package));
+}
+
+/*
+ * When a package is edited, we have to stop current convergence command
+ * then start a new command with new package params
+ */
+function restart_active_convergence_commands($papi_id, $package) {
+    $package = (object) $package;
+
+    // Get convergence commands to restart
+    $active_commands = xmlrpc_get_active_convergence_commands($papi_id, $package->id);
+    if ($active_commands) {
+        // WTF, this dyngroup function needs pkgs and msc....
+        if (in_array('pkgs', $_SESSION['modulesList'])) {
+            require_once('modules/pkgs/includes/xmlrpc.php');
+        }
+        else {
+            new NotifyWidgetWarn(_T("Failed to load some pkgs module", "pkgs"));
+            return False;
+        }
+        if (in_array('msc', $_SESSION['modulesList'])) {
+            require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+        }
+        else {
+            new NotifyWidgetWarn(_T("Failed to load some msc module", "pkgs"));
+            return False;
+        }
+
+        // We need ServerAPI for some convergence methods...
+        $ServerAPI = getPApiDetail($papi_id);
+        // ... but without 'uuid'
+        unset($ServerAPI['uuid']);
+
+        $cmd_type = 2;
+        $active = 1;
+        $ordered_proxies = array();
+        $mode = 'push';
+        foreach ($active_commands as $command) {
+            function _get_command_start_date($cmd_id) {
+                $command_details = command_detail($cmd_id);
+                list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
+                return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
+            }
+
+            $gid = $command['gid'];
+            $cmd_id = $command['cmd_id'];
+
+            /* Stop command */
+            stop_command($cmd_id);
+            /* Set end date of this command to now(), don't touch to start date */
+            $start_date = _get_command_start_date($cmd_id);
+            extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
+            /* Create new command */
+            $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $ServerAPI, $package->id);
+            $params = xmlrpc_get_convergence_phases($gid, $ServerAPI, $package->id);
+            $command_id = add_command_api($package->id, NULL, $params, $ServerAPI, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+            /* Update convergence DB */
+            $updated_datas = array(
+                'active' => $active,
+                'commandId' => intval($command_id),
+                'cmdPhases' => $params,
+            );
+            xmlrpc_edit_convergence_datas($gid, $ServerAPI, $package->id, $updated_datas);
+        }
+    }
+}
+
 function update_convergence_groups_request($papi_id, $package) {
     $package = (object) $package;
     // Get convergence groups to update
