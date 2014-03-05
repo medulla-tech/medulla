@@ -1023,10 +1023,20 @@ class WUParsePhase(Phase):
             else:
                 os_class = -1
 
+
             if "content" in parsed:
+
                 content = parsed["content"]
+
+                wu = WUInjectDB()
+
+                # Get update uuids
+                update_uuids = [l[0] for l in content]
+                # Purge obsolete update
+                purge_obselete_updates(update_uuids)
+
                 for line in content:
-                    try :
+                    try:
                         (uuid,
                          title,
                          kb_number,
@@ -1036,7 +1046,6 @@ class WUParsePhase(Phase):
                          info_url,
                          is_installed) = line
 
-                        wu = WUInjectDB()
 
                         try:
                             title = title.encode('utf-8', 'ignore')

@@ -341,6 +341,28 @@ class WUInjectDB :
             self.conn.rollback()
             self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
 
+    def purge_obselete_updates(self, uuid, update_uuids):
+        """
+        Purge all target links if update are no more present
+        in json
+        """
+        if not update_uuids:
+            return
+
+        stat = "DELETE FROM targets WHERE uuid = %s " % uuid
+        stat += "AND update_id IN ("
+        stat += "SELECT id FROM updates WHERE uuid IN('%s'))" % "', '".join(update_uuids)
+
+        self.logger.debug("\033[33m%s\033[0m" % stat)
+
+        try:
+            c = self.cursor
+            c.execute(stat)
+            self.conn.commit()
+        except Exception, exc:
+            self.conn.rollback()
+            self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
+
     def insert_WU(self,
                   uuid,
                   title,
