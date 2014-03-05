@@ -268,6 +268,22 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn('Failed to set command %s to type %s' % (cmd, type))
         return False
 
+    @DatabaseHelper._session
+    def _set_command_ready(self, session, cmd_id):
+        """
+        Set command as ready, usually used for reschedule
+        convergence commands
+        """
+        cmd = session.query(Commands).get(cmd_id)
+        if cmd:
+            self.logger.debug('Set command %s as ready' % (cmd_id))
+            cmd.ready = 1
+            session.add(cmd)
+            session.flush()
+            return True
+        self.logger.warn('Failed to set command %s as ready' % (cmd))
+        return False
+
     def extendCommand(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.

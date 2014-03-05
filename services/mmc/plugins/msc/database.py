@@ -531,7 +531,7 @@ class MscDatabase(msc.MscDatabase):
                                      maxbw,
                                      deployment_intervals, fk_bundle,
                                      order_in_bundle, proxies, proxy_mode,
-                                     state, len(targets))
+                                     state, len(targets), cmd_type=cmd_type)
             session.flush()
             # Convergence command (type 2) can have no targets
             # so return command_id if no targets
@@ -1004,8 +1004,9 @@ class MscDatabase(msc.MscDatabase):
                                _get_phase('do_reboot'),
                                _get_phase('do_windows_update'),
                                is_quick_action = False)
-            cmd.ready = True
             session.commit()
+            self._force_command_type(cmd_id, 2)
+            self._set_command_ready(cmd_id)
             return cmd_id
 
         d = self.getMachinesSchedulers(targets)
