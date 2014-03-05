@@ -24,6 +24,7 @@
 
 # uses SA to handle sessions
 import sqlalchemy.orm
+from base64 import b64encode
 
 """ Class to map msc.commands_history to SA
 """
@@ -35,8 +36,8 @@ class CommandsHistory(object):
             'id': self.id,
             'fk_commands_on_host': self.fk_commands_on_host,
             'date': self.date,
-            'stderr': self.stderr,
-            'stdout': self.stdout,
+            'stderr': b64encode(self.stderr.encode('utf-8', 'ignore')),
+            'stdout': b64encode(self.stdout.encode('utf-8', 'ignore')),
             'error_code': self.error_code,
             'state': self.state,
             'phase': self.phase

@@ -454,6 +454,9 @@ class CommandHistory {
         $logs_by_phase = array();
 
         foreach ($this->db_ch as $entry) {
+            // Decode base64 stdout and stderr before processing
+            $entry['stdout'] = base64_decode($entry['stdout']);
+            $entry['stderr'] = base64_decode($entry['stderr']);
             // if $logs_by_phase doesnt contain phase key we create it
             if (!isset($logs_by_phase[$entry['phase']]))
                 $logs_by_phase[$entry['phase']] = array();
