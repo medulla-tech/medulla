@@ -66,7 +66,7 @@ prereqs:
 	fi
 
 prereqs-urpmi:
-	urpmi lsb-release python-sqlalchemy python-twisted php-gd perl-Unix-Syslog openssh-clients \
+	urpmi lsb-release python-sqlalchemy python-twisted python-mysql php-gd perl-Unix-Syslog openssh-clients \
 	  iputils rsync mysql
 
 prereqs-deb:
