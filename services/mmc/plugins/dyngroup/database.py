@@ -893,9 +893,11 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except (MultipleResultsFound, NoResultFound) as e:
             self.logger.warn('Error while fetching convergence phases for command %s: %s' % (cmd_id, e))
         if ret:
-            return cPickle.loads(ret.cmdPhases)
-        else:
-            return {}
+            try:
+                return cPickle.loads(ret.cmdPhases)
+            except EOFError, e:
+                self.logger.warn('No phases found for command %s' % cmd_id)
+        return {}
 
     @DatabaseHelper._session
     def getConvergenceStatus(self, session, gid):
