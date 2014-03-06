@@ -54,6 +54,9 @@ if (isset($_GET['gid'])) {
 
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
+if (isset($_SESSION['pull_targets']) && in_array($_GET['uuid'], $_SESSION['pull_targets'])) {
+    $p->setDescription(_T('This client has been registered in pull mode', 'glpi'));
+}
 $prefix = '';
 if ($_GET['hostname'] != '') {
     $p->addTop(sprintf(_T("%s's inventory", 'inventory'), $_GET['hostname']), "modules/inventory/inventory/header.php");

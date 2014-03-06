@@ -101,10 +101,24 @@ function getEntitiesSelectableElements($AllEntitiesValue = False) {
 }
 
 /*
- *  * Convert timestamp to date
- *   */
+ *  Convert timestamp to date
+ */
 
 function timestamp_to_date($timestamp) {
         return date('Y/m/d', $timestamp);
+}
+
+/*
+ * get UUID list of machines registered as Pull Machines
+ */
+
+function get_pull_targets() {
+    if (!isset($_SESSION['pull_targets'])) {
+        $_SESSION['pull_targets'] = array();
+        if (in_array("msc", $_SESSION["modulesList"])) {
+            $_SESSION['pull_targets'] = xmlcall('msc.get_pull_targets');
+        }
+    }
+    return $_SESSION['pull_targets'];
 }
 ?>

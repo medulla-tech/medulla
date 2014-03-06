@@ -51,6 +51,9 @@ else {
 
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
+if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'])) {
+    $p->setDescription(_T('This client has been registered in pull mode', 'glpi'));
+}
 $p->addTop(sprintf(_T("%s's inventory (%s)", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
 
 $i = 0;
