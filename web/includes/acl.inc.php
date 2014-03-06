@@ -98,6 +98,9 @@ function getDefaultPage() {
     if ($_SESSION["login"] == "root") {
         $url = urlStrRedirect("base/main/default");
     }
+    elseif (hasCorrectAcl('dashboard', 'main', 'default')) {
+        $url = urlStrRedirect("dashboard/main/default");
+    }
     else {
         $MMCApp =& MMCApp::getInstance();
         # get first page in acl list which is not a popup
