@@ -55,7 +55,22 @@ if (isset($_GET['gid'])) {
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 if (isset($_SESSION['pull_targets']) && in_array($_GET['uuid'], $_SESSION['pull_targets'])) {
-    $p->setDescription(_T('This client has been registered in pull mode', 'glpi'));
+    if (hasCorrectAcl('base', 'computers', 'remove_from_pull')) {
+        $remove_pull_id = uniqid();
+        $_SESSION['remove_pull_id'] = $remove_pull_id;
+        $p->setDescription(
+            sprintf('%s <a class="btn btn-primary" href="%s">%s</a>',
+                _T('This client has been registered in pull mode', 'inventory'),
+                urlStrRedirect('base/computers/remove_from_pull', array('uuid' => $_GET['uuid'], 'remove_pull_id' => $remove_pull_id)),
+                _T('Leave pull mode', 'inventory')
+            )
+        );
+    }
+    else {
+        $p->setDescription(
+            sprintf('%s', _T('This client has been registered in pull mode', 'inventory'))
+        );
+    }
 }
 $prefix = '';
 if ($_GET['hostname'] != '') {

@@ -52,7 +52,22 @@ else {
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'])) {
-    $p->setDescription(_T('This client has been registered in pull mode', 'glpi'));
+    if (hasCorrectAcl('base', 'computers', 'remove_from_pull')) {
+        $remove_pull_id = uniqid();
+        $_SESSION['remove_pull_id'] = $remove_pull_id;
+        $p->setDescription(
+            sprintf('%s <a class="btn btn-primary" href="%s">%s</a>',
+                _T('This client has been registered in pull mode', 'glpi'),
+                urlStrRedirect('base/computers/remove_from_pull', array('uuid' => $uuid, 'remove_pull_id' => $remove_pull_id)),
+                _T('Leave pull mode', 'glpi')
+            )
+        );
+    }
+    else {
+        $p->setDescription(
+            sprintf('%s', _T('This client has been registered in pull mode', 'glpi'))
+        );
+    }
 }
 $p->addTop(sprintf(_T("%s's inventory (%s)", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
 

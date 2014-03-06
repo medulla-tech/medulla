@@ -1266,6 +1266,14 @@ class MscDatabase(DatabaseHelper):
         query = session.query(PullTargets)
         return [uuid.target_uuid for uuid in query]
 
+    @DatabaseHelper._session
+    def removePullTargets(self, session, uuids):
+        query = session.query(PullTargets).filter(
+            PullTargets.target_uuid.in_(uuids)
+        )
+        query.delete(synchronize_session='fetch')
+        return True
+
     def getTargets(self, cmd_id, onlyId = False):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         if onlyId:
             connection = self.getDbConnection()

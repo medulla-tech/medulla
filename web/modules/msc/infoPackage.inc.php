@@ -83,6 +83,11 @@ if (!empty($submod)) {
     $MMCApp->addModule($mod);
 
     /* put in base/computers */
+    $page = new Page("remove_from_pull", _T('Remove machine from pull mode', 'msc'));
+    $page->setFile("modules/msc/msc/remove_from_pull.php");
+    $page->setOptions(array("visible" => False));
+    $submod->addPage($page);
+
     $page = new Page("groupmsctabs", _T("Secure control on a group of computers", "msc"));
     $page->setFile("modules/msc/msc/tabs.php");
     $page->setOptions(array("visible" => False));

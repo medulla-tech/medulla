@@ -456,6 +456,18 @@ class RpcProxy(RpcProxyI):
         """
         return xmlrpcCleanup(MscDatabase().getPullTargets())
 
+    def remove_pull_targets(self, uuids):
+        """
+        remove pull targets
+        @param uuids: a list of uuids to remove
+        @type uuids: list or str
+
+        @return: True or False :-)
+        """
+        if isinstance(uuids, basestring):
+            uuids = [uuids]
+        return xmlrpcCleanup(MscDatabase().removePullTargets(uuids))
+
     def pull_target_awake(self, hostname, macs):
         """
         Gets the requested machine for UUID.
