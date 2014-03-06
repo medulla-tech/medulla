@@ -22,11 +22,13 @@
 /**
  * update module declaration
  */
+require_once("modules/pulse2/version.php");
+
 $MMCApp = & MMCApp::getInstance();
 
 $mod = new Module("update");
-$mod->setVersion("1.0.0");
-$mod->setRevision('');
+$mod->setVersion(VERSION);
+$mod->setRevision(REVISION);
 $mod->setDescription(_T("Update manager", "update"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(990);
