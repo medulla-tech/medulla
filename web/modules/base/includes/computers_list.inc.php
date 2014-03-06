@@ -24,7 +24,7 @@
 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false, $msc_vnc_show_icon = false) {
     /* $pull_list is an array with UUIDs of pull machines */
-    $pull_list = (in_array("msc", $_SESSION["modulesList"])) ? xmlcall('msc.get_pull_targets') : array();
+    $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
 
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
