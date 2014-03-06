@@ -32,8 +32,13 @@ $mod->setRevision(REVISION);
 $mod->setDescription(_T("GLPI Inventory", "glpi"));
 $mod->setAPIVersion("0:0:0");
 
+// Create a glpi submodule only for Glpi Dashboard ACL
+// (Antivirus, Inventory, WinXP -> 7 migration,...)
 $submod = new SubModule("glpi");
 $submod->setDescription(_T("Glpi", "glpi"));
+
+// BTW, hide this submodule from Web UI
+$submod->setVisibility(False);
 
 $page = new Page('glpi_dashboard', _T('Glpi Dashboard', 'glpi'));
 $submod->addPage($page);
