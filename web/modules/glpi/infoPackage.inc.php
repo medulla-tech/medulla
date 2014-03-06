@@ -22,13 +22,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("modules/pulse2/version.php");
+
 $MMCApp =& MMCApp::getInstance();
 
 $mod = new Module("glpi");
-$mod->setVersion("1.5.1");
-$mod->setRevision('');
+$mod->setVersion(VERSION);
+$mod->setRevision(REVISION);
 $mod->setDescription(_T("GLPI Inventory", "glpi"));
 $mod->setAPIVersion("0:0:0");
+
+$submod = new SubModule("glpi");
+$submod->setDescription(_T("Glpi", "glpi"));
+
+$page = new Page('glpi_dashboard', _T('Glpi Dashboard', 'glpi'));
+$submod->addPage($page);
+$mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
 
