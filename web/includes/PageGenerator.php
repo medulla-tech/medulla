@@ -2628,7 +2628,7 @@ class PopupForm extends Form {
     }
 
     function setQuestion($msg) {
-        $this->ask = $ask;
+        $this->ask = $msg;
     }
 
     function addValidateButtonWithFade($name) {
