@@ -187,7 +187,7 @@ class CommandsOnHost(object):
     def days_delta(self):
         """ number of days between start date and end_date"""
         return (self.end_date - self.start_date).days + 1
-    
+
     @property
     def attempts_total(self):
         """ Total of attempts for all days """
@@ -203,7 +203,7 @@ class CommandsOnHost(object):
         if decrement:
             if self.attempts_total > self.attempts_failed :
                 self.attempts_failed += 1
-        self.next_launch_date = launch_date 
+        self.next_launch_date = launch_date
         self.flush()
         return True
 
@@ -286,9 +286,15 @@ def startCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
     myCommandOnHost = session.query(CommandsOnHost).get(coh_id)
     session.close()
+
+    if myCommandOnHost.current_state in ('done', 'failed', 'over_timed'):
+        return False
+
     myCommandOnHost.setStateScheduled()
-    myCommandOnHost.next_launch_date = "0000-00-00 00:00:00"
+    myCommandOnHost.next_launch_date = datetime.datetime.now()
     myCommandOnHost.flush()
+
+    return True
 
 def stopCommandOnHost(coh_id):
     session = sqlalchemy.orm.create_session()
@@ -398,7 +404,7 @@ class CoHManager :
                     cmd_groups[coh.fk_commands] += 1
                 else :
                     cmd_groups[coh.fk_commands] = 0
-                
+
         session.close()
         return cmd_groups
 

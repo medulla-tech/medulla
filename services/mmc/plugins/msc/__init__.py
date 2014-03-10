@@ -738,9 +738,12 @@ def pingMachine(uuid):
 ### Commands on host handling ###
 # FIXME: we should realy rationalize this stuff !
 def start_command_on_host(coh_id):
-    pulse2.database.msc.orm.commands_on_host.startCommandOnHost(coh_id)
-    mmc.plugins.msc.client.scheduler.startCommand(None, coh_id)
-    return xmlrpcCleanup(True)
+    if pulse2.database.msc.orm.commands_on_host.startCommandOnHost(coh_id):
+        mmc.plugins.msc.client.scheduler.startCommand(None, coh_id)
+        return xmlrpcCleanup(True)
+    else:
+        return xmlrpcCleanup(False)
+
 def pause_command_on_host(coh_id):
     pulse2.database.msc.orm.commands_on_host.togglePauseCommandOnHost(coh_id)
     return xmlrpcCleanup(True)
