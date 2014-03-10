@@ -157,7 +157,7 @@ class updateDatabase(DatabaseHelper):
 
 
             # Main query
-            query = session.query(Update, installed_targets.c.total_installed, all_targets.c.total_targets)\
+            query = session.query(Update, func.ifnull(installed_targets.c.total_installed, 0).label('total_installed'), func.ifnull(all_targets.c.total_targets, 0).label('total_targets'))\
                 .join(Update.update_type)\
                 .outerjoin(installed_targets, Update.id == installed_targets.c.update_id)\
                 .outerjoin(all_targets, Update.id == all_targets.c.update_id)

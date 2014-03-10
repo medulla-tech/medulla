@@ -321,7 +321,7 @@ class WUInjectDB :
             self.conn.commit()
         except Exception, exc:
             self.conn.rollback()
-            self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
+            self.logger.error("Error while inserting target into 'update' db: %s" % str(exc))
 
 
     def update_target(self, update_id, uuid, is_installed):
@@ -339,7 +339,7 @@ class WUInjectDB :
             self.conn.commit()
         except Exception, exc:
             self.conn.rollback()
-            self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
+            self.logger.error("Error while updating target into 'update' db: %s" % str(exc))
 
     def purge_obselete_updates(self, uuid, update_uuids):
         """
@@ -350,18 +350,24 @@ class WUInjectDB :
             return
 
         stat = "DELETE FROM targets WHERE uuid = %s " % uuid
-        stat += "AND update_id IN ("
-        stat += "SELECT id FROM updates WHERE uuid IN('%s'))" % "', '".join(update_uuids)
+        stat += "AND update_id NOT IN ("
+        stat += "SELECT id FROM updates WHERE updates.uuid IN('%s'))" % "', '".join(update_uuids)
 
         self.logger.debug("\033[33m%s\033[0m" % stat)
 
         try:
             c = self.cursor
             c.execute(stat)
+            nb_updates_removed = c.fetchone()
+            if nb_updates_removed:
+                nb_updates_removed = nb_updates_removed[0]
+            else:
+                nb_updates_removed = 0
             self.conn.commit()
+            self.logger.info("Updates: Unlinking %s updates for machine %s" % (str(nb_updates_removed), str(uuid)))
         except Exception, exc:
             self.conn.rollback()
-            self.logger.error("Error while insert target into 'update' db: %s" % str(exc))
+            self.logger.error("Error while cleaning target into 'update' db: %s" % str(exc))
 
     def insert_WU(self,
                   uuid,
