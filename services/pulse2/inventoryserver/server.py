@@ -58,7 +58,9 @@ class InventoryServer:
         self.logger.debug(format % args)
 
     def do_GET(self):
-        self.logger.debug("GET http method - ignore")
+        from_ip = self.client_address[0]
+        dest_path = self.path
+        self.logger.debug("HTTP GET request received for %s from %s" % (str(dest_path), str(from_ip)))
 
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
@@ -99,24 +101,24 @@ class InventoryServer:
         if query == 'PROLOG':
             self.logger.info("PROLOG received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             config = InventoryGetService().config
-            if len(config.options.keys()) == 0:
-                resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>SEND</RESPONSE></REPLY>'
-            else:
-                resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY>'
-                for section in config.options:
-                    try:
-                        params = config.options[section]
-                        resp += '<OPTION><NAME>%s</NAME>' % (params['name'])
-                        resp_param = ""
-                        for p in params['param']:
-                            resp_param += '<PARAM '
-                            for attr in p['param']:
-                                resp_param += '%s="%s" ' % (attr[0], attr[1])
-                            resp_param += '>%s</PARAM>' % (p['value'])
-                        resp += resp_param + '</OPTION>'
-                    except:
-                        self.logger.error('please check your %s config parameter' % (section))
-                resp = resp + '<RESPONSE>SEND</RESPONSE></REPLY>'
+            resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY>'
+            for section in config.options:
+                try:
+                    params = config.options[section]
+                    resp += '<OPTION><NAME>%s</NAME>' % (params['name'])
+                    resp_param = ""
+                    for p in params['param']:
+                        resp_param += '<PARAM '
+                        for attr in p['param']:
+                            resp_param += '%s="%s" ' % (attr[0], attr[1])
+                        resp_param += '>%s</PARAM>' % (p['value'])
+                    resp += resp_param + '</OPTION>'
+                except:
+                    self.logger.error('please check your %s config parameter' % (section))
+            resp = resp + '<RESPONSE>SEND</RESPONSE>'
+            self.logger.debug('Inventory periodicity set to %s' % str(config.inventory_periodicity))
+            resp = resp + '<PROLOG_FREQ>'+str(config.inventory_periodicity)+'</PROLOG_FREQ>'
+            resp = resp + '</REPLY>'
         elif query == 'UPDATE':
             self.logger.info("UPDATE received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_update</RESPONSE></REPLY>'

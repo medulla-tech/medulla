@@ -51,6 +51,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     localcert = mmcconfdir + '/pulse2/inventory-server/keys/privkey.pem'
     enable_forward = False
     url_to_forward = "http://localhost/glpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
+    inventory_periodicity = 24
 
     hostname = ['Hardware', 'Host']
 
@@ -113,6 +114,8 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.enable_forward = self.cp.getboolean('main', 'enable_forward')
         if self.cp.has_option('main', 'url_to_forward'):
             self.url_to_forward = self.cp.get('main', 'url_to_forward')
+        if self.cp.has_option('main', 'inventory_periodicity'):
+            self.inventory_periodicity = self.cp.get('main', 'inventory_periodicity')
 
         if not os.path.isfile(self.localcert):
             raise Exception('can\'t read SSL key "%s"' % (self.localcert))
