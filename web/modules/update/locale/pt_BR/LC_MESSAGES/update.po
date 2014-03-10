@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-17 01:00+0100\n"
+"POT-Creation-Date: 2014-03-10 01:00+0100\n"
 "PO-Revision-Date: 2014-01-14 10:14+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/infoPackage.inc.php:39
+#: modules/update/infoPackage.inc.php:41
 #: modules/update/update/viewUpdates.php:37
 msgid "All updates"
 msgstr "Todas as atualizações"
@@ -40,7 +40,7 @@ msgstr ""
 msgid "Disable this update?"
 msgstr "Desabilitar esta atualização?"
 
-#: modules/update/infoPackage.inc.php:53
+#: modules/update/infoPackage.inc.php:55
 msgid "Disable update"
 msgstr "Desabilitar atualização"
 
@@ -60,7 +60,7 @@ msgstr ""
 msgid "Enable this update?"
 msgstr "Habilitar esta atualização?"
 
-#: modules/update/infoPackage.inc.php:49
+#: modules/update/infoPackage.inc.php:51
 msgid "Enable update"
 msgstr "Habilitar atualização"
 
@@ -84,7 +84,7 @@ msgstr "Tipo"
 msgid "UUID"
 msgstr "UUID"
 
-#: modules/update/infoPackage.inc.php:30
+#: modules/update/infoPackage.inc.php:32
 #: modules/update/update/viewUpdates.php:49
 msgid "Update manager"
 msgstr "Gerenciador de Atualização"
@@ -97,10 +97,10 @@ msgstr "Gerenciamento de Atualização"
 msgid "Update title"
 msgstr "Atualizar título"
 
-#: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:42
+#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 msgid "Updates"
 msgstr ""
 
-#: modules/update/infoPackage.inc.php:45
+#: modules/update/infoPackage.inc.php:47
 msgid "Updates list"
 msgstr ""

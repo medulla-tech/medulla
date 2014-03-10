@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-02-17 01:00+0100\n"
+"POT-Creation-Date: 2014-03-10 01:00+0100\n"
 "PO-Revision-Date: 2014-01-27 16:03+0000\n"
 "Last-Translator: Ishak Belahmar <ibelahmar@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/infoPackage.inc.php:39
+#: modules/update/infoPackage.inc.php:41
 #: modules/update/update/viewUpdates.php:37
 msgid "All updates"
 msgstr "Toutes les mises à jour"
@@ -41,7 +41,7 @@ msgstr "Désactiver les mises à jour sélectionnées"
 msgid "Disable this update?"
 msgstr "Désactiver cette mise à jour?"
 
-#: modules/update/infoPackage.inc.php:53
+#: modules/update/infoPackage.inc.php:55
 msgid "Disable update"
 msgstr "Désactiver la mise à jour"
 
@@ -61,7 +61,7 @@ msgstr "Activer les mises à jour sélectionnées"
 msgid "Enable this update?"
 msgstr "Activer cette mise à jour?"
 
-#: modules/update/infoPackage.inc.php:49
+#: modules/update/infoPackage.inc.php:51
 msgid "Enable update"
 msgstr "Activer la mise à jour"
 
@@ -85,7 +85,7 @@ msgstr "Type"
 msgid "UUID"
 msgstr "UUID"
 
-#: modules/update/infoPackage.inc.php:30
+#: modules/update/infoPackage.inc.php:32
 #: modules/update/update/viewUpdates.php:49
 msgid "Update manager"
 msgstr "Gestionnaire de mises à jour"
@@ -98,10 +98,10 @@ msgstr "Gestion des mises à jour"
 msgid "Update title"
 msgstr "Nom de la mise à jour"
 
-#: modules/update/infoPackage.inc.php:34 modules/update/infoPackage.inc.php:42
+#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 msgid "Updates"
 msgstr "Mises à jour"
 
-#: modules/update/infoPackage.inc.php:45
+#: modules/update/infoPackage.inc.php:47
 msgid "Updates list"
 msgstr "Liste des mises à jour"
