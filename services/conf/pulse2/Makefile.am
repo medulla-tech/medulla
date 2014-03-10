@@ -38,6 +38,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/05_HP_consistency.py \
 	inventory-server/xml-fix/06_Laptop_type.py \
 	inventory-server/xml-fix/07_Virtual_machine_type.py \
+	inventory-server/xml-fix/08_bad_mapping_consistency.py \
 	inventory-server/OcsNGMap.xml \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
