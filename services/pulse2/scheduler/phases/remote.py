@@ -1033,7 +1033,7 @@ class WUParsePhase(Phase):
                 # Get update uuids
                 update_uuids = [l[0] for l in content]
                 # Purge obsolete update
-                wu.purge_obselete_updates(update_uuids)
+                wu.purge_obselete_updates(self.target.target_uuid.replace('UUID', ''), update_uuids)
 
                 for line in content:
                     try:
