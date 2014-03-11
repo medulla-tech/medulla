@@ -30,7 +30,7 @@ certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 
 nobase_pulseconf_DATA = \
 	package-server/package-server.ini inventory-server/inventory-server.ini \
-	inventory-server/xml-fix/00_Microsoft_consistency.py \
+	inventory-server/xml-fix/00_Replace_bad_characters.py \
 	inventory-server/xml-fix/01_Dell_consistency.py \
 	inventory-server/xml-fix/02_ATI_consistency.py \
 	inventory-server/xml-fix/03_ASUS_consistency.py \
@@ -38,7 +38,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/05_HP_consistency.py \
 	inventory-server/xml-fix/06_Laptop_type.py \
 	inventory-server/xml-fix/07_Virtual_machine_type.py \
-	inventory-server/xml-fix/08_bad_mapping_consistency.py \
+	inventory-server/xml-fix/08_Microsoft_consistency.py \
 	inventory-server/OcsNGMap.xml \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
