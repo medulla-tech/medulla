@@ -510,8 +510,17 @@ class RpcProxy(RpcProxyI):
         result['xls_path'] = xls_path
         return result
 
-    def historize_all(self):
-        ReportDatabase().historize_all()
+    def historize_all(self, timestamp=None):
+        # If timestamp is not specified, taking actual time
+        if not timestamp:
+            timestamp = int(time.time())
+        ReportDatabase().historize_all(timestamp)
+        
+    def historize_overwrite_last(self, timestamp=None):
+        # If timestamp is not specified, taking actual time
+        if not timestamp:
+            timestamp = int(time.time())
+        ReportDatabase().historize_overwrite_last(timestamp)
 
     def get_indicator_value_at_time(self, indicator_name, ts_min, ts_max, entities=[]):
         return ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)

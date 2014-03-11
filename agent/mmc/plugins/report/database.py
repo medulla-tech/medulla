@@ -22,13 +22,12 @@ Declare Report database
 """
 
 import logging
-from time import time
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm.exc import NoResultFound
 
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.report.schema import Indicator
+from mmc.plugins.report.schema import Indicator, ReportingIntData, ReportingTextData, ReportingFloatData
 
 
 logger = logging.getLogger()
@@ -110,7 +109,7 @@ class ReportDatabase(DatabaseHelper):
         session.commit()
 
     @DatabaseHelper._session
-    def historize_all(self, session):
+    def historize_all(self, session, timestamp):
         indicators = session.query(Indicator).filter_by(active=1, keep_history=1)
         for indicator in indicators:
             # Save the indicator values to Db
@@ -120,17 +119,31 @@ class ReportDatabase(DatabaseHelper):
                 logger.exception('Unable to get data for indicator : %s' % indicator.name)
                 continue
             for entry in values:
-		if not 'value' in entry:
-		    continue
-		if entry['value'] is None:
-		    entry['value'] = 0
+                if not 'value' in entry:
+                    continue
+                if entry['value'] is None:
+                    entry['value'] = 0
                 data = indicator.dataClass()
                 # Import value and enity_id from entry
                 data.fromDict(entry)
                 data.indicator_id = indicator.id
-                data.timestamp = int(time())
+                data.timestamp = timestamp
                 session.add(data)
         session.commit()
+        
+        
+    @DatabaseHelper._session
+    def historize_overwrite_last(self, session, timestamp):
+        """
+        Debug function to historize and overwrite last historization data
+        """
+        
+        # Remove last 24 hours data
+        for _class in [ReportingIntData, ReportingTextData, ReportingFloatData]:
+            session.query(_class).filter(_class.timestamp>timestamp-86400).delete()
+        
+        # Doing an historization for 
+        self.historize_all(timestamp-80400)
 
     @DatabaseHelper._session
     def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities=[]):
