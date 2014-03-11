@@ -22,6 +22,9 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
+if ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit') {
+    unset($_SESSION['request']);
+}
 $groupedit = True;
 if (strpos($_GET['action'], 'profile') !== false) {
     $groupedit = False;
