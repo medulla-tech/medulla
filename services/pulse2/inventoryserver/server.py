@@ -249,7 +249,7 @@ class InventoryFix :
        Checked module must have a calable function named 'xml_fix'.
        """
        for (path, dirs, files) in os.walk(self.config.xmlfixplugindir):
-          for filename in files:
+          for filename in sorted(files):
               pathname = os.path.join(path, filename)
               if re.match('^.*\.py$',pathname):
                   mod_name = filename
