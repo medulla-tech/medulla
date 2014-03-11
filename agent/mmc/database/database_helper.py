@@ -366,6 +366,9 @@ class DBObj(object):
             if key and type(value) not in [type({}), type([])]:
                 setattr(self, key, value)
 
+    def __str__(self):
+        return str(self.toDict())
+
 
 def id2uuid(id):
     return "UUID%d" % id
