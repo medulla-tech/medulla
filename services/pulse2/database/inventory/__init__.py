@@ -31,7 +31,7 @@ from pulse2.managers.group import ComputerGroupManager
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 from mmc.database.utilities import unique, handle_deconnect
 from mmc.database.utilities import DbObject # pyflakes.ignore
-from mmc.database.database_helper import DatabaseHelper
+from mmc.database.database_helper import DatabaseHelper, DBObj
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, Singleton, isUUID
 
@@ -122,7 +122,8 @@ class Inventory(DyngroupDatabaseHelper):
             self.table[item] = Table(item, self.metadata, autoload = True)
             # Create the class that will be mapped
             # This will create the Bios, BootDisk, etc. classes
-            exec "class %s(DbObject): pass" % item
+            # Inherit from DBObj only for __str__ method (debugging purpose)
+            exec "class %s(DbObject, DBObj): pass" % item
             self.klass[item] = eval(item)
             # Map the python class to the SQL table
             mapper(self.klass[item], self.table[item])
