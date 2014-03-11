@@ -1302,7 +1302,7 @@ class Inventory(DyngroupDatabaseHelper):
         for v in values:
             if type(v) == str or type(v) == unicode:
                 if hasattr(table.c, v):
-                    result = result.filter(getattr(table.c, v) == values[v])
+                    result = result.filter(getattr(table.c, v).like(values[v]))
         res = result.first()
         if sessionCreator:
             session.close()
