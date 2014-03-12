@@ -121,10 +121,19 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
 </head>
 
 <?php
+$exceptions = array($host, $_SERVER['SERVER_NAME'], $_SERVER['SERVER_ADDR'], $_SERVER['HTTP_HOST']);
+if ($_SERVER['SERVER_NAME'] != '')
+{
+    $hostname = explode('.', $_SERVER['SERVER_NAME']);
+    $hostname = $hostname[0];
+    $exceptions[] = $hostname;
+}
+$exceptions = implode(', ', array_unique($exceptions));
+
 if ($proxyActive) {
 ?>
     <script type="text/javascript">
-        alert("<?php printf(_T('An HTTP Proxy has been detected. Try disabling proxy for local addresses in your browser settings or add Pulse Server address (%s) to the excluded hosts list.', 'msc'), $host); ?>");
+        alert("<?php printf(_T('An HTTP Proxy has been detected. Try disabling proxy for local addresses in your browser settings or add Pulse Server address (%s) to the excluded hosts list.', 'msc'), $exceptions); ?>");
     </script>
 <?php
 }
