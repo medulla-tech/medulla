@@ -451,7 +451,8 @@ class DispatchProxies :
 
 if __name__ == "__main__" :
 
-    log.info("VNC Proxy: Starting new proxy: "+' '.join(sys.argv))
+    proxy_type = config.create_web_proxy and 'WebSocket' or 'TCP'
+    log.info('VNC Proxy: Starting new ' + proxy_type + ' proxy: '+' '.join(sys.argv))
     reactor.callWhenRunning(DispatchProxies)
     reactor.run()
     sys.exit(0)
