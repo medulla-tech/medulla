@@ -95,7 +95,7 @@ class ReportDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._session
-    def historize_indicator(self, session, name):
+    def historize_indicator(self, session, name, timestamp):
         indicator = self.get_indicator_by_name(name)
         # TODO: Test if history is 1 if not WARNING
         # Save the indicator values to Db
@@ -104,7 +104,7 @@ class ReportDatabase(DatabaseHelper):
             # Import value and enity_id from entry
             data.fromDict(entry)
             data.indicator_id = indicator.id
-            data.timestamp = int(time())
+            data.timestamp = timestamp
             session.add(data)
         session.commit()
 
