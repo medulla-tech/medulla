@@ -209,7 +209,7 @@ if ($proxyActive) {
                 msg = msg.replace('Server disconnected', <?php print json_encode(_T('Unable to reach remote host', 'msc')); ?>);
                 msg = msg.replace('reason', <?php print json_encode(_T('reason', 'msc')); ?>);
                 msg = msg.replace('Connected', <?php print json_encode(_T('Connected', 'msc')); ?>);
-                msg = msg.replace('to', <?php print json_encode(_T('to', 'msc')); ?>);
+                msg = msg.replace(' to: ', ' ' + <?php print json_encode(_T('to', 'msc')); ?> + ': ');
                 s.innerHTML = msg;
             }
         }
