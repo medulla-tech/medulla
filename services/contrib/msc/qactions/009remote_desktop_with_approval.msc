@@ -1,5 +1,4 @@
-title=Disable user approval for remote desktop
-titlefr=Désactiver l'autorisation pour la prise en main à distance
+title=Enable user approval for remote desktop
+titlefr=Activer l'autorisation pour la prise en main à distance
 titlede=Entfernte Desktopverbindung MIT Benutzerzustimmung
 command=reg add "HKLM\SOFTWARE\TightVNC\Server" /f /v QueryAcceptOnTimeout /t REG_DWORD /d 0 && reg add "HKLM\SOFTWARE\TightVNC\Server" /f /v QueryTimeout /t REG_DWORD /d 20 && net stop tvnserver && net start tvnserver
-
