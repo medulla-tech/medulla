@@ -203,6 +203,10 @@ if ($proxyActive) {
                 sb.setAttribute("class", "noVNC_status_" + level);
                 msg = msg.replace('(unencrypted)','(<?php print _T('through SSH tunnel', 'msc'); ?>)');
                 msg = msg.replace('Failed to connect to server','<?php print _T('Connection failed', 'msc'); ?>');
+                msg = msg.replace('Authenticating using scheme: 1','<?php print _T('Waiting for user approval', 'msc'); ?>');
+                msg = msg.replace('Password Required','<?php print _T('Password Required', 'msc'); ?>');
+                msg = msg.replace('Connection has been rejected','<?php print _T('Host rejected connection', 'msc'); ?>');
+                msg = msg.replace('Server disconnected','<?php print _T('Unable to reach remote host', 'msc'); ?>');
                 msg = msg.replace('reason','<?php print _T('reason', 'msc'); ?>');
                 msg = msg.replace('Connected','<?php print _T('Connected', 'msc'); ?>');
                 msg = msg.replace('to','<?php print _T('to', 'msc'); ?>');
