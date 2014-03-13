@@ -1126,13 +1126,11 @@ class Inventory(DyngroupDatabaseHelper):
         ret = []
         session = create_session()
         partTable = self.table[part]
-        haspartTable = self.table["has" + part]
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
 
         for grp in grp_by:
             result = result.group_by(grp)
 
-        result = result.order_by(haspartTable.c.machine).order_by(desc("inventoryid")).order_by(haspartTable.c.inventory)
         # if needed, filter by date and limit the first date
         if(params.has_key('date')) and params['date'] != '':
                 result.order_by(desc(self.klass['Inventory'].Date))
@@ -1653,7 +1651,8 @@ class Inventory(DyngroupDatabaseHelper):
 
         hardwareType = self.table['Hardware'].c.Type
         biosType = self.table['Bios'].c.TypeMachine
-        type_filter = [or_(hardwareType.like(type), biosType.like(type)) for type in types]
+        typeField = func.if_(func.isnull(hardwareType) | (hardwareType.in_(['', '0'])), biosType, hardwareType)
+        type_filter = [typeField.like(type) for type in types]
         query = query.filter(or_(*type_filter))
 
         if int(count) == 1:
