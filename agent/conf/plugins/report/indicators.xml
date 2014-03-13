@@ -19,16 +19,17 @@
 <indicators>
     <!-- GLPI indicators -->
     <module name="glpi">
-        <!-- getComputerCountByOSes -->
+        <!-- getAllComputerCount -->
          <indicator
-            name="os_count"
-            label="All OS"
+            name="all_computer_count"
+            label="All Computer Count"
             request_function="getComputerCountByOSes"
             params="'*'"
             data_type="0"
             active="1"
             keep_history="1"
         />
+        <!-- getComputerCountByOSes -->
          <indicator
             name="os_count_windows"
             label="Windows"
@@ -879,15 +880,6 @@
             keep_history="1"
         />
         <!-- getComputerCountByType -->
-        <indicator
-            name="type_count"
-            label="Types"
-            request_function="getComputerCountByTypes"
-            params="'*'"
-            data_type="0"
-            active="1"
-            keep_history="1"
-        />
         <indicator
             name="type_count_desktop"
             label="Desktop"

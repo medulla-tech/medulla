@@ -47,7 +47,7 @@
 
     <section module="glpi" title="Device evolution" name="glpi">
         <table type="period" title="Number of devices by OS" name="table_os" chart_type="bar">
-            <item module="glpi" indicator="os_count" title="OS" hidden="yes">
+            <item module="glpi" indicator="all_computer_count" title="OS" hidden="yes">
                 <item module="glpi" indicator="os_count_windows" title="Windows">
                     <item module="glpi" indicator="os_count_windows_xp" title="Windows XP" selected="yes">
                         <item module="glpi" indicator="os_count_windows_xp_home" title="Windows XP Home" />
@@ -166,7 +166,7 @@
             <item module="glpi" indicator="soft_count_autocad" title="AutoCAD" />
         </table>
         <table type="period" title="Computer types" name="table_types" chart_type="bar">
-            <item module="glpi" indicator="type_count" title="Types" hidden="yes">
+            <item module="glpi" indicator="all_computer_count" title="Types" hidden="yes">
                 <item module="glpi" indicator="type_count_desktop" title="Desktop" selected="yes" />
                 <item module="glpi" indicator="type_count_laptop" title="Laptop" selected="yes" />
                 <item module="glpi" indicator="type_count_server" title="Server" selected="yes" />
