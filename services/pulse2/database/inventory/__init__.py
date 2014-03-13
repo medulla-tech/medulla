@@ -1626,6 +1626,34 @@ class Inventory(DyngroupDatabaseHelper):
         pass
 
     @DatabaseHelper._session
+    def getAllComputers(self, session, ctx, count=0):
+        """ @return: all machines that have this type """
+        if int(count) == 1:
+            query = session.query(func.count(Machine.id))
+        else:
+            query = session.query(Machine)
+
+        query = query.select_from(self.machine
+                    .join(
+                        self.table['hasEntity'],
+                        (self.table['hasEntity'].c.machine == self.machine.c.id) \
+                    )
+                    .join(self.table['Inventory'],
+                        self.table['Inventory'].c.id == self.table['hasEntity'].c.inventory
+                    )
+                )
+
+        query = query.filter(self.inventory.c.Last == 1)
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
+
+    @DatabaseHelper._session
     def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this type """
         if isinstance(types, basestring):
@@ -1637,17 +1665,24 @@ class Inventory(DyngroupDatabaseHelper):
             query = session.query(Machine)
 
         query = query.select_from(self.machine
-                    .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine) \
-                    .join(self.table['hasBios'], self.machine.c.id == self.table['hasBios'].c.machine) \
+                    .join(self.table['hasHardware'], (self.machine.c.id == self.table['hasHardware'].c.machine)) \
+                    .join(self.table['hasBios'], (self.machine.c.id == self.table['hasBios'].c.machine)) \
                     .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
-                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                    .join(self.table['Bios'], self.table['Bios'].c.id == self.table['hasBios'].c.bios)
                     .join(
                         self.table['hasEntity'],
-                        self.table['hasEntity'].c.inventory == self.table['Inventory'].c.id,
+                        (self.table['hasEntity'].c.machine == self.machine.c.id) \
                     )
+                    .join(self.table['Inventory'], and_(
+                        self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory,
+                        self.table['Inventory'].c.id == self.table['hasBios'].c.inventory,
+                        self.table['Inventory'].c.id == self.table['hasEntity'].c.inventory
+                    ))
                 )
 
         query = query.filter(self.inventory.c.Last == 1)
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
 
         hardwareType = self.table['Hardware'].c.Type
         biosType = self.table['Bios'].c.TypeMachine
