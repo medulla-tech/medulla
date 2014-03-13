@@ -79,6 +79,20 @@ class ReportDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._session
+    def disable_indicators_by_name(self, session, includes=[], excludes=[]):
+        try:
+            query = session.query(Indicator)
+            if includes:
+                query = query.filter(Indicator.name.in_(includes))
+            if excludes:
+                query = query.filter(~Indicator.name.in_(excludes))
+            query.update({'active':0, 'keep_history':0}, synchronize_session=False)
+            session.commit()
+            return True
+        except Exception, e:
+            logger.error('DB Error: %s', str(e))
+
+    @DatabaseHelper._session
     def add_indicator(self, session, indicator_attr):
         try:
             indicator = session.query(Indicator).filter_by(name=indicator_attr['name']).first()
@@ -130,19 +144,19 @@ class ReportDatabase(DatabaseHelper):
                 data.timestamp = timestamp
                 session.add(data)
         session.commit()
-        
-        
+
+
     @DatabaseHelper._session
     def historize_overwrite_last(self, session, timestamp):
         """
         Debug function to historize and overwrite last historization data
         """
-        
+
         # Remove last 24 hours data
         for _class in [ReportingIntData, ReportingTextData, ReportingFloatData]:
             session.query(_class).filter(_class.timestamp>timestamp-86400).delete()
-        
-        # Doing an historization for 
+
+        # Doing an historization for
         self.historize_all(timestamp-80400)
 
     @DatabaseHelper._session

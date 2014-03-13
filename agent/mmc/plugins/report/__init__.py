@@ -81,13 +81,21 @@ def activate():
 def import_indicators():
     config = ReportConfig("report")
     xmltemp = ET.parse(os.path.join(reportconfdir, config.indicators)).getroot()
+
+    # Indicator names list
+    available_indicators = []
+
     for module in xmltemp.getiterator('module'):
         module_name = module.attrib['name']
         for indicator in module.getiterator('indicator'):
             indicator_attr = indicator.attrib
             indicator_attr['module'] = module_name
+            available_indicators.append(indicator_attr['name'])
             # Add indicator if not exists
             ReportDatabase().add_indicator(indicator_attr)
+
+    # Disable all deleted indicators
+    ReportDatabase().disable_indicators_by_name(excludes=available_indicators)
     return True
 
 
