@@ -61,6 +61,12 @@ def calldb(func, *args, **kw):
 def get_os_classes(params):
     return updateDatabase().get_os_classes(params)
 
+def enable_only_os_classes(os_classes_ids):
+    """
+    Enable spacified os_classes and disble others
+    """
+    return updateDatabase().enable_only_os_classes(os_classes_ids)
+
 
 def get_update_types(params):
     return updateDatabase().get_update_types(params)

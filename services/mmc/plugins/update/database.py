@@ -78,11 +78,31 @@ class updateDatabase(DatabaseHelper):
         return session.query(OsClass)
 
 
+    @DatabaseHelper._session
+    def enable_only_os_classes(self, session, os_classes_ids):
+        """
+        Enable spacified os_classes and disble others
+        """
+        try:
+            session.query(OsClass)\
+                    .filter(OsClass.id.in_(os_classes_ids))\
+                    .update({'enabled': 1}, synchronize_session=False)
+            session.query(OsClass)\
+                    .filter(~OsClass.id.in_(os_classes_ids))\
+                    .update({'enabled': 0}, synchronize_session=False)
+            session.commit()
+            return True
+        except Exception, e:
+            logger.error("DB Error: %s" % str(e))
+            return False
+
+
+
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
     def get_update_types(self, session, params):
         """
-        Get all os classes
+        Get all update types
         """
         return session.query(UpdateType)
 
@@ -157,7 +177,7 @@ class updateDatabase(DatabaseHelper):
 
 
             # Main query
-            query = session.query(Update, func.ifnull(installed_targets.c.total_installed, 0).label('total_installed'), func.ifnull(all_targets.c.total_targets, 0).label('total_targets'))\
+            query = session.query(Update, func.ifnull(installed_targets.c.total_installed, 0).label('total_installed'), func.ifnull(all_targets.c.total_targets, 0).label('total_targets'))
                 .join(Update.update_type)\
                 .outerjoin(installed_targets, Update.id == installed_targets.c.update_id)\
                 .outerjoin(all_targets, Update.id == all_targets.c.update_id)

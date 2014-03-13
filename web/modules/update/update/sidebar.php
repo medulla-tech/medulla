@@ -25,31 +25,29 @@
 ?>
 <?php
 
+require_once("graph/navbar.inc.php");
 require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/html.inc.php");
 
 $MMCApp = & MMCApp::getInstance();
 
-include dirname(__FILE__) . '/sidebar.php';
+$os_classes = get_os_classes();
 
-$p = new PageGenerator(_T("Update manager", 'update'));
-$p->setSideMenu($sidemenu);
-$p->display();
-$params = array();
+$sidemenu = new SideMenu();
+$sidemenu->setClass("update");
 
-if (isset($_GET["os_class_id"]))
-    $params['os_class_id'] = $_GET["os_class_id"];
+$sidemenu->addSideMenuItem(new SideMenuItem(_T('All updates', 'update'), "update", "update", "index"));
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
+foreach ($os_classes['data'] as $os) {
+    $item = new SideMenuItem($os['name'], "update", "update", "viewUpdates&os_class_id=" . $os['id']);
+    $item->setCssId("osClass" . $os['id']);
+    $sidemenu->addSideMenuItem($item);
+}
 
-$ajax->setElements(array(
-                         _T('Available', 'update'),
-                         _T('Enabled', 'update'),
-                         _T('Disabled', 'update')
-));
+if (isset($_GET['os_class_id'])) {
+    $sidemenu->forceActiveItem("viewUpdates&os_class_id=" . $_GET['os_class_id']);
+}
 
-$ajax->setElementsVal(array('0', '1', '2'));
-$ajax->display();
-echo "<br/><br/>";
-$ajax->displayDivToUpdate();
+$sidemenu->addSideMenuItem(new SideMenuItem(_T('Settings', 'update'), "update", "update", "settings"));
+
 ?>
