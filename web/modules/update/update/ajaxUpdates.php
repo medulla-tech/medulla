@@ -60,11 +60,14 @@ if (!$count) {
 
 //  Listinfo params
 $listinfoParams = array();
+
 $checkboxes = array();
 foreach ($data as $row) {
     $listinfoParams[] = array('id' => $row['id']);
     $checkboxes[] = '<input type="checkbox" name="selected_updates[]" value="' . $row['id'] . '">';
 }
+
+$check_all = '<input type="checkbox" id="check_all" />';
 
 $cols = listInfoFriendly($data);
 
@@ -79,7 +82,7 @@ for ($i = 0; $i < count($cols['total_targets']); $i++){
 // Printing selected updates form
 print '<form id="sel_updates_form">';
 
-$n = new OptimizedListInfos($checkboxes, '', '', '10px');
+$n = new OptimizedListInfos($checkboxes, $check_all, '', '10px');
 $n->first_elt_padding = '0';
 $n->addExtraInfo($cols['title'], _T("Update title", "update"));
 $n->addExtraInfo($cols['uuid'], _T("UUID", "update"));
@@ -107,6 +110,7 @@ print '</form>';
 
 <script type="text/javascript">
 
+// Enable Updates button
 jQuery('#btnEnableUpdates').click(function(){
 
     jQuery.ajax({
@@ -120,6 +124,7 @@ jQuery('#btnEnableUpdates').click(function(){
 
 });
 
+// Disable Updates button
 jQuery('#btnDisableUpdates').click(function(){
 
     jQuery.ajax({
@@ -131,6 +136,11 @@ jQuery('#btnDisableUpdates').click(function(){
         }
     });
 
+});
+
+// Check all checkbox
+jQuery('#check_all').click(function(){
+    jQuery(this).parents('table:first').find('input[type=checkbox]').prop('checked', jQuery(this).is(':checked')); 
 });
 
 
