@@ -559,6 +559,7 @@ class RemoteCallProxy :
                            })
 
         client = {'host': ip,
+                  'chosen_ip': ip,
                   'uuid': uuid,
                   'shortname': shortname,
                   'ip': ips,
@@ -610,6 +611,7 @@ class RemoteCallProxy :
                            })
 
         client = {'host': ip,
+                  'chosen_ip': ip,
                   'uuid': uuid,
                   'shortname': shortname,
                   'ip': ips,

@@ -46,12 +46,14 @@ def getCheck(check, target):
         return ret
     for key in check:
         if check[key] == 'ipaddr':
-            if target['ips'] and target['ips'] != ['']:
-                ret.update({key: target['ips'][0]})
+            if 'chosen_ip' in target and target['chosen_ip']:
+                ret[key] = target['chosen_ip']
+            elif 'ips' in target and target['ips']:
+                ret[key] = target['ips'][0]
         if check[key] == 'name':
-            ret.update({key: target['shortname']})
+            ret[key] = target['shortname']
         if check[key] == 'uuid':
-            ret.update({key: target['uuid']})
+            ret[key] = target['uuid']
         if check[key] == 'macaddr':
-            ret.update({key: target['macs'][0]})
+            ret[key] = target['macs'][0]
     return ret
