@@ -22,7 +22,11 @@
  */
 
 require_once("modules/dyngroup/includes/includes.php");
-if ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit') {
+if (
+        count($_POST) == 0 &&
+        !isset($_GET['request']) &&
+        ($_GET['action'] == 'computersgroupcreator' || $_GET['action'] == 'computersgroupedit')
+    ) {
     unset($_SESSION['request']);
 }
 $groupedit = True;
