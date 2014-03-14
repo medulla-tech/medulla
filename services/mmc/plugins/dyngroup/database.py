@@ -933,6 +933,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         query = query.filter(and_(
                     Convergence.papi.like('%' + mountpoint + '%'),
                     Convergence.packageUUID == package_id,
+                    Convergence.active == 1,
                 ))
         for line in query:
             ret.append({
