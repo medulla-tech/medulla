@@ -56,6 +56,9 @@ $page = new Page("disableUpdate", _T("Disable update", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+$page = new Page("settings", _T("Settings", "update"));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
