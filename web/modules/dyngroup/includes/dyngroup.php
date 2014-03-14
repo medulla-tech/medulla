@@ -454,20 +454,19 @@ function restart_active_convergence_commands($papi_id, $package) {
         $active = 1;
         $ordered_proxies = array();
         $mode = 'push';
+        function __get_command_start_date($cmd_id) {
+            $command_details = command_detail($cmd_id);
+            list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
+            return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
+        }
         foreach ($active_commands as $command) {
-            function _get_command_start_date($cmd_id) {
-                $command_details = command_detail($cmd_id);
-                list($year, $month, $day, $hour, $minute, $second) = $command_details['start_date'];
-                return sprintf("%s-%s-%s %s:%s:%s", $year, $month, $day, $hour, $minute, $second);
-            }
-
             $gid = $command['gid'];
             $cmd_id = $command['cmd_id'];
 
             /* Stop command */
             stop_command($cmd_id);
             /* Set end date of this command to now(), don't touch to start date */
-            $start_date = _get_command_start_date($cmd_id);
+            $start_date = __get_command_start_date($cmd_id);
             extend_command($cmd_id, $start_date, date("Y-m-d H:i:s"));
             /* Create new command */
             $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $ServerAPI, $package->id);
