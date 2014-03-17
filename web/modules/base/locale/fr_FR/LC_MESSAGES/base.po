@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-07 16:17+0100\n"
+"POT-Creation-Date: 2014-03-13 16:50+0100\n"
 "PO-Revision-Date: 2014-01-27 16:46+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -85,7 +85,7 @@ msgid "No"
 msgstr "Non"
 
 #: graph/header.inc.php:233 includes/FormGenerator.php:618
-#: includes/PageGenerator.php:2176
+#: includes/PageGenerator.php:2188
 msgid "Close"
 msgstr "Fermer"
 
@@ -448,6 +448,10 @@ msgstr "Inverser la sélection"
 msgid "Delete"
 msgstr "Suppression"
 
+#: includes/acl.inc.php:127
+msgid "You do not have required rights"
+msgstr "Vous n'avez pas les droits requis !"
+
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
 msgstr "à"
@@ -477,29 +481,25 @@ msgstr "Aucun élément disponible"
 msgid "Select entity"
 msgstr "Entité sélectionnée"
 
-#: includes/PageGenerator.php:2554 includes/PageGenerator.php:2623
-#: includes/PageGenerator.php:2649 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "Valider"
 
-#: includes/PageGenerator.php:2558 includes/PageGenerator.php:2627
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
 #: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Annuler"
 
-#: includes/PageGenerator.php:2801
+#: includes/PageGenerator.php:2813
 msgid "Select all"
 msgstr "Tout sélectionner"
 
-#: includes/PageGenerator.php:2801
+#: includes/PageGenerator.php:2813
 msgid "Unselect all"
 msgstr "Tout désélectionner"
-
-#: includes/acl.inc.php:124
-msgid "You do not have required rights"
-msgstr "Vous n'avez pas les droits requis !"
 
 #: logout/index.php:50
 msgid "Your session will be closed"
