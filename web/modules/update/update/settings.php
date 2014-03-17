@@ -74,9 +74,9 @@ $f->addValidateButton("bconfirm");
 
 $f->display();
 
-print '<br/><hr/><br/><h2>' . _T('Update commands', 'update') . '</h2>';
+	print '<br/><hr/><br/><h2>' . _T('Updates deployment', 'update') . '</h2>';
 
-print '<a href="' . $_SERVER['REQUEST_URI'] . '&create_update_commands=1" class="btnPrimary" style="color:white">Force updates deployments</a>';
+print '<a href="' . $_SERVER['REQUEST_URI'] . '&create_update_commands=1" class="btnPrimary" style="color:white">'._T('Force now', 'update').'</a>';
 
 
 ?>
