@@ -300,6 +300,7 @@ class ScheduledCall:
                 d.callback(self)
 
         def eb(failure):
+            logger.error("Failed to start task %s" % self.f)
             self.running = False
             d, self.deferred = self.deferred, None
             d.errback(failure)
