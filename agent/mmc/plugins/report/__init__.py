@@ -520,7 +520,7 @@ class RpcProxy(RpcProxyI):
 
     def historize_all(self, timestamp=None):
         # If timestamp is not specified, taking actual time
-        if not timestamp:
+        if timestamp is None:
             timestamp = int(time.time())
         ReportDatabase().historize_all(timestamp)
         

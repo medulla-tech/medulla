@@ -22,6 +22,7 @@ Declare Report database
 """
 
 import logging
+import time
 
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm.exc import NoResultFound
@@ -123,7 +124,9 @@ class ReportDatabase(DatabaseHelper):
         session.commit()
 
     @DatabaseHelper._session
-    def historize_all(self, session, timestamp):
+    def historize_all(self, session, timestamp=None):
+        if timestamp is None:
+            timestamp = int(time.time())
         indicators = session.query(Indicator).filter_by(active=1, keep_history=1)
         for indicator in indicators:
             # Save the indicator values to Db
