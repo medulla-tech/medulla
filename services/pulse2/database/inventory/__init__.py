@@ -1610,7 +1610,8 @@ class Inventory(DyngroupDatabaseHelper):
                     self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%')
                 )
             )
-        else:
+        # if osnames == ['%'], we want all machines, including machines without OS (used for reporting, per example...)
+        elif osnames != ['%']:
             os_filter = [self.table['Hardware'].c.OperatingSystem.like('%' + osname + '%') for osname in osnames]
             query = query.filter(or_(*os_filter))
 
