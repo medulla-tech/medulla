@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 01:22+0100\n"
-"PO-Revision-Date: 2014-03-14 08:53+0000\n"
+"POT-Creation-Date: 2014-03-17 10:10+0100\n"
+"PO-Revision-Date: 2014-03-17 09:10+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -55,18 +55,6 @@ msgstr "Aktiviert"
 msgid "Disabled"
 msgstr "Deaktiviert"
 
-#: modules/update/update/settings.php:57
-msgid "Update settings"
-msgstr ""
-
-#: modules/update/update/settings.php:61
-msgid "Enable update managment for:"
-msgstr ""
-
-#: modules/update/update/settings.php:77
-msgid "Update commands"
-msgstr ""
-
 #: modules/update/update/ajaxUpdates.php:57
 msgid "No entry found"
 msgstr "Kein Eintrag gefunden"
@@ -101,6 +89,22 @@ msgstr ""
 
 #: modules/update/update/ajaxUpdates.php:109
 msgid "Disable selected updates"
+msgstr ""
+
+#: modules/update/update/settings.php:57
+msgid "Update settings"
+msgstr ""
+
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr ""
+
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr ""
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
 msgstr ""
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 01:22+0100\n"
-"PO-Revision-Date: 2014-03-17 08:53+0000\n"
+"POT-Creation-Date: 2014-03-17 10:10+0100\n"
+"PO-Revision-Date: 2014-03-17 09:13+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
@@ -56,18 +56,6 @@ msgstr "Activée"
 msgid "Disabled"
 msgstr "Désactivée"
 
-#: modules/update/update/settings.php:57
-msgid "Update settings"
-msgstr "Paramètres des maj"
-
-#: modules/update/update/settings.php:61
-msgid "Enable update managment for:"
-msgstr "Activer la gestion des maj pour:"
-
-#: modules/update/update/settings.php:77
-msgid "Update commands"
-msgstr "Commandes de maj"
-
 #: modules/update/update/ajaxUpdates.php:57
 msgid "No entry found"
 msgstr "Aucune entrée trouvée"
@@ -103,6 +91,22 @@ msgstr "Activer les maj"
 #: modules/update/update/ajaxUpdates.php:109
 msgid "Disable selected updates"
 msgstr "Désactiver les maj"
+
+#: modules/update/update/settings.php:57
+msgid "Update settings"
+msgstr "Paramètres des mises à jour"
+
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr "Activer la gestion des mises à jour pour:"
+
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr "Déploiement des mises à jour"
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
+msgstr "Appliquer maintenant"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 msgid "Updates"
