@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-14 14:36+0100\n"
-"PO-Revision-Date: 2014-03-14 08:53+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-03-17 01:22+0100\n"
+"PO-Revision-Date: 2014-03-17 08:53+0000\n"
+"Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr "Toutes les mises à jour"
 
 #: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 #: modules/update/update/viewUpdates.php:35
 #: modules/update/infoPackage.inc.php:32
@@ -58,15 +58,15 @@ msgstr "Désactivée"
 
 #: modules/update/update/settings.php:57
 msgid "Update settings"
-msgstr ""
+msgstr "Paramètres des maj"
 
 #: modules/update/update/settings.php:61
 msgid "Enable update managment for:"
-msgstr ""
+msgstr "Activer la gestion des maj pour:"
 
 #: modules/update/update/settings.php:77
 msgid "Update commands"
-msgstr ""
+msgstr "Commandes de maj"
 
 #: modules/update/update/ajaxUpdates.php:57
 msgid "No entry found"
