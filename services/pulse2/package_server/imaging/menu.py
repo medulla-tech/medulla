@@ -385,7 +385,10 @@ class ImagingMenu:
                 fid.write(buf)
                 fid.close()
                 for item in self.menuitems.values():
-                    item.write(self.config)
+                    try:
+                        item.write(self.config)
+                    except Exception, e:
+                        self.logger.error('An error occurred while writing boot menu entry "%s": %s' % (str(item), str(e)))
                 if self.mac:
                     self.logger.debug('Successfully wrote boot menu for computer MAC %s into file %s' % (self.mac, filename))
                 else:
@@ -576,6 +579,10 @@ class ImagingItem:
         assert(type(self.desc) == unicode)
         self.uuid = None
 
+    def __str__(self):
+        d = self.__dict__
+        return str(d)
+
     def _applyReplacement(self, out, network = True):
         if network:
             device = '(nd)'
@@ -756,17 +763,18 @@ class ImagingImageItem(ImagingItem):
                     f.write('\n')
                     f.write('. /opt/lib/libpostinst.sh')
                     f.write('\n')
-                    f.write('echo "==> postinstall script #%d : %s"\n' % (order, script['name']))
+                    f.write('echo "==> postinstall script #%d : %s"\n' % (order, script['name'].encode('utf-8')))
                     f.write('set -v\n')
                     f.write('\n')
-                    # FIXME: any specific encoding to use ?
-                    f.write(script['value'])
+                    f.write(script['value'].encode('utf-8'))
                     f.close()
                     os.chmod(postinst, stat.S_IRUSR | stat.S_IXUSR)
                     self.logger.debug('Successfully wrote script: %s' % postinst)
                 except OSError, e:
                     self.logger.error("Can't update post-imaging script %s: %s" % (postinst, e))
                     raise
+                except Exception, e:
+                    self.logger.error("Something wrong happened while writing post-imaging script %s: %s" % (postinst, e))
                 order += 1
         else:
             self.logger.debug('No post-imaging script to write')
