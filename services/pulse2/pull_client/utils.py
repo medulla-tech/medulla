@@ -77,10 +77,25 @@ def get_launcher_env():
                                      "SOFTWARE\Mandriva\OpenSSH",
                                      "InstallPath")
         openssh_bin = os.path.join(openssh, "bin")
-        fusion = os.path.dirname(get_registry_value("HKEY_LOCAL_MACHINE",
-                                                    "SOFTWARE\FusionInventory-Agent",
-                                                    "share-dir"))
-        fusion_bin = os.path.join(fusion, "perl", "bin")
+
+        # FusionInventory 2.3.X
+        fusion_registry = get_registry_value("HKEY_LOCAL_MACHINE",
+                                             "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\FusionInventory-Agent",
+                                             "InstallLocation")
+        if fusion_registry:
+            if os.path.exists(fusion_registry):
+                fusion_bin = os.path.join(fusion, "perl", "bin")
+            
+        # FusionInventory 2.2.X
+        if not fusion_registry:
+            fusion_registry = get_registry_value("HKEY_LOCAL_MACHINE",
+                                                "SOFTWARE\FusionInventory-Agent",
+                                                "share-dir")
+            if fusion_registry:
+                if os.path.exists(fusion_registry):
+                    fusion = os.path.dirname(fusion_registry)
+                    fusion_bin = os.path.join(fusion, "perl", "bin")
+
         environ["OPENSSH_BIN_PATH"] = str(openssh_bin)
         environ["FUSION_BIN_PATH"] = str(fusion_bin)
         environ["PATH"] += str(os.pathsep + openssh_bin + os.pathsep + fusion_bin)
