@@ -656,6 +656,7 @@ class SetupApp(object):
         self.defaults['glpidbpassword'] = self.options["glpi_dbpassword"] or ""
         self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
         self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "localhost"
+        self.defaults['ipexternal'] = self.options["ipexternal"] or None
 
 
 
@@ -669,7 +670,7 @@ class SetupApp(object):
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
-                                                         get_default_ip())
+                                                         self.defaults['ipexternal'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -1168,6 +1169,8 @@ if __name__ == '__main__':
                       help="MySQL administrator username")
     parser.add_option("--glpi-dbpasswd", dest="glpidbpasswd",
                       help="MySQL administrator password")
+    parser.add_option("--external-ip-address", dest="ipexternal",
+                      help="Set an external IP Address used in package-server.ini and launchers.ini")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1203,6 +1206,7 @@ if __name__ == '__main__':
         'glpi_dbpassword' : options.glpidbpasswd,
         'glpi_dbname' : options.glpidbname,
         'glpi_dbhost' : options.glpidbhost,
+        'ipexternal' : options.ipexternal,
     }
 
     # Run the setup app
