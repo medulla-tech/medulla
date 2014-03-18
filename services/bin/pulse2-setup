@@ -970,6 +970,7 @@ class SetupApp(object):
             self.confs['plugins/glpi.ini'].set('main', 'disable', 0)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 1)
             self.confs['plugins/base.ini'].set('computers', 'method', 'glpi')
+            self.confs['plugins/report.ini'].set('data', 'indicators', 'indicators.xml')
             if self.defaults['package.service.enable'] :
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
                 pkg_conf.set("imaging_api", "glpi_mode", True)
@@ -982,6 +983,7 @@ class SetupApp(object):
             self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
             self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
+            self.confs['plugins/report.ini'].set('data', 'indicators', 'indicators_inventory.xml')
 
             if self.defaults['package.service.enable'] :
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
