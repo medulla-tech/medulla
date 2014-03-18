@@ -993,7 +993,11 @@ class Inventory(DyngroupDatabaseHelper):
                 else:
                     # Valid SMBIOS type
                     machine_type = 'Unknown'
-                fields.append(['Model / Type', ' / '.join([bios['Chipset'],machine_type])])
+                if bios['Chipset'] is not None:
+                    machine_model = bios['Chipset']
+                else:
+                    machine_model = 'Unknown'
+                fields.append(['Model / Type', ' / '.join([machine_model, machine_type])])
                 fields.append(['Manufacturer', bios['ChipVendor']])
                 fields.append(['Serial Number', bios['Serial']])
             entity = Inventory().getComputersLocations([params['uuid']])
