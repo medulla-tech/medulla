@@ -84,7 +84,7 @@ def get_launcher_env():
                                              "InstallLocation")
         if fusion_registry:
             if os.path.exists(fusion_registry):
-                fusion_bin = os.path.join(fusion, "perl", "bin")
+                fusion_bin = os.path.join(fusion_registry, "perl", "bin")
             
         # FusionInventory 2.2.X
         if not fusion_registry:
