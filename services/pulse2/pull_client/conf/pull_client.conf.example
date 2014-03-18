@@ -61,11 +61,11 @@ propagate=0
 class=FileHandler
 level=DEBUG
 formatter=form01
-args=('C:\pull_client.log', 'w')
+args=('@@LOG_PATH@@', 'w')
 
 [handler_hand02]
 class=handlers.NTEventLogHandler
-level=ERROR
+level=DEBUG
 formatter=form02
 args=('Pulse Pull Client', '', 'Application')
 
