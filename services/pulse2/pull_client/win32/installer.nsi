@@ -1,6 +1,6 @@
 ; Basic variables
 !define PRODUCT_NAME "Mandriva Pulse Pull Client"
-!define PRODUCT_VERSION "1.0.0"
+!define PRODUCT_VERSION "1.0.1"
 !define PRODUCT_PUBLISHER "Mandriva S.A."
 !define PRODUCT_WEB_SITE "http://www.mandriva.com"
 !define PRODUCT_DIR_REGKEY "Software\Mandriva\Pulse-Pull-Client"
@@ -302,6 +302,7 @@ Please fill the field with the right security key."
   !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_SERVER@@" $DLP_SERVER
   !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_PORT@@" $DLP_PORT
   !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@DLP_KEY@@" $DLP_KEY
+  !insertmacro _ReplaceInFile "$INSTDIR\conf\pull_client.conf" "@@LOG_PATH@@" $INSTDIR\pull_client_log.txt
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;
