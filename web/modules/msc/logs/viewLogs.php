@@ -63,11 +63,16 @@ if (strlen($_GET['uuid'])) {
         $act = $bdl->quickDisplay();
         if ($act) {
             //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs&action=msctabs");
+            $command_type = False;
+            if (!empty($_GET["commands"])) {
+                $command_type = $_GET['commands'];
+            }
             $params = array(
                 "uuid" => quickGet('uuid'),
                 "bundle_id" => quickGet('bundle_id'),
                 'divID' => $divName,
                 "tab" => "tablogs",
+                "commands" => $command_type,
             );
 
             if (isset($_history))
