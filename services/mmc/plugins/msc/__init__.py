@@ -615,6 +615,9 @@ class RpcProxy(RpcProxyI):
 
     def set_commands_filter(self, filterType):
         ctx = self.currentContext
+        if not filterType in ['mine', 'all']:
+            filterType = 'mine'
+            logging.getLogger().error('msc.set_commands_filter called without valid parameter')
         ctx.filterType = filterType
 
     def get_commands_filter(self):

@@ -30,8 +30,10 @@ $maxperpage = $conf["global"]["maxperpage"];
 $filter = empty($_GET["filter"]) ? '' : $_GET['filter'];
 $start = empty($_GET["start"]) ? 0 : $_GET["start"];
 
+$command_type = False;
 if (!empty($_GET["commands"])) {
     setCommandsFilter($_GET["commands"]);
+    $command_type = $_GET['commands'];
 }
 
 $expired = isset($_GET['expired']) ? $_GET['expired'] == 1 : FALSE;
@@ -106,7 +108,7 @@ foreach ($cmds as $item) {
     }
 
     if ($target_uuid && $target_uuid != '') {
-        $param = array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid);
+        $param = array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid, 'commands' => $command_type);
         if (!isset($gid) || $gid == '') {
             $param['coh_id'] = $coh_id;
         } else {
@@ -115,7 +117,7 @@ foreach ($cmds as $item) {
         $linkdetail = urlStr("msc/logs/viewLogs", $param);
         $linklogs = urlStr("msc/logs/viewLogs", array('uuid' => $target_uuid, 'gid' => $gid));
     } else {
-        $linkdetail = urlStr("msc/logs/viewLogs", array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid, 'gid' => $gid));
+        $linkdetail = urlStr("msc/logs/viewLogs", array('uuid' => $target_uuid, 'cmd_id' => $cmd_id, 'bundle_id' => $bid, 'gid' => $gid, 'commands' => $command_type));
         $linklogs = urlStr("msc/logs/viewLogs", array('uuid' => $target_uuid, 'gid' => $gid));
     }
     $a_date[] = $creation_date;
