@@ -53,6 +53,11 @@ $divName = (isset($_history) && $_history == '1') ? 'divHistory' : 'divLogs';
 // inject styles
 print '<link rel="stylesheet" href="modules/msc/graph/css/msc_commands.css" type="text/css" media="screen" />';
 
+$command_type = False;
+if (!empty($_GET["commands"])) {
+    $command_type = $_GET['commands'];
+}
+
 if (strlen($_GET['uuid'])) {
     /*
      * display stuff for a single client
@@ -62,11 +67,6 @@ if (strlen($_GET['uuid'])) {
         displayBreadCrumb();
         $act = $bdl->quickDisplay();
         if ($act) {
-            //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?uuid=".$_GET['uuid']."&bundle_id=".$_GET['bundle_id']."&tab=tablogs&action=msctabs");
-            $command_type = False;
-            if (!empty($_GET["commands"])) {
-                $command_type = $_GET['commands'];
-            }
             $params = array(
                 "uuid" => quickGet('uuid'),
                 "bundle_id" => quickGet('bundle_id'),
@@ -131,6 +131,7 @@ if (strlen($_GET['uuid'])) {
             "hostname" => $_GET['hostname'],
             'divID' => $divName,
             "tab" => "tablogs",
+            "commands" => $command_type,
         );
 
         if (isset($_history))
@@ -155,6 +156,7 @@ if (strlen($_GET['uuid'])) {
                 "bundle_id" => $_GET['bundle_id'],
                 'divID' => $divName,
                 "tab" => "grouptablogs",
+                "commands" => $command_type,
             );
 
             if (isset($_history))
@@ -220,12 +222,12 @@ if (strlen($_GET['uuid'])) {
         $act = $cmd->quickDisplay();
         if ($act) {
             // display all the commands on hosts
-            //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid'].$bdlink."&cmd_id=".$_GET['cmd_id']."&tab=grouptablogs&action=groupmsctabs");
             $params = array(
                 "gid" => $_GET['gid'] . $bdlink,
                 "cmd_id" => $_GET['cmd_id'],
                 'divID' => $divName,
                 "tab" => "grouptablogs",
+                "commands" => $command_type,
             );
 
             if (isset($_history))
@@ -237,11 +239,11 @@ if (strlen($_GET['uuid'])) {
         }
     } else { # Display history for a specific group
         // display all commands
-        //$ajax = new AjaxFilterCommands("modules/msc/msc/ajaxLogsFilter.php?gid=".$_GET['gid']."&tab=grouptablogs&action=groupmsctabs");
         $params = array(
             "gid" => $_GET['gid'],
             'divID' => $divName,
             "tab" => "grouptablogs",
+            "commands" => $command_type,
         );
 
         if (isset($_history))
