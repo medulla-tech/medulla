@@ -100,7 +100,18 @@ class getCommand(object):
         return './"%s" -ms' % basename(self.file)
 
     def getMSI32Command(self):
-        return 'msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % basename(self.file)
+        return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
+
+msi_ret=$?
+
+if [ ! $msi_ret -eq 0 ]; then
+  cat install.log
+  echo "MSI INSTALLER FAILED WITH CODE $msi_ret. SEE LOG ABOVE." 
+  exit $msi_ret
+else
+  rm -f install.log
+  exit 0
+fi""" % basename(self.file)
 
     def getMSI32UpdateCommand(self):
         """
@@ -109,7 +120,18 @@ class getCommand(object):
         return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getMSI64Command(self):
-        return '$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0' % basename(self.file)
+        return """$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
+
+msi_ret=$?
+
+if [ ! $msi_ret -eq 0 ]; then
+  cat install.log
+  echo "MSI INSTALLER FAILED WITH CODE $msi_ret. SEE LOG ABOVE." 
+  exit $msi_ret
+else
+  rm -f install.log
+  exit 0
+fi""" % basename(self.file)
 
     def getMSI64UpdateCommand(self):
         """
