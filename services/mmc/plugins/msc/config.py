@@ -83,7 +83,7 @@ class MscConfig(MscDatabaseConfig):
     web_show_reboot = True
     web_dlpath = []
     # Default life time of command (in hours)
-    web_def_coh_life_time = 24
+    web_def_coh_life_time = 1
     # Attempts per day average
     web_def_attempts_per_day = 4
     # Max bandwith to use to download a file
