@@ -657,6 +657,8 @@ class SetupApp(object):
         self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
         self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "localhost"
         self.defaults['ipexternal'] = self.options["ipexternal"] or None
+        self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
+        self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
 
 
 
@@ -671,6 +673,8 @@ class SetupApp(object):
                                                                self.defaults['package.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
                                                          self.defaults['ipexternal'])
+        self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
+        self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -1080,12 +1084,12 @@ class SetupApp(object):
         # Associate local BackupPC server to first entity (UUID1)
         binpath = path_lookup('pulse2-backup-servers')
         if binpath is not None:
-            cmd = binpath + ' -a -e UUID1 -p http://127.0.0.1/backuppc/index.cgi'
+            cmd = binpath + ' -a -e ' + self.config['backuppc_entity'] + ' -p http://' + self.config['backuppc_ip'] + '/backuppc/index.cgi'
             log.debug('Call: %s' % cmd)
             if call(cmd, shell=True)<>0:
-                log.error('Unable to associate local BackupPC server to entity UUID1')
+                log.error('Unable to associate BackupPC server on %(backuppc_ip)s to entity %(backuppc_entity)s' % self.config)
             else:
-                log.info('Local BackupPC server http://127.0.0.1/backuppc/index.cgi associated to root entity UUID1')
+                log.info('BackupPC server http://%(backuppc_ip)s/backuppc/index.cgi associated to entity %(backuppc_entity)s' % self.config)
         else :
             log.error("BackupPC server is not probably installed")
 
@@ -1171,6 +1175,10 @@ if __name__ == '__main__':
                       help="MySQL administrator password")
     parser.add_option("--external-ip-address", dest="ipexternal",
                       help="Set an external IP Address used in package-server.ini and launchers.ini")
+    parser.add_option("--backuppc-ip", dest="backuppc_ip",
+                      help="BackupPC IP, you can specify port. Per example: 127.0.0.1:81")
+    parser.add_option("--backuppc-entity", dest="backuppc_entity",
+                      help="Entity who will be linked to BackupPC (default: UUID1)")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1207,6 +1215,8 @@ if __name__ == '__main__':
         'glpi_dbname' : options.glpidbname,
         'glpi_dbhost' : options.glpidbhost,
         'ipexternal' : options.ipexternal,
+        'backuppc_ip' : options.backuppc_ip,
+        'backuppc_entity' : options.backuppc_entity,
     }
 
     # Run the setup app
