@@ -171,7 +171,7 @@ if ($proxyActive) {
                            "jsunzip.js", "rfb.js"]);
 
         var rfb;
-        var MAX_CONNECTION_ATTEMPS = 5;
+        var MAX_CONNECTION_ATTEMPS = 10;
         var connection_attemps = 0;
 
         function passwordRequired(rfb) {
