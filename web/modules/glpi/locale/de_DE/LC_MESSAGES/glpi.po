@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 10:10+0100\n"
+"POT-Creation-Date: 2014-03-20 13:53+0100\n"
 "PO-Revision-Date: 2014-03-06 15:14+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/pulse2/team/de_DE/)\n"
@@ -17,43 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr "Antivirus Status ist OK auf %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "Antivirus läuft nicht oder nicht aktuell auf %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
-#, php-format
-msgid "No antivirus found at %s"
-msgstr "Kein Antivirus gefunden unter %s"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createOSStaticGroup.php:52
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
-
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Neustes Inventar ist weniger als %s Tage um %s"
-
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Neustes Inventar ist mehr als %s Tage um %s"
-
-#: modules/glpi/glpi/createOSStaticGroup.php:34
-#, php-format
-msgid "Machine with %s installed at %s"
-msgstr "Maschine mit %s installiert an %s"
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -347,6 +310,43 @@ msgstr "Up-to-date"
 msgid "Invalid hostname"
 msgstr "Ungültiger Hostname"
 
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
+#, php-format
+msgid "Antivirus status is OK at %s"
+msgstr "Antivirus Status ist OK auf %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr "Antivirus läuft nicht oder nicht aktuell auf %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#, php-format
+msgid "No antivirus found at %s"
+msgstr "Kein Antivirus gefunden unter %s"
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
+
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr "Maschine mit %s installiert an %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Neustes Inventar ist weniger als %s Tage um %s"
+
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Neustes Inventar ist mehr als %s Tage um %s"
+
 #: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
 msgstr ""
@@ -393,6 +393,10 @@ msgstr "Verlauf"
 msgid "Antivirus"
 msgstr "Antivirus"
 
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr "Windows Updates verbergen"
+
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
 #: modules/glpi/includes/panels/os_repartition.inc.php:91
@@ -438,10 +442,6 @@ msgstr "Weitere"
 #: modules/glpi/includes/panels/os_repartition.inc.php:51
 msgid "Other Windows"
 msgstr "Anderes Windows"
-
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
-msgstr "Windows Updates verbergen"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"

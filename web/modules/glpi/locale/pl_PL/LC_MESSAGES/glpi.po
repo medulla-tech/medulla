@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 10:10+0100\n"
-"PO-Revision-Date: 2014-03-17 09:24+0000\n"
+"POT-Creation-Date: 2014-03-20 13:53+0100\n"
+"PO-Revision-Date: 2014-03-20 13:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,43 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
-#, php-format
-msgid "Antivirus status is OK at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
-#, php-format
-msgid "Antivirus is not running or not up-to-date at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
-#, php-format
-msgid "No antivirus found at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createOSStaticGroup.php:52
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr ""
-
-#: modules/glpi/glpi/createOSStaticGroup.php:34
-#, php-format
-msgid "Machine with %s installed at %s"
-msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -343,6 +306,43 @@ msgstr ""
 msgid "Invalid hostname"
 msgstr ""
 
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:30
+#, php-format
+msgid "Antivirus status is OK at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:33
+#, php-format
+msgid "Antivirus is not running or not up-to-date at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:36
+#, php-format
+msgid "No antivirus found at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr ""
+
 #: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
 msgstr ""
@@ -389,6 +389,10 @@ msgstr ""
 msgid "Antivirus"
 msgstr ""
 
+#: modules/glpi/includes/html.php:49
+msgid "Hide Windows Updates"
+msgstr ""
+
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
 #: modules/glpi/includes/panels/os_repartition.inc.php:91
@@ -433,10 +437,6 @@ msgstr ""
 
 #: modules/glpi/includes/panels/os_repartition.inc.php:51
 msgid "Other Windows"
-msgstr ""
-
-#: modules/glpi/includes/html.php:49
-msgid "Hide Windows Updates"
 msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:32

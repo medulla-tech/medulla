@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 10:10+0100\n"
-"PO-Revision-Date: 2014-03-17 09:24+0000\n"
+"POT-Creation-Date: 2014-03-20 13:53+0100\n"
+"PO-Revision-Date: 2014-03-20 13:05+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -176,6 +176,223 @@ msgstr ""
 msgid "Csv export"
 msgstr ""
 
+#: modules/dyngroup/dyngroup/creator.php:129
+msgid "Choose the module you want to query : "
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:222
+msgid "Comparison operator : "
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:235
+msgid "Date"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:238
+#: modules/dyngroup/dyngroup/creator.php:247
+#: modules/dyngroup/dyngroup/creator.php:271
+#: modules/dyngroup/dyngroup/creator.php:279
+#: modules/dyngroup/dyngroup/creator.php:283
+#: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/includes/double.php:36
+msgid "Add"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:273
+#: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
+msgid "Modify"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:276
+#: modules/dyngroup/dyngroup/creator.php:282
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/includes/groups.inc.php:167
+msgid "Yes"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:277
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/includes/groups.inc.php:168
+msgid "No"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:299
+msgid "The request is : "
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:316
+msgid "Go to save step"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:323
+msgid "Identification"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:324
+msgid "Computer name"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:325
+msgid "Hostname of the computer"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:326
+msgid "Description"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:327
+msgid "Description of the computer"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:328
+msgid "Inventory number"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:329
+msgid "Your internal inventory number"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:330
+msgid "Hardware"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:331
+msgid "System type"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:332
+msgid "Laptop, Desktop, Rack Mount Chassis ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:333
+msgid "System manufacturer"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:334
+msgid "Dell, HP, Apple ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:335
+msgid "System model"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:336
+msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:337
+msgid "Location"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:338
+msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:339
+msgid "State"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:340
+msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:341
+msgid "Entity"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:342
+msgid "Organizational structure (automatic assignment)"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:343
+msgid "Software"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:344
+msgid "Operating system"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:345
+msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:346
+msgid "Installed software"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:347
+msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:348
+msgid "Installed software (specific version)"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/creator.php:349
+msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:31
+#: modules/dyngroup/dyngroup/delete_group.php:33
+msgid "Delete imaging group"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:32
+#, php-format
+msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:37
+#: modules/dyngroup/dyngroup/delete_group.php:39
+msgid "Delete group"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:38
+#, php-format
+msgid ""
+"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
+"other group)."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:57
+#, php-format
+msgid "Imaging group %s was successfully deleted"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:60
+#, php-format
+msgid "Group %s was successfully deleted"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/delete_group.php:77
+#: modules/dyngroup/dyngroup/remove_machine.php:58
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:281
+msgid "Cancel"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/details.php:30
+#, php-format
+msgid "%s's details"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/details.php:49
+msgid "Close"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/details.php:52
+msgid "Regenerate"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/details.php:55
+msgid "Hide"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/details.php:57
+msgid "Show"
+msgstr ""
+
 #: modules/dyngroup/dyngroup/display.php:60
 #, php-format
 msgid "Group '%s' content"
@@ -221,19 +438,6 @@ msgstr ""
 msgid "Please choose the type of group you want to create"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/creator.php:276
-#: modules/dyngroup/dyngroup/creator.php:282
-#: modules/dyngroup/includes/groups.inc.php:167
-msgid "Yes"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/creator.php:277
-#: modules/dyngroup/includes/groups.inc.php:168
-msgid "No"
-msgstr ""
-
 #: modules/dyngroup/dyngroup/import_from_file.php:57
 #: modules/dyngroup/includes/groups.inc.php:119
 #: modules/dyngroup/includes/groups.inc.php:123
@@ -270,6 +474,35 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:42
 msgid "Dynamic imaging group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:29
+msgid "All groups"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:30
+msgid "Add a group"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:35
+msgid "Static group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:35
+msgid "Dynamic group:"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/remove_machine.php:48
+msgid "Remove a computer"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/remove_machine.php:54
+#, php-format
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
+msgstr ""
+
+#: modules/dyngroup/dyngroup/remove_machine.php:57
+msgid "Remove Computer"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/save.php:30
@@ -410,245 +643,20 @@ msgstr ""
 msgid "update machine cache : %s machines"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:31
-#: modules/dyngroup/dyngroup/delete_group.php:33
-msgid "Delete imaging group"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:32
-#, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:37
-#: modules/dyngroup/dyngroup/delete_group.php:39
-msgid "Delete group"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:38
-#, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:57
-#, php-format
-msgid "Imaging group %s was successfully deleted"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:60
-#, php-format
-msgid "Group %s was successfully deleted"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:77
-#: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/includes/groups.inc.php:86
-#: modules/dyngroup/includes/groups.inc.php:281
-msgid "Cancel"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/details.php:30
-#, php-format
-msgid "%s's details"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/details.php:49
-msgid "Close"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/details.php:52
-msgid "Regenerate"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/details.php:55
-msgid "Hide"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/details.php:57
-msgid "Show"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/remove_machine.php:48
-msgid "Remove a computer"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/remove_machine.php:54
-#, php-format
-msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/remove_machine.php:57
-msgid "Remove Computer"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/localSidebar.php:29
-msgid "All groups"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/localSidebar.php:30
-msgid "Add a group"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/localSidebar.php:35
-msgid "Static group:"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/localSidebar.php:35
-msgid "Dynamic group:"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:129
-msgid "Choose the module you want to query : "
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:222
-msgid "Comparison operator : "
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:235
-msgid "Date"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:238
-#: modules/dyngroup/dyngroup/creator.php:247
-#: modules/dyngroup/dyngroup/creator.php:271
-#: modules/dyngroup/dyngroup/creator.php:279
-#: modules/dyngroup/dyngroup/creator.php:283
-#: modules/dyngroup/includes/autocomplete.php:29
-#: modules/dyngroup/includes/double.php:36
-msgid "Add"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:273
-#: modules/dyngroup/includes/autocomplete.php:31
-#: modules/dyngroup/includes/double.php:39
-msgid "Modify"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:299
-msgid "The request is : "
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:316
-msgid "Go to save step"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:323
-msgid "Identification"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:324
-msgid "Computer name"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:325
-msgid "Hostname of the computer"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:326
-msgid "Description"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:327
-msgid "Description of the computer"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:328
-msgid "Inventory number"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:329
-msgid "Your internal inventory number"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:330
-msgid "Hardware"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:331
-msgid "System type"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:332
-msgid "Laptop, Desktop, Rack Mount Chassis ..."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:333
-msgid "System manufacturer"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:334
-msgid "Dell, HP, Apple ..."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:335
-msgid "System model"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:336
-msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:337
-msgid "Location"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:338
-msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:339
-msgid "State"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:340
-msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:341
-msgid "Entity"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:342
-msgid "Organizational structure (automatic assignment)"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:343
-msgid "Software"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:344
-msgid "Operating system"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:345
-msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:346
-msgid "Installed software"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:347
-msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:348
-msgid "Installed software (specific version)"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:349
-msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
-msgstr ""
-
 #: modules/dyngroup/includes/autocomplete.php:44
 msgid "Add a value"
 msgstr ""
 
 #: modules/dyngroup/includes/double.php:51
 msgid "->"
+msgstr ""
+
+#: modules/dyngroup/includes/dyngroup.php:437
+msgid "Failed to load some pkgs module"
+msgstr ""
+
+#: modules/dyngroup/includes/dyngroup.php:444
+msgid "Failed to load some msc module"
 msgstr ""
 
 #: modules/dyngroup/includes/groups.inc.php:38
@@ -716,14 +724,6 @@ msgstr ""
 #: modules/dyngroup/includes/request.php:179
 #, php-format
 msgid "%s) Search %s %s %s in module %s"
-msgstr ""
-
-#: modules/dyngroup/includes/dyngroup.php:437
-msgid "Failed to load some pkgs module"
-msgstr ""
-
-#: modules/dyngroup/includes/dyngroup.php:444
-msgid "Failed to load some msc module"
 msgstr ""
 
 #: modules/dyngroup/infoPackage.inc.php:30

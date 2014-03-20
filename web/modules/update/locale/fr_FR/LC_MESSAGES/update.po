@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-17 10:10+0100\n"
+"POT-Creation-Date: 2014-03-20 13:53+0100\n"
 "PO-Revision-Date: 2014-03-17 09:13+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
@@ -19,42 +19,34 @@ msgstr ""
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/update/localSidebar.php:28
-msgid "Update managment"
-msgstr "Gestion des mises à jour"
-
-#: modules/update/update/disableUpdate.php:40
-msgid "Disable this update?"
-msgstr "Désactiver cette mise à jour?"
-
-#: modules/update/update/enableUpdate.php:40
-msgid "Enable this update?"
-msgstr "Activer cette mise à jour?"
-
-#: modules/update/update/sidebar.php:39 modules/update/infoPackage.inc.php:41
-msgid "All updates"
-msgstr "Toutes les mises à jour"
-
-#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
-msgid "Settings"
-msgstr "Paramètres"
-
-#: modules/update/update/viewUpdates.php:35
 #: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:35
 msgid "Update manager"
 msgstr "Gestionnaire de mises à jour"
 
-#: modules/update/update/viewUpdates.php:46
-msgid "Available"
-msgstr "Disponible"
+#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
+msgid "Updates"
+msgstr "Mises à jour"
 
-#: modules/update/update/viewUpdates.php:47
-msgid "Enabled"
-msgstr "Activée"
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
+msgid "All updates"
+msgstr "Toutes les mises à jour"
 
-#: modules/update/update/viewUpdates.php:48
-msgid "Disabled"
-msgstr "Désactivée"
+#: modules/update/infoPackage.inc.php:47
+msgid "Updates list"
+msgstr "Liste de mises à jour"
+
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr "Activer la mise à jour"
+
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr "Désactiver la mise à jour"
+
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
+msgid "Settings"
+msgstr "Paramètres"
 
 #: modules/update/update/ajaxUpdates.php:57
 msgid "No entry found"
@@ -92,6 +84,18 @@ msgstr "Activer les maj"
 msgid "Disable selected updates"
 msgstr "Désactiver les maj"
 
+#: modules/update/update/disableUpdate.php:40
+msgid "Disable this update?"
+msgstr "Désactiver cette mise à jour?"
+
+#: modules/update/update/enableUpdate.php:40
+msgid "Enable this update?"
+msgstr "Activer cette mise à jour?"
+
+#: modules/update/update/localSidebar.php:28
+msgid "Update managment"
+msgstr "Gestion des mises à jour"
+
 #: modules/update/update/settings.php:57
 msgid "Update settings"
 msgstr "Paramètres des mises à jour"
@@ -108,20 +112,16 @@ msgstr "Déploiement des mises à jour"
 msgid "Force now"
 msgstr "Appliquer maintenant"
 
-#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
-msgid "Updates"
-msgstr "Mises à jour"
+#: modules/update/update/viewUpdates.php:46
+msgid "Available"
+msgstr "Disponible"
 
-#: modules/update/infoPackage.inc.php:47
-msgid "Updates list"
-msgstr "Liste de mises à jour"
+#: modules/update/update/viewUpdates.php:47
+msgid "Enabled"
+msgstr "Activée"
 
-#: modules/update/infoPackage.inc.php:51
-msgid "Enable update"
-msgstr "Activer la mise à jour"
-
-#: modules/update/infoPackage.inc.php:55
-msgid "Disable update"
-msgstr "Désactiver la mise à jour"
+#: modules/update/update/viewUpdates.php:48
+msgid "Disabled"
+msgstr "Désactivée"
 
 
