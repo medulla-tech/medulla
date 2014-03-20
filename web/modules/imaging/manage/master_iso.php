@@ -70,10 +70,13 @@ if ($_POST) {
                     several files of your media size will be created.</p>
             </td></tr>
         <tr><td><?php echo _T("Media size", "imaging"); ?></td><td>
-                <select name="media" />
+                <select name="media">
         <option value="681574400">CD (650 Mo)</option>
         <option value="734003200">CD (700 Mo)</option>
-        <option value="5046586572">DVD (4.7 Go)</option>
+        <option value="4617089843">DVD (4.3 GB)</option>
+        <option value="8375186227">DVD-DL (7.8 GB)</option>
+        <option value="24696061952">Blu-ray (25 GB)</option>
+        <option value="49392123904">Blu-ray (50 GB)</option>
         </select>
         </td></tr></table>
     <br/><br/>
