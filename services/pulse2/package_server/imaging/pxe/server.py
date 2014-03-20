@@ -107,7 +107,7 @@ class ProcessPacket :
         return result
 
 
-    def on_exec_error(failure, **kwargs):
+    def on_exec_error(self, failure):
         logging.getLogger().warn("PXE Proxy: send response error: %s" % str(failure))
         return failure
 
