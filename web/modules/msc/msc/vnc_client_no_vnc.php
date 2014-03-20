@@ -171,6 +171,8 @@ if ($proxyActive) {
                            "jsunzip.js", "rfb.js"]);
 
         var rfb;
+        var MAX_CONNECTION_ATTEMPS = 5;
+        var connection_attemps = 0;
 
         function passwordRequired(rfb) {
             var msg;
@@ -210,6 +212,17 @@ if ($proxyActive) {
 
             if (typeof(msg) !== 'undefined') {
                 sb.setAttribute("class", "noVNC_status_" + level);
+                if (msg.search('1006') != -1) {
+                    // 1006 message: unable to connect
+                    
+                    // Retrying: New connection attempt
+                    if (connection_attemps <= MAX_CONNECTION_ATTEMPS) {
+                        setTimeout(window.auto_connect, 3000);
+                        s.innerHTML = <?php print json_encode(_T('Connecting ...', 'msc')); ?>;
+                        return;
+                    }
+                    
+                }
                 msg = msg.replace('(unencrypted)', <?php print json_encode('('. _T('through SSH tunnel', 'msc') . ')'); ?>);
                 msg = msg.replace('Failed to connect to server', <?php print json_encode(_T('Connection failed', 'msc')); ?>);
                 msg = msg.replace('Authenticating using scheme: 1', <?php print json_encode(_T('Waiting for user approval', 'msc')); ?>);
@@ -222,15 +235,26 @@ if ($proxyActive) {
                 s.innerHTML = msg;
             }
         }
+        
+        function windowResize() {
+            var contentWidth = $('canvas').width()+10;
+            var contentHeight = $('canvas').height()+120;
+            window.resizeTo(contentWidth,contentHeight);
 
-        window.onscriptsload = function () {
-            var host, port, password, path, token;
+            if (contentHeight < 300)
+                setTimeout(windowResize, 1000);
 
+        }
+        
+        $(function(){
+            
+            
             $D('sendCtrlAltDelButton').style.display = "inline";
             $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
 
 
-        $(function(){
+            WebUtil.init_logging(WebUtil.getQueryVar('logging', 'warn'));
+            
 	    // post clipboard button
 	    $('#toClipboard').click(function(){
 		var clipText = prompt('Enter text to send to machine clipboard:');
@@ -242,11 +266,17 @@ if ($proxyActive) {
             window.onbeforeunload = function() {
             	rfb.disconnect();
 	    };
+            
+            jQuery('canvas').resize(windowResize);
 
         });
+        
+        
+        window.auto_connect = function () {
+            var host, port, password, path, token;
 
-            WebUtil.init_logging(WebUtil.getQueryVar('logging', 'warn'));
-            document.title = unescape(WebUtil.getQueryVar('title', 'noVNC'));
+            connection_attemps++;
+            
             // By default, use the host and port of server that served this file
             host = '<?php print $host; ?>';
             port = '<?php print $port; ?>';
@@ -293,21 +323,18 @@ if ($proxyActive) {
             rfb.set_onDesktopName(function(rfb, name){
                 document.title = name;
             });
+            
+            window.rfb = rfb;
 
-	    function windowResize() {
-		var contentWidth = $('canvas').width()+10;
-		var contentHeight = $('canvas').height()+120;
-		window.resizeTo(contentWidth,contentHeight);
-
-		if (contentHeight < 300)
-		    setTimeout(windowResize, 1000);
-
-	    }
 
 	    setTimeout(windowResize, 1000);
-	    jQuery('canvas').resize(windowResize);
 
         };
+        
+        window.onscriptsload = function() {
+            auto_connect();
+        };
+        
         </script>
 
     </body>
