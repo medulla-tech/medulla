@@ -29,6 +29,7 @@ import mmctools
 
 import ldap
 import re
+from os.path import isfile
 from ConfigParser import ConfigParser, NoOptionError, NoSectionError, InterpolationError
 
 
@@ -115,6 +116,9 @@ class PluginConfig(MMCConfigParser):
         self.setDefault()
         fid = file(self.conffile, "r")
         self.readfp(fid, self.conffile)
+        if isfile(self.conffile + '.local'):
+            fid = file(self.conffile + '.local', "r")
+            self.readfp(fid, self.conffile)
         self.readConf()
 
     def readConf(self):

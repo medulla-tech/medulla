@@ -49,6 +49,7 @@ class DatabaseConfig(Singleton):
         # Load configuration file
         self.cp = MMCConfigParser()
         self.cp.read(config_file)
+        self.cp.read(config_file + '.local')
 
         if self.cp.has_section(self.dbsection):
             if self.cp.has_option(self.dbsection, "dbdriver"):
