@@ -177,6 +177,7 @@ class LauncherConfig(pulse2.utils.Singleton):
         """
         self.cp = pulse2.utils.Pulse2ConfigParser()
         self.cp.read(config_file)
+        self.cp.read(config_file + '.local')
 
         if self.cp.has_option("daemon", "user"):
             self.daemon_user = pwd.getpwnam(self.cp.get("daemon", "user"))[2]

@@ -134,6 +134,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         else:
             self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
+        self.cp.read(config_file + '.local')
 
         if self.cp.has_option("handler_hand01", "args"):
             self.logdir = os.path.dirname(re.compile("['|\"]").split(self.cp.get("handler_hand01", "args"))[1])
@@ -148,6 +149,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             else:
                 self.cp = ConfigParser.ConfigParser()
             self.cp.read(config_file)
+            self.cp.read(config_file + '.local')
 
         if self.cp.has_option("main", "bind"):  # TODO remove in a future version
             logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
