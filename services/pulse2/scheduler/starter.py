@@ -124,4 +124,8 @@ class LoopingStarter(object):
 	""" Looping call fallback """
         self.logger.error("Loop call starting failed: %s" % str(failure))
 
+    def cancel(self):
+        """ Interrupts immediatelly the looping calls """
+        self.loop.stop()
+
 

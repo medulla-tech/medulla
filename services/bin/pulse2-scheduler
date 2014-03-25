@@ -35,7 +35,7 @@ from twisted.internet import reactor
 from twisted.internet.defer import maybeDeferred
 from twisted.internet.task import LoopingCall, deferLater
 
- 
+
 # Filter SA warns to prevent trivial (hex/dec notation) error printing on STDOUT
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -50,7 +50,7 @@ from pulse2.scheduler.control import MscDispatcher
 from pulse2.scheduler.phases import installed_phases
 from pulse2.scheduler.utils import SpawnProxy
 from pulse2.scheduler.gateway import SchedulerGatewayFactory
- 
+
 
 import logging
 import logging.config
@@ -68,15 +68,18 @@ class App :
     socket_file = None
     proxy_pid = None
 
+    # mainloop caller
+    loop = None
+
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger()
         self.socket_file = self.config.scheduler_proxy_socket_path
- 
-        reactor.addSystemEventTrigger("before", 
-                                      "shutdown", 
+
+        reactor.addSystemEventTrigger("before",
+                                      "shutdown",
                                        self.clean_up)
- 
+
     def setup(self):
         d = maybeDeferred(self.start_unix_socket)
         d.addCallback(self.initialize_dispatcher)
@@ -87,7 +90,7 @@ class App :
         self.logger.error("scheduler setup failed: %s" % str(failure))
         reactor.stop()
         return failure
- 
+
     def start(self):
         d = self.setup()
         d.addCallback(self.spawn_proxy)
@@ -96,15 +99,15 @@ class App :
         return d
 
     def _schedule_dispatcher(self, reason):
-        return deferLater(reactor, 
-                          self.config.initial_wait, 
+        return deferLater(reactor,
+                          self.config.initial_wait,
                           self.schedule_dispatcher)
 
     def eb_start(self, failure):
         self.logger.error("scheduler start failed: %s" % str(failure))
         reactor.stop()
         return failure
- 
+
 
 
     def start_unix_socket(self):
@@ -132,12 +135,12 @@ class App :
             self.logger.error("Dispatcher init error: %s" % str(failure))
             reactor.stop()
         return d
-    
+
     def schedule_dispatcher(self):
         """ """
         self.logger.info("Starting the main dispatcher ...")
-        loop = LoopingCall(MscDispatcher().mainloop)
-        d = loop.start(self.config.awake_time, now=True)
+        self.loop = LoopingCall(MscDispatcher().mainloop)
+        d = self.loop.start(self.config.awake_time, now=True)
         d.addErrback(self.eb_loop)
         return d
 
@@ -162,15 +165,19 @@ class App :
         except Exception, e:
             self.logger.error("Start of XMLRPC Proxy failed: %s" % str(e))
             return False
- 
-        
+
+
 
     def clean_up(self):
         """ Cleanning up routine called before the shutdown. """
         self.logger.info('scheduler %s: Shutting down and cleaning up' % (self.config.name))
 
+        # dispatcher invalidate
+        MscDispatcher().cancel()
+        # mainloop invalidate
+        self.loop.stop()
 
-        # attempt to stop the unix socket listening    
+        # attempt to stop the unix socket listening
         if self.listen_unix :
             d = self.listen_unix.stopListening()
             @d.addCallback
@@ -179,7 +186,7 @@ class App :
                 if os.path.exists(self.socket_file):
                     self.logger.info("Unix socket: unlinking the file")
                     os.unlink(self.socket_file)
-            # attempt to stop the scheduler-proxy 
+            # attempt to stop the scheduler-proxy
             d.addCallback(self.close_proxy)
 
             @d.addCallback
@@ -252,7 +259,7 @@ def startService(config):
     pref_ntw_display = [(ip +"/"+ mask) for ip, mask in config.preferred_network]
     logger.info("Preferred network is set to %s" % str(pref_ntw_display))
 
- 
+
     App(config).start()
 
     logger.info('scheduler %s: setting threadpool max size to %d' % (config.name, config.max_threads))
@@ -266,13 +273,13 @@ def startService(config):
 def main():
     parser = optparse.OptionParser()
 
-    parser.add_option("-c", 
-                      "--config-file", 
-                      help='path to the config file', 
+    parser.add_option("-c",
+                      "--config-file",
+                      help='path to the config file',
                       default=mmcconfdir + '/pulse2/scheduler/scheduler.ini')
 
-    parser.add_option("-d", "--debug", 
-            dest="debug", 
+    parser.add_option("-d", "--debug",
+            dest="debug",
             action="store_true",
             default=False,
             help='verbose debug mode')
@@ -288,7 +295,7 @@ def main():
     logger.info("Scheduler version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
     if options.debug :
-        from mmc.core.log import ColoredFormatter 
+        from mmc.core.log import ColoredFormatter
         hdlr2 = logging.StreamHandler()
         hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
         logger.addHandler(hdlr2)

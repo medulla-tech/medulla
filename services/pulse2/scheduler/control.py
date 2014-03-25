@@ -349,10 +349,14 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         """
         dl = []
         for id in ids :
+            if self.kill_all:
+                self.logger.debug("Dispatcher killed")
+                return DeferredList(dl)
+
             if any([True for c in self._circuits if c.id == id]):
                 circuit = self.get(id)
                 if circuit.initialized :
-		    deferToThread(circuit.run)
+                    deferToThread(circuit.run)
                 else :
                     circuit.install_dispatcher(self)
                     d = circuit.setup()

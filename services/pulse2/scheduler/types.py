@@ -1019,6 +1019,8 @@ class MscContainer (object):
     # a provider to collect the commands statistics
     statistics = None
 
+    kill_all = False
+
     @property
     def ready_candidats_to_cleanup(self):
         """ Shortcut to expired circuits according to cleanup conditions """
@@ -1061,6 +1063,13 @@ class MscContainer (object):
         """
         self.checkout_command(circuit.cmd_id)
         self._circuits.remove(circuit)
+
+
+    def cancel(self):
+        """ Stops all the running loops and other traitements """
+        self.logger.info("Stopping the dispatcher...")
+        self.loop_starter.cancel()
+        self.kill_all = True
 
     @property
     def max_slots(self):
