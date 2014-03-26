@@ -111,7 +111,7 @@ input[type="color"],
 textarea,
 select,
 .uneditable-input {
-  width: 206px;
+  width: auto;
 }
 textarea {
   height: auto;
@@ -344,7 +344,7 @@ input.span4, textarea.span4, .uneditable-input.span4 {
   width: 286px;
 }
 input.span3, textarea.span3, .uneditable-input.span3 {
-  width: 206px;
+  width: auto;
 }
 input.span2, textarea.span2, .uneditable-input.span2 {
   width: 126px;
