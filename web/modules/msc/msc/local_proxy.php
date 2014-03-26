@@ -90,8 +90,8 @@ $num->display(array('value' => $this->proxy_number));
      </td>
      <td style="border: none;">
       <div>
-       <input type="image" name="bdelmachine" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
-       <input type="image" name="baddmachine" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
+       <input type="image" name="baddmachine" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/><br/>
+       <input type="image" name="bdelmachine" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
       </div>
      </td>
      <td style="border: none;">
