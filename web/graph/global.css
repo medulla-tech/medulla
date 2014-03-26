@@ -252,6 +252,7 @@ p {
 }
 
 #sidebar ul li a {
+    word-wrap: break-word;
     font-size: 10px;
     text-decoration: none;
     padding: 12px 8px 12px 61px;
