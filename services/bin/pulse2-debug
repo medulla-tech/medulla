@@ -53,6 +53,7 @@ DEFER = None
 rpc_proxy = None
 transport = None
 LOGSNIFFER = None
+SCRIPT_MODE = False
 
 # ====================================================================================
 
@@ -718,46 +719,51 @@ class xmlrpcModule():
                 print "Lost connection, reconnecting ..."
                 return
 
+            # ============= PRINTING RESULT ======================
 
-            if isinstance(result, dict) and 'listinfo' in result:
-                params = args[0]
-
-                # Calculating delta
-                delta = getheight() - 4
-
-                if not 'min' in params:
-                    params['min'] = 0
-                if not 'max' in params:
-                    params['max'] = delta
-
-                if len(result['data']) != 0:
-                    # Resetting min and max et loop
-                    printListInfo(result)
-                    key = getch()
-                    # TODO: r refresh , f filter
-                    if key == LEFT:
-                        params['min'] -= delta
-                        params['max'] -= delta
-                    if key == RIGHT:
-                        params['min'] += delta
-                        params['max'] += delta
-                    # Ensure that min, max are in limits
-                    params['min'] = min(result['count']-delta, params['min'])
-                    params['min'] = max(0, params['min'])
-
-                    params['max'] = max(delta, params['max'])
-                    params['max'] = min(result['count'], params['max'])
-
-                    # If q is pressed, we quit loop => prompt
-                    if not('q' in key or 'Q' in key):
-                        xmlCallfunc(params)
-            else:
-                s = pprint.pformat(result)
-                # If result is too larger paginate it
-                if len(s.split('\n')) > (getheight() - 4):
-                    textpager(s)
+            # If SCRIPT_MODE is activated, skip printing
+            if not SCRIPT_MODE:
+                if isinstance(result, dict) and 'listinfo' in result:
+                    params = args[0]
+    
+                    # Calculating delta
+                    delta = getheight() - 4
+    
+                    if not 'min' in params:
+                        params['min'] = 0
+                    if not 'max' in params:
+                        params['max'] = delta
+    
+                    if len(result['data']) != 0:
+                        # Resetting min and max et loop
+                        printListInfo(result)
+                        key = getch()
+                        # TODO: r refresh , f filter
+                        if key == LEFT:
+                            params['min'] -= delta
+                            params['max'] -= delta
+                        if key == RIGHT:
+                            params['min'] += delta
+                            params['max'] += delta
+                        # Ensure that min, max are in limits
+                        params['min'] = min(result['count']-delta, params['min'])
+                        params['min'] = max(0, params['min'])
+    
+                        params['max'] = max(delta, params['max'])
+                        params['max'] = min(result['count'], params['max'])
+    
+                        # If q is pressed, we quit loop => prompt
+                        if not('q' in key or 'Q' in key):
+                            xmlCallfunc(params)
                 else:
-                    print s
+                    s = pprint.pformat(result)
+                    # If result is too larger paginate it
+                    if len(s.split('\n')) > (getheight() - 4):
+                        textpager(s)
+                    else:
+                        print s
+    
+            # =======================================================
 
             return result
 
@@ -822,7 +828,9 @@ if __name__ == "__main__" :
     parser = argparse.ArgumentParser()
     
     parser.add_argument("-c", "--command", help="Run the specified code")
-    parser.add_argument("-f", "--file", help="Load an run a script file")
+    #parser.add_argument("-f", "--file", help="Load an run a script file")
+    parser.add_argument('file', type=str, nargs='?',
+                         help='Load and run a script file')
 
     # Parsing args
     args = parser.parse_args()
@@ -859,9 +867,12 @@ if __name__ == "__main__" :
 
     if args.file:
         try:
+            print args.file
+            # Enabling script mode
+            SCRIPT_MODE = True
+            # Reading and executing script file
             f = open(args.file, 'r')
-            for line in f.readlines():
-                exec(line, CONSOLE_VARS)
+            exec(f.read(), CONSOLE_VARS)
             sys.exit(0)
         except IOError:
             print 'Error while reading script file'
