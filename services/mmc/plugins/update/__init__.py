@@ -21,10 +21,12 @@
 Update plugin for the MMC agent
 """
 import logging
+import subprocess
+from time import time
 
 logger = logging.getLogger()
 
-from mmc.support.mmctools import SecurityContext
+from mmc.support.mmctools import SecurityContext, RpcProxyI
 from mmc.core.tasks import TaskManager
 from mmc.plugins.update.config import updateConfig
 from mmc.plugins.update.database import updateDatabase
@@ -34,6 +36,8 @@ from mmc.plugins.base.computers import ComputerManager
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:1:0"
+last_update_check_ts = None
+available_updates = None
 
 def getApiVersion(): return APIVERSION
 
@@ -128,3 +132,88 @@ def create_update_commands():
             create_update_command(ctx, [uuid], update_list)
     return True
 
+
+class OSHandler(object):
+    
+    def runInShell(self, cmd):
+        process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        out, err = process.communicate()
+        return out.strip(), err.strip(), process.returncode
+
+class DebianHandler(OSHandler):
+    
+    def getPackageTitle(self, pkg):
+        cmd = "LANG=C apt-cache show %s|awk '/^Description/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'|head -1" % pkg
+        out, err, ec = self.runInShell(cmd)
+        return out if ec == 0 and out else pkg
+    
+    def getCandidateVersion(self, pkg):
+        cmd = "LANG=C apt-cache policy %s|awk '/Candidate/ { print $2 }'" % pkg
+        out, err, ec = self.runInShell(cmd)
+        return out if ec == 0 and out else 'N/A'
+    
+    def getAvailableUpdates(self):
+        
+        global last_update_check_ts, available_updates
+        # If last checking is least than 4 hours, return cached value
+        logger.fatal(last_update_check_ts)
+        if last_update_check_ts and (time() - last_update_check_ts) < 14400:
+            return available_updates
+        
+        #ctx = self.currentContext
+        # Check if user is root
+        #logging.getLogger().fatal(ctx.userid)
+        # ============== apt-get update ====================
+        out, err, ec = self.runInShell('apt-get update')
+        # Update error occured
+        if ec != 0:
+            logging.getLogger().error(out)
+            logging.getLogger().error(err)
+            return []
+        # ============ apt-get dist-upgrade =====================
+        # get available updates
+        cmd = "LANG=C apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }'"
+        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse2' -e '^mmc-agent$'"
+        cmd += pulse_packages_filter
+        
+        out, err, ec = self.runInShell(cmd)
+        
+        if ec != 0:
+            logging.getLogger().error(out)
+            logging.getLogger().error(err)
+            return []
+        
+        packages = out.strip().split('\n')
+        
+        result = []
+        
+        for pkg in packages:
+            result.append({
+                'name': pkg,
+                'title': self.getPackageTitle(pkg),
+                'version': self.getCandidateVersion(pkg)
+            })
+            
+        available_updates = result
+        last_update_check_ts = time()
+            
+        return result
+    
+    def installUpdates(self):
+        
+        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse2' -e '^mmc-agent$'"
+        install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
+        
+        # Running this command with no pipe
+        subprocess.call(install_cmd, shell=True)
+    
+
+class RpcProxy(RpcProxyI):
+       
+    def getAvailableUpdates(self):
+        return DebianHandler().getAvailableUpdates()
+    
+    def installUpdates(self):
+        return DebianHandler().installUpdates()
+    
+ 
