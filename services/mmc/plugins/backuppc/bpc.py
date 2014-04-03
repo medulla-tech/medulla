@@ -766,6 +766,8 @@ def build_fileindex(host):
                 continue
             # If filename is . or .. , we pass
             if line[37:].strip() in ['.' ,'..']: continue
+            # XferLog can be malformed, so this bullshit code below can fail
+            if '4294967295' in line: continue
             # extracting info
             file_index[host][backupnum][current_share]['actions'].append(line[2:8].strip())
             file_index[host][backupnum][current_share]['types'].append(line[9])
