@@ -1120,9 +1120,10 @@ class SetupApp(object):
             for (sec_name, section) in conf.config.items():
                 if sec_name in self.orig_confs[path].config:
                     for (opt_name, value) in section.iteritems():
-                        if str(value) == str(self.orig_confs[path].config[sec_name][opt_name]):
-                            # remove option having the same value
-                            del self.confs[path].config[sec_name][opt_name]
+                        if opt_name in self.orig_confs[path].config[sec_name]:
+                            if str(value) == str(self.orig_confs[path].config[sec_name][opt_name]):
+                                # remove option having the same value
+                                del self.confs[path].config[sec_name][opt_name]
                 if len(self.confs[path].config[sec_name]) == 0:
                     # empty section remove
                     del self.confs[path].config[sec_name]
