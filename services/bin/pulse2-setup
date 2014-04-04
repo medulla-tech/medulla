@@ -30,6 +30,7 @@ import string
 import uuid
 import readline   # pyflakes.ignore
 import shutil
+from copy import deepcopy
 from random import choice
 from subprocess import call
 from optparse import OptionParser
@@ -401,15 +402,28 @@ class Pulse2ConfigFile(object):
         # Use example configuration
         else:
             dir_path = examplesdir
+
         fpath = os.path.join(dir_path, self.path)
+        loc_path = os.path.join(dir_path, self.path + ".local")
+
+        if os.path.exists(loc_path):
+            log.debug("Load config file %s" % loc_path)
+            try:
+                self.config = ConfigObj(loc_path, list_values=False, interpolation=False)
+            except Exception, e:
+                log.error("Error while parsing file: %s" % loc_path)
+                log.error(str(e))
+                sys.exit(1)
+
         if os.path.exists(fpath):
             log.debug("Load config file %s" % fpath)
             try:
-                self.config = ConfigObj(fpath, list_values=False)
+                self.config = ConfigObj(fpath, list_values=False, interpolation=False)
             except Exception, e:
                 log.error("Error while parsing file: %s" % fpath)
                 log.error(str(e))
                 sys.exit(1)
+
 
         elif os.path.exists(fpath + '.gz'):
             fpath = fpath + '.gz'
@@ -433,6 +447,7 @@ class Pulse2ConfigFile(object):
             self.config[name] = section
 
     def write_path(self, path):
+        path = "%s.local" % path
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
@@ -553,6 +568,8 @@ class UUIDResolverConfig(Pulse2ConfigFile):
 
 class SetupApp(object):
     defaults = {}
+    confs = {}
+    orig_confs = {}
 
     def __init__(self, options):
         self.config = {}
@@ -582,6 +599,9 @@ class SetupApp(object):
         for clsname in Pulse2ConfigFile.clsnames:
             cls = globals()[clsname]
             self.confs[cls.path] = cls(self.options['reset_conf'])
+
+        self.orig_confs = deepcopy(self.confs)
+
 
         # Creates Services objects
         self.services = []
@@ -1093,10 +1113,30 @@ class SetupApp(object):
         else :
             log.error("BackupPC server is not probably installed")
 
+    def apply_conf_diff(self):
+        """Removes the default values and remaining options will be placed in .local copy """
+
+        for (path, conf) in self.confs.items():
+            for (sec_name, section) in conf.config.items():
+                if sec_name in self.orig_confs[path].config:
+                    for (opt_name, value) in section.iteritems():
+                        if str(value) == str(self.orig_confs[path].config[sec_name][opt_name]):
+                            # remove option having the same value
+                            del self.confs[path].config[sec_name][opt_name]
+                if len(self.confs[path].config[sec_name]) == 0:
+                    # empty section remove
+                    del self.confs[path].config[sec_name]
+
+
     def commit(self):
         """ Write down all config files
         """
+        self.apply_conf_diff()
+
         for (path, conf) in self.confs.iteritems():
+            if len(conf.config) == 0:
+                # if empty local config do not generate
+                continue
             conf.commit()
 
     def run(self):
