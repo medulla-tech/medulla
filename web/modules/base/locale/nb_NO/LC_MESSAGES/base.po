@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-03-26 15:04+0100\n"
+"POT-Creation-Date: 2014-04-03 16:35+0200\n"
 "PO-Revision-Date: 2014-01-27 16:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,8 +78,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:233 includes/FormGenerator.php:618
-#: includes/PageGenerator.php:2188
+#: graph/header.inc.php:233 includes/PageGenerator.php:2188
+#: includes/FormGenerator.php:618
 msgid "Close"
 msgstr ""
 
@@ -207,16 +207,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:619 includes/PageGenerator.php:871
-#: includes/PageGenerator.php:1118
+#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:619
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Forrige"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:885
-#: includes/PageGenerator.php:1128
+#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:620
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -279,8 +279,61 @@ msgid ""
 "this error."
 msgstr ""
 
+#: includes/acl.inc.php:127
+msgid "You do not have required rights"
+msgstr "Du har ikke tilstrekkelig rettigheter"
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+msgid "to"
+msgstr "til"
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Totalt <b>%s </b>"
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+msgid "page"
+msgstr "side"
+
+#: includes/PageGenerator.php:905
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:978
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1406
+msgid "No item available"
+msgstr ""
+
+#: includes/PageGenerator.php:1594
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
+msgid "Confirm"
+msgstr "Bekreft"
+
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: includes/PageGenerator.php:2813
+msgid "Select all"
+msgstr "Velg alt"
+
+#: includes/PageGenerator.php:2813
+msgid "Unselect all"
+msgstr ""
+
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
-#: includes/FormGenerator.php:728 includes/FormGenerator.php:855
+#: includes/FormGenerator.php:728 includes/FormGenerator.php:858
 msgid "unavailable"
 msgstr "utilgjengelig"
 
@@ -421,68 +474,15 @@ msgstr ""
 msgid "Add"
 msgstr "Legg til"
 
-#: includes/FormGenerator.php:992
+#: includes/FormGenerator.php:995
 msgid "Toggle selection"
 msgstr ""
 
-#: includes/FormGenerator.php:1131 modules/base/groups/ajaxFilter.php:48
+#: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "Slett"
-
-#: includes/acl.inc.php:127
-msgid "You do not have required rights"
-msgstr "Du har ikke tilstrekkelig rettigheter"
-
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
-msgid "to"
-msgstr "til"
-
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Totalt <b>%s </b>"
-
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
-msgid "page"
-msgstr "side"
-
-#: includes/PageGenerator.php:905
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:978
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1406
-msgid "No item available"
-msgstr ""
-
-#: includes/PageGenerator.php:1594
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
-#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:117
-msgid "Confirm"
-msgstr "Bekreft"
-
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: includes/PageGenerator.php:2813
-msgid "Select all"
-msgstr "Velg alt"
-
-#: includes/PageGenerator.php:2813
-msgid "Unselect all"
-msgstr ""
 
 #: logout/index.php:50
 msgid "Your session will be closed"
