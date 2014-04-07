@@ -382,6 +382,7 @@ class Pulse2ConfigFile(object):
     mode = stat.S_IRUSR | stat.S_IWUSR | stat.S_IRGRP | stat.S_IROTH
     # ConfigObj object
     config = None
+    local_config = None
 
     def __init__(self, reset=False):
         if self.defaults:
@@ -409,7 +410,7 @@ class Pulse2ConfigFile(object):
         if os.path.exists(loc_path):
             log.debug("Load config file %s" % loc_path)
             try:
-                self.config = ConfigObj(loc_path, list_values=False, interpolation=False)
+                self.local_config = ConfigObj(loc_path, list_values=False, interpolation=False)
             except Exception, e:
                 log.error("Error while parsing file: %s" % loc_path)
                 log.error(str(e))
@@ -431,18 +432,37 @@ class Pulse2ConfigFile(object):
             fh = gzip.open(fpath, 'rb')
             config_string = fh.read()
             fh.close()
-            self.config = ConfigObj(StringIO(config_string), list_values=False)
+            self.config = ConfigObj(StringIO(config_string), list_values=False, interpolation=False)
             self.config.filename = fpath
         else:
             log.debug("No such file %s" % fpath)
             if not current:
                 fpath = os.path.join(mmcconfdir, self.path)
                 log.debug("Fallback on current configuration %s" % fpath)
-            self.config = ConfigObj(fpath, list_values=False)
+            self.config = ConfigObj(fpath, list_values=False, interpolation=False)
+
+        if self.local_config:
+            self._override_by_local()
+
+    def _override_by_local(self):
+        """ .local defaults overriding """
+        for sec_name, section in self.config.items():
+            if sec_name in self.local_config :
+                for opt_name, option in section.items():
+                    if not opt_name in self.local_config[sec_name]:
+                        continue
+                    if str(option) != str(self.local_config[sec_name][opt_name]):
+                        log.debug("[%s] overriding %s.%s by local value(%s)" % (self.path,
+                                                                                sec_name,
+                                                                                opt_name,
+                                                                                self.local_config[sec_name][opt_name]
+                                                                                ))
+                        self.config[sec_name][opt_name] = self.local_config[sec_name][opt_name]
+
 
     def _populate(self, d):
         if not self.config:
-            self.config = ConfigObj(list_values=False)
+            self.config = ConfigObj(list_values=False, interpolation=False)
         for name, section in d.iteritems():
             self.config[name] = section
 
