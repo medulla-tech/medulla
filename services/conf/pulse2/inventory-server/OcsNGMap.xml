@@ -95,6 +95,7 @@
 		<MappedField from="IPMASK" to="SubnetMask" />
 		<MappedField from="IPGATEWAY" to="Gateway" />
 		<MappedField from="IPDHCP" to="DNS" />
+		<MappedField from="VIRTUALDEV" to="Virtual" />
 
 	</MappedObject>
 
