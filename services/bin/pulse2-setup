@@ -34,7 +34,7 @@ from copy import deepcopy
 from random import choice
 from subprocess import call
 from optparse import OptionParser
-from configobj import ConfigObj
+from configobj import ConfigObj, MissingInterpolationOption
 import gzip
 from StringIO import StringIO
 import sqlalchemy as sa
@@ -365,6 +365,66 @@ class SrvPkgServer(Service):
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
+
+def apply_conf_diff(origin, current, only_override=False):
+    """
+    Removes or overrides the default values and remaining options.
+
+    @param origin: original config instance
+    @type origin: ConfigObj
+
+    @param current: current or local config instance
+    @type current: ConfigObj
+
+    @param only_override: if True, returns the origin overriden by current;
+                          if False, returns a diff overriden by current
+    @type only_override: bool
+
+    @return: overriden conf instance (complete or diff)
+    @rtype: ConfigObj
+    """
+
+    for (sec_name, section) in current.items():
+        if sec_name in origin:
+            options_to_delete = []
+            for opt_name in section:
+                try:
+                    value = current[sec_name].get(opt_name)
+
+                except MissingInterpolationOption, e:
+                    current.interpolation = False
+                    value = current[sec_name].get(opt_name)
+                    current.interpolation = True
+
+                if opt_name in origin[sec_name]:
+                    try:
+                        orig_value = origin[sec_name].get(opt_name)
+                    except MissingInterpolationOption, e:
+
+                        origin.interpolation = False
+                        if only_override:
+                            orig_value = value
+                        else:
+                            orig_value = origin[sec_name].get(opt_name)
+                        origin.interpolation = True
+
+                    if str(value) == str(orig_value):
+                        if not only_override:
+                            options_to_delete.append(opt_name)
+            if not only_override:
+                for opt_name in options_to_delete:
+                    del current[sec_name][opt_name]
+
+        if len(current[sec_name]) == 0:
+            # empty section remove
+            del current[sec_name]
+
+    if only_override:
+        return origin
+    else:
+        return current
+
+
 class Pulse2ConfigFile(object):
     """ Values are setted that way:
     - load the config file
@@ -410,7 +470,7 @@ class Pulse2ConfigFile(object):
         if os.path.exists(loc_path):
             log.debug("Load config file %s" % loc_path)
             try:
-                self.local_config = ConfigObj(loc_path, list_values=False, interpolation=False)
+                self.local_config = ConfigObj(loc_path, list_values=False)
             except Exception, e:
                 log.error("Error while parsing file: %s" % loc_path)
                 log.error(str(e))
@@ -419,7 +479,7 @@ class Pulse2ConfigFile(object):
         if os.path.exists(fpath):
             log.debug("Load config file %s" % fpath)
             try:
-                self.config = ConfigObj(fpath, list_values=False, interpolation=False)
+                self.config = ConfigObj(fpath, list_values=False)
             except Exception, e:
                 log.error("Error while parsing file: %s" % fpath)
                 log.error(str(e))
@@ -432,37 +492,22 @@ class Pulse2ConfigFile(object):
             fh = gzip.open(fpath, 'rb')
             config_string = fh.read()
             fh.close()
-            self.config = ConfigObj(StringIO(config_string), list_values=False, interpolation=False)
+            self.config = ConfigObj(StringIO(config_string), list_values=False)
             self.config.filename = fpath
         else:
             log.debug("No such file %s" % fpath)
             if not current:
                 fpath = os.path.join(mmcconfdir, self.path)
                 log.debug("Fallback on current configuration %s" % fpath)
-            self.config = ConfigObj(fpath, list_values=False, interpolation=False)
+            self.config = ConfigObj(fpath, list_values=False)
 
         if self.local_config:
-            self._override_by_local()
-
-    def _override_by_local(self):
-        """ .local defaults overriding """
-        for sec_name, section in self.config.items():
-            if sec_name in self.local_config :
-                for opt_name, option in section.items():
-                    if not opt_name in self.local_config[sec_name]:
-                        continue
-                    if str(option) != str(self.local_config[sec_name][opt_name]):
-                        log.debug("[%s] overriding %s.%s by local value(%s)" % (self.path,
-                                                                                sec_name,
-                                                                                opt_name,
-                                                                                self.local_config[sec_name][opt_name]
-                                                                                ))
-                        self.config[sec_name][opt_name] = self.local_config[sec_name][opt_name]
+            self.config = apply_conf_diff(self.config, self.local_config, True)
 
 
     def _populate(self, d):
         if not self.config:
-            self.config = ConfigObj(list_values=False, interpolation=False)
+            self.config = ConfigObj(list_values=False)
         for name, section in d.iteritems():
             self.config[name] = section
 
@@ -508,7 +553,24 @@ class Pulse2ConfigFile(object):
             return False
 
     def commit(self):
+        self._remove_comments()
         self.write_path(os.path.join(mmcconfdir, self.path))
+
+    def _remove_comments(self):
+        """ Removes all the comments from config """
+
+        for entry in self.config.comments:
+            self.config.comments[entry] = []
+        for entry in self.config.inline_comments :
+            self.config.inline_comments[entry] = ""
+
+        for sec_name in self.config:
+
+            for entry in self.config[sec_name].comments:
+                self.config[sec_name].comments[entry] = []
+            for entry in self.config[sec_name].inline_comments:
+                self.config[sec_name].inline_comments[entry] = ""
+
 
 class LoggingConfig(Pulse2ConfigFile):
     log_dir = '/var/log/mmc'
@@ -1133,31 +1195,17 @@ class SetupApp(object):
         else :
             log.error("BackupPC server is not probably installed")
 
-    def apply_conf_diff(self):
-        """Removes the default values and remaining options will be placed in .local copy """
-
-        for (path, conf) in self.confs.items():
-            for (sec_name, section) in conf.config.items():
-                if sec_name in self.orig_confs[path].config:
-                    for (opt_name, value) in section.iteritems():
-                        if opt_name in self.orig_confs[path].config[sec_name]:
-                            if str(value) == str(self.orig_confs[path].config[sec_name][opt_name]):
-                                # remove option having the same value
-                                del self.confs[path].config[sec_name][opt_name]
-                if len(self.confs[path].config[sec_name]) == 0:
-                    # empty section remove
-                    del self.confs[path].config[sec_name]
 
 
     def commit(self):
         """ Write down all config files
         """
-        self.apply_conf_diff()
-
         for (path, conf) in self.confs.iteritems():
+            conf.config = apply_conf_diff(self.orig_confs[path].config, conf.config)
             if len(conf.config) == 0:
                 # if empty local config do not generate
                 continue
+
             conf.commit()
 
     def run(self):
