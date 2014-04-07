@@ -787,7 +787,7 @@ class Inventory(DyngroupDatabaseHelper):
             logging.getLogger().debug("Try to associate a MAC address to an existing machine")
             networks = inventory["Network"]
             for network in networks:
-                if ("MACAddress" and 'Virtual') in network and network['Virtual'] == '0':
+                if 'MACAddress' in network and 'Virtual' in network and network['Virtual'] == '0':
                     mac = network["MACAddress"]
                     logging.getLogger().info("Trying to associate to an existing machine using MAC %s" % mac)
                     machines = self.getMachinesBy(ctx,
