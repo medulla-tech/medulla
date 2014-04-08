@@ -867,7 +867,6 @@ if __name__ == "__main__" :
 
     if args.file:
         try:
-            print args.file
             # Enabling script mode
             SCRIPT_MODE = True
             # Reading and executing script file
