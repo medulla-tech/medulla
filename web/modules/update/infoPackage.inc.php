@@ -59,6 +59,27 @@ $submod->addPage($page);
 $page = new Page("settings", _T("Settings", "update"));
 $submod->addPage($page);
 
+//$mod->addSubmod($submod);
+
+/*$submod = new SubModule("product_updates", _T("Product updates", "update"));
+//$submod->setDefaultPage("update/product_updates/installProductUpdates");
+$submod->setImg('modules/update/graph/navbar/update');
+$submod->setPriority(990);*/
+
+$page = new Page("installProductUpdates", _T("Product Updates installation", "update"));
+$page->setOptions(array("visible" => True, "noHeader" => False));
+$submod->addPage($page);
+
+$page = new Page("viewProductUpdates", _T("Product Updates list", "update"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+
+
+$page = new Page("ajaxInstallProductUpdates", _T("Product Updates installation (ajax)", "update"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);

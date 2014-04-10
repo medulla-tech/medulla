@@ -22,7 +22,10 @@ Update plugin for the MMC agent
 """
 import logging
 import subprocess
+import json
 from time import time
+from twisted.internet.threads import deferToThread
+deferred = deferToThread.__get__ #Create an alias for deferred functions
 
 logger = logging.getLogger()
 
@@ -133,26 +136,16 @@ def create_update_commands():
     return True
 
 
-class OSHandler(object):
+class RpcProxy(RpcProxyI):
     
+    updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
+       
     def runInShell(self, cmd):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
         return out.strip(), err.strip(), process.returncode
-
-class DebianHandler(OSHandler):
-    
-    def getPackageTitle(self, pkg):
-        cmd = "LANG=C apt-cache show %s|awk '/^Description/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'|head -1" % pkg
-        out, err, ec = self.runInShell(cmd)
-        return out if ec == 0 and out else pkg
-    
-    def getCandidateVersion(self, pkg):
-        cmd = "LANG=C apt-cache policy %s|awk '/Candidate/ { print $2 }'" % pkg
-        out, err, ec = self.runInShell(cmd)
-        return out if ec == 0 and out else 'N/A'
-    
-    def getAvailableUpdates(self):
+       
+    def getProductUpdates(self):
         
         global last_update_check_ts, available_updates
         # If last checking is least than 4 hours, return cached value
@@ -160,60 +153,47 @@ class DebianHandler(OSHandler):
         if last_update_check_ts and (time() - last_update_check_ts) < 14400:
             return available_updates
         
-        #ctx = self.currentContext
-        # Check if user is root
-        #logging.getLogger().fatal(ctx.userid)
-        # ============== apt-get update ====================
-        out, err, ec = self.runInShell('apt-get update')
-        # Update error occured
-        if ec != 0:
-            logging.getLogger().error(out)
-            logging.getLogger().error(err)
-            return []
-        # ============ apt-get dist-upgrade =====================
-        # get available updates
-        cmd = "LANG=C apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }'"
-        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse2' -e '^mmc-agent$'"
-        cmd += pulse_packages_filter
+        o, e, ec = self.runInShell('%s -l --json' % self.updMgrPath)
         
-        out, err, ec = self.runInShell(cmd)
+        # Check json part existence
+        if not '===JSON_BEGIN===' in o or not '===JSON_END===' in o:
+            return False
         
-        if ec != 0:
-            logging.getLogger().error(out)
-            logging.getLogger().error(err)
-            return []
-        
-        packages = out.strip().split('\n')
+        # Get json output
+        json_output = o.split('===JSON_BEGIN===')[1].split('===JSON_END===')[0].strip()
+        packages = json.loads(json_output)['content']
         
         result = []
         
         for pkg in packages:
-            result.append({
-                'name': pkg,
-                'title': self.getPackageTitle(pkg),
-                'version': self.getCandidateVersion(pkg)
-            })
+            pulse_filters = ('python-mmc', 'python-pulse2', 'mmc-web', 'pulse2', 'mmc-agent')
             
+            # Skip non-Pulse packages
+            if not pkg[2].startswith(pulse_filters):
+                continue
+            
+            result.append({
+                'name': pkg[2],
+                'title': pkg[1]
+            })
+        
+        # Caching last result
         available_updates = result
         last_update_check_ts = time()
-            
-        return result
-    
-    def installUpdates(self):
         
+        return result
+        #return DebianHandler().getAvailableUpdates()
+    
+    def installProductUpdates(self):
         pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse2' -e '^mmc-agent$'"
         install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
+        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (self.updMgrPath, pulse_packages_filter, self.updMgrPath)
         
-        # Running this command with no pipe
-        subprocess.call(install_cmd, shell=True)
-    
-
-class RpcProxy(RpcProxyI):
-       
-    def getAvailableUpdates(self):
-        return DebianHandler().getAvailableUpdates()
-    
-    def installUpdates(self):
-        return DebianHandler().installUpdates()
-    
- 
+        @deferred
+        def _runInstall():
+            # Running install command with no pipe
+            subprocess.call(install_cmd, shell=True)
+            
+        _runInstall()
+        
+        return True

@@ -55,4 +55,12 @@ function create_update_commands(){
     return xmlCall("update.create_update_commands", array());
 }
 
+function getProductUpdates(){
+    return xmlCall("update.getProductUpdates", array());
+}
+
+function installProductUpdates(){
+    return xmlCall("update.installProductUpdates", array());
+}
+
 ?>
