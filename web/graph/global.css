@@ -645,6 +645,11 @@ li.empty a {
     background-color: #f6f6f6;
 }
 
+#section table.listinfos tbody tr.disabledRow {
+    background-color: #FCC1C1;
+}
+
+
 
 #section table.membersTpl {
     width: auto;
