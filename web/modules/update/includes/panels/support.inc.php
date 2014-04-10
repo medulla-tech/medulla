@@ -37,23 +37,25 @@ class UpdatePanel extends Panel {
         $updates = getProductUpdates();
         $update_count = count($updates);
         
+        print '<center>';
+        
         if ($update_count == 0)
-            $update_count = 'No';
-        
-        echo '<p><strong>' . $update_count . '</strong> updates available</p>';
-        
-        
-        print <<<EOS
-<center>
-<a title="View updates" class="btnSecondary"
-    href="javascript:;"
-    onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
-    >View updates</a><br/><br/>
-    <a title="Install updates" class="btnSecondary"
-    href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
-    >Install updates</a>
-</center>
+            printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
+        else{
+            printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
+            
+            print <<<EOS
+            <a title="View updates" class="btnSecondary"
+                href="javascript:;"
+                onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+                >View updates</a><br/><br/>
+                <a title="Install updates" class="btnSecondary"
+                href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
+                >Install updates</a>
+            </center>
 EOS;
+            
+        }
     
     }
 

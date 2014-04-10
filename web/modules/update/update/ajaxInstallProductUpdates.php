@@ -35,6 +35,5 @@ if ($return != 0)
 else
     print '<img src="modules/update/graph/loader.gif" alt="" />';
 
-print $return;
 die();
 ?>
