@@ -1,8 +1,5 @@
 from win32com import client as w32comCl
 import _winreg
-import sys
-from collections import namedtuple
-from platform import platform
 
 ssDefault = 0
 ssManagedServer = 1

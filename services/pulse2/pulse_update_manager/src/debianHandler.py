@@ -29,7 +29,7 @@ class debianUpdateHandler(linuxUpdateHandler):
     def showUpdateInfo(self, uuid, online=True):
         # uuid is pkgname/version
         pkg_name = uuid.split('/')[0]
-        out, err, ec = self.runInShell("apt-cache show pulse2")
+        out, err, ec = self.runInShell("apt-cache show %s" % pkg_name)
         print out
    
     def getCandidateVersion(self, pkg):
@@ -70,7 +70,7 @@ class debianUpdateHandler(linuxUpdateHandler):
             new_packages = []
         
         if returnResultList:
-            return fetchW32ComArray(new_packages)
+            return new_packages
     
         # Formatting output dict
         for pkg in new_packages:
@@ -144,7 +144,7 @@ class debianUpdateHandler(linuxUpdateHandler):
             
             # Checking if package version (in repo) is the same
             if self.getCandidateVersion(pkg) != version:
-                print "Skipping %s, candidate version doesn't match" % pkgs
+                print "Skipping %s, candidate version doesn't match" % pkg
                 continue
             
             # Adding update to updatesToInstall list
