@@ -787,25 +787,32 @@ class Inventory(DyngroupDatabaseHelper):
             logging.getLogger().debug("Try to associate a MAC address to an existing machine")
             networks = inventory["Network"]
             for network in networks:
-                if 'MACAddress' in network and 'Virtual' in network and network['Virtual'] == '0':
+                # This "network" (read: nic) xml entry contains a mac address
+                if 'MACAddress' in network:
                     mac = network["MACAddress"]
-                    logging.getLogger().info("Trying to associate to an existing machine using MAC %s" % mac)
-                    machines = self.getMachinesBy(ctx,
-                                                  "Network",
-                                                  "MACAddress",
-                                                  mac,
-                                                  False)
+                    # If there's no "virtual" attribute or "virtual" attribute is set to 0
+                    # virtual attribute means it's a virtual network interface (vpn...)
+                    # which may contains duplicates addresses
+                    if not 'Virtual' in network or network['Virtual'] == '0':
+                        logging.getLogger().info("Trying to associate to an existing machine using MAC %s" % mac)
+                        machines = self.getMachinesBy(ctx,
+                                                      "Network",
+                                                      "MACAddress",
+                                                      mac,
+                                                      False)
 
-                    if len(machines) == 1 :
-                        uuid = machines[0]["uuid"]
-                        name = machines[0]["hostname"]
-                        message = "Match found using MAC %s! UUID: %s Hostname: %s" % (mac, uuid, name)
-                        logging.getLogger().info(message)
-                        return mac, uuid, name
-                    elif len(machines) > 1 :
-                        logging.getLogger().warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)
+                        if len(machines) == 1 :
+                            uuid = machines[0]["uuid"]
+                            name = machines[0]["hostname"]
+                            message = "Match found using MAC %s! UUID: %s Hostname: %s" % (mac, uuid, name)
+                            logging.getLogger().info(message)
+                            return mac, uuid, name
+                        elif len(machines) > 1 :
+                            logging.getLogger().warn("Cannot resolve machine name: duplicate MAC address (%s)" % mac)
+                        else:
+                            logging.getLogger().debug("Cannot find a machine with MAC %s" % mac)
                     else:
-                        logging.getLogger().debug("Cannot find a machine with MAC %s" % mac)
+                        logging.getLogger().info("Skipping MAC %s, interface is marked as being virtual" % mac)
 
         return None, None, None
 
