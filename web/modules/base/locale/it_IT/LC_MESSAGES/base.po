@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-04-03 16:35+0200\n"
+"POT-Creation-Date: 2014-04-10 10:51+0200\n"
 "PO-Revision-Date: 2014-01-27 16:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -78,8 +78,8 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: graph/header.inc.php:233 includes/PageGenerator.php:2188
-#: includes/FormGenerator.php:618
+#: graph/header.inc.php:233 includes/FormGenerator.php:618
+#: includes/PageGenerator.php:2188
 msgid "Close"
 msgstr ""
 
@@ -221,16 +221,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/PageGenerator.php:871 includes/PageGenerator.php:1118
-#: includes/FormGenerator.php:619
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:871
+#: includes/PageGenerator.php:1118
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Precedente"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/PageGenerator.php:885 includes/PageGenerator.php:1128
-#: includes/FormGenerator.php:620
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:885
+#: includes/PageGenerator.php:1128
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -304,55 +304,6 @@ msgstr ""
 #: includes/acl.inc.php:127
 msgid "You do not have required rights"
 msgstr "Non avete i diritti necessari"
-
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
-msgid "to"
-msgstr "a"
-
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
-#, php-format
-msgid " - Total <b>%s </b>"
-msgstr " - Totale <b>%s </b>"
-
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
-msgid "page"
-msgstr "pagina"
-
-#: includes/PageGenerator.php:905
-msgid "Pagination"
-msgstr ""
-
-#: includes/PageGenerator.php:978
-msgid "Go to page"
-msgstr ""
-
-#: includes/PageGenerator.php:1406
-msgid "No item available"
-msgstr "Nessuna oggetto disponibile"
-
-#: includes/PageGenerator.php:1594
-msgid "Select entity"
-msgstr ""
-
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
-#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
-#: modules/base/groups/edit.php:117
-msgid "Confirm"
-msgstr "Conferma"
-
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
-#: modules/base/groups/members.php:189 modules/base/groups/delete.php:66
-#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr "Annulla"
-
-#: includes/PageGenerator.php:2813
-msgid "Select all"
-msgstr "Seleziona tutto"
-
-#: includes/PageGenerator.php:2813
-msgid "Unselect all"
-msgstr "Deseleziona tutto"
 
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
 #: includes/FormGenerator.php:728 includes/FormGenerator.php:858
@@ -505,6 +456,55 @@ msgstr ""
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "Cancella"
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+msgid "to"
+msgstr "a"
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - Totale <b>%s </b>"
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+msgid "page"
+msgstr "pagina"
+
+#: includes/PageGenerator.php:905
+msgid "Pagination"
+msgstr ""
+
+#: includes/PageGenerator.php:978
+msgid "Go to page"
+msgstr ""
+
+#: includes/PageGenerator.php:1406
+msgid "No item available"
+msgstr "Nessuna oggetto disponibile"
+
+#: includes/PageGenerator.php:1594
+msgid "Select entity"
+msgstr ""
+
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/edit.php:117
+#: modules/base/groups/members.php:188
+msgid "Confirm"
+msgstr "Conferma"
+
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Annulla"
+
+#: includes/PageGenerator.php:2813
+msgid "Select all"
+msgstr "Seleziona tutto"
+
+#: includes/PageGenerator.php:2813
+msgid "Unselect all"
+msgstr "Deseleziona tutto"
 
 #: logout/index.php:50
 msgid "Your session will be closed"
@@ -756,31 +756,6 @@ msgstr "Elenco gruppi"
 msgid "List"
 msgstr "Elenca"
 
-#: modules/base/groups/members.php:109
-msgid "Group successfully modified"
-msgstr "Gruppo modificato con successo"
-
-#: modules/base/groups/members.php:125
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr ""
-"Alcuni utenti non possono essere rimossi da questo gruppo poiché questo "
-"gruppo è il loro gruppo primario"
-
-#: modules/base/groups/members.php:128
-#, php-format
-msgid "Group members %s"
-msgstr "Membri del gruppo %s"
-
-#: modules/base/groups/members.php:141
-msgid "All users"
-msgstr "Tutti gli utenti"
-
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
-msgid "Group members"
-msgstr "Membri del gruppo"
-
 #: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
 msgid "Delete group"
 msgstr "Elimina gruppo"
@@ -822,6 +797,31 @@ msgstr "Nome del gruppo"
 #: modules/base/groups/edit.php:114
 msgid "Create"
 msgstr "Crea"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr "Gruppo modificato con successo"
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Alcuni utenti non possono essere rimossi da questo gruppo poiché questo "
+"gruppo è il loro gruppo primario"
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "Membri del gruppo %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "Tutti gli utenti"
+
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
+msgid "Group members"
+msgstr "Membri del gruppo"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
