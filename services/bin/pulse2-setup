@@ -1207,6 +1207,10 @@ class SetupApp(object):
                 continue
 
             conf.commit()
+            # config restore
+            self.confs[path].config = apply_conf_diff(self.orig_confs[path].config,
+                                                      conf.config,
+                                                      only_override=True)
 
     def run(self):
         """ Run setup
