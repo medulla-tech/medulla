@@ -571,6 +571,9 @@ class Pulse2ConfigFile(object):
             for entry in self.config[sec_name].inline_comments:
                 self.config[sec_name].inline_comments[entry] = ""
 
+        self.config.initial_comment = []
+        self.config.final_comment = []
+
 
 class LoggingConfig(Pulse2ConfigFile):
     log_dir = '/var/log/mmc'
