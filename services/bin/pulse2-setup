@@ -716,11 +716,10 @@ class SetupApp(object):
             return read_passwd(name, default)
 
     def read_ip(self, name, default=None):
+        if default is None:
+            default = get_default_ip()
         if self.options['batch']:
-            if default is not None:
-                return default
-            else:
-                return get_default_ip()
+            return default
         else:
             return read_ip(name, default)
 
