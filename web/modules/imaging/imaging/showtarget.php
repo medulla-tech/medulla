@@ -168,3 +168,13 @@ if (isset($_GET['from'])) {
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
             return false;"/>
 </form>
+
+<script type="text/javascript">
+    // prefix: checkbox prefix, check_state 0/1
+    function checkAll(prefix, check_state) {
+        jQuery('input[type=checkbox]').each(function() {
+            if (jQuery(this).attr('name').indexOf(prefix) > -1)
+                jQuery(this).prop('checked', check_state);
+        });
+    }
+</script>
