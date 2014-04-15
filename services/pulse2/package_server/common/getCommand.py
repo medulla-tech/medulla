@@ -201,27 +201,28 @@ fi""" % basename(self.file)
             else:
                 return self.logger.info("I can't get a command for %s" % self.file)
 
-        elif "Document Little Endian" in file_data[self.file]:
-            # MSI files
-            if "Template" in file_data:
-                if "x64" in file_data['Template']:
-                    if self.file.endswith('.msp'):
-                        self.logger.debug("%s is a x64 MSI Update file" % self.file)
-                        return self.getMSI64UpdateCommand()
+        elif "Name of Creating Application" in file_data:
+            if "Windows Installer" in file_data['Name of Creating Application']:
+                # MSI files
+                if "Template" in file_data:
+                    if "x64" in file_data['Template']:
+                        if self.file.endswith('.msp'):
+                            self.logger.debug("%s is a x64 MSI Update file" % self.file)
+                            return self.getMSI64UpdateCommand()
+                        else:
+                            self.logger.debug("%s is a x64 MSI file" % self.file)
+                            return self.getMSI64Command()
+                    elif "Intel" in file_data['Template']:
+                        if self.file.endswith('.msp'):
+                            self.logger.debug("%s is a 32-bit MSI Update file" % self.file)
+                            return self.getMSI32UpdateCommand()
+                        else:
+                            self.logger.debug("%s is a 32-bit MSI file" % self.file)
+                            return self.getMSI32Command()
                     else:
-                        self.logger.debug("%s is a x64 MSI file" % self.file)
-                        return self.getMSI64Command()
-                elif "Intel" in file_data['Template']:
-                    if self.file.endswith('.msp'):
-                        self.logger.debug("%s is a 32-bit MSI Update file" % self.file)
-                        return self.getMSI32UpdateCommand()
-                    else:
-                        self.logger.debug("%s is a 32-bit MSI file" % self.file)
-                        return self.getMSI32Command()
+                        return self.logger.info("I can't get a command for %s" % self.file)
                 else:
-                    return self.logger.info("I can't get a command for %s" % self.file)
-            else:
-                return self.logger.info("No Template Key for %s" % self.file)
+                    return self.logger.info("No Template Key for %s" % self.file)
         elif "Debian binary package" in file_data[self.file]:
             self.logger.debug("Debian package detected")
             return self.getDpkgCommand()
