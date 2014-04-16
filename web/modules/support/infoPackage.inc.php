@@ -24,6 +24,7 @@
  * dashboard module declaration
  */
 
+require_once("modules/pulse2/version.php");
 
 $mod = new Module("support");
 $mod->setVersion(VERSION);
