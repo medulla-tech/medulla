@@ -31,7 +31,7 @@ $command = "bash -c \"ps aux|grep 'pulse-update-manager'|grep -v 'grep'\"";
 exec($command, $output, $return);
 
 if ($return != 0)
-    print '<script type="text/javascript">window.location.href=\'http://tyrion/mmc/index.php\'</script>';
+    print '<script type="text/javascript">window.location.href=\'index.php\'</script>';
 else
     print '<img src="modules/update/graph/loader.gif" alt="" />';
 
