@@ -1,0 +1,12 @@
+Source: pulse-update-manager
+Section: misc
+Priority: extra
+Maintainer: Adam Cécile <acecile@mandriva.com>
+Build-Depends: debhelper (>= 5), python-support
+Standards-Version: 3.9.5
+
+Package: pulse-update-manager
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}
+Description: Pulse2 updates helper
+ Helper to list and install system updates

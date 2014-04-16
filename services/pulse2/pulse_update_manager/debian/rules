@@ -1,0 +1,38 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+build:
+	dh_testdir
+
+clean:
+	dh_testdir
+	dh_testroot
+	dh_clean
+
+build-arch:
+build-indep:
+binary-arch:
+
+binary-indep: build
+	dh_testdir
+	dh_testroot
+	dh_clean
+	dh_installdirs
+	dh_install
+	dh_pysupport
+	dh_installdocs
+	dh_installchangelogs
+	dh_link
+	dh_compress
+	dh_fixperms
+	chmod 644 $(CURDIR)/debian/pulse-update-manager/usr/share/pulse-update-manager/*
+	chmod 755 $(CURDIR)/debian/pulse-update-manager/usr/share/pulse-update-manager/pulse-update-manager.py
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary
