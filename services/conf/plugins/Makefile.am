@@ -26,4 +26,5 @@ endif
 
 pluginsconfdir = $(sysconfdir)/mmc/plugins
 dist_pluginsconf_DATA = msc.ini glpi.ini pkgs.ini dyngroup.ini imaging.ini \
-	inventory.ini pulse2.ini glpi_search_options.ini backuppc.ini update.ini
+	inventory.ini pulse2.ini glpi_search_options.ini backuppc.ini update.ini \
+	support.ini
