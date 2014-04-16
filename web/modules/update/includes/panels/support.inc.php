@@ -36,26 +36,35 @@ class UpdatePanel extends Panel {
     function display_content() {
         $updates = getProductUpdates();
         $update_count = count($updates);
+
+        if ($updates == FALSE){
+
+        // Update error occured
+	print '<center style="color:red;font-weight:bold">An error occured when fetching updates</center>';
+	}
+	else{
         
-        print '<center>';
-        
-        if ($update_count == 0)
-            printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
-        else{
-            printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
+            print '<center>';
             
-            print <<<EOS
-            <a title="View updates" class="btnSecondary"
-                href="javascript:;"
-                onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
-                >View updates</a><br/><br/>
-                <a title="Install updates" class="btnSecondary"
-                href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
-                >Install updates</a>
-            </center>
+            if ($update_count == 0)
+                printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
+            else{
+                printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
+                
+                print <<<EOS
+                <a title="View updates" class="btnSecondary"
+                    href="javascript:;"
+                    onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+                    >View updates</a><br/><br/>
+                    <a title="Install updates" class="btnSecondary"
+                    href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
+                    >Install updates</a>
+                </center>
 EOS;
-            
-        }
+                
+            }
+
+	}
     
     }
 
