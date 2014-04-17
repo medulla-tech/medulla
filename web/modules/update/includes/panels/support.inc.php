@@ -37,10 +37,10 @@ class UpdatePanel extends Panel {
         $updates = getProductUpdates();
         $update_count = count($updates);
 
-        if ($updates == FALSE){
+        if ($updates === FALSE){
 
         // Update error occured
-	print '<center style="color:red;font-weight:bold">An error occured when fetching updates</center>';
+	print '<center style="color:red;font-weight:bold">An error occured while fetching updates</center>';
 	}
 	else{
         
