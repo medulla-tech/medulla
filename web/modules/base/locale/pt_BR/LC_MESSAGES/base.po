@@ -4,7 +4,7 @@
 # 
 ## Translators:
 #   <alexandre@mandriva.com.br>, 2012.
-#   <andre@mandriva.com>, 2011, 2013.
+#   <andre@mandriva.com>, 2011, 2013, 2014.
 #   <leonardoc@mandriva.com.br>, 2012.
 # Sergio Rafael Lemke <sergio@mandriva.com.br>, 2010.
 # Wanderlei Antonio Cavassin <cavassin@mandriva.com>, 2007.
@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-04-10 10:51+0200\n"
-"PO-Revision-Date: 2014-01-27 16:34+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-04-14 01:11+0200\n"
+"PO-Revision-Date: 2014-04-14 18:18+0000\n"
+"Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -366,83 +366,83 @@ msgstr "value=\"never\";'>nunca</a>"
 
 #: includes/FormGenerator.php:595
 msgid "January"
-msgstr ""
+msgstr "Janeiro"
 
 #: includes/FormGenerator.php:595
 msgid "February"
-msgstr ""
+msgstr "Fevereiro"
 
 #: includes/FormGenerator.php:595
 msgid "March"
-msgstr ""
+msgstr "Março"
 
 #: includes/FormGenerator.php:595
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #: includes/FormGenerator.php:596
 msgid "May"
-msgstr ""
+msgstr "Maio"
 
 #: includes/FormGenerator.php:596
 msgid "June"
-msgstr ""
+msgstr "Junho"
 
 #: includes/FormGenerator.php:596
 msgid "July"
-msgstr ""
+msgstr "Julho"
 
 #: includes/FormGenerator.php:596
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #: includes/FormGenerator.php:597
 msgid "September"
-msgstr ""
+msgstr "Setembro"
 
 #: includes/FormGenerator.php:597
 msgid "October"
-msgstr ""
+msgstr "Outubro"
 
 #: includes/FormGenerator.php:597
 msgid "November"
-msgstr ""
+msgstr "Novembro"
 
 #: includes/FormGenerator.php:597
 msgid "December"
-msgstr ""
+msgstr "Dezembro"
 
 #: includes/FormGenerator.php:607
 msgid "Sunday"
-msgstr ""
+msgstr "Domingo"
 
 #: includes/FormGenerator.php:607
 msgid "Monday"
-msgstr ""
+msgstr "Segunda-feira"
 
 #: includes/FormGenerator.php:607
 msgid "Tuesday"
-msgstr ""
+msgstr "Terça-feira"
 
 #: includes/FormGenerator.php:607
 msgid "Wednesday"
-msgstr ""
+msgstr "Quarta-feira"
 
 #: includes/FormGenerator.php:608
 msgid "Thursday"
-msgstr ""
+msgstr "Quinta-feira"
 
 #: includes/FormGenerator.php:608
 msgid "Friday"
-msgstr ""
+msgstr "Sexta-feira"
 
 #: includes/FormGenerator.php:608
 msgid "Saturday"
-msgstr ""
+msgstr "Sábado"
 
 #: includes/FormGenerator.php:621
 msgid "Now"
-msgstr ""
+msgstr "Agora"
 
 #: includes/FormGenerator.php:694 modules/base/groups/localSidebar.php:29
 #: modules/base/users/localSidebar.php:29
@@ -451,7 +451,7 @@ msgstr "Adicionar"
 
 #: includes/FormGenerator.php:995
 msgid "Toggle selection"
-msgstr ""
+msgstr "Alternar seleção"
 
 #: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
 #: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
@@ -1181,6 +1181,8 @@ msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extention to resize the photo automatically"
 msgstr ""
+"A foto é muito grande. O tamanho máximo permitido é %s x %s.\n"
+"                    Instale a extensão php gd para redimensionar a foto automaticamente"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
