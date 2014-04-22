@@ -859,6 +859,8 @@ if __name__ == "__main__" :
 
     if args.command:
         try:
+	    # Enabling script mode
+            SCRIPT_MODE = True
             exec(args.command, CONSOLE_VARS)
             sys.exit(0)
         except Exception, e:
