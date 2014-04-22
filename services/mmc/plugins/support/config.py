@@ -44,6 +44,13 @@ class SupportConfig(PluginConfig):
         self.check_pid_delay = 2
         self.session_timeout = 7200
 
+        self.license_server_url = "https://serviceplace.mandriva.com/api/v1/partner"
+        self.install_id_path = "/etc/pulse-licensing/installation_id"
+        self.install_uuid = None
+
+        self.cron_search_for_updates = "0 6 * * *"
+        self.license_tmp_file = "/var/tmp/pulse_license_info"
+        self.country = "FR"
 
 
     def readConf(self):
@@ -76,6 +83,31 @@ class SupportConfig(PluginConfig):
         self.session_timeout = int(self.safe_get("main",
                                                  "session_timeout",
                                                   self.session_timeout))
+
+        if not os.path.exists(self.install_id_path):
+            logging.getLogger().warn("File %s don't exists!" % self.install_id_path)
+        else:
+            with open(self.install_id_path, "r") as f:
+                content = f.readlines()
+                if len(content) > 0:
+                    self.install_uuid = content[0].strip()
+
+
+        self.license_server_url = self.safe_get("main",
+                                                "license_server_url",
+                                                self.license_server_url)
+
+        self.cron_search_for_updates = self.safe_get("main",
+                                                     "cron_search_for_updates",
+                                                     self.cron_search_for_updates)
+
+        self.license_tmp_file = self.safe_get("main",
+                                              "license_tmp_file",
+                                              self.license_tmp_file)
+
+        self.country = self.safe_get("main",
+                                     "country",
+                                      self.country)
 
 
 

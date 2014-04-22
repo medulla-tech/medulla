@@ -18,8 +18,34 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-
 from mmc.plugins.dashboard.panel import Panel
+
 
 class RemoteSupportPanel(Panel):
     pass
+
+
+
+class LicensePanel(Panel):
+
+    data = None
+
+    def data_handler(self, data):
+        """
+		A reference method to actualize by JSON query.
+
+		@param data: info from the license server
+		@type data: dict
+		"""
+        self.data = data
+
+
+    def serialize(self):
+        return self.data
+
+
+
+
+
+
+

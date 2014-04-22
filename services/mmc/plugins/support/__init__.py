@@ -23,11 +23,14 @@
 import logging
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from mmc.support.mmctools import SingletonN
+from mmc.core.tasks import TaskManager
 
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.support.config import SupportConfig
-from mmc.plugins.support.panel import RemoteSupportPanel
+from mmc.plugins.support.panel import RemoteSupportPanel, LicensePanel
 from mmc.plugins.support.process import TunnelBuilder
+from mmc.plugins.support.jsonquery import Query
 
 APIVERSION = "0:1:0"
 NAME = "support"
@@ -43,11 +46,147 @@ def activate():
 
     DM = DashboardManager()
     DM.register_panel(RemoteSupportPanel("remotesupport"))
+    DM.register_panel(license_panel)
+
+    TaskManager().addTask("support.get_license_info",
+                          (LicenseChecker().get_license_info,),
+                          cron_expression=config.cron_search_for_updates
+                          )
+
+    LicenseChecker().get_license_info(True)
+
     return True
+
+class LicenseChecker(object):
+    """
+    Periodical checks to license server.
+
+    This checks are triggered by cron and returned and parsed data
+    updates the license widget on dashboard.
+    """
+    __metaclass__ = SingletonN
+
+
+    def get_license_info(self, offline=False):
+        """
+        Checks the license info on license server.
+
+        @param offline: temp file check only
+        @type offline: bool
+
+        @return: True when successfull query and data parse
+        @rtype: Deferred
+        """
+
+        logging.getLogger().info("Plugin Support: checking the license info on %s/%s" % (config.license_server_url,
+                                                                                         config.install_uuid)
+                                )
+        query = Query(config.license_server_url,
+                      config.install_uuid,
+                      config.license_tmp_file
+                      )
+
+        d = query.get(offline)
+        d.addCallback(self.data_extract)
+        d.addErrback(self.eb_get_info)
+        d.addCallback(self.update_panel)
+
+        return d
+
+
+    def data_extract(self, response):
+        """
+        Custom corrections to display the license info.
+
+        @param data: decoded data returned from license server
+        @type data: list
+
+        @return: transformed data
+        @rtype: dict
+        """
+        # -------------------
+        # format of response:
+        # -------------------
+        #  [{"name": "Support - Niveau 1/2",
+        #         "country": "FR",
+        #          "data": {"hours": "De 7h \u00e0 18h, les jours ouvr\u00e9s.",
+        #                   "phone": "+33 12 13 14 15 23",
+        #                   "email": "support-fr@mandriva.com"
+        #                   }
+        #         },
+        #        {"name": "Unterstützung - Ebene 1/2",
+        #         "country": "DE",
+        #         "data": {"hours": "Von 8 bis 18",
+        #                  "phone": "+31 452 144 254",
+        #                  "email": "support-de@mandriva.com"
+        #                   }
+        #         }]
+        #
+        # -----------------------
+        # will be transformed to:
+        # -----------------------
+        #  {"name": "Support - Niveau 1/2",
+        #   "country": "FR",
+        #   "hours": "De 7h \u00e0 18h, les jours ouvr\u00e9s.",
+        #   "phone": "+33 12 13 14 15 23",
+        #   "email": "support-fr@mandriva.com"
+        #   }
+
+        if not isinstance(response, list):
+            logging.getLogger().warning("No license data; widget will not be updated.")
+            return None
+
+        data = None
+        for pack in response:
+            if "country" in pack:
+                if pack["country"] == config.country:
+                    data = pack
+                    break
+
+        if not data:
+            logging.getLogger().warning("No license data for country '%s'; widget will not be updated." % config.country)
+            return None
+
+        if not "data" in data:
+            logging.getLogger().warning("No license data")
+            return None
+
+        for key in ["phone", "email", "hours"]:
+            if key in data["data"]:
+                data[key] = data["data"][key]
+
+
+        del data["data"]
+
+        normalized = dict([(key, value.decode("unicode-escape")) for (key, value) in data.items()])
+        return normalized
+
+
+    def eb_get_info(self, failure):
+        """ Common errorback for querying and parsing """
+        logging.getLogger().warning("License check failed: %s" % failure)
+        return False
+
+
+    def update_panel(self, data):
+        """
+        Updates the license widget for dashboard.
+
+        @param data: parsed data ready for widget display
+        @type data: dict
+        """
+        if not data:
+            return False
+        license_panel.data_handler(data)
+        return True
+
 
 
 config = SupportConfig(NAME)
 builder = TunnelBuilder(config)
+
+license_panel = LicensePanel("license")
+
 
 def open():
     return builder.open()
