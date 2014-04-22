@@ -155,6 +155,13 @@ class LicenseChecker(object):
             if key in data["data"]:
                 data[key] = data["data"][key]
 
+        if "phone" in data:
+            data["phone_uri"] = "tel:%s" % data["phone"].replace(".", "")\
+                                       .replace("-", "").replace(" ", "")
+
+        if "email" in data:
+            data["email_uri"] = "mailto:%s?subject=%s" % (data["email"], config.install_uuid)
+
 
         del data["data"]
 
