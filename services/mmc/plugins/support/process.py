@@ -289,10 +289,10 @@ class TunnelBuilder(object):
         @rtype: Deferred
         """
         protocol = ForkingProtocol(TunnelBuilder.process_ended)
-        process = reactor.spawnProcess(protocol,
-                                       self.args[0],
-                                       self.args,
-                                       usePTY=True)
+        reactor.spawnProcess(protocol,
+                             self.args[0],
+                             self.args,
+                             usePTY=True)
         try:
             yield deferLater(reactor,
                        self.config.check_pid_delay,
