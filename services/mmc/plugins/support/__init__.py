@@ -111,7 +111,17 @@ class LicenseChecker(object):
         #         "country": "FR",
         #          "data": {"hours": "De 7h \u00e0 18h, les jours ouvr\u00e9s.",
         #                   "phone": "+33 12 13 14 15 23",
-        #                   "email": "support-fr@mandriva.com"
+        #                   "email": "support-fr@mandriva.com",
+        #                   "links": [
+        #                            {
+        #                             "url": "http://hot-line.com",
+        #                             "text": "Hot-line Form",
+        #                             },
+        #                            {
+        #                             "url": "http://example.com",
+        #                             "text": "Acheter une license"
+        #                             },
+        #                            ]
         #                   }
         #         },
         #        {"name": "Unterstützung - Ebene 1/2",
@@ -151,7 +161,7 @@ class LicenseChecker(object):
             logging.getLogger().warning("No license data")
             return None
 
-        for key in ["phone", "email", "hours"]:
+        for key in ["phone", "email", "hours", "links"]:
             if key in data["data"]:
                 data[key] = data["data"][key]
 
@@ -165,8 +175,33 @@ class LicenseChecker(object):
 
         del data["data"]
 
-        normalized = dict([(key, value.decode("unicode-escape")) for (key, value) in data.items()])
-        return normalized
+        return self.normalize(data)
+
+    def normalize(self, data):
+        """
+        Converts all elements with unicode escape characters to unicode chars.
+
+        Includes also nested lists containing another dicts.
+
+        @param data: extracted response from the license server
+        @type data: dict
+
+        @return: converted data
+        @rtype: dict
+        """
+        for key, value in data.items():
+            if isinstance(value, unicode):
+                data[key] = value.decode("unicode-escape")
+            elif isinstance(value, list):
+                lst = []
+                for sub_data in value:
+                    lst.append(self.normalize(sub_data))
+                data[key] = lst
+            else:
+                data[key] = value
+        return data
+
+
 
 
     def eb_get_info(self, failure):

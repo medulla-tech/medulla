@@ -50,8 +50,15 @@ class LicensePanel extends Panel {
 		    echo '<p>' . _T("Hours", "support") . ':</p>';
 	            echo '<p><b>' . $this->data['hours'] . '</b></p>';
             echo '</div>';
-	    
 
+	    if ($this->data['links']) {
+                echo '<div class="subpanel">';    
+                echo '<p>' . _T("Links", "support") . ':</p>';
+	        foreach($this->data['links'] as $linkgrp){
+	 	    echo '<p><b><a href="' . $linkgrp["url"] . '">' . $linkgrp["text"] . '</a></b></p>';
+	        }	    
+                echo '</div>';
+	    }
 
 
     }
