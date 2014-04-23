@@ -44,7 +44,7 @@ class SupportConfig(PluginConfig):
         self.check_pid_delay = 2
         self.session_timeout = 7200
 
-        self.license_server_url = "https://serviceplace.mandriva.com/api/v1/partner"
+        self.license_server_url = "https://serviceplace.mandriva.com/api/v1/support"
         self.install_id_path = "/etc/pulse-licensing/installation_id"
         self.install_uuid = None
 
