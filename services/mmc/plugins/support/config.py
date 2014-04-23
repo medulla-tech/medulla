@@ -49,7 +49,7 @@ class SupportConfig(PluginConfig):
         self.install_uuid = None
 
         self.cron_search_for_updates = "0 6 * * *"
-        self.license_tmp_file = "/var/tmp/pulse_license_info"
+        self.license_tmp_file = "/var/lib/mmc/pulse_license_info"
         self.country = "FR"
 
 
