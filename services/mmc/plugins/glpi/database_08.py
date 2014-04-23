@@ -772,7 +772,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         else:
                             ret.append(not_(partA.like(self.encode(partB))))
                     else:
-                        ret.append(partA != self.encode(partB))
+                        ret.append(not_(partA.like(self.encode(partB))))
                 else:
                     if like:
                         if partBcanBeNone:
@@ -785,7 +785,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         else:
                             ret.append(partA.like(self.encode(partB)))
                     else:
-                        ret.append(partA == self.encode(partB))
+                        ret.append(partA.like(self.encode(partB)))
             if ctx.userid != 'root':
                 ret.append(self.__filter_on_entity_filter(None, ctx))
             return and_(*ret)
