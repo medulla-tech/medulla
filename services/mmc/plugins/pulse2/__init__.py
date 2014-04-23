@@ -194,3 +194,10 @@ class RpcProxy(RpcProxyI):
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())
+
+def getSSHPublicKey():
+    try:
+        return open('/root/.ssh/id_rsa.pub').read()
+    except IOError:
+        logging.getLogger().error('Error while reading SSH public key')
+        return ''
