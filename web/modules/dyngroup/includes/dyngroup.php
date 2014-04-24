@@ -142,9 +142,9 @@ class ConvergenceGroup extends Group {
         if (in_array('inventory', $_SESSION['modulesList'])) {
             $subReqCriterion = 'Software/Company:ProductName:ProductVersion';
         }
-        $Qvendor = ($this->package->Qvendor) ? $this->package->Qvendor : '*';
-        $Qsoftware = ($this->package->Qsoftware) ? $this->package->Qsoftware : '*';
-        $Qversion = ($this->package->Qversion) ? $this->package->Qversion : '*';
+        $Qvendor = ($this->package->Qvendor) ? str_replace(',', '*', $this->package->Qvendor) : '*';
+        $Qsoftware = ($this->package->Qsoftware) ? str_replace(',', '*', $this->package->Qsoftware) : '*';
+        $Qversion = ($this->package->Qversion) ? str_replace(',', '*', $this->package->Qversion) : '*';
         $subReqValue = sprintf('>%s, %s, %s<', $Qvendor, $Qsoftware, $Qversion);
         $subReqValue2 = '';
         $subReqOperator = '=';
