@@ -201,3 +201,31 @@ def getSSHPublicKey():
     except IOError:
         logging.getLogger().error('Error while reading SSH public key')
         return ''
+    
+def updateDebianSourceList():
+    try:
+        installation_uuid = open('/etc/pulse-licensing/installation_id').read().strip()
+    except IOError:
+        logging.getLogger().error('Error while reading installation_id file')
+    try:
+        # Pulse repository line
+        repo_line = 'deb http://%s@pulse.mandriva.org/pub/pulse2/server/debian wheezy 2.0' % installation_uuid
+
+        lines = open('/etc/apt/sources.list', 'r').readlines()
+        for i in xrange(len(lines)):
+            line = lines[i]
+            # If there is already a pulse line, we overwrite it (skip comment line)
+            if 'pulse.mandriva.org/pub/pulse2/server/debian' in line and not '#' in line:
+                lines[i] = repo_line
+                break
+        else:
+            lines.append(repo_line)
+        
+        # Writing file
+        f = open('/etc/apt/sources.list', 'w')
+        f.writelines(lines)
+        f.close()
+    except IOError:
+        logging.getLogger().error('Error while writing source.list file')
+    except Exception, e:
+        logging.getLogger().exception(str(e))
