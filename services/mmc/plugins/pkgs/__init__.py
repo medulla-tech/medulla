@@ -185,6 +185,7 @@ class RpcProxy(RpcProxyI):
         return d
 
     def ppa_dropPackage(self, pp_api_id, pid):
+        logging.getLogger().info('I will drop package %s/%s' % (pp_api_id, pid))
         def _ppa_dropPackage(result, pp_api_id = pp_api_id, pid = pid):
             for upa in result:
                 if upa['uuid'] == pp_api_id:

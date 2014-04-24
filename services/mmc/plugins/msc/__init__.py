@@ -399,6 +399,27 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
+    def expire_all_package_commands(self, pid):
+        """
+        Expires all commands of a given package
+        Used usually when a package is dropped
+
+        @param pid: uuid of dropped package
+        @type pid: uuid
+        """
+        # get all cmd_ids with their start_date  of given package id
+        cmds = MscDatabase().get_package_cmds(pid)
+
+        if cmds:
+            logging.getLogger().info('%d command will be expired' % len(cmds))
+
+            # for all cmd_ids, get start_date and expire them
+            for cmd_id, start_date in cmds.items():
+                logging.getLogger().info('Expires command %d' % cmd_id)
+                end_date = time.strftime("%Y-%m-%d %H:%M:%S")
+                self.extend_command(cmd_id, start_date, end_date)
+        return True
+
     def extend_command(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.

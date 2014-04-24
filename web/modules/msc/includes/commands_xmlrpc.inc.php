@@ -199,4 +199,15 @@ function extend_command($cmd_id, $start_date, $end_date) {
     return xmlCall('msc.extend_command', array($cmd_id, $start_date, $end_date));
 }
 
+/*
+ * Expire all commands for a given package
+ * Used usually when a package is dropped
+ *
+ * @param pid: uuid of dropped package
+ * @type pid: uuid
+ */
+function expire_all_package_commands($pid) {
+    return xmlCall('msc.expire_all_package_commands', array($pid));
+}
+
 ?>

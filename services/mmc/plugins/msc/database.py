@@ -601,6 +601,21 @@ class MscDatabase(msc.MscDatabase):
         d.addErrback(lambda err: err)
         return d
 
+    @DatabaseHelper._session
+    def get_package_cmds(self, session, pid):
+        """
+        Get all commands of a given package
+        return a dict with cmd_id as key and start_date as value
+
+        @param pid: uuid of dropped package
+        @type pid: uuid
+        """
+        query = session.query(Commands).filter_by(package_id=pid)
+        ret = {}
+        for x in query:
+            ret[x.id] = x.start_date
+        return ret
+
     def extend_command(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.

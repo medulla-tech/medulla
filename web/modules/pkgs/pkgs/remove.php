@@ -23,6 +23,7 @@
  */
 
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 
 
 if (isset($_POST["bconfirm"])) {
@@ -30,6 +31,7 @@ if (isset($_POST["bconfirm"])) {
     $pid = $_GET["pid"];
     $from = $_GET["from"];
     $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
+    $expire_result = expire_all_package_commands($ret);
     if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
     if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
     $to = "index";
