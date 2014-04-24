@@ -209,7 +209,7 @@ def updateDebianSourceList():
         logging.getLogger().error('Error while reading installation_id file')
     try:
         # Pulse repository line
-        repo_line = 'deb http://%s@pulse.mandriva.org/pub/pulse2/server/debian wheezy 2.0' % installation_uuid
+        repo_line = 'deb http://%s:a0@pulse.mandriva.org/pub/pulse2/server/debian wheezy 2.0' % installation_uuid
 
         lines = open('/etc/apt/sources.list', 'r').readlines()
         for i in xrange(len(lines)):
