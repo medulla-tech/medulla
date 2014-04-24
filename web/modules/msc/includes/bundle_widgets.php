@@ -85,8 +85,8 @@ class RenderedMSCBundleChoice {
  </td>
  <td style="border: none;">
   <div>
-   <input type="image" name="bdeluser" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" /><br/>
-   <input type="image" name="badduser" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/>
+   <input type="image" name="badduser" style="padding: 5px;" src="img/common/icn_arrowright.gif" value = "-->"/><br/>
+   <input type="image" name="bdeluser" style="padding: 5px;" src="img/common/icn_arrowleft.gif" value="<--" />
   </div>
  </td>
  <td style="border: none;">
