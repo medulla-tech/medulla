@@ -389,8 +389,10 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
     // $start_date is now()
     $start_date = (quick_get('start_date')) ? quick_get('start_date') : date("Y-m-d H:i:s");
-    // $end_date = now() + 24h by default (set in web_def_coh_life_time msc ini value)
-    $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + web_def_coh_life_time() * 60 * 60);
+    // $end_date = now() + 1h by default (set in web_def_coh_life_time msc ini value)
+    // $coh_life_time is set to 24h for convergence commands
+    $coh_life_time = (quick_get('convergence')) ? 24 : web_def_coh_life_time();
+    $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + $coh_life_time * 60 * 60);
 
     if (quick_get('launchAction')) { // Advanced Quick Action
         $f->add(
@@ -482,6 +484,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 new TrFormElement(
                     _T('Convergence is active', 'msc'), new CheckboxTpl('active')
                 ), array("value" => quick_get('active') == 'on' ? 'checked' : '')
+            );
+
+            $f->add(
+                new HiddenTpl('start_date'), array("value" => $start_date, "hide" => True)
+            );
+            $f->add(
+                new HiddenTpl('end_date'), array("value" => $end_date, "hide" => True)
             );
         }
         else {
