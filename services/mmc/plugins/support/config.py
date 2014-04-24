@@ -21,6 +21,7 @@
 
 import os
 import logging
+from random import randrange
 
 from mmc.support.config import PluginConfig
 
@@ -100,6 +101,7 @@ class SupportConfig(PluginConfig):
         self.cron_search_for_updates = self.safe_get("main",
                                                      "cron_search_for_updates",
                                                      self.cron_search_for_updates)
+        self._cron_randomize()
 
         self.license_tmp_file = self.safe_get("main",
                                               "license_tmp_file",
@@ -110,4 +112,16 @@ class SupportConfig(PluginConfig):
                                       self.country)
 
 
+    def _cron_randomize(self):
+        """
+        Updates the minutes section of cron expression with random value.
+        This step avoids the saturation of license server on the same time.
+        """
+        minute = randrange(0,60)
+
+        first_number_end = self.cron_search_for_updates.index(" ")
+        expression = "%d %s" % (minute, self.cron_search_for_updates[first_number_end+1:])
+        self.logger.debug("License info cron updated to %s" % expression)
+
+        self.cron_search_for_updates = expression
 
