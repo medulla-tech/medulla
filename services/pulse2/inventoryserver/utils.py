@@ -185,3 +185,10 @@ class InventoryUtils :
 
         return macs
 
+
+def canDoInventory():
+    mmc = MMCProxy()
+    if not mmc.failure:
+        proxy = mmc.proxy
+        return proxy.pulse2.canDoInventory()
+    return False

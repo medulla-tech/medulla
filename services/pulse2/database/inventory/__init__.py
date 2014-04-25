@@ -2524,6 +2524,11 @@ class InventoryCreator(Inventory):
                 m.Name = hostname
                 session.add(m)
 
+            # If machine doesn't exists, check if we can add a machine
+            from pulse2.inventoryserver.utils import canDoInventory
+            if not machine_exists and not canDoInventory():
+                self.logger.info("Cannot add a new machine (operation denied)")
+                return False
 
             if machine_exists :
                 if setLastFlag:

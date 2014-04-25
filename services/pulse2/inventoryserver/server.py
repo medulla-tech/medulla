@@ -48,9 +48,9 @@ from pulse2.utils import Singleton
 from mmc.site import mmcconfdir
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
-from pulse2.inventoryserver.utils import InventoryUtils
+from pulse2.inventoryserver.utils import InventoryUtils, canDoInventory
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
-from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS, canDoInventory
+from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS
 
 
 class InventoryServer:
