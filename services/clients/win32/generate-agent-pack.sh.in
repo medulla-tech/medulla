@@ -223,7 +223,12 @@ if [ ! ${download_only} -eq 1 ]; then
       exit 1
     else
       # Read public_ip parameters
-      my_fqdn=`grep -E '^public_ip[[:space:]]*=' @sysconfdir@/mmc/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+      test -f /etc/mmc/pulse2/package-server/package-server.ini.local && \
+        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/pulse2/package-server/package-server.ini.local | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+      if [ -z ${my_fqdn} ]; then
+        test -f /etc/mmc/pulse2/package-server/package-server.ini && \
+        my_fqdn=`grep -E '^public_ip[[:space:]]*=' /etc/mmc/pulse2/package-server/package-server.ini | cut -d= -f2 | sed 's!\s!!g' | grep -E '^([0-9]{1,3}\.){3}[0-9]{1,3}$'`
+      fi
       # Still empty ?!?!?
       if [ -z ${my_fqdn} ]; then
         echo "Unable to determinate IP address using public_ip field from"
