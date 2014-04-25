@@ -229,3 +229,11 @@ def updateDebianSourceList():
         logging.getLogger().error('Error while writing source.list file')
     except Exception, e:
         logging.getLogger().exception(str(e))
+
+
+def canDoInventory():
+    try:
+        from mmc.plugins.pulse2.inventory import canDoInventory
+        return canDoInventory()
+    except ImportError:
+        return True
