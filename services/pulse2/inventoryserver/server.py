@@ -50,7 +50,7 @@ from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 from pulse2.inventoryserver.ssl import SecureHTTPRequestHandler, SecureThreadedHTTPServer
 from pulse2.inventoryserver.utils import InventoryUtils
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
-from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS
+from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS, canDoInventory
 
 
 class InventoryServer:
@@ -197,12 +197,16 @@ class InventoryServer:
                             do_forward = True
                 # Machine is not known, forward anyway
                 else:
-                    if InventoryUtils.is_coming_from_pxe(content):
-                        self.logger.info("<GlpiProxy> PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
-                        do_forward = True
+                    
+                    if canDoInventory():
+                        if InventoryUtils.is_coming_from_pxe(content):
+                            self.logger.info("<GlpiProxy> PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                            do_forward = True
+                        else:
+                            self.logger.info("<GlpiProxy> Inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                            do_forward = True
                     else:
-                        self.logger.info("<GlpiProxy> Inventory received from %s for an unknown machine: forwarding" % str(from_ip))
-                        do_forward = True
+                        self.logger.info("<GlpiProxy> Cannot forward inventory (operation denied)")
 
                 # Let's forward if needed
                 if do_forward:
