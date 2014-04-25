@@ -349,7 +349,7 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getComputersList(ctx, filt)
 
-    def getComputerCount(self, ctx, filt = None):
+    def getComputerCount(self, ctx, filt = {}):
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerCount(ctx, filt)
