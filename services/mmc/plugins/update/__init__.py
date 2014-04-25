@@ -149,7 +149,6 @@ class RpcProxy(RpcProxyI):
         
         global last_update_check_ts, available_updates
         # If last checking is least than 4 hours, return cached value
-        logger.fatal(last_update_check_ts)
         if last_update_check_ts and (time() - last_update_check_ts) < 14400:
             return available_updates
         
