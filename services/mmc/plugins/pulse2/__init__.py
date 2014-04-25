@@ -44,6 +44,10 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:0:0"
 
+NOAUTHNEEDED = [
+    'canDoInventory',
+]
+
 def getApiVersion(): return APIVERSION
 
 def activate():
