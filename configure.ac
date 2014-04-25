@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [pulse2])
-AC_INIT(project, [2.0.6], [http://www.mandriva.com])
+AC_INIT(project, [2.0.7], [http://www.mandriva.com])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
