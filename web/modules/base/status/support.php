@@ -26,7 +26,7 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
 
 require("graph/navbar.inc.php");
 require("includes/statusSidebar.inc.php");
-$p = new PageGenerator(_("License and support informations"));
+$p = new PageGenerator(_("License and support information"));
 $p->displayTitle();
 
 $subscription = getSubscriptionInformation(True);

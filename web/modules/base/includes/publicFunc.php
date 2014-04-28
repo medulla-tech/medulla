@@ -246,7 +246,7 @@ function _base_changeUser($FH, $mode) {
             }
             else {
                 $base_errors .= sprintf(_("The photo is too big. The max size is %s x %s.
-                    Install php gd extention to resize the photo automatically"),
+                    Install php gd extension to resize the photo automatically"),
                     $maxwidth, $maxheight) . "<br/>";
             }
         }
