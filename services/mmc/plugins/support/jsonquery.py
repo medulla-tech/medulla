@@ -81,7 +81,7 @@ class Query(object):
                'Content-type': ['text/json'],
               }
 
-    def __init__(self, url, client_uuid, license_tmp_file, clock=reactor):
+    def __init__(self, url, client_uuid, license_tmp_file, country, clock=reactor):
         """
         @param url: Service Place URL
         @type url: str
@@ -95,7 +95,7 @@ class Query(object):
         @param clock: used reactor (for utittests)
         @type clock: reactor
         """
-        self.url = "%s/%s/" % (url, client_uuid)
+        self.url = "%s/%s/pulse/?country=%s" % (url, client_uuid, country)
         self.clock = clock
         self.license_tmp_file = license_tmp_file
         self.logger = logging.getLogger()

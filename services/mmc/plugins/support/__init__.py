@@ -53,7 +53,7 @@ def activate():
                           cron_expression=config.cron_search_for_updates
                           )
 
-    LicenseChecker().get_license_info(True)
+    LicenseChecker().get_license_info()
 
     return True
 
@@ -78,12 +78,16 @@ class LicenseChecker(object):
         @rtype: Deferred
         """
 
-        logging.getLogger().info("Plugin Support: checking the license info on %s/%s" % (config.license_server_url,
-                                                                                         config.install_uuid)
-                                )
+        logging.getLogger().info("Plugin Support: checking the license info on %s/%s/pulse/country=%s" % (
+            config.license_server_url,
+            config.install_uuid,
+            config.country)
+        )
+
         query = Query(config.license_server_url,
                       config.install_uuid,
-                      config.license_tmp_file
+                      config.license_tmp_file,
+                      config.country
                       )
 
         d = query.get(offline)
