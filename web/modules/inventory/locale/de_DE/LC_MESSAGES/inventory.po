@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-04-07 14:14+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -399,7 +399,8 @@ msgid "Filesystem"
 msgstr "Dateisystem"
 
 #: modules/inventory/includes/html.php:98
-msgid "Filter softwares"
+#, fuzzy
+msgid "Filter software"
 msgstr "Filter Software"
 
 #: modules/inventory/inventory/infos.php:43
@@ -507,7 +508,8 @@ msgstr "Eintreffende Inventare"
 #: modules/inventory/infoPackage.inc.php:83
 #: modules/inventory/inventory/ajaxIncoming.php:85
 #: modules/inventory/inventory/ajaxViewPart.php:462
-msgid "Informations"
+#, fuzzy
+msgid "Information"
 msgstr "Informationen"
 
 #: modules/inventory/infoPackage.inc.php:58

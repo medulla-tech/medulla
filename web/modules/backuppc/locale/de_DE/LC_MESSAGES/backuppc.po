@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2013-12-23 10:01+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -284,7 +284,8 @@ msgid "Error log"
 msgstr "Fehler-Log"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:39
-msgid "Error while retreiving status."
+#, fuzzy
+msgid "Error while retrieving status."
 msgstr "Fehler beim Einholen des Status."
 
 #: modules/backuppc/backuppc/hostSummary.php:152
@@ -637,7 +638,8 @@ msgid "View all versions"
 msgstr "Alle Versionen betrachten"
 
 #: modules/backuppc/backuppc/hostSummary.php:163
-msgid "View erros"
+#, fuzzy
+msgid "View errors"
 msgstr "Fehler ansehen"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:28
@@ -667,7 +669,8 @@ msgstr "Windows XP (Gesamtes C: Laufwerk)"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
 #: modules/backuppc/backuppc/edit.php:95
-msgid "Windows-1250 - Latin (Central europe)"
+#, fuzzy
+msgid "Windows-1250 - Latin (Central Europe)"
 msgstr "Windows-1250 - Latin (Central Europe)"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:104
@@ -677,7 +680,8 @@ msgstr "Windows-1251 - Kyrillisch"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 #: modules/backuppc/backuppc/edit.php:89
-msgid "Windows-1252 - Western europe"
+#, fuzzy
+msgid "Windows-1252 - Western Europe"
 msgstr "Windows-1252 - Westeuropa"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:105

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-03-20 17:47+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -566,7 +566,8 @@ msgid "Connection Failed !"
 msgstr "Conexão Falhou!"
 
 #: modules/msc/msc/vnc_client_java.php:72
-msgid "Connection Succeedeed !"
+#, fuzzy
+msgid "Connection Succeeded !"
 msgstr "Conectado com sucesso !"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:227
@@ -1125,7 +1126,8 @@ msgid "Not available"
 msgstr "Não disponível"
 
 #: modules/msc/msc/tabs.php:85
-msgid "Not enough informations"
+#, fuzzy
+msgid "Not enough information"
 msgstr "Informações insuficientes"
 
 #: modules/msc/includes/functions.php:46
@@ -1868,7 +1870,8 @@ msgid "computers paused"
 msgstr "computadores pausados"
 
 #: modules/msc/msc/statuscsv.php:109
-msgid "computers running a deploiement"
+#, fuzzy
+msgid "computers running a deployment"
 msgstr "computadores executando uma implantação"
 
 #: modules/msc/msc/statuscsv.php:106

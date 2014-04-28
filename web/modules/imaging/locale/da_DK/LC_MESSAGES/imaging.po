@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-04-28 07:47+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1142,7 +1142,7 @@ msgid "No master available."
 msgstr ""
 
 #: modules/imaging/imaging/tabs.php:277
-msgid "Not enough informations"
+msgid "Not enough information"
 msgstr ""
 
 #: modules/imaging/includes/post_install_script.php:28

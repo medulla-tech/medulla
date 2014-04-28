@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2013-10-09 12:53+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -1152,7 +1152,8 @@ msgid "No master available."
 msgstr "Нет доступного мастера"
 
 #: modules/imaging/imaging/tabs.php:277
-msgid "Not enough informations"
+#, fuzzy
+msgid "Not enough information"
 msgstr "Не достаточно информации"
 
 #: modules/imaging/includes/post_install_script.php:28

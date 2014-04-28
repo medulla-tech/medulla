@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-03-20 12:54+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
@@ -561,8 +561,9 @@ msgid "Connection Failed !"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_java.php:72
-msgid "Connection Succeedeed !"
-msgstr ""
+#, fuzzy
+msgid "Connection Succeeded !"
+msgstr "Команда ping выполнена успешно"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:227
 msgid "Connection failed"
@@ -1115,7 +1116,8 @@ msgid "Not available"
 msgstr ""
 
 #: modules/msc/msc/tabs.php:85
-msgid "Not enough informations"
+#, fuzzy
+msgid "Not enough information"
 msgstr "Не достаточно информации"
 
 #: modules/msc/includes/functions.php:46
@@ -1860,7 +1862,8 @@ msgid "computers paused"
 msgstr "работа компьютеров приостановлена"
 
 #: modules/msc/msc/statuscsv.php:109
-msgid "computers running a deploiement"
+#, fuzzy
+msgid "computers running a deployment"
 msgstr "компьютеры под управлением развертывания"
 
 #: modules/msc/msc/statuscsv.php:106

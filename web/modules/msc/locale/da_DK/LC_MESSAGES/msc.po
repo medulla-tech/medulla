@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-04-28 07:48+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -533,7 +533,7 @@ msgid "Connection Failed !"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_java.php:72
-msgid "Connection Succeedeed !"
+msgid "Connection Succeeded !"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_no_vnc.php:227
@@ -1083,7 +1083,7 @@ msgid "Not available"
 msgstr ""
 
 #: modules/msc/msc/tabs.php:85
-msgid "Not enough informations"
+msgid "Not enough information"
 msgstr ""
 
 #: modules/msc/includes/functions.php:46
@@ -1818,7 +1818,7 @@ msgid "computers paused"
 msgstr ""
 
 #: modules/msc/msc/statuscsv.php:109
-msgid "computers running a deploiement"
+msgid "computers running a deployment"
 msgstr ""
 
 #: modules/msc/msc/statuscsv.php:106

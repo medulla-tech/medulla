@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-28 09:49+0200\n"
+"POT-Creation-Date: 2014-04-28 10:59+0200\n"
 "PO-Revision-Date: 2014-03-12 13:22+0000\n"
 "Last-Translator: Cécile Adam <acecile@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -402,7 +402,8 @@ msgid "Filesystem"
 msgstr "Système de Fichiers"
 
 #: modules/inventory/includes/html.php:98
-msgid "Filter softwares"
+#, fuzzy
+msgid "Filter software"
 msgstr "Filtrer les logiciels"
 
 #: modules/inventory/inventory/infos.php:43
@@ -510,7 +511,8 @@ msgstr "Nouveaux inventaires"
 #: modules/inventory/infoPackage.inc.php:83
 #: modules/inventory/inventory/ajaxIncoming.php:85
 #: modules/inventory/inventory/ajaxViewPart.php:462
-msgid "Informations"
+#, fuzzy
+msgid "Information"
 msgstr "Informations"
 
 #: modules/inventory/infoPackage.inc.php:58
