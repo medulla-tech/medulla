@@ -80,7 +80,7 @@ $page = new Page("view", _T("View", "inventory"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-$page = new Page("infos", _T("Informations", "inventory"));
+$page = new Page("infos", _T("Information", "inventory"));
 $page->setFile("modules/inventory/inventory/infos.php", array("noHeader" => True, "visible" => False));
 $submod->addPage($page);
 

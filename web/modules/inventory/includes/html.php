@@ -95,7 +95,7 @@ class AjaxFilterInventory extends AjaxFilter {
                     // Display the checkbox to allow to filter the softwares
                     $checkbox = new CheckboxTpl("software_filter");
                     $checkbox->display(array("value" => "checked"));
-                    echo _T("Filter softwares", 'inventory');
+                    echo _T("Filter software", 'inventory');
 
                     // Display hide windows updates checkbox
                     $checkbox = new CheckboxTpl("hide_win_updates");

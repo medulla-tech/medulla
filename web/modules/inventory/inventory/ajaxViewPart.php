@@ -459,7 +459,7 @@ if ($_GET['uuid'] != '') {
     print "<div style=\"overflow: auto\">";
     if ($n != null) {
         $n->addActionItem(new ActionItem(_T("View", "inventory"), "invtabs", "display", "inventory", "base", "computers"));
-        $n->addActionItem(new ActionPopupItem(_T("Informations", "inventory"), "infos", "info", "inventory", "inventory", "inventory"));
+        $n->addActionItem(new ActionPopupItem(_T("Information", "inventory"), "infos", "info", "inventory", "inventory", "inventory"));
         $n->setParamInfo($params);
         $n->setTableHeaderPadding(1);
         $n->setItemCount($count);

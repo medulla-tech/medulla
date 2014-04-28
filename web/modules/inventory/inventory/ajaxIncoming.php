@@ -82,7 +82,7 @@ $l->addExtraInfo($inventories, _T("Inventory date"));
 $l->addExtraInfo($new_machines, _T("New computer"));
 // Add actions item, to make first column cliquable
 $l->addActionItem(new ActionItem(_T("View", "inventory"),"invtabs","display","inventory", "base", "computers"));
-$l->addActionItem(new ActionPopupItem(_T("Informations", "inventory"),"infos","info","inventory", "inventory", "inventory"));
+$l->addActionItem(new ActionPopupItem(_T("Information", "inventory"),"infos","info","inventory", "inventory", "inventory"));
 $l->setParamInfo($params);
 // Navbar for an Ajax widget
 $l->setItemCount($count);
