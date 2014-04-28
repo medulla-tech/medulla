@@ -20,6 +20,7 @@
 
 """ JSON querying on License server """
 
+import os
 import json
 import logging
 
@@ -208,6 +209,10 @@ class Query(object):
         @return: decoded data
         @rtype: dict
         """
+        if not os.path.exists(self.license_tmp_file):
+            self.logger.debug("License temp file not found, skipping")
+            return None
+
         try:
             with open(self.license_tmp_file, "r") as jsonfile:
                 try:
