@@ -106,7 +106,7 @@ if ($specific_state) {
                 _T('computers stopped', 'msc'),
                 _T('computers paused', 'msc'),
                 _T('computers out of the valid period', 'msc'),
-                _T('computers running a deploiement', 'msc'),
+                _T('computers running a deployment', 'msc'),
                 _T('waiting to upload', 'msc'),
                 _T('waiting to upload and already try', 'msc'),
                 _T('running upload', 'msc'),

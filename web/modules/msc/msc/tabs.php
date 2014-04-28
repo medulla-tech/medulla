@@ -82,7 +82,7 @@ if ($_GET['uuid']) {
     $p = new PageGenerator();
     $p->setSideMenu($sidemenu);
     $p->display();
-    print _T("Not enough informations", "msc");
+    print _T("Not enough information", "msc");
 }
 ?>
 <script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
