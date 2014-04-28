@@ -40,10 +40,14 @@ class UpdatePanel extends Panel {
         if ($updates === FALSE){
 
         // Update error occured
-	print '<center style="color:red;font-weight:bold">An error occured while fetching updates</center>';
+	printf('<center style="color:red;font-weight:bold">%s</center>', _T('An error occured while fetching updates'));
 	}
 	else{
         
+            $view_updates_text = _T('View updates', 'update');
+            $install_updates_text = _T('Install updates', 'update');
+            
+            
             print '<center>';
             
             if ($update_count == 0)
@@ -55,10 +59,10 @@ class UpdatePanel extends Panel {
                 <a title="View updates" class="btnSecondary"
                     href="javascript:;"
                     onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
-                    >View updates</a><br/><br/>
+                    >$view_updates_text</a><br/><br/>
                     <a title="Install updates" class="btnSecondary"
                     href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
-                    >Install updates</a>
+                    >$install_updates_text</a>
                 </center>
 EOS;
                 
