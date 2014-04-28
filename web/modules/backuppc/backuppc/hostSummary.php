@@ -160,7 +160,7 @@ if ($response['data']) {
 
     $n->setParamInfo($params); // Setting url params
     $n->addActionItem(new ActionItem(_T("Browse", "backuppc"), "BrowseShareNames", "display", "host", "backuppc", "backuppc"));
-    $n->addActionItem(new ActionPopupItem(_T("View erros"), "viewXferLog", "file", "dir", "backuppc", "backuppc"));
+    $n->addActionItem(new ActionPopupItem(_T("View errors"), "viewXferLog", "file", "dir", "backuppc", "backuppc"));
 
     print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 

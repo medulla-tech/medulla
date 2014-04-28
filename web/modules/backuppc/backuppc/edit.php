@@ -86,13 +86,13 @@ $f->add(
 $sel = new SelectItem("encoding");
 $list = array(
     "utf8" => 'UTF8',
-    "cp1252" => _T('Windows-1252 - Western europe', 'backuppc'),
+    "cp1252" => _T('Windows-1252 - Western Europe', 'backuppc'),
     "cp874" => _T('Windows-874 - Thai', 'backuppc'),
     "cp932" => _T('Windows-932 - Japanese', 'backuppc'),
     "cp936" => _T('Windows-936 - Chinese (simplified)', 'backuppc'),
     "cp949" => _T('Windows-949 - Korean', 'backuppc'),
     "cp950" => _T('Windows-950 - Chinese (traditional)', 'backuppc'),
-    "cp1250" => _T('Windows-1250 - Latin (Central europe)', 'backuppc'),
+    "cp1250" => _T('Windows-1250 - Latin (Central Europe)', 'backuppc'),
     "cp1251" => _T('Windows-1251 - Cyrillic', 'backuppc'),
     "cp1253" => _T('Windows-1253 - Greek', 'backuppc'),
     "cp1254" => _T('Windows-1254 - Turkish', 'backuppc'),
