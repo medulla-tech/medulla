@@ -21,7 +21,6 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/base/includes/computers.inc.php");
 
 
 $options = array(
@@ -46,9 +45,15 @@ class LicensePanel extends Panel {
 	    if ($this->data['email'])
 		    echo '<p>' . _T("Email", "support") . ':</p>';
 		    echo '<p><b><a href="'. $this->data["email_uri"] . '">' . $this->data['email'] . '</a></b></p>';
-	    if ($this->data['hours']) 
+	    if ($this->data['hours']){ 
 		    echo '<p>' . _T("Hours", "support") . ':</p>';
-	            echo '<p><b>' . $this->data['hours'] . '</b></p>';
+		    echo '<p><b>' . $this->data['hours'] . '</b></p>';
+	    }
+	    echo '<p>' . _T("Your subscription", "support") . ':</p>';
+
+	    if ($this->data['machines_subscribed']||$this->data['machines_used']){ 
+	    echo '<p><b>' . $this->data['machines_used']. " " . _T("machines used of", "support") .' '. $this->data["machines_subscribed"] .' ' . _T("subscribed", "support") . '</b></p>';
+            }
             echo '</div>';
 
 	    if ($this->data['links']) {
