@@ -274,6 +274,6 @@ if (isset($params['uuid'])) {
     $p = new PageGenerator();
     $p->setSideMenu($sidemenu);
     $p->display();
-    print _T("Not enough informations", "imaging");
+    print _T("Not enough information", "imaging");
 }
 ?>
