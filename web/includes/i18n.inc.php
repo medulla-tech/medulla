@@ -55,7 +55,9 @@ if (!function_exists('_T')) {
                      "nb_NO" => "Norwegian Bokmål",
                      "pl_PL" => "Polish",
                      "pt_BR" => "Português do Brasil",
-                     "ru_RU" => "русский язык"
+                     "ru_RU" => "русский язык",
+                     "zh_TW" => "Chinese Traditional",
+                     "ja_JP" => "Japanese"
                     );
         return $res;
     }
