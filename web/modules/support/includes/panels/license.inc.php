@@ -32,40 +32,40 @@ $options = array(
 
 class LicensePanel extends Panel {
 
-	function display_content() {
+    function display_content() {
 
-            echo '<div class="subpanel">';    
-	    echo '<p>' . _T("Your support", "support") . ':</p>';
-	    if ($this->data['name']) 
+        echo '<div class="subpanel">';
+        if ($this->data['name']||$this->data['phone']||$this->data['email']||$this->data['hours']){ 
+            echo '<p>' . _T("Your support", "support") . ':</p>';
+            if ($this->data['name']) 
                 echo '<p><b>' . $this->data['name'] . '</b></p>';
 
-	    if ($this->data['phone']) 
-		    echo '<p>' . _T("Phone", "support") . ':</p>'; 
-		    echo '<p><b><a href="'. $this->data["phone_uri"] . '">' . $this->data['phone'] . '</a></b></p>';
-	    if ($this->data['email'])
-		    echo '<p>' . _T("Email", "support") . ':</p>';
-		    echo '<p><b><a href="'. $this->data["email_uri"] . '">' . $this->data['email'] . '</a></b></p>';
-	    if ($this->data['hours']){ 
-		    echo '<p>' . _T("Hours", "support") . ':</p>';
-		    echo '<p><b>' . $this->data['hours'] . '</b></p>';
-	    }
-	    echo '<p>' . _T("Your subscription", "support") . ':</p>';
+            if ($this->data['phone']) 
+                echo '<p>' . _T("Phone", "support") . ':</p>'; 
+            echo '<p><b><a href="'. $this->data["phone_uri"] . '">' . $this->data['phone'] . '</a></b></p>';
+            if ($this->data['email'])
+                echo '<p>' . _T("Email", "support") . ':</p>';
+            echo '<p><b><a href="'. $this->data["email_uri"] . '">' . $this->data['email'] . '</a></b></p>';
+            if ($this->data['hours']){ 
+                echo '<p>' . _T("Hours", "support") . ':</p>';
+                echo '<p><b>' . $this->data['hours'] . '</b></p>';
+            }
+        }
+        echo '<p>' . _T("Your subscription", "support") . ':</p>';
 
-	    if ($this->data['machines_subscribed']||$this->data['machines_used']){ 
-	    echo '<p><b>' . $this->data['machines_used']. " " . _T("machines used of", "support") .' '. $this->data["machines_subscribed"] .' ' . _T("subscribed", "support") . '</b></p>';
+
+        list($used_machines, $max_machines) = xmlCall("support.get_subscription_info");
+        echo '<p class="alert alert-success">Computers : <b>' . $used_machines. " " . '/' .' '. $max_machines .' ' . '</b></p>';
+        echo '</div>';
+
+        if ($this->data['links']) {
+            echo '<div class="subpanel">';
+            echo '<p>' . _T("Links", "support") . ':</p>';
+            foreach($this->data['links'] as $linkgrp){
+                echo '<p><b><a href="' . $linkgrp["url"] . '">' . $linkgrp["text"] . '</a></b></p>';
             }
             echo '</div>';
-
-	    if ($this->data['links']) {
-                echo '<div class="subpanel">';    
-                echo '<p>' . _T("Links", "support") . ':</p>';
-	        foreach($this->data['links'] as $linkgrp){
-	 	    echo '<p><b><a href="' . $linkgrp["url"] . '">' . $linkgrp["text"] . '</a></b></p>';
-	        }	    
-                echo '</div>';
-	    }
-
-
+        }
     }
 }
 ?>

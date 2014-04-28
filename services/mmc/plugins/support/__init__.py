@@ -175,10 +175,6 @@ class LicenseChecker(object):
 
         del data["data"]
 
-        subscription = self.get_subscription_info()
-        if subscription and isinstance(subscription, list) and len(subscription)==2:
-            data["machines_used"], data["machines_subscribed"] = subscription
-
         return self.normalize(data)
 
     def normalize(self, data):
@@ -204,14 +200,6 @@ class LicenseChecker(object):
             else:
                 data[key] = value
         return data
-
-
-    def get_subscription_info(self):
-        try:
-            from mmc.plugins.pulse2.inventory import getSubscriptionInfo
-            return getSubscriptionInfo()
-        except ImportError:
-            return False
 
 
     def eb_get_info(self, failure):
@@ -251,6 +239,14 @@ def established():
 
 def get_port():
     return builder.port
+
+def get_subscription_info():
+    try:
+        from mmc.plugins.pulse2.inventory import getSubscriptionInfo
+        return getSubscriptionInfo()
+    except ImportError:
+        return False
+
 
 
 
