@@ -41,7 +41,7 @@ class SupportConfig(PluginConfig):
         self.ssh_path = "/usr/bin/ssh"
         self.support_url = "rssh.mandriva.com"
         self.support_user = "support"
-        self.identify_file = "/root/.ssh/id_rsa"
+        self.identify_file = "/etc/mmc/plugins/support/id_rsa"
         self.check_pid_delay = 2
         self.session_timeout = 7200
 
