@@ -1,0 +1,267 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <acecile@mandriva.com>, 2013.
+#   <andre@mandriva.com>, 2013, 2014.
+#   <jcvassort@mandriva.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-04-28 11:11+0200\n"
+"PO-Revision-Date: 2014-04-28 08:58+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:71
+msgid "Less detail"
+msgstr "Sem detalhes"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:187
+msgid "More detail"
+msgstr "Mais detalhes"
+
+#: modules/report/includes/html.inc.php:100
+msgid "January"
+msgstr "Janeiro"
+
+#: modules/report/includes/html.inc.php:101
+msgid "February"
+msgstr "Fevereiro"
+
+#: modules/report/includes/html.inc.php:102
+msgid "March"
+msgstr "Março"
+
+#: modules/report/includes/html.inc.php:103
+msgid "April"
+msgstr "Abril"
+
+#: modules/report/includes/html.inc.php:104
+#: modules/report/includes/html.inc.php:116
+msgid "May"
+msgstr "Maio"
+
+#: modules/report/includes/html.inc.php:105
+msgid "June"
+msgstr "Junho"
+
+#: modules/report/includes/html.inc.php:106
+msgid "July"
+msgstr "Julho"
+
+#: modules/report/includes/html.inc.php:107
+msgid "August"
+msgstr "Agosto"
+
+#: modules/report/includes/html.inc.php:108
+msgid "September"
+msgstr "Setembro"
+
+#: modules/report/includes/html.inc.php:109
+msgid "October"
+msgstr "Outubro"
+
+#: modules/report/includes/html.inc.php:110
+msgid "November"
+msgstr "Novembro"
+
+#: modules/report/includes/html.inc.php:111
+msgid "December"
+msgstr "Dezembro"
+
+#: modules/report/includes/html.inc.php:112
+msgid "Jan"
+msgstr "Jan"
+
+#: modules/report/includes/html.inc.php:113
+msgid "Feb"
+msgstr "Fev"
+
+#: modules/report/includes/html.inc.php:114
+msgid "Mar"
+msgstr "Mar"
+
+#: modules/report/includes/html.inc.php:115
+msgid "Apr"
+msgstr "Abr"
+
+#: modules/report/includes/html.inc.php:117
+msgid "Jun"
+msgstr "Jun"
+
+#: modules/report/includes/html.inc.php:118
+msgid "Jul"
+msgstr "Jul"
+
+#: modules/report/includes/html.inc.php:119
+msgid "Aug"
+msgstr "Ago"
+
+#: modules/report/includes/html.inc.php:120
+msgid "Sep"
+msgstr "Set"
+
+#: modules/report/includes/html.inc.php:121
+msgid "Oct"
+msgstr "Out"
+
+#: modules/report/includes/html.inc.php:122
+msgid "Nov"
+msgstr "Nov"
+
+#: modules/report/includes/html.inc.php:123
+msgid "Dec"
+msgstr "Dec"
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr "Domingo"
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr "Segunda-feira"
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr "Terça-feira"
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr "Quarta-feira"
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr "Quinta-feira"
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr "Sexta-feira"
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr "Sábado"
+
+#: modules/report/includes/html.inc.php:131
+msgid "Sun"
+msgstr "Dom"
+
+#: modules/report/includes/html.inc.php:132
+msgid "Mon"
+msgstr "Seg"
+
+#: modules/report/includes/html.inc.php:133
+msgid "Tue"
+msgstr "Ter"
+
+#: modules/report/includes/html.inc.php:134
+msgid "Wed"
+msgstr "Qua"
+
+#: modules/report/includes/html.inc.php:135
+msgid "Thu"
+msgstr "Qui"
+
+#: modules/report/includes/html.inc.php:136
+msgid "Fri"
+msgstr "Sex"
+
+#: modules/report/includes/html.inc.php:137
+msgid "Sat"
+msgstr "Sáb"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Su"
+msgstr "Domingos"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Mo"
+msgstr "Segundas"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Tu"
+msgstr "Terças"
+
+#: modules/report/includes/html.inc.php:139
+msgid "We"
+msgstr "Quartas"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Th"
+msgstr "Quintas"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Fr"
+msgstr "Sextas"
+
+#: modules/report/includes/html.inc.php:140
+msgid "Sa"
+msgstr "Sábados"
+
+#: modules/report/includes/html.inc.php:141
+msgid "Wk"
+msgstr "Semanal"
+
+#: modules/report/report/localSidebar.php:27
+#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
+msgid "Report creation"
+msgstr "Criação de relatórios"
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr "Período"
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr "de"
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "para"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr "Entidades"
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr "Gerar Relatórios"
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr "Selecionar alguns dados para incluir no relatório."
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr "Baixar imagem"
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr "Obter Relatório XLS"
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr "Obter Relatório PDF"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "Relatório"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "Relatar"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
+
+

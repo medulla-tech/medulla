@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <maikwagner@yahoo.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-04-28 11:11+0200\n"
+"PO-Revision-Date: 2013-04-03 22:14+0000\n"
+"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
+"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+#: modules/dashboard/includes/panels/shortcuts.inc.php:29
+msgid "Shortcuts"
+msgstr "Shortcuts"
+
+#: modules/dashboard/includes/panels/space.inc.php:28
+msgid "Disk usage"
+msgstr "Plattennutzung"
+
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
+msgstr "benutzt"
+
+#: modules/dashboard/includes/panels/space.inc.php:37
+#: modules/dashboard/includes/panels/general.inc.php:74
+msgid "free"
+msgstr "frei"
+
+#: modules/dashboard/includes/panels/general.inc.php:28
+msgid "General"
+msgstr "Allgemein"
+
+#: modules/dashboard/includes/panels/general.inc.php:38
+msgid "on"
+msgstr "auf"
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "Uptime"
+msgstr "Uptime"
+
+#: modules/dashboard/includes/panels/general.inc.php:40
+msgid "Load"
+msgstr "Load"
+
+#: modules/dashboard/includes/panels/general.inc.php:43
+msgid "RAM"
+msgstr "RAM"
+
+#: modules/dashboard/infoPackage.inc.php:36
+#: modules/dashboard/infoPackage.inc.php:40
+#: modules/dashboard/infoPackage.inc.php:46
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: modules/dashboard/infoPackage.inc.php:51
+msgid "Panels"
+msgstr "Panels"
+
+
