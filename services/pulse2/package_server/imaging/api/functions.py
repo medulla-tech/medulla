@@ -124,7 +124,7 @@ class Imaging(object):
             PackageServerConfig().pxe_keymap = params['pxe_keymap']
             if callback: callback.__call__(*args, **kw)
         def _error(error):
-            self.logger.error("Error while retreiving PXE Params: %s" % error)
+            self.logger.error("Error while retrieving PXE Params: %s" % error)
         RPCReplay().init()
         RPCReplay().firstRun()
         client = self._getXMLRPCClient()
