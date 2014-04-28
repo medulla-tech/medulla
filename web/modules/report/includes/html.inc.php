@@ -125,14 +125,14 @@ class periodInputTpl extends multifieldTpl {
                       _T("Monday", "report"),
                       _T("Tuesday", "report"),
                       _T("Wednesday", "report"),
-                      _T("Thirsday", "report"),
+                      _T("Thursday", "report"),
                       _T("Friday", "report"),
                       _T("Saturday", "report")));
         $daysShort = json_encode(array(_T("Sun", "report"),
                            _T("Mon", "report"),
                            _T("Tue", "report"),
                            _T("Wed", "report"),
-                           _T("Thi", "report"),
+                           _T("Thu", "report"),
                            _T("Fri", "report"),
                            _T("Sat", "report")));
         $daysMin = json_encode(array(_T("Su", "report"), _T("Mo", "report"), _T("Tu", "report"),
