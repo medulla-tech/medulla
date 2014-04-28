@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-04-28 01:12+0200\n"
-"PO-Revision-Date: 2014-01-27 16:34+0000\n"
+"POT-Creation-Date: 2014-04-28 10:47+0200\n"
+"PO-Revision-Date: 2014-04-28 08:30+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -1103,6 +1103,54 @@ msgstr "Адрес маски сети компьютера"
 msgid "Refresh"
 msgstr "Обновить"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Инвентарь"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI Инвентарь"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Читать журнал"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Развертывание ПО"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "Управление образами"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "Загрузить файл"
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr "Удаленное управление"
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr "Показать профиль"
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr "Список компьютеров"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr "Удалить компьютер"
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
+msgstr "Удалить компьютер из группы"
+
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1159,7 +1207,7 @@ msgstr ""
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extention to resize the photo automatically"
+"                    Install php gd extension to resize the photo automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:253
@@ -1320,53 +1368,9 @@ msgstr ""
 msgid "GID"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "Инвентарь"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "GLPI Инвентарь"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "Читать журнал"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "Развертывание ПО"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "Управление образами"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "Загрузить файл"
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr "Удаленное управление"
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr "Показать профиль"
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr "Список компьютеров"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr "Удалить компьютер"
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
-msgstr "Удалить компьютер из группы"
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr "Просмотреть журнал операций LDAP"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1381,12 +1385,8 @@ msgid "Actions"
 msgstr "Действия"
 
 #: modules/base/logview/ajax_showlog.php:46
-msgid "Extra informations"
-msgstr "Дополнительная информация"
-
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
-msgstr "Просмотреть журнал операций LDAP"
+msgid "Extra information"
+msgstr ""
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1396,9 +1396,53 @@ msgstr "У пользователя root не может быть избранн
 msgid "Add this page to your favorite"
 msgstr "Добавить эту страницу в закладки"
 
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "Время работы: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "день"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "час"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "минута"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "Память"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "Подкачка"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "Общий вид"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "Состояние сервера"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "Конфигурация LDAP"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "Разделы жесткого диска"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "Фоновые задания"
+
 #: modules/base/status/support.php:29
-msgid "License and support informations"
-msgstr "Информация о лицензии и поддержке"
+msgid "License and support information"
+msgstr ""
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
@@ -1459,50 +1503,6 @@ msgstr "Электронная почта поддержки"
 #: modules/base/status/support.php:59
 msgid "Support phone number"
 msgstr "Телефонный поддержки"
-
-#: modules/base/status/index.php:101
-msgid "Uptime: "
-msgstr "Время работы: "
-
-#: modules/base/status/index.php:104
-msgid "day"
-msgstr "день"
-
-#: modules/base/status/index.php:108
-msgid "hour"
-msgstr "час"
-
-#: modules/base/status/index.php:111
-msgid "minute"
-msgstr "минута"
-
-#: modules/base/status/index.php:116
-msgid "Memory"
-msgstr "Память"
-
-#: modules/base/status/index.php:119
-msgid "Swap"
-msgstr "Подкачка"
-
-#: modules/base/status/index.php:199
-msgid "Global view"
-msgstr "Общий вид"
-
-#: modules/base/status/index.php:206
-msgid "Server status"
-msgstr "Состояние сервера"
-
-#: modules/base/status/index.php:211
-msgid "LDAP Configuration"
-msgstr "Конфигурация LDAP"
-
-#: modules/base/status/index.php:218
-msgid "Hard drive partitions"
-msgstr "Разделы жесткого диска"
-
-#: modules/base/status/index.php:223
-msgid "Background jobs"
-msgstr "Фоновые задания"
 
 #: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
 msgid "Name"

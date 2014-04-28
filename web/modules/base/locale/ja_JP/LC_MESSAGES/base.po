@@ -1,0 +1,1994 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <info@janusww.com>, 2014.
+#   <jcvassort@mandriva.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-04-28 10:47+0200\n"
+"PO-Revision-Date: 2014-04-28 08:47+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/mds/team/ja_JP/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: forgotpassword.php:24
+msgid "A password reset link has been sent."
+msgstr "パスワードリセットリンクが送信されました。"
+
+#: forgotpassword.php:26
+msgid "Can't reset your password. Please contact your administrator."
+msgstr "パスワードをリセットできません。管理者に連絡してください。"
+
+#: forgotpassword.php:74 forgotpassword.php:80
+msgid "Password reset"
+msgstr "パスワードリセット"
+
+#: forgotpassword.php:76
+msgid "Login or mail"
+msgstr "ログインまたはメール"
+
+#: forgotpassword.php:81
+msgid "Back"
+msgstr "戻る"
+
+#: graph/navbar.inc.php:40
+msgid "standard mode"
+msgstr "スタンダードモード"
+
+#: graph/navbar.inc.php:42
+msgid "expert mode"
+msgstr "エキスパートモード"
+
+#: graph/navbar.inc.php:47
+msgid "Click to switch to"
+msgstr "按一下以切換至"
+
+#: graph/navbar.inc.php:48
+msgid "logout"
+msgstr "ログアウト"
+
+#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
+msgid "Logout"
+msgstr "ログアウト"
+
+#: graph/navbar.inc.php:62 modules/base/main/default.php:89
+#: modules/base/infoPackage.inc.php:43
+msgid "Home"
+msgstr "ホーム"
+
+#: graph/navbar.inc.php:97
+msgid ""
+"If this phrase does not change, you browser is not supported by the MMC "
+"application"
+msgstr "このフレーズが変わらない場合は、お使いのブラウザ は、MMC アプリケーションによってサポートされていません"
+
+#: graph/header.inc.php:195 graph/header.inc.php:231
+msgid "Yes"
+msgstr "はい"
+
+#: graph/header.inc.php:198 graph/header.inc.php:200
+msgid "No"
+msgstr "いいえ"
+
+#: graph/header.inc.php:233 includes/FormGenerator.php:618
+#: includes/PageGenerator.php:2188
+msgid "Close"
+msgstr "閉じる"
+
+#: graph/header.inc.php:297
+msgid "Form cannot be submit. Input errors are highlighted in red."
+msgstr "フォームを送信できません。入力エラーは赤でハイライトされています。"
+
+#: includes/commonErrorHandling.php:30
+msgid "This item already exists in your LDAP directory"
+msgstr "このアイテムは、すでに LDAP ディレクトリに存在しています。"
+
+#: includes/commonErrorHandling.php:31
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>change this entry name</li>\n"
+"                            <li>delete this entry before recreate it</li>\n"
+"                        </ul>"
+msgstr ""
+"次の手法によって問題を解決してください:⏎\n"
+"                        <ul>⏎\n"
+"                            <li>この入力名の変更</li>⏎\n"
+"                            <li>再作成する前にこの入力を削除する</li>⏎\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:43
+msgid "MMC Agent can't contact your LDAP server"
+msgstr "MMC エージェントが LDAP サーバーにコンタクトできません"
+
+#: includes/commonErrorHandling.php:44
+msgid ""
+"Solve the problem by:\n"
+"                        <ul>\n"
+"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify you LDAP server is up</li>\n"
+"                        </ul>"
+msgstr ""
+"次の手法によって問題を解決してください:\n"
+"⏎\n"
+"                        <ul>⏎\n"
+"                            <li>LDAP サーバーが正しく /etc/mmc/プラグインs/base/ini に設定されていることを確認する </li>⏎\n"
+"                            <li>LDAP サーバーが起動していることを確認する\n"
+"</li>⏎\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:53
+msgid "Error during authentication process"
+msgstr "認証プロセス中にエラーが発生しました"
+
+#: includes/commonErrorHandling.php:54 includes/commonErrorHandling.php:59
+msgid "Please contact your administrator."
+msgstr "管理者に連絡してください。"
+
+#: includes/commonErrorHandling.php:58
+msgid "Error while provisioning your account"
+msgstr "アカウントプロビジョニング中にエラーが発生しました"
+
+#: includes/commonErrorHandling.php:64
+msgid "This item do not seems to be in the index"
+msgstr "この項目は、インデックスに存在しないようです"
+
+#: includes/commonErrorHandling.php:65
+msgid ""
+"This problem can appear if:\n"
+"                        <ul>\n"
+"                            <li>This item no longer exists.</li>\n"
+"                            <li>You misspelled it.</li>\n"
+"                        </ul>"
+msgstr ""
+"次の場合にこの問題が生じる可能性があります:⏎\n"
+"                        <ul>⏎\n"
+"                            <li>この項目はもう存在していません。</li>⏎\n"
+"                            <li>ミススペルです。</li>⏎\n"
+"                        </ul>"
+
+#: includes/commonErrorHandling.php:77
+msgid "smbpasswd failed to change your password entry"
+msgstr "smbpasswd は、パスワード登録の変更に失敗しました。"
+
+#: includes/commonErrorHandling.php:78
+msgid ""
+"Verify that your smbpasswd is correctly configured:\n"
+"                        <ul>\n"
+"                            <li> Your Ldap server can be down</li>\n"
+"                            <li> Your Samba server is not properly configured</li>\n"
+"                        </ul>"
+msgstr ""
+"smbpasswd が正しく設定されていることを確認してください:⏎\n"
+"                        <ul>⏎\n"
+"                            <li> Ldap サーバーがダウンしている可能性がある</li>⏎\n"
+"                            <li> SAMBA サーバーが適切に設定されていない</li>⏎\n"
+"                        </ul>"
+
+#: includes/auditCodesManager.php:33
+msgid "Daemon start"
+msgstr "デーモン開始"
+
+#: includes/auditCodesManager.php:34
+msgid "Daemon stop"
+msgstr "デーモン停止"
+
+#: includes/auditCodesManager.php:35
+msgid "MMC agent"
+msgstr "MMC エージェント"
+
+#: includes/bgps_view.php:64
+msgid "No job."
+msgstr "ジョブがありません。"
+
+#: includes/ErrorHandling.php:77
+msgid "Show complete trackback"
+msgstr "完了したトレースバックを表示"
+
+#: includes/ErrorHandling.php:78
+msgid "Complete Traceback"
+msgstr "完了したトレースバック"
+
+#: includes/modules.inc.php:384
+#, php-format
+msgid "%s service restarting..."
+msgstr "%s  サービス再起動中..."
+
+#: includes/modules.inc.php:385
+#, php-format
+msgid "%s service restarted successfully."
+msgstr "%s サービスが再起動されました。"
+
+#: includes/modules.inc.php:386
+#, php-format
+msgid "%s service failed to restart."
+msgstr "%s サービスは再起動に失敗しました。"
+
+#: includes/modules.inc.php:391
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] ""
+"Pluralized Translations\n"
+"\n"
+"\n"
+"one: サービスを再起動しますか？\n"
+"\n"
+"other: サービスを再起動しますか？"
+
+#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:871
+#: includes/PageGenerator.php:1118
+#: modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100
+msgid "Previous"
+msgstr "前"
+
+#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:885
+#: includes/PageGenerator.php:1128
+#: modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111
+msgid "Next"
+msgstr "次"
+
+#: includes/xmlrpc.inc.php:166
+msgid "Can't connect to MMC agent"
+msgstr "MMC エージェントに接続できません"
+
+#: includes/xmlrpc.inc.php:167
+msgid "MMC agent seems to be down or not correctly configured."
+msgstr "MMC エージェントがダウンしているか、正しく設定されていないようです。"
+
+#: includes/xmlrpc.inc.php:179
+msgid "Can't send XML-RPC request to MMC agent"
+msgstr "XML-RPC リクエストを MMC エージェントに送信できません"
+
+#: includes/xmlrpc.inc.php:180
+msgid "MMC agent seems to be not correctly configured."
+msgstr "MMC エージェントが正しく設定されていないようです。"
+
+#: includes/xmlrpc.inc.php:196 includes/xmlrpc.inc.php:221
+#: includes/xmlrpc.inc.php:244
+msgid "MMC agent communication problem"
+msgstr "MMC エージェント通信で問題が発生しました"
+
+#: includes/xmlrpc.inc.php:197
+msgid ""
+"Timeout when reading data from the MMC agent. Please check network "
+"connectivity and server load."
+msgstr "MMC エージェントからデータを読み取る時に、タイムアウトしました。ネットワーク接続およびサーバー負荷を確認してください。"
+
+#: includes/xmlrpc.inc.php:206
+msgid "Error while reading MMC agent XML-RPC response."
+msgstr "MMC エージェント XML-RPC レスポンス読み取り時にエラーが発生しました。"
+
+#: includes/xmlrpc.inc.php:207
+msgid "Please check network connectivity."
+msgstr "ネットワーク接続を確認してください。"
+
+#: includes/xmlrpc.inc.php:222
+msgid ""
+"Can't communicate with MMC agent. Please check you're using the right TCP "
+"port and the right protocol."
+msgstr "MMC エージェントと通信できません。正しい TCP ポートとプロトコルを使用していることを確認してください。"
+
+#: includes/xmlrpc.inc.php:245
+msgid ""
+"The MMC agent didn't give us a session number. Please check the MMC agent "
+"version."
+msgstr "MMC エージェントがセッション番号を提示しませんでした。MMC エージェントのバージョンを確認してください。"
+
+#: includes/xmlrpc.inc.php:354
+msgid "unknown error"
+msgstr "原因不明のエラー"
+
+#: includes/xmlrpc.inc.php:355
+msgid ""
+"This exception is unknown. Please contact us to add an error handling on "
+"this error."
+msgstr "この例外の原因は不明です。当社までご連絡いただき、このエラーに関するエラーハンドリングを追加してください。"
+
+#: includes/acl.inc.php:127
+msgid "You do not have required rights"
+msgstr "必要な権限を持っていません。"
+
+#: includes/FormGenerator.php:69 includes/FormGenerator.php:291
+#: includes/FormGenerator.php:728 includes/FormGenerator.php:858
+msgid "unavailable"
+msgstr "使用不能"
+
+#: includes/FormGenerator.php:231
+msgid "Delete photo"
+msgstr "写真の削除"
+
+#: includes/FormGenerator.php:277
+msgid "yes"
+msgstr "はい"
+
+#: includes/FormGenerator.php:280
+msgid "no"
+msgstr "いいえ"
+
+#: includes/FormGenerator.php:465
+msgid "Year: "
+msgstr "年: "
+
+#: includes/FormGenerator.php:465
+msgid "Month: "
+msgstr "月: "
+
+#: includes/FormGenerator.php:465
+msgid "Day: "
+msgstr "日: "
+
+#: includes/FormGenerator.php:466
+msgid "Hour: "
+msgstr "時間: "
+
+#: includes/FormGenerator.php:466
+msgid "Min.: "
+msgstr "分.: "
+
+#: includes/FormGenerator.php:466
+msgid "Sec.: "
+msgstr "秒.: "
+
+#: includes/FormGenerator.php:538 includes/FormGenerator.php:544
+#: modules/base/includes/AjaxFilterLog.inc.php:168
+#: modules/base/includes/AjaxFilterLog.inc.php:172
+msgid "or <a href='#'"
+msgstr "あるいは<a href='#'"
+
+#: includes/FormGenerator.php:540
+#: modules/base/includes/AjaxFilterLog.inc.php:170
+msgid "value=\"now\";'>now</a>"
+msgstr "value=\"now\";'>今</a>"
+
+#: includes/FormGenerator.php:546
+#: modules/base/includes/AjaxFilterLog.inc.php:174
+msgid "value=\"never\";'>never</a>"
+msgstr "value=\"never\";'>しない</a>"
+
+#: includes/FormGenerator.php:595
+msgid "January"
+msgstr "1月"
+
+#: includes/FormGenerator.php:595
+msgid "February"
+msgstr "2月"
+
+#: includes/FormGenerator.php:595
+msgid "March"
+msgstr "3月"
+
+#: includes/FormGenerator.php:595
+msgid "April"
+msgstr "4月"
+
+#: includes/FormGenerator.php:596
+msgid "May"
+msgstr "5月"
+
+#: includes/FormGenerator.php:596
+msgid "June"
+msgstr "6月"
+
+#: includes/FormGenerator.php:596
+msgid "July"
+msgstr "7月"
+
+#: includes/FormGenerator.php:596
+msgid "August"
+msgstr "8月"
+
+#: includes/FormGenerator.php:597
+msgid "September"
+msgstr "9月"
+
+#: includes/FormGenerator.php:597
+msgid "October"
+msgstr "10月"
+
+#: includes/FormGenerator.php:597
+msgid "November"
+msgstr "11月"
+
+#: includes/FormGenerator.php:597
+msgid "December"
+msgstr "12月"
+
+#: includes/FormGenerator.php:607
+msgid "Sunday"
+msgstr "日曜"
+
+#: includes/FormGenerator.php:607
+msgid "Monday"
+msgstr "月曜"
+
+#: includes/FormGenerator.php:607
+msgid "Tuesday"
+msgstr "火曜"
+
+#: includes/FormGenerator.php:607
+msgid "Wednesday"
+msgstr "水曜"
+
+#: includes/FormGenerator.php:608
+msgid "Thursday"
+msgstr "木曜"
+
+#: includes/FormGenerator.php:608
+msgid "Friday"
+msgstr "金曜"
+
+#: includes/FormGenerator.php:608
+msgid "Saturday"
+msgstr "土曜"
+
+#: includes/FormGenerator.php:621
+msgid "Now"
+msgstr "今"
+
+#: includes/FormGenerator.php:694 modules/base/groups/localSidebar.php:29
+#: modules/base/users/localSidebar.php:29
+msgid "Add"
+msgstr "追加"
+
+#: includes/FormGenerator.php:995
+msgid "Toggle selection"
+msgstr "トグル選択"
+
+#: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
+#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "削除"
+
+#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+msgid "to"
+msgstr "至"
+
+#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#, php-format
+msgid " - Total <b>%s </b>"
+msgstr " - 合計  <b>%s </b>"
+
+#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+msgid "page"
+msgstr "ページ"
+
+#: includes/PageGenerator.php:905
+msgid "Pagination"
+msgstr "ページネーション"
+
+#: includes/PageGenerator.php:978
+msgid "Go to page"
+msgstr "ページに移動"
+
+#: includes/PageGenerator.php:1406
+msgid "No item available"
+msgstr "使用できる項目がありません"
+
+#: includes/PageGenerator.php:1594
+msgid "Select entity"
+msgstr "エンティティ選択"
+
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/edit.php:117
+#: modules/base/groups/members.php:188
+msgid "Confirm"
+msgstr "確認"
+
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
+#: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: includes/PageGenerator.php:2813
+msgid "Select all"
+msgstr "すべて選択"
+
+#: includes/PageGenerator.php:2813
+msgid "Unselect all"
+msgstr "すべて選択解除"
+
+#: logout/index.php:50
+msgid "Your session will be closed"
+msgstr "セッションは閉じられます"
+
+#: modules/admin/includes/configure.inc.php:50
+msgid " configuration"
+msgstr " 設定"
+
+#: modules/admin/includes/configure.inc.php:62
+msgid " configuration page"
+msgstr " 設定ページ"
+
+#: modules/base/audit/ajaxLogFilter.php:49
+#: modules/base/includes/AjaxFilterLog.inc.php:325
+msgid "Begin date"
+msgstr "開始日"
+
+#: modules/base/audit/ajaxLogFilter.php:52
+#: modules/base/includes/AjaxFilterLog.inc.php:326
+msgid "End date"
+msgstr "終了日"
+
+#: modules/base/audit/ajaxLogFilter.php:114 modules/base/audit/logview.php:58
+#: modules/base/logview/ajax_showlog.php:42
+msgid "Date"
+msgstr "日付"
+
+#: modules/base/audit/ajaxLogFilter.php:121 modules/base/audit/indexall.php:30
+#: modules/base/audit/indexbase.php:30 modules/base/includes/auditCodes.php:45
+msgid "User"
+msgstr "ユーザー"
+
+#: modules/base/audit/ajaxLogFilter.php:122 modules/base/audit/logview.php:62
+msgid "Event"
+msgstr "イベント"
+
+#: modules/base/audit/ajaxLogFilter.php:123 modules/base/audit/indexall.php:29
+#: modules/base/audit/indexbase.php:29
+msgid "Type"
+msgstr "タイプ"
+
+#: modules/base/audit/ajaxLogFilter.php:124
+msgid "Object Name"
+msgstr "オブジェクト名"
+
+#: modules/base/audit/ajaxLogFilter.php:126
+msgid "Module"
+msgstr "モジュール"
+
+#: modules/base/audit/ajaxLogFilter.php:128
+msgid "Result"
+msgstr "結果"
+
+#: modules/base/audit/ajaxLogFilter.php:132
+msgid "View details"
+msgstr "詳細を表示"
+
+#: modules/base/audit/indexall.php:29 modules/base/audit/indexbase.php:29
+#: modules/base/audit/logview.php:75
+msgid "Object"
+msgstr "オブジェクト"
+
+#: modules/base/audit/indexall.php:30 modules/base/audit/indexbase.php:30
+msgid "Action"
+msgstr "アクション"
+
+#: modules/base/audit/indexall.php:33 modules/base/audit/localSidebar.php:28
+msgid "All modules"
+msgstr "すべてのモジュール"
+
+#: modules/base/audit/indexbase.php:32
+msgid "User and group"
+msgstr "ユーザーおよびグループ"
+
+#: modules/base/audit/indexmail.php:31 modules/base/audit/localSidebar.php:38
+#: modules/base/users/ajaxFilter.php:80
+msgid "Mail"
+msgstr "メール"
+
+#: modules/base/audit/indexnetwork.php:31
+#: modules/base/audit/localSidebar.php:46
+msgid "Network"
+msgstr "ネットワーク"
+
+#: modules/base/audit/indexproxy.php:31
+msgid "Proxy audit"
+msgstr "プロキシ監査"
+
+#: modules/base/audit/indexsamba.php:31 modules/base/audit/localSidebar.php:34
+msgid "Samba"
+msgstr "SAMBA"
+
+#: modules/base/audit/indexsshlpk.php:31
+msgid "SSH public key audit"
+msgstr "SSH パブリックキー監査"
+
+#: modules/base/audit/list.php:30
+msgid "Logged actions"
+msgstr "ログに記録されたアクション"
+
+#: modules/base/audit/list.php:39
+msgid "Search action"
+msgstr "アクションを検索"
+
+#: modules/base/audit/localSidebar.php:30
+msgid "Users and Groups"
+msgstr "ユーザーおよびグループ"
+
+#: modules/base/audit/localSidebar.php:42
+msgid "Proxy"
+msgstr "プロキシ"
+
+#: modules/base/audit/logview.php:35
+msgid "Event details"
+msgstr "イベント詳細"
+
+#: modules/base/audit/logview.php:60
+msgid "User that initiated the event"
+msgstr "イベントを開始したユーザー"
+
+#: modules/base/audit/logview.php:64
+msgid "Plugin"
+msgstr "プラグイン"
+
+#: modules/base/audit/logview.php:66
+msgid "Client"
+msgstr "クライアント"
+
+#: modules/base/audit/logview.php:68
+msgid "Client hostname"
+msgstr "クライアントホスト名"
+
+#: modules/base/audit/logview.php:70
+msgid "Agent hostname"
+msgstr "エージェントホスト名"
+
+#: modules/base/audit/logview.php:77
+msgid "Object type"
+msgstr "オブジェクトタイプ"
+
+#: modules/base/audit/logview.php:87
+msgid "Value"
+msgstr "値"
+
+#: modules/base/computers/edit.php:36
+msgid "Computer successfully added"
+msgstr "コンピューターが追加されました"
+
+#: modules/base/computers/edit.php:41
+msgid "The computer name is already taken."
+msgstr "このコンピューター名はすでに取得されています。"
+
+#: modules/base/computers/edit.php:44
+msgid "Invalid computer name."
+msgstr "コンピューター名が不正です。"
+
+#: modules/base/computers/edit.php:50
+msgid "Add a computer"
+msgstr "コンピューターの追加"
+
+#: modules/base/computers/edit.php:52
+msgid "Edit a computer"
+msgstr "コンピューターの編集"
+
+#: modules/base/computers/edit.php:84
+msgid "Computer name"
+msgstr "コンピューター名"
+
+#: modules/base/computers/edit.php:89 modules/base/groups/edit.php:102
+msgid "Description"
+msgstr "内容"
+
+#: modules/base/computers/edit.php:123
+msgid "Location"
+msgstr "場所"
+
+#: modules/base/computers/trads.php:26
+msgid "Computer Name"
+msgstr "コンピューター名"
+
+#: modules/base/computers/trads.php:27
+msgid "Display Name"
+msgstr "表示名"
+
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:279
+msgid "Computer list"
+msgstr "コンピューター一覧"
+
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "すべてのコンピューター"
+
+#: modules/base/computers/localSidebar.php:8
+#: modules/base/infoPackage.inc.php:282
+msgid "Add computer"
+msgstr "コンピューターの追加"
+
+#: modules/base/computers/delete.php:30
+msgid ""
+"You have to check the box <b>\"I am aware that all related images (non-"
+"master) will be deleted\"</b> if you want to remove this computer."
+msgstr ""
+"このコンピューターを削除する場合は、<b>\"関連イメージ (マスターでない) が削除されることを認識しています\"</b> "
+"のボックスにチェックする必要があります。"
+
+#: modules/base/computers/delete.php:38
+msgid "The computer has been deleted."
+msgstr "コンピューターが削除されました。"
+
+#: modules/base/computers/delete.php:44
+msgid "Delete this computer"
+msgstr "このコンピューターの削除"
+
+#: modules/base/computers/delete.php:47
+msgid "Do you want a backup to be done ?"
+msgstr "バックアップを実行しますか？"
+
+#: modules/base/computers/delete.php:53
+msgid ""
+"I am aware that <b>all related images (non-master)</b> will be "
+"<b>DELETED</b>.<br />Check this box if it is what you want."
+msgstr ""
+"私は <b>すべての関連イメージ (マスターでない)</b> が <b>削除される</b>.<br "
+"/>削除される場合は、このボックスをチェックしてください。"
+
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
+msgid "Groups"
+msgstr "グループ"
+
+#: modules/base/groups/ajaxFilter.php:43
+msgid "Comments"
+msgstr "コメント"
+
+#: modules/base/groups/ajaxFilter.php:46
+msgid "Edit members"
+msgstr "メンバーの編集"
+
+#: modules/base/groups/ajaxFilter.php:47 modules/base/groups/edit.php:63
+msgid "Edit group"
+msgstr "グループの編集"
+
+#: modules/base/groups/ajaxFilter.php:49
+msgid "Groups management"
+msgstr "グループ管理"
+
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
+msgid "Group list"
+msgstr "グループ一覧"
+
+#: modules/base/groups/localSidebar.php:28
+#: modules/base/users/localSidebar.php:28
+msgid "List"
+msgstr "一覧"
+
+#: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
+msgid "Delete group"
+msgstr "グループの削除"
+
+#: modules/base/groups/delete.php:57
+msgid "You will delete group"
+msgstr "グループを削除します"
+
+#: modules/base/groups/delete.php:60
+msgid "This group will be deleted even though it is not empty"
+msgstr "このグループは空であっても削除されます。"
+
+#: modules/base/groups/edit.php:35
+#, php-format
+msgid "Group %s successfully added"
+msgstr "グループ %s が追加されました"
+
+#: modules/base/groups/edit.php:52
+#, php-format
+msgid "Group %s successfully modified"
+msgstr "グループ %s が変更されました"
+
+#: modules/base/groups/edit.php:58 modules/base/includes/auditCodes.php:32
+msgid "Add group"
+msgstr "グループの追加"
+
+#: modules/base/groups/edit.php:82
+msgid ""
+"The group name can only contain letters and numeric, and must begin with a "
+"letter"
+msgstr "グループ名には、英数字のみ文字と数字のみ含めることができます。また文字から始める必要があります。"
+
+#: modules/base/groups/edit.php:99
+msgid "Group name"
+msgstr "グループ名"
+
+#: modules/base/groups/edit.php:114
+msgid "Create"
+msgstr "作成"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr "グループが変更されました"
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr "このグループがプライマリグループであるため、ユーザーの一部はこのグループから削除できません。"
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "グループメンバー %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "すべてのユーザー"
+
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
+msgid "Group members"
+msgstr "グループメンバー"
+
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "LDAP ログファイルが存在しません。"
+
+#: modules/base/includes/errorHandling.php:29
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+"以下を確認してください:⏎\n"
+"                        <p>このラインが /etc/ldap/slapd.conf or /etc/openldap/slapd.conf にあること:⏎\n"
+"                        <pre>ログレベル   256</pre></p>⏎\n"
+"                        <p>およびこのラインが次に存在すること /etc/syslog.conf:⏎\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>⏎\n"
+"                        </p>⏎\n"
+"                        "
+
+#: modules/base/includes/errorHandling.php:41
+msgid "The user directory does not exist and cannot be removed."
+msgstr "ユーザーディレクトリが存在しません。削除することはできません。"
+
+#: modules/base/includes/errorHandling.php:42
+msgid "Please do not remove user's files when deleting the user."
+msgstr "ユーザーを削除する時に、ユーザーのファイルを削除しないでください。"
+
+#: modules/base/includes/errorHandling.php:47
+msgid "The user home directory already exists."
+msgstr "このユーザーのホームディレクトリはすでに存在しています。"
+
+#: modules/base/includes/errorHandling.php:48
+msgid ""
+"Set the home directory in a different location or force the use of the "
+"existing directory (in expert mode)."
+msgstr "ホームディレクトリを異なる場所に設定するか、あえて既存のディレクトリを使用するように設定してください (エキスパートモード)。"
+
+#: modules/base/includes/errorHandling.php:53
+msgid "Your password is too young to change."
+msgstr "パスワードは新しすぎて変更できません。"
+
+#: modules/base/includes/errorHandling.php:54
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワードは新しすぎて変更できません。"
+
+#: modules/base/includes/errorHandling.php:59
+msgid "Password is in history of old passwords"
+msgstr "パスワードは、過去のパスワード履歴に存在しています。"
+
+#: modules/base/includes/errorHandling.php:60
+#: modules/base/includes/errorHandling.php:66
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。このパスワードは以前使用されていたことがあります。"
+
+#: modules/base/includes/errorHandling.php:65
+msgid "Password is not being changed from existing value"
+msgstr "パスワードは、既存の値から変更されていません。"
+
+#: modules/base/includes/errorHandling.php:71
+msgid "Password fails quality checking policy."
+msgstr "パスワードは、ポリシーのクオリティ確認に失敗しました。"
+
+#: modules/base/includes/errorHandling.php:72
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is not complex enough or is too short."
+msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワードが簡単すぎるか短すぎます。"
+
+#: modules/base/includes/errorHandling.php:77
+msgid "The password must contain at least one number"
+msgstr "パスワードは、数字を最低 1 つ含む必要があります。"
+
+#: modules/base/includes/errorHandling.php:82
+msgid "The password must contain at least one upper case character"
+msgstr "パスワードは、大文字を最低 1 つ含む必要があります。"
+
+#: modules/base/includes/errorHandling.php:87
+msgid "The password must contain at least one lower case character"
+msgstr "パスワードは、小文字を最低 1 つ含む必要があります。"
+
+#: modules/base/includes/errorHandling.php:92
+msgid ""
+"The password must contain at least one special character: #$%&+./:=?@{}"
+msgstr "パスワードは、特殊文字を最低 1 つ含む必要があります: #$%&+./:=?@{}"
+
+#: modules/base/includes/errorHandling.php:98
+#, php-format
+msgid "The password must not contain the same character %s times"
+msgstr "パスワードは、同じ文字を %s 回含むことはできません。"
+
+#: modules/base/includes/errorHandling.php:109
+#, php-format
+msgid "The password length must be %s or longer"
+msgstr "パスワードは、%s 文字以上である必要があります。"
+
+#: modules/base/includes/errorHandling.php:114
+msgid "The password is too short."
+msgstr "パスワードが短すぎます"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:88
+#, php-format
+msgid "Group %s already exist"
+msgstr "グループ %s はすでに存在しています"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:102
+#, php-format
+msgid "Group %s created"
+msgstr "グループ %s が作成されました"
+
+#: modules/base/includes/panels/support.inc.php:29
+msgid "Your product"
+msgstr "お使いの製品"
+
+#: modules/base/includes/panels/support.inc.php:39
+msgid "Support"
+msgstr "サポート"
+
+#: modules/base/includes/panels/support.inc.php:44
+msgid "Phone :"
+msgstr "電話 :"
+
+#: modules/base/includes/panels/support.inc.php:49
+msgid "License"
+msgstr "ライセンス"
+
+#: modules/base/includes/panels/support.inc.php:50
+msgid "Users : "
+msgstr "ユーザー : "
+
+#: modules/base/includes/panels/support.inc.php:51
+msgid "Computers : "
+msgstr "コンピューター : "
+
+#: modules/base/includes/panels/support.inc.php:56
+msgid "Upgrade"
+msgstr "アップグレード"
+
+#: modules/base/includes/users-xmlrpc.inc.php:46
+msgid "Invalid login"
+msgstr "不正なログイン"
+
+#: modules/base/includes/users-xmlrpc.inc.php:55
+msgid "users"
+msgstr "ユーザー"
+
+#: modules/base/includes/users-xmlrpc.inc.php:58
+msgid "computers"
+msgstr "コンピューター"
+
+#: modules/base/includes/users-xmlrpc.inc.php:61
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "警告: 登録された %s の数は、ライセンスを超過しています。"
+
+#: modules/base/includes/users-xmlrpc.inc.php:61
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr "  および  "
+
+#: modules/base/includes/users-xmlrpc.inc.php:116
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr ""
+"ユーザー %s "
+"が作成されましたが、パスワードポリシーに対してパスワードが有効ではありません。<br/><strong>ユーザーパスワードを変更する必要があります。</strong>"
+
+#: modules/base/includes/users-xmlrpc.inc.php:120
+msgid "You cannot add more users."
+msgstr "ユーザーをさらに追加することはできません。"
+
+#: modules/base/includes/users-xmlrpc.inc.php:126
+#, php-format
+msgid "User %s successfully created"
+msgstr "ユーザー %s が作成されました"
+
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
+msgid "Add user"
+msgstr "ユーザーを追加"
+
+#: modules/base/includes/auditCodes.php:28
+msgid "Enable user"
+msgstr "ユーザーを有効化"
+
+#: modules/base/includes/auditCodes.php:29
+msgid "Disable user"
+msgstr "ユーザーを無効化"
+
+#: modules/base/includes/auditCodes.php:30
+msgid "Change user attribute"
+msgstr "ユーザー属性を変更"
+
+#: modules/base/includes/auditCodes.php:31
+msgid "Change group attribute"
+msgstr "グループ属性を変更"
+
+#: modules/base/includes/auditCodes.php:33
+msgid "Add user to group"
+msgstr "ユーザーをグループに追加"
+
+#: modules/base/includes/auditCodes.php:34
+msgid "Del user from group"
+msgstr "ユーザーをグループから削除"
+
+#: modules/base/includes/auditCodes.php:35
+msgid "Del user from all group"
+msgstr "ユーザーを全グループから削除"
+
+#: modules/base/includes/auditCodes.php:36
+msgid "Change user primary group"
+msgstr "ユーザーのプライマリ グループを変更"
+
+#: modules/base/includes/auditCodes.php:37
+msgid "Del user"
+msgstr "ユーザーを削除"
+
+#: modules/base/includes/auditCodes.php:38
+msgid "Del user attribute"
+msgstr "ユーザー属性を削除"
+
+#: modules/base/includes/auditCodes.php:39
+msgid "Change user Password"
+msgstr "ユーザーパスワードを変更"
+
+#: modules/base/includes/auditCodes.php:40
+msgid "Del group"
+msgstr "グループを削除"
+
+#: modules/base/includes/auditCodes.php:41
+msgid "Backup user"
+msgstr "ユーザーをバックアップ"
+
+#: modules/base/includes/auditCodes.php:42
+msgid "User authentication"
+msgstr "ユーザー認証"
+
+#: modules/base/includes/auditCodes.php:43
+msgid "Move user home"
+msgstr "ユーザーホームを移動"
+
+#: modules/base/includes/auditCodes.php:44
+msgid "Add organizational unit"
+msgstr "組織ユニットを追加"
+
+#: modules/base/includes/auditCodes.php:46
+msgid "System user"
+msgstr "システムユーザー"
+
+#: modules/base/includes/auditCodes.php:47
+msgid "Group"
+msgstr "グループ"
+
+#: modules/base/includes/auditCodes.php:48
+msgid "Attribute"
+msgstr "属性"
+
+#: modules/base/includes/auditCodes.php:49
+msgid "Organizational unit"
+msgstr "組織ユニット"
+
+#: modules/base/includes/auditCodes.php:50
+msgid "base"
+msgstr "ベース"
+
+#: modules/base/includes/computers-i18n.php:25
+msgid "Computer's IP address"
+msgstr "コンピューターの IP アドレス"
+
+#: modules/base/includes/computers-i18n.php:26
+msgid "Computer's MAC address"
+msgstr "コンピューターの MAC アドレス"
+
+#: modules/base/includes/computers-i18n.php:27
+msgid "Computer's netmask address"
+msgstr "コンピューターのネットマスクアドレス"
+
+#: modules/base/includes/AjaxFilterLog.inc.php:366
+msgid "Refresh"
+msgstr "リフレッシュ"
+
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "在庫"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI 在庫"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "ログの読み込み"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "ソフトウェアデプロイ"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "イメージング管理"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "ファイルダウンロード"
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr "リモートコントロール"
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr "プロファイル表示"
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr "コンピューター一覧"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr "バックアップステータス"
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr "コンピューターの削除"
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
+msgstr "マシンのグループからの削除"
+
+#: modules/base/includes/publicFunc.php:46
+#, php-format
+msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
+msgstr "グループ %s は削除できません。<br/>%s は、一部のユーザーのプライマリグループです。"
+
+#: modules/base/includes/publicFunc.php:49
+#, php-format
+msgid "Group %s successfully deleted."
+msgstr "グループ %s は削除されました。"
+
+#: modules/base/includes/publicFunc.php:80
+msgid "User's name invalid !"
+msgstr "ユーザーの名前が不正です！"
+
+#: modules/base/includes/publicFunc.php:85
+#, php-format
+msgid "The user %s already exists."
+msgstr "ユーザー %s はすでに存在しています。"
+
+#: modules/base/includes/publicFunc.php:90
+msgid "Password is empty."
+msgstr "パスワードが空です。"
+
+#: modules/base/includes/publicFunc.php:95
+msgid "The confirmation password does not match the new password."
+msgstr "パスワード確認が新しいパスワードと一致しません。"
+
+#: modules/base/includes/publicFunc.php:102
+msgid "The primary group field can't be empty."
+msgstr "プライマリグループフィールドは、空であることはできません。"
+
+#: modules/base/includes/publicFunc.php:106
+#, php-format
+msgid "The group %s does not exist, and so can't be set as primary group."
+msgstr "グループ  %s は存在していません。プライマリグループとして設定することはできません。"
+
+#: modules/base/includes/publicFunc.php:183
+msgid "User photo deleted"
+msgstr "ユーザーの写真が削除されました"
+
+#: modules/base/includes/publicFunc.php:197
+msgid "User disabled"
+msgstr "ユーザーは無効化されました"
+
+#: modules/base/includes/publicFunc.php:201
+msgid "User enabled"
+msgstr "ユーザーは有効化されました"
+
+#: modules/base/includes/publicFunc.php:248
+#, php-format
+msgid ""
+"The photo is too big. The max size is %s x %s.\n"
+"                    Install php gd extension to resize the photo automatically"
+msgstr "写真が大きすぎます。最大サイズは %s x %s です。⏎ 写真を自動的にリサイズするには、PHP GD をインストールしてください。"
+
+#: modules/base/includes/publicFunc.php:253
+msgid "The photo is not a JPG file"
+msgstr "写真が JPG ファイルではありません"
+
+#: modules/base/includes/publicFunc.php:257
+msgid "User attributes updated"
+msgstr "ユーザー属性が更新されました"
+
+#: modules/base/includes/publicFunc.php:273
+msgid "User attributes"
+msgstr "ユーザー属性"
+
+#: modules/base/includes/publicFunc.php:282
+#: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
+#: index.php:207
+msgid "Login"
+msgstr "ログイン"
+
+#: modules/base/includes/publicFunc.php:297
+#: modules/base/infoPackage.inc.php:326 index.php:213
+msgid "Password"
+msgstr "パスワード"
+
+#: modules/base/includes/publicFunc.php:301
+msgid "Confirm password"
+msgstr "パスワード確認"
+
+#: modules/base/includes/publicFunc.php:306
+msgid "Photo"
+msgstr "写真"
+
+#: modules/base/includes/publicFunc.php:311
+msgid "Last name"
+msgstr "姓"
+
+#: modules/base/includes/publicFunc.php:316
+msgid "First name"
+msgstr "名"
+
+#: modules/base/includes/publicFunc.php:321
+msgid "Title"
+msgstr "肩書"
+
+#: modules/base/includes/publicFunc.php:326
+msgid "Email address"
+msgstr "電子メールアドレス"
+
+#: modules/base/includes/publicFunc.php:334
+#: modules/base/includes/publicFunc.php:337
+#: modules/base/infoPackage.inc.php:318
+msgid "Telephone number"
+msgstr "電話番号"
+
+#: modules/base/includes/publicFunc.php:344
+msgid "Mobile number"
+msgstr "携帯番号"
+
+#: modules/base/includes/publicFunc.php:349
+#: modules/base/infoPackage.inc.php:320
+msgid "Fax number"
+msgstr "FAX 番号"
+
+#: modules/base/includes/publicFunc.php:354
+#: modules/base/infoPackage.inc.php:321
+msgid "Home phone number"
+msgstr "電話番号 (家庭)"
+
+#: modules/base/includes/publicFunc.php:359
+msgid "Choose language"
+msgstr "言語選択"
+
+#: modules/base/includes/publicFunc.php:364
+msgid "Preferred language"
+msgstr "使用言語"
+
+#: modules/base/includes/publicFunc.php:372
+msgid "User is disabled, if checked"
+msgstr "チェックすると、ユーザーは無効化されます。"
+
+#: modules/base/includes/publicFunc.php:373
+msgid ""
+"A disabled user can't log in any UNIX services. <br/>\n"
+"                                Her/his login shell command is replaced by /bin/false"
+msgstr ""
+"無効化されたユーザーは、あらゆる UNIX サービスのログに記録されません。<br/>⏎\n"
+"                                彼らのログインシェルコマンドは、/bin/false によって置き換えられます。"
+
+#: modules/base/includes/publicFunc.php:405
+#: modules/base/infoPackage.inc.php:322
+msgid "Primary group"
+msgstr "プライマリグループ"
+
+#: modules/base/includes/publicFunc.php:411
+msgid "User's groups"
+msgstr "ユーザーのグループ"
+
+#: modules/base/includes/publicFunc.php:411
+msgid "All groups"
+msgstr "すべてのグループ"
+
+#: modules/base/includes/publicFunc.php:434
+#: modules/base/infoPackage.inc.php:323
+msgid "Secondary groups"
+msgstr "セカンダリグループ"
+
+#: modules/base/includes/publicFunc.php:443
+#: modules/base/views/index.tpl.php:87
+msgid "Home directory"
+msgstr "ホームディレクトリ"
+
+#: modules/base/includes/publicFunc.php:449
+msgid "Create home directory on filesystem"
+msgstr "ファイルシステムにホーム ディレクトリを作成"
+
+#: modules/base/includes/publicFunc.php:453
+msgid "Force to use the home directory if it exists"
+msgstr "存在していれば、そのホームディレクトリを使用"
+
+#: modules/base/includes/publicFunc.php:454
+msgid "Warning: an existing directory may belong to another user !"
+msgstr "警告: 既存のディレクトリは別のユーザーに所属する可能性があります！"
+
+#: modules/base/includes/publicFunc.php:460
+#: modules/base/infoPackage.inc.php:315
+msgid "Login shell"
+msgstr "ログインシェル"
+
+#: modules/base/includes/publicFunc.php:465
+#: modules/base/infoPackage.inc.php:324
+msgid "Common name"
+msgstr "共通の名前"
+
+#: modules/base/includes/publicFunc.php:466
+msgid ""
+"This field is used by some LDAP clients (for example Thunderbird address "
+"book) to display user entries."
+msgstr ""
+"このフィールドは、LDAP クライアントの一部によって、ユーザーエントリーを表示するために使用されます (Thunderbird "
+"アドレス帳などのため)。"
+
+#: modules/base/includes/publicFunc.php:471
+#: modules/base/infoPackage.inc.php:325
+msgid "Preferred name to be used"
+msgstr "使用される名前"
+
+#: modules/base/includes/publicFunc.php:472
+msgid ""
+"This field is used by SAMBA (and other LDAP clients) to display user name."
+msgstr "このフィールドは、SAMBA (および他の LDAP クライアント) によって、ユーザー名を表示するために使用されます。"
+
+#: modules/base/includes/publicFunc.php:478
+msgid "UID"
+msgstr "UID"
+
+#: modules/base/includes/publicFunc.php:483
+msgid "GID"
+msgstr "GID"
+
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr "LDAP オペレーションログ表示"
+
+#: modules/base/logview/ajax_showlog.php:43
+msgid "Connection"
+msgstr "接続"
+
+#: modules/base/logview/ajax_showlog.php:44
+msgid "Operation"
+msgstr "オペレーション"
+
+#: modules/base/logview/ajax_showlog.php:45
+msgid "Actions"
+msgstr "アクション"
+
+#: modules/base/logview/ajax_showlog.php:46
+msgid "Extra information"
+msgstr "特別情報"
+
+#: modules/base/main/favorites.php:4
+msgid "Root user cannot have favorites"
+msgstr "ルートユーザーはお気に入りを持つことはできません。"
+
+#: modules/base/main/favorites.php:149
+msgid "Add this page to your favorite"
+msgstr "このページをお気に入りに追加する"
+
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "アップタイム: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "日"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "時間"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "分"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "メモリ"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "スワップ"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "グローバル表示"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "サーバーステータス"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "LDAP 設定"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "ハードドライブパーティション"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "バックグラウンドジョブ"
+
+#: modules/base/status/support.php:29
+msgid "License and support information"
+msgstr "ライセンスおよびサポート情報"
+
+#: modules/base/status/support.php:38
+msgid "WARNING: The number of registered users is exceeding your license."
+msgstr "警告: 登録ユーザー数がライセンスを超過しました。"
+
+#: modules/base/status/support.php:41
+msgid "WARNING: The number of registered computers is exceeding your license."
+msgstr "警告: 登録コンピューター数がライセンスを超過しました。"
+
+#: modules/base/status/support.php:44
+msgid ""
+"Please contact your administrator for more information. If you are an "
+"administrator, please go to the license status page for more information."
+msgstr "詳細は、担当の管理者にご連絡ください。自分が管理者である場合は、ライセンスステータスページの詳細情報を確認してください。"
+
+#: modules/base/status/support.php:50
+msgid "Product name"
+msgstr "製品名"
+
+#: modules/base/status/support.php:51
+msgid "Product vendor"
+msgstr "製品ベンダー"
+
+#: modules/base/status/support.php:52
+msgid "Product vendor mail"
+msgstr "製品ベンダーメール"
+
+#: modules/base/status/support.php:53
+msgid "Company name"
+msgstr "会社名"
+
+#: modules/base/status/support.php:54
+msgid "Company administrator mail"
+msgstr "会社管理者メール"
+
+#: modules/base/status/support.php:55 modules/base/status/support.php:60
+msgid "Comment"
+msgstr "コメント"
+
+#: modules/base/status/support.php:56
+msgid "Registered users"
+msgstr "登録ユーザー"
+
+#: modules/base/status/support.php:57
+msgid "Registered computers"
+msgstr "登録コンピューター"
+
+#: modules/base/status/support.php:58
+msgid "Support mail address"
+msgstr "サポートメールアドレス"
+
+#: modules/base/status/support.php:59
+msgid "Support phone number"
+msgstr "サポート電話番号"
+
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "名前"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "電話"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "編集"
+
+#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC 権限"
+
+#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "バックアップ"
+
+#: modules/base/users/ajaxFilter.php:88
+msgid "Logged Actions"
+msgstr "ログに記録されたアクション"
+
+#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "ユーザー"
+
+#: modules/base/users/delete.php:33
+#, php-format
+msgid "User %s has been successfully deleted"
+msgstr "ユーザー %s は削除されました"
+
+#: modules/base/users/delete.php:38
+msgid "Delete user"
+msgstr "ユーザーの削除"
+
+#: modules/base/users/delete.php:39
+#, php-format
+msgid "You will delete user <b>%s</b>."
+msgstr "ユーザー<b>%s</b>  を削除します。"
+
+#: modules/base/users/delete.php:40
+msgid "Delete all user's files"
+msgstr "すべてのユーザーのファイルの削除"
+
+#: modules/base/users/edit.php:56
+msgid "Edit user"
+msgstr "ユーザーの編集"
+
+#: modules/base/users/edit.php:85
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "%s プラグインでのプライマリグループの変更に失敗しました"
+
+#: modules/base/users/edit.php:109
+msgid "Password not updated"
+msgstr "パスワードはアップデートされませんでした"
+
+#: modules/base/users/edit.php:112
+msgid "Password updated"
+msgstr "パスワードがアップデートされました"
+
+#: modules/base/users/edit.php:121
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "%s プラグインでのユーザーの無効化に失敗しました"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "User %s disabled."
+msgstr "ユーザー %s が無効化されました。"
+
+#: modules/base/users/edit.php:130
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "%s プラグインでのユーザーの有効化に失敗しました。"
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "User %s enabled"
+msgstr "ユーザー %s が有効化されました"
+
+#: modules/base/users/edit.php:183
+msgid "Enable account"
+msgstr "アカウントの有効化"
+
+#: modules/base/users/edit.php:185
+msgid "Disable account"
+msgstr "アカウントの無効化"
+
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:171
+msgid "User list"
+msgstr "ユーザー一覧"
+
+#: modules/base/users/localSidebar.php:31
+msgid "Bulk import (CSV)"
+msgstr "バルクインポート (CSV)"
+
+#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
+#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:60
+msgid "Change your password"
+msgstr "パスワードを変更"
+
+#: modules/base/users/localSidebar.php:36
+#: modules/base/users/resetpasswd.php:35
+msgid "Reset your password"
+msgstr "パスワードをリセット"
+
+#: modules/base/users/loguser.php:39
+msgid "User log"
+msgstr "ユーザーログ"
+
+#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
+msgid "Your password has been changed."
+msgstr "パスワードは変更されました。"
+
+#: modules/base/users/passwd.php:50
+msgid "Change your user's password"
+msgstr "ユーザーのパスワードを変更する"
+
+#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:50
+msgid "You are going to change your password"
+msgstr "自分のパスワードを変更します"
+
+#: modules/base/users/passwd.php:64
+msgid "Current password"
+msgstr "現在のパスワード"
+
+#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:53
+msgid "New password"
+msgstr "新規パスワード"
+
+#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
+#: modules/base/infoPackage.inc.php:327
+msgid "Confirm your password"
+msgstr "パスワードを確認する"
+
+#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:61
+msgid "Return"
+msgstr "戻る"
+
+#: modules/base/users/passwd.php:79
+msgid "Invalid current password. Please retry."
+msgstr "現在のパスワードが不正です。もう一度お試しください。"
+
+#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
+msgid "Passwords are mismatching. Please retry."
+msgstr "パスワードが一致しません。もう一度お試しください。"
+
+#: modules/base/users/backup.php:38
+msgid "Backup a user's folder"
+msgstr "ユーザーフォルダのバックアップ"
+
+#: modules/base/users/backup.php:52
+msgid "Backup a user's home directory"
+msgstr "ユーザーホームディレクトリのバックアップ"
+
+#: modules/base/users/backup.php:54
+#, php-format
+msgid "Backup of <b>%s</b> user's folder has been launched in background."
+msgstr "<b>%s</b> ユーザーのフォルダのバックアップがバックグラウンドで起動されました。"
+
+#: modules/base/users/backup.php:56
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr "ファイルは、バックアップの最後にサーバーのディレクトリ %s に保存されます。"
+
+#: modules/base/users/backup.php:58
+msgid "Please go to the status page to check the backup status."
+msgstr "ステータスページに移動して、バックアップステータスを確認してください。"
+
+#: modules/base/users/backup.php:60
+msgid "This operation will last according to the amount of data to backup."
+msgstr "この操作は、バックアップのデータ量に応じて継続します。"
+
+#: modules/base/users/backup.php:74
+#, php-format
+msgid "%s home directory will be archived."
+msgstr "%s  のホームディレクトリがアーカイブされます。"
+
+#: modules/base/users/backup.php:79
+#, php-format
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr "メディアサイズを選択してください。データがボリュームサイズを超過する場合、メディアサイズのファイルがいくつか作成されます。"
+
+#: modules/base/users/backup.php:83
+msgid "Media size"
+msgstr "メディアサイズ"
+
+#: modules/base/users/backup.php:90
+msgid "Launch backup"
+msgstr "バックアップの起動"
+
+#: modules/base/users/editacl.php:152
+msgid "User ACLs successfully modified."
+msgstr "ユーザー ACL が変更されました。"
+
+#: modules/base/users/editacl.php:175
+msgid "Set value for all radio buttons:&nbsp;&nbsp;"
+msgstr "すべてのラジオボタンに値を設定してください:&nbsp;&nbsp;"
+
+#: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
+msgid "read only"
+msgstr "読み取りのみ"
+
+#: modules/base/users/editacl.php:177 modules/base/users/editacl.php:181
+msgid "read/write"
+msgstr "読み取り/書き込み"
+
+#: modules/base/users/editacl.php:178 modules/base/users/editacl.php:181
+msgid "hide"
+msgstr "非表示"
+
+#: modules/base/users/editacl.php:181
+msgid "Attribute description"
+msgstr "属性内容"
+
+#: modules/base/users/editacl.php:209
+#, php-format
+msgid " (%s module)"
+msgstr " (%s モジュール)"
+
+#: modules/base/users/editacl.php:219
+msgid "Web page description"
+msgstr "Web ページ内容"
+
+#: modules/base/users/editacl.php:219
+msgid "Authorization"
+msgstr "認証"
+
+#: modules/base/users/editacl.php:228
+msgid "Warning no desc found in infoPackage.inc.php :"
+msgstr "警告 infoPackage.inc.php に内容が見つかりませんでした  :"
+
+#: modules/base/users/editacl.php:251
+#, php-format
+msgid "Edit ACL of user %s"
+msgstr "ユーザー %s ACL の編集"
+
+#: modules/base/users/editacl.php:271
+msgid "Download ACL string"
+msgstr "ACL 文字列のダウンロード"
+
+#: modules/base/infoPackage.inc.php:36
+msgid "User, group and computer management"
+msgstr "ユーザー、グループ、コンピューター管理"
+
+#: modules/base/infoPackage.inc.php:48
+msgid "Shortcuts"
+msgstr "ショートカット"
+
+#: modules/base/infoPackage.inc.php:52
+msgid "Favorites page"
+msgstr "お気に入りページ"
+
+#: modules/base/infoPackage.inc.php:60
+msgid "MMC Logs"
+msgstr "MMC ログ"
+
+#: modules/base/infoPackage.inc.php:111
+msgid "View details of an action"
+msgstr "アクション詳細を表示"
+
+#: modules/base/infoPackage.inc.php:120
+msgid "Log view"
+msgstr "ログビュー"
+
+#: modules/base/infoPackage.inc.php:126
+msgid "LDAP log"
+msgstr "LDAP ログ"
+
+#: modules/base/infoPackage.inc.php:144
+msgid "Status"
+msgstr "ステータス"
+
+#: modules/base/infoPackage.inc.php:150
+msgid "Default status page"
+msgstr "デフォルトステータスページ"
+
+#: modules/base/infoPackage.inc.php:155
+msgid "Support page"
+msgstr "サポートページ"
+
+#: modules/base/infoPackage.inc.php:184
+msgid "Add a user"
+msgstr "ユーザーの追加"
+
+#: modules/base/infoPackage.inc.php:187
+msgid "Edit a user"
+msgstr "ユーザーの編集"
+
+#: modules/base/infoPackage.inc.php:191
+msgid "Edit ACL permissions on a user"
+msgstr "ユーザーの ACL 権限を編集"
+
+#: modules/base/infoPackage.inc.php:195
+msgid "Logged user actions"
+msgstr "ログに記録されたユーザーアクション"
+
+#: modules/base/infoPackage.inc.php:200
+msgid "Action details"
+msgstr "アクション詳細"
+
+#: modules/base/infoPackage.inc.php:210
+msgid "Delete a user"
+msgstr "ユーザーの削除"
+
+#: modules/base/infoPackage.inc.php:215
+msgid "Backup user files"
+msgstr "ユーザーファイルのバックアップ "
+
+#: modules/base/infoPackage.inc.php:220
+msgid "Reset user password"
+msgstr "ユーザーパスワードのリセット"
+
+#: modules/base/infoPackage.inc.php:225
+msgid "Change user password"
+msgstr "ユーザーパスワードの変更"
+
+#: modules/base/infoPackage.inc.php:230
+msgid "Get user photo"
+msgstr "ユーザーの写真を取得"
+
+#: modules/base/infoPackage.inc.php:248
+msgid "Add a group"
+msgstr "グループの追加"
+
+#: modules/base/infoPackage.inc.php:251
+msgid "Delete a group"
+msgstr "グループの削除"
+
+#: modules/base/infoPackage.inc.php:265
+msgid "Edit a group"
+msgstr "グループの編集"
+
+#: modules/base/infoPackage.inc.php:274
+msgid "Computers"
+msgstr "コンピューター"
+
+#: modules/base/infoPackage.inc.php:288
+msgid "Edit computer"
+msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
+
+#: modules/base/infoPackage.inc.php:292
+msgid "Delete a computer"
+msgstr "コンピューターの削除"
+
+#: modules/base/infoPackage.inc.php:297
+msgid "Ajax part of computers list"
+msgstr "コンピューターの Ajax 部分一覧"
+
+#: modules/base/infoPackage.inc.php:310
+msgid "User photo"
+msgstr "ユーザーの写真"
+
+#: modules/base/infoPackage.inc.php:311
+msgid "User login"
+msgstr "ユーザーログイン"
+
+#: modules/base/infoPackage.inc.php:312
+msgid "User name"
+msgstr "ユーザー名"
+
+#: modules/base/infoPackage.inc.php:313
+msgid "User firstname"
+msgstr "ユーザーの名前"
+
+#: modules/base/infoPackage.inc.php:314
+msgid "User home directory"
+msgstr "ユーザーホームディレクトリ"
+
+#: modules/base/infoPackage.inc.php:316
+msgid "User title"
+msgstr "ユーザーの肩書"
+
+#: modules/base/infoPackage.inc.php:317
+msgid "Mail address"
+msgstr "メールアドレス"
+
+#: modules/base/infoPackage.inc.php:319
+msgid "Mobile phone number"
+msgstr "携帯電話番号"
+
+#: modules/base/infoPackage.inc.php:328
+msgid "Enable/Disable user account"
+msgstr "ユーザーアカウントの有効化/無効化"
+
+#: modules/dashboard/includes/panels/general.inc.php:39
+msgid "Uptime"
+msgstr "アップタイム: "
+
+#: modules/services/includes/panels/services.inc.php:44
+#, php-format
+msgid "%d inactive service"
+msgid_plural "%d inactive services"
+msgstr[0] ""
+"Pluralized Translations\n"
+"\n"
+"\n"
+"one: %d 非アクティブサービス\n"
+"\n"
+"other: %d 非アクティブサービス"
+
+#: token.php:54 index.php:61
+#, php-format
+msgid "The server %s does not exist"
+msgstr "サーバー %s は存在しません"
+
+#: token.php:66
+msgid "Token not valid"
+msgstr "トークンが不正です"
+
+#: token.php:68
+msgid "Error while validating your token. Please contact your administrator."
+msgstr "トークン検証中のエラーです。管理者に連絡してください。"
+
+#: version.php:35
+msgid "MMC components version"
+msgstr "MMC コンポーネントバージョン"
+
+#: version.php:36
+msgid "MMC agent: version"
+msgstr "MMC エージェント: バージョン"
+
+#: version.php:40
+msgid "agent: version"
+msgstr "エージェント: バージョン"
+
+#: version.php:42
+msgid "web: version"
+msgstr "Web: バージョン"
+
+#: version.php:44
+msgid "web: plugin is not installed"
+msgstr "Web: プラグインがインストールされていません。"
+
+#: license.php:27
+msgid ""
+"<p>\n"
+"The community version of this product is distributed in the hope that it\n"
+"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"warranty of merchantability of fitness for a particular purpose. See the\n"
+"GNU General Public License for more details.</p>\n"
+"<p>\n"
+"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"and without a tested and certified upgrade path from previous versions.\n"
+"</p>"
+msgstr ""
+"<p>⏎\n"
+"本製品のコミュニティバージョンは、有益なものとなることを願って配布されていますが、 <strong>いかなる保証もありません </strong>。⏎また特定の目的に対する市場性適合の暗黙の保証もありません。詳細は、GNU General Public ライセンスを参照してください。.</p>⏎\n"
+"<p>⏎\n"
+"さらに、本製品はお使いの情報システムの主要かつ重要なコンポーネントです。このコミュニティバージョンは、いかなる種類のプロフェッショナルサポートもありませんし、>⏎以前のバージョンからのアップグレードパスは試験されていませんし認証されていません。\n"
+"⏎\n"
+"</p>"
+
+#: license.php:38
+msgid ""
+"Click here to get more information about our support and maintenance "
+"subscription plan."
+msgstr "ここをクリックすると、私たちのサポートおよびメンテナンス購読プランの詳細情報を取得することができます。"
+
+#: index.php:71
+msgid "Login failed"
+msgstr "ログインが失敗しました"
+
+#: index.php:77
+msgid ""
+"You have been logged out because the session between the MMC web interface "
+"and the MMC agent expired."
+msgstr "MMC Web インターフェースと MMC エージェント間のセッションが終了したので、ログアウトしました。"
+
+#: index.php:183
+msgid "Forgot password ?"
+msgstr "パスワードを忘れましたか？"
+
+#: index.php:194
+msgid "Server"
+msgstr "サーバー"
+
+#: index.php:201
+msgid "Language"
+msgstr "言語"
+
+#: index.php:226
+msgid "Connect"
+msgstr "接続"
+
+

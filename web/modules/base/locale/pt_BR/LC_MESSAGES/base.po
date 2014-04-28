@@ -5,6 +5,7 @@
 ## Translators:
 #   <alexandre@mandriva.com.br>, 2012.
 #   <andre@mandriva.com>, 2011, 2013, 2014.
+#   <jcvassort@mandriva.com>, 2014.
 #   <leonardoc@mandriva.com.br>, 2012.
 # Sergio Rafael Lemke <sergio@mandriva.com.br>, 2010.
 # Wanderlei Antonio Cavassin <cavassin@mandriva.com>, 2007.
@@ -12,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-04-28 01:12+0200\n"
-"PO-Revision-Date: 2014-04-14 18:18+0000\n"
-"Last-Translator: Andre Machado <andre@mandriva.com>\n"
+"POT-Creation-Date: 2014-04-28 10:47+0200\n"
+"PO-Revision-Date: 2014-04-28 08:48+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1125,6 +1126,54 @@ msgstr "Endereço da mascara de rede do computador"
 msgid "Refresh"
 msgstr "Atualizar"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Inventário"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "Inventário GLPI"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Ler log"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Instalação de software"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "gerenciamento das imagens"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "Baixar arquivo"
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr "Controle remoto"
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr "Mostrar Perfil"
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr "Lista de computadores"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr "Status do Backup"
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr "Remover computador"
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
+msgstr "Remover máquina de grupo"
+
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1179,10 +1228,10 @@ msgstr "Usuário ativado"
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extention to resize the photo automatically"
+"                    Install php gd extension to resize the photo automatically"
 msgstr ""
-"A foto é muito grande. O tamanho máximo permitido é %s x %s.\n"
-"                    Instale a extensão php gd para redimensionar a foto automaticamente"
+"A foto é muito grande. O tamanho máximo permitido é %s x %s. Instale a "
+"extensão php gd para redimensionar a foto automaticamente"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
@@ -1344,53 +1393,9 @@ msgstr "UID"
 msgid "GID"
 msgstr "GID"
 
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "Inventário"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "Inventário GLPI"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "Ler log"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "Instalação de software"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "gerenciamento das imagens"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "Baixar arquivo"
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr "Controle remoto"
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr "Mostrar Perfil"
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr "Lista de computadores"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr "Status do Backup"
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr "Remover computador"
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
-msgstr "Remover máquina de grupo"
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr "Ver log de operações do LDAP"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1405,12 +1410,8 @@ msgid "Actions"
 msgstr "Ações"
 
 #: modules/base/logview/ajax_showlog.php:46
-msgid "Extra informations"
+msgid "Extra information"
 msgstr "Informações extras"
-
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
-msgstr "Ver log de operações do LDAP"
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1420,8 +1421,52 @@ msgstr "Usuário root não pode ter favoritos"
 msgid "Add this page to your favorite"
 msgstr "Adicionar esta página aos links favoritos"
 
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "Tempo desde o boot: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "dia"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "hora"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "minuto"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "Memória"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "Swap"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "Visão global"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "Status do servidor"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "Configuração LDAP"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "Partições do disco rígido"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "Serviços em segundo plano"
+
 #: modules/base/status/support.php:29
-msgid "License and support informations"
+msgid "License and support information"
 msgstr "Informaçoes da licença e suporte"
 
 #: modules/base/status/support.php:38
@@ -1481,50 +1526,6 @@ msgstr "Endereço de email do suporte"
 #: modules/base/status/support.php:59
 msgid "Support phone number"
 msgstr "Telefone do Suporte"
-
-#: modules/base/status/index.php:101
-msgid "Uptime: "
-msgstr "Tempo desde o boot: "
-
-#: modules/base/status/index.php:104
-msgid "day"
-msgstr "dia"
-
-#: modules/base/status/index.php:108
-msgid "hour"
-msgstr "hora"
-
-#: modules/base/status/index.php:111
-msgid "minute"
-msgstr "minuto"
-
-#: modules/base/status/index.php:116
-msgid "Memory"
-msgstr "Memória"
-
-#: modules/base/status/index.php:119
-msgid "Swap"
-msgstr "Swap"
-
-#: modules/base/status/index.php:199
-msgid "Global view"
-msgstr "Visão global"
-
-#: modules/base/status/index.php:206
-msgid "Server status"
-msgstr "Status do servidor"
-
-#: modules/base/status/index.php:211
-msgid "LDAP Configuration"
-msgstr "Configuração LDAP"
-
-#: modules/base/status/index.php:218
-msgid "Hard drive partitions"
-msgstr "Partições do disco rígido"
-
-#: modules/base/status/index.php:223
-msgid "Background jobs"
-msgstr "Serviços em segundo plano"
 
 #: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
 msgid "Name"

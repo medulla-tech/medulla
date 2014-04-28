@@ -1,0 +1,266 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <info@janusww.com>, 2014.
+#   <jcvassort@mandriva.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-04-28 10:47+0200\n"
+"PO-Revision-Date: 2014-04-28 08:57+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/mds/team/ja_JP/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:71
+msgid "Less detail"
+msgstr "詳細を隠す"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:187
+msgid "More detail"
+msgstr "詳細を表示"
+
+#: modules/report/includes/html.inc.php:100
+msgid "January"
+msgstr "1月"
+
+#: modules/report/includes/html.inc.php:101
+msgid "February"
+msgstr "2月"
+
+#: modules/report/includes/html.inc.php:102
+msgid "March"
+msgstr "3月"
+
+#: modules/report/includes/html.inc.php:103
+msgid "April"
+msgstr "4月"
+
+#: modules/report/includes/html.inc.php:104
+#: modules/report/includes/html.inc.php:116
+msgid "May"
+msgstr "5月"
+
+#: modules/report/includes/html.inc.php:105
+msgid "June"
+msgstr "6月"
+
+#: modules/report/includes/html.inc.php:106
+msgid "July"
+msgstr "7月"
+
+#: modules/report/includes/html.inc.php:107
+msgid "August"
+msgstr "8月"
+
+#: modules/report/includes/html.inc.php:108
+msgid "September"
+msgstr "9月"
+
+#: modules/report/includes/html.inc.php:109
+msgid "October"
+msgstr "10月"
+
+#: modules/report/includes/html.inc.php:110
+msgid "November"
+msgstr "11月"
+
+#: modules/report/includes/html.inc.php:111
+msgid "December"
+msgstr "12月"
+
+#: modules/report/includes/html.inc.php:112
+msgid "Jan"
+msgstr "1月"
+
+#: modules/report/includes/html.inc.php:113
+msgid "Feb"
+msgstr "2月"
+
+#: modules/report/includes/html.inc.php:114
+msgid "Mar"
+msgstr "3月"
+
+#: modules/report/includes/html.inc.php:115
+msgid "Apr"
+msgstr "4月"
+
+#: modules/report/includes/html.inc.php:117
+msgid "Jun"
+msgstr "6月"
+
+#: modules/report/includes/html.inc.php:118
+msgid "Jul"
+msgstr "7月"
+
+#: modules/report/includes/html.inc.php:119
+msgid "Aug"
+msgstr "8月"
+
+#: modules/report/includes/html.inc.php:120
+msgid "Sep"
+msgstr "9月"
+
+#: modules/report/includes/html.inc.php:121
+msgid "Oct"
+msgstr "10月"
+
+#: modules/report/includes/html.inc.php:122
+msgid "Nov"
+msgstr "11月"
+
+#: modules/report/includes/html.inc.php:123
+msgid "Dec"
+msgstr "12月"
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr "日曜"
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr "月曜"
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr "火曜"
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr "水曜"
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr "木曜"
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr "金曜"
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr "土曜"
+
+#: modules/report/includes/html.inc.php:131
+msgid "Sun"
+msgstr "日曜"
+
+#: modules/report/includes/html.inc.php:132
+msgid "Mon"
+msgstr "月曜"
+
+#: modules/report/includes/html.inc.php:133
+msgid "Tue"
+msgstr "火曜"
+
+#: modules/report/includes/html.inc.php:134
+msgid "Wed"
+msgstr "水曜"
+
+#: modules/report/includes/html.inc.php:135
+msgid "Thu"
+msgstr "木曜"
+
+#: modules/report/includes/html.inc.php:136
+msgid "Fri"
+msgstr "金曜"
+
+#: modules/report/includes/html.inc.php:137
+msgid "Sat"
+msgstr "土曜"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Su"
+msgstr "日曜"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Mo"
+msgstr "月曜"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Tu"
+msgstr "火曜"
+
+#: modules/report/includes/html.inc.php:139
+msgid "We"
+msgstr "水曜"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Th"
+msgstr "木曜"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Fr"
+msgstr "金曜"
+
+#: modules/report/includes/html.inc.php:140
+msgid "Sa"
+msgstr "土曜"
+
+#: modules/report/includes/html.inc.php:141
+msgid "Wk"
+msgstr "週"
+
+#: modules/report/report/localSidebar.php:27
+#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
+msgid "Report creation"
+msgstr "レポート作成"
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr "期間"
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr "期間"
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "開始"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr "エンティティ"
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr "レポートの生成"
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr "レポートに含めるデータを選択してください。"
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr "イメージのダウンロード"
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr "XLS レポート取得"
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr "PDF レポート取得"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "レポーティング"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "レポート"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "レポートモジュールからファイルをダウンロード (レポート/PNG)"
+
+

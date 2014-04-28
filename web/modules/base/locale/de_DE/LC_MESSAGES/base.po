@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
+#   <jcvassort@mandriva.com>, 2014.
 #   <maikwagner@yahoo.com>, 2011, 2012, 2013, 2014.
 #   <mario.fetka@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-04-28 01:12+0200\n"
-"PO-Revision-Date: 2014-01-29 08:53+0000\n"
-"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
+"POT-Creation-Date: 2014-04-28 10:47+0200\n"
+"PO-Revision-Date: 2014-04-28 08:49+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1134,6 +1135,54 @@ msgstr "Netmask Adresse des Computers"
 msgid "Refresh"
 msgstr "aktualisieren"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Inventar"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI Inventar"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Log lesen"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Software Deployment"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "maging-Verwaltung"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "Datei herunterladen"
+
+#: modules/base/includes/computers_list.inc.php:36
+msgid "Remote control"
+msgstr "Fernsteuerung"
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Show Profile"
+msgstr "Profile anzeigen"
+
+#: modules/base/includes/computers_list.inc.php:153
+msgid "Computers list"
+msgstr "Computerliste"
+
+#: modules/base/includes/computers_list.inc.php:164
+msgid "Backup status"
+msgstr "Backup Status"
+
+#: modules/base/includes/computers_list.inc.php:181
+msgid "Delete computer"
+msgstr "lösche Computer"
+
+#: modules/base/includes/computers_list.inc.php:184
+msgid "Remove machine from group"
+msgstr "lösche Computer aus Gruppe"
+
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1190,10 +1239,10 @@ msgstr "Benutzer aktiviert"
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extention to resize the photo automatically"
+"                    Install php gd extension to resize the photo automatically"
 msgstr ""
-"Das Foto ist zu groß. Die maximale Größe ist %s x %s.\n"
-"                    Installieren Sie die php gd Erweiterung um das Foto automatisch anzupassen"
+"Das Foto ist zu groß. Die maximale Größe ist %s x %s. Installieren Sie die "
+"php gd Erweiterung um das Foto automatisch anzupassen"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
@@ -1356,53 +1405,9 @@ msgstr "UID"
 msgid "GID"
 msgstr "GID"
 
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "Inventar"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "GLPI Inventar"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "Log lesen"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "Software Deployment"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "maging-Verwaltung"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "Datei herunterladen"
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr "Fernsteuerung"
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr "Profile anzeigen"
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr "Computerliste"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr "Backup Status"
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr "lösche Computer"
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
-msgstr "lösche Computer aus Gruppe"
+#: modules/base/logview/index.php:35
+msgid "LDAP operations log view"
+msgstr "LDAP-Log \"Operationen\" ansehen"
 
 #: modules/base/logview/ajax_showlog.php:43
 msgid "Connection"
@@ -1417,12 +1422,8 @@ msgid "Actions"
 msgstr "Aktionen"
 
 #: modules/base/logview/ajax_showlog.php:46
-msgid "Extra informations"
+msgid "Extra information"
 msgstr "Zusätzliche Informationen"
-
-#: modules/base/logview/index.php:35
-msgid "LDAP operations log view"
-msgstr "LDAP-Log \"Operationen\" ansehen"
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1432,8 +1433,52 @@ msgstr "Root-Benutzer können keine Favoriten haben."
 msgid "Add this page to your favorite"
 msgstr "Fügen Sie diese Seite jetzt zu Ihren Favoriten hinzu."
 
+#: modules/base/status/index.php:101
+msgid "Uptime: "
+msgstr "Laufzeit: "
+
+#: modules/base/status/index.php:104
+msgid "day"
+msgstr "day"
+
+#: modules/base/status/index.php:108
+msgid "hour"
+msgstr "hour"
+
+#: modules/base/status/index.php:111
+msgid "minute"
+msgstr "minute"
+
+#: modules/base/status/index.php:116
+msgid "Memory"
+msgstr "Speicher"
+
+#: modules/base/status/index.php:119
+msgid "Swap"
+msgstr "Swap"
+
+#: modules/base/status/index.php:199
+msgid "Global view"
+msgstr "globale Ansicht"
+
+#: modules/base/status/index.php:206
+msgid "Server status"
+msgstr "Server Status"
+
+#: modules/base/status/index.php:211
+msgid "LDAP Configuration"
+msgstr "LDAP-Konfiguration"
+
+#: modules/base/status/index.php:218
+msgid "Hard drive partitions"
+msgstr "Festplattenpartitionen"
+
+#: modules/base/status/index.php:223
+msgid "Background jobs"
+msgstr "Hintergrunddienste"
+
 #: modules/base/status/support.php:29
-msgid "License and support informations"
+msgid "License and support information"
 msgstr "Lizenz-und Support Informationen"
 
 #: modules/base/status/support.php:38
@@ -1494,50 +1539,6 @@ msgstr "Support Mail-Adresse"
 #: modules/base/status/support.php:59
 msgid "Support phone number"
 msgstr "Support Telefonnummer"
-
-#: modules/base/status/index.php:101
-msgid "Uptime: "
-msgstr "Laufzeit: "
-
-#: modules/base/status/index.php:104
-msgid "day"
-msgstr "day"
-
-#: modules/base/status/index.php:108
-msgid "hour"
-msgstr "hour"
-
-#: modules/base/status/index.php:111
-msgid "minute"
-msgstr "minute"
-
-#: modules/base/status/index.php:116
-msgid "Memory"
-msgstr "Speicher"
-
-#: modules/base/status/index.php:119
-msgid "Swap"
-msgstr "Swap"
-
-#: modules/base/status/index.php:199
-msgid "Global view"
-msgstr "globale Ansicht"
-
-#: modules/base/status/index.php:206
-msgid "Server status"
-msgstr "Server Status"
-
-#: modules/base/status/index.php:211
-msgid "LDAP Configuration"
-msgstr "LDAP-Konfiguration"
-
-#: modules/base/status/index.php:218
-msgid "Hard drive partitions"
-msgstr "Festplattenpartitionen"
-
-#: modules/base/status/index.php:223
-msgid "Background jobs"
-msgstr "Hintergrunddienste"
 
 #: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
 msgid "Name"
