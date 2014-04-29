@@ -49,8 +49,7 @@ class LicensePanel extends Panel {
 
         if ($this->data['name'] != ''||$this->data['phone'] != ''||$this->data['email'] != ''||$this->data['hours'] != ''){ 
             echo '<div class="subpanel">';
-            if ($this->data['name'] != '')
-                echo '<p><b>' . $this->data['name'] . '</b></p>';
+            echo '<p><b>' . _T('Support', 'support') . '</b></p>';
 
             if ($this->data['phone'] != '') {
                 echo '<p>' . _T("Phone", "support") . ':</p>';
@@ -72,10 +71,14 @@ class LicensePanel extends Panel {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Your subscription", "support") . ':</p>';
             list($used_machines, $max_machines, $ts_expiration) = $subscription_info;
-            $machine_alert = ($max_machines - $used_machines > 10) ? 'alert-success' : 'alert-error';
-            $support_alert = (time() - $ts_expiration < 0) ? 'alert-success' : 'alert-error';
+            $machine_alert = ($max_machines - $used_machines >= 10) ? 'alert-success' : 'alert-error';
+            // If demo, alert is always success
+            if ($max_machines == 5) $machine_alert = 'alert-success';
+            $support_alert = (time() - $ts_expiration <= 0) ? 'alert-success' : 'alert-error';
             echo '<p class="alert ' . $machine_alert  . '">' . _T('Computers', 'support') . ': <b>' . $used_machines. " " . '/' .' '. $max_machines .' ' . '</b></p>';
-            echo '<p class="' . $support_alert  . '">' . _T('End of support', 'support') . ': <b>' . date(_T('M, j Y', 'support'), $ts_expiration) .' ' . '</b></p>';
+            if ($ts_expiration > 0) {
+                echo '<p class="alert ' . $support_alert  . '">' . _T('End', 'support') . ': <b>' . date('Y-m-d', $ts_expiration) .' ' . '</b></p>';
+            }
             echo '</div>';
         }
 
