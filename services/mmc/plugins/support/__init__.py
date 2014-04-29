@@ -53,7 +53,7 @@ def activate():
                           cron_expression=config.cron_search_for_updates
                           )
 
-    LicenseChecker().get_license_info()
+    LicenseChecker().get_license_info(True)
 
     return True
 
