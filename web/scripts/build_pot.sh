@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
-for module in dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update; do
+for module in dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update support; do
     POT="modules/$module/locale/$module.pot"
     rm -f $POT
     touch $POT
