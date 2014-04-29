@@ -251,6 +251,8 @@ def get_subscription_info():
     except ImportError:
         return False
 
+def get_license_info():
+    return LicenseChecker().get_license_info()
 
 
 
