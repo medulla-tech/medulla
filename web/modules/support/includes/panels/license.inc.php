@@ -70,14 +70,42 @@ class LicensePanel extends Panel {
         if ($subscription_info) {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Your subscription", "support") . ':</p>';
+
+            $display_sub_buttons = False;
+
+            /* Machines */
             list($used_machines, $max_machines, $ts_expiration) = $subscription_info;
-            $machine_alert = ($max_machines - $used_machines >= 10) ? 'alert-success' : 'alert-error';
-            // If demo, alert is always success
-            if ($max_machines == 5) $machine_alert = 'alert-success';
-            $support_alert = (time() - $ts_expiration <= 0) ? 'alert-success' : 'alert-error';
+
+            $machine_alert = 'alert-success';
+
+            if ($max_machines == 5) { // If demo, alert is always success
+                $display_sub_buttons = True;
+            }
+            elseif ($max_machines - $used_machines <= 10) {
+                $machine_alert = ''; // warning alert
+                $display_sub_buttons = True;
+            }
+
             echo '<p class="alert ' . $machine_alert  . '">' . _T('Computers', 'support') . ': <b>' . $used_machines. " " . '/' .' '. $max_machines .' ' . '</b></p>';
-            if ($ts_expiration > 0) {
+
+            /* end support */
+            $support_alert = 'alert-success';
+
+            if (time() > $ts_expiration - (86400*30)) { // support is about to expire
+                $support_alert = ''; // warning alert
+                $display_sub_buttons = True;
+            }
+            elseif (time() >= $ts_expiration) { // support is expired
+                $support_alert = 'alert-error';
+                $display_sub_buttons = True;
+            }
+
+            if ($ts_expiration != 0) { // do not display end of support in case of demo
                 echo '<p class="alert ' . $support_alert  . '">' . _T('End', 'support') . ': <b>' . date('Y-m-d', $ts_expiration) .' ' . '</b></p>';
+            }
+            if ($display_sub_buttons) {
+                echo '<div style="text-align: center"><a class="btn btn-primary" href="https://serviceplace.mandriva.com" target="_blank">' . _T('Purchase', 'support') . '</a>';
+                echo '&nbsp;<a class="btn btn-primary" href="http://' . $_SERVER['HTTP_HOST'] . '/pulse-first-run/?reactivate=1" target="_blank">' . _T('Activate', 'support') . '</a></div>';
             }
             echo '</div>';
         }

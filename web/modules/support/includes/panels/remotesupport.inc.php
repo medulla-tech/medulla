@@ -38,10 +38,10 @@ class RemoteSupportPanel extends Panel {
                 echo '<p><div style="text-align: center"><font color="green">Your server is now connected to:</font></div></p>
  <div style="text-align: center"><font color="green"><b>rssh.mandriva.com</b></font></div>
  <p><div style="text-align: center"><font color="green">(remote port: <b>'. get_port() . '</b>)</font></div></p>
-                <div style="text-align: center"><a class="btn btn-primary" href="' . urlStrRedirect("support/support/disconnect") . '">' . _('Disconnect') . '</a></div>';
+                <div style="text-align: center"><a class="btn btn-primary" href="' . urlStrRedirect("support/support/disconnect") . '">' . _T('Disconnect', 'support') . '</a></div>';
 	    }	    
 	    else {
-                echo '<div style="text-align: center"><a class="btn btn-primary" href="' . urlStrRedirect("support/support/connect") . '">' . _('Connect to support') . '</a></div>';
+                echo '<div style="text-align: center"><a class="btn btn-primary" href="' . urlStrRedirect("support/support/connect") . '">' . _T('Connect to support', 'support') . '</a></div>';
 	    }
 
 	}
