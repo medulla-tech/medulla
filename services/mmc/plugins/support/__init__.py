@@ -194,9 +194,7 @@ class LicenseChecker(object):
         @rtype: dict
         """
         for key, value in data.items():
-            if isinstance(value, unicode):
-                data[key] = value.decode("unicode-escape")
-            elif isinstance(value, list):
+            if isinstance(value, list):
                 lst = []
                 for sub_data in value:
                     lst.append(self.normalize(sub_data))
