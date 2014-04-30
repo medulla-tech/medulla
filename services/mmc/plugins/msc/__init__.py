@@ -370,6 +370,12 @@ class RpcProxy(RpcProxyI):
         d.addCallbacks(xmlrpcCleanup, lambda err: err)
         return d
 
+    def getContext(self, user='root'):
+            s = SecurityContext()
+            s.userid = user
+            s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
+            return s
+
     def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = [], cmd_type = 0):
         """
         @param target: must be list of UUID
@@ -377,6 +383,11 @@ class RpcProxy(RpcProxyI):
         """
         ctx = self.currentContext
         if gid:
+            grp = DyngroupDatabase().get_group(self.getContext(), gid)
+            # If convergence group, get context of group's owner
+            if grp.type == 2:
+                _group_user = DyngroupDatabase()._get_group_user(grp.parent_id)
+                ctx = self.getContext(user=_group_user)
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
 
         g = mmc.plugins.msc.package_api.SendPackageCommand(ctx, p_api, pid, target, params, mode, gid, proxies = proxy, cmd_type = cmd_type)

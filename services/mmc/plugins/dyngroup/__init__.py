@@ -167,7 +167,12 @@ class RpcProxy(RpcProxyI):
         return DyngroupDatabase().groupNameExists(ctx, name, gid)
 
     def get_group(self, id, ro=False, root_context=False):
-        ctx = root_context and self.getContext() or self.currentContext
+        grp = DyngroupDatabase().get_group(self.getContext(), id)
+        if grp.type == 2:
+            _group_user = DyngroupDatabase()._get_group_user(grp.parent_id)
+            ctx = self.getContext(user=_group_user)
+        else:
+            ctx = root_context and self.getContext() or self.currentContext
         grp = DyngroupDatabase().get_group(ctx, id, ro)
         if grp:
             return xmlrpcCleanup(grp.toH())
@@ -222,8 +227,12 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().bool_group(ctx, id))
 
-    def setbool_group(self, id, bool):
-        ctx = self.currentContext
+    def setbool_group(self, id, bool, type=0, parent_id=None):
+        if type == 2 and parent_id is not None: # convergence group, get parent group's user context
+            _group_user = DyngroupDatabase()._get_group_user(parent_id)
+            ctx = self.getContext(user=_group_user)
+        else:
+            ctx = self.currentContext
         return xmlrpcCleanup(DyngroupDatabase().setbool_group(ctx, id, bool))
 
     def requestresult_group(self, id, start, end, filter):

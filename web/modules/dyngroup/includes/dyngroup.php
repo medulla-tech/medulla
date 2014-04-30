@@ -254,7 +254,7 @@ class Group {
     function getRequest() { return __xmlrpc_request_group($this->id); }
     function setRequest($request, $root_context) { if ($this->can_modify()) { return __xmlrpc_setrequest_group($this->id, $request, $root_context); } return False; }
     function getBool() { return __xmlrpc_bool_group($this->id); }
-    function setBool($bool) { if ($this->can_modify()) { return __xmlrpc_setbool_group($this->id, $bool); } return False; }
+    function setBool($bool) { if ($this->can_modify()) { return __xmlrpc_setbool_group($this->id, $bool, $this->type, $this->parent_id); } return False; }
 
     function reply($start = 0, $end = 10, $filter = '') { return __xmlrpc_requestresult_group($this->id, $start, $end, $filter); }
     function countReply($filter = '') { return __xmlrpc_countrequestresult_group($this->id, $filter); }
@@ -344,7 +344,7 @@ function __xmlrpc_setvisibility_group($id, $visibility) { return xmlCall("dyngro
 function __xmlrpc_request_group($id) { return xmlCall("dyngroup.request_group", array($id)); }
 function __xmlrpc_setrequest_group($id, $request, $root_context) { return xmlCall("dyngroup.setrequest_group", array($id, $request, $root_context)); }
 function __xmlrpc_bool_group($id) { return xmlCall("dyngroup.bool_group", array($id)); }
-function __xmlrpc_setbool_group($id, $bool) { return xmlCall("dyngroup.setbool_group", array($id, $bool)); }
+function __xmlrpc_setbool_group($id, $bool, $type=0, $parent_id=null) { return xmlCall("dyngroup.setbool_group", array($id, $bool, $type, $parent_id)); }
 function __xmlrpc_requestresult_group($id, $start, $end, $filter) { return xmlCall("dyngroup.requestresult_group", array($id, $start, $end, $filter)); }
 function __xmlrpc_countrequestresult_group($id, $filter) { return xmlCall("dyngroup.countrequestresult_group", array($id, $filter)); }
 function convertComputer($e) {$e = array('hostname'=>$e[1]['cn'][0], 'uuid'=>$e[1]['objectUUID'][0]); return $e;}
