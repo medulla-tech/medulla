@@ -549,7 +549,7 @@ class ConfigReader :
     """Read and parse config files"""
     def __init__(self):
        self._config  = self.get_config('/etc/mmc/mmc.ini')
-       self._config2 = self.get_config('/etc/mmc/plugins/base.ini')
+       self._config2 = self.get_config('/etc/mmc/plugins/base.ini.local')
 
 
     @classmethod
