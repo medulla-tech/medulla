@@ -390,6 +390,32 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         return query.first().name
 
     @DatabaseHelper._session
+    def delete_package_convergence(self, session, packageUUID):
+        """
+        Delete deploy and done groups for a given packageUUID
+        """
+        convergence_group_ids = []
+        for line in session.query(Convergence).filter_by(packageUUID = packageUUID):
+            convergence_group_ids.append(line.deployGroupId)
+            convergence_group_ids.append(line.doneGroupId)
+        if convergence_group_ids:
+            session.query(ShareGroup).filter(ShareGroup.FK_groups.in_(convergence_group_ids)).delete(synchronize_session='fetch')
+            session.query(Groups).filter(Groups.id.in_(convergence_group_ids)).delete(synchronize_session='fetch')
+            session.query(Convergence).filter_by(packageUUID = packageUUID).delete()
+        return True
+
+    @DatabaseHelper._session
+    def delete_convergence_groups(self, session, parent_id):
+        """
+        Delete deploy and done groups, for a given parent_group_id
+        """
+        convergence_group_ids = [cgroup.id for cgroup in session.query(Groups).filter_by(parent_id = parent_id)]
+        session.query(ShareGroup).filter(ShareGroup.FK_groups.in_(convergence_group_ids)).delete(synchronize_session='fetch')
+        session.query(Groups).filter_by(parent_id = parent_id).delete()
+        session.query(Convergence).filter_by(parentGroupId = parent_id).delete()
+        return True
+
+    @DatabaseHelper._session
     def delete_group(self, session, ctx, id):
         """
         delete a group defined by it's id
@@ -417,11 +443,8 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         # Delete the group from the Groups table
         session.query(ProfilesData).filter_by(FK_groups = id).delete()
         session.query(Groups).filter_by(id = id).delete()
-        # Delete convergence groups
-        convergence_group_ids = [cgroup.id for cgroup in session.query(Groups).filter_by(parent_id = id)]
-        session.query(ShareGroup).filter(ShareGroup.FK_groups.in_(convergence_group_ids)).delete(synchronize_session='fetch')
-        session.query(Groups).filter_by(parent_id = id).delete()
-        session.query(Convergence).filter_by(parentGroupId = id).delete()
+        # Delete convergence groups for this id
+        self.delete_convergence_groups(id)
         session.flush()
         trans.commit()
         return True

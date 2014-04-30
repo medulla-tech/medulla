@@ -418,6 +418,8 @@ class RpcProxy(RpcProxyI):
                 logging.getLogger().info('Expires command %d' % cmd_id)
                 end_date = time.strftime("%Y-%m-%d %H:%M:%S")
                 self.extend_command(cmd_id, start_date, end_date)
+            # Delete convergence groups if any
+            DyngroupDatabase().delete_package_convergence(pid)
         return True
 
     def extend_command(self, cmd_id, start_date, end_date):
