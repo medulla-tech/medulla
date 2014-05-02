@@ -22,6 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
+import os
 from ConfigParser import ConfigParser, NoSectionError, NoOptionError
 from twisted.internet import defer
 from mmc.support.mmctools import Singleton
@@ -128,6 +129,8 @@ class ProvisionerConfig(ConfigParser):
         self.setDefault()
         fp = file(self.conffile, "r")
         self.readfp(fp, self.conffile)
+        if os.path.isfile(self.conffile + '.local'):
+            self.readfp(open(self.conffile + '.local','r'))
         self.readConf()
         fp.close()
 
