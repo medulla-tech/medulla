@@ -28,6 +28,7 @@ Class to manage msc mmc-agent plugin
 # Big modules
 import logging
 import time
+import datetime
 import re
 import os
 
@@ -187,6 +188,10 @@ def create_update_command(ctx, target, update_list, gid = None):
     if MscConfig().web_def_awake == 1:
         do_wol = "enable"
 
+    # set end_date to now() + 24H Refs #2313
+    fmt = "%Y-%m-%d %H:%M:%S"
+    end_date = (datetime.datetime.now() + datetime.timedelta(days=1)).strftime(fmt)
+
     d = defer.maybeDeferred(MscDatabase().addCommand, ctx,
                              None,
                              cmd,
@@ -195,6 +200,7 @@ def create_update_command(ctx, target, update_list, gid = None):
                              target,
                              'push',
                              gid,
+                             end_date = end_date,
                              title = desc,
                              do_wol = do_wol,
                              do_windows_update = "enable",
