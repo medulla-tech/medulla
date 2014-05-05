@@ -107,6 +107,7 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                 self.config.ldapurl = ldapurl
                 conn = LDAPConnection(self.config)
                 l = conn.l
+                l.set_option(ldap.OPT_REFERRALS, ldap.OPT_OFF)
                 if self.config.network_timeout:
                     l.set_option(ldap.OPT_NETWORK_TIMEOUT, self.config.network_timeout)
                 if self.config.bindname:
