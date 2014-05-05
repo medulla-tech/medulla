@@ -158,7 +158,7 @@ class debianUpdateHandler(linuxUpdateHandler):
         print "Installing updates ..."
         
         # Running apt-get install
-        install_cmd = "DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt-get -y -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install %s" % ' '.join(packages_to_install)
+        install_cmd = "DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt-get -y --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install %s" % ' '.join(packages_to_install)
         print install_cmd
         out, err, ec = self.runInShell(install_cmd)
         print out
