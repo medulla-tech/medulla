@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-05-05 01:10+0200\n"
-"PO-Revision-Date: 2014-04-28 14:54+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-05-05 14:08+0200\n"
+"PO-Revision-Date: 2014-05-05 10:15+0000\n"
+"Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,15 +25,15 @@ msgstr "更新"
 
 #: modules/update/includes/panels/remotesupport.inc.php:43
 msgid "An error occured while fetching updates"
-msgstr ""
+msgstr "擷取更新時發生錯誤"
 
 #: modules/update/includes/panels/remotesupport.inc.php:47
 msgid "View updates"
-msgstr ""
+msgstr "檢視更新"
 
 #: modules/update/includes/panels/remotesupport.inc.php:48
 msgid "Install updates"
-msgstr ""
+msgstr "安裝更新"
 
 #: modules/update/includes/panels/remotesupport.inc.php:54
 msgid "No updates available."

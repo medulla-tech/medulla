@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 ## Translators:
+#   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-05-05 01:10+0200\n"
-"PO-Revision-Date: 2014-04-29 15:41+0000\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"POT-Creation-Date: 2014-05-05 14:08+0200\n"
+"PO-Revision-Date: 2014-05-05 10:18+0000\n"
+"Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,65 +20,65 @@ msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
-msgstr ""
+msgstr "訂閱資訊"
 
 #: modules/support/includes/panels/license.inc.php:52
 #: modules/support/infoPackage.inc.php:32
 msgid "Support"
-msgstr ""
+msgstr "支援"
 
 #: modules/support/includes/panels/license.inc.php:55
 msgid "Phone"
-msgstr ""
+msgstr "電話"
 
 #: modules/support/includes/panels/license.inc.php:59
 msgid "Email"
-msgstr ""
+msgstr "電子郵件"
 
 #: modules/support/includes/panels/license.inc.php:63
 msgid "Hours"
-msgstr ""
+msgstr "小時"
 
 #: modules/support/includes/panels/license.inc.php:72
 msgid "Your subscription"
-msgstr ""
+msgstr "您的訂閱"
 
 #: modules/support/includes/panels/license.inc.php:89
 msgid "Computers"
-msgstr ""
+msgstr "電腦"
 
 #: modules/support/includes/panels/license.inc.php:104
 msgid "End"
-msgstr ""
+msgstr "結束"
 
 #: modules/support/includes/panels/license.inc.php:107
 msgid "Purchase"
-msgstr ""
+msgstr "購買"
 
 #: modules/support/includes/panels/license.inc.php:108
 msgid "Activate"
-msgstr ""
+msgstr "啟動"
 
 #: modules/support/includes/panels/license.inc.php:115
 msgid "Links"
-msgstr ""
+msgstr "連結"
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
 #: modules/support/infoPackage.inc.php:36
 msgid "Remote support"
-msgstr ""
+msgstr "遠端支援"
 
 #: modules/support/includes/panels/remotesupport.inc.php:41
 #: modules/support/infoPackage.inc.php:43
 msgid "Disconnect"
-msgstr ""
+msgstr "斷開連線"
 
 #: modules/support/includes/panels/remotesupport.inc.php:44
 msgid "Connect to support"
-msgstr ""
+msgstr "連線至支援"
 
 #: modules/support/infoPackage.inc.php:41
 msgid "Connect"
-msgstr ""
+msgstr "連線"
 
 
