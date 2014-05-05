@@ -165,9 +165,12 @@ class LicenseChecker(object):
             logging.getLogger().warning("No license data")
             return None
 
-        for key in ["phone", "email", "hours", "links"]:
+        for key in ["phone", "email", "hours", "raw_content"]:
             if key in data["data"]:
                 data[key] = data["data"][key]
+
+        if 'links' in data['data']:
+            data['links'] = data['data']['links']
 
         if "phone" in data:
             data["phone_uri"] = "tel:%s" % data["phone"].replace(".", "")\
@@ -175,7 +178,6 @@ class LicenseChecker(object):
 
         if "email" in data:
             data["email_uri"] = "mailto:%s?subject=%s" % (data["email"], config.install_uuid)
-
 
         del data["data"]
 

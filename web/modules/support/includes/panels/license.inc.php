@@ -42,6 +42,7 @@ class LicensePanel extends Panel {
             'email_uri' => '',
             'hours' => '',
             'links' => '',
+            'raw_content' => '',
         ), $this->data);
     }
 
@@ -67,11 +68,11 @@ class LicensePanel extends Panel {
         }
 
         $subscription_info = xmlCall("support.get_subscription_info");
+        $display_renew_links = False;
         if ($subscription_info) {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Your subscription", "support") . ':</p>';
 
-            $display_sub_buttons = False;
 
             /* Machines */
             list($used_machines, $max_machines, $ts_expiration) = $subscription_info;
@@ -79,11 +80,11 @@ class LicensePanel extends Panel {
             $machine_alert = 'alert-success';
 
             if ($max_machines == 5) { // If demo, alert is always success
-                $display_sub_buttons = True;
+                $display_renew_links = True;
             }
             elseif ($max_machines - $used_machines <= 10) {
                 $machine_alert = ''; // warning alert
-                $display_sub_buttons = True;
+                $display_renew_links = True;
             }
 
             echo '<p class="alert ' . $machine_alert  . '">' . _T('Computers', 'support') . ': <b>' . $used_machines. " " . '/' .' '. $max_machines .' ' . '</b></p>';
@@ -93,28 +94,41 @@ class LicensePanel extends Panel {
 
             if (time() > $ts_expiration - (86400*30)) { // support is about to expire
                 $support_alert = ''; // warning alert
-                $display_sub_buttons = True;
+                $display_renew_links = True;
             }
             elseif (time() >= $ts_expiration) { // support is expired
                 $support_alert = 'alert-error';
-                $display_sub_buttons = True;
+                $display_renew_links = True;
             }
 
             if ($ts_expiration != 0) { // do not display end of support in case of demo
                 echo '<p class="alert ' . $support_alert  . '">' . _T('End', 'support') . ': <b>' . date('Y-m-d', $ts_expiration) .' ' . '</b></p>';
             }
-            if ($display_sub_buttons) {
-                echo '<div style="text-align: center"><a class="btn btn-primary" href="https://serviceplace.mandriva.com" target="_blank">' . _T('Purchase', 'support') . '</a>';
-                echo '&nbsp;<a class="btn btn-primary" href="http://' . $_SERVER['HTTP_HOST'] . '/pulse-first-run/?reactivate=1" target="_blank">' . _T('Activate', 'support') . '</a></div>';
-            }
             echo '</div>';
         }
 
+        if ($this->data['raw_content'] != '') {
+            echo '<div class="subpanel">';
+            echo $this->data['raw_content'];
+            echo '</div>';
+        }
         if ($this->data['links'] != '') {
             echo '<div class="subpanel">';
             echo '<p>' . _T("Links", "support") . ':</p>';
-            foreach($this->data['links'] as $linkgrp){
-                echo '<p><b><a href="' . $linkgrp["url"] . '">' . $linkgrp["text"] . '</a></b></p>';
+            foreach($this->data['links'] as $key => $linkgrp){
+                if ($linkgrp['url'] != '' && $linkgrp['text'] != '') {
+                    if (in_array($key, array('buy_link', 'renew_link'))) {
+                        if ($display_renew_links) {
+                            echo '<p><b><a href="' . $linkgrp["url"] . '" target="_blank">' . $linkgrp["text"] . '</a></b></p>';
+                        }
+                    }
+                    else {
+                        echo '<p><b><a href="' . $linkgrp["url"] . '" target="_blank">' . $linkgrp["text"] . '</a></b></p>';
+                    }
+                }
+            }
+            if ($display_renew_links) {
+                echo '<p><b><a href="http://' . $_SERVER['HTTP_HOST'] . '/pulse-first-run/?reactivate=1" target="_blank">' . _T('Activate', 'support') . '</a></b></p>';
             }
             echo '</div>';
         }
