@@ -1,0 +1,265 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+## Translators:
+#   <info@janusww.com>, 2014.
+msgid ""
+msgstr ""
+"Project-Id-Version: Mandriva Directory Server\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-05-06 09:40+0200\n"
+"PO-Revision-Date: 2014-05-04 21:33+0000\n"
+"Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/mds/team/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:71
+msgid "Less detail"
+msgstr "较少详情"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:187
+msgid "More detail"
+msgstr "较多详情"
+
+#: modules/report/includes/html.inc.php:100
+msgid "January"
+msgstr "一月"
+
+#: modules/report/includes/html.inc.php:101
+msgid "February"
+msgstr "二月"
+
+#: modules/report/includes/html.inc.php:102
+msgid "March"
+msgstr "三月"
+
+#: modules/report/includes/html.inc.php:103
+msgid "April"
+msgstr "四月"
+
+#: modules/report/includes/html.inc.php:104
+#: modules/report/includes/html.inc.php:116
+msgid "May"
+msgstr "五月"
+
+#: modules/report/includes/html.inc.php:105
+msgid "June"
+msgstr "六月"
+
+#: modules/report/includes/html.inc.php:106
+msgid "July"
+msgstr "七月"
+
+#: modules/report/includes/html.inc.php:107
+msgid "August"
+msgstr "八月"
+
+#: modules/report/includes/html.inc.php:108
+msgid "September"
+msgstr "九月"
+
+#: modules/report/includes/html.inc.php:109
+msgid "October"
+msgstr "十月"
+
+#: modules/report/includes/html.inc.php:110
+msgid "November"
+msgstr "十一月"
+
+#: modules/report/includes/html.inc.php:111
+msgid "December"
+msgstr "十二月"
+
+#: modules/report/includes/html.inc.php:112
+msgid "Jan"
+msgstr "一月"
+
+#: modules/report/includes/html.inc.php:113
+msgid "Feb"
+msgstr "二月"
+
+#: modules/report/includes/html.inc.php:114
+msgid "Mar"
+msgstr "三月"
+
+#: modules/report/includes/html.inc.php:115
+msgid "Apr"
+msgstr "四月"
+
+#: modules/report/includes/html.inc.php:117
+msgid "Jun"
+msgstr "六月"
+
+#: modules/report/includes/html.inc.php:118
+msgid "Jul"
+msgstr "七月"
+
+#: modules/report/includes/html.inc.php:119
+msgid "Aug"
+msgstr "八月"
+
+#: modules/report/includes/html.inc.php:120
+msgid "Sep"
+msgstr "九月"
+
+#: modules/report/includes/html.inc.php:121
+msgid "Oct"
+msgstr "十月"
+
+#: modules/report/includes/html.inc.php:122
+msgid "Nov"
+msgstr "十一月"
+
+#: modules/report/includes/html.inc.php:123
+msgid "Dec"
+msgstr "十二月"
+
+#: modules/report/includes/html.inc.php:124
+msgid "Sunday"
+msgstr "星期日"
+
+#: modules/report/includes/html.inc.php:125
+msgid "Monday"
+msgstr "星期一"
+
+#: modules/report/includes/html.inc.php:126
+msgid "Tuesday"
+msgstr "星期二"
+
+#: modules/report/includes/html.inc.php:127
+msgid "Wednesday"
+msgstr "星期三"
+
+#: modules/report/includes/html.inc.php:128
+msgid "Thursday"
+msgstr "星期四"
+
+#: modules/report/includes/html.inc.php:129
+msgid "Friday"
+msgstr "星期五"
+
+#: modules/report/includes/html.inc.php:130
+msgid "Saturday"
+msgstr "星期六"
+
+#: modules/report/includes/html.inc.php:131
+msgid "Sun"
+msgstr "星期五"
+
+#: modules/report/includes/html.inc.php:132
+msgid "Mon"
+msgstr "周一"
+
+#: modules/report/includes/html.inc.php:133
+msgid "Tue"
+msgstr "周二"
+
+#: modules/report/includes/html.inc.php:134
+msgid "Wed"
+msgstr "周三"
+
+#: modules/report/includes/html.inc.php:135
+msgid "Thu"
+msgstr "周四"
+
+#: modules/report/includes/html.inc.php:136
+msgid "Fri"
+msgstr "周五"
+
+#: modules/report/includes/html.inc.php:137
+msgid "Sat"
+msgstr "周六"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Su"
+msgstr "周日"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Mo"
+msgstr "周一"
+
+#: modules/report/includes/html.inc.php:138
+msgid "Tu"
+msgstr "周二"
+
+#: modules/report/includes/html.inc.php:139
+msgid "We"
+msgstr "周三"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Th"
+msgstr "周四"
+
+#: modules/report/includes/html.inc.php:139
+msgid "Fr"
+msgstr "周五"
+
+#: modules/report/includes/html.inc.php:140
+msgid "Sa"
+msgstr "周六"
+
+#: modules/report/includes/html.inc.php:141
+msgid "Wk"
+msgstr "星期"
+
+#: modules/report/report/localSidebar.php:27
+#: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
+msgid "Report creation"
+msgstr "报告建立"
+
+#: modules/report/report/index.php:62
+msgid "Period"
+msgstr "周期"
+
+#: modules/report/report/index.php:63
+msgid "from"
+msgstr "从"
+
+#: modules/report/report/index.php:63
+msgid "to"
+msgstr "至"
+
+#: modules/report/report/index.php:76
+msgid "Entities"
+msgstr "实体"
+
+#: modules/report/report/index.php:90
+msgid "Generate Report"
+msgstr "产生报告"
+
+#: modules/report/report/index.php:132
+msgid "Select some data to include in the report."
+msgstr "选择一些资料以包括在报告中。"
+
+#: modules/report/report/index.php:194
+msgid "Download image"
+msgstr "下载图像"
+
+#: modules/report/report/index.php:234
+msgid "Get XLS Report"
+msgstr "取得 XLS 报告"
+
+#: modules/report/report/index.php:236
+msgid "Get PDF Report"
+msgstr "取得 PDF 报告"
+
+#: modules/report/infoPackage.inc.php:32
+msgid "Reporting"
+msgstr "报告"
+
+#: modules/report/infoPackage.inc.php:36
+msgid "Report"
+msgstr "报告"
+
+#: modules/report/infoPackage.inc.php:44
+msgid "Download a file from report module (report or PNG)"
+msgstr "从报告模组下载档案（报告或 PNG）"
+
+
