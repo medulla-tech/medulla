@@ -73,7 +73,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
-            self.logger.info("Inventory don't need activation")
+            self.logger.info("Inventory doesn't need activation")
             return None
         self.logger.info("Inventory is activating")
         self.config = config
@@ -163,10 +163,13 @@ class Inventory(DyngroupDatabaseHelper):
         self.table['hasInventory'] = self.table['hasNetwork']
         self.klass['hasInventory'] = self.klass['hasNetwork']
 
-        mapper(Machine, self.machine)
-        mapper(InventoryTable, self.inventory)
-        mapper(UserTable, self.user)
-        mapper(UserEntitiesTable, self.userentities)
+        try:
+            mapper(Machine, self.machine)
+            mapper(InventoryTable, self.inventory)
+            mapper(UserTable, self.user)
+            mapper(UserEntitiesTable, self.userentities)
+        except:
+            pass
 
     def getInventoryDatabaseVersion(self):
         """
