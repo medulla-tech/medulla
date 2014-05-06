@@ -57,6 +57,7 @@ if (!function_exists('_T')) {
                      "pt_BR" => "Português do Brasil",
                      "ru_RU" => "русский язык",
                      "zh_TW" => "Chinese Traditional",
+                     "zh_CN" => "Chinese Simplified",
                      "ja_JP" => "Japanese"
                     );
         return $res;
