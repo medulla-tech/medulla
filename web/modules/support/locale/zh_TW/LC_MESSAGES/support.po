@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-05 14:21+0200\n"
+"POT-Creation-Date: 2014-05-06 09:47+0200\n"
 "PO-Revision-Date: 2014-05-05 10:18+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -19,11 +19,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/support/includes/panels/license.inc.php:108
+#: modules/support/includes/panels/license.inc.php:131
 msgid "Activate"
 msgstr "啟動"
 
-#: modules/support/includes/panels/license.inc.php:89
+#: modules/support/includes/panels/license.inc.php:90
 msgid "Computers"
 msgstr "電腦"
 
@@ -40,29 +40,25 @@ msgstr "連線至支援"
 msgid "Disconnect"
 msgstr "斷開連線"
 
-#: modules/support/includes/panels/license.inc.php:59
+#: modules/support/includes/panels/license.inc.php:60
 msgid "Email"
 msgstr "電子郵件"
 
-#: modules/support/includes/panels/license.inc.php:104
+#: modules/support/includes/panels/license.inc.php:105
 msgid "End"
 msgstr "結束"
 
-#: modules/support/includes/panels/license.inc.php:63
+#: modules/support/includes/panels/license.inc.php:64
 msgid "Hours"
 msgstr "小時"
 
-#: modules/support/includes/panels/license.inc.php:115
+#: modules/support/includes/panels/license.inc.php:117
 msgid "Links"
 msgstr "連結"
 
-#: modules/support/includes/panels/license.inc.php:55
+#: modules/support/includes/panels/license.inc.php:56
 msgid "Phone"
 msgstr "電話"
-
-#: modules/support/includes/panels/license.inc.php:107
-msgid "Purchase"
-msgstr "購買"
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
 #: modules/support/infoPackage.inc.php:36
@@ -73,11 +69,14 @@ msgstr "遠端支援"
 msgid "Subscription info"
 msgstr "訂閱資訊"
 
-#: modules/support/includes/panels/license.inc.php:52
+#: modules/support/includes/panels/license.inc.php:53
 #: modules/support/infoPackage.inc.php:32
 msgid "Support"
 msgstr "支援"
 
-#: modules/support/includes/panels/license.inc.php:72
+#: modules/support/includes/panels/license.inc.php:74
 msgid "Your subscription"
 msgstr "您的訂閱"
+
+#~ msgid "Purchase"
+#~ msgstr "購買"

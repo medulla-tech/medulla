@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-05 14:21+0200\n"
+"POT-Creation-Date: 2014-05-06 09:47+0200\n"
 "PO-Revision-Date: 2014-04-29 15:41+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/support/includes/panels/license.inc.php:108
+#: modules/support/includes/panels/license.inc.php:131
 msgid "Activate"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:89
+#: modules/support/includes/panels/license.inc.php:90
 msgid "Computers"
 msgstr ""
 
@@ -39,28 +39,24 @@ msgstr ""
 msgid "Disconnect"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:59
+#: modules/support/includes/panels/license.inc.php:60
 msgid "Email"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:104
+#: modules/support/includes/panels/license.inc.php:105
 msgid "End"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:63
+#: modules/support/includes/panels/license.inc.php:64
 msgid "Hours"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:115
+#: modules/support/includes/panels/license.inc.php:117
 msgid "Links"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:55
+#: modules/support/includes/panels/license.inc.php:56
 msgid "Phone"
-msgstr ""
-
-#: modules/support/includes/panels/license.inc.php:107
-msgid "Purchase"
 msgstr ""
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
@@ -72,11 +68,11 @@ msgstr ""
 msgid "Subscription info"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:52
+#: modules/support/includes/panels/license.inc.php:53
 #: modules/support/infoPackage.inc.php:32
 msgid "Support"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:72
+#: modules/support/includes/panels/license.inc.php:74
 msgid "Your subscription"
 msgstr ""

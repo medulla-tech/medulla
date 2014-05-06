@@ -1,0 +1,58 @@
+#: modules/support/includes/panels/license.inc.php:131
+msgid "Activate"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:90
+msgid "Computers"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:41
+msgid "Connect"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:44
+msgid "Connect to support"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:41
+#: modules/support/infoPackage.inc.php:43
+msgid "Disconnect"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:60
+msgid "Email"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:105
+msgid "End"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:64
+msgid "Hours"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:117
+msgid "Links"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:56
+msgid "Phone"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:30
+#: modules/support/infoPackage.inc.php:36
+msgid "Remote support"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:30
+msgid "Subscription info"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:53
+#: modules/support/infoPackage.inc.php:32
+msgid "Support"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:74
+msgid "Your subscription"
+msgstr ""

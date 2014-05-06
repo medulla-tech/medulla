@@ -1,0 +1,150 @@
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
+msgid "All updates"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:43
+msgid "An error occured while fetching updates"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:46
+msgid "Available"
+msgstr ""
+
+#: modules/update/update/viewProductUpdates.php:25
+#: modules/update/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:93
+msgid "Disable"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:109
+msgid "Disable selected updates"
+msgstr ""
+
+#: modules/update/update/disableUpdate.php:40
+msgid "Disable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:48
+msgid "Disabled"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:92
+msgid "Enable"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:108
+msgid "Enable selected updates"
+msgstr ""
+
+#: modules/update/update/enableUpdate.php:40
+msgid "Enable this update?"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr ""
+
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:47
+msgid "Enabled"
+msgstr ""
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:48
+msgid "Install updates"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:90
+msgid "Installed count"
+msgstr ""
+
+#: modules/update/update/installProductUpdates.php:38
+msgid "Installing updates ..."
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:54
+msgid "No updates available."
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:69
+msgid "Product Updates installation"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:79
+msgid "Product Updates installation (ajax)"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:73
+msgid "Product Updates list"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
+msgid "Settings"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:89
+msgid "Type"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:88
+msgid "UUID"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:35
+msgid "Update manager"
+msgstr ""
+
+#: modules/update/update/localSidebar.php:28
+msgid "Update managment"
+msgstr ""
+
+#: modules/update/update/settings.php:57
+msgid "Update settings"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:87
+msgid "Update title"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
+msgid "Updates"
+msgstr ""
+
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr ""
+
+#: modules/update/infoPackage.inc.php:47
+msgid "Updates list"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:47
+msgid "View updates"
+msgstr ""
+
+#: modules/update/includes/panels/remotesupport.inc.php:56
+msgid "updates available."
+msgstr ""
