@@ -61,7 +61,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     This class does not read the inventory files created by the LRS during a boot phase (/tftpboot/revoboot/log/*.ini)
     """
-    
+
     def db_check(self):
         self.my_name = "inventory"
         self.configfile = "inventory.ini"
@@ -73,7 +73,7 @@ class Inventory(DyngroupDatabaseHelper):
         self.logger = logging.getLogger()
         DyngroupDatabaseHelper.init(self)
         if self.is_activated:
-            self.logger.info("Inventory doesn't need activation")
+            self.logger.info("Inventory don't need activation")
             return None
         self.logger.info("Inventory is activating")
         self.config = config
@@ -92,9 +92,9 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
-                
         self.table = {}
         self.klass = {}
+
         self.version = Table("Version", self.metadata, autoload = True)
         self.machine = Table("Machine", self.metadata, autoload = True)
         self.inventory = Table("Inventory", self.metadata, autoload = True)
@@ -163,14 +163,10 @@ class Inventory(DyngroupDatabaseHelper):
         self.table['hasInventory'] = self.table['hasNetwork']
         self.klass['hasInventory'] = self.klass['hasNetwork']
 
-        try:
-            mapper(Machine, self.machine)
-            mapper(InventoryTable, self.inventory)
-            mapper(UserTable, self.user)
-            mapper(UserEntitiesTable, self.userentities)
-        except:
-            pass
-        
+        mapper(Machine, self.machine)
+        mapper(InventoryTable, self.inventory)
+        mapper(UserTable, self.user)
+        mapper(UserEntitiesTable, self.userentities)
 
     def getInventoryDatabaseVersion(self):
         """
@@ -2486,7 +2482,7 @@ class InventoryCreator(Inventory):
             self.ctx = InventoryContext()
             self.ctx.userid = 'root'
 
-    def createNewInventory(self, hostname, inventory, date, setLastFlag = True, coming_from_pxe=False):
+    def createNewInventory(self, hostname, inventory, date, setLastFlag = True):
         """
         Add a new inventory for a computer
         """
@@ -2530,11 +2526,6 @@ class InventoryCreator(Inventory):
 
             # If machine doesn't exists, check if we can add a machine
             from pulse2.inventoryserver.utils import canDoInventory
-            
-            if machine_exists and coming_from_pxe:
-                self.logger.info("Machine already exists, ignoring PXE inventory")
-                return False
-            
             if not machine_exists and not canDoInventory():
                 self.logger.info("Cannot add a new machine (operation denied)")
                 return False
