@@ -149,7 +149,7 @@ class InventoryServer:
         @type query: str
         """
         try:
-            # Light Pull mode and/or decide to forward or not if coming for PXE
+            # Light Pull mode and/or decide to forward or not if coming for PXE
             if query == 'INVENTORY':
 
                 has_known_os = False
@@ -386,13 +386,15 @@ class TreatInv(Thread):
         if self.config.enable_forward:
             return False
 
-        # Native case - inventory handling
+        # Native case - inventory handling
+        coming_from_pxe = False
 
         if InventoryUtils.is_coming_from_pxe(content):
             self.logger.debug("Inventory is coming from PXE")
             inv = Inventory()
             inv.activate(self.config)
             setLastFlag = not inv.isInventoried(final_macaddr)
+            coming_from_pxe = True
 
         try:
             start_date = time.time()
@@ -477,7 +479,7 @@ class TreatInv(Thread):
             inventory['Entity'] = [{'Label' : entity}]
 
             self.logger.debug("Thread %s : prepared : %s " % (threadname, time.time()))
-            result = InventoryCreator().createNewInventory(hostname, inventory, date, setLastFlag)
+            result = InventoryCreator().createNewInventory(hostname, inventory, date, setLastFlag, coming_from_pxe=coming_from_pxe, from_ip=from_ip)
             self.logger.debug("Thread %s : done : %s " % (threadname, time.time()))
             # TODO if ret == False : reply something else
             end_date = time.time()
@@ -486,7 +488,7 @@ class TreatInv(Thread):
 
             ret = None
             if isinstance(result, list) and len(result) == 2 :
-                # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
+                # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
                 if not self.config.enable_forward :
                     ret, machine_uuid = result
                     AttemptToScheduler(content, machine_uuid)
