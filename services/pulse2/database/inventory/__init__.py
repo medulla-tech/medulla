@@ -2486,7 +2486,7 @@ class InventoryCreator(Inventory):
             self.ctx = InventoryContext()
             self.ctx.userid = 'root'
 
-    def createNewInventory(self, hostname, inventory, date, setLastFlag = True, coming_from_pxe=False):
+    def createNewInventory(self, hostname, inventory, date, setLastFlag = True, coming_from_pxe=False, from_ip='N/A'):
         """
         Add a new inventory for a computer
         """
@@ -2531,13 +2531,45 @@ class InventoryCreator(Inventory):
             # If machine doesn't exists, check if we can add a machine
             from pulse2.inventoryserver.utils import canDoInventory
             
-            if machine_exists and coming_from_pxe:
-                self.logger.info("Machine already exists, ignoring PXE inventory")
-                return False
             
-            if not machine_exists and not canDoInventory():
-                self.logger.info("Cannot add a new machine (operation denied)")
-                return False
+            # Machine found in database
+            if machine_exists:
+                try:
+                    os_name = self.getComputersOS([machine_uuid])[0]['OSName']
+                except:
+                    os_name = ''
+                
+                # Known OS is OS not null and not PXE OS    
+                has_known_os = os_name != '' and os_name != 'Unknown operating system (PXE network boot inventory)'
+                
+                # Machine found in database with real OS
+                if has_known_os:
+                    # Machine found in database with real OS and new inventory is PXE
+                    if coming_from_pxe:
+                        self.logger.info("Machine %s received a new PXE inventory from %s: skipping (don't overwrite real inventory)" % (str(machine_uuid), str(from_ip)))
+                        return False
+                    # Machine found in database with real OS and new inventory is real inventory
+                    else:
+                        self.logger.info("Machine %s received a new inventory from %s: forwarding" % (str(machine_uuid), str(from_ip)))
+                # Machine found in database with PXE OS
+                else:
+                    # Machine found in database with PXE OS and new inventory is PXE
+                    if coming_from_pxe:
+                        self.logger.info("Machine %s received a new PXE inventory from %s: forwarding (overwrite PXE inventory)" % (str(machine_uuid), str(from_ip)))
+                    # Machine found in database with PXE OS and new inventory real inventory
+                    else:
+                        self.logger.info("Machine %s received a new inventory from %s: forwarding (overwrite PXE inventory)" % (str(machine_uuid), str(from_ip)))
+            # Machine is not known, forward anyway
+            else:
+                if canDoInventory():
+                    if coming_from_pxe:
+                        self.logger.info("PXE inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                    else:
+                        self.logger.info("Inventory received from %s for an unknown machine: forwarding" % str(from_ip))
+                else:
+                    self.logger.info("Cannot forward inventory (operation denied)")
+                    return False
+            
 
             if machine_exists :
                 if setLastFlag:
