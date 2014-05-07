@@ -58,6 +58,10 @@ def activate():
     """
     logger = logging.getLogger()
     config = BackuppcConfig("backuppc")
+    
+    # Registering BackupComputers in ComputerManager
+    ComputerManager().register('backuppc', BackupComputers)
+    
     if config.disable:
         logger.warning("Plugin backuppc: disabled by configuration.")
         return False
@@ -221,6 +225,3 @@ class BackupComputers(ComputerI):
 
     def delComputer(self, ctx, uuid, backup):
         return bpc.unset_backup_for_host(uuid)
-
-# Registering BackupComputers in ComputerManager
-ComputerManager().register('imaging', BackupComputers)
