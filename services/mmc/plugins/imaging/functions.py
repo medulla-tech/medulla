@@ -2504,6 +2504,7 @@ class ImagingRpcProxy(RpcProxyI):
             'computerip': '',
             'computermac': MACAddress,
             'computernet': '',
+            'operating_system': 'Unknown operating system (PXE network boot inventory)',
             'location_uuid': loc_id}
 
         uuid = None
