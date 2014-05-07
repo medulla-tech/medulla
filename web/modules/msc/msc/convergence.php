@@ -113,7 +113,7 @@ if ($_GET['editConvergence']) {
     }
 }
 else {
-    $params["ltitle"] = get_def_package_label($name, $version);
+    $params["ltitle"] = _T('Convergence on ') . $name;
     $params["start_script"] = 'on';
     $params["clean_on_success"] = 'on';
     $params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
