@@ -222,7 +222,7 @@ class InventoryComputers(ComputerI):
     def delComputer(self, ctx, uuid, backup):
         return self.inventory.delMachine(uuid)
 
-    def editComputerName(self, uuid, name):
+    def editComputerName(self, ctx, uuid, name):
         """
         Edit the computer name
 
