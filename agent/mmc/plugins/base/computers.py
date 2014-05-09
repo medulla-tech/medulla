@@ -300,11 +300,7 @@ class ComputerManager(Singleton):
         for plugin in self.components:
             klass = self.components[plugin]
             instance = klass()
-            try:
-                instance.editComputerName(ctx, uuid, name)
-            except TypeError:
-                instance.editComputerName(uuid, name)
-
+            instance.editComputerName(ctx, uuid, name)
 
     def neededParamsAddComputer(self):
         try:
