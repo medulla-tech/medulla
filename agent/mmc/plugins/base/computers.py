@@ -246,14 +246,9 @@ class ComputerManager(Singleton):
             klass = self.components[plugin]
             instance = klass()
             if klass().canAddComputer():
-                try:
-                    ret = instance.addComputer(ctx, params)
-                    if plugin == self.main:
-                        r = ret
-                except TypeError:
-                    ret = instance.addComputer(params)
-                    if plugin == self.main:
-                        r = ret
+                ret = instance.addComputer(ctx, params)
+                if plugin == self.main:
+                    r = ret
         return r
 
     def checkComputerName(self, name):
