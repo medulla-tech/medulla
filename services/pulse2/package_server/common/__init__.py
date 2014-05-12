@@ -557,7 +557,7 @@ class Common(pulse2.utils.Singleton):
                 shutil.rmtree(f)
         self._treatFiles(files_out, mp, pid, access = {})
         if len(files_out):
-            self._createMD5File(os.path.dirname(files_out[0]))
+            self._createMD5File(os.path.dirname(files_out[0]), force_compute=True)
         del Common().need_assign[pid]
         Common().newAssociation[pid] = True
         if self.config.package_mirror_activate:
@@ -731,12 +731,16 @@ class Common(pulse2.utils.Singleton):
             self.mp2p[mp] = []
             Find().find(src, self._treatConfFile, (mp, access))
 
-    def _createMD5File(self, dirname):
+    def _createMD5File(self, dirname, force_compute=False):
         """
         Create the MD5SUMS file for a directory content
+
+	@param force_compute: Force MD5 compute (used when editing package)
+	@type force_compute: bool
         """
         fmd5name = os.path.join(dirname, self.MD5SUMS)
-        if os.path.exists(fmd5name):
+	# If we edit a package, delete MD5SUM file for re-compute
+        if force_compute and os.path.exists(fmd5name):
             os.unlink(fmd5name)
         if not os.path.exists(fmd5name): # create file only if it do not exists
             self.logger.info("Computing MD5 sums file %s" % fmd5name)
