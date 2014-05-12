@@ -163,10 +163,11 @@ class PackageApiPut(PackageApiGet):
 
 	# Force packavge detection
 	Common().detectNewPackages()
+	Common()._createMD5File(pa.root, force_compute=True)
 	# Reload all package info
-	desc = Common().desc
-	Common().init(Common().config)
-	Common().desc = desc
+	#desc = Common().desc
+	#Common().init(Common().config)
+	#Common().desc = desc
 
         return (True, package['id'], confdir, pa.toH())
 

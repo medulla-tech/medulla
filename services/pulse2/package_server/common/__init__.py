@@ -582,13 +582,16 @@ class Common(pulse2.utils.Singleton):
         path = self._getPackageRoot(pid)
         # Deleting files
         try:
-            for file in files:
-                filepath = os.path.join(path, file)
+            internals_files = [x.name for x in self.packages[pid].files.internals]
+            for _file in files:
+                filepath = os.path.join(path, _file)
                 os.unlink(filepath)
+                del self.packages[pid].files.internals[internals_files.index(_file)]
+            self._createMD5File(path, force_compute=True)
             # Reloading all packages info
-            desc = self.desc
-            self.init(self.config)
-            self.desc = desc
+            #desc = self.desc
+            #self.init(self.config)
+            #self.desc = desc
             return [True,0]
         except Exception as e:
             return [False,str(e)]
