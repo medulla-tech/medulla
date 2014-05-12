@@ -198,8 +198,6 @@ class InventoryComputers(ComputerI):
         location = None
         if params.has_key('location_uuid'):
             location = params['location_uuid']
-        if 'operating_system' in params:
-            os = params['operating_system']
         ret = self.inventory.addMachine(name, ip, mac, net, comment, location)
         return ret
 
