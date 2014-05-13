@@ -493,7 +493,7 @@ class PXEImagingApi (PXEMethodParser):
         @d.addErrback
         def _eb (failure):
             self.api.logClientAction(mac,
-                                     LOG_LEVEL.WARN,
+                                     LOG_LEVEL.WARNING,
                                      LOG_STATE.MENU,
                                      "preselected-menu-entry-change failed : %d" % num)
         return d
@@ -549,7 +549,7 @@ class PXEImagingApi (PXEMethodParser):
         @d.addErrback
         def _eb (failure):
             self.api.logClientAction(mac,
-                                     LOG_LEVEL.WARN,
+                                     LOG_LEVEL.WARNING,
                                      LOG_STATE.MENU,
                                      "preselected-menu-entry-change failed : %d" % num)
 
