@@ -583,6 +583,12 @@ class Glpi084(DyngroupDatabaseHelper):
             if filt.get('hostname'):
                 if displayList:
                     clauses = []
+                    # UUID filtering
+                    if filt['hostname'].lower().startswith('uuid') and len(filt['hostname'])>3:
+                        try:
+                            clauses.append(self.machine.c.id==fromUUID(filt['hostname']))
+                        except:
+                            pass
                     if 'cn' in self.config.summary:
                         clauses.append(self.machine.c.name.like('%'+filt['hostname']+'%'))
                     if 'os' in self.config.summary:

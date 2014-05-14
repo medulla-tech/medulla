@@ -537,6 +537,12 @@ class Glpi08(DyngroupDatabaseHelper):
             if filt.get('hostname'):
                 if displayList:
                     clauses = []
+                    # UUID filtering
+                    if filt['hostname'].lower().startswith('uuid') and len(filt['hostname'])>3:
+                        try:
+                            clauses.append(self.machine.c.id==fromUUID(filt['hostname']))
+                        except:
+                            pass
                     if 'cn' in self.config.summary:
                         clauses.append(self.machine.c.name.like('%'+filt['hostname']+'%'))
                     if 'os' in self.config.summary:
@@ -855,11 +861,11 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         Get the first computers that match filters parameters
         """
-        ret = self.getRestrictedComputersList(ctx, 
-                                              0, 
-                                              10, 
-                                              filt, 
-                                              displayList=False, 
+        ret = self.getRestrictedComputersList(ctx,
+                                              0,
+                                              10,
+                                              filt,
+                                              displayList=False,
                                               empty_macs=empty_macs)
         if len(ret) != 1:
             for i in ['location', 'ctxlocation']:
@@ -867,11 +873,11 @@ class Glpi08(DyngroupDatabaseHelper):
                     filt.pop(i)
                 except:
                     pass
-            ret = self.getRestrictedComputersList(ctx, 
-                                                  0, 
-                                                  10, 
-                                                  filt, 
-                                                  displayList=False, 
+            ret = self.getRestrictedComputersList(ctx,
+                                                  0,
+                                                  10,
+                                                  filt,
+                                                  displayList=False,
                                                   empty_macs=empty_macs)
             if len(ret) > 0:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
@@ -936,14 +942,14 @@ class Glpi08(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getRestrictedComputersList(self, 
-                                   ctx, 
-                                   min = 0, 
-                                   max = -1, 
-                                   filt = None, 
-                                   advanced = True, 
-                                   justId = False, 
-                                   toH = False, 
+    def getRestrictedComputersList(self,
+                                   ctx,
+                                   min = 0,
+                                   max = -1,
+                                   filt = None,
+                                   advanced = True,
+                                   justId = False,
+                                   toH = False,
                                    displayList = None,
                                    empty_macs = False):
         """
@@ -1126,12 +1132,12 @@ class Glpi08(DyngroupDatabaseHelper):
             nets = self.getMachinesNetwork(uuids)
             for uuid in ret:
                 try:
-                    (ret[uuid][1]['macAddress'], 
-                     ret[uuid][1]['ipHostNumber'], 
-                     ret[uuid][1]['subnetMask'], 
-                     ret[uuid][1]['domain'], 
-                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid, 
-                                                                          names[uuid], 
+                    (ret[uuid][1]['macAddress'],
+                     ret[uuid][1]['ipHostNumber'],
+                     ret[uuid][1]['subnetMask'],
+                     ret[uuid][1]['domain'],
+                     ret[uuid][1]['networkUuids']) = self.orderIpAdresses(uuid,
+                                                                          names[uuid],
                                                                           nets[uuid],
                                                                           empty_macs)
 
