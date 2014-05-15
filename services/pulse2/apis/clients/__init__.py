@@ -25,13 +25,12 @@ Class to manage api calls and errors
 
 import logging
 
-from twisted.internet import reactor
-import twisted.web.xmlrpc
-import pulse2.xmlrpc
+from pulse2.xmlrpc import Pulse2XMLRPCProxy
 from pulse2.apis.consts import PULSE2_ERR_404, PULSE2_ERR_CONN_REF, PULSE2_ERR_UNKNOWN
+from twisted.internet.error import ConnectionRefusedError
 import exceptions
 
-class Pulse2Api(twisted.web.xmlrpc.Proxy):
+class Pulse2Api(Pulse2XMLRPCProxy):
 
     name = "pulse2API"
 
@@ -41,33 +40,19 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
         @type credentials: str
         """
         url = str(url)
-        twisted.web.xmlrpc.Proxy.__init__(self, url, None, None)
+        Pulse2XMLRPCProxy.__init__(self,
+                                   url,
+                                   verifypeer=verifypeer,
+                                   cacert=cacert,
+                                   localcert=localcert)
         self.SSLClientContext = None
         self.logger = logging.getLogger()
-        if verifypeer :
-            pulse2.xmlrpc.OpenSSLContext().setup(localcert, cacert, verifypeer)
-            self.SSLClientContext = pulse2.xmlrpc.OpenSSLContext().getContext()
         self.logger.debug('%s will connect to %s' % (self.name, url))
         self.server_addr = url
         self.credentials = credentials
         # FIXME: still needed ?
         self.initialized_failed = False
 
-    def callRemote(self, method, *args):
-        if pulse2.xmlrpc.isTwistedEnoughForCert():
-            factory = self.queryFactory(self.path, self.host, method, self.user, self.password, self.allowNone, args)
-            d = factory.deferred
-            if self.secure:
-                from twisted.internet import ssl
-                if not self.SSLClientContext:
-                    self.SSLClientContext = ssl.ClientContextFactory()
-                reactor.connectSSL(self.host, self.port or 443, factory, self.SSLClientContext)
-            else:
-                reactor.connectTCP(self.host, self.port or 80, factory)
-            return d
-        else:
-            # cont support certif
-            return twisted.web.xmlrpc.Proxy.callRemote(self, method, *args)
 
     def onError(self, error, funcname, args, default_return = []):
         self.logger.warn("%s: %s %s has failed: %s" % (self.name, funcname, args, error))
@@ -80,7 +65,7 @@ class Pulse2Api(twisted.web.xmlrpc.Proxy):
         @returns: a list containing error informations
         @rtype: list
         """
-        if error.type == twisted.internet.error.ConnectionRefusedError:
+        if error.type == ConnectionRefusedError:
             self.logger.error("%s %s has failed: connection refused" % (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,
                    self.server_addr, default_return]

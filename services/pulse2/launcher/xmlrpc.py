@@ -33,8 +33,8 @@ try:
 except ImportError:
     from twisted.protocols import http # pyflakes.ignore
 
-import pulse2.launcher.config
-import pulse2.xmlrpc
+from pulse2.launcher.config import LauncherConfig
+from pulse2.xmlrpc import Pulse2XMLRPCProxy
 
 class LauncherHTTPChannel(http.HTTPChannel):
     """
@@ -56,43 +56,11 @@ class LauncherHTTPChannel(http.HTTPChannel):
 class LauncherSite(twisted.web.server.Site):
     protocol = LauncherHTTPChannel
 
-class LauncherProxy(twisted.web.xmlrpc.Proxy):
-
-    def __init__(self, url, user=None, password=None):
-        twisted.web.xmlrpc.Proxy.__init__(self, url, user, password)
-        self.SSLClientContext = None
-
-    def setSSLClientContext(self, SSLClientContext):
-        self.SSLClientContext = SSLClientContext
-
-    def callRemote(self, method, *args):
-        factory = self.queryFactory(
-            self.path, self.host, method, self.user,
-            self.password, self.allowNone, args)
-        d = factory.deferred
-        if self.secure:
-            from twisted.internet import ssl
-            if not self.SSLClientContext:
-                self.SSLClientContext = ssl.ClientContextFactory()
-            twisted.internet.reactor.connectSSL(self.host, self.port or 443,
-                               factory, self.SSLClientContext)
-        else:
-            twisted.internet.reactor.connectTCP(self.host, self.port or 80, factory)
-        return d
 
 def getProxy(url):
     """
-    Return a suitable LauncherProxy object to communicate with the scheduler
+    Return a suitable LauncherProxy object to communicate with scheduler
     """
-    if url.startswith("http://"):
-        ret = twisted.web.xmlrpc.Proxy(url)
-    else:
-        config = pulse2.launcher.config.LauncherConfig()
-        if config.launchers[config.name]['verifypeer']:
-            # We have to build the SSL context to include launcher certificates
-            ctx = pulse2.xmlrpc.OpenSSLContext().getContext()
-            ret = LauncherProxy(url)
-            ret.setSSLClientContext(ctx)
-        else:
-            ret = twisted.web.xmlrpc.Proxy(url)
-    return ret
+    verifypeer = LauncherConfig().launchers[LauncherConfig().name]['verifypeer']
+    return Pulse2XMLRPCProxy(url, verifypeer=verifypeer)
+

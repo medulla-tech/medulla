@@ -25,6 +25,7 @@ import logging # to log stuff
 
 import twisted
 from twisted.internet import ssl
+from twisted.web.xmlrpc import Proxy
 
 import pulse2.utils
 
@@ -62,6 +63,8 @@ class OpenSSLContext(pulse2.utils.Singleton):
         else:
             return ssl.DefaultOpenSSLContextFactory(self.localcert_path, self.cacert_path)
 
+
+
     def setup(self, localcert_path, cacert_path, verifypeer):
         """
         Just load the certs in verifypeer mode
@@ -91,6 +94,81 @@ class OpenSSLContext(pulse2.utils.Singleton):
         else:
             logger.warning("SSL enabled, but peer verification is disabled.")
 
+class Pulse2XMLRPCProxy(Proxy):
+
+    def __init__(self,
+                 url,
+                 user=None,
+                 password=None,
+                 verifypeer = False,
+                 cacert = None,
+                 localcert = None):
+
+        self._version_reminder()
+
+        twisted.web.xmlrpc.Proxy.__init__(self,
+                                          url,
+                                          user,
+                                          password,
+                                          connectTimeout=60.0
+                                          )
+
+        self.SSLClientContext = None
+
+        if verifypeer :
+            if cacert and localcert :
+                OpenSSLContext().setup(localcert, cacert, verifypeer)
+            self.SSLClientContext = OpenSSLContext().getContext()
+
+    def _version_reminder(self):
+        """
+        Content of method callRemote was changed since 10.1.
+        (last check for 13.2)
+
+        Check please its content for each release of twisted and validate it
+        increasing number version bellow...
+        """
+        if twisted.version.major < 10 :
+            logging.getLogger().warn("Uncompatible Twisted version, must be greater than 10.1")
+            return False
+
+        if twisted.version.major >= 13 and twisted.version.minor > 2:
+
+            logging.getLogger().warn("Uncompatible Twisted version, must be less than than 13.2")
+            return False
+
+        return True
+
+
+    def callRemote(self, method, *args):
+        """
+        Overrided only for giving the SSL context.
+
+        Please check this method for each release of Twisted !!!
+        """
+        def cancel(d):
+            factory.deferred = None
+            connector.disconnect()
+
+        factory = self.queryFactory(
+            self.path, self.host, method, self.user,
+            self.password, self.allowNone, args, cancel, self.useDateTime)
+
+        if self.secure:
+            if not self.SSLClientContext:
+                self.SSLClientContext = ssl.ClientContextFactory()
+            connector = self._reactor.connectSSL(
+                self.host, self.port or 443,
+                factory, self.SSLClientContext,
+                timeout=self.connectTimeout)
+        else:
+            connector = self._reactor.connectTCP(
+                self.host, self.port or 80, factory,
+                timeout=self.connectTimeout)
+        return factory.deferred
+
+
+
 def __checkTwistedVersion(min):
     try:
         if twisted.version.major > min[0] or twisted.version.major == min[0] and twisted.version.minor > min[1]:
@@ -102,7 +180,7 @@ def __checkTwistedVersion(min):
 def isTwistedEnoughForLoginPass():
     min = (2, 3)
     return __checkTwistedVersion(min)
-    
+
 def isTwistedEnoughForCert():
     min = (2, 5)
     return __checkTwistedVersion(min)
