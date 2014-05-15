@@ -61,7 +61,7 @@ class P2PServerCP(pulse2.utils.Singleton):
     verifypeer = False
     username = ''
     password = ''
-    tmp_input_dir = '/tmp/packages/default'
+    tmp_input_dir = '/var/lib/pulse2/package-server-tmpdir'
 
     pxe_password = ''
     pxe_keymap = 'C'
