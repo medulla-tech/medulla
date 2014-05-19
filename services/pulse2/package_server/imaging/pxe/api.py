@@ -699,12 +699,14 @@ class PXEImagingApi (PXEMethodParser):
             try:
                 f = pnum + bnum
 
-                if time.time() - self.lasttime > 3600 :
+                now = time.time()
+
+                if now - self.lasttime > 3600 :
                     self.lasttime = 0 # reset MTFTP time barriers
                     self.lastfile = 0
 
                 if f == self.lastfile :
-                    wait = to + (self.lasttime - time())
+                    wait = to + (self.lasttime - now)
                     if wait < 0:
                         wait = 0
 
@@ -715,7 +717,7 @@ class PXEImagingApi (PXEMethodParser):
                     if self.lastfile == 0 :
                         wait += 10 # 1st wait after a boot
                         self.lastfile = f
-                        self.lasttime = time.time()
+                        self.lasttime = now
 
                 return str(wait)
             except Exception, e :
