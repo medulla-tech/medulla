@@ -25,8 +25,8 @@ import logging
 
 
 class BundleElement :
-    """ 
-    A simple table of references of one circuit. 
+    """
+    A simple table of references of one circuit.
 
     This is a simple clone of relations of ids defined in the database,
     which is used as element in the main bundle references table.
@@ -97,7 +97,7 @@ class BundleReferences :
             c = circuit.cohq
             if c.coh.id not in [b.coh_id for b in self.content] :
                 self.logger.debug("Circuit #%s: added to bundle control" % circuit.id)
-                bundle = BundleElement(c.cmd.fk_bundle, 
+                bundle = BundleElement(c.cmd.fk_bundle,
                                        circuit.cmd_id,
                                        circuit.id,
                                        c.cmd.order_in_bundle,
@@ -112,7 +112,7 @@ class BundleReferences :
                     bundle.finished = finished
                 else :
                     self.logger.warn("Circuit #%s: multiple entries in the bundle control" % circuit.id)
- 
+
     def finish(self, coh_id):
         """
         Flagging the circuit as finished.
@@ -124,13 +124,13 @@ class BundleReferences :
         if len(matches)==1:
             b = matches[0]
             b.finished = True
-            self.logger.debug("Circuit #%s: of bundle #%s finished (order=%d)" %  
+            self.logger.debug("Circuit #%s: of bundle #%s finished (order=%d)" %
                     (coh_id, b.id, b.order))
 
 
     def get(self, **kwargs):
-        """ 
-        Gets a BundleElement or more. 
+        """
+        Gets a BundleElement or more.
 
         The kwargs must containing at least one of bundle filter.
         """
@@ -152,7 +152,7 @@ class BundleReferences :
         matches = self.get(coh_id=coh_id)
         if len(matches)==1:
             actual = matches[0]
-            next = self.get(id = actual.id, 
+            next = self.get(id = actual.id,
                             target_uuid = actual.target_uuid,
                             order = actual.order + 1)
             if len(next)==1 :
@@ -189,14 +189,17 @@ class BundleReferences :
                 # im first, so let's go
                 return True
 
-            matches = self.get(id = actual.id, 
+            matches = self.get(id = actual.id,
                                target_uuid = actual.target_uuid,
                                order = actual.order - 1)
- 
+
             if len(matches)==1:
                 previous = matches[0]
                 return previous.finished
-        return False  
+            elif len(matches)==0:
+                # previous coh already done and no more present
+                return True
+        return False
 
 
     def get_ready_cohs(self):
@@ -206,7 +209,7 @@ class BundleReferences :
         """
         return [c.coh_id for c in self.content if self.is_previous_finished(c.coh_id)
                                                    and not c.finished]
- 
+
 
     def get_banned_cohs(self):
         """
@@ -214,7 +217,7 @@ class BundleReferences :
         @rtype: list
         """
         return [c.coh_id for c in self.content if not self.is_previous_finished(c.coh_id)]
- 
+
     def remove_bundle(self, id):
         """
         Removes the bundle, with all the circuit references from container.
@@ -225,7 +228,7 @@ class BundleReferences :
         cohs = self.get(id=id)
         for coh in cohs :
             self.content.remove(coh)
-        
+
 
     def clean_up_finished(self):
         """
@@ -251,7 +254,7 @@ class BundleReferences :
                 self.content.remove(coh)
 
 
-            
+
     def clean_up(self, **kwargs):
         """
         Removes all matching circuits.
@@ -270,5 +273,5 @@ class BundleReferences :
                 cohs = self.get(cmd_id=cmd_id)
                 for coh in cohs :
                     self.content.remove(coh)
- 
+
 
