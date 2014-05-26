@@ -202,17 +202,19 @@ fi""" % basename(self.file)
                 return self.logger.info("I can't get a command for %s" % self.file)
 
         elif "Name of Creating Application" in file_data:
-            if "Windows Installer" in file_data['Name of Creating Application']:
+            # MSI files are created with Windows Installer, but some apps like Flash Plugin, No
+            if "Windows Installer" in file_data['Name of Creating Application'] or "Document Little Endian" in file_data[self.file]:
                 # MSI files
                 if "Template" in file_data:
-                    if "x64" in file_data['Template']:
+                    if re.match('x64;[0-9]+', file_data['Template']):
                         if self.file.endswith('.msp'):
                             self.logger.debug("%s is a x64 MSI Update file" % self.file)
                             return self.getMSI64UpdateCommand()
                         else:
                             self.logger.debug("%s is a x64 MSI file" % self.file)
                             return self.getMSI64Command()
-                    elif "Intel" in file_data['Template']:
+                    # Some buggy MSI converters don't add Intel in Template key
+                    elif re.match('(Intel)?;[0-9]+', file_data['Template']):
                         if self.file.endswith('.msp'):
                             self.logger.debug("%s is a 32-bit MSI Update file" % self.file)
                             return self.getMSI32UpdateCommand()
