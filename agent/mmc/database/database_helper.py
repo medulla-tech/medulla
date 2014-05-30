@@ -200,12 +200,14 @@ class DatabaseHelper(Singleton):
             if 'filters' in params:
                 clauses = [_entity_descriptor(query._mapper_zero(), key) == value
                     for key, value in params['filters'].iteritems()]
-                query = query.filter(*clauses)
+                if clauses:
+                    query = query.filter(*clauses)
             # Like filters
             if 'like_filters' in params:
                 clauses = [_entity_descriptor(query._mapper_zero(), key).like('%' + value + '%')
                     for key, value in params['like_filters'].iteritems()]
-                query = query.filter(*clauses)
+                if clauses:
+                    query = query.filter(*clauses)
 
             # Calculating count without limit and offset on primary entity id
             primary_id = _entity_descriptor(query._mapper_zero(), "id")
