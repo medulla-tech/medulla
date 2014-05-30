@@ -58,7 +58,53 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
+function startsWith($haystack, $needle) {
+    return $needle === "" || strpos($haystack, $needle) === 0;
+}
+function endsWith($haystack, $needle){
+    return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
+}
+
+/*
+ * Sometimes, url can be formatted like this:
+ *   &sharename=%2Fcygdrive%2Fc%2FDocuments%26Acirc%3B%2520and%26Acirc%3B%2520Settings%2F
+ *
+ * And this "%26Acirc%3B%25" gives a bad array with some keys who starts with Acirc;_.
+ * These bad keys are part of previous good key value, so this function try to fix it.
+ *
+ * Bad $_GET example:
+ * Array
+ *   (
+ *       [module] => backuppc
+ *       [submod] => backuppc
+ *       [action] => ajaxBrowseFiles
+ *       [filter] => 
+ *       [host] => UUID3
+ *       [sharename] => /cygdrive/c/Documents
+ *       [Acirc;_and] => 
+ *       [Acirc;_Settings/] => 
+ *       [backupnum] => 0
+ *       [location] => 
+ *       [maxperpage] => 20
+ *       [folder] => /
+ *   )
+ */
+
+function fixBadGet($get) {
+    $previous_key = '';
+    foreach ($get as $key => $value) {
+        if(startsWith($key, 'Acirc;_')) {
+            $get[$previous_key] = $get[$previous_key] . str_replace('Acirc;_', ' ', $key);
+        }
+        else {
+            $previous_key = $key;
+        }
+    }
+    return $get;
+}
+
 if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'])) {
+    $_GET = fixBadGet($_GET);
 
     $folder = (isset($_GET['folder']) && trim($_GET['folder']) != '//') ? urldecode($_GET['folder']) : '/';
     $response = list_files($_GET['host'], $_GET['backupnum'], $_GET['sharename'], $folder, $_GET['location']);
