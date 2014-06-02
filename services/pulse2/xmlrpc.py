@@ -146,13 +146,14 @@ class Pulse2XMLRPCProxy(Proxy):
 
         Please check this method for each release of Twisted !!!
         """
-        def cancel(d):
+        def cancel(ignored):
             factory.deferred = None
             connector.disconnect()
 
         factory = self.queryFactory(
             self.path, self.host, method, self.user,
             self.password, self.allowNone, args, cancel, self.useDateTime)
+        d = factory.deferred
 
         if self.secure:
             if not self.SSLClientContext:
@@ -165,7 +166,7 @@ class Pulse2XMLRPCProxy(Proxy):
             connector = self._reactor.connectTCP(
                 self.host, self.port or 80, factory,
                 timeout=self.connectTimeout)
-        return factory.deferred
+        return d
 
 
 
