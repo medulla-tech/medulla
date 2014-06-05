@@ -100,7 +100,7 @@ class PXEImagingApi (PXEMethodParser):
 
             d = task.deferLater(reactor, 0, self.glpi_register, mac, hostname, ip_address)
             d.addCallback(self._computerRegister, hostname, mac, 2)
-            d.addErrback(self._ebRegisterError)
+            d.addErrback(self._ebRegisterError, mac)
 
             return d
 
