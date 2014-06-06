@@ -228,11 +228,9 @@ p {
 /* ---------------------------------------- */
 
 #sidebar {
-    position: fixed;
-    top: 125px;
-    left: 0px;
-    padding: 0px;
+    float: left;
     width: 200px;
+    margin-left: -227px;
     min-height: 300px;
 }
 
