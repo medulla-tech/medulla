@@ -263,10 +263,54 @@ class InventoryStep(Step):
         return ("%f E: Failed to send inventory to the Pulse Inventory Server" % time.time(), 1)
 
 
+class RebootStep(Step):
+    """Reboot order"""
+
+    def run(self):
+
+        if os.name == "posix":
+            args = ["shutdown", "-r", "now"]
+        else:
+            args = ["shutdown.exe", "-f", "-r"]
+
+        p = subprocess.Popen(args,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             )
+
+        stdout, error = p.communicate()
+        if not p.returncode == 0:
+            return ("%f E: %s" % (time.time(), error), p.returncode)
+        return ("%f O: Reboot order stacked: %s" % (time.time(), str(stdout)), 0)
+
+
+class HaltStep(Step):
+    """Halt order"""
+
+    def run(self):
+
+        if os.name == "posix":
+            args = ["shutdown", "-h", "now"]
+        else:
+            args = ["shutdown.exe", "-f", "-s"]
+
+        p = subprocess.Popen(args,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             )
+
+        stdout, error = p.communicate()
+        if not p.returncode == 0:
+            return ("%f E: %s" % (time.time(), error), p.returncode)
+        return ("%f O: Halt order stacked: %s" % (time.time(), str(stdout)), 0)
+
+
 class Steps:
     WOL = type('StepInfo', (object,), {'name': 'wol', 'klass': WolStep})
     UPLOAD = type('StepInfo', (object,), {'name': 'upload', 'klass': UploadStep})
     EXECUTE = type('StepInfo', (object,), {'name': 'execute', 'klass': ExecuteStep})
     DELETE = type('StepInfo', (object,), {'name': 'delete', 'klass': DeleteStep})
     INVENTORY = type('StepInfo', (object,), {'name': 'inventory', 'klass': InventoryStep})
+    REBOOT = type('StepInfo', (object,), {'name': 'reboot', 'klass': RebootStep})
+    HALT = type('StepInfo', (object,), {'name': 'halt', 'klass': HaltStep})
     DONE = type('StepInfo', (object,), {'name': 'done'})
