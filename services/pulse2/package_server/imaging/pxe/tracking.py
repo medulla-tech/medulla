@@ -1,11 +1,11 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 #
 # (c) 2013 Mandriva, http://www.mandriva.com/
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# Pulse 2 is free software; you can redistribute it and/or modify  
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
@@ -29,7 +29,7 @@ class TrackingContainer(Singleton):
     entries = {}
 
     def add(self, mac, entry):
-        """ 
+        """
         Add the menu entry
 
         @param mac: MAC address of client machine
@@ -41,7 +41,7 @@ class TrackingContainer(Singleton):
         self.entries[mac] = entry, False
 
     def get(self, mac):
-        """ 
+        """
         Get the menu entry
 
         @param mac: MAC address of client machine
@@ -63,16 +63,19 @@ class TrackingContainer(Singleton):
         if mac in self.entries :
             entry, flag = self.entries[mac]
             self.entries[mac] = entry, True
-  
+
     def delete(self, mac):
-        """ 
-        Delete the menu entry 
+        """
+        Delete the menu entry
 
         @param mac: MAC address of client machine
         @type mac: str
         """
         if mac in self.entries :
             del self.entries[mac]
+
+    def __contains__(self, mac):
+        return mac in self.entries
 
 CHOOSEN_MENU_ENTRY = LOG_ACTION[1][1]
 
@@ -83,11 +86,11 @@ class EntryTracking(TrackingContainer):
     Second parameter confirms that menu entry is a choice of backup
     or restore.
 
-    The entries are added by extracting of log message from logCientAction, 
+    The entries are added by extracting of log message from logCientAction,
     which reports all client activities.
 
     """
- 
+
     def search_and_extract(self, mac, phase, message):
         """
         Log message extract
@@ -97,11 +100,11 @@ class EntryTracking(TrackingContainer):
 
         @param phase: step of imaging workflow
         @type phase: str
- 
+
         @param message: displayed message
         @type message: str
         """
-        if phase == LOG_STATE.MENU and CHOOSEN_MENU_ENTRY in message: 
+        if phase == LOG_STATE.MENU and CHOOSEN_MENU_ENTRY in message:
             entry = message.replace(CHOOSEN_MENU_ENTRY, "").replace(":","").strip()
             if entry.isdigit() :
                 num = int(entry)

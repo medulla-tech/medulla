@@ -492,6 +492,8 @@ class PXEImagingApi (PXEMethodParser):
 
         @d.addErrback
         def _eb (failure):
+
+            logging.getLogger().warn("PXE Proxy: preselected-menu-entry-change failed: %s" % str(failure))
             self.api.logClientAction(mac,
                                      LOG_LEVEL.WARNING,
                                      LOG_STATE.MENU,
@@ -520,6 +522,9 @@ class PXEImagingApi (PXEMethodParser):
         @return: ACK to confirm a correct reception, otherwise ERROR
         @rtype: str
         """
+        if not mac in EntryTracking():
+            return succeed("ACK")
+
         actual_entry, marked = EntryTracking().get(mac)
         if marked and actual_entry == int(default_entry):
             setDefaultMenuItem = True
@@ -720,6 +725,7 @@ class PXEImagingApi (PXEMethodParser):
                         self.lasttime = now
 
                 return str(wait)
+
             except Exception, e :
                 logging.getLogger().warn("PXE Proxy: method imagingServerStatus failed: %s" % str(e))
 
