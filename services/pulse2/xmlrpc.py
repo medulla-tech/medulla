@@ -25,6 +25,7 @@ import logging # to log stuff
 
 import twisted
 from twisted.internet import ssl
+from twisted.internet import reactor
 from twisted.web.xmlrpc import Proxy
 
 import pulse2.utils
@@ -109,8 +110,7 @@ class Pulse2XMLRPCProxy(Proxy):
         twisted.web.xmlrpc.Proxy.__init__(self,
                                           url,
                                           user,
-                                          password,
-                                          connectTimeout=60.0
+                                          password
                                           )
 
         self.SSLClientContext = None
@@ -158,14 +158,14 @@ class Pulse2XMLRPCProxy(Proxy):
         if self.secure:
             if not self.SSLClientContext:
                 self.SSLClientContext = ssl.ClientContextFactory()
-            connector = self._reactor.connectSSL(
+            connector = reactor.connectSSL(
                 self.host, self.port or 443,
                 factory, self.SSLClientContext,
-                timeout=self.connectTimeout)
+       		)
         else:
-            connector = self._reactor.connectTCP(
+            connector = reactor.connectTCP(
                 self.host, self.port or 80, factory,
-                timeout=self.connectTimeout)
+                )
         return d
 
 
