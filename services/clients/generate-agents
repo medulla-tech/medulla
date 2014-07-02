@@ -1,0 +1,749 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2014 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+"""
+A generic util to create several packages including all needed dependencies
+and parameter config files.
+
+Based on templates and on a config file, for each defined platform generates
+the package including needed postinstall scripts.
+"""
+
+import os
+import sys
+import datetime
+import plistlib
+
+from distutils import dir_util, file_util, archive_util
+from subprocess import Popen, PIPE
+from ConfigParser import ConfigParser
+
+
+class ParameterError(Exception):
+    def __init__(self, arg):
+        Exception.__init__(self)
+        self._arg = arg
+
+    def __repr__(self):
+        return "Invalid parameter '%s'" % self._arg
+
+
+MODULE_NAME = os.path.splitext(os.path.basename(__file__))[0]
+MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
+CONFIG_FILE = os.path.join(MODULE_DIR, "agents.conf")
+INVENTORY_URL_FILE = "inventory.url"
+
+verbose_mode = False
+
+class Config(object):
+    """
+    Config parser reader.
+
+    Excluding section [main] including common parameters,
+    remaining sections represents all the platforms.
+    Name of sections defines the name of platform folder
+    and includes related options.
+
+    Example:
+    agents.conf
+    [main]
+    attr1 = value1
+    ..
+    ..
+    [win32]
+    version = 2.3.5
+    ..
+    [deb]
+    package_name = pulse2-agents-installer
+    ..
+    ..
+    ..
+
+    # element in [main] section will be referenced as a direct attribute:
+
+    >>> self.attr1
+
+    # other elements:
+
+    >>> self.deb.package_name
+    >>> self.win32.version
+
+    """
+
+    def __init__(self, path=CONFIG_FILE):
+        self.cp = ConfigParser()
+        self.cp.read(path)
+        self.parse()
+
+    def parse(self):
+        """Parsing of all the sections and attaching its to this instance """
+
+        for section in self.cp.sections():
+            if section == "main":
+                for option in self.cp.options(section):
+                    value = self.cp.get(section, option)
+                    setattr(self, option, value)
+            else:
+                attrs = {}
+                for option in self.cp.options(section):
+                    value = self.cp.get(section, option)
+                    attrs[option] = value
+
+                section_type = type("Section", (object,), attrs)
+                setattr(self, section, section_type)
+
+
+
+
+
+class InventoryURLGen(object):
+    """Detects the inventory URL."""
+
+    inv_ini_path = os.path.join("/",
+                               "etc",
+                               "mmc",
+                               "pulse2",
+                               "inventory-server",
+                               "inventory-server.ini")
+    pkg_ini_path = os.path.join("/",
+                               "etc",
+                               "mmc",
+                               "pulse2",
+                               "package-server",
+                               "package-server.ini")
+
+    host = None
+    port = None
+
+    enablessl = False
+
+    def __init__(self, host=None, port=None, enablessl=False):
+
+        if host is None:
+            self.pkg_check()
+        else:
+            self.host = host
+
+        if port is None:
+            self.inv_check()
+        else:
+            self.port = int(port)
+
+        if enablessl in ["True", "1", "true"]:
+            self.enablessl = True
+
+
+    def inv_check(self):
+
+        try:
+            from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
+        except ImportError:
+            self.port = 9999
+        else:
+            config = Pulse2OcsserverConfigParser()
+            config.setup(self.inv_ini_path)
+            self.port = config.port
+            self.enablessl = config.enablessl
+
+    def pkg_check(self):
+
+        try:
+            from pulse2.package_server.config import P2PServerCP
+        except ImportError:
+            self.host = self.probe_fqdn()
+        else:
+            config = P2PServerCP()
+            config.setup(self.pkg_ini_path)
+            self.host = config.public_ip
+
+
+    def probe_fqdn(self):
+        p = Popen(["hostname", "-f"], stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+        if err:
+            print "ERROR: %s" % err
+        fqdn = out.split("\n")
+        self.host = fqdn[0]
+
+
+
+    def get(self):
+        if self.enablessl:
+            proto = "https"
+        else:
+            proto = "http"
+
+        return "server = %s://%s:%s" % (proto, self.host, self.port)
+
+
+
+class AbsCreator(object):
+    """
+    A main frame for the package creators.
+
+    Defines some common methods to create the packages, including
+    the control file generators and a final packaging.
+    """
+    # configuration reference
+    config = None
+
+    # export directory and config section reference
+    platform_directory = None
+
+    # name of package
+    package_name = None
+
+    # relative path for copying some files with a config content
+    resources_path_list = []
+
+    # list of required packages
+    dependencies = []
+
+    def __init__(self, config, inventory_url):
+        """
+        @param config: config instance
+        @type config: Config
+
+        @param inventory_url: detected URL of inventory service
+        @type inventory_url: str
+        """
+        self.config = config
+        self.inventory_url = inventory_url
+
+        # get the platform : config.<platform>
+        platform_section = getattr(config, self.platform_directory)
+
+        # config.<platform>.version
+        if hasattr(platform_section, "version"):
+            self.version = getattr(platform_section, "version")
+
+        print "Creating [%s] agent pack" % self.platform_directory
+
+
+    @property
+    def dir_current(self):
+        """Current directory"""
+        return os.path.dirname(os.path.abspath(__file__))
+
+    @property
+    def dir_template(self):
+        """Directory with template related to platform"""
+        return os.path.join(self.dir_current,
+                            self.config.templates_dir,
+                            self.platform_directory,
+                            self.config.template_pkg_name,
+                            )
+
+    @property
+    def dir_destination(self):
+        """Directory used to export of package"""
+        return os.path.join(self.dir_current,
+                            self.platform_directory,
+                            self.package_dir_name,
+                            )
+
+    @property
+    def dir_resources(self):
+        """Files with the config content will be placed here"""
+        return os.path.join(self.dir_destination, *self.resources_path_list)
+
+
+    def create_dummy_package(self):
+        """Creates a empty package in the export directory """
+
+        dir_util.mkpath(self.dir_destination)
+
+        dir_util.copy_tree(self.dir_template,
+                           self.dir_destination,
+                           )
+
+    def control_file_generate(self):
+        """
+        Creates the control file of package related to platform.
+
+        Will be overriden.
+        """
+        pass
+
+    def copy_ssh_key(self):
+        """SSH public key copying into the resource folder"""
+        file_util.copy_file(self.config.ssh_key_pub,
+                            self.dir_resources,
+                            )
+
+    def create_inventory_url_file(self):
+        """
+        Creating the inventory config file which will be used
+        to configure fusioninventory agent
+        """
+        path = os.path.join(self.dir_resources,
+                            INVENTORY_URL_FILE)
+
+        with open(path, "w") as f:
+            f.write(self.inventory_url)
+
+    def build(self):
+        """Build the package (to be override)."""
+        pass
+
+    def remove(self):
+        """Removes the temporary package tree """
+        dir_util.remove_tree(self.dir_destination)
+
+
+    def generate(self):
+        """Package generating, step-by-step with a given workflow"""
+        self.create_dummy_package()
+        self.control_file_generate()
+
+        self.copy_ssh_key()
+        self.create_inventory_url_file()
+        self.build()
+        self.remove()
+
+
+class MacCreator(AbsCreator):
+    """ Creates a package for OS X"""
+
+    platform_directory = "mac"
+    package_name = "Pulse2AgentsInstaller"
+    package_dir_name = "Pulse2AgentsInstaller.pkg"
+    dependencies = ["fusioninventory-agent"]
+    resources_path_list = ["Contents",
+                           "Resources",
+                           ]
+
+
+    def control_file_generate(self):
+        """
+        OSX package (.pkg) Info.plist.
+
+        Creates Info.plist file which contents all necessary package info.
+        """
+        path = os.path.join(self.dir_destination,
+                            "Contents",
+                            )
+
+        version_splitted = self.config.mac.version.split(".")
+        version_maj, version_min = version_splitted[0:2]
+
+        product_info = {
+            "CFBundleDevelopmentRegion" : "English",
+            "CFBundleGetInfoString": "Pulse2 Agents Installer for OS X %s" % self.config.mac.version,
+            "CFBundleIdentifier": self.config.mac.package_id ,
+            "CFBundleName": self.package_name,
+            "CFBundleIconFile": "header.png",
+            "IFMajorVersion": version_maj,
+            "IFMinorVersion": version_min,
+            "IFPkgBuildDate" : datetime.datetime.now(),
+            "IFPkgBuildVersion": "10H574",
+            "IFPkgCreator": "",
+            "FPkgFlagAllowBackRev": False,
+            "IFPkgFlagAuthorizationAction": "AdminAuthorization",
+            "IFPkgFlagBackgroundAlignment": "bottomright",
+            "IFPkgFlagBackgroundScaling": "tofit",
+            "IFPkgFlagDefaultLocation": "/",
+            "IFPkgFlagFollowLinks" : False,
+        #    "IFPkgFlagInstalledSize": 50468,
+            "IFPkgFlagIsRequired": False,
+            "IFPkgFlagOverwritePermissions": False,
+            "IFPkgFlagRelocatable": False,
+            "IFPkgFlagRestartAction": "NoRestart",
+            "IFPkgFlagRootVolumeOnly": True,
+            "IFPkgFlagUpdateInstalledLanguages": False,
+            "IFPkgFormatVersion": 0.10000000149011612
+            }
+
+        filename = os.path.join(path, "Info.plist")
+        f = open(filename, "w")
+        f.close()
+
+        plistlib.writePlist(product_info, filename)
+
+    def build(self):
+
+#        cmd = ["genisoimage",
+#                "-V",
+#                self.config.mac.package_name,
+#                "-D",
+#                "-R",
+#                "-apple",
+#                "-no-pad",
+#                "-o",
+#                "%s.dmg" % self.config.mac.package_name,
+#                self.platform_directory,
+#                ]
+#        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+#        out, err = p.communicate()
+#        if err:
+#            print "ERROR: %s" % err
+#        print "os x dmg create: %s" % out
+
+
+        origin_dir = self.dir_current
+        destination = os.path.join(self.dir_current,
+                                   self.platform_directory,
+                                   )
+        os.chdir(destination)
+
+        archive_util.make_archive(self.package_name,
+                                  "tar",
+                                  None,
+                                  None,
+                                  verbose=1
+                                  )
+        os.chdir(origin_dir)
+        print "[mac] package %s built successfully" % self.package_name
+
+
+
+
+
+class DebCreator(AbsCreator):
+    """ Creates a package for debian based platforms"""
+
+    platform_directory = "deb"
+    package_name = "pulse2-agents-installer"
+    package_dir_name = package_name
+    dependencies = ["fusioninventory-agent",
+                     "openssh-server",
+                     "tightvncserver"]
+
+    resources_path_list = ["opt",]
+
+
+    def control_file_generate(self):
+        content = """Section: misc
+Priority: optional
+Homepage: %s
+Package: %s
+Version: %s
+Architecture: all
+Installed-Size: 0
+Maintainer: %s
+Depends: %s
+Description: A metapackage to install and configure Pulse2 agents
+""" % (
+               self.config.homepage,
+               self.package_name,
+               self.version,
+               self.config.maintainer,
+               ", ".join(self.dependencies),
+               )
+
+        path = os.path.join(self.dir_destination,
+                            "DEBIAN",
+                            "control")
+
+        with open(path, "w") as f:
+            f.write(content)
+
+    def build(self):
+        origin_dir = self.dir_current
+        destination = os.path.join(self.dir_current,
+                                   self.platform_directory,
+                                   )
+        os.chdir(destination)
+
+        cmd = ["dpkg", "--build", self.package_name]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+        if err:
+            print "ERROR: %s" % err
+        if verbose_mode:
+            print "[deb]: %s" % out
+
+        print "[deb] package %s built successfully" % self.package_name
+
+        os.chdir(origin_dir)
+
+class RpmCreator(AbsCreator):
+
+    platform_directory = "rpm"
+    package_name = "pulse2-agents-installer"
+    package_dir_name = package_name
+    dependencies = ["fusioninventory-agent",
+                     "openssh-server",
+                     "tigervnc-server"]
+
+    resources_path_list = ["SOURCES"]
+
+    def _head_line(self, name, value):
+        return "%define " + "%s %s" % (name, value)
+
+
+    def control_file_generate(self):
+
+        var_header = []
+        var_header.append(self._head_line("name", self.package_name))
+        var_header.append(self._head_line("version", self.version))
+        var_header.append(self._head_line("release", self.config.rpm.release))
+        var_header.append(self._head_line("requires", ", ".join(self.dependencies)))
+        var_header.append(self._head_line("opt_dir", "opt"))
+
+        specs = """
+%define _topdir %(echo $PWD)/
+Summary: A meta-package to install and configure Pulse2 agents
+Name: %{name}
+Version: %{version}
+Release: %{release}
+Group: System/Configuration
+License: GPLv3
+Source0: %{name}-%{version}.tar
+BuildArch: noarch
+BuildRoot: %{_tmppath}/%{name}-%{version}-root
+Requires: %{requires}
+
+%description
+ A meta-package to install and configure Pulse2 agents
+
+%prep
+%setup -q
+
+%build
+
+%install
+rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT/%{opt}/%{name}
+install postinst $RPM_BUILD_ROOT/%{opt}/%{name}/postinst
+install id_rsa.pub $RPM_BUILD_ROOT/%{opt}/%{name}/id_rsa.pub
+install inventory.url $RPM_BUILD_ROOT/%{opt}/%{name}/inventory.url
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%dir /%{opt}/%{name}/postinst
+
+%defattr(-,root,root,-)
+/%{opt}/%{name}/postinst
+/%{opt}/%{name}/id_rsa.pub
+/%{opt}/%{name}/inventory.url
+
+%post
+chmod +x /%{opt}/%{name}/postinst
+/%{opt}/%{name}/postinst
+rm -rf /%{opt}/%{name}/
+        """
+        content = "\n".join(var_header) + "\n" + specs
+
+
+        path = os.path.join(self.dir_destination,
+                            "SPECS",
+                            "%s.spec" % self.package_name)
+
+        with open(path, "w") as f:
+            f.write(content)
+
+
+    def _create_source(self):
+        """
+        Creates a directory in the SOURCES/ folder and moves all
+        sources files into. This directory will be packaged as tarball.
+        """
+        origin_dir = self.dir_current
+        destination = os.path.join(self.dir_destination, *self.resources_path_list)
+        # cd rpm/package_name/SOURCES
+
+        os.chdir(destination)
+        r_files = os.listdir(destination)
+
+        #name_version = "%s-%s" % (self.config.rpm.package_name, self.version)
+        name_version = "%s-%s" % (self.package_name, self.version)
+
+        # mkdir rpm/package_name/SORCES/package_name-0.1
+        dir_util.mkpath(name_version)
+
+        # mv * name_version/
+        for r_file in r_files:
+            file_util.move_file(r_file, name_version)
+
+        # tar package_name-0.1.tar package_name-0.1
+        archive_util.make_archive(name_version,
+                                  "tar",
+                                  None,
+                                  None,
+                                  verbose=1
+                                  )
+        os.chdir(origin_dir)
+
+    def build(self):
+        """ Builds a RPM package."""
+
+        # moves source files into an archive
+        self._create_source()
+
+        origin_dir = self.dir_current
+
+        # fo to the package directory
+        os.chdir(self.dir_destination)
+
+        cmd = ["rpmbuild",
+               "-ba",
+               os.path.join("SPECS",
+                            "%s.spec" % self.package_name,
+                            )
+               ]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+        if err:
+            print "ERROR: %s" % err
+        if verbose_mode:
+            print "rpm: %s" % out
+
+        os.chdir(origin_dir)
+
+        rpm_name = "%s-%s-%s.noarch.rpm" % (self.package_name,
+                                            self.version,
+                                            self.config.rpm.release,
+                                            )
+
+        rpms_dir = os.path.join(self.platform_directory,
+                                self.package_name,
+                                "RPMS",
+                                "noarch",
+                                rpm_name,
+                                )
+
+        file_util.move_file(rpms_dir, self.platform_directory)
+
+        print "[rpm] package %s built successfully" % self.package_name
+
+
+class DebServerCreator(DebCreator):
+    platform_directory = "deb"
+    package_name = "pulse2-agents-installer-nordp"
+    package_dir_name = "pulse2-agents-installer-nordp"
+    dependencies = ["fusioninventory-agent",
+                    "openssh-server",
+                    ]
+
+class RpmServerCreator(RpmCreator):
+
+    platform_directory = "rpm"
+    package_name = "pulse2-agents-installer-nordp"
+    package_dir_name = "pulse2-agents-installer-nordp"
+    dependencies = ["fusioninventory-agent",
+                    "openssh-server",
+                    ]
+
+
+class Win32Creator(AbsCreator):
+    """
+    Creates a agent pack for Windows.
+
+    Because the packaging on this platform is completelly different,
+    we call only a building bash script.
+    """
+
+    platform_directory = "win32"
+
+
+    def generate(self):
+        path = os.path.join(self.dir_current,
+                            self.platform_directory,
+                            self.config.win32.generate_script
+                            )
+        cmd = [path]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+
+        if verbose_mode:
+            print out
+
+
+        print "[win32] package built successfully"
+
+
+
+class PackagesGenerator(object):
+    """The Package creators will be called here. """
+    def __init__(self, inventory_url):
+
+        self.config = Config(CONFIG_FILE)
+        self.inventory_url = inventory_url
+
+    def generate_all(self):
+        """All the creators must be called here."""
+        for creator in [MacCreator,
+                        DebCreator,
+                        RpmCreator,
+                        DebServerCreator,
+                        RpmServerCreator,
+                        Win32Creator,
+                        ]:
+
+            m = creator(self.config, self.inventory_url)
+            m.generate()
+
+
+
+
+
+def args_parse(script_path, args):
+    """
+    Arguments parsing.
+
+    @param script_path: pathname defined by __file__
+    @type script_path: str
+
+    @param args: list of command line arguments
+    @type args: list
+
+    @return: keywords for InventoryURLGen
+    @rtype: dict
+    """
+
+    module = os.path.splitext(os.path.basename(script_path))[0]
+
+    allowed_args = [module, "--host", "--port", "--enablessl", "--help", "--verbose"]
+
+    kwargs = {}
+
+    if len(args) > 1:
+        for arg in args:
+            if not any([a in arg for a in allowed_args]):
+                raise ParameterError(arg)
+            if arg == "--verbose" :
+                verbose_mode = True
+                continue
+            if "=" in arg:
+                key, value = arg.split("=")
+                key = key.replace("--", "")
+                kwargs[key] = value
+
+    return kwargs
+
+
+if __name__ == "__main__":
+
+    kwargs = args_parse(__file__, sys.argv)
+    inv = InventoryURLGen(**kwargs)
+    inventory_url = inv.get()
+
+    pgen = PackagesGenerator(inventory_url)
+    pgen.generate_all()
+
+
+
+
+

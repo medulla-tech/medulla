@@ -1,0 +1,123 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PREFIX="$DIR"
+
+### Root account
+
+echo
+echo "########################"
+echo "1. ENABLING ROOT ACCOUNT"
+echo "########################"
+echo
+
+# Try to find current root hash by querying some XML stuff
+curpasswd=`plutil -convert xml1 /private/var/db/dslocal/nodes/Default/users/root.plist -o - | xpath /plist/dict/array[preceding-sibling::*[1][.=\"passwd\"]]/string/text\(\) 2>/dev/null`
+
+# * = disabled, ******** = enabled
+if [ "${curpasswd}" = "*" ]; then
+  echo "INFO: Root account found (disabled)"
+  # Generating a strong password and change it
+  passwd=`openssl rand -base64 24`
+  # Use expect....
+  expect -c "
+    log_user 0
+    set timeout 1
+    spawn passwd root
+    sleep 1
+    expect \"Changing password for root.\$\"
+    expect \"New password: \$\"
+    send \"${passwd}\r\"
+    expect \"Retype new password: \$\"
+    send \"${passwd}\r\"
+    expect eof"
+  if [ ${?} -eq 0 ]; then
+    echo "INFO: A new secure password for root user has been set."
+  else
+    echo "ERROR: Something wrong happened while changing root password"
+  fi
+else
+  echo "WARN: Root account seems to be already enabled!"
+fi
+
+
+inv_server_url=$(head -n 1 ${PREFIX}/inventory.url)
+#if [ -n "$1" ]; then
+if [ -z "$inv_server_url" ]; then
+    echo "ERROR: Unable to get inventory server URL"        
+    exit 1
+else
+    echo "INFO: Detected inventory url - $inv_server_url"
+fi 
+
+fusion_version="2.2.7-3"
+fusion_archive=fusioninventory-agent_macosx-intel_${fusion_version}.pkg.tar.gz
+fusion_url=http://pulse2.mandriva.org/pub/pulse2/client/mac/inventory-agent/${fusion_archive}
+fusion_pkg="FusionInventory-Agent.pkg"
+fusion_cfg=/opt/fusioninventory-agent/agent.cfg
+ssh_pub_key="${PREFIX}/id_rsa.pub"
+
+
+echo
+echo "###########################################"
+echo "2. ADDING SERVER SSH KEY TO AUTHORIZED KEYS"
+echo "###########################################"
+echo
+
+
+if [ -e ${ssh_pub_key} ]; then
+    sudo tee -a /var/root/.ssh/authorized_keys < ${ssh_pub_key}
+fi	
+
+
+
+### Fusion-Inventory agent
+
+echo
+echo "###################################"
+echo "3. INSTALLING FUSIONINVENTORY AGENT"
+echo "###################################"
+echo
+
+curl -O $fusion_url
+if [ -f $fusion_archive ];then
+    tar xzf $fusion_archive
+else
+    echo "ERROR: downloaded packet not found"
+    echo "Check if agent pack was created"
+    exit 1
+fi	
+
+if [ -d ${fusion_pkg} ]; then
+
+    sudo installer -pkg "${fusion_pkg}" -target /
+    if grep -q "${inv_server_url}" "${fusion_cfg}"; then
+       echo "Fusion Inventory agent already configured" 
+    else 
+       sudo tee -a ${fusion_cfg} < ${PREFIX}/inventory.url 
+    fi
+    echo "INFO: Running initial inventory"
+    sudo /opt/fusioninventory-agent/fusioninventory-agent
+
+else
+    echo "ERROR: downloaded package ${fusion_pkg} not found"
+    echo "Check if agent pack was created"
+    exit 1
+fi    
+
+if [ -e ${fusion_pkg} ];then
+    rm -rf ${fusion_pkg}
+fi
+
+if [ -e ${fusion_archive} ];then
+    rm -rf ${fusion_archive}
+fi
+
+
+### Enable VNC server
+echo
+echo "######################"
+echo "4. Enable VNC server  "
+echo "######################"
+echo
+
+sudo /System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart -activate -configure -access -on -clientopts -setvnclegacy -vnclegacy yes -clientopts -setvncpw -vncpw $passwd -restart -agent -privs -all

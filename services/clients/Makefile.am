@@ -20,4 +20,39 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+
 SUBDIRS = win32
+
+posixclientdir = $(localstatedir)/lib/pulse2/clients/
+
+posixclientscripts = generate-agents \
+                   templates/mac/package/Contents/Resources/postflight \
+                   templates/deb/package/DEBIAN/postinst \
+                   templates/rpm/package/SOURCES/postinst
+
+posixclientdata = agents.conf \
+                templates/mac/package/Contents/package_version \
+                templates/mac/package/Contents/header.png 
+
+nobase_posixclient_SCRIPTS = $(posixclientscripts) 
+nobase_posixclient_DATA = $(posixclientdata) 
+
+install-data-local:
+	$(MKDIR_P) $(posixclientdir)/mac
+	$(MKDIR_P) $(posixclientdir)/deb
+	$(MKDIR_P) $(posixclientdir)/rpm
+	$(MKDIR_P) $(posixclientdir)/templates/deb/package/opt
+	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/SPECS
+	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/BUILD
+	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/BUILDROOT
+	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/RPMS
+	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/SRPMS
+
+	
+EXTRA_DIST = $(posixclientscripts) $(posixclientdata)
+
+prereqs-deb:
+	apt-get update
+	apt-get install rpm dpkg
+
+.PHONY = prereqs-deb
