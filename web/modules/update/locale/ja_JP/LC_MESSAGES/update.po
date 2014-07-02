@@ -1,79 +1,44 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-07-02 17:57+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-07-02 18:19+0200\n"
 "PO-Revision-Date: 2014-05-05 17:15+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
-"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/ja_JP/)\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/update/includes/panels/remotesupport.inc.php:30
-#: modules/update/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "アップデート"
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
+msgid "All updates"
+msgstr "すべてのアップデート"
 
 #: modules/update/includes/panels/remotesupport.inc.php:43
 msgid "An error occured while fetching updates"
 msgstr "アップデート取得中にエラーが発生しました。"
 
-#: modules/update/includes/panels/remotesupport.inc.php:47
-msgid "View updates"
-msgstr "アップデートを表示"
+#: modules/update/update/viewUpdates.php:46
+msgid "Available"
+msgstr "入手可能"
 
-#: modules/update/includes/panels/remotesupport.inc.php:48
-msgid "Install updates"
-msgstr "アップデートをインストール"
-
-#: modules/update/includes/panels/remotesupport.inc.php:54
-msgid "No updates available."
-msgstr "入手可能なアップデートがありません。"
-
-#: modules/update/includes/panels/remotesupport.inc.php:56
-msgid "updates available."
-msgstr "アップデートが入手可能です。"
-
-#: modules/update/update/ajaxUpdates.php:57
-msgid "No entry found"
-msgstr "登録が見つかりませんでした"
-
-#: modules/update/update/ajaxUpdates.php:87
-msgid "Update title"
-msgstr "アップデートタイトル"
-
-#: modules/update/update/ajaxUpdates.php:88
-msgid "UUID"
-msgstr "UUID"
-
-#: modules/update/update/ajaxUpdates.php:89
-msgid "Type"
-msgstr "タイプ"
-
-#: modules/update/update/ajaxUpdates.php:90
-msgid "Installed count"
-msgstr "インストール数"
-
-#: modules/update/update/ajaxUpdates.php:92
-msgid "Enable"
-msgstr "有効"
+#: modules/update/update/viewProductUpdates.php:25
+#: modules/update/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "入手可能アップデート"
 
 #: modules/update/update/ajaxUpdates.php:93
 msgid "Disable"
 msgstr "無効"
-
-#: modules/update/update/ajaxUpdates.php:108
-msgid "Enable selected updates"
-msgstr "選択されたアップデートを有効化"
 
 #: modules/update/update/ajaxUpdates.php:109
 msgid "Disable selected updates"
@@ -83,9 +48,95 @@ msgstr "選択されたアップデートを無効化"
 msgid "Disable this update?"
 msgstr "このアップデートを無効化しますか？"
 
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr "アップデートの無効化"
+
+#: modules/update/update/viewUpdates.php:48
+msgid "Disabled"
+msgstr "無効"
+
+#: modules/update/update/ajaxUpdates.php:92
+msgid "Enable"
+msgstr "有効"
+
+#: modules/update/update/ajaxUpdates.php:108
+msgid "Enable selected updates"
+msgstr "選択されたアップデートを有効化"
+
 #: modules/update/update/enableUpdate.php:40
 msgid "Enable this update?"
 msgstr "このアップデートを有効化しますか？"
+
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr "アップデートの有効化"
+
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr "有効にするアップデート管理対象:"
+
+#: modules/update/update/viewUpdates.php:47
+msgid "Enabled"
+msgstr "有効"
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
+msgstr "今強制する"
+
+#: modules/update/includes/panels/remotesupport.inc.php:48
+msgid "Install updates"
+msgstr "アップデートをインストール"
+
+#: modules/update/update/ajaxUpdates.php:90
+msgid "Installed count"
+msgstr "インストール数"
+
+#: modules/update/update/installProductUpdates.php:38
+msgid "Installing updates ..."
+msgstr "アップデートインストール中 ..."
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr "登録が見つかりませんでした"
+
+#: modules/update/includes/panels/remotesupport.inc.php:54
+msgid "No updates available."
+msgstr "入手可能なアップデートがありません。"
+
+#: modules/update/infoPackage.inc.php:69
+msgid "Product Updates installation"
+msgstr "製品アップデートインストール"
+
+#: modules/update/infoPackage.inc.php:79
+msgid "Product Updates installation (ajax)"
+msgstr "製品アップデートインストール (Ajax)"
+
+#: modules/update/infoPackage.inc.php:73
+msgid "Product Updates list"
+msgstr "製品アップデート一覧"
+
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
+msgid "Settings"
+msgstr "設定"
+
+#: modules/update/update/ajaxUpdates.php:89
+msgid "Type"
+msgstr "タイプ"
+
+#: modules/update/update/ajaxUpdates.php:88
+msgid "UUID"
+msgstr "UUID"
+
+#: modules/update/includes/panels/remotesupport.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "アップデート"
+
+#: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:35
+msgid "Update manager"
+msgstr "アップデートマネージャー"
 
 #: modules/update/update/localSidebar.php:28
 msgid "Update managment"
@@ -95,78 +146,26 @@ msgstr "アップデート管理"
 msgid "Update settings"
 msgstr "アップデート設定"
 
-#: modules/update/update/settings.php:61
-msgid "Enable update managment for:"
-msgstr "有効にするアップデート管理対象:"
-
-#: modules/update/update/settings.php:77
-msgid "Updates deployment"
-msgstr "アップデートデプロイ"
-
-#: modules/update/update/settings.php:79
-msgid "Force now"
-msgstr "今強制する"
-
-#: modules/update/update/sidebar.php:39 modules/update/infoPackage.inc.php:41
-msgid "All updates"
-msgstr "すべてのアップデート"
-
-#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
-msgid "Settings"
-msgstr "設定"
-
-#: modules/update/update/viewUpdates.php:35
-#: modules/update/infoPackage.inc.php:32
-msgid "Update manager"
-msgstr "アップデートマネージャー"
-
-#: modules/update/update/viewUpdates.php:46
-msgid "Available"
-msgstr "入手可能"
-
-#: modules/update/update/viewUpdates.php:47
-msgid "Enabled"
-msgstr "有効"
-
-#: modules/update/update/viewUpdates.php:48
-msgid "Disabled"
-msgstr "無効"
-
-#: modules/update/update/installProductUpdates.php:38
-msgid "Installing updates ..."
-msgstr "アップデートインストール中 ..."
-
-#: modules/update/update/viewProductUpdates.php:25
-#: modules/update/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "入手可能アップデート"
+#: modules/update/update/ajaxUpdates.php:87
+msgid "Update title"
+msgstr "アップデートタイトル"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 msgid "Updates"
 msgstr "アップデート"
 
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr "アップデートデプロイ"
+
 #: modules/update/infoPackage.inc.php:47
 msgid "Updates list"
 msgstr "アップデート一覧"
 
-#: modules/update/infoPackage.inc.php:51
-msgid "Enable update"
-msgstr "アップデートの有効化"
+#: modules/update/includes/panels/remotesupport.inc.php:47
+msgid "View updates"
+msgstr "アップデートを表示"
 
-#: modules/update/infoPackage.inc.php:55
-msgid "Disable update"
-msgstr "アップデートの無効化"
-
-#: modules/update/infoPackage.inc.php:69
-msgid "Product Updates installation"
-msgstr "製品アップデートインストール"
-
-#: modules/update/infoPackage.inc.php:73
-msgid "Product Updates list"
-msgstr "製品アップデート一覧"
-
-#: modules/update/infoPackage.inc.php:79
-msgid "Product Updates installation (ajax)"
-msgstr "製品アップデートインストール (Ajax)"
-
-
+#: modules/update/includes/panels/remotesupport.inc.php:56
+msgid "updates available."
+msgstr "アップデートが入手可能です。"
