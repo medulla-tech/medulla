@@ -62,6 +62,7 @@ class Pulse2InventoryProxyConfig(Singleton):
         # Load configuration file
         self.cp = ConfigParser.ConfigParser()
         self.cp.read(config_file)
+        self.cp.read(config_file + '.local')
         self.logger = logging.getLogger()
 
         if self.cp.has_option('main', 'server'):

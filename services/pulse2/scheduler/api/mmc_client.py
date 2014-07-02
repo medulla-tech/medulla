@@ -58,6 +58,8 @@ class ConfigReader(object):
 
         config = ConfigParser()
         config.readfp(open(inifile))
+        if os.path.isfile(inifile + '.local'):
+            config.readfp(open(inifile + '.local','r'))
 
         return config
 
