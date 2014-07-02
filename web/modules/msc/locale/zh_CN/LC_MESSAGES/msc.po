@@ -1,256 +1,184 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-02 17:25+0200\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-07-02 17:26+0200\n"
 "PO-Revision-Date: 2014-05-07 15:40+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+
+#: modules/msc/includes/command_history.php:34
+#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:428
+msgid "Command name"
+msgstr "命令名称"
+
+#: modules/msc/includes/command_history.php:35
+msgid "Host"
+msgstr "主机"
+
+#: modules/msc/includes/command_history.php:36
+#: modules/msc/includes/command_history.php:143
+#: modules/msc/includes/command_history.php:182
+#: modules/msc/logs/ajaxLogsFilter.php:131
+#: modules/msc/logs/ajaxConsultLogsFilter.php:215
+#: modules/msc/msc/ajaxLogsFilter.php:233
+#: modules/msc/msc/ajaxLogsFilter.php:368 modules/msc/msc/reschedule.php:43
+msgid "Start date"
+msgstr "开始日期"
+
+#: modules/msc/includes/command_history.php:37
+#: modules/msc/includes/command_history.php:144
+#: modules/msc/includes/command_history.php:183
+#: modules/msc/logs/ajaxLogsFilter.php:129
+#: modules/msc/logs/ajaxConsultLogsFilter.php:216
+#: modules/msc/msc/ajaxLogsFilter.php:234
+#: modules/msc/msc/ajaxLogsFilter.php:366
+msgid "End date"
+msgstr "结束日期"
+
+#: modules/msc/includes/command_history.php:38
+#: modules/msc/includes/bundle_widgets.php:363
+#: modules/msc/logs/ajaxConsultLogsFilter.php:217
+#: modules/msc/msc/launch.php:534
+msgid "Deployment interval"
+msgstr "部署间隔"
+
+#: modules/msc/includes/command_history.php:39
+#: modules/msc/msc/msctabssinglestatus.php:38
+msgid "Current State"
+msgstr "目前状态"
 
 #: modules/msc/includes/command_history.php:49
 msgid " on "
 msgstr " 在 "
 
-#: modules/msc/includes/utilities.php:35
-#, php-format
-msgid "%3.1f %s%s"
-msgstr "%3.1f %s%s"
+#: modules/msc/includes/command_history.php:53
+#: modules/msc/includes/command_history.php:205
+#: modules/msc/msc/package_detail.php:39
+msgid "Name"
+msgstr "名称"
 
-#: modules/msc/includes/command_history.php:336
-#, php-format
-msgid "%s %s"
-msgstr "%s %s"
+#: modules/msc/includes/command_history.php:55
+#: modules/msc/includes/command_history.php:207
+#: modules/msc/msc/package_detail.php:40
+msgid "Value"
+msgstr "值"
 
-#: modules/msc/includes/command_history.php:345
-#, php-format
-msgid "%s (Local Proxy Server)"
-msgstr "%s（本机 Proxy 伺服器）"
+#: modules/msc/includes/command_history.php:91
+#: modules/msc/includes/command_history.php:147
+#: modules/msc/includes/command_history.php:244
+#: modules/msc/logs/ajaxLogsFilter.php:58
+#: modules/msc/logs/ajaxConsultLogsFilter.php:54
+#: modules/msc/msc/ajaxLogsFilter.php:101
+msgid "Start"
+msgstr "开始"
 
-#: modules/msc/includes/command_history.php:338
-#, php-format
-msgid "%s <i>(no additional parameter given)</i>"
-msgstr "%s <i>（未提供其他参数）</i>"
+#: modules/msc/includes/command_history.php:93
+#: modules/msc/includes/command_history.php:148
+#: modules/msc/includes/command_history.php:245
+#: modules/msc/logs/ajaxLogsFilter.php:60
+#: modules/msc/logs/ajaxConsultLogsFilter.php:56
+#: modules/msc/msc/ajaxLogsFilter.php:103
+msgid "Stop"
+msgstr "停止"
 
-#: modules/msc/includes/widgets.inc.php:96
-#, php-format
-msgid ""
-"%s host is not defined in the MSC module, or you don't have permissions to "
-"access it"
-msgstr "%s 主机在 MSC 模组中未定义，或您没有其存取权限"
+#: modules/msc/includes/command_history.php:142
+#: modules/msc/logs/ajaxConsultLogsFilter.php:135
+msgid "Bundle"
+msgstr "套件组合"
 
-#: modules/msc/logs/ajaxLogsFilter.php:87
-#, php-format
-msgid "%s on %s %s"
-msgstr "%s 在 %s %s"
+#: modules/msc/includes/command_history.php:145
+msgid "Bundle success percent"
+msgstr "套件组合成功百分比"
 
-#: modules/msc/includes/widgets.inc.php:45
-#, php-format
-msgid "%s status"
-msgstr "%s 状态"
+#: modules/msc/includes/command_history.php:184
+msgid "User command creator"
+msgstr "使用者命令建立者"
 
-#: modules/msc/msc/tabs.php:49 modules/msc/msc/tabs.php:58
-#, php-format
-msgid "%s's computer secure control"
-msgstr "%s 的电脑安全控制"
+#: modules/msc/includes/command_history.php:185
+msgid "Execute file"
+msgstr "执行档案"
 
-#: modules/msc/msc/tabs.php:73
-#, php-format
-msgid "%s's group secure control"
-msgstr "%s 的群组安全控制"
+#: modules/msc/includes/command_history.php:186
+msgid "Execution arguments"
+msgstr "执行引数"
 
-#: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/msctabsstatus.php:138
-#: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/msctabsstatus.php:142
-#, php-format
-msgid "(with %s already try)"
-msgstr "（其中 %s 已经尝试）"
+#: modules/msc/includes/command_history.php:187
+msgid "Start execute file"
+msgstr "启动执行档案"
 
-#: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/msctabsstatus.php:149
-#: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/msctabsstatus.php:155
-#, php-format
-msgid "(with %s being unreachable)"
-msgstr "（其中 %s 无法连线）"
+#: modules/msc/includes/command_history.php:188
+msgid "Start inventory agent"
+msgstr "启动清查代理程式"
 
-#: modules/msc/msc/ajaxLogsFilter.php:282
-#, php-format
-msgid ", using proxy %s"
-msgstr "，使用 proxy %s"
+#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:440
+msgid "Start \"Wake On Lan\" query if connection fails"
+msgstr "如果连线失败则启动\"网路唤醒\"查询"
 
-#: modules/msc/logs/ajaxLogsFilter.php:84
-#, php-format
-msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
-msgstr "<a href='' class='bundle' title='%s'>（在套件组合 %s 中）</a>"
+#: modules/msc/includes/command_history.php:190
+msgid "Delay between two connections"
+msgstr "两个连线之间延迟"
 
-#: modules/msc/msc/msctabsstatus.php:108
-#, php-format
-msgid "<b>%s</b> computers are paused"
-msgstr "已暂停<b>%s</b>台电脑"
+#: modules/msc/includes/command_history.php:191
+msgid "Command start date"
+msgstr "命令开始日期"
 
-#: modules/msc/msc/msctabsstatus.php:114
-#, php-format
-msgid "<b>%s</b> computers are running a deployment"
-msgstr "<b>%s</b>台电脑正在执行部署"
+#: modules/msc/includes/command_history.php:192
+msgid "Command expiry date"
+msgstr "命令过期日期"
 
-#: modules/msc/msc/msctabsstatus.php:102
-#, php-format
-msgid "<b>%s</b> computers are stopped"
-msgstr "已停止<b>%s</b>台电脑"
+#: modules/msc/includes/command_history.php:246
+msgid "Reschedule"
+msgstr "重新排程"
 
-#: modules/msc/msc/msctabsstatus.php:120
-#, php-format
-msgid "<b>%s</b> computers failed to deploy"
-msgstr "<b>%s</b>台电脑部署失败"
-
-#: modules/msc/msc/msctabsstatus.php:96
-#, php-format
-msgid "<b>%s</b> computers were successfully deployed"
-msgstr "成功部署<b>%s</b>台电脑"
-
-#: modules/msc/msc/msctabsstatus.php:81
-#, php-format
-msgid "<b>%s</b> packages installation are in progress"
-msgstr "正在安装<b>%s</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:75
-#, php-format
-msgid "<b>%s</b> packages installation are paused"
-msgstr "暂停安装<b>%s</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:69
-#, php-format
-msgid "<b>%s</b> packages installation are stopped"
-msgstr "停止安装<b>%s</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:87
-#, php-format
-msgid "<b>%s</b> packages installation failed"
-msgstr "正在安装<b>%s</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:63
-#, php-format
-msgid "<b>%s</b> packages installation were successful"
-msgstr "成功安装<b>%s</b>个封装"
-
-#: modules/msc/includes/command_history.php:560
-msgid "<b>Command Environment</b>"
-msgstr "<b>命令环境</b>"
-
-#: modules/msc/msc/msctabsstatus.php:118
-msgid "<b>No</b> computer failed to deploy"
-msgstr "没有<b>任何</b>电脑部署失败"
-
-#: modules/msc/msc/msctabsstatus.php:106
-msgid "<b>No</b> computer is paused"
-msgstr "未暂停<b>任何</b>电脑"
-
-#: modules/msc/msc/msctabsstatus.php:112
-msgid "<b>No</b> computer is running a deployment"
-msgstr "没有<b>任何</b>电脑正在执行部署"
-
-#: modules/msc/msc/msctabsstatus.php:100
-msgid "<b>No</b> computer is stopped"
-msgstr "未停止<b>任何</b>电脑"
-
-#: modules/msc/msc/msctabsstatus.php:94
-msgid "<b>No</b> computer was successfully deployed"
-msgstr "未成功部署<b>任何</b>电脑"
-
-#: modules/msc/msc/msctabsstatus.php:85
-msgid "<b>No</b> package installation failed"
-msgstr "未正在安装<b>任何</b>封装"
-
-#: modules/msc/msc/msctabsstatus.php:79
-msgid "<b>No</b> package installation is in progress"
-msgstr "未正在安装<b>任何</b>封装"
-
-#: modules/msc/msc/msctabsstatus.php:73
-msgid "<b>No</b> package installation is paused"
-msgstr "未暂停安装<b>任何</b>封装"
-
-#: modules/msc/msc/msctabsstatus.php:67
-msgid "<b>No</b> package installation is stopped"
-msgstr "未停止安装<b>任何</b>封装"
-
-#: modules/msc/msc/msctabsstatus.php:61
-msgid "<b>No</b> package installation was successful"
-msgstr "未成功安装<b>任何</b>封装"
-
-#: modules/msc/msc/msctabsstatus.php:119
-msgid "<b>One</b> computer failed to deploy"
-msgstr "<b>一</b>台电脑部署失败"
-
-#: modules/msc/msc/msctabsstatus.php:107
-msgid "<b>One</b> computer is paused"
-msgstr "已暂停<b>一</b>台电脑"
-
-#: modules/msc/msc/msctabsstatus.php:113
-msgid "<b>One</b> computer is running a deployment"
-msgstr "<b>一</b>台电脑正在执行部署"
-
-#: modules/msc/msc/msctabsstatus.php:101
-msgid "<b>One</b> computer is stopped"
-msgstr "已停止<b>一</b>台电脑"
-
-#: modules/msc/msc/msctabsstatus.php:95
-msgid "<b>One</b> computer was successfully deployed"
-msgstr "成功部署<b>一</b>台电脑"
-
-#: modules/msc/msc/msctabsstatus.php:86
-msgid "<b>One</b> package installation failed"
-msgstr "正在安装<b>一</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:80
-msgid "<b>One</b> package installation is in progress"
-msgstr "正在安装<b>一</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:74
-msgid "<b>One</b> package installation is paused"
-msgstr "暂停安装<b>一</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:68
-msgid "<b>One</b> package installation is stopped"
-msgstr "停止安装<b>一</b>个封装"
-
-#: modules/msc/msc/msctabsstatus.php:62
-msgid "<b>One</b> package installation was successful"
-msgstr "成功安装<b>一</b>个封装"
-
-#: modules/msc/msc/reschedule.php:44
-msgid "<br/>End date"
-msgstr "<br/>结束日期"
-
-#: modules/msc/includes/command_history.php:317
-msgid "<i>as soon as possible</i>"
-msgstr "<i>尽快</i>"
-
-#: modules/msc/includes/command_history.php:299
-msgid "<i>forever</i>"
-msgstr "<i>不限次数</i>"
-
-#: modules/msc/includes/command_history.php:295
-#, php-format
-msgid "<i>from</i> %s"
-msgstr "<i>从</i> %s"
+#: modules/msc/includes/command_history.php:265
+#: modules/msc/includes/command_history.php:340
+msgid "<i>not set</i>"
+msgstr "<i>未设定</i>"
 
 #: modules/msc/includes/command_history.php:293
 #, php-format
 msgid "<i>from</i> %s <i>to</i> %s"
 msgstr "<i>从</i> %s <i>至</i> %s"
 
-#: modules/msc/includes/command_history.php:553
-msgid "<i>none</i>"
-msgstr "<i>无</i>"
+#: modules/msc/includes/command_history.php:295
+#, php-format
+msgid "<i>from</i> %s"
+msgstr "<i>从</i> %s"
+
+#: modules/msc/includes/command_history.php:297
+#, php-format
+msgid "<i>to</i> %s"
+msgstr "<i>至</i> %s"
+
+#: modules/msc/includes/command_history.php:299
+msgid "<i>forever</i>"
+msgstr "<i>不限次数</i>"
+
+#: modules/msc/includes/command_history.php:304
+#: modules/msc/includes/command_history.php:309
+msgid "<i>whole day</i>"
+msgstr "<i>全天</i>"
+
+#: modules/msc/includes/command_history.php:317
+msgid "<i>as soon as possible</i>"
+msgstr "<i>尽快</i>"
+
+#: modules/msc/includes/command_history.php:322
+#: modules/msc/includes/command_history.php:327
+msgid "<i>not yet available</i>"
+msgstr "<i>尚不可用</i>"
 
 #: modules/msc/includes/command_history.php:332
 #: modules/msc/includes/command_history.php:354
@@ -260,824 +188,34 @@ msgstr "<i>无</i>"
 msgid "<i>not available</i>"
 msgstr "<i>不可用</i>"
 
-#: modules/msc/includes/command_history.php:265
-#: modules/msc/includes/command_history.php:340
-msgid "<i>not set</i>"
-msgstr "<i>未设定</i>"
-
-#: modules/msc/includes/command_history.php:322
-#: modules/msc/includes/command_history.php:327
-msgid "<i>not yet available</i>"
-msgstr "<i>尚不可用</i>"
-
-#: modules/msc/includes/command_history.php:297
+#: modules/msc/includes/command_history.php:336
 #, php-format
-msgid "<i>to</i> %s"
-msgstr "<i>至</i> %s"
+msgid "%s %s"
+msgstr "%s %s"
 
-#: modules/msc/includes/command_history.php:663
-msgid "<i>undefined</i>"
-msgstr "<i>未定义</i>"
-
-#: modules/msc/includes/command_history.php:304
-#: modules/msc/includes/command_history.php:309
-msgid "<i>whole day</i>"
-msgstr "<i>全天</i>"
-
-#: modules/msc/msc/download_file.php:42
-msgid "A file is already being downloaded."
-msgstr "已经在下载一个档案。"
-
-#: modules/msc/includes/bundle_widgets.php:158
-#: modules/msc/includes/bundle_widgets.php:187
-msgid "Actions in bundle"
-msgstr "套件组合中的动作"
-
-#: modules/msc/msc/ajaxPackageFilter.php:74
-msgid "Active"
-msgstr "作用中"
-
-#: modules/msc/msc/start_quick_action.php:138
-msgid "Advanced"
-msgstr "进阶"
-
-#: modules/msc/msc/ajaxPackageFilter.php:170
-msgid "Advanced launch"
-msgstr "进阶启动"
-
-#: modules/msc/includes/functions.php:324
-msgid "After bootmenu actions"
-msgstr "在开机功能表动作后"
-
-#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
-msgid "All user commands"
-msgstr "所有使用者命令"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:499
-msgid "All users commands"
-msgstr "所有使用者命令"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:136
+#: modules/msc/includes/command_history.php:338
 #, php-format
-msgid ""
-"An HTTP Proxy has been detected. Try disabling proxy for local addresses in "
-"your browser settings or add Pulse Server address (%s) to the excluded hosts "
-"list."
-msgstr ""
-"侦测到一个 HTTP Proxy。请尝试在您的浏览器设定中停用本机位址的 proxy 或新增 "
-"Pulse 伺服器位址 (%s) 至排除的主机清单。"
+msgid "%s <i>(no additional parameter given)</i>"
+msgstr "%s <i>（未提供其他参数）</i>"
 
-#: modules/msc/includes/command_history.php:418
+#: modules/msc/includes/command_history.php:343
+msgid "None (Local Proxy Client)"
+msgstr "无（本机 Proxy 用户端）"
+
+#: modules/msc/includes/command_history.php:345
 #, php-format
-msgid ""
-"An error occurred when trying to contact the fallback mirror '%s' : the "
-"connection was refused."
-msgstr "尝试连络后援镜像 '%s' 时发生错误：连线被拒绝。"
-
-#: modules/msc/includes/command_history.php:420
-#, php-format
-msgid ""
-"An error occurred when trying to contact the fallback mirror '%s' : the "
-"mountpoint doesn't exists."
-msgstr "尝试连络后援镜像 '%s' 时发生错误：挂接点不存在。"
-
-#: modules/msc/includes/command_history.php:417
-#, php-format
-msgid ""
-"An error occurred when trying to contact the mirror '%s' : the connection "
-"was refused."
-msgstr "尝试连络镜像 '%s' 时发生错误：连线被拒绝。"
-
-#: modules/msc/includes/command_history.php:419
-#, php-format
-msgid ""
-"An error occurred when trying to contact the mirror '%s' : the mountpoint "
-"doesn't exists."
-msgstr "尝试连络镜像 '%s' 时发生错误：挂接点不存在。"
-
-#: modules/msc/includes/command_history.php:640
-#: modules/msc/includes/command_history.php:656
-#: modules/msc/includes/command_history.php:661
-msgid "As soon as possible"
-msgstr "尽快"
-
-#: modules/msc/infoPackage.inc.php:46
-msgid "Audit"
-msgstr "稽核"
-
-#: modules/msc/msc/ajaxPackageFilter.php:72
-msgid "Available"
-msgstr "可用"
-
-#: modules/msc/msc/msctabsstatus.php:162
-msgid "Awake Failed: %percent% (%d computers)"
-msgstr "唤醒失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:163
-msgid "Awake Failed: %percent% (%d packages)"
-msgstr "唤醒失败：%percent%（%d 个封装）"
-
-#: modules/msc/includes/functions.php:323
-msgid "Before bootmenu actions"
-msgstr "在开机功能表动作前"
-
-#: modules/msc/includes/bundle_widgets.php:361
-msgid "Beginning of validity"
-msgstr "验证开始"
-
-#: modules/msc/includes/command_history.php:142
-#: modules/msc/logs/ajaxConsultLogsFilter.php:135
-msgid "Bundle"
-msgstr "套件组合"
-
-#: modules/msc/msc/ajaxLogsFilter.php:140
-#, php-format
-msgid "Bundle #%s"
-msgstr "套件组合 #%s"
-
-#: modules/msc/msc/msctabsstatus.php:50
-#, php-format
-msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
-msgstr "套件组合 '%s' 状态有关<b>%s</b>台电脑上的<b>%s</b>个命令"
-
-#: modules/msc/msc/msctabsstatus.php:49
-#, php-format
-msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
-msgstr "套件组合 '%s' 状态有关<b>一</b>台电脑上的<b>%s</b>个命令"
-
-#: modules/msc/msc/msctabsstatus.php:47
-#, php-format
-msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
-msgstr "套件组合 '%s' 状态有关<b>%s</b>台电脑上的<b>一个</b>命令"
-
-#: modules/msc/msc/msctabsstatus.php:46
-#, php-format
-msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
-msgstr "套件组合 '%s' 状态有关<b>一</b>台电脑上的<b>一</b>个命令"
-
-#: modules/msc/includes/command_history.php:145
-msgid "Bundle success percent"
-msgstr "套件组合成功百分比"
-
-#: modules/msc/includes/bundle_widgets.php:349
-msgid "Bundle title"
-msgstr "套件组合标题"
-
-#: modules/msc/includes/utilities.php:32
-msgid "Bytes"
-msgstr "位元组"
-
-#: modules/msc/msc/ajaxLogsFilter.php:136
-msgid "Can't get bundle for the requested id"
-msgstr "无法为请求的 id 取得套件组合"
-
-#: modules/msc/includes/command_history.php:416
-#, php-format
-msgid ""
-"Can't get files URI for package '%s' on fallback mirror %s.\n"
-"Please check that the package and its files have not been modified since the "
-"planning of the command."
-msgstr ""
-"无法在后援镜像 %s 上取得封装 '%s' 的档案 URI。\\n\n"
-"请检查自命令规划以来封装及其档案未被修改。"
-
-#: modules/msc/includes/command_history.php:415
-#, php-format
-msgid ""
-"Can't get files URI for package '%s' on mirror %s.\n"
-"Please check that the package and its files have not been modified since the "
-"planning of the command."
-msgstr ""
-"无法在镜像 %s 上取得封装 '%s' 的档案 URI。\\n\n"
-"请检查自命令规划以来封装及其档案未被修改。"
-
-#: modules/msc/includes/bundle_widgets.php:286
-msgid "Cancel"
-msgstr "取消"
-
-#: modules/msc/includes/bundle_widgets.php:389
-#: modules/msc/includes/bundle_widgets.php:405
-msgid "Cancel bundle creation"
-msgstr "取消建立套件组合"
-
-#: modules/msc/includes/functions.php:319
-msgid "Clean"
-msgstr "清理"
-
-#: modules/msc/msc/download_file.php:54
-msgid ""
-"Click below to start downloading file from this computer. Warning: the "
-"download may last a long time"
-msgstr "在下方按一下以开始从此电脑下载档案。警告：下载可能持续较长时间"
-
-#: modules/msc/msc/ajaxLogsFilter.php:375
-msgid "Client"
-msgstr "用户端"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:212
-#: modules/msc/logs/ajaxLogsFilter.php:134
-#: modules/msc/msc/ajaxLogsFilter.php:231
-#: modules/msc/msc/ajaxLogsFilter.php:373
-#: modules/msc/msc/package_detail.php:36
-msgid "Command"
-msgstr "命令"
-
-#: modules/msc/msc/msctabssinglestatus.php:33
-#, php-format
-msgid "Command '%s' state concerning <b>%s</b>"
-msgstr "命令 '%s' 状态有关 <b>%s</b>"
-
-#: modules/msc/msc/msctabsstatus.php:35
-#, php-format
-msgid "Command '%s' state concerning <b>%s</b> computers"
-msgstr "命令 '%s' 状态有关 <b>%s</b> 台电脑"
-
-#: modules/msc/msc/msctabsstatus.php:33
-#, php-format
-msgid "Command '%s' state concerning <b>one</b> computer"
-msgstr "命令 '%s' 状态有关<b>一</b>台电脑"
-
-#: modules/msc/includes/command_history.php:192
-msgid "Command expiry date"
-msgstr "命令过期日期"
-
-#: modules/msc/includes/command_history.php:34
-#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:428
-msgid "Command name"
-msgstr "命令名称"
-
-#: modules/msc/includes/bundle_widgets.php:360
-msgid "Command parameters"
-msgstr "命令参数"
-
-#: modules/msc/includes/command_history.php:191
-msgid "Command start date"
-msgstr "命令开始日期"
-
-#: modules/msc/infoPackage.inc.php:164
-msgid "Command status"
-msgstr "命令状态"
-
-#: modules/msc/infoPackage.inc.php:56
-msgid "Commands logs"
-msgstr "命令记录档"
-
-#: modules/msc/msc/local_proxy.php:79
-msgid "Computers in this command"
-msgstr "此命令中的电脑"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:233
-msgid "Connected"
-msgstr "已连线"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:221
-msgid "Connecting ..."
-msgstr "正在连线..."
-
-#: modules/msc/msc/vnc_client_java.php:46
-#: modules/msc/msc/vnc_client_no_vnc.php:57
-msgid "Connection Failed !"
-msgstr "连线失败！"
-
-#: modules/msc/msc/vnc_client_java.php:72
-msgid "Connection Succeeded !"
-msgstr "连线成功！"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:227
-msgid "Connection failed"
-msgstr "连线失败"
-
-#: modules/msc/msc/ajaxPing.php:33
-msgid ""
-"Connection was refused by the other side while trying to ping the machine"
-msgstr "尝试 ping 电脑时连线被对方拒绝"
-
-#: modules/msc/msc/ajaxPingProbe.php:37 modules/msc/msc/ajaxPingProbe.php:50
-#: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
-msgid ""
-"Connection was refused by the other side while trying to probe the machine"
-msgstr "尝试探查电脑时连线被对方拒绝"
-
-#: modules/msc/msc/vnc_client_java.php:48
-#: modules/msc/msc/vnc_client_no_vnc.php:59
-msgid "Connection was refused by the other side."
-msgstr "连线被对方拒绝。"
-
-#: modules/msc/msc/ajaxPackageFilter.php:89
-#: modules/msc/msc/ajaxPackageFilter.php:159
-msgid "Convergence"
-msgstr "聚合"
-
-#: modules/msc/msc/launch.php:485
-msgid "Convergence is active"
-msgstr "聚合在作用中"
-
-#: modules/msc/msc/convergence.php:116
-msgid "Convergence on "
-msgstr ""
-
-#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:551
-msgid "Copy Mode"
-msgstr "复制模式"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:213
-msgid "Creator"
-msgstr "建立者"
-
-#: modules/msc/infoPackage.inc.php:245
-msgid "Csv's export"
-msgstr "Csv 格式的汇出"
-
-#: modules/msc/includes/command_history.php:39
-#: modules/msc/msc/msctabssinglestatus.php:38
-msgid "Current State"
-msgstr "目前状态"
-
-#: modules/msc/includes/command_history.php:557
-msgid "Current launcher"
-msgstr "目前启动器"
-
-#: modules/msc/includes/command_history.php:558
-msgid "Current proxy"
-msgstr "目前 proxy"
-
-#: modules/msc/logs/ajaxLogsFilter.php:135
-#: modules/msc/msc/ajaxLogsFilter.php:238
-msgid "Current state"
-msgstr "目前状态"
-
-#: modules/msc/msc/ajaxLogsFilter.php:380
-msgid "Current step"
-msgstr "目前步骤"
-
-#: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
-msgid "Current tasks"
-msgstr "目前工作"
-
-#: modules/msc/logs/ajaxLogsFilter.php:127
-msgid "Date"
-msgstr "日期"
-
-#: modules/msc/includes/command_history.php:190
-msgid "Delay between two connections"
-msgstr "两个连线之间延迟"
-
-#: modules/msc/msc/msctabsstatus.php:153
-msgid "Delete Failed: %percent% (%d computers)"
-msgstr "删除失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:154
-msgid "Delete Failed: %percent% (%d packages)"
-msgstr "删除失败：%percent%（%d 个封装）"
-
-#: modules/msc/includes/functions.php:32
-msgid "Delete done"
-msgstr "删除完成"
-
-#: modules/msc/includes/functions.php:33
-msgid "Delete failed"
-msgstr "删除失败"
-
-#: modules/msc/msc/ajaxDownloadFile.php:35
-msgid "Delete file"
-msgstr "删除档案"
-
-#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:452
-msgid "Delete files after a successful execution"
-msgstr "成功执行后删除档案"
-
-#: modules/msc/includes/functions.php:31
-msgid "Delete in progress"
-msgstr "正在删除"
-
-#: modules/msc/msc/ajaxLogsFilter.php:419
-msgid "Deploy status"
-msgstr "部署状态"
-
-#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:556
-msgid "Deploy using a local proxy"
-msgstr "使用本机 proxy 部署"
-
-#: modules/msc/includes/bundle_widgets.php:363
-#: modules/msc/includes/command_history.php:38
-#: modules/msc/logs/ajaxConsultLogsFilter.php:217
-#: modules/msc/msc/launch.php:534
-msgid "Deployment interval"
-msgstr "部署间隔"
-
-#: modules/msc/msc/ajaxPackageFilter.php:155
-msgid "Description"
-msgstr "说明"
-
-#: modules/msc/logs/ajaxLogsFilter.php:61
-#: modules/msc/logs/ajaxLogsFilter.php:62 modules/msc/logs/viewLogs.php:96
-#: modules/msc/logs/viewLogs.php:114 modules/msc/logs/viewLogs.php:181
-#: modules/msc/logs/viewLogs.php:212 modules/msc/msc/ajaxLogsFilter.php:106
-#: modules/msc/msc/packages.php:44
-msgid "Details"
-msgstr "详情"
-
-#: modules/msc/msc/ajaxPackageFilter.php:171
-msgid "Direct launch"
-msgstr "直接启动"
-
-#: modules/msc/msc/launch.php:458
-msgid "Do an inventory after a successful execution"
-msgstr "在成功执行后进行清查"
-
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:334
-#: modules/msc/includes/widgets.inc.php:390
-#: modules/msc/msc/ajaxLogsFilter.php:405
-msgid "Done"
-msgstr "完成"
-
-#: modules/msc/msc/ajaxDownloadFile.php:34
-msgid "Download file"
-msgstr "下载档案"
-
-#: modules/msc/infoPackage.inc.php:121
-msgid "Download file from a computer"
-msgstr "从一台电脑下载档案"
-
-#: modules/msc/infoPackage.inc.php:240 modules/msc/msc/download_file.php:32
-msgid "Download file page"
-msgstr "下载档案页面"
-
-#: modules/msc/msc/ajaxDownloadFile.php:67
-msgid "Downloading"
-msgstr "正在下载"
-
-#: modules/msc/includes/command_history.php:37
-#: modules/msc/includes/command_history.php:144
-#: modules/msc/includes/command_history.php:183
-#: modules/msc/logs/ajaxConsultLogsFilter.php:216
-#: modules/msc/logs/ajaxLogsFilter.php:129
-#: modules/msc/msc/ajaxLogsFilter.php:234
-#: modules/msc/msc/ajaxLogsFilter.php:366
-msgid "End date"
-msgstr "结束日期"
-
-#: modules/msc/includes/bundle_widgets.php:362
-msgid "End of validity"
-msgstr "验证结束"
-
-#: modules/msc/msc/ajaxDownloadFile.php:72
-msgid "Error"
-msgstr "错误"
-
-#: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
-#: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
-msgid "Error scheduler-side !"
-msgstr "排程器端错误！"
-
-#: modules/msc/includes/command_history.php:404
-msgid ""
-"Error while connecting to secure agent on this host. Please check network "
-"connectivity, and that the secure agent is installed on this host."
-msgstr ""
-"连线至此主机上的安全代理程式时候发生错误。请检查网路连线，以及此主机上已安装"
-"安全代理程式。"
-
-#: modules/msc/msc/launch.php:524
-msgid "Example for lunch and night (24h format): 12-14,20-8"
-msgstr "午餐和夜晚的範例（24 小时制）：12-14,20-8"
-
-#: modules/msc/includes/widgets.inc.php:232
-msgid "Execute action..."
-msgstr "执行动作..."
-
-#: modules/msc/includes/command_history.php:185
-msgid "Execute file"
-msgstr "执行档案"
-
-#: modules/msc/includes/functions.php:317
-msgid "Execution"
-msgstr "执行"
-
-#: modules/msc/msc/msctabsstatus.php:150
-msgid "Execution Failed: %percent% (%d computers)"
-msgstr "执行失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:151
-msgid "Execution Failed: %percent% (%d packages)"
-msgstr "执行失败：%percent%（%d 个封装）"
-
-#: modules/msc/includes/command_history.php:186
-msgid "Execution arguments"
-msgstr "执行引数"
-
-#: modules/msc/includes/functions.php:29
-msgid "Execution done"
-msgstr "执行完成"
-
-#: modules/msc/includes/functions.php:30
-msgid "Execution failed"
-msgstr "执行失败"
-
-#: modules/msc/includes/functions.php:28
-msgid "Execution in progress"
-msgstr "正在执行"
-
-#: modules/msc/includes/command_history.php:623
-#, php-format
-msgid "Exit code : %s"
-msgstr "结束代码：%s"
-
-#: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
-msgid "Expired tasks"
-msgstr "已过期的工作"
-
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:333
-#: modules/msc/includes/widgets.inc.php:392
-#: modules/msc/msc/ajaxLogsFilter.php:406
-msgid "Failed"
-msgstr "失败"
-
-#: modules/msc/msc/start_quick_action.php:100
-msgid "Failed to retrieve this quick action."
-msgstr "无法撷取此快速动作。"
-
-#: modules/msc/includes/functions.php:41
-msgid "Failed to send WOL request"
-msgstr "无法传送 WOL 请求"
-
-#: modules/msc/msc/msctabsstatus.php:121
-msgid "Failed: %percent% (%d computers)"
-msgstr "失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:88
-msgid "Failed: %percent% (%d packages)"
-msgstr "失败：%percent%（%d 个封装）"
-
-#: modules/msc/msc/ajaxDownloadFile.php:88
-msgid "File name"
-msgstr "档案名称"
-
-#: modules/msc/includes/functions.php:325
-msgid "Finish"
-msgstr "完成"
-
-#: modules/msc/msc/ajaxDownloadFile.php:87
-msgid "From computer"
-msgstr "从电脑"
-
-#: modules/msc/infoPackage.inc.php:133
-msgid "Get a downloaded file"
-msgstr "取得一个已下载的档案"
-
-#: modules/msc/msc/ajaxLogsFilter.php:378
-msgid "Global State"
-msgstr "全域状态"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:158
-#: modules/msc/logs/ajaxConsultLogsFilter.php:173
-msgid "Group"
-msgstr "群组"
-
-#: modules/msc/msc/launch.php:365
-#, php-format
-msgid "Group Advanced launch : action \"%s\" on \"%s\""
-msgstr "群组进阶启动：动作 \"%s\" 在 \"%s\""
-
-#: modules/msc/msc/msctabsstatus.php:168
-msgid "Halt Failed: %percent% (%d computers)"
-msgstr "终止失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:169
-msgid "Halt Failed: %percent% (%d packages)"
-msgstr "终止失败：%percent%（%d 个封装）"
-
-#: modules/msc/msc/launch.php:470
-msgid "Halt client"
-msgstr "终止用户端"
-
-#: modules/msc/includes/bundle_widgets.php:355
-msgid "Halt client after"
-msgstr "终止用户端"
-
-#: modules/msc/includes/functions.php:44
-msgid "Halt done"
-msgstr "终止完成"
-
-#: modules/msc/includes/functions.php:45
-msgid "Halt failed"
-msgstr "终止失败"
-
-#: modules/msc/includes/functions.php:43
-msgid "Halt in progress"
-msgstr "正在终止"
-
-#: modules/msc/includes/command_history.php:35
-msgid "Host"
-msgstr "主机"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:230
-msgid "Host rejected connection"
-msgstr "主机拒绝的连线"
-
-#: modules/msc/infoPackage.inc.php:235
-msgid "IP Addr."
-msgstr "IP 位址"
-
-#: modules/msc/includes/functions.php:57
-msgid "Ignored"
-msgstr "已略过"
-
-#: modules/msc/includes/widgets.inc.php:394
-msgid "In progress"
-msgstr "进行中"
-
-#: modules/msc/msc/msctabsstatus.php:115
-msgid "In progress: %percent% (%d computers)"
-msgstr "正在进行：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:82
-msgid "In progress: %percent% (%d packages)"
-msgstr "正在进行：%percent%（%d 个封装）"
-
-#: modules/msc/msc/ajaxPackageFilter.php:76
-msgid "Inactive"
-msgstr "非作用中"
-
-#: modules/msc/includes/functions.php:320
-msgid "Inventory"
-msgstr "清查"
-
-#: modules/msc/msc/msctabsstatus.php:156
-msgid "Inventory Failed: %percent% (%d computers)"
-msgstr "清查失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:157
-msgid "Inventory Failed: %percent% (%d packages)"
-msgstr "清查失败：%percent%（%d 个封装）"
-
-#: modules/msc/includes/functions.php:36
-msgid "Inventory done"
-msgstr "清查完成"
-
-#: modules/msc/includes/functions.php:35
-msgid "Inventory failed"
-msgstr "清查失败"
-
-#: modules/msc/includes/functions.php:34
-msgid "Inventory in progress"
-msgstr "正在清查"
-
-#: modules/msc/msc/vnc_client_java.php:169
-msgid ""
-"Java Plugin is not installed on <u>your own computer</u>. Please download it "
-"from <a href='http://www.java.com/download/'>http://www.java.com/download/</"
-"a>, install it, restart your browser and then, verify your installation on "
-"<a target='_blank' href='http://www.java.com/verify/'>http://www.java.com/"
-"verify/</a>."
-msgstr ""
-"<u>您自己的电脑</u>上未安装 Java 外挂程式。请从 <a href='http://www.java.com/"
-"download/'>http://www.java.com/download/</a> 下载、安装，并且重新启动您的浏览"
-"器，然后在 <a target='_blank' href='http://www.java.com/verify/'>http://www."
-"java.com/verify/</a> 验证您的安装。"
-
-#: modules/msc/msc/package_detail.php:36
-msgid "Label"
-msgstr "标签"
-
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
-msgid "Launch"
-msgstr "启动"
-
-#: modules/msc/includes/bundle_widgets.php:285
-msgid "Launch (advanced)"
-msgstr "启动（进阶）"
-
-#: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:75
-msgid "Launch Actions"
-msgstr "启动动作"
-
-#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:76
-msgid "Launch Bundle"
-msgstr "启动套件组合"
-
-#: modules/msc/infoPackage.inc.php:193
-msgid "Launch a advanced command"
-msgstr "启动进阶命令"
-
-#: modules/msc/infoPackage.inc.php:187
-msgid "Launch a command"
-msgstr "启动命令"
-
-#: modules/msc/infoPackage.inc.php:205
-msgid "Launch a quick action command"
-msgstr "启动快速动作命令"
-
-#: modules/msc/msc/ajaxDownloadFile.php:89
-msgid "Length"
-msgstr "长度"
-
-#: modules/msc/msc/local_proxy.php:217
-msgid "Local Proxy Mode"
-msgstr "本机 Proxy 模式"
-
-#: modules/msc/msc/local_proxy.php:99
-msgid "Local proxies"
-msgstr "本机 proxy"
-
-#: modules/msc/msc/local_proxy.php:248
-msgid "Local proxies selection"
-msgstr "本机 proxy 选择"
-
-#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:78
-msgid "Logs"
-msgstr "记录档"
-
-#: modules/msc/infoPackage.inc.php:230
-msgid "MAC Addr."
-msgstr "MAC 位址"
-
-#: modules/msc/includes/bundle_widgets.php:170
-#: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:124
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "MMC 无法连络封装伺服器 %s。"
-
-#: modules/msc/infoPackage.inc.php:98
-msgid "MSC bundle tab for a group"
-msgstr "一个群组的 MSC 套件组合标签"
-
-#: modules/msc/infoPackage.inc.php:113
-msgid "MSC bundle tab for a machine"
-msgstr "一台电脑的 MSC 套件组合标签"
-
-#: modules/msc/infoPackage.inc.php:95
-msgid "MSC launch tab for a group"
-msgstr "一个群组的 MSC 启动标签"
-
-#: modules/msc/infoPackage.inc.php:110
-msgid "MSC launch tab for a machine"
-msgstr "一台电脑的 MSC 启动标签"
-
-#: modules/msc/infoPackage.inc.php:101
-msgid "MSC logs tab for a group"
-msgstr "一个群组的 MSC 记录档标签"
-
-#: modules/msc/infoPackage.inc.php:116
-msgid "MSC logs tab for a machine"
-msgstr "一台电脑的 MSC 记录档标签"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:153
-#: modules/msc/logs/ajaxConsultLogsFilter.php:165
-#: modules/msc/logs/ajaxConsultLogsFilter.php:168
-msgid "Machine"
-msgstr "电脑"
-
-#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:540
-msgid "Max bandwidth (kbits/s)"
-msgstr "最大频宽 (kbits/s)"
-
-#: modules/msc/msc/local_proxy.php:226
-msgid "Maximum number of simultaneous connections to a proxy"
-msgstr "与一个 proxy 的最大同时连线数"
-
-#: modules/msc/msc/ajaxLogsFilter.php:371
-msgid "Mode"
-msgstr "模式"
+msgid "%s (Local Proxy Server)"
+msgstr "%s（本机 Proxy 伺服器）"
 
 #: modules/msc/includes/command_history.php:347
 #: modules/msc/msc/local_proxy.php:208
 msgid "Multiple"
 msgstr "多重"
 
-#: modules/msc/msc/ajaxLogsFilter.php:294
-#, php-format
-msgid "Multiple, client mode%s"
-msgstr "多重，用户端模式%s"
-
-#: modules/msc/msc/ajaxLogsFilter.php:296
-msgid "Multiple, server mode"
-msgstr "多重，伺服器模式"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:499 modules/msc/infoPackage.inc.php:50
-#: modules/msc/logs/localSidebar.php:28
-msgid "My commands"
-msgstr "我的命令"
-
-#: modules/msc/includes/command_history.php:53
-#: modules/msc/includes/command_history.php:205
-#: modules/msc/msc/package_detail.php:39
-msgid "Name"
-msgstr "名称"
-
-#: modules/msc/includes/command_history.php:637
-#: modules/msc/includes/command_history.php:653
-msgid "Never"
-msgstr "永不"
-
-#: modules/msc/msc/ajaxPingProbe.php:85
-msgid "No probe performed"
-msgstr "未执行探查"
+#: modules/msc/includes/command_history.php:349
+#: modules/msc/msc/local_proxy.php:208
+msgid "Single with fallback"
+msgstr "单个，带后援"
 
 #: modules/msc/includes/command_history.php:351
 msgid "No proxy"
@@ -1087,57 +225,116 @@ msgstr "无 proxy"
 msgid "None"
 msgstr "无"
 
-#: modules/msc/includes/command_history.php:343
-msgid "None (Local Proxy Client)"
-msgstr "无（本机 Proxy 用户端）"
+#: modules/msc/includes/command_history.php:364
+msgid "enable"
+msgstr "启用"
 
-#: modules/msc/msc/ajaxLogsFilter.php:290
-#: modules/msc/msc/ajaxLogsFilter.php:303
-msgid "Normal"
-msgstr "正常"
+#: modules/msc/includes/command_history.php:365
+msgid "disable"
+msgstr "停用"
 
-#: modules/msc/msc/ajaxPackageFilter.php:79
-msgid "Not available"
-msgstr "不可用"
+#: modules/msc/includes/command_history.php:366
+msgid "done"
+msgstr "完成"
 
-#: modules/msc/msc/tabs.php:85
-msgid "Not enough information"
-msgstr "资讯不足"
+#: modules/msc/includes/command_history.php:367
+msgid "failed"
+msgstr "失败"
 
-#: modules/msc/includes/functions.php:46
-msgid "Not reachable"
-msgstr "无法连线"
+#: modules/msc/includes/command_history.php:368
+msgid "over_time"
+msgstr "over_time"
 
-#: modules/msc/msc/msctabsstatus.php:277
-msgid "One"
-msgstr "一"
+#: modules/msc/includes/command_history.php:369
+msgid "out_of_interval"
+msgstr "out_of_interval"
 
-#: modules/msc/msc/local_proxy.php:74
-msgid "Or designate the proxies manually below : "
-msgstr "或在下方手动指定 proxy："
+#: modules/msc/includes/command_history.php:404
+msgid ""
+"Error while connecting to secure agent on this host. Please check network "
+"connectivity, and that the secure agent is installed on this host."
+msgstr "连线至此主机上的安全代理程式时候发生错误。请检查网路连线，以及此主机上已安装安全代理程式。"
 
-#: modules/msc/includes/widgets.inc.php:33
-msgid "Other/N.A."
-msgstr "其它／不可用"
+#: modules/msc/includes/command_history.php:406
+msgid "The script was killed by Pulse 2 (timeout ?)."
+msgstr "指令码已被 Pulse 2 终止（逾时？）。"
 
-#: modules/msc/msc/msctabsstatus.php:159
-msgid "Over-timed: %percent% (%d computers)"
-msgstr "已逾时：%percent%（%d 台电脑）"
+#: modules/msc/includes/command_history.php:407
+msgid "The script was terminated by Pulse 2."
+msgstr "指令码被 Pulse 2 终止。"
 
-#: modules/msc/msc/msctabsstatus.php:160
-msgid "Over-timed: %percent% (%d packages)"
-msgstr "已逾时：%percent%（%d 个封装）"
+#: modules/msc/includes/command_history.php:409
+msgid "Something goes wrong while checking client identity."
+msgstr "检查用户端身分时发生错误。"
 
-#: modules/msc/includes/widgets.inc.php:396
-#: modules/msc/msc/ajaxLogsFilter.php:408
-msgid "Overtime"
-msgstr "加班"
+#: modules/msc/includes/command_history.php:410
+msgid ""
+"The current host name doesn't match the host name from the inventory "
+"database."
+msgstr "目前的主机名称与来自清查资料库的主机名称不相符。"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:133
-#: modules/msc/logs/ajaxConsultLogsFilter.php:139
-#: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
-msgid "Package"
-msgstr "封装"
+#: modules/msc/includes/command_history.php:411
+msgid ""
+"The current host IP address doesn't match the IP address from the inventory "
+"database."
+msgstr "目前的主机 IP 位址与来自清查资料库的 IP 位址不相符。"
+
+#: modules/msc/includes/command_history.php:412
+msgid ""
+"The current host MAC address doesn't match the MAC address from the "
+"inventory database."
+msgstr "目前的主机 MAC 位址与来自清查资料库的 MAC 位址不相符。"
+
+#: modules/msc/includes/command_history.php:414
+#, php-format
+msgid "The package '%s' is not available on any mirror."
+msgstr "封装 '%s' 在任何镜像上均不可用。"
+
+#: modules/msc/includes/command_history.php:415
+#, php-format
+msgid ""
+"Can't get files URI for package '%s' on mirror %s.\n"
+"Please check that the package and its files have not been modified since the planning of the command."
+msgstr ""
+"无法在镜像 %s 上取得封装 '%s' 的档案 URI。\\n\n"
+"请检查自命令规划以来封装及其档案未被修改。"
+
+#: modules/msc/includes/command_history.php:416
+#, php-format
+msgid ""
+"Can't get files URI for package '%s' on fallback mirror %s.\n"
+"Please check that the package and its files have not been modified since the planning of the command."
+msgstr ""
+"无法在后援镜像 %s 上取得封装 '%s' 的档案 URI。\\n\n"
+"请检查自命令规划以来封装及其档案未被修改。"
+
+#: modules/msc/includes/command_history.php:417
+#, php-format
+msgid ""
+"An error occurred when trying to contact the mirror '%s' : the connection "
+"was refused."
+msgstr "尝试连络镜像 '%s' 时发生错误：连线被拒绝。"
+
+#: modules/msc/includes/command_history.php:418
+#, php-format
+msgid ""
+"An error occurred when trying to contact the fallback mirror '%s' : the "
+"connection was refused."
+msgstr "尝试连络后援镜像 '%s' 时发生错误：连线被拒绝。"
+
+#: modules/msc/includes/command_history.php:419
+#, php-format
+msgid ""
+"An error occurred when trying to contact the mirror '%s' : the mountpoint "
+"doesn't exists."
+msgstr "尝试连络镜像 '%s' 时发生错误：挂接点不存在。"
+
+#: modules/msc/includes/command_history.php:420
+#, php-format
+msgid ""
+"An error occurred when trying to contact the fallback mirror '%s' : the "
+"mountpoint doesn't exists."
+msgstr "尝试连络后援镜像 '%s' 时发生错误：挂接点不存在。"
 
 #: modules/msc/includes/command_history.php:421
 #, php-format
@@ -1153,102 +350,34 @@ msgstr ""
 msgid "Package '%s' is available on primary mirror %s"
 msgstr "封装 '%s' 在主要镜像 %s 上可用"
 
-#: modules/msc/msc/ajaxPackageFilter.php:157
-msgid "Package size"
-msgstr "封装大小"
+#: modules/msc/includes/command_history.php:481
+#: modules/msc/includes/command_history.php:512
+msgid "next attempt"
+msgstr "下次尝试"
 
-#: modules/msc/infoPackage.inc.php:210 modules/msc/msc/packages.php:29
-msgid "Packages"
-msgstr "封装"
+#: modules/msc/includes/command_history.php:497
+msgid "Step log"
+msgstr "步骤记录档"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:229
-msgid "Password Required"
-msgstr "需要密码"
+#: modules/msc/includes/command_history.php:506
+msgid "Show log"
+msgstr "显示记录档"
 
-#: modules/msc/logs/ajaxLogsFilter.php:59
-#: modules/msc/msc/ajaxLogsFilter.php:102
-msgid "Pause"
-msgstr "暂停"
+#: modules/msc/includes/command_history.php:540
+msgid "Step"
+msgstr "步骤"
 
-#: modules/msc/msc/msctabspause.php:126
-#, php-format
-msgid "Pause %s %s on host %s"
-msgstr "暂停主机 %s 上的 %s %s"
+#: modules/msc/includes/command_history.php:553
+msgid "Reserved bandwidth"
+msgstr "保留频宽"
 
-#: modules/msc/msc/msctabspause.php:124
-#, php-format
-msgid "Pause %s %s on this group"
-msgstr "暂停此群组上的 %s %s"
+#: modules/msc/includes/command_history.php:553
+msgid "<i>none</i>"
+msgstr "<i>无</i>"
 
-#: modules/msc/infoPackage.inc.php:152
-msgid "Pause a command"
-msgstr "暂停命令"
-
-#: modules/msc/includes/functions.php:49
-msgid "Paused"
-msgstr "已暂停"
-
-#: modules/msc/msc/msctabsstatus.php:109
-msgid "Paused: %percent% (%d computers)"
-msgstr "已暂停：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:76
-msgid "Paused: %percent% (%d packages)"
-msgstr "已暂停：%percent%（%d 个封装）"
-
-#: modules/msc/infoPackage.inc.php:220
-msgid "Ping"
-msgstr "Ping"
-
-#: modules/msc/infoPackage.inc.php:215
-msgid "Ping and probe"
-msgstr "Ping 和探查"
-
-#: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
-msgid "Ping failed"
-msgstr "Ping 失败"
-
-#: modules/msc/msc/ajaxPingProbe.php:45
-msgid "Ping succeeded"
-msgstr "Ping 成功"
-
-#: modules/msc/msc/ajaxPingProbe.php:77
-msgid "Ping succeeded, SSH connection failed"
-msgstr "Ping 成功，SSH 连线失败"
-
-#: modules/msc/infoPackage.inc.php:225
-msgid "Platform"
-msgstr "平台"
-
-#: modules/msc/infoPackage.inc.php:146
-msgid "Play a command"
-msgstr "播放命令"
-
-#: modules/msc/msc/vnc_client_java.php:76
-msgid "Please close this windows when you are done."
-msgstr "请在完成后关闭此视窗。"
-
-#: modules/msc/msc/download_file_remove.php:32
-msgid "Please confirm file deletion"
-msgstr "请确认档案删除"
-
-#: modules/msc/msc/start_quick_action.php:136
-msgid "Please confirm you really want to perform this action"
-msgstr "请确认您真的要执行此动作"
-
-#: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:151
-msgid "Please contact your administrator."
-msgstr "请连络您的管理员。"
-
-#: modules/msc/includes/bundle_widgets.php:159
-#: modules/msc/includes/bundle_widgets.php:188
-msgid "Possible actions"
-msgstr "可能的动作"
-
-#: modules/msc/msc/launch.php:580
-msgid "Probe status"
-msgstr "探查状态"
+#: modules/msc/includes/command_history.php:553
+msgid "bit/s"
+msgstr "bit/s"
 
 #: modules/msc/includes/command_history.php:554
 msgid "Proxy mode"
@@ -1258,27 +387,133 @@ msgstr "Proxy 模式"
 msgid "Proxy priority"
 msgstr "Proxy 优先顺序"
 
-#: modules/msc/msc/ajaxLogsFilter.php:287
-msgid "Pull"
-msgstr "提取"
+#: modules/msc/includes/command_history.php:556
+msgid "Scheduler"
+msgstr "排程器"
 
-#: modules/msc/includes/widgets.inc.php:255
-msgid "Quick action list is empty"
-msgstr "快速动作清单是空的"
+#: modules/msc/includes/command_history.php:557
+msgid "Current launcher"
+msgstr "目前启动器"
 
-#: modules/msc/includes/widgets.inc.php:184
+#: modules/msc/includes/command_history.php:558
+msgid "Current proxy"
+msgstr "目前 proxy"
+
+#: modules/msc/includes/command_history.php:560
+msgid "<b>Command Environment</b>"
+msgstr "<b>命令环境</b>"
+
+#: modules/msc/includes/command_history.php:591
+msgid "Y-m-d H:i:s"
+msgstr "年-月-日 时:分:秒"
+
+#: modules/msc/includes/command_history.php:623
 #, php-format
-msgid "Quick action on %s"
-msgstr "%s 上的快速动作"
+msgid "Exit code : %s"
+msgstr "结束代码：%s"
 
-#: modules/msc/includes/widgets.inc.php:27
-#, php-format
-msgid "Quick action path %s don't exists"
-msgstr "快速动作路径 %s 不存在"
+#: modules/msc/includes/command_history.php:637
+#: modules/msc/includes/command_history.php:653
+msgid "Never"
+msgstr "永不"
 
-#: modules/msc/msc/local_proxy.php:68
-msgid "Random (indicate number of proxies) : "
-msgstr "随机（指出 proxy 数目）"
+#: modules/msc/includes/command_history.php:640
+#: modules/msc/includes/command_history.php:656
+#: modules/msc/includes/command_history.php:661
+msgid "As soon as possible"
+msgstr "尽快"
+
+#: modules/msc/includes/command_history.php:663
+msgid "<i>undefined</i>"
+msgstr "<i>未定义</i>"
+
+#: modules/msc/includes/functions.php:25
+msgid "Upload in progress"
+msgstr "正在上传"
+
+#: modules/msc/includes/functions.php:26
+msgid "Upload done"
+msgstr "上传完成"
+
+#: modules/msc/includes/functions.php:27
+msgid "Upload failed"
+msgstr "上传失败"
+
+#: modules/msc/includes/functions.php:28
+msgid "Execution in progress"
+msgstr "正在执行"
+
+#: modules/msc/includes/functions.php:29
+msgid "Execution done"
+msgstr "执行完成"
+
+#: modules/msc/includes/functions.php:30
+msgid "Execution failed"
+msgstr "执行失败"
+
+#: modules/msc/includes/functions.php:31
+msgid "Delete in progress"
+msgstr "正在删除"
+
+#: modules/msc/includes/functions.php:32
+msgid "Delete done"
+msgstr "删除完成"
+
+#: modules/msc/includes/functions.php:33
+msgid "Delete failed"
+msgstr "删除失败"
+
+#: modules/msc/includes/functions.php:34
+msgid "Inventory in progress"
+msgstr "正在清查"
+
+#: modules/msc/includes/functions.php:35
+msgid "Inventory failed"
+msgstr "清查失败"
+
+#: modules/msc/includes/functions.php:36
+msgid "Inventory done"
+msgstr "清查完成"
+
+#: modules/msc/includes/functions.php:37
+msgid "Reboot in progress"
+msgstr "正在重新开机"
+
+#: modules/msc/includes/functions.php:38
+msgid "Reboot failed"
+msgstr "重新开机失败"
+
+#: modules/msc/includes/functions.php:39
+msgid "Reboot done"
+msgstr "重新开机完成"
+
+#: modules/msc/includes/functions.php:40
+msgid "WOL request being sent"
+msgstr "正在传送 WOL 请求"
+
+#: modules/msc/includes/functions.php:41
+msgid "Failed to send WOL request"
+msgstr "无法传送 WOL 请求"
+
+#: modules/msc/includes/functions.php:42
+msgid "WOL request has been sent"
+msgstr "WOL 请求已传送"
+
+#: modules/msc/includes/functions.php:43
+msgid "Halt in progress"
+msgstr "正在终止"
+
+#: modules/msc/includes/functions.php:44
+msgid "Halt done"
+msgstr "终止完成"
+
+#: modules/msc/includes/functions.php:45
+msgid "Halt failed"
+msgstr "终止失败"
+
+#: modules/msc/includes/functions.php:46
+msgid "Not reachable"
+msgstr "无法连线"
 
 #: modules/msc/includes/functions.php:47
 #: modules/msc/includes/functions.php:331
@@ -1286,69 +521,97 @@ msgstr "随机（指出 proxy 数目）"
 msgid "Ready"
 msgstr "就绪"
 
-#: modules/msc/msc/msctabsstatus.php:165
-msgid "Reboot Failed: %percent% (%d computers)"
-msgstr "重新开机失败：%percent%（%d 台电脑）"
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:334
+#: modules/msc/includes/widgets.inc.php:390
+#: modules/msc/msc/ajaxLogsFilter.php:405
+msgid "Done"
+msgstr "完成"
 
-#: modules/msc/msc/msctabsstatus.php:166
-msgid "Reboot Failed: %percent% (%d packages)"
-msgstr "重新开机失败：%percent%（%d 个封装）"
+#: modules/msc/includes/functions.php:49
+msgid "Paused"
+msgstr "已暂停"
 
-#: modules/msc/msc/launch.php:464
-msgid "Reboot client"
-msgstr "重新开机用户端"
+#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
+#: modules/msc/includes/widgets.inc.php:398
+#: modules/msc/msc/ajaxLogsFilter.php:407
+msgid "Stopped"
+msgstr "已停止"
 
-#: modules/msc/includes/functions.php:39
-msgid "Reboot done"
-msgstr "重新开机完成"
-
-#: modules/msc/includes/functions.php:38
-msgid "Reboot failed"
-msgstr "重新开机失败"
-
-#: modules/msc/includes/functions.php:37
-msgid "Reboot in progress"
-msgstr "正在重新开机"
-
-#: modules/msc/msc/connection_error.php:24
-msgid "Remote control of :"
-msgstr "远端控制："
-
-#: modules/msc/infoPackage.inc.php:127
-msgid "Remove a downloaded file"
-msgstr "移除一个已下载的档案"
-
-#: modules/msc/infoPackage.inc.php:86
-msgid "Remove machine from pull mode"
-msgstr "从提取模式移除电脑"
-
-#: modules/msc/msc/localSidebar.php:27
-msgid "Repository"
-msgstr "存放库"
-
-#: modules/msc/includes/command_history.php:246
-msgid "Reschedule"
-msgstr "重新排程"
-
-#: modules/msc/infoPackage.inc.php:170
-msgid "Reschedule a command"
-msgstr "重新排程命令"
-
-#: modules/msc/msc/reschedule.php:40
-msgid "Reschedule this command"
-msgstr "重新排程此命令"
+#: modules/msc/includes/functions.php:52
+msgid "Scheduled"
+msgstr "已排程"
 
 #: modules/msc/includes/functions.php:53
 msgid "Rescheduled"
 msgstr "已重新排程"
 
-#: modules/msc/includes/command_history.php:553
-msgid "Reserved bandwidth"
-msgstr "保留频宽"
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:333
+#: modules/msc/includes/widgets.inc.php:392
+#: modules/msc/msc/ajaxLogsFilter.php:406
+msgid "Failed"
+msgstr "失败"
+
+#: modules/msc/includes/functions.php:55
+msgid "Time Exceeded"
+msgstr "超过时间"
+
+#: modules/msc/includes/functions.php:56
+msgid "To do"
+msgstr "待执行"
+
+#: modules/msc/includes/functions.php:57
+msgid "Ignored"
+msgstr "已略过"
+
+#: modules/msc/includes/functions.php:60
+msgid "Work in progress"
+msgstr "正在进行工作"
+
+#: modules/msc/includes/functions.php:315
+msgid "Wake on LAN"
+msgstr "网路唤醒"
+
+#: modules/msc/includes/functions.php:316
+msgid "Upload"
+msgstr "上传"
+
+#: modules/msc/includes/functions.php:317
+msgid "Execution"
+msgstr "执行"
+
+#: modules/msc/includes/functions.php:318
+msgid "Windows Update parse"
+msgstr "Windows 更新剖析"
+
+#: modules/msc/includes/functions.php:319
+msgid "Clean"
+msgstr "清理"
+
+#: modules/msc/includes/functions.php:320
+msgid "Inventory"
+msgstr "清查"
 
 #: modules/msc/includes/functions.php:321
 msgid "Restart"
 msgstr "重新启动"
+
+#: modules/msc/includes/functions.php:322
+msgid "Shutdown"
+msgstr "关机"
+
+#: modules/msc/includes/functions.php:323
+msgid "Before bootmenu actions"
+msgstr "在开机功能表动作前"
+
+#: modules/msc/includes/functions.php:324
+msgid "After bootmenu actions"
+msgstr "在开机功能表动作后"
+
+#: modules/msc/includes/functions.php:325
+msgid "Finish"
+msgstr "完成"
 
 #: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:340
@@ -1356,85 +619,210 @@ msgstr "重新启动"
 msgid "Running"
 msgstr "正在执行"
 
-#: modules/msc/msc/ajaxPingProbe.php:55
-msgid "SSH connection failed"
-msgstr "SSH 连线失败"
+#: modules/msc/includes/utilities.php:32
+msgid "Bytes"
+msgstr "位元组"
 
-#: modules/msc/includes/functions.php:52
-msgid "Scheduled"
-msgstr "已排程"
+#: modules/msc/includes/utilities.php:35
+#, php-format
+msgid "%3.1f %s%s"
+msgstr "%3.1f %s%s"
 
-#: modules/msc/includes/command_history.php:556
-msgid "Scheduler"
-msgstr "排程器"
+#: modules/msc/includes/widgets.inc.php:27
+#, php-format
+msgid "Quick action path %s don't exists"
+msgstr "快速动作路径 %s 不存在"
 
-#: modules/msc/msc/launch.php:434
-msgid "Script parameters"
-msgstr "指令码参数"
+#: modules/msc/includes/widgets.inc.php:33
+msgid "Other/N.A."
+msgstr "其它／不可用"
 
-#: modules/msc/infoPackage.inc.php:42
-msgid "Secure Control"
-msgstr "安全控制"
+#: modules/msc/includes/widgets.inc.php:45
+#, php-format
+msgid "%s status"
+msgstr "%s 状态"
 
-#: modules/msc/infoPackage.inc.php:91
-msgid "Secure control on a group of computers"
-msgstr "一组电脑上的安全控制"
+#: modules/msc/includes/widgets.inc.php:74
+#, php-format
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions"
+" to access it"
+msgstr "群组 \"%s\" 在 MSC 模组中未定义，或您没有其存取权限"
 
-#: modules/msc/infoPackage.inc.php:106
-msgid "Secure control on computer"
-msgstr "电脑上的安全控制"
+#: modules/msc/includes/widgets.inc.php:96
+#, php-format
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr "%s 主机在 MSC 模组中未定义，或您没有其存取权限"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:150
-msgid "Send Ctrl+Alt+Del"
-msgstr "传送 Ctrl+Alt+Del"
+#: modules/msc/includes/widgets.inc.php:117
+msgid "You don't have the right permissions to display this command"
+msgstr "您没有显示此命令的正确权限"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:154
-msgid "Send text to clipboard"
-msgstr "传送文字至剪贴簿"
+#: modules/msc/includes/widgets.inc.php:184
+#, php-format
+msgid "Quick action on %s"
+msgstr "%s 上的快速动作"
+
+#: modules/msc/includes/widgets.inc.php:232
+msgid "Execute action..."
+msgstr "执行动作..."
+
+#: modules/msc/includes/widgets.inc.php:255
+msgid "Quick action list is empty"
+msgstr "快速动作清单是空的"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:499 modules/msc/infoPackage.inc.php:50
+#: modules/msc/logs/localSidebar.php:28
+msgid "My commands"
+msgstr "我的命令"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:499
+msgid "All users commands"
+msgstr "所有使用者命令"
+
+#: modules/msc/includes/widgets.inc.php:388
+msgid "State filter"
+msgstr "状态筛选器"
+
+#: modules/msc/includes/widgets.inc.php:394
+msgid "In progress"
+msgstr "进行中"
+
+#: modules/msc/includes/widgets.inc.php:396
+#: modules/msc/msc/ajaxLogsFilter.php:408
+msgid "Overtime"
+msgstr "加班"
 
 #: modules/msc/includes/bundle_widgets.php:119
 msgid "Set order"
 msgstr "设定顺序"
 
-#: modules/msc/logs/finished.php:33
-msgid "Show all finished task's logs"
-msgstr "显示所有已完成工作的记录档"
+#: modules/msc/includes/bundle_widgets.php:150
+#: modules/msc/msc/ajaxPackageFilter.php:151
+msgid "Please contact your administrator."
+msgstr "请连络您的管理员。"
+
+#: modules/msc/includes/bundle_widgets.php:158
+#: modules/msc/includes/bundle_widgets.php:187
+msgid "Actions in bundle"
+msgstr "套件组合中的动作"
+
+#: modules/msc/includes/bundle_widgets.php:159
+#: modules/msc/includes/bundle_widgets.php:188
+msgid "Possible actions"
+msgstr "可能的动作"
+
+#: modules/msc/includes/bundle_widgets.php:170
+#: modules/msc/includes/bundle_widgets.php:199
+#: modules/msc/msc/ajaxPackageFilter.php:124
+#, php-format
+msgid "MMC failed to contact package server %s."
+msgstr "MMC 无法连络封装伺服器 %s。"
+
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
+msgid "Launch"
+msgstr "启动"
+
+#: modules/msc/includes/bundle_widgets.php:285
+msgid "Launch (advanced)"
+msgstr "启动（进阶）"
+
+#: modules/msc/includes/bundle_widgets.php:286
+msgid "Cancel"
+msgstr "取消"
+
+#: modules/msc/includes/bundle_widgets.php:304
+msgid "awake"
+msgstr "唤醒"
+
+#: modules/msc/includes/bundle_widgets.php:306
+msgid "invent."
+msgstr "发明家"
+
+#: modules/msc/includes/bundle_widgets.php:349
+msgid "Bundle title"
+msgstr "套件组合标题"
+
+#: modules/msc/includes/bundle_widgets.php:350
+msgid "Wake on lan"
+msgstr "网路唤醒"
+
+#: modules/msc/includes/bundle_widgets.php:351
+msgid "Start the script"
+msgstr "启动指令码"
+
+#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:452
+msgid "Delete files after a successful execution"
+msgstr "成功执行后删除档案"
+
+#: modules/msc/includes/bundle_widgets.php:353
+msgid "Start inventory"
+msgstr "开始清查"
+
+#: modules/msc/includes/bundle_widgets.php:355
+msgid "Halt client after"
+msgstr "终止用户端"
+
+#: modules/msc/includes/bundle_widgets.php:360
+msgid "Command parameters"
+msgstr "命令参数"
+
+#: modules/msc/includes/bundle_widgets.php:361
+msgid "Beginning of validity"
+msgstr "验证开始"
+
+#: modules/msc/includes/bundle_widgets.php:362
+msgid "End of validity"
+msgstr "验证结束"
+
+#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:540
+msgid "Max bandwidth (kbits/s)"
+msgstr "最大频宽 (kbits/s)"
+
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:548
+msgid "push"
+msgstr "推入"
+
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:548
+msgid "push / pull"
+msgstr "推入／提取"
+
+#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:551
+msgid "Copy Mode"
+msgstr "复制模式"
+
+#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:556
+msgid "Deploy using a local proxy"
+msgstr "使用本机 proxy 部署"
+
+#: modules/msc/includes/bundle_widgets.php:389
+#: modules/msc/includes/bundle_widgets.php:405
+msgid "Cancel bundle creation"
+msgstr "取消建立套件组合"
+
+#: modules/msc/infoPackage.inc.php:42
+msgid "Secure Control"
+msgstr "安全控制"
+
+#: modules/msc/infoPackage.inc.php:46
+msgid "Audit"
+msgstr "稽核"
+
+#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
+msgid "All user commands"
+msgstr "所有使用者命令"
+
+#: modules/msc/infoPackage.inc.php:56
+msgid "Commands logs"
+msgstr "命令记录档"
 
 #: modules/msc/infoPackage.inc.php:59
 msgid "Show all logs"
 msgstr "显示所有记录档"
-
-#: modules/msc/logs/pending.php:33
-msgid "Show all pending task's logs"
-msgstr "显示所有搁置工作的记录档"
-
-#: modules/msc/logs/running.php:33
-msgid "Show all running task's logs"
-msgstr "显示所有执行中工作的记录档"
-
-#: modules/msc/logs/all.php:33
-msgid "Show all task logs"
-msgstr "显示所有工作记录档"
-
-#: modules/msc/infoPackage.inc.php:68
-msgid "Show custom state task's logs"
-msgstr "显示自订状态工作的记录档"
-
-#: modules/msc/logs/custom.php:33
-msgid "Show custom status task's logs"
-msgstr "显示自订状态工作的记录档"
-
-#: modules/msc/infoPackage.inc.php:65
-msgid "Show finished task's logs"
-msgstr "显示已完成工作的记录档"
-
-#: modules/msc/includes/command_history.php:506
-msgid "Show log"
-msgstr "显示记录档"
-
-#: modules/msc/infoPackage.inc.php:181
-msgid "Show package's details"
-msgstr "显示封装的详情"
 
 #: modules/msc/infoPackage.inc.php:61
 msgid "Show pending task's logs"
@@ -1444,23 +832,336 @@ msgstr "显示搁置工作的记录档"
 msgid "Show running task's logs"
 msgstr "显示执行中工作的记录档"
 
-#: modules/msc/includes/functions.php:322
-msgid "Shutdown"
-msgstr "关机"
+#: modules/msc/infoPackage.inc.php:65
+msgid "Show finished task's logs"
+msgstr "显示已完成工作的记录档"
 
-#: modules/msc/msc/launch.php:352
-#, php-format
-msgid "Single advanced launch : action \"%s\" on \"%s\""
-msgstr "单次进阶启动：动作 \"%s\" 在 \"%s\""
+#: modules/msc/infoPackage.inc.php:68
+msgid "Show custom state task's logs"
+msgstr "显示自订状态工作的记录档"
+
+#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:250
+#: modules/msc/infoPackage.inc.php:255
+msgid "logs list"
+msgstr "记录档清单"
+
+#: modules/msc/infoPackage.inc.php:74
+msgid "consolidated logs list"
+msgstr "合并的记录档清单"
+
+#: modules/msc/infoPackage.inc.php:77
+msgid "the state list"
+msgstr "状态清单"
+
+#: modules/msc/infoPackage.inc.php:86
+msgid "Remove machine from pull mode"
+msgstr "从提取模式移除电脑"
+
+#: modules/msc/infoPackage.inc.php:91
+msgid "Secure control on a group of computers"
+msgstr "一组电脑上的安全控制"
+
+#: modules/msc/infoPackage.inc.php:95
+msgid "MSC launch tab for a group"
+msgstr "一个群组的 MSC 启动标签"
+
+#: modules/msc/infoPackage.inc.php:98
+msgid "MSC bundle tab for a group"
+msgstr "一个群组的 MSC 套件组合标签"
+
+#: modules/msc/infoPackage.inc.php:101
+msgid "MSC logs tab for a group"
+msgstr "一个群组的 MSC 记录档标签"
+
+#: modules/msc/infoPackage.inc.php:106
+msgid "Secure control on computer"
+msgstr "电脑上的安全控制"
+
+#: modules/msc/infoPackage.inc.php:110
+msgid "MSC launch tab for a machine"
+msgstr "一台电脑的 MSC 启动标签"
+
+#: modules/msc/infoPackage.inc.php:113
+msgid "MSC bundle tab for a machine"
+msgstr "一台电脑的 MSC 套件组合标签"
+
+#: modules/msc/infoPackage.inc.php:116
+msgid "MSC logs tab for a machine"
+msgstr "一台电脑的 MSC 记录档标签"
+
+#: modules/msc/infoPackage.inc.php:121
+msgid "Download file from a computer"
+msgstr "从一台电脑下载档案"
+
+#: modules/msc/infoPackage.inc.php:127
+msgid "Remove a downloaded file"
+msgstr "移除一个已下载的档案"
+
+#: modules/msc/infoPackage.inc.php:133
+msgid "Get a downloaded file"
+msgstr "取得一个已下载的档案"
+
+#: modules/msc/infoPackage.inc.php:139
+msgid "Take control of a computer"
+msgstr "控制一台电脑"
+
+#: modules/msc/infoPackage.inc.php:146
+msgid "Play a command"
+msgstr "播放命令"
+
+#: modules/msc/infoPackage.inc.php:152
+msgid "Pause a command"
+msgstr "暂停命令"
+
+#: modules/msc/infoPackage.inc.php:158
+msgid "Stop a command"
+msgstr "停止命令"
+
+#: modules/msc/infoPackage.inc.php:164
+msgid "Command status"
+msgstr "命令状态"
+
+#: modules/msc/infoPackage.inc.php:170
+msgid "Reschedule a command"
+msgstr "重新排程命令"
 
 #: modules/msc/infoPackage.inc.php:176
 msgid "Single command status"
 msgstr "单个命令状态"
 
-#: modules/msc/includes/command_history.php:349
-#: modules/msc/msc/local_proxy.php:208
-msgid "Single with fallback"
-msgstr "单个，带后援"
+#: modules/msc/infoPackage.inc.php:181
+msgid "Show package's details"
+msgstr "显示封装的详情"
+
+#: modules/msc/infoPackage.inc.php:187
+msgid "Launch a command"
+msgstr "启动命令"
+
+#: modules/msc/infoPackage.inc.php:193
+msgid "Launch a advanced command"
+msgstr "启动进阶命令"
+
+#: modules/msc/infoPackage.inc.php:199
+msgid "Software convergence configuration"
+msgstr "软体聚合设定"
+
+#: modules/msc/infoPackage.inc.php:205
+msgid "Launch a quick action command"
+msgstr "启动快速动作命令"
+
+#: modules/msc/infoPackage.inc.php:210 modules/msc/msc/packages.php:29
+msgid "Packages"
+msgstr "封装"
+
+#: modules/msc/infoPackage.inc.php:215
+msgid "Ping and probe"
+msgstr "Ping 和探查"
+
+#: modules/msc/infoPackage.inc.php:220
+msgid "Ping"
+msgstr "Ping"
+
+#: modules/msc/infoPackage.inc.php:225
+msgid "Platform"
+msgstr "平台"
+
+#: modules/msc/infoPackage.inc.php:230
+msgid "MAC Addr."
+msgstr "MAC 位址"
+
+#: modules/msc/infoPackage.inc.php:235
+msgid "IP Addr."
+msgstr "IP 位址"
+
+#: modules/msc/infoPackage.inc.php:240 modules/msc/msc/download_file.php:32
+msgid "Download file page"
+msgstr "下载档案页面"
+
+#: modules/msc/infoPackage.inc.php:245
+msgid "Csv's export"
+msgstr "Csv 格式的汇出"
+
+#: modules/msc/logs/ajaxLogsFilter.php:59
+#: modules/msc/msc/ajaxLogsFilter.php:102
+msgid "Pause"
+msgstr "暂停"
+
+#: modules/msc/logs/ajaxLogsFilter.php:61
+#: modules/msc/logs/ajaxLogsFilter.php:62 modules/msc/logs/viewLogs.php:96
+#: modules/msc/logs/viewLogs.php:114 modules/msc/logs/viewLogs.php:181
+#: modules/msc/logs/viewLogs.php:212 modules/msc/msc/ajaxLogsFilter.php:106
+#: modules/msc/msc/packages.php:44
+msgid "Details"
+msgstr "详情"
+
+#: modules/msc/logs/ajaxLogsFilter.php:84
+#, php-format
+msgid "<a href='' class='bundle' title='%s'>(in bundle %s)</a>"
+msgstr "<a href='' class='bundle' title='%s'>（在套件组合 %s 中）</a>"
+
+#: modules/msc/logs/ajaxLogsFilter.php:87
+#, php-format
+msgid "%s on %s %s"
+msgstr "%s 在 %s %s"
+
+#: modules/msc/logs/ajaxLogsFilter.php:127
+msgid "Date"
+msgstr "日期"
+
+#: modules/msc/logs/ajaxLogsFilter.php:134
+#: modules/msc/logs/ajaxConsultLogsFilter.php:212
+#: modules/msc/msc/ajaxLogsFilter.php:231
+#: modules/msc/msc/ajaxLogsFilter.php:373
+#: modules/msc/msc/package_detail.php:36
+msgid "Command"
+msgstr "命令"
+
+#: modules/msc/logs/ajaxLogsFilter.php:135
+#: modules/msc/msc/ajaxLogsFilter.php:238
+msgid "Current state"
+msgstr "目前状态"
+
+#: modules/msc/logs/all.php:33
+msgid "Show all task logs"
+msgstr "显示所有工作记录档"
+
+#: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
+msgid "Current tasks"
+msgstr "目前工作"
+
+#: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
+msgid "Expired tasks"
+msgstr "已过期的工作"
+
+#: modules/msc/logs/custom.php:33
+msgid "Show custom status task's logs"
+msgstr "显示自订状态工作的记录档"
+
+#: modules/msc/logs/finished.php:33
+msgid "Show all finished task's logs"
+msgstr "显示所有已完成工作的记录档"
+
+#: modules/msc/logs/pending.php:33
+msgid "Show all pending task's logs"
+msgstr "显示所有搁置工作的记录档"
+
+#: modules/msc/logs/running.php:33
+msgid "Show all running task's logs"
+msgstr "显示所有执行中工作的记录档"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:57
+#: modules/msc/logs/ajaxConsultLogsFilter.php:58
+#: modules/msc/msc/ajaxDownloadFile.php:90
+#: modules/msc/msc/ajaxLogsFilter.php:104
+msgid "Status"
+msgstr "状态"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:133
+#: modules/msc/logs/ajaxConsultLogsFilter.php:139
+#: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
+msgid "Package"
+msgstr "封装"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:151
+msgid "Unavailable computer"
+msgstr "不可用的电脑"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:153
+#: modules/msc/logs/ajaxConsultLogsFilter.php:165
+#: modules/msc/logs/ajaxConsultLogsFilter.php:168
+msgid "Machine"
+msgstr "电脑"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:156
+msgid "Unavailable group"
+msgstr "不可用的群组"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:158
+#: modules/msc/logs/ajaxConsultLogsFilter.php:173
+msgid "Group"
+msgstr "群组"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:213
+msgid "Creator"
+msgstr "建立者"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:218
+msgid "Target"
+msgstr "目标"
+
+#: modules/msc/logs/ajaxConsultLogsFilter.php:219
+#: modules/msc/msc/ajaxLogsFilter.php:235
+msgid "Success percent"
+msgstr "成功百分比"
+
+#: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
+#: modules/msc/logs/viewLogs.php:217
+msgid "The group you are working on is empty."
+msgstr "您正在处理的群组是空的。"
+
+#: modules/msc/msc/ajaxDownloadFile.php:34
+msgid "Download file"
+msgstr "下载档案"
+
+#: modules/msc/msc/ajaxDownloadFile.php:35
+msgid "Delete file"
+msgstr "删除档案"
+
+#: modules/msc/msc/ajaxDownloadFile.php:67
+msgid "Downloading"
+msgstr "正在下载"
+
+#: modules/msc/msc/ajaxDownloadFile.php:72
+msgid "Error"
+msgstr "错误"
+
+#: modules/msc/msc/ajaxDownloadFile.php:86
+msgid "Timestamp"
+msgstr "时间戳记"
+
+#: modules/msc/msc/ajaxDownloadFile.php:87
+msgid "From computer"
+msgstr "从电脑"
+
+#: modules/msc/msc/ajaxDownloadFile.php:88
+msgid "File name"
+msgstr "档案名称"
+
+#: modules/msc/msc/ajaxDownloadFile.php:89
+msgid "Length"
+msgstr "长度"
+
+#: modules/msc/msc/ajaxLogsFilter.php:136
+msgid "Can't get bundle for the requested id"
+msgstr "无法为请求的 id 取得套件组合"
+
+#: modules/msc/msc/ajaxLogsFilter.php:140
+#, php-format
+msgid "Bundle #%s"
+msgstr "套件组合 #%s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:282
+#, php-format
+msgid ", using proxy %s"
+msgstr "，使用 proxy %s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:287
+msgid "Pull"
+msgstr "提取"
+
+#: modules/msc/msc/ajaxLogsFilter.php:290
+#: modules/msc/msc/ajaxLogsFilter.php:303
+msgid "Normal"
+msgstr "正常"
+
+#: modules/msc/msc/ajaxLogsFilter.php:294
+#, php-format
+msgid "Multiple, client mode%s"
+msgstr "多重，用户端模式%s"
+
+#: modules/msc/msc/ajaxLogsFilter.php:296
+msgid "Multiple, server mode"
+msgstr "多重，伺服器模式"
 
 #: modules/msc/msc/ajaxLogsFilter.php:299
 #, php-format
@@ -1471,220 +1172,25 @@ msgstr "单个，用户端模式%s"
 msgid "Single, server mode"
 msgstr "单个，伺服器模式"
 
-#: modules/msc/msc/launch.php:362
-#, php-format
-msgid "Software Convergence: action \"%s\" on \"%s\""
-msgstr "软体聚合：动作\"%s\" 在 \"%s\""
+#: modules/msc/msc/ajaxLogsFilter.php:371
+msgid "Mode"
+msgstr "模式"
 
-#: modules/msc/infoPackage.inc.php:199
-msgid "Software convergence configuration"
-msgstr "软体聚合设定"
+#: modules/msc/msc/ajaxLogsFilter.php:375
+msgid "Client"
+msgstr "用户端"
 
-#: modules/msc/includes/command_history.php:409
-msgid "Something goes wrong while checking client identity."
-msgstr "检查用户端身分时发生错误。"
+#: modules/msc/msc/ajaxLogsFilter.php:378
+msgid "Global State"
+msgstr "全域状态"
 
-#: modules/msc/includes/command_history.php:91
-#: modules/msc/includes/command_history.php:147
-#: modules/msc/includes/command_history.php:244
-#: modules/msc/logs/ajaxConsultLogsFilter.php:54
-#: modules/msc/logs/ajaxLogsFilter.php:58
-#: modules/msc/msc/ajaxLogsFilter.php:101
-msgid "Start"
-msgstr "开始"
+#: modules/msc/msc/ajaxLogsFilter.php:380
+msgid "Current step"
+msgstr "目前步骤"
 
-#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:440
-msgid "Start \"Wake On Lan\" query if connection fails"
-msgstr "如果连线失败则启动\"网路唤醒\"查询"
-
-#: modules/msc/msc/msctabsplay.php:127
-#, php-format
-msgid "Start %s %s on host %s"
-msgstr "启动主机 %s 上的 %s %s"
-
-#: modules/msc/msc/msctabsplay.php:125
-#, php-format
-msgid "Start %s %s on this group"
-msgstr "启动此群组上的 %s %s"
-
-#: modules/msc/includes/command_history.php:36
-#: modules/msc/includes/command_history.php:143
-#: modules/msc/includes/command_history.php:182
-#: modules/msc/logs/ajaxConsultLogsFilter.php:215
-#: modules/msc/logs/ajaxLogsFilter.php:131
-#: modules/msc/msc/ajaxLogsFilter.php:233
-#: modules/msc/msc/ajaxLogsFilter.php:368 modules/msc/msc/reschedule.php:43
-msgid "Start date"
-msgstr "开始日期"
-
-#: modules/msc/msc/download_file.php:56
-#, php-format
-msgid "Start download from computer %s"
-msgstr "开始从电脑 %s 下载"
-
-#: modules/msc/includes/command_history.php:187
-msgid "Start execute file"
-msgstr "启动执行档案"
-
-#: modules/msc/includes/bundle_widgets.php:353
-msgid "Start inventory"
-msgstr "开始清查"
-
-#: modules/msc/includes/command_history.php:188
-msgid "Start inventory agent"
-msgstr "启动清查代理程式"
-
-#: modules/msc/msc/launch.php:446
-msgid "Start script"
-msgstr "启动指令码"
-
-#: modules/msc/includes/bundle_widgets.php:351
-msgid "Start the script"
-msgstr "启动指令码"
-
-#: modules/msc/includes/widgets.inc.php:388
-msgid "State filter"
-msgstr "状态筛选器"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:57
-#: modules/msc/logs/ajaxConsultLogsFilter.php:58
-#: modules/msc/msc/ajaxDownloadFile.php:90
-#: modules/msc/msc/ajaxLogsFilter.php:104
-msgid "Status"
-msgstr "状态"
-
-#: modules/msc/includes/command_history.php:540
-msgid "Step"
-msgstr "步骤"
-
-#: modules/msc/includes/command_history.php:497
-msgid "Step log"
-msgstr "步骤记录档"
-
-#: modules/msc/includes/command_history.php:93
-#: modules/msc/includes/command_history.php:148
-#: modules/msc/includes/command_history.php:245
-#: modules/msc/logs/ajaxConsultLogsFilter.php:56
-#: modules/msc/logs/ajaxLogsFilter.php:60
-#: modules/msc/msc/ajaxLogsFilter.php:103
-msgid "Stop"
-msgstr "停止"
-
-#: modules/msc/msc/msctabsstop.php:126
-#, php-format
-msgid "Stop %s %s on host %s"
-msgstr "停止主机 %s 上的 %s %s"
-
-#: modules/msc/msc/msctabsstop.php:124
-#, php-format
-msgid "Stop %s %s on this group"
-msgstr "停止此群组上的 %s %s"
-
-#: modules/msc/infoPackage.inc.php:158
-msgid "Stop a command"
-msgstr "停止命令"
-
-#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/includes/widgets.inc.php:398
-#: modules/msc/msc/ajaxLogsFilter.php:407
-msgid "Stopped"
-msgstr "已停止"
-
-#: modules/msc/msc/msctabsstatus.php:103
-msgid "Stopped: %percent% (%d computers)"
-msgstr "已停止：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:70
-msgid "Stopped: %percent% (%d packages)"
-msgstr "已停止：%percent%（%d 个封装）"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:219
-#: modules/msc/msc/ajaxLogsFilter.php:235
-msgid "Success percent"
-msgstr "成功百分比"
-
-#: modules/msc/msc/msctabsstatus.php:97
-msgid "Success: %percent% (%d computers)"
-msgstr "成功：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:64
-msgid "Success: %percent% (%d packages)"
-msgstr "成功：%percent%（%d 个封装）"
-
-#: modules/msc/infoPackage.inc.php:139
-msgid "Take control of a computer"
-msgstr "控制一台电脑"
-
-#: modules/msc/msc/vnc_client_java.php:173
-#: modules/msc/msc/vnc_client_no_vnc.php:350
-msgid "Take control of this computer"
-msgstr "控制此电脑"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:218
-msgid "Target"
-msgstr "目标"
-
-#: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
-#, php-format
-msgid "Target platform is %s"
-msgstr "目标平台是 %s"
-
-#: modules/msc/msc/launch.php:400 modules/msc/msc/launch.php:499
-msgid "The command must start after"
-msgstr "命令必须在以下时间后启动"
-
-#: modules/msc/msc/launch.php:409 modules/msc/msc/launch.php:508
-msgid "The command must stop before"
-msgstr "命令必须在以下时间前停止"
-
-#: modules/msc/includes/command_history.php:411
-msgid ""
-"The current host IP address doesn't match the IP address from the inventory "
-"database."
-msgstr "目前的主机 IP 位址与来自清查资料库的 IP 位址不相符。"
-
-#: modules/msc/includes/command_history.php:412
-msgid ""
-"The current host MAC address doesn't match the MAC address from the "
-"inventory database."
-msgstr "目前的主机 MAC 位址与来自清查资料库的 MAC 位址不相符。"
-
-#: modules/msc/includes/command_history.php:410
-msgid ""
-"The current host name doesn't match the host name from the inventory "
-"database."
-msgstr "目前的主机名称与来自清查资料库的主机名称不相符。"
-
-#: modules/msc/msc/download_file.php:44
-#: modules/msc/msc/download_file_get.php:28
-msgid "The download has failed."
-msgstr "下载失败。"
-
-#: modules/msc/msc/download_file.php:39
-msgid "The download is in progress."
-msgstr "正在下载。"
-
-#: modules/msc/msc/download_file_remove.php:28
-msgid "The file has been deleted."
-msgstr "档案已被删除。"
-
-#: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
-#: modules/msc/logs/viewLogs.php:217
-msgid "The group you are working on is empty."
-msgstr "您正在处理的群组是空的。"
-
-#: modules/msc/includes/command_history.php:414
-#, php-format
-msgid "The package '%s' is not available on any mirror."
-msgstr "封装 '%s' 在任何镜像上均不可用。"
-
-#: modules/msc/includes/command_history.php:406
-msgid "The script was killed by Pulse 2 (timeout ?)."
-msgstr "指令码已被 Pulse 2 终止（逾时？）。"
-
-#: modules/msc/includes/command_history.php:407
-msgid "The script was terminated by Pulse 2."
-msgstr "指令码被 Pulse 2 终止。"
+#: modules/msc/msc/ajaxLogsFilter.php:419
+msgid "Deploy status"
+msgstr "部署状态"
 
 #: modules/msc/msc/ajaxPackageFilter.php:43
 #, php-format
@@ -1696,245 +1202,395 @@ msgstr "这些套件组合可以安装在电脑 \"%s\" 上"
 msgid "These packages can be installed on group \"%s\""
 msgstr "这些套件组合可以安装在群组 \"%s\" 上"
 
-#: modules/msc/msc/vnc_client_java.php:74
-msgid "This connection will be automatically shut down in 60 minutes."
-msgstr "此连线将在 60 分钟后自动关闭。"
+#: modules/msc/msc/ajaxPackageFilter.php:72
+msgid "Available"
+msgstr "可用"
 
-#: modules/msc/includes/functions.php:55
-msgid "Time Exceeded"
-msgstr "超过时间"
+#: modules/msc/msc/ajaxPackageFilter.php:74
+msgid "Active"
+msgstr "作用中"
 
-#: modules/msc/msc/ajaxDownloadFile.php:86
-msgid "Timestamp"
-msgstr "时间戳记"
+#: modules/msc/msc/ajaxPackageFilter.php:76
+msgid "Inactive"
+msgstr "非作用中"
 
-#: modules/msc/includes/functions.php:56
-msgid "To do"
-msgstr "待执行"
+#: modules/msc/msc/ajaxPackageFilter.php:79
+msgid "Not available"
+msgstr "不可用"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:231
-msgid "Unable to reach remote host"
-msgstr "无法连线远端主机"
+#: modules/msc/msc/ajaxPackageFilter.php:89
+#: modules/msc/msc/ajaxPackageFilter.php:159
+msgid "Convergence"
+msgstr "聚合"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:151
-msgid "Unavailable computer"
-msgstr "不可用的电脑"
-
-#: modules/msc/logs/ajaxConsultLogsFilter.php:156
-msgid "Unavailable group"
-msgstr "不可用的群组"
-
-#: modules/msc/includes/functions.php:316
-msgid "Upload"
-msgstr "上传"
-
-#: modules/msc/msc/msctabsstatus.php:147
-msgid "Upload Failed: %percent% (%d computers)"
-msgstr "上传失败：%percent%（%d 台电脑）"
-
-#: modules/msc/msc/msctabsstatus.php:148
-msgid "Upload Failed: %percent% (%d packages)"
-msgstr "上传失败：%percent%（%d 个封装）"
-
-#: modules/msc/includes/functions.php:26
-msgid "Upload done"
-msgstr "上传完成"
-
-#: modules/msc/includes/functions.php:27
-msgid "Upload failed"
-msgstr "上传失败"
-
-#: modules/msc/includes/functions.php:25
-msgid "Upload in progress"
-msgstr "正在上传"
-
-#: modules/msc/includes/command_history.php:184
-msgid "User command creator"
-msgstr "使用者命令建立者"
-
-#: modules/msc/includes/command_history.php:55
-#: modules/msc/includes/command_history.php:207
-#: modules/msc/msc/package_detail.php:40
-msgid "Value"
-msgstr "值"
+#: modules/msc/msc/ajaxPackageFilter.php:155
+msgid "Description"
+msgstr "说明"
 
 #: modules/msc/msc/ajaxPackageFilter.php:156
 #: modules/msc/msc/package_detail.php:36 modules/msc/msc/packages.php:41
 msgid "Version"
 msgstr "版本"
 
-#: modules/msc/includes/functions.php:40
-msgid "WOL request being sent"
-msgstr "正在传送 WOL 请求"
+#: modules/msc/msc/ajaxPackageFilter.php:157
+msgid "Package size"
+msgstr "封装大小"
 
-#: modules/msc/includes/functions.php:42
-msgid "WOL request has been sent"
-msgstr "WOL 请求已传送"
+#: modules/msc/msc/ajaxPackageFilter.php:170
+msgid "Advanced launch"
+msgstr "进阶启动"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:228
-msgid "Waiting for user approval"
-msgstr "等候使用者核准"
+#: modules/msc/msc/ajaxPackageFilter.php:171
+msgid "Direct launch"
+msgstr "直接启动"
 
-#: modules/msc/includes/functions.php:315
-msgid "Wake on LAN"
-msgstr "网路唤醒"
+#: modules/msc/msc/ajaxPing.php:33
+msgid ""
+"Connection was refused by the other side while trying to ping the machine"
+msgstr "尝试 ping 电脑时连线被对方拒绝"
 
-#: modules/msc/includes/bundle_widgets.php:350
-msgid "Wake on lan"
-msgstr "网路唤醒"
+#: modules/msc/msc/ajaxPingProbe.php:37 modules/msc/msc/ajaxPingProbe.php:50
+#: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
+msgid ""
+"Connection was refused by the other side while trying to probe the machine"
+msgstr "尝试探查电脑时连线被对方拒绝"
 
-#: modules/msc/includes/functions.php:318
-msgid "Windows Update parse"
-msgstr "Windows 更新剖析"
+#: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
+#: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
+msgid "Error scheduler-side !"
+msgstr "排程器端错误！"
 
-#: modules/msc/includes/functions.php:60
-msgid "Work in progress"
-msgstr "正在进行工作"
+#: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
+msgid "Ping failed"
+msgstr "Ping 失败"
 
-#: modules/msc/includes/command_history.php:591
-msgid "Y-m-d H:i:s"
-msgstr "年-月-日 时:分:秒"
+#: modules/msc/msc/ajaxPingProbe.php:45
+msgid "Ping succeeded"
+msgstr "Ping 成功"
 
-#: modules/msc/includes/widgets.inc.php:117
-msgid "You don't have the right permissions to display this command"
-msgstr "您没有显示此命令的正确权限"
+#: modules/msc/msc/ajaxPingProbe.php:55
+msgid "SSH connection failed"
+msgstr "SSH 连线失败"
 
-#: modules/msc/msc/launch.php:84
-msgid "Your start and end dates are not coherent, please check them.<br/>"
-msgstr "您的开始和结束日期不相连贯，请检查。<br/>"
+#: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
+#, php-format
+msgid "Target platform is %s"
+msgstr "目标平台是 %s"
+
+#: modules/msc/msc/ajaxPingProbe.php:77
+msgid "Ping succeeded, SSH connection failed"
+msgstr "Ping 成功，SSH 连线失败"
+
+#: modules/msc/msc/ajaxPingProbe.php:85
+msgid "No probe performed"
+msgstr "未执行探查"
+
+#: modules/msc/msc/connection_error.php:24
+msgid "Remote control of :"
+msgstr "远端控制："
+
+#: modules/msc/msc/download_file.php:39
+msgid "The download is in progress."
+msgstr "正在下载。"
+
+#: modules/msc/msc/download_file.php:42
+msgid "A file is already being downloaded."
+msgstr "已经在下载一个档案。"
+
+#: modules/msc/msc/download_file.php:44
+#: modules/msc/msc/download_file_get.php:28
+msgid "The download has failed."
+msgstr "下载失败。"
+
+#: modules/msc/msc/download_file.php:54
+msgid ""
+"Click below to start downloading file from this computer. Warning: the "
+"download may last a long time"
+msgstr "在下方按一下以开始从此电脑下载档案。警告：下载可能持续较长时间"
+
+#: modules/msc/msc/download_file.php:56
+#, php-format
+msgid "Start download from computer %s"
+msgstr "开始从电脑 %s 下载"
+
+#: modules/msc/msc/download_file_remove.php:28
+msgid "The file has been deleted."
+msgstr "档案已被删除。"
+
+#: modules/msc/msc/download_file_remove.php:32
+msgid "Please confirm file deletion"
+msgstr "请确认档案删除"
+
+#: modules/msc/msc/localSidebar.php:27
+msgid "Repository"
+msgstr "存放库"
 
 #: modules/msc/msc/msctabspause.php:119 modules/msc/msc/msctabsplay.php:120
 #: modules/msc/msc/msctabsstop.php:119
 msgid "action"
 msgstr "动作"
 
-#: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
-msgid "are"
-msgstr "是"
-
-#: modules/msc/includes/bundle_widgets.php:304
-msgid "awake"
-msgstr "唤醒"
-
-#: modules/msc/includes/command_history.php:553
-msgid "bit/s"
-msgstr "bit/s"
-
 #: modules/msc/msc/msctabspause.php:121 modules/msc/msc/msctabsplay.php:122
 #: modules/msc/msc/msctabsstop.php:121
 msgid "bundle"
 msgstr "套件组合"
 
-#: modules/msc/msc/statuscsv.php:119
-msgid "computers failed to deploy"
-msgstr "电脑无法部署"
+#: modules/msc/msc/msctabspause.php:124
+#, php-format
+msgid "Pause %s %s on this group"
+msgstr "暂停此群组上的 %s %s"
 
-#: modules/msc/msc/statuscsv.php:108
-msgid "computers out of the valid period"
-msgstr "电脑超出有效期间"
+#: modules/msc/msc/msctabspause.php:126
+#, php-format
+msgid "Pause %s %s on host %s"
+msgstr "暂停主机 %s 上的 %s %s"
 
-#: modules/msc/msc/statuscsv.php:107
-msgid "computers paused"
-msgstr "电脑已暂停"
+#: modules/msc/msc/msctabsplay.php:125
+#, php-format
+msgid "Start %s %s on this group"
+msgstr "启动此群组上的 %s %s"
 
-#: modules/msc/msc/statuscsv.php:109
-msgid "computers running a deployment"
-msgstr "电脑正在执行部署"
+#: modules/msc/msc/msctabsplay.php:127
+#, php-format
+msgid "Start %s %s on host %s"
+msgstr "启动主机 %s 上的 %s %s"
 
-#: modules/msc/msc/statuscsv.php:106
-msgid "computers stopped"
-msgstr "电脑已停止"
-
-#: modules/msc/msc/statuscsv.php:105
-msgid "computers successfully deployed"
-msgstr "已成功部署电脑"
-
-#: modules/msc/infoPackage.inc.php:74
-msgid "consolidated logs list"
-msgstr "合并的记录档清单"
-
-#: modules/msc/msc/statuscsv.php:93
-msgid "current state"
-msgstr "目前状态"
+#: modules/msc/msc/msctabssinglestatus.php:33
+#, php-format
+msgid "Command '%s' state concerning <b>%s</b>"
+msgstr "命令 '%s' 状态有关 <b>%s</b>"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
-msgid "deleted"
-msgstr "已删除"
-
-#: modules/msc/includes/command_history.php:365
-msgid "disable"
-msgstr "停用"
-
-#: modules/msc/includes/command_history.php:366
-msgid "done"
-msgstr "完成"
-
-#: modules/msc/includes/command_history.php:364
-msgid "enable"
-msgstr "启用"
-
-#: modules/msc/msc/statuscsv.php:95
-msgid "end date"
-msgstr "结束日期"
-
-#: modules/msc/msc/msctabssinglestatus.php:47
-msgid "error : cmd_id must be given"
-msgstr "错误：必须提供 cmd_id"
-
-#: modules/msc/msc/msctabsstatus.php:54
-msgid "error : cmd_id or bundle_id must be given"
-msgstr "错误：必须提供 cmd_id 或 bundle_id"
-
-#: modules/msc/msc/msctabsstatus.php:41
-msgid "error : the bundle_id given does not exists in the database."
-msgstr "错误：提供的 bundle_id 在资料库中不存在。"
+msgid "uploaded"
+msgstr "已上传"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "executed"
 msgstr "已执行"
 
-#: modules/msc/msc/msctabsstatus.php:139
-msgid "executing"
-msgstr "正在执行"
+#: modules/msc/msc/msctabssinglestatus.php:38
+msgid "deleted"
+msgstr "已删除"
 
-#: modules/msc/includes/command_history.php:367
-msgid "failed"
-msgstr "失败"
+#: modules/msc/msc/msctabssinglestatus.php:47
+msgid "error : cmd_id must be given"
+msgstr "错误：必须提供 cmd_id"
 
-#: modules/msc/msc/msctabsstatus.php:161
-msgid "failed during awake"
-msgstr "唤醒时失败"
-
-#: modules/msc/msc/msctabsstatus.php:149 modules/msc/msc/statuscsv.php:122
-msgid "failed during execution"
-msgstr "执行时失败"
-
-#: modules/msc/msc/msctabsstatus.php:167
-msgid "failed during halt"
-msgstr "终止时失败"
-
-#: modules/msc/msc/msctabsstatus.php:155
-msgid "failed during inventory"
-msgstr "清查时失败"
-
-#: modules/msc/msc/msctabsstatus.php:164
-msgid "failed during reboot"
-msgstr "重新开机时失败"
-
-#: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/statuscsv.php:124
-msgid "failed during suppression"
-msgstr "隐藏时失败"
-
-#: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/statuscsv.php:120
-msgid "failed during upload"
-msgstr "上传时失败"
-
-#: modules/msc/includes/widgets.inc.php:74
+#: modules/msc/msc/msctabsstatus.php:33
 #, php-format
-msgid ""
-"group \"%s\" is not defined in the MSC module, or you don't have permissions "
-"to access it"
-msgstr "群组 \"%s\" 在 MSC 模组中未定义，或您没有其存取权限"
+msgid "Command '%s' state concerning <b>one</b> computer"
+msgstr "命令 '%s' 状态有关<b>一</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:35
+#, php-format
+msgid "Command '%s' state concerning <b>%s</b> computers"
+msgstr "命令 '%s' 状态有关 <b>%s</b> 台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:41
+msgid "error : the bundle_id given does not exists in the database."
+msgstr "错误：提供的 bundle_id 在资料库中不存在。"
+
+#: modules/msc/msc/msctabsstatus.php:46
+#, php-format
+msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
+msgstr "套件组合 '%s' 状态有关<b>一</b>台电脑上的<b>一</b>个命令"
+
+#: modules/msc/msc/msctabsstatus.php:47
+#, php-format
+msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
+msgstr "套件组合 '%s' 状态有关<b>%s</b>台电脑上的<b>一个</b>命令"
+
+#: modules/msc/msc/msctabsstatus.php:49
+#, php-format
+msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
+msgstr "套件组合 '%s' 状态有关<b>一</b>台电脑上的<b>%s</b>个命令"
+
+#: modules/msc/msc/msctabsstatus.php:50
+#, php-format
+msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
+msgstr "套件组合 '%s' 状态有关<b>%s</b>台电脑上的<b>%s</b>个命令"
+
+#: modules/msc/msc/msctabsstatus.php:54
+msgid "error : cmd_id or bundle_id must be given"
+msgstr "错误：必须提供 cmd_id 或 bundle_id"
+
+#: modules/msc/msc/msctabsstatus.php:61
+msgid "<b>No</b> package installation was successful"
+msgstr "未成功安装<b>任何</b>封装"
+
+#: modules/msc/msc/msctabsstatus.php:62
+msgid "<b>One</b> package installation was successful"
+msgstr "成功安装<b>一</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:63
+#, php-format
+msgid "<b>%s</b> packages installation were successful"
+msgstr "成功安装<b>%s</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:64
+msgid "Success: %percent% (%d packages)"
+msgstr "成功：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:67
+msgid "<b>No</b> package installation is stopped"
+msgstr "未停止安装<b>任何</b>封装"
+
+#: modules/msc/msc/msctabsstatus.php:68
+msgid "<b>One</b> package installation is stopped"
+msgstr "停止安装<b>一</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:69
+#, php-format
+msgid "<b>%s</b> packages installation are stopped"
+msgstr "停止安装<b>%s</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:70
+msgid "Stopped: %percent% (%d packages)"
+msgstr "已停止：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:73
+msgid "<b>No</b> package installation is paused"
+msgstr "未暂停安装<b>任何</b>封装"
+
+#: modules/msc/msc/msctabsstatus.php:74
+msgid "<b>One</b> package installation is paused"
+msgstr "暂停安装<b>一</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:75
+#, php-format
+msgid "<b>%s</b> packages installation are paused"
+msgstr "暂停安装<b>%s</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:76
+msgid "Paused: %percent% (%d packages)"
+msgstr "已暂停：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:79
+msgid "<b>No</b> package installation is in progress"
+msgstr "未正在安装<b>任何</b>封装"
+
+#: modules/msc/msc/msctabsstatus.php:80
+msgid "<b>One</b> package installation is in progress"
+msgstr "正在安装<b>一</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:81
+#, php-format
+msgid "<b>%s</b> packages installation are in progress"
+msgstr "正在安装<b>%s</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:82
+msgid "In progress: %percent% (%d packages)"
+msgstr "正在进行：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:85
+msgid "<b>No</b> package installation failed"
+msgstr "未正在安装<b>任何</b>封装"
+
+#: modules/msc/msc/msctabsstatus.php:86
+msgid "<b>One</b> package installation failed"
+msgstr "正在安装<b>一</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:87
+#, php-format
+msgid "<b>%s</b> packages installation failed"
+msgstr "正在安装<b>%s</b>个封装"
+
+#: modules/msc/msc/msctabsstatus.php:88
+msgid "Failed: %percent% (%d packages)"
+msgstr "失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:94
+msgid "<b>No</b> computer was successfully deployed"
+msgstr "未成功部署<b>任何</b>电脑"
+
+#: modules/msc/msc/msctabsstatus.php:95
+msgid "<b>One</b> computer was successfully deployed"
+msgstr "成功部署<b>一</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:96
+#, php-format
+msgid "<b>%s</b> computers were successfully deployed"
+msgstr "成功部署<b>%s</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:97
+msgid "Success: %percent% (%d computers)"
+msgstr "成功：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:100
+msgid "<b>No</b> computer is stopped"
+msgstr "未停止<b>任何</b>电脑"
+
+#: modules/msc/msc/msctabsstatus.php:101
+msgid "<b>One</b> computer is stopped"
+msgstr "已停止<b>一</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:102
+#, php-format
+msgid "<b>%s</b> computers are stopped"
+msgstr "已停止<b>%s</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:103
+msgid "Stopped: %percent% (%d computers)"
+msgstr "已停止：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:106
+msgid "<b>No</b> computer is paused"
+msgstr "未暂停<b>任何</b>电脑"
+
+#: modules/msc/msc/msctabsstatus.php:107
+msgid "<b>One</b> computer is paused"
+msgstr "已暂停<b>一</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:108
+#, php-format
+msgid "<b>%s</b> computers are paused"
+msgstr "已暂停<b>%s</b>台电脑"
+
+#: modules/msc/msc/msctabsstatus.php:109
+msgid "Paused: %percent% (%d computers)"
+msgstr "已暂停：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:112
+msgid "<b>No</b> computer is running a deployment"
+msgstr "没有<b>任何</b>电脑正在执行部署"
+
+#: modules/msc/msc/msctabsstatus.php:113
+msgid "<b>One</b> computer is running a deployment"
+msgstr "<b>一</b>台电脑正在执行部署"
+
+#: modules/msc/msc/msctabsstatus.php:114
+#, php-format
+msgid "<b>%s</b> computers are running a deployment"
+msgstr "<b>%s</b>台电脑正在执行部署"
+
+#: modules/msc/msc/msctabsstatus.php:115
+msgid "In progress: %percent% (%d computers)"
+msgstr "正在进行：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:118
+msgid "<b>No</b> computer failed to deploy"
+msgstr "没有<b>任何</b>电脑部署失败"
+
+#: modules/msc/msc/msctabsstatus.php:119
+msgid "<b>One</b> computer failed to deploy"
+msgstr "<b>一</b>台电脑部署失败"
+
+#: modules/msc/msc/msctabsstatus.php:120
+#, php-format
+msgid "<b>%s</b> computers failed to deploy"
+msgstr "<b>%s</b>台电脑部署失败"
+
+#: modules/msc/msc/msctabsstatus.php:121
+msgid "Failed: %percent% (%d computers)"
+msgstr "失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
+msgid "is"
+msgstr "是"
+
+#: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
+msgid "are"
+msgstr "是"
 
 #: modules/msc/msc/msctabsstatus.php:128
 msgid "has"
@@ -1944,103 +1600,430 @@ msgstr "有"
 msgid "have"
 msgstr "有"
 
-#: modules/msc/msc/statuscsv.php:92
-msgid "host"
-msgstr "主机"
+#: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/statuscsv.php:110
+msgid "waiting to upload"
+msgstr "等候上传"
 
-#: modules/msc/includes/bundle_widgets.php:306
-msgid "invent."
-msgstr "发明家"
+#: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/msctabsstatus.php:138
+#: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/msctabsstatus.php:142
+#, php-format
+msgid "(with %s already try)"
+msgstr "（其中 %s 已经尝试）"
 
-#: modules/msc/msc/msctabsstatus.php:143
-msgid "inventoring"
-msgstr "正在清查"
+#: modules/msc/msc/msctabsstatus.php:137
+msgid "uploading"
+msgstr "上传"
 
-#: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
-msgid "is"
-msgstr "是"
+#: modules/msc/msc/msctabsstatus.php:138 modules/msc/msc/statuscsv.php:113
+msgid "waiting to execute"
+msgstr "等候执行"
 
-#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:250
-#: modules/msc/infoPackage.inc.php:255
-msgid "logs list"
-msgstr "记录档清单"
-
-#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:250
-msgid "never"
-msgstr "永不"
-
-#: modules/msc/includes/command_history.php:481
-#: modules/msc/includes/command_history.php:512
-msgid "next attempt"
-msgstr "下次尝试"
-
-#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:247
-msgid "now"
-msgstr "现在"
-
-#: modules/msc/msc/msctabsstatus.php:158
-msgid "out of the valid period of execution"
-msgstr "超出有效执行期间"
-
-#: modules/msc/includes/command_history.php:369
-msgid "out_of_interval"
-msgstr "out_of_interval"
-
-#: modules/msc/includes/command_history.php:368
-msgid "over_time"
-msgstr "over_time"
-
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:548
-msgid "push"
-msgstr "推入"
-
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:548
-msgid "push / pull"
-msgstr "推入／提取"
-
-#: modules/msc/msc/vnc_client_no_vnc.php:232
-msgid "reason"
-msgstr "原因"
-
-#: modules/msc/msc/statuscsv.php:115
-msgid "running execution"
+#: modules/msc/msc/msctabsstatus.php:139
+msgid "executing"
 msgstr "正在执行"
 
-#: modules/msc/msc/statuscsv.php:118
-msgid "running suppression"
-msgstr "正在执行隐藏"
-
-#: modules/msc/msc/statuscsv.php:112
-msgid "running upload"
-msgstr "正在执行上传"
-
-#: modules/msc/msc/statuscsv.php:94
-msgid "start date"
-msgstr "开始日期"
+#: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/statuscsv.php:116
+msgid "waiting to suppress"
+msgstr "等候隐藏"
 
 #: modules/msc/msc/msctabsstatus.php:141
 msgid "suppressing"
 msgstr "正在隐藏"
 
-#: modules/msc/infoPackage.inc.php:77
-msgid "the state list"
-msgstr "状态清单"
+#: modules/msc/msc/msctabsstatus.php:142
+msgid "waiting to inventory"
+msgstr "等候清查"
+
+#: modules/msc/msc/msctabsstatus.php:143
+msgid "inventoring"
+msgstr "正在清查"
+
+#: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/statuscsv.php:120
+msgid "failed during upload"
+msgstr "上传时失败"
+
+#: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/msctabsstatus.php:149
+#: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/msctabsstatus.php:155
+#, php-format
+msgid "(with %s being unreachable)"
+msgstr "（其中 %s 无法连线）"
+
+#: modules/msc/msc/msctabsstatus.php:147
+msgid "Upload Failed: %percent% (%d computers)"
+msgstr "上传失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:148
+msgid "Upload Failed: %percent% (%d packages)"
+msgstr "上传失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:149 modules/msc/msc/statuscsv.php:122
+msgid "failed during execution"
+msgstr "执行时失败"
+
+#: modules/msc/msc/msctabsstatus.php:150
+msgid "Execution Failed: %percent% (%d computers)"
+msgstr "执行失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:151
+msgid "Execution Failed: %percent% (%d packages)"
+msgstr "执行失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/statuscsv.php:124
+msgid "failed during suppression"
+msgstr "隐藏时失败"
+
+#: modules/msc/msc/msctabsstatus.php:153
+msgid "Delete Failed: %percent% (%d computers)"
+msgstr "删除失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:154
+msgid "Delete Failed: %percent% (%d packages)"
+msgstr "删除失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:155
+msgid "failed during inventory"
+msgstr "清查时失败"
+
+#: modules/msc/msc/msctabsstatus.php:156
+msgid "Inventory Failed: %percent% (%d computers)"
+msgstr "清查失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:157
+msgid "Inventory Failed: %percent% (%d packages)"
+msgstr "清查失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:158
+msgid "out of the valid period of execution"
+msgstr "超出有效执行期间"
+
+#: modules/msc/msc/msctabsstatus.php:159
+msgid "Over-timed: %percent% (%d computers)"
+msgstr "已逾时：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:160
+msgid "Over-timed: %percent% (%d packages)"
+msgstr "已逾时：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:161
+msgid "failed during awake"
+msgstr "唤醒时失败"
+
+#: modules/msc/msc/msctabsstatus.php:162
+msgid "Awake Failed: %percent% (%d computers)"
+msgstr "唤醒失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:163
+msgid "Awake Failed: %percent% (%d packages)"
+msgstr "唤醒失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:164
+msgid "failed during reboot"
+msgstr "重新开机时失败"
+
+#: modules/msc/msc/msctabsstatus.php:165
+msgid "Reboot Failed: %percent% (%d computers)"
+msgstr "重新开机失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:166
+msgid "Reboot Failed: %percent% (%d packages)"
+msgstr "重新开机失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:167
+msgid "failed during halt"
+msgstr "终止时失败"
+
+#: modules/msc/msc/msctabsstatus.php:168
+msgid "Halt Failed: %percent% (%d computers)"
+msgstr "终止失败：%percent%（%d 台电脑）"
+
+#: modules/msc/msc/msctabsstatus.php:169
+msgid "Halt Failed: %percent% (%d packages)"
+msgstr "终止失败：%percent%（%d 个封装）"
+
+#: modules/msc/msc/msctabsstatus.php:277
+msgid "One"
+msgstr "一"
+
+#: modules/msc/msc/msctabsstop.php:124
+#, php-format
+msgid "Stop %s %s on this group"
+msgstr "停止此群组上的 %s %s"
+
+#: modules/msc/msc/msctabsstop.php:126
+#, php-format
+msgid "Stop %s %s on host %s"
+msgstr "停止主机 %s 上的 %s %s"
+
+#: modules/msc/msc/package_detail.php:36
+msgid "Label"
+msgstr "标签"
+
+#: modules/msc/msc/reschedule.php:40
+msgid "Reschedule this command"
+msgstr "重新排程此命令"
+
+#: modules/msc/msc/reschedule.php:44
+msgid "<br/>End date"
+msgstr "<br/>结束日期"
+
+#: modules/msc/msc/start_quick_action.php:100
+msgid "Failed to retrieve this quick action."
+msgstr "无法撷取此快速动作。"
+
+#: modules/msc/msc/start_quick_action.php:136
+msgid "Please confirm you really want to perform this action"
+msgstr "请确认您真的要执行此动作"
+
+#: modules/msc/msc/start_quick_action.php:138
+msgid "Advanced"
+msgstr "进阶"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:57
+#: modules/msc/msc/vnc_client_java.php:46
+msgid "Connection Failed !"
+msgstr "连线失败！"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:59
+#: modules/msc/msc/vnc_client_java.php:48
+msgid "Connection was refused by the other side."
+msgstr "连线被对方拒绝。"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:136
+#, php-format
+msgid ""
+"An HTTP Proxy has been detected. Try disabling proxy for local addresses in "
+"your browser settings or add Pulse Server address (%s) to the excluded hosts"
+" list."
+msgstr ""
+"侦测到一个 HTTP Proxy。请尝试在您的浏览器设定中停用本机位址的 proxy 或新增 Pulse 伺服器位址 (%s) 至排除的主机清单。"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:150
+msgid "Send Ctrl+Alt+Del"
+msgstr "传送 Ctrl+Alt+Del"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:154
+msgid "Send text to clipboard"
+msgstr "传送文字至剪贴簿"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:221
+msgid "Connecting ..."
+msgstr "正在连线..."
 
 #: modules/msc/msc/vnc_client_no_vnc.php:226
 msgid "through SSH tunnel"
 msgstr "透过 SSH 通道"
 
-#: modules/msc/msc/statuscsv.php:103
-msgid "title"
-msgstr "标题"
+#: modules/msc/msc/vnc_client_no_vnc.php:227
+msgid "Connection failed"
+msgstr "连线失败"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:228
+msgid "Waiting for user approval"
+msgstr "等候使用者核准"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:229
+msgid "Password Required"
+msgstr "需要密码"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:230
+msgid "Host rejected connection"
+msgstr "主机拒绝的连线"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:231
+msgid "Unable to reach remote host"
+msgstr "无法连线远端主机"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:232
+msgid "reason"
+msgstr "原因"
+
+#: modules/msc/msc/vnc_client_no_vnc.php:233
+msgid "Connected"
+msgstr "已连线"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
 msgstr "至"
 
+#: modules/msc/msc/vnc_client_no_vnc.php:350
+#: modules/msc/msc/vnc_client_java.php:173
+msgid "Take control of this computer"
+msgstr "控制此电脑"
+
+#: modules/msc/msc/local_proxy.php:68
+msgid "Random (indicate number of proxies) : "
+msgstr "随机（指出 proxy 数目）"
+
+#: modules/msc/msc/local_proxy.php:74
+msgid "Or designate the proxies manually below : "
+msgstr "或在下方手动指定 proxy："
+
+#: modules/msc/msc/local_proxy.php:79
+msgid "Computers in this command"
+msgstr "此命令中的电脑"
+
+#: modules/msc/msc/local_proxy.php:99
+msgid "Local proxies"
+msgstr "本机 proxy"
+
+#: modules/msc/msc/local_proxy.php:217
+msgid "Local Proxy Mode"
+msgstr "本机 Proxy 模式"
+
+#: modules/msc/msc/local_proxy.php:226
+msgid "Maximum number of simultaneous connections to a proxy"
+msgstr "与一个 proxy 的最大同时连线数"
+
+#: modules/msc/msc/local_proxy.php:248
+msgid "Local proxies selection"
+msgstr "本机 proxy 选择"
+
+#: modules/msc/msc/launch.php:84
+msgid "Your start and end dates are not coherent, please check them.<br/>"
+msgstr "您的开始和结束日期不相连贯，请检查。<br/>"
+
+#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:247
+msgid "now"
+msgstr "现在"
+
+#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:250
+msgid "never"
+msgstr "永不"
+
+#: modules/msc/msc/launch.php:352
+#, php-format
+msgid "Single advanced launch : action \"%s\" on \"%s\""
+msgstr "单次进阶启动：动作 \"%s\" 在 \"%s\""
+
+#: modules/msc/msc/launch.php:362
+#, php-format
+msgid "Software Convergence: action \"%s\" on \"%s\""
+msgstr "软体聚合：动作\"%s\" 在 \"%s\""
+
+#: modules/msc/msc/launch.php:365
+#, php-format
+msgid "Group Advanced launch : action \"%s\" on \"%s\""
+msgstr "群组进阶启动：动作 \"%s\" 在 \"%s\""
+
+#: modules/msc/msc/launch.php:400 modules/msc/msc/launch.php:499
+msgid "The command must start after"
+msgstr "命令必须在以下时间后启动"
+
+#: modules/msc/msc/launch.php:409 modules/msc/msc/launch.php:508
+msgid "The command must stop before"
+msgstr "命令必须在以下时间前停止"
+
+#: modules/msc/msc/launch.php:434
+msgid "Script parameters"
+msgstr "指令码参数"
+
+#: modules/msc/msc/launch.php:446
+msgid "Start script"
+msgstr "启动指令码"
+
+#: modules/msc/msc/launch.php:458
+msgid "Do an inventory after a successful execution"
+msgstr "在成功执行后进行清查"
+
+#: modules/msc/msc/launch.php:464
+msgid "Reboot client"
+msgstr "重新开机用户端"
+
+#: modules/msc/msc/launch.php:470
+msgid "Halt client"
+msgstr "终止用户端"
+
+#: modules/msc/msc/launch.php:485
+msgid "Convergence is active"
+msgstr "聚合在作用中"
+
+#: modules/msc/msc/launch.php:524
+msgid "Example for lunch and night (24h format): 12-14,20-8"
+msgstr "午餐和夜晚的範例（24 小时制）：12-14,20-8"
+
+#: modules/msc/msc/launch.php:580
+msgid "Probe status"
+msgstr "探查状态"
+
+#: modules/msc/msc/statuscsv.php:91
+msgid "uuid"
+msgstr "uuid"
+
+#: modules/msc/msc/statuscsv.php:92
+msgid "host"
+msgstr "主机"
+
+#: modules/msc/msc/statuscsv.php:93
+msgid "current state"
+msgstr "目前状态"
+
+#: modules/msc/msc/statuscsv.php:94
+msgid "start date"
+msgstr "开始日期"
+
+#: modules/msc/msc/statuscsv.php:95
+msgid "end date"
+msgstr "结束日期"
+
+#: modules/msc/msc/statuscsv.php:103
+msgid "title"
+msgstr "标题"
+
 #: modules/msc/msc/statuscsv.php:104
 msgid "total"
 msgstr "总计"
+
+#: modules/msc/msc/statuscsv.php:105
+msgid "computers successfully deployed"
+msgstr "已成功部署电脑"
+
+#: modules/msc/msc/statuscsv.php:106
+msgid "computers stopped"
+msgstr "电脑已停止"
+
+#: modules/msc/msc/statuscsv.php:107
+msgid "computers paused"
+msgstr "电脑已暂停"
+
+#: modules/msc/msc/statuscsv.php:108
+msgid "computers out of the valid period"
+msgstr "电脑超出有效期间"
+
+#: modules/msc/msc/statuscsv.php:109
+msgid "computers running a deployment"
+msgstr "电脑正在执行部署"
+
+#: modules/msc/msc/statuscsv.php:111
+msgid "waiting to upload and already try"
+msgstr "等候上传并已经尝试"
+
+#: modules/msc/msc/statuscsv.php:112
+msgid "running upload"
+msgstr "正在执行上传"
+
+#: modules/msc/msc/statuscsv.php:114
+msgid "waiting to execute and already try"
+msgstr "等候执行并已经尝试"
+
+#: modules/msc/msc/statuscsv.php:115
+msgid "running execution"
+msgstr "正在执行"
+
+#: modules/msc/msc/statuscsv.php:117
+msgid "waiting to suppress and already try"
+msgstr "等候隐藏并已经尝试"
+
+#: modules/msc/msc/statuscsv.php:118
+msgid "running suppression"
+msgstr "正在执行隐藏"
+
+#: modules/msc/msc/statuscsv.php:119
+msgid "computers failed to deploy"
+msgstr "电脑无法部署"
+
+#: modules/msc/msc/statuscsv.php:121
+msgid "unreachable during upload"
+msgstr "上传时无法连线"
 
 #: modules/msc/msc/statuscsv.php:123
 msgid "unreachable during execution"
@@ -2050,46 +2033,60 @@ msgstr "执行时无法连线"
 msgid "unreachable during suppression"
 msgstr "隐藏时无法连线"
 
-#: modules/msc/msc/statuscsv.php:121
-msgid "unreachable during upload"
-msgstr "上传时无法连线"
+#: modules/msc/msc/tabs.php:49 modules/msc/msc/tabs.php:58
+#, php-format
+msgid "%s's computer secure control"
+msgstr "%s 的电脑安全控制"
 
-#: modules/msc/msc/msctabssinglestatus.php:38
-msgid "uploaded"
-msgstr "已上传"
+#: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:75
+msgid "Launch Actions"
+msgstr "启动动作"
 
-#: modules/msc/msc/msctabsstatus.php:137
-msgid "uploading"
-msgstr "上传"
+#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:76
+msgid "Launch Bundle"
+msgstr "启动套件组合"
 
-#: modules/msc/msc/statuscsv.php:91
-msgid "uuid"
-msgstr "uuid"
+#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:78
+msgid "Logs"
+msgstr "记录档"
 
-#: modules/msc/msc/msctabsstatus.php:138 modules/msc/msc/statuscsv.php:113
-msgid "waiting to execute"
-msgstr "等候执行"
+#: modules/msc/msc/tabs.php:73
+#, php-format
+msgid "%s's group secure control"
+msgstr "%s 的群组安全控制"
 
-#: modules/msc/msc/statuscsv.php:114
-msgid "waiting to execute and already try"
-msgstr "等候执行并已经尝试"
+#: modules/msc/msc/tabs.php:85
+msgid "Not enough information"
+msgstr "资讯不足"
 
-#: modules/msc/msc/msctabsstatus.php:142
-msgid "waiting to inventory"
-msgstr "等候清查"
+#: modules/msc/msc/vnc_client_java.php:72
+msgid "Connection Succeeded !"
+msgstr "连线成功！"
 
-#: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/statuscsv.php:116
-msgid "waiting to suppress"
-msgstr "等候隐藏"
+#: modules/msc/msc/vnc_client_java.php:74
+msgid "This connection will be automatically shut down in 60 minutes."
+msgstr "此连线将在 60 分钟后自动关闭。"
 
-#: modules/msc/msc/statuscsv.php:117
-msgid "waiting to suppress and already try"
-msgstr "等候隐藏并已经尝试"
+#: modules/msc/msc/vnc_client_java.php:76
+msgid "Please close this windows when you are done."
+msgstr "请在完成后关闭此视窗。"
 
-#: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/statuscsv.php:110
-msgid "waiting to upload"
-msgstr "等候上传"
+#: modules/msc/msc/vnc_client_java.php:169
+msgid ""
+"Java Plugin is not installed on <u>your own computer</u>. Please download it"
+" from <a "
+"href='http://www.java.com/download/'>http://www.java.com/download/</a>, "
+"install it, restart your browser and then, verify your installation on <a "
+"target='_blank' "
+"href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
+msgstr ""
+"<u>您自己的电脑</u>上未安装 Java 外挂程式。请从 <a "
+"href='http://www.java.com/download/'>http://www.java.com/download/</a> "
+"下载、安装，并且重新启动您的浏览器，然后在 <a target='_blank' "
+"href='http://www.java.com/verify/'>http://www.java.com/verify/</a> 验证您的安装。"
 
-#: modules/msc/msc/statuscsv.php:111
-msgid "waiting to upload and already try"
-msgstr "等候上传并已经尝试"
+#: modules/msc/msc/convergence.php:116
+msgid "Convergence on "
+msgstr ""
+
+
