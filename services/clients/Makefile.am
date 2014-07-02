@@ -23,7 +23,7 @@
 
 SUBDIRS = win32
 
-posixclientdir = $(localstatedir)/lib/pulse2/clients/
+posixclientdir = $(localstatedir)/lib/pulse2/clients
 
 posixclientscripts = generate-agents \
                    templates/mac/package/Contents/Resources/postflight \
@@ -38,15 +38,15 @@ nobase_posixclient_SCRIPTS = $(posixclientscripts)
 nobase_posixclient_DATA = $(posixclientdata) 
 
 install-data-local:
-	$(MKDIR_P) $(posixclientdir)/mac
-	$(MKDIR_P) $(posixclientdir)/deb
-	$(MKDIR_P) $(posixclientdir)/rpm
-	$(MKDIR_P) $(posixclientdir)/templates/deb/package/opt
-	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/SPECS
-	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/BUILD
-	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/BUILDROOT
-	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/RPMS
-	$(MKDIR_P) $(posixclientdir)/templates/rpm/package/SRPMS
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/mac
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/deb
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/rpm
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/deb/package/opt
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SPECS
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILD
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILDROOT
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/RPMS
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SRPMS
 
 	
 EXTRA_DIST = $(posixclientscripts) $(posixclientdata)
