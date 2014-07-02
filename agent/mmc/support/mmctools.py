@@ -471,6 +471,8 @@ def getConfigParser(module, path = mmcconfdir + "/plugins/"):
     inifile = os.path.join(path, module) + ".ini"
     fp = file(inifile, "r")
     config.readfp(fp, inifile)
+    if os.path.isfile(inifile + '.local'):
+        config.readfp(open(inifile + '.local','r'))
     return config
 
 def getConfigFile(module, path = mmcconfdir + "/plugins/"):

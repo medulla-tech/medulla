@@ -362,6 +362,9 @@ class MmcServer(xmlrpc.XMLRPC, object):
                     # Reloading configuration file
                     fid = file(obj.conffile, "r")
                     obj.readfp(fid, obj.conffile)
+                    if os.path.isfile(obj.conffile + '.local'):
+                        fid = file(obj.conffile + '.local', "r")
+                        obj.readfp(fid, obj.conffile + '.local')
                     # Refresh config attributes
                     obj.readConf()
                 except Exception, e:
