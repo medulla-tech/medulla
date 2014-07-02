@@ -1,37 +1,30 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-02 16:38+0200\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-07-02 16:40+0200\n"
 "PO-Revision-Date: 2014-05-06 00:56+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
-"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/inventory/inventory/ajaxViewPart.php:83
-msgid " (Not an antivirus)"
-msgstr "（不是一个防病毒程式）"
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "电脑"
 
-#: modules/inventory/inventory/tabs.php:79
-#, php-format
-msgid "%s's content inventory"
-msgstr "%s 的内容清查"
-
-#: modules/inventory/inventory/tabs.php:77
-#, php-format
-msgid "%s's inventory"
-msgstr "%s 的清查"
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
+msgstr "建立一个群组"
 
 #: modules/inventory/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
@@ -41,21 +34,137 @@ msgstr "< %s 天：%percent% (%d)"
 msgid "> %s days: %percent% (%d)"
 msgstr "> %s 天：%percent% (%d)"
 
-#: modules/inventory/inventory/ajaxViewPart.php:533
-msgid "Action"
-msgstr "动作"
+#: modules/inventory/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "最新清查日期"
 
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr "新增的元素"
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:530
+msgid "Date"
+msgstr "日期"
 
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "其它资讯"
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "筛选软体"
 
-#: modules/inventory/inventory/ajaxViewPart.php:537
-msgid "All"
-msgstr "全部"
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "隐藏 Windows 更新"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "重新整理"
+
+#: modules/inventory/inventory/body.php:40
+msgid "Bios list"
+msgstr "Bios 清单"
+
+#: modules/inventory/inventory/body.php:41
+#: modules/inventory/infoPackage.inc.php:52
+msgid "Summary"
+msgstr "概要"
+
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "硬体和 OS 资讯清单"
+
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "软体清单"
+
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "网路卡与设定清单"
+
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "控制器清单"
+
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "登录机码/值清单"
+
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "磁碟机清单"
+
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "输入装置清单"
+
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "记忆体模组清单"
+
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "监视器清单"
+
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "连接埠清单"
+
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "印表机清单"
+
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "音效卡清单"
+
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "储存媒体清单"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "视讯卡清单"
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "在 %s 上的最新清查少於 %s 天"
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "在 %s 上的最新清查大于 %s 天"
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "在 %d 台电脑上的电脑清单已被截断"
+
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+#: modules/inventory/inventory/i18n_labels.php:96
+msgid "Computer"
+msgstr "电脑"
+
+#: modules/inventory/inventory/graphs.php:35
+#: modules/inventory/infoPackage.inc.php:91
+msgid "Chart"
+msgstr "图表"
+
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "上一页"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "检视上次清查之后的差异"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "清查日期"
+
+#: modules/inventory/inventory/history.php:80
+#: modules/inventory/infoPackage.inc.php:32
+#: modules/inventory/infoPackage.inc.php:38
+msgid "Inventory"
+msgstr "清查"
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -65,13 +174,9 @@ msgstr "应用程式"
 msgid "Availability"
 msgstr "可用性"
 
-#: modules/inventory/inventory/ajaxViewPart.php:526
-msgid "Bandwidth"
-msgstr "频宽"
-
-#: modules/inventory/infoPackage.inc.php:44
 #: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/infoPackage.inc.php:44
 msgid "Bios"
 msgstr "Bios"
 
@@ -82,18 +187,6 @@ msgstr "Bios 厂商"
 #: modules/inventory/inventory/i18n_labels.php:30
 msgid "Bios Version"
 msgstr "Bios 版本"
-
-#: modules/inventory/inventory/body.php:40
-msgid "Bios list"
-msgstr "Bios 清单"
-
-#: modules/inventory/infoPackage.inc.php:169
-msgid "Bios tab for a computer in a group"
-msgstr "一个群组中某台电脑的 Bios 标签"
-
-#: modules/inventory/infoPackage.inc.php:139
-msgid "Bios tab for a group"
-msgstr "一个群组的 Bios 标签"
 
 #: modules/inventory/inventory/i18n_labels.php:31
 msgid "Build"
@@ -123,19 +216,6 @@ msgstr "标题"
 msgid "Card Type"
 msgstr "卡类型"
 
-#: modules/inventory/inventory/ajaxViewPart.php:532
-msgid "Category"
-msgstr "类别"
-
-#: modules/inventory/infoPackage.inc.php:91
-#: modules/inventory/inventory/graphs.php:35
-msgid "Chart"
-msgstr "图表"
-
-#: modules/inventory/infoPackage.inc.php:87
-msgid "Charts"
-msgstr "图表"
-
 #: modules/inventory/inventory/i18n_labels.php:38
 msgid "Chassis"
 msgstr "底座"
@@ -160,14 +240,6 @@ msgstr "晶片组类型"
 msgid "Class"
 msgstr "类别"
 
-#: modules/inventory/inventory/ajaxViewPart.php:106
-msgid "Click here to see this computer on manufacturer website"
-msgstr "请按此处在制造商网站上查看此电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:529
-msgid "Comment"
-msgstr "注解"
-
 #: modules/inventory/inventory/i18n_labels.php:44
 msgid "Comments"
 msgstr "注解"
@@ -176,61 +248,14 @@ msgstr "注解"
 msgid "Company"
 msgstr "公司"
 
-#: modules/inventory/inventory/csv.php:67
-#: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:96
-msgid "Computer"
-msgstr "电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:510
-msgid "Computer Name"
-msgstr "电脑名称"
-
-#: modules/inventory/inventory/ajaxViewPart.php:518
-msgid "Computer Type"
-msgstr "电脑类型"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "电脑名称"
-
-#: modules/inventory/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "电脑"
-
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "在 %d 台电脑上的电脑清单已被截断"
-
 #: modules/inventory/inventory/i18n_labels.php:46
 msgid "Connector"
 msgstr "连接器"
 
-#: modules/inventory/infoPackage.inc.php:50
 #: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/infoPackage.inc.php:50
 msgid "Controller"
-msgstr "控制器"
-
-#: modules/inventory/inventory/body.php:45
-msgid "Controller list"
-msgstr "控制器清单"
-
-#: modules/inventory/infoPackage.inc.php:199
-msgid "Controller tab for a computer"
-msgstr "一台电脑的控制器标签"
-
-#: modules/inventory/infoPackage.inc.php:178
-msgid "Controller tab for a computer in a group"
-msgstr "一个群组中某台电脑的控制器标签"
-
-#: modules/inventory/infoPackage.inc.php:154
-msgid "Controller tab for a group"
-msgstr "一个群组的控制器标签"
-
-#: modules/inventory/inventory/ajaxViewPart.php:229
-msgid "Controllers"
 msgstr "控制器"
 
 #: modules/inventory/inventory/i18n_labels.php:48
@@ -240,18 +265,6 @@ msgstr "Cpu 编号"
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
 msgstr "Cpu 厂商"
-
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid "Create a group"
-msgstr "建立一个群组"
-
-#: modules/inventory/infoPackage.inc.php:99
-msgid "Create static group from dashboard"
-msgstr "从仪表板中建立静态群组"
-
-#: modules/inventory/infoPackage.inc.php:95
-msgid "Csv's export"
-msgstr "Csv 格式的汇出"
 
 #: modules/inventory/inventory/i18n_labels.php:50
 msgid "Custom Field"
@@ -265,20 +278,9 @@ msgstr "Cyl"
 msgid "DNS"
 msgstr "DNS"
 
-#: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:530
-#: modules/inventory/inventory/i18n_labels.php:53
-msgid "Date"
-msgstr "日期"
-
 #: modules/inventory/inventory/i18n_labels.php:54
 msgid "Date Last Switch On"
 msgstr "上次开启日期"
-
-#: modules/inventory/inventory/ajaxViewPart.php:505
-msgid "Date Of Purchase"
-msgstr "购买日期"
 
 #: modules/inventory/inventory/i18n_labels.php:57
 msgid "Default Gateway"
@@ -292,19 +294,15 @@ msgstr "交付日期"
 msgid "Department"
 msgstr "部门"
 
-#: modules/inventory/inventory/ajaxViewPart.php:511
 #: modules/inventory/inventory/i18n_labels.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:511
 msgid "Description"
 msgstr "说明"
 
-#: modules/inventory/inventory/ajaxViewPart.php:498
 #: modules/inventory/inventory/i18n_labels.php:61
+#: modules/inventory/inventory/ajaxViewPart.php:498
 msgid "Device"
 msgstr "装置"
-
-#: modules/inventory/infoPackage.inc.php:207
-msgid "Differences between two inventories"
-msgstr "两次清查之间的差异"
 
 #: modules/inventory/inventory/i18n_labels.php:62
 msgid "Disk"
@@ -314,13 +312,9 @@ msgstr "磁碟"
 msgid "Disk Size"
 msgstr "磁碟大小"
 
-#: modules/inventory/inventory/ajaxViewPart.php:540
-msgid "Domain"
-msgstr "网域"
-
-#: modules/inventory/infoPackage.inc.php:56
 #: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/infoPackage.inc.php:56
 msgid "Drive"
 msgstr "磁碟机"
 
@@ -332,38 +326,9 @@ msgstr "磁碟机代号"
 msgid "Drive Type"
 msgstr "磁碟机类型"
 
-#: modules/inventory/inventory/body.php:47
-msgid "Drive list"
-msgstr "磁碟机清单"
-
 #: modules/inventory/inventory/i18n_labels.php:67
 msgid "Driver"
 msgstr "驱动程式"
-
-#: modules/inventory/inventory/ajaxViewPart.php:231
-msgid "Drives"
-msgstr "磁碟机"
-
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "元素"
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "元素"
-
-#: modules/inventory/inventory/ajaxViewPart.php:545
-msgid "Enabled"
-msgstr "已启用"
-
-#: modules/inventory/inventory/ajaxViewPart.php:513
-msgid "Entity"
-msgstr "实体"
-
-#: modules/inventory/inventory/ajaxViewPart.php:512
-msgid "Entity (Location)"
-msgstr "实体（位置）"
 
 #: modules/inventory/inventory/i18n_labels.php:68
 msgid "Executable Size"
@@ -393,18 +358,6 @@ msgstr "档案数"
 msgid "File System"
 msgstr "档案系统"
 
-#: modules/inventory/inventory/ajaxViewPart.php:500
-msgid "Filesystem"
-msgstr "档案系统"
-
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "筛选软体"
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "第一次出现"
-
 #: modules/inventory/inventory/i18n_labels.php:75
 msgid "Flag"
 msgstr "标记"
@@ -412,10 +365,6 @@ msgstr "标记"
 #: modules/inventory/inventory/i18n_labels.php:76
 msgid "Form"
 msgstr "表单"
-
-#: modules/inventory/inventory/ajaxViewPart.php:502
-msgid "Free Size"
-msgstr "可用大小"
 
 #: modules/inventory/inventory/i18n_labels.php:77
 msgid "Free Space"
@@ -425,8 +374,8 @@ msgstr "可用空间"
 msgid "Freq"
 msgstr "频率"
 
-#: modules/inventory/inventory/ajaxViewPart.php:523
 #: modules/inventory/inventory/i18n_labels.php:79
+#: modules/inventory/inventory/ajaxViewPart.php:523
 msgid "Frequency"
 msgstr "频率"
 
@@ -434,18 +383,14 @@ msgstr "频率"
 msgid "Func"
 msgstr "功能"
 
-#: modules/inventory/inventory/ajaxViewPart.php:497
 #: modules/inventory/inventory/i18n_labels.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:497
 msgid "Gateway"
 msgstr "闸道"
 
-#: modules/inventory/inventory/ajaxViewPart.php:232
-msgid "Graphic Cards"
-msgstr "图形卡"
-
-#: modules/inventory/infoPackage.inc.php:46
 #: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/infoPackage.inc.php:46
 msgid "Hardware"
 msgstr "硬体"
 
@@ -453,110 +398,24 @@ msgstr "硬体"
 msgid "Hardware Version"
 msgstr "硬体版本"
 
-#: modules/inventory/inventory/body.php:42
-msgid "Hardware and OS information list"
-msgstr "硬体和 OS 资讯清单"
-
-#: modules/inventory/infoPackage.inc.php:190
-msgid "Hardware tab for a computer"
-msgstr "一台电脑的硬体标签"
-
-#: modules/inventory/infoPackage.inc.php:160
-msgid "Hardware tab for a computer in a group"
-msgstr "一个群组中某台电脑的硬体标签"
-
-#: modules/inventory/infoPackage.inc.php:136
-msgid "Hardware tab for a group"
-msgstr "一个群组的硬体标签"
-
 #: modules/inventory/inventory/i18n_labels.php:84
 msgid "Head"
 msgstr "标题"
-
-#: modules/inventory/infoPackage.inc.php:116
-msgid "Header"
-msgstr "页首"
-
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr "隐藏 Windows 更新"
 
 #: modules/inventory/inventory/i18n_labels.php:85
 msgid "High Mem"
 msgstr "高端记忆体"
 
-#: modules/inventory/inventory/tabs.php:106
-msgid "History"
-msgstr "历史记录"
-
-#: modules/inventory/inventory/ajaxViewPart.php:495
 #: modules/inventory/inventory/i18n_labels.php:86
+#: modules/inventory/inventory/ajaxViewPart.php:495
 msgid "IP"
 msgstr "IP"
 
-#: modules/inventory/infoPackage.inc.php:42
-#: modules/inventory/inventory/localSidebar.php:28
-msgid "Incoming"
-msgstr "传入"
-
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr "传入的清查"
-
-#: modules/inventory/infoPackage.inc.php:83
-#: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:462
-msgid "Information"
-msgstr "资讯"
-
-#: modules/inventory/infoPackage.inc.php:58
 #: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/infoPackage.inc.php:58
 msgid "Input"
 msgstr "输入"
-
-#: modules/inventory/inventory/body.php:48
-msgid "Input device list"
-msgstr "输入装置清单"
-
-#: modules/inventory/infoPackage.inc.php:32
-#: modules/inventory/infoPackage.inc.php:38
-#: modules/inventory/inventory/history.php:80
-msgid "Inventory"
-msgstr "清查"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "清查日期"
-
-#: modules/inventory/inventory/ajaxViewPart.php:543
-msgid "Inventory Number"
-msgstr "清查号"
-
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "清查变化"
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "清查日期"
-
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "%s 清查"
-
-#: modules/inventory/infoPackage.inc.php:133
-msgid "Inventory on a group of computers"
-msgstr "一组电脑上的清查"
-
-#: modules/inventory/infoPackage.inc.php:186
-msgid "Inventory on a single computer"
-msgstr "一台电脑上的清查"
-
-#: modules/inventory/inventory/ajaxViewPart.php:504
-msgid "Invoice Number"
-msgstr "发票号"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
@@ -566,66 +425,12 @@ msgstr "Ip 位址"
 msgid "KEY"
 msgstr "键"
 
-#: modules/inventory/inventory/ajaxViewPart.php:536
-msgid "Last 30 days"
-msgstr "最近 30 天"
-
-#: modules/inventory/inventory/ajaxViewPart.php:535
-msgid "Last 7 days"
-msgstr "最近 7 天"
-
-#: modules/inventory/inventory/ajaxViewPart.php:515
-msgid "Last Logged User"
-msgstr "上次登入的使用者"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr "上个月"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr "上个季度"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr "上个学期"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr "上星期"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr "去年"
-
-#: modules/inventory/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "最新清查日期"
-
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "在 %s 上的最新清查少於 %s 天"
-
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "在 %s 上的最新清查大于 %s 天"
-
-#: modules/inventory/inventory/tabs.php:65
-msgid "Leave pull mode"
-msgstr "退出 pull 模式"
-
 #: modules/inventory/inventory/i18n_labels.php:90
 msgid "Length"
 msgstr "长度"
 
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
-msgstr "清查时仅载入新电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:514
 #: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:514
 msgid "Location"
 msgstr "位置"
 
@@ -633,8 +438,8 @@ msgstr "位置"
 msgid "Low Mem"
 msgstr "低容量记忆体"
 
-#: modules/inventory/inventory/ajaxViewPart.php:494
 #: modules/inventory/inventory/i18n_labels.php:93
+#: modules/inventory/inventory/ajaxViewPart.php:494
 msgid "MAC Address"
 msgstr "MAC 位址"
 
@@ -650,8 +455,8 @@ msgstr "Mac 位址"
 msgid "Manuf"
 msgstr "制造商"
 
-#: modules/inventory/inventory/ajaxViewPart.php:521
 #: modules/inventory/inventory/i18n_labels.php:98
+#: modules/inventory/inventory/ajaxViewPart.php:521
 msgid "Manufacturer"
 msgstr "制造商"
 
@@ -659,17 +464,13 @@ msgstr "制造商"
 msgid "Media"
 msgstr "媒体"
 
-#: modules/inventory/infoPackage.inc.php:60
-#: modules/inventory/inventory/ajaxViewPart.php:227
-#: modules/inventory/inventory/ajaxViewPart.php:528
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:528
+#: modules/inventory/infoPackage.inc.php:60
 msgid "Memory"
 msgstr "记忆体"
-
-#: modules/inventory/inventory/body.php:49
-msgid "Memory module list"
-msgstr "记忆体模组清单"
 
 #: modules/inventory/inventory/i18n_labels.php:101
 msgid "Misc Mem"
@@ -679,89 +480,37 @@ msgstr "其它记忆体"
 msgid "Misc SMB"
 msgstr "其它 SMB"
 
-#: modules/inventory/inventory/ajaxViewPart.php:520
 #: modules/inventory/inventory/i18n_labels.php:103
+#: modules/inventory/inventory/ajaxViewPart.php:520
 msgid "Model"
 msgstr "型号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:519
-msgid "Model / Type"
-msgstr "型号／类型"
 
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
 msgstr "数据机"
 
-#: modules/inventory/infoPackage.inc.php:62
 #: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/infoPackage.inc.php:62
 msgid "Monitor"
 msgstr "监视器"
 
-#: modules/inventory/inventory/body.php:50
-msgid "Monitor list"
-msgstr "监视器清单"
-
-#: modules/inventory/inventory/ajaxViewPart.php:499
-msgid "Mount Point"
-msgstr "挂接点"
-
+#: modules/inventory/inventory/i18n_labels.php:106
 #: modules/inventory/inventory/ajaxViewPart.php:492
 #: modules/inventory/inventory/ajaxViewPart.php:508
-#: modules/inventory/inventory/i18n_labels.php:106
 msgid "Name"
 msgstr "名称"
 
-#: modules/inventory/inventory/ajaxViewPart.php:496
-msgid "Netmask"
-msgstr "网路遮罩"
-
-#: modules/inventory/infoPackage.inc.php:48
 #: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/infoPackage.inc.php:48
 msgid "Network"
 msgstr "网路"
 
-#: modules/inventory/inventory/ajaxViewPart.php:230
-msgid "Network Cards"
-msgstr "网路卡"
-
-#: modules/inventory/inventory/ajaxViewPart.php:493
 #: modules/inventory/inventory/i18n_labels.php:108
+#: modules/inventory/inventory/ajaxViewPart.php:493
 msgid "Network Type"
 msgstr "网路类型"
-
-#: modules/inventory/inventory/body.php:44
-msgid "Network card and configuration list"
-msgstr "网路卡与设定清单"
-
-#: modules/inventory/infoPackage.inc.php:196
-msgid "Network tab for a computer"
-msgstr "一台电脑的网路标签"
-
-#: modules/inventory/infoPackage.inc.php:175
-msgid "Network tab for a computer in a group"
-msgstr "一个群组中某台电脑的网路标签"
-
-#: modules/inventory/infoPackage.inc.php:151
-msgid "Network tab for a group"
-msgstr "一个群组的网路标签"
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "新电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:491
-msgid "No"
-msgstr "否"
-
-#: modules/inventory/inventory/ajaxViewPart.php:140
-msgid "No record found for this period."
-msgstr "找不到此周期的记录。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:147
-msgid "No record found."
-msgstr "找不到任何记录。"
 
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "Num"
@@ -771,63 +520,39 @@ msgstr "编号"
 msgid "Number"
 msgstr "编号"
 
-#: modules/inventory/inventory/ajaxViewPart.php:516
-msgid "OS"
-msgstr "OS"
-
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "OS Serial Number"
 msgstr "OS 序号"
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr "仅新电脑"
-
-#: modules/inventory/inventory/ajaxViewPart.php:517
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "Operating System"
-msgstr "作业系统"
-
-#: modules/inventory/inventory/i18n_labels.php:113
-msgid "Os Architecture"
-msgstr "OS 架构"
 
 #: modules/inventory/inventory/i18n_labels.php:112
 msgid "Os Installation Date"
 msgstr "OS 安装日期"
 
-#: modules/inventory/inventory/ajaxViewPart.php:234
-msgid "Others"
-msgstr "其它"
+#: modules/inventory/inventory/i18n_labels.php:113
+msgid "Os Architecture"
+msgstr "OS 架构"
+
+#: modules/inventory/inventory/i18n_labels.php:114
+#: modules/inventory/inventory/ajaxViewPart.php:517
+msgid "Operating System"
+msgstr "作业系统"
 
 #: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/pci.php:27
 msgid "Pci"
 msgstr "PCI"
 
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr "周期"
-
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "Phone"
 msgstr "电话"
-
-#: modules/inventory/inventory/ajaxViewPart.php:144
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-"请确认您正在此用户端上执行具有 FusionInventory 外挂程式和 FusionInventory "
-"Agent 的 GLPI。"
 
 #: modules/inventory/inventory/i18n_labels.php:117
 msgid "Point Type"
 msgstr "点类型"
 
-#: modules/inventory/infoPackage.inc.php:64
 #: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/infoPackage.inc.php:64
 msgid "Port"
 msgstr "连接埠"
 
@@ -835,19 +560,11 @@ msgstr "连接埠"
 msgid "Port Type"
 msgstr "连接埠类型"
 
-#: modules/inventory/inventory/body.php:51
-msgid "Port list"
-msgstr "连接埠清单"
-
-#: modules/inventory/infoPackage.inc.php:66
 #: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/infoPackage.inc.php:66
 msgid "Printer"
 msgstr "印表机"
-
-#: modules/inventory/inventory/body.php:52
-msgid "Printer list"
-msgstr "印表机清单"
 
 #: modules/inventory/inventory/i18n_labels.php:121
 msgid "Processor Count"
@@ -861,10 +578,6 @@ msgstr "处理器频率"
 msgid "Processor Type"
 msgstr "处理器类型"
 
-#: modules/inventory/inventory/ajaxViewPart.php:226
-msgid "Processors"
-msgstr "处理器"
-
 #: modules/inventory/inventory/i18n_labels.php:124
 msgid "Product Name"
 msgstr "产品名称"
@@ -877,18 +590,9 @@ msgstr "产品路径"
 msgid "Product Version"
 msgstr "产品版本"
 
-#: modules/inventory/inventory/ajaxViewPart.php:121
-#: modules/inventory/inventory/view.php:74
-msgid "Properties"
-msgstr "属性"
-
 #: modules/inventory/inventory/i18n_labels.php:127
 msgid "Ram Total"
 msgstr "Ram 总容量"
-
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "重新整理"
 
 #: modules/inventory/inventory/i18n_labels.php:128
 msgid "Registered Company"
@@ -897,31 +601,6 @@ msgstr "已注册的公司"
 #: modules/inventory/inventory/i18n_labels.php:129
 msgid "Registered Name"
 msgstr "已注册的名称"
-
-#: modules/inventory/infoPackage.inc.php:76
-#: modules/inventory/inventory/localSidebar.php:34
-msgid "Registry"
-msgstr "登录"
-
-#: modules/inventory/inventory/body.php:46
-msgid "Registry keys/values list"
-msgstr "登录机码/值清单"
-
-#: modules/inventory/infoPackage.inc.php:202
-msgid "Registry tab for a computer"
-msgstr "一台电脑的登录标签"
-
-#: modules/inventory/infoPackage.inc.php:181
-msgid "Registry tab for a computer in a group"
-msgstr "一个群组中某台电脑的登录标签"
-
-#: modules/inventory/infoPackage.inc.php:157
-msgid "Registry tab for a group"
-msgstr "一个群组的登录标签"
-
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
-msgstr "已移除的元素"
 
 #: modules/inventory/inventory/i18n_labels.php:130
 msgid "Resolution"
@@ -935,17 +614,9 @@ msgstr "扇区"
 msgid "Serial"
 msgstr "序列"
 
-#: modules/inventory/inventory/ajaxViewPart.php:522
-msgid "Serial Number"
-msgstr "序号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:538
-msgid "Service Pack"
-msgstr "Service Pack"
-
+#: modules/inventory/inventory/i18n_labels.php:133
 #: modules/inventory/inventory/ajaxViewPart.php:501
 #: modules/inventory/inventory/ajaxViewPart.php:525
-#: modules/inventory/inventory/i18n_labels.php:133
 msgid "Size"
 msgstr "大小"
 
@@ -978,41 +649,17 @@ msgstr "Smb 类型"
 msgid "Smb Version"
 msgstr "Smb 版本"
 
-#: modules/inventory/infoPackage.inc.php:74
 #: modules/inventory/inventory/i18n_labels.php:141
 #: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/infoPackage.inc.php:74
 msgid "Software"
 msgstr "软体"
 
-#: modules/inventory/inventory/body.php:43
-msgid "Software list"
-msgstr "软体清单"
-
-#: modules/inventory/infoPackage.inc.php:193
-msgid "Software tab for a computer"
-msgstr "一台电脑的软体标签"
-
-#: modules/inventory/infoPackage.inc.php:172
-msgid "Software tab for a computer in a group"
-msgstr "一个群组中某台电脑的软体标签"
-
-#: modules/inventory/infoPackage.inc.php:148
-msgid "Software tab for a group"
-msgstr "一个群组的软体标签"
-
-#: modules/inventory/infoPackage.inc.php:68
 #: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/infoPackage.inc.php:68
 msgid "Sound"
 msgstr "声音"
-
-#: modules/inventory/inventory/ajaxViewPart.php:233
-msgid "Sound Cards"
-msgstr "音效卡"
-
-#: modules/inventory/inventory/body.php:53
-msgid "Sound list"
-msgstr "音效卡清单"
 
 #: modules/inventory/inventory/i18n_labels.php:143
 msgid "Speed"
@@ -1030,50 +677,21 @@ msgstr "标准说明"
 msgid "Standard Type"
 msgstr "标准类型"
 
-#: modules/inventory/inventory/ajaxViewPart.php:541
 #: modules/inventory/inventory/i18n_labels.php:147
+#: modules/inventory/inventory/ajaxViewPart.php:541
 msgid "State"
 msgstr "状态"
 
-#: modules/inventory/infoPackage.inc.php:70
-#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/ajaxViewPart.php:228
+#: modules/inventory/infoPackage.inc.php:70
 msgid "Storage"
 msgstr "储存空间"
-
-#: modules/inventory/inventory/body.php:54
-msgid "Storage medium list"
-msgstr "储存媒体清单"
-
-#: modules/inventory/infoPackage.inc.php:166
-msgid "Storage tab for a computer in a group"
-msgstr "一个群组中某台电脑的储存区标签"
-
-#: modules/inventory/infoPackage.inc.php:145
-msgid "Storage tab for a group"
-msgstr "一个群组的储存区标签"
 
 #: modules/inventory/inventory/i18n_labels.php:149
 msgid "Subnet Mask"
 msgstr "子网路遮罩"
-
-#: modules/inventory/infoPackage.inc.php:52
-#: modules/inventory/inventory/body.php:41
-msgid "Summary"
-msgstr "概要"
-
-#: modules/inventory/infoPackage.inc.php:163
-msgid "Summary tab for a computer in a group"
-msgstr "一个群组中某台电脑的概要标签"
-
-#: modules/inventory/infoPackage.inc.php:142
-msgid "Summary tab for a group"
-msgstr "一个群组的概要标签"
-
-#: modules/inventory/inventory/ajaxViewPart.php:503
-msgid "Supplier"
-msgstr "供应商"
 
 #: modules/inventory/inventory/i18n_labels.php:150
 msgid "Support End"
@@ -1087,18 +705,9 @@ msgstr "交换空间"
 msgid "System"
 msgstr "系统"
 
-#: modules/inventory/inventory/tabs.php:63
-#: modules/inventory/inventory/tabs.php:71
-msgid "This client has been registered in pull mode"
-msgstr "已在 pull 模式下注册此用户端"
-
 #: modules/inventory/inventory/i18n_labels.php:153
 msgid "Time"
 msgstr "时间"
-
-#: modules/inventory/inventory/ajaxViewPart.php:534
-msgid "Today"
-msgstr "今天"
 
 #: modules/inventory/inventory/i18n_labels.php:154
 msgid "Total Mem"
@@ -1108,8 +717,8 @@ msgstr "总记忆体"
 msgid "Total Space"
 msgstr "总空间"
 
-#: modules/inventory/inventory/ajaxViewPart.php:524
 #: modules/inventory/inventory/i18n_labels.php:156
+#: modules/inventory/inventory/ajaxViewPart.php:524
 msgid "Type"
 msgstr "类型"
 
@@ -1117,24 +726,12 @@ msgstr "类型"
 msgid "Type Machine"
 msgstr "打字机"
 
-#: modules/inventory/inventory/ajaxViewPart.php:143
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr "在此电脑上侦测不到任何防病毒软体。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:542
-msgid "Unknown"
-msgstr "未知"
-
-#: modules/inventory/inventory/ajaxViewPart.php:546
-msgid "Up-to-date"
-msgstr "最新"
-
 #: modules/inventory/inventory/i18n_labels.php:158
 msgid "Used"
 msgstr "已使用"
 
-#: modules/inventory/inventory/ajaxViewPart.php:531
 #: modules/inventory/inventory/i18n_labels.php:159
+#: modules/inventory/inventory/ajaxViewPart.php:531
 msgid "User"
 msgstr "使用者"
 
@@ -1142,58 +739,31 @@ msgstr "使用者"
 msgid "VRAM Size"
 msgstr "VRAM 容量"
 
-#: modules/inventory/inventory/ajaxViewPart.php:122
 #: modules/inventory/inventory/i18n_labels.php:161
 #: modules/inventory/inventory/inventory_diff.php:76
 #: modules/inventory/inventory/inventory_diff.php:101
 #: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/ajaxViewPart.php:122
 msgid "Value"
 msgstr "值"
 
-#: modules/inventory/inventory/ajaxViewPart.php:507
 #: modules/inventory/inventory/i18n_labels.php:162
+#: modules/inventory/inventory/ajaxViewPart.php:507
 msgid "Vendor"
 msgstr "厂商"
 
-#: modules/inventory/inventory/ajaxViewPart.php:509
 #: modules/inventory/inventory/i18n_labels.php:163
+#: modules/inventory/inventory/ajaxViewPart.php:509
 msgid "Version"
 msgstr "版本"
-
-#: modules/inventory/inventory/body.php:55
-msgid "Video card list"
-msgstr "视讯卡清单"
-
-#: modules/inventory/infoPackage.inc.php:72
-#: modules/inventory/inventory/localSidebar.php:45
-msgid "VideoCard"
-msgstr "视讯卡"
-
-#: modules/inventory/infoPackage.inc.php:79
-#: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:461
-msgid "View"
-msgstr "检视"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "检视上次清查之后的差异"
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
 msgstr "磁碟区名称"
 
-#: modules/inventory/inventory/ajaxViewPart.php:506
-msgid "Warranty End Date"
-msgstr "担保结束日期"
-
 #: modules/inventory/inventory/i18n_labels.php:165
 msgid "WarrantyEnd"
 msgstr "担保结束"
-
-#: modules/inventory/inventory/ajaxViewPart.php:539
-msgid "Windows Key"
-msgstr "Windows 键"
 
 #: modules/inventory/inventory/i18n_labels.php:166
 msgid "Workgroup"
@@ -1203,14 +773,443 @@ msgstr "工作组"
 msgid "WorkingDate"
 msgstr "工作日期"
 
-#: modules/inventory/inventory/ajaxViewPart.php:527
-msgid "Writer"
-msgstr "写入器"
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "传入的清查"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "上星期"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "上个月"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "上个季度"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "上个学期"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "去年"
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "周期"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "仅新电脑"
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr "清查时仅载入新电脑"
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "其它资讯"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "第一次出现"
+
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "清查变化"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "元素"
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "新增的元素"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "已移除的元素"
+
+#: modules/inventory/inventory/localSidebar.php:28
+#: modules/inventory/infoPackage.inc.php:42
+msgid "Incoming"
+msgstr "传入"
+
+#: modules/inventory/inventory/localSidebar.php:34
+#: modules/inventory/infoPackage.inc.php:76
+msgid "Registry"
+msgstr "登录"
+
+#: modules/inventory/inventory/localSidebar.php:45
+#: modules/inventory/infoPackage.inc.php:72
+msgid "VideoCard"
+msgstr "视讯卡"
+
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr "已在 pull 模式下注册此用户端"
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr "退出 pull 模式"
+
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "%s 的清查"
+
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "%s 的内容清查"
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "历史记录"
+
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "%s 清查"
+
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "属性"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "电脑名称"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "清查日期"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "新电脑"
+
+#: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/inventory/ajaxViewPart.php:461
+#: modules/inventory/infoPackage.inc.php:79
+msgid "View"
+msgstr "检视"
+
+#: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:462
+#: modules/inventory/infoPackage.inc.php:83
+msgid "Information"
+msgstr "资讯"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "元素"
+
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr "（不是一个防病毒程式）"
+
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr "请按此处在制造商网站上查看此电脑"
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr "找不到此周期的记录。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr "在此电脑上侦测不到任何防病毒软体。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr "请确认您正在此用户端上执行具有 FusionInventory 外挂程式和 FusionInventory Agent 的 GLPI。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr "找不到任何记录。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr "处理器"
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+msgid "Controllers"
+msgstr "控制器"
+
+#: modules/inventory/inventory/ajaxViewPart.php:230
+msgid "Network Cards"
+msgstr "网路卡"
+
+#: modules/inventory/inventory/ajaxViewPart.php:231
+msgid "Drives"
+msgstr "磁碟机"
+
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr "图形卡"
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+msgid "Sound Cards"
+msgstr "音效卡"
+
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
+msgstr "其它"
 
 #: modules/inventory/inventory/ajaxViewPart.php:490
 msgid "Yes"
 msgstr "是"
 
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "上一页"
+#: modules/inventory/inventory/ajaxViewPart.php:491
+msgid "No"
+msgstr "否"
+
+#: modules/inventory/inventory/ajaxViewPart.php:496
+msgid "Netmask"
+msgstr "网路遮罩"
+
+#: modules/inventory/inventory/ajaxViewPart.php:499
+msgid "Mount Point"
+msgstr "挂接点"
+
+#: modules/inventory/inventory/ajaxViewPart.php:500
+msgid "Filesystem"
+msgstr "档案系统"
+
+#: modules/inventory/inventory/ajaxViewPart.php:502
+msgid "Free Size"
+msgstr "可用大小"
+
+#: modules/inventory/inventory/ajaxViewPart.php:503
+msgid "Supplier"
+msgstr "供应商"
+
+#: modules/inventory/inventory/ajaxViewPart.php:504
+msgid "Invoice Number"
+msgstr "发票号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:505
+msgid "Date Of Purchase"
+msgstr "购买日期"
+
+#: modules/inventory/inventory/ajaxViewPart.php:506
+msgid "Warranty End Date"
+msgstr "担保结束日期"
+
+#: modules/inventory/inventory/ajaxViewPart.php:510
+msgid "Computer Name"
+msgstr "电脑名称"
+
+#: modules/inventory/inventory/ajaxViewPart.php:512
+msgid "Entity (Location)"
+msgstr "实体（位置）"
+
+#: modules/inventory/inventory/ajaxViewPart.php:513
+msgid "Entity"
+msgstr "实体"
+
+#: modules/inventory/inventory/ajaxViewPart.php:515
+msgid "Last Logged User"
+msgstr "上次登入的使用者"
+
+#: modules/inventory/inventory/ajaxViewPart.php:516
+msgid "OS"
+msgstr "OS"
+
+#: modules/inventory/inventory/ajaxViewPart.php:518
+msgid "Computer Type"
+msgstr "电脑类型"
+
+#: modules/inventory/inventory/ajaxViewPart.php:519
+msgid "Model / Type"
+msgstr "型号／类型"
+
+#: modules/inventory/inventory/ajaxViewPart.php:522
+msgid "Serial Number"
+msgstr "序号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:526
+msgid "Bandwidth"
+msgstr "频宽"
+
+#: modules/inventory/inventory/ajaxViewPart.php:527
+msgid "Writer"
+msgstr "写入器"
+
+#: modules/inventory/inventory/ajaxViewPart.php:529
+msgid "Comment"
+msgstr "注解"
+
+#: modules/inventory/inventory/ajaxViewPart.php:532
+msgid "Category"
+msgstr "类别"
+
+#: modules/inventory/inventory/ajaxViewPart.php:533
+msgid "Action"
+msgstr "动作"
+
+#: modules/inventory/inventory/ajaxViewPart.php:534
+msgid "Today"
+msgstr "今天"
+
+#: modules/inventory/inventory/ajaxViewPart.php:535
+msgid "Last 7 days"
+msgstr "最近 7 天"
+
+#: modules/inventory/inventory/ajaxViewPart.php:536
+msgid "Last 30 days"
+msgstr "最近 30 天"
+
+#: modules/inventory/inventory/ajaxViewPart.php:537
+msgid "All"
+msgstr "全部"
+
+#: modules/inventory/inventory/ajaxViewPart.php:538
+msgid "Service Pack"
+msgstr "Service Pack"
+
+#: modules/inventory/inventory/ajaxViewPart.php:539
+msgid "Windows Key"
+msgstr "Windows 键"
+
+#: modules/inventory/inventory/ajaxViewPart.php:540
+msgid "Domain"
+msgstr "网域"
+
+#: modules/inventory/inventory/ajaxViewPart.php:542
+msgid "Unknown"
+msgstr "未知"
+
+#: modules/inventory/inventory/ajaxViewPart.php:543
+msgid "Inventory Number"
+msgstr "清查号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:545
+msgid "Enabled"
+msgstr "已启用"
+
+#: modules/inventory/inventory/ajaxViewPart.php:546
+msgid "Up-to-date"
+msgstr "最新"
+
+#: modules/inventory/infoPackage.inc.php:87
+msgid "Charts"
+msgstr "图表"
+
+#: modules/inventory/infoPackage.inc.php:95
+msgid "Csv's export"
+msgstr "Csv 格式的汇出"
+
+#: modules/inventory/infoPackage.inc.php:99
+msgid "Create static group from dashboard"
+msgstr "从仪表板中建立静态群组"
+
+#: modules/inventory/infoPackage.inc.php:116
+msgid "Header"
+msgstr "页首"
+
+#: modules/inventory/infoPackage.inc.php:133
+msgid "Inventory on a group of computers"
+msgstr "一组电脑上的清查"
+
+#: modules/inventory/infoPackage.inc.php:136
+msgid "Hardware tab for a group"
+msgstr "一个群组的硬体标签"
+
+#: modules/inventory/infoPackage.inc.php:139
+msgid "Bios tab for a group"
+msgstr "一个群组的 Bios 标签"
+
+#: modules/inventory/infoPackage.inc.php:142
+msgid "Summary tab for a group"
+msgstr "一个群组的概要标签"
+
+#: modules/inventory/infoPackage.inc.php:145
+msgid "Storage tab for a group"
+msgstr "一个群组的储存区标签"
+
+#: modules/inventory/infoPackage.inc.php:148
+msgid "Software tab for a group"
+msgstr "一个群组的软体标签"
+
+#: modules/inventory/infoPackage.inc.php:151
+msgid "Network tab for a group"
+msgstr "一个群组的网路标签"
+
+#: modules/inventory/infoPackage.inc.php:154
+msgid "Controller tab for a group"
+msgstr "一个群组的控制器标签"
+
+#: modules/inventory/infoPackage.inc.php:157
+msgid "Registry tab for a group"
+msgstr "一个群组的登录标签"
+
+#: modules/inventory/infoPackage.inc.php:160
+msgid "Hardware tab for a computer in a group"
+msgstr "一个群组中某台电脑的硬体标签"
+
+#: modules/inventory/infoPackage.inc.php:163
+msgid "Summary tab for a computer in a group"
+msgstr "一个群组中某台电脑的概要标签"
+
+#: modules/inventory/infoPackage.inc.php:166
+msgid "Storage tab for a computer in a group"
+msgstr "一个群组中某台电脑的储存区标签"
+
+#: modules/inventory/infoPackage.inc.php:169
+msgid "Bios tab for a computer in a group"
+msgstr "一个群组中某台电脑的 Bios 标签"
+
+#: modules/inventory/infoPackage.inc.php:172
+msgid "Software tab for a computer in a group"
+msgstr "一个群组中某台电脑的软体标签"
+
+#: modules/inventory/infoPackage.inc.php:175
+msgid "Network tab for a computer in a group"
+msgstr "一个群组中某台电脑的网路标签"
+
+#: modules/inventory/infoPackage.inc.php:178
+msgid "Controller tab for a computer in a group"
+msgstr "一个群组中某台电脑的控制器标签"
+
+#: modules/inventory/infoPackage.inc.php:181
+msgid "Registry tab for a computer in a group"
+msgstr "一个群组中某台电脑的登录标签"
+
+#: modules/inventory/infoPackage.inc.php:186
+msgid "Inventory on a single computer"
+msgstr "一台电脑上的清查"
+
+#: modules/inventory/infoPackage.inc.php:190
+msgid "Hardware tab for a computer"
+msgstr "一台电脑的硬体标签"
+
+#: modules/inventory/infoPackage.inc.php:193
+msgid "Software tab for a computer"
+msgstr "一台电脑的软体标签"
+
+#: modules/inventory/infoPackage.inc.php:196
+msgid "Network tab for a computer"
+msgstr "一台电脑的网路标签"
+
+#: modules/inventory/infoPackage.inc.php:199
+msgid "Controller tab for a computer"
+msgstr "一台电脑的控制器标签"
+
+#: modules/inventory/infoPackage.inc.php:202
+msgid "Registry tab for a computer"
+msgstr "一台电脑的登录标签"
+
+#: modules/inventory/infoPackage.inc.php:207
+msgid "Differences between two inventories"
+msgstr "两次清查之间的差异"
+
+

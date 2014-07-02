@@ -1,69 +1,36 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <andre@mandriva.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-02 16:38+0200\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-07-02 16:40+0200\n"
 "PO-Revision-Date: 2014-05-05 15:12+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
-"Language: pt_BR\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/support/includes/panels/license.inc.php:131
-msgid "Activate"
-msgstr "Ativar"
-
-#: modules/support/includes/panels/license.inc.php:90
-msgid "Computers"
-msgstr "Computadores"
-
-#: modules/support/infoPackage.inc.php:41
-msgid "Connect"
-msgstr "Conectar"
-
-#: modules/support/includes/panels/remotesupport.inc.php:44
-msgid "Connect to support"
-msgstr "Conectar ao suporte"
+#: modules/support/includes/panels/remotesupport.inc.php:30
+#: modules/support/infoPackage.inc.php:36
+msgid "Remote support"
+msgstr "Suporte remoto"
 
 #: modules/support/includes/panels/remotesupport.inc.php:41
 #: modules/support/infoPackage.inc.php:43
 msgid "Disconnect"
 msgstr "Desconectar"
 
-#: modules/support/includes/panels/license.inc.php:60
-msgid "Email"
-msgstr "Email"
-
-#: modules/support/includes/panels/license.inc.php:105
-msgid "End"
-msgstr "Finalizar"
-
-#: modules/support/includes/panels/license.inc.php:64
-msgid "Hours"
-msgstr "Horas"
-
-#: modules/support/includes/panels/license.inc.php:117
-msgid "Links"
-msgstr "Links"
-
-#: modules/support/includes/panels/license.inc.php:56
-msgid "Phone"
-msgstr "Fone"
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-#: modules/support/infoPackage.inc.php:36
-msgid "Remote support"
-msgstr "Suporte remoto"
+#: modules/support/includes/panels/remotesupport.inc.php:44
+msgid "Connect to support"
+msgstr "Conectar ao suporte"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
@@ -74,6 +41,40 @@ msgstr "Informação de assinatura"
 msgid "Support"
 msgstr "Suporte"
 
+#: modules/support/includes/panels/license.inc.php:56
+msgid "Phone"
+msgstr "Fone"
+
+#: modules/support/includes/panels/license.inc.php:60
+msgid "Email"
+msgstr "Email"
+
+#: modules/support/includes/panels/license.inc.php:64
+msgid "Hours"
+msgstr "Horas"
+
 #: modules/support/includes/panels/license.inc.php:74
 msgid "Your subscription"
 msgstr "Sua assinatura"
+
+#: modules/support/includes/panels/license.inc.php:90
+msgid "Computers"
+msgstr "Computadores"
+
+#: modules/support/includes/panels/license.inc.php:105
+msgid "End"
+msgstr "Finalizar"
+
+#: modules/support/includes/panels/license.inc.php:117
+msgid "Links"
+msgstr "Links"
+
+#: modules/support/includes/panels/license.inc.php:131
+msgid "Activate"
+msgstr "Ativar"
+
+#: modules/support/infoPackage.inc.php:41
+msgid "Connect"
+msgstr "Conectar"
+
+
