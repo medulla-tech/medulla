@@ -1,6 +1,7 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PREFIX="$DIR"
+inv_file="${PREFIX}/inventory.url"
 
 ### Root account
 
@@ -40,8 +41,9 @@ else
 fi
 
 
-inv_server_url=$(head -n 1 ${PREFIX}/inventory.url)
-#if [ -n "$1" ]; then
+inv_server_url=$(sed '1q;d' ${inv_file})
+inv_server_tag=$(sed '2q;d' ${inv_file})
+
 if [ -z "$inv_server_url" ]; then
     echo "ERROR: Unable to get inventory server URL"        
     exit 1
@@ -93,7 +95,7 @@ if [ -d ${fusion_pkg} ]; then
     if grep -q "${inv_server_url}" "${fusion_cfg}"; then
        echo "Fusion Inventory agent already configured" 
     else 
-       sudo tee -a ${fusion_cfg} < ${PREFIX}/inventory.url 
+       sudo tee -a ${fusion_cfg} < ${inv_file} 
     fi
     echo "INFO: Running initial inventory"
     sudo /opt/fusioninventory-agent/fusioninventory-agent

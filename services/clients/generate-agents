@@ -135,8 +135,9 @@ class InventoryURLGen(object):
     port = None
 
     enablessl = False
+    tag = None
 
-    def __init__(self, host=None, port=None, enablessl=False):
+    def __init__(self, host=None, port=None, enablessl=False, tag=None):
 
         if host is None:
             self.pkg_check()
@@ -150,6 +151,10 @@ class InventoryURLGen(object):
 
         if enablessl in ["True", "1", "true"]:
             self.enablessl = True
+
+        self.tag = tag
+
+
 
 
     def inv_check(self):
@@ -186,13 +191,17 @@ class InventoryURLGen(object):
 
 
 
-    def get(self):
+    def get_url(self):
         if self.enablessl:
             proto = "https"
         else:
             proto = "http"
 
         return "server = %s://%s:%s" % (proto, self.host, self.port)
+
+    def get_tag(self):
+        if self.tag:
+            return "tag = %s" % self.tag
 
 
 
@@ -218,16 +227,20 @@ class AbsCreator(object):
     # list of required packages
     dependencies = []
 
-    def __init__(self, config, inventory_url):
+    def __init__(self, config, inventory_url, tag):
         """
         @param config: config instance
         @type config: Config
 
         @param inventory_url: detected URL of inventory service
         @type inventory_url: str
+
+        @param tag: inventory tag
+        @type tag: str
         """
         self.config = config
         self.inventory_url = inventory_url
+        self.tag = tag
 
         # get the platform : config.<platform>
         platform_section = getattr(config, self.platform_directory)
@@ -298,8 +311,13 @@ class AbsCreator(object):
         path = os.path.join(self.dir_resources,
                             INVENTORY_URL_FILE)
 
+        if self.tag:
+            content = "\n".join([self.inventory_url, self.tag])
+        else:
+            content = self.inventory_url
+
         with open(path, "w") as f:
-            f.write(self.inventory_url)
+            f.write(content)
 
     def build(self):
         """Build the package (to be override)."""
@@ -664,6 +682,8 @@ class Win32Creator(AbsCreator):
                             self.config.win32.generate_script
                             )
         cmd = [path]
+        if self.tag :
+            cmd.append("--tag=%s" % self.tag)
         p = Popen(cmd, stdout=PIPE, stderr=PIPE)
         out, err = p.communicate()
 
@@ -677,10 +697,18 @@ class Win32Creator(AbsCreator):
 
 class PackagesGenerator(object):
     """The Package creators will be called here. """
-    def __init__(self, inventory_url):
+    def __init__(self, inventory_url, tag):
+        """
+        @param inventory_url: URL of inventory server with port number
+        @type inventory_url: str
+
+        @param tag: inventory tag
+        @type tag: str
+        """
 
         self.config = Config(CONFIG_FILE)
         self.inventory_url = inventory_url
+        self.tag = tag
 
     def generate_all(self):
         """All the creators must be called here."""
@@ -692,7 +720,10 @@ class PackagesGenerator(object):
                         Win32Creator,
                         ]:
 
-            m = creator(self.config, self.inventory_url)
+            m = creator(self.config,
+                        self.inventory_url,
+                        self.tag
+                        )
             m.generate()
 
 
@@ -715,7 +746,14 @@ def args_parse(script_path, args):
 
     module = os.path.splitext(os.path.basename(script_path))[0]
 
-    allowed_args = [module, "--host", "--port", "--enablessl", "--help", "--verbose"]
+    allowed_args = [module,
+                    "--host",
+                    "--port",
+                    "--enablessl",
+                    "--tag",
+                    "--help",
+                    "--verbose"
+                    ]
 
     kwargs = {}
 
@@ -738,9 +776,10 @@ if __name__ == "__main__":
 
     kwargs = args_parse(__file__, sys.argv)
     inv = InventoryURLGen(**kwargs)
-    inventory_url = inv.get()
+    inventory_url = inv.get_url()
+    tag = inv.get_tag()
 
-    pgen = PackagesGenerator(inventory_url)
+    pgen = PackagesGenerator(inventory_url, tag)
     pgen.generate_all()
 
 

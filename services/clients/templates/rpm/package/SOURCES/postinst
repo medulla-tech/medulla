@@ -2,11 +2,11 @@
 
 PREFIX="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ssh_pub_key="${PREFIX}/id_rsa.pub"
-
+inv_file="${PREFIX}/inventory.url"
 
 
 if [ -e ${ssh_pub_key} ]; then
-    if ! [-d "/root/.ssh" ]; then
+    if ! [ -d "/root/.ssh" ]; then
 	echo "Create missing SSH profile ..."    
         mkdir -p /root/.ssh
     fi 	
@@ -17,7 +17,8 @@ fi
 
 
 fusion_cfg="/etc/fusioninventory/agent.cfg" 
-url=$(head -n 1 ${PREFIX}/inventory.url)
+url=$(sed '1q;d' ${inv_file})
+tag=$(sed '2q;d' ${inv_file})
 if [ -z "$url" ]; then
     echo "ERROR: Unable to get inventory server URL"	    
     exit 1
@@ -28,6 +29,7 @@ fi
 
 if [ -f ${fusion_cfg} ];then
     grep -q "${url}" ${fusion_cfg} || echo "${url}" >> ${fusion_cfg}
+    grep -q "${tag}" ${fusion_cfg} || echo "${tag}" >> ${fusion_cfg}
 else
     echo "ERROR: Unable to find fusioninventory config file"	
     exit 1
