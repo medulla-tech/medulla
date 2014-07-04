@@ -40,7 +40,7 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 APIVERSION = "0:1:0"
 last_update_check_ts = None
-available_updates = None
+available_updates = []
 
 def getApiVersion(): return APIVERSION
 
@@ -137,62 +137,66 @@ def create_update_commands():
 
 
 class RpcProxy(RpcProxyI):
-    
+
     updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
-       
+
     def runInShell(self, cmd):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
         return out.strip(), err.strip(), process.returncode
-       
+
     def getProductUpdates(self):
-        
+
+        @deferred
+        def _getProductUpdates():
+            global last_update_check_ts, available_updates
+            o, e, ec = self.runInShell('%s -l --json' % self.updMgrPath)
+
+            # Check json part existence
+            if not '===JSON_BEGIN===' in o or not '===JSON_END===' in o:
+                available_updates = False
+
+            # Get json output
+            json_output = o.split('===JSON_BEGIN===')[1].split('===JSON_END===')[0].strip()
+            packages = json.loads(json_output)['content']
+
+            result = []
+
+            for pkg in packages:
+                pulse_filters = ('python-mmc', 'python-pulse2', 'mmc-web', 'pulse', 'mmc-agent')
+
+                # Skip non-Pulse packages
+                if not pkg[2].startswith(pulse_filters):
+                    continue
+
+                result.append({
+                    'name': pkg[2],
+                    'title': pkg[1]
+                })
+
+            # Caching last result
+            available_updates = result
+            last_update_check_ts = time()
+
+
         global last_update_check_ts, available_updates
         # If last checking is least than 4 hours, return cached value
-        if last_update_check_ts and (time() - last_update_check_ts) < 14400:
-            return available_updates
-        
-        o, e, ec = self.runInShell('%s -l --json' % self.updMgrPath)
-        
-        # Check json part existence
-        if not '===JSON_BEGIN===' in o or not '===JSON_END===' in o:
-            return False
-        
-        # Get json output
-        json_output = o.split('===JSON_BEGIN===')[1].split('===JSON_END===')[0].strip()
-        packages = json.loads(json_output)['content']
-        
-        result = []
-        
-        for pkg in packages:
-            pulse_filters = ('python-mmc', 'python-pulse2', 'mmc-web', 'pulse', 'mmc-agent')
-            
-            # Skip non-Pulse packages
-            if not pkg[2].startswith(pulse_filters):
-                continue
-            
-            result.append({
-                'name': pkg[2],
-                'title': pkg[1]
-            })
-        
-        # Caching last result
-        available_updates = result
-        last_update_check_ts = time()
-        
-        return result
-        #return DebianHandler().getAvailableUpdates()
-    
+        if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
+            _getProductUpdates()
+
+        return available_updates
+
+
     def installProductUpdates(self):
         pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$'"
         install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
         install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (self.updMgrPath, pulse_packages_filter, self.updMgrPath)
-        
+
         @deferred
         def _runInstall():
             # Running install command with no pipe
             subprocess.call(install_cmd, shell=True)
-            
+
         _runInstall()
-        
+
         return True
