@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-02 18:19+0200\n"
+"POT-Creation-Date: 2014-07-07 01:00+0200\n"
 "PO-Revision-Date: 2014-05-05 17:19+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
@@ -20,8 +20,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #: modules/support/includes/panels/license.inc.php:131
-msgid "Activate"
-msgstr "アクティベート"
+msgid "Activate again / Use another subscription"
+msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:90
 msgid "Computers"
@@ -77,3 +77,6 @@ msgstr "サポート"
 #: modules/support/includes/panels/license.inc.php:74
 msgid "Your subscription"
 msgstr "購読"
+
+#~ msgid "Activate"
+#~ msgstr "アクティベート"
