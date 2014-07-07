@@ -20,7 +20,10 @@
 
 """ Tracking of selected menu entries. """
 
-from pulse2.utils import Singleton
+import time
+import logging
+
+from pulse2.utils import Singleton, SingletonN
 from pulse2.package_server.imaging.pxe.parser import LOG_ACTION, LOG_STATE
 
 class TrackingContainer(Singleton):
@@ -74,8 +77,8 @@ class TrackingContainer(Singleton):
         if mac in self.entries :
             del self.entries[mac]
 
-    def __contains__(self, mac):
-        return mac in self.entries
+    def __contains__(self, entry):
+        return entry in self.entries
 
 CHOOSEN_MENU_ENTRY = LOG_ACTION[1][1]
 
@@ -112,4 +115,47 @@ class EntryTracking(TrackingContainer):
 
         if phase in (LOG_STATE.BACKUP, LOG_STATE.RESTO):
             self.mark(mac)
+
+
+class MTFTPTracker(object):
+    __metaclass__ = SingletonN
+
+    GRP_TIMEOUT = 3600
+
+    FIRST_DELAY = 10
+    last_file = 0
+    last_time = 0
+
+    def __init__(self):
+        self.last_file = 0
+        self.last_time = 0
+
+
+    def get_delay(self, mac, file, timeout):
+        wait = 0
+        try:
+            now = time.time()
+            logging.getLogger().debug("PXE Proxy: MTFTP Tracker file: %d last_file: %d last_time: %s" % (file, self.last_file, self.last_time))
+            if now - self.last_time > self.GRP_TIMEOUT:
+                self.last_time = 0
+                self.last_file = 0
+
+            if file == self.last_file:
+                wait = timeout + (self.last_time - now)
+                if wait < 0:
+                    wait = 0
+            elif file < self.last_file:
+                wait = 0
+            elif file > self.last_file:
+                wait = timeout
+                if self.last_time == 0:
+                    wait = wait + 10 # 1st wait after a boot
+                self.last_file = file
+                self.last_time = now
+
+            logging.getLogger().debug("PXE Proxy: MTFTP Tracker file: %d for MAC: %s delay = %s" % (file, mac, str(wait)))
+            return int(wait)
+
+        except Exception, e:
+            logging.getLogger().warn("PXE Proxy: MTFTP Tracker failed: %s" % str(e))
 

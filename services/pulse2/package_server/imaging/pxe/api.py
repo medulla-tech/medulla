@@ -27,7 +27,6 @@ only functions using temporary text files to exchange longer strings
 are optimized to direct communication by variables.
 """
 
-import time
 import logging
 
 from twisted.internet import reactor, task
@@ -36,7 +35,7 @@ from twisted.web.client import getPage
 
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
 from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
-from pulse2.package_server.imaging.pxe.tracking import EntryTracking
+from pulse2.package_server.imaging.pxe.tracking import EntryTracking, MTFTPTracker
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
 
@@ -699,44 +698,15 @@ class PXEImagingApi (PXEMethodParser):
         """
         d = Deferred()
 
-        def _mftp_wait_barrier(result):
-            wait = 0
-            try:
-                f = pnum + bnum
-
-                now = time.time()
-
-                if now - self.lasttime > 3600 :
-                    self.lasttime = 0 # reset MTFTP time barriers
-                    self.lastfile = 0
-
-                if f == self.lastfile :
-                    wait = to + (self.lasttime - now)
-                    if wait < 0:
-                        wait = 0
-
-                elif f < self.lastfile :
-                    wait = to
-
-                elif f > self.lastfile :
-                    if self.lastfile == 0 :
-                        wait += 10 # 1st wait after a boot
-                        self.lastfile = f
-                        self.lasttime = now
-
-                return str(wait)
-
-            except Exception, e :
-                logging.getLogger().warn("PXE Proxy: method imagingServerStatus failed: %s" % str(e))
-
-
-
-        d.addCallback(_mftp_wait_barrier)
+        @d.addCallback
+        def delay(result):
+            ret = MTFTPTracker().get_delay(mac, bnum, to)
+            logging.getLogger().debug("PXE Proxy: MTFTP Tracker result: %s" % str(ret))
+            return str(ret)
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn("PXE Proxy: server status get failed: %s" % str(failure))
 
         d.callback(True)
         return d
-
 
