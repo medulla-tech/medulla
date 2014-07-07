@@ -330,6 +330,8 @@ class AbsCreator(object):
 
     def generate(self):
         """Package generating, step-by-step with a given workflow"""
+        if os.path.exists(self.dir_destination):
+            self.remove()
         self.create_dummy_package()
         self.control_file_generate()
 
