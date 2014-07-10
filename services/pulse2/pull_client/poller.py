@@ -23,10 +23,9 @@ import pickle
 import importlib
 from threading import Thread, Event
 from Queue import Queue
-from subprocess import Popen, PIPE
 
 from command import Command
-from workers import WatchdogWorker, ResultWorker, StepWorker
+from workers import WatchdogWorker, ResultWorker, StepWorker, uwf_locked
 from config import PullClientConfig
 from launcher import launcher
 
@@ -48,6 +47,8 @@ class QueuesContainer(object):
             if not queue.empty():
                 return False
         return True
+
+
 
 
 class Poller(Thread):
@@ -119,7 +120,7 @@ class Poller(Thread):
         # Wait before polling:
         # This is usefull when the agent is deployed in push mode, so it let the
         # push deployment finish before acting as a pull client
-        #self.stop.wait(self.config.Poller.wait_poll)
+        self.stop.wait(self.config.Poller.wait_poll)
         logger.info("Polling for new commands")
         while not self.stop.is_set():
             for cmd_dict in self.dlp_client.get_commands():
@@ -182,37 +183,28 @@ class Poller(Thread):
                 return False
         return True
 
+
+
     def pre_deploy_phase(self):
         if not self.config.Triggers.pre_deploy_active:
             return False
-
-#        base_path = os.path.dirname(os.path.abspath(__file__))
-#        if "library.zip" in base_path:
-#            if base_path.endswith("\\") or  base_path.endswith("/"):
-#                base_path = base_path[:-1]
-#            base_path = os.path.dirname(base_path)
-        base_path = "/cygdrive/c/Program\ Files/Mandriva/Pulse-Pull-Client"
-        path = "%s/%s/%s" % (base_path,
-                            self.config.Triggers.folder,
-                            self.config.Triggers.pre_deploy_script)
- #       path = os.path.join(base_path,
- #                           self.config.Triggers.folder,
- #                           self.config.Triggers.pre_deploy_script)
-        logger.info("Script path: %s" % path)
-        try:
-            output, exitcode = launcher(path, '', None)
-        except Exception, e:
-            logger.error("Script error: %s" % e)
-        logger.debug("Script output: %s" % output)
-        if exitcode == 0:
-
+        if not uwf_locked():
             logger.info("Machine unlocked, starting the post-deploy watchdog...")
             expires = time.time() + self.config.Triggers.post_deploy_timeout
             self.watchdog_queue.put(expires)
             return False
-        else:
-            logger.info("\033[32mUnlock process done, move-on aborted; waiting to next command call\033[0m")
-            return True
+
+        cmd_lock = "uwfmgr.exe filter disable"
+        cmd_reboot = "/bin/shutdown.exe -r now"
+
+        for cmd in [cmd_lock, cmd_reboot]:
+            try:
+                output, exitcode = launcher(cmd, '', None)
+                logger.debug("Output of command '%s' : %s" % (cmd, output))
+            except Exception, e:
+                logger.error("Execution ofCommand '%s' failed: %s" % (cmd, str(e)))
+        logger.info("\033[32mUnlock process done, move-on aborted; waiting to next command call\033[0m")
+        return True
 
 
 

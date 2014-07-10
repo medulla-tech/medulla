@@ -21,7 +21,6 @@ import time
 import logging
 import Queue
 from threading import Thread
-from subprocess import Popen, PIPE
 
 from datetime import datetime
 
@@ -153,6 +152,7 @@ class WatchdogWorker(Thread):
     def checkout(self):
         if not self.scheduled_to is None:
             now = time.time()
+            time.sleep(30)
             logger.debug("Re-lock scheduled to %s" % datetime.fromtimestamp(self.scheduled_to).strftime("'%Y-%m-%d %H:%M:%S'"))
             if now > self.scheduled_to and self.queues.empty():
                 logger.info("Watchdog timeout reached")
@@ -165,25 +165,69 @@ class WatchdogWorker(Thread):
     def _execute(self):
 
         logger.info("Watchdog - re-locking the access !")
-#        base_path = os.path.dirname(os.path.abspath(__file__))
-#        if "library.zip" in base_path:
-#            base_path = os.path.dirname(base_path)
-#            if base_path.endswith("\\") or  base_path.endswith("/"):
-#                base_path = base_path[:-1]
 
-        #base_path = "./"
-        #path = os.path.join(base_path,
-        #path = "./%s/%s" % (
-        base_path = "/cygdrive/c/Program\ Files/Mandriva/Pulse-Pull-Client"
-        path = "%s/%s/%s" % (base_path,
-                            self.triggers_folder,
-                            self.post_deploy_script)
-        logger.info("Script path: %s" % path)
-        output, exitcode = launcher(path, '', None)
-
-        logger.debug("Script output: %s" % output)
-        if exitcode == 0:
-            logger.info("\033[31mMachine locked\033[0m")
+        if not uwf_locked():
+            logger.info("\033[31mMachine lock\033[0m")
             self.scheduled_to = None
+
+
+        cmd_lock = "uwfmgr.exe filter enable"
+        cmd_reboot = "/bin/shutdown.exe -r now"
+
+        for cmd in [cmd_lock, cmd_reboot]:
+            try:
+                output, exitcode = launcher(cmd, '', None)
+                logger.debug("Output of command '%s' : %s" % (cmd, output))
+            except Exception, e:
+                logger.error("Execution ofCommand '%s' failed: %s" % (cmd, str(e)))
+        return True
+
+
+
+def uwf_locked():
+    temp_file = "/tmp/toto"
+    path = "uwfmgr.exe get-config > %s" % temp_file
+    try:
+        output, exitcode = launcher(path, '', None)
+        logger.info("UWF check: %s" % output)
+        #pass
+    except Exception, e:
+        logger.error("UWF check error: %s" % e)
+    else:
+
+        path = os.path.join("C:/",
+                            "Program Files",
+                            "Mandriva",
+                            "OpenSSH",
+                            "tmp",
+                            "toto")
+
+        logger.info("UWF toto path: %s" % path)
+        try:
+            buff = []
+            with open(path, "rb") as f:
+                while True:
+                    segment = f.read(1)
+                    if not segment:
+                        break
+                    if ord(segment)==0:
+                        continue
+                    char = chr(ord(segment))
+
+                    buff.append(char)
+            for line in "".join(buff).split("\n"):
+                if "Filter state" in line:
+                    if "ON" in line:
+                        logger.debug("UWF state: \033[31mLOCKED\033[0m")
+                        return True
+                    if "OFF" in line:
+                        logger.debug("UWF state: \033[32mUNLOCKED\033[0m")
+                        return False
+            else:
+                logger.error("UWF state can't be checked")
+                return True
+        except Exception, e:
+            logger.error("UWF check tmp error: %s" % e)
+
 
 
