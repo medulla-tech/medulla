@@ -17,15 +17,18 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 import os
+import time
 import logging
 import pickle
 import importlib
 from threading import Thread, Event
 from Queue import Queue
+from subprocess import Popen, PIPE
 
 from command import Command
-from workers import ResultWorker, StepWorker
+from workers import WatchdogWorker, ResultWorker, StepWorker
 from config import PullClientConfig
+from launcher import launcher
 
 
 logger = logging.getLogger(__name__)
@@ -33,6 +36,18 @@ logger = logging.getLogger(__name__)
 
 class QueueFinished(object):
     pass
+
+class QueuesContainer(object):
+    queues = []
+
+    def add(self, queue):
+        self.queues.append(queue)
+
+    def empty(self):
+        for queue in self.queues:
+            if not queue.empty():
+                return False
+        return True
 
 
 class Poller(Thread):
@@ -62,14 +77,39 @@ class Poller(Thread):
         self.simple_queue = Queue()
         self.result_queue = Queue()
         self.retry_queue = Queue()
+        self.watchdog_queue =Queue()
+
+        if self.config.Triggers.post_deploy_active:
+            queues = QueuesContainer()
+            queues.add(self.parallel_queue)
+            queues.add(self.simple_queue)
+            queues.add(self.result_queue)
+            queues.add(self.retry_queue)
+            self.workers.append(WatchdogWorker(stop,
+                                               self.watchdog_queue,
+                                               queues,
+                                               self.config.Triggers.post_deploy_script,
+                                               self.config.Triggers.folder,
+                                               )
+                                )
+
         for n in range(0, self.config.Poller.result_workers):
             self.workers.append(ResultWorker(self.stop_workers, self.start_polling,
                                              self.result_queue, self.retry_queue,
                                              self.dlp_client))
         # only one worker for the execution/inventory step
-        self.workers.append(StepWorker(self.stop_workers, self.simple_queue, self.result_queue))
+        self.workers.append(StepWorker(self.stop_workers,
+                                       self.simple_queue,
+                                       self.result_queue,
+                                       self.watchdog_queue
+                                       )
+                            )
         for n in range(0, self.config.Poller.parallel_workers):
-            self.workers.append(StepWorker(self.stop_workers, self.parallel_queue, self.result_queue))
+            self.workers.append(StepWorker(self.stop_workers,
+                                           self.parallel_queue,
+                                           self.result_queue,
+                                           self.watchdog_queue
+                                           ))
         logger.info("Starting workers")
         for worker in self.workers:
             worker.start()
@@ -79,11 +119,13 @@ class Poller(Thread):
         # Wait before polling:
         # This is usefull when the agent is deployed in push mode, so it let the
         # push deployment finish before acting as a pull client
-        self.stop.wait(self.config.Poller.wait_poll)
+        #self.stop.wait(self.config.Poller.wait_poll)
         logger.info("Polling for new commands")
         while not self.stop.is_set():
             for cmd_dict in self.dlp_client.get_commands():
                 if self.is_new_command(cmd_dict):
+                    if self.pre_deploy_phase():
+                        break
                     command = Command(cmd_dict, (self.parallel_queue, self.simple_queue), self.dlp_client)
                     self.commands.append(command)
 
@@ -139,6 +181,40 @@ class Poller(Thread):
                 logger.info("Command %s is already done, ignoring..." % cmd_dict['id'])
                 return False
         return True
+
+    def pre_deploy_phase(self):
+        if not self.config.Triggers.pre_deploy_active:
+            return False
+
+#        base_path = os.path.dirname(os.path.abspath(__file__))
+#        if "library.zip" in base_path:
+#            if base_path.endswith("\\") or  base_path.endswith("/"):
+#                base_path = base_path[:-1]
+#            base_path = os.path.dirname(base_path)
+        base_path = "/cygdrive/c/Program\ Files/Mandriva/Pulse-Pull-Client"
+        path = "%s/%s/%s" % (base_path,
+                            self.config.Triggers.folder,
+                            self.config.Triggers.pre_deploy_script)
+ #       path = os.path.join(base_path,
+ #                           self.config.Triggers.folder,
+ #                           self.config.Triggers.pre_deploy_script)
+        logger.info("Script path: %s" % path)
+        try:
+            output, exitcode = launcher(path, '', None)
+        except Exception, e:
+            logger.error("Script error: %s" % e)
+        logger.debug("Script output: %s" % output)
+        if exitcode == 0:
+
+            logger.info("Machine unlocked, starting the post-deploy watchdog...")
+            expires = time.time() + self.config.Triggers.post_deploy_timeout
+            self.watchdog_queue.put(expires)
+            return False
+        else:
+            logger.info("\033[32mUnlock process done, move-on aborted; waiting to next command call\033[0m")
+            return True
+
+
 
 
 if __name__ == "__main__":

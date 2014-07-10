@@ -8,6 +8,15 @@ poll_interval=300
 base_url=http://@@DLP_SERVER@@:@@DLP_PORT@@/api/v1/
 authkey=@@DLP_KEY@@
 
+[Triggers]
+folder=triggers
+pre_deploy_active=False
+pre_deploy_script=pre-deploy.sh
+post_deploy_active=False
+post_deploy_script=post-deploy.sh
+post_deploy_timeout=1800
+
+
 [loggers]
 keys=root,poller,command,workers,config,dlp,launcher
 

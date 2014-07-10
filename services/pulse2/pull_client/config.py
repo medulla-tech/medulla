@@ -51,6 +51,14 @@ class PullClientConfig(Singleton):
         hostname = ""
         mac_list = ""
 
+    class Triggers:
+        folder = "triggers"
+        pre_deploy_active = False
+        pre_deploy_script = "pre-deploy.sh"
+        post_deploy_active = False
+        post_deploy_script = "post-deploy.sh"
+        post_deploy_timeout = 1800
+
     class Proxy:
         # override system proxy
         # eg: http://proxy.mandriva.com:3128/
