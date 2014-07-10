@@ -30,12 +30,15 @@ if __name__ == '__main__':
     platform = platform().lower()
     
     # Init updateHandler according to system platform
-    if 'debian' in platform:
+    if 'debian' in platform or 'univention' in platform:
         from debianHandler import debianUpdateHandler
         updateHandler = debianUpdateHandler(platform)
     elif 'window' in platform:
         from windowsHandler import windowsUpdateHandler
         updateHandler = windowsUpdateHandler(platform)
+    else:
+        print 'Unsupported operating system'
+        sys.exit(1)
     
     # Disabling native update service
     # ugly try, except, but not really important to continue
