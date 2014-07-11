@@ -165,21 +165,16 @@ class WatchdogWorker(Thread):
     def _execute(self):
 
         logger.info("Watchdog - re-locking the access !")
-#        base_path = os.path.dirname(os.path.abspath(__file__))
-#        if "library.zip" in base_path:
-#            base_path = os.path.dirname(base_path)
-#            if base_path.endswith("\\") or  base_path.endswith("/"):
-#                base_path = base_path[:-1]
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        if "library.zip" in base_path:
+            base_path = os.path.dirname(base_path)
+            if base_path.endswith("\\") or  base_path.endswith("/"):
+                base_path = base_path[:-1]
 
-        #base_path = "./"
-        #path = os.path.join(base_path,
-        #path = "./%s/%s" % (
-        base_path = "/cygdrive/c/Program\ Files/Mandriva/Pulse-Pull-Client"
-        path = "%s/%s/%s" % (base_path,
-                            self.triggers_folder,
+        path = "%s/%s" % (  self.triggers_folder,
                             self.post_deploy_script)
         logger.info("Script path: %s" % path)
-        output, exitcode = launcher(path, '', None)
+        output, exitcode = launcher(path, '', base_path)
 
         logger.debug("Script output: %s" % output)
         if exitcode == 0:

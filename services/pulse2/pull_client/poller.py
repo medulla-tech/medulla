@@ -53,6 +53,7 @@ class QueuesContainer(object):
 class Poller(Thread):
     commands = []
     workers = []
+    last_update_ts = None
 
     def __init__(self, stop, **kwargs):
         Thread.__init__(self, **kwargs)
@@ -120,14 +121,37 @@ class Poller(Thread):
         # This is usefull when the agent is deployed in push mode, so it let the
         # push deployment finish before acting as a pull client
         #self.stop.wait(self.config.Poller.wait_poll)
-        logger.info("Polling for new commands")
         while not self.stop.is_set():
-            for cmd_dict in self.dlp_client.get_commands():
-                if self.is_new_command(cmd_dict):
-                    if self.pre_deploy_phase():
-                        break
-                    command = Command(cmd_dict, (self.parallel_queue, self.simple_queue), self.dlp_client)
-                    self.commands.append(command)
+            if self.last_update_ts is None or (time.time() - self.last_update_ts) > 3 * 60:
+                logger.info("Checking for agent updates **** ...")
+                self.last_update_ts = time.time()
+                base_path = os.path.dirname(os.path.abspath(__file__))
+
+                if "library.zip" in base_path:
+                    if base_path.endswith("\\") or  base_path.endswith("/"):
+                        base_path = base_path[:-1]
+                    base_path = os.path.dirname(base_path)
+
+                try:
+                    output, exitcode = launcher('triggers/update.sh', '', base_path)
+                except Exception, e:
+                    logger.error("Script error: %s" % e)
+                logger.debug("Script output: %s" % output)
+
+                if exitcode == 0:
+                    logger.info("Update success.")
+                elif exitcode == 42:
+                    logger.info("Already on latest version.")
+                else:
+                    logger.info("Update error.")
+            else:
+                logger.info("Polling for new commands")
+                for cmd_dict in self.dlp_client.get_commands():
+                    if self.is_new_command(cmd_dict):
+                        if self.pre_deploy_phase():
+                            break
+                        command = Command(cmd_dict, (self.parallel_queue, self.simple_queue), self.dlp_client)
+                        self.commands.append(command)
 
             logger.info("Status:\n%s" % "\n".join(map(str, self.commands)))
             self.stop.wait(self.config.Poller.poll_interval)
@@ -186,21 +210,16 @@ class Poller(Thread):
         if not self.config.Triggers.pre_deploy_active:
             return False
 
-#        base_path = os.path.dirname(os.path.abspath(__file__))
-#        if "library.zip" in base_path:
-#            if base_path.endswith("\\") or  base_path.endswith("/"):
-#                base_path = base_path[:-1]
-#            base_path = os.path.dirname(base_path)
-        base_path = "/cygdrive/c/Program\ Files/Mandriva/Pulse-Pull-Client"
-        path = "%s/%s/%s" % (base_path,
-                            self.config.Triggers.folder,
+        base_path = os.path.dirname(os.path.abspath(__file__))
+        if "library.zip" in base_path:
+            if base_path.endswith("\\") or  base_path.endswith("/"):
+                base_path = base_path[:-1]
+            base_path = os.path.dirname(base_path)
+        path = "%s/%s" % (  self.config.Triggers.folder,
                             self.config.Triggers.pre_deploy_script)
- #       path = os.path.join(base_path,
- #                           self.config.Triggers.folder,
- #                           self.config.Triggers.pre_deploy_script)
         logger.info("Script path: %s" % path)
         try:
-            output, exitcode = launcher(path, '', None)
+            output, exitcode = launcher(path, '', base_path)
         except Exception, e:
             logger.error("Script error: %s" % e)
         logger.debug("Script output: %s" % output)
