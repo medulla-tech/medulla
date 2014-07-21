@@ -761,6 +761,8 @@ class SetupApp(object):
         self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
         self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "localhost"
         self.defaults['glpi_purge_machines'] = self.options["glpi_purge_machines"]
+        self.defaults['glpi_webservices_user'] = self.options["glpi_webservices_user"]
+        self.defaults['glpi_webservices_passwd'] = self.options["glpi_webservices_passwd"]
         self.defaults['ipexternal'] = self.options["ipexternal"] or None
         self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
         self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
@@ -1061,11 +1063,13 @@ class SetupApp(object):
         db_name = self.read_opt("GLPI database name", self.defaults["glpidbname"])
         glpi_conf.set("main", "dbname", db_name)
 	glpi_purge_machines = self.read_opt("Purge machines from GLPI dustbin", self.defaults['glpi_purge_machines'])
+	glpi_webservices_user = self.read_opt("GLPI Webservices Username", self.defaults['glpi_webservices_user'])
+	glpi_webservices_passwd = self.read_opt("GLPI Webservices password", self.defaults['glpi_webservices_passwd'])
 	if glpi_purge_machines:
             glpi_conf.set("webservices", "purge_machine", 1)
             glpi_conf.set("webservices", "glpi_base_url", url)
-            glpi_conf.set("webservices", "glpi_username", db_user)
-            glpi_conf.set("webservices", "glpi_password", db_password)
+            glpi_conf.set("webservices", "glpi_username", glpi_webservices_user)
+            glpi_conf.set("webservices", "glpi_password", glpi_webservices_passwd)
 
         if self.defaults['inventory.service.enable'] :
             invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
@@ -1287,6 +1291,10 @@ if __name__ == '__main__':
     parser.add_option("--glpi-purge-machines", dest="glpi_purge_machines",
                       default=False, action="store_true",
                       help="Purge machines from dustbin in GLPI when they are deleted in Pulse")
+    parser.add_option("--glpi-webservices-user", dest="glpi_webservices_user",
+                      help="GLPI Webservices user")
+    parser.add_option("--glpi-webservices-passwd", dest="glpi_webservices_passwd",
+                      help="GLPI Webservices password")
     parser.add_option("--glpi-url", dest="glpiurl",
                       help="GLPI url")
     parser.add_option("--glpi-dbhost", dest="glpidbhost",
@@ -1334,6 +1342,8 @@ if __name__ == '__main__':
         'server_package' : not options.disable_package,
         'glpi_enable' : options.enable_glpi,
         'glpi_purge_machines' : options.glpi_purge_machines,
+        'glpi_webservices_user' : options.glpi_webservices_user,
+        'glpi_webservices_passwd' : options.glpi_webservices_passwd,
         'glpi_url' : options.glpiurl,
         'glpi_dbuser' : options.glpidbuser,
         'glpi_dbpassword' : options.glpidbpasswd,
