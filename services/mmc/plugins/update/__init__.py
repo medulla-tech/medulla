@@ -188,6 +188,12 @@ class RpcProxy(RpcProxyI):
 
 
     def installProductUpdates(self):
+
+        # Reset update cache
+        global last_update_check_ts, available_updates
+        last_update_check_ts = None
+        available_updates = []
+
         pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$'"
         install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
         install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (self.updMgrPath, pulse_packages_filter, self.updMgrPath)
