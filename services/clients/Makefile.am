@@ -28,7 +28,20 @@ posixclientdir = $(localstatedir)/lib/pulse2/clients
 posixclientscripts = generate-agents generate-agent-pack.sh \
                    templates/mac/package/Contents/Resources/postflight \
                    templates/deb/package/DEBIAN/postinst \
-                   templates/rpm/package/SOURCES/postinst
+                   templates/rpm/package/SOURCES/postinst \
+		   linux/deb/generate.sh \
+		   linux/deb/install.sh.template \
+		   linux/deb/template/fusion_inventory.sh \
+		   linux/deb/template/install.sh \
+		   linux/deb/template/shorewall.sh \
+		   linux/deb/template/ssh.sh \
+		   linux/deb/template/update_manager.sh \
+		   linux/deb/template/vnc/linuxvnc_init \
+		   linux/deb/template/vnc/linuxvnc.sh \
+		   linux/deb/template/vnc/vnc.sh \
+		   linux/deb/template/vnc/x11vnc.desktop \
+		   linux/deb/template/vnc/x11vnc.sh
+
 
 posixclientdata = agents.conf \
                 templates/mac/package/Contents/package_version \
@@ -38,13 +51,6 @@ nobase_posixclient_SCRIPTS = $(posixclientscripts)
 nobase_posixclient_DATA = $(posixclientdata) 
 
 install-data-local:
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/mac
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/deb
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/rpm
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb/template
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb/template/vnc
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/deb/package/opt
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SPECS
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILD
