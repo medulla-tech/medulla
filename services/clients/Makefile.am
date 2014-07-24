@@ -41,6 +41,10 @@ install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/mac
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/deb
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/rpm
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb/template
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/linux/deb/template/vnc
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/deb/package/opt
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SPECS
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILD
