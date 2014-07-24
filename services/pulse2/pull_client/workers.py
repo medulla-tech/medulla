@@ -21,7 +21,6 @@ import time
 import logging
 import Queue
 from threading import Thread
-from subprocess import Popen, PIPE
 
 from datetime import datetime
 

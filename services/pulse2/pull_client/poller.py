@@ -23,7 +23,6 @@ import pickle
 import importlib
 from threading import Thread, Event
 from Queue import Queue
-from subprocess import Popen, PIPE
 
 from command import Command
 from workers import WatchdogWorker, ResultWorker, StepWorker
