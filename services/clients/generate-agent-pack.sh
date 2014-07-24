@@ -9,3 +9,6 @@ linux/deb/generate.sh
 
 # Generate win32 agents
 win32/generate-agent-pack.sh
+
+# Generate mac agents
+./generate-agents

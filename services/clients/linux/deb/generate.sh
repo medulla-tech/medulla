@@ -12,6 +12,9 @@ if [ ! $? -eq 0 ]; then
     exit 1
 fi
 
+# Updating install.sh with server IP
+cat ../install.sh.template|sed 's/__SERVER__/192.168.71.90/' > ../install.sh
+
 echo "Using http://$pulseip:9999 as inventory server" 
 
 echo pulse_url=\"http://$pulseip:9999\" > server_conf
