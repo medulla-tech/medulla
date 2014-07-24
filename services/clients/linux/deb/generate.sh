@@ -13,7 +13,7 @@ if [ ! $? -eq 0 ]; then
 fi
 
 # Updating install.sh with server IP
-cat ../install.sh.template|sed 's/__SERVER__/192.168.71.90/' > ../install.sh
+cat ../install.sh.template|sed "s/__SERVER__/$pulseip/" > ../install.sh
 
 echo "Using http://$pulseip:9999 as inventory server" 
 
