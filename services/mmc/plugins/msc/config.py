@@ -91,7 +91,7 @@ class MscConfig(MscDatabaseConfig):
     # Refresh time
     web_def_refresh_time = 30000
     # Use noVNC instead of TightVNC java applet
-    web_def_use_no_vnc = 0
+    web_def_use_no_vnc = 1
 
     # local proxy
     web_allow_local_proxy = True

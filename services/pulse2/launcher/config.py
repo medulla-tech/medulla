@@ -115,7 +115,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     # SSH Proxy stuff
     tcp_sproxy_path = '/usr/sbin/pulse2-tcp-sproxy'
     tcp_sproxy_host = None
-    tcp_sproxy_check = True
+    tcp_sproxy_check = False
     tcp_sproxy_port_range_start = 8100
     tcp_sproxy_port_range_end = 8200
     tcp_sproxy_establish_delay = 60
@@ -123,7 +123,7 @@ class LauncherConfig(pulse2.utils.Singleton):
     tcp_sproxy_session_lenght = 3600
 
     # Create or not a web_proxy (to use with noVNC)
-    create_web_proxy = False
+    create_web_proxy = True
 
     # Smart Cleaner Stuff
     is_smart_cleaner_available = True
