@@ -21,11 +21,9 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 doc_DATA = \
-	Pulse2-User-Manual-FR.pdf \
 	Pulse2-User-Manual-EN.pdf
 
 MAINTAINERCLEANFILES = \
-	Pulse2-User-Manual-FR.pdf \
 	Pulse2-User-Manual-EN.pdf
 
 EXTRA_DIST = $(doc_DATA)
