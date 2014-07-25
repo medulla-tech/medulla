@@ -6,3 +6,4 @@ wget http://__SERVER__/downloads/linux/deb/deb_agent.tar.gz
 tar zxf deb_agent.tar.gz
 sh install.sh
 rm -r $workdir
+echo "Please reboot your computer to get the agents fully functional."
