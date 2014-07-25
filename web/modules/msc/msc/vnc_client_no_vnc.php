@@ -151,7 +151,7 @@ if ($proxyActive) {
                             id="sendCtrlAltDelButton">
                             </div></td>
 		    <td width="1%"><div id="noVNC_buttons">
-            <input type=button id="toClipboard" class="btnPrimary" value="<?php print _T('Send text to clipboard', 'msc'); ?>" />
+            <input type=button id="toClipboard" class="btnPrimary" style="display: none" value="<?php print _T('Send text to clipboard', 'msc'); ?>" />
                         </div></td>
                 </tr></table>
             </div>
@@ -207,7 +207,7 @@ if ($proxyActive) {
                 default:             level = "warn";   break;
             }
 
-            if (state === "normal") { cad.disabled = false; }
+            if (state === "normal") { cad.disabled = false; update_ui(); }
             else                    { cad.disabled = true; }
 
             if (typeof(msg) !== 'undefined') {
@@ -246,8 +246,7 @@ if ($proxyActive) {
 
         }
         
-        $(function(){
-            
+        function update_ui(){
             
             $D('sendCtrlAltDelButton').style.display = "inline";
             $D('sendCtrlAltDelButton').onclick = sendCtrlAltDel;
@@ -260,6 +259,8 @@ if ($proxyActive) {
 		var clipText = prompt('Enter text to send to machine clipboard:');
 		rfb.clipboardPasteFrom(clipText);	    
 	    });
+            
+            $('#toClipboard').show();
 
 	    // On close window, disconnect
 
@@ -269,7 +270,8 @@ if ($proxyActive) {
             
             jQuery('canvas').resize(windowResize);
 
-        });
+        };
+        
         
         
         window.auto_connect = function () {
