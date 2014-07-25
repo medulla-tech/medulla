@@ -10,7 +10,7 @@ if [ -f /var/lock/linuxvnc ]; then
     exit 0
 fi
 echo "Starting linuxvnc"
-linuxvnc 1 -rfbport 5900 &
+linuxvnc 1 -rfbport 5900 -listen localhost &
 touch /var/lock/linuxvnc
 ;;
 stop)
