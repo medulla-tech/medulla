@@ -41,7 +41,7 @@ def launcher(start_file, params, workdir):
     """
     output_queue = Queue.Queue()
     output = ""
-    cmd_bash = "bash -c \"%s %s\"" % (start_file, params)
+    cmd_bash = "bash -c '%s %s'" % (start_file, params)
     output_queue.put("%f C: %s\n" % (time.time(), cmd_bash))
     logger.debug("Running %s" % cmd_bash)
     p = Popen(shlex.split(cmd_bash),
