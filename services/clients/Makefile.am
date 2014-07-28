@@ -33,7 +33,6 @@ posixclientscripts = generate-agents generate-agent-pack.sh \
 		   linux/deb/install.sh.template \
 		   linux/deb/template/fusion_inventory.sh \
 		   linux/deb/template/install.sh \
-		   linux/deb/template/shorewall.sh \
 		   linux/deb/template/ssh.sh \
 		   linux/deb/template/update_manager.sh \
 		   linux/deb/template/vnc/linuxvnc_init \
