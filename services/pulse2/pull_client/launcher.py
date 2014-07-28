@@ -1,5 +1,6 @@
 import shlex
 import time
+from base64 import b64encode
 from threading import Thread, Event
 from subprocess import Popen, PIPE
 import Queue
@@ -24,7 +25,11 @@ class ReadFlux(Thread):
             line = self.pipe.readline() # blocking
             if not line:
                 break
-            self.output_queue.put("%f %s %s" % (time.time(), self.prepend, line))
+            self.output_queue.put("%f %s %s" % (time.time(),
+                                                self.prepend,
+                                                b64encode(line)
+                                                )
+                                  )
 
     def stop(self):
         self._stop.set()
