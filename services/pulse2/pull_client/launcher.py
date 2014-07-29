@@ -1,8 +1,9 @@
-import shlex
+import os
 import time
 from base64 import b64encode
 from threading import Thread, Event
 from subprocess import Popen, PIPE
+from tempfile import NamedTemporaryFile
 import Queue
 import logging
 
@@ -41,10 +42,14 @@ def launcher(start_file, params, workdir):
     """
     output_queue = Queue.Queue()
     output = ""
-    cmd_bash = "bash -c '%s %s'" % (start_file, params)
+    stf = NamedTemporaryFile(mode="w", delete=False)
+    cmd_bash = "%s %s" % (start_file, params)
+    stf.write(cmd_bash)
+    stf.close()
+
     output_queue.put("%f C: %s\n" % (time.time(), cmd_bash))
     logger.debug("Running %s" % cmd_bash)
-    p = Popen(shlex.split(cmd_bash),
+    p = Popen(["bash", stf.name],
               bufsize=0,
               stderr=PIPE,
               stdout=PIPE,
@@ -59,7 +64,7 @@ def launcher(start_file, params, workdir):
     std_reader.start()
     # Wait for command to end
     exitcode = p.wait()
-    logger.debug("Finisehd %s, exitcode: %d" % (cmd_bash, exitcode))
+    logger.debug("Finished %s, exitcode: %d" % (cmd_bash, exitcode))
     output_queue.put("%f X: %d\n" % (time.time(), exitcode))
     err_reader.stop()
     std_reader.stop()
@@ -67,4 +72,7 @@ def launcher(start_file, params, workdir):
     while not output_queue.empty():
         output += output_queue.get()
         output_queue.task_done()
+
+    os.unlink(stf.name)
+
     return output, exitcode
