@@ -35,36 +35,46 @@ from twisted.internet.error import ProcessDone
 
 
 class ForkingProtocol(ProcessProtocol):
-    """ Protocol to fork a SSH session """
+    """ Protocol to fork a process"""
 
-    def __init__(self, callback):
+    def __init__(self, name, callback=None):
+        """
+        @param name: name or description (for logging only)
+        @type name: str
+
+        @param callback: function to call when forked process finished
+        @type callback: func
+        """
         ProcessProtocol()
         self.logger = logging.getLogger()
 
+        self.name = name
         self.callback = callback
 
 
     def connectionMade(self):
-        self.logger.debug("SSH Tunnel: Opening of daemon started")
+        self.logger.debug("%s: Opening of process started" % self.name)
 
 
     def outReceived(self, data):
-        self.logger.debug("SSH Tunnel: process data received: %s" % (data))
+        self.logger.debug("%s: process data received: %s" % (self.name, data))
         ProcessProtocol.outReceived(self, data)
 
     def errReceived(self, reason):
-        self.logger.warn("SSH Tunnel: process failed: %s" % (reason))
+        self.logger.warn("%s: process failed: %s" % (self.name, reason))
         self.transport.loseConnection()
         ProcessProtocol.errReceived(self, reason)
 
     def processEnded(self, reason):
         err = reason.trap(ProcessDone)
         if err==ProcessDone:
-            self.logger.debug("SSH Tunnel: process successfully ended")
+            self.logger.debug("%s: process successfully ended" % self.name)
         else:
-            self.logger.warn("SSH Tunnel: closing failed: %s" % (reason))
+            self.logger.warn("%s: closing failed: %s" % (self.name, reason))
 
-        self.callback(reason)
+        if self.callback:
+            self.callback(reason)
+
 
 
 
@@ -341,6 +351,42 @@ class TunnelBuilder(object):
     def process_ended(reason):
         pass
 
+
+class Forker(object):
+    """ Ordinary shell execution """
+
+    args = []
+    callback = None
+
+    def __init__(self, script, callback):
+        """
+        @param script: script to execute
+        @type script: str
+
+        @param callback: function called when process ends
+        @type: callable
+        """
+
+        if isinstance(script, list):
+            self.args = script
+        elif isinstance(script, str) or isinstance(script, unicode):
+            self.args = script.split(" ")
+
+        self.callback = callback
+
+
+    def open(self):
+        """
+        Creates a daemon ssh session.
+
+        @return: True if a new session opened
+        @rtype: Deferred
+        """
+        protocol = ForkingProtocol("\033[33mCollector\033[0m", self.callback)
+        reactor.spawnProcess(protocol,
+                             self.args[0],
+                             self.args,
+                             usePTY=True)
 
 
 

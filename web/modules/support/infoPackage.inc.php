@@ -23,7 +23,6 @@
 /**
  * dashboard module declaration
  */
-
 require_once("modules/pulse2/version.php");
 
 $mod = new Module("support");
@@ -38,11 +37,14 @@ $submod->setDefaultPage("support/support/index");
 $submod->setVisibility(false);
 $submod->setPriority(110);
 
+$page = new Page("collect", _T("Collect", "support"));
+$submod->addPage($page);
 $page = new Page("connect", _T("Connect", "support"));
 $submod->addPage($page);
 $page = new Page("disconnect", _T("Disconnect", "support"));
 $submod->addPage($page);
-
+$page = new Page("get_file", _T("Download an archive including logs and config files", "support"));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 

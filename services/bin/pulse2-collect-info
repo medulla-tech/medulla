@@ -1,0 +1,55 @@
+#!/bin/bash
+#
+# (c) 2007-2014 Mandriva, http://www.mandriva.com/
+#
+# $Id: pulse2-ping 24 2008-02-08 16:36:01Z nrueff $
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# This script collects necessary info for helpdesk support
+
+ARCHIVE_PATH=$1
+
+PULSE2_COLLECT_INFO_DIR="/tmp/pulse2-collect-info"
+
+# creates a work directory
+if [ ! -d "$PULSE2_COLLECT_INFO_DIR" ];then
+    mkdir $PULSE2_COLLECT_INFO_DIR
+fi
+
+cd $PULSE2_COLLECT_INFO_DIR
+
+if [ "$(ls -A $DIR)" ]; then
+    rm -rf *
+fi
+
+# several info placed in text files
+lsb_release -a  >> os-info
+dpkg --get-selections > selections
+dpkg -l | egrep '(mmc|pulse2)' > packages
+
+cp /etc/pulse-licensing/installation_id .
+
+ln -s /etc/mmc etc 
+ln -s /var/log/mmc log 
+
+7z -mx=9 -m0=lzma -l a $ARCHIVE_PATH os-info installation_id selections packages etc log
+
+rm -rf $PULSE2_COLLECT_INFO_DIR
+
+chmod 644 $ARCHIVE_PATH

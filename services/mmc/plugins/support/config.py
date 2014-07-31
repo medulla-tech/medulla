@@ -53,6 +53,10 @@ class SupportConfig(PluginConfig):
         self.license_tmp_file = "/var/lib/mmc/pulse_license_info"
         self.country = "FR"
 
+        self.collector_script_path = "/usr/sbin/pulse2-collect-info"
+        self.collector_archive_path = "/tmp/pulse2-collect-info.7z"
+
+
 
     def readConf(self):
         PluginConfig.readConf(self)
@@ -110,6 +114,14 @@ class SupportConfig(PluginConfig):
         self.country = self.safe_get("main",
                                      "country",
                                       self.country)
+
+        self.collector_script_path = self.safe_get("main",
+                                                   "collector_script_path",
+                                                   self.collector_script_path)
+        self.collector_archive_path = self.safe_get("main",
+                                                    "collector_archive_path",
+                                                     self.collector_archive_path)
+
 
 
     def _cron_randomize(self):

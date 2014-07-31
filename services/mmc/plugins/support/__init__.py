@@ -29,7 +29,7 @@ from mmc.core.tasks import TaskManager
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.support.config import SupportConfig
 from mmc.plugins.support.panel import RemoteSupportPanel, LicensePanel
-from mmc.plugins.support.process import TunnelBuilder
+from mmc.plugins.support.process import TunnelBuilder, Forker
 from mmc.plugins.support.jsonquery import Query
 
 APIVERSION = "0:1:0"
@@ -231,6 +231,12 @@ builder = TunnelBuilder(config)
 
 license_panel = LicensePanel("license")
 
+class CollectorState(object):
+    """ Container to store states of Collector """
+    in_progress = False
+    info_collected = False
+
+cd = CollectorState()
 
 def open():
     return builder.open()
@@ -254,7 +260,70 @@ def get_subscription_info():
 def get_license_info():
     return LicenseChecker().get_license_info()
 
+# --------------- Collector ---------------------
+def collect_info():
+    """
+    Calls a shell script collecting necessary info.
 
+    Called script creates an archive which will be proposed
+    to download via web UI.
+    """
 
+    def sender(*args):
+        """
+        Handler called when script ends.
 
+        This callable is passed as callback to forking protocol.
+        """
+
+        logging.getLogger().info("Collector: Archive created")
+        cd.info_collected = True
+        cd.in_progress = False
+
+    # script path
+    script = [config.collector_script_path,
+              config.collector_archive_path,
+              ]
+
+    cd.in_progress = True
+
+    # script calling
+    Forker(script, sender).open()
+
+def info_collected():
+    """
+    Checks if archive is ready to download.
+
+    @return: True if script of collector finished
+    @rtype: bool
+    """
+    return cd.info_collected
+
+def collector_in_progress():
+    """
+    Checks if collector script is running.
+
+    @return: True if script is running
+    @rtype: bool
+    """
+
+    return cd.in_progress
+
+def get_archive_link():
+    """
+    @return: path to archive link
+    @rtype: str
+    """
+    return config.collector_archive_path
+
+def delete_archive():
+    """
+    Erases created archive.
+
+    Called usualy after download.
+    """
+    import os
+    if os.path.exists(config.collector_archive_path):
+        os.unlink(config.collector_archive_path)
+    cd.info_collected = False
 

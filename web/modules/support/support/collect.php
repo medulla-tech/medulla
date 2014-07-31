@@ -1,10 +1,7 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
- *
- * $Id$
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,35 +19,10 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
 
-function open() {
-    return xmlCall("support.open");
-}
-function close() {
-    return xmlCall("support.close");
-}
-function established() {
-    return xmlCall("support.established");
-}
-function get_port() {
-    return xmlCall("support.get_port");
-}
-function collect_info() {
-    return xmlCall("support.collect_info");
-}
-function collector_in_progress() {
-    return xmlCall("support.collector_in_progress");
-}
-function info_collected() {
-    return xmlCall("support.info_collected");
-}
-function get_archive_link() {
-    return xmlCall("support.get_archive_link");
-}
-function delete_archive() {
-    return xmlCall("support.delete_archive");
-}
+require_once("modules/support/includes/xmlrpc.php");
 
+collect_info();
+header("Location: " . urlStrRedirect("base/main/"));
+exit;
 ?>

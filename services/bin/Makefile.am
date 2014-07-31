@@ -24,6 +24,7 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-ping pulse2-tcp-sproxy pulse2-setup pulse2-load-defaults \
 	pulse2-scheduler-proxy pulse2-extract-glpi-search-options \
 	pulse2-backup-servers pulse2-debug pulse2-dbupdate \
-	pulse2-msc-clean-database pulse2-inventory-clean-database
+	pulse2-msc-clean-database pulse2-inventory-clean-database \
+	pulse2-collect-info
 
 dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-dlp-server
