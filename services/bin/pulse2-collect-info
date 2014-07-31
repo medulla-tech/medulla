@@ -40,7 +40,6 @@ fi
 
 # several info placed in text files
 lsb_release -a  >> os-info
-dpkg --get-selections > selections
 dpkg -l | egrep '(mmc|pulse2)' > packages
 
 cp /etc/pulse-licensing/installation_id .
@@ -48,7 +47,7 @@ cp /etc/pulse-licensing/installation_id .
 ln -s /etc/mmc etc 
 ln -s /var/log/mmc log 
 
-7z -mx=9 -m0=lzma -l a $ARCHIVE_PATH os-info installation_id selections packages etc log
+7z -mx=9 -m0=lzma -l a $ARCHIVE_PATH os-info installation_id packages etc log
 
 rm -rf $PULSE2_COLLECT_INFO_DIR
 
