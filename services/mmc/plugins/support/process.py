@@ -382,7 +382,7 @@ class Forker(object):
         @return: True if a new session opened
         @rtype: Deferred
         """
-        protocol = ForkingProtocol("\033[33mCollector\033[0m", self.callback)
+        protocol = ForkingProtocol("Collector", self.callback)
         reactor.spawnProcess(protocol,
                              self.args[0],
                              self.args,
