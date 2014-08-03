@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-28 01:00+0200\n"
+"POT-Creation-Date: 2014-08-04 01:01+0200\n"
 "PO-Revision-Date: 2014-07-04 07:42+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -23,11 +23,15 @@ msgstr ""
 msgid "Activate again / Use another subscription"
 msgstr ""
 
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr ""
+
 #: modules/support/includes/panels/license.inc.php:90
 msgid "Computers"
 msgstr "电脑"
 
-#: modules/support/infoPackage.inc.php:41
+#: modules/support/infoPackage.inc.php:42
 msgid "Connect"
 msgstr "连线"
 
@@ -36,9 +40,17 @@ msgid "Connect to support"
 msgstr "连线至支援"
 
 #: modules/support/includes/panels/remotesupport.inc.php:41
-#: modules/support/infoPackage.inc.php:43
+#: modules/support/infoPackage.inc.php:44
 msgid "Disconnect"
 msgstr "断开连线"
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:51
+msgid "Download archive"
+msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:60
 msgid "Email"
@@ -47,6 +59,10 @@ msgstr "电子邮件"
 #: modules/support/includes/panels/license.inc.php:105
 msgid "End"
 msgstr "结束"
+
+#: modules/support/includes/panels/remotesupport.inc.php:54
+msgid "Extract log and config files"
+msgstr ""
 
 #: modules/support/includes/panels/license.inc.php:64
 msgid "Hours"
@@ -61,7 +77,7 @@ msgid "Phone"
 msgstr "电话"
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
-#: modules/support/infoPackage.inc.php:36
+#: modules/support/infoPackage.inc.php:35
 msgid "Remote support"
 msgstr "远端支援"
 
@@ -70,7 +86,7 @@ msgid "Subscription info"
 msgstr "订阅资讯"
 
 #: modules/support/includes/panels/license.inc.php:53
-#: modules/support/infoPackage.inc.php:32
+#: modules/support/infoPackage.inc.php:31
 msgid "Support"
 msgstr "支援"
 
