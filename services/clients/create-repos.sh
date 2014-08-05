@@ -114,7 +114,10 @@ if [ -d rpm ]; then
                 echo "ERROR: Exiting."
                 exit 1;		
             fi		    
-	done	
+	done
+        if [ -f rpm/repodata/repomd.xml.asc ]; then
+	    rm -f rpm/repodata/repomd.xml.asc	
+	fi	
 	gpg --detach-sign --passphrase $PASSPHRASE --armor rpm/repodata/repomd.xml 
         if [ $? -eq 0 ]; then
             echo "INFO: RPM repository successfully signed"
