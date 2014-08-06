@@ -547,26 +547,26 @@ Requires: %{requires}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/%{opt}/%{name}
-install postinst $RPM_BUILD_ROOT/%{opt}/%{name}/postinst
-install id_rsa.pub $RPM_BUILD_ROOT/%{opt}/%{name}/id_rsa.pub
-install inventory.url $RPM_BUILD_ROOT/%{opt}/%{name}/inventory.url
+install -d $RPM_BUILD_ROOT/%{opt_dir}/%{name}
+install postinst $RPM_BUILD_ROOT/%{opt_dir}/%{name}/postinst
+install id_rsa.pub $RPM_BUILD_ROOT/%{opt_dir}/%{name}/id_rsa.pub
+install inventory.url $RPM_BUILD_ROOT/%{opt_dir}/%{name}/inventory.url
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%dir /%{opt}/%{name}/postinst
+%dir /%{opt_dir}/%{name}/postinst
 
 %defattr(-,root,root,-)
-/%{opt}/%{name}/postinst
-/%{opt}/%{name}/id_rsa.pub
-/%{opt}/%{name}/inventory.url
+/%{opt_dir}/%{name}/postinst
+/%{opt_dir}/%{name}/id_rsa.pub
+/%{opt_dir}/%{name}/inventory.url
 
 %post
-chmod +x /%{opt}/%{name}/postinst
-/%{opt}/%{name}/postinst
-rm -rf /%{opt}/%{name}/
+chmod +x /%{opt_dir}/%{name}/postinst
+/%{opt_dir}/%{name}/postinst
+rm -rf /%{opt_dir}/%{name}/
         """
         content = "\n".join(var_header) + "\n" + specs
 
