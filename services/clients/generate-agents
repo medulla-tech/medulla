@@ -178,7 +178,11 @@ class InventoryURLGen(object):
         else:
             config = P2PServerCP()
             config.setup(self.pkg_ini_path)
-            self.host = config.public_ip
+            host = config.public_ip
+            if host == "":
+                self.host = self.probe_fqdn()
+            else:
+                self.host = config.public_ip
 
 
     def probe_fqdn(self):
@@ -187,7 +191,7 @@ class InventoryURLGen(object):
         if err:
             print "ERROR: %s" % err
         fqdn = out.split("\n")
-        self.host = fqdn[0]
+        return fqdn[0]
 
 
 
@@ -779,6 +783,7 @@ if __name__ == "__main__":
     kwargs = args_parse(__file__, sys.argv)
     inv = InventoryURLGen(**kwargs)
     inventory_url = inv.get_url()
+    print "INFO: Inventory URL: %s" % inventory_url
     tag = inv.get_tag()
 
     pgen = PackagesGenerator(inventory_url, tag)
