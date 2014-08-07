@@ -29,9 +29,15 @@ EMAIL="sales@mandriva.com"
 GPG_KEY_CONF=$HOME/gpg-key-conf
 MACROS=$HOME/.rpmmacros
 ID="$NAME <$EMAIL>"
+RPM_REPO_NAME="pulse2-agents"
+RPM_REPO_FILE="${RPM_REPO_NAME}.repo"
+MY_URL=$(hostname -I | cut -d' ' -f1) 
 
 # ---------- Overwrite .rpmmacros file -----------------
-echo "%_gpg_name=$ID" > $MACROS
+echo "%_gpg_name	$ID" > $MACROS
+echo "%_signature    gpg" >> $MACROS
+echo "%_gpg_path     /root/.gnupg" >> $MACROS
+echo "%_topdir             /var/lib/pulse2/clients" >> $MACROS
 
 if [ ! -f $GPG_KEY_CONF ]; then
     # --------------------- passphrase generate --------------------------
@@ -95,37 +101,56 @@ fi
 # ------------------------ RPM REPOSITORY ------------------------------
 if [ -d rpm ]; then
     echo "INFO: Creating RPM repository"
-    /usr/bin/createrepo rpm
-    if [ $? -eq 0 ]; then
-        echo "INFO: RPM repository successfully created"	   
-	echo "INFO: Signing the packages:"
-        for RPMFILE in `ls rpm/*.rpm`; do
-	    echo "INFO: ... package $RPMFILE"	
-            expect -c " 
+
+    echo "INFO: Signing the packages:"
+
+    for RPMFILE in `ls rpm/*.rpm`; do
+        echo "INFO: ... package $RPMFILE"
+
+        expect -c " 
 	        set timeout 2
-	        spawn rpmsign --addsign ${RPMFILE} 
+	        spawn rpmsign --resign ${RPMFILE} 
                 expect -exact \"Enter pass phrase: \" 		
                 send -- \"${PASSPHRASE}\r\"
-                expect exp_continue
+                expect eof
                 "
 	    
-	    if [ $? -ne 0 ]; then
+        if [ $? -ne 0 ]; then
                 echo "ERROR: Signing process of package '$RPMFILE' failed."
                 echo "ERROR: Exiting."
                 exit 1;		
-            fi		    
-	done
+        fi		    
+    done
+
+    /usr/bin/createrepo -d -v rpm
+    if [ $? -eq 0 ]; then
+
+    echo "INFO: RPM repository successfully created"	   
+ 
         if [ -f rpm/repodata/repomd.xml.asc ]; then
 	    rm -f rpm/repodata/repomd.xml.asc	
 	fi	
-	gpg --detach-sign --passphrase $PASSPHRASE --armor rpm/repodata/repomd.xml 
+	gpg --detach-sign --passphrase $PASSPHRASE --armor rpm/repodata/repomd.xml
+
         if [ $? -eq 0 ]; then
             echo "INFO: RPM repository successfully signed"
-            gpg --export --armour $ID > RPM-GPG-KEY-pulse2	    
-	    	
-	fi	
-    else   	
-        echo "WARNING: RPM repository wasn't created !"	    
+            gpg -v --export --armour $ID > RPM-GPG-KEY-pulse2
+        else	    
+            echo "WARNING: Signing of RPM repository failed"
+        fi    
+
+	echo "INFO: Creating .repo file"
+	echo "[$RPM_REPO_NAME]" > rpm/$RPM_REPO_FILE
+	echo "name = Pulse2 Agents" >> rpm/$RPM_REPO_FILE
+	echo "baseurl = http://$MY_URL/downloads/rpm" >> rpm/$RPM_REPO_FILE
+	echo "gpgkey = http://$MY_URL/downloads/RPM-GPG-KEY-pulse2" >> rpm/$RPM_REPO_FILE
+	echo "enabled=1" >> rpm/$RPM_REPO_FILE
+	echo "gpgcheck=1" >> rpm/$RPM_REPO_FILE
+		
+    else   
+
+        echo "WARNING: RPM repository wasn't created !"	   
+        exit 1;	
     fi
 
 else
