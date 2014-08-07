@@ -1,24 +1,30 @@
 #!/bin/bash
 
 PREFIX="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+match_distro="$( lsb_release -i )"
+DISTRO=${match_distro#"Distributor ID:"}
+
 ssh_pub_key="${PREFIX}/id_rsa.pub"
 inv_file="${PREFIX}/inventory.url"
 
 
-if [ -e ${ssh_pub_key} ]; then
-    if ! [ -d "/root/.ssh" ]; then
-	echo "Create missing SSH profile ..."    
-        mkdir -p /root/.ssh
-    fi 	
+if ! [ -d "/root/.ssh" ]; then
+    echo "Create missing SSH profile ..."    
+    mkdir -p /root/.ssh
+fi 	
     	
-    tee -a /root/.ssh/authorized_keys < ${ssh_pub_key}
-fi	
+tee -a /root/.ssh/authorized_keys < ${ssh_pub_key}
 
 
+fusion_dir="/etc/fusioninventory" 
+fusion_cfg="$fusion_dir/agent.cfg"
 
-fusion_cfg="/etc/fusioninventory/agent.cfg" 
+FUSION_PERL_LIB=$(find /usr -name  FusionInventory-Agent)    
+
 url=$(sed '1q;d' ${inv_file})
 tag=$(sed '2q;d' ${inv_file})
+
 if [ -z "$url" ]; then
     echo "ERROR: Unable to get inventory server URL"	    
     exit 1
@@ -26,6 +32,21 @@ else
     echo "INFO: Detected inventory url - $url"
 fi 
 
+if [ $DISTRO = "OpenMandrivaLinux" ];then
+
+    if [ ! -d $fusion_dir ]; then
+        mkdir $fusion_dir
+    fi	   
+     
+    if [ ! -f $fusion_cfg ]; then
+	touch $fusion_cfg    
+    fi	
+
+    echo '/basevardir/c\basevardir=/var/lib/fusioninventory-agent' >> $fusion_cfg
+    echo "/share-dir/c\share-dir=$FUSION_PERL_LIB" >> $fusion_cfg
+
+
+fi	
 
 if [ -f ${fusion_cfg} ];then
     grep -q "${url}" ${fusion_cfg} || echo "${url}" >> ${fusion_cfg}
