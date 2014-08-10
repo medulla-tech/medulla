@@ -1,39 +1,53 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-07-28 01:00+0200\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-08-08 16:01+0200\n"
 "PO-Revision-Date: 2014-04-21 20:48+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
-"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/ja_JP/)\n"
-"Language: ja_JP\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "自分の全エンティティ"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "ルートエンティティ"
+
+#: modules/pulse2/includes/menu_action.php:34
+msgid "Inventory"
+msgstr "在庫"
 
 #: modules/pulse2/includes/menu_action.php:35
 msgid "Backup status"
 msgstr "バックアップステータス"
 
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr "コンピューター一覧"
+#: modules/pulse2/includes/menu_action.php:36
+msgid "Remote control"
+msgstr "リモートコントロール"
 
-#: modules/pulse2/includes/menu_group_action.php:96
-msgid "Csv export"
-msgstr "CSV エクスポート"
+#: modules/pulse2/includes/menu_action.php:37
+#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:78
+msgid "Read log"
+msgstr "ログの読み込み"
+
+#: modules/pulse2/includes/menu_action.php:38
+msgid "Software deployment"
+msgstr "ソフトウェアデプロイ"
+
+#: modules/pulse2/includes/menu_action.php:39
+#: modules/pulse2/includes/menu_group_action.php:83
+msgid "Imaging management"
+msgstr "イメージング管理"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -47,73 +61,60 @@ msgstr "このプロファイルを削除"
 msgid "Display this group's content"
 msgstr "このグループ内容を表示"
 
-#: modules/pulse2/includes/menu_group_action.php:73
-msgid "Display this imaging group's content"
-msgstr "このイメージンググループ内容を表示"
+#: modules/pulse2/includes/menu_group_action.php:56
+msgid "Inventory on this group"
+msgstr "このグループ上の在庫"
 
 #: modules/pulse2/includes/menu_group_action.php:61
 msgid "Edit this group"
 msgstr "このグループを編集"
 
-#: modules/pulse2/includes/menu_group_action.php:75
-msgid "Edit this imaging group"
-msgstr "このイメージンググループを編集"
-
-#: modules/pulse2/includes/menu_action.php:39
-#: modules/pulse2/includes/menu_group_action.php:83
-msgid "Imaging management"
-msgstr "イメージング管理"
-
-#: modules/pulse2/includes/menu_action.php:34
-msgid "Inventory"
-msgstr "在庫"
-
-#: modules/pulse2/includes/menu_group_action.php:56
-msgid "Inventory on this group"
-msgstr "このグループ上の在庫"
-
-#: modules/pulse2/includes/menu_group_action.php:69
-msgid "Inventory on this profile"
-msgstr "このプロファイル上の在庫"
-
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "コンピューター内での場所選択編集"
-
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
-
-#: modules/pulse2/includes/menu_action.php:37
-#: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:78
-msgid "Read log"
-msgstr "ログの読み込み"
-
-#: modules/pulse2/includes/menu_action.php:36
-msgid "Remote control"
-msgstr "リモートコントロール"
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "ルートエンティティ"
-
 #: modules/pulse2/includes/menu_group_action.php:62
 msgid "Share this group"
 msgstr "このグループを共有"
-
-#: modules/pulse2/includes/menu_group_action.php:76
-msgid "Share this imaging group"
-msgstr "このイメージンググループを共有"
-
-#: modules/pulse2/includes/menu_action.php:38
-msgid "Software deployment"
-msgstr "ソフトウェアデプロイ"
 
 #: modules/pulse2/includes/menu_group_action.php:65
 msgid "Software deployment on this group"
 msgstr "このグループ上でソフトウェアデプロイ"
 
+#: modules/pulse2/includes/menu_group_action.php:69
+msgid "Inventory on this profile"
+msgstr "このプロファイル上の在庫"
+
+#: modules/pulse2/includes/menu_group_action.php:73
+msgid "Display this imaging group's content"
+msgstr "このイメージンググループ内容を表示"
+
+#: modules/pulse2/includes/menu_group_action.php:75
+msgid "Edit this imaging group"
+msgstr "このイメージンググループを編集"
+
+#: modules/pulse2/includes/menu_group_action.php:76
+msgid "Share this imaging group"
+msgstr "このイメージンググループを共有"
+
 #: modules/pulse2/includes/menu_group_action.php:79
 msgid "Software deployment on this imaging group"
 msgstr "このイメージンググループ上でのソフトウェアデプロイ"
+
+#: modules/pulse2/includes/menu_group_action.php:96
+msgid "Csv export"
+msgstr "CSV エクスポート"
+
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "自分の全エンティティ"
+
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr "Pulse2"
+
+#: modules/pulse2/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr "コンピューター一覧"
+
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "コンピューター内での場所選択編集"
+
+
