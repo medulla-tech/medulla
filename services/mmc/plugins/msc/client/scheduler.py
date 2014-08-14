@@ -42,6 +42,7 @@ from mmc.plugins.msc.database import MscDatabase
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
 from pulse2.database.msc.orm.target import Target
 from pulse2.apis import makeURL
+from pulse2.utils import noNoneList
 
 def getProxy(schedulerConfig):
     """
@@ -168,9 +169,9 @@ def process_on_client(proposed_scheduler_name, computer, function, *args):
             computer[1]['objectUUID'][0],
             computer[1]['fullname'],
             computer[1]['cn'][0],
-            computer[1]['ipHostNumber'],
-            computer[1]['macAddress'],
-            computer[1]['subnetMask'],
+            noNoneList(computer[1]['ipHostNumber']),
+            noNoneList(computer[1]['macAddress']),
+            noNoneList(computer[1]['subnetMask']),
             *args
         )
         mydeffered.addCallback(parseResult).addErrback(parseError)
@@ -273,7 +274,7 @@ def extend_command(scheduler, command_id, start_date, end_date):
         return result
 
     def parseError(reason):
-        logging.getLogger().warn('Extending command %s on %s failed: %s' % 
+        logging.getLogger().warn('Extending command %s on %s failed: %s' %
                 (command_id, scheduler, reason))
         return False
 

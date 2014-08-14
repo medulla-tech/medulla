@@ -632,6 +632,21 @@ def noNone(var, res = ''):
         return res
     return var
 
+def noNoneList(var_list, res=''):
+    """
+    Same as noNone function but mapped to an list or another iterable.
+
+    @param var_list: checked list
+    @type var: list
+
+    @param res: element of list equal to None will be replaced with
+    @type res: any...
+
+    @return: unNoned list
+    @rtype: list
+    """
+    return [noNone(var) for var in var_list]
+
 class HasSufficientMemory :
     """
     Can be used as a decorator to avoid executing the functions with high costs.

@@ -66,6 +66,7 @@ import mmc.plugins.msc.client.scheduler
 import pulse2.database.msc.orm.commands_on_host
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.utils import noNoneList
 
 APIVERSION = '0:0:0'
 
@@ -226,9 +227,9 @@ class RpcProxy(RpcProxyI):
         interfaces = {"uuid"      : uuid,
                       "fqdn"      : network["cn"][0],
                       "shortname" : network["cn"][0],
-                      "ips"       : network["ipHostNumber"],
-                      "macs"      : network["macAddress"],
-                      "netmasks"  : network["subnetMask"],
+                      "ips"       : noNoneList(network["ipHostNumber"]),
+                      "macs"      : noNoneList(network["macAddress"]),
+                      "netmasks"  : noNoneList(network["subnetMask"]),
                       }
         return xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
 
