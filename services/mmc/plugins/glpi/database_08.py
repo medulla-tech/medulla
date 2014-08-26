@@ -304,6 +304,7 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('computertypes_id', Integer, ForeignKey('glpi_computertypes.id')),
             Column('groups_id', Integer, ForeignKey('glpi_groups.id')),
             Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
+            Column('users_id', Integer, ForeignKey('glpi_users.id')),
             Column('name', String(255), nullable=False),
             Column('serial', String(255), nullable=False),
             Column('os_license_number', String(255), nullable=True),
@@ -1184,6 +1185,30 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         return True
 
+    def getMachineOwner(self, machine):
+        """
+        Returns the owner of computer.
+
+        @param machine: computer's instance
+        @type machine: Machine
+
+        @return: owner (glpi_computers.user_id -> name)
+        @rtype: str
+        """
+
+        session = create_session()
+        query = session.query(User).select_from(self.user.join(self.machine))
+        query = query.filter(self.machine.c.id==machine.id).first()
+        if query is None:
+            session.close()
+            return None
+        else:
+            session.close()
+            return query.name
+
+
+
+
     def getUserProfile(self, user):
         """
         @return: Return the first user GLPI profile as a string, or None
@@ -1882,6 +1907,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     ['Entity (Location)', '%s' % entityValue],
                     ['Domain', domain],
                     ['Last Logged User', machine.contact],
+                    ['Owner', self.getMachineOwner(machine)],
                     ['OS', os],
                     ['Service Pack', servicepack],
                     ['Windows Key', machine.os_license_number],
@@ -3561,6 +3587,7 @@ class Machine(object):
             ['otherserial',self.otherserial],
             ['contact',self.contact],
             ['contact_num',self.contact_num],
+            ['owner',Glpi08().getMachineOwner(self)],
             # ['tech_num',self.tech_num],
             ['os',self.operatingsystems_id],
             ['os_version',self.operatingsystemversions_id],
