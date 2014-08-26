@@ -557,6 +557,8 @@ class Glpi08(DyngroupDatabaseHelper):
                         clauses.append(self.machine.c.comment.like('%'+filt['hostname']+'%'))
                     if 'type' in self.config.summary:
                         clauses.append(self.glpi_computertypes.c.name.like('%'+filt['hostname']+'%'))
+                    if 'owner' in self.config.summary:
+                        clauses.append(self.user.c.name.like('%'+filt['hostname']+'%'))
                     if 'user' in self.config.summary:
                         clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
                     if 'state' in self.config.summary:
@@ -1206,6 +1208,7 @@ class Glpi08(DyngroupDatabaseHelper):
         @return: owner (glpi_computers.user_id -> name)
         @rtype: str
         """
+
 
         session = create_session()
         query = session.query(User).select_from(self.user.join(self.machine))

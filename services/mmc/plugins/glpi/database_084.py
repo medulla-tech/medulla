@@ -506,7 +506,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     query = query.add_column(self.manufacturers.c.name)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
-
+ 
             query_filter = None
 
             filters = [self.machine.c.is_deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
@@ -603,6 +603,8 @@ class Glpi084(DyngroupDatabaseHelper):
                         clauses.append(self.machine.c.comment.like('%'+filt['hostname']+'%'))
                     if 'type' in self.config.summary:
                         clauses.append(self.glpi_computertypes.c.name.like('%'+filt['hostname']+'%'))
+                    if 'owner' in self.config.summary:
+                        clauses.append(self.user.c.name.like('%'+filt['hostname']+'%'))
                     if 'user' in self.config.summary:
                         clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
                     if 'state' in self.config.summary:
@@ -1151,7 +1153,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     type = l.pop()
                 if 'os' in self.config.summary:
                     os = l.pop()
-
+ 
                 m = l.pop()
 
             datas = {
