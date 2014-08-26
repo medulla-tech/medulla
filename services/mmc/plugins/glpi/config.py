@@ -41,7 +41,7 @@ class GlpiConfig(PluginConfig):
 
     # computer_list section
     # complete list: ['cn', 'description', 'os', 'type', 'user', 'inventorynumber', 'state', 'entity', 'location', 'model', 'manufacturer']
-    summary = ['cn', 'description', 'os', 'type', 'user', 'entity', 'location']
+    summary = ['cn', 'description', 'os', 'type', 'user', 'owner', 'entity', 'location']
     ordered = False
 
     # antivirus section

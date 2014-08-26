@@ -457,6 +457,8 @@ class Glpi08(DyngroupDatabaseHelper):
                     query = query.add_column(self.glpi_computermodels.c.name)
                 if 'manufacturer' in self.config.summary:
                     query = query.add_column(self.manufacturers.c.name)
+                if 'owner' in self.config.summary:
+                    query = query.add_column(self.user.c.name)
 
             query_filter = None
 
@@ -523,6 +525,9 @@ class Glpi08(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.glpi_computermodels)
                 if 'manufacturer' in self.config.summary:
                     join_query = join_query.outerjoin(self.manufacturers)
+                if 'owner' in self.config.summary:
+                    join_query = join_query.outerjoin(self.user)
+
 
             if self.fusionagents is not None:
                 join_query = join_query.outerjoin(self.fusionagents)
@@ -1074,8 +1079,10 @@ class Glpi08(DyngroupDatabaseHelper):
             if isinstance(m, tuple):
                 displayList = True
                 # List of fields defined around line 439
-                # m, os, type, inventorynumber, state, entity, location, model, manufacturer = m
+                # m, os, type, inventorynumber, state, entity, location, model, manufacturer, owner = m
                 l = list(m)
+                if 'owner' in self.config.summary:
+                    owner = l.pop()
                 if 'manufacturer' in self.config.summary:
                     manufacturer = l.pop()
                 if 'model' in self.config.summary:
@@ -1099,6 +1106,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 'displayName': [m.comment],
                 'objectUUID': [m.getUUID()],
                 'user': [m.contact],
+                'owner': [self.getMachineOwner(m)]
             }
 
             if displayList:
@@ -1118,6 +1126,9 @@ class Glpi08(DyngroupDatabaseHelper):
                     datas['type'] = type
                 if 'os' in self.config.summary:
                     datas['os'] = os
+                if 'owner' in self.config.summary:
+                    datas['owner'] = owner
+
 
             ret[m.getUUID()] = [None, datas]
 

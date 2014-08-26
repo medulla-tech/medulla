@@ -266,6 +266,7 @@ class GlpiComputers(ComputerI):
             'description': ['displayName', 'Description'],
             'type': ['type', 'Computer Type'],
             'user': ['user', 'Last Logged User'],
+            'owner': ['owner', 'Owner'],
             'inventorynumber': ['inventorynumber', 'Inventory Number'],
             'state': ['state', 'State'],
             'entity': ['entity', 'Entity'],
