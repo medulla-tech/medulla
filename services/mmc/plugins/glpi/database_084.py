@@ -376,6 +376,8 @@ class Glpi084(DyngroupDatabaseHelper):
         self.user = Table("glpi_users", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('name', String(255), nullable=False),
+            Column('firstname', String(255), nullable=False),
+            Column('realname', String(255), nullable=False),
             Column('auths_id', Integer, nullable=False),
             Column('is_deleted', Integer, nullable=False),
             Column('is_active', Integer, nullable=False))
@@ -504,6 +506,10 @@ class Glpi084(DyngroupDatabaseHelper):
                     query = query.add_column(self.glpi_computermodels.c.name)
                 if 'manufacturer' in self.config.summary:
                     query = query.add_column(self.manufacturers.c.name)
+                if 'owner_firstname' in self.config.summary:
+                    query = query.add_column(self.user.c.firstname)
+                if 'owner_realname' in self.config.summary:
+                    query = query.add_column(self.user.c.realname)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
  
@@ -571,7 +577,9 @@ class Glpi084(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.glpi_computermodels)
                 if 'manufacturer' in self.config.summary:
                     join_query = join_query.outerjoin(self.manufacturers)
-                if 'owner' in self.config.summary:
+                if 'owner' in self.config.summary or \
+                   'owner_firstname' in self.config.summary or \
+                   'owner_realname' in self.config.summary:
                     join_query = join_query.outerjoin(self.user)
 
 
@@ -605,6 +613,10 @@ class Glpi084(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computertypes.c.name.like('%'+filt['hostname']+'%'))
                     if 'owner' in self.config.summary:
                         clauses.append(self.user.c.name.like('%'+filt['hostname']+'%'))
+                    if 'owner_firstname' in self.config.summary:
+                        clauses.append(self.user.c.firstname.like('%'+filt['hostname']+'%'))
+                    if 'owner_realname' in self.config.summary:
+                        clauses.append(self.user.c.realname.like('%'+filt['hostname']+'%'))
                     if 'user' in self.config.summary:
                         clauses.append(self.machine.c.contact.like('%'+filt['hostname']+'%'))
                     if 'state' in self.config.summary:
@@ -1136,7 +1148,11 @@ class Glpi084(DyngroupDatabaseHelper):
                 # m, os, type, inventorynumber, state, entity, location, model, manufacturer, owner = m
                 l = list(m)
                 if 'owner' in self.config.summary:
-                    owner = l.pop()
+                    owner_login = l.pop()
+                if 'owner_firstname' in self.config.summary:
+                    owner_firstname = l.pop()
+                if 'owner_realname' in self.config.summary:
+                    owner_realname = l.pop()
                 if 'manufacturer' in self.config.summary:
                     manufacturer = l.pop()
                 if 'model' in self.config.summary:
@@ -1155,13 +1171,15 @@ class Glpi084(DyngroupDatabaseHelper):
                     os = l.pop()
  
                 m = l.pop()
-
+            owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
             datas = {
                 'cn': m.name not in ['', None] and [m.name] or ['(%s)' % m.id],
                 'displayName': [m.comment],
                 'objectUUID': [m.getUUID()],
                 'user': [m.contact],
-                'owner': [self.getMachineOwner(m)]
+                'owner': [owner_login],
+                'owner_realname': [owner_realname],
+                'owner_firstname': [owner_firstname],
             }
 
             if displayList:
@@ -1182,7 +1200,13 @@ class Glpi084(DyngroupDatabaseHelper):
                 if 'os' in self.config.summary:
                     datas['os'] = os
                 if 'owner' in self.config.summary:
-                    datas['owner'] = owner
+                    datas['owner'] = owner_login
+                if 'owner_firstname' in self.config.summary:
+                    datas['owner_firstname'] = owner_firstname
+                if 'owner_realname' in self.config.summary:
+                    datas['owner_realname'] = owner_realname
+
+
 
 
             ret[m.getUUID()] = [None, datas]
@@ -1261,12 +1285,12 @@ class Glpi084(DyngroupDatabaseHelper):
         @rtype: str
         """
 
-        ret = None
+        ret = None, None, None
         session = create_session()
         query = session.query(User).select_from(self.user.join(self.machine))
         query = query.filter(self.machine.c.id==machine.id).first()
         if query is not None:
-            ret = query.name
+            ret = query.name, query.firstname, query.realname 
 
         session.close()
         return ret
@@ -1994,13 +2018,17 @@ class Glpi084(DyngroupDatabaseHelper):
                 if location:
                     entityValue += ' (%s)' % location
 
+                owner_login, owner_firstname, owner_realname = self.getMachineOwner(machine)
+
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
                     ['Entity (Location)', '%s' % entityValue],
                     ['Domain', domain],
                     ['Last Logged User', machine.contact],
-                    ['Owner', self.getMachineOwner(machine)],
+                    ['Owner', owner_login],
+                    ['Owner Firstname', owner_firstname],
+                    ['Owner Realname', owner_realname],
                     ['OS', os],
                     ['Service Pack', servicepack],
                     ['Windows Key', machine.os_license_number],
@@ -3698,6 +3726,7 @@ class Machine(object):
     def toH(self):
         return { 'hostname':self.name, 'uuid':toUUID(self.id) }
     def to_a(self):
+        owner_login, owner_firstname, owner_realname = Glpi084().getMachineOwner(self)
         return [
             ['name',self.name],
             ['comments',self.comment],
@@ -3705,7 +3734,9 @@ class Machine(object):
             ['otherserial',self.otherserial],
             ['contact',self.contact],
             ['contact_num',self.contact_num],
-            ['owner',Glpi084().getMachineOwner(self)],
+            ['owner', owner_login],
+            ['owner_firstname', owner_firstname],
+            ['owner_realname', owner_realname],
             # ['tech_num',self.tech_num],
             ['os',self.operatingsystems_id],
             ['os_version',self.operatingsystemversions_id],
