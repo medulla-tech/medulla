@@ -25,7 +25,14 @@ A generic util to create several packages including all needed dependencies
 and parameter config files.
 
 Based on templates and on a config file, for each defined platform generates
-the package including needed postinstall scripts.
+the agents packs including needed postinstall scripts.
+
+Options:
+ --host=HOST   : Inventory server name or IP
+ --port=PORT   : Inventory server port
+ --enablessl   : Enabling the SSL protocol for inventory
+ --tag=TAG     : Tag for inventory
+--help         : Displays this help
 """
 
 import os
@@ -782,6 +789,7 @@ def args_parse(script_path, args):
                     "--port",
                     "--enablessl",
                     "--tag",
+                    "-h",
                     "--help",
                     "--verbose"
                     ]
@@ -791,10 +799,14 @@ def args_parse(script_path, args):
     if len(args) > 1:
         for arg in args:
             if not any([a in arg for a in allowed_args]):
-                raise ParameterError(arg)
+                print __doc__
+                sys.exit(0)
             if arg == "--verbose" :
                 verbose_mode = True
                 continue
+            if arg in ["-h", "--help"]:
+                print __doc__
+                sys.exit(0)
             if "=" in arg:
                 key, value = arg.split("=")
                 key = key.replace("--", "")
