@@ -329,6 +329,8 @@ class Glpi08(DyngroupDatabaseHelper):
         self.user = Table("glpi_users", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('name', String(255), nullable=False),
+            Column('firstname', String(255), nullable=False),
+            Column('realname', String(255), nullable=False),
             Column('auths_id', Integer, nullable=False),
             Column('is_deleted', Integer, nullable=False),
             Column('is_active', Integer, nullable=False))
@@ -1235,7 +1237,7 @@ class Glpi08(DyngroupDatabaseHelper):
         query = session.query(User).select_from(self.user.join(self.machine))
         query = query.filter(self.machine.c.id==machine.id).first()
         if query is not None:
-            ret = query.name, query.firstname, query.realname 
+            ret = query.name, query.firstname, query.realname
 
         session.close()
         return ret
@@ -1934,13 +1936,16 @@ class Glpi08(DyngroupDatabaseHelper):
                 if location:
                     entityValue += ' (%s)' % location
 
+                owner_login, owner_firstname, owner_realname = self.getMachineOwner(machine)
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
                     ['Entity (Location)', '%s' % entityValue],
                     ['Domain', domain],
                     ['Last Logged User', machine.contact],
-                    ['Owner', self.getMachineOwner(machine)],
+                    ['Owner', owner_login],
+                    ['Owner Firstname', owner_firstname],
+                    ['Owner Realname', owner_realname],
                     ['OS', os],
                     ['Service Pack', servicepack],
                     ['Windows Key', machine.os_license_number],

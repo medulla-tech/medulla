@@ -512,7 +512,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     query = query.add_column(self.user.c.realname)
                 if 'owner' in self.config.summary:
                     query = query.add_column(self.user.c.name)
- 
+
             query_filter = None
 
             filters = [self.machine.c.is_deleted == 0, self.machine.c.is_template == 0, self.__filter_on_filter(query), self.__filter_on_entity_filter(query, ctx)]
@@ -1169,7 +1169,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     type = l.pop()
                 if 'os' in self.config.summary:
                     os = l.pop()
- 
+
                 m = l.pop()
             owner_login, owner_firstname, owner_realname = self.getMachineOwner(m)
             datas = {
@@ -1290,7 +1290,7 @@ class Glpi084(DyngroupDatabaseHelper):
         query = session.query(User).select_from(self.user.join(self.machine))
         query = query.filter(self.machine.c.id==machine.id).first()
         if query is not None:
-            ret = query.name, query.firstname, query.realname 
+            ret = query.name, query.firstname, query.realname
 
         session.close()
         return ret
