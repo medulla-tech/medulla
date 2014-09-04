@@ -54,6 +54,14 @@ def test(ip):
 
 #####################################################################################
 
+def getMonitoringUri():
+    return MonitoringConfig().monitoring_uri
+
+def getMonitoringUsername():
+	return MonitoringConfig().monitoring_username
+
+def getMonitoringPassword():
+	return MonitoringConfig().monitoring_password
 
 def get_host_os(ip):
 	return mnt.get_host_os(ip)

@@ -26,6 +26,17 @@
 // Main Monitoring communications functions [HTTP]
 //======================================================================
 
+function getZabbixUri() {
+	return xmlCall("monitoring.getMonitoringUri");
+}
+
+function getZabbixUsername() {
+	return xmlCall("monitoring.getMonitoringUsername");
+}
+
+function getZabbixPassword() {
+	return xmlCall("monitoring.getMonitoringPassword");
+}
 
 function get_host_os($ip) {
     return xmlCall("monitoring.get_host_os", array($ip));

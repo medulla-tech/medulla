@@ -26,6 +26,7 @@
 require("modules/monitoring/includes/ZabbixApiAbstract.class.php");
 require("modules/monitoring/includes/ZabbixApi.class.php");
 require("modules/monitoring/includes/functions.php");
+require_once("modules/monitoring/includes/xmlrpc.php");
 
 require("graph/navbar.inc.php");
 require("localSidebar.php");
@@ -38,7 +39,7 @@ $p->display();
 
 try {
 	// connect to Zabbix API
-	$api = new ZabbixApi('http://192.168.0.105/zabbix/api_jsonrpc.php', 'Admin', 'zabbix');
+	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
 
 
 } catch(Exception $e) {

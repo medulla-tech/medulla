@@ -1,5 +1,6 @@
 <?php
 
+
 //display the return of api for debug
 function expand_arr($array) {
 	foreach ($array as $key1) {
@@ -61,9 +62,11 @@ function diffTime($date1, $date2) {
 }
 
 class AjaxPrintGraph extends AjaxFilterLocation {
-	
 
-    function AjaxLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
+    protected $zabbixUrl;
+
+    function AjaxPrintGraph($url, $divid = "container", $paramname = 'location', $params = array(), $zabbixurl = 'http://localhost/zabbix' ) {
+	$this->zabbixUrl = $zabbixurl;
         $this->AjaxFilterLocation($url, $divid, $paramname, $params);
         $this->location = new SelectItem($paramname, 'pushSearchLocationGraph', 'searchfieldreal noborder');
     }
@@ -129,11 +132,11 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 			var period = document.getElementById("period");
 			var test = document.getElementById("graphId");
 			if (test != null)
-				document.getElementById("graphId").src = "http://192.168.0.105/zabbix/chart2.php?graphid=" + graphId +"&period=" + period.value;
+				document.getElementById("graphId").src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
 			else {
 				var image = document.createElement("img");
 				image.id = "graphId";
-				image.src = "http://192.168.0.105/zabbix/chart2.php?graphid=" + graphId +"&period=" + period.value;
+				image.src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
 				div.appendChild(image);
 			}
                     

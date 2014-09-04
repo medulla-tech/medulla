@@ -434,7 +434,7 @@ class Pulse2ConfigFile(object):
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                  'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig', 'PluginsUpdateConfig']
+                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig', 'PluginsUpdateConfig', 'PluginsMonitoringConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -650,6 +650,8 @@ class SchedulerConfig(LoggingConfig):
 class UUIDResolverConfig(Pulse2ConfigFile):
     path = 'pulse2/uuid-resolver/uuid-resolver.ini'
 
+class PluginsMonitoringConfig(Pulse2ConfigFile):
+    path = 'plugins/monitoring.ini'
 
 class SetupApp(object):
     defaults = {}
@@ -675,7 +677,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update', 'monitoring']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -766,7 +768,9 @@ class SetupApp(object):
         self.defaults['ipexternal'] = self.options["ipexternal"] or None
         self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
         self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
-
+	self.defaults['monitoring_url'] = self.options["monitoring_url"] or 'http://localhost/zabbix'
+	self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
+	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
 
 
     def read_config(self):
@@ -782,6 +786,10 @@ class SetupApp(object):
                                                          self.defaults['ipexternal'])
         self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
         self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
+	self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
+        self.config['monitoring_username'] = self.read_opt('Zabbix admin', self.defaults['monitoring_username'])
+        self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
+
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -1030,6 +1038,14 @@ class SetupApp(object):
         self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
+	#monitoring
+        self.confs['plugins/monitoring.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/monitoring.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/monitoring.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
+
+
+
     def init_glpi(self):
         """GLPI coupling"""
 
@@ -1115,6 +1131,12 @@ class SetupApp(object):
 
 	# Enable BackupPC module
         self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
+
+	# Change monitoring webservices variables
+        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_url', self.config['monitoring_url'])
+        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_username', self.config['monitoring_username'])
+        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_password', self.config['monitoring_password'])
+
 
         # Ensure various dirs are created
         for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
@@ -1311,6 +1333,14 @@ if __name__ == '__main__':
                       help="BackupPC IP, you can specify port. Per example: 127.0.0.1:81")
     parser.add_option("--backuppc-entity", dest="backuppc_entity",
                       help="Entity who will be linked to BackupPC (default: UUID1)")
+    parser.add_option("--zabbix-uri", dest="monitoring_url",
+                      help="Zabbix API uri. Per example: http://localhost/zabbix/api_jsonrpc.php")
+    parser.add_option("--zabbix-user", dest="monitoring_username",
+                      help="Zabbix admin username")
+    parser.add_option("--zabbix-password", dest="monitoring_password",
+                      help="Zabbix admin password")
+
+
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1352,6 +1382,9 @@ if __name__ == '__main__':
         'ipexternal' : options.ipexternal,
         'backuppc_ip' : options.backuppc_ip,
         'backuppc_entity' : options.backuppc_entity,
+	'monitoring_url' : options.monitoring_url,
+	'monitoring_username' : options.monitoring_username,
+	'monitoring_password' : options.monitoring_password,
     }
 
     # Run the setup app

@@ -50,7 +50,7 @@ $filter = $_GET['filter'];
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi();
-	$api->setApiUrl('http://192.168.0.105/zabbix/api_jsonrpc.php');
+	$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
 	$api->setApiAuth($apiId);
 
 	$ip = array();

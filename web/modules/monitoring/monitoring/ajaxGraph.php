@@ -26,6 +26,7 @@
 require("modules/monitoring/includes/ZabbixApiAbstract.class.php");
 require("modules/monitoring/includes/ZabbixApi.class.php");
 require("modules/monitoring/includes/functions.php");
+require_once("modules/monitoring/includes/xmlrpc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -37,7 +38,6 @@ else {
 	return;
 }
 
-$url = "http://192.168.0.105/zabbix";
 
 if (isset($_GET["start"]))
     $start = $_GET["start"];
@@ -51,7 +51,7 @@ if (!empty($_GET['hostid']))
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi();
-	$api->setApiUrl('http://192.168.0.105/zabbix/api_jsonrpc.php');
+	$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
 	$api->setApiAuth($apiId);
 
 	if (isset($_GET["graph"])) {
@@ -100,7 +100,7 @@ $param = array(
 	'graph' => $graph
 );
 
-$ajax = new AjaxPrintGraph("", "image", "graph", $host);
+$ajax = new AjaxPrintGraph("", "image", "graph", $host, getZabbixUri());
 
 $ajax->setElements($graphName);
 $ajax->setElementsVal($graphId);

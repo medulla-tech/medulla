@@ -29,6 +29,24 @@ class MonitoringConfig(PluginConfig, MonitoringDatabaseConfig):
         """
         PluginConfig.readConf(self)
 	MonitoringDatabaseConfig.setup(self, self.conffile)
+
+        try:
+            self.monitoring_uri = self.get("webservices", "monitoring_url")
+        except:
+            self.monitoring_uri = "" # http://localhost/zabbix/api_jsonrpc.php
+
+        try:
+            self.monitoring_username = self.get("webservices", "monitoring_username")
+        except:
+            self.monitoring_username = "" # Admin
+
+        try:
+            self.monitoring_password = self.get("webservices", "monitoring_password")
+        except:
+            self.monitoring_password = "" # zabbix
+
+
+
         #self.confOption = self.get("sectionname", "optionname")
         # ...
 

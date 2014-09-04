@@ -37,7 +37,8 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	scheduler.phases scheduler.proxy scheduler.cache \
 	scheduler.tracking scheduler.api scheduler.tests \
 	database.backuppc \
-	dlp dlp.api dlp.tests
+	dlp dlp.api dlp.tests \
+	database.monitoring
 
 all-local: site.py version.py
 
