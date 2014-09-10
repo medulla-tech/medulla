@@ -36,6 +36,20 @@ else
     exit 1
 fi
 
+if hash x11vnc 2>/dev/null; then
+
+    x11_cfg="x11vnc.desktop"
+
+    echo "[Desktop Entry]" >> $x11_cfg   
+    echo "Type=Application" >> $x11_cfg   
+    echo "Name=x11vnc" >> $x11_cfg   
+    echo "Exec=x11vnc -many -rfbport 5900 -listen localhost" >> $x11_cfg   
+
+    for user in /home/*; do
+        mkdir -p $user/.config/autostart/
+        cp $x11_cfg $user/.config/autostart/    
+    done	
+fi	
 echo "INFO: Running initial inventory"
 /usr/bin/fusioninventory-agent
 

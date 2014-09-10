@@ -479,7 +479,7 @@ class DebCreator(AbsCreator):
     package_dir_name = package_name
     dependencies = ["fusioninventory-agent",
                      "openssh-server",
-                     "tightvncserver"]
+                     "x11vnc"]
 
     resources_path_list = ["opt",]
 
