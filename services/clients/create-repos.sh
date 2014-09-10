@@ -121,7 +121,7 @@ if [ -d deb ]; then
 
     for DEBFILE in `ls ../deb/*.deb`; do
         echo "INFO: ... package $DEBFILE"
-
+        sleep 2;
         expect -c " 
 	        set timeout 1 
                 spawn reprepro includedeb ${DIST} ../deb/${DEBFILE}
