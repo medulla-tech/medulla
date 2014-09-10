@@ -58,23 +58,25 @@ fi
 
 
 # ----------- VNC server config -----------------
-vnc_cfg=/etc/sysconfig/vncservers
-vnc_servers="VNCSERVERS=\"1:$SUDO_USER\""
-vnc_serverargs="VNCSERVERARGS[1]=\"-geometry 800x600 -nolisten tcp -localhost\""
+if hash vncserver 2>/dev/null; then
+    vnc_cfg=/etc/sysconfig/vncservers
+    vnc_servers="VNCSERVERS=\"1:$SUDO_USER\""
+    vnc_serverargs="VNCSERVERARGS[1]=\"-geometry 800x600 -nolisten tcp -localhost\""
 
 
-if [ -f ${vnc_cfg} ];then
-    echo "${vnc_servers}" >> ${vnc_cfg}
-    echo "${vnc_serverargs}" >> ${vnc_cfg}
-    echo "INFO: Configuring VNC..."	
-else
-    echo "ERROR: Unable to find VNC config file"	
-    exit 1
-fi
+    if [ -f ${vnc_cfg} ];then
+        echo "${vnc_servers}" >> ${vnc_cfg}
+        echo "${vnc_serverargs}" >> ${vnc_cfg}
+        echo "INFO: Configuring VNC..."	
+    else
+        echo "ERROR: Unable to find VNC config file"	
+        exit 1
+    fi
 
-# ----------- VNC start ---------- 
-service vncserver start
-chkconfig --levels 235 vncsever on
+    # ----------- VNC start ---------- 
+    service vncserver start
+    chkconfig --levels 235 vncsever on
+fi    
 
 echo "INFO: Running initial inventory"
 /usr/bin/fusioninventory-agent
