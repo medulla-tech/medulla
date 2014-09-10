@@ -42,13 +42,24 @@ function get_host_os($ip) {
     return xmlCall("monitoring.get_host_os", array($ip));
 }
 
-function set_db_discovery_host($ip, $os) {
+function add_db_discovery_host($ip, $os) {
     return xmlCall("monitoring.add_discover_host", array($ip, $os));
+}
+
+function set_db_discovery_host_os($ip, $os) {
+    return xmlCall("monitoring.set_discovery_host_os", array($ip, $os));
 }
 
 function get_db_discovery_host_os($ip) {
     return xmlCall("monitoring.get_discover_host_os", array($ip));
 }
 
+function add_db_ack($username, $ackid, $ackmessage) {
+    return xmlCall("monitoring.add_ack", array($username, $ackid, $ackmessage));
+}
+
+function get_db_ack($ackid) {
+    return xmlCall("monitoring.get_ack", array($ackid));
+}
 
 ?>

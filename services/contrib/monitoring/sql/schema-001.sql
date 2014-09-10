@@ -30,17 +30,27 @@ CREATE TABLE IF NOT EXISTS `monitoring_detection` (
     `ip` varchar(15) NOT NULL,
     `os` text NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
 
 CREATE TABLE IF NOT EXISTS `monitoring_options` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
     `result` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
+
+CREATE TABLE IF NOT EXISTS `monitoring_ack` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `username` varchar(255) NOT NULL,
+    `ackid` varchar(255) NOT NULL,
+    `ackmessage` text NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 ;
 
 CREATE TABLE IF NOT EXISTS `version` (
     `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `version` (`Number`) VALUES(1);
+
+COMMIT;

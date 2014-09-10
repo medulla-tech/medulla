@@ -47,3 +47,11 @@ class Monitoring_options(Base, MonitoringPCDBObj):
     # ====== Fields =============================
     name = Column(String(255))
     result = Column(String(255))
+
+class Monitoring_ack(Base, MonitoringPCDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'monitoring_ack'
+    # ====== Fields =============================
+    username = Column(String(255))
+    ackid = Column(String(255))
+    ackmessage = Column(Text())

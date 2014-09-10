@@ -46,6 +46,10 @@ class MonitoringConfig(PluginConfig, MonitoringDatabaseConfig):
             self.monitoring_password = "" # zabbix
 
 
+        try:
+            self.nmap_task_time = self.get("data", "nmap_task_time")
+        except:
+            self.nmap_task_time = "" # 15 22 * * *
 
         #self.confOption = self.get("sectionname", "optionname")
         # ...

@@ -73,6 +73,7 @@ if (isset($_POST['bvalid'])) {
 			new NotifyWidgetFailure("error ".$e->getMessage());
 			redirectTo(urlStrRedirect("monitoring/monitoring/index"));
 		}
+		add_db_ack($_SESSION['login'], $alertid, $message);
 		new NotifyWidgetSuccess("Alert aknowledged");
 		redirectTo(urlStrRedirect("monitoring/monitoring/index"));
 	} else {

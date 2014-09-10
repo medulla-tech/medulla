@@ -82,14 +82,15 @@ try {
 			$dns[] = $service[$j]->dns;
 			if ($service[$j]->status == 0) {
 				$status[] = _T("Host up", "monitoring");
-				$getOs = get_host_os($service[$j]->ip);
+				$getOs = get_db_discovery_host_os($service[$j]->ip);
 				if (is_array($getOs)) {
 					$os[] = get_arr($getOs);
 				}
 				else {
+					if ($getOs == null)
+						$getOs = "Unknow";
 					$os[] = $getOs;
 				}
-				set_db_discovery_host($ip[$countServiceTotal], $os[$countServiceTotal]);
 				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastup);		
 			} else {
 				$status[] = _T("Host down", "monitoring");

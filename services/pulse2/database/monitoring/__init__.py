@@ -29,11 +29,12 @@ Monitoring database handler
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.monitoring.schema import Monitoring_detection, Monitoring_options
+from pulse2.database.monitoring.schema import Monitoring_detection, Monitoring_options, Monitoring_ack
 
 # Imported last
 import logging
@@ -42,16 +43,6 @@ import logging
 import socket, struct
 
 logger = logging.getLogger()
-
-
-def ip2int(addr):
-    return struct.unpack("!I", socket.inet_aton(addr))[0]
-
-
-def int2ip(addr):
-    return socket.inet_ntoa(struct.pack("!I", addr))
-
-
 
 
 class MonitoringDatabase(DatabaseHelper):
@@ -114,7 +105,10 @@ class MonitoringDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_discover_host_os(self, session, _ip):
-        host = session.query(Monitoring_detection).filter_by(ip = _ip).one()
+        try:
+		host = session.query(Monitoring_detection).filter_by(ip = _ip).one()
+	except NoResultFound:
+		return '0'
         if not host:
             logger.warning("Can't find configured host with ip = %s" % _ip)
             return -1
@@ -123,7 +117,10 @@ class MonitoringDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_discover_host_all(self, session):
-        host = session.query(Monitoring_detection).all()
+	try:
+        	host = session.query(Monitoring_detection).all()
+	except NoResultFound:
+		return 0
         if not host:
             logger.warning("Can't find any host")
             return -1
@@ -131,12 +128,59 @@ class MonitoringDatabase(DatabaseHelper):
 	    return [row.toDict() for row in host]
 
     @DatabaseHelper._session
+    def set_discover_host_os(self, session, _ip, _os):
+        try:
+                host = session.query(Monitoring_detection).filter_by(ip = _ip).one()
+        except NoResultFound:
+                return 0
+        if not host:
+            logger.warning("Can't find any host")
+            return -1
+        else:
+	    host.os = _os
+            return [row.toDict() for row in host]
+
+    @DatabaseHelper._session
+    def is_discover_host_exist(self, session, _ip):
+        try:
+                host = session.query(Monitoring_detection).filter_by(ip = _ip).one()
+        except NoResultFound:
+                return 0
+        if not host:
+            logger.warning("Can't find any host")
+            return 0
+        else:
+            return 1
+
+
+    @DatabaseHelper._session
     def add_discover_host(self, session, _os, _ip):
-        table = Monitoring_detection(ip = "192.168.2.3", os = "yzduzdbzudb")
-	#ip = ip2int(_ip)
-        #table.os = _os
-	#table.ip = _ip
+        table = Monitoring_detection(ip = _ip, os = _os)
         session.add(table)
         session.flush()
 	return table.toDict()
+
+
+    # =====================================================================
+    # MONITORING ACK ALERTS
+    # =====================================================================
+
+    @DatabaseHelper._session
+    def add_ack(self, session, _username, _ackid, _ackmessage):
+      	ack = Monitoring_ack(username = _username, ackid = _ackid, ackmessage = _ackmessage)
+        session.add(ack)
+        session.flush()
+        return ack.toDict()
+
+    @DatabaseHelper._session
+    def get_ack(self, session, _ackid):
+        try:
+                ack = session.query(Monitoring_ack).filter_by(ackid = _ackid).one()
+        except NoResultFound:
+                return 0
+        if not ack:
+            logger.warning("Can't find configured ack with id = %s" % _ackid)
+            return -1
+        else:
+            return ack.toDict()
 

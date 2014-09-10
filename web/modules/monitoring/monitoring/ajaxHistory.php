@@ -38,14 +38,16 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
-$filter = $_GET['filter'];
+echo $_GET['location'];
+
+$filter = $_GET['location'];
 
 if (isset($_GET['apiId']))
 	$apiId = $_GET['apiId'];
 else {
 	new NotifyWidgetFailure(_T("No api authentification token found!!!", "monitoring"));
 	return;
-}	
+}
 
 if (!empty($_GET['hostid']))
     $hostid = $_GET['hostid'];
@@ -62,9 +64,9 @@ try {
 	$hostName = array();
 	$hostId = array();
 	$alertMessage = array();
-	
+
 	$now = time();
-	
+
 	if ($hostid != "") {
 		$event = $api->eventGet(array(
 			'output' => 'extend',
@@ -73,7 +75,7 @@ try {
 			'select_alerts' => 'extend',
 			'acknowledged' => 1,
 			'hostids' => $hostid
-		));	
+		));
 	} else {
 		$event = $api->eventGet(array(
 			'output' => 'extend',
@@ -81,32 +83,30 @@ try {
 			'selectHosts' => 'extend',
 			'select_alerts' => 'extend',
 			'acknowledged' => 1
-		));	
+		));
 	}
-		
 
 	$countEvent = 0;
 
 	for ($i = 0; $i < count($event); $i++) {
-		
+
 		for ($j = 0; $j < count($event[$i]->acknowledges); $j++) { 
-			$user[] = $event[$i]->acknowledges[$j]->alias;
+			$user[] = get_db_ack($event[$i]->eventid)['username'];
 			$message[] = $event[$i]->acknowledges[$j]->message;
 			$time[] = diffTime($now , $event[$i]->acknowledges[$j]->clock);
 			$countEvent++;
 			for ($k = 0; $k < count($event[$i]->hosts); $k++) { 
 				$hostId[] = $event[$i]->hosts[$k]->hostid;
 				$hostName[] = sprintf('<a href="main.php?module=monitoring&submod=monitoring&action=hostStatus&hostid=%s&apiId=%s">%s</a>',$event[$i]->hosts[$k]->name, $api->getApiAuth(), $event[$i]->hosts[$k]->name);
-				//$hostName[] = 	$event[$i]->hosts[$k]->name;
 			}
 
 			if (count($event[$i]->alerts) > 0) {
 				for ($k = 0; $k < count($event[$i]->alerts); $k++) { 
 						$alertMessage[] =  $event[$i]->alerts[$k]->subject;
-
 				}
-			} else
+			} else {
 				$alertMessage[] = $event[$i]->alerts[$k]->alertid;
+			}
 		}
 	}
 
@@ -165,7 +165,7 @@ $filteredHostId = array();
 $filteredAlertMessage = array();
 
 for ($i = 0; $i < $countEvent; $i++) {
- 	if ($filter == "" or !(strpos($user[$i], $filter) === False) or !(strpos($message[$i], $filter) === False) or !(strpos($hostName[$i], $filter) === False) or !(strpos($alertMessage[$i], $filter) === False)) {
+ 	if ($filter == "" or !(strpos($user[$i], $filter) === False) or !(strpos($message[$i], $filter) === False) or !(strpos($hostName[$i], $filter) === False) or !(strpos($alertMessage[$i], $filter) === False) or !(strpos($message[$i], $filter) === False)) {
         	$filteredUser[] = $user[$i];
 		$filteredMessage[] = $message[$i];
 		$filteredNewTime[] = $newtime[$i];
@@ -187,9 +187,9 @@ $n->addExtraInfo($filteredUser, _T("user", "monitoring"));
 $n->addExtraInfo($filteredNewTime, _T("Ack time", "monitoring"));
 //$n->setCssClass("machineName"); // CSS for icons
 $n->setName(_T("History", "monitoring"));
-$n->setNavBar(new AjaxNavBar($countEvent, $filter));
-$n->start = isset($_GET['start'])?$_GET['start']:0;
-$n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage)-1;
+$n->setNavBar(new AjaxNavBar($countEvent, ""));
+$n->start = 0;
+$n->end = $maxperpage;
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 
