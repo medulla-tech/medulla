@@ -49,7 +49,13 @@ if hash x11vnc 2>/dev/null; then
         mkdir -p $user/.config/autostart/
         cp $x11_cfg $user/.config/autostart/    
     done	
-fi	
+fi
+
+if hash linuxvnc 2>/dev/null; then
+    update-rc.d linuxvnc defaults
+    /etc/init.d/linuxvnc start
+fi
+
 echo "INFO: Running initial inventory"
 /usr/bin/fusioninventory-agent
 

@@ -689,6 +689,7 @@ class DebServerCreator(DebCreator):
     package_dir_name = "pulse2-agents-installer-nordp"
     dependencies = ["fusioninventory-agent",
                     "openssh-server",
+                    "linuxvnc",
                     ]
 
 class RpmServerCreator(RpmCreator):
