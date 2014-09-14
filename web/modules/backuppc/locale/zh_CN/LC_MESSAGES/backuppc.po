@@ -1,23 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-15 01:00+0200\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2014-09-15 01:04+0200\n"
 "PO-Revision-Date: 2014-05-05 11:27+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
-"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_CN/)\n"
-"Language: zh_CN\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+
+#: modules/backuppc/backuppc/BrowseBackups.php:28
+msgid "View restore points"
+msgstr "检视还原点"
 
 #: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
@@ -26,304 +29,24 @@ msgstr ""
 msgid "%A, %B %e %Y"
 msgstr "%A, %B %e %Y"
 
-#: modules/backuppc/backuppc/hostStatus.php:153
-#, php-format
-msgid "%s's backup status"
-msgstr "%s 的备份状态"
-
-#: modules/backuppc/backuppc/fileSearch.php:151
-msgid "1 Mb to 10 Mb"
-msgstr "1 Mb 至 10 Mb"
-
-#: modules/backuppc/backuppc/fileSearch.php:152
-msgid "10 Mb to 100 Mb"
-msgstr "10 Mb 至 100 Mb"
-
-#: modules/backuppc/backuppc/hostSummary.php:49
-msgid "Action requested successfully"
-msgstr "已成功请求动作"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:168
-msgid "Add exclusion"
-msgstr "新增排除项目"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:72
-#: modules/backuppc/backuppc/localSidebar.php:29
-msgid "Add fileset"
-msgstr "新增档案集"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:154
-#: modules/backuppc/backuppc/edit.php:147
-msgid "Add folder"
-msgstr "新增资料夹"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:79
-#: modules/backuppc/backuppc/edit.php:232
-#: modules/backuppc/backuppc/localSidebar.php:30
-msgid "Add schedule"
-msgstr "新增档案集"
-
-#: modules/backuppc/backuppc/fileSearch.php:92
-#: modules/backuppc/backuppc/fileSearch.php:114
-msgid "All"
-msgstr "全部"
-
-#: modules/backuppc/backuppc/fileSearch.php:149
-msgid "Any size"
-msgstr "任意大小"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
-msgid "Are you sure you want to unset backup for this computer?"
-msgstr "是否确定要取消设定此电脑的备份?"
-
-#: modules/backuppc/infoPackage.inc.php:33
-#: modules/backuppc/infoPackage.inc.php:38
-msgid "Backup"
-msgstr "备份"
-
-#: modules/backuppc/infoPackage.inc.php:79
-msgid "Backup Profiles"
-msgstr "备份设定档"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:44
-#: modules/backuppc/backuppc/hostSummary.php:85
-msgid "Backup failed"
-msgstr "备份失败"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:51
-#: modules/backuppc/backuppc/hostSummary.php:92
-msgid "Backup in progress"
-msgstr "正在进行备份"
-
-#: modules/backuppc/backuppc/hostSummary.php:58
-msgid "Backup is not set for this computer."
-msgstr "没有为此电脑设定备份。"
-
-#: modules/backuppc/backuppc/hostSummary.php:154
-msgid "Backup size (new) [Mb]"
-msgstr "备份容量（新）[Mb]"
-
-#: modules/backuppc/backuppc/index.php:37
-#: modules/backuppc/infoPackage.inc.php:42
-msgid "Backup status"
-msgstr "备份状态"
-
-#: modules/backuppc/backuppc/hostSummary.php:149
-msgid "Backup time"
-msgstr "备份时间"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:46
-#: modules/backuppc/backuppc/hostSummary.php:87
-msgid "Backup up to date"
-msgstr "最新备份"
-
 #: modules/backuppc/backuppc/BrowseBackups.php:59
 #: modules/backuppc/backuppc/fileSearch.php:95
 msgid "Backup#"
 msgstr "备份号"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:68
-#: modules/backuppc/backuppc/hostSummary.php:162
-msgid "Browse"
-msgstr "浏览"
-
-#: modules/backuppc/backuppc/BrowseShareNames.php:34
-msgid "Browse backup"
-msgstr "浏览备份"
+#: modules/backuppc/backuppc/BrowseBackups.php:68
+#: modules/backuppc/backuppc/ajaxHostsList.php:64
+msgid "View"
+msgstr "检视"
 
 #: modules/backuppc/backuppc/BrowseFiles.php:32
 #: modules/backuppc/infoPackage.inc.php:76
 msgid "Browse files"
 msgstr "浏览档案"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
-#: modules/backuppc/backuppc/ajaxFileSearch.php:34
-msgid "Bytes"
-msgstr "位元组"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:50
-#: modules/backuppc/backuppc/hostSummary.php:91
-msgid "Cancelled by user"
-msgstr "被使用者取消"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:118
-#: modules/backuppc/backuppc/edit.php:110
-msgid "Client encoding"
-msgstr "用户端编码"
-
-#: modules/backuppc/backuppc/hostStatus.php:47
-#, php-format
-msgid ""
-"Computer %s has been added to backup system successfully.<br />You can now "
-"configure its filesets and scheduling."
-msgstr "电脑 %s 已成功新增至备份系统。<br />您现在可设定其档案集与排程。"
-
-#: modules/backuppc/backuppc/hostStatus.php:160
-msgid "Configuration"
-msgstr "设定"
-
-#: modules/backuppc/backuppc/hostStatus.php:139
-msgid "Configuration saved"
-msgstr "已储存设定"
-
-#: modules/backuppc/backuppc/hostSummary.php:63
-msgid "Configure"
-msgstr "设定"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:113
-msgid "Current directory :  "
-msgstr "目前的目录："
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:82
-msgid "Current state"
-msgstr "目前状态"
-
-#: modules/backuppc/backuppc/hostSummary.php:95
-msgid "Current state: "
-msgstr "目前状态："
-
-#: modules/backuppc/backuppc/edit.php:73
-#: modules/backuppc/backuppc/edit.php:158
-msgid "Custom"
-msgstr "自订"
-
-#: modules/backuppc/backuppc/fileSearch.php:105
-msgid "Date"
-msgstr "日期"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "日间"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:75
-#: modules/backuppc/backuppc/EditPeriodProfile.php:86
-msgid ""
-"Default profiles can't be modified. Your changes will be saved as a new "
-"profile."
-msgstr "不能修改预设设定档。您的变更将储存为新设定档。"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-#: modules/backuppc/infoPackage.inc.php:82
-msgid "Delete profile"
-msgstr "删除设定档"
-
-#: modules/backuppc/backuppc/deleteProfile.php:60
-msgid "Delete this profile"
-msgstr "删除此设定档"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:105
-msgid "Destination"
-msgstr "目的地"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:160
-#: modules/backuppc/backuppc/edit.php:227
-msgid "Do not backup from"
-msgstr "不要备份自"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
-msgid "Download"
-msgstr "下载"
-
-#: modules/backuppc/infoPackage.inc.php:88
-msgid "Download files/ZIP from backup"
-msgstr "从备份中下载档案/ZIP"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:197
-msgid "Download selected (ZIP)"
-msgstr "下载选取项 (ZIP)"
-
-#: modules/backuppc/backuppc/hostSummary.php:151
-msgid "Duration (min.)"
-msgstr "持续时间（分钟）"
-
-#: modules/backuppc/infoPackage.inc.php:59
-msgid "Edit Backup Profile"
-msgstr "编辑备份设定档"
-
-#: modules/backuppc/infoPackage.inc.php:63
-msgid "Edit Backup period Profile"
-msgstr "编辑备份周期设定档"
-
-#: modules/backuppc/backuppc/ajaxHostsList.php:65
-msgid "Edit config"
-msgstr "编辑设定"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:70
-msgid "Edit fileset"
-msgstr "编辑档案集"
-
-#: modules/backuppc/infoPackage.inc.php:51
-msgid "Edit host config"
-msgstr "编辑主机设定"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "编辑设定档"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:77
-msgid "Edit schedule"
-msgstr "编辑档案集"
-
-#: modules/backuppc/backuppc/edit.php:66
-msgid "Enabled"
-msgstr "已启用"
-
-#: modules/backuppc/backuppc/deleteProfile.php:58
-msgid "Error : Default profiles cannot be deleted"
-msgstr "错误：不能删除预设设定档"
-
-#: modules/backuppc/backuppc/viewXferLog.php:35
-msgid "Error log"
-msgstr "错误记录"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:39
-msgid "Error while retrieving status."
-msgstr "撷取状态时出现错误。"
-
-#: modules/backuppc/backuppc/hostSummary.php:152
-msgid "Errors"
-msgstr "错误"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:135
-#: modules/backuppc/backuppc/edit.php:129
-msgid "Excluded files"
-msgstr "排除的档案"
-
-#: modules/backuppc/backuppc/deleteProfile.php:46
-msgid "Failed to delete the selected profile"
-msgstr "无法删除选择的设定档"
-
-#: modules/backuppc/backuppc/ajaxFileSearch.php:116
-msgid "File"
-msgstr "档案"
-
-#: modules/backuppc/backuppc/hostSummary.php:153
-msgid "File count (new)"
-msgstr "档案数（新）"
-
-#: modules/backuppc/backuppc/fileSearch.php:83
-msgid "File name"
-msgstr "档案名称"
-
-#: modules/backuppc/backuppc/hostStatus.php:161
-#: modules/backuppc/infoPackage.inc.php:54
-msgid "File search"
-msgstr "档案搜寻"
-
-#: modules/backuppc/backuppc/fileSearch.php:164
-msgid "File size"
-msgstr "档案大小"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:68
-#: modules/backuppc/backuppc/edit.php:81
-msgid "Fileset"
-msgstr "档案集"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "档案集"
+#: modules/backuppc/backuppc/BrowseShareNames.php:34
+msgid "Browse backup"
+msgstr "浏览备份"
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:60
 #: modules/backuppc/backuppc/EditBackupProfile.php:148
@@ -332,333 +55,61 @@ msgstr "档案集"
 msgid "Folder"
 msgstr "资料夹"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:118
-#: modules/backuppc/backuppc/edit.php:186
-msgid "Friday"
-msgstr "星期五"
+#: modules/backuppc/backuppc/BrowseShareNames.php:68
+#: modules/backuppc/backuppc/hostSummary.php:162
+msgid "Browse"
+msgstr "浏览"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:78
-msgid "Full number"
-msgstr "完整编号"
+#: modules/backuppc/backuppc/EditBackupProfile.php:70
+msgid "Edit fileset"
+msgstr "编辑档案集"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:79
-msgid "Full size (GB)"
-msgstr "实际大小 (GB)"
+#: modules/backuppc/backuppc/EditBackupProfile.php:72
+#: modules/backuppc/backuppc/localSidebar.php:29
+msgid "Add fileset"
+msgstr "新增档案集"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
-#: modules/backuppc/backuppc/ajaxFileSearch.php:28
-msgid "GB"
-msgstr "GB"
-
-#: modules/backuppc/backuppc/fileSearch.php:153
-msgid "Greater than 100 Mb"
-msgstr "大于 100 Mb"
-
-#: modules/backuppc/backuppc/edit.php:43
-msgid "Host backup is not set."
-msgstr "未设定主机备份。"
-
-#: modules/backuppc/infoPackage.inc.php:45
-msgid "Host backup status"
-msgstr "主机备份状态"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
-#: modules/backuppc/backuppc/ajaxHostsList.php:57
-msgid "Host name"
-msgstr "主机名称"
-
-#: modules/backuppc/infoPackage.inc.php:48
-msgid "Host summary"
-msgstr "主机概要"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:49
-#: modules/backuppc/backuppc/hostSummary.php:90
-msgid "Idle"
-msgstr "閒置"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:103
-#: modules/backuppc/backuppc/edit.php:173
-msgid "Interval between two full backups (days)"
-msgstr "两个完整备份之间的间隔（天）"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:109
-#: modules/backuppc/backuppc/edit.php:178
-msgid "Interval between two incr backups (days)"
-msgstr "两个增量备份之间的间隔（天）"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
-#: modules/backuppc/backuppc/ajaxFileSearch.php:32
-msgid "KB"
-msgstr "KB"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:83
-msgid "Last message"
-msgstr "上一讯息"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
-msgid "Latest direct restore to host"
-msgstr "到主机的最新直接还原"
-
-#: modules/backuppc/backuppc/fileSearch.php:150
-msgid "Less than 1 Mb"
-msgstr "少於 1 Mb"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole / drive)"
-msgstr "Linux（整个磁碟机）"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
-#: modules/backuppc/backuppc/ajaxFileSearch.php:30
-msgid "MB"
-msgstr "MB"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "Mac OS X (User files)"
-msgstr "Mac OS X（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "Mac OS X (Whole / drive)"
-msgstr "Mac OS X（整个磁碟机）"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:81
-msgid "Mast backup (days)"
-msgstr "主要备份（天）"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:114
-#: modules/backuppc/backuppc/edit.php:182
-msgid "Monday"
-msgstr "星期一"
+#: modules/backuppc/backuppc/EditBackupProfile.php:75
+#: modules/backuppc/backuppc/EditPeriodProfile.php:86
+msgid ""
+"Default profiles can't be modified. Your changes will be saved as a new "
+"profile."
+msgstr "不能修改预设设定档。您的变更将储存为新设定档。"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
 msgid "Name"
 msgstr "名称"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "每晚"
+#: modules/backuppc/backuppc/EditBackupProfile.php:97
+#: modules/backuppc/backuppc/edit.php:89
+msgid "Windows-1252 - Western Europe"
+msgstr "Windows-1252 - 西欧"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
-msgid "No entry found."
-msgstr "找不到任何项目。"
+#: modules/backuppc/backuppc/EditBackupProfile.php:98
+#: modules/backuppc/backuppc/edit.php:90
+msgid "Windows-874 - Thai"
+msgstr "Windows-874 - 泰文"
 
-#: modules/backuppc/backuppc/restoreToHost.php:47
-msgid "No file selected."
-msgstr "未选择档案。"
+#: modules/backuppc/backuppc/EditBackupProfile.php:99
+#: modules/backuppc/backuppc/edit.php:91
+msgid "Windows-932 - Japanese"
+msgstr "Windows-932 - 日文"
 
-#: modules/backuppc/backuppc/viewFileVersions.php:37
-msgid "No other version."
-msgstr "没有其它版本。"
+#: modules/backuppc/backuppc/EditBackupProfile.php:100
+#: modules/backuppc/backuppc/edit.php:92
+msgid "Windows-936 - Chinese (simplified)"
+msgstr "Windows-936 - 中文（简体）"
 
-#: modules/backuppc/backuppc/ajaxGetStatus.php:43
-#: modules/backuppc/backuppc/hostSummary.php:84
-msgid "No ping response"
-msgstr "没有 ping 回应"
+#: modules/backuppc/backuppc/EditBackupProfile.php:101
+#: modules/backuppc/backuppc/edit.php:93
+msgid "Windows-949 - Korean"
+msgstr "Windows-949 - 韩文"
 
-#: modules/backuppc/backuppc/localSidebar.php:28
-msgid "Profiles"
-msgstr "设定档"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:137
-#: modules/backuppc/backuppc/EditPeriodProfile.php:148
-#: modules/backuppc/backuppc/edit.php:131
-#: modules/backuppc/backuppc/edit.php:215
-msgid "Remove"
-msgstr "移除"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
-msgid "Requested restores"
-msgstr "请求的还原"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:47
-#: modules/backuppc/backuppc/hostSummary.php:88
-msgid "Restore done"
-msgstr "还原已完成"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:45
-#: modules/backuppc/backuppc/hostSummary.php:86
-msgid "Restore failed"
-msgstr "还原失败"
-
-#: modules/backuppc/backuppc/restorePopup.php:25
-msgid "Restore files"
-msgstr "还原档案"
-
-#: modules/backuppc/backuppc/viewFileVersions.php:49
-msgid "Restore from "
-msgstr "还原自"
-
-#: modules/backuppc/infoPackage.inc.php:70
-msgid "Restore points"
-msgstr "还原点"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:106
-msgid "Restore time"
-msgstr "还原时间"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:198
-msgid "Restore to host"
-msgstr "还原到主机"
-
-#: modules/backuppc/backuppc/hostSummary.php:112
-msgid "Sart Incr Backup"
-msgstr "开始增量备份"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:119
-#: modules/backuppc/backuppc/edit.php:187
-msgid "Saturday"
-msgstr "星期六"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:118
-#: modules/backuppc/backuppc/edit.php:166
-msgid "Schedule"
-msgstr "排程"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "排程"
-
-#: modules/backuppc/backuppc/fileSearch.php:181
-msgid "Search"
-msgstr "搜寻"
-
-#: modules/backuppc/infoPackage.inc.php:67
-msgid "See pending packages"
-msgstr "查看搁置的封装"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:201
-#: modules/backuppc/backuppc/EditPeriodProfile.php:202
-#: modules/backuppc/backuppc/EditPeriodProfile.php:226
-#: modules/backuppc/backuppc/EditPeriodProfile.php:227
-#: modules/backuppc/backuppc/edit.php:284
-#: modules/backuppc/backuppc/edit.php:285
-msgid "Select days"
-msgstr "选择天数"
-
-#: modules/backuppc/infoPackage.inc.php:73
-msgid "Share names"
-msgstr "共用名称"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:177
-#: modules/backuppc/backuppc/ajaxFileSearch.php:118
-msgid "Size"
-msgstr "大小"
-
-#: modules/backuppc/backuppc/hostSummary.php:110
-msgid "Start Full Backup"
-msgstr "开始完整备份"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:107
-#: modules/backuppc/backuppc/localSidebar.php:27
-msgid "Status"
-msgstr "状态"
-
-#: modules/backuppc/backuppc/hostSummary.php:113
-msgid "Stop Backup"
-msgstr "停止备份"
-
-#: modules/backuppc/backuppc/hostStatus.php:156
-msgid "Summary"
-msgstr "概要"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:120
-#: modules/backuppc/backuppc/edit.php:188
-msgid "Sunday"
-msgstr "星期日"
-
-#: modules/backuppc/backuppc/index.php:34
-msgid "The computer has been removed from the backup system."
-msgstr "已从备份系统中移除该电脑。"
-
-#: modules/backuppc/backuppc/deleteProfile.php:43
-msgid "The profile has been deleted successfully."
-msgstr "已成功删除设定档。"
-
-#: modules/backuppc/backuppc/restoreToHost.php:54
-msgid "The selected files are going to be restored to"
-msgstr "选择的档案将还原至"
-
-#: modules/backuppc/backuppc/fileSearch.php:53
-msgid "There is no backup for this machine yet."
-msgstr "此机器尚无备份。"
-
-#: modules/backuppc/backuppc/hostSummary.php:68
-msgid "There is no backup server assigned for the computer entity."
-msgstr "没有为该电脑实体指定备份伺服器。"
-
-#: modules/backuppc/backuppc/ajaxGetStatus.php:48
-#: modules/backuppc/backuppc/hostSummary.php:89
-msgid "This computer has never been backed up"
-msgstr "此电脑从未备份"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:117
-#: modules/backuppc/backuppc/edit.php:185
-msgid "Thursday"
-msgstr "星期四"
-
-#: modules/backuppc/backuppc/restorePopup.php:27
-msgid "To alternate folder"
-msgstr "至其他资料夹"
-
-#: modules/backuppc/backuppc/restorePopup.php:26
-msgid "To original folder (overwrite)"
-msgstr "至原始资料夹（覆写）"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:115
-#: modules/backuppc/backuppc/edit.php:183
-msgid "Tuesday"
-msgstr "星期二"
-
-#: modules/backuppc/backuppc/hostSummary.php:150
-msgid "Type"
-msgstr "类型"
-
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
-msgid "Unset backup"
-msgstr "取消设定备份"
-
-#: modules/backuppc/backuppc/BrowseBackups.php:68
-#: modules/backuppc/backuppc/ajaxHostsList.php:64
-msgid "View"
-msgstr "检视"
-
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:139
-#: modules/backuppc/backuppc/viewFileVersions.php:25
-msgid "View all versions"
-msgstr "检视所有版本"
-
-#: modules/backuppc/backuppc/hostSummary.php:163
-msgid "View errors"
-msgstr "检视错误"
-
-#: modules/backuppc/backuppc/BrowseBackups.php:28
-msgid "View restore points"
-msgstr "检视还原点"
-
-#: modules/backuppc/backuppc/EditPeriodProfile.php:116
-#: modules/backuppc/backuppc/edit.php:184
-msgid "Wednesday"
-msgstr "星期三"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista（整个 C: 磁碟机）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP（整个 C: 磁碟机）"
+#: modules/backuppc/backuppc/EditBackupProfile.php:102
+#: modules/backuppc/backuppc/edit.php:94
+msgid "Windows-950 - Chinese (traditional)"
+msgstr "Windows-950 - 中文（繁体）"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
 #: modules/backuppc/backuppc/edit.php:95
@@ -669,11 +120,6 @@ msgstr "Windows-1250 - 拉丁文（中欧）"
 #: modules/backuppc/backuppc/edit.php:96
 msgid "Windows-1251 - Cyrillic"
 msgstr "Windows-1251 - 斯拉夫文"
-
-#: modules/backuppc/backuppc/EditBackupProfile.php:97
-#: modules/backuppc/backuppc/edit.php:89
-msgid "Windows-1252 - Western Europe"
-msgstr "Windows-1252 - 西欧"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:105
 #: modules/backuppc/backuppc/edit.php:97
@@ -705,58 +151,611 @@ msgstr "Windows-1257 - 拉丁文（波罗的海语言）"
 msgid "Windows-1258 - Vietnamese"
 msgstr "Windows-1258 - 越南文"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:98
-#: modules/backuppc/backuppc/edit.php:90
-msgid "Windows-874 - Thai"
-msgstr "Windows-874 - 泰文"
+#: modules/backuppc/backuppc/EditBackupProfile.php:118
+#: modules/backuppc/backuppc/edit.php:110
+msgid "Client encoding"
+msgstr "用户端编码"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:99
-#: modules/backuppc/backuppc/edit.php:91
-msgid "Windows-932 - Japanese"
-msgstr "Windows-932 - 日文"
+#: modules/backuppc/backuppc/EditBackupProfile.php:135
+#: modules/backuppc/backuppc/edit.php:129
+msgid "Excluded files"
+msgstr "排除的档案"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:100
-#: modules/backuppc/backuppc/edit.php:92
-msgid "Windows-936 - Chinese (simplified)"
-msgstr "Windows-936 - 中文（简体）"
+#: modules/backuppc/backuppc/EditBackupProfile.php:137
+#: modules/backuppc/backuppc/EditPeriodProfile.php:148
+#: modules/backuppc/backuppc/edit.php:131
+#: modules/backuppc/backuppc/edit.php:215
+msgid "Remove"
+msgstr "移除"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:101
-#: modules/backuppc/backuppc/edit.php:93
-msgid "Windows-949 - Korean"
-msgstr "Windows-949 - 韩文"
+#: modules/backuppc/backuppc/EditBackupProfile.php:154
+#: modules/backuppc/backuppc/edit.php:147
+msgid "Add folder"
+msgstr "新增资料夹"
 
-#: modules/backuppc/backuppc/EditBackupProfile.php:102
-#: modules/backuppc/backuppc/edit.php:94
-msgid "Windows-950 - Chinese (traditional)"
-msgstr "Windows-950 - 中文（繁体）"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:77
+msgid "Edit schedule"
+msgstr "编辑档案集"
 
-#: modules/backuppc/backuppc/viewXferLog.php:25
-msgid "XferLog"
-msgstr "XferLog"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:79
+#: modules/backuppc/backuppc/edit.php:232
+#: modules/backuppc/backuppc/localSidebar.php:30
+msgid "Add schedule"
+msgstr "新增档案集"
 
-#: modules/backuppc/backuppc/restoreZip.php:52
-msgid ""
-"Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
-"this archive (for proper special characters handling)."
-msgstr ""
-"正在准备您的 ZIP 档案，请稍候。<br/>请使用 7zip 开启此存档（以正确处理特殊字"
-"元）。"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:103
+#: modules/backuppc/backuppc/edit.php:173
+msgid "Interval between two full backups (days)"
+msgstr "两个完整备份之间的间隔（天）"
 
-#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
-msgid "Your file is being prepared, please wait."
-msgstr "正在准备您的档案，请稍候。"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:109
+#: modules/backuppc/backuppc/edit.php:178
+msgid "Interval between two incr backups (days)"
+msgstr "两个增量备份之间的间隔（天）"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:80
-msgid "incr. number"
-msgstr "增量编号"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:114
+#: modules/backuppc/backuppc/edit.php:182
+msgid "Monday"
+msgstr "星期一"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:146
-#: modules/backuppc/backuppc/edit.php:213
-msgid "on"
-msgstr "在"
+#: modules/backuppc/backuppc/EditPeriodProfile.php:115
+#: modules/backuppc/backuppc/edit.php:183
+msgid "Tuesday"
+msgstr "星期二"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:116
+#: modules/backuppc/backuppc/edit.php:184
+msgid "Wednesday"
+msgstr "星期三"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:117
+#: modules/backuppc/backuppc/edit.php:185
+msgid "Thursday"
+msgstr "星期四"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:118
+#: modules/backuppc/backuppc/edit.php:186
+msgid "Friday"
+msgstr "星期五"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:119
+#: modules/backuppc/backuppc/edit.php:187
+msgid "Saturday"
+msgstr "星期六"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:120
+#: modules/backuppc/backuppc/edit.php:188
+msgid "Sunday"
+msgstr "星期日"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "至"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:146
+#: modules/backuppc/backuppc/edit.php:213
+msgid "on"
+msgstr "在"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:160
+#: modules/backuppc/backuppc/edit.php:227
+msgid "Do not backup from"
+msgstr "不要备份自"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:168
+msgid "Add exclusion"
+msgstr "新增排除项目"
+
+#: modules/backuppc/backuppc/EditPeriodProfile.php:201
+#: modules/backuppc/backuppc/EditPeriodProfile.php:202
+#: modules/backuppc/backuppc/EditPeriodProfile.php:226
+#: modules/backuppc/backuppc/EditPeriodProfile.php:227
+#: modules/backuppc/backuppc/edit.php:284
+#: modules/backuppc/backuppc/edit.php:285
+msgid "Select days"
+msgstr "选择天数"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "档案集"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "编辑设定档"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+#: modules/backuppc/infoPackage.inc.php:82
+msgid "Delete profile"
+msgstr "删除设定档"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:68
+#: modules/backuppc/backuppc/edit.php:81
+msgid "Fileset"
+msgstr "档案集"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "排程"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:118
+#: modules/backuppc/backuppc/edit.php:166
+msgid "Schedule"
+msgstr "排程"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole / drive)"
+msgstr "Linux（整个磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "Mac OS X (User files)"
+msgstr "Mac OS X（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "Mac OS X (Whole / drive)"
+msgstr "Mac OS X（整个磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista（整个 C: 磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP（整个 C: 磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "日间"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "每晚"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:53
+msgid "No entry found."
+msgstr "找不到任何项目。"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:77
+#: modules/backuppc/backuppc/ajaxHostsList.php:57
+msgid "Host name"
+msgstr "主机名称"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:78
+msgid "Full number"
+msgstr "完整编号"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:79
+msgid "Full size (GB)"
+msgstr "实际大小 (GB)"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:80
+msgid "incr. number"
+msgstr "增量编号"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:81
+msgid "Mast backup (days)"
+msgstr "主要备份（天）"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:82
+msgid "Current state"
+msgstr "目前状态"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:83
+msgid "Last message"
+msgstr "上一讯息"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+msgid "Unset backup"
+msgstr "取消设定备份"
+
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:84
+msgid "Are you sure you want to unset backup for this computer?"
+msgstr "是否确定要取消设定此电脑的备份?"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:28
+#: modules/backuppc/backuppc/ajaxFileSearch.php:28
+msgid "GB"
+msgstr "GB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:30
+#: modules/backuppc/backuppc/ajaxFileSearch.php:30
+msgid "MB"
+msgstr "MB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:32
+#: modules/backuppc/backuppc/ajaxFileSearch.php:32
+msgid "KB"
+msgstr "KB"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
+#: modules/backuppc/backuppc/ajaxFileSearch.php:34
+msgid "Bytes"
+msgstr "位元组"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:113
+msgid "Current directory :  "
+msgstr "目前的目录："
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:139
+#: modules/backuppc/backuppc/viewFileVersions.php:25
+msgid "View all versions"
+msgstr "检视所有版本"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:177
+#: modules/backuppc/backuppc/ajaxFileSearch.php:118
+msgid "Size"
+msgstr "大小"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:197
+msgid "Download selected (ZIP)"
+msgstr "下载选取项 (ZIP)"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:198
+msgid "Restore to host"
+msgstr "还原到主机"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:43
+msgid "Requested restores"
+msgstr "请求的还原"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
+msgid "Download"
+msgstr "下载"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:85
+msgid "Latest direct restore to host"
+msgstr "到主机的最新直接还原"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:105
+msgid "Destination"
+msgstr "目的地"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:106
+msgid "Restore time"
+msgstr "还原时间"
+
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:107
+#: modules/backuppc/backuppc/localSidebar.php:27
+msgid "Status"
+msgstr "状态"
+
+#: modules/backuppc/backuppc/ajaxFileSearch.php:116
+msgid "File"
+msgstr "档案"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:39
+msgid "Error while retrieving status."
+msgstr "撷取状态时出现错误。"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:43
+#: modules/backuppc/backuppc/hostSummary.php:84
+msgid "No ping response"
+msgstr "没有 ping 回应"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:44
+#: modules/backuppc/backuppc/hostSummary.php:85
+msgid "Backup failed"
+msgstr "备份失败"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:45
+#: modules/backuppc/backuppc/hostSummary.php:86
+msgid "Restore failed"
+msgstr "还原失败"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:46
+#: modules/backuppc/backuppc/hostSummary.php:87
+msgid "Backup up to date"
+msgstr "最新备份"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:47
+#: modules/backuppc/backuppc/hostSummary.php:88
+msgid "Restore done"
+msgstr "还原已完成"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:48
+#: modules/backuppc/backuppc/hostSummary.php:89
+msgid "This computer has never been backed up"
+msgstr "此电脑从未备份"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:49
+#: modules/backuppc/backuppc/hostSummary.php:90
+msgid "Idle"
+msgstr "閒置"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:50
+#: modules/backuppc/backuppc/hostSummary.php:91
+msgid "Cancelled by user"
+msgstr "被使用者取消"
+
+#: modules/backuppc/backuppc/ajaxGetStatus.php:51
+#: modules/backuppc/backuppc/hostSummary.php:92
+msgid "Backup in progress"
+msgstr "正在进行备份"
+
+#: modules/backuppc/backuppc/ajaxHostsList.php:65
+msgid "Edit config"
+msgstr "编辑设定"
+
+#: modules/backuppc/backuppc/ajaxRestoreFile.php:30
+msgid "Your file is being prepared, please wait."
+msgstr "正在准备您的档案，请稍候。"
+
+#: modules/backuppc/backuppc/deleteProfile.php:43
+msgid "The profile has been deleted successfully."
+msgstr "已成功删除设定档。"
+
+#: modules/backuppc/backuppc/deleteProfile.php:46
+msgid "Failed to delete the selected profile"
+msgstr "无法删除选择的设定档"
+
+#: modules/backuppc/backuppc/deleteProfile.php:58
+msgid "Error : Default profiles cannot be deleted"
+msgstr "错误：不能删除预设设定档"
+
+#: modules/backuppc/backuppc/deleteProfile.php:60
+msgid "Delete this profile"
+msgstr "删除此设定档"
+
+#: modules/backuppc/backuppc/edit.php:43
+msgid "Host backup is not set."
+msgstr "未设定主机备份。"
+
+#: modules/backuppc/backuppc/edit.php:66
+msgid "Enabled"
+msgstr "已启用"
+
+#: modules/backuppc/backuppc/edit.php:73
+#: modules/backuppc/backuppc/edit.php:158
+msgid "Custom"
+msgstr "自订"
+
+#: modules/backuppc/backuppc/fileSearch.php:53
+msgid "There is no backup for this machine yet."
+msgstr "此机器尚无备份。"
+
+#: modules/backuppc/backuppc/fileSearch.php:83
+msgid "File name"
+msgstr "档案名称"
+
+#: modules/backuppc/backuppc/fileSearch.php:92
+#: modules/backuppc/backuppc/fileSearch.php:114
+msgid "All"
+msgstr "全部"
+
+#: modules/backuppc/backuppc/fileSearch.php:105
+msgid "Date"
+msgstr "日期"
+
+#: modules/backuppc/backuppc/fileSearch.php:149
+msgid "Any size"
+msgstr "任意大小"
+
+#: modules/backuppc/backuppc/fileSearch.php:150
+msgid "Less than 1 Mb"
+msgstr "少於 1 Mb"
+
+#: modules/backuppc/backuppc/fileSearch.php:151
+msgid "1 Mb to 10 Mb"
+msgstr "1 Mb 至 10 Mb"
+
+#: modules/backuppc/backuppc/fileSearch.php:152
+msgid "10 Mb to 100 Mb"
+msgstr "10 Mb 至 100 Mb"
+
+#: modules/backuppc/backuppc/fileSearch.php:153
+msgid "Greater than 100 Mb"
+msgstr "大于 100 Mb"
+
+#: modules/backuppc/backuppc/fileSearch.php:164
+msgid "File size"
+msgstr "档案大小"
+
+#: modules/backuppc/backuppc/fileSearch.php:181
+msgid "Search"
+msgstr "搜寻"
+
+#: modules/backuppc/backuppc/hostStatus.php:47
+#, php-format
+msgid ""
+"Computer %s has been added to backup system successfully.<br />You can now "
+"configure its filesets and scheduling."
+msgstr "电脑 %s 已成功新增至备份系统。<br />您现在可设定其档案集与排程。"
+
+#: modules/backuppc/backuppc/hostStatus.php:139
+msgid "Configuration saved"
+msgstr "已储存设定"
+
+#: modules/backuppc/backuppc/hostStatus.php:153
+#, php-format
+msgid "%s's backup status"
+msgstr "%s 的备份状态"
+
+#: modules/backuppc/backuppc/hostStatus.php:156
+msgid "Summary"
+msgstr "概要"
+
+#: modules/backuppc/backuppc/hostStatus.php:160
+msgid "Configuration"
+msgstr "设定"
+
+#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/infoPackage.inc.php:54
+msgid "File search"
+msgstr "档案搜寻"
+
+#: modules/backuppc/backuppc/hostSummary.php:49
+msgid "Action requested successfully"
+msgstr "已成功请求动作"
+
+#: modules/backuppc/backuppc/hostSummary.php:58
+msgid "Backup is not set for this computer."
+msgstr "没有为此电脑设定备份。"
+
+#: modules/backuppc/backuppc/hostSummary.php:63
+msgid "Configure"
+msgstr "设定"
+
+#: modules/backuppc/backuppc/hostSummary.php:68
+msgid "There is no backup server assigned for the computer entity."
+msgstr "没有为该电脑实体指定备份伺服器。"
+
+#: modules/backuppc/backuppc/hostSummary.php:95
+msgid "Current state: "
+msgstr "目前状态："
+
+#: modules/backuppc/backuppc/hostSummary.php:110
+msgid "Start Full Backup"
+msgstr "开始完整备份"
+
+#: modules/backuppc/backuppc/hostSummary.php:112
+msgid "Sart Incr Backup"
+msgstr "开始增量备份"
+
+#: modules/backuppc/backuppc/hostSummary.php:113
+msgid "Stop Backup"
+msgstr "停止备份"
+
+#: modules/backuppc/backuppc/hostSummary.php:149
+msgid "Backup time"
+msgstr "备份时间"
+
+#: modules/backuppc/backuppc/hostSummary.php:150
+msgid "Type"
+msgstr "类型"
+
+#: modules/backuppc/backuppc/hostSummary.php:151
+msgid "Duration (min.)"
+msgstr "持续时间（分钟）"
+
+#: modules/backuppc/backuppc/hostSummary.php:152
+msgid "Errors"
+msgstr "错误"
+
+#: modules/backuppc/backuppc/hostSummary.php:153
+msgid "File count (new)"
+msgstr "档案数（新）"
+
+#: modules/backuppc/backuppc/hostSummary.php:154
+msgid "Backup size (new) [Mb]"
+msgstr "备份容量（新）[Mb]"
+
+#: modules/backuppc/backuppc/hostSummary.php:163
+msgid "View errors"
+msgstr "检视错误"
+
+#: modules/backuppc/backuppc/index.php:34
+msgid "The computer has been removed from the backup system."
+msgstr "已从备份系统中移除该电脑。"
+
+#: modules/backuppc/backuppc/index.php:37
+#: modules/backuppc/infoPackage.inc.php:42
+msgid "Backup status"
+msgstr "备份状态"
+
+#: modules/backuppc/backuppc/localSidebar.php:28
+msgid "Profiles"
+msgstr "设定档"
+
+#: modules/backuppc/backuppc/restorePopup.php:25
+msgid "Restore files"
+msgstr "还原档案"
+
+#: modules/backuppc/backuppc/restorePopup.php:26
+msgid "To original folder (overwrite)"
+msgstr "至原始资料夹（覆写）"
+
+#: modules/backuppc/backuppc/restorePopup.php:27
+msgid "To alternate folder"
+msgstr "至其他资料夹"
+
+#: modules/backuppc/backuppc/restoreToHost.php:47
+msgid "No file selected."
+msgstr "未选择档案。"
+
+#: modules/backuppc/backuppc/restoreToHost.php:54
+msgid "The selected files are going to be restored to"
+msgstr "选择的档案将还原至"
+
+#: modules/backuppc/backuppc/restoreZip.php:52
+msgid ""
+"Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
+"this archive (for proper special characters handling)."
+msgstr "正在准备您的 ZIP 档案，请稍候。<br/>请使用 7zip 开启此存档（以正确处理特殊字元）。"
+
+#: modules/backuppc/backuppc/viewFileVersions.php:37
+msgid "No other version."
+msgstr "没有其它版本。"
+
+#: modules/backuppc/backuppc/viewFileVersions.php:49
+msgid "Restore from "
+msgstr "还原自"
+
+#: modules/backuppc/backuppc/viewXferLog.php:25
+msgid "XferLog"
+msgstr "XferLog"
+
+#: modules/backuppc/backuppc/viewXferLog.php:35
+msgid "Error log"
+msgstr "错误记录"
+
+#: modules/backuppc/infoPackage.inc.php:33
+#: modules/backuppc/infoPackage.inc.php:38
+msgid "Backup"
+msgstr "备份"
+
+#: modules/backuppc/infoPackage.inc.php:45
+msgid "Host backup status"
+msgstr "主机备份状态"
+
+#: modules/backuppc/infoPackage.inc.php:48
+msgid "Host summary"
+msgstr "主机概要"
+
+#: modules/backuppc/infoPackage.inc.php:51
+msgid "Edit host config"
+msgstr "编辑主机设定"
+
+#: modules/backuppc/infoPackage.inc.php:59
+msgid "Edit Backup Profile"
+msgstr "编辑备份设定档"
+
+#: modules/backuppc/infoPackage.inc.php:63
+msgid "Edit Backup period Profile"
+msgstr "编辑备份周期设定档"
+
+#: modules/backuppc/infoPackage.inc.php:67
+msgid "See pending packages"
+msgstr "查看搁置的封装"
+
+#: modules/backuppc/infoPackage.inc.php:70
+msgid "Restore points"
+msgstr "还原点"
+
+#: modules/backuppc/infoPackage.inc.php:73
+msgid "Share names"
+msgstr "共用名称"
+
+#: modules/backuppc/infoPackage.inc.php:79
+msgid "Backup Profiles"
+msgstr "备份设定档"
+
+#: modules/backuppc/infoPackage.inc.php:88
+msgid "Download files/ZIP from backup"
+msgstr "从备份中下载档案/ZIP"
+
+
