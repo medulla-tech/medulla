@@ -344,6 +344,7 @@ class RpcProxy(RpcProxyI):
             'expiration_ts':int(time()) + int(duration) * 30.5 * 24 * 3600
         }
         self.setAppstreamJSON(json)
+        self.updateAppstreamPackages()
         return True
     
     def updateAppstreamPackages(self):
