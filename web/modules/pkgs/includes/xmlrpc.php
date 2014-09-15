@@ -84,4 +84,25 @@ function getLicensesCount($vendor, $software, $version) {
     $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';
     return XmlCall($module . ".getLicensesCount", array($vendor, $software, $version));
 }
+
+function getActivatedAppstreamPackages(){
+    return xmlCall("pkgs.getActivatedAppstreamPackages", array());
+}
+
+function getAvailableAppstreamPackages(){
+    return xmlCall("pkgs.getAvailableAppstreamPackages", array());
+}
+
+function activateAppstreamFlow($id, $package_name, $package_label, $duration){
+    return xmlCall("pkgs.activateAppstreamFlow", array($id, $package_name, $package_label, $duration));
+}
+
+function getAppstreamJSON(){
+    return xmlCall("pkgs.getAppstreamJSON", array());
+}
+
+function setAppstreamJSON($data){
+    return xmlCall("pkgs.setAppstreamJSON", array($data));
+}
+
 ?>

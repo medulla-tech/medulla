@@ -50,6 +50,8 @@ $page->setOptions(array("visible"=>False));
 $submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);
+$page = new Page("appstreamSettings", _T('Appstream settings', 'pkgs'));
+$submod->addPage($page);
 
 $page = new Page("ajaxRefreshPackageTempDir", 'Display Package API Temporary Dir');
 $page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>True));
@@ -71,8 +73,22 @@ $page = new Page("delete",_T("Delete a package", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("activateAppstreamFlow" ,_T("Activate Appstream Flow", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/activateAppstreamFlow.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("ajaxPendingPackageList");
 $page->setFile("modules/pkgs/pkgs/ajaxPendingPackageList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxAppstreamActivatedPackageList");
+$page->setFile("modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxAppstreamAvailablePackageList");
+$page->setFile("modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 

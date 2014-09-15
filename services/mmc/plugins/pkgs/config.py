@@ -41,6 +41,9 @@ class PkgsConfig(PluginConfig):
     upaa_cacert = ''
     upaa_localcert = ''
     tmp_dir = os.path.join('/tmp', 'pkgs_tmp')
+    
+    # Appstream settings
+    appstream_url = "https://appstream.mandriva.com"
 
     def readConf(self):
         """
@@ -88,3 +91,7 @@ class PkgsConfig(PluginConfig):
                 import twisted.internet.ssl
                 if not hasattr(twisted.internet.ssl, "Certificate"):
                     raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
+        
+        # Appstream settings
+        if self.has_option("appstream", "url"):
+            self.appstream_url = self.get("appstream", "url")
