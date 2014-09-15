@@ -2,8 +2,8 @@
 
 PREFIX="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-match_distro="$( lsb_release -i )"
-DISTRO=${match_distro#"Distributor ID:"}
+match_distro="$(cat /etc/*-release |grep DISTRIB_ID )"
+DISTRO=${match_distro#"DISTRIB_ID="}
 
 ssh_pub_key="${PREFIX}/id_rsa.pub"
 inv_file="${PREFIX}/inventory.url"
@@ -32,7 +32,7 @@ else
     echo "INFO: Detected inventory url - $url"
 fi 
 
-if [ $DISTRO = "OpenMandrivaLinux" ];then
+if [ $DISTRO == "OpenMandrivaLinux" ];then
 
     if [ ! -d $fusion_dir ]; then
         mkdir $fusion_dir
