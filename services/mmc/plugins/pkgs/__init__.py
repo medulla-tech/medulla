@@ -281,7 +281,6 @@ class RpcProxy(RpcProxyI):
         except KeyError:
             return -1
 
-        pkgs_config = PkgsConfig("pkgs")
         url = 'https://activation.mandriva.com/' + cmd
         headers = {'content-type': 'application/json'}
         r = requests.get(\
@@ -380,7 +379,7 @@ class RpcProxy(RpcProxyI):
                 r = s.get(base_url + 'downloads')
                 if not r.ok:
                     raise Exception("Cannot get package metadata (downloads). Status: %d" % r.status_code)
-                downloads = r.content.strip()
+                #downloads = r.content.strip()
                 # TODO: Do downloads
                 
                 # Download data file
