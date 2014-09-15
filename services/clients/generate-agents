@@ -700,6 +700,24 @@ class RpmServerCreator(RpmCreator):
     dependencies = ["fusioninventory-agent",
                     "openssh-server",
                     ]
+class SuseCreator(RpmCreator):
+
+    platform_directory = "rpm"
+    package_name = "pulse2-agents-installer-suse"
+    package_dir_name = "pulse2-agents-installer-suse"
+    dependencies = ["fusioninventory-agent",
+                    "openssh",
+                    "tigervnc-server"]
+
+class SuseServerCreator(RpmCreator):
+
+    platform_directory = "rpm"
+    package_name = "pulse2-agents-installer-suse-nordp"
+    package_dir_name = "pulse2-agents-installer-suse-nordp"
+    dependencies = ["fusioninventory-agent",
+                    "openssh",
+                    ]
+
 
 
 class Win32Creator(AbsCreator):
@@ -754,6 +772,8 @@ class PackagesGenerator(object):
                         RpmCreator,
                         DebServerCreator,
                         RpmServerCreator,
+                        SuseCreator,
+                        SuseServerCreator,
                         Win32Creator,
                         ]:
 
