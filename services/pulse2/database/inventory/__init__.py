@@ -61,7 +61,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     This class does not read the inventory files created by the LRS during a boot phase (/tftpboot/revoboot/log/*.ini)
     """
-    
+
     def db_check(self):
         self.my_name = "inventory"
         self.configfile = "inventory.ini"
@@ -92,7 +92,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
-                
+
         self.table = {}
         self.klass = {}
         self.version = Table("Version", self.metadata, autoload = True)
@@ -170,7 +170,7 @@ class Inventory(DyngroupDatabaseHelper):
             mapper(UserEntitiesTable, self.userentities)
         except:
             pass
-        
+
 
     def getInventoryDatabaseVersion(self):
         """
@@ -2425,8 +2425,8 @@ def orderIpAdresses(netiface):
     ret_ids = []
     idx_good = 0
     for iface in netiface:
-        logging.getLogger().debug(iface)
-        if 'IP' in iface and iface['IP'] and 'SubnetMask' in iface and iface['SubnetMask'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
+        logging.getLogger().debug("Examined network interface: %s" % str(iface))
+        if 'IP' in iface and iface['IP'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
             logging.getLogger().debug('can work on')
             if iface['Gateway'] == None or iface['Gateway'] == '':
                 logging.getLogger().debug("no gateway")
@@ -2530,18 +2530,18 @@ class InventoryCreator(Inventory):
 
             # If machine doesn't exists, check if we can add a machine
             from pulse2.inventoryserver.utils import canDoInventory
-            
-            
+
+
             # Machine found in database
             if machine_exists:
                 try:
                     os_name = self.getComputersOS([machine_uuid])[0]['OSName']
                 except:
                     os_name = ''
-                
-                # Known OS is OS not null and not PXE OS    
+
+                # Known OS is OS not null and not PXE OS
                 has_known_os = os_name != '' and os_name != 'Unknown operating system (PXE network boot inventory)'
-                
+
                 # Machine found in database with real OS
                 if has_known_os:
                     # Machine found in database with real OS and new inventory is PXE
@@ -2569,7 +2569,7 @@ class InventoryCreator(Inventory):
                 else:
                     self.logger.info("Cannot forward inventory (operation denied)")
                     return False
-            
+
 
             if machine_exists :
                 if setLastFlag:
