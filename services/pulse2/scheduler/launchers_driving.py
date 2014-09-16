@@ -26,6 +26,8 @@ import logging
 from twisted.internet.defer import DeferredList, fail
 from twisted.internet.error import TCPTimedOutError, ConnectionRefusedError
 from twisted.internet.error import ConnectError
+
+from pulse2.network import NetUtils
 from pulse2.scheduler.config import SchedulerConfig
 from pulse2.scheduler.network import chooseClientIP
 from pulse2.scheduler.checks import getCheck, getAnnounceCheck
@@ -558,6 +560,10 @@ class RemoteCallProxy :
                              'netmasks': netmasks
                            })
 
+        if not ip or not NetUtils.is_ipv4_format(ip):
+            logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
+            return fail(False)
+
         client = {'host': ip,
                   'chosen_ip': ip,
                   'uuid': uuid,
@@ -610,6 +616,10 @@ class RemoteCallProxy :
                              'netmasks': netmasks
                            })
 
+        if not ip or not NetUtils.is_ipv4_format(ip):
+            logging.getLogger().warn("Ivalid IP address format: '%s'" % str(ip))
+            return fail(False)
+
         client = {'host': ip,
                   'chosen_ip': ip,
                   'uuid': uuid,
@@ -624,7 +634,10 @@ class RemoteCallProxy :
 
         d = self.call_method('tcp_sproxy', client, requestor_ip, requested_port)
         d.addCallback(_finalize)
-        d.addErrback(lambda reason: reason)
+        @d.addErrback
+        def _eb(failure):
+            logging.getLogger().warn("VNC proxy open failed: %s" % str(failure))
+
 
         return d
 
