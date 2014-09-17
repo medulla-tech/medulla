@@ -528,6 +528,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
 
                 # bundle banned excluding
                 if circuit.id in banned:
+                    self.logger.info("Circuit #%s is part of bundle, still waiting" % circuit.id)
                     continue
                 if not circuit.cohq.cmd.inDeploymentInterval():
                     circuit.release()
