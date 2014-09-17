@@ -25,6 +25,7 @@ import random
 from base64 import b64decode
 
 from twisted.internet.defer import Deferred, maybeDeferred, DeferredList
+from twisted.internet.defer import succeed
 from twisted.internet.threads import deferToThread
 from twisted.internet import reactor
 
@@ -294,7 +295,9 @@ class MscDispatcher (MscQueryManager, MethodProxy):
             d1.addCallback(self._revolve_all)
             d1.addCallback(self._run_all)
             d1.addErrback(self._start_failed)
-	return d1
+            return d1
+        else:
+            succeed(True)
 
 
     def _circuits_activate(self, circuits):
