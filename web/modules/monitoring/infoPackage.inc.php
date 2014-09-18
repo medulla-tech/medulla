@@ -49,6 +49,34 @@ $page = new Page("editconfiguration", _T('configuration', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/editconfiguration.php");
 $submod->addPage($page);
 
+$page = new Page("mediaManager", _T('manage media', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/mediaManager.php");
+$submod->addPage($page);
+
+$page = new Page("triggerManager", _T('manage trigger', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/triggerManager.php");
+$submod->addPage($page);
+
+$page = new Page("deleteTrigger", _T('delete trigger', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/deleteTrigger.php");
+$submod->addPage($page);
+
+$page = new Page("modifTrigger", _T('modify trigger', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/modifTrigger.php");
+$submod->addPage($page);
+
+$page = new Page("addSnmp", _T('add snmp device', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/addSnmp.php");
+$submod->addPage($page);
+
+$page = new Page("deleteSnmp", _T('delete snmp device', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/deleteSnmp.php");
+$submod->addPage($page);
+
+$page = new Page("editSnmp", _T('edit snmp device', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/editSnmp.php");
+$submod->addPage($page);
+
 $page = new Page("ackalert", _T('ack', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/ackalert.php");
 $submod->addPage($page);
@@ -64,6 +92,7 @@ $submod->addPage($page);
 $page = new Page("hostStatus", _T('host status', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/hostStatus.php");
 $submod->addPage($page);
+
 
 
 
@@ -90,6 +119,21 @@ $submod->addPage($page);
 
 $page = new Page('ajaxHistory');
 $page->setFile("modules/monitoring/monitoring/ajaxHistory.php");
+$page->setOptions(array("visible"=> False, "AJAX" => True));
+$submod->addPage($page);
+
+$page = new Page('ajaxMediatype');
+$page->setFile("modules/monitoring/monitoring/ajaxMediatype.php");
+$page->setOptions(array("visible"=> False, "AJAX" => True));
+$submod->addPage($page);
+
+$page = new Page('ajaxTrigger');
+$page->setFile("modules/monitoring/monitoring/ajaxTrigger.php");
+$page->setOptions(array("visible"=> False, "AJAX" => True));
+$submod->addPage($page);
+
+$page = new Page('ajaxSnmp');
+$page->setFile("modules/monitoring/monitoring/ajaxSnmp.php");
 $page->setOptions(array("visible"=> False, "AJAX" => True));
 $submod->addPage($page);
 

@@ -43,18 +43,6 @@ print '<h2>' . _T("Alerts", 'monitoring') . '</h2>';
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
-	$result = $api->alertGet(array(
-		'output' => 'extend',
-		'sortfield' => 'clock',
-		'sortorder' => 'DESC'
-	));
-
-
-//expand_arr($result);
-	/*foreach($result as $i)
-		expand_arr($i);
-	*/
-	//echo $result->hostid;
 
 } catch(Exception $e) {
 
@@ -90,13 +78,6 @@ $ajax->setRefresh(60000);
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
-
-/*$ajax = new AjaxFilter();
-$ajax->display();
-echo "<br/><br/>";
-$ajax->displayDivToUpdate();
-*/
-
 
 
 ?>

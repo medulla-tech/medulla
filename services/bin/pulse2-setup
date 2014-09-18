@@ -30,6 +30,8 @@ import string
 import uuid
 import readline   # pyflakes.ignore
 import shutil
+import netifaces as net
+import netaddr
 from copy import deepcopy
 from random import choice
 from subprocess import call
@@ -768,9 +770,13 @@ class SetupApp(object):
         self.defaults['ipexternal'] = self.options["ipexternal"] or None
         self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
         self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
-	self.defaults['monitoring_url'] = self.options["monitoring_url"] or 'http://localhost/zabbix'
+	address = net.ifaddresses('eth0')[2][0]['addr']
+	self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
 	self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
 	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
+	netmask = net.ifaddresses('eth0')[2][0]['netmask']
+	cidr = netaddr.IPNetwork('%s/%s' %(address, netmask)).cidr
+        self.defaults['monitoring_nmap_network'] = self.options["monitoring_nmap_network"] or str(cidr)
 
 
     def read_config(self):
@@ -789,6 +795,7 @@ class SetupApp(object):
 	self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
         self.config['monitoring_username'] = self.read_opt('Zabbix admin', self.defaults['monitoring_username'])
         self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
+        self.config['monitoring_nmap_network'] = self.read_ip('NMAP network to discover', self.defaults['monitoring_nmap_network'])
 
 
     def init_ldap(self):
@@ -1136,6 +1143,7 @@ class SetupApp(object):
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_url', self.config['monitoring_url'])
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_username', self.config['monitoring_username'])
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_password', self.config['monitoring_password'])
+        self.confs['plugins/monitoring.ini'].set('data', 'nmap_network', self.config['monitoring_nmap_network'])
 
 
         # Ensure various dirs are created
@@ -1334,12 +1342,13 @@ if __name__ == '__main__':
     parser.add_option("--backuppc-entity", dest="backuppc_entity",
                       help="Entity who will be linked to BackupPC (default: UUID1)")
     parser.add_option("--zabbix-uri", dest="monitoring_url",
-                      help="Zabbix API uri. Per example: http://localhost/zabbix/api_jsonrpc.php")
+                      help="Zabbix API uri. Per example: http://192.168.1.1/zabbix/")
     parser.add_option("--zabbix-user", dest="monitoring_username",
                       help="Zabbix admin username")
     parser.add_option("--zabbix-password", dest="monitoring_password",
                       help="Zabbix admin password")
-
+    parser.add_option("--zabbix-nmap-network", dest="monitoring_nmap_network",
+                      help="Network discovery network")
 
 
     # Parse and analyse args
@@ -1385,6 +1394,7 @@ if __name__ == '__main__':
 	'monitoring_url' : options.monitoring_url,
 	'monitoring_username' : options.monitoring_username,
 	'monitoring_password' : options.monitoring_password,
+	'monitoring_nmap_network' : options.monitoring_nmap_network,
     }
 
     # Run the setup app

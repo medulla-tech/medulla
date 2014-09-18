@@ -53,7 +53,10 @@ $params = array(
     'apiId' => $api->getApiAuth()
 );
 
-$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxHistory"), 'divHist', $params, 'Hist');
+$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxHistory"), 'divHist', "Location", $params, 'Hist');
+list($list, $values) = getEntitiesSelectableElements();
+$ajax->setElements($list);
+$ajax->setElementsVal($values);
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();

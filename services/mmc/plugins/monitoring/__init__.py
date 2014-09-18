@@ -44,9 +44,10 @@ def activate():
         logging.getLogger().warning("Plugin monitoring: an error occurred during the database initialization")
         return False
     # Add nmap network discovery task in the task manager
-    TaskManager().addTask("monitoring.get_task_host_os",
-                          (mnt.get_task_host_os,),
-                          cron_expression=config.nmap_task_time)	
+    if MonitoringConfig().nmap_enable == "1":
+    	TaskManager().addTask("monitoring.get_task_host_os", (mnt.get_task_host_os,), cron_expression=config.nmap_task_time)
+	logging.getLogger().warning("Plugin %s: NMAP enable  by configuration." % NAME)
+	
     return True
 
 def test():

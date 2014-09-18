@@ -91,14 +91,16 @@ $cnames = array();
 $disable = array();
 $error = array();
 
+$available = array(_T('Unknown', "monitoring"), _T('Available', "monitoring"), _T('Unavailable', "monitoring"));
+
 for ($i = 0 ; $i<$count ; $i++) {
 	$cnames[] = sprintf('<a href="main.php?module=monitoring&submod=monitoring&action=hostStatus&hostid=%s&apiId=%s">%s</a>',$result[$i]->name, $api->getApiAuth(), $result[$i]->name);
 	if($result[$i]->disable_until != 0) {
 		$now = time();
 		$time = diffTime($now, $result[$i]->disable_until)['time'];
-		$disable[] = "OFF until ".$time;
+		$disable[] = _T("Unavailable until ").$time;
 	} else
-		$disable[] = "OK";
+		$disable[] = $available[$result[$i]->available];
 	$error[] = $result[$i]->error;
 }
 
@@ -109,13 +111,13 @@ $filteredError = array();
 
 for ($i = 0; $i < $count; $i++) {
 	if ($show == 0) {
-	 	if ($disable[$i] != "OK" && $filter == "" or !(strpos($cnames[$i], $filter) === False) or !(strpos($disable[$i], $filter) === False)) {
+	 	if ($disable[$i] != _T("Available") && $filter == "" or !(strpos($cnames[$i], $filter) === False) or !(strpos($disable[$i], $filter) === False)) {
 			$filteredCnames[] = $cnames[$i];
 			$filteredDisable[] = $disable[$i];
 			$filteredError[] = $error[$i];
 		}
 	} else if ($show == 1) {
-	 	if ($disable[$i] == "OK" && $filter == "" or !(strpos($cnames[$i], $filter) === False) or !(strpos($disable[$i], $filter) === False)) {
+	 	if ($disable[$i] == _T("Available") && $filter == "" or !(strpos($cnames[$i], $filter) === False) or !(strpos($disable[$i], $filter) === False)) {
 			$filteredCnames[] = $cnames[$i];
 			$filteredDisable[] = $disable[$i];
 			$filteredError[] = $error[$i];

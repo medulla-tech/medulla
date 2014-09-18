@@ -25,6 +25,7 @@ import nmap
 import sys
 import os
 
+from mmc.plugins.monitoring.config import MonitoringConfig
 # Database
 from pulse2.database.monitoring import MonitoringDatabase
 
@@ -80,7 +81,7 @@ def get_task_host_os():
         if (os.getuid() != 0):
                 return 0
 
-        nm.scan("192.168.56.100-105", arguments='-O')
+        nm.scan(MonitoringConfig().nmap_network, arguments='-O')
 
 	for host in nm.all_hosts():
 		if (MonitoringDatabase().is_discover_host_exist(host)):
@@ -88,5 +89,5 @@ def get_task_host_os():
 		else:
 			MonitoringDatabase().add_discover_host(nm[host], host)	
 
-        return 0
+        return host
 

@@ -1,7 +1,7 @@
-<?php
+ <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2007-2008 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -31,37 +31,43 @@ require_once("modules/monitoring/includes/xmlrpc.php");
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
-$p = new PageGenerator('');
+if (isset($_GET['apiId']))
+	$apiId = $_GET['apiId'];
+else {
+	new NotifyWidgetFailure(_T("No api authentification token found!!!", "monitoring"));
+	return;
+}
+
+if (isset($_GET['triggerid']))
+	$triggerid = $_GET['triggerid'];
+else {
+	new NotifyWidgetFailure(_T("No trigger ID found!!!", "monitoring"));
+	return;
+}
+
+$p = new PageGenerator(_T("Delete Trigger", 'monitoring'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
 
-print '<h2>' . _T("Discovered Devices", 'monitoring') . '</h2>';
-
 try {
 	// connect to Zabbix API
-	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
-	
+	$api = new ZabbixApi();
+	$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
+	$api->setApiAuth($apiId);
+	$api->triggerDelete(array(
+		$triggerid
+	));
 
 } catch(Exception $e) {
 
 	// Exception in ZabbixApi catched
-	new NotifyWidgetFailure(nl2br($e->getMessage()));
-	return;
+	new NotifyWidgetFailure("error ".$e->getMessage());
+	redirectTo(urlStrRedirect("monitoring/monitoring/editconfiguration"));
 }
-
-$params = array(
-    'apiId' => $api->getApiAuth()
-);
-
-$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxDiscoveryDevices"), 'divHost', "Location", $params, 'host');
-list($list, $values) = getEntitiesSelectableElements();
-$ajax->setElements($list);
-$ajax->setElementsVal($values);
-$ajax->display();
-echo "<br/><br/>";
-$ajax->displayDivToUpdate();
+new NotifyWidgetSuccess("Trigger deleted");
+redirectTo(urlStrRedirect("monitoring/monitoring/editconfiguration"));
 
 
 
-?>
+?>  

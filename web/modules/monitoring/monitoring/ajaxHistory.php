@@ -38,8 +38,6 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
-echo $_GET['location'];
-
 $filter = $_GET['location'];
 
 if (isset($_GET['apiId']))

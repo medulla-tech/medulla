@@ -33,7 +33,7 @@ class MonitoringConfig(PluginConfig, MonitoringDatabaseConfig):
         try:
             self.monitoring_uri = self.get("webservices", "monitoring_url")
         except:
-            self.monitoring_uri = "" # http://localhost/zabbix/api_jsonrpc.php
+            self.monitoring_uri = "" # http://localhost/zabbix/
 
         try:
             self.monitoring_username = self.get("webservices", "monitoring_username")
@@ -45,11 +45,21 @@ class MonitoringConfig(PluginConfig, MonitoringDatabaseConfig):
         except:
             self.monitoring_password = "" # zabbix
 
+        try:
+            self.nmap_enable = self.get("data", "nmap_enable")
+        except:
+            self.nmap_enable = "" # 0
 
         try:
             self.nmap_task_time = self.get("data", "nmap_task_time")
         except:
             self.nmap_task_time = "" # 15 22 * * *
+
+        try:
+            self.nmap_network = self.get("data", "nmap_network")
+        except:
+            self.nmap_task_time = "" # "192.168.0.0/24"
+
 
         #self.confOption = self.get("sectionname", "optionname")
         # ...

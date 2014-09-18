@@ -138,7 +138,7 @@ class MonitoringDatabase(DatabaseHelper):
             return -1
         else:
 	    host.os = _os
-            return [row.toDict() for row in host]
+            return 1
 
     @DatabaseHelper._session
     def is_discover_host_exist(self, session, _ip):

@@ -32,27 +32,24 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 //require_once("modules/pulse2/includes/utilities.php");
 
-
 $p = new PageGenerator('');
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
-print '<h2>' . _T("Configuration", 'monitoring') . '</h2>';
-
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
-	$result = $api->alertGet(array(
-		'output' => 'extend',
-		'sortfield' => 'clock',
-		'sortorder' => 'DESC'
+	$result = $api->hostGet(array(
+		'output' => 'extend'
 	));
 
-	/*foreach($result as $i)
-		expand_arr($i);
-	*/
-	//echo $result->hostid;
+	$host = array();
+	$hostid = array();
+	foreach ($result as $i) {
+		$host[] = $i->name;
+		$hostid[] = $i->hostid;
+	}
+
 
 } catch(Exception $e) {
 
@@ -61,40 +58,53 @@ try {
 	return;
 }
 
+// Add buttons
+if (isset($_POST['bvalidMedia'])) {
+	redirectTo(urlStrRedirect("monitoring/monitoring/mediaManager&apiId=".$api->getApiAuth()));
+}
+if (isset($_POST['bvalidSnmp'])) {
+	redirectTo(urlStrRedirect("monitoring/monitoring/addSnmp&apiId=".$api->getApiAuth()));
+}
+if (isset($_POST['bvalidTrigger'])) {
+	redirectTo(urlStrRedirect("monitoring/monitoring/triggerManager&apiId=".$api->getApiAuth()));
+}
+
+print '<h2>' . _T("Device", 'monitoring') . '</h2>';
+
 $params = array(
     'apiId' => $api->getApiAuth()
 );
 
-
-$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxMonitoringAlert"), 'divAlert', $params, "Alert");
-$ajax->setRefresh(60000);
+$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxSnmp"), 'divSnmp',$params, "Snmp");
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 
-
-print "<br/><br/><br/>";
-print '<h2>' . _T("Hosts", 'monitoring') . '</h2>';
+echo "<br/><br/>";
+print '<h2>' . _T("Media Type", 'monitoring') . '</h2>';
 
 $params = array(
-    'showall' => 'false',
     'apiId' => $api->getApiAuth()
 );
 
-$ajax = new AjaxFilterLocationFormid(urlStrRedirect("monitoring/monitoring/ajaxMonitoringIndex"), 'divHost', "show", $params, "Host");
-$ajax->setElements(array(_T("Show only OFF", "monitoring"), _T("Show only ON", "monitoring"), _T("Show all", "monitoring")));
-$ajax->setElementsVal(array(0, 1, 2));
-$ajax->setRefresh(60000);
+$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxMediatype"), 'divMedia',$params, "Media");
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 
-/*$ajax = new AjaxFilter();
+echo "<br/><br/>";
+print '<h2>' . _T("Trigger", 'monitoring') . '</h2>';
+
+$params = array(
+    'apiId' => $api->getApiAuth()
+);
+
+$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxTrigger"), 'divTrigger', "hostid", $params, "Trigger");
+$ajax->setElements($host);
+$ajax->setElementsVal($hostid);
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
-*/
-
 
 
 ?>

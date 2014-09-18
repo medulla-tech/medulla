@@ -166,10 +166,142 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 
 class AjaxFilterLocationFormid extends AjaxFilterLocation {
 
-    function AjaxFilterLocation($url, $divid = "container", $paramname = 'location', $params = array(), $formid = "") {
+    function AjaxFilterLocationFormid($url, $divid = "container", $paramname = 'location', $params = array(), $formid = "") {
         $this->AjaxFilter($url, $divid, $params, $formid);
         $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
+	$this->formid = $formid;
+    }
+
+    function display($arrParam = array()) {
+        global $conf;
+        $root = $conf["global"]["root"];
+        ?>
+
+        <form name="Form<?php echo $this->formid ?>" id="Form<?php echo $this->formid ?>" action="#" onsubmit="return false;">
+            <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
+            <div id="searchSpan" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+                <span class="searchfield">
+                    <?php
+                    $this->location->display();
+                    ?>
+                </span>&nbsp;
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                        return false;" />
+                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                         onclick="document.getElementById('param').value = '';
+                                 pushSearch();
+                                 return false;" />
+                </span>
+            </div>
+
+            <script type="text/javascript">
+                jQuery('#param').focus();
+
+        <?php
+        if (isset($this->storedfilter)) {
+            ?>
+                    document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
+            <?php 
+        }
+        ?>
+                var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
+                if (jQuery('#maxperpage').length)
+                    maxperpage = jQuery('#maxperpage').val();
+
+                /**
+                 * update div with user
+                 */
+                function updateSearch() {
+                    launch--;
+
+                    if (launch == 0) {
+                        jQuery.ajax({
+                            'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form<?php echo $this->formid ?>.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form<?php echo $this->formid ?>.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
+                            type: 'get',
+                            success: function(data) {
+                                jQuery("#<?php echo $this->divid; ?>").html(data);
+                            }
+                        });
+                    }
+                }
+
+                /**
+                 * provide navigation in ajax for user
+                 */
+
+                function updateSearchParam(filt, start, end) {
+                    var reg = new RegExp("##", "g");
+                    var tableau = filt.split(reg);
+                    var location = "";
+                    var filter = "";
+                    var reg1 = new RegExp(tableau[0] + "##", "g");
+                    if (filt.match(reg1)) {
+                        if (tableau[0] != undefined) {
+                            filter = tableau[0];
+                        }
+                        if (tableau[1] != undefined) {
+                            location = tableau[1];
+                        }
+                    } else if (tableau.length == 1) {
+                        if (tableau[0] != undefined) {
+                            location = tableau[0];
+                        }
+                    }
+                    if (jQuery('#maxperpage').length)
+                        maxperpage = jQuery('#maxperpage').val();
+                    if (!location)
+                        location = document.Form<?php echo $this->formid ?>.<?php echo $this->paramname ?>.value;
+                    if (!filter)
+                        filter = document.Form<?php echo $this->formid ?>.param.value;
+
+                    jQuery.ajax({
+                        'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
+                        type: 'get',
+                        success: function(data) {
+                            jQuery("#<?php echo $this->divid; ?>").html(data);
+                        }
+                    });
+
+                }
+
+                /**
+                 * wait 500ms and update search
+                 */
+
+                function pushSearch() {
+                    launch++;
+                    setTimeout("updateSearch()", 500);
+                }
+
+                pushSearch();
+            </script>
+
+        </form>
+        <?php
+    }
+
+}
+
+class buttonTpl extends AbstractTpl {
+    var $class = '';
+    var $cssClass = 'btn btn-small';
+
+    function buttonTpl($id,$text,$class='') {
+        $this->id = $id;
+        $this->text = $text;
+        $this->class = $class;
+    }
+
+
+    function setClass($class) {
+        $this->cssClass = $class;
+    }
+
+    function display($arrParam) {      
+        if (isset($this->id,$this->text))
+            printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
 }
 
