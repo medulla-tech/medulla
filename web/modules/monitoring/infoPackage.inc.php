@@ -77,6 +77,14 @@ $page = new Page("editSnmp", _T('edit snmp device', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/editSnmp.php");
 $submod->addPage($page);
 
+$page = new Page("createGraph", _T('create graph', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/createGraph.php");
+$submod->addPage($page);
+
+$page = new Page("deleteGraph", _T('delete graph', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/deleteGraph.php");
+$submod->addPage($page);
+
 $page = new Page("ackalert", _T('ack', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/ackalert.php");
 $submod->addPage($page);

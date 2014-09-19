@@ -74,13 +74,13 @@ try {
 	$countService = 0;
 	foreach($service as $a)
 		$countService += 1;
-//expand_arr($service);
+
 	for ($j = 0; $j<$countService ; $j++) {
 		if ($service[$j]->hosts[0]->hostid == null) {
 
-			$ip[] = $service[$j]->ip;
-			$dns[] = $service[$j]->dns;
 			if ($service[$j]->status == 0) {
+				$ip[] = $service[$j]->ip;
+				$dns[] = $service[$j]->dns;
 				$status[] = _T("Host up", "monitoring");
 				$getOs = get_db_discovery_host_os($service[$j]->ip);
 				if (is_array($getOs)) {
@@ -91,24 +91,12 @@ try {
 						$getOs = "Unknow";
 					$os[] = $getOs;
 				}
-				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastup);		
-			} else {
-				$status[] = _T("Host down", "monitoring");
-				//$os[] = "";
-				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastdown);	
-			}
-/*			if ($service[$j]->lastup != 0)
 				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastup);
-			else
-				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastdown);
-*/
-
-			$countServiceTotal++;
+				$countServiceTotal++;		
+			} 
 		}
 
 	}
-	
-//expand_arr($service);
 
 } catch(Exception $e) {
 
@@ -152,7 +140,7 @@ $filteredStatus = array();
 $filteredOs = array();
 
 for ($i = 0; $i < $countServiceTotal; $i++) {
- 	if ($filter == "" or !(strpos($ip[$i], $filter) === False) ) {//or !(strpos($dns[$i], $filter) === False) or !(strpos($status[$i], $filter) === False)) {
+ 	if ($filter == "" or !(strpos($ip[$i], $filter) === False) ) {
 		//convert timestamp to human date
 		$newtime[] = $time[$i]['time'];
 

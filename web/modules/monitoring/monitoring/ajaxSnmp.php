@@ -67,7 +67,7 @@ $available = array("unknown", "available", "unavailable");
 
 for ($i = 0; $i < $countTotal; $i++) {
  	if ($filter == "" or !(strpos($host[$i]->name, $filter) === False)) {
-        	$filteredName[] = $host[$i]->name;
+        	$filteredName[] = sprintf('<a href="main.php?module=monitoring&submod=monitoring&action=hostStatus&hostid=%s&apiId=%s">%s</a>',$host[$i]->name, $api->getApiAuth(), $host[$i]->name);
 		$filteredAvailable[] = $available[$host[$i]->available];
 		$params[] = array('hostid' => $host[$i]->hostid, 'apiId' => $api->getApiAuth());
 	}

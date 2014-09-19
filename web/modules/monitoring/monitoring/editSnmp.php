@@ -133,6 +133,10 @@ else {
 			'output' => 'extend',
 			'hostids' => $hostid
 		));
+		$graph = $api->graphGet(array(
+			'output' => 'extend',
+			'hostids' => $hostid
+		));
 
 	} catch(Exception $e) {
 
@@ -148,6 +152,9 @@ else {
 		$templateName[] = $template->name;
 		$templateId[] = $template->templateid;
 	}
+
+	$graphName = array();
+	$graphId = array();
 
 	$f->push(new Table());
 	$f->add(
@@ -170,20 +177,21 @@ else {
             new TrFormElement(_T("Select a connection option", "monitoring"), $type)
         );
 
+
 	foreach ($temp as $i) {
 		$template = new SelectItem("template[]");
 		$template->setElements($templateName);
 		$template->setElementsVal($templateId);
 		$template->setSelected($i->templateid);
 
-		// Fields
-		$fields = array(
+		// Fields template
+		$fieldsTemp = array(
 			$template,
 			new buttonTpl('removeTemplate',_T('Remove'),'removeTemplate')
 		);
 
 		$f->add(
-		    new TrFormElement("Select a template", new multifieldTpl($fields))
+		    new TrFormElement("Select a template", new multifieldTpl($fieldsTemp))
 		);
 	}
 
@@ -194,6 +202,39 @@ else {
 	    new TrFormElement('', $addTemplate),
 	    array()
 	);
+
+	$f->add(
+	    new TrFormElement('<h2>' . _T("Edit Graph", 'monitoring') . '</h2>', new textTpl(""))
+	);
+
+
+	foreach ($graph as $i) {
+		$item = new textTpl($i->name);;
+		
+		$f->add(
+		    new TrFormElement("", $item)
+		);
+	}
+
+	// Create graph button
+	$createGraph = new buttonTpl('createGraph',_T('Create Graph','monitoring'));
+	$createGraph->setClass('btnPrimary');
+
+	// Delete graph button
+	$deleteGraph = new buttonTpl('deleteGraph',_T('Delete Graph','monitoring'));
+	$deleteGraph->setClass('btnPrimary');
+
+	// Fields template
+	$fieldsGraph = array(
+		$createGraph,
+		$deleteGraph
+	);
+
+
+	$f->add(
+	    new TrFormElement("", new multifieldTpl($fieldsGraph))
+	);
+
 	$f->pop();
 	$f->addButton("bvalid", _T("Edit"), "monitoring");
 	$f->pop();
@@ -205,18 +246,24 @@ else {
 <script type="text/javascript">
 jQuery(function(){
     
-    shareLine = jQuery('.removeTemplate:first').parents('tr:first').clone();
-        
+    shareLineTemp = jQuery('.removeTemplate:first').parents('tr:first').clone();
+    shareLineGraph = jQuery('.removeGraph:first').parents('tr:first').clone();
+
      // Remove template button
      jQuery('.removeTemplate').click(function(){
          if (jQuery('.removeTemplate').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
-     
+
+     // Remove graph button
+     jQuery('.removeGraph').click(function(){
+         if (jQuery('.removeGraph').length > 1)
+             jQuery(this).parents('tr:first').remove();
+     });
      
      // Add template button
      jQuery('#addTemplate').click(function(){
-        var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
+        var newline = shareLineTemp.clone().insertBefore(jQuery(this).parents('tr:first'));
          newline.find("select").val();
 
          newline.find('.removeTemplate').click(function(){
@@ -224,6 +271,32 @@ jQuery(function(){
                 jQuery(this).parents('tr:first').remove();
         });
      });
+
+     // Add graph button
+     jQuery('#addGraph').click(function(){
+        var newline = shareLineGraph.clone().insertBefore(jQuery(this).parents('tr:first'));
+         newline.find("select").val();
+
+         newline.find('.removeGraph').click(function(){
+            if (jQuery('.removeGraph').length > 1)
+                jQuery(this).parents('tr:first').remove();
+        });
+     });
+
+    // Create Graph button
+    jQuery('#createGraph').click(function(){
+	window.location.href = "/mmc/main.php?module=monitoring&submod=monitoring&action=createGraph&hostid=<?php echo $hostid ?>&apiId=<?php echo $apiId?>";
+    });
+
+    // Edit Graph button
+    jQuery('#editGraph').click(function(){
+	window.location.href = "/mmc/main.php?module=monitoring&submod=monitoring&action=editGraph&hostid=<?php echo $hostid ?>&apiId=<?php echo $apiId?>";
+    });
+
+    // Delete Graph button
+    jQuery('#deleteGraph').click(function(){
+	window.location.href = "/mmc/main.php?module=monitoring&submod=monitoring&action=deleteGraph&hostid=<?php echo $hostid ?>&apiId=<?php echo $apiId?>";
+    });
     
 });
 </script>

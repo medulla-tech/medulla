@@ -32,6 +32,7 @@ import readline   # pyflakes.ignore
 import shutil
 import netifaces as net
 import netaddr
+import hashlib
 from copy import deepcopy
 from random import choice
 from subprocess import call
@@ -773,7 +774,7 @@ class SetupApp(object):
 	address = net.ifaddresses('eth0')[2][0]['addr']
 	self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
 	self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
-	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
+	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'	
 	netmask = net.ifaddresses('eth0')[2][0]['netmask']
 	cidr = netaddr.IPNetwork('%s/%s' %(address, netmask)).cidr
         self.defaults['monitoring_nmap_network'] = self.options["monitoring_nmap_network"] or str(cidr)
@@ -794,7 +795,11 @@ class SetupApp(object):
         self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
 	self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
         self.config['monitoring_username'] = self.read_opt('Zabbix admin', self.defaults['monitoring_username'])
-        self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
+        # Generate a password for zabbix root if zabbix on localhost
+	address = net.ifaddresses('eth0')[2][0]['addr']
+	if self.config['monitoring_url']=="http://"+address+"/zabbix":
+        	self.defaults['monitoring_password'] = gen_passwd()
+	self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
         self.config['monitoring_nmap_network'] = self.read_ip('NMAP network to discover', self.defaults['monitoring_nmap_network'])
 
 
@@ -979,6 +984,11 @@ class SetupApp(object):
                 else:
                     raise e
 
+	# Change zabbix root password if localhost
+	if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
+		passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest() 
+		conn.execute('USE zabbix; UPDATE users SET passwd=%s WHERE userid=1;' % passwd)
+
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
 
@@ -1050,7 +1060,7 @@ class SetupApp(object):
         self.confs['plugins/monitoring.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/monitoring.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-
+	
 
 
     def init_glpi(self):

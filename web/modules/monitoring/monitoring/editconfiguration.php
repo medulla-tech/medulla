@@ -68,6 +68,9 @@ if (isset($_POST['bvalidSnmp'])) {
 if (isset($_POST['bvalidTrigger'])) {
 	redirectTo(urlStrRedirect("monitoring/monitoring/triggerManager&apiId=".$api->getApiAuth()));
 }
+if (isset($_POST['bvalidTemplate'])) {
+	redirectTo(urlStrRedirect("monitoring/monitoring/addTemplate&apiId=".$api->getApiAuth()));
+}
 
 print '<h2>' . _T("Device", 'monitoring') . '</h2>';
 
