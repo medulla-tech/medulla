@@ -985,9 +985,10 @@ class SetupApp(object):
                     raise e
 
 	# Change zabbix root password if localhost
+	address = net.ifaddresses('eth0')[2][0]['addr']
 	if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
 		passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest() 
-		conn.execute('USE zabbix; UPDATE users SET passwd=%s WHERE userid=1;' % passwd)
+		conn.execute('USE zabbix; UPDATE `users` SET `passwd`="%s",`autologout`="900" WHERE `userid`="1";' % passwd)
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()

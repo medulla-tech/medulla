@@ -49,6 +49,7 @@ $p->display();
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
+
 	$hostGet = $api->hostGet(array(
 		'output' => 'extend',
 	));
@@ -91,39 +92,5 @@ $ajax->setElementsVal($hostId);
 $ajax->display();
 $ajax->displayDivToUpdate();
 
-/*
-$ajax = new AjaxLocation('');
-$ajax->setElements(array(
-	_T('1 hour', 'monitoring'),
-	_T('1 week', 'monitoring'),
-	_T('1 month', 'monitoring'),
-	_T('1 year', 'monitoring'),
-	_T('4 years', 'monitoring')
-));
-$ajax->setElementsVal(array('3600', '604800', '2419200', '29030400', '116121600'));
-$ajax->display();
-$ajax->displayDivToUpdate();
-*/
-
-
-/*try {
-	// connect to Zabbix API
-	$api = new ZabbixApi('http://192.168.0.105/zabbix/api_jsonrpc.php', 'Admin', 'zabbix');
-	$cpuGraphs = $api->graphGet(array(
-		'output' => 'extend',
-		'search' => array('name' => 'CPU jumps'),
-		'hostids' => "10084"
-	));
-
-	// print graph ID with graph name
-	foreach($cpuGraphs as $graph)
-		zabbix_print_graph($url, $graph->graphid, $graph->width, $graph->height, "3600");
-		//printf("id:%d name:%s l:%s h:%s\n", $graph->graphid, $graph->name, $graph->width, $graph->height);
-
-} catch(Exception $e) {
-
-	// Exception in ZabbixApi catched
-	echo $e->getMessage();
-}*/
 
 ?>

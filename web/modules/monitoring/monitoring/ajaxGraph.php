@@ -54,6 +54,7 @@ try {
 	$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
 	$api->setApiAuth($apiId);
 
+
 	if (isset($_GET["graph"])) {
 		$graph = $_GET["graph"];
 		$graphGet = $api->graphGet(array(

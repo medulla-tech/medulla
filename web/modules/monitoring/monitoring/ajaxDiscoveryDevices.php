@@ -59,9 +59,7 @@ try {
 	$time = array();
 	$os = array();
 
-	$now = time();
-
-
+	$now = time();	
 
 	$service = $api->dserviceGet(array(
 		'output' => 'extend',
