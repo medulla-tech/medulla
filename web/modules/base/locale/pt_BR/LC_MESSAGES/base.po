@@ -13,9 +13,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-08-25 01:07+0200\n"
-"PO-Revision-Date: 2014-04-28 08:48+0000\n"
-"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"POT-Creation-Date: 2014-09-08 01:09+0200\n"
+"PO-Revision-Date: 2014-09-10 19:43+0000\n"
+"Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -704,7 +704,7 @@ msgstr "Todos os computadores"
 #: modules/base/computers/localSidebar.php:8
 #: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
-msgstr "Adicionar um computador "
+msgstr "Adicionar computador "
 
 #: modules/base/computers/delete.php:30
 msgid ""
@@ -1284,21 +1284,21 @@ msgstr "Endereço de Email"
 #: modules/base/includes/publicFunc.php:337
 #: modules/base/infoPackage.inc.php:318
 msgid "Telephone number"
-msgstr "Número do telefone"
+msgstr "Telefone"
 
 #: modules/base/includes/publicFunc.php:344
 msgid "Mobile number"
-msgstr "Número do celular"
+msgstr "Celular"
 
 #: modules/base/includes/publicFunc.php:349
 #: modules/base/infoPackage.inc.php:320
 msgid "Fax number"
-msgstr "Número do fax"
+msgstr "Fax"
 
 #: modules/base/includes/publicFunc.php:354
 #: modules/base/infoPackage.inc.php:321
 msgid "Home phone number"
-msgstr "Número do telefone de casa"
+msgstr "Telefone residencial"
 
 #: modules/base/includes/publicFunc.php:359
 msgid "Choose language"
@@ -1310,7 +1310,7 @@ msgstr "Linguagem preferida"
 
 #: modules/base/includes/publicFunc.php:372
 msgid "User is disabled, if checked"
-msgstr "Usuário está desabilitado, se marcado"
+msgstr "Desabilitar usuário"
 
 #: modules/base/includes/publicFunc.php:373
 msgid ""
@@ -1545,7 +1545,7 @@ msgstr "Permissões MMC"
 
 #: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
 msgid "Backup"
-msgstr "Becape"
+msgstr "Backup"
 
 #: modules/base/users/ajaxFilter.php:88
 msgid "Logged Actions"
@@ -1690,7 +1690,7 @@ msgstr "Cópia(backup) de um diretório home de usuário"
 #: modules/base/users/backup.php:54
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr "O becape da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
+msgstr "O backup da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 
 #: modules/base/users/backup.php:56
 #, php-format
@@ -1703,7 +1703,7 @@ msgstr ""
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
-msgstr "Por favor, veja o status do becape na página de status."
+msgstr "Por favor, veja o status do backup na página de status."
 
 #: modules/base/users/backup.php:60
 msgid "This operation will last according to the amount of data to backup."
@@ -1729,7 +1729,7 @@ msgstr "Tamanho da mídia"
 
 #: modules/base/users/backup.php:90
 msgid "Launch backup"
-msgstr "Iniciar becape"
+msgstr "Iniciar backup"
 
 #: modules/base/users/editacl.php:152
 msgid "User ACLs successfully modified."
@@ -1919,7 +1919,7 @@ msgstr "Endereço email"
 
 #: modules/base/infoPackage.inc.php:319
 msgid "Mobile phone number"
-msgstr "Número do telefone celular"
+msgstr "Celular"
 
 #: modules/base/infoPackage.inc.php:328
 msgid "Enable/Disable user account"
