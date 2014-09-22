@@ -630,6 +630,7 @@ class IPResolversContainer :
     of a client machine.
     """
     resolvers = []
+    networks = []
 
     @classmethod
     def is_resolver(cls, candidate):
@@ -669,6 +670,7 @@ class IPResolversContainer :
         To prevent name conflicts, please use the name of resolver
         as a prefix, like 'dns_value', 'nmblookup_path', etc.
         """
+        self.resolvers = []
         if not resolvers :
             resolvers = self.get_all_resolvers()
         else :
