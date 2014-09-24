@@ -341,6 +341,11 @@ Section -Post
   ; This must be done after installation, otherwise it would overwrite previous version number
   WriteRegStr HKLM "Software\Mandriva\Pulse-Pull-Client" "CurrentVersion" "${PRODUCT_VERSION}"
   WriteRegStr HKLM "Software\Mandriva\Pulse-Pull-Client" "InstallPath" "$INSTDIR"
+  IfFileExists "$PROGRAMFILES\FusionInventory-Agent\fusioninventory-agent.bat" FusionExists PastFusionCheck
+  FusionExists: 
+      DetailPrint "Launching the FusionInventory-Agent..."
+      ExecShell "" "$PROGRAMFILES\FusionInventory-Agent\fusioninventory-agent.bat"
+  PastFusionCheck:
 SectionEnd
 
 ; Section descriptions
