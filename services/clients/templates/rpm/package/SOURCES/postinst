@@ -49,6 +49,8 @@ if [ $DISTRO == "OpenMandrivaLinux" ];then
 fi	
 
 if [ -f ${fusion_cfg} ];then
+    sed -i '/^server\ =/d' ${fusion_cfg}
+    sed -i '/^server\=/d' ${fusion_cfg}
     grep -q "${url}" ${fusion_cfg} || echo "${url}" >> ${fusion_cfg}
     grep -q "${tag}" ${fusion_cfg} || echo "${tag}" >> ${fusion_cfg}
 else
