@@ -1497,6 +1497,9 @@ class LdapUserGroupControl:
                 newattrs = copy.deepcopy(attrs)
                 break
 
+        if 'krb5Key' in newattrs:
+            del newattrs['krb5Key']
+
         return newattrs
 
     getDetailedUserById = getUserEntryById
