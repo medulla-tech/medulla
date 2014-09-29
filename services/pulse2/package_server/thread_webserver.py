@@ -26,7 +26,7 @@ Registers all XML-RPC resources attached to the XML-RPC server.
 
 import logging
 import twisted
-import re
+import re, os
 from twisted.web import resource, static
 from twisted.internet.error import CannotListenError
 
@@ -65,6 +65,9 @@ def initialize(config):
     services = []
     if len(config.mirrors) > 0:
         for mirror_params in config.mirrors:
+            # If source dosesnt exist, create it
+            if not os.path.isdir(mirror_params['src']):
+                os.mkdir(mirror_params['src'])
             m_api = Mirror(mirror_params['mount_point'], mirror_params['mount_point'])
             server.register(m_api, mirror_params['mount_point'])
             services.append({'type':'mirror', 'mp':mirror_params['mount_point'], 'server':config.public_ip, 'port':config.port, 'proto':config.proto, 'src':mirror_params['src'], 'mirror_mp': '%s_files'%(mirror_params['mount_point']), 'mirror_url':'%s://%s:%s%s_files'%(config.proto, config.public_ip, config.port, mirror_params['mount_point']), 'url':'%s://%s:%s%s'%(config.proto, config.public_ip, config.port, mirror_params['mount_point'])})

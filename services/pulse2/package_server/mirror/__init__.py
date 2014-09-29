@@ -39,7 +39,7 @@ class Mirror(MyXmlrpc):
         if Common().getPackages(self.mp) == None:
             e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
             self.logger.error(e)
-            raise e
+            raise Exception(e)
         self.logger.info("(%s) %s : initialised with packages : %s"%(self.type, self.name, str(Common().getPackages(self.mp).keys())))
 
     def xmlrpc_getServerDetails(self):

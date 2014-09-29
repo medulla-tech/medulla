@@ -726,7 +726,7 @@ class Common(pulse2.utils.Singleton):
         if access is None: # dont modify the default value!
             access = {}
         if not os.path.exists(src):
-            raise Exception("Src does not exists for mount point '#{%s}' (%s)" %(mp, src))
+            os.mkdir(src)
 
         if new:
             Find().find(src, self._treatNewConfFile, (mp, access, runid))
