@@ -21,7 +21,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import os
+import os, shutil
 import requests, json, tempfile, tarfile
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
@@ -29,6 +29,7 @@ from time import time
 
 from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
+from mmc.core.tasks import TaskManager
 
 from mmc.plugins.msc.package_api import PackageGetA
 from mmc.plugins.pkgs.package_put_api import PackagePutA
@@ -48,6 +49,10 @@ def activate():
     if config.disabled:
         logger.warning("Plugin pkgs: disabled by configuration.")
         return False
+    
+    TaskManager().addTask("pkgs.updateAppstreamPackages",
+                        (updateAppstreamPackages,),
+                        cron_expression='23 10 * * *')
     return True
 
 class ContextMaker(ContextMakerI):
@@ -270,149 +275,164 @@ class RpcProxy(RpcProxyI):
         config = PkgsConfig("pkgs")
         return config.tmp_dir
     
-    def get_installation_uuid(self):
-        return open('/etc/pulse-licensing/installation_id').read().strip()
-    
-    def lserv_query(self, cmd, options):
-        settings = self.getAppstreamJSON()
-        try:
-            my_username = settings['my_username']
-            my_password = settings['my_password']
-        except KeyError:
-            return -1
 
-        url = 'https://activation.mandriva.com/' + cmd
-        headers = {'content-type': 'application/json'}
-        r = requests.get(\
-                         url,
-                         data=json.dumps(options),
-                         headers=headers,
-                         auth=(my_username, my_password)
-                         )
-        return json.loads(r.content)
-        
-    def getAppstreamJSON(self):
-        try:
-            return json.loads(open('/etc/mmc/plugins/appstream.json').read())
-        except:
-            return {}
+def get_installation_uuid():
+    return open('/etc/pulse-licensing/installation_id').read().strip()
+
+def lserv_query(cmd, options):
+    settings = getAppstreamJSON()
+    try:
+        my_username = settings['my_username']
+        my_password = settings['my_password']
+    except KeyError:
+        return -1
+
+    url = 'https://activation.mandriva.com/' + cmd
+    headers = {'content-type': 'application/json'}
+    r = requests.get(\
+                     url,
+                     data=json.dumps(options),
+                     headers=headers,
+                     auth=(my_username, my_password)
+                     )
+    return json.loads(r.content)
     
-    def setAppstreamJSON(self, data):
-        try:
-            f = open("/etc/mmc/plugins/appstream.json", "w")
-            f.write(json.dumps(data))
-            f.close()
-            return True
-        except Exception, e:
-            logging.getLogger().error('Cannot write appstream JSON')
-            logging.getLogger().error(str(e))
-            return False
-            
-    
-    def getActivatedAppstreamPackages(self):
-        json = self.getAppstreamJSON()
-        if 'flows' in json:
-            return json['flows']
-        else:
-            return {}
-    
-    def getAvailableAppstreamPackages(self):
-        return self.lserv_query('auth/customer/', {
-            'name_licence' : 'appstream',
-            'gui_product' : '-'
-        })
-    
-    def activateAppstreamFlow(self, id, package_name, package_label, duration):
-        result = self.lserv_query('activate/licencing/', {
-            'name_licence' : 'appstream',
-            'gui_product' : self.get_installation_uuid(),
-            'id' : id,
-            'keypublique' : '=',
-            'keysshpublique' : '='
-        })
-        key = result['licence'].strip()
-        
-        # Add key to appStream JSON
-        json = self.getAppstreamJSON()
-        if not 'flows' in json:
-            json['flows'] = {}
-            
-        json['flows'][package_name] = {
-            'id':id,
-            'key':key,
-            'label':package_label,
-            'expiration_ts':int(time()) + int(duration) * 30.5 * 24 * 3600
-        }
-        self.setAppstreamJSON(json)
-        self.updateAppstreamPackages()
+def getAppstreamJSON():
+    try:
+        return json.loads(open('/etc/mmc/plugins/appstream.json').read())
+    except:
+        return {}
+
+def setAppstreamJSON(data):
+    try:
+        f = open("/etc/mmc/plugins/appstream.json", "w")
+        f.write(json.dumps(data))
+        f.close()
         return True
+    except Exception, e:
+        logging.getLogger().error('Cannot write appstream JSON')
+        logging.getLogger().error(str(e))
+        return False
+        
+
+def getActivatedAppstreamPackages():
+    json = getAppstreamJSON()
+    if 'flows' in json:
+        return json['flows']
+    else:
+        return {}
+
+def getAvailableAppstreamPackages():
+    return lserv_query('auth/customer/', {
+        'name_licence' : 'appstream',
+        'gui_product' : '-'
+    })
+
+def activateAppstreamFlow(id, package_name, package_label, duration):
+    result = lserv_query('activate/licencing/', {
+        'name_licence' : 'appstream',
+        'gui_product' : get_installation_uuid(),
+        'id' : id,
+        'keypublique' : '=',
+        'keysshpublique' : '='
+    })
+    key = result['licence'].strip()
     
-    def updateAppstreamPackages(self):
+    # Add key to appStream JSON
+    json = getAppstreamJSON()
+    if not 'flows' in json:
+        json['flows'] = {}
         
-        tempfile.tempdir='/var/tmp/'
-        logger = logging.getLogger()
-        appstream_url = PkgsConfig("pkgs").appstream_url
+    json['flows'][package_name] = {
+        'id':id,
+        'key':key,
+        'label':package_label,
+        'expiration_ts':int(time()) + int(duration) * 30.5 * 24 * 3600
+    }
+    setAppstreamJSON(json)
+    updateAppstreamPackages()
+    return True
+
+def updateAppstreamPackages():
+    
+    tempfile.tempdir='/var/tmp/'
+    logger = logging.getLogger()
+    appstream_url = PkgsConfig("pkgs").appstream_url
+    
+    for pkg, info in getActivatedAppstreamPackages().iteritems():
         
-        for pkg, info in self.getActivatedAppstreamPackages().iteritems():
+        try:
+            # Creating requests session
+            s = requests.Session()
+            s.auth = ('appstream', info['key'])
+            base_url = '%s/%s/' % (appstream_url, pkg)
+            package_dir = None
             
-            try:
-                # Creating requests session
-                s = requests.Session()
-                s.auth = ('appstream', info['key'])
-                base_url = '%s/%s/' % (appstream_url, pkg)
-                package_dir = None
-                
-                # Get Package uuid
-                r = s.get(base_url + 'uuid')
-                if not r.ok:
-                    raise Exception("Cannot get package metadata (uuid). Status: %d" % r.status_code)
-                uuid = r.content.strip()
-                
-                # If package is already downloaded, skip
-                if not uuid or os.path.exists('/var/lib/pulse2/appstream_packages/%s/' % uuid):
-                    continue
-                
-                # Creating package directory
-                package_dir = '/var/lib/pulse2/appstream_packages/%s/' % uuid
-                os.mkdir(package_dir)
-                
-                # Get third party downloads
-                r = s.get(base_url + 'downloads')
-                if not r.ok:
-                    raise Exception("Cannot get package metadata (downloads). Status: %d" % r.status_code)
-                #downloads = r.content.strip()
-                # TODO: Do downloads
-                
-                # Download data file
-                data_temp_file = tempfile.mkstemp()[1]
-                with open(data_temp_file, 'wb') as handle:
-                    # Important: For newer versions of python-requests, use stream=True instead of prefetch
-                    r = s.get(base_url + 'data.tar.gz', prefetch=False)
-                
+            # Get Package uuid
+            r = s.get(base_url + 'uuid')
+            if not r.ok:
+                raise Exception("Cannot get package metadata (uuid). Status: %d" % (r.status_code))
+            uuid = r.content.strip()
+            
+            # If package is already downloaded, skip
+            if not uuid or os.path.exists('/var/lib/pulse2/appstream_packages/%s/' % uuid):
+                continue
+            
+            # Creating package directory
+            package_dir = '/var/lib/pulse2/appstream_packages/%s/' % uuid
+            os.mkdir(package_dir)
+            
+            # Get third party downloads
+            r = s.get(base_url + 'downloads')
+            if not r.ok:
+                raise Exception("Cannot get package metadata (downloads). Status: %d" % (r.status_code))
+            
+            # Downloading third party binaries
+            downloads = r.content.strip()
+            for line in downloads.split('\n'):
+                filename, url = line.split(';')
+                # Downloading file
+                with open(package_dir+filename, 'wb') as handle:
+                    r = s.get(url, prefetch=False)
+                    
                     if not r.ok:
-                        raise Exception("Cannot download package data. Status: %d" % r.status_code)
+                        raise Exception("Cannot download third party files. Status: %d" % (r.status_code))
                     
                     for block in r.iter_content(1024):
                         if not block:
                             break
                         handle.write(block)
-                        
-                # Extracting data archive
-                tar = tarfile.open(data_temp_file)
-                tar.extractall(path=package_dir)
-                tar.close()
-                
-                # Removing tempfile
-                os.remove(data_temp_file)
             
-            except Exception, e:
-                logger.error('Appstream: Error while fetching package %s' % pkg)
-                logger.error(str(e))
+            # Download data file
+            data_temp_file = tempfile.mkstemp()[1]
+            with open(data_temp_file, 'wb') as handle:
+                # Important: For newer versions of python-requests, use stream=True instead of prefetch
+                r = s.get(base_url + 'data.tar.gz', prefetch=False)
+            
+                if not r.ok:
+                    raise Exception("Cannot download package data. Status: %d" % r.status_code)
                 
-                # Removing package dir (if exists)
-                try:
-                    os.rmdir(package_dir)
-                except:
-                    pass
+                for block in r.iter_content(1024):
+                    if not block:
+                        break
+                    handle.write(block)
+                    
+            # Extracting data archive
+            tar = tarfile.open(data_temp_file)
+            tar.extractall(path=package_dir)
+            tar.close()
+            
+            # Removing tempfile
+            os.remove(data_temp_file)
+        
+        except Exception, e:
+            logger.error('Appstream: Error while fetching package %s' % pkg)
+            logger.error(str(e))
+            
+            # Removing package dir (if exists)
+            try:
+                shutil.rmtree(package_dir)
+            except Exception, e:
+                logger.error(str(e))
 
-        return True
+    return True
