@@ -43,7 +43,7 @@ import os
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
+        Date, Integer, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.sql.expression import ColumnOperators
@@ -247,6 +247,7 @@ class Glpi07(DyngroupDatabaseHelper):
             Column('is_template', Integer, nullable=False),
             Column('state', Integer, ForeignKey('glpi_dropdown_state.ID'), nullable=False),
             Column('comments', String(255), nullable=False),
+            Column('date_mod', Date, nullable=False),
             autoload = True)
         mapper(Machine, self.machine) #, properties={'FK_entities': relation(Location)})
 
@@ -1769,6 +1770,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
                     ['State', state],
                     ['Warranty End Date', endDate],
+                    ['Last Inventory Date', machine.date_mod.strftime("%Y-%m-%d %H:%M:%S")],
                 ]
                 ret.append(l)
         return ret

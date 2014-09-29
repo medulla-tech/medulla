@@ -33,7 +33,7 @@ import calendar
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
-        Integer, ForeignKey, asc, or_, not_, desc, func, distinct
+        Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper, relationship
 from sqlalchemy.sql.expression import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
@@ -351,6 +351,7 @@ class Glpi084(DyngroupDatabaseHelper):
             Column('is_template', Integer, nullable=False),
             Column('states_id', Integer, ForeignKey('glpi_states.id'), nullable=False),
             Column('comment', String(255), nullable=False),
+            Column('date_mod', Date, nullable=False),
             autoload = True)
         mapper(Machine, self.machine, properties = {
             # networkports is a one2many relation from Machine to NetworkPorts
@@ -2038,6 +2039,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
                     ['State', state],
                     ['Warranty End Date', endDate],
+                    ['Last Inventory Date', machine.date_mod.strftime("%Y-%m-%d %H:%M:%S")],
                 ]
                 ret.append(l)
         return ret

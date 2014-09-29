@@ -224,6 +224,7 @@ _T('Supplier', 'glpi');
 _T('Invoice Number', 'glpi');
 _T('Date Of Purchase', 'glpi');
 _T('Warranty End Date', 'glpi');
+_T('Last Inventory Date', 'glpi');
 _T('Vendor', 'glpi');
 _T('Name', 'glpi');
 _T('Version', 'glpi');
