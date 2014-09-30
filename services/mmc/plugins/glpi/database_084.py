@@ -1960,6 +1960,7 @@ class Glpi084(DyngroupDatabaseHelper):
             .add_column(self.glpi_operatingsystemservicepacks.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
+            .add_column(self.fusionagents.c.last_contact) \
             .select_from(
                 self.machine.outerjoin(self.location) \
                 .outerjoin(self.locations) \
@@ -1970,6 +1971,7 @@ class Glpi084(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
                 .outerjoin(self.state) \
+                .outerjoin(self.fusionagents) \
                 .outerjoin(self.glpi_domains)
             ), uuid)
 
@@ -1977,7 +1979,7 @@ class Glpi084(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain, state in query:
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2021,6 +2023,11 @@ class Glpi084(DyngroupDatabaseHelper):
 
                 owner_login, owner_firstname, owner_realname = self.getMachineOwner(machine)
 
+		# Last inventory date
+		date_mod = machine.date_mod
+		if self.fusionagents is not None:
+		    date_mod = last_contact
+
                 l = [
                     ['Computer Name', ['computer_name', 'text', machine.name]],
                     ['Description', ['description', 'text', machine.comment]],
@@ -2039,7 +2046,7 @@ class Glpi084(DyngroupDatabaseHelper):
                     ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
                     ['State', state],
                     ['Warranty End Date', endDate],
-                    ['Last Inventory Date', machine.date_mod.strftime("%Y-%m-%d %H:%M:%S")],
+                    ['Last Inventory Date', date_mod.strftime("%Y-%m-%d %H:%M:%S")],
                 ]
                 ret.append(l)
         return ret
