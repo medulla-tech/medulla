@@ -53,7 +53,7 @@ function diffTime($date1, $date2) {
 	$result['hour'] = $tmp % 24;
 	$tmp = floor( ($tmp - $result['hour']) / 24);
 	$result['day'] = $tmp;
-	
+
 	$result2 = array();
 	$result2['abs'] = $diff;
 	$result2['time'] = $result['day']." Day(s) ".$result['hour']." Hour(s) ".$result['minute']." minute(s) ".$result['second']." second(s)";	
@@ -112,7 +112,7 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 						echo "<option value=\"$timeValue[$i]\" >";
 						echo $timeName[$i];
 						echo "</option>";
-					}	
+					}
 					?>
 				</select>
 		            </span>
@@ -123,7 +123,7 @@ class AjaxPrintGraph extends AjaxFilterLocation {
                 /**
                  * update div with user
                  */
-		
+
 
                 function updateSearchLocationGraph() {
 
@@ -139,7 +139,7 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 				image.src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
 				div.appendChild(image);
 			}
-                    
+
                 }
                 /**
                  * wait 500ms and update search
@@ -149,7 +149,7 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 
                     setTimeout("updateSearchLocationGraph()", 500);
                 }
-		
+
 		var graph = document.getElementById("FormLocationGraph");
 		graph.onchange = function() {
 			pushSearchLocationGraph();
@@ -168,7 +168,7 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
 
     function AjaxFilterLocationFormid($url, $divid = "container", $paramname = 'location', $params = array(), $formid = "") {
         $this->AjaxFilter($url, $divid, $params, $formid);
-        $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
+        $this->location = new SelectItem($paramname, 'pushSearch'.$formid, 'searchfieldreal noborder');
         $this->paramname = $paramname;
 	$this->formid = $formid;
     }
@@ -187,23 +187,25 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
                     $this->location->display();
                     ?>
                 </span>&nbsp;
-                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->formid ?>();
                         return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
                          onclick="document.getElementById('param').value = '';
-                                 pushSearch();
+                                 pushSearch<?php echo $this->formid ?>();
                                  return false;" />
                 </span>
             </div>
 
             <script type="text/javascript">
                 jQuery('#param').focus();
-
+                var refreshtimer = null;
+                var refreshparamtimer = null;
+                var refreshdelay = <?php echo $this->refresh; ?>;
         <?php
         if (isset($this->storedfilter)) {
             ?>
                     document.Form<?php echo $this->formid ?>.param.value = "<?php echo $this->storedfilter ?>";
-            <?php 
+            <?php
         }
         ?>
                 var maxperpage = <?php echo $conf["global"]["maxperpage"] ?>;
@@ -211,12 +213,25 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
                     maxperpage = jQuery('#maxperpage').val();
 
                 /**
+                 * Clear the timers set vith setTimeout
+                 */
+                function clearTimers<?php echo $this->formid; ?>() {
+                    if (refreshtimer != null) {
+                        clearTimeout(refreshtimer);
+                    }
+                    if (refreshparamtimer != null) {
+                        clearTimeout(refreshparamtimer);
+                    }
+                }
+
+
+                /**
                  * update div with user
                  */
-                function updateSearch() {
-                    launch--;
 
-                    if (launch == 0) {
+
+                function updateSearch<?php echo $this->formid ?>() {
+
                         jQuery.ajax({
                             'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form<?php echo $this->formid ?>.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form<?php echo $this->formid ?>.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
                             type: 'get',
@@ -224,14 +239,21 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
                                 jQuery("#<?php echo $this->divid; ?>").html(data);
                             }
                         });
-                    }
-                }
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                        refreshparamtimer = setTimeout("updateSearch<?php echo $this->formid; ?>()", refreshdelay);
+            <?php
+        }
+        ?>
+		}
 
                 /**
                  * provide navigation in ajax for user
                  */
 
-                function updateSearchParam(filt, start, end) {
+                updateSearchParam = function(filt, start, end) {
                     var reg = new RegExp("##", "g");
                     var tableau = filt.split(reg);
                     var location = "";
@@ -264,18 +286,26 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
                         }
                     });
 
+
+        <?php
+        if ($this->refresh) {
+            ?>
+                        refreshparamtimer = setTimeout("updateSearchParam<?php echo $this->formid ?>('" + filter + "'," + start + "," + end + ")", refreshdelay);
+            <?php
+        }
+        ?>
                 }
 
                 /**
                  * wait 500ms and update search
                  */
 
-                function pushSearch() {
-                    launch++;
-                    setTimeout("updateSearch()", 500);
+                function pushSearch<?php echo $this->formid ?>() {
+                    clearTimers<?php echo $this->formid; ?>();
+                    refreshtimer = setTimeout("updateSearch<?php echo $this->formid ?>()", 500);
                 }
 
-                pushSearch();
+                pushSearch<?php echo $this->formid ?>();
             </script>
 
         </form>
@@ -299,181 +329,11 @@ class buttonTpl extends AbstractTpl {
         $this->cssClass = $class;
     }
 
-    function display($arrParam) {      
+    function display($arrParam) {
         if (isset($this->id,$this->text))
             printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
     }
 }
-
-// TO ERASE
-
-//request the api and return the result
-function json_request($uri, $data) {
-	$json_data = json_encode($data);
-	$c = curl_init();
-	curl_setopt($c, CURLOPT_URL, $uri);
-	curl_setopt($c, CURLOPT_CUSTOMREQUEST, "POST");
-	curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($c, CURLOPT_POST, $json_data);
-	curl_setopt($c, CURLOPT_POSTFIELDS, $json_data);
-	curl_setopt($c, CURLOPT_HTTPHEADER, array(
-		'Content-Type: application/json',
-		'Content-Length: ' . strlen($json_data))
-	);
-	curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
-	$result = curl_exec($c);
-
-	/* Uncomment to see some debug info
-	echo "<b>JSON Request:</b><br>\n";
-	echo $json_data."<br><br>\n";
-
-	echo "<b>JSON Answer:</b><br>\n";
-	echo $result."<br><br>\n";
-
-	echo "<b>CURL Debug Info:</b><br>\n";
-	$debug = curl_getinfo($c);
-	echo expand_arr($debug)."<br><hr>\n";
-	*/
-
-	return json_decode($result, true);
-}
-
-//return the token
-function zabbix_auth($uri, $username, $password) {
-	$data = array(
-		'jsonrpc' => "2.0",
-		'method' => "user.authenticate",
-		'params' => array(
-			'user' => $username,
-			'password' => $password
-		),
-		'id' => "1"
-	);
-	$response = json_request($uri, $data);
-	return $response['result'];
-}
-
-//return all the hosts' informations
-function zabbix_get_host($uri, $authtoken) {
-        $data = array(
-                'jsonrpc' => "2.0",
-                'method' => "host.get",
-                'params' => array(
-                        'output' => "extend",
-                        'sortfield' => "name",
-			'with_triggers' => "1"
-                ),
-                'id' => "2",
-                'auth' => $authtoken
-        );
-        $response = json_request($uri, $data);
-        return $response['result'];
-}
-
-//return all the group
-function zabbix_get_hostgroups($uri, $authtoken) {
-	$data = array(
-		'jsonrpc' => "2.0",
-		'method' => "hostgroup.get",
-		'params' => array(
-			'output' => "extend",
-			'sortfield' => "name",
-			'filter' => array('name' => "Zabbix servers")
-		),
-		'id' => "2",
-		'auth' => $authtoken
-	);
-	$response = json_request($uri, $data);
-	return $response['result'];
-}
-
-//return all the graph by id
-function zabbix_get_graph_by_id($uri, $authtoken, $id) {
-        $data = array(
-                'jsonrpc' => "2.0",
-                'method' => "graph.get",
-                'params' => array(
-                        'output' => "extend",
-			'hostids' => $id,
-                        'sortfield' => "name"
-                ),
-                'id' => "2",
-                'auth' => $authtoken
-        );
-        $response = json_request($uri, $data);
-        return $response['result'];
-}
-
-//return alert
-function zabbix_get_event($uri, $authtoken) {
-        $data = array(
-                'jsonrpc' => "2.0",
-                'method' => "event.get",
-                'params' => array(
-                        'output' => "extend"
-                ),
-                'id' => "2",
-                'auth' => $authtoken
-        );
-        $response = json_request($uri, $data);
-        return $response['result'];
-}
-
-//return trigger
-function zabbix_get_trigger($uri, $authtoken) {
-        $data = array(
-                'jsonrpc' => "2.0",
-                'method' => "trigger.get",
-                'params' => array(
-                        'output' => "extend"
-                ),
-                'id' => "2",
-                'auth' => $authtoken
-        );
-        $response = json_request($uri, $data);
-        return $response['result'];
-}
-
-
-//display all the graph
-function zabbix_print_all_graph($url, $result, $time) {
-	foreach ($result as $item) {
-        	$graphid =  $item['graphid'];
-        	$width = $item['width'];
-        	$height = $item['height'];
-        	$p = $url."/chart2.php?graphid=".$graphid."&width=".$width."&height=".$height."&period=".$time;
-        	echo "<img src=".$p.">";
-	}
-}
-
-//display only a select graph
-/**function zabbix_print_graph($url, $result, $graph, $time) {
-        foreach ($result as $item) {
-		if ($item['name'] == $graph) {
-                	$graphid =  $item['graphid'];
-                	$width = $item['width'];
-                	$height = $item['height'];
-                	$p = $url."/chart2.php?graphid=".$graphid."&width=".$width."&height=".$height."&period=".$time;
-                	echo "<img src=".$p.">";
-		}
-        }
-}**/
-
-
-//count event number
-function count_event($uri, $authtoken) {
-	$result = zabbix_get_event($uri, $authtoken);
-	$nb = 0;
-	$total = 0;
-	foreach ($result as $item) {
-		$nb += (int)$item['value'];
-		$total += 1;
-	}
-	echo "event : ".$nb."/".$total."<br>";
-}
-
-
-
 
 
 ?>

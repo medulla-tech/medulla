@@ -45,7 +45,7 @@ else {
 	return;
 }
 
-if (isset($_GET["hostid"])) 
+if (isset($_GET["hostid"]))
     $hostid = $_GET["hostid"];
 
 $filter = $_GET['filter'];
@@ -87,17 +87,17 @@ try {
 
 	//get all alert by hosts
 	for ($i = 0; $i < count($event); $i++) {
-		
-		for ($j = 0; $j < count($event[$i]->alerts); $j++) { 
+
+		for ($j = 0; $j < count($event[$i]->alerts); $j++) {
 			$countAlertTotal++;
-			for ($k = 0; $k < count($event[$i]->hosts); $k++) { 
+			for ($k = 0; $k < count($event[$i]->hosts); $k++) {
 				$name[] = sprintf('<a href="main.php?module=monitoring&submod=monitoring&action=hostStatus&hostid=%s&apiId=%s">%s</a>',$event[$i]->hosts[$k]->name, $api->getApiAuth(), $event[$i]->hosts[$k]->name);
 			}
 
 			$subject[] =  $event[$i]->alerts[$j]->subject;
 			$sendto[] = $event[$i]->alerts[$j]->sendto;
 			$time[] = diffTime($now , $event[$i]->alerts[$j]->clock);
-			$id[] = $event[$i]->alerts[$j]->eventid;	
+			$id[] = $event[$i]->alerts[$j]->eventid;
 		}
 	}
 
@@ -118,9 +118,8 @@ if ($countAlertTotal == 0){
 for ($i = 0; $i<$countAlertTotal ; $i++) {
 	for ($j = 0; $j < $countAlertTotal ; $j++) {
 		if ($time[$i]['abs'] < $time[$j]['abs']) {
-		
 			$tmpId = $id[$i];
-			$tmpName = $name[$i]; 
+			$tmpName = $name[$i];
 			$tmpSub = $subject[$i];
 			$tmpSend = $sendto[$i];
 			$tmpTime = $time[$i];

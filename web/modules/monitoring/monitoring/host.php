@@ -38,11 +38,11 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-print '<h2>' . _T("Alerts", 'monitoring') . '</h2>';
 
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
+
 
 } catch(Exception $e) {
 
@@ -51,14 +51,16 @@ try {
 	return;
 }
 
+print '<h2>' . _T("Hosts", 'monitoring') . '</h2>';
+
 $params = array(
+    'showall' => 'false',
     'apiId' => $api->getApiAuth()
 );
 
-
-$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxMonitoringAlert"), 'divAlert', "alerts", $params, "Alert");
-$ajax->setElements(array($hostGet[0]->name));
-$ajax->setElementsVal(array($host));
+$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxMonitoringIndex"), 'divHost', "show", $params, "Host");
+$ajax->setElements(array(_T("Show only OFF", "monitoring"), _T("Show only ON", "monitoring"), _T("Show all", "monitoring")));
+$ajax->setElementsVal(array(0, 1, 2));
 $ajax->setRefresh(60000);
 $ajax->display();
 echo "<br/><br/>";

@@ -41,6 +41,10 @@ $submod->setPriority(900);
 $page = new Page("index", _T('dashboard', 'monitoring'));
 $submod->addPage($page);
 
+$page = new Page("host", _T('dashboard', 'monitoring'));
+$page->setFile("modules/monitoring/monitoring/host.php");
+$submod->addPage($page);
+
 $page = new Page("viewgraphics", _T('graphics', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/viewgraphics.php");
 $submod->addPage($page);

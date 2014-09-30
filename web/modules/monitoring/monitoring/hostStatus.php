@@ -41,8 +41,8 @@ if (isset($_GET['apiId'])) {
 
 if (isset($_GET['hostid'])) {
 	$hostid = $_GET['hostid'];
-} else if (isset($_GET['CN'])) {
-	$hostid = $_GET['CN'];
+} else if (isset($_GET['cn'])) {
+	$hostid = $_GET['cn'];
 } else {
 	new NotifyWidgetFailure(_T("No host id or cn found!!!", "monitoring"));
 	return;
@@ -81,7 +81,9 @@ $params = array(
 );
 
 
-$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxMonitoringAlert"), 'divAlert', $params, "Alert");
+$ajax = new AjaxFilterLocationFormid(urlStrRedirect("monitoring/monitoring/ajaxMonitoringAlert"), 'divAlert', "alert", $params, "Alert");
+$ajax->setElements(array($hostGet[0]->name));
+$ajax->setElementsVal(array($host));
 $ajax->setRefresh(60000);
 $ajax->display();
 echo "<br/><br/>";
@@ -111,7 +113,9 @@ $params = array(
     'hostid' => $host
 );
 
-$ajax = new AjaxFilter(urlStrRedirect("monitoring/monitoring/ajaxHistory"), 'divHist', $params, 'Hist');
+$ajax = new AjaxFilterLocationFormid(urlStrRedirect("monitoring/monitoring/ajaxHistory"), 'divHist', "history", $params, 'Hist');
+$ajax->setElements(array($hostGet[0]->name));
+$ajax->setElementsVal(array($host));
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
