@@ -105,6 +105,8 @@ $ajax->setElementsVal(array($host));
 $ajax->display();
 $ajax->displayDivToUpdate();
 
+/* Compatibility problem with the list selector
+
 print "<br/><br/><br/>";
 print '<h2>' . _T("History", 'monitoring') . '</h2>';
 
@@ -119,7 +121,7 @@ $ajax->setElementsVal(array($host));
 $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
-
+*/
 
 
 ?>
