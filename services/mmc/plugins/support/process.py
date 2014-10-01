@@ -112,6 +112,11 @@ class PIDControl(object):
         @return: True if process found
         @rtype: bool
         """
+        # A little hack - because autossh in ps list has another path 
+        for i, a in enumerate(args): 
+            if a=="/usr/bin/autossh":
+                args[i] = "/usr/lib/autossh/autossh"
+                break
 
         for p in psutil.process_iter():
             if p.cmdline == args :
@@ -252,22 +257,20 @@ class TunnelBuilder(object):
         @return: ssh command
         @rtype: list
         """
-        return [self.config.ssh_path,
-                # this options provides the daemonizing of SSH session
-                # so no need nohup execution or other utils ...
-                "-f", "-N",
-                self.config.url,
-                "-R%d:127.0.0.1:22" % self.port,
+        return ["/usr/bin/autossh", 
+                "-i", self.config.identify_file,
                 "-o",
-                "IdentityFile=%s" % self.config.identify_file,
+                "PasswordAuthentication=no",
                 "-o",
                 " CheckHostIP=no",
                 "-o",
                 "UserKnownHostsFile=/dev/null",
                 "-o",
-                "PasswordAuthentication=no",
-                "-o",
                 "StrictHostKeyChecking=no",
+                "-R", "%d:127.0.0.1:22" % self.port,
+                self.config.url,
+                "-N",
+                "&"
                 ]
 
 
