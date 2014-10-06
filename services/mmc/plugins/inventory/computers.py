@@ -129,7 +129,7 @@ class InventoryComputers(ComputerI):
         return [True, filt]
 
     def getRestrictedComputersListLen(self, ctx, filt = {}):
-        if filt == '':
+        if filt == '' or filt is None:
             filt = {}
 
         filt = self.__restrictLocationsOnImagingServerOrEntity(filt, ctx)
@@ -139,7 +139,7 @@ class InventoryComputers(ComputerI):
         return self.inventory.countMachinesOnly(ctx, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True, justId = False, toH = False):
-        if filt == '':
+        if filt == '' or filt is None:
             filt = {}
 
         filt = self.__restrictLocationsOnImagingServerOrEntity(filt, ctx)
