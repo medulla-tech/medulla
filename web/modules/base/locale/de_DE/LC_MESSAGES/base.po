@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-09-08 01:09+0200\n"
-"PO-Revision-Date: 2014-04-28 08:49+0000\n"
-"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"POT-Creation-Date: 2014-10-10 10:23+0200\n"
+"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -458,7 +458,7 @@ msgid "Toggle selection"
 msgstr "Auswahl einstellen"
 
 #: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/base/users/ajaxFilter.php:88 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "löschen"
@@ -1031,7 +1031,7 @@ msgstr "Sie können nicht mehr Benutzer hinzufügen."
 msgid "User %s successfully created"
 msgstr "Benutzer %s erfolgreich erstellt"
 
-#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
 msgstr "Benutzer hinzufügen"
 
@@ -1135,54 +1135,6 @@ msgstr "Netmask Adresse des Computers"
 msgid "Refresh"
 msgstr "aktualisieren"
 
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "Inventar"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "GLPI Inventar"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "Log lesen"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "Software Deployment"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "maging-Verwaltung"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "Datei herunterladen"
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr "Fernsteuerung"
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr "Profile anzeigen"
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr "Computerliste"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr "Backup Status"
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr "lösche Computer"
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
-msgstr "lösche Computer aus Gruppe"
-
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1241,8 +1193,6 @@ msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
-"Das Foto ist zu groß. Die maximale Größe ist %s x %s. Installieren Sie die "
-"php gd Erweiterung um das Foto automatisch anzupassen"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
@@ -1405,6 +1355,59 @@ msgstr "UID"
 msgid "GID"
 msgstr "GID"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Inventar"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI Inventar"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Log lesen"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Software Deployment"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "maging-Verwaltung"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "Datei herunterladen"
+
+#: modules/base/includes/computers_list.inc.php:36
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Remote control"
+msgstr "Fernsteuerung"
+
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Show Profile"
+msgstr "Profile anzeigen"
+
+#: modules/base/includes/computers_list.inc.php:160
+msgid "Computers list"
+msgstr "Computerliste"
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Backup status"
+msgstr "Backup Status"
+
+#: modules/base/includes/computers_list.inc.php:191
+msgid "Delete computer"
+msgstr "lösche Computer"
+
+#: modules/base/includes/computers_list.inc.php:194
+msgid "Remove machine from group"
+msgstr "lösche Computer aus Gruppe"
+
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
 msgstr "LDAP-Log \"Operationen\" ansehen"
@@ -1423,7 +1426,7 @@ msgstr "Aktionen"
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra information"
-msgstr "Zusätzliche Informationen"
+msgstr ""
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1479,7 +1482,7 @@ msgstr "Hintergrunddienste"
 
 #: modules/base/status/support.php:29
 msgid "License and support information"
-msgstr "Lizenz-und Support Informationen"
+msgstr ""
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
@@ -1540,35 +1543,6 @@ msgstr "Support Mail-Adresse"
 msgid "Support phone number"
 msgstr "Support Telefonnummer"
 
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "Name"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "Telefon"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "bearbeiten"
-
-#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "MMC Rechte"
-
-#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "archivieren"
-
-#: modules/base/users/ajaxFilter.php:88
-msgid "Logged Actions"
-msgstr "Aufgezeichnete Aktionen"
-
-#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "Benutzer"
-
 #: modules/base/users/delete.php:33
 #, php-format
 msgid "User %s has been successfully deleted"
@@ -1586,51 +1560,6 @@ msgstr "Sie löschen den Benutzer <b>%s</b>."
 #: modules/base/users/delete.php:40
 msgid "Delete all user's files"
 msgstr "alle Benutzer-Dateien löschen"
-
-#: modules/base/users/edit.php:56
-msgid "Edit user"
-msgstr "Benutzer bearbeiten"
-
-#: modules/base/users/edit.php:85
-#, php-format
-msgid "Failed to change primary group in %s plugin"
-msgstr "Fehler beim Wechsel der Primärgruppe in %s Plugin"
-
-#: modules/base/users/edit.php:109
-msgid "Password not updated"
-msgstr "Passwort nicht aktualisiert"
-
-#: modules/base/users/edit.php:112
-msgid "Password updated"
-msgstr "Passwort aktualisiert"
-
-#: modules/base/users/edit.php:121
-#, php-format
-msgid "Failed to disable user in %s plugin"
-msgstr "Fehler beim Deaktivieren des Benutzers in %s plugin"
-
-#: modules/base/users/edit.php:124
-#, php-format
-msgid "User %s disabled."
-msgstr "Benutzer %s deaktiviert."
-
-#: modules/base/users/edit.php:130
-#, php-format
-msgid "Failed to enable user in %s plugin"
-msgstr "Fehler beim Aktivieren des Benutzers in %s Plugin"
-
-#: modules/base/users/edit.php:133
-#, php-format
-msgid "User %s enabled"
-msgstr "Benutzer %s aktiviert"
-
-#: modules/base/users/edit.php:183
-msgid "Enable account"
-msgstr "Konto aktivieren"
-
-#: modules/base/users/edit.php:185
-msgid "Disable account"
-msgstr "Konto deaktivieren"
 
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
@@ -1798,6 +1727,80 @@ msgstr "ACL des Benutzer %s bearbeiten"
 #: modules/base/users/editacl.php:271
 msgid "Download ACL string"
 msgstr "ACL string herunterladen"
+
+#: modules/base/users/edit.php:59
+msgid "Edit user"
+msgstr "Benutzer bearbeiten"
+
+#: modules/base/users/edit.php:88
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "Fehler beim Wechsel der Primärgruppe in %s Plugin"
+
+#: modules/base/users/edit.php:112
+msgid "Password not updated"
+msgstr "Passwort nicht aktualisiert"
+
+#: modules/base/users/edit.php:115
+msgid "Password updated"
+msgstr "Passwort aktualisiert"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "Fehler beim Deaktivieren des Benutzers in %s plugin"
+
+#: modules/base/users/edit.php:127
+#, php-format
+msgid "User %s disabled."
+msgstr "Benutzer %s deaktiviert."
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "Fehler beim Aktivieren des Benutzers in %s Plugin"
+
+#: modules/base/users/edit.php:136
+#, php-format
+msgid "User %s enabled"
+msgstr "Benutzer %s aktiviert"
+
+#: modules/base/users/edit.php:186
+msgid "Enable account"
+msgstr "Konto aktivieren"
+
+#: modules/base/users/edit.php:188
+msgid "Disable account"
+msgstr "Konto deaktivieren"
+
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "Name"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Telefon"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "bearbeiten"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC Rechte"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "archivieren"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "Aufgezeichnete Aktionen"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "Benutzer"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"

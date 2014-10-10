@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-09-08 01:09+0200\n"
-"PO-Revision-Date: 2014-04-28 08:30+0000\n"
+"POT-Creation-Date: 2014-10-10 10:23+0200\n"
+"PO-Revision-Date: 2014-10-10 08:23+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -430,7 +430,7 @@ msgid "Toggle selection"
 msgstr ""
 
 #: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/base/users/ajaxFilter.php:88 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "Slett"
@@ -976,7 +976,7 @@ msgstr ""
 msgid "User %s successfully created"
 msgstr ""
 
-#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
 msgstr "Legg til bruker"
 
@@ -1078,54 +1078,6 @@ msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:46
@@ -1341,6 +1293,59 @@ msgstr ""
 msgid "GID"
 msgstr ""
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:36
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Remote control"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Show Profile"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:160
+msgid "Computers list"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Backup status"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:191
+msgid "Delete computer"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
+msgid "Remove machine from group"
+msgstr ""
+
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
 msgstr "LDAP opersjons loggvisning"
@@ -1471,35 +1476,6 @@ msgstr ""
 msgid "Support phone number"
 msgstr ""
 
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "Etternavn"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "Telefon"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "Rediger"
-
-#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr ""
-
-#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "Sikkerhetskopi"
-
-#: modules/base/users/ajaxFilter.php:88
-msgid "Logged Actions"
-msgstr ""
-
-#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "Brukere"
-
 #: modules/base/users/delete.php:33
 #, php-format
 msgid "User %s has been successfully deleted"
@@ -1517,51 +1493,6 @@ msgstr "Du vil slette brukeren <b>%s</b>."
 #: modules/base/users/delete.php:40
 msgid "Delete all user's files"
 msgstr "Slett alle filene til brukeren"
-
-#: modules/base/users/edit.php:56
-msgid "Edit user"
-msgstr "Rediger bruker"
-
-#: modules/base/users/edit.php:85
-#, php-format
-msgid "Failed to change primary group in %s plugin"
-msgstr ""
-
-#: modules/base/users/edit.php:109
-msgid "Password not updated"
-msgstr ""
-
-#: modules/base/users/edit.php:112
-msgid "Password updated"
-msgstr ""
-
-#: modules/base/users/edit.php:121
-#, php-format
-msgid "Failed to disable user in %s plugin"
-msgstr ""
-
-#: modules/base/users/edit.php:124
-#, php-format
-msgid "User %s disabled."
-msgstr ""
-
-#: modules/base/users/edit.php:130
-#, php-format
-msgid "Failed to enable user in %s plugin"
-msgstr ""
-
-#: modules/base/users/edit.php:133
-#, php-format
-msgid "User %s enabled"
-msgstr ""
-
-#: modules/base/users/edit.php:183
-msgid "Enable account"
-msgstr ""
-
-#: modules/base/users/edit.php:185
-msgid "Disable account"
-msgstr ""
 
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
@@ -1722,6 +1653,80 @@ msgstr ""
 #: modules/base/users/editacl.php:271
 msgid "Download ACL string"
 msgstr ""
+
+#: modules/base/users/edit.php:59
+msgid "Edit user"
+msgstr "Rediger bruker"
+
+#: modules/base/users/edit.php:88
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr ""
+
+#: modules/base/users/edit.php:112
+msgid "Password not updated"
+msgstr ""
+
+#: modules/base/users/edit.php:115
+msgid "Password updated"
+msgstr ""
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr ""
+
+#: modules/base/users/edit.php:127
+#, php-format
+msgid "User %s disabled."
+msgstr ""
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr ""
+
+#: modules/base/users/edit.php:136
+#, php-format
+msgid "User %s enabled"
+msgstr ""
+
+#: modules/base/users/edit.php:186
+msgid "Enable account"
+msgstr ""
+
+#: modules/base/users/edit.php:188
+msgid "Disable account"
+msgstr ""
+
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "Etternavn"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Telefon"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "Rediger"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr ""
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "Sikkerhetskopi"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr ""
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "Brukere"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"

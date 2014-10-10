@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-09-08 01:09+0200\n"
-"PO-Revision-Date: 2014-05-04 23:14+0000\n"
-"Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
+"POT-Creation-Date: 2014-10-10 10:23+0200\n"
+"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/mds/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -444,7 +444,7 @@ msgid "Toggle selection"
 msgstr "切换选取范围"
 
 #: includes/FormGenerator.php:1134 modules/base/groups/ajaxFilter.php:48
-#: modules/base/users/ajaxFilter.php:85 modules/base/views/index.tpl.php:92
+#: modules/base/users/ajaxFilter.php:88 modules/base/views/index.tpl.php:92
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
 msgstr "删除"
@@ -992,7 +992,7 @@ msgstr "您无法再新增使用者。"
 msgid "User %s successfully created"
 msgstr "使用者 %s 已成功建立"
 
-#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:51
+#: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
 msgstr "新增使用者"
 
@@ -1096,54 +1096,6 @@ msgstr "电脑的网路遮罩位址"
 msgid "Refresh"
 msgstr "重新整理"
 
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "清查"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "GLPI 清查"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "读取记录"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "软体部署"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "影像管理"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "下载档案"
-
-#: modules/base/includes/computers_list.inc.php:36
-msgid "Remote control"
-msgstr "远端控制"
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Show Profile"
-msgstr "显示设定档"
-
-#: modules/base/includes/computers_list.inc.php:153
-msgid "Computers list"
-msgstr "电脑清单"
-
-#: modules/base/includes/computers_list.inc.php:164
-msgid "Backup status"
-msgstr "备份状态"
-
-#: modules/base/includes/computers_list.inc.php:181
-msgid "Delete computer"
-msgstr "删除电脑"
-
-#: modules/base/includes/computers_list.inc.php:184
-msgid "Remove machine from group"
-msgstr "从群组移除电脑"
-
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1198,8 +1150,6 @@ msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
-"相片太大。最大大小为 %s x %s。\\n\n"
-"                    安装 php gd 延伸以自动调整相片大小"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
@@ -1357,6 +1307,59 @@ msgstr "UID"
 msgid "GID"
 msgstr "GID"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "清查"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI 清查"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "读取记录"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "软体部署"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "影像管理"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "下载档案"
+
+#: modules/base/includes/computers_list.inc.php:36
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Remote control"
+msgstr "远端控制"
+
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Show Profile"
+msgstr "显示设定档"
+
+#: modules/base/includes/computers_list.inc.php:160
+msgid "Computers list"
+msgstr "电脑清单"
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Backup status"
+msgstr "备份状态"
+
+#: modules/base/includes/computers_list.inc.php:191
+msgid "Delete computer"
+msgstr "删除电脑"
+
+#: modules/base/includes/computers_list.inc.php:194
+msgid "Remove machine from group"
+msgstr "从群组移除电脑"
+
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
 msgstr "LDAP 作业记录档视图"
@@ -1375,7 +1378,7 @@ msgstr "动作"
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra information"
-msgstr "额外资讯"
+msgstr ""
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1431,7 +1434,7 @@ msgstr "背景作业"
 
 #: modules/base/status/support.php:29
 msgid "License and support information"
-msgstr "授权和支援资讯"
+msgstr ""
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
@@ -1487,35 +1490,6 @@ msgstr "支援邮件位址"
 msgid "Support phone number"
 msgstr "支援电话号码"
 
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "名称"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "电话"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "编辑"
-
-#: modules/base/users/ajaxFilter.php:84 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "MMC 权限"
-
-#: modules/base/users/ajaxFilter.php:86 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "备份"
-
-#: modules/base/users/ajaxFilter.php:88
-msgid "Logged Actions"
-msgstr "已记录的动作"
-
-#: modules/base/users/ajaxFilter.php:90 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "使用者"
-
 #: modules/base/users/delete.php:33
 #, php-format
 msgid "User %s has been successfully deleted"
@@ -1533,51 +1507,6 @@ msgstr "您将删除使用者 <b>%s</b>。"
 #: modules/base/users/delete.php:40
 msgid "Delete all user's files"
 msgstr "删除所有使用者的档案"
-
-#: modules/base/users/edit.php:56
-msgid "Edit user"
-msgstr "编辑使用者"
-
-#: modules/base/users/edit.php:85
-#, php-format
-msgid "Failed to change primary group in %s plugin"
-msgstr "无法变更 %s 外挂程式中的主要群组"
-
-#: modules/base/users/edit.php:109
-msgid "Password not updated"
-msgstr "密码未更新"
-
-#: modules/base/users/edit.php:112
-msgid "Password updated"
-msgstr "密码已更新"
-
-#: modules/base/users/edit.php:121
-#, php-format
-msgid "Failed to disable user in %s plugin"
-msgstr "无法停用 %s 外挂程式中的使用者"
-
-#: modules/base/users/edit.php:124
-#, php-format
-msgid "User %s disabled."
-msgstr "使用者 %s 已停用。"
-
-#: modules/base/users/edit.php:130
-#, php-format
-msgid "Failed to enable user in %s plugin"
-msgstr "无法启用 %s 外挂程式中的使用者"
-
-#: modules/base/users/edit.php:133
-#, php-format
-msgid "User %s enabled"
-msgstr "使用者 %s 已启用"
-
-#: modules/base/users/edit.php:183
-msgid "Enable account"
-msgstr "启用帐户"
-
-#: modules/base/users/edit.php:185
-msgid "Disable account"
-msgstr "停用帐户"
 
 #: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
 #: modules/base/infoPackage.inc.php:171
@@ -1736,6 +1665,80 @@ msgstr "编辑使用者 %s 的 ACL"
 #: modules/base/users/editacl.php:271
 msgid "Download ACL string"
 msgstr "下载 ACL 字串"
+
+#: modules/base/users/edit.php:59
+msgid "Edit user"
+msgstr "编辑使用者"
+
+#: modules/base/users/edit.php:88
+#, php-format
+msgid "Failed to change primary group in %s plugin"
+msgstr "无法变更 %s 外挂程式中的主要群组"
+
+#: modules/base/users/edit.php:112
+msgid "Password not updated"
+msgstr "密码未更新"
+
+#: modules/base/users/edit.php:115
+msgid "Password updated"
+msgstr "密码已更新"
+
+#: modules/base/users/edit.php:124
+#, php-format
+msgid "Failed to disable user in %s plugin"
+msgstr "无法停用 %s 外挂程式中的使用者"
+
+#: modules/base/users/edit.php:127
+#, php-format
+msgid "User %s disabled."
+msgstr "使用者 %s 已停用。"
+
+#: modules/base/users/edit.php:133
+#, php-format
+msgid "Failed to enable user in %s plugin"
+msgstr "无法启用 %s 外挂程式中的使用者"
+
+#: modules/base/users/edit.php:136
+#, php-format
+msgid "User %s enabled"
+msgstr "使用者 %s 已启用"
+
+#: modules/base/users/edit.php:186
+msgid "Enable account"
+msgstr "启用帐户"
+
+#: modules/base/users/edit.php:188
+msgid "Disable account"
+msgstr "停用帐户"
+
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "名称"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "电话"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "编辑"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC 权限"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "备份"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "已记录的动作"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "使用者"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
