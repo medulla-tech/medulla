@@ -20,3 +20,15 @@ form.audit_ok td.label, form.audit_nok td.label {
 form.audit_ok td.label:after, form.audit_nok td.label:after {
     content: " :";
 }
+li.extticket a {
+        padding: 3px 3px 3px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/extticket_shortcut.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+

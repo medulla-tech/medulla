@@ -29,6 +29,9 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require("modules/base/includes/AjaxFilterLog.inc.php");
 require_once("includes/FormHandler.php");
+if (in_array("extticket", $_SESSION["supportModList"])) {
+    require_once("modules/extticket/includes/menu_action.php");
+}
 
 # infos messages
 global $result;
