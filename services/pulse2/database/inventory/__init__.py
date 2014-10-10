@@ -53,6 +53,9 @@ class UserTable(object):
 class UserEntitiesTable(object):
     pass
 
+class Hardware(object):
+    pass
+
 class Inventory(DyngroupDatabaseHelper):
     """
     Class to query the LRS/Pulse2 inventory database, populated by OCS inventory.
@@ -116,6 +119,11 @@ class Inventory(DyngroupDatabaseHelper):
 
         self.table['Inventory'] = self.inventory
         self.klass['Inventory'] = InventoryTable
+
+        self.table['Hardware'] = self.hardware
+        self.klass['Hardware'] = Hardware
+
+        mapper(Hardware, self.hardware)
 
         for item in self.config.getInventoryParts():
             # Declare the SQL table
@@ -365,6 +373,18 @@ class Inventory(DyngroupDatabaseHelper):
         # Grouping by machine.id
         query = query.group_by(self.machine.c.id)
         return query
+
+    def getUUIDByMachineName(self, ctx, name):
+
+        session = create_session()
+        query = session.query(Machine).filter(self.machine.c.Name==name)
+        result = query.all()
+        if len(result)==1:
+            return toUUID(result[0].id)
+        else:
+            return None
+
+        session.close()
 
     def getTotalComputerCount(self):
         session = create_session()
@@ -957,6 +977,60 @@ class Inventory(DyngroupDatabaseHelper):
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True): # TODO implement ...
         return True
 
+    def getMachineByLastLoggedUser(self, ctx, user):
+        result = self.getLastMachineInventoryPart(ctx, "Hardware", {"Owner": user})
+        if len(result) > 0:
+            uuid = result[0][2]
+            computers = self.getComputersOptimized(ctx, {"uuid" :uuid})
+            if len(computers)==1:
+                return computers[uuid][1]
+            #return result[0][1][0] #[q[0] for q in result][0]
+        return None
+
+    def getAvgOwner(self, machine_uuid):
+        """
+        Based on number of inventory injections (AVG_BASE),
+        this method returns the most frequently logged user.
+
+        @param machine_uuid: machine
+        @typr machine_uuid: str
+
+        @return: the most frequently logged user
+        @rtype: str
+        """
+        AVG_BASE = 10
+
+        machine_id = fromUUID(machine_uuid)
+        session = create_session()
+
+        query = session.query(Hardware)
+        query = query.select_from(self.hardware.join(self.table['hasHardware'],
+                                                     self.table['hasHardware'].c.hardware == self.table["Hardware"].c.id))
+        query = query.filter(self.table['hasHardware'].c.machine == machine_id)
+
+        owners = {}
+
+        for i, hardware in enumerate(query.all()):
+            if i == AVG_BASE :
+                break
+            if hardware.User not in owners:
+                owners[hardware.User] = 1
+            else:
+                owners[hardware.User] += 1
+
+        if len(owners) > 0:
+            # the most frequent occurence of user
+            return max(owners, key=owners.get)
+
+
+
+
+
+
+
+
+
+
     def countLastMachineInventoryPart(self, ctx, part, params):
         session = create_session()
         result, grp_by = self.__lastMachineInventoryPartQuery(session, ctx, part, params)
@@ -988,6 +1062,7 @@ class Inventory(DyngroupDatabaseHelper):
                 fields.append(['Computer Name', ['computer_name', 'text', hardware['Host']]])
                 fields.append(['Domain', hardware['Workgroup']])
                 fields.append(['Last Logged User', hardware['User']])
+                fields.append(['Owner', hardware['Owner']])
                 fields.append(['OS', hardware['OperatingSystem']])
                 fields.append(['Service Pack', hardware['Build']])
                 fields.append(['Windows Key', hardware['OsSerialKey']])
@@ -1231,6 +1306,10 @@ class Inventory(DyngroupDatabaseHelper):
         #result = result.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
         # Apply other filters
         result = self.__filterQuery(part, ctx, result, params)
+        if "User" in params:
+            result = result.filter(self.klass['Hardware'].User == params["User"])
+        if "Owner" in params:
+            result = result.filter(self.klass['Hardware'].Owner == params["Owner"])
 
         # Apply a filter on the software ProductName if asked in parameters (the filter is loaded from a config file)
         if params.has_key('software_filter') and params['software_filter'] == True and part == 'Software':
@@ -2347,6 +2426,40 @@ class Inventory(DyngroupDatabaseHelper):
                         return False
         return True
 
+    def update_owner(self, machine_uuid):
+        """
+        Updates the owner of machine.
+
+        @param machine_uuid: uuid of Machine
+        @type machine_uuid: str
+
+        """
+        session = create_session()
+
+        machine_id = fromUUID(machine_uuid)
+
+        logging.getLogger().info("Trying to update the owner (machine UUID%s)" % (machine_id))
+
+        query = session.query(Hardware)
+        query = query.select_from(self.hardware.join(self.table['hasHardware'],
+                                                     self.table['hasHardware'].c.hardware == self.table["Hardware"].c.id)\
+                                               .join(self.table['Inventory'],
+                                                     self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                                 )
+        query = query.filter(self.table['hasHardware'].c.machine == machine_id)
+        query = query.filter(self.inventory.c.Last == 1)
+
+
+        hardware = query.first()
+        if hardware:
+            hardware.Owner = self.getAvgOwner(machine_uuid)
+            session.add(hardware)
+            session.flush()
+            logging.getLogger().info("New owner of machine UUID%s is %s" % (machine_id, hardware.Owner))
+
+        session.close()
+
+
 def toUUID(id): # TODO : change this method to get a value from somewhere in the db, depending on a config param
     return "UUID%s" % (str(id))
 
@@ -2391,6 +2504,7 @@ class Machine(object):
             if len(hardware):
                 ret[1]['os'] = hardware[0][1][0]['OperatingSystem']
                 ret[1]['user'] = hardware[0][1][0]['User']
+                ret[1]['owner'] = hardware[0][1][0]['Owner']
                 ret[1]['type'] = hardware[0][1][0]['Type']
                 ret[1]['domain'] = [hardware[0][1][0]['Workgroup']]
                 ret[1]['fullname'] = '.'.join(filter(None, [self.Name, hardware[0][1][0]['Workgroup']]))
@@ -2707,9 +2821,12 @@ class InventoryCreator(Inventory):
 
         session.close()
         if machine_exists :
+            self.update_owner(machine_uuid)
             return [True, machine_uuid]
 
         return True
+
+
 
 
 # TODO - Get this info on the PXE client side !

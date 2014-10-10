@@ -44,6 +44,7 @@ class InventoryConfig(InventoryDatabaseConfig):
 
     def setup(self, conf_file):
         self.disable = self.cp.getboolean("main", "disable")
+
         for i in getInventoryParts():
             try:
                 self.graph[i] = self.cp.get("graph", i).split('|')

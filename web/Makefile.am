@@ -23,7 +23,7 @@
 mmcdatadir = $(datadir)/mmc
 
 datapaths = modules/dyngroup modules/msc modules/inventory modules/glpi modules/pkgs \
-	modules/pulse2 modules/imaging modules/backuppc modules/update modules/support
+	modules/pulse2 modules/imaging modules/backuppc modules/update modules/support 
 datafiles = $(shell find $(patsubst %,$(srcdir)/%,$(datapaths)) \
 		-type f \
 		! -name '*.po' \

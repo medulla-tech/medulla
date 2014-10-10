@@ -80,6 +80,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	inventory/sql/schema-011.sql \
 	inventory/sql/schema-012.sql \
 	inventory/sql/schema-013.sql \
+	inventory/sql/schema-014.sql \
 	inventory/pulse2-inventory-manage-entities \
 	inventory/pulse2-inventory-populate-root-entity.py \
 	inventory/pulse2-inventory-purge-from-date \

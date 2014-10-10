@@ -89,6 +89,15 @@ class ContextMaker(ContextMakerI):
         return s
 
 class RpcProxy(RpcProxyI):
+
+    def getMachineByLastLoggedUser(self, user):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getMachineByLastLoggedUser(ctx, user))
+
+    def getUUIDByMachineName(self, name):
+        ctx = self.currentContext
+        return xmlrpcCleanup(Inventory().getUUIDByMachineName(ctx, name))
+
     def countLastMachineInventoryPart(self, part, params):
         ctx = self.currentContext
         return xmlrpcCleanup(Inventory().countLastMachineInventoryPart(ctx, part, params))
