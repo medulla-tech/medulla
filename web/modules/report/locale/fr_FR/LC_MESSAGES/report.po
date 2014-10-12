@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-09-29 01:08+0200\n"
-"PO-Revision-Date: 2014-04-28 08:58+0000\n"
-"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
+"POT-Creation-Date: 2014-10-10 16:07+0200\n"
+"PO-Revision-Date: 2014-10-10 08:11+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +141,7 @@ msgstr "Mercredi"
 
 #: modules/report/includes/html.inc.php:128
 msgid "Thursday"
-msgstr "Jeudi"
+msgstr ""
 
 #: modules/report/includes/html.inc.php:129
 msgid "Friday"
@@ -169,7 +169,7 @@ msgstr "Mer"
 
 #: modules/report/includes/html.inc.php:135
 msgid "Thu"
-msgstr "Jeu"
+msgstr ""
 
 #: modules/report/includes/html.inc.php:136
 msgid "Fri"
