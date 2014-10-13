@@ -28,7 +28,7 @@ import platform
 import psutil
 from datetime import datetime
 
-from mmc.support.mmctools import size_format
+from mmc.support.mmctools import size_format, shlaunch
 from mmc.plugins.base import getUsersLdap
 
 
@@ -76,8 +76,14 @@ class SpacePanel(Panel):
         parts = psutil.disk_partitions()
         partitions = []
 
+        # get --bind mounts
+        bind_mounts = []
+        exitcode, stdout, stderr = shlaunch("findmnt -nr | fgrep [ | cut -d' ' -f1")
+        if exitcode == 0:
+            bind_mounts = stdout
+
         for part in parts:
-            if not 'loop' in part.device:
+            if 'loop' not in part.device and part.mountpoint not in bind_mounts:
                 usage = psutil.disk_usage(part.mountpoint)
                 partitions.append({
                     'device': part.device,
