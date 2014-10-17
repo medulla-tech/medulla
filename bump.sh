@@ -9,6 +9,8 @@ if [ ! -z $1 ]; then
     git diff
     git commit -a -m "pulse: bump version to $1"
     git tag -s pulse_$1 -m "pulse_$1"
+    #git push
+    #git push --tags
 
 else
 
