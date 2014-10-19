@@ -1,22 +1,85 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-13 01:04+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-10-20 01:00+0200\n"
 "PO-Revision-Date: 2014-07-31 13:36+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
+
+#: modules/support/includes/panels/license.inc.php:131
+msgid "Activate again / Use another subscription"
+msgstr ""
+
+#: modules/support/infoPackage.inc.php:40
+msgid "Collect"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:90
+msgid "Computers"
+msgstr "电脑"
+
+#: modules/support/infoPackage.inc.php:42
+msgid "Connect"
+msgstr "连线"
+
+#: modules/support/includes/panels/remotesupport.inc.php:44
+msgid "Connect to support"
+msgstr "连线至支援"
+
+#: modules/support/includes/panels/remotesupport.inc.php:41
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr "断开连线"
+
+#: modules/support/infoPackage.inc.php:46
+msgid "Download an archive including logs and config files"
+msgstr ""
+
+#: modules/support/includes/panels/remotesupport.inc.php:51
+msgid "Download archive"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:60
+msgid "Email"
+msgstr "电子邮件"
+
+#: modules/support/includes/panels/license.inc.php:105
+msgid "End"
+msgstr "结束"
+
+#: modules/support/includes/panels/remotesupport.inc.php:54
+msgid "Extract log and config files"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:64
+msgid "Hours"
+msgstr "小时"
+
+#: modules/support/includes/panels/license.inc.php:117
+msgid "Links"
+msgstr "连结"
+
+#: modules/support/includes/panels/license.inc.php:56
+msgid "Phone"
+msgstr "电话"
+
+#: modules/support/includes/panels/remotesupport.inc.php:30
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "远端支援"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
@@ -27,70 +90,6 @@ msgstr "订阅资讯"
 msgid "Support"
 msgstr "支援"
 
-#: modules/support/includes/panels/license.inc.php:56
-msgid "Phone"
-msgstr "电话"
-
-#: modules/support/includes/panels/license.inc.php:60
-msgid "Email"
-msgstr "电子邮件"
-
-#: modules/support/includes/panels/license.inc.php:64
-msgid "Hours"
-msgstr "小时"
-
 #: modules/support/includes/panels/license.inc.php:74
 msgid "Your subscription"
 msgstr "您的订阅"
-
-#: modules/support/includes/panels/license.inc.php:90
-msgid "Computers"
-msgstr "电脑"
-
-#: modules/support/includes/panels/license.inc.php:105
-msgid "End"
-msgstr "结束"
-
-#: modules/support/includes/panels/license.inc.php:117
-msgid "Links"
-msgstr "连结"
-
-#: modules/support/includes/panels/license.inc.php:131
-msgid "Activate again / Use another subscription"
-msgstr ""
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "远端支援"
-
-#: modules/support/includes/panels/remotesupport.inc.php:41
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr "断开连线"
-
-#: modules/support/includes/panels/remotesupport.inc.php:44
-msgid "Connect to support"
-msgstr "连线至支援"
-
-#: modules/support/includes/panels/remotesupport.inc.php:51
-msgid "Download archive"
-msgstr ""
-
-#: modules/support/includes/panels/remotesupport.inc.php:54
-msgid "Extract log and config files"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:40
-msgid "Collect"
-msgstr ""
-
-#: modules/support/infoPackage.inc.php:42
-msgid "Connect"
-msgstr "连线"
-
-#: modules/support/infoPackage.inc.php:46
-msgid "Download an archive including logs and config files"
-msgstr ""
-
-
