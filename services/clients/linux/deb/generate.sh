@@ -20,7 +20,7 @@ echo "Using http://$pulseip:9999 as inventory server"
 echo pulse_url=\"http://$pulseip:9999\" > server_conf
 
 echo "Downloading latest Pulse update manager package ..."
-apt-get download pulse-update-manager 
+aptitude download pulse-update-manager
 
 echo "Compressing new agents ..."
 if tar zcvf ../deb_agent.tar.gz * > /dev/null; then
