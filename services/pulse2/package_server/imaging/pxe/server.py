@@ -1,4 +1,4 @@
-#!/usr/bin/python 
+#!/usr/bin/python
 # -*- coding: utf-8; -*-
 """
 """
@@ -7,7 +7,7 @@
 #
 # This file is part of Pulse 2, http://pulse2.mandriva.org
 #
-# Pulse 2 is free software; you can redistribute it and/or modify  
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
@@ -37,20 +37,30 @@ from pulse2.package_server.imaging.pxe.api import PXEImagingApi
 class ProcessPacket :
     """Common packet processing"""
 
-    imaging = None
+    config = None
+    api = None
 
     @classmethod
-    def set_imaging(cls, imaging):
+    def set_imaging_args(cls, config, api):
         """
-        @param imaging: imaging interface to execute methods on package server
-        @type imaging: object
+        Classmethod to pass some references
+
+        @param config: config container
+        @type config: PackageServerConfig
+
+        @param api: Imaging API
+        @type api: ImagingAPI
         """
-        cls.imaging = imaging
+        cls.api = api
+        cls.config = config
         logging.getLogger().debug("PXE Proxy: UDP proxy initialized")
 
-    def method_exec(self, method, args):
+    def method_exec(self, imaging, method, args):
         """
         Method execution call
+
+        @param imaging: interface to execute PXE methods
+        @type imaging: PXEImagingApi
 
         @param method: method to execute
         @type method: func
@@ -61,21 +71,34 @@ class ProcessPacket :
         @return:  executed method
         @rtype: deferred
         """
-        return method(self.imaging, *args)
+        return method(imaging, *args)
 
 
     def process_data (self, data, client=None):
+        """
+        Called when a packet received.
 
-        fnc, args = self.imaging.get_method(data)
-     
-        d = self.method_exec(fnc, args)
+        @param data: packet
+        @type data: str
+
+        @param client: client (host, port) tuple
+        @type client: tuple
+        """
+        # For each session a new instance of PXEImagingApi created
+
+        imaging = PXEImagingApi(self.config)
+        imaging.set_api(self.api)
+
+        fnc, args = imaging.get_method(data)
+
+        d = self.method_exec(imaging, fnc, args)
 
         d.addCallback(self.send_response, fnc, client)
         d.addErrback(self.on_exec_error)
 
         return d
 
- 
+
     def send_response(self, result, fnc, client=None):
         """
         Sending the result of executed method to client.
@@ -95,10 +118,10 @@ class ProcessPacket :
                     self.transport.write(data)         # TCP response
                 if client :
                     ip, port = client
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s on %s:%d" % 
+                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s on %s:%d" %
                             (fnc.__name__, str(data), ip, port))
                 else :
-                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" % 
+                    logging.getLogger().debug("PXE Proxy: method: %s / response sent: %s" %
                             (fnc.__name__, str(data)))
 
             except Exception, e:
@@ -133,23 +156,21 @@ class PXEProxy :
 
     def __init__(self, config, api):
 
-        imaging = PXEImagingApi(config)
-        imaging.set_api(api)
-        
+
         pxe_port = config.imaging_api["pxe_port"]
 
         udp = UDPProxy()
-        udp.set_imaging(imaging)
+        udp.set_imaging_args(config, api)
 
         reactor.listenUDP(pxe_port, udp)
 
         tcp = Factory()
         tcp.protocol = TCPProxy
-        tcp.protocol.set_imaging(imaging)
+        tcp.protocol.set_imaging_args(config, api)
 
         reactor.listenTCP(pxe_port, tcp)
 
-    
+
 
 
 
