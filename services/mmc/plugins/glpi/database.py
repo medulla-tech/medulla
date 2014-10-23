@@ -81,22 +81,7 @@ class Glpi(DyngroupDatabaseHelper):
         except ImportError:
             logging.getLogger().debug('Failed to load glpi panels')
 
-
-        # we get all the needed methods
-        methods = ['initMappers', 'getMachineUUID', 'activate', 'config', 'decode', 'doesUserHaveAccessToMachine', 'doesUserHaveAccessToMachines', \
-            'getLastMachineInventoryFull', 'getLastMachineInventoryPart', 'getLocationsCount', 'getMachineIp', 'getMachinesMac', 'getMachineMac', 'getMachineUUID', \
-            'getUserLocations', 'getUserParentLocations', 'getUserProfile', 'getUserProfiles', 'getUsersInSameLocations', 'init', 'inventoryExists', 'glpi_version', \
-            'getRestrictedComputersList', 'getRestrictedComputersListLen', 'getComputersList', 'getComputer', 'getComputerCount', 'getMachinesLocations', \
-            'getAllComments', 'getAllContactNums', 'getAllContacts', 'getAllEntities', 'getAllGroups', 'getAllHostnames', 'getAllLocations', \
-            'getAllModels', 'getAllNetworks', 'getAllOs', 'getAllOsSps', 'getAllSoftwares', 'getAllSoftwaresByManufacturer', 'getAllVersion4Software', 'glpi_version_new', 'getMachineByMacAddress', \
-            'getAllManufacturers', 'getAllStates', 'getAllTypes', 'getAllInventoryNumbers', 'getMachineByManufacturer', 'getMachineByState', 'getMachineByType', 'getMachineByInventoryNumber', \
-            'getMachineUUIDByMacAddress', 'getMachineByComment', 'getMachineByContact', 'getMachineByContactNum', 'getMachineByEntity', 'getMachineByGroup', 'getMachineByHostname', \
-            'getMachineByLocation', 'getMachineByModel', 'getMachineByNetwork', 'getMachineByOs', 'getMachineByOsLike', 'getMachineByOsSp', 'getMachineBySoftware', 'getMachineBySoftwareAndVersion', \
-            'getLocationsFromPathString', 'getLocationParentPath', 'getTotalComputerCount', 'isComputerNameAvailable', 'getMachineNumberByState', \
-            'getMachineListByState', 'countLastMachineInventoryPart', 'delMachine', 'setGlpiEditableValue', 'hasKnownOS', 'getComputersOS','getComputersCountByOS', 'getAntivirusStatus', \
-            'getMachineListByAntivirusState', 'getLocationName', 'getAllSoftwareVendors', 'getAllSoftwareVersions', 'getMachineByHostnameAndMacs', 'getAllSoftwaresImproved'
-            ]
-        for i in methods:
-            setattr(self, i, getattr(self.database, i))
-
         return ret
+    
+    def __getattr__(self, attr_name):
+            return getattr(self.database, attr_name)
