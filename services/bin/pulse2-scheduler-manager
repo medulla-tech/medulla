@@ -175,7 +175,7 @@ def stop_scheduler(config, wait_for_completion = False):
         logger.error('failed to stop scheduler "%s": was not running' % (name))
         print 'failed to stop scheduler "%s": was not running' % (name)
         clear_pidfile(config)
-        return False
+        return True
 
 def clear_pidfile(config):
     os.setegid(0)
