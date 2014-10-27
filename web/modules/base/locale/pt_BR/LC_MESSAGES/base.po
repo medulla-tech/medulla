@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-13 14:43+0200\n"
+"POT-Creation-Date: 2014-10-24 18:04+0200\n"
 "PO-Revision-Date: 2014-10-10 08:23+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
@@ -489,23 +489,23 @@ msgstr "Nenhum item disponível"
 msgid "Select entity"
 msgstr "Selecionar entidade"
 
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
-#: includes/PageGenerator.php:2661 modules/base/groups/edit.php:117
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2634
+#: includes/PageGenerator.php:2660 modules/base/groups/edit.php:117
 #: modules/base/groups/members.php:188
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2638
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2812
 msgid "Select all"
 msgstr "Selecionar todos"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2812
 msgid "Unselect all"
 msgstr "Desmarcar todos"
 
