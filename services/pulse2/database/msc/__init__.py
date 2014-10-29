@@ -284,6 +284,186 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn('Failed to set command %s as ready' % (cmd))
         return False
 
+
+    def deleteBundle(self, bundle_id):
+        """
+        Deletes a bundle with all related sub-elements.
+
+        @param bundle_id: id of bundle
+        @type bundle_id: int
+        """
+        session = create_session()
+        session.begin()
+        try:
+
+            bundle = session.query(Bundle).get(bundle_id)
+            if not bundle:
+                self.logger.warn("Unable to find bundle (id=%s)" % bundle_id)
+                return False
+
+            cmds = session.query(Commands)
+            cmds = cmds.select_from(self.commands)
+            cmds = cmds.filter(self.commands.c.fk_bundle == bundle_id)
+            #self.logger.warn("Commands : %s)" % cmds.all())
+
+            ok = self._deleteCommands(session, cmds)
+            if ok:
+                session.delete(bundle)
+                session.flush()
+                session.commit()
+                session.close()
+                return True
+            else:
+                return False
+
+        except Exception, exc:
+            self.logger.error("Delete of bundle (id=%s) failed: %s" % (bundle_id, str(exc)))
+            session.rollback()
+            session.close()
+            return False
+
+
+
+
+    def deleteCommand(self, cmd_id):
+        """
+        Deletes a command with all related sub-elements.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+        """
+        session = create_session()
+        session.begin()
+        try:
+            cmds = session.query(Commands)
+            cmds = cmds.select_from(self.commands)
+            cmds = cmds.filter(self.commands.c.id == cmd_id)
+
+            ok = self._deleteCommands(session, cmds)
+            if ok:
+                session.commit()
+                session.close()
+                return True
+            else:
+                session.rollback()
+                session.close()
+                return False
+
+        except Exception, exc:
+            self.logger.error("Delete of command (id=%s) failed: %s" % (cmd_id, str(exc)))
+            session.rollback()
+            session.close()
+            return False
+
+    def deleteCommandOnHost(self, coh_id):
+        """
+        Deletes a command with all related sub-elements.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+        """
+        session = create_session()
+        session.begin()
+        try:
+            cohs = session.query(CommandsOnHost)
+            cohs = cohs.select_from(self.commands_on_host)
+            cohs = cohs.filter(self.commands_on_host.c.id == coh_id)
+
+            ok = self._deleteCommandsOnHost(session, cohs)
+            if ok:
+                session.commit()
+                session.close()
+                return True
+            else:
+                session.rollback()
+                session.close()
+                return False
+
+
+        except Exception, exc:
+            self.logger.error("Delete of command on host(id=%s) failed: %s" % (coh_id, str(exc)))
+            session.rollback()
+            session.close()
+            return False
+
+
+
+    def _deleteCommands(self, session, cmds):
+        """
+        Deletes a command with all related sub-elements.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+        """
+        for cmd in cmds.all():
+            cohs = session.query(CommandsOnHost)
+            cohs = cohs.select_from(self.commands_on_host)
+            cohs = cohs.filter(self.commands_on_host.c.fk_commands == cmd.id)
+
+            ok = self._deleteCommandsOnHost(session, cohs)
+            if ok:
+                session.delete(cmd)
+                session.flush()
+                self.logger.info("Command (id=%s) successfully deleted" % (cmd.id))
+
+            else:
+                self.logger.warn("Unable to delete commands on host of command (id=%s)" % cmd.id)
+                return False
+
+        return True
+
+
+    def _deleteCommandsOnHost(self, session, cohs):
+        """
+        Deletes a command with all related sub-elements.
+
+        @param cohs: Commands hon Host
+        @type cohs: query list
+        """
+        for coh in cohs.all():
+            session.delete(coh)
+            session.flush()
+
+            targets = session.query(Target)
+            targets = targets.select_from(self.target)
+            targets = targets.filter(self.target.c.id == coh.fk_target)
+
+            for target in targets.all():
+                session.delete(target)
+                session.flush()
+
+
+            phases = session.query(CommandsOnHostPhase)
+            phases = phases.select_from(self.commands_on_host_phase)
+            phases = phases.filter(self.commands_on_host_phase.c.fk_commands_on_host == coh.id)
+
+            for phase in phases.all():
+                session.delete(phase)
+                session.flush()
+
+
+            hists = session.query(CommandsHistory)
+            hists = hists.select_from(self.commands_history)
+            hists = hists.filter(self.commands_history.c.fk_commands_on_host == coh.id)
+
+            for hist in hists.all():
+                session.delete(hist)
+                session.flush()
+
+
+            session.delete(coh)
+            session.flush()
+
+        return True
+
+
+
+
+
+
+
+
+
     def extendCommand(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.
