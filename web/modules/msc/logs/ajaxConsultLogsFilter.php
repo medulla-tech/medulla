@@ -23,6 +23,7 @@
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/command_history.php");
+require_once("modules/msc/includes/mscoptions_xmlrpc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -53,6 +54,7 @@ $params = array();
 
 $actionplay = new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers");
 //$actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", "msc", "base", "computers");
+$actiondelete = new ActionPopupItem(_T("Delete", "msc"), "delete", "delete", "msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
 $actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
 $actionsinglestatus = new ActionPopupItem(_T("Status", "msc"), "msctabssinglestatus", "status", "msc", "base", "computers");
@@ -60,6 +62,7 @@ $actionstatus->setWidth("400");
 $actionempty = new EmptyActionItem();
 $a_start = array();
 $a_pause = array();
+$a_delete = array();
 $a_stop = array();
 $a_details = array();
 
@@ -184,6 +187,7 @@ foreach ($cmds as $item) {
         $a_start[] = $actionempty;
         $a_stop[] = $actionempty;
         $a_pause[] = $actionempty;
+        $a_delete[] = $actionempty;
         $a_details[] = $actionempty;
     } else {
         if ($icons['play'] == '') {
@@ -195,6 +199,11 @@ foreach ($cmds as $item) {
             $a_stop[] = $actionempty;
         } else {
             $a_stop[] = $actionstop;
+	}
+        if (web_def_allow_delete()){
+            $a_delete[] = $actiondelete;
+        } else {
+            $a_delete[] = $actionempty;
         }
         //if ($icons['pause'] == '') {
             //$a_pause[] = $actionempty;
@@ -221,6 +230,7 @@ $n->addExtraInfo($a_donepercent, _T("Success percent", "msc"));
 $n->addActionItemArray($a_start);
 //$n->addActionItemArray($a_pause);
 $n->addActionItemArray($a_stop);
+$n->addActionItemArray($a_delete);
 //$n->addActionItemArray($a_details);
 
 $n->disableFirstColumnActionLink(); # TODO put several columns actions

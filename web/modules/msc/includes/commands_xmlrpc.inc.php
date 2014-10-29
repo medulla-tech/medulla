@@ -256,5 +256,14 @@ function extend_command($cmd_id, $start_date, $end_date) {
 function expire_all_package_commands($pid) {
     return xmlCall('msc.expire_all_package_commands', array($pid));
 }
+function delete_bundle($id) {
+    return xmlCall('msc.delete_bundle', array($id));
+}
+function delete_command($id) {
+    return xmlCall('msc.delete_command', array($id));
+}
+function delete_command_on_host($id) {
+    return xmlCall('msc.delete_command_on_host', array($id));
+}
 
 ?>

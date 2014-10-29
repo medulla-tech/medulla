@@ -27,6 +27,8 @@ require_once("modules/msc/includes/widgets.inc.php");
 require_once("modules/msc/includes/functions.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 require_once("modules/msc/includes/command_history.php");
+require_once("modules/msc/includes/mscoptions_xmlrpc.php");
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 $DISPLAY_TABLE = TRUE;
@@ -100,6 +102,7 @@ $params = array();
 /* available buttons */
 $actionplay = new ActionPopupItem(_T("Start", "msc"), "msctabsplay", "start", "msc", "base", "computers");
 $actionpause = new ActionPopupItem(_T("Pause", "msc"), "msctabspause", "pause", "msc", "base", "computers");
+$actiondelete = new ActionPopupItem(_T("Delete", "msc"), "delete", "delete", "msc", "base", "computers");
 $actionstop = new ActionPopupItem(_T("Stop", "msc"), "msctabsstop", "stop", "msc", "base", "computers");
 $actionstatus = new ActionPopupItem(_T("Status", "msc"), "msctabsstatus", "status", "msc", "base", "computers");
 $actionstatus->setWidth("400");
@@ -113,6 +116,8 @@ $a_details = array();
 $a_status = array();
 $a_step_state = array();
 $a_progression = array();
+$a_delete = array();
+
 $n = null;
 
 if ($areCommands) { // display several commands
@@ -187,7 +192,11 @@ if ($areCommands) { // display several commands
             $icons['stop'] == '' ? $a_stop[] = $actionempty : $a_stop[] = $actionstop;
             $icons['pause'] == '' ? $a_pause[] = $actionempty : $a_pause[] = $actionpause;
         }
-
+        if (web_def_allow_delete()){
+	    $a_delete[] = $actiondelete;
+	} else {
+	    $a_delete[] = $actionempty;
+	}
         $params[] = $p;
         if ($_GET['cmd_id'] && $cmd['id'] == $_GET['cmd_id']) {
             $a_details[] = $actionempty;
@@ -225,9 +234,15 @@ if ($areCommands) { // display several commands
         if (strlen($cmd['bundle_id']) and !strlen($_GET['cmd_id']))
             $done_percent = '-';
 
-        $a_percent[] = $done_percent;
-    }
+	$a_percent[] = $done_percent;
 
+        if (web_def_allow_delete()){
+	    $a_delete[] = $actiondelete;
+	} else {
+	    $a_delete[] = $actionempty;
+	}
+    }
+    
     $n = new OptimizedListInfos($a_cmd, _T("Command", "msc"));
 
     $n->addExtraInfo($a_date, _T("Start date", "msc"));
@@ -244,6 +259,7 @@ if ($areCommands) { // display several commands
         $n->addActionItemArray($a_stop);
     }
     $n->addActionItemArray($a_status);
+    $n->addActionItemArray($a_delete);
 } else { // display only one command
     $proxies = array();
     $a_client = array();
@@ -359,6 +375,12 @@ if ($areCommands) { // display several commands
             } else {
                 $a_details[] = $actiondetails;
             }
+            if (web_def_allow_delete()){
+                $a_delete[] = $actiondelete;
+            } else {
+	        $a_delete[] = $actionempty;
+            }
+
         }
     }
     # TODO: add the command end timestamp
@@ -384,6 +406,8 @@ if ($areCommands) { // display several commands
         //$n->addActionItemArray($a_pause);
         $n->addActionItemArray($a_stop);
     }
+    $n->addActionItemArray($a_delete);
+
     $n->col_width = array("30px", "", "", "", "", "");
     $n->setParamInfo($params);
     $n->setTableHeaderPadding(1);

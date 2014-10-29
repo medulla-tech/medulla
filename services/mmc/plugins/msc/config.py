@@ -100,6 +100,9 @@ class MscConfig(MscDatabaseConfig):
     web_def_proxy_number = 2
     web_def_proxy_selection_mode = "semi_auto"
 
+    # Allow to delete commands and bundles from audit
+    web_def_allow_delete = False
+
     # VNC applet behavior
     web_vnc_show_icon = True
     web_vnc_view_only = True
@@ -306,6 +309,10 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_coh_life_time = self.cp.getint("web", "web_def_coh_life_time")
         if self.cp.has_option("web", "web_def_attempts_per_day"):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_attempts_per_day")
+
+        # Allow to delete commands and bundles from audit
+        if self.cp.has_option("web", "web_def_allow_delete"):
+            self.web_def_allow_delete = self.cp.get("web", "web_def_allow_delete")
 
         # VNC stuff
         if self.cp.has_option("web", "vnc_show_icon"):

@@ -478,6 +478,38 @@ class RpcProxy(RpcProxyI):
 
         return d
 
+
+    def delete_bundle(self, bundle_id):
+        """
+        Deletes a bundle with all related sub-elements.
+
+        @param bundle_id: Bundle id
+        @type bundle_id: int
+        """
+        return MscDatabase().deleteBundle(bundle_id)
+
+
+    def delete_command(self, cmd_id):
+        """
+        Deletes a command with all related sub-elements.
+
+        @param cmd_id: Commands id
+        @type cmd_id: int
+        """
+        return MscDatabase().deleteCommand(cmd_id)
+
+
+    def delete_command_on_host(self, coh_id):
+        """
+        Deletes a command on host with all related sub-elements.
+
+        @param coh_id: CommandsOnHost id
+        @type coh_id: int
+        """
+        return MscDatabase().deleteCommandOnHost(coh_id)
+
+
+
     def is_pull_target(self, uuid):
         """
         Returns True if the machine is a known pull client
@@ -773,6 +805,9 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_attempts_per_day(self):
         return xmlrpcCleanup(MscConfig().web_def_attempts_per_day)
+
+    def get_web_def_allow_delete(self):
+        return xmlrpcCleanup(MscConfig().web_def_allow_delete)
 
 
 ##
