@@ -396,6 +396,24 @@ class AjaxFilterCommands extends AjaxFilter {
                         <label for="cbx_overtimed" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Overtime', 'msc')); ?></label>
                         <input type="checkbox" name="cbx_state[]" id="cbx_stopped" value="stopped" style="top: 2px; left: 5px; position: relative; float: left" />
                         <label for="cbx_stopped" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Stopped', 'msc')); ?></label>
+                        <input type="hidden" name="create_group" value="" />
+                        <br/>
+                        <div style="margin:2px 7px -5px 5px" align="right">
+                            <input id="btnCreateGroup"  type="button" value="<?php print _T('Create a group'); ?>" class="btnPrimary">
+                        </div>
+                        <script type="text/javascript">
+                            var $ = jQuery;
+                            $(function() {
+                                $('#btnCreateGroup').click(function(){
+                                    var create_group_field = $(this).parents('form:first').find('input[name=create_group]');
+                                    create_group_field.val('1');
+                                    pushSearch<?php echo $this->divid; ?>();
+                                    setTimeout(function(){
+                                        create_group_field.val('');
+                                    }, 1000);
+                                });
+                            });
+                        </script>
                     </span>
                     <!-- </form> -->
                 <?php } ?>

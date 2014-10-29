@@ -618,6 +618,11 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getTargetForCoh(ctx, coh_id))
 
+    def get_targets_for_coh(self, coh_ids):
+        ctx = self.currentContext
+        result = MscDatabase().getTargetsForCoh(ctx, coh_ids)
+        return [xmlrpcCleanup2(x) for x in result]
+
     def get_commands_history(self, coh_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getCommandsHistory(ctx, coh_id))
