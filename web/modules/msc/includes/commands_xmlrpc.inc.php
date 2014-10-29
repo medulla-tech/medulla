@@ -101,9 +101,15 @@ function get_targets_for_coh($coh_ids) {
 
 function displayLogs($params) {
 
-    $result = xmlCall('msc.displayLogs', array($params));
+    $result1 = xmlCall('msc.displayLogs', array($params));
 
     if (!empty($_GET['create_group'])){
+
+        // Small hack to include all pages
+        $params['min'] = 0;
+        $params['max'] = 9999999;
+
+        $result = xmlCall('msc.displayLogs', array($params));
 
         require_once("modules/dyngroup/includes/dyngroup.php");
         require_once("modules/dyngroup/includes/xmlrpc.php");
@@ -137,7 +143,7 @@ function displayLogs($params) {
         new NotifyWidgetSuccess(sprintf(_T('Deploy subgroup created successfully. <br/><a href="%s" target="_blank">View group</a>', "msc"), $link));
     }
 
-    return $result;
+    return $result1;
 }
 
 function setCommandsFilter($param) {
