@@ -73,4 +73,25 @@ function getMachineByOsLike($osname,$count = 1){
     return xmlCall("glpi.getMachineByOsLike", array($osname,$count));
 }
 
+function getLocationsForUser($username){
+    return xmlCall("glpi.getLocationsForUser", array($username));
+}
+
+function setLocationsForUser($username, $attr){
+    return xmlCall("glpi.setLocationsForUser", array($username, $attr));
+}
+
+function getAllUserProfiles(){
+    return xmlCall("glpi.getAllUserProfiles", array());
+}
+
+function addGlpiUser($username, $password, $entity_rights){
+    return xmlCall("glpi.addUser", array($username, $password, $entity_rights));
+}
+
+function setGlpiUserPassword($username, $password){
+    return xmlCall("glpi.setUserPassword", array($username, $password));
+}
+
+
 ?>

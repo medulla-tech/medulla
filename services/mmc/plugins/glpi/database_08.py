@@ -30,7 +30,7 @@ import logging
 import re
 from sets import Set
 import datetime
-import calendar
+import calendar, hashlib
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct
@@ -330,6 +330,7 @@ class Glpi08(DyngroupDatabaseHelper):
         self.user = Table("glpi_users", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('name', String(255), nullable=False),
+            Column('password', String(40), nullable=False),
             Column('firstname', String(255), nullable=False),
             Column('realname', String(255), nullable=False),
             Column('auths_id', Integer, nullable=False),
@@ -343,6 +344,7 @@ class Glpi08(DyngroupDatabaseHelper):
             Column('users_id', Integer, ForeignKey('glpi_users.id')),
             Column('profiles_id', Integer, ForeignKey('glpi_profiles.id')),
             Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+            Column('is_dynamic', Integer),
             Column('is_recursive', Integer))
         mapper(UserProfile, self.userprofile)
 
@@ -1272,6 +1274,16 @@ class Glpi08(DyngroupDatabaseHelper):
             ret = None
         session.close()
         return ret
+    
+    @DatabaseHelper._session
+    def getAllUserProfiles(self, session):
+        """
+        @return: Return all GLPI profiles as a dict
+        """
+        result = {}
+        for profile in session.query(Profile):
+            result[profile.id] = profile.name
+        return result
 
     def getUserParentLocations(self, user):
         """
@@ -3618,6 +3630,90 @@ class Glpi08(DyngroupDatabaseHelper):
 
         else:
             return False
+        
+    @DatabaseHelper._session
+    def addUser(self, session, username, password, entity_rights):
+        # User settings
+        user = User()
+        user.name = username
+        user.password = hashlib.sha1(password).hexdigest()
+        user.firstname = ''
+        user.realname = ''
+        user.auths_id = 0
+        user.is_deleted = 0
+        user.is_active = 1
+        session.add(user)
+        session.commit()
+        session.flush()
+        
+        # Setting entity rights
+        self.setLocationsForUser(username, entity_rights)
+        
+    @DatabaseHelper._session
+    def setUserPassword(self, session, username, password):
+        user = session.query(User).filter_by(name=username).one()
+        user.password = hashlib.sha1(password).hexdigest()
+        session.commit()
+        session.flush()
+        
+    def removeUser(self, session, username):
+        # Too complicated, affects many tables
+        return True
+    
+    def AddEntity(self, entity_name, parent_id, comment):
+        entity = Location()
+        entity.entities_id = parent_id #parent
+        entity.name = entity_name
+        entity.comment = comment
+        entity.level = parent_id
+        entity.completename = 'ewtiry > entitee > zozo' # toute l'arbo
+        
+        session.add(entity)
+        session.commit()
+        session.flush()
+        return True
+    
+    def removeEntity(self, entity_id):
+        # Too complicated, affects many tables
+        pass
+    
+    def moveComputerToEntity(self, uuid, entity_id):
+        pass
+        #UPDATE `glpi_computers`
+        #SET `entities_id` = '5' WHERE `id` ='3'
+        
+    @DatabaseHelper._session
+    def getLocationsForUser(self, session, username):
+        user_id = session.query(User).filter_by(name=username).one().id
+        entities = []
+        for profile in session.query(UserProfile).filter_by(users_id = user_id):
+            entities += [{
+                            'entity_id' : profile.entities_id,
+                            'profile': profile.profiles_id,
+                            'is_recursive' : profile.is_recursive,
+                            'is_dynamic' : profile.is_dynamic
+                        }]
+        return entities
+    
+    @DatabaseHelper._session
+    def setLocationsForUser(self, session, username, profiles):
+        
+        user_id = session.query(User).filter_by(name=username).one().id
+        # Delete all user entity profiles
+        session.query(UserProfile).filter_by(users_id = user_id).delete()
+        
+        for attr in profiles:
+            p = UserProfile()
+            p.users_id = user_id
+            p.profiles_id = attr['profile']
+            p.entities_id = attr['entity_id']
+            p.is_recursive = attr['is_recursive']
+            p.is_dynamic = attr['is_dynamic']
+            session.add(p)
+            session.commit()
+        
+        session.flush()
+        return True
 
 # Class for SQLalchemy mapping
 class Machine(object):

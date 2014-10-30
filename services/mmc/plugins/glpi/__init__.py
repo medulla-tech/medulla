@@ -115,6 +115,8 @@ class RpcProxy(RpcProxyI):
                                                                 hostname,
                                                                 macs))
 
+def addUser(username, password, entity_rights):
+    return Glpi().addUser(username, password, entity_rights)
 
 def getLicensesCount(vendor, software, version):
     ctx = SecurityContext()
@@ -202,3 +204,18 @@ def getMachinesLocations(uuids):
 
 def hasKnownOS(uuid):
     return xmlrpcCleanup(Glpi().hasKnownOS(uuid))
+
+def getLocationsForUser(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getLocationsForUser(*args, **kwargs))
+
+def setLocationsForUser(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().setLocationsForUser(*args, **kwargs))
+
+def getAllUserProfiles(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getAllUserProfiles(*args, **kwargs))
+
+def addUser(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().addUser(*args, **kwargs))
+
+def setUserPassword(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().setUserPassword(*args, **kwargs))
