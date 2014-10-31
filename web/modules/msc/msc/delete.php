@@ -24,21 +24,32 @@
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 if (isset($_POST["bconfirm"])) {
-    $cmd_id = $_POST['cmd_id'];
-    $coh_id = $_POST['coh_id'];
-    $bundle_id = $_POST['bundle_id'];
-	
-    if (isset($coh_id) && $coh_id != ""){	
-        delete_command_on_host($coh_id);
-    }
-    elseif (isset($cmd_id) && $cmd_id != ""){	
-        delete_command($cmd_id);
-    }
-    elseif (isset($bundle_id) && $bundle_id != ""){	
-        delete_bundle($bundle_id);
-    }
+    $from = $_POST['from'];
+    $path =  explode('|', $from);
+    $module = $path[0];
+    $submod = $path[1];
+    $page = $path[2];
+    $tab = $path[3];
+    $url = array();
+    foreach (array('name', 'from', 'uuid', 'gid', 'bundle_id', 'hostname') as $post) {
+        $url[$post] = $_POST[$post];
+    }   
+    if (isset($tab)) {
+        $url['tab'] = $tab;
+    }   
 
-    return;
+	
+    if (isset($_POST['coh_id']) && $_POST['coh_id'] != ""){	
+        delete_command_on_host($_POST['coh_id']);
+    }
+    elseif (isset($_POST['cmd_id']) && $_POST['cmd_id'] != ""){	
+        delete_command($_POST['cmd_id']);
+    }
+    elseif (isset($_POST['bundle_id']) && $_POST['bundle_id'] != ""){	
+        delete_bundle($_POST['bundle_id']);
+    }
+    header("Location: " . urlStrRedirect("$module/$submod/$page", $url));
+    exit;
 }
 
 
@@ -53,6 +64,10 @@ if (isset($_GET['cmd_id'])){
 if (isset($_GET['bundle_id'])){
     $f->add(new HiddenTpl("bundle_id"), array("value" => $_GET['bundle_id'], "hide" => True));
 }
+if (isset($_GET['from'])){
+    $f->add(new HiddenTpl("from"), array("value" => $_GET['from'], "hide" => True));
+}
+
 
 $f->addValidateButton("bconfirm");
 $f->addCancelButton("bback");
