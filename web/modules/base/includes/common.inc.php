@@ -1,7 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -20,29 +20,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/* Returns the first logo found in img/logo */
-function getMMCLogo() {
-    $basedir = "img/logo/";
-    $logos = scandir($basedir);
-    // remove . and .. entries
-    $logos = array_slice($logos, 2);
-    // reverse the array so that _mandriva.png is the last one
-    rsort($logos);
-    return $basedir . $logos[0];
-}
+/** Clean the LDAP filter for searching
+ * users and groups
+ **/
+function cleanSearchFilter($filter) {
 
-function startsWith($haystack, $needle) {
-     $length = strlen($needle);
-     return (substr($haystack, 0, $length) === $needle);
-}
-
-function endsWith($haystack, $needle) {
-    $length = strlen($needle);
-    if ($length == 0) {
-            return true;
+    if ($filter == "") {
+        $filter = null;
+    }
+    else {
+        $count = 0;
+        for ($i=0; $i<10; $i++) {
+            $filter = str_replace('**', '*', $filter, $count);
+            if ($count === 0)
+                break;
         }
+    }
 
-    return (substr($haystack, -$length) === $needle);
+    return $filter;
 }
-
-?>

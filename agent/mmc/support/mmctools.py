@@ -65,9 +65,14 @@ try:
 except ImportError:
     mxDateTime = None # pyflakes.ignore
 
+
 def cleanFilter(f):
     for char in "()&=":
         f = f.replace(char, "")
+    if not f.startswith('*'):
+        f = '*' + f
+    if not f.endswith('*'):
+        f = f + '*'
     return f
 
 # All the command lines launched by this module will use the C locale

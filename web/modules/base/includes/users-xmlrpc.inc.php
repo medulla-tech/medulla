@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,6 +19,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+include_once('common.inc.php');
 
 function check_auth($login, $pass) {
     $param = array();
@@ -72,10 +71,7 @@ function auth_user ($login, $pass)
  * @param &$error referenced error String
  */
 function get_users($full = false, $filter = null) {
-
-    if ($filter == "") $filter = null;
-    else $filter = "*".$filter . "*";
-
+    $filter = cleanSearchFilter($filter);
     $tab = xmlCall("base.getUsersLdap", $filter);
     if ($full) {
         return $tab;
@@ -93,10 +89,8 @@ function get_users($full = false, $filter = null) {
  * @return get a detailled ldap users using cpu
  * @param &$error reference String error
  */
-function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
-{
-    if ($filter == "") $filter = null;
-    else $filter = "*".$filter . "*";
+function get_users_detailed(&$error, $filter = null, $start = null, $end = null) {
+    $filter = cleanSearchFilter($filter);
     return xmlCall("base.searchUserAdvanced", array($filter, $start, $end));
 }
 

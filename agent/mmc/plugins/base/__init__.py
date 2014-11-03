@@ -240,8 +240,6 @@ def searchUserAdvanced(searchFilter = "", start = None, end = None):
     """
     ldapObj = ldapUserGroupControl()
     if '=' in searchFilter:
-        if searchFilter.startswith('*') and searchFilter.endswith('*'):
-            searchFilter = searchFilter[1:-1]
         terms = ["(%s)" % term for term in searchFilter.split() if '=' in term]
         searchFilter = "(&%s)" % "".join(terms)
     else:
@@ -254,9 +252,9 @@ def searchUserAdvanced(searchFilter = "", start = None, end = None):
 def getGroupEntry(cn):
     return ldapUserGroupControl().getGroupEntry(cn)
 
-def getGroupsLdap(searchFilter= ""):
+def getGroupsLdap(searchFilter=""):
     ldapObj = ldapUserGroupControl()
-    searchFilter=cleanFilter(searchFilter);
+    searchFilter = cleanFilter(searchFilter)
     return ldapObj.searchGroup(searchFilter)
 
 def getDefaultUserGroup():
@@ -1610,13 +1608,14 @@ class LdapUserGroupControl:
         resArr = cSort(resArr);
         return resArr
 
-    def search(self, searchFilter = '', basedn = None, attrs = None, scope = ldap.SCOPE_SUBTREE):
+    def search(self, searchFilter='', basedn = None, attrs = None, scope = ldap.SCOPE_SUBTREE):
         """
         @param searchFilter: LDAP search filter
         @type searchFilter: unicode
         """
         searchFilter = searchFilter.encode("utf-8")
-        if not basedn: basedn = self.baseDN
+        if not basedn:
+            basedn = self.baseDN
         result_set = []
         ldap_result_id = self.l.search(basedn, scope, searchFilter, attrs)
         while 1:
@@ -1770,11 +1769,11 @@ class LdapUserGroupControl:
             ret = len(self.searchGroup(group)) == 1
         return ret
 
-    def searchGroup(self, pattern = '' , base = None, minNumber = 0):
-        if not base: base = self.baseGroupsDN
-        if (pattern==''): searchFilter = "cn=*"
-        else: searchFilter = "cn=" + pattern
-        result_set = self.search(searchFilter, base, None, ldap.SCOPE_ONELEVEL)
+    def searchGroup(self, pattern='*', base=None, minNumber=0):
+        if not base:
+            base = self.baseGroupsDN
+        result_set = self.search("cn=%s" % pattern, base, None,
+                ldap.SCOPE_ONELEVEL)
 
         # prepare array for processing
         resArr = {}
@@ -1795,15 +1794,11 @@ class LdapUserGroupControl:
                     try:
                         numbr = len(entry[1]['memberUid'])
                     except:
-                        numbr = 0;
+                        numbr = 0
 
-                    cell = []
-
-                    cell.append(cn)
-                    cell.append(description)
-                    cell.append(numbr)
-
-                    if (gidNumber >= minNumber): resArr[cn.lower()] = cell
+                    cell = [cn, description, numbr]
+                    if (gidNumber >= minNumber):
+                        resArr[cn.lower()] = cell
 
                 except:
                     pass
