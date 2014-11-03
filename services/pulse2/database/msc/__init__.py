@@ -421,8 +421,6 @@ class MscDatabase(DatabaseHelper):
         @type cohs: query list
         """
         for coh in cohs.all():
-            session.delete(coh)
-            session.flush()
 
             targets = session.query(Target)
             targets = targets.select_from(self.target)
