@@ -98,7 +98,7 @@ function getDefaultPage() {
     if ($_SESSION["login"] == "root") {
         $url = urlStrRedirect("base/main/default");
     }
-    elseif (hasCorrectAcl('dashboard', 'main', 'default')) {
+    else if (hasCorrectAcl('dashboard', 'main', 'default')) {
         $url = urlStrRedirect("dashboard/main/default");
     }
     else {
@@ -111,6 +111,7 @@ function getDefaultPage() {
                         # check page is not a popup
                         if (isset($MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]) &&
                             $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['noHeader'] != 1 &&
+                            $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['visible'] === true &&
                             $MMCApp->_modules[$module]->_submod[$submod]->_pages[$page]->_options['AJAX'] != true) {
                                 # get url
                                 $url = urlStrRedirect("$module/$submod/$page");
