@@ -20,10 +20,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if ($_SESSION["AUTH_METHOD"] == "login" || isset($_POST["bback"])) {
-    header("Location: " . urlStrRedirect("base/users/index"));
-    exit;
-}
+if ($_SESSION["AUTH_METHOD"] == "login" || isset($_POST["bback"]))
+    redirectTo(urlStrRedirect("base/users/index"));
 
 require("modules/base/includes/users.inc.php");
 require("graph/header.inc.php");

@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -22,22 +20,24 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu = new SideMenu();
-$sidemenu->setClass("users");
-$sidemenu->setBackgroundImage("img/users/icn_users_large.gif");
-$sidemenu->addSideMenuItem(new SideMenuItem(_("List"), "base","users","index", "img/users/icn_global_active.gif", "img/users/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_("Add"), "base","users","add", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
-if (in_array("bulkimport", $_SESSION["modulesList"])) {
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Bulk import (CSV)"), "base", "users", "bulkimport", "img/users/icn_addUser_active.gif", "img/users/icn_addUser.gif"));
-}
-if ($_SESSION["login"] != "root" && $_SESSION["AUTH_METHOD"] == "login")
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Change your password"), "base", "users", "passwd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
-if ($_SESSION["login"] != "root" && $_SESSION["AUTH_METHOD"] == "token")
-    $sidemenu->addSideMenuItem(new SideMenuItem(_("Reset your password"), "base", "users", "resetpasswd", "img/access/icn_global_active.gif", "img/access/icn_global.gif"));
+$submods = array('users');
 
-/* Display the global password policy settings if enabled */
-if (in_array("ppolicy", $_SESSION["modulesList"])) {
-    require_once("modules/ppolicy/includes/localSidebar.php");
+$sidemenu = new SideMenu();
+$sidemenu->setClass(join(" ", $submods));
+$sidemenu->setBackgroundImage("modules/base/graph/users/img/icn_users_large.gif");
+
+$MMCApp =& MMCApp::getInstance();
+$mod = $MMCApp->getModule('base');
+
+foreach ($submods as $submod) {
+    $submod = $mod->getSubmod($submod);
+    foreach ($submod->getPages() as $page) {
+        if ($page->hasAccessAndVisible($mod, $submod)) {
+            $item = new SideMenuItem($page->getDescription(), $mod->getName(), $submod->getName(), $page->getAction(), $page->getImg("active"), $page->getImg("default"));
+            $item->cssId = join("_", array($mod->getName(), $submod->getName(), $page->getAction()));
+            $sidemenu->addSideMenuItem($item);
+        }
+    }
 }
 
 ?>

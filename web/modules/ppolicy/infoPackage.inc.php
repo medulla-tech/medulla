@@ -44,10 +44,14 @@ $users = &$base->getSubmod('users');
 
 /* Add the page to the module */
 $page = new Page("indexppolicy",_T("Password policies", "ppolicy"));
+$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
+              "modules/base/graph/access/img/icn_global.gif");
 $page->setFile("modules/ppolicy/default/index.php");
 $users->addPage($page);
 
 $page = new Page("addppolicy",_T("Add a password policy", "ppolicy"));
+$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
+              "modules/base/graph/access/img/icn_global.gif");
 $page->setFile("modules/ppolicy/default/add.php");
 $users->addPage($page);
 
