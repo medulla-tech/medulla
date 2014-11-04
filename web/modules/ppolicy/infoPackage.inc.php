@@ -31,7 +31,7 @@ require_once("modules/ppolicy/includes/ppolicy.inc.php");
 
 
 $mod = new Module("ppolicy");
-$mod->setVersion("3.1.71");
+$mod->setVersion("3.1.72");
 $mod->setRevision('$Rev$');
 $mod->setDescription(_T("Password Policy", "ppolicy"));
 $mod->setAPIVersion("0:1:0");
