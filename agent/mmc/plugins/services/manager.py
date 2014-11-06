@@ -84,7 +84,7 @@ class ServiceManager(object):
                     return True
         return False
 
-    def list_others_services(self, filter = None):
+    def list_others_services(self, filter=None):
         """
         Returns list of services not managed by MMC plugins
         """
@@ -93,7 +93,7 @@ class ServiceManager(object):
             if not self.is_plugin_service(unit['id']) and \
                unit['id'].endswith(".service") and \
                unit['unit_file_state'] != "static":
-                if filter and any(v for k,v in unit.items() if filter in str(v)):
+                if filter and any(v for k, v in unit.items() if filter in str(v)):
                     list.append(unit)
                 if not filter:
                     list.append(unit)
@@ -123,7 +123,7 @@ class ServiceManager(object):
         unit = self.get_unit(service)
         return self.serialize_unit(unit, service)
 
-    def serialize_unit(self, unit, service = ""):
+    def serialize_unit(self, unit, service=""):
         if unit:
             return {'id': str(unit.properties.Id),
                     'description': str(unit.properties.Description),
@@ -131,8 +131,7 @@ class ServiceManager(object):
                     'can_start': bool(unit.properties.CanStart),
                     'can_stop': bool(unit.properties.CanStop),
                     'can_reload': bool(unit.properties.CanReload),
-                    'unit_file_state': str(unit.properties.UnitFileState),
-                   }
+                    'unit_file_state': str(unit.properties.UnitFileState)}
         else:
             return {'id': service + ".service",
                     'description': service,
@@ -140,8 +139,7 @@ class ServiceManager(object):
                     'can_start': False,
                     'can_stop': False,
                     'can_reload': False,
-                    'unit_file_state': "unavailable",
-                   }
+                    'unit_file_state': "unavailable"}
 
     def start(self, service):
         unit = self.get_unit(service)
@@ -169,7 +167,7 @@ class ServiceManager(object):
                 str(unit.properties.ActiveState),
                 str(unit.properties.SubState))
 
-    def log(self, service = "", filter = ""):
+    def log(self, service="", filter=""):
         service = service.replace(".service", "", 1)
         result = []
         service_filter = ""
@@ -188,7 +186,7 @@ class ServiceManager(object):
                 for key, value in message.copy().items():
                     if key not in fields:
                         del message[key]
-                if filter and any(filter in str(v) for k,v in message.items()):
+                if filter and any(filter in str(v) for k, v in message.items()):
                     result.append(message)
                 if not filter:
                     result.append(message)
