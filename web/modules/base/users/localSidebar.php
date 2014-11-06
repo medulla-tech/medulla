@@ -24,7 +24,6 @@ $submods = array('users');
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass(join(" ", $submods));
-$sidemenu->setBackgroundImage("modules/base/graph/users/img/icn_users_large.gif");
 
 $MMCApp =& MMCApp::getInstance();
 $mod = $MMCApp->getModule('base');

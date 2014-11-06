@@ -769,13 +769,13 @@ td.groupAction { text-align: right; }
 
 td.userName {
     padding: 0 0 0 34px;
-    background-image: url("../img/users/icn_usersList.gif");
+    background-image: url("../modules/base/graph/users/img/icn_usersList.gif");
     background-position: 13px 6px;
 }
 
 td.userNameDisabled {
     padding: 0 0 0 34px;
-    background-image: url("../img/users/icn_usersList.gif");
+    background-image: url("../modules/base/graph/users/img/icn_usersList.gif");
     background-position: 13px 6px;
 }
 
