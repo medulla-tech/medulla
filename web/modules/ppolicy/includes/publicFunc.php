@@ -125,6 +125,13 @@ function _ppolicy_baseEdit($FH, $mode) {
     return $f;
 }
 
+function _ppolicy_enableUser($uid) {
+    return unlockAccount($uid);
+}
+
+function _ppolicy_disableUser($uid) {
+    return lockAccount($uid);
+}
 
 /**
  * Function called before changing user attributes
