@@ -92,7 +92,7 @@ def has_inactive_plugins_services():
 def list_others_services(filter = None):
     return ServiceManager().list_others_services(filter)
 
-def log(service = "", filter = ""):
+def log(service="", filter=""):
     return ServiceManager().log(service, filter)
 
 def server_power_off():

@@ -175,8 +175,14 @@ class ServiceManager(object):
         if service:
             service_filter += '_SYSTEMD_UNIT=%s.service' % service
         code, out, err = shlaunch('%s -n 500 -o json %s' % (self.config.journalctl_path, service_filter))
-        out = json.loads("".join(out))
-        for message in out:
+        logs = []
+        for line in out:
+            try:
+                logs.append(json.loads(line))
+            except:
+                if "Reboot" in line:
+                    logs.append({"MESSAGE": "Reboot"})
+        for message in logs:
             if "MESSAGE" in message and isinstance(message["MESSAGE"], basestring):
                 if "_SOURCE_REALTIME_TIMESTAMP" in message:
                     message["TIMESTAMP"] = int(int(message["_SOURCE_REALTIME_TIMESTAMP"]) / 1000000)
