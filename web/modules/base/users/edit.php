@@ -159,9 +159,7 @@ if ($result) {
 }
 // in case of modification/creation success, redirect to the edit page
 if ($redirect) {
-    header('Location: ' . urlStrRedirect("base/users/edit",
-        array("user" => $uid)));
-    exit;
+    redirectTo(urlStrRedirect("base/users/edit", array("user" => $uid)));
 }
 
 // in case of failure, set errorStatus to 0 in order to display the edit form
