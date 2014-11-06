@@ -27,7 +27,7 @@
 $MMCApp =& MMCApp::getInstance();
 
 $mod = new Module("report");
-$mod->setVersion("3.1.73");
+$mod->setVersion("3.1.74");
 $mod->setRevision('');
 $mod->setDescription(_T("Reporting", "report"));
 $mod->setAPIVersion("0:0:0");

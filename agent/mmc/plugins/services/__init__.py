@@ -34,7 +34,7 @@ from mmc.plugins.services.config import ServicesConfig
 
 logger = logging.getLogger()
 
-VERSION = "3.1.73"
+VERSION = "3.1.74"
 APIVERSION = "0:1:0"
 REVISION = ""
 

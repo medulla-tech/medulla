@@ -31,7 +31,7 @@ $base = &$MMCApp->getModule('base');
 $main = &$base->getSubmod('main');
 
 $mod = new Module("dashboard");
-$mod->setVersion("3.1.73");
+$mod->setVersion("3.1.74");
 $mod->setRevision('');
 $mod->setDescription(_T("Dashboard", "dashboard"));
 $mod->setAPIVersion("0:0:0");
