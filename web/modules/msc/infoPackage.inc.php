@@ -173,7 +173,7 @@ if (!empty($submod)) {
     $submod->addPage($page);
 
     /* Delete command popup */
-    $page = new Page("delete", _T("Delete a command", "msc"));
+    $page = new Page("delete_command", _T("Delete a command", "msc"));
     $page->setFile("modules/msc/msc/delete.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
