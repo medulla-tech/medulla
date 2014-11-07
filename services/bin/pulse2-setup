@@ -971,7 +971,7 @@ class SetupApp(object):
 
             # Grant rights in DB
             try:
-                dbs = self.dbmodules
+                dbs = self.dbmodules + ['zabbix']
                 for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
