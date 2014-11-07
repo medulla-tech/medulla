@@ -102,6 +102,11 @@ $page->setFile("modules/pkgs/pkgs/ajaxAutocompleteSearch.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("viewAppstreamUpdates", _T("Appstream Updates list", "pkgs"));
+$page->setFile("modules/pkgs/pkgs/viewAppstreamUpdates.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

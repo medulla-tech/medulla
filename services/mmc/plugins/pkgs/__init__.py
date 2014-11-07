@@ -26,12 +26,17 @@ import requests, json, tempfile, tarfile
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
 from time import time
+from json import loads as parse_json
+import subprocess
 
 from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.core.tasks import TaskManager
+from mmc.plugins.dashboard.manager import DashboardManager
+from mmc.plugins.dashboard.panel import Panel
 
 from mmc.plugins.msc.package_api import PackageGetA
+from mmc.plugins.pulse2.utils import notificationManager
 from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
@@ -49,6 +54,8 @@ def activate():
     if config.disabled:
         logger.warning("Plugin pkgs: disabled by configuration.")
         return False
+    
+    DashboardManager().register_panel(Panel('appstream'))
     
     TaskManager().addTask("pkgs.updateAppstreamPackages",
                         (updateAppstreamPackages,),
@@ -359,38 +366,35 @@ def updateAppstreamPackages():
     logger = logging.getLogger()
     appstream_url = PkgsConfig("pkgs").appstream_url
     
-    for pkg, info in getActivatedAppstreamPackages().iteritems():
+    for pkg, details in getActivatedAppstreamPackages().iteritems():
         
         try:
             # Creating requests session
             s = requests.Session()
-            s.auth = ('appstream', info['key'])
+            s.auth = ('appstream', details['key'])
             base_url = '%s/%s/' % (appstream_url, pkg)
             package_dir = None
             
             # Get Package uuid
-            r = s.get(base_url + 'uuid')
+            r = s.get(base_url + 'info.json')
             if not r.ok:
-                raise Exception("Cannot get package metadata (uuid). Status: %d" % (r.status_code))
-            uuid = r.content.strip()
+                raise Exception("Cannot get package metadata. Status: %d" % (r.status_code))
+            logger.error(r.content.strip())
+            info = parse_json(r.content.strip())
+            uuid = info['uuid']
             
             # If package is already downloaded, skip
+            logger.debug('Got UUID %s, checking if it already exists ...' % uuid)
             if not uuid or os.path.exists('/var/lib/pulse2/appstream_packages/%s/' % uuid):
                 continue
             
             # Creating package directory
+            logger.debug('New package version, creating %s directory' % uuid)
             package_dir = '/var/lib/pulse2/appstream_packages/%s/' % uuid
             os.mkdir(package_dir)
             
-            # Get third party downloads
-            r = s.get(base_url + 'downloads')
-            if not r.ok:
-                raise Exception("Cannot get package metadata (downloads). Status: %d" % (r.status_code))
-            
             # Downloading third party binaries
-            downloads = r.content.strip()
-            for line in downloads.split('\n'):
-                filename, url = line.split(';')
+            for filename, url in info['downloads']:
                 # Downloading file
                 with open(package_dir+filename, 'wb') as handle:
                     r = s.get(url, prefetch=False)
@@ -405,6 +409,8 @@ def updateAppstreamPackages():
             
             # Download data file
             data_temp_file = tempfile.mkstemp()[1]
+            logger.debug('Downloading package data file')
+            
             with open(data_temp_file, 'wb') as handle:
                 # Important: For newer versions of python-requests, use stream=True instead of prefetch
                 r = s.get(base_url + 'data.tar.gz', prefetch=False)
@@ -416,14 +422,18 @@ def updateAppstreamPackages():
                     if not block:
                         break
                     handle.write(block)
-                    
+
+            logger.debug('Extracting package data file')
             # Extracting data archive
-            tar = tarfile.open(data_temp_file)
-            tar.extractall(path=package_dir)
-            tar.close()
+
+            if subprocess.call('tar xvf %s -C %s' % (data_temp_file, package_dir), shell=True) != 0:
+                raise Exception('Cannot decompress data file')
             
             # Removing tempfile
-            os.remove(data_temp_file)
+            #os.remove(data_temp_file)
+            
+            n_title = details['label'] + ' has been updated to version ' + info['version']
+            notificationManager().add('pkgs', n_title, '')
         
         except Exception, e:
             logger.error('Appstream: Error while fetching package %s' % pkg)
@@ -434,5 +444,9 @@ def updateAppstreamPackages():
                 shutil.rmtree(package_dir)
             except Exception, e:
                 logger.error(str(e))
+                
 
     return True
+
+def getAppstreamNotifications():
+    return notificationManager().getModuleNotification('pkgs')

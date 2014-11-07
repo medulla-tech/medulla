@@ -105,4 +105,8 @@ function setAppstreamJSON($data){
     return xmlCall("pkgs.setAppstreamJSON", array($data));
 }
 
+function getAppstreamNotifications(){
+    return xmlCall("pkgs.getAppstreamNotifications", array());
+}
+
 ?>
