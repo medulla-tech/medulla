@@ -22,7 +22,7 @@
  * MA 02110-1301, USA
  */
 
-require("modules/glpi/includes/xmlrpc.php");
+require_once("modules/glpi/includes/xmlrpc.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
