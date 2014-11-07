@@ -186,6 +186,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     if (in_array("imaging", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionImaging);
     }
+    if (in_array("monitoring", $_SESSION["supportModList"])) {
+	$n->addActionItem(new ActionItem(_("Monitoring"), "hostStatus", "monitoring", "monitoring", "monitoring", "monitoring"));
+    }
     if ($delete_computer && canDelComputer()) {
         // set popup window to 400px width
         $n->addActionItem(new ActionPopupItem(_("Delete computer"),"delete","delete","computer", "base", "computers", null, 400));
