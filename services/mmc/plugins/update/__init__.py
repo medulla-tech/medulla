@@ -31,6 +31,10 @@ logger = logging.getLogger()
 
 from mmc.support.mmctools import SecurityContext, RpcProxyI
 from mmc.core.tasks import TaskManager
+
+from mmc.plugins.dashboard.manager import DashboardManager
+from mmc.plugins.dashboard.panel import Panel
+
 from mmc.plugins.update.config import updateConfig
 from mmc.plugins.update.database import updateDatabase
 from mmc.plugins.msc import create_update_command
@@ -53,6 +57,9 @@ def activate():
     if not updateDatabase().activate(config):
         logger.error("UpdateMgr database not activated")
         return False
+    
+    DashboardManager().register_panel(Panel('product_updates'))
+    
     # Add create update commands in the task manager
     if config.enable_update_commands:
         TaskManager().addTask("update.create_update_commands",
