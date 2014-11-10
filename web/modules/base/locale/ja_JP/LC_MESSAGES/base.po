@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"PO-Revision-Date: 2014-11-07 08:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/mds/team/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -1364,11 +1364,15 @@ msgstr "コンピューター一覧"
 msgid "Backup status"
 msgstr "バックアップステータス"
 
-#: modules/base/includes/computers_list.inc.php:191
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
 msgid "Delete computer"
 msgstr "コンピューターの削除"
 
-#: modules/base/includes/computers_list.inc.php:194
+#: modules/base/includes/computers_list.inc.php:197
 msgid "Remove machine from group"
 msgstr "マシンのグループからの削除"
 
@@ -1678,6 +1682,35 @@ msgstr "ユーザー %s ACL の編集"
 msgid "Download ACL string"
 msgstr "ACL 文字列のダウンロード"
 
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "名前"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "電話"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "編集"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC 権限"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "バックアップ"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "ログに記録されたアクション"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "ユーザー"
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "ユーザーの編集"
@@ -1722,35 +1755,6 @@ msgstr "アカウントの有効化"
 #: modules/base/users/edit.php:188
 msgid "Disable account"
 msgstr "アカウントの無効化"
-
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "名前"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "電話"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "編集"
-
-#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "MMC 権限"
-
-#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "バックアップ"
-
-#: modules/base/users/ajaxFilter.php:91
-msgid "Logged Actions"
-msgstr "ログに記録されたアクション"
-
-#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "ユーザー"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"

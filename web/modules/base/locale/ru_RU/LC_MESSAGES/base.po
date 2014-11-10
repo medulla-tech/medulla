@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"PO-Revision-Date: 2014-11-07 08:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -1365,11 +1365,15 @@ msgstr "Список компьютеров"
 msgid "Backup status"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:191
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
 msgid "Delete computer"
 msgstr "Удалить компьютер"
 
-#: modules/base/includes/computers_list.inc.php:194
+#: modules/base/includes/computers_list.inc.php:197
 msgid "Remove machine from group"
 msgstr "Удалить компьютер из группы"
 
@@ -1695,6 +1699,35 @@ msgstr "Изменить ACL-разрешения пользователя %s"
 msgid "Download ACL string"
 msgstr "Загрузить строку ACL"
 
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "Имя"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Телефон"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "Изменить"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "Права доступа MMC"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "Резервное копирование"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "Зарегистрированные действия"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "Пользователи"
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "Изменить пользователя"
@@ -1739,35 +1772,6 @@ msgstr ""
 #: modules/base/users/edit.php:188
 msgid "Disable account"
 msgstr ""
-
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "Имя"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "Телефон"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "Изменить"
-
-#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "Права доступа MMC"
-
-#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "Резервное копирование"
-
-#: modules/base/users/ajaxFilter.php:91
-msgid "Logged Actions"
-msgstr "Зарегистрированные действия"
-
-#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "Пользователи"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"

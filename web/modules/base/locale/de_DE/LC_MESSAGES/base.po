@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"PO-Revision-Date: 2014-11-07 08:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -1400,11 +1400,15 @@ msgstr "Computerliste"
 msgid "Backup status"
 msgstr "Backup Status"
 
-#: modules/base/includes/computers_list.inc.php:191
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
 msgid "Delete computer"
 msgstr "lösche Computer"
 
-#: modules/base/includes/computers_list.inc.php:194
+#: modules/base/includes/computers_list.inc.php:197
 msgid "Remove machine from group"
 msgstr "lösche Computer aus Gruppe"
 
@@ -1728,6 +1732,35 @@ msgstr "ACL des Benutzer %s bearbeiten"
 msgid "Download ACL string"
 msgstr "ACL string herunterladen"
 
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "Name"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "Telefon"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "bearbeiten"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC Rechte"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "archivieren"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "Aufgezeichnete Aktionen"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "Benutzer"
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "Benutzer bearbeiten"
@@ -1772,35 +1805,6 @@ msgstr "Konto aktivieren"
 #: modules/base/users/edit.php:188
 msgid "Disable account"
 msgstr "Konto deaktivieren"
-
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "Name"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "Telefon"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "bearbeiten"
-
-#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "MMC Rechte"
-
-#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "archivieren"
-
-#: modules/base/users/ajaxFilter.php:91
-msgid "Logged Actions"
-msgstr "Aufgezeichnete Aktionen"
-
-#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "Benutzer"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"

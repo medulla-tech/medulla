@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-10-10 08:23+0000\n"
+"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"PO-Revision-Date: 2014-11-07 08:34+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/mds/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -1352,11 +1352,15 @@ msgstr "电脑清单"
 msgid "Backup status"
 msgstr "备份状态"
 
-#: modules/base/includes/computers_list.inc.php:191
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
 msgid "Delete computer"
 msgstr "删除电脑"
 
-#: modules/base/includes/computers_list.inc.php:194
+#: modules/base/includes/computers_list.inc.php:197
 msgid "Remove machine from group"
 msgstr "从群组移除电脑"
 
@@ -1666,6 +1670,35 @@ msgstr "编辑使用者 %s 的 ACL"
 msgid "Download ACL string"
 msgstr "下载 ACL 字串"
 
+#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
+msgid "Name"
+msgstr "名称"
+
+#: modules/base/users/ajaxFilter.php:81
+msgid "Telephone"
+msgstr "电话"
+
+#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
+msgid "Edit"
+msgstr "编辑"
+
+#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
+msgid "MMC rights"
+msgstr "MMC 权限"
+
+#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
+msgid "Backup"
+msgstr "备份"
+
+#: modules/base/users/ajaxFilter.php:91
+msgid "Logged Actions"
+msgstr "已记录的动作"
+
+#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
+#: modules/base/infoPackage.inc.php:166
+msgid "Users"
+msgstr "使用者"
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "编辑使用者"
@@ -1710,35 +1743,6 @@ msgstr "启用帐户"
 #: modules/base/users/edit.php:188
 msgid "Disable account"
 msgstr "停用帐户"
-
-#: modules/base/users/ajaxFilter.php:79 modules/base/views/index.tpl.php:84
-msgid "Name"
-msgstr "名称"
-
-#: modules/base/users/ajaxFilter.php:81
-msgid "Telephone"
-msgstr "电话"
-
-#: modules/base/users/ajaxFilter.php:83 modules/base/views/index.tpl.php:89
-msgid "Edit"
-msgstr "编辑"
-
-#: modules/base/users/ajaxFilter.php:87 modules/base/views/index.tpl.php:91
-msgid "MMC rights"
-msgstr "MMC 权限"
-
-#: modules/base/users/ajaxFilter.php:89 modules/base/views/index.tpl.php:93
-msgid "Backup"
-msgstr "备份"
-
-#: modules/base/users/ajaxFilter.php:91
-msgid "Logged Actions"
-msgstr "已记录的动作"
-
-#: modules/base/users/ajaxFilter.php:93 modules/base/views/index.tpl.php:95
-#: modules/base/infoPackage.inc.php:166
-msgid "Users"
-msgstr "使用者"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
