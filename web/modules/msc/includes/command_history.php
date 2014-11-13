@@ -554,7 +554,7 @@ class CommandHistory {
             array(_T('Proxy mode', 'msc'), $proxy_mode),
             array(_T('Proxy priority', 'msc'), $proxy_priority),
             array(_T('Scheduler', 'msc'), $this->db_coh['scheduler']),
-            array(_T('Current launcher', 'msc'), isset($this->db_coh['launcher']) ? $this->db_coh['launcher'] :  _T('<i>not available</i>', 'msc')),
+            array(_T('Current launcher', 'msc'), ! empty($this->db_coh['current_launcher']) ? $this->db_coh['current_launcher'] :  _T('<i>not available</i>', 'msc')),
             array(_T('Current proxy', 'msc'), $current_proxy),
         );
         $n = new ListInfos(array_map("_names", $values), _T('<b>Command Environment</b>', 'msc'));
