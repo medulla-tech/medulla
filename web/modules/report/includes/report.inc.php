@@ -40,7 +40,16 @@
             }
         });
     }
-
+    
+    var entitiesSelected = function() {
+		// select all entities
+        var select = jQuery("#entities");
+        select.find('option').each(function() {
+            var option = jQuery(this);
+            option.prop('selected', true);
+        });
+    }
+    
     var sectionsSelected = function() {
         // check if something in the section is selected
         jQuery('.report-section').each(function() {
@@ -81,6 +90,7 @@
     jQuery(document).ready(function() {
         checkInitialIndicators();
         sectionsSelected();
+        entitiesSelected();
     });
 </script>
 
