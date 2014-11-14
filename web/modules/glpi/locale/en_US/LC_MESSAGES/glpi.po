@@ -378,7 +378,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:82
 msgid "Softwares"
-msgstr "Software"
+msgstr ""
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
@@ -509,7 +509,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:103 modules/glpi/infoPackage.inc.php:133
 msgid "Softwares tab (GLPI)"
-msgstr "Software tab (GLPI)"
+msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:106 modules/glpi/infoPackage.inc.php:136
 msgid "Administrative tab (GLPI)"
