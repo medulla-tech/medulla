@@ -77,7 +77,13 @@ if ($count = count($download_status)) {
             $paths[] = $filepath;
             $name = basename($filepath);
 
-            $actions[] = $downloadAction;
+            // Show download link only when archive file is finished
+            if ($dstatus['status'] != 0 && $dstatus['err'] == 0) {
+                $actions[] = $downloadAction;
+	        } else {
+                $actions[] = $emptyAction;
+            }
+
         } else {
             // Direct restore
             $params[] = array('dir' => '');
