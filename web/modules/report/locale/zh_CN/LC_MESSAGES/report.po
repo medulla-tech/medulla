@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"POT-Creation-Date: 2014-11-16 21:22+0100\n"
 "PO-Revision-Date: 2014-10-10 08:11+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/mds/team/zh_CN/)\n"
@@ -17,16 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-
-#: modules/report/includes/report.inc.php:36
-#: modules/report/includes/report.inc.php:71
-msgid "Less detail"
-msgstr "较少详情"
-
-#: modules/report/includes/report.inc.php:39
-#: modules/report/includes/report.inc.php:187
-msgid "More detail"
-msgstr "较多详情"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -208,6 +198,16 @@ msgstr "周六"
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
 msgstr "星期"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr "较少详情"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
+msgstr "较多详情"
 
 #: modules/report/report/localSidebar.php:27
 #: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41

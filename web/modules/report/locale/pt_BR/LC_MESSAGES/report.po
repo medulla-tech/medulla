@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-11-07 09:34+0100\n"
+"POT-Creation-Date: 2014-11-16 21:22+0100\n"
 "PO-Revision-Date: 2014-10-10 08:11+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
@@ -19,16 +19,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
-
-#: modules/report/includes/report.inc.php:36
-#: modules/report/includes/report.inc.php:71
-msgid "Less detail"
-msgstr "Sem detalhes"
-
-#: modules/report/includes/report.inc.php:39
-#: modules/report/includes/report.inc.php:187
-msgid "More detail"
-msgstr "Mais detalhes"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -210,6 +200,16 @@ msgstr "Sábados"
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
 msgstr "Semanal"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr "Sem detalhes"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
+msgstr "Mais detalhes"
 
 #: modules/report/report/localSidebar.php:27
 #: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
