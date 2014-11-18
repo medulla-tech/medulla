@@ -31,6 +31,7 @@ import re
 from sets import Set
 import datetime
 import calendar, hashlib
+from xmlrpclib import ProtocolError
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct
@@ -1274,7 +1275,7 @@ class Glpi08(DyngroupDatabaseHelper):
             ret = None
         session.close()
         return ret
-    
+
     @DatabaseHelper._session
     def getAllUserProfiles(self, session):
         """
@@ -3605,9 +3606,20 @@ class Glpi08(DyngroupDatabaseHelper):
 
         machine = session.query(Machine).filter(self.machine.c.id == id).first()
 
-        if machine :
+        if machine:
+            webservice_ok = True
+            try:
+                self._get_webservices_client()
+            except ProtocolError, e:
+                webservice_ok = False
+            except Exception, e:
+                webservice_ok = False
+
             if self.config.webservices['purge_machine']:
-                return self.purgeMachine(machine.id)
+                if webservice_ok:
+                    return self.purgeMachine(machine.id)
+                else:
+                    self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
 
             connection = self.getDbConnection()
             trans = connection.begin()
@@ -3630,7 +3642,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
         else:
             return False
-        
+
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights):
         # User settings
@@ -3645,21 +3657,21 @@ class Glpi08(DyngroupDatabaseHelper):
         session.add(user)
         session.commit()
         session.flush()
-        
+
         # Setting entity rights
         self.setLocationsForUser(username, entity_rights)
-        
+
     @DatabaseHelper._session
     def setUserPassword(self, session, username, password):
         user = session.query(User).filter_by(name=username).one()
         user.password = hashlib.sha1(password).hexdigest()
         session.commit()
         session.flush()
-        
+
     def removeUser(self, session, username):
         # Too complicated, affects many tables
         return True
-    
+
     def AddEntity(self, entity_name, parent_id, comment):
         entity = Location()
         entity.entities_id = parent_id #parent
@@ -3667,21 +3679,21 @@ class Glpi08(DyngroupDatabaseHelper):
         entity.comment = comment
         entity.level = parent_id
         entity.completename = 'ewtiry > entitee > zozo' # toute l'arbo
-        
+
         session.add(entity)
         session.commit()
         session.flush()
         return True
-    
+
     def removeEntity(self, entity_id):
         # Too complicated, affects many tables
         pass
-    
+
     def moveComputerToEntity(self, uuid, entity_id):
         pass
         #UPDATE `glpi_computers`
         #SET `entities_id` = '5' WHERE `id` ='3'
-        
+
     @DatabaseHelper._session
     def getLocationsForUser(self, session, username):
         user_id = session.query(User).filter_by(name=username).one().id
@@ -3694,14 +3706,14 @@ class Glpi08(DyngroupDatabaseHelper):
                             'is_dynamic' : profile.is_dynamic
                         }]
         return entities
-    
+
     @DatabaseHelper._session
     def setLocationsForUser(self, session, username, profiles):
-        
+
         user_id = session.query(User).filter_by(name=username).one().id
         # Delete all user entity profiles
         session.query(UserProfile).filter_by(users_id = user_id).delete()
-        
+
         for attr in profiles:
             p = UserProfile()
             p.users_id = user_id
@@ -3711,7 +3723,7 @@ class Glpi08(DyngroupDatabaseHelper):
             p.is_dynamic = attr['is_dynamic']
             session.add(p)
             session.commit()
-        
+
         session.flush()
         return True
 

@@ -53,6 +53,7 @@ import re
 from sets import Set
 import datetime
 import calendar
+from xmlrpclib import ProtocolError
 
 class Glpi07(DyngroupDatabaseHelper):
     """
@@ -3300,9 +3301,20 @@ class Glpi07(DyngroupDatabaseHelper):
 
         machine = session.query(Machine).filter(self.machine.c.ID == id).first()
 
-        if machine :
+        if machine:
+            webservice_ok = True
+            try:
+                self._get_webservices_client()
+            except ProtocolError, e:
+                webservice_ok = False
+            except Exception, e:
+                webservice_ok = False
+
             if self.config.webservices['purge_machine']:
-                return self.purgeMachine(machine.id)
+                if webservice_ok:
+                    return self.purgeMachine(machine.id)
+                else:
+                    self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
 
             connection = self.getDbConnection()
             trans = connection.begin()
