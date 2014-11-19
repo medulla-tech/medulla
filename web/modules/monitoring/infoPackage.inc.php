@@ -34,7 +34,7 @@ $mod->setAPIVersion("4:1:3");
 
 $submod = new SubModule("monitoring");
 $submod->setDescription(_T("Monitoring", "monitoring"));
-$submod->setImg("modules/monitoring/graph/imaging");
+$submod->setImg("modules/monitoring/graph/monitoring");
 $submod->setDefaultPage("monitoring/monitoring/index");
 $submod->setPriority(900);
 
