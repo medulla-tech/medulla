@@ -541,6 +541,8 @@ button.ui-button::-moz-focus-inner {
 .ui-resizable {
 	position: relative;
 }
+p.ui-resizable{margin: 10px;}
+
 .ui-resizable-handle {
 	position: absolute;
 	font-size: 0.1px;
@@ -1140,25 +1142,25 @@ body .ui-tooltip {
 .ui-corner-top,
 .ui-corner-left,
 .ui-corner-tl {
-	border-top-left-radius: 4px;
+	border-top-left-radius: 2px;
 }
 .ui-corner-all,
 .ui-corner-top,
 .ui-corner-right,
 .ui-corner-tr {
-	border-top-right-radius: 4px;
+	border-top-right-radius: 2px;
 }
 .ui-corner-all,
 .ui-corner-bottom,
 .ui-corner-left,
 .ui-corner-bl {
-	border-bottom-left-radius: 4px;
+	border-bottom-left-radius: 2px;
 }
 .ui-corner-all,
 .ui-corner-bottom,
 .ui-corner-right,
 .ui-corner-br {
-	border-bottom-right-radius: 4px;
+	border-bottom-right-radius: 2px;
 }
 
 /* Overlays */

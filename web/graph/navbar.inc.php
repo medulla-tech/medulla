@@ -31,6 +31,7 @@ $root = $conf["global"]["root"];
 
 <div id="header">
 
+<!--menuTopRight-->
 <div id="menuTopRight">
 
   <ul>
@@ -53,7 +54,46 @@ if (isExpertMode()) {
 
   </ul>
 </div>
+<!--menuTopRight-->
 
+<!--navbar-->
+<div id="navbar">
+<?php
+if (getMMCLogo()) {
+?>
+<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+<?php
+}
+?>
+
+<ul>
+<?php
+
+autoGenerateNavbar(); //auto generation of navbar for new modules;
+
+if ($_SESSION["login"]=='root') {
+    $favact = "_disabled";
+} else {
+    $favact = "";
+}
+
+?>
+</ul>
+</div>
+<!--navbar-->
+
+
+
+
+
+
+</div>
+
+
+
+
+
+<!--path-->
 <p class="path">
 <?php
 /* Path automatic creation */
@@ -72,24 +112,10 @@ if (is_object($action)) {
 }
 ?>
 </p>
-</div>
+<!--path-->
 
-<div id="navbar">
-<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
-    <ul>
-<?php
 
-autoGenerateNavbar(); //auto generation of navbar for new modules;
 
-if ($_SESSION["login"]=='root') {
-    $favact = "_disabled";
-} else {
-    $favact = "";
-}
-
-?>
-</ul>
-</div>
 
 <div id="overlay" class="overlay" style="display: none"></div>
 <div id="popup" class="popup" style="display: none;">

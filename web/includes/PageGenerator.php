@@ -1251,7 +1251,7 @@ class AjaxFilter extends HtmlElement {
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
             </div>
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-                <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
+                <img src="graph/search.gif" style="position:relative; float: left; left:4px;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
                         return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
                          onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
@@ -1750,7 +1750,7 @@ class SideMenuItem {
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             echo '<li id="' . $this->cssId . '">';
-            echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>' . "\n";
+            echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>';
         }
     }
 
@@ -1778,10 +1778,8 @@ class SideMenuItem {
 
         if ($active) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
-                        background-color: #f6f6f6;
+                        background-color: #FDD800;
                         color: #444;
-                        border-bottom: solid 1px #ccc;
-                        border-top: solid 1px #ccc;
                         $bgi_active
             }";
         } else if ($bgi_inactive) {
@@ -1876,14 +1874,13 @@ class SideMenu {
      *  print the SideMenu and the sideMenuItem
      */
     function display() {
-        echo "<style>#section { margin-left: 200px; border-left: 2px solid #bbb; }</style>";
+        echo "<style>#section {}</style>";
         echo "<div id=\"sidebar\">\n";
         echo "<ul class=\"" . $this->className . "\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
             $objSideMenuItem->display();
         }
-        echo "</ul>\n";
-        echo "</div>\n";
+        echo "</ul><div class=\"clearer\"></div></div>";
     }
 
     /**
@@ -2069,7 +2066,6 @@ class TabbedPageGenerator extends PageGenerator {
         $this->tabselector = new TabSelector();
         $this->pages = array();
         $this->firstTabActivated = False;
-        $this->description = False;
     }
 
     /**
@@ -2078,16 +2074,6 @@ class TabbedPageGenerator extends PageGenerator {
     function addTop($title, $file) {
         $this->title = $title;
         $this->topfile = $file;
-    }
-
-    function setDescription($desc) {
-        $this->description = $desc;
-    }
-
-    function displayDescription() {
-        if ($this->description) {
-            printf('<p>%s</p>', $this->description);
-        }
     }
 
     /**
@@ -2124,7 +2110,6 @@ class TabbedPageGenerator extends PageGenerator {
         $this->page = null;
         $this->displaySideMenu();
         $this->displayTitle();
-        $this->displayDescription();
         if ($this->topfile)
             require($this->topfile);
         $this->tabselector->display();
@@ -2253,7 +2238,7 @@ class NotifyWidget {
     }
 
     function end() {
-        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup();return false;">' . _("Close") . '</button></div></div>';
+        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
 
@@ -2696,7 +2681,7 @@ class PopupForm extends Form {
     }
 
     function setQuestion($msg) {
-        $this->ask = $msg;
+        $this->ask = $ask;
     }
 
     function addValidateButtonWithFade($name) {
@@ -2726,7 +2711,7 @@ class PopupWindowForm extends PopupForm {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=530, height=300'); return false;\"");
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"");
     }
 
 }

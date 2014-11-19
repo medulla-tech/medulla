@@ -44,12 +44,13 @@ Notes:
 @import '../bootstrap-alerts.css';
 
 * {
-    font-family: Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
-    font-size: 11px;
+    font-family: Arial, Verdana, Lucida, Geneva, Helvetica, Arial, sans-serif;
+    font-size: 12px;
 }
 
 body {
-	background: url(../../img/common/background.gif) top left #C0C0C0;
+	/*background: url(../../img/common/background.gif) top left #C0C0C0;*/
+	background-color: #f5f6f7;
 }
 
 #loginBox {
@@ -64,18 +65,20 @@ body {
 
 #interface {
     background: white;
-    margin: 0 5px;
-    box-shadow: 0 0 5px;
+    margin: auto;
+    border:1px solid #ccc;
+    border-radius: 2px;
+    max-width: 260px;
 }
 
 #content {
 	text-align: left;
-	min-height: 248px;
-	background: url(../../img/login/bg_mandriva_large.gif) no-repeat top left transparent;
+	min-height: 200px;
+	/*background: url(../../img/login/bg_mandriva_large.gif) no-repeat top left transparent;*/
 }
 
 #login {
-	padding: 50px 10px 10px 250px;
+	padding: 20px;
 }
 
 #login img {
@@ -87,24 +90,28 @@ body {
 /* ---------------------------------------- */
 
 #header {
-	text-align: left;
-	background-color: #326495;
-	background: url(../../img/login/bg_header.gif) repeat-x top left #C0C0C0;
-}
+
+	/*background-color: #326495;
+	background: url(../../img/login/bg_header.gif) repeat-x top left #C0C0C0;*/
+	height: 40px;
+	width: 154px;
+    margin: auto auto 20px;
+    position: relative;
+    }
 
 #headerLeft {
-	background: url(../../img/login/corner_header_left.gif) no-repeat top left transparent;
+	/*background: url(../../img/login/corner_header_left.gif) no-repeat top left transparent;*/
 }
 
 #headerRight {
 	height: 26px;
-	background: url(../../img/login/corner_header_right.gif) no-repeat top right transparent;
+	/*background: url(../../img/login/corner_header_right.gif) no-repeat top right transparent;*/
 }
 
 #header p {
 	font-size: 10px;
 	color: #A3BBD1;
-	padding: 7px 0 0 13px;
+	/*padding: 7px 0 0 13px;*/
 }
 
 #header p a {color: #E7ECF2;}
@@ -114,7 +121,7 @@ body {
 #header p.lock {
 	margin: 0 5px 0 0;
 	height: 26px;
-	background: url(../../img/login/icn_lock.gif) no-repeat top right transparent;
+	/*background: url(../../img/login/icn_lock.gif) no-repeat top right transparent;*/
 	color: #FFF;
 	font-weight: bold;
 }
@@ -125,17 +132,17 @@ body {
 
 #footer {
 	height: 9px;
-	background: url(../../img/login/bg_footer.gif) repeat-x transparent;
+	/*background: url(../../img/login/bg_footer.gif) repeat-x transparent;*/
 }
 
 #footerLeft {
 	height: 9px;
-	background: url(../../img/login/corner_footer_left.gif) no-repeat top left transparent;
+	/*background: url(../../img/login/corner_footer_left.gif) no-repeat top left transparent;*/
 }
 
 #footerRight {
 	height: 9px;
-	background: url(../../img/login/corner_footer_right.gif) no-repeat top right transparent;
+	/*background: url(../../img/login/corner_footer_right.gif) no-repeat top right transparent;*/
 }
 
 /* ---------------------------------------- */
@@ -212,10 +219,11 @@ body {
 input[type=text],
 input[type=password],
 select {
-    width: 100px;
+    width: 200px;
 }
 select {
-    padding: 2px 4px;
+    padding: 6px 2px;
+    width: 215px;
 }
 
 .form-inline .control-group {
@@ -223,9 +231,14 @@ select {
 }
 
 .form-inline .control-label {
-    width: 90px;
-    float: left;
-    text-align: right;
+    /*width: 90px;*/
     margin-right: 5px;
     margin-top: 5px;
+    font-weight: bold;
+    font-size: 13px;
+    color: #666;
 }
+
+/*ADD*/
+
+.controls{margin: auto;}
