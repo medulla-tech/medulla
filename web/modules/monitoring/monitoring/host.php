@@ -59,8 +59,8 @@ $params = array(
 );
 
 $ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxMonitoringIndex"), 'divHost', "show", $params, "Host");
-$ajax->setElements(array(_T("Show only OFF", "monitoring"), _T("Show only ON", "monitoring"), _T("Show all", "monitoring")));
-$ajax->setElementsVal(array(0, 1, 2));
+$ajax->setElements(array(_T("Show all", "monitoring"), _T("Show only ON", "monitoring"), _T("Show only OFF", "monitoring")));
+$ajax->setElementsVal(array(2, 1, 0));
 $ajax->setRefresh(60000);
 $ajax->display();
 echo "<br/><br/>";
