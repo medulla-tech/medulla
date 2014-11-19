@@ -67,6 +67,50 @@ $page->setFile("modules/glpi/glpi/createOSStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("entityList", _T('Entities', 'glpi'));
+$page->setFile("modules/glpi/glpi/entityList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEntityList", _T('Entities (ajax)', 'glpi'));
+$page->setFile("modules/glpi/glpi/ajaxEntityList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("addEntity", _T('Add entity', 'glpi'));
+$page->setFile("modules/glpi/glpi/addEntity.php");
+$submod->addPage($page);
+
+$page = new Page("locationList", _T('Locations', 'glpi'));
+$page->setFile("modules/glpi/glpi/locationList.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxLocationList", _T('Entities (ajax)', 'glpi'));
+$page->setFile("modules/glpi/glpi/ajaxLocationList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("addLocation", _T('Add entity', 'glpi'));
+$page->setFile("modules/glpi/glpi/addLocation.php");
+$submod->addPage($page);
+
+$page = new Page("entityRules", _T('Entity rules', 'glpi'));
+$page->setFile("modules/glpi/glpi/entityRules.php");
+$submod->addPage($page);
+
+$page = new Page("ajaxEntityRules", _T('Entity rules (ajax)', 'glpi'));
+$page->setFile("modules/glpi/glpi/ajaxEntityRules.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("addEntityRule", _T('Add entity rule', 'glpi'));
+$page->setFile("modules/glpi/glpi/addEntityRule.php");
+$submod->addPage($page);
+
+$page = new Page("deleteEntityRule", _T("Delete entity rule", "glpi"));
+$page->setFile("modules/glpi/glpi/deleteEntityRule.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 /* groupes dynamiques */
 
 $page = new Page("locations", _T('Display locations', 'glpi'));

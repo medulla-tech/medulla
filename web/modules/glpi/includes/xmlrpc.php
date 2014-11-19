@@ -93,5 +93,40 @@ function setGlpiUserPassword($username, $password){
     return xmlCall("glpi.setUserPassword", array($username, $password));
 }
 
+function getAllEntities($params){
+    return xmlCall("glpi.getAllEntities", array($params));
+}
+
+function addEntity($entity_name, $parent_id, $comment){
+    return xmlCall("glpi.addEntity", array($entity_name, $parent_id, $comment));
+}
+
+function getAllEntityRules($params){
+    return xmlCall("glpi.getAllEntityRules", array($params));
+}
+
+function getAllLocations($params){
+    return xmlCall("glpi.getAllLocations", array($params));
+}
+
+function addLocation($location_name, $parent_id, $comment){
+    return xmlCall("glpi.addLocation", array($location_name, $parent_id, $comment));
+}
+
+function getEntityRule($params){
+    return xmlCall("glpi.getEntityRule", array($params));
+}
+
+function addEntityRule($params){
+    return xmlCall("glpi.addEntityRule", array($params));
+}
+
+function editEntityRule($id, $rule_data){
+    return xmlCall("glpi.editEntityRule", array($id, $rule_data));
+}
+
+function deleteEntityRule($id){
+    return xmlCall("glpi.deleteEntityRule", array($id));
+}
 
 ?>

@@ -115,9 +115,6 @@ class RpcProxy(RpcProxyI):
                                                                 hostname,
                                                                 macs))
 
-def addUser(username, password, entity_rights):
-    return Glpi().addUser(username, password, entity_rights)
-
 def getLicensesCount(vendor, software, version):
     ctx = SecurityContext()
     ctx.userid = "root"
@@ -214,8 +211,35 @@ def setLocationsForUser(*args, **kwargs):
 def getAllUserProfiles(*args, **kwargs):
     return xmlrpcCleanup(Glpi().getAllUserProfiles(*args, **kwargs))
 
+def getAllEntityRules(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getAllEntityRules(*args, **kwargs))
+
+def getEntityRule(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getEntityRule(*args, **kwargs))
+
+def getAllLocations(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getAllLocations(*args, **kwargs))
+
 def addUser(*args, **kwargs):
     return xmlrpcCleanup(Glpi().addUser(*args, **kwargs))
 
+def addEntity(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().addEntity(*args, **kwargs))
+
+def addEntityRule(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().addEntityRule(*args, **kwargs))
+
+def editEntityRule(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().editEntityRule(*args, **kwargs))
+
+def deleteEntityRule(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().deleteEntityRule(*args, **kwargs))
+
 def setUserPassword(*args, **kwargs):
     return xmlrpcCleanup(Glpi().setUserPassword(*args, **kwargs))
+
+def addLocation(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().addLocation(*args, **kwargs))
+
+def getAllEntities(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().getAllEntities(*args, **kwargs))

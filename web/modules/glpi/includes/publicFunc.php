@@ -140,7 +140,7 @@ function _glpi_baseEdit($FH, $mode) {
             $profiles_select,
             $recursive_select,
             $dynamic_select,
-            new buttonTpl2('removeShare',_T('Remove'),'removeShare')
+            new buttonTpl2('removeLine',_T('Remove', 'glpi'),'removeLine')
         );
         
         $values = array(
@@ -157,8 +157,8 @@ function _glpi_baseEdit($FH, $mode) {
         );
     }
         
-    // Add Share button
-    $addEntityRightBtn = new buttonTpl2('addShare',_T('Add entity right','backuppc'));
+    // Add line button
+    $addEntityRightBtn = new buttonTpl2('addLine',_T('Add entity right','backuppc'));
     $addEntityRightBtn->setClass('btnPrimary');
     $f->add(
         new TrFormElement('', $addEntityRightBtn),
@@ -169,23 +169,23 @@ function _glpi_baseEdit($FH, $mode) {
 <script type="text/javascript">
 jQuery(function(){
     
-    shareLine = jQuery('.removeShare:first').parents('tr:first').clone();
+    modelLine = jQuery('.removeLine:first').parents('tr:first').clone();
         
-     // Remove Share button
-     jQuery('.removeShare').click(function(){
-         if (jQuery('.removeShare').length > 1)
+     // Remove line button
+     jQuery('.removeLine').click(function(){
+         if (jQuery('.removeLine').length > 1)
              jQuery(this).parents('tr:first').remove();
      });
      
      
-     // Add Share button
-     jQuery('#addShare').click(function(){
-        var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
+     // Add line button
+     jQuery('#addLine').click(function(){
+        var newline = modelLine.clone().insertBefore(jQuery(this).parents('tr:first'));
          newline.find('input[type=text]').val('');
          newline.find('textarea').val('');
 
-         newline.find('.removeShare').click(function(){
-            if (jQuery('.removeShare').length > 1)
+         newline.find('.removeLine').click(function(){
+            if (jQuery('.removeLine').length > 1)
                 jQuery(this).parents('tr:first').remove();
         });
      });
