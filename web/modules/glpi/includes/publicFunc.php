@@ -87,7 +87,6 @@ function _glpi_baseEdit($FH, $mode) {
 
     $f = new Table();
     $d->push($f);
-    $f->pop();
 
     // =================================
     // Entity select
@@ -195,7 +194,6 @@ window.toto=1;
 </script>
 EOF;
 
-    $d->pop();
     return $f;
 
 }
