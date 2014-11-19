@@ -197,13 +197,13 @@ class DatabaseHelper(Singleton):
 
             # Applying filters on primary entity
             # Exact filters
-            if 'filters' in params:
+            if 'filters' in params and params['filters']:
                 clauses = [_entity_descriptor(query._mapper_zero(), key) == value
                     for key, value in params['filters'].iteritems()]
                 if clauses:
                     query = query.filter(*clauses)
             # Like filters
-            if 'like_filters' in params:
+            if 'like_filters' in params and params['like_filters']:
                 clauses = [_entity_descriptor(query._mapper_zero(), key).like('%' + value + '%')
                     for key, value in params['like_filters'].iteritems()]
                 if clauses:
@@ -242,6 +242,10 @@ class DatabaseHelper(Singleton):
                 else:
                     if line.__class__.__name__ == 'Decimal':
                         line = int(line)
+                    elif hasattr(line, '_sa_instance_state'):
+                        # SA object, try to do a dict conversion
+                        line = line.__dict__
+                        del line['_sa_instance_state']
                     # Base types
                     data.append(line)
 
