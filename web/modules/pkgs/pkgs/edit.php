@@ -247,10 +247,21 @@ $names = array();
 $cssClasses = array();
 $params = array();
 
+// Get Papi details
+$papi_details = getPApiDetail($p_api_id);
+$pserver_base_url = '';
+// Very dirty hack: TODO: read conf from package server
+if ($papi_details['mountpoint'] == '/package_api_get1')
+    $mirror = 'mirror1';
+elseif ($papi_details['mountpoint'] == '/appstream')
+    $mirror = 'appstream';
+
+$pserver_base_url = $papi_details['protocol'] . '://' . $papi_details['server'] . ':' . $papi_details['port'] . '/' . $mirror . "_files/$pid/";
+
 foreach ($package['files'] as $file) {
     if ($file['name'] == "MD5SUMS")
         continue;
-    $names[] = $file['name'];
+    $names[] = sprintf('<a href="%s">%s</a>', $pserver_base_url . $file['name'] , $file['name']);
     $params[] = array(
         'p_api' => $_GET['p_api'],
         'pid' => $_GET['pid'],
