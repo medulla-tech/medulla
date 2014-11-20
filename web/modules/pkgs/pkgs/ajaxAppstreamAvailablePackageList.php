@@ -59,7 +59,7 @@ $n->setParamInfo($params);
 $n->start = 0;
 $n->end = $count - 1;
 
-$n->addActionItem(new ActionPopupItem(_T("Show mirrors", "pkgs"), "activateAppstreamFlow", "activate", "pkgs", "pkgs", "pkgs"));
+$n->addActionItem(new ActionPopupItem(_T("Activate this Appstream flow", "pkgs"), "activateAppstreamFlow", "activate", "pkgs", "pkgs", "pkgs"));
 
 //print "<br/><br/><br/>"; // start display below the location bar, yes it's quiet ugly, so : FIXME !
 $n->display();
