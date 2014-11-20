@@ -234,7 +234,7 @@ def getUsersLdap(searchFilter = ""):
     searchFilter = cleanFilter(searchFilter)
     return ldapObj.searchUser(searchFilter)
 
-def searchUserAdvanced(searchFilter = "", start = None, end = None):
+def searchUserAdvanced(searchFilter="", start=None, end=None):
     """
     Used by the MMC web interface to get a user list
     """
