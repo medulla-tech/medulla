@@ -26,6 +26,8 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
+require_once("modules/backuppc/includes/html.inc.php");
+
 $p = new PageGenerator(_T("Appstream settings", 'pkgs'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -40,7 +42,6 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 // Activated package list
 
 $json = getAppstreamJSON();
-
 if (isset($_POST['bconfirm'])){
     $json['my_username'] = $_POST['my_username'];
     $json['my_password'] = $_POST['my_password'];
@@ -56,12 +57,30 @@ if (isset($_POST['bconfirm'])){
     }
 }
 
+//  Check if credentials are active
+$credentials_active=false;
+if (setAppstreamJSON($json)){
+    $available = getAvailableAppstreamPackages();
+    if ($available['detail'] != 'Invalid username/password')
+        $credential_active=true;
+}
 // =============================================================
 // My Credentials form
 // =============================================================
 
-print '<h2><br/>' . _T('My Account credentials:', 'pkgs') . '</h2>';
+if ($credential_active) {
+    print '<h2><br/>' . _T('Your Account credentials are active', 'pkgs') . '</h2>';
+    $edit_credentialBtn = new buttonTpl('edit_account',_T('Modify Account credentials', 'pkgs'));
+    $edit_credentialBtn->display();
+    $show_credentials = "0";
+    print '<br/>';
+}
+else {
+    $show_credentials = "1";
+    print '<h2><br/>' . _T('My Account credentials:', 'pkgs') . '</h2>';
+}
 
+print '<div id=\'credentials_form\'>';
 $f = new ValidatingForm();
 $f->push(new Table());
 
@@ -74,16 +93,17 @@ $f->add(
     new TrFormElement(_T('Password','pkgs'), new PasswordTpl('my_password')),
     array("value" => $json['my_password'],"required" => True)
 );
-
+print "<input type = 'hidden' id = 'show_credentials' value = '$show_credentials'/>";
 $f->addValidateButton("bconfirm");
 
 $f->display();
+print '</div>';
 
 // =============================================================
 // Package list
 // =============================================================
 
-if (isset($json['my_username'])) {
+if ($credential_active) {
 
 // Activated package list
 include("modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php");
@@ -91,11 +111,21 @@ include("modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php");
 // Available package list
 include("modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php");
 
-} 
+}
 ?>
 
 <style>
     .noborder { border:0px solid blue; }
 </style>
 
+<script type="text/javascript">
+    if (jQuery('#show_credentials').val() == "0")
+    {
+        jQuery('#credentials_form').css("display","none");
+    }
 
+    jQuery('#edit_account').click(function(){
+        jQuery('#credentials_form').css("display","inline");
+        jQuery('#edit_account').css("display","none");
+    });
+</script>
