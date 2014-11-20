@@ -116,11 +116,11 @@ select.list
 function drawGroupList($machines, $members, $listOfMembers, $visibility, $diff, $gid, $name, $filter = '', $type = 0) {
     if ($type == 0) {
         $label_name = _T('Group name', 'dyngroup');
-        $label_visible = _T('Add shortcut', 'dyngroup');
+        $label_visible = _T('Make favourite', 'dyngroup');
         $label_members = _T("Group members", "dyngroup");
     } else {
         $label_name = _T('Group name', 'dyngroup'); // Imaging group
-        $label_visible = _T('Add shortcut', 'dyngroup');
+        $label_visible = _T('Make favourite', 'dyngroup');
         $label_members = _T("Group members", "dyngroup");
     }
     $willBeUnregistered = array();

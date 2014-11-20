@@ -21,13 +21,24 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Add new sidemenu item */
-
+require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
 require_once("modules/dyngroup/includes/includes.php");
-require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
+require("modules/dyngroup/graph/index.css");
 
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Favourite groups", "dyngroup"), "base", "computers",  "listFavourite", "img/machines/icn_allGroups_active.gif", "img/machines/icn_allGroups_ro.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All groups", "dyngroup"), "base", "computers",  "list", "img/machines/icn_allGroups_active.gif", "img/machines/icn_allGroups_ro.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a group", "dyngroup"), "base", "computers", "computersgroupcreator", "img/machines/icn_addGroup_active.gif", "img/machines/icn_addGroup_ro.gif"));
+$p = new PageGenerator(_T("Favourite group list", 'dyngroup'));
+$p->setSideMenu($sidemenu);
+$p->display();
+
+
+if (isset($_GET['gid'])) {
+    $gid = $_GET['gid'];
+} else {
+    $gid = '';
+}
+$ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxListGroups"), "container", array('gid' => $gid, 'favourite' => true));
+$ajax->display();
+print "<br/><br/><br/>";
+$ajax->displayDivToUpdate();
 
 ?>

@@ -145,6 +145,10 @@ if (!empty($submod)) {
     $page->setFile("modules/dyngroup/dyngroup/list.php");
     $submod->addPage($page);
 
+    $page = new Page("listFavourite",_T("List favourite groups","dyngroup"));
+    $page->setFile("modules/dyngroup/dyngroup/listFavourite.php");
+    $submod->addPage($page);
+    
     $page = new Page("ajaxListGroups",_T("List all groups of computers","dyngroup"));
     $page->setFile("modules/dyngroup/dyngroup/ajaxListGroups.php");
     $page->setOptions(array("visible"=>False, "AJAX" =>True));

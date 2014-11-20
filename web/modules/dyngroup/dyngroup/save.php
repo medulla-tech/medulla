@@ -81,7 +81,7 @@ if (!isset($_POST['btnPrimary']) || $name_exists || !$check || isset($_POST['che
             } else {
                 print "<td><input name='save_type' type='hidden' value='2'/></td>";
             }
-            print "<td colspan='2'>"._T("it should be", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("hidden", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("visible", "dyngroup")."</option></select></td>";
+            print "<td colspan='2'>"._T("Make favourite", "dyngroup")." <select name='visible'><option value='2' ".($visible == 2 ? 'selected' : '').">"._T("No", "dyngroup")."</option><option value='1' ".($visible == 1 ? 'selected' : '').">"._T("Yes", "dyngroup")."</option></select></td>";
     }
     if ($r->countPart() > 0) {
         drawBoolEquation($bool);

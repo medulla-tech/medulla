@@ -37,6 +37,12 @@ else
     $is_gp = 0;
 
 $params = array('min'=>$start, 'max'=>$start + $maxperpage, 'filter'=>$_GET["filter"]);
+
+if (isset($_GET['favourite'])){
+    $params['canShow'] = true;
+    $params['localSidebar'] = true;
+}
+
 if ($is_gp == 1) { # Profile
     $list = getAllProfiles($params);
     $count = countAllProfiles($params);
@@ -45,6 +51,7 @@ if ($is_gp == 1) { # Profile
     $count = countAllGroups($params);
 }
 $filter = $_GET["filter"];
+
 
 $ids  = array();
 $name = array();
@@ -66,7 +73,7 @@ foreach ($list as $group) {
     } else {
         $type[]= _T('static group', 'dyngroup');
     }
-    $show[]= ($group->canShow() ? _T('Visible', 'dyngroup') : _T('Hidden', 'dyngroup'));
+    $show[]= ($group->canShow() ? _T('Yes', 'dyngroup') : _T('No', 'dyngroup'));
     if ($group->is_owner == 1) {
         $action_delete[]= $delete;
     } else {
@@ -89,7 +96,7 @@ $n->end = $conf["global"]["maxperpage"];
 if ($is_gp != 1) { // Simple group
     $n->addExtraInfo($type, _T('Type', 'dyngroup'));
 }
-$n->addExtraInfo($show, _T('Display', 'dyngroup'));
+$n->addExtraInfo($show, _T('Favourite', 'dyngroup'));
 $n->setParamInfo($ids);
 
 if ($is_gp != 1) { // Simple group
