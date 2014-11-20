@@ -29,7 +29,7 @@ import logging
 import re
 from sets import Set
 import datetime
-import calendar
+import calendar, hashlib
 from configobj import ConfigObj
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
@@ -168,6 +168,16 @@ class Glpi084(DyngroupDatabaseHelper):
         # entity
         self.location = Table("glpi_entities", self.metadata, autoload = True)
         mapper(Location, self.location)
+
+		# rules
+        self.rules = Table("glpi_rules", self.metadata, autoload = True)
+        mapper(Rule, self.rules)
+
+        self.rule_criterias = Table("glpi_rulecriterias", self.metadata, autoload = True)
+        mapper(RuleCriterion, self.rule_criterias)
+
+        self.rule_actions = Table("glpi_ruleactions", self.metadata, autoload = True)
+        mapper(RuleAction, self.rule_actions)
 
         # location
         self.locations = Table("glpi_locations", self.metadata, autoload = True)
@@ -377,6 +387,7 @@ class Glpi084(DyngroupDatabaseHelper):
         self.user = Table("glpi_users", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('name', String(255), nullable=False),
+            Column('password', String(40), nullable=False),
             Column('firstname', String(255), nullable=False),
             Column('realname', String(255), nullable=False),
             Column('auths_id', Integer, nullable=False),
@@ -390,6 +401,7 @@ class Glpi084(DyngroupDatabaseHelper):
             Column('users_id', Integer, ForeignKey('glpi_users.id')),
             Column('profiles_id', Integer, ForeignKey('glpi_profiles.id')),
             Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+            Column('is_dynamic', Integer),
             Column('is_recursive', Integer))
         mapper(UserProfile, self.userprofile)
 
@@ -1325,6 +1337,16 @@ class Glpi084(DyngroupDatabaseHelper):
             ret = None
         session.close()
         return ret
+
+    @DatabaseHelper._session
+    def getAllUserProfiles(self, session):
+        """
+        @return: Return all GLPI profiles as a dict
+        """
+        result = {}
+        for profile in session.query(Profile):
+            result[profile.id] = profile.name
+        return result
 
     def getUserParentLocations(self, user):
         """
@@ -3725,6 +3747,313 @@ class Glpi084(DyngroupDatabaseHelper):
 
         else:
             return False
+		
+    @DatabaseHelper._session
+    def addUser(self, session, username, password, entity_rights):
+        # User settings
+        user = User()
+        user.name = username
+        user.password = hashlib.sha1(password).hexdigest()
+        user.firstname = ''
+        user.realname = ''
+        user.auths_id = 0
+        user.is_deleted = 0
+        user.is_active = 1
+        session.add(user)
+        session.commit()
+        session.flush()
+
+        # Setting entity rights
+        self.setLocationsForUser(username, entity_rights)
+
+    @DatabaseHelper._session
+    def setUserPassword(self, session, username, password):
+        user = session.query(User).filter_by(name=username).one()
+        user.password = hashlib.sha1(password).hexdigest()
+        session.commit()
+        session.flush()
+
+    def removeUser(self, session, username):
+        # Too complicated, affects many tables
+        return True
+
+    @DatabaseHelper._session
+    def addEntity(self, session, entity_name, parent_id, comment):
+        entity = Location()
+        entity.id = session.query(func.max(Location.id)).scalar() + 1
+        entity.entities_id = parent_id #parent
+        entity.name = entity_name
+        entity.comment = comment
+        entity.level = parent_id
+        # Get parent entity object
+        parent_entity = session.query(Location).filter_by(id=parent_id,).one()
+        completename = parent_entity.completename + ' > ' + entity_name
+        entity.completename = completename
+
+        session.add(entity)
+        session.commit()
+        session.flush()
+        return True
+
+    def removeEntity(self, entity_id):
+        # Too complicated, affects many tables
+        pass
+
+    @DatabaseHelper._listinfo
+    @DatabaseHelper._session
+    def getAllEntities(self, session, params):
+        return session.query(Location).order_by(Location.completename)
+    
+    @DatabaseHelper._session
+    def addLocation(self, session, name, parent_id, comment):
+        location = Locations()
+        location.entities_id = 0 #entity is root
+        location.name = name
+        location.locations_id = parent_id
+        
+        location.comment = comment
+        location.level = parent_id
+        location.building = ''
+        location.room = ''
+        
+        # Get parent location object
+        parent_location = session.query(Locations).filter_by(id=parent_id,).one()
+        completename = parent_location.completename + ' > ' + name
+        location.completename = completename
+
+        session.add(location)
+        session.commit()
+        session.flush()
+        return True
+    
+    @DatabaseHelper._listinfo
+    @DatabaseHelper._session
+    def getAllLocations(self, session, params):
+        return session.query(Locations).order_by(Locations.completename)
+    
+    @DatabaseHelper._listinfo
+    @DatabaseHelper._session
+    def getAllEntityRules(self, session, params):
+        # TODO: Filter this by user context entities
+        return session.query(self.rules).filter_by(sub_type='PluginFusioninventoryInventoryRuleEntity')\
+                                        .filter(self.rules.c.name != 'Root')
+
+    @DatabaseHelper._session
+    def addEntityRule(self, session, rule_data):
+        
+        
+        rule = Rule()
+        # root entity (this means that rule is appliable on root entity and all subentities)
+        rule.entities_id = 0
+        rule.sub_type = 'PluginFusioninventoryInventoryRuleEntity'
+        # Get the last ranking for this class +1
+        rule.ranking = session.query(func.max(self.rules.c.ranking))\
+            .filter(self.rules.c.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
+            .scalar() + 1
+        rule.name = rule_data['name']
+        rule.description = rule_data['description']
+        rule.match = rule_data['aggregator']
+        if rule_data['active'] == 'on':
+            rule.is_active = 1
+        else:
+            rule.is_active = 0
+            
+        session.add(rule)
+        session.commit()
+        session.flush()
+        
+        # Adding rule criteria
+        
+        for i in xrange(len(rule_data['criteria'])):
+            
+            cr = RuleCriterion()
+            cr.rules_id = rule.id
+            cr.criteria = rule_data['criteria'][i]
+            cr.condition = rule_data['operators'][i]
+            cr.pattern = rule_data['patterns'][i]
+            session.add(cr)
+            session.commit()
+            
+        # Adding rule actions
+        
+        # If a target entity is specified, add it
+        if rule_data['target_entity'] != '-1':
+            action = RuleAction()
+            action.rules_id = rule.id
+            action.action_type = 'assign'
+            action.field = 'entities_id'
+            action.value = rule_data['target_entity']
+            session.add(action)
+            
+        # If a target location is specified, add it
+        if rule_data['target_location'] != '-1':
+            action = RuleAction()
+            action.rules_id = rule.id
+            action.action_type = 'assign'
+            action.field = 'locations_id'
+            action.value = rule_data['target_location']
+            session.add(action)
+        
+        session.commit()
+        return True
+    
+        
+        # it s shit do it from dict directly
+        #{'ranking' : 2, 'sub_type': 'PluginFusioninventoryInventoryRuleEntity',
+        # date_mod: NOW(),
+
+        # criteria
+        # {'criteria': 'ip', // 'name' => hostanme, 'domain', 'serial', 'subnet', 'tag',
+        #'condition': 0=is, 1=is_not, 2=contains, 3=doesnt contain,  4=start with, 5= finishes by
+        # 6=regex_check, 7=not_regex, 8=exists, 9=doesnt eixts
+        # 'pattern' : 192.168.44.,
+        # 'rules_id' : rule_id
+
+        # rule actions
+        # { 'rules_id', rid
+        # action_type = assign,
+        # field = entities_id
+        # value = ENTITY_ID
+        #
+        #action_type=regex_result,field=_affect_entity_by_tag, value=?
+        #action_type=assign, field=locations_id, value=id
+
+    @DatabaseHelper._session
+    def editEntityRule(self, session, id, rule_data):
+        
+        rule = session.query(Rule).filter_by(id=id).one()
+        # Delete associated criteria and actions
+        session.query(RuleCriterion).filter_by(rules_id=id).delete()
+        session.query(RuleAction).filter_by(rules_id=id).delete()
+        
+        rule.name = rule_data['name']
+        rule.description = rule_data['description']
+        rule.match = rule_data['aggregator']
+        if rule_data['active'] == 'on':
+            rule.is_active = 1
+        else:
+            rule.is_active = 0
+            
+        session.commit()
+        session.flush()
+        
+        # Adding rule criteria
+        
+        for i in xrange(len(rule_data['criteria'])):
+            
+            cr = RuleCriterion()
+            cr.rules_id = rule.id
+            cr.criteria = rule_data['criteria'][i]
+            cr.condition = rule_data['operators'][i]
+            cr.pattern = rule_data['patterns'][i]
+            session.add(cr)
+            session.commit()
+            
+        # Adding rule actions
+        
+        # If a target entity is specified, add it
+        if rule_data['target_entity'] != '-1':
+            action = RuleAction()
+            action.rules_id = rule.id
+            action.action_type = 'assign'
+            action.field = 'entities_id'
+            action.value = rule_data['target_entity']
+            session.add(action)
+            
+        # If a target location is specified, add it
+        if rule_data['target_location'] != '-1':
+            action = RuleAction()
+            action.rules_id = rule.id
+            action.action_type = 'assign'
+            action.field = 'locations_id'
+            action.value = rule_data['target_location']
+            session.add(action)
+        
+        session.commit()
+        return True   
+
+    @DatabaseHelper._session
+    def getEntityRule(self, session, id):
+        
+        
+        rule = session.query(Rule).filter_by(id=id).one()
+        criteria = session.query(RuleCriterion).filter_by(rules_id=id).all()
+        actions = session.query(RuleAction).filter_by(rules_id=id).all()
+        
+        result = {}
+        result['active'] = rule.is_active
+        result['name'] = rule.name
+        result['description'] = rule.description
+        result['aggregator'] = rule.match
+        
+        result['criteria'] = []
+        result['operators'] = []
+        result['patterns'] = []
+        
+        for cr in criteria:
+            result['criteria'].append(cr.criteria)
+            result['operators'].append(cr.condition)
+            result['patterns'].append(cr.pattern)
+            
+        # By default, don't assign entity nor location
+        result['target_entity'] = -1
+        result['target_location'] = -1
+        
+        for action in actions:
+            if action.field == 'entities_id' and action.action_type == 'assign':
+                result['target_entity'] = action.value
+            if action.field == 'locations_id' and action.action_type == 'assign':
+                result['target_entity'] = action.value
+        
+        return result
+    
+    @DatabaseHelper._session
+    def deleteEntityRule(self, session, id):
+        
+        # Delete rule
+        session.query(Rule).filter_by(id=id).delete()
+        # Delete associated criteria and actions
+        session.query(RuleCriterion).filter_by(rules_id=id).delete()
+        session.query(RuleAction).filter_by(rules_id=id).delete()
+        return True
+
+    def moveComputerToEntity(self, uuid, entity_id):
+        pass
+        #UPDATE `glpi_computers`
+        #SET `entities_id` = '5' WHERE `id` ='3'
+
+    @DatabaseHelper._session
+    def getLocationsForUser(self, session, username):
+        user_id = session.query(User).filter_by(name=username).one().id
+        entities = []
+        for profile in session.query(UserProfile).filter_by(users_id = user_id):
+            entities += [{
+                            'entity_id' : profile.entities_id,
+                            'profile': profile.profiles_id,
+                            'is_recursive' : profile.is_recursive,
+                            'is_dynamic' : profile.is_dynamic
+                        }]
+        return entities
+
+    @DatabaseHelper._session
+    def setLocationsForUser(self, session, username, profiles):
+
+        user_id = session.query(User).filter_by(name=username).one().id
+        # Delete all user entity profiles
+        session.query(UserProfile).filter_by(users_id = user_id).delete()
+
+        for attr in profiles:
+            p = UserProfile()
+            p.users_id = user_id
+            p.profiles_id = attr['profile']
+            p.entities_id = attr['entity_id']
+            p.is_recursive = attr['is_recursive']
+            p.is_dynamic = attr['is_dynamic']
+            session.add(p)
+            session.commit()
+
+        session.flush()
+        return True
 
 # Class for SQLalchemy mapping
 class Machine(object):
@@ -3886,4 +4215,13 @@ class NetworkNames(object):
     pass
 
 class IPAddresses_IPNetworks(object):
+    pass
+
+class Rule(DbTOA):
+    pass
+
+class RuleCriterion(DbTOA):
+    pass
+
+class RuleAction(DbTOA):
     pass

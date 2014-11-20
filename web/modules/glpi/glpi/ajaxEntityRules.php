@@ -63,12 +63,8 @@ foreach ($data as $row) {
 $cols = listInfoFriendly($data);
 
 
-$n = new OptimizedListInfos($cols['name'], 'ddd', '', '10px');
+$n = new OptimizedListInfos($cols['name'], _T('Rule name', 'glpi'), '', '10px');
 $n->first_elt_padding = '0';
-/*$n->addExtraInfo($cols['title'], _T("Update title", "update"));
-$n->addExtraInfo($cols['uuid'], _T("UUID", "update"));
-$n->addExtraInfo($cols['type_str'], _T("Type", "update"));
-$n->addExtraInfo($cols['targets'], _T("Installed count", "update"));*/
 
 $n->addActionItem(new ActionItem(_T("Edit rule", "glpi"), "addEntityRule", "edit", "rule", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Delete rule", "glpi"), "deleteEntityRule", "delete", "rule", "base", "computers"));
