@@ -3642,7 +3642,7 @@ class Glpi08(DyngroupDatabaseHelper):
             return False
 
     @DatabaseHelper._session
-    def addUser(self, session, username, password, entity_rights):
+    def addUser(self, session, username, password, entity_rights=None):
         # User settings
         user = User()
         user.name = username
@@ -3657,11 +3657,17 @@ class Glpi08(DyngroupDatabaseHelper):
         session.flush()
 
         # Setting entity rights
-        self.setLocationsForUser(username, entity_rights)
+        if entity_rights is not None:
+            self.setLocationsForUser(username, entity_rights)
+        return True
 
     @DatabaseHelper._session
     def setUserPassword(self, session, username, password):
-        user = session.query(User).filter_by(name=username).one()
+    	try:
+            user = session.query(User).filter_by(name=username).one()
+        except NoResultFound:
+            self.addUser(username, password)
+            return
         user.password = hashlib.sha1(password).hexdigest()
         session.commit()
         session.flush()
@@ -3916,7 +3922,10 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def getLocationsForUser(self, session, username):
-        user_id = session.query(User).filter_by(name=username).one().id
+    	try:
+            user_id = session.query(User).filter_by(name=username).one().id
+        except NoResultFound:
+            return []
         entities = []
         for profile in session.query(UserProfile).filter_by(users_id = user_id):
             entities += [{
