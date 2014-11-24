@@ -11,5 +11,7 @@ if (canAddComputer()) {
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require("modules/dyngroup/dyngroup/localSidebar.php");
 }
-
+if (in_array("monitoring", $_SESSION["modulesList"])) {
+    $sidemenu->addSideMenuItem(new SideMenuItem(_T("Discovery", 'monitoring'), "base", "computers", "discovery"));
+}
 ?>
