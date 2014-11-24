@@ -71,6 +71,31 @@ if (isset($_POST['bvalidTrigger'])) {
 if (isset($_POST['bvalidTemplate'])) {
 	redirectTo(urlStrRedirect("monitoring/monitoring/addTemplate&apiId=".$api->getApiAuth()));
 }
+if (isset($_POST['bvalidRefresh'])) {
+    $refresh = $_POST['refresh'];
+        try {
+            $api->userUpdateProfile(array(
+                'refresh' => $refresh,
+            ));
+        } catch(Exception $e) {
+            // Exception in ZabbixApi catched
+            new NotifyWidgetFailure("error ".$e->getMessage());
+        }
+}
+else {
+        try {
+            $userdata=$api->userGet(array(
+                "filter" => array("alias"=>getZabbixUsername()),
+                'output' => "extend")
+            );
+            
+            $refresh=$userdata[0]->refresh;
+        } catch(Exception $e) {
+            // Exception in ZabbixApi catched
+             new NotifyWidgetFailure("error ".$e->getMessage());
+        }
+}
+
 
 print '<h2>' . _T("Device", 'monitoring') . '</h2>';
 
@@ -109,5 +134,15 @@ $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 
-
+echo "<br/><br/>";
+$f = new ValidatingForm();
+$f->push(new Table());
+$f->add(
+    new TrFormElement(_T("Refresh (in seconds)", "monitoring"), new InputTpl("refresh")),
+    array("value" => $refresh, "required" => True)
+);
+$f->pop();
+$f->addButton("bvalidRefresh", _T("Set frequency check"), "monitoring");
+$f->pop();
+$f->display();
 ?>
