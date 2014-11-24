@@ -3,33 +3,33 @@
 
 //display the return of api for debug
 function expand_arr($array) {
-	foreach ($array as $key1) {
-		foreach ($key1 as $key => $value) {
-			if (is_array($value)) {
-					echo "<i>".$key."</i>:<div style=\"margin-left: 20px;\" >";
-					expand_arr($value);
-					echo "</div>\n";
-				} else {
-					echo "<i>".$key."</i>: ".$value."<br>\n";
-				}
-			}
-	}
-	echo "<br>\n\n\n";
+    foreach ($array as $key1) {
+        foreach ($key1 as $key => $value) {
+            if (is_array($value)) {
+                    echo "<i>".$key."</i>:<div style=\"margin-left: 20px;\" >";
+                    expand_arr($value);
+                    echo "</div>\n";
+                } else {
+                    echo "<i>".$key."</i>: ".$value."<br>\n";
+                }
+            }
+    }
+    echo "<br>\n\n\n";
 }
 
 //return  an array in a one string to print it
 function get_arr($array) {
-	foreach ($array as $key1) {
-		foreach ($key1 as $key => $value) {
-			if (is_array($value)) {
-					$arg =$arg."<i>".$key."</i>:<div style=\"margin-left: 20px;\" >";
-					$arg = $arg.get_arr($value);
-				} else {
-					$arg = $arg."<i>".$key."</i>: ".$value."<br>";
-				}
-			}
-	}
-	return $arg;
+    foreach ($array as $key1) {
+        foreach ($key1 as $key => $value) {
+            if (is_array($value)) {
+                    $arg =$arg."<i>".$key."</i>:<div style=\"margin-left: 20px;\" >";
+                    $arg = $arg.get_arr($value);
+                } else {
+                    $arg = $arg."<i>".$key."</i>: ".$value."<br>";
+                }
+            }
+    }
+    return $arg;
 }
 
 //display the graph with his URL
@@ -42,23 +42,23 @@ echo "</br></br>";
 
 //calcul difference de temps entre 2 timestamp
 function diffTime($date1, $date2) {
-	$result = array();
-	$diff = abs($date1 - $date2);
-	$result['abs'] = $diff;
-	$tmp = $diff;
-	$result['second'] = $tmp % 60;
-	$tmp = floor( ($tmp - $result['second']) / 60);
-	$result['minute'] = $tmp % 60;
-	$tmp = floor( ($tmp - $result['minute']) / 60);
-	$result['hour'] = $tmp % 24;
-	$tmp = floor( ($tmp - $result['hour']) / 24);
-	$result['day'] = $tmp;
+    $result = array();
+    $diff = abs($date1 - $date2);
+    $result['abs'] = $diff;
+    $tmp = $diff;
+    $result['second'] = $tmp % 60;
+    $tmp = floor( ($tmp - $result['second']) / 60);
+    $result['minute'] = $tmp % 60;
+    $tmp = floor( ($tmp - $result['minute']) / 60);
+    $result['hour'] = $tmp % 24;
+    $tmp = floor( ($tmp - $result['hour']) / 24);
+    $result['day'] = $tmp;
 
-	$result2 = array();
-	$result2['abs'] = $diff;
-	$result2['time'] = $result['day']." Day(s) ".$result['hour']." Hour(s) ".$result['minute']." minute(s) ".$result['second']." second(s)";	
+    $result2 = array();
+    $result2['abs'] = $diff;
+    $result2['time'] = $result['day']." Day(s) ".$result['hour']." Hour(s) ".$result['minute']." minute(s) ".$result['second']." second(s)";
 
-	return $result2;
+    return $result2;
 }
 
 class AjaxPrintGraph extends AjaxFilterLocation {
@@ -66,7 +66,7 @@ class AjaxPrintGraph extends AjaxFilterLocation {
     protected $zabbixUrl;
 
     function AjaxPrintGraph($url, $divid = "container", $paramname = 'location', $params = array(), $zabbixurl = 'http://localhost/zabbix' ) {
-	$this->zabbixUrl = $zabbixurl;
+    $this->zabbixUrl = $zabbixurl;
         $this->AjaxFilterLocation($url, $divid, $paramname, $params);
         $this->location = new SelectItem($paramname, 'pushSearchLocationGraph', 'searchfieldreal noborder');
     }
@@ -90,34 +90,34 @@ class AjaxPrintGraph extends AjaxFilterLocation {
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" />
             </div>
 
-		<form name="FormLocationPeriod" id="FormLocationPeriod" action="#" onsubmit="return false;">
-		    <div id="Location">
-		        <span id="searchSpan" class="searchbox">
-		            <img src="graph/search.gif"/>
-		            <span class="locationtext">&nbsp;<?php echo _T("Select period", "monitoring") ?>:&nbsp;</span>
-		            <span class="locationfield">
-				<select id="period" class="searchfieldreal noborder" name="period" onchange="pushSearch(); return false;">
-					<?php
-					// time field creation
-					$timeName = array(
-						_T('1 hour', 'monitoring'),
-						_T('1 week', 'monitoring'),
-						_T('1 month', 'monitoring'),
-						_T('1 year', 'monitoring'),
-						_T('4 years', 'monitoring')
-					);
-					$timeValue = array('3600', '604800', '2419200', '29030400', '116121600');
-					$count = count($timeName);
-					for ($i = 0; $i < $count; $i++) {
-						echo "<option value=\"$timeValue[$i]\" >";
-						echo $timeName[$i];
-						echo "</option>";
-					}
-					?>
-				</select>
-		            </span>
-		        </span>
-		    </div>
+        <form name="FormLocationPeriod" id="FormLocationPeriod" action="#" onsubmit="return false;">
+            <div id="Location">
+                <span id="searchSpan" class="searchbox">
+                    <img src="graph/search.gif"/>
+                    <span class="locationtext">&nbsp;<?php echo _T("Select period", "monitoring") ?>:&nbsp;</span>
+                    <span class="locationfield">
+                <select id="period" class="searchfieldreal noborder" name="period" onchange="pushSearch(); return false;">
+                    <?php
+                    $ini_file="/etc/mmc/plugins/monitoring.ini";
+                    if (file_exists($ini_file))
+                    {
+                        $ini=parse_ini_file($ini_file,true);
+                        $timeName =$ini["periods"][name];
+                        $timeValue = $ini["periods"][duration];
+                        $count = count($timeName);
+
+                        // create selection with periods
+                        for ($i = 1; $i < $count+1; $i++) {
+                            echo "<option value=\"$timeValue[$i]\" >";
+                            echo _T($timeName[$i],'monitoring');
+                            echo "</option>";
+                        }
+                    }
+                    ?>
+                </select>
+                    </span>
+                </span>
+            </div>
 
             <script type="text/javascript">
                 /**
@@ -127,18 +127,18 @@ class AjaxPrintGraph extends AjaxFilterLocation {
 
                 function updateSearchLocationGraph() {
 
-			var div = document.getElementById('<?php echo $this->divid; ?>');
-			var graphId = document.FormLocationGraph.<?php echo $this->paramname; ?>.value;
-			var period = document.getElementById("period");
-			var test = document.getElementById("graphId");
-			if (test != null)
-				document.getElementById("graphId").src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
-			else {
-				var image = document.createElement("img");
-				image.id = "graphId";
-				image.src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
-				div.appendChild(image);
-			}
+            var div = document.getElementById('<?php echo $this->divid; ?>');
+            var graphId = document.FormLocationGraph.<?php echo $this->paramname; ?>.value;
+            var period = document.getElementById("period");
+            var test = document.getElementById("graphId");
+            if (test != null)
+                document.getElementById("graphId").src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
+            else {
+                var image = document.createElement("img");
+                image.id = "graphId";
+                image.src = "<?php echo $this->zabbixUrl; ?>" + "/chart2.php?graphid=" + graphId +"&period=" + period.value;
+                div.appendChild(image);
+            }
 
                 }
                 /**
@@ -150,10 +150,10 @@ class AjaxPrintGraph extends AjaxFilterLocation {
                     setTimeout("updateSearchLocationGraph()", 500);
                 }
 
-		var graph = document.getElementById("FormLocationGraph");
-		graph.onchange = function() {
-			pushSearchLocationGraph();
-		};
+        var graph = document.getElementById("FormLocationGraph");
+        graph.onchange = function() {
+            pushSearchLocationGraph();
+        };
 
                 pushSearchLocationGraph();
             </script>
@@ -170,7 +170,7 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
         $this->AjaxFilter($url, $divid, $params, $formid);
         $this->location = new SelectItem($paramname, 'pushSearch'.$formid, 'searchfieldreal noborder');
         $this->paramname = $paramname;
-	$this->formid = $formid;
+    $this->formid = $formid;
     }
 
     function display($arrParam = array()) {
@@ -247,7 +247,7 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
             <?php
         }
         ?>
-		}
+        }
 
                 /**
                  * provide navigation in ajax for user
