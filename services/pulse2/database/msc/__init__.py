@@ -1431,6 +1431,36 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return ret
 
+
+    @DatabaseHelper._session
+    def updateTargetIP(self, session, uuid, ip):
+        """
+        Updates IP address of all records according to UUID.
+
+        @param uuid: UUID of machine
+        @type uuid: str
+
+        @param ip: actualized IP address of machine
+        @type ip: str
+        """
+        # TODO - add a timestamp column "last_update" and update it
+        now = time.strftime("%Y-%m-%d %H:%M:%S")
+
+        query = session.query(Target)
+        query = query.select_from(self.target.join(self.commands_on_host))
+        query = query.filter(self.target.c.target_uuid == uuid)
+        query = query.filter(self.commands_on_host.c.end_date > now)
+
+        for target in query.all():
+            logging.getLogger().info("Target updated by SmartAgent: old IP: %s => new IP: %s" % (target.target_ipaddr, ip))
+            target.target_ipaddr = ip
+            session.add(target)
+            session.flush()
+
+
+
+
+
     @DatabaseHelper._session
     def isPullTarget(self, session, uuid):
         try:

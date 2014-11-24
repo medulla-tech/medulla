@@ -558,6 +558,18 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
                                                                             hostname,
                                                                             macs))
+    def update_target_ip(self, uuid, ip):
+        """
+        Updates IP address of all records according to UUID.
+
+        @param uuid: UUID of machine
+        @type uuid: str
+
+        @param ip: actualized IP address of machine
+        @type ip: str
+        """
+        return xmlrpcCleanup(MscDatabase().updateTargetIP(uuid, ip))
+
 
     def checkLightPullCommands(self, uuid):
         """
