@@ -59,7 +59,7 @@ try {
 	$time = array();
 	$os = array();
 
-	$now = time();	
+	$now = time();
 
 	$service = $api->dserviceGet(array(
 		'output' => 'extend',
@@ -67,7 +67,7 @@ try {
 		'selectDHosts' => 'extend',
 		'selectHosts' => 'extend'
 	));
-	
+
 	$countServiceTotal = 0;
 	$countService = 0;
 	foreach($service as $a)
@@ -90,8 +90,8 @@ try {
 					$os[] = $getOs;
 				}
 				$time[] = diffTime($now , $service[$j]->dhosts[0]->lastup);
-				$countServiceTotal++;		
-			} 
+				$countServiceTotal++;
+			}
 		}
 
 	}
@@ -108,9 +108,9 @@ try {
 for ($i = 0; $i<$countServiceTotal ; $i++) {
 	for ($j = 0; $j < $countServiceTotal ; $j++) {
 		if ($time[$i]['abs'] < $time[$j]['abs']) {
-		
+
 			$tmpIp = $ip[$i];
-			$tmpDns = $dns[$i]; 
+			$tmpDns = $dns[$i];
 			$tmpStatus = $status[$i];
 			$tmpTime = $time[$i];
 			$tmpOs = $os[$i];
@@ -159,7 +159,6 @@ if (count($filteredIp) == 0){
 $n = new OptimizedListInfos($filteredIp, _T("IP", "monitoring"));
 $n->addExtraInfo($filteredDns, _T("Host name", "monitoring"));
 $n->addExtraInfo($filteredOs, _T("OS informations", "monitoring"));
-$n->addExtraInfo($filteredTime, _T("Uptime/Downtime", "monitoring"));
 $n->addExtraInfo($filteredStatus, _T("Status", "monitoring"));
 //$n->setCssClass("machineName"); // CSS for icons
 $n->setName(_T("Discovered Devices", "monitoring"));
@@ -171,4 +170,4 @@ print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line
 
 $n->display();
 
-?>  
+?>
