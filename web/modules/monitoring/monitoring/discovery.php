@@ -29,7 +29,7 @@ require("modules/monitoring/includes/functions.php");
 require_once("modules/monitoring/includes/xmlrpc.php");
 
 require("graph/navbar.inc.php");
-require("localSidebar.php");
+require("modules/base/computers/localSidebar.php");
 
 $p = new PageGenerator('');
 $p->setSideMenu($sidemenu);
@@ -41,7 +41,7 @@ print '<h2>' . _T("Discovered Devices", 'monitoring') . '</h2>';
 try {
 	// connect to Zabbix API
 	$api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
-	
+
 
 } catch(Exception $e) {
 
