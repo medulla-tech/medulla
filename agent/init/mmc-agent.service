@@ -1,5 +1,5 @@
 [Unit]
-Description=Mandriva Management Console : mmc-agent
+Description=Mandriva Management Console
 After=samba.service slapd.service
 
 [Service]
@@ -7,9 +7,7 @@ PIDFile=/var/run/mmc-agent.pid
 Type=forking
 ExecStart=/usr/sbin/mmc-agent
 Restart=always
-
 RestartSec=1
-#KillMode=process
 
 [Install]
 WantedBy=multi-user.target
