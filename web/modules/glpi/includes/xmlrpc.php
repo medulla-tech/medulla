@@ -84,7 +84,7 @@ function setLocationsForUser($username, $attr){
 function getAllUserProfiles(){
     return xmlCall("glpi.getAllUserProfiles", array());
 }
-
+        $result[$part] = xmlCall("glpi.getLastMachineInventoryPart",array("$computer_uuid","$part") );
 function addGlpiUser($username, $password, $entity_rights){
     return xmlCall("glpi.addUser", array($username, $password, $entity_rights));
 }
@@ -127,6 +127,10 @@ function editEntityRule($id, $rule_data){
 
 function deleteEntityRule($id){
     return xmlCall("glpi.deleteEntityRule", array($id));
+}
+
+function getReport($uuid){
+    return xmlCall("glpi.getReport", array($uuid));
 }
 
 ?>

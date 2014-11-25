@@ -89,7 +89,17 @@ foreach ($tabList as $tab => $str) {
     $p->addTab("tab$i", $str, "", "modules/glpi/glpi/view_part.php", array('hostname'=>$hostname, 'uuid'=>$uuid, 'part' => $tab));
     $i++;
 }
-
 $p->display();
+$f = new ValidatingForm();
+if (isset ($uuid))
+{
+
+    print("<br><br>");
+    $result['xls_path']=getReport($uuid);
+    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;', urlStrRedirect("report/report/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "glpi")));
+    $f->add($link);
+    $f->pop();
+    $f->display();
+}
 
 ?>
