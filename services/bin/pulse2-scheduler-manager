@@ -195,7 +195,7 @@ def kill_pid(pid, signal):
     os.setegid(0)
     os.seteuid(0)
     try:
-        os.kill(pid, signal)
+        os.killpg(os.getpgid(pid), signal)
     except OSError, err:
         if err.errno == errno.ESRCH:
             os.setegid(config.daemon_group)
