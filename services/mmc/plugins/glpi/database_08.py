@@ -3713,19 +3713,19 @@ class Glpi08(DyngroupDatabaseHelper):
     @DatabaseHelper._session
     def getAllEntities(self, session, params):
         return session.query(Location).order_by(Location.completename)
-    
+
     @DatabaseHelper._session
     def addLocation(self, session, name, parent_id, comment):
         location = Locations()
         location.entities_id = 0 #entity is root
         location.name = name
         location.locations_id = parent_id
-        
+
         location.comment = comment
         location.level = parent_id
         location.building = ''
         location.room = ''
-        
+
         # Get parent location object
         parent_location = session.query(Locations).filter_by(id=parent_id,).one()
         completename = parent_location.completename + ' > ' + name
@@ -3735,12 +3735,12 @@ class Glpi08(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
     def getAllLocations(self, session, params):
         return session.query(Locations).order_by(Locations.completename)
-    
+
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
     def getAllEntityRules(self, session, params):
@@ -3750,8 +3750,8 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def addEntityRule(self, session, rule_data):
-        
-        
+
+
         rule = Rule()
         # root entity (this means that rule is appliable on root entity and all subentities)
         rule.entities_id = 0
@@ -3759,6 +3759,7 @@ class Glpi08(DyngroupDatabaseHelper):
         # Get the last ranking for this class +1
         rule.ranking = session.query(func.max(self.rules.c.ranking))\
             .filter(self.rules.c.sub_type=='PluginFusinvinventoryRuleEntity')\
+            .filter(self.rules.c.name != 'Root')\
             .scalar() + 1
         rule.name = rule_data['name']
         rule.description = rule_data['description']
@@ -3767,15 +3768,15 @@ class Glpi08(DyngroupDatabaseHelper):
             rule.is_active = 1
         else:
             rule.is_active = 0
-            
+
         session.add(rule)
         session.commit()
         session.flush()
-        
+
         # Adding rule criteria
-        
+
         for i in xrange(len(rule_data['criteria'])):
-            
+
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data['criteria'][i]
@@ -3783,9 +3784,9 @@ class Glpi08(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
-            
+
         # Adding rule actions
-        
+
         # If a target entity is specified, add it
         if rule_data['target_entity'] != '-1':
             action = RuleAction()
@@ -3794,7 +3795,7 @@ class Glpi08(DyngroupDatabaseHelper):
             action.field = 'entities_id'
             action.value = rule_data['target_entity']
             session.add(action)
-            
+
         # If a target location is specified, add it
         if rule_data['target_location'] != '-1':
             action = RuleAction()
@@ -3803,11 +3804,11 @@ class Glpi08(DyngroupDatabaseHelper):
             action.field = 'locations_id'
             action.value = rule_data['target_location']
             session.add(action)
-        
+
         session.commit()
         return True
-    
-        
+
+
         # it s shit do it from dict directly
         #{'ranking' : 2, 'sub_type': 'PluginFusinvinventoryRuleEntity',
         # date_mod: NOW(),
@@ -3830,12 +3831,12 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def editEntityRule(self, session, id, rule_data):
-        
+
         rule = session.query(Rule).filter_by(id=id).one()
         # Delete associated criteria and actions
         session.query(RuleCriterion).filter_by(rules_id=id).delete()
         session.query(RuleAction).filter_by(rules_id=id).delete()
-        
+
         rule.name = rule_data['name']
         rule.description = rule_data['description']
         rule.match = rule_data['aggregator']
@@ -3843,14 +3844,14 @@ class Glpi08(DyngroupDatabaseHelper):
             rule.is_active = 1
         else:
             rule.is_active = 0
-            
+
         session.commit()
         session.flush()
-        
+
         # Adding rule criteria
-        
+
         for i in xrange(len(rule_data['criteria'])):
-            
+
             cr = RuleCriterion()
             cr.rules_id = rule.id
             cr.criteria = rule_data['criteria'][i]
@@ -3858,9 +3859,9 @@ class Glpi08(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
-            
+
         # Adding rule actions
-        
+
         # If a target entity is specified, add it
         if rule_data['target_entity'] != '-1':
             action = RuleAction()
@@ -3869,7 +3870,7 @@ class Glpi08(DyngroupDatabaseHelper):
             action.field = 'entities_id'
             action.value = rule_data['target_entity']
             session.add(action)
-            
+
         # If a target location is specified, add it
         if rule_data['target_location'] != '-1':
             action = RuleAction()
@@ -3878,48 +3879,48 @@ class Glpi08(DyngroupDatabaseHelper):
             action.field = 'locations_id'
             action.value = rule_data['target_location']
             session.add(action)
-        
+
         session.commit()
-        return True   
+        return True
 
     @DatabaseHelper._session
     def getEntityRule(self, session, id):
-        
-        
+
+
         rule = session.query(Rule).filter_by(id=id).one()
         criteria = session.query(RuleCriterion).filter_by(rules_id=id).all()
         actions = session.query(RuleAction).filter_by(rules_id=id).all()
-        
+
         result = {}
         result['active'] = rule.is_active
         result['name'] = rule.name
         result['description'] = rule.description
         result['aggregator'] = rule.match
-        
+
         result['criteria'] = []
         result['operators'] = []
         result['patterns'] = []
-        
+
         for cr in criteria:
             result['criteria'].append(cr.criteria)
             result['operators'].append(cr.condition)
             result['patterns'].append(cr.pattern)
-            
+
         # By default, don't assign entity nor location
         result['target_entity'] = -1
         result['target_location'] = -1
-        
+
         for action in actions:
             if action.field == 'entities_id' and action.action_type == 'assign':
                 result['target_entity'] = action.value
             if action.field == 'locations_id' and action.action_type == 'assign':
                 result['target_entity'] = action.value
-        
+
         return result
-    
+
     @DatabaseHelper._session
     def deleteEntityRule(self, session, id):
-        
+
         # Delete rule
         session.query(Rule).filter_by(id=id).delete()
         # Delete associated criteria and actions
