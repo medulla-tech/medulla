@@ -20,6 +20,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from os.path import isfile
+
 from mmc.plugins.base.provisioning import ProvisionerConfig, ProvisionerI
 from mmc.plugins.base import ldapUserGroupControl
 from mmc.plugins.glpi.auth import GlpiAuthenticator
@@ -37,7 +39,13 @@ class GlpiProvisionerConfig(ProvisionerConfig):
             pass
         for option in self.options(self.section):
             if option.startswith(PROFILEACL):
-                self.profilesAcl[option.replace(PROFILEACL, "")] = self.get(self.section, option)
+                value = self.get(self.section, option)
+                if isfile(value):
+                    acls = open(value, 'r').read().split('\n')
+                    # Clean empty lines, and join them by :
+                    value = ':' + (':'.join([x for x in acls if x.strip() and x[0] != '#']))
+                else:
+                    self.profilesAcl[option.replace(PROFILEACL, "")] = value
         self.profilesOrder = self.get(self.section, "profiles_order").split()
 
     def setDefault(self):
