@@ -27,6 +27,7 @@ It provide an API to access informations in the GLPI database.
 from mmc.support.mmctools import xmlrpcCleanup, RpcProxyI, ContextMakerI, SecurityContext
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
+from mmc.plugins.base.output import XLSGenerator
 from mmc.plugins.glpi.config import GlpiConfig
 from mmc.plugins.glpi.database import Glpi
 from mmc.plugins.glpi.computers import GlpiComputers
@@ -147,6 +148,20 @@ def getLastMachineInventoryFull(uuid):
 
 def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
+
+
+def getReport(uuid):
+    xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls")
+    xsl.get_summary_sheet(getLastMachineInventoryPart(uuid, "Summary"))
+    xsl.get_hardware_sheet(getLastMachineInventoryPart(uuid, "Processors"),
+                            getLastMachineInventoryPart(uuid, "Controllers"),
+                            getLastMachineInventoryPart(uuid, 'GraphicCards'),
+                            getLastMachineInventoryPart(uuid, 'SoundCards'))
+    xsl.get_network_sheet(getLastMachineInventoryPart(uuid,'Network'))
+    xsl.get_storage_sheet(getLastMachineInventoryPart(uuid, 'Storage'))
+    xsl.get_software_sheet(getLastMachineInventoryPart(uuid, 'Softwares',0,-1,None,{"hide_win_updates":True}))
+    xsl.save()
+    return xmlrpcCleanup(xsl.path)
 
 
 def getLastMachineInventoryPart(uuid,

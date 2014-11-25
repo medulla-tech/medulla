@@ -29,6 +29,7 @@ from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.plugins.base.computers import ComputerManager
 from mmc.plugins.base.provisioning import ProvisioningManager
+from mmc.plugins.base.output import XLSGenerator
 from pulse2.managers.location import ComputerLocationManager
 
 import logging
@@ -113,6 +114,19 @@ class RpcProxy(RpcProxyI):
 #        uuid = name # TODO : get uuid from name, or something like that...
 #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
         return xmlrpcCleanup(Inventory().getLastMachineInventoryPart2(ctx, part, params))
+
+    def getReport(uuid):
+        xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls")
+        xsl.get_summary_sheet(getLastMachineInventoryPart("Summary", {"uuid":uuid}))
+        xsl.get_hardware_sheet(getLastMachineInventoryPart("Processors", {"uuid":uuid}),
+                                getLastMachineInventoryPart("Controllers", {"uuid":uuid}),
+                                getLastMachineInventoryPart('GraphicCards', {"uuid":uuid}),
+                                getLastMachineInventoryPart('SoundCards', {"uuid":uuid}))
+        xsl.get_network_sheet(getLastMachineInventoryPart('Network', {"uuid":uuid}))
+        xsl.get_storage_sheet(getLastMachineInventoryPart('Storage', {"uuid":uuid}))
+        xsl.get_software_sheet(getLastMachineInventoryPart('Softwares', {"uuid":uuid, "hide_win_updates":True}))
+        xsl.save()
+        return xmlrpcCleanup(xsl.path)
 
     def getLastMachineInventoryFull(self, params):
         ctx = self.currentContext
