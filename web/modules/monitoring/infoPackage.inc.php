@@ -93,10 +93,6 @@ $page = new Page("ackalert", _T('ack', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/ackalert.php");
 $submod->addPage($page);
 
-$page = new Page("discovery", _T('discovery', 'monitoring'));
-$page->setFile("modules/monitoring/monitoring/discovery.php");
-$submod->addPage($page);
-
 $page = new Page("history", _T('history', 'monitoring'));
 $page->setFile("modules/monitoring/monitoring/history.php");
 $submod->addPage($page);

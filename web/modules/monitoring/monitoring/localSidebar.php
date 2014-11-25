@@ -27,7 +27,6 @@ $sidemenu->setClass("monitoring");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Dashboard", 'monitoring'), "monitoring", "monitoring", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Hosts", 'monitoring'), "monitoring", "monitoring", "host"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Graphics", 'monitoring'), "monitoring", "monitoring", "viewgraphics"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Discovery", 'monitoring'), "monitoring", "monitoring", "discovery"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Configuration", 'monitoring'), "monitoring", "monitoring", "editconfiguration"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("History", 'monitoring'), "monitoring", "monitoring", "history"));
 
