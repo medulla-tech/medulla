@@ -26,7 +26,7 @@ install-exec-hook:
 	install -d -m 0750 $(DESTDIR)$(mmclogdir)
 	install -d -m 0750 $(DESTDIR)$(mmclibdir)
 
-SUBDIRS = backup-tools bin init.d contrib man
+SUBDIRS = backup-tools bin init contrib man
 if ENABLE_CONF
 SUBDIRS += conf
 endif
