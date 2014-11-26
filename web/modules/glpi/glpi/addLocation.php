@@ -47,7 +47,7 @@ $f->add(
 // Location list
 
 $locations_select = new SelectItem("parent");
-$locations = getAllLocations(array());
+$locations = getAllLocationsPowered(array());
 
 $location_list = array();
 

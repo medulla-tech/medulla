@@ -97,6 +97,10 @@ function getAllEntities($params){
     return xmlCall("glpi.getAllEntities", array($params));
 }
 
+function getAllEntitiesPowered($params){
+    return xmlCall("glpi.getAllEntitiesPowered", array($params));
+}
+
 function addEntity($entity_name, $parent_id, $comment){
     return xmlCall("glpi.addEntity", array($entity_name, $parent_id, $comment));
 }
@@ -107,6 +111,10 @@ function getAllEntityRules($params){
 
 function getAllLocations($params){
     return xmlCall("glpi.getAllLocations", array($params));
+}
+
+function getAllLocationsPowered($params){
+    return xmlCall("glpi.getAllLocationsPowered", array($params));
 }
 
 function addLocation($location_name, $parent_id, $comment){

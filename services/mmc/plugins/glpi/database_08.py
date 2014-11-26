@@ -3711,7 +3711,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
-    def getAllEntities(self, session, params):
+    def getAllEntitiesPowered(self, session, params):
         return session.query(Location).order_by(Location.completename)
 
     @DatabaseHelper._session
@@ -3738,7 +3738,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
-    def getAllLocations(self, session, params):
+    def getAllLocationsPowered(self, session, params):
         return session.query(Locations).order_by(Locations.completename)
 
     @DatabaseHelper._listinfo

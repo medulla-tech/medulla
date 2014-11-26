@@ -184,7 +184,7 @@ $f->add(
 // Location list
 
 $locations_select = new SelectItem("target_location");
-$locations = getAllLocations(array());
+$locations = getAllLocationsPowered(array());
 
 $location_list = array();
 $location_list['-1'] = _T('Do not assign', 'glpi');

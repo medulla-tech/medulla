@@ -45,7 +45,7 @@ $params = array(
 if (isset($_GET["filter"]) && $_GET["filter"])
     $params['like_filters']['name'] = $_GET["filter"];
 
-extract(getAllEntities($params));
+extract(getAllEntitiesPowered($params));
 
 if (!$count) {
     print _T('No entry found', 'glpi');
