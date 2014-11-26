@@ -22,7 +22,7 @@
 
 import logging
 import os, shutil
-import requests, json, tempfile, tarfile
+import requests, json, tempfile
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
 from time import time
