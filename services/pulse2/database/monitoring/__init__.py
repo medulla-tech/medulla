@@ -34,16 +34,12 @@ from sqlalchemy.orm.exc import NoResultFound
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.monitoring.schema import Monitoring_detection, Monitoring_options, Monitoring_ack
+from pulse2.database.monitoring.schema import Monitoring_detection, Monitoring_ack
 
 # Imported last
 import logging
 
-# Convert IP to INT for database
-import socket, struct
-
 logger = logging.getLogger()
-
 
 class MonitoringDatabase(DatabaseHelper):
     """
