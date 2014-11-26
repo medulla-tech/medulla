@@ -41,7 +41,7 @@ echo "%_signature    gpg" >> $MACROS
 echo "%_gpg_path     /root/.gnupg" >> $MACROS
 echo "%_topdir             $BASE_DIR" >> $MACROS
 
-
+cd $BASE_DIR
 
 if [ ! -f $GPG_KEY_CONF ]; then
     # --------------------- passphrase generate --------------------------
