@@ -249,3 +249,9 @@ def getAllEntities(*args, **kwargs):
 
 def getAllEntitiesPowered(*args, **kwargs):
     return xmlrpcCleanup(Glpi().getAllEntitiesPowered(*args, **kwargs))
+
+def moveEntityRuleUp(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().moveEntityRuleUp(*args, **kwargs))
+
+def moveEntityRuleDown(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().moveEntityRuleDown(*args, **kwargs))

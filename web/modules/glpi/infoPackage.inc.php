@@ -111,6 +111,16 @@ $page->setFile("modules/glpi/glpi/deleteEntityRule.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+$page = new Page("moveRuleUp", _T("Change entity rule order (up)", "glpi"));
+$page->setFile("modules/glpi/glpi/moveRuleUp.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("moveRuleDown", _T("Change entity rule order (down)", "glpi"));
+$page->setFile("modules/glpi/glpi/moveRuleDown.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
 /* groupes dynamiques */
 
 $page = new Page("locations", _T('Display locations', 'glpi'));

@@ -137,4 +137,13 @@ function deleteEntityRule($id){
     return xmlCall("glpi.deleteEntityRule", array($id));
 }
 
+function moveEntityRuleUp($id){
+    return xmlCall("glpi.moveEntityRuleUp", array($id));
+}
+
+function moveEntityRuleDown($id){
+    return xmlCall("glpi.moveEntityRuleDown", array($id));
+}
+
+
 ?>

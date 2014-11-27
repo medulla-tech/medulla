@@ -3854,7 +3854,8 @@ class Glpi084(DyngroupDatabaseHelper):
     def getAllEntityRules(self, session, params):
         # TODO: Filter this by user context entities
         return session.query(self.rules).filter_by(sub_type='PluginFusioninventoryInventoryRuleEntity')\
-                                        .filter(self.rules.c.name != 'Root')
+                                        .filter(self.rules.c.name != 'Root')\
+                                        .order_by(self.rules.c.ranking)
 
     @DatabaseHelper._session
     def addEntityRule(self, session, rule_data):
@@ -3880,6 +3881,10 @@ class Glpi084(DyngroupDatabaseHelper):
         session.add(rule)
         session.commit()
         session.flush()
+
+        # Make sure "Root" entity rule ranking is very high
+        session.query(Rule).filter_by(sub_type='PluginFusioninventoryInventoryRuleEntity',\
+            name='Root').update({'ranking': rule.ranking+1}, synchronize_session=False)
 
         # Adding rule criteria
 
@@ -3936,6 +3941,45 @@ class Glpi084(DyngroupDatabaseHelper):
         #
         #action_type=regex_result,field=_affect_entity_by_tag, value=?
         #action_type=assign, field=locations_id, value=id
+
+    @DatabaseHelper._session
+    def moveEntityRuleUp(self, session, id):
+
+        rule = session.query(Rule).filter_by(id=id).one()
+        # get previous rule
+        previous = session.query(Rule).filter(Rule.ranking<rule.ranking)\
+                .filter(Rule.name != 'Root')\
+                .filter(Rule.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
+                .order_by(Rule.ranking.desc()).first()
+        if previous:
+            previous_ranking = previous.ranking
+            rule_ranking = rule.ranking
+            previous.ranking = rule_ranking
+            session.commit()
+            rule.ranking = previous_ranking
+            session.commit()
+
+        return True
+
+    @DatabaseHelper._session
+    def moveEntityRuleDown(self, session, id):
+
+        rule = session.query(Rule).filter_by(id=id).one()
+        # get next rule
+        next_ = session.query(Rule).filter(Rule.ranking>rule.ranking)\
+                .filter(Rule.name != 'Root')\
+                .filter(Rule.sub_type=='PluginFusioninventoryInventoryRuleEntity')\
+                .order_by(Rule.ranking.asc()).first()
+        if next_:
+            next_ranking = next_.ranking
+            rule_ranking = rule.ranking
+            next_.ranking = rule_ranking
+            session.commit()
+            rule.ranking = next_ranking
+            session.commit()
+
+        return True
+
 
     @DatabaseHelper._session
     def editEntityRule(self, session, id, rule_data):

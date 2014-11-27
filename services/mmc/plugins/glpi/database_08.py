@@ -3675,7 +3675,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def setUserPassword(self, session, username, password):
-    	try:
+        try:
             user = session.query(User).filter_by(name=username).one()
         except NoResultFound:
             self.addUser(username, password)
@@ -3746,11 +3746,11 @@ class Glpi08(DyngroupDatabaseHelper):
     def getAllEntityRules(self, session, params):
         # TODO: Filter this by user context entities
         return session.query(self.rules).filter_by(sub_type='PluginFusinvinventoryRuleEntity')\
-                                        .filter(self.rules.c.name != 'Root')
+                                        .filter(self.rules.c.name != 'Root')\
+                                        .order_by(self.rules.c.ranking)
 
     @DatabaseHelper._session
     def addEntityRule(self, session, rule_data):
-
 
         rule = Rule()
         # root entity (this means that rule is appliable on root entity and all subentities)
@@ -3772,6 +3772,10 @@ class Glpi08(DyngroupDatabaseHelper):
         session.add(rule)
         session.commit()
         session.flush()
+
+        # Make sure "Root" entity rule ranking is very high
+        session.query(Rule).filter_by(sub_type='PluginFusinvinventoryRuleEntity',\
+                name='Root').update({'ranking': rule.ranking+1}, synchronize_session=False)
 
         # Adding rule criteria
 
@@ -3884,6 +3888,44 @@ class Glpi08(DyngroupDatabaseHelper):
         return True
 
     @DatabaseHelper._session
+    def moveEntityRuleUp(self, session, id):
+
+        rule = session.query(Rule).filter_by(id=id).one()
+        # get previous rule
+        previous = session.query(Rule).filter(Rule.ranking<rule.ranking)\
+                .filter(Rule.name != 'Root')\
+                .filter(Rule.sub_type=='PluginFusinvinventoryRuleEntity')\
+                .order_by(Rule.ranking.desc()).first()
+        if previous:
+            previous_ranking = previous.ranking
+            rule_ranking = rule.ranking
+            previous.ranking = rule_ranking
+            session.commit()
+            rule.ranking = previous_ranking
+            session.commit()
+
+        return True
+
+    @DatabaseHelper._session
+    def moveEntityRuleDown(self, session, id):
+
+        rule = session.query(Rule).filter_by(id=id).one()
+        # get next rule
+        next_ = session.query(Rule).filter(Rule.ranking>rule.ranking)\
+                .filter(Rule.name != 'Root')\
+                .filter(Rule.sub_type=='PluginFusinvinventoryRuleEntity')\
+                .order_by(Rule.ranking.asc()).first()
+        if next_:
+            next_ranking = next_.ranking
+            rule_ranking = rule.ranking
+            next_.ranking = rule_ranking
+            session.commit()
+            rule.ranking = next_ranking
+            session.commit()
+
+        return True
+
+    @DatabaseHelper._session
     def getEntityRule(self, session, id):
 
 
@@ -3935,7 +3977,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def getLocationsForUser(self, session, username):
-    	try:
+        try:
             user_id = session.query(User).filter_by(name=username).one().id
         except NoResultFound:
             return []

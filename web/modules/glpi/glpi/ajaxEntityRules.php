@@ -67,7 +67,10 @@ $n = new OptimizedListInfos($cols['name'], _T('Rule name', 'glpi'), '', '10px');
 $n->first_elt_padding = '0';
 
 $n->addActionItem(new ActionItem(_T("Edit rule", "glpi"), "addEntityRule", "edit", "rule", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Move rule up", "glpi"), "moveRuleUp", "up", "rule", "base", "computers"));
+$n->addActionItem(new ActionPopupItem(_T("Move rule down", "glpi"), "moveRuleDown", "down", "rule", "base", "computers"));
 $n->addActionItem(new ActionPopupItem(_T("Delete rule", "glpi"), "deleteEntityRule", "delete", "rule", "base", "computers"));
+
 
 $n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
