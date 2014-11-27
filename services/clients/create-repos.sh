@@ -189,7 +189,7 @@ if [ -d rpm ]; then
     if [ -f rpm/repodata/repomd.xml.asc ]; then
         rm -f rpm/repodata/repomd.xml.asc	
     fi	
-    gpg --detach-sign --passphrase $PASSPHRASE --armor rpm/repodata/repomd.xml
+    gpg --detach-sign --no-tty --passphrase $PASSPHRASE --armor rpm/repodata/repomd.xml
     
     if [ $? -eq 0 ]; then
         echo "INFO: RPM repository successfully signed"
