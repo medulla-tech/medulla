@@ -88,7 +88,10 @@ GPG_KEY_ID=$(gpg --list-keys --with-colons $EMAIL | awk -F: '/^pub:/ { print $5 
 if [ -d deb ]; then
     DIST="common"
     REPO_SUBDIR="debian"
-
+    if [ -d $REPO_SUBDIR ]; then
+        echo "INFO: Erasing of old debian repository"
+        rm -rf $REPO_SUBDIR
+    fi  
     echo "INFO: Creating DEB repository"
 
     if [ ! -d $REPO_SUBDIR ]; then
