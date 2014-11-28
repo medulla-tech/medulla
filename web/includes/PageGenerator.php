@@ -1778,8 +1778,8 @@ class SideMenuItem {
 
         if ($active) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
-                        background-color: #FDD800;
-                        color: #444;
+                        background-color: #2295d2;
+                        color: #fff;
                         $bgi_active
             }";
         } else if ($bgi_inactive) {
