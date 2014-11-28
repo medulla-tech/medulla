@@ -25,23 +25,11 @@ SUBDIRS = win32
 
 posixclientdir = $(localstatedir)/lib/pulse2/clients
 
-posixclientscripts = generate-agents generate-agent-pack.sh \
-		     create-repos.sh \
+posixclientscripts = generate-agents create-repos.sh \
                    templates/mac/package/Contents/Resources/postflight \
                    templates/deb/package/DEBIAN/postinst \
                    templates/deb/package/etc/init.d/linuxvnc \
-                   templates/rpm/package/SOURCES/postinst \
-		   linux/deb/generate.sh \
-		   linux/deb/install.sh.template \
-		   linux/deb/template/fusion_inventory.sh \
-		   linux/deb/template/install.sh \
-		   linux/deb/template/ssh.sh \
-		   linux/deb/template/update_manager.sh \
-		   linux/deb/template/vnc/linuxvnc_init \
-		   linux/deb/template/vnc/linuxvnc.sh \
-		   linux/deb/template/vnc/vnc.sh \
-		   linux/deb/template/vnc/x11vnc.desktop \
-		   linux/deb/template/vnc/x11vnc.sh
+                   templates/rpm/package/SOURCES/postinst
 
 
 posixclientdata = agents.conf \
