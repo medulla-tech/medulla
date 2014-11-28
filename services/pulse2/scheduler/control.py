@@ -484,6 +484,7 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                                                                  launcher)
                     self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" %
                                   (launcher, circuit.id))
+            circuit.cohq.coh.setCurrentLauncher(launcher)
             circuits.append(circuit)
         return circuits
 
