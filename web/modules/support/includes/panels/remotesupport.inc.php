@@ -33,6 +33,9 @@ $options = array(
 class RemoteSupportPanel extends Panel {
 
 	function display_content() {
+
+            get_license_info(); 
+
 	    if (established())
 	    {
                 echo '<p><div style="text-align: center"><font color="green">Your server is now connected to:</font></div></p>

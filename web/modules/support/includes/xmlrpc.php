@@ -53,4 +53,8 @@ function delete_archive() {
     return xmlCall("support.delete_archive");
 }
 
+function get_license_info() {
+    return xmlCall("support.get_license_info");
+}
+
 ?>
