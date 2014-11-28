@@ -59,7 +59,7 @@ if (isset($_POST['bconfirm'])){
 
 //  Check if credentials are active
 $credentials_active=false;
-if (setAppstreamJSON($json)){
+if (isset($json['my_username'], $json['my_password'])){
     $available = getAvailableAppstreamPackages();
     if ($available['detail'] != 'Invalid username/password')
         $credential_active=true;
