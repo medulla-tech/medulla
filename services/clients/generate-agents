@@ -37,6 +37,7 @@ Options:
 
 import os
 import sys
+import uuid
 import datetime
 import plistlib
 
@@ -120,6 +121,11 @@ class Config(object):
                 setattr(self, section, section_type)
 
 
+    def generate_vnc_password(self, section):
+        password = str(uuid.uuid4()).replace("-","")[:16]
+        self.cp.set(section, "vnc_password", password)
+        self._save()
+        return password
 
 
     def increment_release(self):
@@ -384,6 +390,8 @@ class MacCreator(AbsCreator):
     resources_path_list = ["Contents",
                            "Resources",
                            ]
+    postflight_file = "%s/%s/Contents/Resources/postflight" % (platform_directory,
+                                                               package_dir_name)
 
 
     def control_file_generate(self):
@@ -450,7 +458,7 @@ class MacCreator(AbsCreator):
 #        if err:
 #            print "ERROR: %s" % err
 #        print "os x dmg create: %s" % out
-
+        self._declare_vnc_password()
 
         origin_dir = self.dir_current
         destination = os.path.join(self.dir_current,
@@ -466,6 +474,19 @@ class MacCreator(AbsCreator):
                                   )
         os.chdir(origin_dir)
         print "[mac] package %s built successfully" % self.package_name
+
+
+    def _declare_vnc_password(self):
+        password = self.config.generate_vnc_password(self.platform_directory)
+        postflight = os.path.join(self.dir_current, self.postflight_file)
+        with open(postflight, "wt") as fout:
+            with open("%s.in" % postflight, "rt") as fin:
+                for line in fin:
+                    if "@vnc_password@" in line:
+                        fout.write(line.replace("@vnc_password@", password))
+                    else:
+                        fout.write(line)
+
 
 
 
