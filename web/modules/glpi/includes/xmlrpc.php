@@ -84,7 +84,7 @@ function setLocationsForUser($username, $attr){
 function getAllUserProfiles(){
     return xmlCall("glpi.getAllUserProfiles", array());
 }
-        $result[$part] = xmlCall("glpi.getLastMachineInventoryPart",array("$computer_uuid","$part") );
+
 function addGlpiUser($username, $password, $entity_rights){
     return xmlCall("glpi.addUser", array($username, $password, $entity_rights));
 }

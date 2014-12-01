@@ -150,8 +150,8 @@ def inventoryExists(uuid):
     return xmlrpcCleanup(Glpi().inventoryExists(uuid))
 
 
-def getReport(uuid):
-    xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls")
+def getReport(uuid,lang):
+    xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls",lang)
     xsl.get_summary_sheet(getLastMachineInventoryPart(uuid, "Summary"))
     xsl.get_hardware_sheet(getLastMachineInventoryPart(uuid, "Processors"),
                             getLastMachineInventoryPart(uuid, "Controllers"),
