@@ -73,7 +73,7 @@ $page = new Page("delete",_T("Delete a package", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
-$page = new Page("activateAppstreamFlow" ,_T("Activate Appstream Flow", 'pkgs'));
+$page = new Page("activateAppstreamFlow" ,_T("Activate Appstream Stream", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/activateAppstreamFlow.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
