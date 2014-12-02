@@ -90,10 +90,9 @@ foreach ($tabList as $tab => $str) {
     $i++;
 }
 $p->display();
-$f = new ValidatingForm();
 if (isset ($uuid))
 {
-
+    $f = new ValidatingForm();
     print("<br><br>");
     $result['xls_path']=getReport($uuid,$_SESSION['lang']);
    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',

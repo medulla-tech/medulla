@@ -91,6 +91,7 @@ class ContextMaker(ContextMakerI):
 
 class RpcProxy(RpcProxyI):
 
+
     def getMachineByLastLoggedUser(self, user):
         ctx = self.currentContext
         return xmlrpcCleanup(Inventory().getMachineByLastLoggedUser(ctx, user))
@@ -115,16 +116,17 @@ class RpcProxy(RpcProxyI):
 #        ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid)
         return xmlrpcCleanup(Inventory().getLastMachineInventoryPart2(ctx, part, params))
 
-    def getReport(uuid):
-        xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls")
-        xsl.get_summary_sheet(getLastMachineInventoryPart("Summary", {"uuid":uuid}))
-        xsl.get_hardware_sheet(getLastMachineInventoryPart("Processors", {"uuid":uuid}),
-                                getLastMachineInventoryPart("Controllers", {"uuid":uuid}),
-                                getLastMachineInventoryPart('GraphicCards', {"uuid":uuid}),
-                                getLastMachineInventoryPart('SoundCards', {"uuid":uuid}))
-        xsl.get_network_sheet(getLastMachineInventoryPart('Network', {"uuid":uuid}))
-        xsl.get_storage_sheet(getLastMachineInventoryPart('Storage', {"uuid":uuid}))
-        xsl.get_software_sheet(getLastMachineInventoryPart('Softwares', {"uuid":uuid, "hide_win_updates":True}))
+    def getReport(self,uuid,lang):
+        xsl= XLSGenerator("/var/tmp/report-"+uuid+".xls",lang)
+        xsl.get_summary_sheet(self.getLastMachineInventoryPart2('Summary', {"uuid":uuid}))
+        xsl.get_hardware_sheet(self.getLastMachineInventoryPart2("Processors", {"uuid":uuid}),
+                                self.getLastMachineInventoryPart2('Controllers', {"uuid":uuid}),
+                                self.getLastMachineInventoryPart2('GraphicCards', {"uuid":uuid}),
+                                self.getLastMachineInventoryPart2('SoundCards', {"uuid":uuid}))
+        xsl.get_network_sheet(self.getLastMachineInventoryPart2('Network', {"uuid":uuid}))
+        xsl.get_storage_sheet(self.getLastMachineInventoryPart2('Storage', {"uuid":uuid}))
+        # TODO : adapt Inventory().getLastMachineInventoryPart2 to Software part
+        #xsl.get_software_sheet(self.getLastMachineInventoryPart2('Software', {"uuid":uuid, "hide_win_updates":True}))
         xsl.save()
         return xmlrpcCleanup(xsl.path)
 
@@ -133,6 +135,7 @@ class RpcProxy(RpcProxyI):
 #        if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx.userid, uuid):
 #            return False
         return xmlrpcCleanup(Inventory().getLastMachineInventoryFull(ctx, params))
+
 
     def getMachineInventoryFull(self, params):
         ctx = self.currentContext
@@ -216,7 +219,6 @@ class RpcProxy(RpcProxyI):
     def getValuesFuzzy(self, table, field, fuzzy_value):
         return Inventory().getValuesFuzzy(table, field, fuzzy_value)
 
-
 def getValues(table, field):
     return Inventory().getValues(table, field)
 
@@ -230,7 +232,7 @@ def getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value):
     return Inventory().getValueFuzzyWhere(table, field1, value1, field2, fuzzy_value)
 
 def getMachinesBy(table, field, value):
-    # TODO : ctx is missing....
+    # TODO : ctx is missing....Inventory
     ctx = None
     return Inventory().getMachinesBy(ctx, table, field, value)
 

@@ -129,8 +129,8 @@ function deleteEntityRule($id){
     return xmlCall("glpi.deleteEntityRule", array($id));
 }
 
-function getReport($uuid){
-    return xmlCall("glpi.getReport", array($uuid));
+function getReport($uuid,$lang){
+    return xmlCall("glpi.getReport", array($uuid,$lang));
 }
 
 ?>

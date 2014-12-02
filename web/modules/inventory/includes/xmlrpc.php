@@ -106,5 +106,7 @@ function getMachineByLastLoggedUser($user) {
     return xmlCall("inventory.getMachineByLastLoggedUser", array($user));
 }
 
-
+function getReport($uuid,$lang){
+    return xmlCall("inventory.getReport", array($uuid,$lang));
+}
 ?>
