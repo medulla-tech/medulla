@@ -25,7 +25,7 @@ import xlwt
 import gettext
 from gettext import bindtextdomain
 
-localedir = "/usr/share/mmc/modules/glpi/locale"
+localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
 def setup_lang(lang):
     global _gettext
