@@ -977,7 +977,7 @@ class Inventory(DyngroupDatabaseHelper):
     def doesUserHaveAccessToMachines(self, userid, machine_uuid, all = True): # TODO implement ...
         return True
 
-    def getMachineByLastLoggedUser(self, ctx, user):
+    def getMachineByOwner(self, ctx, user):
         result = self.getLastMachineInventoryPart(ctx, "Hardware", {"Owner": user})
         if len(result) > 0:
             uuid = result[0][2]

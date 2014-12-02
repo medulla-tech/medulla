@@ -102,9 +102,8 @@ function getMachineListByState($groupName) {
     return xmlCall("inventory.getMachineListByState", array($groupName));
 }
 
-function getMachineByLastLoggedUser($user) {
-    return xmlCall("inventory.getMachineByLastLoggedUser", array($user));
+function getMachineByOwner($user) {
+    return xmlCall("inventory.getMachineByOwner", array($user));
 }
-
 
 ?>
