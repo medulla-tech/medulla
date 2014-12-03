@@ -190,6 +190,18 @@ function _base_changeUser($FH, $mode) {
     }
 
     // common stuff to add/edit mode
+    if($FH->isUpdated('isBaseDesactive')) {
+        $shells = getDefaultShells();
+        if ($FH->getValue('isBaseDesactive') == "on") {
+            changeUserAttributes($uid, 'loginShell', $shells['disabledShell']);
+            $result .= _("User disabled")."<br />";
+        }
+        else {
+            changeUserAttributes($uid, 'loginShell', $shells['enabledShell']);
+            $result .= _("User enabled")."<br />";
+        }
+    }
+
     if($FH->isUpdated('telephoneNumber')) {
         changeUserTelephoneNumbers($uid, $FH->getValue("telephoneNumber"));
         $update = true;
@@ -351,6 +363,17 @@ function _base_baseEdit($FH, $mode) {
     $f->add(
         new TrFormElement(_("Preferred language"), $languages),
         array("value" => $FH->getArrayOrPostValue("preferredLanguage"))
+    );
+
+    $checked = "checked";
+    if ($FH->getArrayOrPostValue("loginShell") != '/bin/false')
+        $checked = "";
+    $f->add(
+        new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
+            array("tooltip"=>_("A disabled user can't log in any UNIX services. <br/>
+                                Her/his login shell command is replaced by /bin/false"))
+            ),
+        array("value" => $checked)
     );
 
     /* Primary group */
