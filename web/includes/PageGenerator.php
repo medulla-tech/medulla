@@ -2580,6 +2580,7 @@ class ValidatingForm extends Form {
 
     function ValidatingForm($options = array()) {
         $this->Form($options);
+        $this->options["onsubmit"] = "return validateForm('" . $this->options["id"] . "');";
     }
 
     function end() {
