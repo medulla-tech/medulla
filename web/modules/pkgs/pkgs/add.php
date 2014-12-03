@@ -120,7 +120,7 @@ if (isset($_POST['bconfirm'])) {
     $selectpapi->setElements($list);
     $selectpapi->setElementsVal($list_val);
 
-    $f = new ValidatingForm();
+    $f = new ValidatingFormRequiresId();
     $f->push(new Table());
 
     // Step title
