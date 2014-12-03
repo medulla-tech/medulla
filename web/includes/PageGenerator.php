@@ -2592,6 +2592,13 @@ class ValidatingForm extends Form {
     }
 
 }
+class ValidatingFormRequiresId extends ValidatingForm {
+
+    function ValidatingFormRequiresId($options = array()) {
+        $this->ValidatingForm($options);
+	$this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"] . "');";
+    }
+}
 
 /**
  *
