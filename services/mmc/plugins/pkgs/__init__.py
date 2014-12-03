@@ -23,6 +23,8 @@
 import logging
 import os, shutil
 import requests, json, tempfile
+import urllib2
+from contextlib import closing
 from ConfigParser import ConfigParser
 from base64 import b64encode, b64decode
 from time import time
@@ -379,7 +381,6 @@ def updateAppstreamPackages():
             r = s.get(base_url + 'info.json')
             if not r.ok:
                 raise Exception("Cannot get package metadata. Status: %d" % (r.status_code))
-            logger.error(r.content.strip())
             info = parse_json(r.content.strip())
             uuid = info['uuid']
             
@@ -394,18 +395,15 @@ def updateAppstreamPackages():
             os.mkdir(package_dir)
             
             # Downloading third party binaries
+            if info['downloads']:
+                logger.debug('I will now download third party packages')
             for filename, url in info['downloads']:
                 # Downloading file
-                with open(package_dir+filename, 'wb') as handle:
-                    r = s.get(url, prefetch=False)
-                    
-                    if not r.ok:
-                        raise Exception("Cannot download third party files. Status: %d" % (r.status_code))
-                    
-                    for block in r.iter_content(1024):
-                        if not block:
-                            break
-                        handle.write(block)
+                # thanks to http://stackoverflow.com/questions/11768214/python-download-a-file-over-an-ftp-server
+                logger.debug('Downloading %s at %s' % (filename, url))
+                with closing(urllib2.urlopen(url)) as r:
+                    with open(package_dir+filename, 'wb') as f:
+                        shutil.copyfileobj(r, f)
             
             # Download data file
             data_temp_file = tempfile.mkstemp()[1]
