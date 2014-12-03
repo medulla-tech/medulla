@@ -154,6 +154,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	pulse2/sql/schema-001.sql \
 	backuppc/sql/README \
 	backuppc/sql/schema-001.sql \
+	backuppc/sql/schema-002.sql \
 	update/sql/README \
 	update/sql/schema-001.sql \
 	update/sql/schema-002.sql \
