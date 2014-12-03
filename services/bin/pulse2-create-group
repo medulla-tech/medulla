@@ -1,0 +1,178 @@
+#!/usr/bin/python
+# -*- coding: utf-8; -*-
+#
+# (c) 2014 Mandriva, http://www.mandriva.com/
+#
+# This file is part of Pulse 2, http://pulse2.mandriva.org
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+"""A simple script to create an user group"""
+
+import os
+import sys
+import logging
+
+from twisted.internet import reactor
+
+from mmc.site import sysconfdir
+from mmc.client.async import Proxy
+from mmc.support.config import PluginConfigFactory
+from mmc.support.config import MMCConfigParser
+from mmc.plugins.base.config import BasePluginConfig
+
+MODULE_NAME = os.path.splitext(os.path.basename(__file__))[0]
+logger = logging.getLogger(MODULE_NAME)
+
+
+
+
+base_config = PluginConfigFactory.new(BasePluginConfig, "base")
+
+
+class CredentialsConfig(object):
+    """Gets needed credentials to execute the remote calls over MMC"""
+
+    mmc_url = None
+    mmc_login = None
+    mmc_passwd = None
+    ldap_passwd = None
+
+    def __init__(self):
+
+        self.ldap_default_user_group = self.base_config.get("ldap", "defaultUserGroup")
+        self.ldap_passwd = self.base_config.get("ldap", "password")
+
+        mmc_host = self.mmc_config.get("main", "host")
+        mmc_port = self.mmc_config.getint("main", "port")
+
+        self.mmc_url = "https://%s:%d/XMLRPC" % (mmc_host, mmc_port)
+
+        self.mmc_login = self.mmc_config.get("main", "login")
+        self.mmc_passwd = self.mmc_config.get("main", "password")
+
+
+    @property
+    def base_config(self):
+        path = os.path.join(sysconfdir, "mmc", "plugins", "base.ini")
+        return PluginConfigFactory.new(BasePluginConfig, "base", path)
+
+    @property
+    def mmc_config(self):
+        path = os.path.join(sysconfdir, "mmc", "agent", "config.ini")
+        config = MMCConfigParser()
+        config.read(path)
+        config.read("%s.local" % path)
+
+        return config
+
+
+class GroupCreator(object):
+
+    proxy = None
+
+    def __init__(self, config, name):
+        self.config = config
+        self.name = name
+
+
+    def _auth_setup(self):
+        self.proxy = Proxy(self.config.mmc_url,
+                           self.config.mmc_login,
+                           self.config.mmc_passwd,
+                           )
+
+        return self.proxy.callRemote("base.ldapAuth",
+                                     "root",
+                                     self.config.ldap_passwd,
+                                     )
+
+    def _auth_failed(self, failure):
+        logger.error("LDAP Authentification failed: %s" % repr(failure))
+        reactor.stop()
+        sys.exit(1)
+
+    def _get_existing_groups(self, result):
+
+        d = self.proxy.callRemote("base.getGroupsLdap")
+
+        @d.addCallback
+        def result_groups(result):
+            if isinstance(result, dict):
+                return self.name in [name for (name, desc, n) in result.itervalues()]
+            else:
+                logger.warn("Strange result of occurence of group '%s': %s (dict expected)" % (self.name, repr(result)))
+                return False
+
+        @d.addErrback
+        def result_groups_failed(failure):
+            logger.error("Test of occurence of group '%s' in existing groups failed: %s" % (self.name, repr(failure)))
+            reactor.stop()
+            sys.exit(1)
+
+        return d
+
+
+    def _create(self):
+        d = self.proxy.callRemote("base.createGroup", self.name)
+        d.addCallback(self._call_finished)
+        d.addErrback(self._call_failed)
+
+        return d
+
+    def _call_failed(self, failure):
+        logger.error("Creating of group '%s' failed: %s" % (self.name, repr(failure)))
+        reactor.stop()
+        sys.exit(1)
+
+    def _call_finished(self, result):
+        logger.debug("Group '%s' successfully created: %s" % (self.name, repr(result)))
+        reactor.stop()
+
+    def run(self):
+        d = self._auth_setup()
+        d.addErrback(self._auth_failed)
+        d.addCallback(self._get_existing_groups)
+        @d.addCallback
+        def group_exists(exists):
+            if exists:
+                logger.debug("Group '%s' already exists" % (self.name))
+                reactor.stop()
+            else:
+                return self._create()
+
+
+
+if __name__ == "__main__":
+
+    args = sys.argv
+
+    handler = logging.StreamHandler()
+    level = logging.DEBUG
+    handler.setLevel(level)
+    logger.addHandler(handler)
+    logger.setLevel(level)
+
+    if len(args) != 2:
+        logger.error("%s takes only one parameter as group name to create" % (MODULE_NAME))
+        sys.exit(1)
+
+    name = args[1]
+
+    config = CredentialsConfig()
+    grp = GroupCreator(config, name)
+    grp.run()
+
+    reactor.run()
+

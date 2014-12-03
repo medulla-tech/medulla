@@ -745,6 +745,7 @@ class SetupApp(object):
         self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
         self.defaults['ldapadmindn'] = self.options['ldapadmindn'] or self.confs['plugins/base.ini'].get('ldap', 'rootName')
         self.defaults['ldappasswd'] = self.options['ldappasswd'] or self.confs['plugins/base.ini'].get('ldap', 'password')
+        self.defaults['defaultUserGroup'] = self.confs['plugins/base.ini'].get('ldap', 'defaultUserGroup')
 
         self.defaults['dbhost'] = self.options['dbhost'] or self.confs['plugins/pulse2.ini'].get('database', 'dbhost')
         self.defaults['dbadminuser'] = self.options['dbadminuser'] or 'root'
@@ -774,7 +775,7 @@ class SetupApp(object):
 	address = net.ifaddresses('eth0')[2][0]['addr']
 	self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
 	self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
-	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'	
+	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
 	netmask = net.ifaddresses('eth0')[2][0]['netmask']
 	cidr = netaddr.IPNetwork('%s/%s' %(address, netmask)).cidr
         self.defaults['monitoring_nmap_network'] = self.options["monitoring_nmap_network"] or str(cidr)
@@ -852,11 +853,14 @@ class SetupApp(object):
                 log.error('Exiting...')
                 sys.exit(1)
 
+        self.config['defaultUserGroup'] = self.read_opt('Default user group', self.defaults['defaultUserGroup'])
+
         # Populate base plugin conf file
         self.confs['plugins/base.ini'].set('ldap', 'ldapurl', self.config['ldapurl'])
         self.confs['plugins/base.ini'].set('ldap', 'baseDN', self.config['ldapbasedn'])
         self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
+        self.confs['plugins/base.ini'].set('ldap', 'defaultUserGroup', self.config['defaultUserGroup'])
 
         # LDAP password for UUID resolver
         self.confs['pulse2/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
@@ -987,7 +991,7 @@ class SetupApp(object):
 	# Change zabbix root password if localhost
 	address = net.ifaddresses('eth0')[2][0]['addr']
 	if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
-		passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest() 
+		passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest()
 		conn.execute('USE zabbix; UPDATE `users` SET `passwd`="%s",`autologout`="900" WHERE `userid`="1";' % passwd)
 
         conn.execute('FLUSH PRIVILEGES')
@@ -1061,7 +1065,7 @@ class SetupApp(object):
         self.confs['plugins/monitoring.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/monitoring.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-	
+
 
 
     def init_glpi(self):
@@ -1248,6 +1252,15 @@ class SetupApp(object):
         else :
             log.error("BackupPC server is not probably installed")
 
+
+        binpath = path_lookup('pulse2-create-group')
+        grp_name = self.config['defaultUserGroup']
+        cmd = "%s '%s'" % (binpath, grp_name)
+        log.debug('Call: %s' % cmd)
+        if call(cmd, shell=True) <> 0:
+            log.error("Unable to create group '%s'" % grp_name)
+        else:
+            log.info("Group %s successfully created" % grp_name)
 
 
     def commit(self):
