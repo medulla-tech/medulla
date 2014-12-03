@@ -200,13 +200,13 @@ $submod->addPage($page);
 $page = new Page("logview",_("Action details"));
 $page->setFile("modules/base/users/logview.php",
                    array("AJAX" =>False,"visible"=>False));
-$submod->addPage($page);    if (in_array("monitoring", $_SESSION["modulesList"])) {
-        $page = new Page("discovery",_("Discovery"));
-        $page->setFile("modules/monitoring/monitoring/discovery.php");
-        $submod->addPage($page);
+$submod->addPage($page);
 
-        $mod->addSubmod($submod);
-    }
+if (in_array("monitoring", $_SESSION["modulesList"])) {
+    $page = new Page("discovery",_("Discovery"));
+    $page->setFile("modules/monitoring/monitoring/discovery.php");
+    $submod->addPage($page);
+}
 
 $page = new Page("ajaxLogFilter");
 $page->setFile("modules/base/audit/ajaxLogFilter.php",
@@ -222,13 +222,13 @@ $page = new Page("backup",_("Backup user files"));
 $page->setFile("modules/base/users/backup.php",
                array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
-    if (in_array("monitoring", $_SESSION["modulesList"])) {
-        $page = new Page("discovery",_("Discovery"));
-        $page->setFile("modules/monitoring/monitoring/discovery.php");
-        $submod->addPage($page);
 
-        $mod->addSubmod($submod);
-    }
+if (in_array("monitoring", $_SESSION["modulesList"])) {
+    $page = new Page("discovery",_("Discovery"));
+    $page->setFile("modules/monitoring/monitoring/discovery.php");
+    $submod->addPage($page);
+}
+
 $page = new Page("resetpasswd",_("Reset user password"));
 if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "login")
     $page->setOptions(array("visible" => False));
@@ -315,9 +315,9 @@ if (hasComputerManagerWorking()) {
         $page = new Page("discovery",_("Discovery"));
         $page->setFile("modules/monitoring/monitoring/discovery.php");
         $submod->addPage($page);
-
-        $mod->addSubmod($submod);
     }
+
+    $mod->addSubmod($submod);
 }
 
 
