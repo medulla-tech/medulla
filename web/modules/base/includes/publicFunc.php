@@ -369,9 +369,9 @@ function _base_baseEdit($FH, $mode) {
     if ($FH->getArrayOrPostValue("loginShell") != '/bin/false')
         $checked = "";
     $f->add(
-        new TrFormElement(_("User is disabled, if checked"), new CheckboxTpl("isBaseDesactive"),
-            array("tooltip"=>_("A disabled user can't log in any UNIX services. <br/>
-                                Her/his login shell command is replaced by /bin/false"))
+        new TrFormElement(_("Disable user's shell"), new CheckboxTpl("isBaseDesactive"),
+            array("tooltip" => _("A disabled user can't log in any UNIX services.<br/>
+                                  His login shell command is replaced by /bin/false"))
             ),
         array("value" => $checked)
     );
