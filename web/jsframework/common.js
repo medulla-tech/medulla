@@ -82,3 +82,10 @@ function pushSearchGroup() {  // ===> NOT USED
 function toggleVisibility(id) {
     jQuery('#' + id).toggle();
 }
+
+/* Set display value on an element by
+ * its id
+ */
+function changeObjectDisplay(elem, display) {
+  jQuery('#' + elem).css('display', display);
+}
