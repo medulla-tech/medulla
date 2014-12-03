@@ -182,7 +182,10 @@ class SendBundleCommand:
             else:
                 params['do_wol'] = 'off'
 
-
+            # If is an empty Package, avoid file uploading
+            if 'size' in pinfos:
+                if pinfos['size'] == 0 :
+                    pinfos['files'] = None
             # override possible choice of do_reboot from the gui by the one declared in the package
             # (in bundle mode, the gui does not offer enough choice to say when to reboot)
             params['do_reboot'] = pinfos['do_reboot']
@@ -195,7 +198,7 @@ class SendBundleCommand:
             command['order_in_bundle'] = order
             command['proxies'] = self.proxies
             command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable" 
+            command['do_windows_update'] = "disable"
             commands.append(command)
         add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
         if type(add) != int:
@@ -336,12 +339,12 @@ class SendPackageCommand:
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-        
+
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-        
+
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
