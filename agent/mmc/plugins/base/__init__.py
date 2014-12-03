@@ -772,18 +772,6 @@ class LdapUserGroupControl:
         except KeyError:
             return False
 
-    def isLocked(self, login):
-        """
-        Return True if the user is locked, else False.
-        An user is locked if there is a L in its samba account flags
-        """
-        u = self.getDetailedUser(login)
-        try:
-            ret = "L" in u["sambaAcctFlags"][0]
-        except (KeyError, IndexError):
-            ret = False
-        return ret
-
     def _applyUserDefault(self, entry, default):
         """
         Prepare the modification of a user entry with default values.
