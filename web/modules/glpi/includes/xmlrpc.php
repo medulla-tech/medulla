@@ -145,5 +145,8 @@ function moveEntityRuleDown($id){
     return xmlCall("glpi.moveEntityRuleDown", array($id));
 }
 
+function getReport($uuid,$lang){
+    return xmlCall("glpi.getReport", array($uuid,$lang));
+}
 
 ?>

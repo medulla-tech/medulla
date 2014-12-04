@@ -106,4 +106,7 @@ function getMachineByOwner($user) {
     return xmlCall("inventory.getMachineByOwner", array($user));
 }
 
+function getReport($uuid,$lang){
+    return xmlCall("inventory.getReport", array($uuid,$lang));
+}
 ?>

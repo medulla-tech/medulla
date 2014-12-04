@@ -132,8 +132,8 @@ if ($profile_names) {
 
 _T('Linux (User files)', 'backuppc');
 _T('Linux (Whole / drive)', 'backuppc');
-_T('Mac OS X (User files)', 'backuppc');
-_T('Mac OS X (Whole / drive)', 'backuppc');
+_T('OS X (User files)', 'backuppc');
+_T('OS X (Whole / drive)', 'backuppc');
 _T('Windows 7/Vista (User files)', 'backuppc');
 _T('Windows 7/Vista (Whole C: Drive)', 'backuppc');
 _T('Windows XP (User files)', 'backuppc');

@@ -106,4 +106,17 @@ $i++;
 $p->addTab($prefix . "tab$i", _T('History', 'inventory'), "", "modules/inventory/inventory/history.php", array('uuid' => $_GET['uuid'], 'hostname' => $_GET['hostname'], 'part' => $tab, 'gid' => $gid, 'groupname' => $groupname));
 
 $p->display();
+
+$uuid=$_GET['uuid'];
+if (isset ($uuid))
+{
+    $f = new ValidatingForm();
+    print("<br><br>");
+    $result['xls_path']=getReport($uuid,$_SESSION['lang']);
+    $link = new SpanElement(sprintf('<br /><a class="btn btn-primary" href="%s">%s</a>&nbsp;&nbsp;',
+    urlStrRedirect("base/computers/get_file", array('path' => $result['xls_path'])), _T("Get XLS Report", "inventory")));
+    $f->add($link);
+    $f->pop();
+    $f->display();
+}
 ?>
