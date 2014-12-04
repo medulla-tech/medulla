@@ -4,7 +4,7 @@ journalctl_path = /bin/systemd-journalctl
 blacklist = slapd,ldap
 
 [plugins]
-samba = samba,smb
+samba4 = samba,s4sync
 mail = dovecot,postfix,amavis,amavisd
 network = isc-dhcp-server,dhcpd,bind9,named,named-sdb
 shorewall = shorewall
