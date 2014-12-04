@@ -86,7 +86,7 @@ $p->display();
 }
 ?>
 
-<form name="groupform" method="post" onsubmit="return validateForm();">
+<form id="Form" name="groupform" method="post" onsubmit="return validateForm('Form');">
 <table cellspacing="0">
 
 <?php

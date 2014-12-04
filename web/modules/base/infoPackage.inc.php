@@ -317,6 +317,11 @@ if (hasComputerManagerWorking()) {
         $submod->addPage($page);
     }
 
+    $page = new Page("get_file", _("Download inventory of one machine"));
+    $page->setFile("modules/base/computers/get_file.php");
+    $page->setOptions(array("visible" => False, "noHeader" => True));
+    $submod->addPage($page);
+
     $mod->addSubmod($submod);
 }
 
