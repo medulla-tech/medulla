@@ -2005,10 +2005,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
     def __queryImageInImagingServerMenu(self, session):
-        return session.query(Image).add_entity(ImagingServer).select_from(self.image \
+        return session.query(Image).add_entity(ImagingServer).add_entity(Entity).select_from(self.image \
                 .join(self.image_in_menu, self.image.c.id == self.image_in_menu.c.fk_image) \
                 .join(self.menu_item, self.menu_item.c.id == self.image_in_menu.c.fk_menuitem) \
                 .join(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu_item.c.fk_menu) \
+                .join(self.entity, self.imaging_server.c.fk_entity == self.entity.c.id) \
         )
 
     def isImageInMenu(self, item_uuid, target_uuid = None, target_type = None):
@@ -2039,9 +2040,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), self.imaging_server.c.id != uuid2id(target_uuid))).all()
             else:
                 q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
-            for im, ims in q:
+            for im, ims, entity in q:
                 ims = ims.toH()
-                ret1.append([ims['imaging_uuid'], -1, ims['name']])
+                entity = entity.toH()
+                ret1.append([entity['uuid'], -1, ims['name']])
             ret[item_uuid] = ret1
         return ret
 
