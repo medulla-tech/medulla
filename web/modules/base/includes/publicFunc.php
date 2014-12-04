@@ -75,6 +75,8 @@ function _base_verifInfo($FH, $mode) {
     $confpass = $FH->getPostValue("confpass");
     $homedir = $FH->getPostValue("homeDirectory");
     $primary = $FH->getPostValue("primary");
+    $firstname = $FH->getPostValue("givenName");
+    $lastname = $FH->getPostValue("sn");
 
     if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
         $base_errors .= _("User's name invalid !")."<br/>";
@@ -90,6 +92,17 @@ function _base_verifInfo($FH, $mode) {
         $base_errors .= _("Password is empty.")."<br/>";
         setFormError("pass");
     }
+
+    if ($mode == "add" && $lastname == '') {
+        $base_errors .= _("Last name is empty.")."<br/>";
+        setFormError("sn");
+    }
+    if ($mode == "add" && $firstname == '') {
+        $base_errors .= _("First name is empty.")."<br/>";
+        setFormError("givenName");
+    }
+
+
 
     if ($pass != $confpass) {
         $base_errors .= _("The confirmation password does not match the new password.")." <br/>";
