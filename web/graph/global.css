@@ -202,7 +202,7 @@ p {
 
 #navbar #logo {
     float: left;
-    padding: 15px 25px 15px 30px;
+    padding: 15px 15px 15px 30px;
 }
 
 #navbar ul {
@@ -218,16 +218,16 @@ p {
     display: block;
     float: left;
     text-align: center;
-    margin: 0 12px 0 12px;
+    margin: 0 5px 0 5px;
     border-left: 1px solid #21262b;
 }
 
 #navbar ul li a {
-    padding: 40px 12px 15px 12px;
+    padding: 40px 5px 15px 5px;
     text-decoration: none;
     display: block;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     color: #81919e;
     line-height: 16px;
     /* default icon */
@@ -240,6 +240,43 @@ p {
 }
 
 #navbar ul li a:hover {color: #999;}
+
+
+/*Media Queries*/
+/*@media only screen and (max-width:800px) {
+
+#navbar ul {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    text-align: center;
+}
+
+#navbar ul li {
+    width: 70px;
+    display: block;
+    float: left;
+    text-align: center;
+    margin: 0 0px 0 0px;
+    border-left: 1px solid #21262b;
+}
+
+#navbar ul li a {   
+	padding: 40px 0px 15px 0px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+    font-size: 11px;
+    color: #81919e;
+    line-height: 16px;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: red;}
+}*/
 
 /* ---------------------------------------- */
 /* 2a. Configuration                        */
@@ -720,7 +757,7 @@ li.wait a {
 /* End IE5-Mac hack */
 
 td {
-    padding: 10px;
+    padding: 10px 25px 10px 10px;
     border-color: #CCCCCC;
     border-width: 1px 0 0 0;
     border-style: solid;
@@ -841,7 +878,7 @@ td.userAction { text-align: right; }
 td.machineName {
     padding: 0 0 0 37px;
     background-image: url("../img/machines/icn_machinesList.gif");
-    background-position: 7px 7px;
+    /*background-position: 7px 7px;*/
 }
 
 td.machinePull {
@@ -960,7 +997,7 @@ form {
 
 #Location .searchfieldreal {
     clear: none;
-    padding: 0px;
+    /*padding: 0px;*/
 }
 
 
@@ -1209,7 +1246,7 @@ ul.roACL {
 .portlet {
     background-color: #fafafa;
     padding: 0px;
-    margin: 10px 10px 20px 10px;
+    margin: 10px 10px 40px 10px;
     border: 1px solid #ddd;
    /* -webkit-border-radius: 4px;
        -moz-border-radius: 4px;
