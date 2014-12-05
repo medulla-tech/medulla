@@ -30,6 +30,7 @@ from base64 import b64encode, b64decode
 from time import time
 from json import loads as parse_json
 import subprocess
+from twisted.internet.threads import deferToThread
 
 from mmc.site import mmcconfdir
 from mmc.support.mmctools import RpcProxyI, ContextMakerI, SecurityContext
@@ -56,9 +57,9 @@ def activate():
     if config.disabled:
         logger.warning("Plugin pkgs: disabled by configuration.")
         return False
-    
+
     DashboardManager().register_panel(Panel('appstream'))
-    
+
     TaskManager().addTask("pkgs.updateAppstreamPackages",
                         (updateAppstreamPackages,),
                         cron_expression='23 10 * * *')
@@ -73,8 +74,8 @@ class ContextMaker(ContextMakerI):
 class ConfigReader(object):
     """Read and parse config files"""
     def __init__(self):
-        agent_ini = os.path.join(mmcconfdir, 
-                                "agent", 
+        agent_ini = os.path.join(mmcconfdir,
+                                "agent",
                                 "config.ini")
         self._agent_config = self.get_config(agent_ini)
 
@@ -87,7 +88,7 @@ class ConfigReader(object):
         @param inifile: path to config file
         @type inifile: string
 
-        @return: ConfigParser.ConfigParser instance 
+        @return: ConfigParser.ConfigParser instance
         """
         logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
@@ -103,21 +104,21 @@ class ConfigReader(object):
 
     @property
     def agent_config(self):
-        """ 
-        Get the configuration of package server 
+        """
+        Get the configuration of package server
 
-        @return: ConfigParser.ConfigParser instance 
+        @return: ConfigParser.ConfigParser instance
         """
         return self._agent_config
 
 class RpcProxy(RpcProxyI):
     def getPApiDetail(self, pp_api_id):
         def _getPApiDetail(result, pp_api_id = pp_api_id):
-            for upa in result: 
+            for upa in result:
                 if upa['uuid'] == pp_api_id:
                     return upa
             return False
-        
+
         d = self.upaa_getUserPackageApi()
         d.addCallback(_getPApiDetail)
         return d
@@ -242,8 +243,8 @@ class RpcProxy(RpcProxyI):
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_associatePackages)
         return d
-    
-    
+
+
     def ppa_removeFilesFromPackage(self, pp_api_id, pid, files):
         def _ppa_removeFilesFromPackage(result, pp_api_id = pp_api_id, pid = pid, files = files):
             for upa in result:
@@ -263,7 +264,7 @@ class RpcProxy(RpcProxyI):
         d = self.upaa_getUserPackageApi()
         d.addCallback(_ppa_getRsyncStatus)
         return d
-    
+
     # UserPackageApiApi
     def upaa_getUserPackageApi(self):
         ctx = self.currentContext
@@ -283,7 +284,175 @@ class RpcProxy(RpcProxyI):
     def getPServerTmpDir(self):
         config = PkgsConfig("pkgs")
         return config.tmp_dir
-    
+
+
+class DownloadAppstreamPackageList(object):
+    """
+    Create list of Appstream who need to be download and download them
+    """
+    def __init__(self):
+        #dict of package to be download
+        self.download_packages= {}
+        #by default, there is no working update
+        self.update=False
+
+    def _add_appstream(self,package_name):
+        """
+        This methods add package in the dict of
+        package who need to be download and set it to "wait"
+        status.
+        """
+        self.download_packages[package_name]="wait"
+
+    def _start_appstream(self,package_name):
+        """
+        This methods set package in the dict of
+        package who need to be download, to "downloading"
+        status.
+        """
+        self.download_packages[package_name]="download"
+
+    def _finish_appstream(self,package_name):
+        """
+        This methods delete a package in the dict of
+        not yet downloaded appstream packages.
+        """
+        if package_name in self.download_packages:
+            self.download_packages.pop(package_name)
+
+    def getDownloadAppstreamPackages(self):
+        """
+        This methods return dict of packages who need
+        to be download
+        @rtype: dict of unicode like { 'package_name' : 'status' } ,
+            valid status are "download" and "wait".
+        @return: list of new appstream packages name who are not
+        yet downloaded.
+        """
+        return self.download_packages
+
+    def updateAppstreamPackages(self):
+        """
+        This methode update appstream package and download package who need to be
+        download. It can effectly work only one at a time.
+        @rtype: bool
+        @return: True if done,False if already working.
+        """
+        # if an other update is working, don't update.
+        if self.update:
+            return False
+        self.update=True
+
+        tempfile.tempdir='/var/tmp/'
+        logger = logging.getLogger()
+        appstream_url = PkgsConfig("pkgs").appstream_url
+
+        #add non downloaded package to download package list
+        for pkg, details in getActivatedAppstreamPackages().iteritems():
+
+            try:
+                # Creating requests session
+                s = requests.Session()
+                s.auth = ('appstream', details['key'])
+                base_url = '%s/%s/' % (appstream_url, pkg)
+
+                # Get Package uuid
+                r = s.get(base_url + 'info.json')
+                if not r.ok:
+                    raise Exception("Cannot get package metadata. Status: %d" % (r.status_code))
+                info = parse_json(r.content.strip())
+                uuid = info['uuid']
+
+                # If package is already downloaded, skip
+                logger.debug('Got UUID %s, checking if it already exists ...' % uuid)
+                if not uuid or os.path.exists('/var/lib/pulse2/appstream_packages/%s/' % uuid):
+                    continue
+                #add package to download package list
+                self._add_appstream(pkg)
+
+            except Exception, e:
+                logger.error('Appstream: Error while fetching package %s' % pkg)
+                logger.error(str(e))
+
+        #Download packages (copy dictionnary to be able to delete entry while iterate)
+        for pkg,state in self.getDownloadAppstreamPackages().copy().iteritems():
+            # download only wait package
+            if state != "wait":
+                continue
+            logger.debug('Package %s will be download' % pkg)
+            details=getActivatedAppstreamPackages()[pkg]
+            try:
+                # Creating requests session
+                s = requests.Session()
+                s.auth = ('appstream', details['key'])
+                base_url = '%s/%s/' % (appstream_url, pkg)
+                package_dir = None
+
+                # Get Package uuid
+                r = s.get(base_url + 'info.json')
+                if not r.ok:
+                    raise Exception("Cannot get package metadata. Status: %d" % (r.status_code))
+                info = parse_json(r.content.strip())
+                uuid = info['uuid']
+
+                self._start_appstream(pkg)
+                # Creating package directory
+                logger.debug('New package version, creating %s directory' % uuid)
+                package_dir = '/var/lib/pulse2/appstream_packages/%s/' % uuid
+                os.mkdir(package_dir)
+
+                # Downloading third party binaries
+                if info['downloads']:
+                    logger.debug('I will now download third party packages')
+                for filename, url in info['downloads']:
+                    # Downloading file
+                    # thanks to http://stackoverflow.com/questions/11768214/python-download-a-file-over-an-ftp-server
+                    logger.debug('Downloading %s at %s' % (filename, url))
+                    with closing(urllib2.urlopen(url)) as r:
+                        with open(package_dir+filename, 'wb') as f:
+                            shutil.copyfileobj(r, f)
+
+                # Download data file
+                data_temp_file = tempfile.mkstemp()[1]
+                logger.debug('Downloading package data file')
+
+                with open(data_temp_file, 'wb') as handle:
+                    # Important: For newer versions of python-requests, use stream=True instead of prefetch
+                    r = s.get(base_url + 'data.tar.gz', prefetch=False)
+
+                    if not r.ok:
+                        raise Exception("Cannot download package data. Status: %d" % r.status_code)
+
+                    for block in r.iter_content(1024):
+                        if not block:
+                            break
+                        handle.write(block)
+
+                logger.debug('Extracting package data file')
+                # Extracting data archive
+
+                if subprocess.call('tar xvf %s -C %s' % (data_temp_file, package_dir), shell=True) != 0:
+                    raise Exception('Cannot decompress data file')
+
+                # Removing tempfile
+                #os.remove(data_temp_file)
+
+                n_title = details['label'] + ' has been updated to version ' + info['version']
+                notificationManager().add('pkgs', n_title, '')
+                self._finish_appstream(pkg);
+            except Exception, e:
+                logger.error('Appstream: Error while fetching package to be downloaded %s' % pkg)
+                logger.error(str(e))
+               # Removing package dir (if exists)
+                try:
+                    shutil.rmtree(package_dir)
+                except Exception, e:
+                    logger.error(str(e))
+
+        self.update = False
+        return True
+
+dapl = DownloadAppstreamPackageList()
 
 def get_installation_uuid():
     return open('/etc/pulse-licensing/installation_id').read().strip()
@@ -305,7 +474,7 @@ def lserv_query(cmd, options):
                      auth=(my_username, my_password)
                      )
     return json.loads(r.content)
-    
+
 def getAppstreamJSON():
     try:
         return json.loads(open('/etc/mmc/plugins/appstream.json').read())
@@ -322,7 +491,7 @@ def setAppstreamJSON(data):
         logging.getLogger().error('Cannot write appstream JSON')
         logging.getLogger().error(str(e))
         return False
-        
+
 
 def getActivatedAppstreamPackages():
     json = getAppstreamJSON()
@@ -346,12 +515,12 @@ def activateAppstreamFlow(id, package_name, package_label, duration):
         'keysshpublique' : '='
     })
     key = result['licence'].strip()
-    
+
     # Add key to appStream JSON
     json = getAppstreamJSON()
     if not 'flows' in json:
         json['flows'] = {}
-        
+
     json['flows'][package_name] = {
         'id':id,
         'key':key,
@@ -362,89 +531,41 @@ def activateAppstreamFlow(id, package_name, package_label, duration):
     updateAppstreamPackages()
     return True
 
+
+def getDownloadAppstreamPackages():
+    """
+    This methods give new appstream packages who are not
+    yet downloaded.
+    @rtype: dict of unicode like { 'package_name' : 'status' } ,
+        valid status are "download" and "wait".
+    @return: list of new appstream packages name who are not
+    yet downloaded.
+    """
+    return dapl.getDownloadAppstreamPackages()
+
 def updateAppstreamPackages():
-    
-    tempfile.tempdir='/var/tmp/'
-    logger = logging.getLogger()
-    appstream_url = PkgsConfig("pkgs").appstream_url
-    
-    for pkg, details in getActivatedAppstreamPackages().iteritems():
-        
-        try:
-            # Creating requests session
-            s = requests.Session()
-            s.auth = ('appstream', details['key'])
-            base_url = '%s/%s/' % (appstream_url, pkg)
-            package_dir = None
-            
-            # Get Package uuid
-            r = s.get(base_url + 'info.json')
-            if not r.ok:
-                raise Exception("Cannot get package metadata. Status: %d" % (r.status_code))
-            info = parse_json(r.content.strip())
-            uuid = info['uuid']
-            
-            # If package is already downloaded, skip
-            logger.debug('Got UUID %s, checking if it already exists ...' % uuid)
-            if not uuid or os.path.exists('/var/lib/pulse2/appstream_packages/%s/' % uuid):
-                continue
-            
-            # Creating package directory
-            logger.debug('New package version, creating %s directory' % uuid)
-            package_dir = '/var/lib/pulse2/appstream_packages/%s/' % uuid
-            os.mkdir(package_dir)
-            
-            # Downloading third party binaries
-            if info['downloads']:
-                logger.debug('I will now download third party packages')
-            for filename, url in info['downloads']:
-                # Downloading file
-                # thanks to http://stackoverflow.com/questions/11768214/python-download-a-file-over-an-ftp-server
-                logger.debug('Downloading %s at %s' % (filename, url))
-                with closing(urllib2.urlopen(url)) as r:
-                    with open(package_dir+filename, 'wb') as f:
-                        shutil.copyfileobj(r, f)
-            
-            # Download data file
-            data_temp_file = tempfile.mkstemp()[1]
-            logger.debug('Downloading package data file')
-            
-            with open(data_temp_file, 'wb') as handle:
-                # Important: For newer versions of python-requests, use stream=True instead of prefetch
-                r = s.get(base_url + 'data.tar.gz', prefetch=False)
-            
-                if not r.ok:
-                    raise Exception("Cannot download package data. Status: %d" % r.status_code)
-                
-                for block in r.iter_content(1024):
-                    if not block:
-                        break
-                    handle.write(block)
-
-            logger.debug('Extracting package data file')
-            # Extracting data archive
-
-            if subprocess.call('tar xvf %s -C %s' % (data_temp_file, package_dir), shell=True) != 0:
-                raise Exception('Cannot decompress data file')
-            
-            # Removing tempfile
-            #os.remove(data_temp_file)
-            
-            n_title = details['label'] + ' has been updated to version ' + info['version']
-            notificationManager().add('pkgs', n_title, '')
-        
-        except Exception, e:
-            logger.error('Appstream: Error while fetching package %s' % pkg)
-            logger.error(str(e))
-            
-            # Removing package dir (if exists)
-            try:
-                shutil.rmtree(package_dir)
-            except Exception, e:
-                logger.error(str(e))
-                
-
+    """
+    This methode create a thread to update appstream packages.
+    """
+    d = deferToThread(dapl.updateAppstreamPackages)
+    d.addCallback(_cb_updateAppstreamPackages)
+    d.addErrback(_eb_updateAppstreamPackages)
     return True
+
+def _cb_updateAppstreamPackages(reason):
+    """
+    This methode is the callback of updateAppstreamPackages
+    """
+    logger = logging.getLogger()
+    logger.info("Update of appstream packages finished correctly ")
+    return reason
+
+def _eb_updateAppstreamPackages(failure):
+    """
+    This methode is the error Back of updateAppstreamPackages
+    """
+    logger = logging.getLogger()
+    logger.warning("Update of appstream packages failed : %s " % repr(failure))
 
 def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')

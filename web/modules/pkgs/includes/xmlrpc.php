@@ -85,6 +85,14 @@ function getLicensesCount($vendor, $software, $version) {
     return XmlCall($module . ".getLicensesCount", array($vendor, $software, $version));
 }
 
+function updateAppstreamPackages(){
+    return xmlCall("pkgs.updateAppstreamPackages", array());
+}
+
+function getDownloadAppstreamPackages(){
+    return xmlCall("pkgs.getDownloadAppstreamPackages", array());
+}
+
 function getActivatedAppstreamPackages(){
     return xmlCall("pkgs.getActivatedAppstreamPackages", array());
 }

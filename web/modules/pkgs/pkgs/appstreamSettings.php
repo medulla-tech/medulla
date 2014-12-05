@@ -26,7 +26,10 @@
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
+require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/html.inc.php");
+
+updateAppstreamPackages();
 
 $p = new PageGenerator(_T("Appstream settings", 'pkgs'));
 $p->setSideMenu($sidemenu);

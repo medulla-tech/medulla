@@ -25,18 +25,35 @@
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 $packages = getActivatedAppstreamPackages();
+$packages_download=getDownloadAppstreamPackages();
 $count = count($packages);
 
 $expiration_dates = $params = $labels = array();
 
 foreach ($packages as $key => $data) {
-   
+
     $labels[] = $data['label'];
     $expiration_dates[] = date('Y-m-d', $data['expiration_ts']);
     $params[] = array(
                       'package_name' => $key,
                       'id' => $data['id']
                       );
+    $action=new EmptyActionItem();
+
+    #choose of icons
+    if (array_key_exists($key,$packages_download)) {
+        if ( $packages_download[$key] == "wait" ) {
+            $action->setClassCss("wait");
+        }
+        if ( $packages_download[$key] == "download" ) {
+            $action->setClassCss("load");
+        }
+    } else {
+        $action->setClassCss("ok");
+        $action->setDescription(_T("Downloading", "pkgs"));
+    }
+
+    $actions[]=$action;
 }
 
 print '<br/><h3>Activated packages</h3>';
@@ -50,8 +67,7 @@ $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
 $n->start = 0;
 $n->end = 100;
-
-$n->addActionItem(new EmptyActionItem());
+$n->addActionItemArray($actions);
 
 //print "<br/><br/><br/>"; // start display below the location bar, yes it's quiet ugly, so : FIXME !
 $n->display();
