@@ -616,6 +616,39 @@ li.empty a {
     color: #FFF;
 }
 
+li.ok a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/icn_yes.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.load a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/loader_p.gif");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
+li.wait a {
+    padding: 3px 0px 5px 20px;
+    margin: 0 0px 0 0px;
+    background-image: url("../img/common/todo.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    line-height: 18px;
+    text-decoration: none;
+    color: #FFF;
+}
+
 #section table {
     width: 99%;
 }
