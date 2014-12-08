@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-11-16 21:22+0100\n"
-"PO-Revision-Date: 2014-11-07 08:34+0000\n"
+"POT-Creation-Date: 2014-12-04 18:24+0100\n"
+"PO-Revision-Date: 2014-12-04 17:25+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -478,23 +478,23 @@ msgstr ""
 msgid "Select entity"
 msgstr ""
 
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2634
-#: includes/PageGenerator.php:2660 modules/base/groups/edit.php:117
-#: modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "Potwierdź"
 
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2638
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: includes/PageGenerator.php:2812
+#: includes/PageGenerator.php:2813
 msgid "Select all"
 msgstr "Zaznacz wszystkie"
 
-#: includes/PageGenerator.php:2812
+#: includes/PageGenerator.php:2813
 msgid "Unselect all"
 msgstr ""
 
@@ -682,18 +682,9 @@ msgstr ""
 msgid "Display Name"
 msgstr ""
 
-#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:279
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:291
 msgid "Computer list"
 msgstr "Lista komputerów"
-
-#: modules/base/computers/localSidebar.php:5
-msgid "All computers"
-msgstr "Wszystkie komputery"
-
-#: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:282
-msgid "Add computer"
-msgstr ""
 
 #: modules/base/computers/delete.php:30
 msgid ""
@@ -719,7 +710,16 @@ msgid ""
 "<b>DELETED</b>.<br />Check this box if it is what you want."
 msgstr ""
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "Wszystkie komputery"
+
+#: modules/base/computers/localSidebar.php:8
+#: modules/base/infoPackage.inc.php:294
+msgid "Add computer"
+msgstr ""
+
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:252
 msgid "Groups"
 msgstr "Grupy"
 
@@ -739,7 +739,7 @@ msgstr "Edytuj grupę"
 msgid "Groups management"
 msgstr "Zarządzanie grupą"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:257
 msgid "Group list"
 msgstr "Lista grup"
 
@@ -759,6 +759,31 @@ msgstr "Usuniesz grupę"
 #: modules/base/groups/delete.php:60
 msgid "This group will be deleted even though it is not empty"
 msgstr "Ta grupa zostanie usunięta, mimo tego, że nie jest pusta"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr ""
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr ""
+"Nie można usunąć niektórych użytkowników z tej grupy ponieważ jest to ich "
+"podstawowa grupa."
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "Członkowie grupy %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "Wszyscy użytkownicy"
+
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:273
+msgid "Group members"
+msgstr "Członkowie grupy"
 
 #: modules/base/groups/edit.php:35
 #, php-format
@@ -789,31 +814,6 @@ msgstr "Nazwa grupy"
 #: modules/base/groups/edit.php:114
 msgid "Create"
 msgstr "Utwórz"
-
-#: modules/base/groups/members.php:109
-msgid "Group successfully modified"
-msgstr ""
-
-#: modules/base/groups/members.php:125
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr ""
-"Nie można usunąć niektórych użytkowników z tej grupy ponieważ jest to ich "
-"podstawowa grupa."
-
-#: modules/base/groups/members.php:128
-#, php-format
-msgid "Group members %s"
-msgstr "Członkowie grupy %s"
-
-#: modules/base/groups/members.php:141
-msgid "All users"
-msgstr "Wszyscy użytkownicy"
-
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
-msgid "Group members"
-msgstr "Członkowie grupy"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -1094,6 +1094,63 @@ msgstr ""
 msgid "Refresh"
 msgstr ""
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "Katalog"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "Katalog GLPI"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "Czytaj log"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "Wdrożenie oprogramowania"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:36
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Remote control"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Show Profile"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:160
+msgid "Computers list"
+msgstr "Lista komputerów"
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Backup status"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
+msgid "Delete computer"
+msgstr "Usuń komputer"
+
+#: modules/base/includes/computers_list.inc.php:197
+msgid "Remove machine from group"
+msgstr "Usuń komputer z grupy"
+
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1168,7 +1225,7 @@ msgid "Login"
 msgstr "Logowanie"
 
 #: modules/base/includes/publicFunc.php:297
-#: modules/base/infoPackage.inc.php:326 index.php:213
+#: modules/base/infoPackage.inc.php:348 index.php:213
 msgid "Password"
 msgstr "Hasło "
 
@@ -1198,7 +1255,7 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:334
 #: modules/base/includes/publicFunc.php:337
-#: modules/base/infoPackage.inc.php:318
+#: modules/base/infoPackage.inc.php:340
 msgid "Telephone number"
 msgstr "Numer telefonu"
 
@@ -1207,12 +1264,12 @@ msgid "Mobile number"
 msgstr "Numer komórkowy"
 
 #: modules/base/includes/publicFunc.php:349
-#: modules/base/infoPackage.inc.php:320
+#: modules/base/infoPackage.inc.php:342
 msgid "Fax number"
 msgstr "Numer faxu"
 
 #: modules/base/includes/publicFunc.php:354
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:343
 msgid "Home phone number"
 msgstr "Domowy numer telefonu"
 
@@ -1235,7 +1292,7 @@ msgid ""
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:405
-#: modules/base/infoPackage.inc.php:322
+#: modules/base/infoPackage.inc.php:344
 msgid "Primary group"
 msgstr "Grupa podstawowa"
 
@@ -1248,7 +1305,7 @@ msgid "All groups"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:434
-#: modules/base/infoPackage.inc.php:323
+#: modules/base/infoPackage.inc.php:345
 msgid "Secondary groups"
 msgstr ""
 
@@ -1270,12 +1327,12 @@ msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:460
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:337
 msgid "Login shell"
 msgstr "Powłoka logowania"
 
 #: modules/base/includes/publicFunc.php:465
-#: modules/base/infoPackage.inc.php:324
+#: modules/base/infoPackage.inc.php:346
 msgid "Common name"
 msgstr "Nazwa"
 
@@ -1288,7 +1345,7 @@ msgstr ""
 "pole do wyświetlania wpisów użytkownika."
 
 #: modules/base/includes/publicFunc.php:471
-#: modules/base/infoPackage.inc.php:325
+#: modules/base/infoPackage.inc.php:347
 msgid "Preferred name to be used"
 msgstr "Preferowana nazwa"
 
@@ -1306,63 +1363,6 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:483
 msgid "GID"
 msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "Katalog"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "Katalog GLPI"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "Czytaj log"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "Wdrożenie oprogramowania"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:36
-#: modules/base/users/ajaxFilter.php:85
-msgid "extTicket issue"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Remote control"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:38
-msgid "Show Profile"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:160
-msgid "Computers list"
-msgstr "Lista komputerów"
-
-#: modules/base/includes/computers_list.inc.php:174
-msgid "Backup status"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:190
-msgid "Monitoring"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:194
-msgid "Delete computer"
-msgstr "Usuń komputer"
-
-#: modules/base/includes/computers_list.inc.php:197
-msgid "Remove machine from group"
-msgstr "Usuń komputer z grupy"
 
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
@@ -1556,7 +1556,7 @@ msgid "New password"
 msgstr "Nowe hasło"
 
 #: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
-#: modules/base/infoPackage.inc.php:327
+#: modules/base/infoPackage.inc.php:349
 msgid "Confirm your password"
 msgstr "Potwierdź hasło"
 
@@ -1808,87 +1808,96 @@ msgstr ""
 msgid "Action details"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:210
+#: modules/base/infoPackage.inc.php:204 modules/base/infoPackage.inc.php:226
+#: modules/base/infoPackage.inc.php:315
+msgid "Discovery"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:216
 msgid "Delete a user"
 msgstr "Usuń użytkownika"
 
-#: modules/base/infoPackage.inc.php:215
+#: modules/base/infoPackage.inc.php:221
 msgid "Backup user files"
 msgstr "Archiwizuj pliki użytkownika"
 
-#: modules/base/infoPackage.inc.php:220
+#: modules/base/infoPackage.inc.php:232
 msgid "Reset user password"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:225
+#: modules/base/infoPackage.inc.php:237
 msgid "Change user password"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:230
+#: modules/base/infoPackage.inc.php:242
 msgid "Get user photo"
 msgstr "Pobierz zdjęcie użytkownika"
 
-#: modules/base/infoPackage.inc.php:248
+#: modules/base/infoPackage.inc.php:260
 msgid "Add a group"
 msgstr "Dodaj grupę"
 
-#: modules/base/infoPackage.inc.php:251
+#: modules/base/infoPackage.inc.php:263
 msgid "Delete a group"
 msgstr "Usuń grupę"
 
-#: modules/base/infoPackage.inc.php:265
+#: modules/base/infoPackage.inc.php:277
 msgid "Edit a group"
 msgstr "Edytuj grupę"
 
-#: modules/base/infoPackage.inc.php:274
+#: modules/base/infoPackage.inc.php:286
 msgid "Computers"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:288
+#: modules/base/infoPackage.inc.php:300
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:292
+#: modules/base/infoPackage.inc.php:304
 msgid "Delete a computer"
 msgstr "Usuń komputer"
 
-#: modules/base/infoPackage.inc.php:297
+#: modules/base/infoPackage.inc.php:309
 msgid "Ajax part of computers list"
 msgstr "Część AJAX-owa listy komputerów"
 
-#: modules/base/infoPackage.inc.php:310
+#: modules/base/infoPackage.inc.php:321
+msgid "Download inventory of one machine"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:332
 msgid "User photo"
 msgstr "Zdjęcie użytkownika"
 
-#: modules/base/infoPackage.inc.php:311
+#: modules/base/infoPackage.inc.php:333
 msgid "User login"
 msgstr "Login użytkownika"
 
-#: modules/base/infoPackage.inc.php:312
+#: modules/base/infoPackage.inc.php:334
 msgid "User name"
 msgstr "Nazwa użytkownika"
 
-#: modules/base/infoPackage.inc.php:313
+#: modules/base/infoPackage.inc.php:335
 msgid "User firstname"
 msgstr "Imię użytkownika"
 
-#: modules/base/infoPackage.inc.php:314
+#: modules/base/infoPackage.inc.php:336
 msgid "User home directory"
 msgstr "Katalog domowy użytkownika"
 
-#: modules/base/infoPackage.inc.php:316
+#: modules/base/infoPackage.inc.php:338
 msgid "User title"
 msgstr "Tytuł użytkownika"
 
-#: modules/base/infoPackage.inc.php:317
+#: modules/base/infoPackage.inc.php:339
 msgid "Mail address"
 msgstr "Adres pocztowy"
 
-#: modules/base/infoPackage.inc.php:319
+#: modules/base/infoPackage.inc.php:341
 msgid "Mobile phone number"
 msgstr "Numer telefonu komórkowego"
 
-#: modules/base/infoPackage.inc.php:328
+#: modules/base/infoPackage.inc.php:350
 msgid "Enable/Disable user account"
 msgstr "Odbloku / Zablokuj konto użytkownika"
 

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-11-16 21:22+0100\n"
-"PO-Revision-Date: 2014-11-07 08:34+0000\n"
+"POT-Creation-Date: 2014-12-04 18:24+0100\n"
+"PO-Revision-Date: 2014-12-04 17:25+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/mds/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -481,23 +481,23 @@ msgstr "無可用項目"
 msgid "Select entity"
 msgstr "選擇實體"
 
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2634
-#: includes/PageGenerator.php:2660 modules/base/groups/edit.php:117
-#: modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
+#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
+#: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "確認"
 
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2638
+#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "取消"
 
-#: includes/PageGenerator.php:2812
+#: includes/PageGenerator.php:2813
 msgid "Select all"
 msgstr "全選"
 
-#: includes/PageGenerator.php:2812
+#: includes/PageGenerator.php:2813
 msgid "Unselect all"
 msgstr "取消全選"
 
@@ -685,18 +685,9 @@ msgstr "電腦名稱"
 msgid "Display Name"
 msgstr "顯示名稱"
 
-#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:279
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:291
 msgid "Computer list"
 msgstr "電腦清單"
-
-#: modules/base/computers/localSidebar.php:5
-msgid "All computers"
-msgstr "所有電腦"
-
-#: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:282
-msgid "Add computer"
-msgstr "新增電腦"
 
 #: modules/base/computers/delete.php:30
 msgid ""
@@ -722,7 +713,16 @@ msgid ""
 "<b>DELETED</b>.<br />Check this box if it is what you want."
 msgstr "我知道<b>所有相關圖像（非主要）</b> 將被<b>刪除</b>。<br/>如果您要這樣做，請核取此方塊。"
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:240
+#: modules/base/computers/localSidebar.php:5
+msgid "All computers"
+msgstr "所有電腦"
+
+#: modules/base/computers/localSidebar.php:8
+#: modules/base/infoPackage.inc.php:294
+msgid "Add computer"
+msgstr "新增電腦"
+
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:252
 msgid "Groups"
 msgstr "群組"
 
@@ -742,7 +742,7 @@ msgstr "編輯群組"
 msgid "Groups management"
 msgstr "群組管理"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:245
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:257
 msgid "Group list"
 msgstr "群組清單"
 
@@ -762,6 +762,29 @@ msgstr "您將刪除群組"
 #: modules/base/groups/delete.php:60
 msgid "This group will be deleted even though it is not empty"
 msgstr "即使此群組不是空的，也會將其刪除"
+
+#: modules/base/groups/members.php:109
+msgid "Group successfully modified"
+msgstr "已成功修改群組"
+
+#: modules/base/groups/members.php:125
+msgid ""
+"Some users can't be removed from this group because this group is their "
+"primary group."
+msgstr "部分使用者不能從此群組移除，因為此群組是其主要群組。"
+
+#: modules/base/groups/members.php:128
+#, php-format
+msgid "Group members %s"
+msgstr "群組成員 %s"
+
+#: modules/base/groups/members.php:141
+msgid "All users"
+msgstr "所有使用者"
+
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:273
+msgid "Group members"
+msgstr "群組成員"
 
 #: modules/base/groups/edit.php:35
 #, php-format
@@ -790,29 +813,6 @@ msgstr "群組名稱"
 #: modules/base/groups/edit.php:114
 msgid "Create"
 msgstr "建立"
-
-#: modules/base/groups/members.php:109
-msgid "Group successfully modified"
-msgstr "已成功修改群組"
-
-#: modules/base/groups/members.php:125
-msgid ""
-"Some users can't be removed from this group because this group is their "
-"primary group."
-msgstr "部分使用者不能從此群組移除，因為此群組是其主要群組。"
-
-#: modules/base/groups/members.php:128
-#, php-format
-msgid "Group members %s"
-msgstr "群組成員 %s"
-
-#: modules/base/groups/members.php:141
-msgid "All users"
-msgstr "所有使用者"
-
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:261
-msgid "Group members"
-msgstr "群組成員"
 
 #: modules/base/includes/errorHandling.php:28
 msgid "LDAP log file does not exist."
@@ -1100,6 +1100,63 @@ msgstr "電腦的網路遮罩位址"
 msgid "Refresh"
 msgstr "重新整理"
 
+#: modules/base/includes/computers_list.inc.php:30
+msgid "Inventory"
+msgstr "清查"
+
+#: modules/base/includes/computers_list.inc.php:31
+msgid "GLPI Inventory"
+msgstr "GLPI 清查"
+
+#: modules/base/includes/computers_list.inc.php:32
+msgid "Read log"
+msgstr "讀取記錄"
+
+#: modules/base/includes/computers_list.inc.php:33
+msgid "Software deployment"
+msgstr "軟體部署"
+
+#: modules/base/includes/computers_list.inc.php:34
+msgid "Imaging management"
+msgstr "影像管理"
+
+#: modules/base/includes/computers_list.inc.php:35
+msgid "Download file"
+msgstr "下載檔案"
+
+#: modules/base/includes/computers_list.inc.php:36
+#: modules/base/users/ajaxFilter.php:85
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:37
+msgid "Remote control"
+msgstr "遠端控制"
+
+#: modules/base/includes/computers_list.inc.php:38
+msgid "Show Profile"
+msgstr "顯示設定檔"
+
+#: modules/base/includes/computers_list.inc.php:160
+msgid "Computers list"
+msgstr "電腦清單"
+
+#: modules/base/includes/computers_list.inc.php:174
+msgid "Backup status"
+msgstr "備份狀態"
+
+#: modules/base/includes/computers_list.inc.php:190
+msgid "Monitoring"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:194
+msgid "Delete computer"
+msgstr "刪除電腦"
+
+#: modules/base/includes/computers_list.inc.php:197
+msgid "Remove machine from group"
+msgstr "從群組移除電腦"
+
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
@@ -1174,7 +1231,7 @@ msgid "Login"
 msgstr "登入"
 
 #: modules/base/includes/publicFunc.php:297
-#: modules/base/infoPackage.inc.php:326 index.php:213
+#: modules/base/infoPackage.inc.php:348 index.php:213
 msgid "Password"
 msgstr "密碼"
 
@@ -1204,7 +1261,7 @@ msgstr "電子郵件位址"
 
 #: modules/base/includes/publicFunc.php:334
 #: modules/base/includes/publicFunc.php:337
-#: modules/base/infoPackage.inc.php:318
+#: modules/base/infoPackage.inc.php:340
 msgid "Telephone number"
 msgstr "電話號碼"
 
@@ -1213,12 +1270,12 @@ msgid "Mobile number"
 msgstr "行動電話號碼"
 
 #: modules/base/includes/publicFunc.php:349
-#: modules/base/infoPackage.inc.php:320
+#: modules/base/infoPackage.inc.php:342
 msgid "Fax number"
 msgstr "傳真號碼"
 
 #: modules/base/includes/publicFunc.php:354
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:343
 msgid "Home phone number"
 msgstr "家庭電話號碼"
 
@@ -1243,7 +1300,7 @@ msgstr ""
 "                                                                其登入殼層命令以 /bin/false 取代"
 
 #: modules/base/includes/publicFunc.php:405
-#: modules/base/infoPackage.inc.php:322
+#: modules/base/infoPackage.inc.php:344
 msgid "Primary group"
 msgstr "主要群組"
 
@@ -1256,7 +1313,7 @@ msgid "All groups"
 msgstr "全部群組"
 
 #: modules/base/includes/publicFunc.php:434
-#: modules/base/infoPackage.inc.php:323
+#: modules/base/infoPackage.inc.php:345
 msgid "Secondary groups"
 msgstr "次要群組"
 
@@ -1278,12 +1335,12 @@ msgid "Warning: an existing directory may belong to another user !"
 msgstr "警告：現有目錄可能屬於其他使用者！"
 
 #: modules/base/includes/publicFunc.php:460
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:337
 msgid "Login shell"
 msgstr "登入殼層"
 
 #: modules/base/includes/publicFunc.php:465
-#: modules/base/infoPackage.inc.php:324
+#: modules/base/infoPackage.inc.php:346
 msgid "Common name"
 msgstr "一般名稱"
 
@@ -1294,7 +1351,7 @@ msgid ""
 msgstr "此欄位由一些 LDAP 用戶端（例如 Thunderbird 通訊錄）用於顯示使用者輸入項目。"
 
 #: modules/base/includes/publicFunc.php:471
-#: modules/base/infoPackage.inc.php:325
+#: modules/base/infoPackage.inc.php:347
 msgid "Preferred name to be used"
 msgstr "要使用的偏好名稱"
 
@@ -1310,63 +1367,6 @@ msgstr "UID"
 #: modules/base/includes/publicFunc.php:483
 msgid "GID"
 msgstr "GID"
-
-#: modules/base/includes/computers_list.inc.php:30
-msgid "Inventory"
-msgstr "清查"
-
-#: modules/base/includes/computers_list.inc.php:31
-msgid "GLPI Inventory"
-msgstr "GLPI 清查"
-
-#: modules/base/includes/computers_list.inc.php:32
-msgid "Read log"
-msgstr "讀取記錄"
-
-#: modules/base/includes/computers_list.inc.php:33
-msgid "Software deployment"
-msgstr "軟體部署"
-
-#: modules/base/includes/computers_list.inc.php:34
-msgid "Imaging management"
-msgstr "影像管理"
-
-#: modules/base/includes/computers_list.inc.php:35
-msgid "Download file"
-msgstr "下載檔案"
-
-#: modules/base/includes/computers_list.inc.php:36
-#: modules/base/users/ajaxFilter.php:85
-msgid "extTicket issue"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:37
-msgid "Remote control"
-msgstr "遠端控制"
-
-#: modules/base/includes/computers_list.inc.php:38
-msgid "Show Profile"
-msgstr "顯示設定檔"
-
-#: modules/base/includes/computers_list.inc.php:160
-msgid "Computers list"
-msgstr "電腦清單"
-
-#: modules/base/includes/computers_list.inc.php:174
-msgid "Backup status"
-msgstr "備份狀態"
-
-#: modules/base/includes/computers_list.inc.php:190
-msgid "Monitoring"
-msgstr ""
-
-#: modules/base/includes/computers_list.inc.php:194
-msgid "Delete computer"
-msgstr "刪除電腦"
-
-#: modules/base/includes/computers_list.inc.php:197
-msgid "Remove machine from group"
-msgstr "從群組移除電腦"
 
 #: modules/base/logview/index.php:35
 msgid "LDAP operations log view"
@@ -1560,7 +1560,7 @@ msgid "New password"
 msgstr "新密碼"
 
 #: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
-#: modules/base/infoPackage.inc.php:327
+#: modules/base/infoPackage.inc.php:349
 msgid "Confirm your password"
 msgstr "確認您的密碼"
 
@@ -1808,87 +1808,96 @@ msgstr "已記錄的使用者動作"
 msgid "Action details"
 msgstr "動作詳情"
 
-#: modules/base/infoPackage.inc.php:210
+#: modules/base/infoPackage.inc.php:204 modules/base/infoPackage.inc.php:226
+#: modules/base/infoPackage.inc.php:315
+msgid "Discovery"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:216
 msgid "Delete a user"
 msgstr "刪除一個使用者"
 
-#: modules/base/infoPackage.inc.php:215
+#: modules/base/infoPackage.inc.php:221
 msgid "Backup user files"
 msgstr "備份使用者檔案"
 
-#: modules/base/infoPackage.inc.php:220
+#: modules/base/infoPackage.inc.php:232
 msgid "Reset user password"
 msgstr "重設使用者密碼"
 
-#: modules/base/infoPackage.inc.php:225
+#: modules/base/infoPackage.inc.php:237
 msgid "Change user password"
 msgstr "變更使用者密碼"
 
-#: modules/base/infoPackage.inc.php:230
+#: modules/base/infoPackage.inc.php:242
 msgid "Get user photo"
 msgstr "取得使用者相片"
 
-#: modules/base/infoPackage.inc.php:248
+#: modules/base/infoPackage.inc.php:260
 msgid "Add a group"
 msgstr "新增一個群組"
 
-#: modules/base/infoPackage.inc.php:251
+#: modules/base/infoPackage.inc.php:263
 msgid "Delete a group"
 msgstr "刪除一個群組"
 
-#: modules/base/infoPackage.inc.php:265
+#: modules/base/infoPackage.inc.php:277
 msgid "Edit a group"
 msgstr "編輯一個群組"
 
-#: modules/base/infoPackage.inc.php:274
+#: modules/base/infoPackage.inc.php:286
 msgid "Computers"
 msgstr "電腦"
 
-#: modules/base/infoPackage.inc.php:288
+#: modules/base/infoPackage.inc.php:300
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:292
+#: modules/base/infoPackage.inc.php:304
 msgid "Delete a computer"
 msgstr "刪除一台電腦"
 
-#: modules/base/infoPackage.inc.php:297
+#: modules/base/infoPackage.inc.php:309
 msgid "Ajax part of computers list"
 msgstr "電腦清單的 Ajax 部分"
 
-#: modules/base/infoPackage.inc.php:310
+#: modules/base/infoPackage.inc.php:321
+msgid "Download inventory of one machine"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:332
 msgid "User photo"
 msgstr "使用者相片"
 
-#: modules/base/infoPackage.inc.php:311
+#: modules/base/infoPackage.inc.php:333
 msgid "User login"
 msgstr "使用者登入"
 
-#: modules/base/infoPackage.inc.php:312
+#: modules/base/infoPackage.inc.php:334
 msgid "User name"
 msgstr "使用者名稱"
 
-#: modules/base/infoPackage.inc.php:313
+#: modules/base/infoPackage.inc.php:335
 msgid "User firstname"
 msgstr "使用者名字"
 
-#: modules/base/infoPackage.inc.php:314
+#: modules/base/infoPackage.inc.php:336
 msgid "User home directory"
 msgstr "使用者主目錄"
 
-#: modules/base/infoPackage.inc.php:316
+#: modules/base/infoPackage.inc.php:338
 msgid "User title"
 msgstr "使用者頭銜"
 
-#: modules/base/infoPackage.inc.php:317
+#: modules/base/infoPackage.inc.php:339
 msgid "Mail address"
 msgstr "郵件位址"
 
-#: modules/base/infoPackage.inc.php:319
+#: modules/base/infoPackage.inc.php:341
 msgid "Mobile phone number"
 msgstr "行動電話號碼"
 
-#: modules/base/infoPackage.inc.php:328
+#: modules/base/infoPackage.inc.php:350
 msgid "Enable/Disable user account"
 msgstr "啟用／停用使用者帳戶"
 
