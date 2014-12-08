@@ -63,6 +63,15 @@ if (isset($_POST['bvalid'])) {
 		$api = new ZabbixApi();
 		$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
 		$api->setApiAuth($apiId);
+                $deviceGroupId = $api->hostgroupGet(
+                    array(
+                        'output'=> array('groupids'),
+                        'filter'=> array('name'=> 'Device')
+                    )
+                );
+
+                $deviceGroupId = $deviceGroupId[0]->groupid;
+
 		$hostid = $api->hostCreate(array(
 			'host' => $dns,
 			'name' => $dns,
@@ -75,7 +84,7 @@ if (isset($_POST['bvalid'])) {
 				'type' => "2"
 			),
 			'groups' => array(
-				'groupid' => "9"
+				'groupid' => $deviceGroupId
 			),
 			'templates' => $templateids
 		));
