@@ -56,8 +56,12 @@ class DatabaseHelper(Singleton):
             return False
 
         conn = self.connected()
+        # Glpi is an external DB, it's version is not managed by Pulse, so if Glpi, db_version = True
+        db_version = self.my_name == 'Glpi' and conn or self.db_version
         if conn:
-            if required_version > conn:
+            if required_version == db_version:
+                return True
+            elif required_version > db_version:
                 return self.db_update()
             elif required_version != -1 and conn != required_version:
                 logger.error("%s database version error: v.%s needeed, v.%s found; please update your schema !" % (self.my_name, required_version, conn))
