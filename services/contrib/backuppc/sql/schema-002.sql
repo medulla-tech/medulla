@@ -22,10 +22,10 @@
 
 UPDATE `backup_profiles`
 SET `profilename` = 'OS X (User files)'
-WHERE 'id' = 7;
+WHERE `id` = 7;
 
 UPDATE `backup_profiles`
 SET `profilename` = 'OS X (Whole / drive)'
-WHERE 'id' = 8;
+WHERE `id` = 8;
 
 UPDATE version SET Number = 2;
