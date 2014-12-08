@@ -27,56 +27,58 @@ from gettext import bindtextdomain
 
 localedir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "locale")
 
-def setup_lang(lang):
-    global _gettext
-    bindtextdomain("glpi", localedir)
-    try:
-        lang = gettext.translation('glpi', localedir, [lang], fallback = True)
-        lang.install()
-        _gettext = lang.gettext
-    except IOError:
-        pass
-
-def _T(text):
-    return _gettext(text).decode('utf8')
-
 class XLSGenerator(object):
+    _gettext = None
+
     def __init__(self, path='/tmp/report.xls',lang="en_US"):
         self.wbk = xlwt.Workbook(encoding='utf-8')
         self.path = path
-        setup_lang(lang)
+        self._setup_lang(lang)
+
+    def _setup_lang(self, lang):
+        bindtextdomain("glpi", localedir)
+        try:
+            lang = gettext.translation('glpi', localedir, [lang], fallback = True)
+            lang.install()
+            self._gettext = lang.gettext
+        except IOError:
+            pass
+
+    def _T(self, text):
+        return self._gettext(text).decode('utf8')
+
 
     def get_summary_sheet(self,datas):
-        sheet = self.wbk.add_sheet(_T('Summary'))
+        sheet = self.wbk.add_sheet(self._T('Summary'))
         self.create_summary_table(sheet,0,0,"",datas)
 
     def get_hardware_sheet(self,processors_data,controllers_data,
         graphic_card_data,sound_card_data):
-        sheet = self.wbk.add_sheet(_T('Hardware'))
+        sheet = self.wbk.add_sheet(self._T('Hardware'))
         line = 0
         if processors_data:
-            line = self.create_simple_table(sheet,line,0,_T("Processors"),processors_data)
+            line = self.create_simple_table(sheet,line,0,self._T("Processors"),processors_data)
         if controllers_data:
-            line = self.create_simple_table(sheet,line,0,_T("Controllers"),controllers_data)
+            line = self.create_simple_table(sheet,line,0,self._T("Controllers"),controllers_data)
         if graphic_card_data:
-            line = self.create_simple_table(sheet,line,0,_T("Graphic Cards"),graphic_card_data)
+            line = self.create_simple_table(sheet,line,0,self._T("Graphic Cards"),graphic_card_data)
         if sound_card_data:
-            line = self.create_simple_table(sheet,line,0,_T("Sound Cards"),sound_card_data)
+            line = self.create_simple_table(sheet,line,0,self._T("Sound Cards"),sound_card_data)
 
     def get_storage_sheet(self,datas):
-        sheet = self.wbk.add_sheet(_T('Storage'))
+        sheet = self.wbk.add_sheet(self._T('Storage'))
         if datas:
-            self.create_simple_table(sheet,0,0,_T("Storage"),datas)
+            self.create_simple_table(sheet,0,0,self._T("Storage"),datas)
 
     def get_software_sheet(self,datas):
-        sheet = self.wbk.add_sheet(_T('Software'))
+        sheet = self.wbk.add_sheet(self._T('Software'))
         if datas:
-            self.create_simple_table(sheet,0,0,_T("Software"),datas)
+            self.create_simple_table(sheet,0,0,self._T("Software"),datas)
 
     def get_network_sheet(self,datas):
-        sheet = self.wbk.add_sheet(_T('Network'))
+        sheet = self.wbk.add_sheet(self._T('Network'))
         if datas:
-            self.create_simple_table(sheet,0,0,_T("Network"),datas)
+            self.create_simple_table(sheet,0,0,self._T("Network"),datas)
 
     def create_summary_table(self,sheet,line,column,table_name, datas):
         if table_name:
@@ -87,7 +89,7 @@ class XLSGenerator(object):
                 for cell in row:
                     try:
                         if isinstance (cell,basestring):
-                            sheet.write(line,column,_T(cell))
+                            sheet.write(line,column,self._T(cell))
                         else:
                             if isinstance (cell[2],basestring):
                                 sheet.write(line,column,cell[2])
@@ -116,7 +118,7 @@ class XLSGenerator(object):
                     if isinstance (elements[0],basestring):
                         if elements[0] not in headers:
                             headers.append(elements[0])
-                            sheet.write(line,column,_T(elements[0]))
+                            sheet.write(line,column,self._T(elements[0]))
                         column += 1
                 except Exception:
                     pass
