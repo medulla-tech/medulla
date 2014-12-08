@@ -167,7 +167,11 @@ class DatabaseHelper(Singleton):
 
     @property
     def db_version(self):
-        return self.db.execute("select Number from version").scalar()
+        if hasattr(self, "version"):
+            return self.version.select().execute().fetchone()[0]
+        elif hasattr(self, "Version"):
+            return self.version.select().execute().fetchone()[0]
+
 
     # Session decorator to create and close session automatically
     @classmethod
