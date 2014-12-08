@@ -62,6 +62,8 @@ class BackuppcDatabase(DatabaseHelper):
         self.logger.info("BackupPC database is connecting")
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
+        if not self.db_check():
+            return False
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
