@@ -44,13 +44,15 @@ foreach ($packages as $key => $data) {
     if (array_key_exists($key,$packages_download)) {
         if ( $packages_download[$key] == "wait" ) {
             $action->setClassCss("wait");
+            $action->setDescription(_T("Waiting...", "pkgs"));
         }
         if ( $packages_download[$key] == "download" ) {
             $action->setClassCss("load");
+            $action->setDescription(_T("Downloading", "pkgs"));
         }
     } else {
         $action->setClassCss("ok");
-        $action->setDescription(_T("Downloading", "pkgs"));
+        $action->setDescription(_T("Ready to use", "pkgs"));
     }
 
     $actions[]=$action;
