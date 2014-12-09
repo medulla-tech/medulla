@@ -38,7 +38,9 @@ $root = $conf["global"]["root"];
 <?php
 if (getMMCLogo()) {
 ?>
-<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+<a href="https://www.mandriva.com/pulse2/">
+	<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+</a>
 <?php
 }
 ?>

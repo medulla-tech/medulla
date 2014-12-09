@@ -1247,8 +1247,9 @@ ul.roACL {
 
 .portlet {
     background-color: #fafafa;
-    padding: 0px;
-    margin: 10px 10px 40px 10px;
+    padding:0px;
+    margin: 20px 20px 10px 10px;
+    min-width: 220px;
     border: 1px solid #ddd;
    /* -webkit-border-radius: 4px;
        -moz-border-radius: 4px;

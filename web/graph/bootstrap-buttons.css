@@ -121,6 +121,10 @@
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
   border-radius: 2px;
+  min-width: 150px;
+  max-width: 150px;
+  margin-top: 3px;
+  margin-bottom: 3px;
 }
 .btn-small [class^="icon-"],
 .btn-small [class*=" icon-"] {
