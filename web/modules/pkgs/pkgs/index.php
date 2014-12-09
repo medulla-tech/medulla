@@ -66,5 +66,5 @@ $ajax->displayDivToUpdate();
 ?>
 
 <style>
-    .noborder { border:0px solid blue; }
+    .noborder { border:1px solid #cccccc; }
 </style>
