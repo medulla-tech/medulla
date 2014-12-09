@@ -49,6 +49,10 @@ else {
     $glpi_link = 'GLPI';
 }
 
+// JM 20141209 removed GLPI link
+unset($glpi_link);
+// endof JM 20141209
+
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'])) {
@@ -69,7 +73,7 @@ if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'
         );
     }
 }
-$p->addTop(sprintf(_T("%s's inventory (%s)", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
+$p->addTop(sprintf(_T("%s's inventory %s", "glpi"), $hostname, $glpi_link), "modules/glpi/glpi/header.php");
 
 $i = 0;
 // TODO get the list with trads from agent (conf file...)
