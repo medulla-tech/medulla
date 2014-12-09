@@ -31,30 +31,7 @@ $root = $conf["global"]["root"];
 
 <div id="header">
 
-<!--menuTopRight-->
-<div id="menuTopRight">
 
-  <ul>
-
-<?php
-if (isExpertMode()) {
-    $mode = _("standard mode");
-} else {
-    $mode = _("expert mode");
-}
-
-?>
-
-    <li id="expertmode"><a href="<?php echo $root   ?>includes/switchmode.php"><?php echo _("Click to switch to") . "&nbsp;" . $mode; ?></a></li>
-    <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
-        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); event.returnValue=false; return false;\">";
-        echo _("Logout").'&nbsp;'.$_SESSION['login'];
-        echo "</a></li>";
-    ?>
-
-  </ul>
-</div>
-<!--menuTopRight-->
 
 <!--navbar-->
 <div id="navbar">
@@ -83,6 +60,31 @@ if ($_SESSION["login"]=='root') {
 <!--navbar-->
 
 
+
+<!--menuTopRight-->
+<div id="menuTopRight">
+
+  <ul>
+
+<?php
+if (isExpertMode()) {
+    $mode = _("standard mode");
+} else {
+    $mode = _("expert mode");
+}
+
+?>
+
+    <li id="expertmode"><a href="<?php echo $root   ?>includes/switchmode.php"><?php echo _("Click to switch to") . "&nbsp;" . $mode; ?></a></li>
+    <?php echo "<li id=\"disconnect\"><a title=\""._("logout")."\" href=\"".$root."logout/index.php\"";
+        echo " onclick=\"showPopup(event,'".$root."logout/index.php'); event.returnValue=false; return false;\">";
+        echo _("Logout").'&nbsp;'.$_SESSION['login'];
+        echo "</a></li>";
+    ?>
+
+  </ul>
+</div>
+<!--menuTopRight-->
 
 
 

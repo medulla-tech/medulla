@@ -55,14 +55,27 @@ legend small {
   color: #999999;
 }
 label,
-input,
 button,
 select,
 textarea {
   font-size: 12px;
   font-weight: normal;
-  /*line-height: 20px;*/
 }
+
+input {
+  font-size: 12px;
+  font-weight: normal;
+  border: 1px solid #2295D2;
+  color: #2295D2;
+  border-radius: 3px;
+  padding: 5px;
+}
+
+input:hover{  
+  color: white;
+  background-color: #2295D2;
+}
+
 label {
   display: block;
   margin-bottom: 5px;
