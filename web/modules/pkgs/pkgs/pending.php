@@ -46,6 +46,9 @@ foreach ($res as $mirror) {
 if (isset($_GET['location'])) {
     $ajax->setSelected($list_val[base64_decode($_GET['location'])]);
 }
+elseif (isset($_SESSION['pkgs_selected'])) {
+    $ajax->setSelected($list_val[$_SESSION['pkgs_selected']]);
+}
 $ajax->setElements($list);
 $ajax->setElementsVal($list_val);
 $ajax->display();
@@ -57,7 +60,7 @@ $ajax->displayDivToUpdate();
 ?>
 
 <style>
-    .noborder { border:1px solid #cccccc; }
+    .noborder { border:0px solid blue; }
 </style>
 
 

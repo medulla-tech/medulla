@@ -40,6 +40,7 @@ if (isset($_GET["start"])) {
 } else {
     $start = 0;
 }
+$_SESSION['pkgs_selected'] = base64_decode($filter['location']);
 
 $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 $count = $packages[0];
