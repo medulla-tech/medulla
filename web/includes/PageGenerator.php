@@ -352,11 +352,21 @@ class ActionConfirmItem extends ActionItem {
 class EmptyActionItem extends ActionItem {
 
     function EmptyActionItem() {
-
+        $this->classCss='empty';
+        $this->desc='';
     }
 
     function display($param = null, $extraParams = Array()) {
-        print '<li class="empty"><a href="#" onclick="return false;">&nbsp;</a></li>';
+        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
+        echo "onclick=\"return false;\">&nbsp;</a>";
+        print "</li>";
+    }
+    function setClassCss($name) {
+        $this->classCss = $name;
+    }
+    function setDescription($name) {
+        $this->desc = $name;
     }
 
 }
