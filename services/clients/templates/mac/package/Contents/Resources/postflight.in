@@ -44,13 +44,6 @@ fi
 inv_server_url=$(sed '1q;d' ${inv_file})
 inv_server_tag=$(sed '2q;d' ${inv_file})
 
-if [ -z "$inv_server_url" ]; then
-    echo "ERROR: Unable to get inventory server URL"        
-    exit 1
-else
-    echo "INFO: Detected inventory url - $inv_server_url"
-fi 
-
 fusion_version="2.2.7-3"
 fusion_archive=fusioninventory-agent_macosx-intel_${fusion_version}.pkg.tar.gz
 fusion_url=http://pulse2.mandriva.org/pub/pulse2/client/mac/inventory-agent/${fusion_archive}
