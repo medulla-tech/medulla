@@ -12,14 +12,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-10-10 08:23+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
+"PO-Revision-Date: 2014-12-10 17:09+0200\n"
+"Last-Translator: Jean-Philippe <jpbraun@mandriva.com>\n"
+"Language-Team: French <http://translate.mandriva.com/projects/mmc-"
+"core-32/base/fr_FR/>\n"
+"Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2.1-dev\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -454,7 +456,7 @@ msgstr "Suppression"
 
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
-msgstr "à"
+msgstr "au"
 
 #: includes/PageGenerator.php:560 includes/PageGenerator.php:792
 #, php-format
@@ -1188,6 +1190,9 @@ msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
+"La photo est trop grande. La taille maximale est %s x %s.\n"
+"                    Installez l'extension php-gd pour redimensionner la "
+"photo automatiquement"
 
 #: modules/base/includes/publicFunc.php:253
 msgid "The photo is not a JPG file"
@@ -1421,7 +1426,7 @@ msgstr "Actions"
 
 #: modules/base/logview/ajax_showlog.php:46
 msgid "Extra information"
-msgstr ""
+msgstr "Informations supplémentaires"
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -2041,5 +2046,3 @@ msgstr "Langue"
 #: index.php:226
 msgid "Connect"
 msgstr "Connecter"
-
-
