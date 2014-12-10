@@ -92,8 +92,8 @@ p {
     background-color: #292f36;
     border-bottom: 1px solid #d4d4d4;
     border-top: 1px solid #21262b;
-    padding: 0 0px 10px 0px;
-    height: 60px;
+    padding: 0 0px 0px 0px;
+    height: auto;
 }
 
 #header p {
@@ -195,11 +195,12 @@ p {
 
 #navbar {
     padding: 0px 0px 0px 0px;
-    height: 69px;
+    /*height: 69px;*/
     background-color: none;
     overflow: hidden;
     position: relative;
     width: auto;
+    height: auto;
 }
 
 #navbar #logo {
@@ -217,7 +218,7 @@ p {
 
 #navbar ul li {
     width: 70px;
-    display: block;
+    display: inline-block;
     float: left;
     text-align: center;
     margin: 0 5px 0 5px;
@@ -306,6 +307,7 @@ p {
 }
 
 #sidebar ul li {
+    /*clear: both;*/
     margin: 0px;
     padding: 0px;
     line-height: 41px;
@@ -488,6 +490,8 @@ ul.action {
     padding: 0px;
     margin: 0px;
     float: right;
+    clear: both;
+    line-height: 41px;
 }
 
 ul.action li {
@@ -723,6 +727,10 @@ li.wait a {
     color: #FFF;
 }
 
+#container .action{
+	line-height: 18px;
+}
+
 #section table {
     width: 100%;
 }
@@ -758,11 +766,12 @@ li.wait a {
 * html #section table {float: left; margin: 0 0 10px 0;}
 /* End IE5-Mac hack */
 
-td {
+td, th {
     padding: 10px 25px 10px 10px;
     border-color: #CCCCCC;
     border-width: 1px 0 0 0;
     border-style: solid;
+    vertical-align: center;
 }
 
 td.printerName,
@@ -877,11 +886,41 @@ td.userNameDisabled {
 
 td.userAction { text-align: right; }
 
+td.laptopName {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_laptopsList.gif");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+}
+
 td.machineName {
     padding: 0 0 0 37px;
     background-image: url("../img/machines/icn_machinesList.gif");
+    background-position: 7px center;
     /*background-position: 7px 7px;*/
 }
+
+td.phoneName {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_phonesList.gif");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+}
+
+td.smartPhoneName {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_smartPhonesList.gif");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+}
+
+td.tabletName {
+    padding: 0 0 0 37px;
+    background-image: url("../img/machines/icn_tabletsList.gif");
+    background-position: 7px center;
+    /*background-position: 7px 7px;*/
+}
+
 
 td.machinePull {
     padding: 0 0 0 37px;
@@ -995,6 +1034,7 @@ form {
     padding-bottom: 0px;
     /* IE Hack */
     !padding: 0px;
+    float: right;
 }
 
 #Location .searchfieldreal {
