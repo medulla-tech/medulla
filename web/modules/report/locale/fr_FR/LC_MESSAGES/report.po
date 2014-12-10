@@ -63,7 +63,7 @@ msgstr "Juillet"
 
 #: modules/report/includes/html.inc.php:107
 msgid "August"
-msgstr "Aôut"
+msgstr "Août"
 
 #: modules/report/includes/html.inc.php:108
 msgid "September"
