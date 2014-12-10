@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2012-12-13 17:41+0000\n"
-"Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"PO-Revision-Date: 2014-12-10 22:25+0200\n"
+"Last-Translator: Andre <andre@mandriva.com>\n"
+"Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
+"/mmc-core-32/ppolicy/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.1-dev\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -46,7 +48,7 @@ msgid ""
 "policy will be applied to users that use this password policy."
 msgstr ""
 "Você vai excluir a política de senha <strong>%s</ strong>. A política de "
-"senha padrão será aplicado aos usuários que utilizam esta política de senha."
+"senha padrão será aplicada aos usuários que a utilizam."
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
@@ -64,7 +66,7 @@ msgstr "Adicionar uma política de senha"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Idade máxima\" tem que ser maior que \"Idade mínima\""
+msgstr "\"Idade máxima\" deve ser maior que \"Idade mínima\"."
 
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
@@ -380,7 +382,7 @@ msgstr "Política de senha %s removida."
 
 #: modules/ppolicy/includes/publicFunc.php:179
 msgid "Password policy attributes updated."
-msgstr "Atributos da política de senha atualizados"
+msgstr "Atributos da política de senha atualizados."
 
 #: modules/ppolicy/includes/publicFunc.php:216
 msgid "Apply a password policy for all group users"
@@ -398,7 +400,7 @@ msgstr "Apagar atributo ppolicy"
 
 #: modules/ppolicy/includes/auditCodes.php:6
 msgid "Add ppolicy to user"
-msgstr "Adicionar "
+msgstr "Adicionar"
 
 #: modules/ppolicy/includes/auditCodes.php:7
 msgid "Update ppolicy for user"
@@ -411,7 +413,7 @@ msgstr "Remover política do usuário"
 #: modules/ppolicy/includes/auditCodes.php:11
 #: modules/ppolicy/includes/auditCodes.php:12
 msgid "ppolicy"
-msgstr "ppolicy"
+msgstr "política"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -427,10 +429,8 @@ msgstr "Remover a política de senha"
 
 #: modules/ppolicy/infoPackage.inc.php:75
 msgid "Default "
-msgstr "Padrão"
+msgstr "Padrão "
 
 #: modules/ppolicy/infoPackage.inc.php:78
 msgid "Enable user specific password policy"
 msgstr "Habilitar política de senha para usuário específico"
-
-
