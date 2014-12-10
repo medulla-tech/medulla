@@ -85,7 +85,6 @@ print '<form id="sel_updates_form">';
 $n = new OptimizedListInfos($checkboxes, $check_all, '', '10px');
 $n->first_elt_padding = '0';
 $n->addExtraInfo($cols['title'], _T("Update title", "update"));
-$n->addExtraInfo($cols['uuid'], _T("UUID", "update"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "update"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
 
@@ -140,7 +139,7 @@ jQuery('#btnDisableUpdates').click(function(){
 
 // Check all checkbox
 jQuery('#check_all').click(function(){
-    jQuery(this).parents('table:first').find('input[type=checkbox]').prop('checked', jQuery(this).is(':checked')); 
+    jQuery(this).parents('table:first').find('input[type=checkbox]').prop('checked', jQuery(this).is(':checked'));
 });
 
 
