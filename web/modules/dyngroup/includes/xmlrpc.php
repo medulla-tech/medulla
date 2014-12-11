@@ -55,7 +55,7 @@ function arePartOfAProfile($uuids) {
 }
 
 function xmlrpc_hasMoreThanOneEthCard($uuids) {
-    return xmlCall("dyngroup.hasMoreThanOneEthCard", array($uuids));
+    return xmlCall("imaging.hasMoreThanOneEthCard", array($uuids));
 }
 
 function updateMachineCache() {
