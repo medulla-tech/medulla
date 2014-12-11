@@ -29,7 +29,7 @@ imaging plugin
 import logging
 from twisted.internet import defer
 from sets import Set as set
-import time
+import time, ipaddr
 
 from mmc.support.mmctools import xmlrpcCleanup
 from mmc.support.mmctools import RpcProxyI #, ContextMakerI, SecurityContext
@@ -125,6 +125,10 @@ class ImagingRpcProxy(RpcProxyI):
         menu = map(lambda l: l.toH(), db.getBootMenu(target_id, type, start, end, filter))
         count = db.countBootMenu(target_id, type, filter)
         return [count, xmlrpcCleanup(menu)]
+
+    def hasMoreThanOneEthCard(self, uuids):
+        ctx = self.currentContext
+        return hasMoreThanOneEthCard(ctx, uuids) 
 
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         """
@@ -1503,15 +1507,18 @@ class ImagingRpcProxy(RpcProxyI):
         ret = computersUnregister(computers_UUID, backup)
         return ret
 
+            
+
     def checkComputerForImaging(self, computerUUID):
         """
         @return: 0 if the computer can be registered into the imaging module
         @rtype: int
         """
         ctx = self.currentContext
-        query = ComputerManager().getComputersNetwork(ctx, {'uuid':computerUUID})
+        query = getComputersNetwork_filtered(ctx, {'uuid':computerUUID})
         try:
             macaddress = query[0][1]['macAddress']
+            macaddress = [x for x in macaddress if x]
         except KeyError:
             macaddress = []
         except IndexError:
@@ -1531,9 +1538,10 @@ class ImagingRpcProxy(RpcProxyI):
     def getProfileNetworks(self, profileUUID):
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
         ctx = self.currentContext
-        networks = ComputerManager().getComputersNetwork(ctx, {'uuids': uuids})
+        networks = getComputersNetwork_filtered(ctx, {'uuids': uuids})
 
         return xmlrpcCleanup(networks)
+
 
     def checkProfileForImaging(self, profileUUID):
         """
@@ -2102,7 +2110,7 @@ class ImagingRpcProxy(RpcProxyI):
                 # one computer with more than one network card
                 if 'choose_network_profile' in params:
                     h_macaddress = {}
-                    networks = ComputerManager().getComputersNetwork(ctx, {'uuids': uuids})[0][1]
+                    networks = getComputersNetwork_filtered(ctx, {'uuids': uuids})[0][1]
                     keys = networks['networkUuids']
                     values = networks['macAddress']
                     # [Memo] uuidMacDict = {'NIC_UUID': 'Mac_adress', etc.}
@@ -2974,7 +2982,7 @@ class ImagingRpcProxy(RpcProxyI):
 
 def chooseMacAddress(ctx, uuid, macs):
     # should pass uuids and the list of uuids
-    nets = ComputerManager().getComputersNetwork(ctx, {'uuid':uuid})
+    nets = getComputersNetwork_filtered(ctx, {'uuid':uuid})
     nets = nets[0][1]
 
     # For nic_uuid variable, get Target Nic UUID from Target table
@@ -3416,3 +3424,55 @@ def computersUnregister(computers_UUID, backup):
         defer_list = defer.DeferredList(dl)
         return defer_list
     return False
+
+def getComputersNetwork_filtered(ctx, params):
+    """
+    @return: the computer network information but excludes
+    empty macs, lo interface and if there is a preferred network
+    choose it
+    """
+    network_data = ComputerManager().getComputersNetwork(ctx, params)
+    for m in xrange(len(network_data)):
+        cpt_data = network_data[m][1]
+        ipHostNumber = []
+        macAddress = []
+        networkUuids = []
+        subnetMask = []
+        for i in xrange(len(cpt_data['ipHostNumber'])):
+            ip = cpt_data['ipHostNumber'][i]
+            mac = cpt_data['macAddress'][i]
+            uuid = cpt_data['networkUuids'][i]
+            netmask = cpt_data['subnetMask'][i]
+            # IP filtering
+            if not ip or ip == '127.0.0.1':
+                continue
+            if not mac:
+                continue
+            ipHostNumber.append(ip)
+            macAddress.append(mac)
+            networkUuids.append(uuid)
+            subnetMask.append(netmask)
+        # If there is more than one address, apply preferred netowrk algo
+        preferred_network = ImagingConfig().preferred_network
+        if len(macAddress) > 1 and preferred_network:
+           for i in xrange(len(macAddress)):
+               ip = ipHostNumber[i]
+               if ipaddr.IPAddress(ip) in ipaddr.IPNetwork(preferred_network):
+                   ipHostNumber = [ip]
+                   macAddress = [macAddress[i]]
+                   networkUuids = [networkUuids[i]]
+                   subnetMask = [subnetMask[i]]
+                   break
+        network_data[m][1]['ipHostNumber'] = ipHostNumber
+        network_data[m][1]['macAddress'] = macAddress
+        network_data[m][1]['networkUuids'] = networkUuids
+        network_data[m][1]['subnetMask'] = subnetMask
+    return network_data
+
+def getMachineMac_filtered(ctx, params):
+    net_data = getComputersNetwork_filtered(ctx, params)
+    return [{x[1]['objectUUID'][0]:x[1]['macAddress']} for x in net_data]
+
+def hasMoreThanOneEthCard(ctx, uuids):
+    net_data = getComputersNetwork_filtered(ctx, {'uuids': uuids})
+    return [x[1]['objectUUID'][0] for x in net_data if len(x[1]['macAddress'])>1]
