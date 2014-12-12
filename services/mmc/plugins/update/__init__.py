@@ -57,9 +57,11 @@ def activate():
     if not updateDatabase().activate(config):
         logger.error("UpdateMgr database not activated")
         return False
-    
+
     DashboardManager().register_panel(Panel('product_updates'))
-    
+    DashboardManager().register_panel(Panel('clients_updates'))
+
+
     # Add create update commands in the task manager
     if config.enable_update_commands:
         TaskManager().addTask("update.create_update_commands",
