@@ -50,7 +50,6 @@ if (isset($_POST["bfull"], $_POST["uuid"])) {
         var $ = jQuery;
         $('form#backupManualAction').find('input[type=submit]').click(function() {
             var form = $('form#backupManualAction');
-            alert(form.serialize() + '&' + $(this).attr('name') + '=' + $(this).val());
             $.ajax(form.attr('action'), {
                 type: form.attr('method'),
                 data: form.serialize() + '&' + $(this).attr('name') + '=' + $(this).val()
