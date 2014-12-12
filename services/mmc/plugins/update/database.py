@@ -374,16 +374,17 @@ class updateDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._session
-    def set_update_status_for_host(self, session, uuid, update_id, status):
+    def set_update_status_for_hosts(self, session, uuid, update_id, status):
         """
         Set the update status for the target host only
         (global update status will remain unchanged)
         """
+	if not isinstance(uuid, list):
+            uuid = [uuid]
         try:
             session.query(Target)\
-                .filter_by(uuid = uuid, update_id = update_id)\
-                .one()\
-                .status = status
+                .filter(Target.uuid.in_(uuid), Target.update_id==update_id)\
+                .update({'status': status}, synchronize_session=False)
 
             session.commit()
             return True
