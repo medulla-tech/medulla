@@ -131,6 +131,11 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
     $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
     $cfg['PingCmd'] = '/bin/true';
+    $backup_manager_cmd = '/usr/bin/pulse2-backup-handler $host $hostIP $type $cmdType';
+    $cfg['DumpPreUserCmd'] = $cfg['DumpPostUserCmd'] = $backup_manager_cmd;
+    $cfg['RestorePreUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd;
+    $cfg['UserCmdCheckStatus'] = 1;
+    
     
     // Enable or disable backup
     $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
@@ -158,7 +163,8 @@ $p->addTab("tab1", _T('Summary', 'backuppc'), "", "modules/backuppc/backuppc/hos
 if (host_exists($uuid))
 {
     $p->addTab("tab2", _T('Configuration', 'backuppc'), "", "modules/backuppc/backuppc/edit.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
-    $p->addTab("tab3", _T('File search', 'backuppc'), "", "modules/backuppc/backuppc/fileSearch.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+    $p->addTab("tab3", _T('Advanced scripts', 'backuppc'), "", "modules/backuppc/backuppc/advScripts.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
+    $p->addTab("tab4", _T('File search', 'backuppc'), "", "modules/backuppc/backuppc/fileSearch.php", array('objectUUID'=>$uuid, 'cn'=>$computer_name));
 }
 
 $p->setSideMenu($sidemenu);

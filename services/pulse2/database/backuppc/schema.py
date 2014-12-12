@@ -68,3 +68,7 @@ class Hosts(Base, BackupPCDBObj):
     uuid = Column(String(50))
     backup_profile = Column(Integer)
     period_profile = Column(Integer)
+    pre_backup_script = Column(Text)
+    post_backup_script = Column(Text)
+    pre_restore_script = Column(Text)
+    post_restore_script = Column(Text)

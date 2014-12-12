@@ -164,6 +164,10 @@ function get_xfer_log($uuid, $backupnum) {
     return xmlCall("backuppc.get_xfer_log", array($uuid, $backupnum));
 }
 
+function get_host_log($uuid) {
+    return xmlCall("backuppc.get_host_log", array($uuid));
+}
+
 function get_global_status($entity_uuid) {
     return xmlCall("backuppc.get_global_status", array($entity_uuid));
 }
@@ -178,6 +182,38 @@ function get_backupserver_for_computer($uuid) {
 
 function file_search($host, $backupnum_0, $sharename_0, $filename_0, $filesize_min = -1, $filesize_max = -1, $type_0 = ' ') {
     return xmlCall("backuppc.file_search", array($host, $backupnum_0, $sharename_0, $filename_0, $filesize_min, $filesize_max, $type_0));
+}
+
+function get_host_pre_backup_script($uuid) {
+    return xmlCall("backuppc.get_host_pre_backup_script", array($uuid));
+}
+
+function get_host_post_backup_script($uuid) {
+    return xmlCall("backuppc.get_host_post_backup_script", array($uuid));
+}
+
+function get_host_pre_restore_script($uuid) {
+    return xmlCall("backuppc.get_host_pre_restore_script", array($uuid));
+}
+
+function get_host_post_restore_script($uuid) {
+    return xmlCall("backuppc.get_host_post_restore_script", array($uuid));
+}
+
+function set_host_pre_backup_script($uuid, $script) {
+    return xmlCall("backuppc.set_host_pre_backup_script", array($uuid, $script));
+}
+
+function set_host_post_backup_script($uuid, $script) {
+    return xmlCall("backuppc.set_host_post_backup_script", array($uuid, $script));
+}
+
+function set_host_pre_restore_script($uuid, $script) {
+    return xmlCall("backuppc.set_host_pre_restore_script", array($uuid, $script));
+}
+
+function set_host_post_restore_script($uuid, $script) {
+    return xmlCall("backuppc.set_host_post_restore_script", array($uuid, $script));
 }
 
 ?>

@@ -51,7 +51,10 @@ $page->addTab($tab);
 $tab = new Tab("tab2", _T('Edit host config', 'backuppc'));
 $page->addTab($tab);
 
-$tab = new Tab("tab3", _T('File search', 'backuppc'));
+$tab = new Tab("tab3", _T('Advanced scripts', 'backuppc'));
+$page->addTab($tab);
+
+$tab = new Tab("tab4", _T('File search', 'backuppc'));
 $page->addTab($tab);
 
 $submod->addPage($page);
@@ -119,6 +122,11 @@ $page->setFile("modules/backuppc/backuppc/viewXferLog.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
+$page = new Page("viewHostLog");
+$page->setFile("modules/backuppc/backuppc/viewHostLog.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("restoreZip");
 $page->setFile("modules/backuppc/backuppc/restoreZip.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
@@ -131,6 +139,16 @@ $submod->addPage($page);
 
 
 // AJAX PAGES
+$page = new Page('startBackup');
+$page->setFile("modules/backuppc/backuppc/startBackup.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page('stopBackup');
+$page->setFile("modules/backuppc/backuppc/stopBackup.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page('ajaxBackupStatus');
 $page->setFile("modules/backuppc/backuppc/ajaxBackupStatus.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));

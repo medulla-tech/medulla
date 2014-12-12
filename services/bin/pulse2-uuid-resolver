@@ -66,10 +66,13 @@ class MMCQueryProtocol(xmlrpc.QueryProtocol):
     def handleResponse(self, contents):
         xmlrpc.QueryProtocol.handleResponse(self, contents)
         if '<methodName>base.ldapAuth</methodName>' in self.factory.payload:
-            h = open(COOKIES_FILE, 'w+')
-            h.write(self._session)
-            h.close()
-            os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+            try:
+                h = open(COOKIES_FILE, 'w+')
+                h.write(self._session)
+                h.close()
+                os.chmod(COOKIES_FILE, stat.S_IRUSR | stat.S_IWUSR)
+            except IOError:
+                print "Unable to write cookies file"
 
 
 class MMCQueryFactory(xmlrpc._QueryFactory):

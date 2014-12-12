@@ -706,6 +706,22 @@ def get_xfer_log(host,backupnum):
     else:
         return {'err':0,'data':d('pre:first').text()}
 
+def get_host_log(host):
+    params = {
+            'host':host,
+            'action':'view',
+            'type':'LOG'
+            }
+    html = send_request(params)
+    if not html:
+        return _CONNECTION_ERROR
+    if getHTMLerr(html):
+        return getHTMLerr(html)
+    d=pq(html)
+    if not d('pre:first'):
+        return _FORMAT_ERROR
+    else:
+        return {'err':0,'data':d('pre:first').text()}
 
 def build_fileindex(host):
     res = get_backup_list(host)

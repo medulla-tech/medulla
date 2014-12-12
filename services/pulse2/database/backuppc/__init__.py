@@ -62,8 +62,6 @@ class BackuppcDatabase(DatabaseHelper):
         self.logger.info("BackupPC database is connecting")
         self.config = config
         self.db = create_engine(self.makeConnectionPath(), pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        if not self.db_check():
-            return False
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
@@ -298,3 +296,51 @@ class BackuppcDatabase(DatabaseHelper):
             return True
         else:
             logger.warning("Can't find BackupServer associated to entity %s" % entityuuid)
+
+    @DatabaseHelper._session
+    def get_host_pre_backup_script(self, session, uuid):
+        return session.query(Hosts).filter_by(uuid=uuid).one().pre_backup_script
+
+    @DatabaseHelper._session
+    def get_host_post_backup_script(self, session, uuid):
+        return session.query(Hosts).filter_by(uuid=uuid).one().post_backup_script
+
+    @DatabaseHelper._session
+    def set_host_pre_backup_script(self, session, uuid, script):
+        host = session.query(Hosts).filter_by(uuid=uuid).one()
+        if host:
+            host.pre_backup_script = script
+            session.flush()
+        return host != None
+
+    @DatabaseHelper._session
+    def set_host_post_backup_script(self, session, uuid, script):
+        host = session.query(Hosts).filter_by(uuid=uuid).one()
+        if host:
+            host.post_backup_script = script
+            session.flush()
+        return host != None
+    
+    @DatabaseHelper._session
+    def get_host_pre_restore_script(self, session, uuid):
+        return session.query(Hosts).filter_by(uuid=uuid).one().pre_restore_script
+
+    @DatabaseHelper._session
+    def get_host_post_restore_script(self, session, uuid):
+        return session.query(Hosts).filter_by(uuid=uuid).one().post_restore_script
+
+    @DatabaseHelper._session
+    def set_host_pre_restore_script(self, session, uuid, script):
+        host = session.query(Hosts).filter_by(uuid=uuid).one()
+        if host:
+            host.pre_restore_script = script
+            session.flush()
+        return host != None
+
+    @DatabaseHelper._session
+    def set_host_post_restore_script(self, session, uuid, script):
+        host = session.query(Hosts).filter_by(uuid=uuid).one()
+        if host:
+            host.post_restore_script = script
+            session.flush()
+        return host != None

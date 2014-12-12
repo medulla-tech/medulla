@@ -58,10 +58,10 @@ def activate():
     """
     logger = logging.getLogger()
     config = BackuppcConfig("backuppc")
-    
+
     # Registering BackupComputers in ComputerManager
     ComputerManager().register('backuppc', BackupComputers)
-    
+
     if config.disable:
         logger.warning("Plugin backuppc: disabled by configuration.")
         return False
@@ -186,6 +186,9 @@ def unset_backup_for_host(uuid):
 def get_xfer_log(host,backupnum):
     return bpc.get_xfer_log(host,backupnum)
 
+def get_host_log(host):
+    return bpc.get_host_log(host)
+
 def get_backupservers_list():
     return BackuppcDatabase().get_backupservers_list()
 
@@ -212,6 +215,32 @@ def file_search(host,backupnum_0,sharename_0,filename_0,filesize_min=-1,filesize
 
 def calldb(func, *args, **kw):
     return getattr(BackuppcDatabase(),func).__call__(*args, **kw)
+
+# Pre and post backup scripts
+
+def get_host_pre_backup_script(uuid):
+    return BackuppcDatabase().get_host_pre_backup_script(uuid)
+
+def set_host_pre_backup_script(uuid, script):
+    return BackuppcDatabase().set_host_pre_backup_script(uuid, script)
+
+def get_host_post_backup_script(uuid):
+    return BackuppcDatabase().get_host_post_backup_script(uuid)
+
+def set_host_post_backup_script(uuid, script):
+    return BackuppcDatabase().set_host_post_backup_script(uuid, script)
+
+def get_host_pre_restore_script(uuid):
+    return BackuppcDatabase().get_host_pre_restore_script(uuid)
+
+def set_host_pre_restore_script(uuid, script):
+    return BackuppcDatabase().set_host_pre_restore_script(uuid, script)
+
+def get_host_post_restore_script(uuid):
+    return BackuppcDatabase().get_host_post_restore_script(uuid)
+
+def set_host_post_restore_script(uuid, script):
+    return BackuppcDatabase().set_host_post_restore_script(uuid, script)
 
 ######################
 

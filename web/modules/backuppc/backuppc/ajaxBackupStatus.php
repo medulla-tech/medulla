@@ -81,6 +81,9 @@ $n->addExtraInfo($data['incr'], _T("incr. number", "backuppc"));
 $n->addExtraInfo($data['last_backup'], _T("Last backup (days)", "backuppc"));
 $n->addExtraInfo($data['state'], _T("Current state", "backuppc"));
 $n->addExtraInfo($data['last_attempt'], _T("Last message", "backuppc"));
+$n->addActionItem(new ActionPopupItem(_T("Start backup"), "startBackup", "start", "host", "backuppc", "backuppc"));
+$n->addActionItem(new ActionPopupItem(_T("Start backup"), "stopBackup", "stop", "host", "backuppc", "backuppc"));
+$n->addActionItem(new ActionPopupItem(_T("View errors"), "viewHostLog", "file", "host", "backuppc", "backuppc"));
 $n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "uuid", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc')));
 $n->setParamInfo($params);
 $n->setCssClass("machineName"); // CSS for icons

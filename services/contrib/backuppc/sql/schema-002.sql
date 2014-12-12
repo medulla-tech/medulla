@@ -28,4 +28,10 @@ UPDATE `backup_profiles`
 SET `profilename` = 'OS X (Whole / drive)'
 WHERE `id` = 8;
 
+ALTER TABLE `hosts`
+ADD `pre_backup_script` TEXT NOT NULL,
+ADD `post_backup_script` TEXT NOT NULL,
+ADD `pre_restore_script` TEXT NOT NULL,
+ADD `post_restore_script` TEXT NOT NULL;
+
 UPDATE version SET Number = 2;

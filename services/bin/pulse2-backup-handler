@@ -1,0 +1,51 @@
+#!/usr/sbin/pulse2-debug
+import sys, subprocess
+
+def runInShell(cmd):
+    process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    out, err = process.communicate()
+    return out.strip(), err.strip(), process.returncode
+
+def runOnHost(hostIP, script):
+    cmd = "/usr/bin/ssh -x -o StrictHostKeyChecking=no -o PasswordAuthentication=no -l root %s '$SHELL'" % hostIP
+    process = subprocess.Popen([cmd], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    out, err = process.communicate(input=script)
+    return out.strip(), err.strip(), process.returncode
+
+def main():
+    # Retreive Command line params
+    try:
+        bin, host, hostIP, type, cmdType = sys.argv
+    except:
+        print 'Invalid params, leaving'
+        sys.exit(1)
+
+    # Checking ssh
+    o, e, ec = runInShell('/usr/bin/ssh -x -o StrictHostKeyChecking=no -o PasswordAuthentication=no -l root %s echo SSH Ok' % hostIP)
+    
+    if ec != 0:
+        print "SSH Error : " + e
+        sys.exit(1)
+
+    # Running specific state script
+    #backuppc.get_host_pre_backup_script
+    if cmdType == 'DumpPreUserCmd':
+        script = backuppc.get_host_pre_backup_script(host)
+    elif cmdType == 'DumpPostUserCmd':
+        script = backuppc.get_host_post_backup_script(host)
+    elif cmdType == 'RestorePreUserCmd':
+        script = backuppc.get_host_pre_restore_script(host)
+    elif cmdType == 'RestorePostUserCmd':
+        script = backuppc.get_host_post_restore_script(host)
+
+    if script.strip():
+        o, e, ec = runOnHost(hostIP, script)
+        print o
+        print e
+        sys.exit(ec)
+    
+
+main()
+
+
+

@@ -667,9 +667,9 @@ def prompt():
             exec(input, CONSOLE_VARS)
         except Exception:
             ex_type, ex, tb = sys.exc_info()
-            print ex_type
+            #print ex_type
             print ex
-            traceback.print_tb(tb)
+            #traceback.print_tb(tb)
             del tb
 
 
@@ -831,7 +831,7 @@ if __name__ == "__main__" :
     
     parser.add_argument("-c", "--command", help="Run the specified code")
     #parser.add_argument("-f", "--file", help="Load an run a script file")
-    parser.add_argument('file', type=str, nargs='?',
+    parser.add_argument('file', type=str, nargs='*',
                          help='Load and run a script file')
 
     # Parsing args
@@ -870,11 +870,12 @@ if __name__ == "__main__" :
             sys.exit(1)
 
     if args.file:
+        sys.argv = args.file
         try:
             # Enabling script mode
             SCRIPT_MODE = True
             # Reading and executing script file
-            f = open(args.file, 'r')
+            f = open(args.file[0], 'r')
             exec(f.read(), CONSOLE_VARS)
             sys.exit(0)
         except IOError:
