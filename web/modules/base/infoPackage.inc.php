@@ -30,7 +30,7 @@ require_once("modules/base/includes/users-xmlrpc.inc.php");
  * module declaration
  */
 $mod = new Module("base");
-$mod->setVersion("3.1.1");
+$mod->setVersion("3.1.79");
 $mod->setRevision('$Rev$');
 $mod->setAPIVersion("9:0:5");
 $mod->setDescription(_("User, group and computer management"));
@@ -169,6 +169,8 @@ $submod->setDefaultPage("base/users/index");
 $submod->setPriority(0);
 
 $page = new Page("index",_("User list"));
+$page->setImg("modules/base/graph/users/img/icn_global_active.gif",
+              "modules/base/graph/users/img/icn_global.gif");
 $submod->addPage($page);
 
 $page = new Page("ajaxAutocompleteGroup");
@@ -182,6 +184,8 @@ $page->setFile("modules/base/users/ajaxFilter.php",
 $submod->addPage($page);
 
 $page = new Page("add",_("Add a user"));
+$page->setImg("modules/base/graph/users/img/icn_addUser_active.gif",
+              "modules/base/graph/users/img/icn_addUser.gif");
 $submod->addPage($page);
 
 $page = new Page("edit",_("Edit a user"));
@@ -230,11 +234,15 @@ if (in_array("monitoring", $_SESSION["modulesList"])) {
 }
 
 $page = new Page("resetpasswd",_("Reset user password"));
+$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
+              "modules/base/graph/access/img/icn_global.gif");
 if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "login")
     $page->setOptions(array("visible" => False));
 $submod->addPage($page);
 
-$page = new Page("passwd",_("Change user password"));
+$page = new Page("passwd",_("Change password"));
+$page->setImg("modules/base/graph/access/img/icn_global_active.gif",
+              "modules/base/graph/access/img/icn_global.gif");
 if ($_SESSION["login"] == 'root' || $_SESSION['AUTH_METHOD'] == "token")
     $page->setOptions(array("visible" => False));
 $submod->addPage($page);

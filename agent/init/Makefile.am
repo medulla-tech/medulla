@@ -1,6 +1,4 @@
-# (c) 2011 Mandriva, http://www.mandriva.com
-#
-# $Id$
+# (c) 2014 Mandriva, http://www.mandriva.com
 #
 # This file is part of Mandriva Management Console (MMC).
 #
@@ -16,11 +14,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
-#
-# Author(s)
-#   Jean Parpaillon <jparpaillon@mandriva.com>
-#
+
+if ENABLE_SYSTEMD
+dist_systemd_DATA = mmc-agent.service
+else
 nodist_init_SCRIPTS = mmc-agent
+endif
 
 EXTRA_DIST = mmc-agent.in
 CLEANFILES = mmc-agent

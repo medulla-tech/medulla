@@ -177,15 +177,10 @@ $f = new ValidatingFormRequiresId(array('method' => 'POST',
     'enctype' => 'multipart/form-data'));
 // add submit button
 $f->addValidateButton("buser");
-
-// check if all modules are disabled
-// TODO
-$disabledAccount = false;
+// enable/disable buttons
 if($mode == 'edit') {
-    if ($disabledAccount)
-        $f->addButton("enableAccount", _("Enable account"), "btnSecondary");
-    else
-        $f->addButton("disableAccount", _("Disable account"), "btnSecondary");
+    $f->addButton("enableAccount", _("Enable account"), "btnSecondary");
+    $f->addButton("disableAccount", _("Disable account"), "btnSecondary");
 }
 // add reset form button
 $f->addCancelButton("breset");

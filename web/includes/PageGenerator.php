@@ -2590,7 +2590,6 @@ class ValidatingForm extends Form {
 
     function ValidatingForm($options = array()) {
         $this->Form($options);
-        $this->options["onsubmit"] = "return validateForm('" . $this->options["id"] . "');";
     }
 
     function end() {
@@ -2602,13 +2601,6 @@ class ValidatingForm extends Form {
         return $str;
     }
 
-}
-class ValidatingFormRequiresId extends ValidatingForm {
-
-    function ValidatingFormRequiresId($options = array()) {
-        $this->ValidatingForm($options);
-	$this->options["onsubmit"] = "selectAll('" . $this->options["id"] . "'); return validateForm('" . $this->options["id"] . "');";
-    }
 }
 
 /**

@@ -20,23 +20,22 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$submods = array('users');
+/** Clean the LDAP filter for searching
+ * users and groups
+ **/
+function cleanSearchFilter($filter) {
 
-$sidemenu = new SideMenu();
-$sidemenu->setClass(join(" ", $submods));
-
-$MMCApp =& MMCApp::getInstance();
-$mod = $MMCApp->getModule('base');
-
-foreach ($submods as $submod) {
-    $submod = $mod->getSubmod($submod);
-    foreach ($submod->getPages() as $page) {
-        if ($page->hasAccessAndVisible($mod, $submod)) {
-            $item = new SideMenuItem($page->getDescription(), $mod->getName(), $submod->getName(), $page->getAction(), $page->getImg("active"), $page->getImg("default"));
-            $item->cssId = join("_", array($mod->getName(), $submod->getName(), $page->getAction()));
-            $sidemenu->addSideMenuItem($item);
+    if ($filter == "") {
+        $filter = null;
+    }
+    else {
+        $count = 0;
+        for ($i=0; $i<10; $i++) {
+            $filter = str_replace('**', '*', $filter, $count);
+            if ($count === 0)
+                break;
         }
     }
-}
 
-?>
+    return $filter;
+}

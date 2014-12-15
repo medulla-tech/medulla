@@ -23,7 +23,7 @@ AC_PREREQ(2.59)
 dnl autoconf initialization
 define([project], [mmc-core])
 define([gitversion], esyscmd([sh -c "which git > /dev/null && git describe 2> /dev/null | sed -e 's/]project[-\([^-]\+\)//' | tr -d '\n' || true"]))dnl
-AC_INIT(project, [3.1.1], [http://projects.mandriva.org/projects/mmc])
+AC_INIT(project, [3.1.79], [http://projects.mandriva.org/projects/mmc])
 AC_DEFINE(GITVERSION, "gitversion", [Git version])
 
 AC_CANONICAL_BUILD
@@ -59,6 +59,15 @@ if test "x$USE_NLS" = "xyes"; then
           AC_MSG_ERROR([msgfmt not found. You need to install the 'gettext' package, or pass --enable-nls=no to configure.])
    fi
 fi
+
+dnl
+dnl --enable-systemd
+dnl   Install systemd services instead of init scripts
+dnl
+AC_ARG_ENABLE([systemd],
+              [AS_HELP_STRING([--enable-systemd],
+                              [Install systemd services @<:@default=disable@:>@])])
+AM_CONDITIONAL([ENABLE_SYSTEMD], [test "$enable_systemd" = "yes"])
 
 dnl
 dnl --disable-python
@@ -122,10 +131,22 @@ dnl   Default to SYSCONFDIR/init.d
 dnl
 AC_ARG_WITH([initdir],
             [AS_HELP_STRING([--with-initdir],
-                            [path to init scripts direcory @<:@default=SYSCONFDIR/init.d@:>@])],
+                            [path to init scripts directory @<:@default=SYSCONFDIR/init.d@:>@])],
             [initdir="$withval"],
 	    [initdir="${sysconfdir}/init.d"])
 AC_SUBST([initdir])
+
+dnl
+dnl --with-systemddir
+dnl   Set path to systemd services directory
+dnl   Default to /lib/systemd/system
+dnl
+AC_ARG_WITH([systemddir],
+            [AS_HELP_STRING([--with-systemddir],
+                            [path to systemd services directory @<:@default=/lib/systemd/system@:>@])],
+            [systemddir="$withval"],
+	    [systemddir="/lib/systemd/system"])
+AC_SUBST([systemddir])
 
 dnl files to generate with automake
 AC_CONFIG_FILES([Makefile])
@@ -133,7 +154,7 @@ AC_CONFIG_FILES([agent/Makefile])
 AC_CONFIG_FILES([agent/bin/Makefile])
 AC_CONFIG_FILES([agent/mmc/Makefile])
 AC_CONFIG_FILES([agent/backup-tools/Makefile])
-AC_CONFIG_FILES([agent/init.d/Makefile])
+AC_CONFIG_FILES([agent/init/Makefile])
 AC_CONFIG_FILES([agent/conf/Makefile])
 AC_CONFIG_FILES([agent/contrib/Makefile])
 AC_CONFIG_FILES([agent/man/Makefile])

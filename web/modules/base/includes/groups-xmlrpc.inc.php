@@ -1,9 +1,7 @@
 <?php
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
- *
- * $Id$
+ * (c) 2007-2014 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).
  *
@@ -21,9 +19,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-?>
-<?php
-/* $Id$ */
+
+include_once('common.inc.php');
+
 
 function existGroup($group) {
     return xmlCall("base.existGroup", $group);
@@ -42,9 +40,8 @@ function get_default_group() {
 
 
 function search_groups($filter = null) {
-    if ($filter == "") $filter = null;
-    else $filter = "*".$filter . "*";
-    $groups = xmlCall("base.getGroupsLdap",$filter);
+    $filter = cleanSearchFilter($filter);
+    $groups = xmlCall("base.getGroupsLdap", $filter);
     sort($groups);
     reset($groups);
     return $groups;

@@ -22,9 +22,14 @@
 
 $sidemenu = new SideMenu();
 $sidemenu->setClass("control");
-$sidemenu->setBackgroundImage("img/users/icn_users_large.gif");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Core services", "services"), "services", "control", "index", "img/config/icn_global_active.gif", "img/config/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Other services", "services"), "services", "control", "others", "img/config/icn_global_active.gif", "img/config/icn_global.gif"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Services log", "services"), "services", "control", "log", "img/config/icn_global_active.gif", "img/config/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Core services", "services"), "services", "control", "index",
+                                            "modules/services/graph/img/icn_global_active.gif",
+                                            "modules/services/graph/img/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Other services", "services"), "services", "control", "others",
+                                            "modules/services/graph/img/icn_global_active.gif",
+                                            "modules/services/graph/img/icn_global.gif"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Services log", "services"), "services", "control", "log",
+                                            "modules/services/graph/img/icn_global_active.gif",
+                                            "modules/services/graph/img/icn_global.gif"));
 
 ?>

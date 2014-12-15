@@ -34,7 +34,7 @@ from mmc.plugins.services.config import ServicesConfig
 
 logger = logging.getLogger()
 
-VERSION = "3.1.1"
+VERSION = "3.1.79"
 APIVERSION = "0:1:0"
 REVISION = ""
 
@@ -92,7 +92,7 @@ def has_inactive_plugins_services():
 def list_others_services(filter = None):
     return ServiceManager().list_others_services(filter)
 
-def log(service = "", filter = ""):
+def log(service="", filter=""):
     return ServiceManager().log(service, filter)
 
 def server_power_off():

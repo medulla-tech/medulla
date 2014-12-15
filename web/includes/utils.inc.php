@@ -31,4 +31,28 @@ function getMMCLogo() {
     return $basedir . $logos[0];
 }
 
+function _startsWith($haystack, $needle) {
+    return !strncmp($haystack, $needle, strlen($needle));
+}
+
+function startsWith($haystack, $needle) {
+    if (is_array($needle)) {
+        foreach($needle as $item) {
+            if (_startsWith($haystack, $item))
+                return True;
+        }
+        return False;
+    }
+    return _startsWith($haystack, $needle);
+}
+
+function endsWith($haystack, $needle) {
+    $length = strlen($needle);
+    if ($length == 0) {
+            return true;
+        }
+
+    return (substr($haystack, -$length) === $needle);
+}
+
 ?>
