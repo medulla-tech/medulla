@@ -67,6 +67,7 @@ $n = new OptimizedListInfos($cols['completename'], _T('Entity name', 'glpi'), ''
 $n->first_elt_padding = '0';
 $n->addExtraInfo($cols['comment'], _T("Comment", "glpi"));
 
+$n->addActionItem(new ActionItem(_T("Edit entity", "glpi"), "addEntity", "edit", "entity", "base", "computers"));
 //$n->addActionItem(new ActionPopupItem(_T("Delete", "glpi"), "deleteEntity", "delete", "id", "base", "computers"));
 
 $n->setParamInfo($listinfoParams);

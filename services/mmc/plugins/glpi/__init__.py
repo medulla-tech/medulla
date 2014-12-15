@@ -244,6 +244,9 @@ def addUser(*args, **kwargs):
 def addEntity(*args, **kwargs):
     return xmlrpcCleanup(Glpi().addEntity(*args, **kwargs))
 
+def editEntity(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().editEntity(*args, **kwargs))
+
 def addEntityRule(*args, **kwargs):
     return xmlrpcCleanup(Glpi().addEntityRule(*args, **kwargs))
 
@@ -258,6 +261,9 @@ def setUserPassword(*args, **kwargs):
 
 def addLocation(*args, **kwargs):
     return xmlrpcCleanup(Glpi().addLocation(*args, **kwargs))
+
+def editLocation(*args, **kwargs):
+    return xmlrpcCleanup(Glpi().editLocation(*args, **kwargs))
 
 def getAllEntities(*args, **kwargs):
     return xmlrpcCleanup(Glpi().getAllEntities(*args, **kwargs))

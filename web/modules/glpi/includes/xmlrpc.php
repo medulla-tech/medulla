@@ -93,10 +93,6 @@ function setGlpiUserPassword($username, $password){
     return xmlCall("glpi.setUserPassword", array($username, $password));
 }
 
-function getAllEntities($params){
-    return xmlCall("glpi.getAllEntities", array($params));
-}
-
 function getAllEntitiesPowered($params){
     return xmlCall("glpi.getAllEntitiesPowered", array($params));
 }
@@ -105,12 +101,12 @@ function addEntity($entity_name, $parent_id, $comment){
     return xmlCall("glpi.addEntity", array($entity_name, $parent_id, $comment));
 }
 
-function getAllEntityRules($params){
-    return xmlCall("glpi.getAllEntityRules", array($params));
+function editEntity($id, $entity_name, $parent_id, $comment){
+    return xmlCall("glpi.editEntity", array($id, $entity_name, $parent_id, $comment));
 }
 
-function getAllLocations($params){
-    return xmlCall("glpi.getAllLocations", array($params));
+function getAllEntityRules($params){
+    return xmlCall("glpi.getAllEntityRules", array($params));
 }
 
 function getAllLocationsPowered($params){
@@ -119,6 +115,10 @@ function getAllLocationsPowered($params){
 
 function addLocation($location_name, $parent_id, $comment){
     return xmlCall("glpi.addLocation", array($location_name, $parent_id, $comment));
+}
+
+function editLocation($id, $location_name, $parent_id, $comment){
+    return xmlCall("glpi.editLocation", array($id, $location_name, $parent_id, $comment));
 }
 
 function getEntityRule($params){
