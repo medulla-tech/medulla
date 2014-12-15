@@ -22,6 +22,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/utils.inc.php");
 
@@ -35,7 +36,6 @@ if (isset($_GET["start"]))
 else
     $start = 0;
 
-
 $params = array(
     'min' => $start,
     'max' => $start + $maxperpage,
@@ -48,8 +48,11 @@ if (isset($_GET["status"]))
 if (isset($_GET["os_class_id"]))
     $params['filters']['os_class_id'] = $_GET["os_class_id"];
 
-if (isset($_GET["filter"]) && $_GET["filter"])
-    $params['like_filters']['title'] = $_GET["filter"];
+if (isset($_GET["filter"]) && $_GET["filter"]) {
+   $params['like_filters']['title'] = $_GET["filter"];
+   // to get all elements
+   unset($params['max']);
+}
 
 extract(get_updates($params));
 
@@ -57,7 +60,11 @@ if (!$count) {
     print _T('No entry found', 'update');
     return;
 }
-
+//to disable pagination
+if (isset($_GET["filter"]) && $_GET["filter"]) {
+   $maxperpage=$count;
+   $_REQUEST['maxperpage']=$count;
+}
 //  Listinfo params
 $listinfoParams = array();
 
@@ -94,7 +101,7 @@ $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", 
 
 $n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
-$n->setNavBar(new AjaxNavBar($count, $status));
+$n->setNavBar(new AjaxNavBar($count, $status,"updateSearchParam",$maxperpage));
 $n->start = 0;
 $n->end = $maxperpage;
 $n->disableFirstColumnActionLink();
@@ -123,6 +130,7 @@ jQuery('#btnEnableUpdates').click(function(){
     });
 
 });
+
 
 // Disable Updates button
 jQuery('#btnDisableUpdates').click(function(){
