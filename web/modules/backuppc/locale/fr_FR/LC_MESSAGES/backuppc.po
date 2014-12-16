@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-12 17:40+0100\n"
-"PO-Revision-Date: 2014-12-12 16:10+0000\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"POT-Creation-Date: 2014-12-16 15:51+0100\n"
+"PO-Revision-Date: 2014-12-16 13:43+0000\n"
+"Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -596,65 +596,6 @@ msgstr "Destination"
 msgid "Restore time"
 msgstr "Date de restauration"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "Jeux de fichiers"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "Editer le profil"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-#: modules/backuppc/infoPackage.inc.php:85
-msgid "Delete profile"
-msgstr "Supprimer le profil"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "Plannings"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux (Fichiers utilisateurs)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole / drive)"
-msgstr "Linux (Disque / complet)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole / drive)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista (Fichiers utilisateurs)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista (Disque C: complet)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP (Fichiers utilisateurs)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP (Disque C: complet)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "En journée"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "La nuit"
-
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:144
 msgid "Configuration saved"
@@ -662,19 +603,19 @@ msgstr "Configuration enregistrée"
 
 #: modules/backuppc/backuppc/advScripts.php:64
 msgid "Pre-backup script"
-msgstr ""
+msgstr "Script de pre-sauvegarde"
 
 #: modules/backuppc/backuppc/advScripts.php:68
 msgid "Post-backup script"
-msgstr ""
+msgstr "Script de post-sauvegarde"
 
 #: modules/backuppc/backuppc/advScripts.php:72
 msgid "Pre-restore script"
-msgstr ""
+msgstr "Script de pré-restauration"
 
 #: modules/backuppc/backuppc/advScripts.php:76
 msgid "Post-restore script"
-msgstr ""
+msgstr "Script de post-restauration"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
@@ -694,7 +635,7 @@ msgstr "Nb incrémentales"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:81
 msgid "Last backup (days)"
-msgstr ""
+msgstr "Age de la dernière sauvegarde (en jours)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:82
 msgid "Current state"
@@ -707,7 +648,7 @@ msgstr "Dernier message"
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:84
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:85
 msgid "Start backup"
-msgstr ""
+msgstr "Démarrer la sauvegarde"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:87
 msgid "Unset backup"
@@ -744,7 +685,7 @@ msgstr "Configuration"
 #: modules/backuppc/backuppc/hostStatus.php:166
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
-msgstr ""
+msgstr "Scripts avancés"
 
 #: modules/backuppc/backuppc/hostStatus.php:167
 #: modules/backuppc/infoPackage.inc.php:57
@@ -753,23 +694,82 @@ msgstr "Recherche de fichiers"
 
 #: modules/backuppc/backuppc/viewHostLog.php:25
 msgid "backup Log"
-msgstr ""
+msgstr "Log de sauvegarde"
 
 #: modules/backuppc/backuppc/viewHostLog.php:35
 msgid "backup log"
-msgstr ""
+msgstr "Log de sauvegarde"
 
 #: modules/backuppc/backuppc/startBackup.php:38
 msgid "Choose the backup type."
-msgstr ""
+msgstr "Choisissez le type de sauvegarde"
 
 #: modules/backuppc/backuppc/startBackup.php:42
 msgid "Full backup"
-msgstr ""
+msgstr "Sauvegarde complète"
 
 #: modules/backuppc/backuppc/startBackup.php:43
 msgid "Incremental backup"
-msgstr ""
+msgstr "Sauvegarde incrémentielle"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "Jeux de fichiers"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "Editer le profil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+#: modules/backuppc/infoPackage.inc.php:85
+msgid "Delete profile"
+msgstr "Supprimer le profil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "Plannings"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux (Fichiers utilisateurs)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole drive)"
+msgstr "Linux (tout le disque)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "OS X (User files)"
+msgstr "OS X (Fichiers utilisateurs)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "OS X (Whole drive)"
+msgstr "OS X (tout le disque)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista (Fichiers utilisateurs)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista (Disque C: complet)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP (Fichiers utilisateurs)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP (Disque C: complet)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "En journée"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "La nuit"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38

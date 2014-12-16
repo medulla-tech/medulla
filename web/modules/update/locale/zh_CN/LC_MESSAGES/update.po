@@ -1,120 +1,44 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-12 17:40+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-16 16:07+0100\n"
 "PO-Revision-Date: 2014-05-05 23:06+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
-"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
+"Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/zh_CN/)\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/update/includes/panels/product_updates.inc.php:30
-#: modules/update/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "更新"
+#: modules/update/update/sidebar.php:39 modules/update/infoPackage.inc.php:41
+msgid "All updates"
+msgstr "所有更新"
 
 #: modules/update/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
 msgstr "撷取更新时发生错误"
 
-#: modules/update/includes/panels/product_updates.inc.php:47
-msgid "View updates"
-msgstr "检视更新"
+#: modules/update/update/viewUpdates.php:46
+msgid "Available"
+msgstr "可用"
 
-#: modules/update/includes/panels/product_updates.inc.php:48
-msgid "Install updates"
-msgstr "安装更新"
-
-#: modules/update/includes/panels/product_updates.inc.php:54
-msgid "No updates available."
-msgstr "无可用更新。"
-
-#: modules/update/includes/panels/product_updates.inc.php:56
-msgid "updates available."
-msgstr "有可用更新。"
-
-#: modules/update/infoPackage.inc.php:32
-#: modules/update/update/viewUpdates.php:35
-msgid "Update manager"
-msgstr "更新管理员"
-
-#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
-msgid "Updates"
-msgstr "更新"
-
-#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
-msgid "All updates"
-msgstr "所有更新"
-
-#: modules/update/infoPackage.inc.php:47
-msgid "Updates list"
-msgstr "更新清单"
-
-#: modules/update/infoPackage.inc.php:51
-msgid "Enable update"
-msgstr "启用更新"
-
-#: modules/update/infoPackage.inc.php:55
-msgid "Disable update"
-msgstr "停用更新"
-
-#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
-msgid "Settings"
-msgstr "设定"
-
-#: modules/update/infoPackage.inc.php:69
-msgid "Product Updates installation"
-msgstr "产品更新安装"
-
-#: modules/update/infoPackage.inc.php:73
-msgid "Product Updates list"
-msgstr "产品更新清单"
-
-#: modules/update/infoPackage.inc.php:79
-msgid "Product Updates installation (ajax)"
-msgstr "产品更新安装 (ajax)"
-
-#: modules/update/update/ajaxUpdates.php:57
-msgid "No entry found"
-msgstr "找不到任何项目"
-
-#: modules/update/update/ajaxUpdates.php:87
-msgid "Update title"
-msgstr "更新标题"
-
-#: modules/update/update/ajaxUpdates.php:88
-msgid "UUID"
-msgstr "UUID"
-
-#: modules/update/update/ajaxUpdates.php:89
-msgid "Type"
-msgstr "类型"
-
-#: modules/update/update/ajaxUpdates.php:90
-msgid "Installed count"
-msgstr "已安装数目"
-
-#: modules/update/update/ajaxUpdates.php:92
-msgid "Enable"
-msgstr "启用"
+#: modules/update/update/viewProductUpdates.php:25
+#: modules/update/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "可用更新"
 
 #: modules/update/update/ajaxUpdates.php:93
 msgid "Disable"
 msgstr "停用"
-
-#: modules/update/update/ajaxUpdates.php:108
-msgid "Enable selected updates"
-msgstr "启用所选更新"
 
 #: modules/update/update/ajaxUpdates.php:109
 msgid "Disable selected updates"
@@ -124,13 +48,95 @@ msgstr "停用所选更新"
 msgid "Disable this update?"
 msgstr "要停用此更新？"
 
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr "停用更新"
+
+#: modules/update/update/viewUpdates.php:48
+msgid "Disabled"
+msgstr "已停用"
+
+#: modules/update/update/ajaxUpdates.php:92
+msgid "Enable"
+msgstr "启用"
+
+#: modules/update/update/ajaxUpdates.php:108
+msgid "Enable selected updates"
+msgstr "启用所选更新"
+
 #: modules/update/update/enableUpdate.php:40
 msgid "Enable this update?"
 msgstr "要启用此更新？"
 
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr "启用更新"
+
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr "启用更新管理用於："
+
+#: modules/update/update/viewUpdates.php:47
+msgid "Enabled"
+msgstr "已启用"
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
+msgstr "立即强制执行"
+
+#: modules/update/includes/panels/product_updates.inc.php:48
+msgid "Install updates"
+msgstr "安装更新"
+
+#: modules/update/update/ajaxUpdates.php:90
+msgid "Installed count"
+msgstr "已安装数目"
+
 #: modules/update/update/installProductUpdates.php:38
 msgid "Installing updates ..."
 msgstr "正在安装更新..."
+
+#: modules/update/update/ajaxUpdates.php:57
+msgid "No entry found"
+msgstr "找不到任何项目"
+
+#: modules/update/includes/panels/product_updates.inc.php:54
+msgid "No updates available."
+msgstr "无可用更新。"
+
+#: modules/update/infoPackage.inc.php:69
+msgid "Product Updates installation"
+msgstr "产品更新安装"
+
+#: modules/update/infoPackage.inc.php:79
+msgid "Product Updates installation (ajax)"
+msgstr "产品更新安装 (ajax)"
+
+#: modules/update/infoPackage.inc.php:73
+msgid "Product Updates list"
+msgstr "产品更新清单"
+
+#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
+msgid "Settings"
+msgstr "设定"
+
+#: modules/update/update/ajaxUpdates.php:89
+msgid "Type"
+msgstr "类型"
+
+#: modules/update/update/ajaxUpdates.php:88
+msgid "UUID"
+msgstr "UUID"
+
+#: modules/update/update/viewProductUpdates.php:38
+#: modules/update/includes/panels/product_updates.inc.php:30
+msgid "Update"
+msgstr "更新"
+
+#: modules/update/update/viewUpdates.php:35
+#: modules/update/infoPackage.inc.php:32
+msgid "Update manager"
+msgstr "更新管理员"
 
 #: modules/update/update/localSidebar.php:28
 msgid "Update managment"
@@ -140,33 +146,26 @@ msgstr "启用更新管理用於："
 msgid "Update settings"
 msgstr "更新设定"
 
-#: modules/update/update/settings.php:61
-msgid "Enable update managment for:"
-msgstr "启用更新管理用於："
+#: modules/update/update/ajaxUpdates.php:87
+msgid "Update title"
+msgstr "更新标题"
+
+#: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
+msgid "Updates"
+msgstr "更新"
 
 #: modules/update/update/settings.php:77
 msgid "Updates deployment"
 msgstr "更新部署"
 
-#: modules/update/update/settings.php:79
-msgid "Force now"
-msgstr "立即强制执行"
+#: modules/update/infoPackage.inc.php:47
+msgid "Updates list"
+msgstr "更新清单"
 
-#: modules/update/update/viewProductUpdates.php:25
-#: modules/update/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "可用更新"
+#: modules/update/includes/panels/product_updates.inc.php:47
+msgid "View updates"
+msgstr "检视更新"
 
-#: modules/update/update/viewUpdates.php:46
-msgid "Available"
-msgstr "可用"
-
-#: modules/update/update/viewUpdates.php:47
-msgid "Enabled"
-msgstr "已启用"
-
-#: modules/update/update/viewUpdates.php:48
-msgid "Disabled"
-msgstr "已停用"
-
-
+#: modules/update/includes/panels/product_updates.inc.php:56
+msgid "updates available."
+msgstr "有可用更新。"

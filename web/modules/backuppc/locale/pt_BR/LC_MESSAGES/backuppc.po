@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-12 17:40+0100\n"
-"PO-Revision-Date: 2014-12-12 16:10+0000\n"
+"POT-Creation-Date: 2014-12-16 15:51+0100\n"
+"PO-Revision-Date: 2014-12-16 13:37+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -596,65 +596,6 @@ msgstr "Destino"
 msgid "Restore time"
 msgstr "Tempo de recuperação"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "Configuração de arquivos"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "Editar perfil"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-#: modules/backuppc/infoPackage.inc.php:85
-msgid "Delete profile"
-msgstr "Excluir perfil"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "Agendamentos"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux (Arquivos dos usuários)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole / drive)"
-msgstr "Linux (Completo / disco)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
-msgstr "OS X (Arquivos dos usuários)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole / drive)"
-msgstr "OS X (Disco inteiro)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista (Arquivos dos usuários)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista (Disco C: completo)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP (Arquivos dos usuários)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP (Disco C: completo)"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "Diurno"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "Noturno"
-
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:144
 msgid "Configuration saved"
@@ -768,6 +709,65 @@ msgstr ""
 #: modules/backuppc/backuppc/startBackup.php:43
 msgid "Incremental backup"
 msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "Configuração de arquivos"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+#: modules/backuppc/infoPackage.inc.php:85
+msgid "Delete profile"
+msgstr "Excluir perfil"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "Agendamentos"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux (Arquivos dos usuários)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole drive)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "OS X (User files)"
+msgstr "OS X (Arquivos dos usuários)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "OS X (Whole drive)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista (Arquivos dos usuários)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista (Disco C: completo)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP (Arquivos dos usuários)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP (Disco C: completo)"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "Diurno"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "Noturno"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-12 17:40+0100\n"
-"PO-Revision-Date: 2014-12-12 16:10+0000\n"
+"POT-Creation-Date: 2014-12-16 15:51+0100\n"
+"PO-Revision-Date: 2014-12-16 13:37+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -590,65 +590,6 @@ msgstr "目的地"
 msgid "Restore time"
 msgstr "还原时间"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:27
-msgid "Filesets"
-msgstr "档案集"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:39
-#: modules/backuppc/backuppc/ViewProfiles.php:89
-msgid "Edit profile"
-msgstr "编辑设定档"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:40
-#: modules/backuppc/backuppc/ViewProfiles.php:90
-#: modules/backuppc/infoPackage.inc.php:85
-msgid "Delete profile"
-msgstr "删除设定档"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:85
-msgid "Schedules"
-msgstr "排程"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:133
-msgid "Linux (User files)"
-msgstr "Linux（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:134
-msgid "Linux (Whole / drive)"
-msgstr "Linux（整个磁碟机）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole / drive)"
-msgstr ""
-
-#: modules/backuppc/backuppc/ViewProfiles.php:137
-msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:138
-msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista（整个 C: 磁碟机）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:139
-msgid "Windows XP (User files)"
-msgstr "Windows XP（使用者档案）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:140
-msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP（整个 C: 磁碟机）"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:141
-msgid "Daytime"
-msgstr "日间"
-
-#: modules/backuppc/backuppc/ViewProfiles.php:142
-msgid "Nightly"
-msgstr "每晚"
-
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:144
 msgid "Configuration saved"
@@ -760,6 +701,65 @@ msgstr ""
 #: modules/backuppc/backuppc/startBackup.php:43
 msgid "Incremental backup"
 msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:27
+msgid "Filesets"
+msgstr "档案集"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:39
+#: modules/backuppc/backuppc/ViewProfiles.php:89
+msgid "Edit profile"
+msgstr "编辑设定档"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:40
+#: modules/backuppc/backuppc/ViewProfiles.php:90
+#: modules/backuppc/infoPackage.inc.php:85
+msgid "Delete profile"
+msgstr "删除设定档"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:85
+msgid "Schedules"
+msgstr "排程"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:133
+msgid "Linux (User files)"
+msgstr "Linux（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:134
+msgid "Linux (Whole drive)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:135
+msgid "OS X (User files)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:136
+msgid "OS X (Whole drive)"
+msgstr ""
+
+#: modules/backuppc/backuppc/ViewProfiles.php:137
+msgid "Windows 7/Vista (User files)"
+msgstr "Windows 7/Vista（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:138
+msgid "Windows 7/Vista (Whole C: Drive)"
+msgstr "Windows 7/Vista（整个 C: 磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:139
+msgid "Windows XP (User files)"
+msgstr "Windows XP（使用者档案）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:140
+msgid "Windows XP (Whole C: Drive)"
+msgstr "Windows XP（整个 C: 磁碟机）"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:141
+msgid "Daytime"
+msgstr "日间"
+
+#: modules/backuppc/backuppc/ViewProfiles.php:142
+msgid "Nightly"
+msgstr "每晚"
 
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
