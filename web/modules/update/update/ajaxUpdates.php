@@ -41,7 +41,6 @@ $params = array(
     'max' => $start + $maxperpage,
     'filters' => array()
 );
-
 if (isset($_GET["status"]))
     $params['filters']['status'] = $_GET["status"];
 
@@ -100,6 +99,7 @@ $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", 
 
 $n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
+
 $n->setNavBar(new AjaxNavBar($count, $status,"updateSearchParam",$maxperpage));
 $n->start = 0;
 $n->end = $maxperpage;

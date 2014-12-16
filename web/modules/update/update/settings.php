@@ -53,10 +53,11 @@ if (isset($_GET['create_update_commands'])){
 include dirname(__FILE__) . '/sidebar.php';
 
 
-
-$p = new PageGenerator(_T("Update settings", 'update'));
-$p->setSideMenu($sidemenu);
-$p->display();
+if (! ($_GET['module'] == 'base' && $_GET['submod'] == 'computers')) {
+    $p = new PageGenerator(_T("Update settings", 'update'));
+    $p->setSideMenu($sidemenu);
+    $p->display();
+}
 
 print '<h2><br/>' . _T('Enable update managment for:', 'update') . '</h2>';
 
