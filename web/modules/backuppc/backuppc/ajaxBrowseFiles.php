@@ -58,13 +58,6 @@ if (isset($_GET["start"])) {
     $start = 0;
 }
 
-function startsWith($haystack, $needle) {
-    return $needle === "" || strpos($haystack, $needle) === 0;
-}
-function endsWith($haystack, $needle){
-    return $needle === "" || substr($haystack, -strlen($needle)) === $needle;
-}
-
 /*
  * Sometimes, url can be formatted like this:
  *   &sharename=%2Fcygdrive%2Fc%2FDocuments%26Acirc%3B%2520and%26Acirc%3B%2520Settings%2F
