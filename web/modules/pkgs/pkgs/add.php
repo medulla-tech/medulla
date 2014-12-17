@@ -121,7 +121,7 @@ if (isset($_POST['bconfirm'])) {
     $selectpapi->setElementsVal($list_val);
     $_SESSION['pkgs_selected'] = array_values($list_val)[0];
 
-    $f = new ValidatingFormRequiresId();
+    $f = new ValidatingForm();
     $f->push(new Table());
 
     // Step title
