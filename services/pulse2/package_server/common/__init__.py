@@ -34,6 +34,7 @@ import shutil
 import hashlib
 import logging
 import random
+import json
 from pulse2.package_server.types import File
 from pulse2.package_server.parser import PackageParser, PackageParserXML, PackageParserJSON
 from pulse2.package_server.find import Find
@@ -494,8 +495,20 @@ class Common(pulse2.utils.Singleton):
         if not os.path.exists(confdir):
             os.mkdir(confdir)
         try:
+            # Try Reading old conf for merge
+            try:
+                __file = open(conf_file, 'r')
+                old_conf_data = json.loads(__file.read())
+                __file.close()
+            except:
+                old_conf_data = {}
+                
+            # Merge old conf data with new one
+            old_conf_data.update(json.loads(conf_data))
+            new_conf_data = json.dumps(old_conf_data)
+                
             f = open(conf_filetmp, 'w+')
-            f.write(conf_data)
+            f.write(new_conf_data)
             f.close()
         except Exception, e:
             self.logger.error("Error while writing new conf.json file")
