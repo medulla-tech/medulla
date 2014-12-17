@@ -41,10 +41,6 @@ function quick_get($param, $is_checkbox = False) {
     return $_GET[$param];
 }
 
-function startswith($haystack, $needle) {
-    return substr($haystack, 0, strlen($needle)) === $needle;
-}
-
 /*
  * Get all params of POST request prefixed by old_
  */
