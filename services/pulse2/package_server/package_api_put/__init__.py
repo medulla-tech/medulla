@@ -39,7 +39,7 @@ from pulse2.package_server.config import P2PServerCP
 
 class PackageApiPut(PackageApiGet):
     type = 'PackageApiPut'
-    
+
     def __init__(self, mp, name = '', tmp_input_dir = ''):
         PackageApiGet.__init__(self, mp, name)
         self.tmp_input_dir = tmp_input_dir
@@ -112,7 +112,7 @@ class PackageApiPut(PackageApiGet):
                 files.append(os.path.join(self.tmp_input_dir, f))
         if not ret:
             return [False, 'Some files are missing']
-                
+
         try:
             ret_assoc = Common().associateFiles(self.mp, pid, files, level)
         except exceptions.OSError, e:
@@ -130,7 +130,7 @@ class PackageApiPut(PackageApiGet):
         if ret_assoc[1] & 1:
             errors.append('Some files failed to be erased')
         # COULD ADD SOME MORE FLAGS
-            
+
         ret_assoc[1] = errors
         return ret_assoc
 
@@ -149,8 +149,8 @@ class PackageApiPut(PackageApiGet):
 
         ret = Common().editPackage(package['id'], pa, need_assign)
         if not ret: return False
-        
-        # Create conf.xml file in package
+
+        # Create conf file in package
         ret = Common().writePackageTo(package['id'], self.mp)
         ret, confdir = ret
         if not ret: return False

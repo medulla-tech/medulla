@@ -97,7 +97,7 @@ class Package:
         self.specifiedFiles = []
 
     def init(self, id, label, version, size, description, cmd, initcmd='',
-             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, Qvendor='',
+             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, appstream_family='', Qvendor='',
              Qsoftware='', Qversion='', boolcnd='', licenses='',
              associateinventory=0):
         self.label = label
@@ -112,6 +112,7 @@ class Package:
         self.postcmd_ok = getCommandFromH(postcmd_ok)
         self.postcmd_ko = getCommandFromH(postcmd_ko)
         self.reboot = reboot
+        self.appstream_family = appstream_family
         self.id = id
         self.root = ''
         self.Qvendor = Qvendor
@@ -146,6 +147,7 @@ class Package:
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
             'reboot':self.reboot,
+            'appstream_family': self.appstream_family,
             'files':self.files.toH(),
             'Qvendor':self.Qvendor,
             'Qsoftware':self.Qsoftware,
@@ -201,6 +203,9 @@ class Package:
             self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
         else:
             self.postcmd_ko = Command()
+        self.appstream_family = ''
+        if h.has_key('appstream_family'):
+            self.appstream_family = h['appstream_family']
         self.reboot = 0
         if h.has_key('reboot'):
             self.reboot = h['reboot']

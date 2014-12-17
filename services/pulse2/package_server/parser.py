@@ -28,14 +28,15 @@
 import logging
 import os
 from xml.dom import minidom
+import json
 from pulse2.package_server.types import Package
 
 
 class PackageParser:
     def init(self, config):
         self.logger = logging.getLogger()
-        if config.parser == None or config.parser == 'XML':
-            self.parser = PackageParserXML()
+        if 1:#config.parser == None or config.parser == 'XML':
+            self.parser = PackageParserJSON()
         else:
             self.logger.error("don't know how to parse this kind of package configuration %s" %
                               (config.parser))
@@ -48,7 +49,7 @@ class PackageParser:
             raise Exception("UKNPARSEMETHOD")
 
     def concat(self, package):
-        return self.parser.to_xml(package)
+        return self.parser.to_json(package)
 
 
 class PackageParserXML:
@@ -67,6 +68,11 @@ class PackageParserXML:
                 raise Exception('CANTPARSE')
             root = root[0]
             pid = root.getAttribute('id')
+
+            appstream_family = ''
+            if root.hasAttribute('appstream_family'):
+                appstream_family = root.getAttribute('appstream_family')
+
             tmp = root.getElementsByTagName('name')[0]
             name = tmp.firstChild.wholeText.strip()
             version = root.getElementsByTagName('version')[0]
@@ -141,6 +147,7 @@ class PackageParserXML:
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
                 reboot,
+                appstream_family,
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],
@@ -304,3 +311,104 @@ class PackageParserXML:
     <!ELEMENT Qversion (#PCDATA)>
     <!ELEMENT boolcnd (#PCDATA)>
 """
+
+class PackageParserJSON:
+    def parse_str(self, file):
+        try:
+            # Nonesense: we don't know if file is a path or content ??!! wtf
+            if os.path.exists(file):
+                try:
+                    data = json.loads(open(file).read())
+                except IOError:
+                    pass
+                except:
+                    pass
+            else:
+                data = json.loads(file)
+
+            # parsing routines
+            self.logger = logging.getLogger()
+            try:
+                pid = data['id']
+
+                if 'appstream_family' in data:
+                    appstream_family = data['appstream_family']
+                else:
+                    appstream_family = ''
+
+                name = data['name'].strip()
+
+                v_txt = data['version'] or '0'
+                desc = data['description']
+                cmds = data['commands']
+                reboot = data['reboot'] or 0
+
+                # Inventory section
+                licenses = data['inventory']['licenses']
+                associateinventory = data['inventory']['associateinventory']
+                queries = data['inventory']['queries']
+
+            except KeyError:
+                raise Exception('CANTPARSE')
+
+            p = Package()
+            p.init(
+                pid,
+                name,
+                v_txt,
+                0,
+                desc,
+                cmds['command'],
+                cmds['installInit'],
+                cmds['preCommand'],
+                cmds['postCommandSuccess'],
+                cmds['postCommandFailure'],
+                reboot,
+                appstream_family,
+                queries['Qvendor'],
+                queries['Qsoftware'],
+                queries['Qversion'],
+                queries['boolcnd'],
+                licenses,
+                associateinventory
+            )
+        except Exception, e:
+            logging.getLogger().error("parse_str failed")
+            logging.getLogger().error(e)
+            p = None
+
+        return p
+
+    def to_json(self, package):
+        """
+        create JSON document for the package
+        """
+
+        data = {}
+        data['id'] = package.id
+        data['name'] = package.label
+        data['version'] = str(package.version)
+        data['description'] = package.description
+        data['reboot'] = package.reboot
+
+        # Inventory section
+        data['inventory'] = {}
+        data['inventory']['licenses'] = package.licenses
+        data['inventory']['associateinventory'] = str(package.associateinventory)
+        data['inventory']['queries'] = {
+                'Qvendor':package.Qvendor,
+                'Qsoftware':package.Qsoftware,
+                'Qversion':package.Qversion,
+                'boolcnd': package.boolcnd}
+
+        # Commands section
+        data['commands'] = {}
+        data['commands']['preCommand'] = {'name':package.precmd.name, 'command':package.precmd.command}
+        data['commands']['installInit'] = {'name':package.initcmd.name, 'command':package.initcmd.command}
+        data['commands']['command'] = {'name':package.cmd.name, 'command':package.cmd.command}
+        data['commands']['postCommandSuccess'] = {'name':package.postcmd_ok.name, 'command':package.postcmd_ok.command}
+        data['commands']['postCommandFailure'] = {'name':package.postcmd_ko.name, 'command':package.postcmd_ko.command}
+        
+        data['appstream_family'] = package.appstream_family
+
+        return json.dumps(data)

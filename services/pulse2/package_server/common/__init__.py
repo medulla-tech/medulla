@@ -35,7 +35,7 @@ import hashlib
 import logging
 import random
 from pulse2.package_server.types import File
-from pulse2.package_server.parser import PackageParser
+from pulse2.package_server.parser import PackageParser, PackageParserXML, PackageParserJSON
 from pulse2.package_server.find import Find
 import pulse2.utils
 from pulse2.package_server.utilities import md5file
@@ -46,7 +46,7 @@ class Common(pulse2.utils.Singleton):
     """
 
     MD5SUMS = "MD5SUMS"
-    CONFXML = "conf.xml"
+    CONFFILE = "conf.json"
 
     SMART_DETECT_NOTPLUGGED = 0
     SMART_DETECT_NOCHANGES  = 1
@@ -193,25 +193,25 @@ class Common(pulse2.utils.Singleton):
 
     def _detectRemovedAndEditedPackages(self):
         """
-        Look for no more available conf.xml files, and unregister packages.
+        Look for no more available conf files, and unregister packages.
         """
         todelete = []
         for pid in self.packages:
             try:
                 proot = self._getPackageRoot(pid)
-                confxml = os.path.join(proot, "conf.xml")
-                if os.path.exists(confxml) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(confxml): # EDITED
-                    self.logger.debug("Package %s has been modified (%s)" % (pid, confxml))
+                conf_file = os.path.join(proot, self.CONFFILE)
+                if os.path.exists(conf_file) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(conf_file): # EDITED
+                    self.logger.debug("Package %s has been modified (%s)" % (pid, conf_file))
                     #self.__removePackage(pid, proot)
                     #todelete.append(pid)
-                    #if confxml in self.already_declared:
-                    #    del self.already_declared[confxml]
-                elif not os.path.exists(confxml): # SUPPRESSED
-                    self.logger.debug("Package %s no more exists (%s)" % (pid, confxml))
+                    #if conf_file in self.already_declared:
+                    #    del self.already_declared[conf_file]
+                elif not os.path.exists(conf_file): # SUPPRESSED
+                    self.logger.debug("Package %s no more exists (%s)" % (pid, conf_file))
                     self.__removePackage(pid, proot)
                     todelete.append(pid)
-                    if confxml in self.already_declared:
-                        del self.already_declared[confxml]
+                    if conf_file in self.already_declared:
+                        del self.already_declared[conf_file]
             except Exception, e:
                 self.logger.error("Common._detectRemovedAndEditedPackages : an exception happened")
                 self.logger.debug(type(e))
@@ -321,7 +321,7 @@ class Common(pulse2.utils.Singleton):
         return ret
 
     def checkPath4package(self, path): # TODO check if still used
-        # TODO get conf.xml files in path, parse them, and fill the hashes
+        # TODO get conf.json files in path, parse them, and fill the hashes
         return False
 
     def associatePackage2mp(self, pid, mp):
@@ -483,35 +483,35 @@ class Common(pulse2.utils.Singleton):
         if not self.packages.has_key(pid):
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
-        xml = self.parser.concat(self.packages[pid])
+        conf_data = self.parser.concat(self.packages[pid])
         params = self.h_desc(mp)
         path = params['src']
 
         confdir = os.path.join(path, pid)
         self.packages[pid].setRoot(confdir)
-        confxml = os.path.join(confdir, "conf.xml")
-        confxmltmp = confxml + '.tmp'
+        conf_file = os.path.join(confdir, self.CONFFILE)
+        conf_filetmp = conf_file + '.tmp'
         if not os.path.exists(confdir):
             os.mkdir(confdir)
         try:
-            f = open(confxmltmp, 'w+')
-            f.write(xml)
+            f = open(conf_filetmp, 'w+')
+            f.write(conf_data)
             f.close()
         except Exception, e:
-            self.logger.error("Error while writing new conf.xml file")
+            self.logger.error("Error while writing new conf.json file")
             self.logger.error(e)
-            if os.path.exists(confxmltmp):
-                os.remove(confxmltmp)
+            if os.path.exists(conf_filetmp):
+                os.remove(conf_filetmp)
             del self.inEdition[pid]
             return (None, None)
-        if os.path.exists(confxml):
-            os.remove(confxml)
+        if os.path.exists(conf_file):
+            os.remove(conf_file)
         # notify it's an edition
         self.inEdition[pid] = True
-        shutil.move(confxmltmp, confxml)
-        self.packageDetectionDate[pid] = self.__getDate(confxml)
-        if not os.path.exists(confxml):
-            self.logger.error("Error while moving the new conf.xml file")
+        shutil.move(conf_filetmp, conf_file)
+        self.packageDetectionDate[pid] = self.__getDate(conf_file)
+        if not os.path.exists(conf_file):
+            self.logger.error("Error while moving the new conf.json file")
 
         return [pid, confdir]
 
@@ -614,9 +614,9 @@ class Common(pulse2.utils.Singleton):
             self.logger.debug("is going to delete %s" % (p_dir))
             shutil.rmtree(p_dir, ignore_errors = True)
         else:
-            confxml = os.path.join(path, pid, 'conf.xml')
-            if os.path.exists(confxml):
-                shutil.move(os.path.join(path, pid, 'conf.xml'), os.path.join(path, pid, 'conf.xml.rem'))
+            conf_file = os.path.join(path, pid, self.CONFFILE)
+            if os.path.exists(conf_file):
+                shutil.move(os.path.join(path, pid, self.CONFFILE), os.path.join(path, pid, 'conf.json.rem'))
         # TODO remove package from mirrors
         if self.config.package_mirror_activate:
             Common().rsyncPackageOnMirrors(pid)
@@ -711,10 +711,10 @@ class Common(pulse2.utils.Singleton):
         Find().find(mirror_params['tmp_input_dir'], self._moveNewPackageSub, [mirror_params['src']])
 
     def _moveNewPackageSub(self, file, src):
-        if os.path.basename(file) == 'conf.xml':
+        if os.path.basename(file) == self.CONFFILE:
             file = os.path.dirname(file)
-            confxml = os.path.join(file, "conf.xml")
-            l_package = self.parser.parse(confxml)
+            conf_file = os.path.join(file, self.CONFFILE)
+            l_package = self.parser.parse(conf_file)
             l_package.setRoot(os.path.dirname(file))
             if l_package == None:
                 return False
@@ -750,7 +750,7 @@ class Common(pulse2.utils.Singleton):
             md5sums = []
             for root, dirs, files in os.walk(dirname):
                 for name in files:
-                    if name != self.CONFXML:
+                    if name != self.CONFFILE:
                         try:
                             filepath = os.path.join(root, name)
                             f = file(filepath, "rb")
@@ -887,7 +887,7 @@ class Common(pulse2.utils.Singleton):
         return os.stat(conffile)[stat.ST_MTIME]
 
     def _treatNewConfFile(self, file, mp, access, runid = -1):
-        if os.path.basename(file) == 'conf.xml':
+        if os.path.basename(file) == self.CONFFILE:
             l_package = self.parser.parse(file)
             if l_package == None: return
             if self.working_pkgs.has_key(l_package.id): return
@@ -935,7 +935,24 @@ class Common(pulse2.utils.Singleton):
 
 
     def _treatConfFile(self, file, mp, access):
+        # Compatibility code
+        # TODO: Remove this section for further releases
+        # Convert XML conf files into JSON
         if os.path.basename(file) == 'conf.xml':
+            try:
+                package_data = PackageParserXML().parse_str(file)
+                json_data = PackageParserJSON().to_json(package_data)
+                # Save the conf.json file
+                _json_file = open(os.path.join(os.path.dirname(file), 'conf.json'), 'w')
+                _json_file.write(json_data)
+                _json_file.close()
+                # Delete XML file
+                os.unlink(file)
+            except:
+                pass
+        # End compatibility code
+        
+        if os.path.basename(file) == self.CONFFILE:
             if self.already_declared.has_key(file) and self.already_declared[file]:
                 self._treatDir(os.path.dirname(file), mp, access)
                 return
@@ -964,10 +981,10 @@ class Common(pulse2.utils.Singleton):
         pid = None
         try:
             if os.path.isdir(file):
-                self.logger.debug("loading package metadata (xml) in %s"%(file))
+                self.logger.debug("loading package metadata (conf_file) in %s"%(file))
                 if l_package == None:
-                    confxml = os.path.join(file, "conf.xml")
-                    l_package = self.parser.parse(confxml)
+                    conf_file = os.path.join(file, self.CONFFILE)
+                    l_package = self.parser.parse(conf_file)
                 l_package.setRoot(file)
                 if l_package == None:
                     self.logger.debug("package failed to parse in %s"%(file))
@@ -1055,7 +1072,7 @@ class Common(pulse2.utils.Singleton):
             if os.path.isdir("%s%s%s" % (path , os.sep, pfile)):
                 files.extend(self._getFiles("%s%s%s" % (path , os.sep, pfile)))
             else:
-                if os.path.basename(pfile) != 'conf.xml':
+                if os.path.basename(pfile) != self.CONFFILE:
                     files.append("%s%s%s" % (path , os.sep, pfile))
         return files
 
