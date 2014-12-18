@@ -116,6 +116,20 @@ def _get_updates_for_group(params):
     updates = updateDatabase().get_updates_for_hosts(params)
     return updates
 
+def set_update_status_for_group(gid,update_ids,status):
+    # Creating root context
+    ctx = SecurityContext()
+    ctx.userid = 'root'
+    #get uuid for all computer of this group
+    ComputerList=ComputerGroupManager().get_group_results(ctx,gid,0,-1,{})
+    #set update_status for all computer of this group
+    uuids=[]
+    for uuid in ComputerList:
+            uuids.append(int(uuid.lower().replace('uuid', '')))
+    for update_id in update_ids:
+        updateDatabase().set_update_status_for_hosts(uuids,update_id,status)
+    return True
+
 def set_update_status(update_id, status):
     return updateDatabase().set_update_status(update_id, status)
 

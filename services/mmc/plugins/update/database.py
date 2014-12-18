@@ -467,6 +467,26 @@ class updateDatabase(DatabaseHelper):
             logger.error(str(e))
             return False
 
+    @DatabaseHelper._session
+    def set_update_status_for_hosts(self, session, uuids, update_id, status):
+        """
+        Set the update status for the target hosts
+        (global update status will remain unchanged)
+        """
+        try:
+            session.query(Target)\
+                .filter_by(update_id = update_id)\
+                .filter(Target.uuid.in_(uuids))\
+                .one()\
+                .status = status
+
+            session.commit()
+            return True
+
+        except Exception, e:
+            logger.error("DB Error: No entry found or duplicate entries")
+            logger.error(str(e))
+            return False
 
     #========================================================================
     # >>>>>>>  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
