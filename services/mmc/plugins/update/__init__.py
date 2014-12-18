@@ -38,6 +38,7 @@ from mmc.plugins.dashboard.panel import Panel
 from mmc.plugins.update.config import updateConfig
 from mmc.plugins.update.database import updateDatabase
 from mmc.plugins.msc import create_update_command
+from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.base.computers import ComputerManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
@@ -89,8 +90,31 @@ def get_update_types(params):
 
 
 def get_updates(params):
-    return updateDatabase().get_updates(params)
+    # if whe have a group or list of uuids
+    if ('gid' or 'uuids') in params:
+        return _get_updates_for_group(params)
+    else:
+        return updateDatabase().get_updates(params)
 
+def _get_updates_for_group(params):
+    """
+    Get updates from uuids list if params['uuids'] is a correct list of uuid
+    and from group if params['gid'] is a correct group id
+    """
+    if 'gid' in params:
+        params['uuids']=[]
+        # Creating root context
+        ctx = SecurityContext()
+        ctx.userid = 'root'
+
+        #get uuid for all computer of this group
+        ComputerList=ComputerGroupManager().get_group_results(ctx,params['gid'],0,-1,{})
+        for uuid in ComputerList:
+            params['uuids'].append(int(uuid.lower().replace('uuid', '')))
+
+    #get updates for this group
+    updates = updateDatabase().get_updates_for_hosts(params)
+    return updates
 
 def set_update_status(update_id, status):
     return updateDatabase().set_update_status(update_id, status)

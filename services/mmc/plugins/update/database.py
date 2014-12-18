@@ -235,6 +235,79 @@ class updateDatabase(DatabaseHelper):
     # >>>>>>> UPDATE FOR HOSTS FUNCTIONS <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     #========================================================================
 
+    @DatabaseHelper._listinfo
+    @DatabaseHelper._session
+    def get_updates_for_hosts(self, session,params):
+        """
+        Get all update to install for a group of hosts,
+        this function return all updates for the group of hosts
+        if the update have the Status (STATUS_ENABLED or STATUS_DISABLED, STATUS_NEUTRAL)
+        in this order of priority:
+        Target -> Update -> Update Type
+        """
+        if 'uuids' in params:
+            uuids=params['uuids']
+        else:
+            uuids=[]
+
+        if 'is_install' in params:
+            is_installed=params['is_installed']
+        else:
+            is_installed=None
+
+        if 'filters' in params and 'status' in params['filters']:
+            dStatus=int(params['filters']['status'])
+            del params['filters']['status']
+        else:
+            dStatus= STATUS_NEUTRAL
+
+        try:
+            # Defining subqueries
+            installed_targets = session.query(Target.update_id, func.sum(Target.is_installed).label('total_installed')).group_by(Target.update_id).subquery()
+            all_targets = session.query(Target.update_id, func.count('*').label('total_targets')).group_by(Target.update_id).subquery()
+
+            query = session.query(Update, func.ifnull(installed_targets.c.total_installed, 0).label('total_installed'), func.ifnull(all_targets.c.total_targets, 0).label('total_targets'))
+            query = query.join(Target)
+            query = query.join(UpdateType)
+            # filter on the group of hosts
+            query = query.filter(Target.uuid.in_(uuids))
+            # add subqueries
+            query = query.outerjoin(installed_targets, Update.id == installed_targets.c.update_id)
+            query = query.outerjoin(all_targets, Update.id == all_targets.c.update_id)
+
+            if dStatus == STATUS_NEUTRAL:
+                query = query.filter(Target.status == STATUS_NEUTRAL)
+                query = query.filter(Update.status == STATUS_NEUTRAL)
+                query = query.filter(UpdateType.status == STATUS_NEUTRAL)
+            # ============================================
+            # ==== STATUS FILTERING ======================
+            # ============================================
+            else:
+                query = query.filter(\
+                    # 1st level filtering : Target status
+                    (Target.status == dStatus) |\
+                    (\
+                        (Target.status == STATUS_NEUTRAL) &\
+                        (\
+                            # 2nd level filtering : Update status
+                            (Update.status == dStatus)| \
+                                (\
+                                    (Update.status == STATUS_NEUTRAL) &\
+                                        (UpdateType.status == dStatus)\
+                                )\
+                        )\
+                    )
+                )
+            if is_installed is not None:
+                query = query.filter(Target.is_installed == is_installed)
+            # ============================================
+            # ==== END STATUS FILTERING ==================
+            # ============================================
+            return query
+        except Exception, e:
+            logger.error("DB Error: %s" % str(e))
+            return False
+
     @DatabaseHelper._session
     def get_updates_for_host_by_dominant_status(self, session, uuid, dStatus, is_installed=None):
         """
