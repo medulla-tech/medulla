@@ -32,9 +32,12 @@ $MMCApp = & MMCApp::getInstance();
 
 include dirname(__FILE__) . '/sidebar.php';
 
-$p = new PageGenerator(_T("Update manager", 'update'));
-$p->setSideMenu($sidemenu);
-$p->display();
+# if on base/computer module , dont create a new page (for group view)
+if (! ($_GET['module'] == 'base' && $_GET['submod'] == 'computers')) {
+    $p = new PageGenerator(_T("Update manager", 'update'));
+    $p->setSideMenu($sidemenu);
+    $p->display();
+}
 $params = array();
 
 if (isset($_GET["os_class_id"]))
