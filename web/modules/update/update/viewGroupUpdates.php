@@ -30,12 +30,14 @@ require_once("modules/update/includes/html.inc.php");
 require("modules/base/computers/localSidebar.php");
 require_once('graph/navbar.inc.php');
 require_once("modules/pulse2/includes/utilities.php");
-
 $MMCApp = & MMCApp::getInstance();
 $os_classes = get_os_classes();
 right_top_shortcuts_display();
 
-if ($_GET['gid']) {
+$params = array();
+
+if (isset($_GET['gid'])) {
+    $params['gid'] = $_GET['gid'];
     $p = new TabbedPageGenerator();
     $p->setSideMenu($sidemenu);
     require("modules/dyngroup/includes/includes.php");
@@ -45,14 +47,15 @@ if ($_GET['gid']) {
     } else {
         $countTab=1;
         $p->addTop(sprintf(_T("%s's group update manager", 'update'), $group->getName()), "modules/msc/msc/header.php");
-        $p->addTab($countTab,_T('All updates', 'update'),"", "modules/update/update/viewUpdates.php", array('gid' => $_GET['gid']));
+        $p->addTab($countTab,_T('All updates', 'update'),"", "modules/update/update/viewUpdates.php", $params);
+        # tabs for each os available for update_module
         foreach ($os_classes['data'] as $os) {
             $countTab++;
-            $p->addTab($countTab,_T($os['name'], 'update'),"", "modules/update/update/viewUpdates.php", array('gid' => $_GET['gid'],'os_class_id'=>$os['id']));
+            $params['os_class_id']=$os['id'];
+            $p->addTab($countTab,_T($os['name'], 'update'),"", "modules/update/update/viewUpdates.php", $params);
         }
         $countTab++;
-        $p->addTab($countTab,_T('Settings', 'update'),"", "modules/update/update/settings.php", array('gid' => $_GET['gid']));
-#        $p->addTab("", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
+        $p->addTab($countTab,_T('Settings', 'update'),"", "modules/update/update/settings.php", $params);
     }
     $p->display();
 } else {

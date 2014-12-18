@@ -43,6 +43,9 @@ $params = array();
 if (isset($_GET["os_class_id"]))
     $params['os_class_id'] = $_GET["os_class_id"];
 
+if (isset($_GET['gid']))
+    $params['gid'] = $_GET["gid"];
+
 $ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
 
 $ajax->setElements(array(

@@ -47,6 +47,12 @@ if (isset($_GET["status"]))
 if (isset($_GET["os_class_id"]))
     $params['filters']['os_class_id'] = $_GET["os_class_id"];
 
+if (isset($_GET["gid"]))
+    $params['gid'] = $_GET["gid"];
+
+if (isset($_GET["uuids"]))
+    $params['uuids'] = $_GET["uuids"];
+
 if (isset($_GET["filter"]) && $_GET["filter"]) {
    $params['like_filters']['title'] = $_GET["filter"];
    // to get all elements
@@ -120,12 +126,12 @@ print '</form>';
 jQuery('#btnEnableUpdates').click(function(){
 
     jQuery.ajax({
-	url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
-	type: 'POST',
-	data: jQuery('#sel_updates_form').serialize(),
-	success: function(result){
-	    pushSearch();
-	}
+        url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
+        type: 'POST',
+        data: jQuery('#sel_updates_form').serialize(),
+        success: function(result){
+            pushSearch();
+        }
     });
 
 });
