@@ -261,6 +261,8 @@ class Inventory(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.table['hasNetwork'], self.table['hasNetwork'].c.machine == Machine.id).outerjoin(self.table['Network'], self.table['Network'].c.id == self.table['hasNetwork'].c.network)
             if set(['os','user','type','domain','fullname']) & requested_cols:
                 join_query = join_query.outerjoin(self.table['hasHardware'], self.table['hasHardware'].c.machine == Machine.id).outerjoin(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+            if "Registry" in self.config.content:
+                join_query = join_query.outerjoin(self.table['hasRegistry'], self.table['hasRegistry'].c.machine == Machine.id).outerjoin(self.table['Registry'], self.table['Registry'].c.id == self.table['hasRegistry'].c.registry)
 
         if count:
             query = session.query(func.count(Machine.id)).select_from(join_query).filter(query_filter)
@@ -308,6 +310,10 @@ class Inventory(DyngroupDatabaseHelper):
                     clauses.append(self.table['Hardware'].c.User.like("%" + pattern['hostname'] + "%"))
                     clauses.append(self.table['Hardware'].c.Type.like("%" + pattern['hostname'] + "%"))
                     clauses.append(self.table['Hardware'].c.Workgroup.like("%" + pattern['hostname'] + "%"))
+                # Filtering on Registy params
+                if "Registry" in self.config.content:
+                    clauses.append(self.table['Registry'].c.Value.like("%"+ pattern['hostname'] + "%"))
+
                 # Entity filtering
                 if 'entity' in requested_cols:
                     clauses.append(self.table['Entity'].c.Label.like("%" + pattern['hostname'] + "%"))
