@@ -64,6 +64,9 @@ if ($is_gp != 1) { // Simple group
         $actions['log'] = new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs");
         $actions['deploy'] = new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers");
     }
+    if (in_array("update", $_SESSION["supportModList"])) {
+        $actions['update'] = new ActionItem(_T("Update on this group", "dyngroup"),"view_updates", "reload", "id","base", "computers");
+    }
 } else { // Imaging group
     if (in_array("inventory", $_SESSION["supportModList"])) {
         $actions['inventory'] = new ActionItem(_T("Inventory on this profile", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers");
