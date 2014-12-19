@@ -23,6 +23,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 ?>
+<link href='modules/update/graph/update/index.css' rel='stylesheet' type='text/css'>
 <?php
 
 require_once("modules/update/includes/xmlrpc.inc.php");

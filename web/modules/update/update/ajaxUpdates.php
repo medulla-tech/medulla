@@ -47,9 +47,10 @@ if (isset($_GET["status"]))
 if (isset($_GET["os_class_id"]))
     $params['filters']['os_class_id'] = $_GET["os_class_id"];
 
-if (isset($_GET["gid"]))
+if (isset($_GET["gid"])) {
     $params['gid'] = $_GET["gid"];
-
+    print ("<div id=\"gid\" style=\"display:none;\">".$params['gid']."</div>");
+}
 if (isset($_GET["uuids"]))
     $params['uuids'] = $_GET["uuids"];
 
@@ -72,10 +73,13 @@ if (isset($_GET["filter"]) && $_GET["filter"]) {
 }
 //  Listinfo params
 $listinfoParams = array();
-
 $checkboxes = array();
 foreach ($data as $row) {
-    $listinfoParams[] = array('id' => $row['id']);
+    if (isset($_GET["gid"])) {
+        $listinfoParams[] = array('id' => $row['id'],'gid' => $_GET["gid"]);
+    } else {
+        $listinfoParams[] = array('id' => $row['id']);
+    }
     $checkboxes[] = '<input type="checkbox" name="selected_updates[]" value="' . $row['id'] . '">';
 }
 
@@ -102,7 +106,9 @@ $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
 
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
-
+if (isset($_POST['gid'])){
+    $n->add(new HiddenTpl("gid"), array("value" => $_GET['gid'], "hide" => True));
+}
 $n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
 
@@ -121,7 +127,6 @@ print '</form>';
 <input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
 
 <script type="text/javascript">
-
 // Enable Updates button
 jQuery('#btnEnableUpdates').click(function(){
 

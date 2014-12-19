@@ -47,6 +47,10 @@ function set_update_status($update_id, $status) {
     return xmlCall("update.set_update_status", array($update_id, $status));
 }
 
+function set_update_status_for_group($gid, $update_id, $status) {
+    return xmlCall("update.set_update_status_for_group", array($gid,$update_id, $status));
+}
+
 function enable_only_os_classes($os_classes_id){
     return xmlCall("update.enable_only_os_classes", array($os_classes_id));
 }

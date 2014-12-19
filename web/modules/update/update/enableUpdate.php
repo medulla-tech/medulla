@@ -24,23 +24,32 @@
 
 require_once("modules/update/includes/xmlrpc.inc.php");
 
-
 // Enabling Multiple updates
 if (isset($_POST["selected_updates"])) {
-    set_update_status($_POST["selected_updates"] , 1);
+    if (isset($_POST['gid'])){
+        set_update_status_for_group($_POST['gid'] , $_POST["selected_updates"] , 1);
+    } else {
+        set_update_status($_POST["selected_updates"] , 1);
+    }
     return;
 }
 
 if (isset($_POST["bconfirm"], $_POST["id"])) {
     // Setting update status
-    set_update_status($_POST["id"], 1);
+    if (isset($_POST['gid'])){
+        set_update_status_for_group($_POST['gid'] , array($_POST["id"]) , 1);
+    } else {
+        set_update_status($_POST["id"], 1);
+    }
     return;
 } else {
     /* Form displaying */
     $title = _T("Enable this update?", 'update');
-
     $f = new PopupForm($title, 'enableUpdateForm');
     $f->add(new HiddenTpl("id"), array("value" => $_GET['id'], "hide" => True));
+    if (isset($_POST['gid'])){
+        $f->add(new HiddenTpl("gid"), array("value" => $_GET['gid'], "hide" => True));
+    }
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
