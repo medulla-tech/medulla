@@ -220,8 +220,8 @@ class updateDatabase(DatabaseHelper):
         """
         Set the global update status
         """
-	if not isinstance(update_id, list):
-	    update_id = [update_id]
+        if not isinstance(update_id, list):
+            update_id = [update_id]
         try:
             session.query(Update).filter(Update.id.in_(update_id)).update({'status': status}, synchronize_session = False)
             session.commit()
@@ -239,9 +239,9 @@ class updateDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def get_updates_for_hosts(self, session,params):
         """
-        Get all update to install for a group of hosts,
-        this function return all updates for the group of hosts
-        if the update have the Status (STATUS_ENABLED or STATUS_DISABLED, STATUS_NEUTRAL)
+        Get all updates for a group of hosts by the specified filters,
+        like get_updates function.
+        Status filter is specially treaten.
         in this order of priority:
         Target -> Update -> Update Type
         """
@@ -275,13 +275,16 @@ class updateDatabase(DatabaseHelper):
             query = query.outerjoin(installed_targets, Update.id == installed_targets.c.update_id)
             query = query.outerjoin(all_targets, Update.id == all_targets.c.update_id)
 
+            if is_installed is not None:
+                query = query.filter(Target.is_installed == is_installed)
+
+            # ============================================
+            # ==== STATUS FILTERING ======================
+            # ============================================
             if dStatus == STATUS_NEUTRAL:
                 query = query.filter(Target.status == STATUS_NEUTRAL)
                 query = query.filter(Update.status == STATUS_NEUTRAL)
                 query = query.filter(UpdateType.status == STATUS_NEUTRAL)
-            # ============================================
-            # ==== STATUS FILTERING ======================
-            # ============================================
             else:
                 query = query.filter(\
                     # 1st level filtering : Target status
@@ -298,8 +301,6 @@ class updateDatabase(DatabaseHelper):
                         )\
                     )
                 )
-            if is_installed is not None:
-                query = query.filter(Target.is_installed == is_installed)
             # ============================================
             # ==== END STATUS FILTERING ==================
             # ============================================

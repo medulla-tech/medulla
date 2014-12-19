@@ -90,7 +90,11 @@ def get_update_types(params):
 
 
 def get_updates(params):
-    # if whe have a group or list of uuids
+    """
+    Get updates standard function,
+    if gid or uuids is defined group view is used
+    else global view is used
+    """
     if ('gid' or 'uuids') in params:
         return _get_updates_for_group(params)
     else:
@@ -117,6 +121,11 @@ def _get_updates_for_group(params):
     return updates
 
 def set_update_status_for_group(gid,update_ids,status):
+    """
+    Set updates status for one define group of machine, for multiples defines
+    update to status param value.
+    This does not affect global status of update
+    """
     # Creating root context
     ctx = SecurityContext()
     ctx.userid = 'root'
@@ -131,6 +140,9 @@ def set_update_status_for_group(gid,update_ids,status):
     return True
 
 def set_update_status(update_id, status):
+    """
+    Set  global status of one update
+    """
     return updateDatabase().set_update_status(update_id, status)
 
 
