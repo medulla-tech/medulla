@@ -193,4 +193,24 @@ class MultiFileTpl2 extends AbstractTpl {
 
 }
 
+class buttonTpl extends AbstractTpl {
+    var $class = '';
+    var $cssClass = 'btn btn-small';
+
+    function buttonTpl($id,$text,$class='') {
+        $this->id = $id;
+        $this->text = $text;
+        $this->class = $class;
+    }
+
+
+    function setClass($class) {
+        $this->cssClass = $class;
+    }
+
+    function display($arrParam) {
+        if (isset($this->id,$this->text))
+            printf('<input id="%s" type="button" value="%s" class="%s %s" />',$this->id,$this->text,$this->cssClass,$this->class);
+    }
+}
 ?>

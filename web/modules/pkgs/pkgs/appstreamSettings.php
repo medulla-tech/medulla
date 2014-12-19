@@ -27,7 +27,7 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 
 require_once("modules/pkgs/includes/xmlrpc.php");
-require_once("modules/backuppc/includes/html.inc.php");
+require_once("modules/pkgs/includes/html.inc.php");
 
 updateAppstreamPackages();
 

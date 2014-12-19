@@ -28,7 +28,7 @@ $packages = getActivatedAppstreamPackages();
 $packages_download=getDownloadAppstreamPackages();
 $count = count($packages);
 
-$expiration_dates = $params = $labels = array();
+$expiration_dates = $params = $labels = $actions = array();
 
 foreach ($packages as $key => $data) {
 
