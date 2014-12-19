@@ -672,23 +672,6 @@ def unset_backup_for_host(uuid):
 # SERVER, HOST INFO AND BACKUP LOGS
 # ==========================================================================
 
-def get_host_log(host):
-    params = {}
-    params['host'] = host
-    params['action'] = 'view'
-    params['type'] = 'LOG'
-    html = send_request(params)
-    if not html:
-        return _CONNECTION_ERROR
-    if getHTMLerr(html):
-        return getHTMLerr(html)
-    d=pq(html)
-    if not d('pre:first'):
-        return _FORMAT_ERROR
-    else:
-        return d('pre:first').text()
-
-
 def get_xfer_log(host,backupnum):
     params = {}
     params['host'] = host
