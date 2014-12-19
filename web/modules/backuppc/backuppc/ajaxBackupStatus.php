@@ -57,19 +57,33 @@ if (count($data) == 0){
 $cnames = array();
 $params = array();
 
+
 for ($i = 0 ; $i<count($data['hosts']) ; $i++){
-    $cnames[] = $data['hosts'][$i];
-    if (preg_match('@uuid([0-9]+)@i',$data['hosts'][$i],$matches) == 1)
+	
+	$cn = $data['hosts'][$i];
+	
+    
+    if (preg_match('@uuid([0-9]+)@i', $cn, $matches) == 1)
     {
-    	$cn = getComputersName(array('uuid' => $matches[1]));
-	    if (count($cn))
-    	    $cnames[$i] = sprintf('<a href="main.php?module=backuppc&submod=backuppc&action=hostStatus&
-            cn=%s&objectUUID=UUID%s">%s</a>',$cn[0],$matches[1],$cn[0]);
-        
-        $params[] = array('cn' => $cn[0], 'objectUUID' => 'UUID'.$matches[1]);
+    	$cn_ = getComputersName(array('uuid' => $matches[1]));
+	    if (count($cn_)){
+			$cn = $cn_[0];
+    	    $cnames_ = sprintf('<a href="main.php?module=backuppc&submod=backuppc&action=hostStatus&cn=%s&objectUUID=UUID%s">%s</a>',$cn_[0],$matches[1],$cn_[0]);
+		}
+        $param_ = array('cn' => $cn, 'objectUUID' => 'UUID'.$matches[1]);
     }
-    else
-        $params[] = array('cn' => $data['hosts'][$i]);
+    else{
+        $param_ = array('cn' => $data['hosts'][$i]);
+		$cnames_ = $cn;
+	}
+		
+	
+	if (!empty($_GET['filter']) && stripos($cn, $_GET['filter'])===FALSE)
+		continue;
+	
+
+	$cnames[] = $cnames_;
+	$params[] = $param_;
 }
 
 $count = count($data['hosts']);
@@ -81,11 +95,13 @@ $n->addExtraInfo($data['incr'], _T("incr. number", "backuppc"));
 $n->addExtraInfo($data['last_backup'], _T("Last backup (days)", "backuppc"));
 $n->addExtraInfo($data['state'], _T("Current state", "backuppc"));
 $n->addExtraInfo($data['last_attempt'], _T("Last message", "backuppc"));
+
 $n->addActionItem(new ActionPopupItem(_T("Start backup"), "startBackup", "start", "host", "backuppc", "backuppc"));
 $n->addActionItem(new ActionPopupItem(_T("Start backup"), "stopBackup", "stop", "host", "backuppc", "backuppc"));
 $n->addActionItem(new ActionPopupItem(_T("View errors"), "viewHostLog", "file", "host", "backuppc", "backuppc"));
 $n->addActionItem(new ActionConfirmItem(_T("Unset backup", 'backuppc'), "index", "delete", "uuid", "backuppc", "backuppc", _T('Are you sure you want to unset backup for this computer?', 'backuppc')));
 $n->setParamInfo($params);
+
 $n->setCssClass("machineName"); // CSS for icons
 $n->setItemCount($count);
 $filter1 = $_GET['location'];
