@@ -55,6 +55,10 @@ function enable_only_os_classes($os_classes_id){
     return xmlCall("update.enable_only_os_classes", array($os_classes_id));
 }
 
+function get_machines_update_status() {
+    return xmlCall("update.get_machines_update_status", array());
+}
+
 function create_update_commands(){
     return xmlCall("update.create_update_commands", array());
 }
