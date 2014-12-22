@@ -55,8 +55,6 @@ if (isset($_GET['gid'])) {
             $params['os_class_id']=$os['id'];
             $p->addTab($countTab,_T($os['name'], 'update'),"", "modules/update/update/viewUpdates.php", $params);
         }
-        $countTab++;
-        $p->addTab($countTab,_T('Settings', 'update'),"", "modules/update/update/settings.php", $params);
     }
     $p->display();
 } else {
