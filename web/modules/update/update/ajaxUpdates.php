@@ -94,12 +94,15 @@ $cols['targets'] = array();
 for ($i = 0; $i < count($cols['total_targets']); $i++){
     $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
 }
+for ($i = 0; $i < count($cols['info_url']); $i++){
+    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i].'" title="'._T("More details","update").'">'.$cols['title'][$i].'</a>';
+}
 // Printing selected updates form
 print '<form id="sel_updates_form">';
 
 $n = new OptimizedListInfos($checkboxes, $check_all, '', '10px');
 $n->first_elt_padding = '0';
-$n->addExtraInfo($cols['title'], _T("Update title", "update"));
+$n->addExtraInfo($cols['title_url'], _T("Update title", "update"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "update"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
