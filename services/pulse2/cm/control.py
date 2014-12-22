@@ -21,7 +21,7 @@
 # MA 02110-1301, USA.
 import logging
 
-from twisted.internet.defer import Deferred, DeferredList
+from twisted.internet.defer import DeferredList
 
 from pulse2.cm.parse import Parser
 from pulse2.cm.server import Server
@@ -240,8 +240,6 @@ if __name__ == "__main__":
     hdlr2 = logging.StreamHandler(sys.stdout)
     hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
     logger.addHandler(hdlr2)
-
-    from OpenSSL.SSL import TLSv1_METHOD
 
     from twisted.internet import reactor
     from pulse2.cm.config import Config

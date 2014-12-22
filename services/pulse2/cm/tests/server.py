@@ -19,18 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from random import randrange
-
 from twisted.trial.unittest import TestCase
 from twisted.test.proto_helpers import StringTransport
-from twisted.python.threadpool import ThreadPool
 
-from twisted.internet.defer import Deferred, maybeDeferred
-from twisted.internet.task import deferLater, Clock, LoopingCall
+from twisted.internet.defer import Deferred
+from twisted.internet.task import Clock
 
 from pulse2.cm.server import GatheringFactory
 from pulse2.cm.collector import Collector, Sessions
-from pulse2.cm.trigger import Trigger
 
 
 class EchoResponse(object):

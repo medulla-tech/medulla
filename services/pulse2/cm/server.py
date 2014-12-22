@@ -32,7 +32,6 @@ from twisted.internet.ssl import DefaultOpenSSLContextFactory
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet.address import IPv4Address
 
-from pulse2.cm.collector import Collector
 
 
 class GatheringServer(Protocol):
@@ -186,92 +185,5 @@ class Server(object):
 # openssl req -new -key client.key -out client.csr
 # openssl x509 -req -in server.csr -CA root.pem -CAkey root.key -CAcreateserial -out server.crt -days 1023
 # openssl x509 -req -in client.csr -CA root.pem -CAkey root.key -CAcreateserial -out client.crt -days 1023
-
-def test_with_trigger(server):
-    import time
-    from random import randrange
-    from pulse2.cm.collector import Collector, Sessions
-    from pulse2.cm.trigger import Trigger
-
-    from twisted.test.proto_helpers import StringTransport
-    from twisted.internet import reactor
-    from twisted.internet.task import deferLater
-
-
-    collector = Collector()
-
-    def process_responses(_collector):
-        #print _collector.queue
-        while True:
-            result = _collector.get()
-
-            if not result:
-                break
-
-            uid, ip, request = result
-
-            delay = randrange(1, 20)
-
-
-            #d = deferLater(reactor, delay, _collector.release, uid, "ok")
-            # send the request back (echo test)
-            d = deferLater(reactor, delay, _collector.release, uid, request)
-            @d.addCallback
-            def cb(reason):
-                pass
-                #print "\033[33mrelease request: %s (delay=%d)\033[0m" % (request, delay)
-            @d.addErrback
-            def eb(reason):
-                pass
-                #print "\033[31mrelease request failed: %s \033[0m" % (reason)
-
-
-            #_collector.release(uid, "ok")
-
-    try:
-        trigger = Trigger(process_responses, collector)
-    except Exception, e:
-        logging.getLogger().warn("\033[31mtrigger instance failed: %s\033[0m" % str(e))
-
-    server.start(collector, trigger)
-
-#    factory = GatheringFactory()
-#    factory.protocol.set_handler(collector)
-#    factory.protocol.set_trigger(trigger)
-#
-#    protocol = factory.buildProtocol(("127.0.0.1", 0))
-#    transport = StringTransport()
-#    protocol.makeConnection(transport)
-
-#    prev_stamp = 0
-#    for kk in xrange(3):
-#        for i in xrange(5):
-#
-#            request = "hello_%d" % randrange(0, 99999)
-#            protocol.dataReceived(request)
-#
-#            lag = time.time() - prev_stamp
-#
-#            print "\033[32mrelease request: %d \033[0m" % (lag)
-#            prev_stamp = time.time()
-#        time.sleep(5)
-#
-#    print len(collector.queue)
-
-
-if __name__ == "__main__":
-
-    key = "/root/dev/smart_agent/tls/server.key"
-    crt = "/root/dev/smart_agent/tls/server.crt"
-    pem = "/root/dev/smart_agent/tls/root.pem"
-
-
-    #collector = Collector()
-
-    s = Server(key, crt, pem, TLSv1_METHOD)
-    #s.start(collector)
-    test_with_trigger(s)
-    reactor.run()
-
 
 

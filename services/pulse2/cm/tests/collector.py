@@ -21,7 +21,7 @@
 
 from twisted.trial.unittest import TestCase
 from twisted.internet.defer import Deferred, DeferredList
-from twisted.internet.task import deferLater, Clock, LoopingCall
+from twisted.internet.task import Clock
 
 from pulse2.cm.collector import SessionNotFound
 from pulse2.cm.collector import Sessions, Collector
@@ -190,8 +190,8 @@ class Test01_CollectorTestCase(TestCase):
 
         for i in xrange(10):
 
-            other_deferred = collector.queue_and_process("192.168.127.22",
-                                                         "%s_%d" % (any_data, i))
+            collector.queue_and_process("192.168.127.22",
+                                        "%s_%d" % (any_data, i))
 
         uid, ip, request = collector.get()
 
@@ -236,7 +236,6 @@ class Test01_CollectorTestCase(TestCase):
             d = collector.queue_and_process("192.168.45.12", "valid")
             dl.append(d)
 
-        result = []
 
         dfl = DeferredList(dl)
         @dfl.addCallback

@@ -23,7 +23,6 @@
 import logging
 
 from twisted.internet.defer import succeed, maybeDeferred
-from twisted.internet.threads import deferToThread
 
 
 class Trigger(object):

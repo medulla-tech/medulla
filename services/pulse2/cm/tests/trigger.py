@@ -20,8 +20,7 @@
 # MA 02110-1301, USA.
 
 from twisted.trial.unittest import TestCase
-from twisted.internet.defer import succeed
-from twisted.internet.task import deferLater, Clock, LoopingCall
+from twisted.internet.task import Clock
 
 from pulse2.cm.trigger import Trigger
 

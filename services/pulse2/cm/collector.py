@@ -43,8 +43,8 @@ We can define a timeout to limit the processing time of request.
 import time
 from twisted.internet import reactor
 
-from twisted.internet.defer import Deferred, DeferredQueue
-from twisted.internet.defer import CancelledError, succeed
+from twisted.internet.defer import Deferred
+from twisted.internet.defer import CancelledError
 from twisted.internet.task import deferLater
 
 
