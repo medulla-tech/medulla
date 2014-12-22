@@ -51,7 +51,6 @@ install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILDROOT
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/RPMS
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SRPMS
-	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/vpn
 
 	
 EXTRA_DIST = $(posixclientscripts) $(posixclientdata)
