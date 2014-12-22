@@ -41,16 +41,16 @@ class ClientUpdatePanel extends Panel {
         // Update error occured
         printf('<center style="color:red;font-weight:bold">%s</center>', _T('An error occured while fetching updates'));
         } else {
-        
+
             $view_updates_text = _T('View updates', 'update');
-            
+
             print '<center>';
-            
+
             if ($update_count == 0)
                 printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
             else{
                 printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
-                
+
                 print <<<EOS
                 <a title="View updates" class="btnSecondary"
                     href="main.php?module=update&amp;submod=update&amp;action=index"
@@ -124,7 +124,7 @@ EOS;
         for (var i = 0; i < legend.length; i++) {
             jQuery('#update_status ul').append(
                 '<li style="color: ' + colors[i].split('-')[1]  + ';"><span style="color: #000">' + legend[i]
-                + '<a href="' + href[i] + '"><img title="' + createGroupText +
+                + '<a href="' + href[i] + '"><img title="' + $createGroupText +
                 '" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a></span></li>'
             );
         }
