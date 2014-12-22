@@ -120,6 +120,35 @@ def _get_updates_for_group(params):
     updates = updateDatabase().get_updates_for_hosts(params)
     return updates
 
+def get_machines_update_status():
+    """
+    Get machine update status as a dict as key
+    and status string as value.
+    commons status values :"unknown","up-to-date","need_update","update_available".
+    """
+    # Creating root context
+    ctx = SecurityContext()
+    ctx.userid = 'root'
+
+    machines_status={}
+    uuids=[]
+    #get computer list who returned update
+    machines_update=updateDatabase().get_machines()
+    #get uuid for all computer
+    ComputerList= ComputerManager().getComputersList(ctx, {}).keys()
+    uuids=[]
+    for uuid in ComputerList:
+            uuids.append(int(uuid.lower().replace('uuid', '')))
+    for uuid in uuids:
+        if uuid in machines_update:
+            if len(updateDatabase().get_neutral_updates_for_host(uuid)) == 0:
+                machines_status["UUID"+str(uuid)]="up-to-date"
+            else:
+                machines_status["UUID"+str(uuid)]="update_available"
+        else:
+            machines_status["UUID"+str(uuid)]="unknown"
+    return machines_status
+
 def set_update_status_for_group(gid,update_ids,status):
     """
     Set updates status for one define group of machine, for multiples defines

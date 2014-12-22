@@ -23,7 +23,7 @@ Declare Update database
 
 import logging
 
-from sqlalchemy import create_engine, MetaData, func
+from sqlalchemy import create_engine, MetaData, func,distinct
 
 from mmc.database.database_helper import DatabaseHelper
 from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target,\
@@ -159,7 +159,14 @@ class updateDatabase(DatabaseHelper):
             logger.error(str(e))
             return False
 
-
+    @DatabaseHelper._session
+    def get_machines(self,session):
+        """
+        Get list of id of machines who send informations to update databases
+        """
+        query=session.query(distinct(Target.uuid))
+        result = [r for r, in query]
+        return result
 
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
