@@ -29,12 +29,17 @@ posixclientscripts = generate-agents create-repos.sh \
                    templates/mac/package/Contents/Resources/postflight.in \
                    templates/deb/package/DEBIAN/postinst \
                    templates/deb/package/etc/init.d/linuxvnc \
-                   templates/rpm/package/SOURCES/postinst
-
+                   templates/rpm/package/SOURCES/postinst \
+                   vpn/vpn-client-set.sh \
+		   vpn/vpn-server-user-create.sh \
+		   vpn/vpn-service-uninstall.sh \
+                   vpn/vpn-server-set.sh \
+		   vpn/vpn-service-install.sh
 
 posixclientdata = agents.conf \
                 templates/mac/package/Contents/package_version \
-                templates/mac/package/Contents/header.png 
+                templates/mac/package/Contents/header.png \
+                vpn/vpn-variables.in
 
 nobase_posixclient_SCRIPTS = $(posixclientscripts) 
 nobase_posixclient_DATA = $(posixclientdata) 
@@ -46,6 +51,7 @@ install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/BUILDROOT
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/RPMS
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SRPMS
+	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/vpn
 
 	
 EXTRA_DIST = $(posixclientscripts) $(posixclientdata)

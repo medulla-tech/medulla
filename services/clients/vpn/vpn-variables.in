@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+# (c) 2014 Mandriva, http://www.mandriva.com
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+
+
+############################
+### GLOBAL VPN VARIABLES ###
+############################
+
+export VPN_SERVER_HOST="@@VPN_SERVER_HOST@@"
+export VPN_SERVER_PORT="@@VPN_SERVER_PORT@@"
+export VPN_SERVER_USER="@@VPN_SERVER_USER@@"
+export VPN_SERVER_PASSWORD="@@VPN_SERVER_PASSWORD@@"
+# logging when run a command in the expect block
+export VPN_LOG_EXPECT=1
+# URL to download install pack archive
+export VPN_URL_ROOT="http://pulse2.mandriva.org/pub/pulse2/misc"
+export VPN_URL="$VPN_URL_ROOT"
+
+# service side { server | client }
+export VPN_SERVICE_SIDE="@@VPN_SERVICE_SIDE@@"
+if [[ $VPN_SERVICE_SIDE == "server" ]]; then
+    # name of program folder
+    export VPN_INST_DIR="vpnserver"
+    # name of daemon
+    export VPN_SERVICE_NAME="vpnserver"
+else
+    # name of program folder
+    export VPN_INST_DIR="vpnclient"
+    # name of daemon
+    export VPN_SERVICE_NAME="vpnclient"
+fi    	
+    
+# path of SoftEther VPN CLI
+export VPN_VPNCMD_PATH="/usr/bin/vpncmd"
+# program folder path
+export VPN_PROG_DIR="/opt"
+# start up service path
+export VPN_START_UP="/etc/init.d/$VPN_SERVICE_NAME"
+# name of virtual hub
+export VPN_PULSE_HUB="PULSE"
+# name of user group
+export VPN_PULSE_GROUP="pulse"
+# TODO - temp variables:
+export VPN_ADMIN_PASSWORD="@@VPN_ADMIN_PASSWORD@@"
+export VPN_PRE_SHARED_KEY="@@VPN_PRE_SHARED_KEY@@"
+# server certificate path
+export VPN_CRT_PATH="~/cert.cer"
+# exported openvpn config (if openvpn enabled)
+export VPN_OPENVPN_CONFIG_ARCHIVE="~/openvpn_config.zip"
+
+# OS X tun/tap driver
+export VPN_TUNTAP_DRIVER_ARCHIVE="tuntap_20111101.tar.gz"
+export VPN_TUNTAP_DRIVER_NAME="tuntap_20111101.pkg"
+
+
+
+# OS resolve
+export VPN_ARCH=$( uname -m ) 
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        export VPN_OS="linux"
+        if [[ $VPN_SERVICE_SIDE == "server" ]]; then
+           export VPN_ARCHIVE_NAME="softether-vpnserver-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"  
+        else
+           if [[ $VPN_ARCH == "x86_64" ]]; then 
+               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x64-64bit.tar.gz"  
+           else
+               export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-linux-x86-32bit.tar.gz" 
+           fi 
+        fi
+fi
+if [[ "$OSTYPE" == "darwin"* ]]; then
+        export VPN_OS="osx"
+        if [[ $VPN_ARCH == "x86_64" ]]; then 
+            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x64-64bit.tar.gz" 
+        else
+            export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-macos-x86-32bit.tar.gz" 
+        fi
+fi 
+if [[ "$OSTYPE" == "cygwin" ]]; then
+        export VPN_OS="cygwin"
+        export VPN_ARCHIVE_NAME="softether-vpnclient-v4.08-9449-rtm-2014.06.08-windows-x86_x64-intel.exe" 
+fi
+
