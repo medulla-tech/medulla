@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-10-29 16:36+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -314,7 +314,7 @@ msgstr "进阶启动"
 msgid "After bootmenu actions"
 msgstr "在开机功能表动作后"
 
-#: modules/msc/logs/localSidebar.php:29 modules/msc/infoPackage.inc.php:53
+#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
 msgid "All user commands"
 msgstr "所有使用者命令"
 
@@ -391,8 +391,8 @@ msgstr "在开机功能表动作前"
 msgid "Beginning of validity"
 msgstr "验证开始"
 
-#: modules/msc/logs/ajaxConsultLogsFilter.php:138
 #: modules/msc/includes/command_history.php:142
+#: modules/msc/logs/ajaxConsultLogsFilter.php:138
 msgid "Bundle"
 msgstr "套件组合"
 
@@ -480,11 +480,11 @@ msgstr "在下方按一下以开始从此电脑下载档案。警告：下载可
 msgid "Client"
 msgstr "用户端"
 
+#: modules/msc/logs/ajaxConsultLogsFilter.php:221
+#: modules/msc/logs/ajaxLogsFilter.php:134
 #: modules/msc/msc/ajaxLogsFilter.php:246
 #: modules/msc/msc/ajaxLogsFilter.php:395
 #: modules/msc/msc/package_detail.php:36
-#: modules/msc/logs/ajaxLogsFilter.php:134
-#: modules/msc/logs/ajaxConsultLogsFilter.php:221
 msgid "Command"
 msgstr "命令"
 
@@ -507,8 +507,8 @@ msgstr "命令 '%s' 状态有关<b>一</b>台电脑"
 msgid "Command expiry date"
 msgstr "命令过期日期"
 
-#: modules/msc/msc/launch.php:428 modules/msc/includes/command_history.php:34
-#: modules/msc/includes/command_history.php:180
+#: modules/msc/includes/command_history.php:34
+#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:424
 msgid "Command name"
 msgstr "命令名称"
 
@@ -540,8 +540,8 @@ msgstr "已连线"
 msgid "Connecting ..."
 msgstr "正在连线..."
 
-#: modules/msc/msc/vnc_client_no_vnc.php:57
 #: modules/msc/msc/vnc_client_java.php:46
+#: modules/msc/msc/vnc_client_no_vnc.php:57
 msgid "Connection Failed !"
 msgstr "连线失败！"
 
@@ -564,8 +564,8 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "尝试探查电脑时连线被对方拒绝"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:59
 #: modules/msc/msc/vnc_client_java.php:48
+#: modules/msc/msc/vnc_client_no_vnc.php:59
 msgid "Connection was refused by the other side."
 msgstr "连线被对方拒绝。"
 
@@ -574,7 +574,7 @@ msgstr "连线被对方拒绝。"
 msgid "Convergence"
 msgstr "聚合"
 
-#: modules/msc/msc/launch.php:485
+#: modules/msc/msc/launch.php:481
 msgid "Convergence is active"
 msgstr "聚合在作用中"
 
@@ -582,7 +582,7 @@ msgstr "聚合在作用中"
 msgid "Convergence on "
 msgstr ""
 
-#: modules/msc/msc/launch.php:551 modules/msc/includes/bundle_widgets.php:373
+#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:547
 msgid "Copy Mode"
 msgstr "复制模式"
 
@@ -598,8 +598,8 @@ msgstr "建立者"
 msgid "Csv's export"
 msgstr "Csv 格式的汇出"
 
-#: modules/msc/msc/msctabssinglestatus.php:38
 #: modules/msc/includes/command_history.php:39
+#: modules/msc/msc/msctabssinglestatus.php:38
 msgid "Current State"
 msgstr "目前状态"
 
@@ -611,8 +611,8 @@ msgstr "目前启动器"
 msgid "Current proxy"
 msgstr "目前 proxy"
 
-#: modules/msc/msc/ajaxLogsFilter.php:253
 #: modules/msc/logs/ajaxLogsFilter.php:135
+#: modules/msc/msc/ajaxLogsFilter.php:253
 msgid "Current state"
 msgstr "目前状态"
 
@@ -620,7 +620,7 @@ msgstr "目前状态"
 msgid "Current step"
 msgstr "目前步骤"
 
-#: modules/msc/msc/logs.php:33 modules/msc/logs/consult.php:39
+#: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
 msgid "Current tasks"
 msgstr "目前工作"
 
@@ -632,8 +632,8 @@ msgstr "日期"
 msgid "Delay between two connections"
 msgstr "两个连线之间延迟"
 
-#: modules/msc/msc/ajaxLogsFilter.php:105
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
+#: modules/msc/msc/ajaxLogsFilter.php:105
 msgid "Delete"
 msgstr ""
 
@@ -661,7 +661,7 @@ msgstr "删除失败"
 msgid "Delete file"
 msgstr "删除档案"
 
-#: modules/msc/msc/launch.php:452 modules/msc/includes/bundle_widgets.php:352
+#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:448
 msgid "Delete files after a successful execution"
 msgstr "成功执行后删除档案"
 
@@ -684,14 +684,14 @@ msgid ""
 "\">View group</a>"
 msgstr ""
 
-#: modules/msc/msc/launch.php:556 modules/msc/includes/bundle_widgets.php:378
+#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:552
 msgid "Deploy using a local proxy"
 msgstr "使用本机 proxy 部署"
 
-#: modules/msc/msc/launch.php:534
-#: modules/msc/logs/ajaxConsultLogsFilter.php:226
 #: modules/msc/includes/bundle_widgets.php:363
 #: modules/msc/includes/command_history.php:38
+#: modules/msc/logs/ajaxConsultLogsFilter.php:226
+#: modules/msc/msc/launch.php:530
 msgid "Deployment interval"
 msgstr "部署间隔"
 
@@ -699,11 +699,11 @@ msgstr "部署间隔"
 msgid "Description"
 msgstr "说明"
 
-#: modules/msc/msc/ajaxLogsFilter.php:109 modules/msc/msc/packages.php:44
-#: modules/msc/logs/viewLogs.php:96 modules/msc/logs/viewLogs.php:114
-#: modules/msc/logs/viewLogs.php:181 modules/msc/logs/viewLogs.php:212
 #: modules/msc/logs/ajaxLogsFilter.php:61
-#: modules/msc/logs/ajaxLogsFilter.php:62
+#: modules/msc/logs/ajaxLogsFilter.php:62 modules/msc/logs/viewLogs.php:96
+#: modules/msc/logs/viewLogs.php:114 modules/msc/logs/viewLogs.php:181
+#: modules/msc/logs/viewLogs.php:212 modules/msc/msc/ajaxLogsFilter.php:109
+#: modules/msc/msc/packages.php:44
 msgid "Details"
 msgstr "详情"
 
@@ -711,14 +711,14 @@ msgstr "详情"
 msgid "Direct launch"
 msgstr "直接启动"
 
-#: modules/msc/msc/launch.php:458
+#: modules/msc/msc/launch.php:454
 msgid "Do an inventory after a successful execution"
 msgstr "在成功执行后进行清查"
 
-#: modules/msc/msc/ajaxLogsFilter.php:429
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
 #: modules/msc/includes/functions.php:334
 #: modules/msc/includes/widgets.inc.php:390
+#: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
 msgstr "完成"
 
@@ -730,7 +730,7 @@ msgstr "下载档案"
 msgid "Download file from a computer"
 msgstr "从一台电脑下载档案"
 
-#: modules/msc/msc/download_file.php:32 modules/msc/infoPackage.inc.php:247
+#: modules/msc/infoPackage.inc.php:247 modules/msc/msc/download_file.php:32
 msgid "Download file page"
 msgstr "下载档案页面"
 
@@ -738,13 +738,13 @@ msgstr "下载档案页面"
 msgid "Downloading"
 msgstr "正在下载"
 
-#: modules/msc/msc/ajaxLogsFilter.php:249
-#: modules/msc/msc/ajaxLogsFilter.php:388
-#: modules/msc/logs/ajaxLogsFilter.php:129
-#: modules/msc/logs/ajaxConsultLogsFilter.php:225
 #: modules/msc/includes/command_history.php:37
 #: modules/msc/includes/command_history.php:144
 #: modules/msc/includes/command_history.php:183
+#: modules/msc/logs/ajaxConsultLogsFilter.php:225
+#: modules/msc/logs/ajaxLogsFilter.php:129
+#: modules/msc/msc/ajaxLogsFilter.php:249
+#: modules/msc/msc/ajaxLogsFilter.php:388
 msgid "End date"
 msgstr "结束日期"
 
@@ -769,7 +769,7 @@ msgstr ""
 "连线至此主机上的安全代理程式时候发生错误。请检查网路连线，以及此主机上已安装"
 "安全代理程式。"
 
-#: modules/msc/msc/launch.php:524
+#: modules/msc/msc/launch.php:520
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr "午餐和夜晚的範例（24 小时制）：12-14,20-8"
 
@@ -814,14 +814,14 @@ msgstr "正在执行"
 msgid "Exit code : %s"
 msgstr "结束代码：%s"
 
-#: modules/msc/msc/logs.php:38 modules/msc/logs/consult.php:64
+#: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
 msgid "Expired tasks"
 msgstr "已过期的工作"
 
-#: modules/msc/msc/ajaxLogsFilter.php:430
 #: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
 #: modules/msc/includes/functions.php:333
 #: modules/msc/includes/widgets.inc.php:392
+#: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
 msgstr "失败"
 
@@ -866,7 +866,7 @@ msgstr "全域状态"
 msgid "Group"
 msgstr "群组"
 
-#: modules/msc/msc/launch.php:365
+#: modules/msc/msc/launch.php:361
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "群组进阶启动：动作 \"%s\" 在 \"%s\""
@@ -879,7 +879,7 @@ msgstr "终止失败：%percent%（%d 台电脑）"
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr "终止失败：%percent%（%d 个封装）"
 
-#: modules/msc/msc/launch.php:470
+#: modules/msc/msc/launch.php:466
 msgid "Halt client"
 msgstr "终止用户端"
 
@@ -972,7 +972,7 @@ msgstr ""
 msgid "Label"
 msgstr "标签"
 
-#: modules/msc/msc/packages.php:43 modules/msc/includes/bundle_widgets.php:218
+#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
 msgid "Launch"
 msgstr "启动"
 
@@ -1024,9 +1024,9 @@ msgstr "记录档"
 msgid "MAC Addr."
 msgstr "MAC 位址"
 
-#: modules/msc/msc/ajaxPackageFilter.php:124
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
+#: modules/msc/msc/ajaxPackageFilter.php:124
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC 无法连络封装伺服器 %s。"
@@ -1061,7 +1061,7 @@ msgstr "一台电脑的 MSC 记录档标签"
 msgid "Machine"
 msgstr "电脑"
 
-#: modules/msc/msc/launch.php:540 modules/msc/includes/bundle_widgets.php:364
+#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:536
 msgid "Max bandwidth (kbits/s)"
 msgstr "最大频宽 (kbits/s)"
 
@@ -1073,8 +1073,8 @@ msgstr "与一个 proxy 的最大同时连线数"
 msgid "Mode"
 msgstr "模式"
 
-#: modules/msc/msc/local_proxy.php:208
 #: modules/msc/includes/command_history.php:347
+#: modules/msc/msc/local_proxy.php:208
 msgid "Multiple"
 msgstr "多重"
 
@@ -1087,15 +1087,15 @@ msgstr "多重，用户端模式%s"
 msgid "Multiple, server mode"
 msgstr "多重，伺服器模式"
 
-#: modules/msc/logs/localSidebar.php:28
 #: modules/msc/includes/widgets.inc.php:345
 #: modules/msc/includes/widgets.inc.php:517 modules/msc/infoPackage.inc.php:50
+#: modules/msc/logs/localSidebar.php:28
 msgid "My commands"
 msgstr "我的命令"
 
-#: modules/msc/msc/package_detail.php:39
 #: modules/msc/includes/command_history.php:53
 #: modules/msc/includes/command_history.php:205
+#: modules/msc/msc/package_detail.php:39
 msgid "Name"
 msgstr "名称"
 
@@ -1157,14 +1157,14 @@ msgstr "已逾时：%percent%（%d 台电脑）"
 msgid "Over-timed: %percent% (%d packages)"
 msgstr "已逾时：%percent%（%d 个封装）"
 
-#: modules/msc/msc/ajaxLogsFilter.php:432
 #: modules/msc/includes/widgets.inc.php:396
+#: modules/msc/msc/ajaxLogsFilter.php:432
 msgid "Overtime"
 msgstr "加班"
 
-#: modules/msc/msc/packages.php:40 modules/msc/msc/ajaxPackageFilter.php:154
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
+#: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "封装"
 
@@ -1186,7 +1186,7 @@ msgstr "封装 '%s' 在主要镜像 %s 上可用"
 msgid "Package size"
 msgstr "封装大小"
 
-#: modules/msc/msc/packages.php:29 modules/msc/infoPackage.inc.php:217
+#: modules/msc/infoPackage.inc.php:217 modules/msc/msc/packages.php:29
 msgid "Packages"
 msgstr "封装"
 
@@ -1194,8 +1194,8 @@ msgstr "封装"
 msgid "Password Required"
 msgstr "需要密码"
 
-#: modules/msc/msc/ajaxLogsFilter.php:104
 #: modules/msc/logs/ajaxLogsFilter.php:59
+#: modules/msc/msc/ajaxLogsFilter.php:104
 msgid "Pause"
 msgstr "暂停"
 
@@ -1265,8 +1265,8 @@ msgstr "请确认档案删除"
 msgid "Please confirm you really want to perform this action"
 msgstr "请确认您真的要执行此动作"
 
-#: modules/msc/msc/ajaxPackageFilter.php:151
 #: modules/msc/includes/bundle_widgets.php:150
+#: modules/msc/msc/ajaxPackageFilter.php:151
 msgid "Please contact your administrator."
 msgstr "请连络您的管理员。"
 
@@ -1275,7 +1275,7 @@ msgstr "请连络您的管理员。"
 msgid "Possible actions"
 msgstr "可能的动作"
 
-#: modules/msc/msc/launch.php:580
+#: modules/msc/msc/launch.php:576
 msgid "Probe status"
 msgstr "探查状态"
 
@@ -1309,9 +1309,9 @@ msgstr "快速动作路径 %s 不存在"
 msgid "Random (indicate number of proxies) : "
 msgstr "随机（指出 proxy 数目）"
 
-#: modules/msc/msc/ajaxDownloadFile.php:77
 #: modules/msc/includes/functions.php:47
 #: modules/msc/includes/functions.php:331
+#: modules/msc/msc/ajaxDownloadFile.php:77
 msgid "Ready"
 msgstr "就绪"
 
@@ -1323,7 +1323,7 @@ msgstr "重新开机失败：%percent%（%d 台电脑）"
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr "重新开机失败：%percent%（%d 个封装）"
 
-#: modules/msc/msc/launch.php:464
+#: modules/msc/msc/launch.php:460
 msgid "Reboot client"
 msgstr "重新开机用户端"
 
@@ -1379,9 +1379,9 @@ msgstr "保留频宽"
 msgid "Restart"
 msgstr "重新启动"
 
+#: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
-#: modules/msc/includes/functions.php:332
 msgid "Running"
 msgstr "正在执行"
 
@@ -1397,7 +1397,7 @@ msgstr "已排程"
 msgid "Scheduler"
 msgstr "排程器"
 
-#: modules/msc/msc/launch.php:434
+#: modules/msc/msc/launch.php:430
 msgid "Script parameters"
 msgstr "指令码参数"
 
@@ -1477,7 +1477,7 @@ msgstr "显示执行中工作的记录档"
 msgid "Shutdown"
 msgstr "关机"
 
-#: modules/msc/msc/launch.php:352
+#: modules/msc/msc/launch.php:348
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "单次进阶启动：动作 \"%s\" 在 \"%s\""
@@ -1486,8 +1486,8 @@ msgstr "单次进阶启动：动作 \"%s\" 在 \"%s\""
 msgid "Single command status"
 msgstr "单个命令状态"
 
-#: modules/msc/msc/local_proxy.php:208
 #: modules/msc/includes/command_history.php:349
+#: modules/msc/msc/local_proxy.php:208
 msgid "Single with fallback"
 msgstr "单个，带后援"
 
@@ -1500,7 +1500,7 @@ msgstr "单个，用户端模式%s"
 msgid "Single, server mode"
 msgstr "单个，伺服器模式"
 
-#: modules/msc/msc/launch.php:362
+#: modules/msc/msc/launch.php:358
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "软体聚合：动作\"%s\" 在 \"%s\""
@@ -1513,16 +1513,16 @@ msgstr "软体聚合设定"
 msgid "Something goes wrong while checking client identity."
 msgstr "检查用户端身分时发生错误。"
 
-#: modules/msc/msc/ajaxLogsFilter.php:103
-#: modules/msc/logs/ajaxLogsFilter.php:58
-#: modules/msc/logs/ajaxConsultLogsFilter.php:55
 #: modules/msc/includes/command_history.php:91
 #: modules/msc/includes/command_history.php:147
 #: modules/msc/includes/command_history.php:244
+#: modules/msc/logs/ajaxConsultLogsFilter.php:55
+#: modules/msc/logs/ajaxLogsFilter.php:58
+#: modules/msc/msc/ajaxLogsFilter.php:103
 msgid "Start"
 msgstr "开始"
 
-#: modules/msc/msc/launch.php:440 modules/msc/includes/command_history.php:189
+#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:436
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "如果连线失败则启动\"网路唤醒\"查询"
 
@@ -1536,13 +1536,13 @@ msgstr "启动主机 %s 上的 %s %s"
 msgid "Start %s %s on this group"
 msgstr "启动此群组上的 %s %s"
 
-#: modules/msc/msc/reschedule.php:43 modules/msc/msc/ajaxLogsFilter.php:248
-#: modules/msc/msc/ajaxLogsFilter.php:390
-#: modules/msc/logs/ajaxLogsFilter.php:131
-#: modules/msc/logs/ajaxConsultLogsFilter.php:224
 #: modules/msc/includes/command_history.php:36
 #: modules/msc/includes/command_history.php:143
 #: modules/msc/includes/command_history.php:182
+#: modules/msc/logs/ajaxConsultLogsFilter.php:224
+#: modules/msc/logs/ajaxLogsFilter.php:131
+#: modules/msc/msc/ajaxLogsFilter.php:248
+#: modules/msc/msc/ajaxLogsFilter.php:390 modules/msc/msc/reschedule.php:43
 msgid "Start date"
 msgstr "开始日期"
 
@@ -1563,7 +1563,7 @@ msgstr "开始清查"
 msgid "Start inventory agent"
 msgstr "启动清查代理程式"
 
-#: modules/msc/msc/launch.php:446
+#: modules/msc/msc/launch.php:442
 msgid "Start script"
 msgstr "启动指令码"
 
@@ -1575,10 +1575,10 @@ msgstr "启动指令码"
 msgid "State filter"
 msgstr "状态筛选器"
 
-#: modules/msc/msc/ajaxLogsFilter.php:107
-#: modules/msc/msc/ajaxDownloadFile.php:90
 #: modules/msc/logs/ajaxConsultLogsFilter.php:59
 #: modules/msc/logs/ajaxConsultLogsFilter.php:60
+#: modules/msc/msc/ajaxDownloadFile.php:90
+#: modules/msc/msc/ajaxLogsFilter.php:107
 msgid "Status"
 msgstr "状态"
 
@@ -1590,12 +1590,12 @@ msgstr "步骤"
 msgid "Step log"
 msgstr "步骤记录档"
 
-#: modules/msc/msc/ajaxLogsFilter.php:106
-#: modules/msc/logs/ajaxLogsFilter.php:60
-#: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/includes/command_history.php:93
 #: modules/msc/includes/command_history.php:148
 #: modules/msc/includes/command_history.php:245
+#: modules/msc/logs/ajaxConsultLogsFilter.php:58
+#: modules/msc/logs/ajaxLogsFilter.php:60
+#: modules/msc/msc/ajaxLogsFilter.php:106
 msgid "Stop"
 msgstr "停止"
 
@@ -1613,9 +1613,9 @@ msgstr "停止此群组上的 %s %s"
 msgid "Stop a command"
 msgstr "停止命令"
 
-#: modules/msc/msc/ajaxLogsFilter.php:431
 #: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
 #: modules/msc/includes/widgets.inc.php:398
+#: modules/msc/msc/ajaxLogsFilter.php:431
 msgid "Stopped"
 msgstr "已停止"
 
@@ -1627,8 +1627,8 @@ msgstr "已停止：%percent%（%d 台电脑）"
 msgid "Stopped: %percent% (%d packages)"
 msgstr "已停止：%percent%（%d 个封装）"
 
-#: modules/msc/msc/ajaxLogsFilter.php:250
 #: modules/msc/logs/ajaxConsultLogsFilter.php:228
+#: modules/msc/msc/ajaxLogsFilter.php:250
 msgid "Success percent"
 msgstr "成功百分比"
 
@@ -1644,8 +1644,8 @@ msgstr "成功：%percent%（%d 个封装）"
 msgid "Take control of a computer"
 msgstr "控制一台电脑"
 
-#: modules/msc/msc/vnc_client_no_vnc.php:352
 #: modules/msc/msc/vnc_client_java.php:173
+#: modules/msc/msc/vnc_client_no_vnc.php:352
 msgid "Take control of this computer"
 msgstr "控制此电脑"
 
@@ -1658,11 +1658,11 @@ msgstr "目标"
 msgid "Target platform is %s"
 msgstr "目标平台是 %s"
 
-#: modules/msc/msc/launch.php:400 modules/msc/msc/launch.php:499
+#: modules/msc/msc/launch.php:396 modules/msc/msc/launch.php:495
 msgid "The command must start after"
 msgstr "命令必须在以下时间后启动"
 
-#: modules/msc/msc/launch.php:409 modules/msc/msc/launch.php:508
+#: modules/msc/msc/launch.php:405 modules/msc/msc/launch.php:504
 msgid "The command must stop before"
 msgstr "命令必须在以下时间前停止"
 
@@ -1781,14 +1781,14 @@ msgstr "正在上传"
 msgid "User command creator"
 msgstr "使用者命令建立者"
 
-#: modules/msc/msc/package_detail.php:40
 #: modules/msc/includes/command_history.php:55
 #: modules/msc/includes/command_history.php:207
+#: modules/msc/msc/package_detail.php:40
 msgid "Value"
 msgstr "值"
 
-#: modules/msc/msc/package_detail.php:36 modules/msc/msc/packages.php:41
 #: modules/msc/msc/ajaxPackageFilter.php:156
+#: modules/msc/msc/package_detail.php:36 modules/msc/msc/packages.php:41
 msgid "Version"
 msgstr "版本"
 
@@ -1828,7 +1828,7 @@ msgstr "年-月-日 时:分:秒"
 msgid "You don't have the right permissions to display this command"
 msgstr "您没有显示此命令的正确权限"
 
-#: modules/msc/msc/launch.php:84
+#: modules/msc/msc/launch.php:80
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr "您的开始和结束日期不相连贯，请检查。<br/>"
 
@@ -1934,7 +1934,7 @@ msgstr "失败"
 msgid "failed during awake"
 msgstr "唤醒时失败"
 
-#: modules/msc/msc/statuscsv.php:122 modules/msc/msc/msctabsstatus.php:149
+#: modules/msc/msc/msctabsstatus.php:149 modules/msc/msc/statuscsv.php:122
 msgid "failed during execution"
 msgstr "执行时失败"
 
@@ -1950,11 +1950,11 @@ msgstr "清查时失败"
 msgid "failed during reboot"
 msgstr "重新开机时失败"
 
-#: modules/msc/msc/statuscsv.php:124 modules/msc/msc/msctabsstatus.php:152
+#: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/statuscsv.php:124
 msgid "failed during suppression"
 msgstr "隐藏时失败"
 
-#: modules/msc/msc/statuscsv.php:120 modules/msc/msc/msctabsstatus.php:146
+#: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/statuscsv.php:120
 msgid "failed during upload"
 msgstr "上传时失败"
 
@@ -1994,7 +1994,7 @@ msgstr "是"
 msgid "logs list"
 msgstr "记录档清单"
 
-#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:250
+#: modules/msc/msc/launch.php:120 modules/msc/msc/launch.php:246
 msgid "never"
 msgstr "永不"
 
@@ -2003,7 +2003,7 @@ msgstr "永不"
 msgid "next attempt"
 msgstr "下次尝试"
 
-#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:247
+#: modules/msc/msc/launch.php:118 modules/msc/msc/launch.php:243
 msgid "now"
 msgstr "现在"
 
@@ -2019,11 +2019,11 @@ msgstr "out_of_interval"
 msgid "over_time"
 msgstr "over_time"
 
-#: modules/msc/msc/launch.php:548 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:544
 msgid "push"
 msgstr "推入"
 
-#: modules/msc/msc/launch.php:548 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:544
 msgid "push / pull"
 msgstr "推入／提取"
 
@@ -2095,7 +2095,7 @@ msgstr "上传"
 msgid "uuid"
 msgstr "uuid"
 
-#: modules/msc/msc/statuscsv.php:113 modules/msc/msc/msctabsstatus.php:138
+#: modules/msc/msc/msctabsstatus.php:138 modules/msc/msc/statuscsv.php:113
 msgid "waiting to execute"
 msgstr "等候执行"
 
@@ -2107,7 +2107,7 @@ msgstr "等候执行并已经尝试"
 msgid "waiting to inventory"
 msgstr "等候清查"
 
-#: modules/msc/msc/statuscsv.php:116 modules/msc/msc/msctabsstatus.php:140
+#: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/statuscsv.php:116
 msgid "waiting to suppress"
 msgstr "等候隐藏"
 
@@ -2115,7 +2115,7 @@ msgstr "等候隐藏"
 msgid "waiting to suppress and already try"
 msgstr "等候隐藏并已经尝试"
 
-#: modules/msc/msc/statuscsv.php:110 modules/msc/msc/msctabsstatus.php:136
+#: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/statuscsv.php:110
 msgid "waiting to upload"
 msgstr "等候上传"
 

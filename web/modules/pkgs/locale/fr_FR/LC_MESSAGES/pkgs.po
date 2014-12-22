@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-12-16 14:11+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -106,8 +106,8 @@ msgstr "Annuler"
 msgid "Cannot set My Credentials."
 msgstr "Impossible d'affecter les identifiants My."
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:319
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -129,7 +129,7 @@ msgstr "Cliquer ici pour sélectionner les fichiers"
 msgid "Command : "
 msgstr "Commande : "
 
-#: modules/pkgs/pkgs/edit.php:208 modules/pkgs/pkgs/add.php:164
+#: modules/pkgs/pkgs/add.php:164 modules/pkgs/pkgs/edit.php:208
 msgid "Command's name : "
 msgstr "Nom de la commande : "
 
@@ -151,9 +151,9 @@ msgstr "Supprimer le fichier"
 msgid "Delete this package"
 msgstr "Supprimer ce package"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:82 modules/pkgs/pkgs/edit.php:204
-#: modules/pkgs/pkgs/add.php:153
+#: modules/pkgs/pkgs/add.php:153 modules/pkgs/pkgs/ajaxPackageList.php:82
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:204
 msgid "Description"
 msgstr "Description"
 
@@ -174,13 +174,13 @@ msgstr "Modifier le package"
 msgid "Expiration date"
 msgstr "Date d'expiration"
 
-#: modules/pkgs/pkgs/edit.php:116 modules/pkgs/pkgs/add.php:97
-#: modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/add.php:97 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:116
 msgid "Failed to associate files"
 msgstr "L'association de fichiers a échoué"
 
-#: modules/pkgs/pkgs/edit.php:113 modules/pkgs/pkgs/add.php:94
-#: modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/add.php:94 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/edit.php:113
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "L'association de fichiers a échoué %s"
@@ -217,8 +217,8 @@ msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr ""
 "Les fichiers ont été associés avec le package <b>%s (%s)</b> avec succès.%s"
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:319
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "Envoi de fichiers (<b><u title='%s'>%sM max</u></b>)"
@@ -254,7 +254,7 @@ msgstr "Identifiants My :"
 msgid "Name"
 msgstr "Nom"
 
-#: modules/pkgs/pkgs/edit.php:216 modules/pkgs/pkgs/add.php:172
+#: modules/pkgs/pkgs/add.php:172 modules/pkgs/pkgs/edit.php:216
 msgid "Need a reboot ?"
 msgstr "Besoin de redémarrer ?"
 
@@ -266,7 +266,7 @@ msgstr "Aucun flux AppStream mis en avant."
 msgid "Number of licenses"
 msgstr "Nombre de licences"
 
-#: modules/pkgs/pkgs/edit.php:184 modules/pkgs/pkgs/add.php:138
+#: modules/pkgs/pkgs/add.php:138 modules/pkgs/pkgs/edit.php:184
 msgid "Package API"
 msgstr "Api de package"
 
@@ -287,9 +287,9 @@ msgid "Package label"
 msgstr "Libellé du package"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 msgid "Package name"
 msgstr "Nom du package"
 
@@ -313,7 +313,7 @@ msgstr "Version du package"
 msgid "Packages"
 msgstr "Packages"
 
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "Liste des packages"
 
@@ -321,7 +321,7 @@ msgstr "Liste des packages"
 msgid "Password"
 msgstr "Mot de passe"
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "Liste des packages en attente"
 
@@ -453,8 +453,8 @@ msgstr "Validité (mois)"
 msgid "Vendor"
 msgstr "Marque"
 
-#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/ajaxPackageList.php:83
-#: modules/pkgs/pkgs/add.php:152
+#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/add.php:152
+#: modules/pkgs/pkgs/ajaxPackageList.php:83
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr "Version"

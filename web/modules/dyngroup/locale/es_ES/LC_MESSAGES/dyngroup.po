@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-11-25 13:08+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -48,8 +48,8 @@ msgid ""
 "be rewritten</strong></p>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/add_groups.php:218
+#: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -60,8 +60,8 @@ msgstr ""
 #: modules/dyngroup/dyngroup/creator.php:271
 #: modules/dyngroup/dyngroup/creator.php:279
 #: modules/dyngroup/dyngroup/creator.php:283
-#: modules/dyngroup/includes/double.php:36
 #: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr ""
 
@@ -122,8 +122,8 @@ msgstr ""
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:77
+#: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/includes/groups.inc.php:86
 #: modules/dyngroup/includes/groups.inc.php:281
 msgid "Cancel"
@@ -383,8 +383,8 @@ msgstr ""
 msgid "Group share"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
 #: modules/dyngroup/dyngroup/add_groups.php:166
+#: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr ""
 
@@ -517,8 +517,8 @@ msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
 msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:273
-#: modules/dyngroup/includes/double.php:39
 #: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr ""
 
@@ -530,8 +530,8 @@ msgstr ""
 msgid "Name :"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/creator.php:277
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:76
+#: modules/dyngroup/dyngroup/creator.php:277
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/save.php:84
 #: modules/dyngroup/includes/groups.inc.php:168
@@ -745,9 +745,9 @@ msgstr ""
 msgid "Update machines name cache in dyngroup"
 msgstr ""
 
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
 #: modules/dyngroup/dyngroup/creator.php:276
 #: modules/dyngroup/dyngroup/creator.php:282
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/save.php:84
 #: modules/dyngroup/includes/groups.inc.php:167

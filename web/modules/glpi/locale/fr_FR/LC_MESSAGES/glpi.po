@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-12-16 14:02+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -144,9 +144,9 @@ msgstr "Modifier l'ordre des règles d'entités (haut)"
 msgid "Click here to see this computer on manufacturer website"
 msgstr "Cliquez ici pour voir cet ordinateur sur le site du constructeur"
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
 #: modules/glpi/glpi/ajaxEntityList.php:68
 #: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -166,9 +166,9 @@ msgstr "Numéro de série"
 msgid "Computers"
 msgstr "Machines"
 
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des machines a été tronquée à %d"
@@ -177,9 +177,9 @@ msgstr "La liste des machines a été tronquée à %d"
 msgid "Controllers"
 msgstr "Contrôleurs"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
+#: modules/glpi/includes/panels/os_repartition.inc.php:91
 msgid "Create a group"
 msgstr "Créer un groupe"
 
@@ -222,9 +222,9 @@ msgstr "Supprimer la règle"
 msgid "Delete this rule?"
 msgstr "Supprimer cette règle ?"
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addLocation.php:101
 #: modules/glpi/glpi/ajaxViewPart.php:232
-#: modules/glpi/glpi/addEntityRule.php:77
 msgid "Description"
 msgstr "Description"
 
@@ -241,8 +241,8 @@ msgstr "Montrer les lieux"
 msgid "Do not assign"
 msgstr "Ne pas associer"
 
-#: modules/glpi/glpi/ajaxViewPart.php:261
 #: modules/glpi/glpi/addEntityRule.php:100
+#: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Domain"
 msgstr "Domaine"
 
@@ -492,10 +492,9 @@ msgstr "Déplacer la règle vers le bas"
 msgid "Move rule up"
 msgstr "Déplacer la règle vers le haut"
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addLocation.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
 #: modules/glpi/glpi/ajaxViewPart.php:229
-#: modules/glpi/glpi/addEntityRule.php:72
 msgid "Name"
 msgstr "Nom"
 

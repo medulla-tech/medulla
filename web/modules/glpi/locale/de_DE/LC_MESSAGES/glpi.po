@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-12-16 13:37+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -142,9 +142,9 @@ msgid "Click here to see this computer on manufacturer website"
 msgstr ""
 "Klicken Sie hier um diesen Rechner auf der Hersteller-Webseite zu sehen"
 
-#: modules/glpi/glpi/ajaxViewPart.php:250
 #: modules/glpi/glpi/ajaxEntityList.php:68
 #: modules/glpi/glpi/ajaxLocationList.php:68
+#: modules/glpi/glpi/ajaxViewPart.php:250
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -164,9 +164,9 @@ msgstr ""
 msgid "Computers"
 msgstr "Rechner"
 
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
@@ -175,9 +175,9 @@ msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
 msgid "Controllers"
 msgstr "Controller"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
+#: modules/glpi/includes/panels/os_repartition.inc.php:91
 msgid "Create a group"
 msgstr "Eine Gruppe erstellen"
 
@@ -217,9 +217,9 @@ msgstr ""
 msgid "Delete this rule?"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addLocation.php:101
 #: modules/glpi/glpi/ajaxViewPart.php:232
-#: modules/glpi/glpi/addEntityRule.php:77
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -236,8 +236,8 @@ msgstr "Display Standorte"
 msgid "Do not assign"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:261
 #: modules/glpi/glpi/addEntityRule.php:100
+#: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Domain"
 msgstr "Domain"
 
@@ -487,10 +487,9 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addLocation.php:77
-#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
 #: modules/glpi/glpi/ajaxViewPart.php:229
-#: modules/glpi/glpi/addEntityRule.php:72
 msgid "Name"
 msgstr "Name"
 

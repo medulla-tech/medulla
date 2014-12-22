@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-05-06 01:17+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -45,8 +45,8 @@ msgstr "%s 的映像群组"
 msgid "%s's profile imaging"
 msgstr "%s 的设定档映像建立"
 
-#: modules/imaging/manage/ajaxConfiguration.php:143
 #: modules/imaging/imaging/configure.php:87
+#: modules/imaging/manage/ajaxConfiguration.php:143
 msgid "(default)"
 msgstr "（预设）"
 
@@ -126,8 +126,8 @@ msgstr "新增开机服务 <b>%s</b> 至 <b>%s</b>"
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr "新增开机服务 <b>%s</b> 至预设开机功能表"
 
-#: modules/imaging/manage/master_add.php:89
 #: modules/imaging/imaging/addimage.php:123
+#: modules/imaging/manage/master_add.php:89
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
 msgstr "新增映像 <b>%s</b> 至 <b>%s</b>"
@@ -188,8 +188,8 @@ msgstr "可用映像"
 msgid "Available imaging servers for entity %s"
 msgstr "实体 %s 的可用映像伺服器"
 
-#: modules/imaging/manage/ajaxMaster.php:27
 #: modules/imaging/imaging/images.php:69
+#: modules/imaging/manage/ajaxMaster.php:27
 msgid "Available masters"
 msgstr "可用母片"
 
@@ -197,8 +197,8 @@ msgstr "可用母片"
 msgid "Available post-imaging scripts"
 msgstr "可用映像建立后指令码"
 
-#: modules/imaging/manage/ajaxLogs.php:55
 #: modules/imaging/includes/logs.inc.php:27
+#: modules/imaging/manage/ajaxLogs.php:55
 msgid "Backup"
 msgstr "备份"
 
@@ -210,18 +210,18 @@ msgstr "备份已完成"
 msgid "Backup Started"
 msgstr "备份已启动"
 
-#: modules/imaging/manage/ajaxLogs.php:65
 #: modules/imaging/includes/logs.inc.php:39
+#: modules/imaging/manage/ajaxLogs.php:65
 msgid "Backup done"
 msgstr "备份已完成"
 
-#: modules/imaging/manage/ajaxLogs.php:66
 #: modules/imaging/includes/logs.inc.php:40
+#: modules/imaging/manage/ajaxLogs.php:66
 msgid "Backup failed"
 msgstr "备份失败"
 
-#: modules/imaging/manage/ajaxLogs.php:64
 #: modules/imaging/includes/logs.inc.php:38
+#: modules/imaging/manage/ajaxLogs.php:64
 msgid "Backup in progress"
 msgstr "正在进行备份"
 
@@ -229,8 +229,8 @@ msgstr "正在进行备份"
 msgid "Backup log messages"
 msgstr "备分记录档讯息"
 
-#: modules/imaging/manage/ajaxLogs.php:52
 #: modules/imaging/includes/logs.inc.php:28
+#: modules/imaging/manage/ajaxLogs.php:52
 msgid "Boot"
 msgstr "开机"
 
@@ -249,30 +249,30 @@ msgstr "已建立开机服务"
 msgid "Boot menu"
 msgstr "开机功能表"
 
-#: modules/imaging/manage/service_show_used.php:71
-#: modules/imaging/imaging/bootmenu_remove.php:72
-#: modules/imaging/imaging/showtarget.php:78
 #: modules/imaging/imaging/addimage.php:64
 #: modules/imaging/imaging/addservice.php:63
+#: modules/imaging/imaging/bootmenu_remove.php:72
+#: modules/imaging/imaging/showtarget.php:78
+#: modules/imaging/manage/service_show_used.php:71
 #, php-format
 msgid "Boot menu generation failed for computer: %s"
 msgstr "无法为电脑产生开机功能表：%s"
 
-#: modules/imaging/manage/service_del.php:48
-#: modules/imaging/manage/service_show_used.php:83
-#: modules/imaging/manage/master_add.php:54
-#: modules/imaging/manage/service_add.php:54
-#: modules/imaging/manage/imaging_server_link.php:64
-#: modules/imaging/manage/master_remove.php:41
-#: modules/imaging/manage/service_remove.php:48
 #: modules/imaging/imaging/showtarget.php:90
+#: modules/imaging/manage/imaging_server_link.php:64
+#: modules/imaging/manage/master_add.php:54
+#: modules/imaging/manage/master_remove.php:41
+#: modules/imaging/manage/service_add.php:54
+#: modules/imaging/manage/service_del.php:48
+#: modules/imaging/manage/service_remove.php:48
+#: modules/imaging/manage/service_show_used.php:83
 #, php-format
 msgid "Boot menu generation failed for package server: %s"
 msgstr "无法为封装伺服器产生开机功能表：%s"
 
-#: modules/imaging/manage/save_configuration.php:70
 #: modules/imaging/manage/location.php:59
 #: modules/imaging/manage/location.php:62
+#: modules/imaging/manage/save_configuration.php:70
 #, php-format
 msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check /var/log/"
@@ -302,8 +302,8 @@ msgstr "已为 <strong>%s</strong> 修改开机功能表。"
 msgid "Boot menu shown"
 msgstr "显示的开机功能表"
 
-#: modules/imaging/manage/ajaxConfiguration.php:163
 #: modules/imaging/imaging/configure.php:108
+#: modules/imaging/manage/ajaxConfiguration.php:163
 msgid "Boot options"
 msgstr "开机选项"
 
@@ -329,16 +329,16 @@ msgstr "无法与关联至所选实体的映像伺服器连线。"
 msgid "Can't delete this post-imaging script, it's a global script."
 msgstr "无法删除此映像建立后指令码，其为全域指令码。"
 
-#: modules/imaging/manage/service_show_used.php:145
-#: modules/imaging/manage/postinstall_delete.php:68
+#: modules/imaging/imaging/bootmenu_remove.php:94
+#: modules/imaging/imaging/configure.php:382
+#: modules/imaging/imaging/images_delete.php:60
+#: modules/imaging/imaging/images_iso.php:100
+#: modules/imaging/imaging/showtarget.php:168
 #: modules/imaging/manage/master_delete.php:55
 #: modules/imaging/manage/master_iso.php:86
 #: modules/imaging/manage/master_remove.php:70
-#: modules/imaging/imaging/bootmenu_remove.php:94
-#: modules/imaging/imaging/images_iso.php:100
-#: modules/imaging/imaging/configure.php:382
-#: modules/imaging/imaging/showtarget.php:168
-#: modules/imaging/imaging/images_delete.php:60
+#: modules/imaging/manage/postinstall_delete.php:68
+#: modules/imaging/manage/service_show_used.php:145
 msgid "Cancel"
 msgstr "取消"
 
@@ -358,9 +358,9 @@ msgid ""
 "menu"
 msgstr "如果您要强制执行开机功能表的更新，请按一下 \"强制执行产生\""
 
-#: modules/imaging/manage/service_show_used.php:124
 #: modules/imaging/imaging/configure.php:47
 #: modules/imaging/imaging/showtarget.php:147
+#: modules/imaging/manage/service_show_used.php:124
 msgid "Computer"
 msgstr "电脑"
 
@@ -426,8 +426,8 @@ msgstr "建立一个带自订映像建立功能表的包含电脑的静态群组
 msgid "Create boot service from postinstall script"
 msgstr "从安装后指令码建立开机服务"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:114
 #: modules/imaging/imaging/ajaxImages.php:168
+#: modules/imaging/manage/ajaxMasterLevel2.php:114
 msgid "Create bootable iso"
 msgstr "建立可开机的 iso"
 
@@ -436,8 +436,8 @@ msgstr "建立可开机的 iso"
 msgid "Create iso for <strong>%s</strong>"
 msgstr "为 <strong>%s</strong> 建立 iso"
 
-#: modules/imaging/manage/master_iso.php:42
 #: modules/imaging/infoPackage.inc.php:59
+#: modules/imaging/manage/master_iso.php:42
 msgid "Create iso from master"
 msgstr "从母片建立 iso"
 
@@ -445,8 +445,8 @@ msgstr "从母片建立 iso"
 msgid "Create iso image"
 msgstr "建立 iso 映像"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:109
 #: modules/imaging/imaging/ajaxImages.php:158
+#: modules/imaging/manage/ajaxMasterLevel2.php:109
 msgid "Created"
 msgstr "已建立"
 
@@ -462,8 +462,8 @@ msgstr "目前的开机功能表"
 msgid "Default"
 msgstr "预设值"
 
-#: modules/imaging/manage/localSidebar.php:37
 #: modules/imaging/infoPackage.inc.php:81
+#: modules/imaging/manage/localSidebar.php:37
 msgid "Default boot menu"
 msgstr "预设开机功能表"
 
@@ -479,8 +479,8 @@ msgstr "已成功还原预设功能表。"
 msgid "Default menu item label"
 msgstr "预设功能表项目标签"
 
-#: modules/imaging/manage/ajaxConfiguration.php:111
 #: modules/imaging/imaging/configure.php:51
+#: modules/imaging/manage/ajaxConfiguration.php:111
 msgid "Default menu label"
 msgstr "预设功能表标签"
 
@@ -496,12 +496,12 @@ msgstr "预设功能表逾时"
 msgid "Default on WOL"
 msgstr "WOL 上的预设值"
 
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/postinstall_delete.php:67
-#: modules/imaging/manage/ajaxMasterLevel2.php:68
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
 #: modules/imaging/imaging/bootmenu.php:257
 #: modules/imaging/includes/logs.inc.php:34
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/ajaxMasterLevel2.php:68
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/manage/postinstall_delete.php:67
 msgid "Delete"
 msgstr "删除"
 
@@ -514,13 +514,13 @@ msgstr "删除一个电脑群组"
 msgid "Delete image"
 msgstr "删除映像"
 
-#: modules/imaging/manage/master_delete.php:50
 #: modules/imaging/infoPackage.inc.php:50
+#: modules/imaging/manage/master_delete.php:50
 msgid "Delete master"
 msgstr "删除母片"
 
-#: modules/imaging/manage/postinstall_delete.php:63
 #: modules/imaging/infoPackage.inc.php:107
+#: modules/imaging/manage/postinstall_delete.php:63
 msgid "Delete post-imaging script"
 msgstr "删除映像建立后指令码"
 
@@ -532,18 +532,18 @@ msgstr "删除服务"
 msgid "Delete the image"
 msgstr "删除映像"
 
-#: modules/imaging/manage/ajaxBootmenu.php:98
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/ajaxMasterLevel2.php:108
-#: modules/imaging/manage/service_edit.php:59
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/imaging/bootmenu.php:349
-#: modules/imaging/imaging/ajaxServices.php:99
 #: modules/imaging/imaging/ajaxImages.php:157
+#: modules/imaging/imaging/ajaxServices.php:99
+#: modules/imaging/imaging/bootmenu.php:349
 #: modules/imaging/imaging/images.php:108
 #: modules/imaging/includes/post_install_script.php:65
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/ajaxBootmenu.php:98
+#: modules/imaging/manage/ajaxMasterLevel2.php:108
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/master_edit.php:57
+#: modules/imaging/manage/service_edit.php:59
 msgid "Description"
 msgstr "说明"
 
@@ -555,25 +555,25 @@ msgstr "无磁碟 Linux 命令列存取"
 msgid "Display computers group content"
 msgstr "显示电脑群组内容"
 
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/master_add.php:105
-#: modules/imaging/manage/service_add.php:104
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/imaging/bootmenu.php:167
-#: modules/imaging/imaging/bootmenu.php:352
 #: modules/imaging/imaging/addimage.php:137
 #: modules/imaging/imaging/addservice.php:120
+#: modules/imaging/imaging/bootmenu.php:167
+#: modules/imaging/imaging/bootmenu.php:352
+#: modules/imaging/manage/ajaxBootmenu.php:100
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/manage/master_add.php:105
+#: modules/imaging/manage/service_add.php:104
 msgid "Displayed"
 msgstr "显示"
 
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/master_add.php:109
-#: modules/imaging/manage/service_add.php:108
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/imaging/bootmenu.php:177
-#: modules/imaging/imaging/bootmenu.php:355
 #: modules/imaging/imaging/addimage.php:141
 #: modules/imaging/imaging/addservice.php:124
+#: modules/imaging/imaging/bootmenu.php:177
+#: modules/imaging/imaging/bootmenu.php:355
+#: modules/imaging/manage/ajaxBootmenu.php:102
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/manage/master_add.php:109
+#: modules/imaging/manage/service_add.php:108
 msgid "Displayed on WOL"
 msgstr "在 WOL 上显示"
 
@@ -601,8 +601,8 @@ msgstr "向下服务"
 msgid "Duplicate"
 msgstr "复制"
 
-#: modules/imaging/manage/ajaxBootmenu.php:105
 #: modules/imaging/imaging/bootmenu.php:256
+#: modules/imaging/manage/ajaxBootmenu.php:105
 msgid "Edit"
 msgstr "编辑"
 
@@ -611,9 +611,9 @@ msgstr "编辑"
 msgid "Edit : %s"
 msgstr "编辑：%s"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:118
 #: modules/imaging/imaging/ajaxImages.php:77
 #: modules/imaging/imaging/ajaxImages.php:175
+#: modules/imaging/manage/ajaxMasterLevel2.php:118
 msgid "Edit image"
 msgstr "编辑映像"
 
@@ -674,8 +674,8 @@ msgstr "备份结束请求"
 msgid "End of Backup Success"
 msgstr "备份结束成功"
 
-#: modules/imaging/manage/ajaxLogs.php:57
 #: modules/imaging/includes/logs.inc.php:31
+#: modules/imaging/manage/ajaxLogs.php:57
 msgid "Error"
 msgstr "错误"
 
@@ -746,13 +746,13 @@ msgstr "强制执行产生"
 msgid "Force raw backup mode"
 msgstr "强制执行原始备份模式"
 
-#: modules/imaging/imaging/ajaxServices.php:102
 #: modules/imaging/imaging/ajaxImages.php:162
+#: modules/imaging/imaging/ajaxServices.php:102
 msgid "From profile"
 msgstr "从设定档"
 
-#: modules/imaging/manage/ajaxConfiguration.php:166
 #: modules/imaging/imaging/configure.php:111
+#: modules/imaging/manage/ajaxConfiguration.php:166
 msgid "Full path to the XPM displayed at boot"
 msgstr "开机时显示的 XPM 完整路径"
 
@@ -917,8 +917,8 @@ msgstr "群组 '%s' 的映像建立启动"
 msgid "Imaging configuration"
 msgstr "映像建立设定"
 
-#: modules/imaging/manage/service_show_used.php:124
 #: modules/imaging/imaging/showtarget.php:147
+#: modules/imaging/manage/service_show_used.php:124
 msgid "Imaging group"
 msgstr "映像群组"
 
@@ -934,8 +934,8 @@ msgstr "电脑映像建立"
 msgid "Imaging on group"
 msgstr "群组映像建立"
 
-#: modules/imaging/manage/service_show_used.php:116
 #: modules/imaging/imaging/showtarget.php:139
+#: modules/imaging/manage/service_show_used.php:116
 msgid "Imaging server"
 msgstr "映像伺服器"
 
@@ -961,8 +961,8 @@ msgstr "映像伺服器状态"
 msgid "Imaging service"
 msgstr "映像建立服务"
 
-#: modules/imaging/manage/ajaxServiceLevel2.php:94
 #: modules/imaging/imaging/ajaxImages.php:160
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
 msgstr "在开机功能表中"
 
@@ -978,8 +978,8 @@ msgstr "在预设开机功能表中"
 msgid "In default bootmenu"
 msgstr "在预设开机功能表中"
 
-#: modules/imaging/manage/ajaxLogs.php:59
 #: modules/imaging/includes/logs.inc.php:26
+#: modules/imaging/manage/ajaxLogs.php:59
 msgid "Inventory"
 msgstr "清查"
 
@@ -992,15 +992,15 @@ msgstr "已在背景中启动母片 <strong>%s</strong> 的 Iso。"
 msgid "Kernel parameters"
 msgstr "核心参数"
 
+#: modules/imaging/imaging/ajaxImages.php:155
+#: modules/imaging/imaging/ajaxServices.php:98
+#: modules/imaging/imaging/bootmenu.php:347
+#: modules/imaging/imaging/images.php:104
 #: modules/imaging/manage/ajaxBootmenu.php:96
+#: modules/imaging/manage/ajaxMasterLevel2.php:106
 #: modules/imaging/manage/ajaxServiceLevel2.php:91
 #: modules/imaging/manage/master_edit.php:53
-#: modules/imaging/manage/ajaxMasterLevel2.php:106
 #: modules/imaging/manage/service_edit.php:54
-#: modules/imaging/imaging/bootmenu.php:347
-#: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/ajaxImages.php:155
-#: modules/imaging/imaging/images.php:104
 msgid "Label"
 msgstr "标签"
 
@@ -1054,13 +1054,13 @@ msgstr "一个群组的 MSC 启动标签"
 msgid "MSC logs tab for a group"
 msgstr "一个群组的 MSC 记录档标签"
 
-#: modules/imaging/manage/localSidebar.php:34
 #: modules/imaging/infoPackage.inc.php:63
+#: modules/imaging/manage/localSidebar.php:34
 msgid "Manage boot services"
 msgstr "管理开机服务"
 
-#: modules/imaging/manage/localSidebar.php:31
 #: modules/imaging/infoPackage.inc.php:45
+#: modules/imaging/manage/localSidebar.php:31
 msgid "Manage masters"
 msgstr "管理母片"
 
@@ -1077,8 +1077,8 @@ msgstr "已成功修改母片 <strong>%s</strong>"
 msgid "Masters"
 msgstr "母片"
 
-#: modules/imaging/manage/master_iso.php:72
 #: modules/imaging/imaging/images_iso.php:86
+#: modules/imaging/manage/master_iso.php:72
 msgid "Media size"
 msgstr "媒体大小"
 
@@ -1086,8 +1086,8 @@ msgstr "媒体大小"
 msgid "Memory"
 msgstr "记忆体"
 
-#: modules/imaging/manage/ajaxLogs.php:53
 #: modules/imaging/includes/logs.inc.php:25
+#: modules/imaging/manage/ajaxLogs.php:53
 msgid "Menu"
 msgstr "功能表"
 
@@ -1105,29 +1105,29 @@ msgstr "功能表语言"
 msgid "Menu timeout"
 msgstr "功能表逾时"
 
-#: modules/imaging/manage/ajaxLogs.php:112
 #: modules/imaging/imaging/ajaxLogs.php:95
+#: modules/imaging/manage/ajaxLogs.php:112
 msgid "Message"
 msgstr "讯息"
 
-#: modules/imaging/manage/ajaxConfiguration.php:169
 #: modules/imaging/imaging/configure.php:115
+#: modules/imaging/manage/ajaxConfiguration.php:169
 msgid "Message displayed during backup/restoration"
 msgstr "在备份／还原期间显示的讯息"
 
-#: modules/imaging/manage/ajaxBootmenu.php:29
 #: modules/imaging/imaging/bootmenu.php:254
+#: modules/imaging/manage/ajaxBootmenu.php:29
 msgid "Move Up"
 msgstr "上移"
 
-#: modules/imaging/manage/ajaxBootmenu.php:30
 #: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/manage/ajaxBootmenu.php:30
 msgid "Move down"
 msgstr "下移"
 
+#: modules/imaging/includes/post_install_script.php:63
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-#: modules/imaging/includes/post_install_script.php:63
 msgid "Name"
 msgstr "名称"
 
@@ -1193,13 +1193,13 @@ msgstr "请为 ISO 映像档案指定标题。"
 msgid "Please switch to expert mode now if you want to change more parameters."
 msgstr "如果要变更更多参数，请立即切换至专业模式。"
 
-#: modules/imaging/manage/ajaxLogs.php:56
 #: modules/imaging/includes/logs.inc.php:30
+#: modules/imaging/manage/ajaxLogs.php:56
 msgid "Post-imaging"
 msgstr "映像建立后"
 
-#: modules/imaging/manage/localSidebar.php:40
 #: modules/imaging/infoPackage.inc.php:93
+#: modules/imaging/manage/localSidebar.php:40
 msgid "Post-imaging scripts"
 msgstr "映像建立后指令码"
 
@@ -1284,12 +1284,12 @@ msgstr "移除开机服务失败"
 msgid "Removal of master failed"
 msgstr "移除母片失败"
 
-#: modules/imaging/manage/service_show_used.php:144
+#: modules/imaging/imaging/bootmenu_remove.php:93
+#: modules/imaging/imaging/images_delete.php:59
+#: modules/imaging/imaging/showtarget.php:167
 #: modules/imaging/manage/master_delete.php:54
 #: modules/imaging/manage/master_remove.php:69
-#: modules/imaging/imaging/bootmenu_remove.php:93
-#: modules/imaging/imaging/showtarget.php:167
-#: modules/imaging/imaging/images_delete.php:59
+#: modules/imaging/manage/service_show_used.php:144
 msgid "Remove"
 msgstr "移除"
 
@@ -1297,16 +1297,16 @@ msgstr "移除"
 msgid "Remove a service from a target"
 msgstr "从目标移除服务"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:56
-#: modules/imaging/imaging/bootmenu_remove.php:89
 #: modules/imaging/imaging/ajaxImages.php:71
+#: modules/imaging/imaging/bootmenu_remove.php:89
 #: modules/imaging/infoPackage.inc.php:223
 #: modules/imaging/infoPackage.inc.php:304
+#: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
 msgstr "从开机功能表移除"
 
-#: modules/imaging/manage/master_remove.php:65
 #: modules/imaging/infoPackage.inc.php:47
+#: modules/imaging/manage/master_remove.php:65
 msgid "Remove master"
 msgstr "移除母片"
 
@@ -1333,8 +1333,8 @@ msgstr "从预设开机功能表移除开机服务 <b>%s</b>"
 msgid "Remove this boot service from imaging server %s"
 msgstr "从映像伺服器 %s 移除此开机服务"
 
-#: modules/imaging/manage/service_show_used.php:123
 #: modules/imaging/imaging/showtarget.php:146
+#: modules/imaging/manage/service_show_used.php:123
 #, php-format
 msgid "Remove this master from computer %s"
 msgstr "从电脑 %s 移除此母片"
@@ -1353,8 +1353,8 @@ msgstr "重设同步处理状态"
 msgid "Reset synchronisation state for %s (%s) succeed"
 msgstr "已成功为 %s (%s) 重设同步处理状态"
 
-#: modules/imaging/manage/ajaxLogs.php:54
 #: modules/imaging/includes/logs.inc.php:29
+#: modules/imaging/manage/ajaxLogs.php:54
 msgid "Restoration"
 msgstr "还原"
 
@@ -1366,33 +1366,33 @@ msgstr "还原已完成"
 msgid "Restoration Started"
 msgstr "还原已启动"
 
-#: modules/imaging/manage/ajaxConfiguration.php:127
 #: modules/imaging/imaging/configure.php:70
+#: modules/imaging/manage/ajaxConfiguration.php:127
 msgid "Restoration options"
 msgstr "还原选项"
 
-#: modules/imaging/manage/ajaxConfiguration.php:156
 #: modules/imaging/imaging/configure.php:100
+#: modules/imaging/manage/ajaxConfiguration.php:156
 msgid "Restoration type"
 msgstr "还原类型"
 
-#: modules/imaging/manage/ajaxConfiguration.php:159
 #: modules/imaging/imaging/configure.php:103
+#: modules/imaging/manage/ajaxConfiguration.php:159
 msgid "Restoration: MTFTP maximum waiting (in sec)"
 msgstr "还原：MTFTP 最大等候时间（秒）"
 
-#: modules/imaging/manage/ajaxLogs.php:62
 #: modules/imaging/includes/logs.inc.php:36
+#: modules/imaging/manage/ajaxLogs.php:62
 msgid "Restore done"
 msgstr "还原已完成"
 
-#: modules/imaging/manage/ajaxLogs.php:63
 #: modules/imaging/includes/logs.inc.php:37
+#: modules/imaging/manage/ajaxLogs.php:63
 msgid "Restore failed"
 msgstr "还原失败"
 
-#: modules/imaging/manage/ajaxLogs.php:61
 #: modules/imaging/includes/logs.inc.php:35
+#: modules/imaging/manage/ajaxLogs.php:61
 msgid "Restore in progress"
 msgstr "正在进行还原"
 
@@ -1417,8 +1417,8 @@ msgstr "指令码值"
 msgid "Secure control on a group of computers"
 msgstr "一组电脑上的安全控制"
 
-#: modules/imaging/manage/service_show_used.php:141
 #: modules/imaging/imaging/showtarget.php:164
+#: modules/imaging/manage/service_show_used.php:141
 msgid "Select all"
 msgstr "全选"
 
@@ -1426,21 +1426,21 @@ msgstr "全选"
 msgid "Select this hard disk"
 msgstr "选择此硬碟"
 
-#: modules/imaging/manage/master_add.php:103
-#: modules/imaging/manage/service_add.php:102
-#: modules/imaging/manage/bootmenu_edit.php:81
-#: modules/imaging/imaging/bootmenu.php:162
 #: modules/imaging/imaging/addimage.php:135
 #: modules/imaging/imaging/addservice.php:118
+#: modules/imaging/imaging/bootmenu.php:162
+#: modules/imaging/manage/bootmenu_edit.php:81
+#: modules/imaging/manage/master_add.php:103
+#: modules/imaging/manage/service_add.php:102
 msgid "Selected by default"
 msgstr "预设选取"
 
-#: modules/imaging/manage/master_add.php:107
-#: modules/imaging/manage/service_add.php:106
-#: modules/imaging/manage/bootmenu_edit.php:91
-#: modules/imaging/imaging/bootmenu.php:172
 #: modules/imaging/imaging/addimage.php:139
 #: modules/imaging/imaging/addservice.php:122
+#: modules/imaging/imaging/bootmenu.php:172
+#: modules/imaging/manage/bootmenu_edit.php:91
+#: modules/imaging/manage/master_add.php:107
+#: modules/imaging/manage/service_add.php:106
 msgid "Selected by default on WOL"
 msgstr "在 WOL 上预设选取"
 
@@ -1472,8 +1472,8 @@ msgstr "已成功移除服务 <strong>%s</strong>"
 msgid "Share a group of computers"
 msgstr "共用一个电脑群组"
 
-#: modules/imaging/manage/service_show_used.php:108
 #: modules/imaging/imaging/showtarget.php:123
+#: modules/imaging/manage/service_show_used.php:108
 msgid "Show all targets that use that image in their boot menu"
 msgstr "显示在其开机功能表中使用该映像的所有目标"
 
@@ -1485,8 +1485,8 @@ msgstr "显示同步处理状态"
 msgid "Show target that use that image"
 msgstr "显示使用该映像的目标"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:69
 #: modules/imaging/imaging/ajaxImages.php:74
+#: modules/imaging/manage/ajaxMasterLevel2.php:69
 msgid "Show target using that image"
 msgstr "显示使用该映像的目标"
 
@@ -1498,8 +1498,8 @@ msgstr "显示已使用的服务"
 msgid "Show where service is used"
 msgstr "显示服务的使用位置"
 
-#: modules/imaging/manage/ajaxMasterLevel2.php:110
 #: modules/imaging/imaging/ajaxImages.php:159
+#: modules/imaging/manage/ajaxMasterLevel2.php:110
 msgid "Size (compressed)"
 msgstr "大小（已压缩）"
 
@@ -1540,8 +1540,8 @@ msgstr "切换"
 msgid "Synchronization state"
 msgstr "同步处理状态"
 
-#: modules/imaging/manage/ajaxLogs.php:111
 #: modules/imaging/imaging/ajaxLogs.php:94
+#: modules/imaging/manage/ajaxLogs.php:111
 msgid "Target"
 msgstr "目标"
 
@@ -1687,13 +1687,13 @@ msgstr "此目标的开机功能表已是最新。"
 msgid "This value is already used."
 msgstr "此值已被使用。"
 
-#: modules/imaging/manage/ajaxLogs.php:109
 #: modules/imaging/imaging/ajaxLogs.php:90
+#: modules/imaging/manage/ajaxLogs.php:109
 msgid "Timestamp"
 msgstr "时间戳记"
 
-#: modules/imaging/manage/master_iso.php:67
 #: modules/imaging/imaging/images_iso.php:81
+#: modules/imaging/manage/master_iso.php:67
 msgid "Title"
 msgstr "标题"
 
@@ -1726,8 +1726,8 @@ msgstr "若要登录，您必须先设定预设功能表至管理此电脑实体
 msgid "Unregister this computer"
 msgstr "取消登录此电脑"
 
-#: modules/imaging/manage/service_show_used.php:143
 #: modules/imaging/imaging/showtarget.php:166
+#: modules/imaging/manage/service_show_used.php:143
 msgid "Unselect all"
 msgstr "取消全选"
 
@@ -1753,12 +1753,12 @@ msgid ""
 "default boot entry."
 msgstr "使用 \"预先选择的选项\" 或 \"WOL 上预先选择的选项\" 定义预设开机项目。"
 
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/service_edit.php:69
+#: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/ajaxConfiguration.php:191
 #: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/postinstall_edit.php:126
-#: modules/imaging/imaging/bootmenu.php:182
+#: modules/imaging/manage/service_edit.php:69
 msgid "Validate"
 msgstr "验证"
 
@@ -1852,13 +1852,13 @@ msgstr "母片可用"
 msgid "minute"
 msgstr "分"
 
-#: modules/imaging/manage/ajaxConfiguration.php:136
 #: modules/imaging/imaging/configure.php:80
+#: modules/imaging/manage/ajaxConfiguration.php:136
 msgid "mtftp"
 msgstr "mtftp"
 
-#: modules/imaging/manage/ajaxConfiguration.php:135
 #: modules/imaging/imaging/configure.php:78
+#: modules/imaging/manage/ajaxConfiguration.php:135
 msgid "nfs"
 msgstr "nfs"
 

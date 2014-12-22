@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-04-29 20:00+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/update/sidebar.php:39 modules/update/infoPackage.inc.php:41
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
 msgid "All updates"
 msgstr "Todas atualizações"
 
@@ -116,7 +116,7 @@ msgstr "Instalação de Atualizações de Produto (ajax)"
 msgid "Product Updates list"
 msgstr "Lista de Atualizações de Produto"
 
-#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
 msgid "Settings"
 msgstr "Comfigurações"
 
@@ -128,13 +128,13 @@ msgstr "Tipo"
 msgid "UUID"
 msgstr "UUID"
 
-#: modules/update/update/viewProductUpdates.php:38
 #: modules/update/includes/panels/product_updates.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
 msgid "Update"
 msgstr "Atualizar"
 
-#: modules/update/update/viewUpdates.php:35
 #: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:35
 msgid "Update manager"
 msgstr "Gerenciador de Atualização"
 

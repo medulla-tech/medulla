@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-11-25 13:08+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -51,8 +51,8 @@ msgstr ""
 "<p>這些電腦將移至此群組，並且它們的開機功能表<strong>將被重新寫入</strong></"
 "p>"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/add_groups.php:218
+#: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
 #, php-format
 msgid "A group already exists with name '%s'"
@@ -63,8 +63,8 @@ msgstr "名稱為 '%s' 的群組已經存在"
 #: modules/dyngroup/dyngroup/creator.php:271
 #: modules/dyngroup/dyngroup/creator.php:279
 #: modules/dyngroup/dyngroup/creator.php:283
-#: modules/dyngroup/includes/double.php:36
 #: modules/dyngroup/includes/autocomplete.php:29
+#: modules/dyngroup/includes/double.php:36
 msgid "Add"
 msgstr "新增"
 
@@ -125,8 +125,8 @@ msgstr "是否確定要刪除群組 <b>%s</b>？<br/>（可在其他群組中使
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr "是否確定要刪除影像群組<b>%s</b> ？</b>"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/dyngroup/delete_group.php:77
+#: modules/dyngroup/dyngroup/remove_machine.php:58
 #: modules/dyngroup/includes/groups.inc.php:86
 #: modules/dyngroup/includes/groups.inc.php:281
 msgid "Cancel"
@@ -386,8 +386,8 @@ msgstr "電腦群組詳情"
 msgid "Group share"
 msgstr "群組共用"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
 #: modules/dyngroup/dyngroup/add_groups.php:166
+#: modules/dyngroup/dyngroup/import_from_file.php:41
 msgid "Group successfully created"
 msgstr "已成功建立群組"
 
@@ -522,8 +522,8 @@ msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
 msgstr "Microsoft Windows 7、Debian GNU/Linux 7.1 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:273
-#: modules/dyngroup/includes/double.php:39
 #: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
 msgid "Modify"
 msgstr "修改"
 
@@ -535,8 +535,8 @@ msgstr "Mozilla Firefox、LibreOffice、Microsoft Office 2003 ..."
 msgid "Name :"
 msgstr "名稱："
 
-#: modules/dyngroup/dyngroup/creator.php:277
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:76
+#: modules/dyngroup/dyngroup/creator.php:277
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/save.php:84
 #: modules/dyngroup/includes/groups.inc.php:168
@@ -750,9 +750,9 @@ msgstr "更新機器快取"
 msgid "Update machines name cache in dyngroup"
 msgstr "在動態群組中更新機器名稱快取"
 
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
 #: modules/dyngroup/dyngroup/creator.php:276
 #: modules/dyngroup/dyngroup/creator.php:282
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/save.php:84
 #: modules/dyngroup/includes/groups.inc.php:167

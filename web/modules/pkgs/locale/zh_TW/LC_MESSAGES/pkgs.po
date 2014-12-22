@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-12-09 10:01+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -102,8 +102,8 @@ msgstr "取消"
 msgid "Cannot set My Credentials."
 msgstr ""
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:319
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
 "increase upload size."
@@ -125,7 +125,7 @@ msgstr "按一下此處選擇檔案"
 msgid "Command : "
 msgstr "命令："
 
-#: modules/pkgs/pkgs/edit.php:208 modules/pkgs/pkgs/add.php:164
+#: modules/pkgs/pkgs/add.php:164 modules/pkgs/pkgs/edit.php:208
 msgid "Command's name : "
 msgstr "命令的名稱："
 
@@ -147,9 +147,9 @@ msgstr "刪除檔案"
 msgid "Delete this package"
 msgstr "刪除此封裝"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:82 modules/pkgs/pkgs/edit.php:204
-#: modules/pkgs/pkgs/add.php:153
+#: modules/pkgs/pkgs/add.php:153 modules/pkgs/pkgs/ajaxPackageList.php:82
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:204
 msgid "Description"
 msgstr "說明"
 
@@ -170,13 +170,13 @@ msgstr "編輯封裝"
 msgid "Expiration date"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:116 modules/pkgs/pkgs/add.php:97
-#: modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/add.php:97 modules/pkgs/pkgs/associate_files.php:75
+#: modules/pkgs/pkgs/edit.php:116
 msgid "Failed to associate files"
 msgstr "無法關聯檔案"
 
-#: modules/pkgs/pkgs/edit.php:113 modules/pkgs/pkgs/add.php:94
-#: modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/add.php:94 modules/pkgs/pkgs/associate_files.php:72
+#: modules/pkgs/pkgs/edit.php:113
 #, php-format
 msgid "Failed to associate files%s"
 msgstr "無法關聯檔案 %s"
@@ -212,8 +212,8 @@ msgstr "檔案已成功新增至封裝 <b>%s (%s)</b>"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "檔案已成功關聯封裝<b>%s (%s)</b>%s "
 
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #: modules/pkgs/pkgs/add.php:319
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
 msgstr "檔案上傳 （<b><u title='%s'>%sM 最大</u></b>）"
@@ -247,7 +247,7 @@ msgstr ""
 msgid "Name"
 msgstr "名稱"
 
-#: modules/pkgs/pkgs/edit.php:216 modules/pkgs/pkgs/add.php:172
+#: modules/pkgs/pkgs/add.php:172 modules/pkgs/pkgs/edit.php:216
 msgid "Need a reboot ?"
 msgstr "需要重新開機？"
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Number of licenses"
 msgstr "授權數目"
 
-#: modules/pkgs/pkgs/edit.php:184 modules/pkgs/pkgs/add.php:138
+#: modules/pkgs/pkgs/add.php:138 modules/pkgs/pkgs/edit.php:184
 msgid "Package API"
 msgstr "封裝 API"
 
@@ -280,9 +280,9 @@ msgid "Package label"
 msgstr "封裝標籤"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 msgid "Package name"
 msgstr "封裝名稱"
 
@@ -306,7 +306,7 @@ msgstr "封裝版本"
 msgid "Packages"
 msgstr "封裝"
 
-#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
+#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
 msgid "Packages list"
 msgstr "封裝清單"
 
@@ -314,7 +314,7 @@ msgstr "封裝清單"
 msgid "Password"
 msgstr ""
 
-#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
 msgid "Pending packages list"
 msgstr "擱置的封裝清單"
 
@@ -436,8 +436,8 @@ msgstr ""
 msgid "Vendor"
 msgstr "廠商"
 
-#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/ajaxPackageList.php:83
-#: modules/pkgs/pkgs/add.php:152
+#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/add.php:152
+#: modules/pkgs/pkgs/ajaxPackageList.php:83
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
 msgid "Version"
 msgstr "版本"

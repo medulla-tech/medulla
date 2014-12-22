@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-22 01:00+0100\n"
 "PO-Revision-Date: 2014-05-05 23:06+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/update/update/sidebar.php:39 modules/update/infoPackage.inc.php:41
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
 msgid "All updates"
 msgstr "所有更新"
 
@@ -116,7 +116,7 @@ msgstr "产品更新安装 (ajax)"
 msgid "Product Updates list"
 msgstr "产品更新清单"
 
-#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
 msgid "Settings"
 msgstr "设定"
 
@@ -128,13 +128,13 @@ msgstr "类型"
 msgid "UUID"
 msgstr "UUID"
 
-#: modules/update/update/viewProductUpdates.php:38
 #: modules/update/includes/panels/product_updates.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
 msgid "Update"
 msgstr "更新"
 
-#: modules/update/update/viewUpdates.php:35
 #: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:35
 msgid "Update manager"
 msgstr "更新管理员"
 
