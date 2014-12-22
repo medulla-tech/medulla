@@ -22,7 +22,6 @@
 
 import logging
 
-from OpenSSL.SSL import TLSv1_METHOD
 from OpenSSL.SSL import VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
 
 from twisted.internet import reactor
@@ -85,9 +84,9 @@ class GatheringServer(Protocol):
         logging.getLogger().debug("data received: %s from %s" % (str(data), ip))
         try:
             tr_result = self._trigger.fire()
-            #@tr_result.addCallback
-            #def res(result):
-            #    print "trigger result: %s" % (str(result))
+            @tr_result.addCallback
+            def res(result):
+                print "trigger result: %s" % (str(result))
         except Exception, e:
             logging.getLogger().warn("\033[31mtrigger firing fail: %s\033[0m" % str(e))
 
