@@ -47,7 +47,7 @@ if (isset($_POST["bconfirm"], $_POST["id"])) {
     $title = _T("Enable this update?", 'update');
     $f = new PopupForm($title, 'enableUpdateForm');
     $f->add(new HiddenTpl("id"), array("value" => $_GET['id'], "hide" => True));
-    if (isset($_POST['gid'])){
+    if (isset($_GET['gid'])){
         $f->add(new HiddenTpl("gid"), array("value" => $_GET['gid'], "hide" => True));
     }
     $f->addValidateButton("bconfirm");
