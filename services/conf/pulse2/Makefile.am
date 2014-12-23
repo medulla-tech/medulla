@@ -24,7 +24,7 @@ pulseconfdir = $(sysconfdir)/mmc/pulse2
 
 certpaths = \
 	package-server/keys inventory-server/keys scheduler/keys \
-	launchers/keys
+	launchers/keys cm/keys
 certca = $(patsubst %,%/cacert.pem,$(certpaths))
 certpriv = $(patsubst %,%/privkey.pem,$(certpaths))
 
@@ -43,7 +43,7 @@ nobase_pulseconf_DATA = \
 	inventory-server/OcsNGMap.xml \
 	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
-	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf \
+	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf cm/cm.ini \
 	$(certca) $(certpriv)
 
 EXTRA_DIST = $(nobase_pulseconf_DATA) \
