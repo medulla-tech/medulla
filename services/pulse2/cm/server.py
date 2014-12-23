@@ -22,8 +22,6 @@
 
 import logging
 
-from OpenSSL.SSL import VERIFY_PEER, VERIFY_FAIL_IF_NO_PEER_CERT
-
 from twisted.internet import reactor
 
 from twisted.internet.endpoints import SSL4ServerEndpoint
