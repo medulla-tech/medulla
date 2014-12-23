@@ -88,3 +88,11 @@ class Target(Base, DBObj):
     status = Column(Integer, default = 0)
     is_installed = Column(Integer, default = 0)
 
+class Groups(Base, DBObj):
+    # ====== Table name =========================
+    __tablename__ = 'groups'
+    # ====== Fields =============================
+    id = Column(Integer, primary_key=True)
+    gid = Column(Integer)
+    update_id = Column(Integer, ForeignKey('updates.id'))
+    status = Column(Integer, default = 0)
