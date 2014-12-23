@@ -182,9 +182,9 @@ class Dispatcher(object):
         self.config = config
         self.logger = logging.getLogger()
 
-        self.server = Server(config.server.ssl_key_file,
+        self.server = Server(config.server.port,
+                             config.server.ssl_key_file,
                              config.server.ssl_crt_file,
-                             config.server.ssl_pem_file,
                              config.server.ssl_method,
                              )
         self.collector = Collector()

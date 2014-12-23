@@ -104,20 +104,21 @@ class GatheringFactory(Factory):
     protocol = GatheringServer
 
 class Server(object):
-    def __init__(self, key, crt, pem, ssl_method):
+    def __init__(self, port, key, crt, ssl_method):
         """
+        @param port: port to listen
+        @type port: int
+
         @param key: private key filename
         @type key: str
 
         @param crt: certificate filename
         @type crt: str
 
-        @param pem: PEM file path
-        @type pem: str
-
         @param ssl_method: SSL method
         @type: str
         """
+        self.port = port
         if ssl_method == "TLSv1_METHOD":
             from OpenSSL.SSL import TLSv1_METHOD
             ssl_method = TLSv1_METHOD
@@ -139,21 +140,6 @@ class Server(object):
                                                         ssl_method
                                                         )
 
-        mode = VERIFY_PEER | VERIFY_FAIL_IF_NO_PEER_CERT
-
-        ctx = self.ctx_factory.getContext()
-        ctx.set_verify(mode, self._verify_callback)
-        ctx.load_verify_locations(pem)
-
-    def _verify_callback(self, connection, x509, errnum, errdepth, ok):
-        #print "%s / %s / %s / %s / %s" % (connection, x509, errnum, errdepth, ok)
-        #print "error code: %d" % errnum
-        if not ok:
-            logging.getLogger().warn('invalid cert from subject:', x509.get_subject())
-            return False
-        else:
-            return True
-
 
     def start(self, handler, trigger):
 
@@ -162,7 +148,10 @@ class Server(object):
         self.factory.protocol.set_handler(handler)
         self.factory.protocol.set_trigger(trigger)
 
-        endpoint = SSL4ServerEndpoint(reactor, 8088, self.ctx_factory)
+        endpoint = SSL4ServerEndpoint(reactor,
+                                      self.port,
+                                      self.ctx_factory)
+
         d = endpoint.listen(self.factory)
 
         @d.addCallback

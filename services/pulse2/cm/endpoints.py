@@ -79,8 +79,8 @@ class Endpoint(object):
 class AgentsInstallMap(object):
     """Common attributes containing the install commands of agents by platform."""
 
-    windows = ["##wget## ##server##/downloads/win32/pulse2-win32-agents-installer.exe",
-               "##tmp## pulse2-win32-agents-installer.exe"]
+    windows = ["##wget## ##server##/downloads/win32/pulse2-win32-agents-pack-silent.exe",
+               "##tmp## pulse2-win32-agents-pack-silent.exe"]
     debian = ["wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
               "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
               "apt-get update",
