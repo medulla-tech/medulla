@@ -42,24 +42,6 @@ class Config(object):
 
         endpoints = ["packages", "inventory",]
 
-    class package_api(object):
-
-        mserver = "127.0.0.1"
-        mport = 9990
-        mmountpoint = "/rpc"
-        enablessl = 1
-        verifypeer = 0
-        localcert = None
-        cacert = None
-
-    class scheduler(object):
-
-        db_host = "localhost"
-        db_name = "msc"
-        db_port = "3306"
-        db_user = "msc"
-        db_passwd = "msc"
-
     class inventory(object):
         enablessl = False
         host = "localhost"
