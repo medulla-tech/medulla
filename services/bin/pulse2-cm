@@ -22,7 +22,6 @@
 
 import sys
 import logging
-from OpenSSL.SSL import TLSv1_METHOD
 
 from twisted.internet import reactor
 
@@ -39,6 +38,7 @@ logger.addHandler(hdlr2)
 
 
 config = Config()
+config.read("/etc/mmc/pulse2/cm/cm.ini")
 dp = Dispatcher(config)
 dp.run()
 
