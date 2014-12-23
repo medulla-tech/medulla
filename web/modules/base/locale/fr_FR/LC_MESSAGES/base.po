@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-12-10 17:09+0200\n"
+"PO-Revision-Date: 2014-12-23 10:27+0200\n"
 "Last-Translator: Jean-Philippe <jpbraun@mandriva.com>\n"
 "Language-Team: French <http://translate.mandriva.com/projects/mmc-"
 "core-32/base/fr_FR/>\n"
@@ -321,7 +321,7 @@ msgstr "non"
 
 #: includes/FormGenerator.php:465
 msgid "Year: "
-msgstr "Année:"
+msgstr "Année: "
 
 #: includes/FormGenerator.php:465
 msgid "Month: "
@@ -341,7 +341,7 @@ msgstr "Min.: "
 
 #: includes/FormGenerator.php:466
 msgid "Sec.: "
-msgstr "Sec.:"
+msgstr "Sec.: "
 
 #: includes/FormGenerator.php:538 includes/FormGenerator.php:544
 #: modules/base/includes/AjaxFilterLog.inc.php:168
@@ -509,11 +509,11 @@ msgstr "Votre session va être fermée"
 
 #: modules/admin/includes/configure.inc.php:50
 msgid " configuration"
-msgstr "configuration"
+msgstr " configuration"
 
 #: modules/admin/includes/configure.inc.php:62
 msgid " configuration page"
-msgstr "page de configuration"
+msgstr " page de configuration"
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:325
@@ -665,7 +665,7 @@ msgstr "Ajouter un ordinateur"
 
 #: modules/base/computers/edit.php:52
 msgid "Edit a computer"
-msgstr "Édition d'un ordinateur "
+msgstr "Édition d'un ordinateur"
 
 #: modules/base/computers/edit.php:84
 msgid "Computer name"
@@ -711,7 +711,7 @@ msgstr ""
 
 #: modules/base/computers/delete.php:38
 msgid "The computer has been deleted."
-msgstr "Cet ordinateur a été supprimé"
+msgstr "Cet ordinateur a été supprimé."
 
 #: modules/base/computers/delete.php:44
 msgid "Delete this computer"
@@ -870,11 +870,11 @@ msgid ""
 "existing directory (in expert mode)."
 msgstr ""
 "Modifiez le chemin du répertoire personnel ou forcez l'utilisation du "
-"répertoire existant (en mode expert)"
+"répertoire existant (en mode expert)."
 
 #: modules/base/includes/errorHandling.php:53
 msgid "Your password is too young to change."
-msgstr "Votre mot de passe est trop récent pour être changé"
+msgstr "Votre mot de passe est trop récent pour être changé."
 
 #: modules/base/includes/errorHandling.php:54
 msgid ""
@@ -1141,7 +1141,7 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:49
 #, php-format
 msgid "Group %s successfully deleted."
-msgstr "Le groupe %s a été suppprimé avec succès"
+msgstr "Le groupe %s a été suppprimé avec succès."
 
 #: modules/base/includes/publicFunc.php:80
 msgid "User's name invalid !"
@@ -1482,7 +1482,7 @@ msgstr "Actions en arrière plan"
 
 #: modules/base/status/support.php:29
 msgid "License and support information"
-msgstr ""
+msgstr "License et information support"
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
@@ -1586,7 +1586,7 @@ msgstr "Journal de l'utilisateur"
 
 #: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
 msgid "Your password has been changed."
-msgstr "Votre mot de passe a été changé"
+msgstr "Votre mot de passe a été changé."
 
 #: modules/base/users/passwd.php:50
 msgid "Change your user's password"
@@ -1950,7 +1950,7 @@ msgstr "Activer/Désactiver un compte"
 
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
-msgstr "Uptime"
+msgstr "Temps de fonctionnement"
 
 #: modules/services/includes/panels/services.inc.php:44
 #, php-format
