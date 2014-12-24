@@ -30,6 +30,7 @@ from pulse2.cm.trigger import Trigger
 from pulse2.cm.endpoints import Endpoint
 from pulse2.cm.endpoints import PackagesEndpoint
 from pulse2.cm.endpoints import InventoryServerEndpoint
+from pulse2.cm.endpoints import VPNInstallEndpoint
 
 
 class MethodNotFound(Exception):
@@ -169,6 +170,7 @@ class Dispatcher(object):
     """
     endpoints = [PackagesEndpoint,
                  InventoryServerEndpoint,
+                 VPNInstallEndpoint,
                  ]
 
     endpoints_root = None

@@ -22,8 +22,9 @@
 
 
 import logging
-
+import os
 import time
+import psutil
 from datetime import datetime
 
 from twisted.internet import reactor
@@ -31,6 +32,8 @@ from twisted.internet.defer import Deferred, DeferredList
 from twisted.internet.defer import succeed, fail
 from twisted.internet.task import deferLater
 from twisted.web.client import getPage
+from twisted.internet.protocol import ProcessProtocol
+from twisted.internet.error import ProcessDone
 
 from mmc.client.async import Proxy
 
@@ -56,6 +59,20 @@ class Endpoint(object):
     def __init__(self, config):
         self.config = config
         self.logger = logging.getLogger()
+        self._mmc_proxy_init()
+
+
+    def _mmc_proxy_init(self):
+        """Starts the cleint mmc proxy for remote calls """
+        proto = "https" if self.config.mmc.enablessl else "http"
+        url = "%s://%s:%d/XMLRPC" % (proto,
+                                     self.config.mmc.host,
+                                     self.config.mmc.port,
+                                     )
+        self.mmc_proxy = Proxy(url,
+                               self.config.mmc.user,
+                               self.config.mmc.passwd,
+                               )
 
 
     def call_method(self, name, *args):
@@ -73,6 +90,37 @@ class Endpoint(object):
             return method(*args)
         else:
             raise MethodNotFound(name)
+
+
+    def _get_machine_uuid(self, hostname, macs):
+        """
+        A remote call to get UUID of machine.
+
+        @param hostname: hostname of machine
+        @type hostname: str
+
+        @param macs: list of active MAC addresses of machine
+        @type macs: list
+
+        @return: UUID of machine
+        @rtype: Deferred
+        """
+        d = self.mmc_proxy.callRemote("base.ldapAuth",
+                                      self.config.mmc.ldap_user,
+                                      self.config.mmc.ldap_passwd,
+                                      )
+        @d.addCallback
+        def cb(result):
+            if result:
+                method = "inventory.getMachineByHostnameAndMacs"
+                return self.mmc_proxy.callRemote(method, hostname, macs)
+
+        @d.addErrback
+        def eb(failure):
+            self.logger.error("MMC LDAP auth failed: %s" % str(failure))
+            return failure
+
+        return d
 
 
 
@@ -230,24 +278,24 @@ class InventoryServerEndpoint(Endpoint):
     fusion_formatter = FusionFormatter()
     mmc_proxy = None
 
-    def __init__(self, *args, **kwargs):
-        super(self.__class__, self).__init__(*args, **kwargs)
-
-        self._mmc_proxy_init()
-
-
-    def _mmc_proxy_init(self):
-        """Starts the cleint mmc proxy for remote calls """
-        proto = "https" if self.config.mmc.enablessl else "http"
-        url = "%s://%s:%d/XMLRPC" % (proto,
-                                     self.config.mmc.host,
-                                     self.config.mmc.port,
-                                     )
-        self.mmc_proxy = Proxy(url,
-                               self.config.mmc.user,
-                               self.config.mmc.passwd,
-                               )
-
+#    def __init__(self, *args, **kwargs):
+#        super(self.__class__, self).__init__(*args, **kwargs)
+#
+#        self._mmc_proxy_init()
+#
+#
+#    def _mmc_proxy_init(self):
+#        """Starts the cleint mmc proxy for remote calls """
+#        proto = "https" if self.config.mmc.enablessl else "http"
+#        url = "%s://%s:%d/XMLRPC" % (proto,
+#                                     self.config.mmc.host,
+#                                     self.config.mmc.port,
+#                                     )
+#        self.mmc_proxy = Proxy(url,
+#                               self.config.mmc.user,
+#                               self.config.mmc.passwd,
+#                               )
+#
 
     def get_valid_mac(self, inventory, from_ip):
         hostname, system, osversion, networks = inventory
@@ -288,7 +336,7 @@ class InventoryServerEndpoint(Endpoint):
         hostname, system, osversion, networks = inventory
         macs = [mac for (name, ip, mac, mask) in networks]
 
-        d = self.get_machine_uuid(hostname, macs)
+        d = self._get_machine_uuid(hostname, macs)
         # UUID of machine
         d.addCallback(self.get_uuid_callback, hostname, macs, inventory)
         # IP address update for UUID (msc.target table)
@@ -352,7 +400,7 @@ class InventoryServerEndpoint(Endpoint):
 
                     delayed = deferLater(reactor,
                                          delay,
-                                         self.get_machine_uuid,
+                                         self._get_machine_uuid,
                                          hostname,
                                          macs,
                                          )
@@ -368,35 +416,35 @@ class InventoryServerEndpoint(Endpoint):
 
 
 
-    def get_machine_uuid(self, hostname, macs):
-        """
-        A remote call to get UUID of machine.
-
-        @param hostname: hostname of machine
-        @type hostname: str
-
-        @param macs: list of active MAC addresses of machine
-        @type macs: list
-
-        @return: UUID of machine
-        @rtype: Deferred
-        """
-        d = self.mmc_proxy.callRemote("base.ldapAuth",
-                                      self.config.mmc.ldap_user,
-                                      self.config.mmc.ldap_passwd,
-                                      )
-        @d.addCallback
-        def cb(result):
-            if result:
-                method = "inventory.getMachineByHostnameAndMacs"
-                return self.mmc_proxy.callRemote(method, hostname, macs)
-
-        @d.addErrback
-        def eb(failure):
-            self.logger.error("MMC LDAP auth failed: %s" % str(failure))
-            return failure
-
-        return d
+#    def get_machine_uuid(self, hostname, macs):
+#        """
+#        A remote call to get UUID of machine.
+#
+#        @param hostname: hostname of machine
+#        @type hostname: str
+#
+#        @param macs: list of active MAC addresses of machine
+#        @type macs: list
+#
+#        @return: UUID of machine
+#        @rtype: Deferred
+#        """
+#        d = self.mmc_proxy.callRemote("base.ldapAuth",
+#                                      self.config.mmc.ldap_user,
+#                                      self.config.mmc.ldap_passwd,
+#                                      )
+#        @d.addCallback
+#        def cb(result):
+#            if result:
+#                method = "inventory.getMachineByHostnameAndMacs"
+#                return self.mmc_proxy.callRemote(method, hostname, macs)
+#
+#        @d.addErrback
+#        def eb(failure):
+#            self.logger.error("MMC LDAP auth failed: %s" % str(failure))
+#            return failure
+#
+#        return d
 
     def update_target_ip(self, uuid, ip):
         """
@@ -541,6 +589,129 @@ class InventoryServerEndpoint(Endpoint):
             return False
 
         return d
+
+
+class VPNInstallEndpoint(Endpoint):
+    prefix = "vpn_install"
+
+    def _check_vpn_service(self):
+        """ Returns True if VPN server running """
+        process_name = "vpnserver"
+        for p in psutil.process_iter():
+            if process_name in p.cmdline :
+                return True
+
+        self.logger.warn("SSH Tunnel: Can't find VPN server service")
+        return False
+
+
+
+    def create_new_user(self, inventory):
+
+        if not self._check_vpn_service():
+            return succeed(False)
+
+        hostname, system, osversion, networks = inventory
+        macs = [mac for (name, ip, mac, mask) in networks]
+
+        d = self._get_machine_uuid(hostname, macs)
+        @d.addCallback
+        def get_uuid_callback(uuid):
+            """
+            Resolving of result of remote call to get UUID of machine.
+
+            @param uuid: result of remote call (UUID if request successfull, otherwise False)
+            @type uuid: str or bool
+
+            @return: UUID of machine
+            @rtype: Deferred
+            """
+            if uuid is not False:
+                self.logger.info("VPN install: Machine %s has uuid=%s" % (hostname, str(uuid)))
+                return succeed(uuid)
+            else:
+                return fail(None)
+
+        @d.addCallback
+        def create_user(uuid):
+            """
+            Creates a client account in VPN service.
+
+            @param uuid: UUID of machine as username
+            @type uuid: str
+            """
+            path = os.path.join(self.config.vpn.scripts_path,
+                                "vpn-server-user-create.sh",
+                                )
+            template = os.path.join(self.config.vpn.scripts_path,
+                                    "vpn-variables.in",
+                                    )
+            password = self._password_generate()
+
+            protocol = ForkingProtocol()
+            args = [path, uuid, password]
+            reactor.spawnProcess(protocol,
+                                 args[0],
+                                 args,
+                                 usePTY=True)
+
+            return (uuid, password)
+
+
+        @d.addErrback
+        def get_uuid_errback(failure):
+            return False
+
+
+        return d
+
+    def _password_generate(self):
+        length = 16
+        chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+        return "".join([chars[ord(c) % len(chars)] for c in os.urandom(length)])
+
+
+
+class ForkingProtocol(ProcessProtocol):
+    """ Protocol to fork a process"""
+
+    def __init__(self, name, callback=None):
+        """
+        @param name: name or description (for logging only)
+        @type name: str
+
+        @param callback: function to call when forked process finished
+        @type callback: func
+        """
+        ProcessProtocol()
+        self.logger = logging.getLogger()
+
+        self.name = name
+        self.callback = callback
+
+
+    def connectionMade(self):
+        self.logger.debug("%s: Opening of process started" % self.name)
+
+
+    def outReceived(self, data):
+        self.logger.debug("%s: process data received: %s" % (self.name, data))
+        ProcessProtocol.outReceived(self, data)
+
+    def errReceived(self, reason):
+        self.logger.warn("%s: process failed: %s" % (self.name, reason))
+        self.transport.loseConnection()
+        ProcessProtocol.errReceived(self, reason)
+
+    def processEnded(self, reason):
+        err = reason.trap(ProcessDone)
+        if err==ProcessDone:
+            self.logger.debug("%s: process successfully ended" % self.name)
+        else:
+            self.logger.warn("%s: closing failed: %s" % (self.name, reason))
+
+        if self.callback:
+            self.callback(reason)
 
 
 

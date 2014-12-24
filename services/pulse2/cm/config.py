@@ -40,7 +40,7 @@ class Config(object):
         ssl_crt_file = None
         ssl_method = "SSLv3_METHOD"
 
-        endpoints = ["packages", "inventory",]
+        endpoints = ["packages", "inventory","vpn_install"]
 
     class inventory(object):
         enablessl = False
@@ -58,6 +58,8 @@ class Config(object):
         ldap_user = "root"
         ldap_passwd = "ldap"
 
+    class vpn(object):
+        scripts_path = "/var/lib/pulse2/clients/vpn"
 
 
 
