@@ -49,7 +49,7 @@ fi
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserCreate $username
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserCreate $username
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
     expect \"Assigned Group Name:\n\"
@@ -64,7 +64,7 @@ echo "----- user $username successfully created ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserPasswordSet $username
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:UserPasswordSet $username
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
     expect \"Password:\n\"

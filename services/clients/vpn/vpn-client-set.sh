@@ -33,7 +33,7 @@ if [ $VPN_OS == "osx" ]; then
 	fi 
 
 	tar xvzf $PREFIX_DIR/$VPN_TUNTAP_DRIVER_ARCHIVE -C $PREFIX_DIR
-        /usr/bin/installer -pkg $VPN_TUNTAP_DRIVER_NAME -target /
+        /usr/sbin/installer -pkg $VPN_TUNTAP_DRIVER_NAME -target /
         nic_name="vpn0"
 fi
 

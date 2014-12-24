@@ -25,12 +25,12 @@ fqdn=$( hostname )
 # VPN global variables
 . $PREFIX_DIR/vpn-variables
 
-$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:ServerPasswordSet $VPN_ADMIN_PASSWORD
+$VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerPasswordSet $VPN_ADMIN_PASSWORD
 echo "----- set password ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:HubCreate $VPN_PULSE_HUB
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:HubCreate $VPN_PULSE_HUB
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -44,7 +44,7 @@ echo "----- create hub ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /HUB:$VPN_PULSE_HUB /CMD:SecureNatEnable
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:SecureNatEnable
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -54,7 +54,7 @@ echo "----- Nat enable ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /HUB:$VPN_PULSE_HUB /CMD:GroupCreate $VPN_PULSE_GROUP
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:GroupCreate $VPN_PULSE_GROUP
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -68,7 +68,7 @@ echo "----- group create ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:IPSecEnable
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:IPSecEnable
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -88,7 +88,7 @@ echo "----- IPSec ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:ServerCertRegenerate $fqdn
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerCertRegenerate $fqdn
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -98,7 +98,7 @@ echo "----- ServerCertRegenerate for $fqdn ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:ServerCertGet $VPN_CRT_PATH
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerCertGet $VPN_CRT_PATH
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -108,7 +108,7 @@ echo "----- ServerCertGet to $VPN_CRT_PATH ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:SstpEnable yes
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:SstpEnable yes
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -118,7 +118,7 @@ echo "----- SstpEnable ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:OpenVpnEnable yes /PORTS:1194
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:OpenVpnEnable yes /PORTS:1194
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
@@ -128,7 +128,7 @@ echo "----- OpenVpnEnable ok ----- "
 expect -c "
     log_user $VPN_LOG_EXPECT 
     set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:443 /SERVER /CMD:OpenVpnMakeConfig $VPN_OPENVPN_CONFIG_ARCHIVE
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:OpenVpnMakeConfig $VPN_OPENVPN_CONFIG_ARCHIVE
     sleep 1
     expect \"Password:\n\"
     send $VPN_ADMIN_PASSWORD\r
