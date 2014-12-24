@@ -145,6 +145,11 @@ class AgentsInstallMap(object):
     redhat_server = ["yum-config-manager --add-repo ##server##/downloads/rpm/pulse2-agents.repo",
               "yum install -y pulse2-agents-installer-nordp",
               ]
+    osx = ["##wget##  ##server##/downloads/mac/Pulse2AgentsInstaller.tar",
+           "tar xvf ##tmp##Pulse2AgentsInstaller.tar",
+           "/usr/bin/installer -pkg ##tmp##Pulse2AgentsInstaller.tar -target /",
+
+           ]
 
 
 class PackagesEndpoint(Endpoint):
@@ -278,24 +283,6 @@ class InventoryServerEndpoint(Endpoint):
     fusion_formatter = FusionFormatter()
     mmc_proxy = None
 
-#    def __init__(self, *args, **kwargs):
-#        super(self.__class__, self).__init__(*args, **kwargs)
-#
-#        self._mmc_proxy_init()
-#
-#
-#    def _mmc_proxy_init(self):
-#        """Starts the cleint mmc proxy for remote calls """
-#        proto = "https" if self.config.mmc.enablessl else "http"
-#        url = "%s://%s:%d/XMLRPC" % (proto,
-#                                     self.config.mmc.host,
-#                                     self.config.mmc.port,
-#                                     )
-#        self.mmc_proxy = Proxy(url,
-#                               self.config.mmc.user,
-#                               self.config.mmc.passwd,
-#                               )
-#
 
     def get_valid_mac(self, inventory, from_ip):
         hostname, system, osversion, networks = inventory
@@ -415,36 +402,6 @@ class InventoryServerEndpoint(Endpoint):
             return d
 
 
-
-#    def get_machine_uuid(self, hostname, macs):
-#        """
-#        A remote call to get UUID of machine.
-#
-#        @param hostname: hostname of machine
-#        @type hostname: str
-#
-#        @param macs: list of active MAC addresses of machine
-#        @type macs: list
-#
-#        @return: UUID of machine
-#        @rtype: Deferred
-#        """
-#        d = self.mmc_proxy.callRemote("base.ldapAuth",
-#                                      self.config.mmc.ldap_user,
-#                                      self.config.mmc.ldap_passwd,
-#                                      )
-#        @d.addCallback
-#        def cb(result):
-#            if result:
-#                method = "inventory.getMachineByHostnameAndMacs"
-#                return self.mmc_proxy.callRemote(method, hostname, macs)
-#
-#        @d.addErrback
-#        def eb(failure):
-#            self.logger.error("MMC LDAP auth failed: %s" % str(failure))
-#            return failure
-#
-#        return d
 
     def update_target_ip(self, uuid, ip):
         """
@@ -643,12 +600,9 @@ class VPNInstallEndpoint(Endpoint):
             path = os.path.join(self.config.vpn.scripts_path,
                                 "vpn-server-user-create.sh",
                                 )
-            template = os.path.join(self.config.vpn.scripts_path,
-                                    "vpn-variables.in",
-                                    )
             password = self._password_generate()
 
-            protocol = ForkingProtocol()
+            protocol = ForkingProtocol("VPN installer")
             args = [path, uuid, password]
             reactor.spawnProcess(protocol,
                                  args[0],
