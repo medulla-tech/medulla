@@ -143,6 +143,7 @@ class InventoryChecker(Component):
                 yield name
 
         elif SYSTEM == "DARWIN":
+            software_required = self.config.inventory.osx_software_required
             base_command = "/usr/sbin/pkgutil --pkgs"
 
             for name in self.posix_shell_query(base_command, software_required):
@@ -287,7 +288,7 @@ class WindowsMinimalInventory(MinimalInventory):
 def get_minimal_inventory():
     if SYSTEM == "WINDOWS":
         inv = WindowsMinimalInventory()
-    elif SYSTEM in ("LINUX","MACOSX"):
+    elif SYSTEM in ("LINUX","DARWIN"):
         inv = PosixMinimalInventory()
     else:
         raise OSError
