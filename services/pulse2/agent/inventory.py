@@ -33,11 +33,11 @@ SYSTEM = platform.system().upper()
 
 if SYSTEM == "WINDOWS":
 
-    from _winreg import ConnectRegistry
-    from _winreg import OpenKey, CloseKey, EnumKey
-    from _winreg import HKEY_LOCAL_MACHINE
+    from _winreg import ConnectRegistry             #pyflakes.ignore
+    from _winreg import OpenKey, CloseKey, EnumKey  #pyflakes.ignore
+    from _winreg import HKEY_LOCAL_MACHINE          #pyflakes.ignore
+    from win32com.client import Dispatch            #pyflakes.ignore
 
-    from win32com.client import Dispatch
 else:
     import fcntl
 
@@ -77,7 +77,7 @@ class WindowsRegistry:
                 if folder in missing:
                     missing.remove(folder)
                 i += 1
-            except WindowsError:
+            except WindowsError: #pyflakes.ignore
                 break
         CloseKey(key)
         return missing
