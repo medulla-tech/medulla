@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-22 01:00+0100\n"
+"POT-Creation-Date: 2014-12-29 01:00+0100\n"
 "PO-Revision-Date: 2014-05-05 23:06+0000\n"
 "Last-Translator: Konstantin Josseliani <info@janusww.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -19,15 +19,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
+#: modules/update/update/viewGroupUpdates.php:50
+#, fuzzy, php-format
+msgid "%s's group update manager"
+msgstr "更新管理员"
+
 #: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
+#: modules/update/update/viewGroupUpdates.php:51
 msgid "All updates"
 msgstr "所有更新"
 
+#: modules/update/includes/panels/clients_updates.inc.php:42
 #: modules/update/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
 msgstr "撷取更新时发生错误"
 
-#: modules/update/update/viewUpdates.php:46
+#: modules/update/update/viewUpdates.php:52
 msgid "Available"
 msgstr "可用"
 
@@ -36,15 +43,29 @@ msgstr "可用"
 msgid "Available updates"
 msgstr "可用更新"
 
-#: modules/update/update/ajaxUpdates.php:93
+#: modules/update/includes/panels/clients_updates.inc.php:30
+#, fuzzy
+msgid "Clients Update"
+msgstr "检视更新"
+
+#: modules/update/update/createUpdateStaticGroup.php:50
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:84
+msgid "Create a group"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:109
 msgid "Disable"
 msgstr "停用"
 
-#: modules/update/update/ajaxUpdates.php:109
+#: modules/update/update/ajaxUpdates.php:127
 msgid "Disable selected updates"
 msgstr "停用所选更新"
 
-#: modules/update/update/disableUpdate.php:40
+#: modules/update/update/disableUpdate.php:48
 msgid "Disable this update?"
 msgstr "要停用此更新？"
 
@@ -52,19 +73,19 @@ msgstr "要停用此更新？"
 msgid "Disable update"
 msgstr "停用更新"
 
-#: modules/update/update/viewUpdates.php:48
+#: modules/update/update/viewUpdates.php:54
 msgid "Disabled"
 msgstr "已停用"
 
-#: modules/update/update/ajaxUpdates.php:92
+#: modules/update/update/ajaxUpdates.php:108
 msgid "Enable"
 msgstr "启用"
 
-#: modules/update/update/ajaxUpdates.php:108
+#: modules/update/update/ajaxUpdates.php:126
 msgid "Enable selected updates"
 msgstr "启用所选更新"
 
-#: modules/update/update/enableUpdate.php:40
+#: modules/update/update/enableUpdate.php:47
 msgid "Enable this update?"
 msgstr "要启用此更新？"
 
@@ -72,15 +93,15 @@ msgstr "要启用此更新？"
 msgid "Enable update"
 msgstr "启用更新"
 
-#: modules/update/update/settings.php:61
+#: modules/update/update/settings.php:62
 msgid "Enable update managment for:"
 msgstr "启用更新管理用於："
 
-#: modules/update/update/viewUpdates.php:47
+#: modules/update/update/viewUpdates.php:53
 msgid "Enabled"
 msgstr "已启用"
 
-#: modules/update/update/settings.php:79
+#: modules/update/update/settings.php:80
 msgid "Force now"
 msgstr "立即强制执行"
 
@@ -88,7 +109,7 @@ msgstr "立即强制执行"
 msgid "Install updates"
 msgstr "安装更新"
 
-#: modules/update/update/ajaxUpdates.php:90
+#: modules/update/update/ajaxUpdates.php:107
 msgid "Installed count"
 msgstr "已安装数目"
 
@@ -96,19 +117,37 @@ msgstr "已安装数目"
 msgid "Installing updates ..."
 msgstr "正在安装更新..."
 
-#: modules/update/update/ajaxUpdates.php:57
+#: modules/update/update/createUpdateStaticGroup.php:34
+#, php-format
+msgid "Machine %s at %s"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:98
+msgid "More details"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:66
 msgid "No entry found"
 msgstr "找不到任何项目"
 
+#: modules/update/includes/panels/clients_updates.inc.php:50
 #: modules/update/includes/panels/product_updates.inc.php:54
 msgid "No updates available."
 msgstr "无可用更新。"
+
+#: modules/update/update/viewGroupUpdates.php:64
+msgid "Not enough information"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:66
+msgid "Not registered"
+msgstr ""
 
 #: modules/update/infoPackage.inc.php:69
 msgid "Product Updates installation"
 msgstr "产品更新安装"
 
-#: modules/update/infoPackage.inc.php:79
+#: modules/update/infoPackage.inc.php:77
 msgid "Product Updates installation (ajax)"
 msgstr "产品更新安装 (ajax)"
 
@@ -120,13 +159,18 @@ msgstr "产品更新清单"
 msgid "Settings"
 msgstr "设定"
 
-#: modules/update/update/ajaxUpdates.php:89
+#: modules/update/update/viewGroupUpdates.php:47
+msgid "This group doesn't exist"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:106
 msgid "Type"
 msgstr "类型"
 
-#: modules/update/update/ajaxUpdates.php:88
-msgid "UUID"
-msgstr "UUID"
+#: modules/update/includes/panels/clients_updates.inc.php:64
+#, fuzzy
+msgid "Up-to-date"
+msgstr "更新"
 
 #: modules/update/includes/panels/product_updates.inc.php:30
 #: modules/update/update/viewProductUpdates.php:38
@@ -134,7 +178,7 @@ msgid "Update"
 msgstr "更新"
 
 #: modules/update/infoPackage.inc.php:32
-#: modules/update/update/viewUpdates.php:35
+#: modules/update/update/viewUpdates.php:37
 msgid "Update manager"
 msgstr "更新管理员"
 
@@ -146,15 +190,21 @@ msgstr "启用更新管理用於："
 msgid "Update settings"
 msgstr "更新设定"
 
-#: modules/update/update/ajaxUpdates.php:87
+#: modules/update/update/ajaxUpdates.php:105
 msgid "Update title"
 msgstr "更新标题"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
+#: modules/update/infoPackage.inc.php:88 modules/update/infoPackage.inc.php:93
 msgid "Updates"
 msgstr "更新"
 
-#: modules/update/update/settings.php:77
+#: modules/update/includes/panels/clients_updates.inc.php:65
+#, fuzzy
+msgid "Updates availables"
+msgstr "有可用更新。"
+
+#: modules/update/update/settings.php:78
 msgid "Updates deployment"
 msgstr "更新部署"
 
@@ -162,10 +212,15 @@ msgstr "更新部署"
 msgid "Updates list"
 msgstr "更新清单"
 
+#: modules/update/includes/panels/clients_updates.inc.php:45
 #: modules/update/includes/panels/product_updates.inc.php:47
 msgid "View updates"
 msgstr "检视更新"
 
+#: modules/update/includes/panels/clients_updates.inc.php:52
 #: modules/update/includes/panels/product_updates.inc.php:56
 msgid "updates available."
 msgstr "有可用更新。"
+
+#~ msgid "UUID"
+#~ msgstr "UUID"

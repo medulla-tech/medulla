@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-22 01:00+0100\n"
+"POT-Creation-Date: 2014-12-29 01:00+0100\n"
 "PO-Revision-Date: 2014-12-16 14:54+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -193,7 +193,7 @@ msgstr ""
 msgid "Confirm"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:137
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:140
 msgid "Csv export"
 msgstr ""
 
@@ -259,7 +259,7 @@ msgstr ""
 msgid "Display this group's content"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:117
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:120
 msgid "Display this imaging group's content"
 msgstr ""
 
@@ -303,7 +303,7 @@ msgstr ""
 msgid "Edit this group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:124
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
 msgid "Edit this imaging group"
 msgstr ""
 
@@ -452,7 +452,7 @@ msgstr ""
 msgid "Imaging groups"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:132
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:135
 msgid "Imaging management"
 msgstr ""
 
@@ -480,7 +480,7 @@ msgstr ""
 msgid "Inventory on this group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:122
 msgid "Inventory on this imaging group"
 msgstr ""
 
@@ -550,7 +550,7 @@ msgid "Please choose the type of group you want to create"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:113
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:130
 msgid "Read log"
 msgstr ""
 
@@ -620,7 +620,7 @@ msgstr ""
 msgid "Share this group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:125
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:128
 msgid "Share this imaging group"
 msgstr ""
 
@@ -636,7 +636,7 @@ msgstr ""
 msgid "Software deployment on this group"
 msgstr ""
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:128
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
 msgid "Software deployment on this imaging group"
 msgstr ""
 
@@ -742,6 +742,10 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:117
+msgid "Update on this group"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:76

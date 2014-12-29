@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-16 16:07+0100\n"
+"POT-Creation-Date: 2014-12-29 01:00+0100\n"
 "PO-Revision-Date: 2014-11-07 13:49+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/"
@@ -30,7 +30,7 @@ msgstr ""
 msgid "Computers list"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:96
+#: modules/pulse2/includes/menu_group_action.php:99
 msgid "Csv export"
 msgstr ""
 
@@ -46,7 +46,7 @@ msgstr ""
 msgid "Display this group's content"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:73
+#: modules/pulse2/includes/menu_group_action.php:76
 msgid "Display this imaging group's content"
 msgstr ""
 
@@ -54,12 +54,12 @@ msgstr ""
 msgid "Edit this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:75
+#: modules/pulse2/includes/menu_group_action.php:78
 msgid "Edit this imaging group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:40
-#: modules/pulse2/includes/menu_group_action.php:83
+#: modules/pulse2/includes/menu_group_action.php:86
 msgid "Imaging management"
 msgstr ""
 
@@ -71,7 +71,7 @@ msgstr ""
 msgid "Inventory on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:69
+#: modules/pulse2/includes/menu_group_action.php:72
 msgid "Inventory on this profile"
 msgstr ""
 
@@ -89,7 +89,7 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:38
 #: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:78
+#: modules/pulse2/includes/menu_group_action.php:81
 msgid "Read log"
 msgstr ""
 
@@ -105,7 +105,7 @@ msgstr ""
 msgid "Share this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:76
+#: modules/pulse2/includes/menu_group_action.php:79
 msgid "Share this imaging group"
 msgstr ""
 
@@ -117,8 +117,12 @@ msgstr ""
 msgid "Software deployment on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:79
+#: modules/pulse2/includes/menu_group_action.php:82
 msgid "Software deployment on this imaging group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:68
+msgid "Update on this group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:35

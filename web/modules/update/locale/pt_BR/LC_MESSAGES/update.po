@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-22 01:00+0100\n"
+"POT-Creation-Date: 2014-12-29 01:00+0100\n"
 "PO-Revision-Date: 2014-04-29 20:00+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -19,15 +19,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
+#: modules/update/update/viewGroupUpdates.php:50
+#, fuzzy, php-format
+msgid "%s's group update manager"
+msgstr "Gerenciador de Atualização"
+
 #: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
+#: modules/update/update/viewGroupUpdates.php:51
 msgid "All updates"
 msgstr "Todas atualizações"
 
+#: modules/update/includes/panels/clients_updates.inc.php:42
 #: modules/update/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
 msgstr "Um erro ocorreu ao buscar atualizações"
 
-#: modules/update/update/viewUpdates.php:46
+#: modules/update/update/viewUpdates.php:52
 msgid "Available"
 msgstr "Disponível"
 
@@ -36,15 +43,29 @@ msgstr "Disponível"
 msgid "Available updates"
 msgstr "Atualizações disponíveis"
 
-#: modules/update/update/ajaxUpdates.php:93
+#: modules/update/includes/panels/clients_updates.inc.php:30
+#, fuzzy
+msgid "Clients Update"
+msgstr "Visualizar atualizações"
+
+#: modules/update/update/createUpdateStaticGroup.php:50
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:84
+msgid "Create a group"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:109
 msgid "Disable"
 msgstr "Desabilitar"
 
-#: modules/update/update/ajaxUpdates.php:109
+#: modules/update/update/ajaxUpdates.php:127
 msgid "Disable selected updates"
 msgstr "Desativar atualizações selecionadas"
 
-#: modules/update/update/disableUpdate.php:40
+#: modules/update/update/disableUpdate.php:48
 msgid "Disable this update?"
 msgstr "Desativar esta atualização?"
 
@@ -52,19 +73,19 @@ msgstr "Desativar esta atualização?"
 msgid "Disable update"
 msgstr "Desativar atualização"
 
-#: modules/update/update/viewUpdates.php:48
+#: modules/update/update/viewUpdates.php:54
 msgid "Disabled"
 msgstr "Desabilitar"
 
-#: modules/update/update/ajaxUpdates.php:92
+#: modules/update/update/ajaxUpdates.php:108
 msgid "Enable"
 msgstr "Habilitar"
 
-#: modules/update/update/ajaxUpdates.php:108
+#: modules/update/update/ajaxUpdates.php:126
 msgid "Enable selected updates"
 msgstr "Ativar atualizações selecionadas"
 
-#: modules/update/update/enableUpdate.php:40
+#: modules/update/update/enableUpdate.php:47
 msgid "Enable this update?"
 msgstr "Ativar esta atualização?"
 
@@ -72,15 +93,15 @@ msgstr "Ativar esta atualização?"
 msgid "Enable update"
 msgstr "Ativar atualização"
 
-#: modules/update/update/settings.php:61
+#: modules/update/update/settings.php:62
 msgid "Enable update managment for:"
 msgstr "Ativar gerenciamento de atualização para:"
 
-#: modules/update/update/viewUpdates.php:47
+#: modules/update/update/viewUpdates.php:53
 msgid "Enabled"
 msgstr "Habilitar"
 
-#: modules/update/update/settings.php:79
+#: modules/update/update/settings.php:80
 msgid "Force now"
 msgstr "Forçar agora"
 
@@ -88,7 +109,7 @@ msgstr "Forçar agora"
 msgid "Install updates"
 msgstr "Instalar atualizações"
 
-#: modules/update/update/ajaxUpdates.php:90
+#: modules/update/update/ajaxUpdates.php:107
 msgid "Installed count"
 msgstr "Conta instalada"
 
@@ -96,19 +117,37 @@ msgstr "Conta instalada"
 msgid "Installing updates ..."
 msgstr "Instalando atualizações..."
 
-#: modules/update/update/ajaxUpdates.php:57
+#: modules/update/update/createUpdateStaticGroup.php:34
+#, php-format
+msgid "Machine %s at %s"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:98
+msgid "More details"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:66
 msgid "No entry found"
 msgstr "Nenhuma ocorrência encontrada"
 
+#: modules/update/includes/panels/clients_updates.inc.php:50
 #: modules/update/includes/panels/product_updates.inc.php:54
 msgid "No updates available."
 msgstr "Nenhuma atualização disponível."
+
+#: modules/update/update/viewGroupUpdates.php:64
+msgid "Not enough information"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:66
+msgid "Not registered"
+msgstr ""
 
 #: modules/update/infoPackage.inc.php:69
 msgid "Product Updates installation"
 msgstr "Instalação de Atualizações do Produto"
 
-#: modules/update/infoPackage.inc.php:79
+#: modules/update/infoPackage.inc.php:77
 msgid "Product Updates installation (ajax)"
 msgstr "Instalação de Atualizações de Produto (ajax)"
 
@@ -120,13 +159,18 @@ msgstr "Lista de Atualizações de Produto"
 msgid "Settings"
 msgstr "Comfigurações"
 
-#: modules/update/update/ajaxUpdates.php:89
+#: modules/update/update/viewGroupUpdates.php:47
+msgid "This group doesn't exist"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:106
 msgid "Type"
 msgstr "Tipo"
 
-#: modules/update/update/ajaxUpdates.php:88
-msgid "UUID"
-msgstr "UUID"
+#: modules/update/includes/panels/clients_updates.inc.php:64
+#, fuzzy
+msgid "Up-to-date"
+msgstr "Atualizar"
 
 #: modules/update/includes/panels/product_updates.inc.php:30
 #: modules/update/update/viewProductUpdates.php:38
@@ -134,7 +178,7 @@ msgid "Update"
 msgstr "Atualizar"
 
 #: modules/update/infoPackage.inc.php:32
-#: modules/update/update/viewUpdates.php:35
+#: modules/update/update/viewUpdates.php:37
 msgid "Update manager"
 msgstr "Gerenciador de Atualização"
 
@@ -146,15 +190,21 @@ msgstr "Gerenciamento de Atualização"
 msgid "Update settings"
 msgstr "Configurações de atualização"
 
-#: modules/update/update/ajaxUpdates.php:87
+#: modules/update/update/ajaxUpdates.php:105
 msgid "Update title"
 msgstr "Atualizar título"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
+#: modules/update/infoPackage.inc.php:88 modules/update/infoPackage.inc.php:93
 msgid "Updates"
 msgstr "Atualizações"
 
-#: modules/update/update/settings.php:77
+#: modules/update/includes/panels/clients_updates.inc.php:65
+#, fuzzy
+msgid "Updates availables"
+msgstr "atualização disponíveis."
+
+#: modules/update/update/settings.php:78
 msgid "Updates deployment"
 msgstr "Instalar atualizações"
 
@@ -162,10 +212,15 @@ msgstr "Instalar atualizações"
 msgid "Updates list"
 msgstr "Lista de atualizações"
 
+#: modules/update/includes/panels/clients_updates.inc.php:45
 #: modules/update/includes/panels/product_updates.inc.php:47
 msgid "View updates"
 msgstr "Visualizar atualizações"
 
+#: modules/update/includes/panels/clients_updates.inc.php:52
 #: modules/update/includes/panels/product_updates.inc.php:56
 msgid "updates available."
 msgstr "atualização disponíveis."
+
+#~ msgid "UUID"
+#~ msgstr "UUID"
