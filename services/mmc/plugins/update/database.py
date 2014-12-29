@@ -278,13 +278,26 @@ class updateDatabase(DatabaseHelper):
 
         try:
             # Defining subqueries
+
             installed_targets = session.query(
-                Target.update_id, func.sum(
-                    Target.is_installed).label('total_installed')).group_by(
-                Target.update_id).subquery()
-            all_targets = session.query(Target.update_id, func.count(
-                '*').label('total_targets')).group_by(Target.update_id).subquery()
+                Target.update_id, 
+                func.sum(Target.is_installed).label('total_installed')
+                )
+            # count only group machines
+            installed_targets = installed_targets.filter(Target.uuid.in_(uuids))
+            installed_targets = installed_targets.group_by(Target.update_id)
+            installed_targets = installed_targets.subquery()
+            
+            all_targets = session.query(
+                Target.update_id,
+                func.count('*').label('total_targets')
+                )
+            # count only group machines
+            all_targets = all_targets.filter(Target.uuid.in_(uuids))
+            all_targets = all_targets.group_by(Target.update_id).subquery()
+
             group = session.query(Groups).filter(Groups.gid == gid).subquery()
+
             query = session.query(
                 Update,
                 func.ifnull(
