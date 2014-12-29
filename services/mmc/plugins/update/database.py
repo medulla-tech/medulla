@@ -25,7 +25,11 @@ import logging
 
 from sqlalchemy import create_engine, MetaData, func, distinct
 
+from mmc.support.mmctools import SecurityContext
 from mmc.database.database_helper import DatabaseHelper
+from pulse2.managers.group import ComputerGroupManager
+from mmc.plugins.dyngroup.database import DyngroupDatabase
+
 from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target, Groups,\
     STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED
 
@@ -280,14 +284,15 @@ class updateDatabase(DatabaseHelper):
             # Defining subqueries
 
             installed_targets = session.query(
-                Target.update_id, 
+                Target.update_id,
                 func.sum(Target.is_installed).label('total_installed')
                 )
             # count only group machines
-            installed_targets = installed_targets.filter(Target.uuid.in_(uuids))
+            installed_targets = installed_targets.filter(
+                Target.uuid.in_(uuids))
             installed_targets = installed_targets.group_by(Target.update_id)
             installed_targets = installed_targets.subquery()
-            
+
             all_targets = session.query(
                 Target.update_id,
                 func.count('*').label('total_targets')
@@ -335,7 +340,7 @@ class updateDatabase(DatabaseHelper):
             # ==== STATUS FILTERING ======================
             # ============================================
             if dStatus == STATUS_NEUTRAL:
-                query = query.filter( (group.c.status == None) |
+                query = query.filter((group.c.status == None) |
                     (group.c.status == STATUS_NEUTRAL))
                 query = query.filter(Update.status == STATUS_NEUTRAL)
                 query = query.filter(UpdateType.status == STATUS_NEUTRAL)
@@ -378,19 +383,39 @@ class updateDatabase(DatabaseHelper):
         this function return all updates for the host
         if the update have the Status (STATUS_ENABLED or STATUS_DISABLED, STATUS_NEUTRAL)
         in this order of priority:
-        Target -> Update -> Update Type
+        Target -> Groups -> Update -> Update Type
         """
 
         if dStatus == STATUS_NEUTRAL:
             logger.error(
                 "Neutral status is not accepted, use get_neutral_updates function instead")
             return False
-
+        # Get group list
+        gid = self._get_machine_groups("UUID" + str(uuid))
         try:
-            query = session.query(Target)\
-                .add_entity(Update).join(Update)\
-                .join(UpdateType)\
-                .filter(Target.uuid == uuid)
+            # Defining group subquery
+            group = session.query(
+                Groups.update_id,
+                # we choose the max because STATUS_DISABLED>STATUS_ENABLED
+                # and STATUS_ENABLED>STATUS_NEUTRAL
+                # So if disable and enable at the same time, disable win
+                func.max(Groups.status).label('status')
+                )
+            if gid:
+                group = group.filter(Groups.gid.in_(gid))
+            # if no group, we need an empty list
+            else:
+                group = group.filter(Groups.gid == None)
+            group = group.group_by(Groups.update_id)
+            group = group.subquery()
+            # Main query
+            query = session.query(
+                Target)
+            query = query.add_entity(Update).join(Update).join(UpdateType)
+            query = query.filter(Target.uuid == uuid)
+            query = query.outerjoin(
+                group,
+                Update.id == group.c.update_id)
 
             if is_installed is not None:
                 query = query.filter(Target.is_installed == is_installed)
@@ -404,11 +429,21 @@ class updateDatabase(DatabaseHelper):
                 (
                     (Target.status == STATUS_NEUTRAL) &
                     (
-                        # 2nd level filtering : Update status
-                        (Update.status == dStatus) |
+                        # 2nd level filtering : Group status
+                        (group.c.status == dStatus) |
                         (
-                            (Update.status == STATUS_NEUTRAL) &
-                            (UpdateType.status == dStatus)
+                            (
+                                (group.c.status == None) |
+                                (group.c.status == STATUS_NEUTRAL)
+                            ) &
+                            (
+                                # 3rd level filtering : Update status
+                                (Update.status == dStatus) |
+                                (
+                                    (Update.status == STATUS_NEUTRAL) &
+                                    (UpdateType.status == dStatus)
+                                )
+                            )
                         )
                     )
                 )
@@ -465,7 +500,7 @@ class updateDatabase(DatabaseHelper):
         """
         Get all update to install for host,
         this function return all eligible updates for the host
-        in this order of priority: Target -> Update -> Update Type
+        in this order of priority: Target -> Groups -> Update -> Update Type
         """
         return self.get_updates_for_host_by_dominant_status(
             uuid,
@@ -477,7 +512,7 @@ class updateDatabase(DatabaseHelper):
         """
         Get all update to install for host,
         this function return all eligible updates for the host
-        in this order of priority: Target -> Update -> Update Type
+        in this order of priority: Target -> Groups -> Update -> Update Type
         """
         return self.get_updates_for_host_by_dominant_status(
             uuid,
@@ -488,7 +523,7 @@ class updateDatabase(DatabaseHelper):
         """
         Get all update to install for host,
         this function return all neutral updates for the host
-        in this order of priority: Target -> Update -> Update Type
+        in this order of priority: Target -> Groups -> Update -> Update Type
         """
         # Update is neutral (for host), if all levels status
         # are neutral
@@ -525,10 +560,10 @@ class updateDatabase(DatabaseHelper):
             update = query.all()
             # if this update not available,add it
             if len(update) == 0:
-                update =Groups(update_id=update_id,gid=gid,status=status)
+                update = Groups(update_id=update_id, gid=gid, status=status)
                 session.add(update)
                 session.flush()
-            #else update it
+            # else update it
             else:
                 query.update({'status': status}, synchronize_session=False)
             session.commit()
@@ -537,3 +572,21 @@ class updateDatabase(DatabaseHelper):
         except Exception as e:
             logger.error(str(e))
             return False
+
+    def _get_machine_groups(self, uuid):
+        """
+        Get groups of one machine with is uuid as a string like "UUID+number"
+        """
+        # Creating root context
+        ctx = SecurityContext()
+        ctx.userid = 'root'
+        group_list = []
+        groups = DyngroupDatabase().getallgroups(ctx, {})
+        groups = map(lambda g: g.toH(), groups)
+        for group in groups:
+            if 'id' in group:
+                result = ComputerGroupManager().get_group_results(
+                    ctx, group['id'], 0, -1, {})
+                if uuid in result:
+                    group_list.append(group['id'])
+        return group_list

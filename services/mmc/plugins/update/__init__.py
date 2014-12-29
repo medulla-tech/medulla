@@ -161,7 +161,7 @@ def set_update_status_for_group(gid, update_ids, status):
     update to status param value.
     This does not affect global status of update
     """
-    for update_id in update_ids :
+    for update_id in update_ids:
         updateDatabase().set_update_status_for_group(gid, update_id, status)
     return True
 
