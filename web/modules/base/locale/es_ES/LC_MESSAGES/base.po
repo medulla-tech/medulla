@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-04 18:24+0100\n"
-"PO-Revision-Date: 2014-12-04 17:25+0000\n"
+"POT-Creation-Date: 2014-12-18 18:06+0100\n"
+"PO-Revision-Date: 2014-12-18 17:07+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/team/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgid "No"
 msgstr ""
 
 #: graph/header.inc.php:233 includes/FormGenerator.php:618
-#: includes/PageGenerator.php:2188
+#: includes/PageGenerator.php:2198
 msgid "Close"
 msgstr ""
 
@@ -218,16 +218,16 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:619 includes/PageGenerator.php:871
-#: includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
+#: includes/PageGenerator.php:1128
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "Anterior"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:885
-#: includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
+#: includes/PageGenerator.php:1138
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -298,10 +298,6 @@ msgid ""
 msgstr ""
 "Esto es un error desconocido. Por favor contacte con nosotros para añadir "
 "una incidencia sobre este error."
-
-#: includes/acl.inc.php:127
-msgid "You do not have required rights"
-msgstr "Usted no tiene los permisos requeridos"
 
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
 #: includes/FormGenerator.php:728 includes/FormGenerator.php:858
@@ -441,7 +437,6 @@ msgid "Now"
 msgstr ""
 
 #: includes/FormGenerator.php:694 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr "Añadir"
 
@@ -455,52 +450,56 @@ msgstr ""
 msgid "Delete"
 msgstr "Eliminar"
 
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+#: includes/acl.inc.php:128
+msgid "You do not have required rights"
+msgstr "Usted no tiene los permisos requeridos"
+
+#: includes/PageGenerator.php:568 includes/PageGenerator.php:800
 msgid "to"
 msgstr "a"
 
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#: includes/PageGenerator.php:570 includes/PageGenerator.php:802
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - Total <b>%s </b>"
 
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+#: includes/PageGenerator.php:573 includes/PageGenerator.php:805
 msgid "page"
 msgstr "página"
 
-#: includes/PageGenerator.php:905
+#: includes/PageGenerator.php:915
 msgid "Pagination"
 msgstr "Paginación"
 
-#: includes/PageGenerator.php:978
+#: includes/PageGenerator.php:988
 msgid "Go to page"
 msgstr "Ir a la página"
 
-#: includes/PageGenerator.php:1406
+#: includes/PageGenerator.php:1416
 msgid "No item available"
 msgstr "Ítem no disponible"
 
-#: includes/PageGenerator.php:1594
+#: includes/PageGenerator.php:1604
 msgid "Select entity"
 msgstr "Seleccionar entidad"
 
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
-#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2576 includes/PageGenerator.php:2644
+#: includes/PageGenerator.php:2670 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: includes/PageGenerator.php:2580 includes/PageGenerator.php:2648
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2822
 msgid "Select all"
 msgstr "Seleccionar todo"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2822
 msgid "Unselect all"
 msgstr "Deseleccionar todos"
 
@@ -688,7 +687,7 @@ msgstr "Nombre del equipo"
 msgid "Display Name"
 msgstr "Nombre para mostrar"
 
-#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:291
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:299
 msgid "Computer list"
 msgstr "Lista de equipos"
 
@@ -721,11 +720,11 @@ msgid "All computers"
 msgstr "Todos los equipos"
 
 #: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:294
+#: modules/base/infoPackage.inc.php:302
 msgid "Add computer"
 msgstr "Añadir equipo "
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:252
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:260
 msgid "Groups"
 msgstr "Grupos"
 
@@ -745,12 +744,11 @@ msgstr "Editar grupo"
 msgid "Groups management"
 msgstr "Administración de grupos"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:257
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:265
 msgid "Group list"
 msgstr "Lista de grupos"
 
 #: modules/base/groups/localSidebar.php:28
-#: modules/base/users/localSidebar.php:28
 msgid "List"
 msgstr "Lista"
 
@@ -787,7 +785,7 @@ msgstr "Miembros del grupo %s"
 msgid "All users"
 msgstr "Todos los usuarios"
 
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:273
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:281
 msgid "Group members"
 msgstr "Miembros del grupo"
 
@@ -924,16 +922,6 @@ msgstr ""
 msgid "The password is too short."
 msgstr ""
 
-#: modules/base/includes/groups-xmlrpc.inc.php:88
-#, php-format
-msgid "Group %s already exist"
-msgstr "El grupo %s ya existe"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:102
-#, php-format
-msgid "Group %s created"
-msgstr "Grupo %s creado"
-
 #: modules/base/includes/panels/support.inc.php:29
 msgid "Your product"
 msgstr ""
@@ -960,44 +948,6 @@ msgstr ""
 
 #: modules/base/includes/panels/support.inc.php:56
 msgid "Upgrade"
-msgstr ""
-
-#: modules/base/includes/users-xmlrpc.inc.php:46
-msgid "Invalid login"
-msgstr "Inicio de sesión no válido"
-
-#: modules/base/includes/users-xmlrpc.inc.php:55
-msgid "users"
-msgstr "Usuarios"
-
-#: modules/base/includes/users-xmlrpc.inc.php:58
-msgid "computers"
-msgstr "Equipos"
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#, php-format
-msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr "AVISO: El número de %s registrados excede los de su licencia."
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#: modules/base/status/support.php:34
-msgid " and "
-msgstr "y"
-
-#: modules/base/includes/users-xmlrpc.inc.php:116
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr ""
-
-#: modules/base/includes/users-xmlrpc.inc.php:120
-msgid "You cannot add more users."
-msgstr ""
-
-#: modules/base/includes/users-xmlrpc.inc.php:126
-#, php-format
-msgid "User %s successfully created"
 msgstr ""
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
@@ -1104,6 +1054,54 @@ msgstr "Máscara de red de los computadores"
 msgid "Refresh"
 msgstr "Actualizar"
 
+#: modules/base/includes/groups-xmlrpc.inc.php:85
+#, php-format
+msgid "Group %s already exist"
+msgstr "El grupo %s ya existe"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:99
+#, php-format
+msgid "Group %s created"
+msgstr "Grupo %s creado"
+
+#: modules/base/includes/users-xmlrpc.inc.php:45
+msgid "Invalid login"
+msgstr "Inicio de sesión no válido"
+
+#: modules/base/includes/users-xmlrpc.inc.php:54
+msgid "users"
+msgstr "Usuarios"
+
+#: modules/base/includes/users-xmlrpc.inc.php:57
+msgid "computers"
+msgstr "Equipos"
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "AVISO: El número de %s registrados excede los de su licencia."
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr "y"
+
+#: modules/base/includes/users-xmlrpc.inc.php:110
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr ""
+
+#: modules/base/includes/users-xmlrpc.inc.php:114
+msgid "You cannot add more users."
+msgstr ""
+
+#: modules/base/includes/users-xmlrpc.inc.php:120
+#, php-format
+msgid "User %s successfully created"
+msgstr ""
+
 #: modules/base/includes/computers_list.inc.php:30
 msgid "Inventory"
 msgstr "Inventario"
@@ -1173,182 +1171,190 @@ msgstr ""
 msgid "Group %s successfully deleted."
 msgstr "El grupo %s ha sido borrado correctamente"
 
-#: modules/base/includes/publicFunc.php:80
+#: modules/base/includes/publicFunc.php:82
 msgid "User's name invalid !"
 msgstr "¡El nombre de usuario no es válido!"
 
-#: modules/base/includes/publicFunc.php:85
+#: modules/base/includes/publicFunc.php:87
 #, php-format
 msgid "The user %s already exists."
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:90
+#: modules/base/includes/publicFunc.php:92
 msgid "Password is empty."
 msgstr "La contraseña está vacía."
 
-#: modules/base/includes/publicFunc.php:95
+#: modules/base/includes/publicFunc.php:97
+msgid "Last name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:101
+msgid "First name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:108
 msgid "The confirmation password does not match the new password."
 msgstr "La contraseña de verificación no coincide con la nueva contraseña."
 
-#: modules/base/includes/publicFunc.php:102
+#: modules/base/includes/publicFunc.php:115
 msgid "The primary group field can't be empty."
 msgstr "El campo del grupo primario no puede estar vacío."
 
-#: modules/base/includes/publicFunc.php:106
+#: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr "El grupo %s no existe, no puede establecerse como grupo primario."
 
-#: modules/base/includes/publicFunc.php:183
+#: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:197
+#: modules/base/includes/publicFunc.php:210
 msgid "User disabled"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:201
+#: modules/base/includes/publicFunc.php:214
 msgid "User enabled"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:248
+#: modules/base/includes/publicFunc.php:261
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:253
+#: modules/base/includes/publicFunc.php:266
 msgid "The photo is not a JPG file"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:257
+#: modules/base/includes/publicFunc.php:270
 msgid "User attributes updated"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:273
+#: modules/base/includes/publicFunc.php:286
 msgid "User attributes"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:282
+#: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
 #: index.php:207
 msgid "Login"
 msgstr "Nombre de usuario"
 
-#: modules/base/includes/publicFunc.php:297
-#: modules/base/infoPackage.inc.php:348 index.php:213
+#: modules/base/includes/publicFunc.php:310
+#: modules/base/infoPackage.inc.php:357 index.php:213
 msgid "Password"
 msgstr "Contraseña"
 
-#: modules/base/includes/publicFunc.php:301
+#: modules/base/includes/publicFunc.php:314
 msgid "Confirm password"
 msgstr "Confirmar contraseña"
 
-#: modules/base/includes/publicFunc.php:306
+#: modules/base/includes/publicFunc.php:319
 msgid "Photo"
 msgstr "Foto"
 
-#: modules/base/includes/publicFunc.php:311
+#: modules/base/includes/publicFunc.php:324
 msgid "Last name"
 msgstr "Apellido"
 
-#: modules/base/includes/publicFunc.php:316
+#: modules/base/includes/publicFunc.php:329
 msgid "First name"
 msgstr "Nombre"
 
-#: modules/base/includes/publicFunc.php:321
+#: modules/base/includes/publicFunc.php:334
 msgid "Title"
 msgstr "Título"
 
-#: modules/base/includes/publicFunc.php:326
+#: modules/base/includes/publicFunc.php:339
 msgid "Email address"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:334
-#: modules/base/includes/publicFunc.php:337
-#: modules/base/infoPackage.inc.php:340
+#: modules/base/includes/publicFunc.php:347
+#: modules/base/includes/publicFunc.php:350
+#: modules/base/infoPackage.inc.php:349
 msgid "Telephone number"
 msgstr "Número de teléfono"
 
-#: modules/base/includes/publicFunc.php:344
+#: modules/base/includes/publicFunc.php:357
 msgid "Mobile number"
 msgstr "Teléfono móvil"
 
-#: modules/base/includes/publicFunc.php:349
-#: modules/base/infoPackage.inc.php:342
+#: modules/base/includes/publicFunc.php:362
+#: modules/base/infoPackage.inc.php:351
 msgid "Fax number"
 msgstr "Número de fax"
 
-#: modules/base/includes/publicFunc.php:354
-#: modules/base/infoPackage.inc.php:343
+#: modules/base/includes/publicFunc.php:367
+#: modules/base/infoPackage.inc.php:352
 msgid "Home phone number"
 msgstr "Teléfono personal"
 
-#: modules/base/includes/publicFunc.php:359
+#: modules/base/includes/publicFunc.php:372
 msgid "Choose language"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:364
+#: modules/base/includes/publicFunc.php:377
 msgid "Preferred language"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:372
-msgid "User is disabled, if checked"
-msgstr "Usuario desactivado, si está marcada."
-
-#: modules/base/includes/publicFunc.php:373
-msgid ""
-"A disabled user can't log in any UNIX services. <br/>\n"
-"                                Her/his login shell command is replaced by /bin/false"
+#: modules/base/includes/publicFunc.php:385
+msgid "Disable user's shell"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:405
-#: modules/base/infoPackage.inc.php:344
+#: modules/base/includes/publicFunc.php:386
+msgid ""
+"A disabled user can't log in any UNIX services.<br/>\n"
+"                                  His login shell command is replaced by /bin/false"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:418
+#: modules/base/infoPackage.inc.php:353
 msgid "Primary group"
 msgstr "Grupo primario"
 
-#: modules/base/includes/publicFunc.php:411
+#: modules/base/includes/publicFunc.php:424
 msgid "User's groups"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:411
+#: modules/base/includes/publicFunc.php:424
 msgid "All groups"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:434
-#: modules/base/infoPackage.inc.php:345
+#: modules/base/includes/publicFunc.php:447
+#: modules/base/infoPackage.inc.php:354
 msgid "Secondary groups"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:443
+#: modules/base/includes/publicFunc.php:456
 #: modules/base/views/index.tpl.php:87
 msgid "Home directory"
 msgstr "Directorio de inicio del usuario"
 
-#: modules/base/includes/publicFunc.php:449
+#: modules/base/includes/publicFunc.php:462
 msgid "Create home directory on filesystem"
 msgstr "Crear directorio de inicio del usuario en el sistema de archivos"
 
-#: modules/base/includes/publicFunc.php:453
+#: modules/base/includes/publicFunc.php:466
 msgid "Force to use the home directory if it exists"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:454
+#: modules/base/includes/publicFunc.php:467
 msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:460
-#: modules/base/infoPackage.inc.php:337
+#: modules/base/includes/publicFunc.php:473
+#: modules/base/infoPackage.inc.php:346
 msgid "Login shell"
 msgstr "Intérprete de comandos"
 
-#: modules/base/includes/publicFunc.php:465
-#: modules/base/infoPackage.inc.php:346
+#: modules/base/includes/publicFunc.php:478
+#: modules/base/infoPackage.inc.php:355
 msgid "Common name"
 msgstr "Nombre común (CN)"
 
-#: modules/base/includes/publicFunc.php:466
+#: modules/base/includes/publicFunc.php:479
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
@@ -1356,23 +1362,23 @@ msgstr ""
 "Este campo es utilizado por algunos clientes LDAP (ej: La libreta de "
 "direcciones de Thunderbird) para mostrar las entradas de usuario."
 
-#: modules/base/includes/publicFunc.php:471
-#: modules/base/infoPackage.inc.php:347
+#: modules/base/includes/publicFunc.php:484
+#: modules/base/infoPackage.inc.php:356
 msgid "Preferred name to be used"
 msgstr "Nombre preferido para usar"
 
-#: modules/base/includes/publicFunc.php:472
+#: modules/base/includes/publicFunc.php:485
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
 msgstr ""
 "Este campo es utilizado por SAMBA (y otros clientes LDAP) para mostrar el "
 "nombre de usuario."
 
-#: modules/base/includes/publicFunc.php:478
+#: modules/base/includes/publicFunc.php:491
 msgid "UID"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:483
+#: modules/base/includes/publicFunc.php:496
 msgid "GID"
 msgstr ""
 
@@ -1533,25 +1539,16 @@ msgstr "Eliminar todos los archivos del usuario"
 msgid "User list"
 msgstr "Lista de usuarios"
 
-#: modules/base/users/localSidebar.php:31
-msgid "Bulk import (CSV)"
-msgstr "Importación masiva (CSV)"
-
-#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
-#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:60
-msgid "Change your password"
-msgstr "Cambie su contraseña"
-
-#: modules/base/users/localSidebar.php:36
-#: modules/base/users/resetpasswd.php:35
-msgid "Reset your password"
-msgstr ""
-
 #: modules/base/users/loguser.php:39
 msgid "User log"
 msgstr "Log de usuario"
 
-#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
+#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
+#: modules/base/users/resetpasswd.php:58
+msgid "Change your password"
+msgstr "Cambie su contraseña"
+
+#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:40
 msgid "Your password has been changed."
 msgstr "Su contraseña ha sido cambiada."
 
@@ -1559,7 +1556,7 @@ msgstr "Su contraseña ha sido cambiada."
 msgid "Change your user's password"
 msgstr "Cambie su contraseña de usuario"
 
-#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:50
+#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:48
 msgid "You are going to change your password"
 msgstr "Va a cambiar su contraseña"
 
@@ -1567,16 +1564,16 @@ msgstr "Va a cambiar su contraseña"
 msgid "Current password"
 msgstr "Contraseña actual"
 
-#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:53
+#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:51
 msgid "New password"
 msgstr "Nueva contraseña"
 
-#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
-#: modules/base/infoPackage.inc.php:349
+#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:53
+#: modules/base/infoPackage.inc.php:358
 msgid "Confirm your password"
 msgstr "Confirmar contraseña"
 
-#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:61
+#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:59
 msgid "Return"
 msgstr "Atrás"
 
@@ -1584,7 +1581,7 @@ msgstr "Atrás"
 msgid "Invalid current password. Please retry."
 msgstr "Contraseña actual inválida. Por favor reinténtelo."
 
-#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
+#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:62
 msgid "Passwords are mismatching. Please retry."
 msgstr "Las contraseñas no coinciden. Por favor, inténtelo de nuevo."
 
@@ -1723,6 +1720,10 @@ msgstr "Acciones logueadas"
 msgid "Users"
 msgstr "Usuarios"
 
+#: modules/base/users/resetpasswd.php:33
+msgid "Reset your password"
+msgstr ""
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "Editar usuario"
@@ -1760,11 +1761,11 @@ msgstr ""
 msgid "User %s enabled"
 msgstr ""
 
-#: modules/base/users/edit.php:186
+#: modules/base/users/edit.php:182
 msgid "Enable account"
 msgstr ""
 
-#: modules/base/users/edit.php:188
+#: modules/base/users/edit.php:183
 msgid "Disable account"
 msgstr ""
 
@@ -1808,116 +1809,116 @@ msgstr "Página de estado"
 msgid "Support page"
 msgstr "Página de soporte"
 
-#: modules/base/infoPackage.inc.php:184
+#: modules/base/infoPackage.inc.php:186
 msgid "Add a user"
 msgstr "Añadir un usuario"
 
-#: modules/base/infoPackage.inc.php:187
+#: modules/base/infoPackage.inc.php:191
 msgid "Edit a user"
 msgstr "Editar un usuario"
 
-#: modules/base/infoPackage.inc.php:191
+#: modules/base/infoPackage.inc.php:195
 msgid "Edit ACL permissions on a user"
 msgstr "Editar los permisos ACL de un usuario"
 
-#: modules/base/infoPackage.inc.php:195
+#: modules/base/infoPackage.inc.php:199
 msgid "Logged user actions"
 msgstr "Acciones de usuario logueado"
 
-#: modules/base/infoPackage.inc.php:200
+#: modules/base/infoPackage.inc.php:204
 msgid "Action details"
 msgstr "Detalles de acciones"
 
-#: modules/base/infoPackage.inc.php:204 modules/base/infoPackage.inc.php:226
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:210 modules/base/infoPackage.inc.php:231
+#: modules/base/infoPackage.inc.php:323
 msgid "Discovery"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:216
+#: modules/base/infoPackage.inc.php:220
 msgid "Delete a user"
 msgstr "Eliminar un usuario"
 
-#: modules/base/infoPackage.inc.php:221
+#: modules/base/infoPackage.inc.php:225
 msgid "Backup user files"
 msgstr "Copia de seguridad de los archivos del usuario"
 
-#: modules/base/infoPackage.inc.php:232
+#: modules/base/infoPackage.inc.php:236
 msgid "Reset user password"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:237
-msgid "Change user password"
-msgstr "Cambiar contraseña del usuario"
+#: modules/base/infoPackage.inc.php:243
+msgid "Change password"
+msgstr ""
 
-#: modules/base/infoPackage.inc.php:242
+#: modules/base/infoPackage.inc.php:250
 msgid "Get user photo"
 msgstr "Obtener foto del usuario"
 
-#: modules/base/infoPackage.inc.php:260
+#: modules/base/infoPackage.inc.php:268
 msgid "Add a group"
 msgstr "Añadir grupo"
 
-#: modules/base/infoPackage.inc.php:263
+#: modules/base/infoPackage.inc.php:271
 msgid "Delete a group"
 msgstr "Eliminar un grupo"
 
-#: modules/base/infoPackage.inc.php:277
+#: modules/base/infoPackage.inc.php:285
 msgid "Edit a group"
 msgstr "Editar un grupo"
 
-#: modules/base/infoPackage.inc.php:286
+#: modules/base/infoPackage.inc.php:294
 msgid "Computers"
 msgstr "Computadoras"
 
-#: modules/base/infoPackage.inc.php:300
+#: modules/base/infoPackage.inc.php:308
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:304
+#: modules/base/infoPackage.inc.php:312
 msgid "Delete a computer"
 msgstr "Eliminar equipo"
 
-#: modules/base/infoPackage.inc.php:309
+#: modules/base/infoPackage.inc.php:317
 msgid "Ajax part of computers list"
 msgstr "Parte Ajax de la lista de equipos"
 
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:328
 msgid "Download inventory of one machine"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:332
+#: modules/base/infoPackage.inc.php:341
 msgid "User photo"
 msgstr "Foto del usuario"
 
-#: modules/base/infoPackage.inc.php:333
+#: modules/base/infoPackage.inc.php:342
 msgid "User login"
 msgstr "Inicio de sesión"
 
-#: modules/base/infoPackage.inc.php:334
+#: modules/base/infoPackage.inc.php:343
 msgid "User name"
 msgstr "Nombre de usuario"
 
-#: modules/base/infoPackage.inc.php:335
+#: modules/base/infoPackage.inc.php:344
 msgid "User firstname"
 msgstr "Nombre"
 
-#: modules/base/infoPackage.inc.php:336
+#: modules/base/infoPackage.inc.php:345
 msgid "User home directory"
 msgstr "Directorio de inicio del usuario"
 
-#: modules/base/infoPackage.inc.php:338
+#: modules/base/infoPackage.inc.php:347
 msgid "User title"
 msgstr "Título del usuario"
 
-#: modules/base/infoPackage.inc.php:339
+#: modules/base/infoPackage.inc.php:348
 msgid "Mail address"
 msgstr "Correo electrónico"
 
-#: modules/base/infoPackage.inc.php:341
+#: modules/base/infoPackage.inc.php:350
 msgid "Mobile phone number"
 msgstr "Teléfono móvil"
 
-#: modules/base/infoPackage.inc.php:350
+#: modules/base/infoPackage.inc.php:359
 msgid "Enable/Disable user account"
 msgstr "Activar/Desactivar cuenta de usuario"
 

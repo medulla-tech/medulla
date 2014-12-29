@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-04 18:24+0100\n"
+"POT-Creation-Date: 2014-12-18 18:06+0100\n"
 "PO-Revision-Date: 2013-04-04 17:04+0000\n"
 "Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
@@ -58,7 +58,7 @@ msgstr "Abbrechen"
 
 #: modules/ppolicy/default/edit.php:44
 #: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/infoPackage.inc.php:50
+#: modules/ppolicy/infoPackage.inc.php:52
 msgid "Add a password policy"
 msgstr "Eine Passwortpolicy hinzufügen"
 
@@ -311,12 +311,39 @@ msgstr ""
 "durchführen wird, und wenn der Server nicht in der Lage ist wird das "
 "Passwort abgelehnt."
 
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "ppolicy Attribute ändern"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "ppolicy Attribut löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "ppolicy dem Benutzer hinzufügen"
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "ppolicy für Benutzer aktualisieren"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "ppolicy bei Benutzer löschen"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "PPolicy"
+
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
 #: modules/ppolicy/includes/publicFunc.php:71
 #: modules/ppolicy/includes/publicFunc.php:78
 #: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:194
+#: modules/ppolicy/includes/publicFunc.php:201
 msgid "Password policy management"
 msgstr "Verwaltung der Passwort-Policy"
 
@@ -374,72 +401,45 @@ msgid "Enable a specific password policy for this user"
 msgstr "Aktiviere ein bestimmtes Kennwort Policy für diesen Benutzer"
 
 #: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:217
+#: modules/ppolicy/includes/publicFunc.php:224
 msgid "If not set the default password policy is enforced."
 msgstr "Wenn nicht aktiviert, wird die Standard Passwortpolicy durchgesetzt."
 
-#: modules/ppolicy/includes/publicFunc.php:163
+#: modules/ppolicy/includes/publicFunc.php:170
 #, php-format
 msgid "Password policy %s applied."
 msgstr "Passwortpolicy %s angewendet."
 
-#: modules/ppolicy/includes/publicFunc.php:167
+#: modules/ppolicy/includes/publicFunc.php:174
 #, php-format
 msgid "Password policy %s removed."
 msgstr "Passwortpolicy %s entfernt."
 
-#: modules/ppolicy/includes/publicFunc.php:179
+#: modules/ppolicy/includes/publicFunc.php:186
 msgid "Password policy attributes updated."
 msgstr "Passwort-Policy Attribute aktualisiert."
 
-#: modules/ppolicy/includes/publicFunc.php:216
+#: modules/ppolicy/includes/publicFunc.php:223
 msgid "Apply a password policy for all group users"
 msgstr "Eine Passwortpolicy für alle Gruppenbenutzer anwenden"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "ppolicy Attribute ändern"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "ppolicy Attribut löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "ppolicy dem Benutzer hinzufügen"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "ppolicy für Benutzer aktualisieren"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "ppolicy bei Benutzer löschen"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "PPolicy"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
 msgstr "Password Policy"
 
-#: modules/ppolicy/infoPackage.inc.php:54
+#: modules/ppolicy/infoPackage.inc.php:58
 msgid "Edit a password policy"
 msgstr "Eine Passwortpolicy ändern"
 
-#: modules/ppolicy/infoPackage.inc.php:59
+#: modules/ppolicy/infoPackage.inc.php:63
 msgid "Delete a password policy"
 msgstr "Eine Passwortpolicy löschen"
 
-#: modules/ppolicy/infoPackage.inc.php:75
+#: modules/ppolicy/infoPackage.inc.php:79
 msgid "Default "
 msgstr "Standart"
 
-#: modules/ppolicy/infoPackage.inc.php:78
+#: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Aktiviere Benutzer spezifischen Passwort-Policy"
 

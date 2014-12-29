@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-04 18:24+0100\n"
+"POT-Creation-Date: 2014-12-18 18:06+0100\n"
 "PO-Revision-Date: 2012-12-11 16:36+0000\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
@@ -80,26 +80,27 @@ msgid "Status"
 msgstr "Statut"
 
 #: modules/services/control/index.php:26
-#: modules/services/control/localSidebar.php:26
+#: modules/services/control/localSidebar.php:25
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
 msgid "Core services"
 msgstr "Services essentiels"
 
-#: modules/services/control/localSidebar.php:27
-#: modules/services/control/others.php:29
-msgid "Other services"
-msgstr "Autres services"
-
-#: modules/services/control/localSidebar.php:28
-#: modules/services/control/log.php:38 modules/services/infoPackage.inc.php:76
-msgid "Services log"
-msgstr "Log des services"
-
 #: modules/services/control/log.php:36
 #, php-format
 msgid "%s service log"
 msgstr "Log du service %s "
+
+#: modules/services/control/log.php:38
+#: modules/services/control/localSidebar.php:31
+#: modules/services/infoPackage.inc.php:76
+msgid "Services log"
+msgstr "Log des services"
+
+#: modules/services/control/others.php:29
+#: modules/services/control/localSidebar.php:28
+msgid "Other services"
+msgstr "Autres services"
 
 #: modules/services/includes/panels/services.inc.php:30
 #: modules/services/infoPackage.inc.php:36

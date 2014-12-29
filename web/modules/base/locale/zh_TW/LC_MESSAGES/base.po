@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-12-04 18:24+0100\n"
-"PO-Revision-Date: 2014-12-04 17:25+0000\n"
+"POT-Creation-Date: 2014-12-18 18:06+0100\n"
+"PO-Revision-Date: 2014-12-18 17:07+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/mds/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgid "No"
 msgstr "否"
 
 #: graph/header.inc.php:233 includes/FormGenerator.php:618
-#: includes/PageGenerator.php:2188
+#: includes/PageGenerator.php:2198
 msgid "Close"
 msgstr "關閉"
 
@@ -224,16 +224,16 @@ msgstr[0] ""
 "other: 重新啟動服務？"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:619 includes/PageGenerator.php:871
-#: includes/PageGenerator.php:1118
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
+#: includes/PageGenerator.php:1128
 #: modules/base/includes/AjaxFilterLog.inc.php:96
 #: modules/base/includes/AjaxFilterLog.inc.php:100
 msgid "Previous"
 msgstr "上一步"
 
 #: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:885
-#: includes/PageGenerator.php:1128
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
+#: includes/PageGenerator.php:1138
 #: modules/base/includes/AjaxFilterLog.inc.php:107
 #: modules/base/includes/AjaxFilterLog.inc.php:111
 msgid "Next"
@@ -295,10 +295,6 @@ msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
 msgstr "這是未知的例外狀況。請聯絡我們以對此錯誤加入錯誤處理方式。"
-
-#: includes/acl.inc.php:127
-msgid "You do not have required rights"
-msgstr "您沒有所需的權限"
 
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
 #: includes/FormGenerator.php:728 includes/FormGenerator.php:858
@@ -438,7 +434,6 @@ msgid "Now"
 msgstr "現在"
 
 #: includes/FormGenerator.php:694 modules/base/groups/localSidebar.php:29
-#: modules/base/users/localSidebar.php:29
 msgid "Add"
 msgstr "新增"
 
@@ -452,52 +447,56 @@ msgstr "切換選取範圍"
 msgid "Delete"
 msgstr "刪除"
 
-#: includes/PageGenerator.php:558 includes/PageGenerator.php:790
+#: includes/acl.inc.php:128
+msgid "You do not have required rights"
+msgstr "您沒有所需的權限"
+
+#: includes/PageGenerator.php:568 includes/PageGenerator.php:800
 msgid "to"
 msgstr "至"
 
-#: includes/PageGenerator.php:560 includes/PageGenerator.php:792
+#: includes/PageGenerator.php:570 includes/PageGenerator.php:802
 #, php-format
 msgid " - Total <b>%s </b>"
 msgstr " - 總計 <b>%s</b>"
 
-#: includes/PageGenerator.php:563 includes/PageGenerator.php:795
+#: includes/PageGenerator.php:573 includes/PageGenerator.php:805
 msgid "page"
 msgstr "頁碼"
 
-#: includes/PageGenerator.php:905
+#: includes/PageGenerator.php:915
 msgid "Pagination"
 msgstr "分頁"
 
-#: includes/PageGenerator.php:978
+#: includes/PageGenerator.php:988
 msgid "Go to page"
 msgstr "移至頁面"
 
-#: includes/PageGenerator.php:1406
+#: includes/PageGenerator.php:1416
 msgid "No item available"
 msgstr "無可用項目"
 
-#: includes/PageGenerator.php:1594
+#: includes/PageGenerator.php:1604
 msgid "Select entity"
 msgstr "選擇實體"
 
-#: includes/PageGenerator.php:2566 includes/PageGenerator.php:2635
-#: includes/PageGenerator.php:2661 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2576 includes/PageGenerator.php:2644
+#: includes/PageGenerator.php:2670 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "確認"
 
-#: includes/PageGenerator.php:2570 includes/PageGenerator.php:2639
+#: includes/PageGenerator.php:2580 includes/PageGenerator.php:2648
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "取消"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2822
 msgid "Select all"
 msgstr "全選"
 
-#: includes/PageGenerator.php:2813
+#: includes/PageGenerator.php:2822
 msgid "Unselect all"
 msgstr "取消全選"
 
@@ -685,7 +684,7 @@ msgstr "電腦名稱"
 msgid "Display Name"
 msgstr "顯示名稱"
 
-#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:291
+#: modules/base/computers/index.php:32 modules/base/infoPackage.inc.php:299
 msgid "Computer list"
 msgstr "電腦清單"
 
@@ -718,11 +717,11 @@ msgid "All computers"
 msgstr "所有電腦"
 
 #: modules/base/computers/localSidebar.php:8
-#: modules/base/infoPackage.inc.php:294
+#: modules/base/infoPackage.inc.php:302
 msgid "Add computer"
 msgstr "新增電腦"
 
-#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:252
+#: modules/base/groups/ajaxFilter.php:41 modules/base/infoPackage.inc.php:260
 msgid "Groups"
 msgstr "群組"
 
@@ -742,12 +741,11 @@ msgstr "編輯群組"
 msgid "Groups management"
 msgstr "群組管理"
 
-#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:257
+#: modules/base/groups/index.php:31 modules/base/infoPackage.inc.php:265
 msgid "Group list"
 msgstr "群組清單"
 
 #: modules/base/groups/localSidebar.php:28
-#: modules/base/users/localSidebar.php:28
 msgid "List"
 msgstr "清單"
 
@@ -782,7 +780,7 @@ msgstr "群組成員 %s"
 msgid "All users"
 msgstr "所有使用者"
 
-#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:273
+#: modules/base/groups/members.php:162 modules/base/infoPackage.inc.php:281
 msgid "Group members"
 msgstr "群組成員"
 
@@ -920,16 +918,6 @@ msgstr "密碼長度必須不短於 %s"
 msgid "The password is too short."
 msgstr "密碼太短。"
 
-#: modules/base/includes/groups-xmlrpc.inc.php:88
-#, php-format
-msgid "Group %s already exist"
-msgstr "群組 %s 已存在"
-
-#: modules/base/includes/groups-xmlrpc.inc.php:102
-#, php-format
-msgid "Group %s created"
-msgstr "已建立群組 %s"
-
 #: modules/base/includes/panels/support.inc.php:29
 msgid "Your product"
 msgstr "您的產品"
@@ -957,44 +945,6 @@ msgstr "電腦："
 #: modules/base/includes/panels/support.inc.php:56
 msgid "Upgrade"
 msgstr "升級"
-
-#: modules/base/includes/users-xmlrpc.inc.php:46
-msgid "Invalid login"
-msgstr "無效的登入"
-
-#: modules/base/includes/users-xmlrpc.inc.php:55
-msgid "users"
-msgstr "使用者"
-
-#: modules/base/includes/users-xmlrpc.inc.php:58
-msgid "computers"
-msgstr "電腦"
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#, php-format
-msgid "WARNING: The number of registered %s is exceeding your license."
-msgstr "警告：登記的 %s 數目已超過您的授權。"
-
-#: modules/base/includes/users-xmlrpc.inc.php:61
-#: modules/base/status/support.php:34
-msgid " and "
-msgstr " 並且 "
-
-#: modules/base/includes/users-xmlrpc.inc.php:116
-#, php-format
-msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr "使用者 %s 已建立，但根據您的密碼政策，密碼無效。<br/><strong>您必須變更使用者密碼。</strong>"
-
-#: modules/base/includes/users-xmlrpc.inc.php:120
-msgid "You cannot add more users."
-msgstr "您無法再新增使用者。"
-
-#: modules/base/includes/users-xmlrpc.inc.php:126
-#, php-format
-msgid "User %s successfully created"
-msgstr "使用者 %s 已成功建立"
 
 #: modules/base/includes/auditCodes.php:27 modules/base/users/edit.php:54
 msgid "Add user"
@@ -1100,6 +1050,54 @@ msgstr "電腦的網路遮罩位址"
 msgid "Refresh"
 msgstr "重新整理"
 
+#: modules/base/includes/groups-xmlrpc.inc.php:85
+#, php-format
+msgid "Group %s already exist"
+msgstr "群組 %s 已存在"
+
+#: modules/base/includes/groups-xmlrpc.inc.php:99
+#, php-format
+msgid "Group %s created"
+msgstr "已建立群組 %s"
+
+#: modules/base/includes/users-xmlrpc.inc.php:45
+msgid "Invalid login"
+msgstr "無效的登入"
+
+#: modules/base/includes/users-xmlrpc.inc.php:54
+msgid "users"
+msgstr "使用者"
+
+#: modules/base/includes/users-xmlrpc.inc.php:57
+msgid "computers"
+msgstr "電腦"
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#, php-format
+msgid "WARNING: The number of registered %s is exceeding your license."
+msgstr "警告：登記的 %s 數目已超過您的授權。"
+
+#: modules/base/includes/users-xmlrpc.inc.php:60
+#: modules/base/status/support.php:34
+msgid " and "
+msgstr " 並且 "
+
+#: modules/base/includes/users-xmlrpc.inc.php:110
+#, php-format
+msgid ""
+"User %s created but password is not valid regarding your password "
+"policies.<br/><strong>You must change the user password.</strong>"
+msgstr "使用者 %s 已建立，但根據您的密碼政策，密碼無效。<br/><strong>您必須變更使用者密碼。</strong>"
+
+#: modules/base/includes/users-xmlrpc.inc.php:114
+msgid "You cannot add more users."
+msgstr "您無法再新增使用者。"
+
+#: modules/base/includes/users-xmlrpc.inc.php:120
+#, php-format
+msgid "User %s successfully created"
+msgstr "使用者 %s 已成功建立"
+
 #: modules/base/includes/computers_list.inc.php:30
 msgid "Inventory"
 msgstr "清查"
@@ -1167,204 +1165,210 @@ msgstr "無法刪除群組 。<br/>%s 是一些使用者的主要群組。"
 msgid "Group %s successfully deleted."
 msgstr "已成功刪除群組 %s。"
 
-#: modules/base/includes/publicFunc.php:80
+#: modules/base/includes/publicFunc.php:82
 msgid "User's name invalid !"
 msgstr "使用者的名稱無效！"
 
-#: modules/base/includes/publicFunc.php:85
+#: modules/base/includes/publicFunc.php:87
 #, php-format
 msgid "The user %s already exists."
 msgstr "使用者 %s 已存在。"
 
-#: modules/base/includes/publicFunc.php:90
+#: modules/base/includes/publicFunc.php:92
 msgid "Password is empty."
 msgstr "密碼為空白。"
 
-#: modules/base/includes/publicFunc.php:95
+#: modules/base/includes/publicFunc.php:97
+msgid "Last name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:101
+msgid "First name is empty."
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:108
 msgid "The confirmation password does not match the new password."
 msgstr "確認密碼與新密碼不相符。"
 
-#: modules/base/includes/publicFunc.php:102
+#: modules/base/includes/publicFunc.php:115
 msgid "The primary group field can't be empty."
 msgstr "主要群組欄位不能為空白。"
 
-#: modules/base/includes/publicFunc.php:106
+#: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
 msgstr "群組 %s 不存在，因此無法被設定為主要群組。"
 
-#: modules/base/includes/publicFunc.php:183
+#: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
 msgstr "使用者相片已刪除"
 
-#: modules/base/includes/publicFunc.php:197
+#: modules/base/includes/publicFunc.php:210
 msgid "User disabled"
 msgstr "使用者已停用"
 
-#: modules/base/includes/publicFunc.php:201
+#: modules/base/includes/publicFunc.php:214
 msgid "User enabled"
 msgstr "使用者已啟用"
 
-#: modules/base/includes/publicFunc.php:248
+#: modules/base/includes/publicFunc.php:261
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
 "                    Install php gd extension to resize the photo automatically"
 msgstr ""
 
-#: modules/base/includes/publicFunc.php:253
+#: modules/base/includes/publicFunc.php:266
 msgid "The photo is not a JPG file"
 msgstr "相片不是 JPG 檔案"
 
-#: modules/base/includes/publicFunc.php:257
+#: modules/base/includes/publicFunc.php:270
 msgid "User attributes updated"
 msgstr "使用者屬性已更新"
 
-#: modules/base/includes/publicFunc.php:273
+#: modules/base/includes/publicFunc.php:286
 msgid "User attributes"
 msgstr "使用者屬性"
 
-#: modules/base/includes/publicFunc.php:282
+#: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
 #: index.php:207
 msgid "Login"
 msgstr "登入"
 
-#: modules/base/includes/publicFunc.php:297
-#: modules/base/infoPackage.inc.php:348 index.php:213
+#: modules/base/includes/publicFunc.php:310
+#: modules/base/infoPackage.inc.php:357 index.php:213
 msgid "Password"
 msgstr "密碼"
 
-#: modules/base/includes/publicFunc.php:301
+#: modules/base/includes/publicFunc.php:314
 msgid "Confirm password"
 msgstr "確認密碼"
 
-#: modules/base/includes/publicFunc.php:306
+#: modules/base/includes/publicFunc.php:319
 msgid "Photo"
 msgstr "相片"
 
-#: modules/base/includes/publicFunc.php:311
+#: modules/base/includes/publicFunc.php:324
 msgid "Last name"
 msgstr "姓氏"
 
-#: modules/base/includes/publicFunc.php:316
+#: modules/base/includes/publicFunc.php:329
 msgid "First name"
 msgstr "名字"
 
-#: modules/base/includes/publicFunc.php:321
+#: modules/base/includes/publicFunc.php:334
 msgid "Title"
 msgstr "頭銜"
 
-#: modules/base/includes/publicFunc.php:326
+#: modules/base/includes/publicFunc.php:339
 msgid "Email address"
 msgstr "電子郵件位址"
 
-#: modules/base/includes/publicFunc.php:334
-#: modules/base/includes/publicFunc.php:337
-#: modules/base/infoPackage.inc.php:340
+#: modules/base/includes/publicFunc.php:347
+#: modules/base/includes/publicFunc.php:350
+#: modules/base/infoPackage.inc.php:349
 msgid "Telephone number"
 msgstr "電話號碼"
 
-#: modules/base/includes/publicFunc.php:344
+#: modules/base/includes/publicFunc.php:357
 msgid "Mobile number"
 msgstr "行動電話號碼"
 
-#: modules/base/includes/publicFunc.php:349
-#: modules/base/infoPackage.inc.php:342
+#: modules/base/includes/publicFunc.php:362
+#: modules/base/infoPackage.inc.php:351
 msgid "Fax number"
 msgstr "傳真號碼"
 
-#: modules/base/includes/publicFunc.php:354
-#: modules/base/infoPackage.inc.php:343
+#: modules/base/includes/publicFunc.php:367
+#: modules/base/infoPackage.inc.php:352
 msgid "Home phone number"
 msgstr "家庭電話號碼"
 
-#: modules/base/includes/publicFunc.php:359
+#: modules/base/includes/publicFunc.php:372
 msgid "Choose language"
 msgstr "選擇語言"
 
-#: modules/base/includes/publicFunc.php:364
+#: modules/base/includes/publicFunc.php:377
 msgid "Preferred language"
 msgstr "偏好的語言"
 
-#: modules/base/includes/publicFunc.php:372
-msgid "User is disabled, if checked"
-msgstr "使用者已停用（如果核取）"
-
-#: modules/base/includes/publicFunc.php:373
-msgid ""
-"A disabled user can't log in any UNIX services. <br/>\n"
-"                                Her/his login shell command is replaced by /bin/false"
+#: modules/base/includes/publicFunc.php:385
+msgid "Disable user's shell"
 msgstr ""
-"已停用的使用者無法登入任何 UNIX 服務。 <br/>⏎\n"
-"                                                                其登入殼層命令以 /bin/false 取代"
 
-#: modules/base/includes/publicFunc.php:405
-#: modules/base/infoPackage.inc.php:344
+#: modules/base/includes/publicFunc.php:386
+msgid ""
+"A disabled user can't log in any UNIX services.<br/>\n"
+"                                  His login shell command is replaced by /bin/false"
+msgstr ""
+
+#: modules/base/includes/publicFunc.php:418
+#: modules/base/infoPackage.inc.php:353
 msgid "Primary group"
 msgstr "主要群組"
 
-#: modules/base/includes/publicFunc.php:411
+#: modules/base/includes/publicFunc.php:424
 msgid "User's groups"
 msgstr "使用者的群組"
 
-#: modules/base/includes/publicFunc.php:411
+#: modules/base/includes/publicFunc.php:424
 msgid "All groups"
 msgstr "全部群組"
 
-#: modules/base/includes/publicFunc.php:434
-#: modules/base/infoPackage.inc.php:345
+#: modules/base/includes/publicFunc.php:447
+#: modules/base/infoPackage.inc.php:354
 msgid "Secondary groups"
 msgstr "次要群組"
 
-#: modules/base/includes/publicFunc.php:443
+#: modules/base/includes/publicFunc.php:456
 #: modules/base/views/index.tpl.php:87
 msgid "Home directory"
 msgstr "主目錄"
 
-#: modules/base/includes/publicFunc.php:449
+#: modules/base/includes/publicFunc.php:462
 msgid "Create home directory on filesystem"
 msgstr "在檔案系統中建立主目錄"
 
-#: modules/base/includes/publicFunc.php:453
+#: modules/base/includes/publicFunc.php:466
 msgid "Force to use the home directory if it exists"
 msgstr "強制使用主目錄（如果存在）"
 
-#: modules/base/includes/publicFunc.php:454
+#: modules/base/includes/publicFunc.php:467
 msgid "Warning: an existing directory may belong to another user !"
 msgstr "警告：現有目錄可能屬於其他使用者！"
 
-#: modules/base/includes/publicFunc.php:460
-#: modules/base/infoPackage.inc.php:337
+#: modules/base/includes/publicFunc.php:473
+#: modules/base/infoPackage.inc.php:346
 msgid "Login shell"
 msgstr "登入殼層"
 
-#: modules/base/includes/publicFunc.php:465
-#: modules/base/infoPackage.inc.php:346
+#: modules/base/includes/publicFunc.php:478
+#: modules/base/infoPackage.inc.php:355
 msgid "Common name"
 msgstr "一般名稱"
 
-#: modules/base/includes/publicFunc.php:466
+#: modules/base/includes/publicFunc.php:479
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
 msgstr "此欄位由一些 LDAP 用戶端（例如 Thunderbird 通訊錄）用於顯示使用者輸入項目。"
 
-#: modules/base/includes/publicFunc.php:471
-#: modules/base/infoPackage.inc.php:347
+#: modules/base/includes/publicFunc.php:484
+#: modules/base/infoPackage.inc.php:356
 msgid "Preferred name to be used"
 msgstr "要使用的偏好名稱"
 
-#: modules/base/includes/publicFunc.php:472
+#: modules/base/includes/publicFunc.php:485
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
 msgstr "此欄位由 SAMBA（和其他 LDAP 用戶端）用於顯示使用者名稱。"
 
-#: modules/base/includes/publicFunc.php:478
+#: modules/base/includes/publicFunc.php:491
 msgid "UID"
 msgstr "UID"
 
-#: modules/base/includes/publicFunc.php:483
+#: modules/base/includes/publicFunc.php:496
 msgid "GID"
 msgstr "GID"
 
@@ -1521,25 +1525,16 @@ msgstr "刪除所有使用者的檔案"
 msgid "User list"
 msgstr "使用者清單"
 
-#: modules/base/users/localSidebar.php:31
-msgid "Bulk import (CSV)"
-msgstr "大量匯入 (CSV)"
-
-#: modules/base/users/localSidebar.php:34 modules/base/users/passwd.php:36
-#: modules/base/users/passwd.php:73 modules/base/users/resetpasswd.php:60
-msgid "Change your password"
-msgstr "變更您的密碼"
-
-#: modules/base/users/localSidebar.php:36
-#: modules/base/users/resetpasswd.php:35
-msgid "Reset your password"
-msgstr "重設您的密碼"
-
 #: modules/base/users/loguser.php:39
 msgid "User log"
 msgstr "使用者記錄檔"
 
-#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:42
+#: modules/base/users/passwd.php:36 modules/base/users/passwd.php:73
+#: modules/base/users/resetpasswd.php:58
+msgid "Change your password"
+msgstr "變更您的密碼"
+
+#: modules/base/users/passwd.php:43 modules/base/users/resetpasswd.php:40
 msgid "Your password has been changed."
 msgstr "您的密碼已變更。"
 
@@ -1547,7 +1542,7 @@ msgstr "您的密碼已變更。"
 msgid "Change your user's password"
 msgstr "變更您的使用者密碼"
 
-#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:50
+#: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:48
 msgid "You are going to change your password"
 msgstr "您將變更密碼"
 
@@ -1555,16 +1550,16 @@ msgstr "您將變更密碼"
 msgid "Current password"
 msgstr "目前的密碼"
 
-#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:53
+#: modules/base/users/passwd.php:66 modules/base/users/resetpasswd.php:51
 msgid "New password"
 msgstr "新密碼"
 
-#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:55
-#: modules/base/infoPackage.inc.php:349
+#: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:53
+#: modules/base/infoPackage.inc.php:358
 msgid "Confirm your password"
 msgstr "確認您的密碼"
 
-#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:61
+#: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:59
 msgid "Return"
 msgstr "返回"
 
@@ -1572,7 +1567,7 @@ msgstr "返回"
 msgid "Invalid current password. Please retry."
 msgstr "無效的目前密碼。請再試一次。"
 
-#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
+#: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:62
 msgid "Passwords are mismatching. Please retry."
 msgstr "密碼不相符。請再試一次。"
 
@@ -1703,6 +1698,10 @@ msgstr "已記錄的動作"
 msgid "Users"
 msgstr "使用者"
 
+#: modules/base/users/resetpasswd.php:33
+msgid "Reset your password"
+msgstr "重設您的密碼"
+
 #: modules/base/users/edit.php:59
 msgid "Edit user"
 msgstr "編輯使用者"
@@ -1740,11 +1739,11 @@ msgstr "無法啟用 %s 外掛程式中的使用者"
 msgid "User %s enabled"
 msgstr "使用者 %s 已啟用"
 
-#: modules/base/users/edit.php:186
+#: modules/base/users/edit.php:182
 msgid "Enable account"
 msgstr "啟用帳戶"
 
-#: modules/base/users/edit.php:188
+#: modules/base/users/edit.php:183
 msgid "Disable account"
 msgstr "停用帳戶"
 
@@ -1788,116 +1787,116 @@ msgstr "預設狀態頁面"
 msgid "Support page"
 msgstr "支援頁面"
 
-#: modules/base/infoPackage.inc.php:184
+#: modules/base/infoPackage.inc.php:186
 msgid "Add a user"
 msgstr "新增一個使用者"
 
-#: modules/base/infoPackage.inc.php:187
+#: modules/base/infoPackage.inc.php:191
 msgid "Edit a user"
 msgstr "編輯一個使用者"
 
-#: modules/base/infoPackage.inc.php:191
+#: modules/base/infoPackage.inc.php:195
 msgid "Edit ACL permissions on a user"
 msgstr "編輯一個使用者的 ACL 權限"
 
-#: modules/base/infoPackage.inc.php:195
+#: modules/base/infoPackage.inc.php:199
 msgid "Logged user actions"
 msgstr "已記錄的使用者動作"
 
-#: modules/base/infoPackage.inc.php:200
+#: modules/base/infoPackage.inc.php:204
 msgid "Action details"
 msgstr "動作詳情"
 
-#: modules/base/infoPackage.inc.php:204 modules/base/infoPackage.inc.php:226
-#: modules/base/infoPackage.inc.php:315
+#: modules/base/infoPackage.inc.php:210 modules/base/infoPackage.inc.php:231
+#: modules/base/infoPackage.inc.php:323
 msgid "Discovery"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:216
+#: modules/base/infoPackage.inc.php:220
 msgid "Delete a user"
 msgstr "刪除一個使用者"
 
-#: modules/base/infoPackage.inc.php:221
+#: modules/base/infoPackage.inc.php:225
 msgid "Backup user files"
 msgstr "備份使用者檔案"
 
-#: modules/base/infoPackage.inc.php:232
+#: modules/base/infoPackage.inc.php:236
 msgid "Reset user password"
-msgstr "重設使用者密碼"
+msgstr ""
 
-#: modules/base/infoPackage.inc.php:237
-msgid "Change user password"
-msgstr "變更使用者密碼"
+#: modules/base/infoPackage.inc.php:243
+msgid "Change password"
+msgstr ""
 
-#: modules/base/infoPackage.inc.php:242
+#: modules/base/infoPackage.inc.php:250
 msgid "Get user photo"
 msgstr "取得使用者相片"
 
-#: modules/base/infoPackage.inc.php:260
+#: modules/base/infoPackage.inc.php:268
 msgid "Add a group"
 msgstr "新增一個群組"
 
-#: modules/base/infoPackage.inc.php:263
+#: modules/base/infoPackage.inc.php:271
 msgid "Delete a group"
 msgstr "刪除一個群組"
 
-#: modules/base/infoPackage.inc.php:277
+#: modules/base/infoPackage.inc.php:285
 msgid "Edit a group"
 msgstr "編輯一個群組"
 
-#: modules/base/infoPackage.inc.php:286
+#: modules/base/infoPackage.inc.php:294
 msgid "Computers"
 msgstr "電腦"
 
-#: modules/base/infoPackage.inc.php:300
+#: modules/base/infoPackage.inc.php:308
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/infoPackage.inc.php:304
+#: modules/base/infoPackage.inc.php:312
 msgid "Delete a computer"
 msgstr "刪除一台電腦"
 
-#: modules/base/infoPackage.inc.php:309
+#: modules/base/infoPackage.inc.php:317
 msgid "Ajax part of computers list"
 msgstr "電腦清單的 Ajax 部分"
 
-#: modules/base/infoPackage.inc.php:321
+#: modules/base/infoPackage.inc.php:328
 msgid "Download inventory of one machine"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:332
+#: modules/base/infoPackage.inc.php:341
 msgid "User photo"
 msgstr "使用者相片"
 
-#: modules/base/infoPackage.inc.php:333
+#: modules/base/infoPackage.inc.php:342
 msgid "User login"
 msgstr "使用者登入"
 
-#: modules/base/infoPackage.inc.php:334
+#: modules/base/infoPackage.inc.php:343
 msgid "User name"
 msgstr "使用者名稱"
 
-#: modules/base/infoPackage.inc.php:335
+#: modules/base/infoPackage.inc.php:344
 msgid "User firstname"
 msgstr "使用者名字"
 
-#: modules/base/infoPackage.inc.php:336
+#: modules/base/infoPackage.inc.php:345
 msgid "User home directory"
 msgstr "使用者主目錄"
 
-#: modules/base/infoPackage.inc.php:338
+#: modules/base/infoPackage.inc.php:347
 msgid "User title"
 msgstr "使用者頭銜"
 
-#: modules/base/infoPackage.inc.php:339
+#: modules/base/infoPackage.inc.php:348
 msgid "Mail address"
 msgstr "郵件位址"
 
-#: modules/base/infoPackage.inc.php:341
+#: modules/base/infoPackage.inc.php:350
 msgid "Mobile phone number"
 msgstr "行動電話號碼"
 
-#: modules/base/infoPackage.inc.php:350
+#: modules/base/infoPackage.inc.php:359
 msgid "Enable/Disable user account"
 msgstr "啟用／停用使用者帳戶"
 
