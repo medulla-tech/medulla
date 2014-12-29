@@ -26,7 +26,7 @@ import logging
 from sqlalchemy import create_engine, MetaData, func, distinct
 
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target,\
+from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target, Groups,\
     STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED
 
 
@@ -249,14 +249,17 @@ class updateDatabase(DatabaseHelper):
 
     @DatabaseHelper._listinfo
     @DatabaseHelper._session
-    def get_updates_for_hosts(self, session, params):
+    def get_updates_for_group(self, session, params):
         """
         Get all updates for a group of hosts by the specified filters,
         like get_updates function.
         Status filter is specially treaten.
         in this order of priority:
-        Target -> Update -> Update Type
+        Groups -> Update -> Update Type
         """
+        if 'gid' in params:
+            gid = params['gid']
+
         if 'uuids' in params:
             uuids = params['uuids']
         else:
@@ -281,7 +284,7 @@ class updateDatabase(DatabaseHelper):
                 Target.update_id).subquery()
             all_targets = session.query(Target.update_id, func.count(
                 '*').label('total_targets')).group_by(Target.update_id).subquery()
-
+            group = session.query(Groups).filter(Groups.gid == gid).subquery()
             query = session.query(
                 Update,
                 func.ifnull(
@@ -289,7 +292,14 @@ class updateDatabase(DatabaseHelper):
                     0).label('total_installed'),
                 func.ifnull(
                     all_targets.c.total_targets,
-                    0).label('total_targets'))
+                    0).label('total_targets'),
+                func.ifnull(
+                    group.c.gid,
+                    gid).label('gid'),
+                func.ifnull(
+                    group.c.status,
+                    0).label('group_status'),
+                )
             query = query.join(Target)
             query = query.join(UpdateType)
             # filter on the group of hosts
@@ -301,6 +311,9 @@ class updateDatabase(DatabaseHelper):
             query = query.outerjoin(
                 all_targets,
                 Update.id == all_targets.c.update_id)
+            query = query.outerjoin(
+                    group,
+                    Update.id == group.c.update_id)
 
             if is_installed is not None:
                 query = query.filter(Target.is_installed == is_installed)
@@ -309,15 +322,19 @@ class updateDatabase(DatabaseHelper):
             # ==== STATUS FILTERING ======================
             # ============================================
             if dStatus == STATUS_NEUTRAL:
-                query = query.filter(Target.status == STATUS_NEUTRAL)
+                query = query.filter( (group.c.status == None) |
+                    (group.c.status == STATUS_NEUTRAL))
                 query = query.filter(Update.status == STATUS_NEUTRAL)
                 query = query.filter(UpdateType.status == STATUS_NEUTRAL)
             else:
                 query = query.filter(
-                    # 1st level filtering : Target status
-                    (Target.status == dStatus) |
+                    # 1st level filtering : Group status
+                    (group.c.status == dStatus) |
                     (
-                        (Target.status == STATUS_NEUTRAL) &
+                        (
+                            (group.c.status == None) |
+                            (group.c.status == STATUS_NEUTRAL)
+                        ) &
                         (
                             # 2nd level filtering : Update status
                             (Update.status == dStatus) |
@@ -484,22 +501,26 @@ class updateDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._session
-    def set_update_status_for_hosts(self, session, uuid, update_id, status):
+    def set_update_status_for_group(self, session, gid, update_id, status):
         """
-        Set the update status for the target host only
-        (global update status will remain unchanged)
+        Set the update status for the group only
+        (global update status and target status remain unchanged)
         """
-        if not isinstance(uuid, list):
-            uuid = [uuid]
         try:
-            session.query(Target)\
-                .filter(Target.uuid.in_(uuid), Target.update_id == update_id)\
-                .update({'status': status}, synchronize_session=False)
-
+            query = session.query(Groups)\
+                .filter(Groups.gid == gid, Groups.update_id == update_id)
+            update = query.all()
+            # if this update not available,add it
+            if len(update) == 0:
+                update =Groups(update_id=update_id,gid=gid,status=status)
+                session.add(update)
+                session.flush()
+            #else update it
+            else:
+                query.update({'status': status}, synchronize_session=False)
             session.commit()
             return True
 
         except Exception as e:
-            logger.error("DB Error: No entry found or duplicate entries")
             logger.error(str(e))
             return False
