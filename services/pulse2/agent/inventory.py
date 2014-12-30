@@ -229,7 +229,7 @@ class MinimalInventory(object):
         return (hostname, system, version, network)
 
 
-class PosixMinimalInventory(MinimalInventory):
+class LinuxMinimalInventory(MinimalInventory):
 
     def get_ip_netmask(self, ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -269,6 +269,38 @@ class PosixMinimalInventory(MinimalInventory):
     def get_hostname(self):
         return platform.node()
 
+class OSXMinimalInventory(MinimalInventory):
+    def get_network(self):
+        stf = NamedTemporaryFile(mode="w", delete=False)
+
+        cmd_bash =  "ifconfig | grep -o -E '([[:xdigit:]]{1,2}:){5}[[:xdigit:]]{1,2}'"
+        stf.write(cmd_bash)
+        stf.close()
+
+        command = ["bash", stf.name]
+
+        process = Popen(command,
+                        stdout=PIPE,
+                        stderr=PIPE,
+                        close_fds=True,
+                       )
+        out, err = process.communicate()
+        returncode = process.returncode
+        if returncode == 0:
+            print ("Network check out: %s" % repr(out))
+            for mac in out.split("\n"):
+                yield None, None, mac, None
+        else:
+            self.logger.warn("Network check errcode: %s" % repr(returncode))
+            self.logger.warn("Network check nok: %s" % repr(out))
+            self.logger.warn("Network check failed: %s" % repr(err))
+            raise SoftwareCheckError(repr(err))
+
+        os.unlink(stf.name)
+
+
+
+
 class WindowsMinimalInventory(MinimalInventory):
     def get_network(self):
         wqm = WMIQueryManager()
@@ -288,8 +320,10 @@ class WindowsMinimalInventory(MinimalInventory):
 def get_minimal_inventory():
     if SYSTEM == "WINDOWS":
         inv = WindowsMinimalInventory()
-    elif SYSTEM in ("LINUX","DARWIN"):
-        inv = PosixMinimalInventory()
+    elif SYSTEM == "LINUX":
+        inv = LinuxMinimalInventory()
+    elif SYSTEM == "DARWIN":
+        pass
     else:
         raise OSError
     return inv.get()
