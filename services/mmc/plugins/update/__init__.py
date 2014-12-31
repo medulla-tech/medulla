@@ -226,8 +226,10 @@ def create_update_commands():
             create_update_command(ctx, [uuid], update_list)
     return True
 
+
 def get_update_conflicts_for_host(uuid):
     return updateDatabase().get_update_conflicts_for_host(uuid)
+
 
 class RpcProxy(RpcProxyI):
 

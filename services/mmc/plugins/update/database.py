@@ -286,7 +286,7 @@ class updateDatabase(DatabaseHelper):
             installed_targets = session.query(
                 Target.update_id,
                 func.sum(Target.is_installed).label('total_installed')
-                )
+            )
             # count only group machines
             installed_targets = installed_targets.filter(
                 Target.uuid.in_(uuids))
@@ -296,7 +296,7 @@ class updateDatabase(DatabaseHelper):
             all_targets = session.query(
                 Target.update_id,
                 func.count('*').label('total_targets')
-                )
+            )
             # count only group machines
             all_targets = all_targets.filter(Target.uuid.in_(uuids))
             all_targets = all_targets.group_by(Target.update_id).subquery()
@@ -317,7 +317,7 @@ class updateDatabase(DatabaseHelper):
                 func.ifnull(
                     group.c.status,
                     0).label('group_status'),
-                )
+            )
             query = query.join(Target)
             query = query.join(UpdateType)
             # filter on the group of hosts
@@ -330,8 +330,8 @@ class updateDatabase(DatabaseHelper):
                 all_targets,
                 Update.id == all_targets.c.update_id)
             query = query.outerjoin(
-                    group,
-                    Update.id == group.c.update_id)
+                group,
+                Update.id == group.c.update_id)
 
             if is_installed is not None:
                 query = query.filter(Target.is_installed == is_installed)
@@ -341,7 +341,7 @@ class updateDatabase(DatabaseHelper):
             # ============================================
             if dStatus == STATUS_NEUTRAL:
                 query = query.filter((group.c.status == None) |
-                    (group.c.status == STATUS_NEUTRAL))
+                                     (group.c.status == STATUS_NEUTRAL))
                 query = query.filter(Update.status == STATUS_NEUTRAL)
                 query = query.filter(UpdateType.status == STATUS_NEUTRAL)
             else:
@@ -400,7 +400,7 @@ class updateDatabase(DatabaseHelper):
                 # and STATUS_ENABLED>STATUS_NEUTRAL
                 # So if disable and enable at the same time, disable win
                 func.max(Groups.status).label('status')
-                )
+            )
             if gid:
                 group = group.filter(Groups.gid.in_(gid))
             # if no group, we need an empty list
@@ -538,7 +538,7 @@ class updateDatabase(DatabaseHelper):
                 # and STATUS_ENABLED>STATUS_NEUTRAL
                 # So if disable and enable at the same time, disable win
                 func.max(Groups.status).label('status')
-                )
+            )
             if gid:
                 group = group.filter(Groups.gid.in_(gid))
             # if no group, we need an empty list
@@ -546,11 +546,11 @@ class updateDatabase(DatabaseHelper):
                 group = group.filter(Groups.gid == None)
             group = group.group_by(Groups.update_id)
             group = group.subquery()
-            
+
             query = session.query(Target)\
                 .add_entity(Update).join(Update)\
                 .join(UpdateType)\
-                .outerjoin(group,Update.id == group.c.update_id)\
+                .outerjoin(group, Update.id == group.c.update_id)\
                 .filter((group.c.status == None) | (group.c.status == STATUS_NEUTRAL))\
                 .filter(Target.uuid == uuid)\
                 .filter(Target.status == STATUS_NEUTRAL)\
@@ -612,24 +612,25 @@ class updateDatabase(DatabaseHelper):
         return group_list
 
     @DatabaseHelper._session
-    def get_update_conflicts_for_host(self,session,uuid):
-        groups=self._get_machine_groups(uuid)
+    def get_update_conflicts_for_host(self, session, uuid):
+        groups = self._get_machine_groups(uuid)
         logger.info(groups)
         try:
             updates = session.query(Groups.update_id)
             updates = updates.filter(Groups.gid.in_(groups))
-            
+
             activated_update = updates.filter(Groups.status == STATUS_ENABLED)
             activated_update = activated_update.subquery()
-            
+
             disabled_update = updates.filter(Groups.status == STATUS_DISABLED)
             disabled_update = disabled_update.subquery()
-            
-            query = session.query(Groups).filter(Groups.update_id.in_(activated_update))
+
+            query = session.query(Groups).filter(
+                Groups.update_id.in_(activated_update))
             query = query.filter(Groups.gid.in_(groups))
             query = query.filter(Groups.update_id.in_(disabled_update))
-            
-            result=[]
+
+            result = []
             for (update) in query:
                 result.append(update.toDict())
             return result

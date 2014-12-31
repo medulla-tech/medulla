@@ -24,7 +24,8 @@
 
 from sqlalchemy import Column, String, Integer, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base()
+from sqlalchemy.ext.declarative import declarative_base
+Base = declarative_base()
 
 from mmc.database.database_helper import DBObj
 
@@ -42,32 +43,34 @@ class OsClass(Base, DBObj):
     enabled = Column(Integer)
     pattern = Column(Text())
 
+
 class Update(Base, DBObj):
     # ====== Table name =========================
     __tablename__ = 'updates'
     # ====== Fields =============================
     id = Column(Integer, primary_key=True)
     title = Column(String(255))
-    uuid = Column(String(255), default = '')
-    kb_number = Column(String(255), default = '')
+    uuid = Column(String(255), default='')
+    kb_number = Column(String(255), default='')
     os_class_id = Column(Integer, ForeignKey('os_classes.id'))
     type_id = Column(Integer, ForeignKey('update_types.id'))
-    status = Column(Integer, default = 0)
-    need_reboot = Column(Integer, default = 0)
-    request_user_input = Column(Integer, default = 0)
-    info_url = Column(String(255), default = '')
+    status = Column(Integer, default=0)
+    need_reboot = Column(Integer, default=0)
+    request_user_input = Column(Integer, default=0)
+    info_url = Column(String(255), default='')
 
     # Relations
-    update_type = relationship('UpdateType', backref = 'updates')
+    update_type = relationship('UpdateType', backref='updates')
 
-    os = relationship('OsClass', backref = 'updates')
+    os = relationship('OsClass', backref='updates')
 
-    targets = relationship('Target', \
-        # Auto Defines Target.update field
-        backref = 'update', \
-        # Delete orphan targets if update is deleted
-        cascade = "all, delete-orphan"
-    )
+    targets = relationship('Target',
+                           # Auto Defines Target.update field
+                           backref='update',
+                           # Delete orphan targets if update is deleted
+                           cascade="all, delete-orphan"
+                           )
+
 
 class UpdateType(Base, DBObj):
     # ====== Table name =========================
@@ -75,7 +78,7 @@ class UpdateType(Base, DBObj):
     # ====== Fields =============================
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    status = Column(Integer, default = 0)
+    status = Column(Integer, default=0)
 
 
 class Target(Base, DBObj):
@@ -85,8 +88,9 @@ class Target(Base, DBObj):
     id = Column(Integer, primary_key=True)
     uuid = Column(Integer)
     update_id = Column(Integer, ForeignKey('updates.id'))
-    status = Column(Integer, default = 0)
-    is_installed = Column(Integer, default = 0)
+    status = Column(Integer, default=0)
+    is_installed = Column(Integer, default=0)
+
 
 class Groups(Base, DBObj):
     # ====== Table name =========================
@@ -95,4 +99,4 @@ class Groups(Base, DBObj):
     id = Column(Integer, primary_key=True)
     gid = Column(Integer)
     update_id = Column(Integer, ForeignKey('updates.id'))
-    status = Column(Integer, default = 0)
+    status = Column(Integer, default=0)
