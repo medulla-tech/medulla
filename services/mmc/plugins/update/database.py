@@ -610,3 +610,29 @@ class updateDatabase(DatabaseHelper):
                 if "UUID" + str(uuid) in result:
                     group_list.append(group['id'])
         return group_list
+
+    @DatabaseHelper._session
+    def get_update_conflicts_for_host(self,session,uuid):
+        groups=self._get_machine_groups(uuid)
+        logger.info(groups)
+        try:
+            updates = session.query(Groups.update_id)
+            updates = updates.filter(Groups.gid.in_(groups))
+            
+            activated_update = updates.filter(Groups.status == STATUS_ENABLED)
+            activated_update = activated_update.subquery()
+            
+            disabled_update = updates.filter(Groups.status == STATUS_DISABLED)
+            disabled_update = disabled_update.subquery()
+            
+            query = session.query(Groups).filter(Groups.update_id.in_(activated_update))
+            query = query.filter(Groups.gid.in_(groups))
+            query = query.filter(Groups.update_id.in_(disabled_update))
+            
+            result=[]
+            for (update) in query:
+                result.append(update.toDict())
+            return result
+        except Exception as e:
+            logger.error(str(e))
+            return False
