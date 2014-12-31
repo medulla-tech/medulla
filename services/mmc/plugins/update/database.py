@@ -391,7 +391,7 @@ class updateDatabase(DatabaseHelper):
                 "Neutral status is not accepted, use get_neutral_updates function instead")
             return False
         # Get group list
-        gid = self._get_machine_groups("UUID" + str(uuid))
+        gid = self._get_machine_groups(uuid)
         try:
             # Defining group subquery
             group = session.query(
@@ -522,16 +522,36 @@ class updateDatabase(DatabaseHelper):
     def get_neutral_updates_for_host(self, session, uuid):
         """
         Get all update to install for host,
-        this function return all neutral updates for the host
+        this function return all neutral upd
         in this order of priority: Target -> Groups -> Update -> Update Type
         """
         # Update is neutral (for host), if all levels status
         # are neutral
 
+        # Get group list
+        gid = self._get_machine_groups(uuid)
         try:
+            # Defining group subquery
+            group = session.query(
+                Groups.update_id,
+                # we choose the max because STATUS_DISABLED>STATUS_ENABLED
+                # and STATUS_ENABLED>STATUS_NEUTRAL
+                # So if disable and enable at the same time, disable win
+                func.max(Groups.status).label('status')
+                )
+            if gid:
+                group = group.filter(Groups.gid.in_(gid))
+            # if no group, we need an empty list
+            else:
+                group = group.filter(Groups.gid == None)
+            group = group.group_by(Groups.update_id)
+            group = group.subquery()
+            
             query = session.query(Target)\
                 .add_entity(Update).join(Update)\
                 .join(UpdateType)\
+                .outerjoin(group,Update.id == group.c.update_id)\
+                .filter((group.c.status == None) | (group.c.status == STATUS_NEUTRAL))\
                 .filter(Target.uuid == uuid)\
                 .filter(Target.status == STATUS_NEUTRAL)\
                 .filter(Update.status == STATUS_NEUTRAL)\
@@ -575,7 +595,7 @@ class updateDatabase(DatabaseHelper):
 
     def _get_machine_groups(self, uuid):
         """
-        Get groups of one machine with is uuid as a string like "UUID+number"
+        Get groups of one machine with is uuid as number"
         """
         # Creating root context
         ctx = SecurityContext()
@@ -587,6 +607,6 @@ class updateDatabase(DatabaseHelper):
             if 'id' in group:
                 result = ComputerGroupManager().get_group_results(
                     ctx, group['id'], 0, -1, {})
-                if uuid in result:
+                if "UUID" + str(uuid) in result:
                     group_list.append(group['id'])
         return group_list

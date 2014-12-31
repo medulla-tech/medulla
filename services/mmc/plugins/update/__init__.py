@@ -226,7 +226,6 @@ def create_update_commands():
             create_update_command(ctx, [uuid], update_list)
     return True
 
-
 class RpcProxy(RpcProxyI):
 
     updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
