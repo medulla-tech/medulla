@@ -129,7 +129,8 @@ def get_machines_update_status():
     """
     Get machine update status as a dict as key
     and status string as value.
-    commons status values :"unknown","up-to-date","need_update","update_available".
+    commons status values :"unknown","up-to-date","need_update","update_available",
+    "update_planned"
     """
     # Creating root context
     ctx = SecurityContext()
@@ -144,10 +145,14 @@ def get_machines_update_status():
     uuids = []
     for uuid in ComputerList:
         uuids.append(int(uuid.lower().replace('uuid', '')))
+    #get status of all machines
     for uuid in uuids:
         if uuid in machines_update:
             if len(updateDatabase().get_neutral_updates_for_host(uuid)) == 0:
-                machines_status["UUID" + str(uuid)] = "up-to-date"
+                if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
+                    machines_status["UUID" + str(uuid)] = "up-to-date"
+                else:
+                    machines_status["UUID" + str(uuid)] = "update_planned"
             else:
                 machines_status["UUID" + str(uuid)] = "update_available"
         else:
