@@ -109,11 +109,19 @@ case "$1" in
   start)
     $DAEMON start
     touch $LOCK
-  ;;
+    sleep 1' >> $VPN_START_UP
+	if [[ $VPN_SERVICE_SIDE == "server" ]]; then 
+	    echo "/sbin/ifconfig $VPN_TAP_IFACE $VPN_TAP_ADDRESS" >> $VPN_START_UP
+	fi    
+	echo '  ;;
   stop)
     $DAEMON stop
     rm $LOCK
-  ;;
+    sleep 1' >> $VPN_START_UP
+	if [[ $VPN_SERVICE_SIDE == "server" ]]; then 
+	    echo "/sbin/ifconfig $VPN_TAP_IFACE $VPN_TAP_ADDRESS" >> $VPN_START_UP
+	fi
+	echo '  ;;
   restart)
     $DAEMON stop
     sleep 3
@@ -139,7 +147,25 @@ exit 0
 	# Start up on boot
 	update-rc.d $VPN_SERVICE_NAME defaults
 
+	if [[ $VPN_SERVICE_SIDE == "server" ]]; then 
+            
+            # Configure DNS & DHCP service 		
+	    echo "interface=${VPN_TAP_INTERFACE}" >> /etc/dnsmasq.conf
+	    echo "dhcp-range=${VPN_TAP_INTERFACE},${VPN_DHCP_RANGE},${VPN_DHCP_LEASE}h" >> /etc/dnsmasq.conf
+	    echo "dhcp-option=${VPN_TAP_INTERFACE},${VPN_TAP_ADDRESS}" >> /etc/dnsmasq.conf
+
+	    # enable IPv4 forwarding
+	    echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+
+	    # apply sysctl
+	    sysctl --system
+
+            iptables -t nat -A POSTROUTING -s $VPN_TAP_LAN -j SNAT --to-source $VPN_SERVER_PUBLIC_IP 
+	    apt-get install iptables-persistent
+        fi
+
 	# Start the service
 	service $VPN_SERVICE_NAME start
+	service dnsmasq start
 fi
 

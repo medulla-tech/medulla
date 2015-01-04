@@ -22,8 +22,16 @@ PWD=$( pwd )
 PREFIX_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 USR_PASSWORD="linbox"
 fqdn=$( hostname )
+
 # VPN global variables
 . $PREFIX_DIR/vpn-variables
+
+if [ ! -f "`which dnsmasq`" ]; then
+    echo "WARNING: You should install a DNS service."
+    echo "INFO: Please type 'apt-get install dnsmasq' to install it."
+    exit 1;
+fi
+
 
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerPasswordSet $VPN_ADMIN_PASSWORD
 echo "----- set password ok ----- "
@@ -41,15 +49,6 @@ expect -c "
     expect eof"
 echo "----- create hub ok ----- "
 
-expect -c "
-    log_user $VPN_LOG_EXPECT 
-    set timeout 1
-    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /HUB:$VPN_PULSE_HUB /CMD:SecureNatEnable
-    sleep 1
-    expect \"Password:\n\"
-    send $VPN_ADMIN_PASSWORD\r
-    expect eof"
-echo "----- Nat enable ok ----- "
 
 expect -c "
     log_user $VPN_LOG_EXPECT 
