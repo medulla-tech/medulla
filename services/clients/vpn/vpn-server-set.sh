@@ -49,6 +49,35 @@ expect -c "
     expect eof"
 echo "----- create hub ok ----- "
 
+expect -c "
+    log_user $VPN_LOG_EXPECT 
+    set timeout 1
+    spawn $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:BridgeCreate $VPN_PULSE_HUB /DEVICE:$VPN_TAP_IFACE /TAP:yes
+    sleep 1
+    expect \"Password:\n\"
+    send $VPN_ADMIN_PASSWORD\r
+    expect eof"
+echo "----- create bridge ok ----- "
+
+# Configure DNS & DHCP service 		
+echo "interface=tap_${VPN_TAP_IFACE}" >> /etc/dnsmasq.conf
+echo "dhcp-range=tap_${VPN_TAP_IFACE},${VPN_DHCP_RANGE},${VPN_DHCP_LEASE}h" >> /etc/dnsmasq.conf
+echo "dhcp-option=tap_${VPN_TAP_IFACE},3,${VPN_TAP_ADDRESS}" >> /etc/dnsmasq.conf
+
+# enable IPv4 forwarding
+echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+
+# apply sysctl
+sysctl --system
+
+iptables -t nat -A POSTROUTING -s $VPN_TAP_LAN -j SNAT --to-source $VPN_SERVER_PUBLIC_IP 
+#apt-get install iptables-persistent
+
+# uncomment the ifconfig tap_soft clause in /etc/init.d/vpnserver
+sed -i 's/#\ ifconfig/ifconfig/g' $VPN_START_UP
+service $VPN_SERVICE_NAME restart
+service dnsmasq restart
+
 
 expect -c "
     log_user $VPN_LOG_EXPECT 
