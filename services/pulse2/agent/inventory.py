@@ -77,7 +77,7 @@ class WindowsRegistry:
                 if folder in missing:
                     missing.remove(folder)
                 i += 1
-            except WindowsError: #pyflakes.ignore
+            except WindowsError: # pyflakes.ignore
                 break
         CloseKey(key)
         return missing
