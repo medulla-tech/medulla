@@ -76,7 +76,7 @@ if (isset($_POST['bvalid'])) {
 		));
 
 		$hostinterface = $api->hostinterfaceGet(array(
-			'output' => 'interfaceids',
+			'output' => 'extend',
 			'hostids' => $hostid
 		));
 		
@@ -100,7 +100,7 @@ if (isset($_POST['bvalid'])) {
 			'dns' => $dns,
 			'port' => $port,
 			'ip' => $address,
-			'type' => 2
+			'type' => $hostinterface[0]->type
 		));
 
 	} catch(Exception $e) {
