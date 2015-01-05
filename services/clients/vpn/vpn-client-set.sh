@@ -72,6 +72,14 @@ expect -c "
     send standard\r
     expect eof"
 
+if [ $VPN_OS == "linux" ]; then
+    # enable IPv4 forwarding
+    echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
+    # apply sysctl
+    sysctl --system
+    dhclient vpn_0
+fi
+
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountConnect $account_name
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost /CLIENT /CMD:AccountStatusGet $account_name
 
