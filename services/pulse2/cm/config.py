@@ -29,8 +29,13 @@ from pulse2.cm._config import ConfigReader
 class Config(object):
     __metaclass__ = ConfigReader
 
-    class main(object):
+    class daemon(object):
+        umask = 0077
+        user = 0
+        group = 0
+        pidfile = "/var/run/pulse2-cm.pid"
 
+    class main(object):
         serializer = "json"
 
     class server(object):
@@ -61,5 +66,29 @@ class Config(object):
     class vpn(object):
         scripts_path = "/var/lib/pulse2/clients/vpn"
 
+    class logging(object):
+        level = "DEBUG"
+        filename = "/var/log/mmc/pulse2-cm.log"
 
+    class loggers(object):
+        keys = "root"
+
+    class handlers(object):
+        keys= "hand01"
+
+    class formatters(object):
+        keys = "form01"
+
+    class logger_root(object):
+        level = "NOTSET"
+        handlers = "hand01"
+
+    class handler_hand01(object):
+        class_ = "handlers.TimedRotatingFileHandler"
+        level = "INFO"
+        formatter = "form01"
+        args = ("/var/log/mmc/pulse2-cm.log", 'midnight', 1, 7)
+
+    class formatter_form01(object):
+        format = "%(asctime)s %(levelname)s %(message)s"
 

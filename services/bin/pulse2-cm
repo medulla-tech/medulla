@@ -20,27 +20,138 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+import os
 import sys
+import getopt
 import logging
+import logging.config
 
 from twisted.internet import reactor
 
-from mmc.core.log import ColoredFormatter
+from mmc.site import mmcconfdir
 from pulse2.cm.config import Config
 from pulse2.cm.control import Dispatcher
 
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-hdlr2 = logging.StreamHandler(sys.stdout)
-hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
-logger.addHandler(hdlr2)
+def running(cfgfile, daemonize):
+    config = Config()
+    config.read(cfgfile)
+
+    logging.config.fileConfig(cfgfile)
+    logger = logging.getLogger()
+
+    os.umask(config.daemon.umask)
+    os.setegid(config.daemon.group)
+    os.seteuid(config.daemon.user)
+
+    logger.debug("Running as euid = %d, egid = %d" % (os.geteuid(), os.getegid()))
+
+    if not daemonize:
+        hdlr2 = logging.StreamHandler()
+        logger.addHandler(hdlr2)
+        logging.getLogger('cm').addHandler(hdlr2)
+
+    try:
+        dp = Dispatcher(config)
+    except Exception, e:
+        print e
+        logger.exception(e)
+        raise
+
+    reactor.addSystemEventTrigger('before',
+                                  'shutdown',
+                                  cleanUp,
+                                  config.daemon.pidfile)
+
+    # Become a daemon
+    if daemonize:
+        daemon(config.daemon.pidfile)
+    print dp
+    reactor.callWhenRunning(dp.run)
+    reactor.run()
+    return 0
+
+def daemon(pidfile):
+    """
+    daemonize pulse2-cm
+
+    @param pidfile: path to pid file
+    @type pidfile: str
+    """
+
+    # Test if mmcagent has been already launched in daemon mode
+    if os.path.isfile(pidfile):
+        print pidfile+" pid already exist. Maybe pulse2-cm is already running\n"
+        print "use /etc/init.d script to stop and relaunch it"
+        sys.exit(0)
+
+    # do the UNIX double-fork magic, see Stevens' "Advanced
+    # Programming in the UNIX Environment" for details (ISBN 0201563177)
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit first parent
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
+
+    # decouple from parent environment
+    os.close(sys.stdin.fileno())
+    os.close(sys.stdout.fileno())
+    os.close(sys.stderr.fileno())
+    os.chdir("/")
+    os.setsid()
+
+    # do second fork
+    try:
+        pid = os.fork()
+        if pid > 0:
+            # exit from second parent, print eventual PID before
+            print "Daemon PID %d" % pid
+            os.seteuid(0)
+            os.setegid(0)
+            os.system("echo " + str(pid) + " > " + pidfile)
+            sys.exit(0)
+    except OSError, e:
+        print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
+        sys.exit(1)
 
 
-config = Config()
-config.read("/etc/mmc/pulse2/cm/cm.ini")
-dp = Dispatcher(config)
-dp.run()
+def cleanUp(pidfile):
+    logger = logging.getLogger()
+    logger.info('Pulse 2 Connection Manager shutting down, cleaning up...')
 
-reactor.run()
+    # Unlink pidfile if it exists
+    if os.path.isfile(pidfile):
+        os.seteuid(0)
+        os.setegid(0)
+        os.unlink(pidfile)
+
+
+if __name__ == "__main__":
+
+    cfgfile = os.path.join(mmcconfdir, "pulse2", "cm", "cm.ini")
+
+    try:
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+    except getopt.GetoptError:
+        sys.exit(2)
+
+    daemonize = True
+    for option, argument in opts:
+        if option == "-f":
+            cfgfile = argument
+        elif option == "-d":
+            daemonize = False
+
+
+    if not os.path.exists(cfgfile):
+        print "File '%s' does not exist." % cfgfile
+        sys.exit(3)
+
+    # Start the daemon main loop
+    sys.exit(running(cfgfile, daemonize))
+
+
 

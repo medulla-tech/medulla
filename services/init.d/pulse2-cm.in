@@ -1,26 +1,27 @@
 #!/bin/bash
 #
-# (c) 2015 Mandriva, http://www.mandriva.com
+# (c) 2015 Mandriva, http://www.mandriva.com/
 #
-# This file is part of Mandriva Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
+# Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
 # (at your option) any later version.
 #
-# MMC is distributed in the hope that it will be useful,
+# Pulse 2 is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with MMC.  If not, see <http://www.gnu.org/licenses/>.
-
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 ### BEGIN INIT INFO
 # Provides:          pulse2-cm
-# Required-Start:    $network mysql
-# Required-Stop:     $network mysql
+# Required-Start:    $remote_fs $network
+# Required-Stop:     $remote_fs $network
+# Should-Start:      mysql
+# Should-Stop:       mysql
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start and stop pulse2 connection manager
@@ -29,15 +30,29 @@
 
 # Redhat based distributions specific
 # chkconfig: 345 99 60
-# description: MMC agent
+# description: Pulse2 Connection Manager
 
 # Variables
-DESC="Pulse2 Connection Manager : pulse2-cm"
+DESC="Pulse2 Connection Manager"
 DAEMON="@sbindir@/pulse2-cm"
+NAME="pulse2-cm"
+
 PIDFILE="/var/run/pulse2-cm.pid"
 
-# Return PID of already running mmc-agent, if any
-# If not, return 0
+# Read config file if it is present.
+if [ -r /etc/default/$NAME ]
+  then
+  . /etc/default/$NAME
+fi
+
+# If disabled in /etc/default/$NAME
+case "$ENABLE" in
+        [Nn]*)
+                echo "$DESC disabled in /etc/default/$NAME."
+		exit 0
+                ;;
+esac
+
 get_running_pid() {
     local pid=0
     if [ -e ${PIDFILE} ]
@@ -60,30 +75,30 @@ get_running_pid() {
 start () {
     echo -n "Starting ${DESC} : "
     pid=$(get_running_pid)
-    # Start daemon if not running
-    if [ $pid -eq 0 ]
-    then
-        ${DAEMON} >/dev/null 2>&1
-        RETVAL=$?
-        # If return code is 0, everything went fine
-	if [ ${RETVAL} -eq 0 ]
-	then
-            echo "done."
-	else
-            echo "failed."
-	fi
-    else
+    if [ $pid -eq 0 ]; then 
+    
+	    # Start manager
+	    ${DAEMON} start >/dev/null 2>&1
+	    RETVAL=$?
+	    # If return code is 0, everything went fine
+	    if [ ${RETVAL} -eq 0 ]
+	      then
+		echo "done."
+	      else
+		echo "failed."
+	    fi
+	    return ${RETVAL}
+     else
 	echo "already running."
         RETVAL=0
-    fi
+     fi	     
 }
 
 # Function to stop daemon
 stop () {
-    echo -n "Stopping ${DESC} : "
+    echo -n $"Stopping ${DESC} : "
     pid=$(get_running_pid)
-    if [ $pid -ne 0 ]
-    then
+    if [ $pid -ne 0 ]; then
         # If there's one, get the pid and send SIG 15
         kill -15 $pid
         # Get return code
@@ -98,12 +113,13 @@ stop () {
     else
         echo "failed."
     fi
+    
 }
 
 # Function to restart (run stop, then start)
 restart() {
     stop
-    sleep 2
+    sleep 1
     start
 }
 
