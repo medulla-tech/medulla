@@ -25,7 +25,7 @@ import subprocess
 import json
 from time import time
 from twisted.internet.threads import deferToThread
-deferred = deferToThread.__get__ #Create an alias for deferred functions
+deferred = deferToThread.__get__  # Create an alias for deferred functions
 
 logger = logging.getLogger()
 
@@ -41,13 +41,15 @@ from mmc.plugins.msc import create_update_command
 from pulse2.managers.group import ComputerGroupManager
 from mmc.plugins.base.computers import ComputerManager
 
-from pulse2.version import getVersion, getRevision # pyflakes.ignore
+from pulse2.version import getVersion, getRevision  # pyflakes.ignore
 
 APIVERSION = "0:1:0"
 last_update_check_ts = None
 available_updates = []
 
-def getApiVersion(): return APIVERSION
+
+def getApiVersion():
+    return APIVERSION
 
 
 def activate():
@@ -62,12 +64,11 @@ def activate():
     DashboardManager().register_panel(Panel('product_updates'))
     DashboardManager().register_panel(Panel('clients_updates'))
 
-
     # Add create update commands in the task manager
     if config.enable_update_commands:
         TaskManager().addTask("update.create_update_commands",
-                            (create_update_commands,),
-                            cron_expression=config.update_commands_cron)
+                              (create_update_commands,),
+                              cron_expression=config.update_commands_cron)
     return True
 
 
@@ -77,6 +78,7 @@ def calldb(func, *args, **kw):
 
 def get_os_classes(params):
     return updateDatabase().get_os_classes(params)
+
 
 def enable_only_os_classes(os_classes_ids):
     """
@@ -100,73 +102,74 @@ def get_updates(params):
     else:
         return updateDatabase().get_updates(params)
 
+
 def _get_updates_for_group(params):
     """
     Get updates from uuids list if params['uuids'] is a correct list of uuid
     and from group if params['gid'] is a correct group id
     """
     if 'gid' in params:
-        params['uuids']=[]
+        params['uuids'] = []
         # Creating root context
         ctx = SecurityContext()
         ctx.userid = 'root'
 
-        #get uuid for all computer of this group
-        ComputerList=ComputerGroupManager().get_group_results(ctx,params['gid'],0,-1,{})
+        # get uuid for all computer of this group
+        ComputerList = ComputerGroupManager().get_group_results(
+            ctx, params['gid'], 0, -1, {})
         for uuid in ComputerList:
             params['uuids'].append(int(uuid.lower().replace('uuid', '')))
 
-    #get updates for this group
-    updates = updateDatabase().get_updates_for_hosts(params)
+    # get updates for this group
+    updates = updateDatabase().get_updates_for_group(params)
     return updates
+
 
 def get_machines_update_status():
     """
     Get machine update status as a dict as key
     and status string as value.
-    commons status values :"unknown","up-to-date","need_update","update_available".
+    commons status values :"unknown","up-to-date","need_update","update_available",
+    "update_planned"
     """
     # Creating root context
     ctx = SecurityContext()
     ctx.userid = 'root'
 
-    machines_status={}
-    uuids=[]
-    #get computer list who returned update
-    machines_update=updateDatabase().get_machines()
-    #get uuid for all computer
-    ComputerList= ComputerManager().getComputersList(ctx, {}).keys()
-    uuids=[]
+    machines_status = {}
+    uuids = []
+    # get computer list who returned update
+    machines_update = updateDatabase().get_machines()
+    # get uuid for all computer
+    ComputerList = ComputerManager().getComputersList(ctx, {}).keys()
+    uuids = []
     for uuid in ComputerList:
-            uuids.append(int(uuid.lower().replace('uuid', '')))
+        uuids.append(int(uuid.lower().replace('uuid', '')))
+    #get status of all machines
     for uuid in uuids:
         if uuid in machines_update:
             if len(updateDatabase().get_neutral_updates_for_host(uuid)) == 0:
-                machines_status["UUID"+str(uuid)]="up-to-date"
+                if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
+                    machines_status["UUID" + str(uuid)] = "up-to-date"
+                else:
+                    machines_status["UUID" + str(uuid)] = "update_planned"
             else:
-                machines_status["UUID"+str(uuid)]="update_available"
+                machines_status["UUID" + str(uuid)] = "update_available"
         else:
-            machines_status["UUID"+str(uuid)]="unknown"
+            machines_status["UUID" + str(uuid)] = "unknown"
     return machines_status
 
-def set_update_status_for_group(gid,update_ids,status):
+
+def set_update_status_for_group(gid, update_ids, status):
     """
     Set updates status for one define group of machine, for multiples defines
     update to status param value.
     This does not affect global status of update
     """
-    # Creating root context
-    ctx = SecurityContext()
-    ctx.userid = 'root'
-    #get uuid for all computer of this group
-    ComputerList=ComputerGroupManager().get_group_results(ctx,gid,0,-1,{})
-    #set update_status for all computer of this group
-    uuids=[]
-    for uuid in ComputerList:
-            uuids.append(int(uuid.lower().replace('uuid', '')))
     for update_id in update_ids:
-        updateDatabase().set_update_status_for_hosts(uuids,update_id,status)
+        updateDatabase().set_update_status_for_group(gid, update_id, status)
     return True
+
 
 def set_update_status(update_id, status):
     """
@@ -190,7 +193,9 @@ def create_update_commands():
     elif computer_manager == 'glpi':
         dyngroup_pattern = '%d==glpi::Operating system==%s'
     else:
-        logging.getLogger().error('Update module: Unsupported computer manager %s' % computer_manager)
+        logging.getLogger().error(
+            'Update module: Unsupported computer manager %s' %
+            computer_manager)
         return False
 
     # Get all enabled os_classes
@@ -204,18 +209,21 @@ def create_update_commands():
         equ_bool = []
 
         for i in xrange(len(patterns)):
-            request.append(dyngroup_pattern % (i+1, patterns[i]))
-            equ_bool.append(str(i+1))
+            request.append(dyngroup_pattern % (i + 1, patterns[i]))
+            equ_bool.append(str(i + 1))
 
         request = '||'.join(request)
         equ_bool = 'OR(%s)' % ','.join(equ_bool)
 
-        targets = ComputerManager().getComputersList(ctx, {'request':  request, 'equ_bool': equ_bool}).keys()
+        targets = ComputerManager().getComputersList(
+            ctx, {
+                'request': request, 'equ_bool': equ_bool}).keys()
 
         # Fetching all targets
         for uuid in targets:
             machine_id = int(uuid.lower().replace('uuid', ''))
-            updates = updateDatabase().get_eligible_updates_for_host(machine_id)
+            updates = updateDatabase().get_eligible_updates_for_host(
+                machine_id)
 
             update_list = [update['uuid'] for update in updates]
 
@@ -224,12 +232,20 @@ def create_update_commands():
     return True
 
 
+def get_update_conflicts_for_host(uuid):
+    return updateDatabase().get_update_conflicts_for_host(uuid)
+
+
 class RpcProxy(RpcProxyI):
 
     updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
 
     def runInShell(self, cmd):
-        process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        process = subprocess.Popen(
+            [cmd],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True)
         out, err = process.communicate()
         return out.strip(), err.strip(), process.returncode
 
@@ -245,13 +261,19 @@ class RpcProxy(RpcProxyI):
                 available_updates = False
 
             # Get json output
-            json_output = o.split('===JSON_BEGIN===')[1].split('===JSON_END===')[0].strip()
+            json_output = o.split('===JSON_BEGIN===')[1].split(
+                '===JSON_END===')[0].strip()
             packages = json.loads(json_output)['content']
 
             result = []
 
             for pkg in packages:
-                pulse_filters = ('python-mmc', 'python-pulse2', 'mmc-web', 'pulse', 'mmc-agent')
+                pulse_filters = (
+                    'python-mmc',
+                    'python-pulse2',
+                    'mmc-web',
+                    'pulse',
+                    'mmc-agent')
 
                 # Skip non-Pulse packages
                 if not pkg[2].startswith(pulse_filters):
@@ -266,14 +288,12 @@ class RpcProxy(RpcProxyI):
             available_updates = result
             last_update_check_ts = time()
 
-
         global last_update_check_ts, available_updates
         # If last checking is least than 4 hours, return cached value
         if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
             _getProductUpdates()
 
         return available_updates
-
 
     def installProductUpdates(self):
 
@@ -284,7 +304,8 @@ class RpcProxy(RpcProxyI):
 
         pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$'"
         install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
-        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (self.updMgrPath, pulse_packages_filter, self.updMgrPath)
+        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
+            self.updMgrPath, pulse_packages_filter, self.updMgrPath)
 
         @deferred
         def _runInstall():
