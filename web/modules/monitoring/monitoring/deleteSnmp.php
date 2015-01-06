@@ -55,8 +55,7 @@ try {
 	$api = new ZabbixApi();
 	$api->setApiUrl(getZabbixUri()."/api_jsonrpc.php");
 	$api->setApiAuth($apiId);
-	$api->hostDelete(array(
-		$hostid
+	$api->hostDelete(array('hostid' => $hostid
 	));
 
 } catch(Exception $e) {
