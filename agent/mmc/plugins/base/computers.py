@@ -143,6 +143,13 @@ class ComputerI:
         """
         pass
 
+    def getComputerByHostnameAndMacs(self, ctx, hostname, macs):
+        """
+        Get the computers by hostname and macs
+        """
+        pass
+
+
     def getComputerList(self, ctx, params):
         """
         Get computer list
@@ -329,6 +336,11 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         return instance.getMachineHostname(ctx, filt)
+
+    def getComputerByHostnameAndMacs(self, ctx, hostname, macs):
+        klass = self.components[self.main]
+        instance = klass()
+        return instance.getComputerByHostnameAndMacs(ctx, hostname, macs)
 
     def getComputersNetwork(self, ctx, filt = None):
         klass = self.components[self.main]

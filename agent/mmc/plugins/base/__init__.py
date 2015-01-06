@@ -2529,6 +2529,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getMachineIp(ctx, filt))
 
+    def getComputerByHostnameAndMacs(self, hostname, macs):
+        ctx = self.currentContext
+        return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx, hostname, macs))
+
     def getComputersName(self, filt = None):
         ctx = self.currentContext
         ret = ComputerManager().getComputersList(ctx, filt)
