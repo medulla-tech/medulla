@@ -20,7 +20,6 @@
 
 PWD=$( pwd )
 PREFIX_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-USR_PASSWORD="linbox"
 fqdn=$( hostname )
 
 # VPN global variables
@@ -32,6 +31,10 @@ if [ ! -f "`which dnsmasq`" ]; then
     exit 1;
 fi
 
+if [[ -n $( netstat -anp | grep LISTEN | grep ":$VPN_SERVER_PORT" | grep -v $VPN_SERVICE_NAME ) ]]; then
+    echo "WARNING: Port ${VPN_SERVER_PORT} already in use."
+    exit 1;    
+fi	
 
 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd localhost:$VPN_SERVER_PORT /SERVER /CMD:ServerPasswordSet $VPN_ADMIN_PASSWORD
 echo "----- set password ok ----- "
