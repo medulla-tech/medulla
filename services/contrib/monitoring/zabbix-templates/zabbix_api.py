@@ -34,7 +34,7 @@ import sys
 try:
     import urllib2
 except ImportError:
-    import urllib.request as urllib2  # python3
+    import urllib.request as urllib2  # python3 # pyflakes.ignore
 import re
 from collections import deque
 
@@ -49,7 +49,7 @@ try:
     __logger.log(15, "Using simplejson library")
 except ImportError:
     # Python >=2.6
-    import json
+    import json # pyflakes.ignore
     __logger.log(15, "Using native json library")
 
 
