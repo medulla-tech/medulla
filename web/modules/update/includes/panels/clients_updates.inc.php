@@ -64,11 +64,13 @@ EOS;
             "up-to-date"=>_T("Up-to-date"),
             "update_available"=>_T("Updates availables"),
             "unknown"=>_T("Not registered"),
+            "update_planned"=>_T("Updates planned"),
         );
         $state_color = array(
             "up-to-date"=>'000-#73d216-#42780D',
             "update_available"=>'000-#ef2929-#A31A1A',
             "unknown"=>'000-#000000-#666665',
+            "update_planned"=>'000-#64780D-#CEDD11',
         );
         $urlRedirect = urlStrRedirect("base/computers/createUpdateStaticGroup");
         foreach ($statut_count as $status => $count) {
