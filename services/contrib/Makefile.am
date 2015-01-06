@@ -165,4 +165,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \
 	test-xmlrpc.py \
-	monitoring/sql/schema-001.sql
+	monitoring/sql/schema-001.sql \
+	monitoring/zabbix-templates/README \
+	monitoring/zabbix-templates/zabbix_api.py \
+	monitoring/zabbix-templates/zabbix_configuration.py \
+	monitoring/zabbix-templates/templates/app_mysql.xml
