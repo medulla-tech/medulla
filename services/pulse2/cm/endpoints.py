@@ -112,7 +112,7 @@ class Endpoint(object):
         @d.addCallback
         def cb(result):
             if result:
-                method = "inventory.getMachineByHostnameAndMacs"
+                method = "base.getComputerByHostnameAndMacs"
                 return self.mmc_proxy.callRemote(method, hostname, macs)
 
         @d.addErrback
