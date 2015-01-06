@@ -31,6 +31,16 @@ if [ ! -f "`which make`" ]; then
     echo "INFO: Please type 'apt-get install build-essential' to install it."
     exit 1;
 fi
+if [ ! -f "`which expect`" ]; then
+    echo "WARNING: You should install the expect tools."
+    echo "INFO: Please type 'apt-get install expect' to install it."
+    exit 1;
+fi
+if [ ! -f "`which curl`" ]; then
+    echo "WARNING: You should install the curl tool."
+    echo "INFO: Please type 'apt-get install curl' to install it."
+    exit 1;
+fi
 
 if [ ! -f "$PREFIX_DIR/$VPN_ARCHIVE_NAME" ]; then
     echo "Install pack $VPN_ARCHIVE_NAME not exists, try to download it from $VPN_URL"
@@ -75,12 +85,13 @@ else
     exit 1;
 fi     
 
+sleep 5
 cd ..
 echo "INFO: Moving the prepared folder $VPN_INST_DIR to $VPN_PROG_DIR ..."
 mv $VPN_INST_DIR $VPN_PROG_DIR
 
 echo "INFO: Set the rights..."
-sleep 2
+sleep 3
 chmod 600 $VPN_PROG_DIR/$VPN_INST_DIR/* 
 chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/vpncmd 
 chmod 700 $VPN_PROG_DIR/$VPN_INST_DIR/$VPN_SERVICE_NAME 
