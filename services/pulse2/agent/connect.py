@@ -57,7 +57,6 @@ class Connector(object):
 
     context = None
 
-    #def __init__(self, host, port=443, keyfile=None, crtfile=None, timeout=30):
     def __init__(self, host, port=443, crtfile=None, timeout=30):
         """
         @param host: name or IP address of server
@@ -100,20 +99,10 @@ class Connector(object):
                                            ssl_version=ssl.PROTOCOL_SSLv3,
                                            )
 
-                #tm = struct.pack('LL',
-                #                 int(self.timeout),
-                #                 int(self.timeout - int(self.timeout))* 1e6
-                #                 )
-                #ssl_sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO, tm)
-                #ssl_sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO, tm)
                 ssl_sock.setblocking(True)
 
                 ssl_sock.connect((self.host, self.port))
                 ssl_sock.do_handshake()
-
-                print "RCV timeout set to %s"  % ssl_sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVTIMEO)
-                print "SND timeout set to %s"  % ssl_sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDTIMEO)
-                print ssl_sock.getpeercert()
 
                 return ssl_sock
             else:
@@ -132,15 +121,14 @@ class Connector(object):
                 raise ConnectionRefused(self.host, self.port)
 
             else:
-                # TODO - remove this !!!
-                print "Another error:", code, message
+                self.logger.debug("Another connection error:", code, message)
 
 
 
         except Exception, e:
-            print "\033[31mClient connection failed: %s\033[0m" % str(e)
+            self.logger.debug("Client connection failed: %s" % str(e))
             import traceback
-            print "\033[31m%s\033[0m" % str(traceback.format_exc())
+            self.logger.debug("\033[31m%s\033[0m" % str(traceback.format_exc()))
 
 
 class ClientEndpoint(object):
@@ -151,7 +139,6 @@ class ClientEndpoint(object):
     def __init__(self, config):
         connector = Connector(config.server.host,
                               config.server.port,
-                              #config.server.keyfile,
                               config.server.crtfile,
                               config.server.timeout,
                               )
@@ -164,12 +151,8 @@ class ClientEndpoint(object):
         pack = self.parser.encode(data)
 
         self.socket.sendall(pack)
-        #self.socket.write(pack)
         response = self.socket.read(1024)
         return self.parser.decode(response)
-        #return self.parser.decode(self.socket.read(1024))
-
-        #return self.parser.decode(self._recv())
 
     def _recv(self, n=1):
         data = ""
@@ -179,12 +162,12 @@ class ClientEndpoint(object):
                 chunk = self.socket.recv(n - len(data))
                 #chunk = self.socket.read(n - len(data))
             except Exception, e:
-                print "SSL read failed: %s" % str(e)
+                self.logger.debug("SSL read failed: %s" % str(e))
 
             if len(chunk) == 0:
                 break
             data += chunk
-        print "\033[33mdata: %s\033[0m" % str(data)
+        self.logger.debug("\033[33mdata: %s\033[0m" % str(data))
         return data
 
     def close(self):

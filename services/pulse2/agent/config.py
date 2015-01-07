@@ -33,7 +33,7 @@ class Config(object):
 
     class server(type):
         host = "pulse2-server"
-        port = 443
+        port = 8443
         keyfile = None
         crtfile = None
         timeout = 60
@@ -42,7 +42,7 @@ class Config(object):
     class vpn(object):
         enabled = True
         host = "vpnhost"
-        port = 443 
+        port = 443
         command = "/opt/vpnclient"
         command_args = ["start",]
         certs_dir = "/etc/openvpn"
@@ -67,9 +67,30 @@ class Config(object):
                                            ]
         osx_required = ["org.pulse2-agents-installer",
                         ]
-        
+
     class paths(object):
         package_tmp_dir_win = "C:\\Temp"
         package_tmp_dir_posix = "/tmp"
 
+    class loggers(object):
+        keys = "root"
+
+    class handlers(object):
+        keys = "hand01"
+
+    class formatters(object):
+        keys = "form01"
+
+    class logger_root(object):
+        level = "NOTSET"
+        handlers = "hand01"
+
+    class handler_hand01(object):
+        class_ = "handlers.TimedRotatingFileHandler"
+        level = "INFO"
+        formatter = "form01"
+        args = ("/var/log/pulse2-agent.log", 'midnight', 1, 7)
+
+    class formatter_form01(object):
+        format = "%(asctime)s %(levelname)s %(message)s"
 

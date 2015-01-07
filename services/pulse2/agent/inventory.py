@@ -183,7 +183,7 @@ class InventoryChecker(Component):
         stf.close()
 
         command = ["bash", stf.name]
-        print ("Inventory check cmd: %s" % repr(command))
+        self.logger.debug("Inventory check cmd: %s" % repr(command))
 
         process = Popen(command,
                         stdout=PIPE,
@@ -193,7 +193,7 @@ class InventoryChecker(Component):
         out, err = process.communicate()
         returncode = process.returncode
         if returncode == 0:
-            print ("Inventory check out: %s" % repr(out))
+            self.logger.debug("Inventory check out: %s" % repr(out))
             for name in software_required:
                 if name not in out:
                     yield name
@@ -287,7 +287,7 @@ class OSXMinimalInventory(MinimalInventory):
         out, err = process.communicate()
         returncode = process.returncode
         if returncode == 0:
-            print ("Network check out: %s" % repr(out))
+            self.logger.debug("Network check out: %s" % repr(out))
             for mac in out.split("\n"):
                 yield None, None, mac, None
         else:
@@ -329,7 +329,6 @@ def get_minimal_inventory():
     return inv.get()
 
 
-print get_minimal_inventory()
 
 
 

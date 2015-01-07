@@ -23,9 +23,9 @@
 import os
 import time
 import logging
+import logging.config
 import platform
 import urllib2
-logging.basicConfig()
 
 from threading import Thread
 from Queue import Queue
@@ -146,7 +146,7 @@ class InitialInstalls(Component):
                                       "http://%s" % self.config.server.host)
         if "##wget##" in command:
             url = command.replace("##wget##","")
-            print "dwnld url: %s" % url
+            self.logger.debug("dwnld url: %s" % url)
             self.download(url)
             return
         if "##tmp##" in command:
@@ -170,7 +170,7 @@ class InitialInstalls(Component):
         filename = url.split('/')[-1]
         u = urllib2.urlopen(url)
 
-        print "start download from url: %s" % url
+        self.logger.debug("start download from url: %s" % url)
 
         if not os.path.exists(self.temp_dir):
             os.mkdir(self.temp_dir)
@@ -179,7 +179,7 @@ class InitialInstalls(Component):
         f = open(path, 'wb')
         meta = u.info()
         filesize = int(meta.getheaders("Content-Length")[0])
-        print "Downloading: %s bytes: %s" % (filename, filesize)
+        self.logger.debug("Downloading: %s bytes: %s" % (filename, filesize))
 
         file_size_dl = 0
         block_sz = 8192
@@ -283,7 +283,7 @@ class Dispatcher(DispatcherFrame):
         try:
             self.client = ClientEndpoint(config)
 
-            print "CLIENT: %s" % repr(self.client.socket)
+            self.logger.debug("CLIENT: %s" % repr(self.client.socket))
             if not self.client.socket:
 
                 return False
@@ -362,8 +362,10 @@ class Dispatcher(DispatcherFrame):
 if __name__ == "__main__":
     from config import Config
 
+    cfgfile = "agent.ini"
     config = Config()
-    config.read("agent.ini")
+    config.read(cfgfile)
+    logging.config.fileConfig(cfgfile)
 
     d = Dispatcher(config)
     d.mainloop()
