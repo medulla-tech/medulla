@@ -404,13 +404,14 @@ class DownloadAppstreamPackageList(object):
                 # Downloading third party binaries
                 if info['downloads']:
                     logger.debug('I will now download third party packages')
-                for filename, url in info['downloads']:
+                for filename, url, md5sum in info['downloads']:
                     # Downloading file
                     # thanks to http://stackoverflow.com/questions/11768214/python-download-a-file-over-an-ftp-server
-                    logger.debug('Downloading %s at %s' % (filename, url))
+                    logger.debug('Downloading %s from %s' % (filename, url))
                     with closing(urllib2.urlopen(url)) as r:
                         with open(package_dir+filename, 'wb') as f:
                             shutil.copyfileobj(r, f)
+                    # TODO: if md5 is not null, do an md5 checksum of downloaded file
 
                 # Download data file
                 data_temp_file = tempfile.mkstemp()[1]
