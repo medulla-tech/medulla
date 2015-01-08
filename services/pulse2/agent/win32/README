@@ -1,0 +1,13 @@
+To build win32 executable file (or 64), you must have:
+- A python installation
+- cx_freeze for python scripts installed
+- cx_logging for python scripts installed
+- cx_pygenlib for python scripts installed
+
+Launch build.bat to build
+
+
+After creating binary files on Windows, copy all content to bin/
+sub-directory and run:
+  makensis installer.nsi
+to generate the Windows Installer executable.

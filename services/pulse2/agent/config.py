@@ -94,3 +94,10 @@ class Config(object):
     class formatter_form01(object):
         format = "%(asctime)s %(levelname)s %(message)s"
 
+
+NAME = "%s"
+DISPLAY_NAME = "Pulse2 Agent (%s)"
+MODULE_NAME = "service"
+CLASS_NAME = "Handler"
+DESCRIPTION = "Pulse2 client service for deployment"
+AUTO_START = True
