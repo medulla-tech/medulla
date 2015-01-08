@@ -86,16 +86,16 @@ class GatheringServer(Protocol):
             def res(result):
                 print "trigger result: %s" % (str(result))
         except Exception, e:
-            logging.getLogger().warn("\033[31mtrigger firing fail: %s\033[0m" % str(e))
+            logging.getLogger().warn("trigger firing fail: %s" % str(e))
 
 
 
     def send_response(self, response):
-        logging.getLogger().debug("\033[35mresponse to client: %s\033[0m" % str(response))
+        logging.getLogger().debug("response to client: %s" % str(response))
         self.transport.write(response)
 
     def _response_failed(self, failure):
-        logging.getLogger().warn("\033[31mresponse failed: %s\033[0m" % str(failure))
+        logging.getLogger().warn("response failed: %s" % str(failure))
 
 
 class GatheringFactory(Factory):

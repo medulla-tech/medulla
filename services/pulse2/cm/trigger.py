@@ -76,7 +76,6 @@ class Trigger(object):
         @return: True if method of endpoints call finished
         @rtype: Deferred
         """
-        self.logger.debug("\033[36mFIRE\033[0m")
 
         if not self.locked:
             #d = deferToThread(self.method,
