@@ -16,7 +16,8 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
-#
+
+import os
 import logging
 import logging.config
 
@@ -30,23 +31,31 @@ from control import Dispatcher
 class Handler(object):
 
     def __init__(self):
-        logging.config.fileConfig("agent.ini")
+
+        path = os.path.dirname(os.path.abspath(__file__))
+        if "library.zip" in path:
+            path = os.path.dirname(path)
+        cfg_path = os.path.join(path, "agent.ini")
+        logging.config.fileConfig(cfg_path)
+
         self.stopEvent = cx_Threads.Event()
-        self.dp = Dispatcher(Config())
+        config = Config()
+        config.read(cfg_path)
+        self.dp = Dispatcher(config)
 
     def Initialize(self, configFileName):
         pass
 
     def Run(self):
         logger = logging.getLogger()
-        cx_Logging.info("Pulse2 Agent starting...")
-        self.stopEvent.Wait()
+        cx_Logging.Info("Pulse2 Agent starting...")
         self.dp.mainloop()
         logger.info("Pulse2 Agent started.")
+        self.stopEvent.Wait()
 
     def Stop(self):
         logger = logging.getLogger()
-        cx_Logging.info("Pulse2 Agent stopping...")
+        cx_Logging.Info("Pulse2 Agent stopping...")
         logger.info("Pulse2 Agent stopped.")
         self.stopEvent.Set()
 

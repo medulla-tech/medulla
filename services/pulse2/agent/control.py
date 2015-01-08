@@ -281,7 +281,7 @@ class Dispatcher(DispatcherFrame):
         """
 
         try:
-            self.client = ClientEndpoint(config)
+            self.client = ClientEndpoint(self.config)
 
             self.logger.debug("CLIENT: %s" % repr(self.client.socket))
             if not self.client.socket:

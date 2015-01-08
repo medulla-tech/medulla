@@ -37,9 +37,6 @@
 ; A global variable containing version of the currently installed agent
 Var /GLOBAL PREVIOUSVERSION
 
-; Another containing path of the previously installed agent
-Var /GLOBAL PREVIOUSINSTDIR
-
 ; Pulse PULSE2_CM address
 Var /GLOBAL PULSE2_CM_SERVER
 Var /GLOBAL PULSE2_CM_PORT
@@ -118,7 +115,7 @@ Function .onInit
   ReadRegStr $0 HKLM "Software\Mandriva\Pulse2Agent" "CurrentVersion"
   ${If} ${Errors}
     ; No previously installed agent
-    StrCpy $PREVIOUSVERSION "0.0"
+    StrCpy $PREVIOUSVERSION "0.1"
   ${Else}
     ; Use $0 which contains the right version
     StrCpy $PREVIOUSVERSION $0
@@ -255,17 +252,17 @@ Please fill the field with the right port."
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
   !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
-  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log
+  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;
   ;;;;;;;;;;;;;;;;;;;;
-  DetailPrint "Running $INSTDIR\service.exe --install pulse2agent"
-  nsExec::ExecToLog "$INSTDIR\service.exe --install pulse2agent"
+  DetailPrint "Running $INSTDIR\service.exe --install pulse2-agent"
+  nsExec::ExecToLog "$INSTDIR\service.exe --install pulse2-agent"
   Pop $0
   ; May return "error" in $0 if something goes wrong
   ${If} $0 == 'error'
-    MessageBox MB_OK|MB_ICONEXCLAMATION 'Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
+    MessageBox MB_OK|MB_ICONEXCLAMATION '1:Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
     Abort
   ${EndIf}
   ; Well is it REALLY installed ? Let's figure out.
@@ -274,7 +271,7 @@ Please fill the field with the right port."
   Pop $0
   ; $0 now contains either 'Yes', 'No' or an error description
   ${If} $0 != 'Yes'
-    MessageBox MB_OK|MB_ICONEXCLAMATION 'Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
+    MessageBox MB_OK|MB_ICONEXCLAMATION '2:Something went wrong when trying to register Pulse2 Agent service.$\r$\n$\r$\nYou may try to run the following command manually to have more information:$\r$\n  "$INSTDIR\service.exe" --install'
     Abort
   ${EndIf}
 
