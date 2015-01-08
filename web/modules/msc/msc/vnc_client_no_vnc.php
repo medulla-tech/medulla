@@ -151,7 +151,7 @@ if ($proxyActive) {
                             id="sendCtrlAltDelButton">
                             </div></td>
 		    <td width="1%"><div id="noVNC_buttons">
-            <input type=button id="toClipboard" class="btnPrimary" style="display: none" value="<?php print _T('Send text to clipboard', 'msc'); ?>" />
+            <input type=button id="toClipboard" class="btnPrimary" style="display: none" value="<?php print _T('Transfer to/from clipboard', 'msc'); ?>" />
                         </div></td>
                 </tr></table>
             </div>
@@ -256,7 +256,7 @@ if ($proxyActive) {
             
 	    // post clipboard button
 	    $('#toClipboard').click(function(){
-		var clipText = prompt('Enter text to send to machine clipboard:');
+		var clipText = prompt('Enter text to send to machine clipboard:', window.clip_content);
 		rfb.clipboardPasteFrom(clipText);	    
 	    });
             
@@ -319,6 +319,7 @@ if ($proxyActive) {
                            'shared':       WebUtil.getQueryVar('shared', true),
                            'view_only':    WebUtil.getQueryVar('view_only', false),
                            'updateState':  updateState,
+                           'onClipboard' : function(rfb, text){window.clip_content = text;},
                            'onPasswordRequired':  passwordRequired});
             rfb.connect(host, port, password, path);
 
