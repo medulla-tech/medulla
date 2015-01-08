@@ -92,7 +92,7 @@ class InventoryServer:
             query = 'FAILS'
         try:
             if query != 'UPDATE':
-                deviceid = re.search(r'<DEVICEID>([\w.-]+)</DEVICEID>', content).group(1)
+                deviceid = re.search(r'<DEVICEID>([\w.-]+)</DEVICEID>', content.decode('utf8'), re.UNICODE).group(1)
         except AttributeError, e:
             self.logger.warn("Could not get any DEVICEID section in inventory from %s"%(from_ip))
             self.logger.debug("no DEVICEID in %s"%(content))
