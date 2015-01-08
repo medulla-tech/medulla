@@ -23,6 +23,11 @@ Declare Update database
 
 import logging
 
+#to parse html file
+from lxml.html import parse
+import urllib2
+import cssselect
+
 from sqlalchemy import create_engine, MetaData, func, distinct
 
 from mmc.support.mmctools import SecurityContext
@@ -161,6 +166,29 @@ class updateDatabase(DatabaseHelper):
 
             session.commit()
             # session.flush()
+            return True
+        except Exception as e:
+            logger.error(str(e))
+            return False
+
+    @DatabaseHelper._session
+    def add_update_description(self,session):
+        try:
+            query = session.query(Update.kb_number).filter(Update.description=="").all()
+            kb_numbers = [r for r, in query]
+            for kb_number in kb_numbers:
+                link = "http://support.microsoft.com/kb/"+kb_number
+                doc = parse(link).getroot()
+                if doc is not None :
+                    try:
+                       title=doc.cssselect('#mt_title')[0]
+                    except Exception as e:
+                        title=None
+                if title is not None:
+                    description=unicode(title.text_content())
+                    for update in session.query(Update).filter(Update.kb_number==kb_number).all():
+                        update.description=description
+                    session.commit()
             return True
         except Exception as e:
             logger.error(str(e))
