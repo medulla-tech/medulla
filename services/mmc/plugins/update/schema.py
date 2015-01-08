@@ -58,6 +58,7 @@ class Update(Base, DBObj):
     need_reboot = Column(Integer, default=0)
     request_user_input = Column(Integer, default=0)
     info_url = Column(String(255), default='')
+    description = Column(String(400), default='')
 
     # Relations
     update_type = relationship('UpdateType', backref='updates')

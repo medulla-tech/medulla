@@ -95,7 +95,9 @@ for ($i = 0; $i < count($cols['total_targets']); $i++){
     $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
 }
 for ($i = 0; $i < count($cols['info_url']); $i++){
-    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i].'" title="'._T("More details","update").'">'.$cols['title'][$i].'</a>';
+    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i];
+    $cols['title_url'][$i].='" title="'.$cols['description'][$i].".'">';
+    $cols['title_url'][$i].=$cols['title'][$i].'</a>';
 }
 // Printing selected updates form
 print '<form id="sel_updates_form">';
