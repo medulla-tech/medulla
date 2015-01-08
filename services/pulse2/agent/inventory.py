@@ -36,6 +36,9 @@ if SYSTEM == "WINDOWS":
     from _winreg import ConnectRegistry             #pyflakes.ignore
     from _winreg import OpenKey, CloseKey, EnumKey  #pyflakes.ignore
     from _winreg import HKEY_LOCAL_MACHINE          #pyflakes.ignore
+    from _winreg import KEY_READ                    #pyflakes.ignore
+    from _winreg import KEY_WOW64_32KEY             #pyflakes.ignore
+
     from win32com.client import Dispatch            #pyflakes.ignore
 
 else:
@@ -66,8 +69,14 @@ class WindowsRegistry:
         @rtype: list
         """
         reg = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
-        logging.getLogger().debug("Registry: %s " % repr(reg))
-        key = OpenKey(reg, path)
+        logging.getLogger().debug("Registry path: %s " % path)
+        try:
+            key = OpenKey(reg, path, 0, KEY_READ | KEY_WOW64_32KEY)
+        except WindowsError: # pyflakes.ignore
+
+            logging.getLogger().warn("Unable to get registry path: %s " % path)
+            logging.getLogger().warn("Cannot check missing software")
+            return []
 
         missing = required
         i = 0

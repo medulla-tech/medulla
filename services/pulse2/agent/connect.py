@@ -23,6 +23,7 @@
 
 import socket
 import ssl
+import logging
 
 from parse import Parser
 
@@ -74,6 +75,7 @@ class Connector(object):
         @param timeout: timeout of client connection
         @type timeout: int
         """
+        self.logger = logging.getLogger()
         self.host = host
         self.port = port
         self.timeout = timeout
@@ -137,6 +139,7 @@ class ClientEndpoint(object):
     parser = None
 
     def __init__(self, config):
+        self.logger = logging.getLogger()
         connector = Connector(config.server.host,
                               config.server.port,
                               config.server.crtfile,
