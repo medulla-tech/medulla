@@ -45,25 +45,19 @@ class Config(object):
         port = 443
         command = "/opt/vpnclient/cpncmd"
         command_args = ["localhost", "/CLIENT", "/CMD:AccountConnect", "pulse2connection"]
-        certs_dir = "/etc/openvpn"
+        startup_delay = 5
 
     class inventory(object):
         windows_reg_path = r"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"
         windows_software_required = ["Mandriva OpenSSH Agent",
-                                     "FusionInventory Agent",
-                                     "TightVNC",
                                      ]
         debian_software_required = ["pulse2-agents-installer",
-                                    "fusioninventory-agent",
                                     ]
         debian_server_software_required = ["pulse2-agents-installer-nordp"
-                                           "fusioninventory-agent",
                                            ]
         redhat_software_required = ["pulse2-agents-installer",
-                                    "fusioninventory-agent",
                                     ]
         redhat_server_software_required = ["pulse2-agents-installer-nordp"
-                                           "fusioninventory-agent",
                                            ]
         osx_required = ["org.pulse2-agents-installer",
                         ]

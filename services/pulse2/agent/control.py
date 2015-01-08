@@ -319,6 +319,7 @@ class Dispatcher(DispatcherFrame):
                 ret = self.vpn_launch_control.start()
                 if ret == CC.VPN | CC.DONE:
                     # VPN established, try to contact the server
+                    time.sleep(self.config.vpn.startup_delay)
                     return self._connect()
                 elif ret == CC.VPN | CC.FAILED:
                     # Unable to start VPN -> exit
