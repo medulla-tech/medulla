@@ -34,28 +34,28 @@ class VPNLaunchControl(Component):
 
     def start(self):
 
-        if not self.probe():
-            self.logger.warn("VPN Server unreacheable")
-            return CC.VPN | CC.REFUSED
+        #if not self.probe():
+        #    self.logger.warn("VPN Server unreacheable")
+        #    return CC.VPN | CC.REFUSED
 
         command = self.config.vpn.command
         command_args = self.config.vpn.command_args
 
-        cmd = [command, command_args]
+        cmd = [command] + command_args
 
         self.logger.info("VPN Server command: %s" % repr(cmd))
 
         process = Popen(cmd,
                         stdout=PIPE,
                         stderr=PIPE,
-                        close_fds=True,
                         )
         out, err = process.communicate()
 
-        self.logger.info("VPN Server stdout: %s" % out)
-        self.logger.info("VPN Server stderr: %s" % err)
+        self.logger.debug("VPN Server stdout: %s" % out)
+        self.logger.debug("VPN Server stderr: %s" % err)
+        self.logger.debug("VPN Server start exitcode: %s" % process.returncode)
 
-        self.queue.put((out, err))
+        #self.queue.put((out, err))
 
         # TODO - do not return directly - return something from CC
         if process.returncode == 0:

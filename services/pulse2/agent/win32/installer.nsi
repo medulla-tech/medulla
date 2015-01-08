@@ -41,6 +41,7 @@ Var /GLOBAL PREVIOUSVERSION
 Var /GLOBAL PULSE2_CM_SERVER
 Var /GLOBAL PULSE2_CM_PORT
 
+Var /GLOBAL SOFTETHER_FOLDER_NAME
 ; Default values for PULSE2_CM
 !define DEFAULT_PULSE2_CM_SERVER "pulse2.domain.com"
 !define DEFAULT_PULSE2_CM_PORT "8443"
@@ -247,12 +248,13 @@ Please fill the field with the right port."
     StrCpy $PULSE2_CM_PORT $1
     ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
   ${EndIF}
-
+  StrCpy $SOFTETHER_FOLDER_NAME "$PROGRAMFILES\SoftEther VPN Client\vpncmd.exe"  
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
   !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
   !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
+  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;

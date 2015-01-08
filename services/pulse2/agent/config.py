@@ -43,8 +43,8 @@ class Config(object):
         enabled = True
         host = "vpnhost"
         port = 443
-        command = "/opt/vpnclient"
-        command_args = ["start",]
+        command = "/opt/vpnclient/cpncmd"
+        command_args = ["localhost", "/CLIENT", "/CMD:AccountConnect", "pulse2connection"]
         certs_dir = "/etc/openvpn"
 
     class inventory(object):
