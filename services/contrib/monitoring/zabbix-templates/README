@@ -3,7 +3,7 @@ $ python zabbix_configuration.py -h
 
 Example:
 $ python zabbix_configuration.py --url http://192.168.122.243/zabbix -p bvScMOXF0Q template app-mysql.xml # will add mysql template
-$ python zabbix_configuration.py --url http://192.168.122.243/zabbix -p bvScMOXF0Q autoregistration # will active autoregistration
+$ python zabbix_configuration.py --url http://192.168.122.243/zabbix -p bvScMOXF0Q autoregistration # will active autoregistration -t "Template App Zabbix Agent"
 
 --------------------------------------------------------------------------------
 The library comes from:
