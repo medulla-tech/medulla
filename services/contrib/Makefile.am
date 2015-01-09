@@ -170,9 +170,6 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	monitoring/zabbix-templates/README \
 	monitoring/zabbix-templates/zabbix_api.py \
 	monitoring/zabbix-templates/zabbix_configuration.py \
-        monitoring/zabbix-templates/README \
-        monitoring/zabbix-templates/zabbix_configuration.py \
-        monitoring/zabbix-templates/zabbix_api.py \
         monitoring/zabbix-templates/templates/homemade/template_http.xml \
         monitoring/zabbix-templates/templates/homemade/template_icmp.xml \
         monitoring/zabbix-templates/templates/homemade/template_ldap.xml \
