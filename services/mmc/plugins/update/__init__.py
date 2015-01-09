@@ -69,6 +69,10 @@ def activate():
         TaskManager().addTask("update.create_update_commands",
                               (create_update_commands,),
                               cron_expression=config.update_commands_cron)
+    if config.enable_update_description:
+        TaskManager().addTask("add_update_description",
+                      (add_update_description,),
+                      cron_expression=config.add_update_description_cron)
     return True
 
 
@@ -90,6 +94,8 @@ def enable_only_os_classes(os_classes_ids):
 def get_update_types(params):
     return updateDatabase().get_update_types(params)
 
+def add_update_description():
+    return updateDatabase().add_update_description()
 
 def get_updates(params):
     """

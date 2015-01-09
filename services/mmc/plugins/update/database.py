@@ -173,6 +173,10 @@ class updateDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def add_update_description(self,session):
+        """
+        Add update descriptions from windows kb base.
+        """
+        logger.debug("get updates description from windows kb base...")
         try:
             query = session.query(Update.kb_number).filter(Update.description=="").all()
             kb_numbers = [r for r, in query]
@@ -189,8 +193,10 @@ class updateDatabase(DatabaseHelper):
                     for update in session.query(Update).filter(Update.kb_number==kb_number).all():
                         update.description=description
                     session.commit()
+            logger.debug("updates description added.")
             return True
         except Exception as e:
+            logger.debug("failed to add update descriptions.")
             logger.error(str(e))
             return False
 
