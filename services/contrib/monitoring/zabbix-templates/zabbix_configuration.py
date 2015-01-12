@@ -1,5 +1,6 @@
 import zabbix_api
 import argparse
+from os.path import basename
 
 parser = argparse.ArgumentParser(description='Configure Zabbix Server')
 parser.add_argument('--url', dest='url', default='http://localhost/zabbix', help='Zabbix server address')
@@ -42,7 +43,7 @@ if args.subparser_name == "template":
             print e
         print "Error: template import failed."
         exit(1)
-    print "Template imported."
+    print "Importing template: %s" % basename(args.template.name)
     exit(0)
 
 
