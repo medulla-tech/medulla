@@ -235,11 +235,14 @@ class updateDatabase(DatabaseHelper):
             # ==== STATUS FILTERING ======================
             if 'filters' in params and 'status' in params['filters']:
                 # Special filter treatment for status
-                Status = params['filters']['status']
+                Status = int(params['filters']['status'])
                 del params['filters']['status']
 
                 # other non-confusing filters
                 # are automatically treaten by @DatabaseHelper._listinfo
+                if 'hide_installed_update' in params :
+                    if  params['hide_installed_update']:
+                        query=query.filter(installed_targets.c.total_installed == 0)
 
                 if Status == STATUS_NEUTRAL:
                     # Neutral status
@@ -373,7 +376,11 @@ class updateDatabase(DatabaseHelper):
             # ============================================
             # ==== STATUS FILTERING ======================
             # ============================================
-            if dStatus == STATUS_NEUTRAL:
+            if 'hide_installed_update' in params :
+                if  params['hide_installed_update']:
+                    query=query.filter(installed_targets.c.total_installed == 0)
+
+            if dStatus ==  STATUS_NEUTRAL:
                 query = query.filter((group.c.status == None) |
                                      (group.c.status == STATUS_NEUTRAL))
                 query = query.filter(Update.status == STATUS_NEUTRAL)
