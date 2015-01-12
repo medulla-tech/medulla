@@ -27,7 +27,6 @@ require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/utils.inc.php");
 
 echo "<br/><br/>";
-
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -58,6 +57,12 @@ if (isset($_GET["filter"]) && $_GET["filter"]) {
    $params['like_filters']['title'] = $_GET["filter"];
    // to get all elements
    unset($params['max']);
+}
+
+if (isset($_GET["hide_installed_update"])) {
+    $params['hide_installed_update'] = true;
+} else {
+    $params['hide_installed_update'] = false;
 }
 
 extract(get_updates($params));
@@ -96,7 +101,7 @@ for ($i = 0; $i < count($cols['total_targets']); $i++){
 }
 for ($i = 0; $i < count($cols['info_url']); $i++){
     $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i];
-    $cols['title_url'][$i].='" title="'.$cols['description'][$i].".'">';
+    $cols['title_url'][$i].='" title="'.$cols['description'][$i].'">';
     $cols['title_url'][$i].=$cols['title'][$i].'</a>';
 }
 // Printing selected updates form
@@ -127,7 +132,6 @@ print '</form>';
 ?>
 <input id="btnEnableUpdates" type="button" value="<?php print _T('Enable selected updates', 'update'); ?>" class="btnPrimary">
 <input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
-
 <script type="text/javascript">
 // Enable Updates button
 jQuery('#btnEnableUpdates').click(function(){

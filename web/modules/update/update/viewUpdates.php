@@ -47,7 +47,7 @@ if (isset($_GET['gid']))
     $params['gid'] = $_GET["gid"];
 
 $ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
-
+$ajax->addCheckbox(new Checkbox("hide_installed_update",_T("Hide installed update","update")));
 $ajax->setElements(array(
                          _T('Available', 'update'),
                          _T('Enabled', 'update'),
