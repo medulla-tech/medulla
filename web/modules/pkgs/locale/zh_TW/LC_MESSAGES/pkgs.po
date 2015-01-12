@@ -1,119 +1,80 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-12 01:00+0100\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2015-01-12 01:06+0100\n"
 "PO-Revision-Date: 2014-12-09 10:01+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_TW/)\n"
-"Language: zh_TW\n"
+"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/pkgs/pkgs/add.php:151
-msgid "<fill_package_name>"
-msgstr "<fill_package_name>"
-
-#: modules/pkgs/infoPackage.inc.php:76
-msgid "Activate Appstream Stream"
+#: modules/pkgs/includes/query.php:33
+msgid ""
+"Please type 3 characters for suggestion.<br>\n"
+"            Wildcard is '%', %text% matches any string containing 'text'.<br>\n"
+"            If unsure, leave Vendor and Version fields blank."
 msgstr ""
+"請輸入 3 個字元以提供建議。<br>⏎\n"
+"            萬用字元是 '%', %text% % 符合任何包含「文字」的字串。<br>⏎\n"
+"            如果不確定，請將「廠商」和「版本」欄位留為空白。"
 
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
-msgid "Activate this Appstream stream"
-msgstr ""
-
-#: modules/pkgs/pkgs/activateAppstreamFlow.php:40
-msgid "Activate this Appstream stream?"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:205
-msgid "Add"
-msgstr "新增"
-
-#: modules/pkgs/infoPackage.inc.php:46 modules/pkgs/pkgs/localSidebar.php:28
-msgid "Add a package"
-msgstr "新增一個封裝"
-
-#: modules/pkgs/includes/html.inc.php:140
-msgid "Add files"
-msgstr "新增檔案"
-
-#: modules/pkgs/pkgs/add.php:31
-msgid "Add package"
-msgstr "新增封裝"
-
-#: modules/pkgs/pkgs/add.php:132
-msgid "Already uploaded on the server"
-msgstr "已上傳至伺服器"
-
-#: modules/pkgs/includes/panels/appstream.inc.php:30
-msgid "Appstream"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:105
-msgid "Appstream Updates list"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:53
-#: modules/pkgs/pkgs/appstreamSettings.php:34
-#: modules/pkgs/pkgs/localSidebar.php:30
-msgid "Appstream settings"
-msgstr ""
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
-msgid "Appstream update"
-msgstr ""
-
-#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
-msgid "Appstream updates"
-msgstr ""
-
-#: modules/pkgs/pkgs/edit.php:287
-msgid "Are you sure you want to delete this file?"
-msgstr "是否確定要刪除此檔案？"
+#: modules/pkgs/includes/query.php:62
+msgid "Query"
+msgstr "查詢"
 
 #: modules/pkgs/includes/query.php:73
 msgid "Associate inventory"
 msgstr "關聯清查"
 
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
-msgid "Associate package"
-msgstr "關聯封裝"
+#: modules/pkgs/includes/query.php:80
+msgid "Vendor"
+msgstr "廠商"
+
+#: modules/pkgs/includes/query.php:81
+msgid "Software"
+msgstr "軟體"
+
+#: modules/pkgs/includes/query.php:83
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
+#: modules/pkgs/pkgs/ajaxPackageList.php:83 modules/pkgs/pkgs/add.php:152
+msgid "Version"
+msgstr "版本"
 
 #: modules/pkgs/includes/query.php:86
 msgid "Bool"
 msgstr "布林"
 
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:141
-msgid "Cancel"
-msgstr "取消"
+#: modules/pkgs/includes/query.php:92
+msgid "Number of licenses"
+msgstr "授權數目"
 
-#: modules/pkgs/pkgs/appstreamSettings.php:59
-msgid "Cannot set My Credentials."
+#: modules/pkgs/includes/panels/appstream.inc.php:30
+msgid "Appstream"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:319
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
-msgid ""
-"Change post_max_size and upload_max_filesize directives in php.ini file to "
-"increase upload size."
+#: modules/pkgs/includes/panels/appstream.inc.php:38
+msgid "_X_ AppStream(s) available for subscription"
 msgstr ""
-"變更 php.ini 檔案中的 post_max_size 和 upload_max_filesize 指示詞以提高上傳大"
-"小。"
 
-#: modules/pkgs/pkgs/add.php:117
-msgid "Choose package source"
-msgstr "選擇封裝來源"
+#: modules/pkgs/includes/panels/appstream.inc.php:39
+msgid "No featured appstream found."
+msgstr ""
+
+#: modules/pkgs/includes/html.inc.php:42
+#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
+#: modules/pkgs/pkgs/edit.php:304
+msgid "Upload Queued Files"
+msgstr "上傳已佇列的檔案"
 
 #: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
@@ -121,284 +82,192 @@ msgstr "選擇封裝來源"
 msgid "Click here to select files"
 msgstr "按一下此處選擇檔案"
 
-#: modules/pkgs/pkgs/edit.php:208
-msgid "Command : "
-msgstr "命令："
+#: modules/pkgs/includes/html.inc.php:60
+#: modules/pkgs/includes/html.inc.php:141
+msgid "Cancel"
+msgstr "取消"
 
-#: modules/pkgs/pkgs/add.php:164 modules/pkgs/pkgs/edit.php:208
-msgid "Command's name : "
-msgstr "命令的名稱："
+#: modules/pkgs/includes/html.inc.php:140
+msgid "Add files"
+msgstr "新增檔案"
 
-#: modules/pkgs/pkgs/add.php:156
-msgid "Command:"
-msgstr "命令："
+#: modules/pkgs/includes/html.inc.php:178
+msgid "Upload selected files"
+msgstr "上傳所選檔案"
 
-#: modules/pkgs/infoPackage.inc.php:72
-#: modules/pkgs/pkgs/ajaxPackageList.php:93
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
-msgid "Delete a package"
-msgstr "刪除一個封裝"
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:50
+msgid "Associate package"
+msgstr "關聯封裝"
 
-#: modules/pkgs/pkgs/edit.php:287
-msgid "Delete file"
-msgstr "刪除檔案"
-
-#: modules/pkgs/pkgs/remove.php:45
-msgid "Delete this package"
-msgstr "刪除此封裝"
-
-#: modules/pkgs/pkgs/add.php:153 modules/pkgs/pkgs/ajaxPackageList.php:82
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:204
-msgid "Description"
-msgstr "說明"
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
-msgid "Downloading"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:48
-#: modules/pkgs/pkgs/ajaxPackageList.php:92 modules/pkgs/pkgs/edit.php:154
-msgid "Edit a package"
-msgstr "編輯一個封裝"
-
-#: modules/pkgs/pkgs/edit.php:37
-msgid "Edit package"
-msgstr "編輯封裝"
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
-msgid "Expiration date"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:97 modules/pkgs/pkgs/associate_files.php:75
-#: modules/pkgs/pkgs/edit.php:116
-msgid "Failed to associate files"
-msgstr "無法關聯檔案"
-
-#: modules/pkgs/pkgs/add.php:94 modules/pkgs/pkgs/associate_files.php:72
-#: modules/pkgs/pkgs/edit.php:113
-#, php-format
-msgid "Failed to associate files%s"
-msgstr "無法關聯檔案 %s"
-
-#: modules/pkgs/pkgs/edit.php:148
-msgid "Failed to delete files"
-msgstr "無法刪除檔案"
-
-#: modules/pkgs/pkgs/edit.php:145
-#, php-format
-msgid "Failed to delete files%s"
-msgstr "無法刪除檔案%s"
-
-#: modules/pkgs/pkgs/edit.php:278
-msgid "File"
-msgstr "檔案"
-
-#: modules/pkgs/pkgs/edit.php:139
-msgid "File successfully deleted."
-msgstr "檔案已成功刪除。"
-
-#: modules/pkgs/pkgs/add.php:142 modules/pkgs/pkgs/add.php:297
-msgid "Files directory"
-msgstr "檔案目錄"
-
-#: modules/pkgs/pkgs/edit.php:105
-#, php-format
-msgid "Files successfully added to the package <b>%s (%s)</b>"
-msgstr "檔案已成功新增至封裝 <b>%s (%s)</b>"
-
-#: modules/pkgs/pkgs/add.php:86 modules/pkgs/pkgs/associate_files.php:64
-#, php-format
-msgid "Files successfully associated with package <b>%s (%s)</b>%s"
-msgstr "檔案已成功關聯封裝<b>%s (%s)</b>%s "
-
-#: modules/pkgs/pkgs/add.php:319
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
-#, php-format
-msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
-msgstr "檔案上傳 （<b><u title='%s'>%sM 最大</u></b>）"
-
-#: modules/pkgs/pkgs/appstreamSettings.php:54
-msgid "Invalid My Credentials, please verify your username/password."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:84
-msgid "Licenses"
-msgstr "授權"
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:55 modules/pkgs/pkgs/index.php:45
-#, php-format
-msgid "MMC failed to contact package server %s."
-msgstr "MMC 無法連絡封裝伺服器 %s。"
-
-#: modules/pkgs/pkgs/add.php:132
-msgid "Make an empty package"
-msgstr "建立一個空的封裝"
-
-#: modules/pkgs/pkgs/appstreamSettings.php:76
-msgid "Modify Account credentials"
-msgstr ""
-
-#: modules/pkgs/pkgs/appstreamSettings.php:83
-msgid "My Account credentials:"
-msgstr ""
-
-#: modules/pkgs/pkgs/add.php:151
-msgid "Name"
-msgstr "名稱"
-
-#: modules/pkgs/pkgs/add.php:172 modules/pkgs/pkgs/edit.php:216
-msgid "Need a reboot ?"
-msgstr "需要重新開機？"
-
-#: modules/pkgs/includes/panels/appstream.inc.php:39
-msgid "No featured appstream found."
-msgstr ""
-
-#: modules/pkgs/includes/query.php:92
-msgid "Number of licenses"
-msgstr "授權數目"
-
-#: modules/pkgs/pkgs/add.php:138 modules/pkgs/pkgs/edit.php:184
-msgid "Package API"
-msgstr "封裝 API"
-
-#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
-msgid "Package API temporary directory is empty"
-msgstr "封裝 API 暫存目錄是空的"
-
-#: modules/pkgs/pkgs/add.php:145
-msgid "Package Creation"
-msgstr "封裝建立"
-
-#: modules/pkgs/pkgs/edit.php:124
-msgid "Package failed to save"
-msgstr "封裝無法儲存"
-
-#: modules/pkgs/pkgs/edit.php:202
-msgid "Package label"
-msgstr "封裝標籤"
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 #: modules/pkgs/pkgs/ajaxPackageList.php:79
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 msgid "Package name"
 msgstr "封裝名稱"
 
-#: modules/pkgs/pkgs/ajaxPackageList.php:85
-msgid "Package size"
-msgstr "封裝大小"
-
-#: modules/pkgs/pkgs/add.php:141
-msgid "Package source"
-msgstr "封裝來源"
-
-#: modules/pkgs/pkgs/edit.php:89
-msgid "Package successfully edited"
-msgstr "封裝已成功編輯"
-
-#: modules/pkgs/pkgs/edit.php:203
-msgid "Package version"
-msgstr "封裝版本"
-
-#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
-msgid "Packages"
-msgstr "封裝"
-
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
-msgid "Packages list"
-msgstr "封裝清單"
-
-#: modules/pkgs/pkgs/appstreamSettings.php:96
-msgid "Password"
-msgstr ""
-
-#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
-msgid "Pending packages list"
-msgstr "擱置的封裝清單"
-
-#: modules/pkgs/pkgs/appstreamSettings.php:39
-#, php-format
-msgid "Please access the %s to manage your Appstream subscriptions."
-msgstr ""
-
-#: modules/pkgs/pkgs/ajaxPackageList.php:76 modules/pkgs/pkgs/index.php:53
-msgid "Please contact your administrator."
-msgstr "請連絡您的管理員。"
-
-#: modules/pkgs/includes/query.php:33
-msgid ""
-"Please type 3 characters for suggestion.<br>\n"
-"            Wildcard is '%', %text% matches any string containing 'text'."
-"<br>\n"
-"            If unsure, leave Vendor and Version fields blank."
-msgstr ""
-"請輸入 3 個字元以提供建議。<br>⏎\n"
-"            萬用字元是 '%', %text% % 符合任何包含「文字」的字串。<br>⏎\n"
-"            如果不確定，請將「廠商」和「版本」欄位留為空白。"
-
-#: modules/pkgs/pkgs/add.php:157
-msgid ""
-"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
-"If the detection fails, it doesn't mean that the application cannot be "
-"installed using Pulse but that you'll have to figure out the proper command."
-"\\n\\n\n"
-"Many vendors (Acrobat, Flash, Skype) provide a MSI version of their "
-"applications which can be processed automatically by Pulse.\\n\n"
-"You may also ask Google for the silent installation switches. If you're "
-"feeling lucky, here is a Google search that may help:\\n\\n\n"
-"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
-msgstr ""
-"Pulse 將嘗試確定如何安裝上傳的檔案。\\n\\n⏎\n"
-"如果偵測失敗，並不表示應用程式無法使用 Pulse 安裝，但您將需要確定正確的命"
-"令。\\n\\n⏎\n"
-"許多廠商（Acrobat、Flash、Skype） 為其應用程式提供了 MSI 版本，可由 Pulse 自"
-"動處理。\\n⏎\n"
-"您亦可向 Google 索要無訊息安裝參數。如果您要使用好手氣功能，以下是可能對您有"
-"幫助的 Google 搜尋結果：\\n\\n⏎\n"
-"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google 搜尋</a>"
-
-#: modules/pkgs/includes/query.php:62
-msgid "Query"
-msgstr "查詢"
-
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
-msgid "Ready to use"
-msgstr ""
-
-#: modules/pkgs/infoPackage.inc.php:51
-msgid "See pending packages"
-msgstr "查看擱置的封裝"
-
-#: modules/pkgs/infoPackage.inc.php:44
-msgid "Show all packages"
-msgstr "顯示所有封裝"
-
-#: modules/pkgs/infoPackage.inc.php:68
-msgid "Show mirror status"
-msgstr "顯示鏡像狀態"
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
+#: modules/pkgs/pkgs/edit.php:204 modules/pkgs/pkgs/ajaxPackageList.php:82
+#: modules/pkgs/pkgs/add.php:153
+msgid "Description"
+msgstr "說明"
 
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:78
 msgid "Show mirrors"
 msgstr "顯示鏡像"
 
-#: modules/pkgs/includes/query.php:81
-msgid "Software"
-msgstr "軟體"
+#: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPackageList.php:93
+#: modules/pkgs/infoPackage.inc.php:72
+msgid "Delete a package"
+msgstr "刪除一個封裝"
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:102
+msgid "Package API temporary directory is empty"
+msgstr "封裝 API 暫存目錄是空的"
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
+#: modules/pkgs/pkgs/add.php:319
+#, php-format
+msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
+msgstr "檔案上傳 （<b><u title='%s'>%sM 最大</u></b>）"
+
+#: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
+#: modules/pkgs/pkgs/add.php:319
+msgid ""
+"Change post_max_size and upload_max_filesize directives in php.ini file to "
+"increase upload size."
+msgstr "變更 php.ini 檔案中的 post_max_size 和 upload_max_filesize 指示詞以提高上傳大小。"
+
+#: modules/pkgs/pkgs/associate_files.php:64 modules/pkgs/pkgs/add.php:86
+#, php-format
+msgid "Files successfully associated with package <b>%s (%s)</b>%s"
+msgstr "檔案已成功關聯封裝<b>%s (%s)</b>%s "
+
+#: modules/pkgs/pkgs/associate_files.php:72 modules/pkgs/pkgs/edit.php:113
+#: modules/pkgs/pkgs/add.php:94
+#, php-format
+msgid "Failed to associate files%s"
+msgstr "無法關聯檔案 %s"
+
+#: modules/pkgs/pkgs/associate_files.php:75 modules/pkgs/pkgs/edit.php:116
+#: modules/pkgs/pkgs/add.php:97
+msgid "Failed to associate files"
+msgstr "無法關聯檔案"
+
+#: modules/pkgs/pkgs/remove.php:35
+msgid "The package has been deleted."
+msgstr "已成功刪除封裝。"
+
+#: modules/pkgs/pkgs/remove.php:36
+msgid "The package failed to delete"
+msgstr "無法刪除封裝"
+
+#: modules/pkgs/pkgs/remove.php:45
+msgid "Delete this package"
+msgstr "刪除此封裝"
 
 #: modules/pkgs/pkgs/rsync.php:32
 #, php-format
 msgid "The package %s (%s) is not associated"
 msgstr "封裝 %s (%s) 未關聯"
 
-#: modules/pkgs/pkgs/remove.php:36
-msgid "The package failed to delete"
-msgstr "無法刪除封裝"
+#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
+msgid "Packages list"
+msgstr "封裝清單"
 
-#: modules/pkgs/pkgs/remove.php:35
-msgid "The package has been deleted."
-msgstr "已成功刪除封裝。"
+#: modules/pkgs/pkgs/localSidebar.php:28 modules/pkgs/infoPackage.inc.php:46
+msgid "Add a package"
+msgstr "新增一個封裝"
+
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/pending.php:29
+msgid "Pending packages list"
+msgstr "擱置的封裝清單"
+
+#: modules/pkgs/pkgs/localSidebar.php:30
+#: modules/pkgs/pkgs/appstreamSettings.php:34
+#: modules/pkgs/infoPackage.inc.php:53
+msgid "Appstream settings"
+msgstr ""
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:25
+msgid "Appstream updates"
+msgstr ""
+
+#: modules/pkgs/pkgs/viewAppstreamUpdates.php:38
+msgid "Appstream update"
+msgstr ""
+
+#: modules/pkgs/pkgs/edit.php:37
+msgid "Edit package"
+msgstr "編輯封裝"
+
+#: modules/pkgs/pkgs/edit.php:89
+msgid "Package successfully edited"
+msgstr "封裝已成功編輯"
+
+#: modules/pkgs/pkgs/edit.php:105
+#, php-format
+msgid "Files successfully added to the package <b>%s (%s)</b>"
+msgstr "檔案已成功新增至封裝 <b>%s (%s)</b>"
+
+#: modules/pkgs/pkgs/edit.php:124
+msgid "Package failed to save"
+msgstr "封裝無法儲存"
+
+#: modules/pkgs/pkgs/edit.php:139
+msgid "File successfully deleted."
+msgstr "檔案已成功刪除。"
+
+#: modules/pkgs/pkgs/edit.php:145
+#, php-format
+msgid "Failed to delete files%s"
+msgstr "無法刪除檔案%s"
+
+#: modules/pkgs/pkgs/edit.php:148
+msgid "Failed to delete files"
+msgstr "無法刪除檔案"
+
+#: modules/pkgs/pkgs/edit.php:154 modules/pkgs/pkgs/ajaxPackageList.php:92
+#: modules/pkgs/infoPackage.inc.php:48
+msgid "Edit a package"
+msgstr "編輯一個封裝"
+
+#: modules/pkgs/pkgs/edit.php:184 modules/pkgs/pkgs/add.php:138
+msgid "Package API"
+msgstr "封裝 API"
+
+#: modules/pkgs/pkgs/edit.php:202
+msgid "Package label"
+msgstr "封裝標籤"
+
+#: modules/pkgs/pkgs/edit.php:203
+msgid "Package version"
+msgstr "封裝版本"
+
+#: modules/pkgs/pkgs/edit.php:208 modules/pkgs/pkgs/add.php:164
+msgid "Command's name : "
+msgstr "命令的名稱："
+
+#: modules/pkgs/pkgs/edit.php:208
+msgid "Command : "
+msgstr "命令："
+
+#: modules/pkgs/pkgs/edit.php:216 modules/pkgs/pkgs/add.php:172
+msgid "Need a reboot ?"
+msgstr "需要重新開機？"
+
+#: modules/pkgs/pkgs/edit.php:278
+msgid "File"
+msgstr "檔案"
+
+#: modules/pkgs/pkgs/edit.php:287
+msgid "Delete file"
+msgstr "刪除檔案"
+
+#: modules/pkgs/pkgs/edit.php:287
+msgid "Are you sure you want to delete this file?"
+msgstr "是否確定要刪除此檔案？"
 
 #: modules/pkgs/pkgs/activateAppstreamFlow.php:29
 msgid ""
@@ -410,50 +279,172 @@ msgstr ""
 msgid "Unable to add stream."
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:42
-#: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:304
-msgid "Upload Queued Files"
-msgstr "上傳已佇列的檔案"
-
-#: modules/pkgs/pkgs/add.php:132
-msgid "Upload from this web page"
-msgstr "從此網頁上傳"
-
-#: modules/pkgs/includes/html.inc.php:178
-msgid "Upload selected files"
-msgstr "上傳所選檔案"
-
-#: modules/pkgs/pkgs/appstreamSettings.php:91
-msgid "Username"
+#: modules/pkgs/pkgs/activateAppstreamFlow.php:40
+msgid "Activate this Appstream stream?"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:55
 msgid "Validity (months)"
 msgstr ""
 
-#: modules/pkgs/includes/query.php:80
-msgid "Vendor"
-msgstr "廠商"
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:62
+msgid "Activate this Appstream stream"
+msgstr ""
 
-#: modules/pkgs/includes/query.php:83 modules/pkgs/pkgs/add.php:152
-#: modules/pkgs/pkgs/ajaxPackageList.php:83
-#: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-msgid "Version"
-msgstr "版本"
+#: modules/pkgs/pkgs/ajaxPackageList.php:55 modules/pkgs/pkgs/index.php:45
+#, php-format
+msgid "MMC failed to contact package server %s."
+msgstr "MMC 無法連絡封裝伺服器 %s。"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:76 modules/pkgs/pkgs/index.php:53
+msgid "Please contact your administrator."
+msgstr "請連絡您的管理員。"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:84
+msgid "Licenses"
+msgstr "授權"
+
+#: modules/pkgs/pkgs/ajaxPackageList.php:85
+msgid "Package size"
+msgstr "封裝大小"
+
+#: modules/pkgs/pkgs/add.php:31
+msgid "Add package"
+msgstr "新增封裝"
+
+#: modules/pkgs/pkgs/add.php:117
+msgid "Choose package source"
+msgstr "選擇封裝來源"
+
+#: modules/pkgs/pkgs/add.php:132
+msgid "Already uploaded on the server"
+msgstr "已上傳至伺服器"
+
+#: modules/pkgs/pkgs/add.php:132
+msgid "Upload from this web page"
+msgstr "從此網頁上傳"
+
+#: modules/pkgs/pkgs/add.php:132
+msgid "Make an empty package"
+msgstr "建立一個空的封裝"
+
+#: modules/pkgs/pkgs/add.php:141
+msgid "Package source"
+msgstr "封裝來源"
+
+#: modules/pkgs/pkgs/add.php:142 modules/pkgs/pkgs/add.php:297
+msgid "Files directory"
+msgstr "檔案目錄"
+
+#: modules/pkgs/pkgs/add.php:145
+msgid "Package Creation"
+msgstr "封裝建立"
+
+#: modules/pkgs/pkgs/add.php:151
+msgid "Name"
+msgstr "名稱"
+
+#: modules/pkgs/pkgs/add.php:151
+msgid "<fill_package_name>"
+msgstr "<fill_package_name>"
+
+#: modules/pkgs/pkgs/add.php:156
+msgid "Command:"
+msgstr "命令："
+
+#: modules/pkgs/pkgs/add.php:157
+msgid ""
+"Pulse will try to figure out how to install the uploaded files.\\n\\n\n"
+"If the detection fails, it doesn't mean that the application cannot be installed using Pulse but that you'll have to figure out the proper command.\\n\\n\n"
+"Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\\n\n"
+"You may also ask Google for the silent installation switches. If you're feeling lucky, here is a Google search that may help:\\n\\n\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google search</a>"
+msgstr ""
+"Pulse 將嘗試確定如何安裝上傳的檔案。\\n\\n⏎\n"
+"如果偵測失敗，並不表示應用程式無法使用 Pulse 安裝，但您將需要確定正確的命令。\\n\\n⏎\n"
+"許多廠商（Acrobat、Flash、Skype） 為其應用程式提供了 MSI 版本，可由 Pulse 自動處理。\\n⏎\n"
+"您亦可向 Google 索要無訊息安裝參數。如果您要使用好手氣功能，以下是可能對您有幫助的 Google 搜尋結果：\\n\\n⏎\n"
+"<a href=\"@@GOOGLE_SEARCH_URL@@\">Google 搜尋</a>"
+
+#: modules/pkgs/pkgs/add.php:205
+msgid "Add"
+msgstr "新增"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
 msgstr ""
 
-#: modules/pkgs/pkgs/appstreamSettings.php:75
-msgid "Your Account credentials are active"
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
+msgid "Downloading"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
+msgid "Ready to use"
+msgstr ""
+
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
+msgid "Expiration date"
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:39
+#, php-format
+msgid "Please access the %s to manage your Appstream subscriptions."
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:54
+msgid "Invalid My Credentials, please verify your username/password."
 msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:56
 msgid "Your My credentials have been set successfuly."
 msgstr ""
 
-#: modules/pkgs/includes/panels/appstream.inc.php:38
-msgid "_X_ AppStream(s) available for subscription"
+#: modules/pkgs/pkgs/appstreamSettings.php:59
+msgid "Cannot set My Credentials."
 msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:75
+msgid "Your Account credentials are active"
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:76
+msgid "Modify Account credentials"
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:83
+msgid "My Account credentials:"
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:91
+msgid "Username"
+msgstr ""
+
+#: modules/pkgs/pkgs/appstreamSettings.php:96
+msgid "Password"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:34 modules/pkgs/infoPackage.inc.php:40
+msgid "Packages"
+msgstr "封裝"
+
+#: modules/pkgs/infoPackage.inc.php:44
+msgid "Show all packages"
+msgstr "顯示所有封裝"
+
+#: modules/pkgs/infoPackage.inc.php:51
+msgid "See pending packages"
+msgstr "查看擱置的封裝"
+
+#: modules/pkgs/infoPackage.inc.php:68
+msgid "Show mirror status"
+msgstr "顯示鏡像狀態"
+
+#: modules/pkgs/infoPackage.inc.php:76
+msgid "Activate Appstream Stream"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:105
+msgid "Appstream Updates list"
+msgstr ""
+
+
