@@ -120,19 +120,19 @@ $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 
-echo "<br/><br/>";
-print '<h2>' . _T("Trigger", 'monitoring') . '</h2>';
+//echo "<br/><br/>";
+//print '<h2>' . _T("Trigger", 'monitoring') . '</h2>';
 
 $params = array(
     'apiId' => $api->getApiAuth()
 );
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxTrigger"), 'divTrigger', "hostid", $params, "Trigger");
-$ajax->setElements($host);
-$ajax->setElementsVal($hostid);
-$ajax->display();
-echo "<br/><br/>";
-$ajax->displayDivToUpdate();
+//$ajax = new AjaxFilterLocation(urlStrRedirect("monitoring/monitoring/ajaxTrigger"), 'divTrigger', "hostid", $params, "Trigger");
+//$ajax->setElements($host);
+//$ajax->setElementsVal($hostid);
+//$ajax->display();
+//echo "<br/><br/>";
+//$ajax->displayDivToUpdate();
 
 echo "<br/><br/>";
 $f = new ValidatingForm();
