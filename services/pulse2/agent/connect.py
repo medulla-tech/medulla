@@ -140,14 +140,16 @@ class ClientEndpoint(object):
 
     def __init__(self, config):
         self.logger = logging.getLogger()
-        connector = Connector(config.server.host,
-                              config.server.port,
-                              config.server.crtfile,
-                              config.server.timeout,
-                              )
-        self.socket = connector.connect()
+        self.connector = Connector(config.server.host,
+                                   config.server.port,
+                                   config.server.crtfile,
+                                   config.server.timeout,
+                                   )
         self.parser = Parser(config.main.serializer)
 
+
+    def connect(self):
+        self.socket = self.connector.connect()
 
     def request(self, data):
 

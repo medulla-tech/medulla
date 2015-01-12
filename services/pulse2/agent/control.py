@@ -282,12 +282,17 @@ class Dispatcher(DispatcherFrame):
 
         try:
             self.client = ClientEndpoint(self.config)
+            time.sleep(2)
+            self.client.connect()
+            time.sleep(2)
 
             self.logger.debug("CLIENT: %s" % repr(self.client.socket))
             if not self.client.socket:
-
+                self.logger.warn("Unable to build a connection to server")
                 return False
-            return True
+            else:
+                self.logger.info("Client successfully connected to server")
+                return True
 
         except ConnectionRefused, exc:
             self.logger.error("Agent connection failed: %s" % repr(exc))
