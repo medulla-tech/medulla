@@ -1453,8 +1453,14 @@ class AjaxFilterLocation extends AjaxFilter {
         $this->AjaxFilter($url, $divid, $params);
         $this->location = new SelectItem($paramname, 'pushSearch', 'searchfieldreal noborder');
         $this->paramname = $paramname;
+        $this->checkbox=array();
+        $this->onchange="pushSearch(); return false;";
     }
-
+    function addCheckbox($checkbox)
+    {
+        $checkbox->onchange=$this->onchange;
+        $this->checkbox[]=$checkbox;
+    }
     function setElements($elt) {
         if (count($elt) == 0) {
             $this->location = new NoLocationTpl($this->paramname);
@@ -1483,6 +1489,11 @@ class AjaxFilterLocation extends AjaxFilter {
         <form name="Form" id="Form" action="#" onsubmit="return false;">
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
+                <?php foreach ($this->checkbox as $checkbox)
+                    {
+                        $checkbox->display();
+                    }
+                    ?>
                 <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
                 <span class="searchfield">
                     <?php
@@ -1516,11 +1527,17 @@ class AjaxFilterLocation extends AjaxFilter {
                  * update div with user
                  */
                 function updateSearch() {
+                    /*add checkbox param*/
+                    var strCheckbox ="";
+                    jQuery(".checkboxsearch").each(function() {
+                        if (jQuery(this).is(":checked")) {
+                            strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                        }
+                    });
                     launch--;
-
                     if (launch == 0) {
                         jQuery.ajax({
-                            'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage,
+                            'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(document.Form.param.value) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.Form.<?php echo $this->paramname ?>.value + '&maxperpage=' + maxperpage +strCheckbox,
                             type: 'get',
                             success: function(data) {
                                 jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1534,6 +1551,13 @@ class AjaxFilterLocation extends AjaxFilter {
                  */
 
                 function updateSearchParam(filt, start, end) {
+                    /*add checkbox param*/
+                    var strCheckbox ="";
+                    jQuery(".checkboxsearch").each(function() {
+                        if (jQuery(this).is(":checked")) {
+                            strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                        }
+                    });
                     var reg = new RegExp("##", "g");
                     var tableau = filt.split(reg);
                     var location = "";
@@ -1559,7 +1583,7 @@ class AjaxFilterLocation extends AjaxFilter {
                         filter = document.Form.param.value;
 
                     jQuery.ajax({
-                        'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage,
+                        'url': '<?php echo $this->url; ?>filter=' + encodeURIComponent(filter) + '<?php echo $this->params ?>&<?php echo $this->paramname ?>=' + location + '&start=' + start + '&end=' + end + '&maxperpage=' + maxperpage +strCheckbox,
                         type: 'get',
                         success: function(data) {
                             jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1591,8 +1615,8 @@ class AjaxLocation extends AjaxFilterLocation {
     function AjaxLocation($url, $divid = "container", $paramname = 'location', $params = array()) {
         $this->AjaxFilterLocation($url, $divid, $paramname, $params);
         $this->location = new SelectItem($paramname, 'pushSearchLocation', 'searchfieldreal noborder');
+        $this->onchange="pushSearchLocation(); return false;";
     }
-
     function display($arrParam = array()) {
         global $conf;
         $root = $conf["global"]["root"];
@@ -1600,6 +1624,11 @@ class AjaxLocation extends AjaxFilterLocation {
         <form name="FormLocation" id="FormLocation" action="#" onsubmit="return false;">
             <div id="Location">
                 <span id="searchSpan" class="searchbox">
+                    <?php foreach ($this->checkbox as $checkbox)
+                    {
+                        $checkbox->display();
+                    }
+                    ?>
                     <img src="graph/search.gif"/>
                     <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
                     <span class="locationfield">
@@ -1617,10 +1646,17 @@ class AjaxLocation extends AjaxFilterLocation {
                  * update div with user
                  */
                 function updateSearchLocation() {
+                    /*add checkbox param*/
+                    var strCheckbox ="";
+                    jQuery(".checkboxsearch").each(function() {
+                        if (jQuery(this).is(":checked")) {
+                            strCheckbox+='&'+jQuery(this).attr('id')+"=true";
+                        }
+                    });
                     launch--;
                     if (launch == 0) {
                         jQuery.ajax({
-                            'url': '<?php echo $this->url; ?><?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.FormLocation.<?php echo $this->paramname ?>.value,
+                            'url': '<?php echo $this->url; ?><?php echo $this->params ?>&<?php echo $this->paramname ?>=' + document.FormLocation.<?php echo $this->paramname ?>.value + strCheckbox,
                             type: 'get',
                             success: function(data) {
                                 jQuery("#<?php echo $this->divid; ?>").html(data);
@@ -1644,6 +1680,28 @@ class AjaxLocation extends AjaxFilterLocation {
         <?php
     }
 
+}
+class Checkbox {
+
+    function Checkbox($paramname,$description)
+    {
+        $this->paramname=$paramname;
+        $this->description=$description;
+        $this->onchange="";
+    }
+    function display($arrParam = array())
+    {
+        global $conf;
+        $root = $conf["global"]["root"];
+        ?>
+        <input checked style="top: 2px; left: 5px; position: relative; float: left"
+        type="checkbox"
+        class="checkboxsearch"
+        name="<?php echo $this->paramname ?>"
+        id="<?php echo  $this->paramname ?>" onchange=" <?php echo $this->onchange ?> "/>
+        <span style="padding: 7px 15px; position: relative; float: left"><?php echo $this->description ?></span>
+        <?php
+    }
 }
 
 /**
