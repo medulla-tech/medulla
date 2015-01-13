@@ -34,7 +34,7 @@ $options = array(
 class ClientUpdatePanel extends Panel {
 
     function display_content() {
-        $updates = get_updates(array('filters'=>array('status'=>0)))[data];
+        $updates = get_updates(array('filters'=>array('status'=>0),'hide_installed_update'=>true))[data];
         $update_count = count($updates);
         if ($updates === FALSE){
 
