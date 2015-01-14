@@ -19,7 +19,7 @@ $_SESSION["supportModList"] = array();
 $list = xmlCall("base.getModList", null);
 if (is_array($list)) {
     sort($list);
-    $_SESSION["supportModList"] = $list;
+    $_SESSION["supportModList"] = orderModulesList($list);
 }
 
 /* Register module version */
