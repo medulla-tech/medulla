@@ -114,4 +114,10 @@ $errItem = new ErrorHandlingItem(": {'info': 'The password is too short.*'");
 $errItem->setMsg(_("The password is too short."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
+
+$errItem = new ErrorHandlingItem(": Phone number is already taken");
+$errItem->setMsg(_T("This phone number is already used."));
+$errItem->setTraceBackDisplay(False);
+$errObj->add($errItem);
+
 ?>
