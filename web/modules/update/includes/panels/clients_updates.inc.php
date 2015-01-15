@@ -62,15 +62,19 @@ EOS;
         $statut_count=array_count_values($machine_update_status);
         $state_name = array(
             "up-to-date"=>_T("Up-to-date"),
-            "update_available"=>_T("Updates availables"),
-            "unknown"=>_T("Not registered"),
             "update_planned"=>_T("Updates planned"),
+            "update_available"=>_T("Updates availables"),
+            "os_update_disabled"=>_T("OS Update disabled"),
+            "not_registered"=>_T("Not registered"),
+            "unknown"=>_T("Not Supported"),
         );
         $state_color = array(
             "up-to-date"=>'000-#73d216-#42780D',
-            "update_available"=>'000-#ef2929-#A31A1A',
-            "unknown"=>'000-#000000-#666665',
             "update_planned"=>'000-#64780D-#CEDD11',
+            "update_available"=>'000-#ef2929-#A31A1A',
+            "os_update_disabled"=>'000-#838383-#CCCCCC',
+            "not_registered"=>'000-#003399-#0251ED',
+            "unknown"=>'000-#000000-#666665',
         );
         $urlRedirect = urlStrRedirect("base/computers/createUpdateStaticGroup");
         foreach ($statut_count as $status => $count) {
@@ -78,7 +82,9 @@ EOS;
             $label[]=$state_name[$status].' (' . $count . ')';
             $colors[]=$state_color[$status];
             $links[]=$urlRedirect."&status=".$status;
+            $counts[]=$count;
         }
+        array_multisort($counts,$data,$label,$colors,$links);
         $data=json_encode($data);
         $label=json_encode($label);
         $colors=json_encode($colors);
