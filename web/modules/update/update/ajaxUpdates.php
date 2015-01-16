@@ -112,8 +112,14 @@ $n->first_elt_padding = '0';
 $n->addExtraInfo($cols['title_url'], _T("Update title", "update"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "update"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
+#Disable only for global view and status=enable
+if ( isset($_GET["gid"]) or  $_GET["status"] != 1 ) {
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
+}
+#Disable only for global view and status=disable
+if ( isset($_GET["gid"]) or  $_GET["status"] != 2 ) {
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
+}
 if (isset($_GET['gid'])){
     print ('<input type="hidden" name="gid" value="'.$_GET['gid'].'"/>');
 }
