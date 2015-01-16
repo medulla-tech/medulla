@@ -131,12 +131,14 @@ def _get_updates_for_group(params):
     return updates
 
 
-def get_machines_update_status():
+def get_machines_update_status(not_supported=False):
     """
     Get machine update status as a dict as key
     and status string as value.
-    commons status values :"unknown","up-to-date","need_update","update_available",
-    "update_planned"
+    commons status values :"not_supported","not_registered",
+    "up-to-date","need_update","update_available","update_planned",
+    "os_update_disabled".
+    The "not_supported" value can be disabled with not_supported param.
     """
     # Creating root context
     ctx = SecurityContext()
@@ -161,22 +163,24 @@ def get_machines_update_status():
     machines_os_disabled =[int(uuid.lower().replace('uuid', '')) for uuid in machines_os_disabled]
     #get status of all machines
     for uuid in uuids:
-        if uuid in machines_os_disabled or uuid in machines_os_enabled :
+        if uuid in machines_os_disabled:
+            machines_status["UUID" + str(uuid)] = "os_update_disabled"
+        elif uuid in machines_os_enabled :
             if uuid in machines_update:
-                if uuid in machines_os_disabled:
-                    machines_status["UUID" + str(uuid)] = "os_update_disabled"
-                else:
-                    if len(updateDatabase().get_neutral_updates_for_host(uuid)) == 0:
-                        if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
-                            machines_status["UUID" + str(uuid)] = "up-to-date"
-                        else:
-                            machines_status["UUID" + str(uuid)] = "update_planned"
+                # if no neutral update not installed on this machine 
+                if len(updateDatabase().get_neutral_updates_for_host(uuid,0)) == 0:
+                    # if no eligible update
+                    if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
+                        machines_status["UUID" + str(uuid)] = "up-to-date"
                     else:
-                        machines_status["UUID" + str(uuid)] = "update_available"
+                        machines_status["UUID" + str(uuid)] = "update_planned"
+                else:
+                    machines_status["UUID" + str(uuid)] = "update_available"
             else:
                 machines_status["UUID" + str(uuid)] = "not_registered"
-        else:
-            machines_status["UUID" + str(uuid)] = "unknown"
+        elif not_supported:
+            machines_status["UUID" + str(uuid)] = "not_supported"
+
     return machines_status
 
 
@@ -234,7 +238,6 @@ def _get_updatable_computers(ctx,activated=True):
         targets.extend(ComputerManager().getComputersList(
             ctx, {
                 'request': request, 'equ_bool': equ_bool}).keys())
-    logger.info("Targets:"+str(targets))
     return targets
 
 def create_update_commands():
