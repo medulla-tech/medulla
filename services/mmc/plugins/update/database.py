@@ -560,7 +560,7 @@ class updateDatabase(DatabaseHelper):
             STATUS_DISABLED)
 
     @DatabaseHelper._session
-    def get_neutral_updates_for_host(self, session, uuid):
+    def get_neutral_updates_for_host(self, session, uuid,is_installed=None):
         """
         Get all update to install for host,
         this function return all neutral upd
@@ -598,6 +598,8 @@ class updateDatabase(DatabaseHelper):
                 .filter(Update.status == STATUS_NEUTRAL)\
                 .filter(UpdateType.status == STATUS_NEUTRAL)
 
+            if is_installed is not None:
+                query = query.filter(Target.is_installed == is_installed)
 
             result = []
 
