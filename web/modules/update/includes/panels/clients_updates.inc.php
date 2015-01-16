@@ -66,7 +66,7 @@ EOS;
             "update_available"=>_T("Updates availables"),
             "os_update_disabled"=>_T("OS Update disabled"),
             "not_registered"=>_T("Not registered"),
-            "unknown"=>_T("Not Supported"),
+            "not_supported"=>_T("Not Supported"),
         );
         $state_color = array(
             "up-to-date"=>'000-#73d216-#42780D',
@@ -74,7 +74,7 @@ EOS;
             "update_available"=>'000-#ef2929-#A31A1A',
             "os_update_disabled"=>'000-#838383-#CCCCCC',
             "not_registered"=>'000-#003399-#0251ED',
-            "unknown"=>'000-#000000-#666665',
+            "not_supported"=>'000-#000000-#666665',
         );
         $urlRedirect = urlStrRedirect("base/computers/createUpdateStaticGroup");
         foreach ($statut_count as $status => $count) {
