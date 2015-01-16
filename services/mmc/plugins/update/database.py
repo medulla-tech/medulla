@@ -242,7 +242,7 @@ class updateDatabase(DatabaseHelper):
                 # are automatically treaten by @DatabaseHelper._listinfo
                 if 'hide_installed_update' in params :
                     if  params['hide_installed_update']:
-                        query=query.filter(installed_targets.c.total_installed == 0)
+                        query=query.filter(installed_targets.c.total_installed != all_targets.c.total_targets)
 
                 if Status == STATUS_NEUTRAL:
                     # Neutral status
@@ -378,7 +378,7 @@ class updateDatabase(DatabaseHelper):
             # ============================================
             if 'hide_installed_update' in params :
                 if  params['hide_installed_update']:
-                    query=query.filter(installed_targets.c.total_installed == 0)
+                    query=query.filter(installed_targets.c.total_installed != all_targets.c.total_targets)
 
             if dStatus ==  STATUS_NEUTRAL:
                 query = query.filter((group.c.status == None) |
@@ -597,6 +597,7 @@ class updateDatabase(DatabaseHelper):
                 .filter(Target.status == STATUS_NEUTRAL)\
                 .filter(Update.status == STATUS_NEUTRAL)\
                 .filter(UpdateType.status == STATUS_NEUTRAL)
+
 
             result = []
 
