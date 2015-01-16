@@ -23,7 +23,7 @@ Declare Update database
 
 import logging
 
-#to parse html file
+# to parse html file
 from lxml.html import parse
 import urllib2
 import cssselect
@@ -172,26 +172,27 @@ class updateDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._session
-    def add_update_description(self,session):
+    def add_update_description(self, session):
         """
         Add update descriptions from windows kb base.
         """
         logger.debug("get updates description from windows kb base...")
         try:
-            query = session.query(Update.kb_number).filter(Update.description=="").all()
+            query = session.query(Update.kb_number).filter(
+                Update.description == "").all()
             kb_numbers = [r for r, in query]
             for kb_number in kb_numbers:
-                link = "http://support.microsoft.com/kb/"+kb_number
+                link = "http://support.microsoft.com/kb/" + kb_number
                 doc = parse(link).getroot()
-                if doc is not None :
+                if doc is not None:
                     try:
-                       title=doc.cssselect('#mt_title')[0]
+                        title = doc.cssselect('#mt_title')[0]
                     except Exception as e:
-                        title=None
+                        title = None
                 if title is not None:
-                    description=unicode(title.text_content())
-                    for update in session.query(Update).filter(Update.kb_number==kb_number).all():
-                        update.description=description
+                    description = unicode(title.text_content())
+                    for update in session.query(Update).filter(Update.kb_number == kb_number).all():
+                        update.description = description
                     session.commit()
             logger.debug("updates description added.")
             return True
@@ -240,9 +241,10 @@ class updateDatabase(DatabaseHelper):
 
                 # other non-confusing filters
                 # are automatically treaten by @DatabaseHelper._listinfo
-                if 'hide_installed_update' in params :
-                    if  params['hide_installed_update']:
-                        query=query.filter(installed_targets.c.total_installed != all_targets.c.total_targets)
+                if 'hide_installed_update' in params:
+                    if params['hide_installed_update']:
+                        query = query.filter(
+                            installed_targets.c.total_installed != all_targets.c.total_targets)
 
                 if Status == STATUS_NEUTRAL:
                     # Neutral status
@@ -376,11 +378,12 @@ class updateDatabase(DatabaseHelper):
             # ============================================
             # ==== STATUS FILTERING ======================
             # ============================================
-            if 'hide_installed_update' in params :
-                if  params['hide_installed_update']:
-                    query=query.filter(installed_targets.c.total_installed != all_targets.c.total_targets)
+            if 'hide_installed_update' in params:
+                if params['hide_installed_update']:
+                    query = query.filter(
+                        installed_targets.c.total_installed != all_targets.c.total_targets)
 
-            if dStatus ==  STATUS_NEUTRAL:
+            if dStatus == STATUS_NEUTRAL:
                 query = query.filter((group.c.status == None) |
                                      (group.c.status == STATUS_NEUTRAL))
                 query = query.filter(Update.status == STATUS_NEUTRAL)
@@ -560,7 +563,7 @@ class updateDatabase(DatabaseHelper):
             STATUS_DISABLED)
 
     @DatabaseHelper._session
-    def get_neutral_updates_for_host(self, session, uuid,is_installed=None):
+    def get_neutral_updates_for_host(self, session, uuid, is_installed=None):
         """
         Get all update to install for host,
         this function return all neutral upd
