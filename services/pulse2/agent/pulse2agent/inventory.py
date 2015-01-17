@@ -242,16 +242,26 @@ class LinuxMinimalInventory(MinimalInventory):
 
     def get_ip_netmask(self, ifname):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        ip = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
+        try:
+            ip = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
                                           0x8915,
                                           struct.pack('256s', ifname[:15])
                                           )[20:24]
                               )
-        netmask = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
+        except IOError:
+            logging.getLogger().warn("Unable to get IP address for interface <%s>" % ifname)
+            ip = ""
+
+        try:
+            netmask = socket.inet_ntoa(fcntl.ioctl(s.fileno(),
                                                0x891b,
                                                struct.pack('256s',ifname)
                                                )[20:24]
                                    )
+        except IOError:
+            logging.getLogger().warn("Unable to get netmask for interface <%s>" % ifname)
+            netmask = ""
+
         macinfo = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
         mac = ''.join(['%02x:' % ord(char) for char in macinfo[18:24]])[:-1]
 
