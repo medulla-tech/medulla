@@ -365,10 +365,10 @@ class Dispatcher(DispatcherFrame):
         #    except Empty:
         #        pass
 
-if __name__ == "__main__":
+def start():
     from config import Config
 
-    cfgfile = "agent.ini"
+    cfgfile = os.path.join("/", "etc", "pulse2agent.ini")
     config = Config()
     config.read(cfgfile)
     logging.config.fileConfig(cfgfile)
@@ -376,4 +376,5 @@ if __name__ == "__main__":
     d = Dispatcher(config)
     d.mainloop()
 
-
+if __name__ == "__main__":
+    start()

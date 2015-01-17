@@ -1,0 +1,9 @@
+# Defaults for pulse2-agent initscript
+# sourced by /etc/init.d/pulse2-agent
+# installed at /etc/default/pulse2-agent by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+ENABLE=yes

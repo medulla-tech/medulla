@@ -228,7 +228,7 @@ Section "Core" Core
   
   SetOutPath "$INSTDIR"
   SetOverwrite on
-  File bin\agent.ini
+  File bin\pulse2agent.ini
 
   ; Read from custom page
   ${IfNot} ${Silent}
@@ -251,10 +251,10 @@ Please fill the field with the right port."
   StrCpy $SOFTETHER_FOLDER_NAME "$PROGRAMFILES\SoftEther VPN Client\vpncmd.exe"  
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
-  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
-  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
-  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
-  !insertmacro _ReplaceInFile "$INSTDIR\agent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
+  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
+  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
+  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
+  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
 
   ;;;;;;;;;;;;;;;;;;;;
   ; Register service ;

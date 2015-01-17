@@ -24,8 +24,8 @@ import logging.config
 import cx_Logging
 import cx_Threads
 
-from config import Config
-from control import Dispatcher
+from pulse2agent.config import Config
+from pulse2agent.control import Dispatcher
 
 
 class Handler(object):
@@ -35,7 +35,7 @@ class Handler(object):
         path = os.path.dirname(os.path.abspath(__file__))
         if "library.zip" in path:
             path = os.path.dirname(path)
-        cfg_path = os.path.join(path, "agent.ini")
+        cfg_path = os.path.join(path, "pulse2agent.ini")
         logging.config.fileConfig(cfg_path)
 
         self.stopEvent = cx_Threads.Event()

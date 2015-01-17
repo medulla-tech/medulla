@@ -19,21 +19,73 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from cx_Freeze import setup, Executable
+import os
+import sys
 
-# Dependencies are automatically detected, but it might need
-# fine tuning.
-buildOptions = dict(includes = ["service"], include_msvcr = 1)
-# Application type is console
+if sys.platform == "win32":
+    from cx_Freeze import setup, Executable
+    executables = [Executable("pulse2agent/config.py",
+                              base="Win32Service",
+                              packages = ["pulse2agent"],
+                              targetName="service.exe")
+                   ]
+    include_modules = ["service",]
+    include_files = ["pulse2agent.ini",]
+    build_options = dict(includes = include_modules,
+                         include_files = include_files,
+                         include_msvcr = 1
+                         )
+    setup(name='Pulse2 Agent',
+          version = '0.1',
+          description = 'Pulse2 Agent',
+          options = dict(build_exe = build_options),
+          executables = executables)
 
-executables = [
-    Executable("config.py",
-               base="Win32Service",
-               targetName="service.exe")
-]
+elif sys.platform == "linux2":
 
-setup(name='Pulse2 Agent',
-      version = '0.1',
-      description = 'Pulse2 Agent',
-      options = dict(build_exe = buildOptions),
-      executables = executables)
+    SCRIPT_NAME = "pulse2-agent"
+    from subprocess import call
+    from distutils.core import setup
+    from distutils.command.install import install as _install
+    from distutils.file_util import copy_file
+
+    def post_install(cur_dir):
+        if os.path.exists('/usr/sbin/update-rc.d'):
+            result = copy_file("linux/pulse2-agent.init",
+                               "/etc/init.d/pulse2-agent")
+            if result[1] == 1:
+                print "ok init"
+            result = copy_file("linux/pulse2-agent.default",
+                               "/etc/default/pulse2-agent")
+            if result[1] == 1:
+                print "ok default"
+
+            result = copy_file("pulse2agent.ini",
+                               "/etc/pulse2agent.ini")
+            if result[1] == 1:
+                print "ok conf"
+
+            result = call("/usr/sbin/update-rc.d %s defaults" % SCRIPT_NAME,
+                          shell=True
+                          )
+            if result == 0:
+                print "rc.d ok"
+        else:
+            print "Cannot install.. sysctl based system ?"
+
+
+    class Install(_install):
+        def run(self):
+            _install.run(self)
+            self.execute(post_install,
+                         (self.install_lib,),
+                         msg="Running post install task"
+                         )
+    setup(name='Pulse2 Agent',
+          version = '0.1',
+          description = 'Pulse2 Agent',
+          packages = ["pulse2agent"],
+          scripts = ["pulse2-agent"],
+          cmdclass={'install': Install},
+          )
+

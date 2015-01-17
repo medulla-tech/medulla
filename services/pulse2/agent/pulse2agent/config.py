@@ -22,7 +22,7 @@
 
 """ Declaration of config defaults """
 
-from _config import ConfigReader
+from pulse2agent._config import ConfigReader
 
 class Config(object):
     __metaclass__ = ConfigReader
