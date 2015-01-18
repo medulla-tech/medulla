@@ -1,0 +1,10 @@
+[Unit]
+Description=Pulse2 Agent
+After=syslog.target network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/pulse2-agent
+
+[Install]
+WantedBy=multi-user.target

@@ -149,6 +149,7 @@ class PostInstallPosixHandler(object):
 
     def run(self):
         for method in (self.copy_files,
+                       self.post_copy_tasks,
                        self.fill_defaults,
                        self.start_service,
                        ):
@@ -166,6 +167,10 @@ class PostInstallPosixHandler(object):
             if result[1] != 1:
                 print "WARNING: copy of file %s -> %s failed" % (source, destination)
                 return False
+        return True
+
+    def post_copy_tasks(self):
+        """Custom tasks to execute after the copy phase"""
         return True
 
 
@@ -229,15 +234,23 @@ class PostInstallSysCtlHandler(PostInstallPosixHandler):
 class PostInstallSystemDHandler(PostInstallPosixHandler):
 
     insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
-    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/bin/systemctl start %.service" % PostInstallPosixHandler.SCRIPT_NAME
 
-    include_files = [("linux/pulse2-agent.init",
-                      "/etc/init.d/pulse2-agent"),
-                     ("linux/pulse2-agent.default",
-                      "/etc/default/pulse2-agent"),
+    include_files = [("linux/pulse2-agent.service",
+                      "/lib/systemd/system/"),
                      ("pulse2agent.ini",
                       "/etc/pulse2agent.ini"),
                      ]
+
+    def post_copy_tasks(self):
+
+        cmd_link = "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%.service" % (self.SCRIPT_NAME, self.SCRIPT_NAME)
+        cmd_systemd_reload = " /bin/systemctl daemon-reload"
+        for cmd in [cmd_link, cmd_systemd_reload]:
+            result = call(cmd, shell=True)
+            if result != 0:
+                return False
+        return True
 
 
 
