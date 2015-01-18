@@ -23,6 +23,9 @@ import os
 import sys
 import fileinput
 
+from subprocess import call
+from distutils.file_util import copy_file
+
 class DefaultsFiller(object):
     """
     Replaces declared occurences in a templated file.
@@ -128,35 +131,134 @@ class DefaultsFiller(object):
         return replaced_items == len(pattern)
 
 
-
-if sys.platform == "win32":
-    from cx_Freeze import setup, Executable
-    executables = [Executable("pulse2agent/config.py",
-                              base="Win32Service",
-                              packages = ["pulse2agent"],
-                              targetName="service.exe")
-                   ]
-    include_modules = ["service",]
-    include_files = ["pulse2agent.ini",]
-    build_options = dict(includes = include_modules,
-                         include_files = include_files,
-                         include_msvcr = 1
-                         )
-    setup(name='Pulse2 Agent',
-          version = '0.1',
-          description = 'Pulse2 Agent',
-          options = dict(build_exe = build_options),
-          executables = executables)
-
-elif sys.platform == "linux2":
+class PostInstallPosixHandler(object):
+    """ Abstract class to generalize different startup systems """
 
     SCRIPT_NAME = "pulse2-agent"
-    from subprocess import call
+    current_directory = None
+
+    system_management = None
+    insert_service_cmd = None
+    start_service_cmd = None
+
+    # list of files to copy : [(source, destionation),]
+    include_files = [(),]
+
+    def __init__(self, current_directory):
+        self.current_directory = current_directory
+
+    def run(self):
+        for method in (self.copy_files,
+                       self.fill_defaults,
+                       self.start_service,
+                       ):
+            succeed = method()
+            if not succeed:
+                return False
+        return True
+
+
+    def copy_files(self):
+        """ Copy include files """
+        for (source, destination) in self.include_files:
+
+            result = copy_file(source, destination)
+            if result[1] != 1:
+                print "WARNING: copy of file %s -> %s failed" % (source, destination)
+                return False
+        return True
+
+
+    def fill_defaults(self):
+        """ Config file filled by pre-configured defaults file """
+        df = DefaultsFiller()
+        if df.exists :
+            all_replaced = df.fill()
+            if all_replaced:
+                print "INFO: Config file correctly updated"
+                return True
+            else:
+                print "WARNING: Some occurrences weren't correctly updated"
+                print "WARNING: Fix please your config file"
+                print "WARNING: Start of service omitted"
+        else:
+            print "WARNING: File of defaults not exists"
+            print "WARNING: Start of service omitted"
+
+        return False
+
+
+    def insert_service(self):
+        print "Install service %s ..." % self.SCRIPT_NAME
+        result = call(self.insert_service_cmd, shell=True)
+        return result == 0
+
+
+    def start_service(self):
+        print "Starting service %s ..." % self.SCRIPT_NAME
+        result = call(self.start_service_cmd, shell=True)
+        return result == 0
+
+
+class PostInstallSystemVHandler(PostInstallPosixHandler):
+
+    insert_service_cmd = "/usr/sbin/update-rc.d %s defaults" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+
+    include_files = [("linux/pulse2-agent.init",
+                      "/etc/init.d/pulse2-agent"),
+                     ("linux/pulse2-agent.default",
+                      "/etc/default/pulse2-agent"),
+                     ("pulse2agent.ini",
+                      "/etc/pulse2agent.ini"),
+                     ]
+
+class PostInstallSysCtlHandler(PostInstallPosixHandler):
+
+    insert_service_cmd = "/bin/chkconfig --add  %s" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+
+    include_files = [("linux/pulse2-agent.init",
+                      "/etc/init.d/pulse2-agent"),
+                     ("linux/pulse2-agent.default",
+                      "/etc/default/pulse2-agent"),
+                     ("pulse2agent.ini",
+                      "/etc/pulse2agent.ini"),
+                     ]
+
+class PostInstallSystemDHandler(PostInstallPosixHandler):
+
+    insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
+
+    include_files = [("linux/pulse2-agent.init",
+                      "/etc/init.d/pulse2-agent"),
+                     ("linux/pulse2-agent.default",
+                      "/etc/default/pulse2-agent"),
+                     ("pulse2agent.ini",
+                      "/etc/pulse2agent.ini"),
+                     ]
+
+
+
+class SystemManagementResolver(object):
+    handlers = {"/usr/sbin/update-rc.d": PostInstallSystemVHandler,
+                "/sbin/sysctl" : PostInstallSysCtlHandler,
+                "/bin/systemctl" : PostInstallSystemDHandler,
+                }
+    def resolve(self):
+        for path, handler in self.handlers.iteritems():
+            if os.path.exists(path):
+                return handler
+
+
+if sys.platform == "linux2":
+
+    SCRIPT_NAME = "pulse2-agent"
     from distutils.core import setup
     from distutils.command.install import install as _install
-    from distutils.file_util import copy_file
 
-    def post_install(cur_dir):
+    def post_install(current_directory):
         """
         Post-install phase to run several tasks.
 
@@ -164,44 +266,8 @@ elif sys.platform == "linux2":
         - put the defaults into the config file
         - start service
         """
-        if os.path.exists('/usr/sbin/update-rc.d'):
-            result = copy_file("linux/pulse2-agent.init",
-                               "/etc/init.d/pulse2-agent")
-            if result[1] == 1:
-                print "ok init"
-            result = copy_file("linux/pulse2-agent.default",
-                               "/etc/default/pulse2-agent")
-            if result[1] == 1:
-                print "ok default"
-
-            result = copy_file("pulse2agent.ini",
-                               "/etc/pulse2agent.ini")
-            if result[1] == 1:
-                print "ok conf"
-
-            result = call("/usr/sbin/update-rc.d %s defaults" % SCRIPT_NAME,
-                          shell=True
-                          )
-            if result == 0:
-                print "rc.d ok"
-        else:
-            print "Cannot install.. sysctl based system ?"
-
-        df = DefaultsFiller()
-        if df.exists :
-            all_replaced = df.fill()
-            if all_replaced:
-                result = call("/etc/init.d/%s start" % SCRIPT_NAME,
-                              shell=True
-                              )
-                if result == 0:
-                    print "start of service ok"
-            else:
-                print "Corrupted defaults file, fix please your config file"
-                print "Start of service omitted"
-        else:
-            print "File of defaults not exists"
-            print "Start of service omitted"
+        handler = SystemManagementResolver().resolve()
+        return handler(current_directory).run()
 
 
     class Install(_install):
@@ -221,4 +287,24 @@ elif sys.platform == "linux2":
           scripts = ["pulse2-agent"],
           cmdclass={'install': Install},
           )
+elif sys.platform == "win32":
+
+    from cx_Freeze import setup, Executable
+    executables = [Executable("pulse2agent/config.py",
+                              base="Win32Service",
+                              packages = ["pulse2agent"],
+                              targetName="service.exe")
+                   ]
+    include_modules = ["service",]
+    include_files = ["pulse2agent.ini",]
+    build_options = dict(includes = include_modules,
+                         include_files = include_files,
+                         include_msvcr = 1
+                         )
+    setup(name='Pulse2 Agent',
+          version = '0.1',
+          description = 'Pulse2 Agent',
+          options = dict(build_exe = build_options),
+          executables = executables)
+
 
