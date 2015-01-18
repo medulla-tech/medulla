@@ -147,6 +147,8 @@ class PostInstallPosixHandler(object):
     def __init__(self, current_directory):
         self.current_directory = current_directory
 
+        print "Running selected handler: %s" % self.__class__.__name__
+
     def run(self):
         for method in (self.copy_files,
                        self.post_copy_tasks,
@@ -234,7 +236,7 @@ class PostInstallSysCtlHandler(PostInstallPosixHandler):
 class PostInstallSystemDHandler(PostInstallPosixHandler):
 
     insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
-    start_service_cmd = "/bin/systemctl start %.service" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/bin/systemctl start %s.service" % PostInstallPosixHandler.SCRIPT_NAME
 
     include_files = [("linux/pulse2-agent.service",
                       "/lib/systemd/system/"),
@@ -244,7 +246,7 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 
     def post_copy_tasks(self):
 
-        cmd_link = "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%.service" % (self.SCRIPT_NAME, self.SCRIPT_NAME)
+        cmd_link = "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%s.service" % (self.SCRIPT_NAME, self.SCRIPT_NAME)
         cmd_systemd_reload = " /bin/systemctl daemon-reload"
         for cmd in [cmd_link, cmd_systemd_reload]:
             result = call(cmd, shell=True)
@@ -256,8 +258,8 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 
 class SystemManagementResolver(object):
     handlers = {"/usr/sbin/update-rc.d": PostInstallSystemVHandler,
+                "/usr/bin/systemctl" : PostInstallSystemDHandler,
                 "/sbin/sysctl" : PostInstallSysCtlHandler,
-                "/bin/systemctl" : PostInstallSystemDHandler,
                 }
     def resolve(self):
         for path, handler in self.handlers.iteritems():
