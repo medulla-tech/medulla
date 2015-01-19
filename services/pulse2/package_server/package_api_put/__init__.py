@@ -147,7 +147,7 @@ class PackageApiPut(PackageApiGet):
         if Common().dontgivepkgs.has_key(pa.id) and len(Common().dontgivepkgs[pa.id]) > 0:
             return (False, "This package is curently locked")
 
-        ret = Common().editPackage(package['id'], pa, need_assign)
+        ret = Common().editPackage(package['id'], pa, need_assign, self.mp)
         if not ret: return False
 
         # Create conf file in package

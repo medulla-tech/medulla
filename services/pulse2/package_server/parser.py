@@ -342,6 +342,11 @@ class PackageParserJSON:
                 desc = data['description']
                 cmds = data['commands']
                 reboot = data['reboot'] or 0
+                
+                try:
+                    sub_packages = data['sub_packages']
+                except KeyError:
+                    sub_packages = []
 
                 # Inventory section
                 licenses = data['inventory']['licenses']
@@ -370,6 +375,7 @@ class PackageParserJSON:
                 queries['Qversion'],
                 queries['boolcnd'],
                 licenses,
+                sub_packages,
                 associateinventory
             )
         except Exception, e:
@@ -390,6 +396,9 @@ class PackageParserJSON:
         data['version'] = str(package.version)
         data['description'] = package.description
         data['reboot'] = package.reboot
+        
+        # Sub packages if exists
+        data['sub_packages'] = package.sub_packages
 
         # Inventory section
         data['inventory'] = {}

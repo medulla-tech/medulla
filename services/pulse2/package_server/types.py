@@ -98,7 +98,7 @@ class Package:
 
     def init(self, id, label, version, size, description, cmd, initcmd='',
              precmd='', postcmd_ok='', postcmd_ko='', reboot=0, appstream_family='', Qvendor='',
-             Qsoftware='', Qversion='', boolcnd='', licenses='',
+             Qsoftware='', Qversion='', boolcnd='', licenses='', sub_packages=[],
              associateinventory=0):
         self.label = label
         self.version = version
@@ -120,6 +120,7 @@ class Package:
         self.Qversion = Qversion
         self.boolcnd = boolcnd
         self.licenses = licenses
+        self.sub_packages = sub_packages
         self.associateinventory = associateinventory
 
     def addFile(self, file):
@@ -154,6 +155,7 @@ class Package:
             'Qversion':self.Qversion,
             'boolcnd':self.boolcnd,
             'licenses': self.licenses,
+            'sub_packages': self.sub_packages,
             'associateinventory': self.associateinventory
         }
         if self.root != '':
@@ -222,6 +224,8 @@ class Package:
             self.boolcnd = h['boolcnd']
         if h.has_key('licenses'):
             self.licenses = h['licenses']
+        if 'sub_packages' in h:
+            self.sub_packages = h['sub_packages']
         if h.has_key('associateinventory'):
             self.associateinventory = h['associateinventory']
         return self

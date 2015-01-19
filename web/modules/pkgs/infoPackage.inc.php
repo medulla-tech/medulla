@@ -43,10 +43,22 @@ $submod->setDefaultPage("pkgs/pkgs/index");
 
 $page = new Page("index", _T('Show all packages', 'pkgs'));
 $submod->addPage($page);
+
+$page = new Page("bundleList", _T('Show all bundles', 'pkgs'));
+$submod->addPage($page);
+
 $page = new Page("add", _T('Add a package', 'pkgs'));
 $submod->addPage($page);
+
 $page = new Page("edit", _T('Edit a package', 'pkgs'));
-$page->setOptions(array("visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("addBundle", _T('Add a bundle', 'pkgs'));
+$submod->addPage($page);
+
+$page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
+$submod->addPage($page);
+
 $submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);
@@ -73,8 +85,17 @@ $page = new Page("delete",_T("Delete a package", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/remove.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
+$page = new Page("deleteBundle",_T("Delete a bundle", 'pkgs'));
+$page->setFile("modules/pkgs/pkgs/removeBundle.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
 $page = new Page("activateAppstreamFlow" ,_T("Activate Appstream Stream", 'pkgs'));
 $page->setFile("modules/pkgs/pkgs/activateAppstreamFlow.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("ajaxXMLRPCCall");
+$page->setFile("modules/pkgs/pkgs/ajaxXMLRPCCall.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
 $page = new Page("ajaxPendingPackageList");
@@ -94,6 +115,11 @@ $submod->addPage($page);
 
 $page = new Page("ajaxPackageList");
 $page->setFile("modules/pkgs/pkgs/ajaxPackageList.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxBundleList");
+$page->setFile("modules/pkgs/pkgs/ajaxBundleList.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 

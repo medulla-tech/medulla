@@ -25,6 +25,11 @@
 
 require_once ("modules/pkgs/includes/autocomplete.php");
 function addQuery($Form, $p, $pack, $field = 'Installed+software', $limit = 3, $extracriterion = '', $style = '') {
+    
+    // Sorry for this shit code :(
+    if (is_array($pack[$p[0]]))
+        $pack[$p[0]] = $pack[$p[0]][0];
+    
     $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';
     $criterion = clean ( quickGet ( 'add_param' ) );
     $auto = new Autocomplete($p[0], 'main.php?module=pkgs&submod=pkgs&action=ajaxAutocompleteSearch', 

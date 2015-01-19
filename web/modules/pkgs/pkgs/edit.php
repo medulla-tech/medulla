@@ -64,6 +64,9 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
     // Package command
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+    
+    // Simple package: not a bundle
+    $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
