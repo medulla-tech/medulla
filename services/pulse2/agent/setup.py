@@ -26,6 +26,9 @@ import fileinput
 from subprocess import call
 from distutils.file_util import copy_file
 
+VERSION = "0.1"
+NAME = "Pulse2 Agent"
+
 class DefaultsFiller(object):
     """
     Replaces declared occurences in a templated file.
@@ -259,7 +262,6 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
                      ("pulse2agent.ini",
                       "/etc/pulse2agent.ini"),
                      ]
-
     def post_copy_tasks(self):
 
         cmd_link = "ln -s /lib/systemd/system/%s.service /etc/systemd/system/%s.service" % (self.SCRIPT_NAME, self.SCRIPT_NAME)
@@ -269,6 +271,19 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
             if result != 0:
                 return False
         return True
+
+
+class PostInstallOSXHandler(PostInstallPosixHandler):
+    """Mac OS X handler"""
+
+    insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
+    start_service_cmd = "/bin/systemctl start %s.service" % PostInstallPosixHandler.SCRIPT_NAME
+
+    include_files = [("linux/pulse2-agent.service",
+                      "/lib/systemd/system/"),
+                     ("pulse2agent.ini",
+                      "/etc/pulse2agent.ini"),
+                     ]
 
 
 
@@ -283,6 +298,7 @@ class SystemManagementResolver(object):
     handlers = {"/usr/sbin/update-rc.d": PostInstallSystemVHandler,
                 "/usr/bin/systemctl" : PostInstallSystemDHandler,
                 "/sbin/sysctl" : PostInstallSysCtlHandler,
+                "/bin/launchctl" : PostInstallOSXHandler,
                 }
     def resolve(self):
         """
@@ -296,11 +312,18 @@ class SystemManagementResolver(object):
                 return handler
 
 
-if sys.platform == "linux2":
+if sys.platform in ("linux2", "darwin"):
 
     SCRIPT_NAME = "pulse2-agent"
-    from distutils.core import setup
-    from distutils.command.install import install as _install
+    if sys.platform == "linux2":
+        from distutils.core import setup
+        from distutils.command.install import install as _install
+    elif sys.platform == "darwin":
+        from setuptools import setup
+        from setuptools.command.install import install as _install
+    else:
+        pass
+
 
     def post_install(current_directory):
         """
@@ -324,13 +347,36 @@ if sys.platform == "linux2":
                          msg="Running post install task"
                          )
 
-    setup(name='Pulse2 Agent',
-          version = '0.1',
-          description = 'Pulse2 Agent',
-          packages = ["pulse2agent"],
-          scripts = ["pulse2-agent"],
-          cmdclass={'install': Install},
-          )
+    if sys.platform == "linux2":
+        setup(name=NAME,
+              version = VERSION,
+              description = NAME,
+              packages = ["pulse2agent"],
+              scripts = ["pulse2-agent"],
+              cmdclass={'install': Install},
+              )
+    elif sys.platform == "darwin":
+        bundle_plist = dict(CFBundleName = NAME,
+                            CFBundleShortVersionString = VERSION,
+                            CFBundleGetInfoString = "%s %s" % (NAME, VERSION),
+                            CFBundleExecutable = "pulse2-agent",
+                            CFBundleIdentifier = "org.pulse2agent.pulse2agent",
+                            )
+        py2app_options = dict(plist=bundle_plist)
+        setup(name="Pulse2Agent",
+              version = VERSION,
+              description = NAME,
+              app = ["pulse2agent/control.py"],
+              options = dict(py2app = py2app_options),
+              setup_requires=['py2app'],
+              cmdclass={'install': Install},
+              env = {}
+              )
+    else:
+        pass
+
+
+
 elif sys.platform == "win32":
 
     from cx_Freeze import setup, Executable
@@ -345,10 +391,9 @@ elif sys.platform == "win32":
                          include_files = include_files,
                          include_msvcr = 1
                          )
-    setup(name='Pulse2 Agent',
-          version = '0.1',
-          description = 'Pulse2 Agent',
+    setup(name=NAME,
+          version = VERSION,
+          description = NAME,
           options = dict(build_exe = build_options),
           executables = executables)
-
 
