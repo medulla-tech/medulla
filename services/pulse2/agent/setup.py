@@ -157,6 +157,7 @@ class PostInstallPosixHandler(object):
                        ):
             succeed = method()
             if not succeed:
+                print "ERROR: An error occurred during execute %s" % method.__name__
                 return False
         return True
 
@@ -196,18 +197,31 @@ class PostInstallPosixHandler(object):
 
 
     def insert_service(self):
+        """
+        Add command to system
+
+        @return: True if successfully added
+        @rtype: bool
+        """
         print "Install service %s ..." % self.SCRIPT_NAME
         result = call(self.insert_service_cmd, shell=True)
         return result == 0
 
 
     def start_service(self):
+        """
+        Start command as service
+
+        @return: True if successfully started
+        @rtype: bool
+        """
         print "Starting service %s ..." % self.SCRIPT_NAME
         result = call(self.start_service_cmd, shell=True)
         return result == 0
 
 
 class PostInstallSystemVHandler(PostInstallPosixHandler):
+    """SystemV (based on inittab) handler"""
 
     insert_service_cmd = "/usr/sbin/update-rc.d %s defaults" % PostInstallPosixHandler.SCRIPT_NAME
     start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
@@ -221,6 +235,7 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
                      ]
 
 class PostInstallSysCtlHandler(PostInstallPosixHandler):
+    """Sysctl handler"""
 
     insert_service_cmd = "/bin/chkconfig --add  %s" % PostInstallPosixHandler.SCRIPT_NAME
     start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
@@ -234,6 +249,7 @@ class PostInstallSysCtlHandler(PostInstallPosixHandler):
                      ]
 
 class PostInstallSystemDHandler(PostInstallPosixHandler):
+    """Systemd handler"""
 
     insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
     start_service_cmd = "/bin/systemctl start %s.service" % PostInstallPosixHandler.SCRIPT_NAME
@@ -257,11 +273,24 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 
 
 class SystemManagementResolver(object):
+    """
+    Selects a correct handler to insert and configure service to system.
+
+    The choice is based on existence of service configuration tools.
+    Important: Because sysctl exists on systemd too, the check of systemd
+    must be executed before.
+    """
     handlers = {"/usr/sbin/update-rc.d": PostInstallSystemVHandler,
                 "/usr/bin/systemctl" : PostInstallSystemDHandler,
                 "/sbin/sysctl" : PostInstallSysCtlHandler,
                 }
     def resolve(self):
+        """
+        Resolves a correct handler.
+
+        @return: handler
+        @rtype: PostInstallPosixHandler
+        """
         for path, handler in self.handlers.iteritems():
             if os.path.exists(path):
                 return handler
