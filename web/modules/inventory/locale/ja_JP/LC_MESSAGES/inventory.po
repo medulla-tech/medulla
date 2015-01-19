@@ -1,50 +1,38 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 #   <jcvassort@mandriva.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-01-12 01:05+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-19 01:00+0100\n"
 "PO-Revision-Date: 2014-12-04 17:25+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/ja_JP/)\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:530
-#: modules/inventory/inventory/i18n_labels.php:53
-msgid "Date"
-msgstr "日付"
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr " (アンチウイルスでない)"
 
-#: modules/inventory/includes/html.php:98
-msgid "Filter software"
-msgstr "ソフトウェアのフィルタ"
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "%s  の内容在庫"
 
-#: modules/inventory/includes/html.php:103
-msgid "Hide Windows Updates"
-msgstr "Windows アップデート非表示"
-
-#: modules/inventory/includes/html.php:117
-msgid "Refresh"
-msgstr "更新"
-
-#: modules/inventory/includes/panels/inventory.inc.php:30
-msgid "Computers"
-msgstr "コンピューター"
-
-#: modules/inventory/includes/panels/inventory.inc.php:43
-msgid "Create a group"
-msgstr "グループを作成"
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "%s の在庫"
 
 #: modules/inventory/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
@@ -54,651 +42,21 @@ msgstr "< %s 日: %percent% (%d)"
 msgid "> %s days: %percent% (%d)"
 msgstr "> %s 日: %percent% (%d)"
 
-#: modules/inventory/includes/panels/inventory.inc.php:48
-msgid "Latest Inventory Date"
-msgstr "最終在庫日"
-
-#: modules/inventory/infoPackage.inc.php:32
-#: modules/inventory/infoPackage.inc.php:38
-#: modules/inventory/inventory/history.php:80
-msgid "Inventory"
-msgstr "在庫"
-
-#: modules/inventory/infoPackage.inc.php:42
-#: modules/inventory/inventory/localSidebar.php:28
-msgid "Incoming"
-msgstr "入庫"
-
-#: modules/inventory/infoPackage.inc.php:44
-#: modules/inventory/inventory/i18n_labels.php:28
-#: modules/inventory/inventory/localSidebar.php:29
-msgid "Bios"
-msgstr "Bios"
-
-#: modules/inventory/infoPackage.inc.php:46
-#: modules/inventory/inventory/i18n_labels.php:82
-#: modules/inventory/inventory/localSidebar.php:30
-msgid "Hardware"
-msgstr "ハードウェア"
-
-#: modules/inventory/infoPackage.inc.php:48
-#: modules/inventory/inventory/i18n_labels.php:107
-#: modules/inventory/inventory/localSidebar.php:32
-msgid "Network"
-msgstr "ネットワーク"
-
-#: modules/inventory/infoPackage.inc.php:50
-#: modules/inventory/inventory/i18n_labels.php:47
-#: modules/inventory/inventory/localSidebar.php:33
-msgid "Controller"
-msgstr "コントローラー"
-
-#: modules/inventory/infoPackage.inc.php:52
-#: modules/inventory/inventory/body.php:41
-msgid "Summary"
-msgstr "サマリー"
-
-#: modules/inventory/infoPackage.inc.php:56
-#: modules/inventory/inventory/i18n_labels.php:64
-#: modules/inventory/inventory/localSidebar.php:37
-msgid "Drive"
-msgstr "ドライブ"
-
-#: modules/inventory/infoPackage.inc.php:58
-#: modules/inventory/inventory/i18n_labels.php:87
-#: modules/inventory/inventory/localSidebar.php:38
-msgid "Input"
-msgstr "入力"
-
-#: modules/inventory/infoPackage.inc.php:60
-#: modules/inventory/inventory/ajaxViewPart.php:227
-#: modules/inventory/inventory/ajaxViewPart.php:528
-#: modules/inventory/inventory/i18n_labels.php:100
-#: modules/inventory/inventory/localSidebar.php:39
-msgid "Memory"
-msgstr "メモリ"
-
-#: modules/inventory/infoPackage.inc.php:62
-#: modules/inventory/inventory/i18n_labels.php:105
-#: modules/inventory/inventory/localSidebar.php:40
-msgid "Monitor"
-msgstr "モニター"
-
-#: modules/inventory/infoPackage.inc.php:64
-#: modules/inventory/inventory/i18n_labels.php:118
-#: modules/inventory/inventory/localSidebar.php:41
-msgid "Port"
-msgstr "ポート"
-
-#: modules/inventory/infoPackage.inc.php:66
-#: modules/inventory/inventory/i18n_labels.php:120
-#: modules/inventory/inventory/localSidebar.php:42
-msgid "Printer"
-msgstr "プリンター"
-
-#: modules/inventory/infoPackage.inc.php:68
-#: modules/inventory/inventory/i18n_labels.php:142
-#: modules/inventory/inventory/localSidebar.php:43
-msgid "Sound"
-msgstr "サウンド"
-
-#: modules/inventory/infoPackage.inc.php:70
-#: modules/inventory/inventory/ajaxViewPart.php:228
-#: modules/inventory/inventory/i18n_labels.php:148
-#: modules/inventory/inventory/localSidebar.php:44
-msgid "Storage"
-msgstr "ストレージ"
-
-#: modules/inventory/infoPackage.inc.php:72
-#: modules/inventory/inventory/localSidebar.php:45
-msgid "VideoCard"
-msgstr "ビデオカード"
-
-#: modules/inventory/infoPackage.inc.php:74
-#: modules/inventory/inventory/i18n_labels.php:141
-#: modules/inventory/inventory/localSidebar.php:31
-msgid "Software"
-msgstr "ソフトウェア"
-
-#: modules/inventory/infoPackage.inc.php:76
-#: modules/inventory/inventory/localSidebar.php:34
-msgid "Registry"
-msgstr "レジストリ"
-
-#: modules/inventory/infoPackage.inc.php:79
-#: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:461
-msgid "View"
-msgstr "表示"
-
-#: modules/inventory/infoPackage.inc.php:83
-#: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:462
-msgid "Information"
-msgstr "情報"
-
-#: modules/inventory/infoPackage.inc.php:87
-msgid "Charts"
-msgstr "チャート"
-
-#: modules/inventory/infoPackage.inc.php:91
-#: modules/inventory/inventory/graphs.php:35
-msgid "Chart"
-msgstr "チャート"
-
-#: modules/inventory/infoPackage.inc.php:95
-msgid "Csv's export"
-msgstr "CSV エクスポート"
-
-#: modules/inventory/infoPackage.inc.php:99
-msgid "Create static group from dashboard"
-msgstr "ダッシュボードから静的グループ を作成"
-
-#: modules/inventory/infoPackage.inc.php:116
-msgid "Header"
-msgstr "ヘッダー"
-
-#: modules/inventory/infoPackage.inc.php:133
-msgid "Inventory on a group of computers"
-msgstr "コンピューターグループ上の在庫"
-
-#: modules/inventory/infoPackage.inc.php:136
-msgid "Hardware tab for a group"
-msgstr "グループのハードウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:139
-msgid "Bios tab for a group"
-msgstr "グループの BIOS タブ"
-
-#: modules/inventory/infoPackage.inc.php:142
-msgid "Summary tab for a group"
-msgstr "グループのサマリータブ"
-
-#: modules/inventory/infoPackage.inc.php:145
-msgid "Storage tab for a group"
-msgstr "グループのストレージタブ"
-
-#: modules/inventory/infoPackage.inc.php:148
-msgid "Software tab for a group"
-msgstr "グループのソフトウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:151
-msgid "Network tab for a group"
-msgstr "グループのネットワークタブ"
-
-#: modules/inventory/infoPackage.inc.php:154
-msgid "Controller tab for a group"
-msgstr "グループのコントローラータブ"
-
-#: modules/inventory/infoPackage.inc.php:157
-msgid "Registry tab for a group"
-msgstr "グループのレジストリタブ"
-
-#: modules/inventory/infoPackage.inc.php:160
-msgid "Hardware tab for a computer in a group"
-msgstr "グループ内のコンピューターのハードウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:163
-msgid "Summary tab for a computer in a group"
-msgstr "グループ内のコンピューターのサマリータブ"
-
-#: modules/inventory/infoPackage.inc.php:166
-msgid "Storage tab for a computer in a group"
-msgstr "グループ内のコンピューターのストレージタブ"
-
-#: modules/inventory/infoPackage.inc.php:169
-msgid "Bios tab for a computer in a group"
-msgstr "グループ内のコンピューターの BIOS タブ"
-
-#: modules/inventory/infoPackage.inc.php:172
-msgid "Software tab for a computer in a group"
-msgstr "グループ内のコンピューターのソフトウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:175
-msgid "Network tab for a computer in a group"
-msgstr "グループ内のコンピューターのネットワークタブ"
-
-#: modules/inventory/infoPackage.inc.php:178
-msgid "Controller tab for a computer in a group"
-msgstr "グループ内のコンピューターのコントローラータブ"
-
-#: modules/inventory/infoPackage.inc.php:181
-msgid "Registry tab for a computer in a group"
-msgstr "グループ内のコンピューターのレジストリタブ"
-
-#: modules/inventory/infoPackage.inc.php:186
-msgid "Inventory on a single computer"
-msgstr "コンピューター上の在庫"
-
-#: modules/inventory/infoPackage.inc.php:190
-msgid "Hardware tab for a computer"
-msgstr "コンピューターのハードウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:193
-msgid "Software tab for a computer"
-msgstr "コンピューターのソフトウェアタブ"
-
-#: modules/inventory/infoPackage.inc.php:196
-msgid "Network tab for a computer"
-msgstr "コンピューターのネットワークタブ"
-
-#: modules/inventory/infoPackage.inc.php:199
-msgid "Controller tab for a computer"
-msgstr "コンピューターのコントローラータブ"
-
-#: modules/inventory/infoPackage.inc.php:202
-msgid "Registry tab for a computer"
-msgstr "コンピューターのレジストリタブ"
-
-#: modules/inventory/infoPackage.inc.php:207
-msgid "Differences between two inventories"
-msgstr "在庫間の差異"
-
-#: modules/inventory/inventory/ajaxIncoming.php:78
-msgid "Computer name"
-msgstr "コンピューター名"
-
-#: modules/inventory/inventory/ajaxIncoming.php:80
-msgid "Inventory date"
-msgstr "在庫日"
-
-#: modules/inventory/inventory/ajaxIncoming.php:82
-msgid "New computer"
-msgstr "新規コンピューター"
-
-#: modules/inventory/inventory/ajaxIncoming.php:91
-msgid "Elements"
-msgstr "要素"
-
-#: modules/inventory/inventory/ajaxViewPart.php:83
-msgid " (Not an antivirus)"
-msgstr " (アンチウイルスでない)"
-
-#: modules/inventory/inventory/ajaxViewPart.php:106
-msgid "Click here to see this computer on manufacturer website"
-msgstr "ここをクリックして、メーカーウェブサイトでこのコンピューターを確認してください。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:121
-#: modules/inventory/inventory/view.php:74
-msgid "Properties"
-msgstr "プロパティ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:75
-msgid "Value"
-msgstr "値"
-
-#: modules/inventory/inventory/ajaxViewPart.php:140
-msgid "No record found for this period."
-msgstr "この期間にレコードが見つかりませんでした。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:143
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr "このマシン上でアンチウイルスソフトウェアを検出できません。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:144
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-"このクライアント上で、必ず FusionInventory プラグインと FusionInventory エージェントとともに GLPI "
-"を実行してください。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:147
-msgid "No record found."
-msgstr "レコードが見つかりませんでした。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:226
-msgid "Processors"
-msgstr "プロセッサ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:229
-msgid "Controllers"
-msgstr "コントローラー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:230
-msgid "Network Cards"
-msgstr "ネットワークカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:231
-msgid "Drives"
-msgstr "ドライブ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:232
-msgid "Graphic Cards"
-msgstr "グラフィックカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:233
-msgid "Sound Cards"
-msgstr "サウンドカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:234
-msgid "Others"
-msgstr "その他"
-
-#: modules/inventory/inventory/ajaxViewPart.php:490
-msgid "Yes"
-msgstr "はい"
-
-#: modules/inventory/inventory/ajaxViewPart.php:491
-msgid "No"
-msgstr "いいえ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:492
-#: modules/inventory/inventory/ajaxViewPart.php:508
-#: modules/inventory/inventory/i18n_labels.php:106
-msgid "Name"
-msgstr "名前"
-
-#: modules/inventory/inventory/ajaxViewPart.php:493
-#: modules/inventory/inventory/i18n_labels.php:108
-msgid "Network Type"
-msgstr "ネットワークタイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:494
-#: modules/inventory/inventory/i18n_labels.php:93
-msgid "MAC Address"
-msgstr "MAC アドレス"
-
-#: modules/inventory/inventory/ajaxViewPart.php:495
-#: modules/inventory/inventory/i18n_labels.php:86
-msgid "IP"
-msgstr "IP"
-
-#: modules/inventory/inventory/ajaxViewPart.php:496
-msgid "Netmask"
-msgstr "ネットマスク"
-
-#: modules/inventory/inventory/ajaxViewPart.php:497
-#: modules/inventory/inventory/i18n_labels.php:81
-msgid "Gateway"
-msgstr "ゲートウェイ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:498
-#: modules/inventory/inventory/i18n_labels.php:61
-msgid "Device"
-msgstr "デバイス"
-
-#: modules/inventory/inventory/ajaxViewPart.php:499
-msgid "Mount Point"
-msgstr "マウントポイント"
-
-#: modules/inventory/inventory/ajaxViewPart.php:500
-msgid "Filesystem"
-msgstr "ファイルシステム"
-
-#: modules/inventory/inventory/ajaxViewPart.php:501
-#: modules/inventory/inventory/ajaxViewPart.php:525
-#: modules/inventory/inventory/i18n_labels.php:133
-msgid "Size"
-msgstr "サイズ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:502
-msgid "Free Size"
-msgstr "フリーサイズ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:503
-msgid "Supplier"
-msgstr "サプライヤー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:504
-msgid "Invoice Number"
-msgstr "請求書番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:505
-msgid "Date Of Purchase"
-msgstr "購入日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:506
-msgid "Warranty End Date"
-msgstr "保証終了日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:507
-#: modules/inventory/inventory/i18n_labels.php:162
-msgid "Vendor"
-msgstr "ベンダー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:509
-#: modules/inventory/inventory/i18n_labels.php:163
-msgid "Version"
-msgstr "バージョン"
-
-#: modules/inventory/inventory/ajaxViewPart.php:510
-msgid "Computer Name"
-msgstr "コンピューター名"
-
-#: modules/inventory/inventory/ajaxViewPart.php:511
-#: modules/inventory/inventory/i18n_labels.php:60
-msgid "Description"
-msgstr "内容"
-
-#: modules/inventory/inventory/ajaxViewPart.php:512
-msgid "Entity (Location)"
-msgstr "エンティティ (場所)"
-
-#: modules/inventory/inventory/ajaxViewPart.php:513
-msgid "Entity"
-msgstr "エンティティ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:514
-#: modules/inventory/inventory/i18n_labels.php:91
-msgid "Location"
-msgstr "メーカー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:515
-msgid "Last Logged User"
-msgstr "最終ログユーザー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:516
-msgid "OS"
-msgstr "OS"
-
-#: modules/inventory/inventory/ajaxViewPart.php:517
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "Operating System"
-msgstr "オペレーティングシステム"
-
-#: modules/inventory/inventory/ajaxViewPart.php:518
-msgid "Computer Type"
-msgstr "コンピュータータイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:519
-msgid "Model / Type"
-msgstr "モデル / タイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:520
-#: modules/inventory/inventory/i18n_labels.php:103
-msgid "Model"
-msgstr "モデル"
-
-#: modules/inventory/inventory/ajaxViewPart.php:521
-#: modules/inventory/inventory/i18n_labels.php:98
-msgid "Manufacturer"
-msgstr "メーカー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:522
-msgid "Serial Number"
-msgstr "シリアル番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:523
-#: modules/inventory/inventory/i18n_labels.php:79
-msgid "Frequency"
-msgstr "周波数"
-
-#: modules/inventory/inventory/ajaxViewPart.php:524
-#: modules/inventory/inventory/i18n_labels.php:156
-msgid "Type"
-msgstr "タイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:526
-msgid "Bandwidth"
-msgstr "帯域幅"
-
-#: modules/inventory/inventory/ajaxViewPart.php:527
-msgid "Writer"
-msgstr "ライター"
-
-#: modules/inventory/inventory/ajaxViewPart.php:529
-msgid "Comment"
-msgstr "コメント"
-
-#: modules/inventory/inventory/ajaxViewPart.php:531
-#: modules/inventory/inventory/i18n_labels.php:159
-msgid "User"
-msgstr "ユーザー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:532
-msgid "Category"
-msgstr "カテゴリー"
-
 #: modules/inventory/inventory/ajaxViewPart.php:533
 msgid "Action"
 msgstr "アクション"
 
-#: modules/inventory/inventory/ajaxViewPart.php:534
-msgid "Today"
-msgstr "今日"
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "追加された要素"
 
-#: modules/inventory/inventory/ajaxViewPart.php:535
-msgid "Last 7 days"
-msgstr "過去 7 日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:536
-msgid "Last 30 days"
-msgstr "過去 30 日"
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "追加情報"
 
 #: modules/inventory/inventory/ajaxViewPart.php:537
 msgid "All"
 msgstr "すべて"
-
-#: modules/inventory/inventory/ajaxViewPart.php:538
-msgid "Service Pack"
-msgstr "サービスパック"
-
-#: modules/inventory/inventory/ajaxViewPart.php:539
-msgid "Windows Key"
-msgstr "Windows キー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:540
-msgid "Domain"
-msgstr "ドメイン"
-
-#: modules/inventory/inventory/ajaxViewPart.php:541
-#: modules/inventory/inventory/i18n_labels.php:147
-msgid "State"
-msgstr "状態"
-
-#: modules/inventory/inventory/ajaxViewPart.php:542
-msgid "Unknown"
-msgstr "不明"
-
-#: modules/inventory/inventory/ajaxViewPart.php:543
-msgid "Inventory Number"
-msgstr "在庫番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:545
-msgid "Enabled"
-msgstr "有効"
-
-#: modules/inventory/inventory/ajaxViewPart.php:546
-msgid "Up-to-date"
-msgstr "最新"
-
-#: modules/inventory/inventory/body.php:40
-msgid "Bios list"
-msgstr "BIOS 一覧"
-
-#: modules/inventory/inventory/body.php:42
-msgid "Hardware and OS information list"
-msgstr "ハードウェア & OS 情報一覧"
-
-#: modules/inventory/inventory/body.php:43
-msgid "Software list"
-msgstr "ソフトウェア一覧"
-
-#: modules/inventory/inventory/body.php:44
-msgid "Network card and configuration list"
-msgstr "ネットワークカード & 設定一覧"
-
-#: modules/inventory/inventory/body.php:45
-msgid "Controller list"
-msgstr "コントローラー一覧"
-
-#: modules/inventory/inventory/body.php:46
-msgid "Registry keys/values list"
-msgstr "レジストリキー/値一覧"
-
-#: modules/inventory/inventory/body.php:47
-msgid "Drive list"
-msgstr "ドライブ一覧"
-
-#: modules/inventory/inventory/body.php:48
-msgid "Input device list"
-msgstr "入力デバイス一覧"
-
-#: modules/inventory/inventory/body.php:49
-msgid "Memory module list"
-msgstr "メモリモジュール一覧"
-
-#: modules/inventory/inventory/body.php:50
-msgid "Monitor list"
-msgstr "モニター一覧"
-
-#: modules/inventory/inventory/body.php:51
-msgid "Port list"
-msgstr "ポート一覧"
-
-#: modules/inventory/inventory/body.php:52
-msgid "Printer list"
-msgstr "プリンター一覧"
-
-#: modules/inventory/inventory/body.php:53
-msgid "Sound list"
-msgstr "サウンド一覧"
-
-#: modules/inventory/inventory/body.php:54
-msgid "Storage medium list"
-msgstr "ストレージメディア一覧"
-
-#: modules/inventory/inventory/body.php:55
-msgid "Video card list"
-msgstr "ビデオカード一覧"
-
-#: modules/inventory/inventory/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "最新の在庫は %s で%s 日以内です"
-
-#: modules/inventory/inventory/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "最新の在庫は %s で %s 日以上です"
-
-#: modules/inventory/inventory/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "コンピューター一覧が、 %d 台のコンピューターでトランケートされました。"
-
-#: modules/inventory/inventory/csv.php:67
-#: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:96
-msgid "Computer"
-msgstr "コンピューター"
-
-#: modules/inventory/inventory/graphs.php:47
-msgid "back"
-msgstr "戻る"
-
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "前の在庫からの差異を表示"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "在庫日"
 
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
@@ -708,6 +66,16 @@ msgstr "アプリケーション"
 msgid "Availability"
 msgstr "可用性"
 
+#: modules/inventory/inventory/ajaxViewPart.php:526
+msgid "Bandwidth"
+msgstr "帯域幅"
+
+#: modules/inventory/infoPackage.inc.php:44
+#: modules/inventory/inventory/i18n_labels.php:28
+#: modules/inventory/inventory/localSidebar.php:29
+msgid "Bios"
+msgstr "Bios"
+
 #: modules/inventory/inventory/i18n_labels.php:29
 msgid "Bios Vendor"
 msgstr "BIOS ベンダー"
@@ -715,6 +83,18 @@ msgstr "BIOS ベンダー"
 #: modules/inventory/inventory/i18n_labels.php:30
 msgid "Bios Version"
 msgstr "BIOS バージョン"
+
+#: modules/inventory/inventory/body.php:40
+msgid "Bios list"
+msgstr "BIOS 一覧"
+
+#: modules/inventory/infoPackage.inc.php:169
+msgid "Bios tab for a computer in a group"
+msgstr "グループ内のコンピューターの BIOS タブ"
+
+#: modules/inventory/infoPackage.inc.php:139
+msgid "Bios tab for a group"
+msgstr "グループの BIOS タブ"
 
 #: modules/inventory/inventory/i18n_labels.php:31
 msgid "Build"
@@ -744,6 +124,19 @@ msgstr "キャプション"
 msgid "Card Type"
 msgstr "カードタイプ"
 
+#: modules/inventory/inventory/ajaxViewPart.php:532
+msgid "Category"
+msgstr "カテゴリー"
+
+#: modules/inventory/infoPackage.inc.php:91
+#: modules/inventory/inventory/graphs.php:35
+msgid "Chart"
+msgstr "チャート"
+
+#: modules/inventory/infoPackage.inc.php:87
+msgid "Charts"
+msgstr "チャート"
+
 #: modules/inventory/inventory/i18n_labels.php:38
 msgid "Chassis"
 msgstr "筐体"
@@ -768,6 +161,16 @@ msgstr "チップセットタイプ"
 msgid "Class"
 msgstr "クラス"
 
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr ""
+"ここをクリックして、メーカーウェブサイトでこのコンピューターを確認してくださ"
+"い。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:529
+msgid "Comment"
+msgstr "コメント"
+
 #: modules/inventory/inventory/i18n_labels.php:44
 msgid "Comments"
 msgstr "コメント"
@@ -776,9 +179,62 @@ msgstr "コメント"
 msgid "Company"
 msgstr "会社"
 
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+#: modules/inventory/inventory/i18n_labels.php:96
+msgid "Computer"
+msgstr "コンピューター"
+
+#: modules/inventory/inventory/ajaxViewPart.php:510
+msgid "Computer Name"
+msgstr "コンピューター名"
+
+#: modules/inventory/inventory/ajaxViewPart.php:518
+msgid "Computer Type"
+msgstr "コンピュータータイプ"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "コンピューター名"
+
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "コンピューター"
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "コンピューター一覧が、 %d 台のコンピューターでトランケートされました。"
+
 #: modules/inventory/inventory/i18n_labels.php:46
 msgid "Connector"
 msgstr "コネクタ"
+
+#: modules/inventory/infoPackage.inc.php:50
+#: modules/inventory/inventory/i18n_labels.php:47
+#: modules/inventory/inventory/localSidebar.php:33
+msgid "Controller"
+msgstr "コントローラー"
+
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "コントローラー一覧"
+
+#: modules/inventory/infoPackage.inc.php:199
+msgid "Controller tab for a computer"
+msgstr "コンピューターのコントローラータブ"
+
+#: modules/inventory/infoPackage.inc.php:178
+msgid "Controller tab for a computer in a group"
+msgstr "グループ内のコンピューターのコントローラータブ"
+
+#: modules/inventory/infoPackage.inc.php:154
+msgid "Controller tab for a group"
+msgstr "グループのコントローラータブ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+msgid "Controllers"
+msgstr "コントローラー"
 
 #: modules/inventory/inventory/i18n_labels.php:48
 msgid "Cpu Num"
@@ -787,6 +243,18 @@ msgstr "CPU 番号"
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
 msgstr "CPU ベンダー"
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
+msgstr "グループを作成"
+
+#: modules/inventory/infoPackage.inc.php:99
+msgid "Create static group from dashboard"
+msgstr "ダッシュボードから静的グループ を作成"
+
+#: modules/inventory/infoPackage.inc.php:95
+msgid "Csv's export"
+msgstr "CSV エクスポート"
 
 #: modules/inventory/inventory/i18n_labels.php:50
 msgid "Custom Field"
@@ -800,9 +268,20 @@ msgstr "Cyl"
 msgid "DNS"
 msgstr "DNS"
 
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:530
+#: modules/inventory/inventory/i18n_labels.php:53
+msgid "Date"
+msgstr "日付"
+
 #: modules/inventory/inventory/i18n_labels.php:54
 msgid "Date Last Switch On"
 msgstr "最終起動日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:505
+msgid "Date Of Purchase"
+msgstr "購入日"
 
 #: modules/inventory/inventory/i18n_labels.php:57
 msgid "Default Gateway"
@@ -816,6 +295,20 @@ msgstr "納品日"
 msgid "Department"
 msgstr "部門"
 
+#: modules/inventory/inventory/ajaxViewPart.php:511
+#: modules/inventory/inventory/i18n_labels.php:60
+msgid "Description"
+msgstr "内容"
+
+#: modules/inventory/inventory/ajaxViewPart.php:498
+#: modules/inventory/inventory/i18n_labels.php:61
+msgid "Device"
+msgstr "デバイス"
+
+#: modules/inventory/infoPackage.inc.php:207
+msgid "Differences between two inventories"
+msgstr "在庫間の差異"
+
 #: modules/inventory/inventory/i18n_labels.php:62
 msgid "Disk"
 msgstr "ディスク"
@@ -823,6 +316,16 @@ msgstr "ディスク"
 #: modules/inventory/inventory/i18n_labels.php:63
 msgid "Disk Size"
 msgstr "ディスクサイズ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:540
+msgid "Domain"
+msgstr "ドメイン"
+
+#: modules/inventory/infoPackage.inc.php:56
+#: modules/inventory/inventory/i18n_labels.php:64
+#: modules/inventory/inventory/localSidebar.php:37
+msgid "Drive"
+msgstr "ドライブ"
 
 #: modules/inventory/inventory/i18n_labels.php:65
 msgid "Drive Letter"
@@ -832,9 +335,38 @@ msgstr "ドライブレター"
 msgid "Drive Type"
 msgstr "ドライブタイプ"
 
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "ドライブ一覧"
+
 #: modules/inventory/inventory/i18n_labels.php:67
 msgid "Driver"
 msgstr "ドライバ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:231
+msgid "Drives"
+msgstr "ドライブ"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "要素"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "要素"
+
+#: modules/inventory/inventory/ajaxViewPart.php:545
+msgid "Enabled"
+msgstr "有効"
+
+#: modules/inventory/inventory/ajaxViewPart.php:513
+msgid "Entity"
+msgstr "エンティティ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:512
+msgid "Entity (Location)"
+msgstr "エンティティ (場所)"
 
 #: modules/inventory/inventory/i18n_labels.php:68
 msgid "Executable Size"
@@ -864,6 +396,18 @@ msgstr "ファイル数"
 msgid "File System"
 msgstr "ファイルシステム"
 
+#: modules/inventory/inventory/ajaxViewPart.php:500
+msgid "Filesystem"
+msgstr "ファイルシステム"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "ソフトウェアのフィルタ"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "初出"
+
 #: modules/inventory/inventory/i18n_labels.php:75
 msgid "Flag"
 msgstr "フラグ"
@@ -871,6 +415,10 @@ msgstr "フラグ"
 #: modules/inventory/inventory/i18n_labels.php:76
 msgid "Form"
 msgstr "フォーム"
+
+#: modules/inventory/inventory/ajaxViewPart.php:502
+msgid "Free Size"
+msgstr "フリーサイズ"
 
 #: modules/inventory/inventory/i18n_labels.php:77
 msgid "Free Space"
@@ -880,21 +428,142 @@ msgstr "フリースペース"
 msgid "Freq"
 msgstr "周波数"
 
+#: modules/inventory/inventory/ajaxViewPart.php:523
+#: modules/inventory/inventory/i18n_labels.php:79
+msgid "Frequency"
+msgstr "周波数"
+
 #: modules/inventory/inventory/i18n_labels.php:80
 msgid "Func"
 msgstr "機能"
+
+#: modules/inventory/inventory/ajaxViewPart.php:497
+#: modules/inventory/inventory/i18n_labels.php:81
+msgid "Gateway"
+msgstr "ゲートウェイ"
+
+#: modules/inventory/inventory/tabs.php:117
+msgid "Get XLS Report"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr "グラフィックカード"
+
+#: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/i18n_labels.php:82
+#: modules/inventory/inventory/localSidebar.php:30
+msgid "Hardware"
+msgstr "ハードウェア"
 
 #: modules/inventory/inventory/i18n_labels.php:83
 msgid "Hardware Version"
 msgstr "ハードウェアバージョン"
 
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "ハードウェア & OS 情報一覧"
+
+#: modules/inventory/infoPackage.inc.php:190
+msgid "Hardware tab for a computer"
+msgstr "コンピューターのハードウェアタブ"
+
+#: modules/inventory/infoPackage.inc.php:160
+msgid "Hardware tab for a computer in a group"
+msgstr "グループ内のコンピューターのハードウェアタブ"
+
+#: modules/inventory/infoPackage.inc.php:136
+msgid "Hardware tab for a group"
+msgstr "グループのハードウェアタブ"
+
 #: modules/inventory/inventory/i18n_labels.php:84
 msgid "Head"
 msgstr "ヘッド"
 
+#: modules/inventory/infoPackage.inc.php:116
+msgid "Header"
+msgstr "ヘッダー"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "Windows アップデート非表示"
+
 #: modules/inventory/inventory/i18n_labels.php:85
 msgid "High Mem"
 msgstr "ハイメモリ"
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "履歴"
+
+#: modules/inventory/inventory/ajaxViewPart.php:495
+#: modules/inventory/inventory/i18n_labels.php:86
+msgid "IP"
+msgstr "IP"
+
+#: modules/inventory/infoPackage.inc.php:42
+#: modules/inventory/inventory/localSidebar.php:28
+msgid "Incoming"
+msgstr "入庫"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "入庫"
+
+#: modules/inventory/infoPackage.inc.php:83
+#: modules/inventory/inventory/ajaxIncoming.php:85
+#: modules/inventory/inventory/ajaxViewPart.php:462
+msgid "Information"
+msgstr "情報"
+
+#: modules/inventory/infoPackage.inc.php:58
+#: modules/inventory/inventory/i18n_labels.php:87
+#: modules/inventory/inventory/localSidebar.php:38
+msgid "Input"
+msgstr "入力"
+
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "入力デバイス一覧"
+
+#: modules/inventory/infoPackage.inc.php:32
+#: modules/inventory/infoPackage.inc.php:38
+#: modules/inventory/inventory/history.php:80
+msgid "Inventory"
+msgstr "在庫"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "在庫日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:543
+msgid "Inventory Number"
+msgstr "在庫番号"
+
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "在庫変化"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "在庫日"
+
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "%s の在庫"
+
+#: modules/inventory/infoPackage.inc.php:133
+msgid "Inventory on a group of computers"
+msgstr "コンピューターグループ上の在庫"
+
+#: modules/inventory/infoPackage.inc.php:186
+msgid "Inventory on a single computer"
+msgstr "コンピューター上の在庫"
+
+#: modules/inventory/inventory/ajaxViewPart.php:504
+msgid "Invoice Number"
+msgstr "請求書番号"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
@@ -904,13 +573,77 @@ msgstr "IP アドレス"
 msgid "KEY"
 msgstr "キー"
 
+#: modules/inventory/inventory/ajaxViewPart.php:536
+msgid "Last 30 days"
+msgstr "過去 30 日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:535
+msgid "Last 7 days"
+msgstr "過去 7 日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:515
+msgid "Last Logged User"
+msgstr "最終ログユーザー"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "前月"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "前四半期"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "前セメスター"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "前週"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "前年"
+
+#: modules/inventory/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "最終在庫日"
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "最新の在庫は %s で%s 日以内です"
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "最新の在庫は %s で %s 日以上です"
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr "プルモードを離脱"
+
 #: modules/inventory/inventory/i18n_labels.php:90
 msgid "Length"
 msgstr "長さ"
 
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr "在庫が実行された時に新規だったコンピューターのみ読み込む"
+
+#: modules/inventory/inventory/ajaxViewPart.php:514
+#: modules/inventory/inventory/i18n_labels.php:91
+msgid "Location"
+msgstr "メーカー"
+
 #: modules/inventory/inventory/i18n_labels.php:92
 msgid "Low Mem"
 msgstr "ローメモリ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:494
+#: modules/inventory/inventory/i18n_labels.php:93
+msgid "MAC Address"
+msgstr "MAC アドレス"
 
 #: modules/inventory/inventory/i18n_labels.php:94
 msgid "MIB"
@@ -924,9 +657,26 @@ msgstr "MAC アドレス"
 msgid "Manuf"
 msgstr "メーカー"
 
+#: modules/inventory/inventory/ajaxViewPart.php:521
+#: modules/inventory/inventory/i18n_labels.php:98
+msgid "Manufacturer"
+msgstr "メーカー"
+
 #: modules/inventory/inventory/i18n_labels.php:99
 msgid "Media"
 msgstr "メディア"
+
+#: modules/inventory/infoPackage.inc.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:528
+#: modules/inventory/inventory/i18n_labels.php:100
+#: modules/inventory/inventory/localSidebar.php:39
+msgid "Memory"
+msgstr "メモリ"
+
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "メモリモジュール一覧"
 
 #: modules/inventory/inventory/i18n_labels.php:101
 msgid "Misc Mem"
@@ -936,9 +686,89 @@ msgstr "その他のメモリ"
 msgid "Misc SMB"
 msgstr "その他の SMB"
 
+#: modules/inventory/inventory/ajaxViewPart.php:520
+#: modules/inventory/inventory/i18n_labels.php:103
+msgid "Model"
+msgstr "モデル"
+
+#: modules/inventory/inventory/ajaxViewPart.php:519
+msgid "Model / Type"
+msgstr "モデル / タイプ"
+
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
 msgstr "モデム"
+
+#: modules/inventory/infoPackage.inc.php:62
+#: modules/inventory/inventory/i18n_labels.php:105
+#: modules/inventory/inventory/localSidebar.php:40
+msgid "Monitor"
+msgstr "モニター"
+
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "モニター一覧"
+
+#: modules/inventory/inventory/ajaxViewPart.php:499
+msgid "Mount Point"
+msgstr "マウントポイント"
+
+#: modules/inventory/inventory/ajaxViewPart.php:492
+#: modules/inventory/inventory/ajaxViewPart.php:508
+#: modules/inventory/inventory/i18n_labels.php:106
+msgid "Name"
+msgstr "名前"
+
+#: modules/inventory/inventory/ajaxViewPart.php:496
+msgid "Netmask"
+msgstr "ネットマスク"
+
+#: modules/inventory/infoPackage.inc.php:48
+#: modules/inventory/inventory/i18n_labels.php:107
+#: modules/inventory/inventory/localSidebar.php:32
+msgid "Network"
+msgstr "ネットワーク"
+
+#: modules/inventory/inventory/ajaxViewPart.php:230
+msgid "Network Cards"
+msgstr "ネットワークカード"
+
+#: modules/inventory/inventory/ajaxViewPart.php:493
+#: modules/inventory/inventory/i18n_labels.php:108
+msgid "Network Type"
+msgstr "ネットワークタイプ"
+
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "ネットワークカード & 設定一覧"
+
+#: modules/inventory/infoPackage.inc.php:196
+msgid "Network tab for a computer"
+msgstr "コンピューターのネットワークタブ"
+
+#: modules/inventory/infoPackage.inc.php:175
+msgid "Network tab for a computer in a group"
+msgstr "グループ内のコンピューターのネットワークタブ"
+
+#: modules/inventory/infoPackage.inc.php:151
+msgid "Network tab for a group"
+msgstr "グループのネットワークタブ"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "新規コンピューター"
+
+#: modules/inventory/inventory/ajaxViewPart.php:491
+msgid "No"
+msgstr "いいえ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr "この期間にレコードが見つかりませんでした。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr "レコードが見つかりませんでした。"
 
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "Num"
@@ -948,34 +778,83 @@ msgstr "番号"
 msgid "Number"
 msgstr "番号"
 
+#: modules/inventory/inventory/ajaxViewPart.php:516
+msgid "OS"
+msgstr "OS"
+
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "OS Serial Number"
 msgstr "OS シリアル番号"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "新規コンピューターのみ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:517
+#: modules/inventory/inventory/i18n_labels.php:114
+msgid "Operating System"
+msgstr "オペレーティングシステム"
+
+#: modules/inventory/inventory/i18n_labels.php:113
+msgid "Os Architecture"
+msgstr "OS アーキテクチャ"
 
 #: modules/inventory/inventory/i18n_labels.php:112
 msgid "Os Installation Date"
 msgstr "OS インストール日"
 
-#: modules/inventory/inventory/i18n_labels.php:113
-msgid "Os Architecture"
-msgstr "OS アーキテクチャ"
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
+msgstr "その他"
 
 #: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/pci.php:27
 msgid "Pci"
 msgstr "PCI"
 
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "期間"
+
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "Phone"
 msgstr "電話"
+
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+"このクライアント上で、必ず FusionInventory プラグインと FusionInventory エー"
+"ジェントとともに GLPI を実行してください。"
 
 #: modules/inventory/inventory/i18n_labels.php:117
 msgid "Point Type"
 msgstr "ポイントタイプ"
 
+#: modules/inventory/infoPackage.inc.php:64
+#: modules/inventory/inventory/i18n_labels.php:118
+#: modules/inventory/inventory/localSidebar.php:41
+msgid "Port"
+msgstr "ポート"
+
 #: modules/inventory/inventory/i18n_labels.php:119
 msgid "Port Type"
 msgstr "ポートタイプ"
+
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "ポート一覧"
+
+#: modules/inventory/infoPackage.inc.php:66
+#: modules/inventory/inventory/i18n_labels.php:120
+#: modules/inventory/inventory/localSidebar.php:42
+msgid "Printer"
+msgstr "プリンター"
+
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "プリンター一覧"
 
 #: modules/inventory/inventory/i18n_labels.php:121
 msgid "Processor Count"
@@ -989,6 +868,10 @@ msgstr "プロセッサ周波"
 msgid "Processor Type"
 msgstr "プロセッサタイプ"
 
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr "プロセッサ"
+
 #: modules/inventory/inventory/i18n_labels.php:124
 msgid "Product Name"
 msgstr "製品名"
@@ -1001,9 +884,18 @@ msgstr "製品パス"
 msgid "Product Version"
 msgstr "製品バージョン"
 
+#: modules/inventory/inventory/ajaxViewPart.php:121
+#: modules/inventory/inventory/view.php:74
+msgid "Properties"
+msgstr "プロパティ"
+
 #: modules/inventory/inventory/i18n_labels.php:127
 msgid "Ram Total"
 msgstr "合計 RAM"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "更新"
 
 #: modules/inventory/inventory/i18n_labels.php:128
 msgid "Registered Company"
@@ -1012,6 +904,31 @@ msgstr "登録企業"
 #: modules/inventory/inventory/i18n_labels.php:129
 msgid "Registered Name"
 msgstr "登録名"
+
+#: modules/inventory/infoPackage.inc.php:76
+#: modules/inventory/inventory/localSidebar.php:34
+msgid "Registry"
+msgstr "レジストリ"
+
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "レジストリキー/値一覧"
+
+#: modules/inventory/infoPackage.inc.php:202
+msgid "Registry tab for a computer"
+msgstr "コンピューターのレジストリタブ"
+
+#: modules/inventory/infoPackage.inc.php:181
+msgid "Registry tab for a computer in a group"
+msgstr "グループ内のコンピューターのレジストリタブ"
+
+#: modules/inventory/infoPackage.inc.php:157
+msgid "Registry tab for a group"
+msgstr "グループのレジストリタブ"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "削除された要素"
 
 #: modules/inventory/inventory/i18n_labels.php:130
 msgid "Resolution"
@@ -1024,6 +941,20 @@ msgstr "セクター"
 #: modules/inventory/inventory/i18n_labels.php:132
 msgid "Serial"
 msgstr "シリアル"
+
+#: modules/inventory/inventory/ajaxViewPart.php:522
+msgid "Serial Number"
+msgstr "シリアル番号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:538
+msgid "Service Pack"
+msgstr "サービスパック"
+
+#: modules/inventory/inventory/ajaxViewPart.php:501
+#: modules/inventory/inventory/ajaxViewPart.php:525
+#: modules/inventory/inventory/i18n_labels.php:133
+msgid "Size"
+msgstr "サイズ"
 
 #: modules/inventory/inventory/i18n_labels.php:134
 #: modules/inventory/inventory/slot.php:27
@@ -1054,6 +985,42 @@ msgstr "SMB タイプ"
 msgid "Smb Version"
 msgstr "SMB バージョン"
 
+#: modules/inventory/infoPackage.inc.php:74
+#: modules/inventory/inventory/i18n_labels.php:141
+#: modules/inventory/inventory/localSidebar.php:31
+msgid "Software"
+msgstr "ソフトウェア"
+
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "ソフトウェア一覧"
+
+#: modules/inventory/infoPackage.inc.php:193
+msgid "Software tab for a computer"
+msgstr "コンピューターのソフトウェアタブ"
+
+#: modules/inventory/infoPackage.inc.php:172
+msgid "Software tab for a computer in a group"
+msgstr "グループ内のコンピューターのソフトウェアタブ"
+
+#: modules/inventory/infoPackage.inc.php:148
+msgid "Software tab for a group"
+msgstr "グループのソフトウェアタブ"
+
+#: modules/inventory/infoPackage.inc.php:68
+#: modules/inventory/inventory/i18n_labels.php:142
+#: modules/inventory/inventory/localSidebar.php:43
+msgid "Sound"
+msgstr "サウンド"
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+msgid "Sound Cards"
+msgstr "サウンドカード"
+
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "サウンド一覧"
+
 #: modules/inventory/inventory/i18n_labels.php:143
 msgid "Speed"
 msgstr "速度"
@@ -1070,9 +1037,50 @@ msgstr "標準内容"
 msgid "Standard Type"
 msgstr "標準タイプ"
 
+#: modules/inventory/inventory/ajaxViewPart.php:541
+#: modules/inventory/inventory/i18n_labels.php:147
+msgid "State"
+msgstr "状態"
+
+#: modules/inventory/infoPackage.inc.php:70
+#: modules/inventory/inventory/ajaxViewPart.php:228
+#: modules/inventory/inventory/i18n_labels.php:148
+#: modules/inventory/inventory/localSidebar.php:44
+msgid "Storage"
+msgstr "ストレージ"
+
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "ストレージメディア一覧"
+
+#: modules/inventory/infoPackage.inc.php:166
+msgid "Storage tab for a computer in a group"
+msgstr "グループ内のコンピューターのストレージタブ"
+
+#: modules/inventory/infoPackage.inc.php:145
+msgid "Storage tab for a group"
+msgstr "グループのストレージタブ"
+
 #: modules/inventory/inventory/i18n_labels.php:149
 msgid "Subnet Mask"
 msgstr "サブネットマスク"
+
+#: modules/inventory/infoPackage.inc.php:52
+#: modules/inventory/inventory/body.php:41
+msgid "Summary"
+msgstr "サマリー"
+
+#: modules/inventory/infoPackage.inc.php:163
+msgid "Summary tab for a computer in a group"
+msgstr "グループ内のコンピューターのサマリータブ"
+
+#: modules/inventory/infoPackage.inc.php:142
+msgid "Summary tab for a group"
+msgstr "グループのサマリータブ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:503
+msgid "Supplier"
+msgstr "サプライヤー"
 
 #: modules/inventory/inventory/i18n_labels.php:150
 msgid "Support End"
@@ -1086,9 +1094,18 @@ msgstr "スワップスペース"
 msgid "System"
 msgstr "システム"
 
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr "このクライアントはプルモードに登録されています"
+
 #: modules/inventory/inventory/i18n_labels.php:153
 msgid "Time"
 msgstr "時間"
+
+#: modules/inventory/inventory/ajaxViewPart.php:534
+msgid "Today"
+msgstr "今日"
 
 #: modules/inventory/inventory/i18n_labels.php:154
 msgid "Total Mem"
@@ -1098,25 +1115,92 @@ msgstr "合計メモリ"
 msgid "Total Space"
 msgstr "合計スペース"
 
+#: modules/inventory/inventory/ajaxViewPart.php:524
+#: modules/inventory/inventory/i18n_labels.php:156
+msgid "Type"
+msgstr "タイプ"
+
 #: modules/inventory/inventory/i18n_labels.php:157
 msgid "Type Machine"
 msgstr "マシンタイプ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr "このマシン上でアンチウイルスソフトウェアを検出できません。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:542
+msgid "Unknown"
+msgstr "不明"
+
+#: modules/inventory/inventory/ajaxViewPart.php:546
+msgid "Up-to-date"
+msgstr "最新"
 
 #: modules/inventory/inventory/i18n_labels.php:158
 msgid "Used"
 msgstr "使用済"
 
+#: modules/inventory/inventory/ajaxViewPart.php:531
+#: modules/inventory/inventory/i18n_labels.php:159
+msgid "User"
+msgstr "ユーザー"
+
 #: modules/inventory/inventory/i18n_labels.php:160
 msgid "VRAM Size"
 msgstr "VRAM サイズ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/view.php:75
+msgid "Value"
+msgstr "値"
+
+#: modules/inventory/inventory/ajaxViewPart.php:507
+#: modules/inventory/inventory/i18n_labels.php:162
+msgid "Vendor"
+msgstr "ベンダー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:509
+#: modules/inventory/inventory/i18n_labels.php:163
+msgid "Version"
+msgstr "バージョン"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "ビデオカード一覧"
+
+#: modules/inventory/infoPackage.inc.php:72
+#: modules/inventory/inventory/localSidebar.php:45
+msgid "VideoCard"
+msgstr "ビデオカード"
+
+#: modules/inventory/infoPackage.inc.php:79
+#: modules/inventory/inventory/ajaxIncoming.php:84
+#: modules/inventory/inventory/ajaxViewPart.php:461
+msgid "View"
+msgstr "表示"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "前の在庫からの差異を表示"
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
 msgstr "ボリューム名"
 
+#: modules/inventory/inventory/ajaxViewPart.php:506
+msgid "Warranty End Date"
+msgstr "保証終了日"
+
 #: modules/inventory/inventory/i18n_labels.php:165
 msgid "WarrantyEnd"
 msgstr "保証終了"
+
+#: modules/inventory/inventory/ajaxViewPart.php:539
+msgid "Windows Key"
+msgstr "Windows キー"
 
 #: modules/inventory/inventory/i18n_labels.php:166
 msgid "Workgroup"
@@ -1126,97 +1210,14 @@ msgstr "ワークグループ"
 msgid "WorkingDate"
 msgstr "稼働日"
 
-#: modules/inventory/inventory/incoming.php:46
-msgid "Incoming Inventories"
-msgstr "入庫"
+#: modules/inventory/inventory/ajaxViewPart.php:527
+msgid "Writer"
+msgstr "ライター"
 
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last week"
-msgstr "前週"
+#: modules/inventory/inventory/ajaxViewPart.php:490
+msgid "Yes"
+msgstr "はい"
 
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last month"
-msgstr "前月"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last quarter"
-msgstr "前四半期"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last semester"
-msgstr "前セメスター"
-
-#: modules/inventory/inventory/incoming.php:56
-msgid "Last year"
-msgstr "前年"
-
-#: modules/inventory/inventory/incoming.php:67
-msgid "Period"
-msgstr "期間"
-
-#: modules/inventory/inventory/incoming.php:72
-msgid "Only new computers"
-msgstr "新規コンピューターのみ"
-
-#: modules/inventory/inventory/incoming.php:73
-msgid "Load only the computers which were new when the inventory was made"
-msgstr "在庫が実行された時に新規だったコンピューターのみ読み込む"
-
-#: modules/inventory/inventory/infos.php:33
-msgid "Additionnal informations"
-msgstr "追加情報"
-
-#: modules/inventory/inventory/infos.php:43
-msgid "First apparition"
-msgstr "初出"
-
-#: modules/inventory/inventory/inventory_diff.php:48
-msgid "Inventory changes"
-msgstr "在庫変化"
-
-#: modules/inventory/inventory/inventory_diff.php:75
-#: modules/inventory/inventory/inventory_diff.php:100
-msgid "Element"
-msgstr "要素"
-
-#: modules/inventory/inventory/inventory_diff.php:114
-msgid "Added elements"
-msgstr "追加された要素"
-
-#: modules/inventory/inventory/inventory_diff.php:123
-msgid "Removed elements"
-msgstr "削除された要素"
-
-#: modules/inventory/inventory/view.php:44
-#, php-format
-msgid "Inventory of %s"
-msgstr "%s の在庫"
-
-#: modules/inventory/inventory/tabs.php:63
-#: modules/inventory/inventory/tabs.php:71
-msgid "This client has been registered in pull mode"
-msgstr "このクライアントはプルモードに登録されています"
-
-#: modules/inventory/inventory/tabs.php:65
-msgid "Leave pull mode"
-msgstr "プルモードを離脱"
-
-#: modules/inventory/inventory/tabs.php:77
-#, php-format
-msgid "%s's inventory"
-msgstr "%s の在庫"
-
-#: modules/inventory/inventory/tabs.php:79
-#, php-format
-msgid "%s's content inventory"
-msgstr "%s  の内容在庫"
-
-#: modules/inventory/inventory/tabs.php:106
-msgid "History"
-msgstr "履歴"
-
-#: modules/inventory/inventory/tabs.php:117
-msgid "Get XLS Report"
-msgstr ""
-
-
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "戻る"
