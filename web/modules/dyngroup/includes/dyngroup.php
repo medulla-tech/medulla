@@ -77,6 +77,7 @@ function getPGobject($id, $load = false) {
 
 
 class ConvergenceGroup extends Group {
+    
     function __Construct($id = null, $load = false, $ro = False, $root_context = false) {
         parent::Group($id, $load, $ro, $root_context);
         $this->type = 2;
@@ -125,16 +126,8 @@ class ConvergenceGroup extends Group {
             $parent_group = new Group($parent_gid, True, False, True);
             $this->setParentGroup($parent_group);
         }
-        $this->request = new Request();
-        /* Create dyngroup based on parent group's name */
-        $subReqModule = 'dyngroup';
-        $subReqCriterion = 'groupname';
-        $subReqValue = $this->parentGroup->name;
-        $subReqValue2 = '';
-        $subReqOperator = '=';
-        $subReq = new SubRequest($subReqModule, $subReqCriterion, $subReqValue, $subReqValue2, $subReqOperator);
-        /* Add subrequest */
-        $this->request->addSub($subReq);
+        
+        $request = array();
 
         /* Create convergence groups subrequest */
         $subReqModule = (in_array('glpi', $_SESSION['modulesList'])) ? 'glpi' : 'inventory';
@@ -142,29 +135,60 @@ class ConvergenceGroup extends Group {
         if (in_array('inventory', $_SESSION['modulesList'])) {
             $subReqCriterion = 'Software/Company:ProductName:ProductVersion';
         }
-        $Qvendor = ($this->package->Qvendor) ? str_replace(',', '*', $this->package->Qvendor) : '*';
-        $Qsoftware = ($this->package->Qsoftware) ? str_replace(',', '*', $this->package->Qsoftware) : '*';
-        $Qversion = ($this->package->Qversion) ? str_replace(',', '*', $this->package->Qversion) : '*';
-        $subReqValue = sprintf('>%s, %s, %s<', $Qvendor, $Qsoftware, $Qversion);
-        $subReqValue2 = '';
-        $subReqOperator = '=';
-        $subReq = new SubRequest($subReqModule, $subReqCriterion, $subReqValue, $subReqValue2, $subReqOperator);
-
-        /* Add convergence subrequest to main request */
-        $this->request->addSub($subReq);
-        /* Set request with root context @see #2240
-         * second param is True
-         * Needed for package edition */
-        parent::setRequest($this->request->toS(), True);
+        
+        // Arrays are for bundles (multiple convergence criterions)
+        if (!is_array($this->package->Qvendor)){
+            $this->package->Qvendor = array($this->package->Qvendor);
+            $this->package->Qsoftware = array($this->package->Qsoftware);
+            $this->package->Qversion = array($this->package->Qversion);
+        }
+        
+        $i = 0;
+        
+        for ($i = 0; $i< count($this->package->Qvendor); $i++){
+            
+            $Qvendor = ($this->package->Qvendor[$i]) ? str_replace(',', '*', $this->package->Qvendor[$i]) : '*';
+            $Qsoftware = ($this->package->Qsoftware[$i]) ? str_replace(',', '*', $this->package->Qsoftware[$i]) : '*';
+            $Qversion = ($this->package->Qversion[$i]) ? str_replace(',', '*', $this->package->Qversion[$i]) : '*';
+            
+            $request[] = sprintf("%d==%s::%s==>%s, %s, %s<", $i+1, $subReqModule, $subReqCriterion, $Qvendor, $Qsoftware, $Qversion);
+        }
+        
+        
+        // Adding parent group condition in last
+        $request[] = ($i+1) . '==dyngroup::groupname==' . $this->parentGroup->name;
+        
+        
+        $request = implode('||', $request);
+        
+        parent::setRequest($request, True);
     }
 
     function setBool() {
+        // If a bool condition is defined in the package level
+        // we use it,
+        $criterion_count = count($this->package->Qvendor);
+        
+        if (trim($this->package->boolcnd)){
+            $subgroup_condition = $this->package->boolcnd;
+        }
+        else{
+            // If the bool condition is not defined, we generate
+            // the defaut one
+            $subgroup_condition = 'AND(' . implode(',', range(1, $criterion_count)) . ')';
+            
+        }
+        
+        // From 1 to $criterion_count => software criteria
+        // $criterion_count +1 => parent group criterion
+        $pgroup_cnumber = $criterion_count +1;
+        
         /* create convergence groups bools */
         if ($this->isDeployGroup) {
-            $this->bool = 'AND(1, NOT(2))';
+            $this->bool = "AND($pgroup_cnumber, NOT($subgroup_condition))";
         }
         else {
-            $this->bool = 'AND(1, 2)';
+            $this->bool = "AND($pgroup_cnumber, $subgroup_condition)";
         }
         parent::setBool($this->bool);
     }
