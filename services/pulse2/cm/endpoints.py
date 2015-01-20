@@ -150,6 +150,15 @@ class AgentsInstallMap(object):
            "/usr/bin/installer -pkg Pulse2AgentsInstaller.tar -target /",
            ]
 
+class VPNInstallMap(object):
+    windows = ["##wget## ##server##/downloads/vpn/softether/softether-silent-install.exe",
+               "##tmp## softether-silent-install.exe"]
+
+    posix = ["##wget## ##server##/downloads/vpn/vpn-service-install.sh",
+             "##wget## ##server##/downloads/vpn/vpn-client-set.sh",
+             "##wget## ##server##/downloads/vpn/vpn-variables.in",
+            ]
+
 
 class PackagesEndpoint(Endpoint):
     """
@@ -162,6 +171,7 @@ class PackagesEndpoint(Endpoint):
     prefix = "packages"
 
     commands = AgentsInstallMap()
+    vpn_install = VPNInstallMap()
 
     def _parse_request(self, request):
         """
@@ -173,7 +183,15 @@ class PackagesEndpoint(Endpoint):
         @return: list of install commands
         @rtype: list
         """
+        if request["name"] == "vpnclient":
+            if request["system"] in ["Linux", "Darwin"]:
+                return self.vpn_install.posix
+            else:
+                return self.vpn_install.windows
 
+        # TODO - recognize by SW name request["name"] in ->
+        # "Mandriva OpenSSH Agent", "pulse2-agents-installer",
+        # "pulse2-agents-installer-nordp", "org.pulse2-agents-installer"
         system = request["system"]
 
         if system == "Windows":
@@ -567,7 +585,7 @@ class VPNInstallEndpoint(Endpoint):
             if process_name in p.cmdline :
                 return True
 
-        self.logger.warn("SSH Tunnel: Can't find VPN server service")
+        self.logger.warn("CM: Can't find VPN server service")
         return False
 
 
