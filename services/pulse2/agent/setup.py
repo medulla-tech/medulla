@@ -282,7 +282,7 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 class PostInstallOSXHandler(PostInstallPosixHandler):
     """Mac OS X handler"""
 
-    insert_service_cmd = "/bin/launchd load org.pulse2agent.pulse2agent"
+    insert_service_cmd = "/bin/launchd load com.pulse2.agent"
 
     include_files = [("mac/com.pulse2.agent.plist",
                       "/Library/LaunchDaemons"),
