@@ -324,8 +324,8 @@ if sys.platform in ("linux2", "darwin"):
         from distutils.core import setup
         from distutils.command.install import install as _install
     elif sys.platform == "darwin":
-        from setuptools import setup
-        from setuptools.command.install import install as _install
+        from setuptools import setup # pyflakes.ignore
+        from setuptools.command.install import install as _install # pyflakes.ignore
     else:
         pass
 
