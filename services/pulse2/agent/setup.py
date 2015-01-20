@@ -206,6 +206,9 @@ class PostInstallPosixHandler(object):
         @return: True if successfully added
         @rtype: bool
         """
+        if self.insert_service_cmd is None:
+            return True
+
         print "Install service %s ..." % self.SCRIPT_NAME
         result = call(self.insert_service_cmd, shell=True)
         return result == 0
@@ -218,6 +221,9 @@ class PostInstallPosixHandler(object):
         @return: True if successfully started
         @rtype: bool
         """
+        if self.insert_service_cmd is None:
+            return True
+
         print "Starting service %s ..." % self.SCRIPT_NAME
         result = call(self.start_service_cmd, shell=True)
         return result == 0
@@ -276,11 +282,10 @@ class PostInstallSystemDHandler(PostInstallPosixHandler):
 class PostInstallOSXHandler(PostInstallPosixHandler):
     """Mac OS X handler"""
 
-    insert_service_cmd = "/bin/systemctl enable %s.service" % PostInstallPosixHandler.SCRIPT_NAME
-    start_service_cmd = "/bin/systemctl start %s.service" % PostInstallPosixHandler.SCRIPT_NAME
+    insert_service_cmd = "/bin/launchd load org.pulse2agent.pulse2agent"
 
-    include_files = [("linux/pulse2-agent.service",
-                      "/lib/systemd/system/"),
+    include_files = [("mac/com.pulse2.agent.plist",
+                      "/Library/LaunchDaemons"),
                      ("pulse2agent.ini",
                       "/etc/pulse2agent.ini"),
                      ]
@@ -360,7 +365,7 @@ if sys.platform in ("linux2", "darwin"):
                             CFBundleShortVersionString = VERSION,
                             CFBundleGetInfoString = "%s %s" % (NAME, VERSION),
                             CFBundleExecutable = "pulse2-agent",
-                            CFBundleIdentifier = "org.pulse2agent.pulse2agent",
+                            CFBundleIdentifier = "org.pulse2.agent",
                             )
         py2app_options = dict(plist=bundle_plist)
         setup(name="Pulse2Agent",
