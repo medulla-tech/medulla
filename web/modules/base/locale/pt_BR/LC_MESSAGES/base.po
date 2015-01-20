@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2015-01-20 20:37+0200\n"
+"PO-Revision-Date: 2015-01-20 21:42+0200\n"
 "Last-Translator: Andre <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
 "/mmc-core-32/base/pt_BR/>\n"
@@ -465,7 +465,7 @@ msgstr "Remover"
 
 #: includes/PageGenerator.php:558 includes/PageGenerator.php:790
 msgid "to"
-msgstr "para"
+msgstr "a"
 
 #: includes/PageGenerator.php:560 includes/PageGenerator.php:792
 #, php-format
@@ -707,7 +707,7 @@ msgstr "Todos os computadores"
 #: modules/base/computers/localSidebar.php:8
 #: modules/base/infoPackage.inc.php:282
 msgid "Add computer"
-msgstr "Adicionar computador "
+msgstr "Adicionar computador"
 
 #: modules/base/computers/delete.php:30
 msgid ""
@@ -1369,7 +1369,7 @@ msgstr "Instalação de software"
 
 #: modules/base/includes/computers_list.inc.php:34
 msgid "Imaging management"
-msgstr "gerenciamento das imagens"
+msgstr "Gerenciamento das imagens"
 
 #: modules/base/includes/computers_list.inc.php:35
 msgid "Download file"
@@ -1382,7 +1382,7 @@ msgstr "consulta extTicket"
 
 #: modules/base/includes/computers_list.inc.php:37
 msgid "Remote control"
-msgstr "Controle remoto"
+msgstr "Acesso remoto"
 
 #: modules/base/includes/computers_list.inc.php:38
 msgid "Show Profile"
@@ -1434,7 +1434,7 @@ msgstr "Adicionar esta página aos links favoritos"
 
 #: modules/base/status/index.php:101
 msgid "Uptime: "
-msgstr "Tempo desde o boot: "
+msgstr "Tempo de atividade: "
 
 #: modules/base/status/index.php:104
 msgid "day"
@@ -1482,21 +1482,19 @@ msgstr "Informações de licença e suporte"
 
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
-msgstr "AVISO: O número de usuários registrados está excedendo sua licença."
+msgstr "AVISO: O número de usuários registrados é excedente ao contratado."
 
 #: modules/base/status/support.php:41
 msgid "WARNING: The number of registered computers is exceeding your license."
-msgstr ""
-"AVISO: O número de computadores registrados está excedendo a sua licença."
+msgstr "AVISO: O número de computadores registrados é excedente ao contratado."
 
 #: modules/base/status/support.php:44
 msgid ""
 "Please contact your administrator for more information. If you are an "
 "administrator, please go to the license status page for more information."
 msgstr ""
-"Porfavor contate o seu administrador para mais informações. Se você for o "
-"administrador, por favor vá a pagina de status das licenças para maiores "
-"informações."
+"Por favor contate seu administrador para mais informações. Se você for o "
+"administrador, verifique na página de status das licenças para mais detalhes."
 
 #: modules/base/status/support.php:50
 msgid "Product name"
@@ -1524,11 +1522,11 @@ msgstr "Comentário"
 
 #: modules/base/status/support.php:56
 msgid "Registered users"
-msgstr "Usuários Registrados"
+msgstr "Usuários registrados"
 
 #: modules/base/status/support.php:57
 msgid "Registered computers"
-msgstr "Computadores Registrados"
+msgstr "Computadores registrados"
 
 #: modules/base/status/support.php:58
 msgid "Support mail address"
@@ -1541,7 +1539,7 @@ msgstr "Telefone do Suporte"
 #: modules/base/users/delete.php:33
 #, php-format
 msgid "User %s has been successfully deleted"
-msgstr "Usuário %s foi removido com sucesso"
+msgstr "O usuário %s foi removido com sucesso"
 
 #: modules/base/users/delete.php:38
 msgid "Delete user"
@@ -1573,7 +1571,7 @@ msgstr "Alterar sua senha"
 #: modules/base/users/localSidebar.php:36
 #: modules/base/users/resetpasswd.php:35
 msgid "Reset your password"
-msgstr "Resetar sua senha"
+msgstr "Trocar sua senha"
 
 #: modules/base/users/loguser.php:39
 msgid "User log"
@@ -1589,7 +1587,7 @@ msgstr "Alterar sua senha"
 
 #: modules/base/users/passwd.php:60 modules/base/users/resetpasswd.php:50
 msgid "You are going to change your password"
-msgstr "Você está prestes a alterar a sua senha"
+msgstr "Você está prestes a alterar sua senha"
 
 #: modules/base/users/passwd.php:64
 msgid "Current password"
@@ -1610,11 +1608,11 @@ msgstr "Retornar"
 
 #: modules/base/users/passwd.php:79
 msgid "Invalid current password. Please retry."
-msgstr "Senha atual inválida. Favor tentar novamente."
+msgstr "Senha atual inválida. Tente novamente."
 
 #: modules/base/users/passwd.php:81 modules/base/users/resetpasswd.php:64
 msgid "Passwords are mismatching. Please retry."
-msgstr "Senhas não conferem. Favor tentar novamente."
+msgstr "Senhas não conferem. Tente novamente."
 
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
@@ -1674,7 +1672,7 @@ msgstr "ACLs de usuário modificadas com sucesso."
 
 #: modules/base/users/editacl.php:175
 msgid "Set value for all radio buttons:&nbsp;&nbsp;"
-msgstr "Setar valores para todos os botões:&nbsp;&nbsp;"
+msgstr "Definir valores para todos os botões:&nbsp;&nbsp;"
 
 #: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
 msgid "read only"
@@ -1725,7 +1723,7 @@ msgstr "Editar usuário"
 #: modules/base/users/edit.php:88
 #, php-format
 msgid "Failed to change primary group in %s plugin"
-msgstr "Falha em mudar o grupo primario no %s plugin"
+msgstr "Falha em mudar o grupo primário no plugin %s"
 
 #: modules/base/users/edit.php:112
 msgid "Password not updated"
@@ -1818,7 +1816,7 @@ msgstr "Ver log"
 
 #: modules/base/infoPackage.inc.php:126
 msgid "LDAP log"
-msgstr "Log do LDAP"
+msgstr "Log LDAP"
 
 #: modules/base/infoPackage.inc.php:144
 msgid "Status"
@@ -1826,7 +1824,7 @@ msgstr "Status"
 
 #: modules/base/infoPackage.inc.php:150
 msgid "Default status page"
-msgstr "Página default de status"
+msgstr "Página padrão de status"
 
 #: modules/base/infoPackage.inc.php:155
 msgid "Support page"
@@ -1846,7 +1844,7 @@ msgstr "Editar permissões ACL de um usuário"
 
 #: modules/base/infoPackage.inc.php:195
 msgid "Logged user actions"
-msgstr "Ações do usuário logado"
+msgstr "Ações do usuário autenticado"
 
 #: modules/base/infoPackage.inc.php:200
 msgid "Action details"
@@ -1862,11 +1860,11 @@ msgstr "Cópia(backup) de arquivos do usuário"
 
 #: modules/base/infoPackage.inc.php:220
 msgid "Reset user password"
-msgstr "Resetar senha do usuário"
+msgstr "Trocar senha do usuário"
 
 #: modules/base/infoPackage.inc.php:225
 msgid "Change user password"
-msgstr "Alterar Senha do Usuario"
+msgstr "Alterar Senha do Usuário"
 
 #: modules/base/infoPackage.inc.php:230
 msgid "Get user photo"
@@ -1890,7 +1888,7 @@ msgstr "Computadores"
 
 #: modules/base/infoPackage.inc.php:288
 msgid "Edit computer"
-msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
+msgstr "Editar computador"
 
 #: modules/base/infoPackage.inc.php:292
 msgid "Delete a computer"
@@ -1958,8 +1956,7 @@ msgstr "Requisição inválida"
 
 #: token.php:68
 msgid "Error while validating your token. Please contact your administrator."
-msgstr ""
-"Erro ao validar o seu requisição . Por favor contacte o seu administrador."
+msgstr "Erro ao validar sua requisição. Por favor contate seu administrador."
 
 #: version.php:35
 msgid "MMC components version"
@@ -1971,7 +1968,7 @@ msgstr "Agente MMC: versão"
 
 #: version.php:40
 msgid "agent: version"
-msgstr "agent: versão"
+msgstr "agente: versão"
 
 #: version.php:42
 msgid "web: version"
@@ -2025,7 +2022,7 @@ msgstr ""
 
 #: index.php:183
 msgid "Forgot password ?"
-msgstr "Senha atualEsqueçeu a senha ?"
+msgstr "Esqueçeu a senha ?"
 
 #: index.php:194
 msgid "Server"
