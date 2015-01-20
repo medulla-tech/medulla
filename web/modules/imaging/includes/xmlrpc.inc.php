@@ -425,4 +425,8 @@ function xmlrpc_getComputerByUUID($uuid) {
     return xmlCall("imaging.getComputerByUUID", array($uuid));
 }
 
+function xmlrpc_Windows_Answer_File_Generator( $params, $title) {
+    return xmlCall("imaging.Windows_Answer_File_Generator", array( $params,$title));
+}
+
 ?>

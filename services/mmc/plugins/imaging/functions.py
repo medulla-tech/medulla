@@ -44,6 +44,7 @@ from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 
+from os import path, makedirs
 
 class ImagingRpcProxy(RpcProxyI):
 
@@ -2201,6 +2202,21 @@ class ImagingRpcProxy(RpcProxyI):
                 return defer_list
 
         return [True]
+
+    def Windows_Answer_File_Generator(self, xmlWAFG, title):
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+        if not path.exists(filexml):
+            makedirs(filexml, 0722)
+        filexml = filexml + title
+        try:
+            f = open(filexml, 'w')
+            f.write(xmlWAFG)
+        except  Exception, e:
+            logging.getLogger().exception(e)
+            return False
+        else:
+            f.close()
+        return True
 
     def getMyMenuComputer(self, uuid):
         """ see getMyMenuTarget """
