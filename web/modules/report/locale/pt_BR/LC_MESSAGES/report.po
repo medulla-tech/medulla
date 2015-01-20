@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2015-01-20 21:34+0200\n"
+"PO-Revision-Date: 2015-01-20 21:42+0200\n"
 "Last-Translator: Andre <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
 "/mmc-core-32/report/pt_BR/>\n"
@@ -183,31 +183,31 @@ msgstr "Sáb"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Su"
-msgstr "Domingos"
+msgstr "Dom"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Mo"
-msgstr "Segundas"
+msgstr "Seg"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Tu"
-msgstr "Terças"
+msgstr "Ter"
 
 #: modules/report/includes/html.inc.php:139
 msgid "We"
-msgstr "Quartas"
+msgstr "Qua"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Th"
-msgstr "Quintas"
+msgstr "Qui"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Fr"
-msgstr "Sextas"
+msgstr "Sex"
 
 #: modules/report/includes/html.inc.php:140
 msgid "Sa"
-msgstr "Sábados"
+msgstr "Sáb"
 
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
@@ -228,7 +228,7 @@ msgstr "de"
 
 #: modules/report/report/index.php:63
 msgid "to"
-msgstr "para"
+msgstr "a"
 
 #: modules/report/report/index.php:76
 msgid "Entities"
