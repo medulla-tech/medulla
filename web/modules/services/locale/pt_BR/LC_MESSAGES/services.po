@@ -8,15 +8,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-01-12 01:11+0100\n"
-"PO-Revision-Date: 2012-12-12 18:54+0000\n"
-"Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"POT-Creation-Date: 2014-10-27 01:10+0100\n"
+"PO-Revision-Date: 2015-01-20 21:56+0200\n"
+"Last-Translator: Andre <andre@mandriva.com>\n"
+"Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
+"/mmc-core-32/services/pt_BR/>\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.1-dev\n"
 
 #: modules/services/control/ajaxLogFilter.php:53
 msgid "Date"
@@ -67,7 +69,7 @@ msgstr "Reiniciar serviço"
 #: modules/services/control/ajaxOthersServicesFilter.php:32
 #: modules/services/control/ajaxServicesFilter.php:32
 msgid "View log"
-msgstr "Vizualizar log"
+msgstr "Visualizar log"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:52
 #: modules/services/control/ajaxServicesFilter.php:79
@@ -80,27 +82,26 @@ msgid "Status"
 msgstr "Status"
 
 #: modules/services/control/index.php:26
-#: modules/services/control/localSidebar.php:25
+#: modules/services/control/localSidebar.php:26
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
 msgid "Core services"
 msgstr "Serviços principais"
 
-#: modules/services/control/log.php:36
-#, php-format
-msgid "%s service log"
-msgstr "%s log do serviço"
+#: modules/services/control/localSidebar.php:27
+#: modules/services/control/others.php:29
+msgid "Other services"
+msgstr "Outros Serviços"
 
-#: modules/services/control/log.php:38
-#: modules/services/control/localSidebar.php:31
-#: modules/services/infoPackage.inc.php:76
+#: modules/services/control/localSidebar.php:28
+#: modules/services/control/log.php:38 modules/services/infoPackage.inc.php:76
 msgid "Services log"
 msgstr "Log dos serviços"
 
-#: modules/services/control/others.php:29
-#: modules/services/control/localSidebar.php:28
-msgid "Other services"
-msgstr "Outros Serviços"
+#: modules/services/control/log.php:36
+#, php-format
+msgid "%s service log"
+msgstr "Log do serviço %s"
 
 #: modules/services/includes/panels/services.inc.php:30
 #: modules/services/infoPackage.inc.php:36
@@ -116,7 +117,7 @@ msgstr[1] "%d serviços inativos"
 
 #: modules/services/includes/panels/services.inc.php:50
 msgid "All services are up"
-msgstr "Todos os servições estão rodando."
+msgstr "Todos os serviços estão em execução"
 
 #: modules/services/includes/panels/system.inc.php:29
 msgid "System"
@@ -147,5 +148,3 @@ msgstr "Gerenciamento de serviços"
 #: modules/services/infoPackage.inc.php:49
 msgid "Others services"
 msgstr "Outros serviços"
-
-

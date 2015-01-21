@@ -17,6 +17,15 @@ if ($service['active_state'] != "unavailable") {
             $actionsReload[] = $emptyAction;
         $actionsLog[] = $logAction;
     }
+    else if ( ($service['active_state'] == "activating" ) ||
+              ($service['active_state'] == "deactivating" ) ) {
+            $status = _T($service['active_state']);
+            $actionsStart[] = $emptyAction;
+            $actionsStop[] = $emptyAction;
+            $actionsRestart[] = $emptyAction;
+            $actionsReload[] = $emptyAction;
+            $actionsLog[] = $logAction;
+    }
     else {
         $status = '<span class="error">' . _T($service['active_state']) . '</span>';
         if ($service['active_state'] != "unavailable") {

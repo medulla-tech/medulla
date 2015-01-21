@@ -28,6 +28,19 @@ define('__ROOT__', dirname(dirname(__FILE__)));
 require_once(__ROOT__."/site.php");
 require_once("ModulesGenerator.php");
 
+
+/**
+ * Order modules lists, plugin base must be first
+ *
+ * @param list of modules
+ * @return ordered module list
+ */
+function orderModulesList($list) {
+    sort($list);
+    array_splice($list, array_search("base", $list), 1);
+    return array_merge(["base"], $list);
+}
+
 /**
  * return an array of all subdirs in a dir
  *
@@ -47,8 +60,6 @@ function fetchModulesList($dir) {
                     $registerList[] = $module;
             }
         }
-        sort($ret);
-        sort($registerList);
     }
 
     /* register modulesList in $_SESSION */
