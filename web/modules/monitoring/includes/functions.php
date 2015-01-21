@@ -182,7 +182,7 @@ class AjaxFilterLocationFormid extends AjaxFilterLocation {
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
                 <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
-                <span class="searchfield">
+                <span class="searchfield">&nbsp;&nbsp;
                     <?php
                     $this->location->display();
                     ?>
