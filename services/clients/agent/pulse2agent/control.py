@@ -86,6 +86,9 @@ class Protocol(Component):
             return "scheduler.tick"
         elif cmd == "INVENTORY":
             return "inventory.process_inventory"
+        elif cmd == "VPN_SET":
+            return "vpn_install.create_new_user"
+
 
 
 class InventorySender(Component):
@@ -99,6 +102,20 @@ class InventorySender(Component):
         response = self.parent.client.request(container)
         self.logger.debug("inventory: received response: %s" % response)
         return True
+
+class VPNSetter(Component):
+    __component_name__ = "vpn_setter"
+
+    def create_user_on_server(self):
+        inventory = get_minimal_inventory()
+        command = self.parent.protocol.get_command("VPN_SET")
+
+        container = (command, inventory)
+        response = self.parent.client.request(container)
+        self.logger.debug("vpn_setter: received response: %s" % response)
+        if isinstance(response, tuple):
+            pass
+        #return True
 
 
 class InitialInstalls(Component):
@@ -227,6 +244,7 @@ class FirstRunEtap(Component):
     __component_name__ = "first_run_etap"
 
     def check_required(self):
+        vpn_installed = False 
         try:
             missing_software = self.parent.inventory_checker.check_missing()
         except SoftwareCheckError:
@@ -238,8 +256,14 @@ class FirstRunEtap(Component):
             return False
 
         if self.config.vpn.enabled:
+            self.logger.debug("check if VPN installed...")
             if not self.parent.inventory_checker.check_vpn_installed():
-                missing_software.append("vpnclient")
+                self.logger.debug("adding the vpnclient to required sw (missing=%s)" % repr(missing_software))
+                #missing_software.append("vpnclient")
+                vpn_installed = False
+            else:
+                vpn_installed = True
+            
 
 
         for sw in missing_software:
@@ -248,6 +272,11 @@ class FirstRunEtap(Component):
                 pass
                 #raise SoftwareRequestError(sw)
 
+        if self.config.vpn.enabled and not vpn_installed:
+            result = self.parent.initial_installs.install(["vpnclient"])
+            self.logger.debug("install of vpnclient: %s" % str(result))
+            result = self.parent.vpn_setter.create_user_on_server()
+            self.logger.debug("create_user_on_server: %s" % str(result))
         return True
 
 
@@ -263,6 +292,7 @@ class Dispatcher(DispatcherFrame):
                   InventoryChecker,
                   InventorySender,
                   VPNLaunchControl,
+                  VPNSetter,
                   Protocol,
                   ]
 
