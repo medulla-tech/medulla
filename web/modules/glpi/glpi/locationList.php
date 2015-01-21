@@ -41,3 +41,6 @@ $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
+<script type="text/javascript">
+jQuery('.searchfield').first().hide()
+</script>
