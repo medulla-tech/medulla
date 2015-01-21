@@ -590,7 +590,7 @@ class VPNInstallEndpoint(Endpoint):
 
 
 
-    def create_new_user(self, inventory):
+    def create_new_user(self, inventory, from_ip):
 
         if not self._check_vpn_service():
             return succeed(False)
