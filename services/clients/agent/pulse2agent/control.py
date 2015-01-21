@@ -21,12 +21,16 @@
 # MA 02110-1301, USA.
 
 import os
+import sys
+import stat
 import time
 import logging
 import logging.config
 import platform
 import urllib2
+import fileinput
 
+from distutils import file_util
 from threading import Thread
 from Queue import Queue
 
@@ -113,9 +117,93 @@ class VPNSetter(Component):
         container = (command, inventory)
         response = self.parent.client.request(container)
         self.logger.debug("vpn_setter: received response: %s" % response)
-        if isinstance(response, tuple):
-            pass
-        #return True
+        try:
+            if isinstance(response, list):
+                if len(response) == 4:
+                    host, port, user, password = response
+                    ok = self.set_variables(host, port, user, password)
+                    if ok:
+                        self.logger.debug("vpn_setter: variables successfully assigned")
+                        return self.install()
+
+                    return True
+        except Exception, e:
+            self.logger.warn("VPN install failed: %s" % str(e))
+
+        return False
+
+    def set_variables(self, host, port, user, password):
+        variables = os.path.join(self.temp_dir,
+                                 "vpn-variables",
+                                 )
+        file_util.copy_file("%s.in" % variables, variables)
+        pattern = {"VPN_SERVER_HOST": host,
+                   "VPN_SERVER_PORT": port,
+                   "VPN_SERVER_USER": user,
+                   "VPN_SERVER_PASSWORD": password,
+                   "VPN_SERVICE_SIDE": "client",
+                   }
+        return self.replace(pattern, variables)
+
+
+    def replace(self, pattern, in_script):
+        """
+        Replaces all occurences based on pattern.
+
+        @param pattern: key as template expression, value as new string
+        @type pattern: dict
+
+        @return: True if all occurences replaced
+        @rtype: bool
+        """
+        replaced_items = 0
+        for line in fileinput.input(in_script, inplace=1):
+            for (old, new) in pattern.iteritems():
+                search_exp = "@@%s@@" % old
+                if search_exp in line:
+                    line = line.replace(search_exp, new)
+                    replaced_items += 1
+            sys.stdout.write(line)
+
+        return replaced_items == len(pattern)
+
+
+    def install(self):
+        installer = os.path.join(self.temp_dir,
+                                 "vpn-service-install.sh",
+                                 )
+        self.logger.debug("vpn_setter: chmod +x installer")
+        st = os.stat(installer)
+        os.chmod(installer, st.st_mode | stat.S_IEXEC)
+
+        exitcode = self.parent.shell.call(installer)
+        if exitcode != 0:
+            self.logger.warn("vpn_setter: install failed")
+            return False
+
+        setter = os.path.join(self.temp_dir,
+                              "vpn-client-set.sh",
+                              )
+        st = os.stat(setter)
+        os.chmod(setter, st.st_mode | stat.S_IEXEC)
+        self.logger.debug("vpn_setter: chmod +x setter")
+
+        exitcode = self.parent.shell.call(setter)
+        if exitcode != 0:
+            self.logger.warn("vpn_setter: set failed")
+            return False
+
+
+        return True
+
+    @property
+    def temp_dir(self):
+        if platform.system() == "Windows":
+           return self.config.paths.package_tmp_dir_win
+        else:
+           return self.config.paths.package_tmp_dir_posix
+
+
 
 
 class InitialInstalls(Component):
@@ -244,7 +332,7 @@ class FirstRunEtap(Component):
     __component_name__ = "first_run_etap"
 
     def check_required(self):
-        vpn_installed = False 
+        vpn_installed = False
         try:
             missing_software = self.parent.inventory_checker.check_missing()
         except SoftwareCheckError:
@@ -263,7 +351,7 @@ class FirstRunEtap(Component):
                 vpn_installed = False
             else:
                 vpn_installed = True
-            
+
 
 
         for sw in missing_software:
