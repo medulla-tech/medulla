@@ -39,7 +39,7 @@ posixclientscripts = generate-agents create-repos.sh installer.sh.in \
 		   agent/setup.py \
 		   agent/service.py \
 		   agent/install.sh \
-		   agent/ininstall.sh \
+		   agent/uninstall.sh \
                    agent/linux/pulse2-agent.init \
                    agent/linux/pulse2-agent.service
 
