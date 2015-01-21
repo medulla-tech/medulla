@@ -582,8 +582,9 @@ class VPNInstallEndpoint(Endpoint):
         """ Returns True if VPN server running """
         process_name = "vpnserver"
         for p in psutil.process_iter():
-            if process_name in p.cmdline :
-                return True
+            for arg in p.cmdline :
+                if process_name in arg:
+                    return True
 
         self.logger.warn("CM: Can't find VPN server service")
         return False
