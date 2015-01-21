@@ -202,7 +202,7 @@ class InventoryChecker(Component):
                        )
         out, err = process.communicate()
         returncode = process.returncode
-        if returncode == 0:
+        if not len(err.strip()) > 0:
             self.logger.debug("Inventory check out: %s" % repr(out))
             for name in software_required:
                 if name not in out:
