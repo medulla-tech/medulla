@@ -25,7 +25,7 @@ SUBDIRS = win32
 
 posixclientdir = $(localstatedir)/lib/pulse2/clients
 
-posixclientscripts = generate-agents create-repos.sh \
+posixclientscripts = generate-agents create-repos.sh installer.sh.in \
                    templates/mac/package/Contents/Resources/postflight.in \
                    templates/deb/package/DEBIAN/postinst \
                    templates/deb/package/etc/init.d/linuxvnc \
@@ -34,12 +34,36 @@ posixclientscripts = generate-agents create-repos.sh \
 		   vpn/vpn-server-user-create.sh \
 		   vpn/vpn-service-uninstall.sh \
                    vpn/vpn-server-set.sh \
-		   vpn/vpn-service-install.sh
+		   vpn/vpn-service-install.sh \
+                   agent/pulse2-agent \
+		   agent/pulse2agent.defaults.in \
+		   agent/setup.py \
+		   agent/service.py \
+		   agent/install.sh \
+		   agent/ininstall.sh \
+                   agent/linux/pulse2-agent.init \
+                   agent/linux/pulse2-agent.service \
+
 
 posixclientdata = agents.conf \
                 templates/mac/package/Contents/package_version \
                 templates/mac/package/Contents/header.png \
-                vpn/vpn-variables.in
+                vpn/vpn-variables.in \
+	        agent/pulse2agent.defaults.in \
+	        agent/pulse2agent.ini \
+                agent/linux/pulse2-agent.default \
+		agent/mac/com.pulse2.agent.plist 
+	        agent/win32/artwork/header.bmp \
+ 	        agent/win32/artwork/uninstall.ico \
+	        agent/win32/artwork/wizard.bmp \
+	        agent/win32/artwork/install.ico \
+	        agent/win32/libs/StrRep.nsh \
+	        agent/win32/libs/ReplaceInFile.nsh \
+	        agent/win32/libs/ServiceLib.nsh \
+	        agent/win32/libs/InstallOptionsMacro.nsh \
+	        agent/win32/plugins/services.dll \
+	        agent/win32/bin/customoptions.ini \
+	        agent/win32/bin/installer.nsi \
 
 nobase_posixclient_SCRIPTS = $(posixclientscripts) 
 nobase_posixclient_DATA = $(posixclientdata) 
