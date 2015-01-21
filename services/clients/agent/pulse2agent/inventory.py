@@ -139,12 +139,12 @@ class InventoryChecker(Component):
 
             distname, version, id = platform.linux_distribution()
 
-            if distname in ("debian", "ubuntu", "mint"):
+            if distname.lower() in ("debian", "ubuntu", "mint"):
 
                 software_required = self.config.inventory.debian_software_required
                 base_command = "/usr/bin/dpkg -l"
 
-            elif distname in ("redhat", "fedora", "centos"):
+            elif distname.lower() in ("redhat", "fedora", "centos"):
                 software_required = self.config.inventory.redhat_software_required
                 base_command = "/usr/bin/rpm -qa"
 

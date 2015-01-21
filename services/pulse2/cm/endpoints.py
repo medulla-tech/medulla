@@ -199,12 +199,12 @@ class PackagesEndpoint(Endpoint):
         elif system == "Linux":
             distro = request["distro"]
             xserver = request["xserver"]
-            if distro in ["debian", "ubuntu", "mint"]:
+            if distro.lower() in ["debian", "ubuntu", "mint"]:
                 if xserver:
                     return self.commands.debian
                 else:
                     return self.commands.debian_server
-            elif distro in ["redhat", "centos", "fedora"]:
+            elif distro.lower() in ["redhat", "centos", "fedora"]:
                 if xserver:
                     return self.commands.redhat
                 else:
