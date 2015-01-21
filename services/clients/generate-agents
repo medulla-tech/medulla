@@ -40,6 +40,7 @@ import sys
 import uuid
 import datetime
 import plistlib
+import fileinput
 
 from distutils import dir_util, file_util, archive_util
 from subprocess import Popen, PIPE
@@ -807,7 +808,85 @@ class PackagesGenerator(object):
         self.config.increment_release()
 
 
+class SmartAgentPrepare(object):
 
+    AGENT_FOLDER = "agent"
+    INSTALLER = "installer.sh"
+    DEFAULTS_FILE = "pulse2agent.defaults"
+
+    def __init__(self, host, port):
+        self.host = host
+        self.port = port
+
+    def set_all(self):
+        for method in [self.installer_set,
+                       self.defaults_set,
+                       self.create_archive,
+                       ]:
+            succeed = method()
+            if not succeed:
+                print "ERROR: An error occurred during execute %s" % method.__name__
+                return 1
+        return 0
+
+
+
+    def installer_set(self):
+
+        installer = os.path.join(MODULE_DIR, self.INSTALLER)
+        file_util.copy_file("%s.in" % installer, installer)
+        print "INFO: Installer create..."
+        return self.replace({"DOMAIN": self.host}, installer)
+
+
+    def defaults_set(self):
+        defaults = os.path.join(MODULE_DIR,
+                                self.AGENT_FOLDER,
+                                self.DEFAULTS_FILE)
+        pattern = {"PULSE2_CM_SERVER": self.host,
+                   "PULSE2_CM_PORT": self.port,
+                   "VPNCMD_PATH": "/opt/vpnclient/vpncmd",
+                   "PULSE2_CM_LOG_PATH": "/var/log/pulse2agent.log",
+                   }
+
+        file_util.copy_file("%s.in" % defaults, defaults)
+        print "INFO: Defaults prepare"
+        return self.replace(pattern, defaults)
+
+
+
+    def replace(self, pattern, in_script):
+        """
+        Replaces all occurences based on pattern.
+
+        @param pattern: key as template expression, value as new string
+        @type pattern: dict
+
+        @return: True if all occurences replaced
+        @rtype: bool
+        """
+        replaced_items = 0
+        for line in fileinput.input(in_script, inplace=1):
+            for (old, new) in pattern.iteritems():
+                search_exp = "@@%s@@" % old
+                if search_exp in line:
+                    line = line.replace(search_exp, new)
+                    replaced_items += 1
+            sys.stdout.write(line)
+
+        return replaced_items == len(pattern)
+
+
+    def create_archive(self):
+        print "INFO: Agent archive create..."
+        #root_dir = os.path.join(MODULE_DIR
+        archive_util.make_archive(self.AGENT_FOLDER,
+                                  "gztar",
+                                  MODULE_DIR,
+                                  self.AGENT_FOLDER,
+                                  verbose=1
+                                  )
+        return True
 
 
 def args_parse(script_path, args):
@@ -831,6 +910,9 @@ def args_parse(script_path, args):
                     "--port",
                     "--enablessl",
                     "--tag",
+                    "--cm-host",
+                    "--cm-port",
+                    "--cm-only",
                     "-h",
                     "--help",
                     "--verbose"
@@ -865,8 +947,25 @@ if __name__ == "__main__":
     print "INFO: Inventory URL: %s" % inventory_url
     tag = inv.get_tag()
 
-    pgen = PackagesGenerator(inventory_url, tag)
-    pgen.generate_all()
+    if not "--cm-only" in sys.argv:
+        pgen = PackagesGenerator(inventory_url, tag)
+        pgen.generate_all()
+
+    if "cm-host" in kwargs:
+        cm_host = kwargs["cm-host"]
+    else:
+        cm_host = inv.host
+
+    if "cm-port" in kwargs:
+        cm_port = kwargs["cm-port"]
+    else:
+        cm_port = "8443" # TODO - check it in cm.ini
+
+
+    sm = SmartAgentPrepare(cm_host, cm_port)
+    sys.exit(sm.set_all())
+
+
 
 
 

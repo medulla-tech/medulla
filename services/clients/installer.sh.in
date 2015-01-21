@@ -17,8 +17,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-ARCHIVE_URL=@@DOMAIN@@/downloads/pulse2agent.tar.gz
+ARCHIVE_URL=@@DOMAIN@@/downloads/agent.tar.gz
 
-curl -O $ARCHIVE_URL
-
-
+if [ ! -f "`which curl`" ]; then
+    wget $ARCHIVE_URL
+else
+    curl -O $ARCHIVE_URL
+fi
+sleep 5
+tar -zxvf agent.tar.gz
+cd agent
+./install.sh
