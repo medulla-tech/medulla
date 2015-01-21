@@ -131,12 +131,12 @@ class AgentsInstallMap(object):
                "##tmp## pulse2-win32-agents-pack-silent.exe"]
     debian = ["wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
               "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
-              "apt-get update",
+              "apt-get update -y",
               "apt-get install -y pulse2-agents-installer"
               ]
     debian_server = ["wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
               "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
-              "apt-get update",
+              "apt-get update -y",
               "apt-get install -y pulse2-agents-installer-nordp"
               ]
     redhat = ["yum-config-manager --add-repo ##server##/downloads/rpm/pulse2-agents.repo",
@@ -183,7 +183,7 @@ class PackagesEndpoint(Endpoint):
         @return: list of install commands
         @rtype: list
         """
-        if request["name"] == "vpnclient":
+        if "vpnclient" in request["name"]:
             if request["system"] in ["Linux", "Darwin"]:
                 return self.vpn_install.posix
             else:
