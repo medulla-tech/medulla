@@ -569,6 +569,8 @@ class InventoryServerEndpoint(Endpoint):
 class VPNInstallEndpoint(Endpoint):
     prefix = "vpn_install"
 
+    VPN_VARIALES_PATH = "/var/lib/pulse2/clients/vpn/vpn-variables"
+
     def _check_vpn_service(self):
         """ Returns True if VPN server running """
         process_name = "vpnserver"
@@ -620,6 +622,7 @@ class VPNInstallEndpoint(Endpoint):
                                 "vpn-server-user-create.sh",
                                 )
             password = self._password_generate()
+            host, port = self.get_vpn_variables()
 
             protocol = ForkingProtocol("VPN installer")
             args = [path, uuid, password]
@@ -628,11 +631,12 @@ class VPNInstallEndpoint(Endpoint):
                                  args,
                                  usePTY=True)
 
-            return (uuid, password)
+            return (host, port, uuid, password)
 
 
         @d.addErrback
         def get_uuid_errback(failure):
+            self.logger.warn("VPN install: uuid get failed: %s" % (str(failure)))
             return False
 
 
@@ -643,6 +647,19 @@ class VPNInstallEndpoint(Endpoint):
         chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
         return "".join([chars[ord(c) % len(chars)] for c in os.urandom(length)])
 
+    def get_vpn_variables(self):
+        host = port = None
+        with open(self.VPN_VARIALES_PATH, "r") as f:
+            for line in f.readlines():
+                if "VPN_SERVER_HOST" in line and "=" in line:
+                    host = line.split("=")[1].strip()
+                if "VPN_SERVER_PORT" in line and "=" in line:
+                    port = line.split("=")[1].strip()
+                if host and port:
+                    return host, port
+
+            self.logger.debug("%s: VPN VARIABLES: %s" % line)
+        return host, port
 
 
 class ForkingProtocol(ProcessProtocol):
