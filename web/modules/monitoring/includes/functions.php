@@ -337,3 +337,6 @@ class buttonTpl extends AbstractTpl {
 
 
 ?>
+<script type="text/javascript">
+jQuery('#Location').hide();
+</script>
