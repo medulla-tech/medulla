@@ -36,7 +36,6 @@ posixclientscripts = generate-agents create-repos.sh installer.sh.in \
                    vpn/vpn-server-set.sh \
 		   vpn/vpn-service-install.sh \
                    agent/pulse2-agent \
-		   agent/pulse2agent.defaults.in \
 		   agent/setup.py \
 		   agent/service.py \
 		   agent/install.sh \
