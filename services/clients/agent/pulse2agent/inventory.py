@@ -158,7 +158,8 @@ class InventoryChecker(Component):
             for name in self.posix_shell_query(base_command, software_required):
                 yield name
 
-
+    def check_vpn_installed(self):
+        return os.path.exists(self.config.vpn.command)
 
     def posix_shell_query(self, base_command, software_required):
         """

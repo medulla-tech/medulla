@@ -237,6 +237,11 @@ class FirstRunEtap(Component):
             self.logger.warn("Unable to continue, another reason: %s" % str(e))
             return False
 
+        if self.config.vpn.enabled:
+            if not self.parent.inventory_checker.check_vpn_installed():
+                missing_software.append("vpnclient")
+
+
         for sw in missing_software:
             result = self.parent.initial_installs.install(sw)
             if not result:
