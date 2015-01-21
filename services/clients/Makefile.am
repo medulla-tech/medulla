@@ -41,7 +41,7 @@ posixclientscripts = generate-agents create-repos.sh installer.sh.in \
 		   agent/install.sh \
 		   agent/ininstall.sh \
                    agent/linux/pulse2-agent.init \
-                   agent/linux/pulse2-agent.service \
+                   agent/linux/pulse2-agent.service
 
 
 posixclientdata = agents.conf \
@@ -62,7 +62,7 @@ posixclientdata = agents.conf \
 	        agent/win32/libs/InstallOptionsMacro.nsh \
 	        agent/win32/plugins/services.dll \
 	        agent/win32/bin/customoptions.ini \
-	        agent/win32/bin/installer.nsi \
+	        agent/win32/bin/installer.nsi 
 
 nobase_posixclient_SCRIPTS = $(posixclientscripts) 
 nobase_posixclient_DATA = $(posixclientdata) 
