@@ -565,15 +565,6 @@ class InventoryServerEndpoint(Endpoint):
         return d
 
 
-class VPNInstallMap(object):
-
-    windows = ["##wget## ##server##/downloads/vpn/vpn-client-set.sh",
-               "##wget## ##server##/downloads/vpn/vpn-variables.in",
-               ]
-    posix = ["##wget## ##server##/downloads/vpn/vpn-service-install.sh",
-             "##wget## ##server##/downloads/vpn/vpn-client-set.sh",
-             "##wget## ##server##/downloads/vpn/vpn-variables.in",
-             ]
 
 class VPNInstallEndpoint(Endpoint):
     prefix = "vpn_install"
