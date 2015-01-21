@@ -69,6 +69,10 @@ def activate():
         TaskManager().addTask("update.create_update_commands",
                               (create_update_commands,),
                               cron_expression=config.update_commands_cron)
+    if config.enable_update_description:
+        TaskManager().addTask("add_update_description",
+                              (add_update_description,),
+                              cron_expression=config.add_update_description_cron)
     return True
 
 
@@ -89,6 +93,10 @@ def enable_only_os_classes(os_classes_ids):
 
 def get_update_types(params):
     return updateDatabase().get_update_types(params)
+
+
+def add_update_description():
+    return updateDatabase().add_update_description()
 
 
 def get_updates(params):
@@ -125,12 +133,14 @@ def _get_updates_for_group(params):
     return updates
 
 
-def get_machines_update_status():
+def get_machines_update_status(not_supported=False):
     """
     Get machine update status as a dict as key
     and status string as value.
-    commons status values :"unknown","up-to-date","need_update","update_available",
-    "update_planned"
+    commons status values :"not_supported","not_registered",
+    "up-to-date","need_update","update_available","update_planned",
+    "os_update_disabled".
+    The "not_supported" value can be disabled with not_supported param.
     """
     # Creating root context
     ctx = SecurityContext()
@@ -138,25 +148,43 @@ def get_machines_update_status():
 
     machines_status = {}
     uuids = []
+
     # get computer list who returned update
     machines_update = updateDatabase().get_machines()
+    # get activated os computers:
+    machines_os_enabled = _get_updatable_computers(ctx, activated=True)
+    # get disabled os computers:
+    machines_os_disabled = _get_updatable_computers(ctx, activated=False)
     # get uuid for all computer
     ComputerList = ComputerManager().getComputersList(ctx, {}).keys()
     uuids = []
+    # convert uuid as string number
     for uuid in ComputerList:
         uuids.append(int(uuid.lower().replace('uuid', '')))
-    #get status of all machines
+    machines_os_enabled = [
+        int(uuid.lower().replace('uuid', '')) for uuid in machines_os_enabled]
+    machines_os_disabled = [
+        int(uuid.lower().replace('uuid', '')) for uuid in machines_os_disabled]
+    # get status of all machines
     for uuid in uuids:
-        if uuid in machines_update:
-            if len(updateDatabase().get_neutral_updates_for_host(uuid)) == 0:
-                if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
-                    machines_status["UUID" + str(uuid)] = "up-to-date"
+        if uuid in machines_os_disabled:
+            machines_status["UUID" + str(uuid)] = "os_update_disabled"
+        elif uuid in machines_os_enabled:
+            if uuid in machines_update:
+                # if no neutral update not installed on this machine
+                if len(updateDatabase().get_neutral_updates_for_host(uuid, 0)) == 0:
+                    # if no eligible update
+                    if len(updateDatabase().get_eligible_updates_for_host(uuid)) == 0:
+                        machines_status["UUID" + str(uuid)] = "up-to-date"
+                    else:
+                        machines_status["UUID" + str(uuid)] = "update_planned"
                 else:
-                    machines_status["UUID" + str(uuid)] = "update_planned"
+                    machines_status["UUID" + str(uuid)] = "update_available"
             else:
-                machines_status["UUID" + str(uuid)] = "update_available"
-        else:
-            machines_status["UUID" + str(uuid)] = "unknown"
+                machines_status["UUID" + str(uuid)] = "not_registered"
+        elif not_supported:
+            machines_status["UUID" + str(uuid)] = "not_supported"
+
     return machines_status
 
 
@@ -178,13 +206,7 @@ def set_update_status(update_id, status):
     return updateDatabase().set_update_status(update_id, status)
 
 
-def create_update_commands():
-    # TODO: ensure that this method is called by taskmanager
-    # and not directly by XMLRPC
-
-    # Creating root context
-    ctx = SecurityContext()
-    ctx.userid = 'root'
+def _get_updatable_computers(ctx, activated=True):
     # Get active computer manager
     computer_manager = ComputerManager().getManagerName()
 
@@ -197,10 +219,15 @@ def create_update_commands():
             'Update module: Unsupported computer manager %s' %
             computer_manager)
         return False
-
     # Get all enabled os_classes
-    os_classes = updateDatabase().get_os_classes({'filters': {'enabled': 1}})
+    if activated:
+        os_classes = updateDatabase().get_os_classes(
+            {'filters': {'enabled': 1}})
+    else:
+        os_classes = updateDatabase().get_os_classes(
+            {'filters': {'enabled': 0}})
 
+    targets = []
     # Create update command for enabled os_classes
     for os_class in os_classes['data']:
 
@@ -215,20 +242,30 @@ def create_update_commands():
         request = '||'.join(request)
         equ_bool = 'OR(%s)' % ','.join(equ_bool)
 
-        targets = ComputerManager().getComputersList(
+        targets.extend(ComputerManager().getComputersList(
             ctx, {
-                'request': request, 'equ_bool': equ_bool}).keys()
+                'request': request, 'equ_bool': equ_bool}).keys())
+    return targets
 
-        # Fetching all targets
-        for uuid in targets:
-            machine_id = int(uuid.lower().replace('uuid', ''))
-            updates = updateDatabase().get_eligible_updates_for_host(
-                machine_id)
 
-            update_list = [update['uuid'] for update in updates]
+def create_update_commands():
+    # TODO: ensure that this method is called by taskmanager
+    # and not directly by XMLRPC
 
-            # Create update command for this host with update_list
-            create_update_command(ctx, [uuid], update_list)
+    # Creating root context
+    ctx = SecurityContext()
+    ctx.userid = 'root'
+    targets = _get_updatable_computers(ctx)
+    # Fetching all targets
+    for uuid in targets:
+        machine_id = int(uuid.lower().replace('uuid', ''))
+        updates = updateDatabase().get_eligible_updates_for_host(
+            machine_id)
+
+        update_list = [update['uuid'] for update in updates]
+
+        # Create update command for this host with update_list
+        create_update_command(ctx, [uuid], update_list)
     return True
 
 

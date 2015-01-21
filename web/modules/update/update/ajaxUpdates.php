@@ -27,7 +27,6 @@ require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/utils.inc.php");
 
 echo "<br/><br/>";
-
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -58,6 +57,12 @@ if (isset($_GET["filter"]) && $_GET["filter"]) {
    $params['like_filters']['title'] = $_GET["filter"];
    // to get all elements
    unset($params['max']);
+}
+
+if (isset($_GET["hide_installed_update"])) {
+    $params['hide_installed_update'] = true;
+} else {
+    $params['hide_installed_update'] = false;
 }
 
 extract(get_updates($params));
@@ -95,7 +100,9 @@ for ($i = 0; $i < count($cols['total_targets']); $i++){
     $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
 }
 for ($i = 0; $i < count($cols['info_url']); $i++){
-    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i].'" title="'._T("More details","update").'">'.$cols['title'][$i].'</a>';
+    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i];
+    $cols['title_url'][$i].='" title="'.$cols['description'][$i].'">';
+    $cols['title_url'][$i].=$cols['title'][$i].'</a>';
 }
 // Printing selected updates form
 print '<form id="sel_updates_form">';
@@ -105,8 +112,14 @@ $n->first_elt_padding = '0';
 $n->addExtraInfo($cols['title_url'], _T("Update title", "update"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "update"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
+#Disable only for global view and status=enable
+if ( isset($_GET["gid"]) or  $_GET["status"] != 1 ) {
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
+}
+#Disable only for global view and status=disable
+if ( isset($_GET["gid"]) or  $_GET["status"] != 2 ) {
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
+}
 if (isset($_GET['gid'])){
     print ('<input type="hidden" name="gid" value="'.$_GET['gid'].'"/>');
 }
@@ -125,7 +138,6 @@ print '</form>';
 ?>
 <input id="btnEnableUpdates" type="button" value="<?php print _T('Enable selected updates', 'update'); ?>" class="btnPrimary">
 <input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
-
 <script type="text/javascript">
 // Enable Updates button
 jQuery('#btnEnableUpdates').click(function(){
