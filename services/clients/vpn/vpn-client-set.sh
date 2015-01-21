@@ -76,7 +76,7 @@ if [ $VPN_OS == "linux" ]; then
     # enable IPv4 forwarding
     echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
     # apply sysctl
-    sysctl --system
+    sysctl -p
     dhclient vpn_0
 fi
 
