@@ -59,7 +59,7 @@ class Config(object):
                                     ]
         redhat_server_software_required = ["pulse2-agents-installer-nordp"
                                            ]
-        osx_required = ["org.pulse2-agents-installer",
+        osx_software_required = ["org.pulse2-agents-installer",
                         ]
 
     class paths(object):
