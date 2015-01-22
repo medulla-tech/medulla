@@ -307,13 +307,13 @@ class OSXMinimalInventory(MinimalInventory):
         out, err = process.communicate()
         returncode = process.returncode
         if returncode == 0:
-            self.logger.debug("Network check out: %s" % repr(out))
+            logging.getLogger().debug("Network check out: %s" % repr(out))
             for mac in out.split("\n"):
-                yield None, None, mac, None
+                yield "", "", mac, ""
         else:
-            self.logger.warn("Network check errcode: %s" % repr(returncode))
-            self.logger.warn("Network check nok: %s" % repr(out))
-            self.logger.warn("Network check failed: %s" % repr(err))
+            logging.getLogger().warn("Network check errcode: %s" % repr(returncode))
+            logging.getLogger().warn("Network check nok: %s" % repr(out))
+            logging.getLogger().warn("Network check failed: %s" % repr(err))
             raise SoftwareCheckError(repr(err))
 
         os.unlink(stf.name)
@@ -343,7 +343,8 @@ def get_minimal_inventory():
     elif SYSTEM == "LINUX":
         inv = LinuxMinimalInventory()
     elif SYSTEM == "DARWIN":
-        pass
+        inv = OSXMinimalInventory()
+
     else:
         raise OSError
     return inv.get()
