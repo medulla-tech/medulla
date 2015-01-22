@@ -221,7 +221,7 @@ class PostInstallPosixHandler(object):
         @return: True if successfully started
         @rtype: bool
         """
-        if self.insert_service_cmd is None:
+        if self.start_service_cmd is None:
             return True
 
         print "Starting service %s ..." % self.SCRIPT_NAME
