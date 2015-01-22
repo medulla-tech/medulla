@@ -320,15 +320,8 @@ class SystemManagementResolver(object):
 if sys.platform in ("linux2", "darwin"):
 
     SCRIPT_NAME = "pulse2-agent"
-    if sys.platform == "linux2":
-        from distutils.core import setup
-        from distutils.command.install import install as _install
-    elif sys.platform == "darwin":
-        from setuptools import setup # pyflakes.ignore
-        from setuptools.command.install import install as _install # pyflakes.ignore
-    else:
-        pass
-
+    from distutils.core import setup
+    from distutils.command.install import install as _install
 
     def post_install(current_directory):
         """
@@ -352,34 +345,13 @@ if sys.platform in ("linux2", "darwin"):
                          msg="Running post install task"
                          )
 
-    if sys.platform == "linux2":
-        setup(name=NAME,
-              version = VERSION,
-              description = NAME,
-              packages = ["pulse2agent"],
-              scripts = ["pulse2-agent"],
-              cmdclass={'install': Install},
-              )
-    elif sys.platform == "darwin":
-        bundle_plist = dict(CFBundleName = NAME,
-                            CFBundleShortVersionString = VERSION,
-                            CFBundleGetInfoString = "%s %s" % (NAME, VERSION),
-                            CFBundleExecutable = "pulse2-agent",
-                            CFBundleIdentifier = "org.pulse2.agent",
-                            )
-        py2app_options = dict(plist=bundle_plist)
-        setup(name="Pulse2Agent",
-              version = VERSION,
-              description = NAME,
-              app = ["pulse2agent/control.py"],
-              options = dict(py2app = py2app_options),
-              setup_requires=['py2app'],
-              cmdclass={'install': Install},
-              env = {}
-              )
-    else:
-        pass
-
+    setup(name=NAME,
+          version = VERSION,
+          description = NAME,
+          packages = ["pulse2agent"],
+          scripts = ["pulse2-agent"],
+          cmdclass={'install': Install},
+          )
 
 
 elif sys.platform == "win32":
