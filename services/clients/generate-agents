@@ -32,7 +32,10 @@ Options:
  --port=PORT   : Inventory server port
  --enablessl   : Enabling the SSL protocol for inventory
  --tag=TAG     : Tag for inventory
---help         : Displays this help
+ --cm-host=HOST: Connection manager host
+ --cm-port     : Connection manager port
+ --cm-only     : Generates only SmartAgent pack
+ --help        : Displays this help
 """
 
 import os
@@ -879,8 +882,9 @@ class SmartAgentPrepare(object):
 
     def create_archive(self):
         print "INFO: Agent archive create..."
-        #root_dir = os.path.join(MODULE_DIR
-        archive_util.make_archive(self.AGENT_FOLDER,
+        name = os.path.join(MODULE_DIR, self.AGENT_FOLDER)
+        #archive_util.make_archive(self.AGENT_FOLDER,
+        archive_util.make_archive(name,
                                   "gztar",
                                   MODULE_DIR,
                                   self.AGENT_FOLDER,
