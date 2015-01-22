@@ -25,8 +25,6 @@ import logging
 
 # to parse html file
 from lxml.html import parse
-import urllib2
-import cssselect
 
 from sqlalchemy import create_engine, MetaData, func, distinct
 
