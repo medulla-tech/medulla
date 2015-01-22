@@ -3820,10 +3820,13 @@ class Glpi08(DyngroupDatabaseHelper):
         rule.entities_id = 0
         rule.sub_type = 'PluginFusinvinventoryRuleEntity'
         # Get the last ranking for this class +1
-        rule.ranking = session.query(func.max(self.rules.c.ranking))\
+        rank = session.query(func.max(self.rules.c.ranking))\
             .filter(self.rules.c.sub_type=='PluginFusinvinventoryRuleEntity')\
             .filter(self.rules.c.name != 'Root')\
-            .scalar() + 1
+            .scalar()
+        if rank is None:
+            rank = 0
+        rule.ranking = rank + 1
         rule.name = rule_data['name']
         rule.description = rule_data['description']
         rule.match = rule_data['aggregator']
