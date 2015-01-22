@@ -24,7 +24,7 @@
 
 # ---------------------- GPG KEY GENERATE ----------------------------
 
-BASE_DIR="/var/lib/pulse2/clients"
+BASE_DIR=$(dirname $0)
 NAME="Mandriva Support" 
 EMAIL="sales@mandriva.com"
 HOME="/root"
