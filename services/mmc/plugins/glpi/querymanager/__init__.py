@@ -75,7 +75,9 @@ def queryGroups():
     ret.append(['Identification',
                 [['Computer name', 'Hostname of the computer'],
                  ['Description', 'Description of the computer'],
-                 ['Inventory number', 'Your internal inventory number']]])
+                 ['Inventory number', 'Your internal inventory number'],
+                 ['Group', 'GLPI Group']
+                 ]])
     # Hardware cat
     ret.append(['Hardware',
                 [['System type', 'Laptop, Desktop, Rack Mount Chassis ...'],
