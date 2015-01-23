@@ -83,7 +83,7 @@ $f->add(
 $locations_select = new SelectItem("parent");
 $locations = getAllLocationsPowered(array());
 
-$location_list = array(0 => '---');
+$location_list = array();
 
 foreach ($locations['data'] as $location){
     $location_list[$location['id']] = $location['completename'];

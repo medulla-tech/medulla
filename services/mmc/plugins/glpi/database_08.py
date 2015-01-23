@@ -3752,7 +3752,7 @@ class Glpi08(DyngroupDatabaseHelper):
     def addLocation(self, session, name, parent_id, comment):
         location = Locations()
         location.entities_id = 0 #entity is root
-        location.name = location.completename = name
+        location.name = name
         location.locations_id = parent_id
 
         location.comment = comment
@@ -3761,10 +3761,9 @@ class Glpi08(DyngroupDatabaseHelper):
         location.room = ''
 
         # Get parent location object
-        if parent_id != '0':
-            parent_location = session.query(Locations).filter_by(id=parent_id,).one()
-            completename = parent_location.completename + ' > ' + name
-            location.completename = completename
+        parent_location = session.query(Locations).filter_by(id=parent_id,).one()
+        completename = parent_location.completename + ' > ' + name
+        location.completename = completename
 
         session.add(location)
         session.commit()
