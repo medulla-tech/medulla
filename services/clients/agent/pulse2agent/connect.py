@@ -26,6 +26,7 @@ import ssl
 import logging
 
 from parse import Parser
+from pexceptions import ConnectionError
 
 class ConnectorException(Exception):
     """A general exception wrapper for client-side errors"""
@@ -155,9 +156,18 @@ class ClientEndpoint(object):
 
         pack = self.parser.encode(data)
 
-        self.socket.sendall(pack)
-        response = self.socket.read(1024)
-        return self.parser.decode(response)
+        try:
+            self.socket.sendall(pack)
+            response = self.socket.read(1024)
+        except Exception, e:
+            self.logger.warn("Request failed: %s" % str(e))
+            raise ConnectionError(self.connector.host)
+
+        try:
+            return self.parser.decode(response)
+        except ValueError, e:
+            self.logger.warn("Decoding of request failed: %s" % str(e))
+            raise ConnectionError(self.connector.host)
 
     def _recv(self, n=1):
         data = ""

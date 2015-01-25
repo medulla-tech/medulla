@@ -41,7 +41,7 @@ from connect import ConnectionTimeout, ConnectionRefused
 from inventory import InventoryChecker, get_minimal_inventory
 from vpn import VPNLaunchControl
 from shell import Shell
-from pexceptions import SoftwareCheckError
+from pexceptions import SoftwareCheckError, ConnectionError
 
 
 
@@ -103,8 +103,11 @@ class InventorySender(Component):
         command = self.parent.protocol.get_command("INVENTORY")
 
         container = (command, inventory)
-        response = self.parent.client.request(container)
-        self.logger.debug("inventory: received response: %s" % response)
+        try:
+            response = self.parent.client.request(container)
+            self.logger.debug("inventory: received response: %s" % response)
+        except ConnectionError:
+            return False
         return True
 
 class VPNSetter(Component):
@@ -460,7 +463,7 @@ class Dispatcher(DispatcherFrame):
                 return True
 
 
-    def mainloop(self):
+    def _mainloop(self):
         # connection establishing
         if not self.start():
             # TODO - stop queues, log something and exit
@@ -482,11 +485,12 @@ class Dispatcher(DispatcherFrame):
             if not self.inventory_sender.send():
                 return False
 
-        #    try:
-        #        if self.queues.stop.get(False):
-        #            break
-        #    except Empty:
-        #        pass
+    def mainloop(self):
+        while True:
+            self._mainloop()
+            self.logger.info("Try to reconnect...")
+            time.sleep(self.config.main.check_period)
+
 
 def start():
     from config import Config
