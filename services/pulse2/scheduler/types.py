@@ -49,7 +49,7 @@ from twisted.internet.defer import Deferred, maybeDeferred, DeferredLock
 
 from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
-from pulse2.network import NetUtils
+from pulse2.network import NetUtils, NetworkDetect
 from pulse2.scheduler.queries import CoHQuery, any_failed
 from pulse2.scheduler.utils import chooseClientInfo
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
@@ -564,9 +564,7 @@ class CircuitBase(object):
             d = maybeDeferred(self._flow_create)
 
             if not recurrent :
-                d.addCallback(self._chooseClientNetwork)
-                d.addCallback(self._host_detect)
-                d.addCallback(self._network_detect)
+                d.addCallback(self._set_host)
 
             d.addCallback(self._init_end)
             d.addErrback(self._init_failed)
@@ -574,6 +572,23 @@ class CircuitBase(object):
             return d
         else :
             return Deferred()
+
+    def _set_host(self, reason):
+        """Sets the detected IP address from CM"""
+
+        if self.cohq.target.last_update and self.cohq.target.target_ipaddr:
+            self.host = self.cohq.target.target_ipaddr
+
+            ntw = NetworkDetect(self.cohq.target.target_ipaddr,
+                                self.cohq.target.target_network)
+            self.network_address = ntw.network
+
+            return True
+        else:
+            self.logger.debug("Circuit #%s: IP address not updated yet" % (self.id))
+            return False
+
+
 
     def _flow_create(self):
         """ Builds the workflow of circuit """
@@ -708,67 +723,7 @@ class CircuitBase(object):
         """
         self.dispatcher.statistics.watchdog_schedule(self.cmd_id)
 
-    def _chooseClientNetwork(self, reason=None):
-        """
-        Choosing the correct IP address based on target info.
 
-        @param reason: void parameter, used as twisted callback reason
-        @type reason: twisted callback reason
-        """
-        return chooseClientInfo(self.cohq.target)
-
-
-    def _host_detect(self, host):
-        """
-        Network address detect callback.
-
-        Invoked by correct IP address of machine.
-
-        @param host: IP address
-        @type host: str
-
-        @return: network address
-        @rtype: str
-        """
-        if host :
-            self.host = host
-
-            for pref_net_ip, pref_netmask in self.config.preferred_network :
-                if NetUtils.on_same_network(host, pref_net_ip, pref_netmask):
-
-                    return pref_net_ip
-
-            if len(self.config.preferred_network) > 0 :
-                self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-                (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
-                return pref_net_ip
-        else:
-            self.logger.warn("Circuit #%s: IP address detect failed" % (self.id))
-
-        if len(self.config.preferred_network) > 0 :
-            self.logger.debug("Circuit #%s: network detect failed, assigned the first of scheduler" % (self.id))
-            (pref_net_ip, pref_netmask) = self.config.preferred_network[0]
-            return pref_net_ip
-
-
-
-    def _network_detect(self, address):
-        """
-        Network detect callback.
-
-        @param address: network address
-        @type address: str
-
-        @return: True and Circuit instance when success
-        @rtype: tuple
-        """
-        if address :
-            self.network_address = address
-        else :
-            self.logger.debug("Circuit #%s: network not assigned" % (self.id))
-
-
-        return True
 
     def _init_end(self, reason):
         """
@@ -780,8 +735,12 @@ class CircuitBase(object):
         @return: Circuit instance
         @rtype: Circuit
         """
-
-        self.initialized = True
+        if not reason:
+            self.logger.warn("Circuit #%s: IP address not detected" % (self.id))
+            self.initialized = False
+            self.release()
+        else:
+            self.initialized = True
         return self
 
     def _init_failed(self, failure):
