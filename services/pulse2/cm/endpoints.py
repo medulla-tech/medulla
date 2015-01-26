@@ -380,7 +380,7 @@ class InventoryServerEndpoint(Endpoint):
         @return: UUID of machine
         @rtype: Deferred
         """
-        if uuid is not False:
+        if uuid is not False and uuid is not None:
             self.logger.info("Machine %s has uuid=%s" % (hostname, str(uuid)))
             return succeed(uuid)
         else:
