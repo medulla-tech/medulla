@@ -235,7 +235,7 @@ class PostInstallSystemVHandler(PostInstallPosixHandler):
     insert_service_cmd = "/usr/sbin/update-rc.d %s defaults" % PostInstallPosixHandler.SCRIPT_NAME
     start_service_cmd = "/etc/init.d/%s start" % PostInstallPosixHandler.SCRIPT_NAME
 
-    include_files = [("linux/pulse2-agent.init",
+    include_files = [("linux/pulse2-agent.init.lsb",
                       "/etc/init.d/pulse2-agent"),
                      ("linux/pulse2-agent.default",
                       "/etc/default/pulse2-agent"),
