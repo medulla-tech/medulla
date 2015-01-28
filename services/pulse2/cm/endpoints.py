@@ -432,7 +432,7 @@ class InventoryServerEndpoint(Endpoint):
 
         @rtype: Deferred
         """
-        if uuid != False:
+        if uuid != False and uuid is not None:
 
             d = self.mmc_proxy.callRemote("msc.update_target_ip", uuid, ip)
             @d.addCallback
