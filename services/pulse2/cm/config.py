@@ -40,7 +40,7 @@ class Config(object):
 
     class server(object):
 
-        port = 443
+        port = 8443
         ssl_key_file = None
         ssl_crt_file = None
         ssl_method = "SSLv3_METHOD"
