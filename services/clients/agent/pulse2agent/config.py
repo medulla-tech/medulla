@@ -29,7 +29,7 @@ class Config(object):
 
     class main(object):
         serializer = "json"
-        check_period = 10
+        check_period = 60
 
     class server(type):
         host = "pulse2-server"
@@ -37,7 +37,7 @@ class Config(object):
         keyfile = None
         crtfile = None
         timeout = 60
-        enablessl = False
+        enablessl = True
 
     class vpn(object):
         enabled = True

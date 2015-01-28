@@ -59,7 +59,7 @@ class Connector(object):
 
     context = None
 
-    def __init__(self, host, port=443, crtfile=None, timeout=30):
+    def __init__(self, host, port=8443, enablessl=True, crtfile=None, timeout=30):
         """
         @param host: name or IP address of server
         @type host: str
@@ -67,8 +67,8 @@ class Connector(object):
         @param port: port of server
         @type port: int
 
-        @param keyfile: client SSL key file path
-        @type keyfile: str
+        @param enablessl: SSL activation flag
+        @type enablessl: bool
 
         @param crtfile: client SSL certificate file path
         @type crtfile: str
@@ -82,7 +82,7 @@ class Connector(object):
         self.timeout = timeout
 
         self.crtfile = crtfile
-    ssl_enabled = True
+        self.ssl_enabled = enablessl
 
 
     def connect(self):
@@ -143,6 +143,7 @@ class ClientEndpoint(object):
         self.logger = logging.getLogger()
         self.connector = Connector(config.server.host,
                                    config.server.port,
+                                   config.server.enablessl,
                                    config.server.crtfile,
                                    config.server.timeout,
                                    )
