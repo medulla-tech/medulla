@@ -30,6 +30,7 @@ body {
     margin: 0;
     background-color: #fff;
     overflow-x: hidden;
+    outline: 0;
 }
 
 .error { color : #A40000; }
@@ -874,13 +875,13 @@ td.groupAction { text-align: right; }
 
 td.userName {
     padding: 0 0 0 34px;
-    background-image: url("../modules/base/graph/users/img/icn_usersList.gif");
+    background-image: url("../img/users/icn_usersList.gif");
     background-position: 13px 6px;
 }
 
 td.userNameDisabled {
     padding: 0 0 0 34px;
-    background-image: url("../modules/base/graph/users/img/icn_usersList.gif");
+    background-image: url("../img/users/icn_usersList.gif");
     background-position: 13px 6px;
 }
 
@@ -961,14 +962,14 @@ form {
 }
 
 .searchfield {
-    margin:0 0px 0 0;
+    /**/margin:0px 0px 0 0px;
     clear: right;
-    padding: 4px 2px 2px;
+    /*padding: 4px 2px 2px;*/
     padding-top: 0px !ie;
     color: #666;
     cursor:pointer;
+    top: 0px;
 }
-
 
 .searchbox {
     -webkit-border-radius: 2px;
@@ -982,7 +983,7 @@ form {
 }
 
 .searchbox input {
-    margin-right: 0px !important;
+    /*margin-right: 0px !important;*/
 }
 
 
@@ -1023,18 +1024,17 @@ form {
 }
 
 #Location {
-    padding: 0px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+    margin: 10px 60px 15px 0;
+    float: left;
 }
 
 #Location #searchSpan {
-    padding: 0px;
+    /*padding: 0px;
     padding-top: 0px;
-    padding-bottom: 0px;
+    padding-bottom: 0px;*/
     /* IE Hack */
     !padding: 0px;
-    float: right;
+    /*float: left;*/
 }
 
 #Location .searchfieldreal {
@@ -1042,11 +1042,12 @@ form {
     /*padding: 0px;*/
 }
 
+.searchfield img{margin-right: 5px;}
 
 #Location img {
-    vertical-align: top;
-    padding-top: 2px;
-    padding-left: 2px;
+    vertical-align: middle;
+    padding-top: 0px;
+    padding-left: 0px;
 }
 
 #FormLocation {
@@ -1108,7 +1109,7 @@ form.inplaceeditor-form input[type="text"] {
     position: absolute;
     background: #fff;
     border: 1px solid #bababa;
-    margin: 5px;
+    margin: 144px 0px 0px -180px;
     padding: 10px;
     z-index: 999;
     -webkit-border-radius: 4px;

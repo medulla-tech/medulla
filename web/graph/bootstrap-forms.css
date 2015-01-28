@@ -69,6 +69,7 @@ input {
   color: #2295D2;
   border-radius: 3px;
   padding: 5px;
+  vertical-align: middle;
 }
 
 input:hover{  
@@ -125,6 +126,7 @@ textarea,
 select,
 .uneditable-input {
   width: 206px;
+  height: auto;
 }
 textarea {
   height: auto;
@@ -155,6 +157,8 @@ input[type="color"],
   -o-transition: border linear .2s, box-shadow linear .2s;
   transition: border linear .2s, box-shadow linear .2s;
   margin-right: 10px;
+  /*margin-left: -8px;*/
+  padding-left: 8px;
 }
 textarea:focus,
 input[type="text"]:focus,
@@ -214,8 +218,10 @@ input[type="file"] {
 }
 select {
   min-width: 220px;
+  height: 30px;
   border: 1px solid #cccccc;
   background-color: #ffffff;
+  margin-right: 20px;
 }
 select[multiple],
 select[size] {
@@ -868,3 +874,5 @@ legend + .control-group {
 .form-horizontal .form-actions {
   padding-left: 180px;
 }
+
+.launchActionImg{top:2px;}
