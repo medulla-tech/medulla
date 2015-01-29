@@ -290,7 +290,7 @@ class Service(object):
     name = None
     clsnames = [ 'SrvMmcAgent',
                  'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
-                 'SrvScheduler' ]
+                 'SrvScheduler', 'SrvConnectionManager' ]
 
     def __init__(self, handler, config):
         self.config = config
@@ -368,6 +368,9 @@ class SrvPkgServer(Service):
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
+class SrvConnectionManager(Service):
+    name = 'pulse2-cm'
+
 
 def apply_conf_diff(origin, current, only_override=False):
     """
@@ -436,7 +439,7 @@ class Pulse2ConfigFile(object):
     clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                  'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                  'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
-                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
+                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 'CMConfig',
                  'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig', 'PluginsUpdateConfig', 'PluginsMonitoringConfig']
     path = None
     # If defaults is None, try to read default values from config file in
@@ -650,6 +653,10 @@ class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
     log_path = 'pulse2-scheduler.log'
 
+class CMConfig(LoggingConfig):
+    path = 'pulse2/cm/cm.ini'
+    log_path = 'pulse2-cm.log'
+
 class UUIDResolverConfig(Pulse2ConfigFile):
     path = 'pulse2/uuid-resolver/uuid-resolver.ini'
 
@@ -861,6 +868,9 @@ class SetupApp(object):
         self.confs['plugins/base.ini'].set('ldap', 'rootName', self.config['ldapadmindn'])
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
         self.confs['plugins/base.ini'].set('ldap', 'defaultUserGroup', self.config['defaultUserGroup'])
+
+        # LDAP password for Connection Manager
+        self.confs['pulse2/cm/cm.ini'].set('mmc', 'ldap_passwd', self.config['ldappasswd'])
 
         # LDAP password for UUID resolver
         self.confs['pulse2/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
