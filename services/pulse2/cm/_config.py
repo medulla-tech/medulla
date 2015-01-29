@@ -22,6 +22,7 @@
 
 """ Declaration of config defaults """
 
+import os
 import inspect
 from ConfigParser import RawConfigParser
 
@@ -181,6 +182,10 @@ class ConfigReader(type):
 
         config_file = ExtendedConfigParser()
         config_file.read(filename)
+        filename_local = "%s.local" % filename
+        if os.path.exists(filename_local):
+            config_file.read(filename_local)
+
 
         for section_name in config_file.sections():
             if hasattr(self, section_name):
