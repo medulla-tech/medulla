@@ -280,6 +280,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_inventory(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
     def xmlrpc_sync_remote_reboot(self, command_id, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_lock_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_lock_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_sync_remote_unlock_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_unlock_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
     def xmlrpc_sync_remote_halt(self, command_id, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.sync_remote_halt(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
 
@@ -298,6 +302,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_inventory(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
     def xmlrpc_async_remote_reboot(self, command_id, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_lock_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_lock_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
+    def xmlrpc_async_remote_unlock_reboot(self, command_id, client, timeout = None):
+        return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_unlock_reboot(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
     def xmlrpc_async_remote_halt(self, command_id, client, timeout = None):
         return xmlrpcCleanup(pulse2.launcher.remote_exec.async_remote_halt(int(command_id), client, timeout or LauncherConfig().wrapper_max_exec_time))
 
@@ -387,10 +395,10 @@ class Launcher(twisted.web.xmlrpc.XMLRPC):
 
 def main():
     parser = optparse.OptionParser()
-    parser.add_option("-c", "--config-file", help='path to the config file', 
+    parser.add_option("-c", "--config-file", help='path to the config file',
                       default=mmcconfdir + '/pulse2/launchers/launchers.ini')
     parser.add_option("-i", "--id", help='id of this launcher')
-    parser.add_option("-l", "--log-config-file", help="path to the logging config file", 
+    parser.add_option("-l", "--log-config-file", help="path to the logging config file",
                       default = mmcconfdir + "/pulse2/launchers/launchers.ini")
     (options, args) = parser.parse_args()
 

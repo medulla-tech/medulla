@@ -262,7 +262,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote pull (rsyncproxy/sync) failed for CoH #%d" % command_id)
             return result
- 
+
     logging.getLogger().warn("Remote pull failed for CoH #%d" % command_id)
     return None
 
@@ -365,7 +365,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote delete (ssh/sync) failed for CoH #%d" % command_id)
             return result
-    logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id) 
+    logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_exec(command_id, client, command, wrapper_timeout):
@@ -438,7 +438,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote exec (ssh/sync) failed for CoH #%d" % command_id)
             return result
-    logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id) 
+    logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_quickaction(command_id, client, command, wrapper_timeout):
@@ -456,7 +456,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
-            logging.getLogger().warn("Can't do remote quickaction because ssh is not available") 
+            logging.getLogger().warn("Can't do remote quickaction because ssh is not available")
             return False
 
         # Built "thru" command
@@ -669,10 +669,10 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
                 __cb_sync_process_end
             )
             if not result :
-                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id) 
+                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id)
             return result
 
-    logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id) 
+    logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_reboot(command_id, client, wrapper_timeout):
@@ -737,7 +737,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             )
             if not result :
                 logging.getLogger().warn("Remote boot (ssh/async) failed for CoH #%d" % command_id)
-            return result 
+            return result
         elif mode == 'sync':
             result = pulse2.launcher.process_control.commandRunner(
                 command_list,
@@ -747,9 +747,161 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
                 logging.getLogger().warn("Remote boot (ssh/sync) failed for CoH #%d" % command_id)
             return result
 
-    logging.getLogger().warn("Remote boot failed for CoH #%d" % command_id)  
+    logging.getLogger().warn("Remote boot failed for CoH #%d" % command_id)
+    return None
+# ================================ lock / unlock
+def sync_remote_lock_reboot(command_id, client, wrapper_timeout):
+    """ Handle remote lock on target, sync mode """
+    return remote_lock_reboot(command_id, client, 'sync', wrapper_timeout)
+
+def async_remote_lock_reboot(command_id, client, wrapper_timeout):
+    """ Handle remote lock on target, async mode """
+    return remote_lock_reboot(command_id, client, 'async', wrapper_timeout)
+
+def remote_lock_reboot(command_id, client, mode, wrapper_timeout):
+    """ Handle remote lock_reboot on target
+    """
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    reboot_command = LauncherConfig().lock_reboot_command
+    if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote lock reboot because ssh is not available")
+            return False
+
+        # Built "thru" command
+        thru_command_list  = [LauncherConfig().ssh_path]
+        thru_command_list += client['transp_args']
+        thru_command_list += [client['host']]
+
+        # Build "exec" command
+        real_command = reboot_command
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--max-log-size',
+            str(LauncherConfig().wrapper_max_log_size),
+            '--max-exec-time',
+            str(wrapper_timeout),
+            '--thru',
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
+        ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
+        if mode == 'async':
+            result = pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_lock_reboot',
+                LauncherConfig().max_command_age,
+                client['group'],
+                'lock_reboot'
+            )
+            if not result :
+                logging.getLogger().warn("Remote lock boot (ssh/async) failed for CoH #%d" % command_id)
+            return result
+        elif mode == 'sync':
+            result = pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
+            if not result :
+                logging.getLogger().warn("Remote lock boot (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote lock boot failed for CoH #%d" % command_id)
     return None
 
+def sync_remote_unlock_reboot(command_id, client, wrapper_timeout):
+    """ Handle remote unlock on target, sync mode """
+    return remote_unlock_reboot(command_id, client, 'sync', wrapper_timeout)
+
+def async_remote_unlock_reboot(command_id, client, wrapper_timeout):
+    """ Handle remote lock on target, async mode """
+    return remote_unlock_reboot(command_id, client, 'async', wrapper_timeout)
+
+def remote_unlock_reboot(command_id, client, mode, wrapper_timeout):
+    """ Handle remote unlock_reboot on target
+    """
+    client = pulse2.launcher.utils.setDefaultClientOptions(client)
+    reboot_command = LauncherConfig().unlock_reboot_command
+    if client['protocol'] == "ssh":
+        # command is issued though our wrapper, time to build it
+
+        if not LauncherConfig().is_ssh_available:
+            logging.getLogger().warn("Can't do remote unlock reboot because ssh is not available")
+            return False
+
+        # Built "thru" command
+        thru_command_list  = [LauncherConfig().ssh_path]
+        thru_command_list += client['transp_args']
+        thru_command_list += [client['host']]
+
+        # Build "exec" command
+        real_command = reboot_command
+
+        # Build final command line
+        command_list = [
+            LauncherConfig().wrapper_path,
+            '--max-log-size',
+            str(LauncherConfig().wrapper_max_log_size),
+            '--max-exec-time',
+            str(wrapper_timeout),
+            '--thru',
+            PULSE2_WRAPPER_ARG_SEPARATOR.join(thru_command_list),
+            '--exec',
+            real_command, # we do not use the PULSE2_WRAPPER_ARG_SEPARATOR here, as the command is send "as is"
+        ]
+
+        # from {'a': 'b', 'c: 'd'} to 'a=b,c=d'
+        if client['client_check']:
+            command_list += ['--check-client-side', ','.join(map((lambda x: '='.join(x)), client['client_check'].items()))]
+        if client['server_check']:
+            command_list += ['--check-server-side', ','.join(map((lambda x: '='.join(x)), client['server_check'].items()))]
+        if client['action']:
+            command_list += ['--action', client['action']]
+
+        if mode == 'async':
+            result = pulse2.launcher.process_control.commandForker(
+                command_list,
+                __cb_async_process_end,
+                command_id,
+                LauncherConfig().defer_results,
+                'completed_unlock_reboot',
+                LauncherConfig().max_command_age,
+                client['group'],
+                'unlock_reboot'
+            )
+            if not result :
+                logging.getLogger().warn("Remote unlock boot (ssh/async) failed for CoH #%d" % command_id)
+            return result
+        elif mode == 'sync':
+            result = pulse2.launcher.process_control.commandRunner(
+                command_list,
+                __cb_sync_process_end
+            )
+            if not result :
+                logging.getLogger().warn("Remote lock boot (ssh/sync) failed for CoH #%d" % command_id)
+            return result
+
+    logging.getLogger().warn("Remote lock boot failed for CoH #%d" % command_id)
+    return None
+
+
+# ================================
 def sync_remote_halt(command_id, client, wrapper_timeout):
     """ Handle remote halt on target, sync mode """
     return remote_halt(command_id, client, 'sync', wrapper_timeout)
@@ -812,7 +964,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
             )
             if not result :
                 logging.getLogger().warn("Remote halt (ssh/async) failed for CoH #%d" % command_id)
-            return result  
+            return result
         elif mode == 'sync':
             result = pulse2.launcher.process_control.commandRunner(
                 command_list,
