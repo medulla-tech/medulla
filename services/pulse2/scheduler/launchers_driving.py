@@ -533,6 +533,22 @@ class RemoteCallProxy :
         """ Handle remote reboot on target, async mode """
         pass
     @same_call
+    def sync_remote_lock_reboot(self, command_id, client, wrapper_timeout):
+        """ Handle remote reboot on target, sync mode """
+        pass
+    @same_call
+    def async_remote_lock_reboot(self, command_id, client,  wrapper_timeout):
+        """ Handle remote reboot on target, async mode """
+        pass
+    @same_call
+    def sync_remote_unlock_reboot(self, command_id, client, wrapper_timeout):
+        """ Handle remote reboot on target, sync mode """
+        pass
+    @same_call
+    def async_remote_unlock_reboot(self, command_id, client,  wrapper_timeout):
+        """ Handle remote reboot on target, async mode """
+        pass
+    @same_call
     def sync_remote_halt(self, command_id, client, wrapper_timeout):
         """ Handle remote halt on target, sync mode """
         pass

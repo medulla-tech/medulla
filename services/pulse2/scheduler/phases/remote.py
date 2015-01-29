@@ -961,6 +961,49 @@ class RebootPhase(RemoteControlPhase):
     def parseRebootResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
+#  -------------------------- UNLOCK REBOOT ----------------------------------
+class UnlockRebootPhase(RemoteControlPhase):
+    """Special case for unlocking a workstation by UWF"""
+    name = "unlock_reboot"
+
+
+    @launcher_proxymethod("completed_unlock_reboot")
+    def parseUnlockRebootResult(self, (exitcode, stdout, stderr)):
+        return self.parse_remote_phase_result((exitcode, stdout, stderr))
+
+
+
+#  -------------------------- LOCK REBOOT ----------------------------------
+class LockRebootPhase(RemoteControlPhase):
+    """Special case for locking a workstation by UWF"""
+    name = "lock_reboot"
+
+    def apply_initial_rules(self):
+        ret = self._apply_initial_rules()
+
+        if self.cmd.isPartOfABundle() and not self.dispatcher.bundles.is_last(self.coh.id):
+            # there is still a coh in the same bundle that has to reboot, jump to next stage
+            self.logger.info("Circuit #%s: another circuit from the same bundle will launch the reboot" % self.coh.id)
+            if not self.coh.isStateStopped():
+                self.coh.setStateScheduled()
+            else :
+                return self.give_up()
+
+            return self.next()
+
+        if ret not in (DIRECTIVE.NEXT,
+                       DIRECTIVE.GIVE_UP,
+                       DIRECTIVE.KILLED,
+                       DIRECTIVE.STOPPED,
+                       DIRECTIVE.OVER_TIMED) :
+            return self._switch_on()
+        return ret
+
+
+    @launcher_proxymethod("completed_lock_reboot")
+    def parseLockRebootResult(self, (exitcode, stdout, stderr)):
+        return self.parse_remote_phase_result((exitcode, stdout, stderr))
+
 
 #  ---------------------------- HALT ----------------------------------
 class HaltPhase(RemoteControlPhase):
