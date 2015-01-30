@@ -55,6 +55,8 @@ APIVERSION = '0:0:0'
 queryManager = None
 config = None
 
+NOAUTHNEEDED = ['get_active_convergence_for_host']
+
 def getApiVersion(): return APIVERSION
 
 def activate():
