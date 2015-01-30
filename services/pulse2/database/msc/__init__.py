@@ -533,7 +533,9 @@ class MscDatabase(DatabaseHelper):
                       do_reboot,
                       do_windows_update,
                       is_quick_action=False):
-        wf_list = ["pre_menu",
+        wf_list = [
+           "unlock_reboot",
+           "pre_menu",
            "wol",
            "post_menu",
            "upload",
@@ -542,6 +544,7 @@ class MscDatabase(DatabaseHelper):
            "delete",
            "inventory",
            "reboot",
+           "lock_reboot",
            "halt",
            "done",
            ]
@@ -557,6 +560,8 @@ class MscDatabase(DatabaseHelper):
             order = 0
 
             for name in wf_list:
+                if name == "unlock_reboot" and self.config.unlock_lock_phase == False:
+                    continue
                 if name == "pre_menu" and do_imaging_menu == "disable" :
                     continue
                 if name == "post_menu" and do_imaging_menu == "disable" :
@@ -575,6 +580,8 @@ class MscDatabase(DatabaseHelper):
                 if name == "inventory" and do_inventory == "disable" :
                     continue
                 if name == "reboot" and do_reboot == "disable" :
+                    continue
+                if name == "lock_reboot" and self.config.unlock_lock_phase == False:
                     continue
                 if name == "halt" and do_halt == "disable" :
                     continue

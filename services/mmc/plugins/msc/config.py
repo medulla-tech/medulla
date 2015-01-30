@@ -151,6 +151,7 @@ class MscConfig(MscDatabaseConfig):
 
     # Windows Update command
     wu_command = "/usr/share/pulse-update-manager/pulse-update-manager"
+    unlock_lock_phase = False
 
     def init(self, name, conffile = None):
         self.name = name
@@ -213,6 +214,10 @@ class MscConfig(MscDatabaseConfig):
 
         if self.cp.has_option("msc", "wu_command"):
             self.wu_command = self.cp.get("msc", "wu_command")
+
+        if self.cp.has_option("msc", "unlock_lock_phase"):
+            self.unlock_lock_phase = self.cp.getboolean("msc", "unlock_lock_phase")
+
 
 
         for section in self.cp.sections():
