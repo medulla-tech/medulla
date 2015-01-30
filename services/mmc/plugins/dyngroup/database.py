@@ -964,6 +964,17 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                 'cmd_id': line.commandId
             })
         return ret
+    
+    @DatabaseHelper._session
+    def get_active_convergences(self, session):
+        ret = []
+        query = session.query(Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID)
+        query = query.filter_by(active= 1)
+        
+        return [{
+            'gid': x[0],
+            'papi': cPickle.loads(x[1]),
+            'pid': x[2]} for x in query]
 
     @DatabaseHelper._session
     def get_convergence_groups_to_update(self, session, mountpoint, package_id):

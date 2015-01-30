@@ -515,6 +515,16 @@ class RpcProxy(RpcProxyI):
     def getConvergenceStatus(self, gid):
         ret = DyngroupDatabase().getConvergenceStatus(gid)
         return xmlrpcCleanup(ret)
+    
+    def get_active_convergence_for_host(self, host_uuid):
+        all_convergences = DyngroupDatabase().get_active_convergences()
+        host_convergences = []
+        for cv in  all_convergences:
+            # Do next with root context
+            ctx = self.getContext()
+            if ComputerManager().getRestrictedComputersList(ctx, 0, -1, {'uuid': host_uuid, 'gid': cv['gid']}, False, False, True):
+                host_convergences.append(cv)
+        return host_convergences
 
     def get_active_convergence_commands(self, papi_id, package_id):
         ret = DyngroupDatabase().get_active_convergence_commands(papi_id, package_id)
