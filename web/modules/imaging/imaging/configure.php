@@ -34,18 +34,6 @@ require_once('modules/imaging/includes/web_def.inc.php');
 require_once('modules/imaging/includes/part-type.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
 
-if (!function_exists('startswith')) {
-    function startswith($haystack, $needle) {
-        return substr($haystack, 0, strlen($needle)) === $needle;
-    }
-}
-
-if (!function_exists('endswith')) {
-    function endswith($haystack, $needle) {
-        return substr($haystack, -strlen($needle)) === $needle;
-    }
-}
-
 function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real_target) {
     if (!$has_profile) {
         $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));

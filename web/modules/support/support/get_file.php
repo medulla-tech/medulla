@@ -53,10 +53,6 @@ function readfile_chunked($filename, $retbytes = true) {
     return $status;
 }
 
-function startswith($haystack, $needle) {
-    return substr($haystack, 0, strlen($needle)) === $needle;
-}
-
 if (isset($_GET['path']) && startswith($_GET['path'], get_archive_link())) {
     // Prevent download to stop after PHP timeout
     set_time_limit(0);
