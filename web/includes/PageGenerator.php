@@ -2066,6 +2066,7 @@ class TabbedPageGenerator extends PageGenerator {
         $this->tabselector = new TabSelector();
         $this->pages = array();
         $this->firstTabActivated = False;
+        $this->description = False;
     }
 
     /**
@@ -2074,6 +2075,16 @@ class TabbedPageGenerator extends PageGenerator {
     function addTop($title, $file) {
         $this->title = $title;
         $this->topfile = $file;
+    }
+
+    function setDescription($desc) {
+        $this->description = $desc;
+    }
+
+    function displayDescription() {
+        if ($this->description) {
+            printf('<p>%s</p>', $this->description);
+        }
     }
 
     /**
@@ -2110,6 +2121,7 @@ class TabbedPageGenerator extends PageGenerator {
         $this->page = null;
         $this->displaySideMenu();
         $this->displayTitle();
+        $this->displayDescription();
         if ($this->topfile)
             require($this->topfile);
         $this->tabselector->display();
