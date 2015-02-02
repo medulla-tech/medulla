@@ -66,6 +66,7 @@ echo "----- create bridge ok ----- "
 echo "interface=tap_${VPN_TAP_IFACE}" >> /etc/dnsmasq.conf
 echo "dhcp-range=tap_${VPN_TAP_IFACE},${VPN_DHCP_RANGE},${VPN_DHCP_LEASE}h" >> /etc/dnsmasq.conf
 echo "dhcp-option=tap_${VPN_TAP_IFACE},3,${VPN_TAP_ADDRESS}" >> /etc/dnsmasq.conf
+echo "dhcp-option=121,${VPN_TAP_LAN}" >> /etc/dnsmasq.conf
 
 # enable IPv4 forwarding
 echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
