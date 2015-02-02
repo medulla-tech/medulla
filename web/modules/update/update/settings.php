@@ -43,7 +43,7 @@ if (isset($_POST['bconfirm'])){
 // Create update commands
 if (isset($_GET['create_update_commands'])){
     create_update_commands();
-    new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
+    new NotifyWidgetSuccess(sprintf(_T("The update deployments scheduled successfully.", "update")));
 }
 
 // ============================================================
