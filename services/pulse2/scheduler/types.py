@@ -576,7 +576,12 @@ class CircuitBase(object):
     def _set_host(self, reason):
         """Sets the detected IP address from CM"""
 
-        if self.cohq.target.last_update and self.cohq.target.target_ipaddr:
+        if self.cohq.target.target_ipaddr:
+
+            if not self.cohq.target.last_update and self.config.requires_agent_update:
+                self.logger.debug("Circuit #%s: IP address not updated yet" % (self.id))
+                return False
+
             self.host = self.cohq.target.target_ipaddr
 
             ntw = NetworkDetect(self.cohq.target.target_ipaddr,
@@ -585,7 +590,7 @@ class CircuitBase(object):
 
             return True
         else:
-            self.logger.debug("Circuit #%s: IP address not updated yet" % (self.id))
+            self.logger.debug("Circuit #%s: Empty IP address" % (self.id))
             return False
 
 

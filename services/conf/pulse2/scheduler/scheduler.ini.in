@@ -106,6 +106,11 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
 # server_check =
 # client_check =
 
+# All workstations sends the heartbeat packets to Connection Manager
+# and updates last contact timestamp into the table "taget".
+# If enabled, scheduler starts the deployements only for updated machines.
+# requires_agent_update = True 
+
 [database]
 dbdriver = mysql
 dbhost = localhost

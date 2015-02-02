@@ -121,6 +121,10 @@ class SchedulerConfig(object):
     umask = 0077
     daemon_user = 0
     setrlimit = ''
+    # All workstations sends the heartbeat packets to Connection Manager
+    # and updates last contact timestamp into the table "taget".
+    # If enabled, scheduler starts the deployements only for updated machines.
+    requires_agent_update = True
 
     mmc_agent = {}
 
@@ -202,6 +206,7 @@ class SchedulerConfig(object):
 
         self.setoption("scheduler", "imaging", "imaging", 'bool')
         self.setoption("scheduler", "max_to_overtimed", "max_to_overtimed", 'int')
+        self.setoption("scheduler", "requires_agent_update", "requires_agent_update", 'bool')
 
         if self.cp.has_option("scheduler", "non_fatal_steps"):
             self.non_fatal_steps = self.cp.get("scheduler", "non_fatal_steps").split(' ')
