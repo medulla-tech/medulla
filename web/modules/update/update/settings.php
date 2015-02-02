@@ -43,8 +43,7 @@ if (isset($_POST['bconfirm'])){
 // Create update commands
 if (isset($_GET['create_update_commands'])){
     create_update_commands();
-    header("Location: " . urlStrRedirect("update/update/settings"));
-    return;
+    new NotifyWidgetSuccess(sprintf(_T("Default menu has been successfully restored.", "imaging")));
 }
 
 // ============================================================
