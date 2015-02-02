@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-26 01:00+0100\n"
+"POT-Creation-Date: 2015-02-02 01:00+0100\n"
 "PO-Revision-Date: 2015-01-08 17:02+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -746,7 +746,7 @@ msgid "Do an inventory after a successful execution"
 msgstr "Inventariar após uma execução sucedida"
 
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:334
+#: modules/msc/includes/functions.php:336
 #: modules/msc/includes/widgets.inc.php:390
 #: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
@@ -850,7 +850,7 @@ msgid "Expired tasks"
 msgstr "Tarefas expiradas"
 
 #: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:333
+#: modules/msc/includes/functions.php:335
 #: modules/msc/includes/widgets.inc.php:392
 #: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
@@ -876,7 +876,7 @@ msgstr "Falhou: %percent% (%d pacotes)"
 msgid "File name"
 msgstr "Nome de arquivo"
 
-#: modules/msc/includes/functions.php:325
+#: modules/msc/includes/functions.php:327
 msgid "Finish"
 msgstr "Finalizar"
 
@@ -1047,6 +1047,10 @@ msgstr "Proxies locais"
 #: modules/msc/msc/local_proxy.php:248
 msgid "Local proxies selection"
 msgstr "Seleção de proxies locais"
+
+#: modules/msc/includes/functions.php:326
+msgid "Lock & Reboot"
+msgstr ""
 
 #: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:78
 msgid "Logs"
@@ -1342,7 +1346,7 @@ msgid "Random (indicate number of proxies) : "
 msgstr "Aleatório (indique o número de proxies) : "
 
 #: modules/msc/includes/functions.php:47
-#: modules/msc/includes/functions.php:331
+#: modules/msc/includes/functions.php:333
 #: modules/msc/msc/ajaxDownloadFile.php:77
 msgid "Ready"
 msgstr "Pronto"
@@ -1411,7 +1415,7 @@ msgstr "Largura de banda reservada"
 msgid "Restart"
 msgstr "Reiniciar"
 
-#: modules/msc/includes/functions.php:332
+#: modules/msc/includes/functions.php:334
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
 msgid "Running"
@@ -1790,6 +1794,10 @@ msgstr "Computador não disponível"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:159
 msgid "Unavailable group"
 msgstr "Grupo não disponível"
+
+#: modules/msc/includes/functions.php:325
+msgid "Unlock & Reboot"
+msgstr ""
 
 #: modules/msc/includes/functions.php:316
 msgid "Upload"

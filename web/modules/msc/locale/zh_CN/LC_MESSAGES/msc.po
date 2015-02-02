@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-26 01:00+0100\n"
+"POT-Creation-Date: 2015-02-02 01:00+0100\n"
 "PO-Revision-Date: 2015-01-08 17:02+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -716,7 +716,7 @@ msgid "Do an inventory after a successful execution"
 msgstr "在成功执行后进行清查"
 
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:334
+#: modules/msc/includes/functions.php:336
 #: modules/msc/includes/widgets.inc.php:390
 #: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
@@ -819,7 +819,7 @@ msgid "Expired tasks"
 msgstr "已过期的工作"
 
 #: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:333
+#: modules/msc/includes/functions.php:335
 #: modules/msc/includes/widgets.inc.php:392
 #: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
@@ -845,7 +845,7 @@ msgstr "失败：%percent%（%d 个封装）"
 msgid "File name"
 msgstr "档案名称"
 
-#: modules/msc/includes/functions.php:325
+#: modules/msc/includes/functions.php:327
 msgid "Finish"
 msgstr "完成"
 
@@ -1015,6 +1015,10 @@ msgstr "本机 proxy"
 #: modules/msc/msc/local_proxy.php:248
 msgid "Local proxies selection"
 msgstr "本机 proxy 选择"
+
+#: modules/msc/includes/functions.php:326
+msgid "Lock & Reboot"
+msgstr ""
 
 #: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:78
 msgid "Logs"
@@ -1310,7 +1314,7 @@ msgid "Random (indicate number of proxies) : "
 msgstr "随机（指出 proxy 数目）"
 
 #: modules/msc/includes/functions.php:47
-#: modules/msc/includes/functions.php:331
+#: modules/msc/includes/functions.php:333
 #: modules/msc/msc/ajaxDownloadFile.php:77
 msgid "Ready"
 msgstr "就绪"
@@ -1379,7 +1383,7 @@ msgstr "保留频宽"
 msgid "Restart"
 msgstr "重新启动"
 
-#: modules/msc/includes/functions.php:332
+#: modules/msc/includes/functions.php:334
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
 msgid "Running"
@@ -1752,6 +1756,10 @@ msgstr "不可用的电脑"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:159
 msgid "Unavailable group"
 msgstr "不可用的群组"
+
+#: modules/msc/includes/functions.php:325
+msgid "Unlock & Reboot"
+msgstr ""
 
 #: modules/msc/includes/functions.php:316
 msgid "Upload"
