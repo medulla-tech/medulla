@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-01-12 01:11+0100\n"
-"PO-Revision-Date: 2014-12-18 17:07+0000\n"
+"POT-Creation-Date: 2015-01-28 17:19+0100\n"
+"PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgid "No"
 msgstr "Nein"
 
 #: graph/header.inc.php:233 includes/FormGenerator.php:618
-#: includes/PageGenerator.php:2198
+#: includes/PageGenerator.php:2256
 msgid "Close"
 msgstr "Schließen"
 
@@ -201,27 +201,6 @@ msgstr "kompletten Trackback zeigen"
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
 msgstr "vollständiger Traceback"
-
-#: includes/modules.inc.php:384
-#, php-format
-msgid "%s service restarting..."
-msgstr "%s Dienst startet neu..."
-
-#: includes/modules.inc.php:385
-#, php-format
-msgid "%s service restarted successfully."
-msgstr "%s Dienst erfolgreich neu gestartet."
-
-#: includes/modules.inc.php:386
-#, php-format
-msgid "%s service failed to restart."
-msgstr "Fehler beim Neustart von Dienst %s"
-
-#: includes/modules.inc.php:391
-msgid "Restart the service ?"
-msgid_plural "Restart the services ?"
-msgstr[0] "Den Dienst neustarten?"
-msgstr[1] "Die Dienste neustarten?"
 
 #: includes/ajaxTools.php:63 includes/ajaxTools.php:69
 #: includes/FormGenerator.php:619 includes/PageGenerator.php:881
@@ -462,6 +441,27 @@ msgstr "löschen"
 msgid "You do not have required rights"
 msgstr "Sie verfügen nicht über die erforderlichen Rechte"
 
+#: includes/modules.inc.php:395
+#, php-format
+msgid "%s service restarting..."
+msgstr "%s Dienst startet neu..."
+
+#: includes/modules.inc.php:396
+#, php-format
+msgid "%s service restarted successfully."
+msgstr "%s Dienst erfolgreich neu gestartet."
+
+#: includes/modules.inc.php:397
+#, php-format
+msgid "%s service failed to restart."
+msgstr "Fehler beim Neustart von Dienst %s"
+
+#: includes/modules.inc.php:402
+msgid "Restart the service ?"
+msgid_plural "Restart the services ?"
+msgstr[0] "Den Dienst neustarten?"
+msgstr[1] "Die Dienste neustarten?"
+
 #: includes/PageGenerator.php:568 includes/PageGenerator.php:800
 msgid "to"
 msgstr "zu"
@@ -487,27 +487,27 @@ msgstr "Gehe zur Seite"
 msgid "No item available"
 msgstr "Keine Eintrag vorhanden"
 
-#: includes/PageGenerator.php:1604
+#: includes/PageGenerator.php:1633
 msgid "Select entity"
 msgstr "Wähle Einheit"
 
-#: includes/PageGenerator.php:2576 includes/PageGenerator.php:2644
-#: includes/PageGenerator.php:2670 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2634 includes/PageGenerator.php:2702
+#: includes/PageGenerator.php:2728 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "bestätigen"
 
-#: includes/PageGenerator.php:2580 includes/PageGenerator.php:2648
+#: includes/PageGenerator.php:2638 includes/PageGenerator.php:2706
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "abbrechen"
 
-#: includes/PageGenerator.php:2822
+#: includes/PageGenerator.php:2880
 msgid "Select all"
 msgstr "alle wählen"
 
-#: includes/PageGenerator.php:2822
+#: includes/PageGenerator.php:2880
 msgid "Unselect all"
 msgstr "alle abwählen"
 
@@ -832,125 +832,6 @@ msgstr "Gruppenname"
 msgid "Create"
 msgstr "erstellen"
 
-#: modules/base/includes/errorHandling.php:28
-msgid "LDAP log file does not exist."
-msgstr "LDAP-Log Datei existiert nicht."
-
-#: modules/base/includes/errorHandling.php:29
-msgid ""
-"Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-msgstr ""
-"Bitte vergewissern Sie folgendes haben:\n"
-"                        <p>Diese Zeile in Ihrer /etc/ldap/slapd.conf oder /etc/openldap/slapd.conf:\n"
-"                        <pre>loglevel        256</pre></p>\n"
-"                        <p>und diese Zeile in Ihrer /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
-"                        </p>\n"
-"                        "
-
-#: modules/base/includes/errorHandling.php:41
-msgid "The user directory does not exist and cannot be removed."
-msgstr ""
-"Das Benutzer-Verzeichnis existiert nicht und kann deshalb nicht entfernt "
-"werden."
-
-#: modules/base/includes/errorHandling.php:42
-msgid "Please do not remove user's files when deleting the user."
-msgstr ""
-"Bitte entfernen Sie nicht die Dateien des Benutzers beim Löschen des "
-"Benutzers."
-
-#: modules/base/includes/errorHandling.php:47
-msgid "The user home directory already exists."
-msgstr "Das Home-Verzeichnis des Benutzers existiert bereits."
-
-#: modules/base/includes/errorHandling.php:48
-msgid ""
-"Set the home directory in a different location or force the use of the "
-"existing directory (in expert mode)."
-msgstr ""
-"Das Home-Verzeichnis an einem anderen Ort setzen oder die Nutzung des "
-"bestehenden Bereiches erzwingen (im Experten-Modus)."
-
-#: modules/base/includes/errorHandling.php:53
-msgid "Your password is too young to change."
-msgstr "Ihr Passwort ist zu jung, um es zu ändern."
-
-#: modules/base/includes/errorHandling.php:54
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is too young to change."
-msgstr ""
-"Die Passwort-Policy von Ihrem Konto ermöglicht es Ihnen nicht, Ihr Passwort "
-"zu ändern, weil Ihr Kennwort nicht alt genug ist, um es zu ändern."
-
-#: modules/base/includes/errorHandling.php:59
-msgid "Password is in history of old passwords"
-msgstr "Das Passwort ist in der Geschichte der alten Passwörter"
-
-#: modules/base/includes/errorHandling.php:60
-#: modules/base/includes/errorHandling.php:66
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because you already had this password previously."
-msgstr ""
-"Die Passwort-Policy von Ihrem Konto ermöglicht es Ihnen nicht, Ihr Passwort "
-"zu ändern, weil Sie schon früher dieses Passwort verwendet haben."
-
-#: modules/base/includes/errorHandling.php:65
-msgid "Password is not being changed from existing value"
-msgstr "Das Passwort wird nicht von dem bestehenden Wert verändert"
-
-#: modules/base/includes/errorHandling.php:71
-msgid "Password fails quality checking policy."
-msgstr "Passwort entspricht nicht Qualitätskriterien."
-
-#: modules/base/includes/errorHandling.php:72
-msgid ""
-"The password policy of your account doesn't allow you to modify your "
-"password, because your password is not complex enough or is too short."
-msgstr ""
-"Die Passwortpolicy Ihres Kontos erlaubt es nicht, ihr Passwort zu ändern, da"
-" Ihr Passwort nicht komplex genug oder zu kurz ist."
-
-#: modules/base/includes/errorHandling.php:77
-msgid "The password must contain at least one number"
-msgstr "Das Passwort muss mindestens eine Ziffer enthalten"
-
-#: modules/base/includes/errorHandling.php:82
-msgid "The password must contain at least one upper case character"
-msgstr "Das Passwort muss mindestens einen Großbuchstaben enthalten"
-
-#: modules/base/includes/errorHandling.php:87
-msgid "The password must contain at least one lower case character"
-msgstr "Das Passwort muss mindestens einen Kleinbuchstaben enthalten"
-
-#: modules/base/includes/errorHandling.php:92
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
-msgstr ""
-"Das Passwort muss mindestens ein Sonderzeichen enthalten: #$%&+./:=?@{}"
-
-#: modules/base/includes/errorHandling.php:98
-#, php-format
-msgid "The password must not contain the same character %s times"
-msgstr "Das Passwort darf nicht das gleiche Zeichen %s mal enthalten"
-
-#: modules/base/includes/errorHandling.php:109
-#, php-format
-msgid "The password length must be %s or longer"
-msgstr "Die Passwortlänge muss %s entsprechen oder länger sein"
-
-#: modules/base/includes/errorHandling.php:114
-msgid "The password is too short."
-msgstr "Das Passwort ist zu kurz."
-
 #: modules/base/includes/panels/support.inc.php:29
 msgid "Your product"
 msgstr "Ihr Produkt"
@@ -1132,6 +1013,125 @@ msgstr "Sie können nicht mehr Benutzer hinzufügen."
 #, php-format
 msgid "User %s successfully created"
 msgstr "Benutzer %s erfolgreich erstellt"
+
+#: modules/base/includes/errorHandling.php:28
+msgid "LDAP log file does not exist."
+msgstr "LDAP-Log Datei existiert nicht."
+
+#: modules/base/includes/errorHandling.php:29
+msgid ""
+"Please be sure you have:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>and this line in your /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
+msgstr ""
+"Bitte vergewissern Sie folgendes haben:\n"
+"                        <p>Diese Zeile in Ihrer /etc/ldap/slapd.conf oder /etc/openldap/slapd.conf:\n"
+"                        <pre>loglevel        256</pre></p>\n"
+"                        <p>und diese Zeile in Ihrer /etc/syslog.conf:\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        </p>\n"
+"                        "
+
+#: modules/base/includes/errorHandling.php:41
+msgid "The user directory does not exist and cannot be removed."
+msgstr ""
+"Das Benutzer-Verzeichnis existiert nicht und kann deshalb nicht entfernt "
+"werden."
+
+#: modules/base/includes/errorHandling.php:42
+msgid "Please do not remove user's files when deleting the user."
+msgstr ""
+"Bitte entfernen Sie nicht die Dateien des Benutzers beim Löschen des "
+"Benutzers."
+
+#: modules/base/includes/errorHandling.php:47
+msgid "The user home directory already exists."
+msgstr "Das Home-Verzeichnis des Benutzers existiert bereits."
+
+#: modules/base/includes/errorHandling.php:48
+msgid ""
+"Set the home directory in a different location or force the use of the "
+"existing directory (in expert mode)."
+msgstr ""
+"Das Home-Verzeichnis an einem anderen Ort setzen oder die Nutzung des "
+"bestehenden Bereiches erzwingen (im Experten-Modus)."
+
+#: modules/base/includes/errorHandling.php:53
+msgid "Your password is too young to change."
+msgstr "Ihr Passwort ist zu jung, um es zu ändern."
+
+#: modules/base/includes/errorHandling.php:54
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is too young to change."
+msgstr ""
+"Die Passwort-Policy von Ihrem Konto ermöglicht es Ihnen nicht, Ihr Passwort "
+"zu ändern, weil Ihr Kennwort nicht alt genug ist, um es zu ändern."
+
+#: modules/base/includes/errorHandling.php:59
+msgid "Password is in history of old passwords"
+msgstr "Das Passwort ist in der Geschichte der alten Passwörter"
+
+#: modules/base/includes/errorHandling.php:60
+#: modules/base/includes/errorHandling.php:66
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because you already had this password previously."
+msgstr ""
+"Die Passwort-Policy von Ihrem Konto ermöglicht es Ihnen nicht, Ihr Passwort "
+"zu ändern, weil Sie schon früher dieses Passwort verwendet haben."
+
+#: modules/base/includes/errorHandling.php:65
+msgid "Password is not being changed from existing value"
+msgstr "Das Passwort wird nicht von dem bestehenden Wert verändert"
+
+#: modules/base/includes/errorHandling.php:71
+msgid "Password fails quality checking policy."
+msgstr "Passwort entspricht nicht Qualitätskriterien."
+
+#: modules/base/includes/errorHandling.php:72
+msgid ""
+"The password policy of your account doesn't allow you to modify your "
+"password, because your password is not complex enough or is too short."
+msgstr ""
+"Die Passwortpolicy Ihres Kontos erlaubt es nicht, ihr Passwort zu ändern, da"
+" Ihr Passwort nicht komplex genug oder zu kurz ist."
+
+#: modules/base/includes/errorHandling.php:77
+msgid "The password must contain at least one number"
+msgstr "Das Passwort muss mindestens eine Ziffer enthalten"
+
+#: modules/base/includes/errorHandling.php:82
+msgid "The password must contain at least one upper case character"
+msgstr "Das Passwort muss mindestens einen Großbuchstaben enthalten"
+
+#: modules/base/includes/errorHandling.php:87
+msgid "The password must contain at least one lower case character"
+msgstr "Das Passwort muss mindestens einen Kleinbuchstaben enthalten"
+
+#: modules/base/includes/errorHandling.php:92
+msgid ""
+"The password must contain at least one special character: #$%&+./:=?@{}"
+msgstr ""
+"Das Passwort muss mindestens ein Sonderzeichen enthalten: #$%&+./:=?@{}"
+
+#: modules/base/includes/errorHandling.php:98
+#, php-format
+msgid "The password must not contain the same character %s times"
+msgstr "Das Passwort darf nicht das gleiche Zeichen %s mal enthalten"
+
+#: modules/base/includes/errorHandling.php:109
+#, php-format
+msgid "The password length must be %s or longer"
+msgstr "Die Passwortlänge muss %s entsprechen oder länger sein"
+
+#: modules/base/includes/errorHandling.php:114
+msgid "The password is too short."
+msgstr "Das Passwort ist zu kurz."
 
 #: modules/base/includes/computers_list.inc.php:30
 msgid "Inventory"

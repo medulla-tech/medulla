@@ -10,27 +10,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2015-01-20 21:42+0200\n"
-"Last-Translator: Andre <andre@mandriva.com>\n"
-"Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
-"/mmc-core-32/report/pt_BR/>\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2015-01-28 17:19+0100\n"
+"PO-Revision-Date: 2014-10-10 08:11+0000\n"
+"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.1-dev\n"
-
-#: modules/report/includes/report.inc.php:36
-#: modules/report/includes/report.inc.php:71
-msgid "Less detail"
-msgstr "Sem detalhes"
-
-#: modules/report/includes/report.inc.php:39
-#: modules/report/includes/report.inc.php:187
-msgid "More detail"
-msgstr "Mais detalhes"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
@@ -143,7 +131,7 @@ msgstr "Quarta-feira"
 
 #: modules/report/includes/html.inc.php:128
 msgid "Thursday"
-msgstr "Quinta-feira"
+msgstr ""
 
 #: modules/report/includes/html.inc.php:129
 msgid "Friday"
@@ -171,7 +159,7 @@ msgstr "Qua"
 
 #: modules/report/includes/html.inc.php:135
 msgid "Thu"
-msgstr "Qui"
+msgstr ""
 
 #: modules/report/includes/html.inc.php:136
 msgid "Fri"
@@ -183,35 +171,45 @@ msgstr "Sáb"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Su"
-msgstr "Dom"
+msgstr "Domingos"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Mo"
-msgstr "Seg"
+msgstr "Segundas"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Tu"
-msgstr "Ter"
+msgstr "Terças"
 
 #: modules/report/includes/html.inc.php:139
 msgid "We"
-msgstr "Qua"
+msgstr "Quartas"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Th"
-msgstr "Qui"
+msgstr "Quintas"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Fr"
-msgstr "Sex"
+msgstr "Sextas"
 
 #: modules/report/includes/html.inc.php:140
 msgid "Sa"
-msgstr "Sáb"
+msgstr "Sábados"
 
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
 msgstr "Semanal"
+
+#: modules/report/includes/report.inc.php:36
+#: modules/report/includes/report.inc.php:80
+msgid "Less detail"
+msgstr "Sem detalhes"
+
+#: modules/report/includes/report.inc.php:39
+#: modules/report/includes/report.inc.php:197
+msgid "More detail"
+msgstr "Mais detalhes"
 
 #: modules/report/report/localSidebar.php:27
 #: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
@@ -228,7 +226,7 @@ msgstr "de"
 
 #: modules/report/report/index.php:63
 msgid "to"
-msgstr "a"
+msgstr "para"
 
 #: modules/report/report/index.php:76
 msgid "Entities"
@@ -265,3 +263,5 @@ msgstr "Relatar"
 #: modules/report/infoPackage.inc.php:44
 msgid "Download a file from report module (report or PNG)"
 msgstr "Baixar um arquivo do módulo de relatórios (relatório ou PNG)"
+
+

@@ -8,17 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2014-12-23 10:27+0200\n"
-"Last-Translator: Jean-Philippe <jpbraun@mandriva.com>\n"
-"Language-Team: French <http://translate.mandriva.com/projects/mmc-"
-"core-32/dashboard/fr_FR/>\n"
-"Language: fr_FR\n"
+"POT-Creation-Date: 2015-01-28 17:19+0100\n"
+"PO-Revision-Date: 2012-12-14 10:15+0000\n"
+"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.1-dev\n"
+"Language: fr_FR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
@@ -47,7 +45,7 @@ msgstr "sur"
 
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
-msgstr "Temps de fonctionnement"
+msgstr "Uptime"
 
 #: modules/dashboard/includes/panels/general.inc.php:40
 msgid "Load"
@@ -66,3 +64,5 @@ msgstr "Dashboard"
 #: modules/dashboard/infoPackage.inc.php:51
 msgid "Panels"
 msgstr "Panneaux"
+
+

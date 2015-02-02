@@ -9,17 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2014-10-27 01:10+0100\n"
-"PO-Revision-Date: 2015-01-20 21:53+0200\n"
-"Last-Translator: Andre <andre@mandriva.com>\n"
-"Language-Team: Portuguese (Brazil) <http://translate.mandriva.com/projects"
-"/mmc-core-32/ppolicy/pt_BR/>\n"
-"Language: pt_BR\n"
+"POT-Creation-Date: 2015-01-28 17:19+0100\n"
+"PO-Revision-Date: 2012-12-13 17:41+0000\n"
+"Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.1-dev\n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -47,8 +45,8 @@ msgid ""
 "You will delete the password policy <strong>%s</strong>. Default password "
 "policy will be applied to users that use this password policy."
 msgstr ""
-"Você excluirá a política de senha <strong>%s</strong>. A política de senha "
-"padrão será aplicada aos usuários que a utilizam."
+"Você vai excluir a política de senha <strong>%s</ strong>. A política de "
+"senha padrão será aplicado aos usuários que utilizam esta política de senha."
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
@@ -60,13 +58,13 @@ msgstr "Cancelar"
 
 #: modules/ppolicy/default/edit.php:44
 #: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/infoPackage.inc.php:50
+#: modules/ppolicy/infoPackage.inc.php:52
 msgid "Add a password policy"
 msgstr "Adicionar uma política de senha"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Idade máxima\" deve ser maior que \"Idade mínima\"."
+msgstr "\"Idade máxima\" tem que ser maior que \"Idade mínima\""
 
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
@@ -92,7 +90,7 @@ msgstr "Checagem de qualidade da senha"
 
 #: modules/ppolicy/default/edit.php:152
 msgid "Minimum age (seconds)"
-msgstr "Idade mínima (segundos)"
+msgstr "Idade minima (segundos)"
 
 #: modules/ppolicy/default/edit.php:159
 msgid "Maximum age (seconds)"
@@ -105,7 +103,7 @@ msgstr "Número de autenticações no modo grace"
 
 #: modules/ppolicy/default/edit.php:180
 msgid "Force users to change their passwords on the first connection ?"
-msgstr "Forçar usuários a alterarem suas senhas na primeira conexão ?"
+msgstr "Forçar usuários a alterar suas senhas na primeira conexão ?"
 
 #: modules/ppolicy/default/edit.php:187
 msgid "Password history"
@@ -113,7 +111,7 @@ msgstr "Histórico de senhas"
 
 #: modules/ppolicy/default/edit.php:201
 msgid "Preventive user lockout ?"
-msgstr "Bloqueio preventivo do usuário ?"
+msgstr "Trancamento preventivo do usuário ?"
 
 #: modules/ppolicy/default/edit.php:215
 msgid "Password maximum failure"
@@ -121,11 +119,11 @@ msgstr "Quantidade máxima de falhas de senha"
 
 #: modules/ppolicy/default/edit.php:222
 msgid "Lockout duration (seconds)"
-msgstr "Duração do bloqueio (segundos)"
+msgstr "Duração do trancamento (segundos)"
 
 #: modules/ppolicy/default/index.php:31
 msgid "Password policies list"
-msgstr "Lista de políticas de senhas"
+msgstr "Lista de Políticas de senhas"
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -133,9 +131,9 @@ msgid ""
 "password as soon as possible using the password change page, else your "
 "account will be locked."
 msgstr ""
-"Aviso, você se conectou usando no modo grace. Por favor, altere sua senha "
-"assim que possível usando a página de alteração de senha ou a sua conta será "
-"bloqueada."
+"Aviso, você se conectou usando no modo grace. Por favor, altere a sua senha "
+"assim que possível usando a página de alteração de senha ou a sua conta será"
+" trancada."
 
 #: modules/ppolicy/default/warnuser.php:40
 msgid ""
@@ -143,13 +141,13 @@ msgid ""
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
 msgstr ""
-"Aviso, o administrador solicitou que você troque sua senha. Sua conta LDAP "
-"está restrita. Por favor, altere a senha assim que possível usando a página "
-"de alteração de senha."
+"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é "
+"restrita.Por favor, troque a senha assim que possível usando a página de "
+"alteração de senha."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
-msgstr "Idade mínima"
+msgstr "Idade minima"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:39
 msgid "Maximum age"
@@ -161,7 +159,7 @@ msgstr "Mudar senha na primeira conexão"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:41
 msgid "Lockout duration"
-msgstr "Duração do bloqueio"
+msgstr "Duração do trancamento"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:42
 msgid "Maximum failed"
@@ -169,7 +167,7 @@ msgstr "Máximo falhou"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:43
 msgid "Preventive lockout user"
-msgstr "Bloqueio preventivo do usuário"
+msgstr "Trancamento preventivo do usuário"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:44
 msgid "Password hash history"
@@ -177,11 +175,11 @@ msgstr "Histórico hash de senhas"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:46
 msgid "Reset the password"
-msgstr "Renovar senha"
+msgstr "Dar reset na senha"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:47
 msgid "Password policy quality check"
-msgstr "Política de checagem de qualidade de senha"
+msgstr "Politica de checagem de qualidade de senha"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:54
 msgid ""
@@ -198,9 +196,9 @@ msgid ""
 "is assumed (i.e. the password may be modified whenever and however often is "
 "desired)."
 msgstr ""
-"Este atributo contém o número de segundos que devem decorrer entre "
-"modificações de senha. Se este atributo não está presente, 0 segundos é "
-"assumido (ex. a senha pode ser alterada quando e como quantas vezes for "
+"Este atributo contém o número de segundos que devem decorrer "
+"entremodificações de senha. Se este atributo não está presente, 0 segundos é"
+" assumido (ex. a senha pode ser alterada quando e como quantas vezesfor "
 "desejado)."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
@@ -220,8 +218,8 @@ msgid ""
 "administrator."
 msgstr ""
 "Esta bandeira especifica se os usuários devem alterar suas senhas na "
-"primeira conexão ao diretório depois que a senha foi definida ou foi zerada "
-"por um administrador."
+"primeira conexão ao diretório depois que a senha foi definida ou levou reset"
+" por um administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
 msgid ""
@@ -231,7 +229,7 @@ msgid ""
 msgstr ""
 "Este atributo configura o numero máximo de senhas usadas. Se este atributo "
 "não estiver presente, ou o valor for 0, as senhas usadas não serão "
-"armazenadas e com isso senhas previamente usadas podem ser reusadas."
+"armazenadas e com isso senhas previamente usadas podem ser re-usadas."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:59
 msgid ""
@@ -254,7 +252,7 @@ msgid ""
 msgstr ""
 "Este atributo configura o número consecutivo de falhas de conexão até a "
 "conta do usuário ser trancada. Se este atributo não estiver presente, ou o "
-"valor for 0, está política não será checada e o valor de \"Bloqueio "
+"valor for 0, está política não será checada e o valor de \"Trancamento "
 "preventivo do usuário\" será ignorado."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:61
@@ -265,9 +263,9 @@ msgid ""
 "authenticate until reset by a password administrator."
 msgstr ""
 "Este atributo configura o número de segundos que uma senha não poderá ser "
-"usada depois de muitas tentativas de autenticação falhadas. Se este atributo "
-"estiver vazio, ou o valor for 0 a senha não poderá ser usada para autenticar "
-"até que a senha seja zerada pelo administrador."
+"usada depois de muitas tentativas de autenticação falhadas. Se este atributo"
+" estiver vazio, ou o valor for 0 a senha não poderá ser usada para "
+"autenticar até que a senha sofra um reset do administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
 msgid ""
@@ -285,7 +283,9 @@ msgstr ""
 msgid ""
 "This flag allows to mark the password as having being reset by an "
 "administrator."
-msgstr "Permite marcar a senha que já foi zerada por um administrador."
+msgstr ""
+"Esta bandeira permite marcar a senha como já tendo sofrido reset por um "
+"administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:64
 msgid ""
@@ -305,18 +305,45 @@ msgstr ""
 "que o servidor vai checar a qualidade, e caso o servidor seja incapaz de "
 "checar, ele retornará um erro recusando a senha."
 
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr "Alterar atributo ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr "Apagar atributo ppolicy"
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr "Adicionar "
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr "Atualizar política para o usuário"
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr "Remover política do usuário"
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr "ppolicy"
+
 #: modules/ppolicy/includes/publicFunc.php:37
 #: modules/ppolicy/includes/publicFunc.php:63
 #: modules/ppolicy/includes/publicFunc.php:71
 #: modules/ppolicy/includes/publicFunc.php:78
 #: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:194
+#: modules/ppolicy/includes/publicFunc.php:201
 msgid "Password policy management"
 msgstr "Gerenciamento da política de senhas"
 
 #: modules/ppolicy/includes/publicFunc.php:64
 msgid "This account is locked by the LDAP directory."
-msgstr "Esta conta está bloqueada pelo diretório LDAP."
+msgstr "Esta conta está bloqueada pelo LDAP diretório."
 
 #: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
@@ -330,7 +357,8 @@ msgid ""
 "The password of this account has expired. The user has %s login(s) left to "
 "change his password."
 msgstr ""
-"A senha da conta expirou. O usuário tem %s login(s) para alterar sua senha."
+"A senha da conta expirou. O usuário tem de login %s (s) tem que sair para "
+"alterar sua senha."
 
 #: modules/ppolicy/includes/publicFunc.php:84
 msgid ""
@@ -343,19 +371,19 @@ msgstr "Bloquear conta"
 
 #: modules/ppolicy/includes/publicFunc.php:89
 msgid "If checked, permanently lock the user account"
-msgstr "Bloquear permanentemente a conta do usuário"
+msgstr "se marcado, bloqueia permanentemente a conta do usuário"
 
 #: modules/ppolicy/includes/publicFunc.php:94
 msgid "Password reset flag"
-msgstr "Trocar senha"
+msgstr "Bandeira de reset da senha"
 
 #: modules/ppolicy/includes/publicFunc.php:95
 msgid ""
 "If checked, the user must change her password when she first binds to the "
 "LDAP directory after password is set or reset by a password administrator"
 msgstr ""
-"O usuário deverá trocar a senha na primeira vez que ao conectar-se no "
-"diretório LDAP depois da senha ter sido zerada ou configurada pelo "
+"Se marcado, o usuário deverá trocar a senha na primeira vez que se ligar ao "
+"diretório LDAP depois da senha ter sofrido reset ou ser configurada pelo "
 "administrador"
 
 #: modules/ppolicy/includes/publicFunc.php:117
@@ -363,71 +391,46 @@ msgid "Enable a specific password policy for this user"
 msgstr "Habilitar uma política de senha específica para esse usuário"
 
 #: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:217
+#: modules/ppolicy/includes/publicFunc.php:224
 msgid "If not set the default password policy is enforced."
 msgstr "Se não definir a política de senha, a política padrão é aplicada."
 
-#: modules/ppolicy/includes/publicFunc.php:163
+#: modules/ppolicy/includes/publicFunc.php:170
 #, php-format
 msgid "Password policy %s applied."
 msgstr "Política de senha %s aplicada."
 
-#: modules/ppolicy/includes/publicFunc.php:167
+#: modules/ppolicy/includes/publicFunc.php:174
 #, php-format
 msgid "Password policy %s removed."
 msgstr "Política de senha %s removida."
 
-#: modules/ppolicy/includes/publicFunc.php:179
+#: modules/ppolicy/includes/publicFunc.php:186
 msgid "Password policy attributes updated."
-msgstr "Atributos da política de senha atualizados."
+msgstr "Atributos da política de senha atualizados"
 
-#: modules/ppolicy/includes/publicFunc.php:216
+#: modules/ppolicy/includes/publicFunc.php:223
 msgid "Apply a password policy for all group users"
 msgstr "Aplicar a política de senha para todos os grupos de usuário"
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr "Alterar atributo ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr "Apagar atributo ppolicy"
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr "Adicionar"
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr "Atualizar política para o usuário"
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr "Remover política do usuário"
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr "política"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
 msgstr "Política de senhas"
 
-#: modules/ppolicy/infoPackage.inc.php:54
+#: modules/ppolicy/infoPackage.inc.php:58
 msgid "Edit a password policy"
 msgstr "Editar a política de senha"
 
-#: modules/ppolicy/infoPackage.inc.php:59
+#: modules/ppolicy/infoPackage.inc.php:63
 msgid "Delete a password policy"
 msgstr "Remover a política de senha"
 
-#: modules/ppolicy/infoPackage.inc.php:75
+#: modules/ppolicy/infoPackage.inc.php:79
 msgid "Default "
-msgstr "Padrão "
+msgstr "Padrão"
 
-#: modules/ppolicy/infoPackage.inc.php:78
+#: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Habilitar política de senha para usuário específico"
+
+
