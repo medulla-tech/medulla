@@ -241,7 +241,7 @@ class NetworkDetect :
         @type netmask: str
         """
 
-        if NetUtils.is_ipv4_format(netmask) :
+        if NetUtils.is_ipv4_format(ip) :
             self.ip = ip
         else :
             raise Exception("Invalid format of IP address")
