@@ -816,13 +816,20 @@ class SmartAgentPrepare(object):
     AGENT_FOLDER = "agent"
     INSTALLER = "installer.sh"
     DEFAULTS_FILE = "pulse2agent.defaults"
+    VPN_INSTALLER_FOLDER = "vpn"
+    VPN_VARIABLES_FILE = "vpn-variables"
+
+    vpn_variables_pattern = {"VPN_SERVER_PUBLIC_IP": ""}
 
     def __init__(self, host, port):
+
         self.host = host
         self.port = port
 
+
     def set_all(self):
-        for method in [self.installer_set,
+        for method in [self.vpn_defaults_get,
+                       self.installer_set,
                        self.defaults_set,
                        self.create_archive,
                        ]:
@@ -848,6 +855,7 @@ class SmartAgentPrepare(object):
                                 self.DEFAULTS_FILE)
         pattern = {"PULSE2_CM_SERVER": self.host,
                    "PULSE2_CM_PORT": self.port,
+                   "VPN_SERVER_PUBLIC_IP" : self.vpn_variables_pattern["VPN_SERVER_PUBLIC_IP"],
                    "VPNCMD_PATH": "/opt/vpnclient/vpncmd",
                    "PULSE2_CM_LOG_PATH": "/var/log/pulse2agent.log",
                    }
@@ -855,6 +863,29 @@ class SmartAgentPrepare(object):
         file_util.copy_file("%s.in" % defaults, defaults)
         print "INFO: Defaults prepare"
         return self.replace(pattern, defaults)
+
+
+    def vpn_defaults_get(self):
+        var_file = os.path.join(MODULE_DIR,
+                                self.VPN_INSTALLER_FOLDER,
+                                self.VPN_VARIABLES_FILE,
+                                )
+        if os.path.exists(var_file):
+            with open(var_file) as f:
+                for line in f.readlines():
+                    for variable in self.vpn_variables_pattern:
+                        if variable in line and "=" in line:
+                            _, value = line.split("=")
+                            value = value.strip().replace('"','')
+                            self.vpn_variables_pattern[variable] = value
+            return True
+        else:
+            print "WARNING: %s not found!" % var_file
+            return False
+
+
+
+
 
 
 
