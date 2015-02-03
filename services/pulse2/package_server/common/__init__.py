@@ -42,6 +42,7 @@ from pulse2.package_server.find import Find
 import pulse2.utils
 from pulse2.package_server.utilities import md5file
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
+from twisted.internet import reactor, task
 
 class Common(pulse2.utils.Singleton):
     """  Base class
@@ -467,7 +468,7 @@ class Common(pulse2.utils.Singleton):
                     raise e
                 pack.setFiles(old.files)
                 pack.size = old.size
-            
+
             if need_assign:
                 Common().need_assign[pid] = True
             elif self.config.package_mirror_activate:
@@ -486,8 +487,8 @@ class Common(pulse2.utils.Singleton):
         if not self.packages.has_key(pid):
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
-        
-        
+
+
         params = self.h_desc(mp)
         path = params['src']
 
@@ -497,25 +498,26 @@ class Common(pulse2.utils.Singleton):
         conf_filetmp = conf_file + '.tmp'
         if not os.path.exists(confdir):
             os.mkdir(confdir)
-        
+
         # ======= Bundle case : generate files and command
-        
+
         if self.packages[pid].sub_packages:
-            
+
             # Init Bundle command
             bundle_command = []
             package_index = 0
-            
+
             # Remove all package files to regenerate zip files
             self.removeAllFilesFromPackage(pid)
-            
+
             for sub_pkg in self.packages[pid].sub_packages:
-                
+
                 package_index += 1
                 sub_pid = sub_pkg['pid']
                 condition = sub_pkg['condition']
+                condition = condition # for avoid pyflakes, to be used later
                 sub_package = self.packages[sub_pid]
-                
+
                 # Generating command for this sub_package
                 bundle_command.append('mkdir %s' % sub_pid)
                 bundle_command.append('unzip -qo %s.zip -d %s/' % (sub_pid, sub_pid))
@@ -525,34 +527,31 @@ class Common(pulse2.utils.Singleton):
                 bundle_command.append('bash %s.sh' % sub_pid)
                 bundle_command.append('RC%d=$?' % package_index)
                 bundle_command.append('cd ..')
-                
-                
+
+
                 # Generating zip file for package
                 zipfile_name = os.path.join(confdir, sub_pid + '.zip')
                 zip = zipfile.ZipFile(zipfile_name, 'w', zipfile.ZIP_DEFLATED)
-                
+
                 for __file in sub_package.files.internals:
                     # Skip MD5SUMS file
                     if __file.name == 'MD5SUMS':
                         continue
-                    
-                    self.logger.error(path)
-                    self.logger.error(sub_pid)
-                    self.logger.error(__file.name)
+
                     zip.write(os.path.join(path, sub_pid, __file.name), __file.name)
                     zip.writestr(sub_pid + '.sh', sub_package.cmd.command)
-                
+
                 zip.close()
-                
+
             # Setting bundle Command
             self.packages[pid].cmd.command = '\n'.join(bundle_command)
-        
+
         # ==============================================================
-                        
+
         try:
             # Exporting conf data
             conf_data = self.parser.concat(self.packages[pid])
-            
+
             # Try Reading old conf for merge
             try:
                 __file = open(conf_file, 'r')
@@ -560,11 +559,11 @@ class Common(pulse2.utils.Singleton):
                 __file.close()
             except:
                 old_conf_data = {}
-                
+
             # Merge old conf data with new one
             old_conf_data.update(json.loads(conf_data))
             new_conf_data = json.dumps(old_conf_data)
-                
+
             f = open(conf_filetmp, 'w+')
             f.write(new_conf_data)
             f.close()
@@ -587,11 +586,11 @@ class Common(pulse2.utils.Singleton):
 
 
         # Bundle case : generate MD5 and rescan packages
-        
+
         if self.packages[pid].sub_packages:
-                       
+
             self._createMD5File(confdir)
-            
+
             # Force new packages detection
             self.detectNewPackages()
             # Reloading all packages info
@@ -601,12 +600,14 @@ class Common(pulse2.utils.Singleton):
         else:
             # Check if this package is linked to bundles
             # In this case, regenerate associated bundles
-            # Important TODO: use a deferred call HERE
+            def __regenerateBundle(_pid):
+                self.writePackageTo(_pid, mp)
+                del self.inEdition[_pid]
+            # Scheduling the bundle regeneration
             for _pid, pkg in self.packages.iteritems():
-                self.logger.error(pid)
                 if pid in [x['pid'] for x in pkg.sub_packages]:
-                    self.logger.error(pid)
-                    self.writePackageTo(pkg.id, mp)
+                    self.inEdition[_pid] = True
+                    task.deferLater(reactor, 30, __regenerateBundle, _pid)
 
         return [pid, confdir]
 
@@ -664,10 +665,10 @@ class Common(pulse2.utils.Singleton):
         self.init(self.config)
         self.desc = desc
         return [True, err]
-    
+
     def removeAllFilesFromPackage(self, pid):
         self.removeFilesFromPackage(pid, all=True)
-    
+
 
     def removeFilesFromPackage(self,pid,files=[], all=False):
         # Checking if package exists
@@ -682,10 +683,10 @@ class Common(pulse2.utils.Singleton):
         # Deleting files
         try:
             internals_files = [x.name for x in self.packages[pid].files.internals]
-            
+
             # If all, then we delete all files
             files = internals_files
-            
+
             for _file in files:
                 filepath = os.path.join(path, _file)
                 os.unlink(filepath)
@@ -1054,7 +1055,7 @@ class Common(pulse2.utils.Singleton):
             except:
                 pass
         # End compatibility code
-        
+
         if os.path.basename(file) == self.CONFFILE:
             if self.already_declared.has_key(file) and self.already_declared[file]:
                 self._treatDir(os.path.dirname(file), mp, access)
@@ -1079,16 +1080,16 @@ class Common(pulse2.utils.Singleton):
             path = re.sub('//', '/', '/'+re.sub(re.escape(os.path.dirname(toRelative)), '', os.path.dirname(f)))
             size = int(self._treatFile(pid, f, path, access))
             self.packages[pid].size = int(self.packages[pid].size) + size
-            
+
 
     def _treatDir(self, file, mp, access, new = False, l_package = None, force = False):
         pid = None
-        
+
         try:
             if os.path.isdir(file):
                 self.logger.debug("loading package metadata (conf_file) in %s"%(file))
-                
-                
+
+
                 if l_package == None:
                     conf_file = os.path.join(file, self.CONFFILE)
                     l_package = self.parser.parse(conf_file)
@@ -1106,7 +1107,7 @@ class Common(pulse2.utils.Singleton):
                     if new:
                         self.logger.debug("package '%s' already exists" % (pid))
                     return False
-                    
+
                 toRelative = self.mp2src[mp]
                 size = 0
                 self.logger.debug("declare %s in packages"%(pid))
