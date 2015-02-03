@@ -74,7 +74,7 @@ Page custom CustomOptions
 
 Name "${PRODUCT_NAME} (${PRODUCT_VERSION})"
 OutFile "pulse2-agent-${PRODUCT_VERSION}.exe"
-InstallDir "$PROGRAMFILES\Mandriva\Pulse2-Agent"
+InstallDir "$PROGRAMFILES32\Mandriva\Pulse2-Agent"
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
@@ -248,7 +248,7 @@ Please fill the field with the right port."
     StrCpy $PULSE2_CM_PORT $1
     ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
   ${EndIF}
-  StrCpy $SOFTETHER_FOLDER_NAME "C:\Program Files\SoftEther VPN Client\vpncmd.exe"  
+  StrCpy $SOFTETHER_FOLDER_NAME "$PROGRAMFILES\SoftEther VPN Client\vpncmd.exe"  
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
