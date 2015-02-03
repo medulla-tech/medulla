@@ -520,8 +520,11 @@ class Common(pulse2.utils.Singleton):
                 bundle_command.append('mkdir %s' % sub_pid)
                 bundle_command.append('unzip -qo %s.zip -d %s/' % (sub_pid, sub_pid))
                 bundle_command.append('cd %s' % sub_pid)
+                for ext in ['sh', 'bat', 'exe']:
+                    bundle_command.append('chmod +x *.%s 2>/dev/null' % ext)
                 bundle_command.append('bash %s.sh' % sub_pid)
                 bundle_command.append('RC%d=$?' % package_index)
+                bundle_command.append('cd ..')
                 
                 
                 # Generating zip file for package
