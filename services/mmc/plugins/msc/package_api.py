@@ -633,6 +633,11 @@ class GetPackagesAdvanced:
                 self.packages.extend(packages)
         # Apply filter if wanted
         try:
+            if 'bundle' in self.filt:
+                self.packages = [p for p in self.packages if p[0]['sub_packages']]
+            else:
+                self.packages = [p for p in self.packages if not p[0]['sub_packages']]
+                
             if self.filt['filter']:
                 self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
         except KeyError:
