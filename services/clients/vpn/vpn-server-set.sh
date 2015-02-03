@@ -75,9 +75,6 @@ echo "net.ipv4.ip_forward = 1" > /etc/sysctl.d/ipv4_forwarding.conf
 # apply sysctl
 sysctl --system
 
-iptables -t nat -A POSTROUTING -s $VPN_TAP_LAN -j SNAT --to-source $VPN_SERVER_PUBLIC_IP 
-#apt-get install iptables-persistent
-
 # uncomment the ifconfig tap_soft clause in /etc/init.d/vpnserver
 sed -i 's/#\ ifconfig/ifconfig/g' $VPN_START_UP
 service $VPN_SERVICE_NAME restart
