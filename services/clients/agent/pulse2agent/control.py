@@ -251,7 +251,7 @@ class InitialInstalls(Component):
     def do_cmd(self, command):
         if "##server##" in command:
             command = command.replace("##server##",
-                                      "http://%s" % self.config.server.host)
+                                      "http://%s" % self.config.vpn.host)
         if "##wget##" in command:
             url = command.replace("##wget##","")
             self.logger.debug("dwnld url: %s" % url)
