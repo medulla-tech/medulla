@@ -248,7 +248,7 @@ Please fill the field with the right port."
     StrCpy $PULSE2_CM_PORT $1
     ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
   ${EndIF}
-  StrCpy $SOFTETHER_FOLDER_NAME "Program Files\SoftEther VPN Client\vpncmd.exe"  
+  StrCpy $SOFTETHER_FOLDER_NAME "C:\Program Files\SoftEther VPN Client\vpncmd.exe"  
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
