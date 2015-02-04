@@ -819,7 +819,9 @@ class SmartAgentPrepare(object):
     VPN_INSTALLER_FOLDER = "vpn"
     VPN_VARIABLES_FILE = "vpn-variables"
 
-    vpn_variables_pattern = {"VPN_SERVER_PUBLIC_IP": ""}
+    vpn_variables_pattern = {"VPN_SERVER_PUBLIC_IP": "",
+                             "VPN_TAP_ADDRESS", "",
+                            }
 
     def __init__(self, host, port):
 
@@ -853,7 +855,7 @@ class SmartAgentPrepare(object):
         defaults = os.path.join(MODULE_DIR,
                                 self.AGENT_FOLDER,
                                 self.DEFAULTS_FILE)
-        pattern = {"PULSE2_CM_SERVER": self.host,
+        pattern = {"PULSE2_CM_SERVER": self.vpn_variables_pattern["VPN_TAP_ADDRESS"],
                    "PULSE2_CM_PORT": self.port,
                    "VPN_SERVER_PUBLIC_IP" : self.vpn_variables_pattern["VPN_SERVER_PUBLIC_IP"],
                    "VPNCMD_PATH": "/opt/vpnclient/vpncmd",
