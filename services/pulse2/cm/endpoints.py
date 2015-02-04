@@ -152,7 +152,7 @@ class AgentsInstallMap(object):
 
 class VPNInstallMap(object):
     windows = ["##wget## ##server##/downloads/vpn/softether/softether-silent-install.exe",
-               "##tmp## softether-silent-install.exe"]
+               "##tmp## softether-silent-install.exe /S"]
 
     posix = ["##wget## ##server##/downloads/vpn/vpn-service-install.sh",
              "##wget## ##server##/downloads/vpn/vpn-client-set.sh",
