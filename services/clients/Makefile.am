@@ -65,9 +65,10 @@ posixclientdata = agents.conf \
 		agent/pulse2agent/shell.py  \
 		agent/pulse2agent/vpn.py
 
-installernsi = agent/win32/bin/installer.nsi 
+installernsi = agent/win32/installer.nsi 
 
 installerdata = \
+	agent/win32/customoptions.ini \
 	agent/win32/artwork/header.bmp \
 	agent/win32/artwork/uninstall.ico \
 	agent/win32/artwork/wizard.bmp \
