@@ -36,11 +36,13 @@ cd "`dirname $0`"
 ssh_ver=2.2
 vnc_ver=2.7.10
 inv_ver=2.3.11.1
+sa_ver=0.0.2
 
 # Compute filenames
 ssh_file=pulse2-secure-agent-${ssh_ver}.exe
 vnc_file=pulse2-rda-agent-${vnc_ver}.msi
 inv_file=inventory-agent-${inv_ver}.exe
+sa_file=pulse2-agent-${sa_ver}.exe
 sfx_file=7zsd.sfx
 
 # Compute downloads url
@@ -48,6 +50,7 @@ base_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
 ssh_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-secure-agent/${ssh_file}
 vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
 inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
+sa_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-smart-agent/${sa_file}
 sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
 
 # Command line options handling
@@ -292,6 +295,24 @@ else
   if [ ! -e ${inv_file} ]; then
     echo
     echo "${inv_file} download failed. Please restart."
+    echo
+    exit 1
+  fi
+fi
+
+# smart-agent download
+if [ -e "${sa_file}" ]; then
+  echo
+  echo "${sa_file} already available. Skipping download."
+  echo
+else
+  echo
+  echo "Downloading ${sa_file}..."
+  curl --progress-bar -o ${sa_file} ${sa_url}
+  echo
+  if [ ! -e ${sa_file} ]; then
+    echo
+    echo "${sa_file} download failed. Please restart."
     echo
     exit 1
   fi
