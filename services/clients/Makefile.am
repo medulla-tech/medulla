@@ -35,6 +35,7 @@ posixclientscripts = generate-agents create-repos.sh installer.sh.in \
 		   vpn/vpn-service-uninstall.sh \
                    vpn/vpn-server-set.sh \
 		   vpn/vpn-service-install.sh \
+		   vpn/softether/build.sh \
                    agent/pulse2-agent \
 		   agent/setup.py \
 		   agent/service.py \
@@ -65,7 +66,8 @@ posixclientdata = agents.conf \
 		agent/pulse2agent/shell.py  \
 		agent/pulse2agent/vpn.py
 
-installernsi = agent/win32/installer.nsi 
+installernsi = agent/win32/installer.nsi \
+	       vpn/softether/softether-installer.nsi
 
 installerdata = \
 	agent/win32/customoptions.ini \
