@@ -75,7 +75,7 @@ installerdata = \
 	agent/win32/artwork/install.ico \
 	agent/win32/libs/StrRep.nsh \
 	agent/win32/libs/ReplaceInFile.nsh \
-	agent/win32/libs/ServiceLib.nsh \
+	agent/win32/libs/VersionCompare.nsh \
 	agent/win32/libs/InstallOptionsMacro.nsh
 
 
