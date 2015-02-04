@@ -820,7 +820,7 @@ class SmartAgentPrepare(object):
     VPN_VARIABLES_FILE = "vpn-variables"
 
     vpn_variables_pattern = {"VPN_SERVER_PUBLIC_IP": "",
-                             "VPN_TAP_ADDRESS", "",
+                             "VPN_TAP_ADDRESS": "",
                             }
 
     def __init__(self, host, port):
