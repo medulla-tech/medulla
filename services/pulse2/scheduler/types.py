@@ -51,7 +51,6 @@ from pulse2.consts import PULSE2_SUCCESS_ERROR
 from pulse2.utils import SingletonN, extractExceptionMessage
 from pulse2.network import NetUtils, NetworkDetect
 from pulse2.scheduler.queries import CoHQuery, any_failed
-from pulse2.scheduler.utils import chooseClientInfo
 from pulse2.scheduler.launchers_driving import RemoteCallProxy
 from pulse2.scheduler.checks import getAnnounceCheck
 from pulse2.scheduler.utils import getClientCheck, getServerCheck

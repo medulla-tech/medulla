@@ -967,7 +967,6 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     
     @DatabaseHelper._session
     def get_active_convergences(self, session):
-        ret = []
         query = session.query(Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID)
         query = query.filter_by(active= 1)
         
