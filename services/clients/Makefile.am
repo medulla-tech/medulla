@@ -40,17 +40,6 @@ posixclientscripts = generate-agents create-repos.sh installer.sh.in \
 		   agent/service.py \
 		   agent/install.sh \
 		   agent/uninstall.sh \
-		   agent/pulse2agent/__init__.py \
-		   agent/pulse2agent/_config.py \
-                   agent/pulse2agent/config.py \
-		   agent/pulse2agent/connect.py \
-		   agent/pulse2agent/control.py \
-		   agent/pulse2agent/inventory.py \
-		   agent/pulse2agent/parse.py \
-		   agent/pulse2agent/pexceptions.py \
-		   agent/pulse2agent/ptypes.py \
-		   agent/pulse2agent/shell.py  \
-		   agent/pulse2agent/vpn.py \
                    agent/linux/pulse2-agent.init \
                    agent/linux/pulse2-agent.init.lsb \
                    agent/linux/pulse2-agent.service
@@ -63,18 +52,32 @@ posixclientdata = agents.conf \
 	        agent/pulse2agent.defaults.in \
 	        agent/pulse2agent.ini \
                 agent/linux/pulse2-agent.default \
-		agent/mac/com.pulse2.agent.plist 
-	        agent/win32/artwork/header.bmp \
- 	        agent/win32/artwork/uninstall.ico \
-	        agent/win32/artwork/wizard.bmp \
-	        agent/win32/artwork/install.ico \
-	        agent/win32/libs/StrRep.nsh \
-	        agent/win32/libs/ReplaceInFile.nsh \
-	        agent/win32/libs/ServiceLib.nsh \
-	        agent/win32/libs/InstallOptionsMacro.nsh \
-	        agent/win32/plugins/services.dll \
-	        agent/win32/bin/customoptions.ini \
-	        agent/win32/bin/installer.nsi 
+		agent/mac/com.pulse2.agent.plist \
+                agent/pulse2agent/__init__.py \
+		agent/pulse2agent/_config.py \
+                agent/pulse2agent/config.py \
+		agent/pulse2agent/connect.py \
+		agent/pulse2agent/control.py \
+		agent/pulse2agent/inventory.py \
+		agent/pulse2agent/parse.py \
+		agent/pulse2agent/pexceptions.py \
+		agent/pulse2agent/ptypes.py \
+		agent/pulse2agent/shell.py  \
+		agent/pulse2agent/vpn.py
+
+installernsi = agent/win32/bin/installer.nsi 
+
+installerdata = \
+	agent/win32/artwork/header.bmp \
+	agent/win32/artwork/uninstall.ico \
+	agent/win32/artwork/wizard.bmp \
+	agent/win32/artwork/install.ico \
+	agent/win32/libs/StrRep.nsh \
+	agent/win32/libs/ReplaceInFile.nsh \
+	agent/win32/libs/ServiceLib.nsh \
+	agent/win32/libs/InstallOptionsMacro.nsh
+
+
 
 nobase_posixclient_SCRIPTS = $(posixclientscripts) 
 nobase_posixclient_DATA = $(posixclientdata) 
@@ -88,7 +91,7 @@ install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/rpm/package/SRPMS
 
 	
-EXTRA_DIST = $(posixclientscripts) $(posixclientdata)
+EXTRA_DIST = $(posixclientscripts) $(posixclientdata) $(installernsi) $(installerdata)
 
 prereqs-deb:
 	apt-get update
