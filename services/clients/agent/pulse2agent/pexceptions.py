@@ -39,4 +39,9 @@ class ConnectionError(SmartAgentError):
     def __repr__(self):
         return "Request to server %s failed" % self.name
 
+class SoftwareInstallError(SmartAgentError):
+
+    def __repr__(self):
+        return "Unable to install software: %s" % self.name
+
 

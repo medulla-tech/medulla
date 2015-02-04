@@ -42,6 +42,7 @@ from inventory import InventoryChecker, get_minimal_inventory
 from vpn import VPNLaunchControl
 from shell import Shell
 from pexceptions import SoftwareCheckError, ConnectionError
+from pexceptions import SoftwareInstallError
 
 
 
@@ -113,12 +114,15 @@ class InventorySender(Component):
 class VPNSetter(Component):
     __component_name__ = "vpn_setter"
 
-    def create_user_on_server(self):
+    def _create_user_on_server(self):
         inventory = get_minimal_inventory()
         command = self.parent.protocol.get_command("VPN_SET")
 
         container = (command, inventory)
-        response = self.parent.client.request(container)
+        return self.parent.client.request(container)
+
+    def create_user_on_server(self):
+        response = self._create_user_on_server()
         self.logger.debug("vpn_setter: received response: %s" % response)
         try:
             if isinstance(response, list):
@@ -134,6 +138,20 @@ class VPNSetter(Component):
             self.logger.warn("VPN install failed: %s" % str(e))
 
         return False
+
+    def installer_win_prepare(self, command):
+        response = self._create_user_on_server()
+        self.logger.debug("vpn_setter: received response: %s" % response)
+        try:
+            if isinstance(response, list):
+                if len(response) == 4:
+                    host, port, user, password = response
+                    return "%s /S"
+            raise SoftwareInstallError("vpnclient")
+        except ValueError:
+            raise SoftwareInstallError("vpnclient")
+
+
 
     def set_variables(self, host, port, user, password):
         variables = os.path.join(self.temp_dir,
@@ -364,10 +382,16 @@ class FirstRunEtap(Component):
                 #raise SoftwareRequestError(sw)
 
         if self.config.vpn.enabled and not vpn_installed:
-            result = self.parent.initial_installs.install(["vpnclient"])
-            self.logger.debug("install of vpnclient: %s" % str(result))
-            result = self.parent.vpn_setter.create_user_on_server()
-            self.logger.debug("create_user_on_server: %s" % str(result))
+
+            if platform.system() == "Windows":
+                result = self.parent.initial_installs.install(["vpnclient"])
+                self.logger.debug("install of vpnclient: %s" % str(result))
+                # TODO - account create on server
+            else:
+                result = self.parent.initial_installs.install(["vpnclient"])
+                self.logger.debug("install of vpnclient: %s" % str(result))
+                result = self.parent.vpn_setter.create_user_on_server()
+                self.logger.debug("create_user_on_server: %s" % str(result))
         return True
 
 
