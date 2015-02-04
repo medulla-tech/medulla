@@ -40,11 +40,13 @@ Var /GLOBAL PREVIOUSVERSION
 ; Pulse PULSE2_CM address
 Var /GLOBAL PULSE2_CM_SERVER
 Var /GLOBAL PULSE2_CM_PORT
+Var /GLOBAL PULSE2_VPN_FQDN
 
 Var /GLOBAL SOFTETHER_FOLDER_NAME
 ; Default values for PULSE2_CM
-!define DEFAULT_PULSE2_CM_SERVER "pulse2.domain.com"
+!define DEFAULT_PULSE2_CM_SERVER "10.0.0.1"
 !define DEFAULT_PULSE2_CM_PORT "8443"
+!define DEFAULT_PULSE2_VPN_FQDN "smart-pulse.vpn"
 
 ; Service name (from the Windows view)
 !define WINSVCNAME "pulse2-agent"
@@ -93,6 +95,9 @@ Function CustomOptions
   ${EndIf}
   ${IfNot} $PULSE2_CM_PORT == ""
     !insertmacro CHANGETEXTFIELD "customoptions.ini" "Field 5" $PULSE2_CM_PORT
+  ${EndIf}
+  ${IfNot} $PULSE2_VPN_FQDN == ""
+    !insertmacro CHANGETEXTFIELD "customoptions.ini" "Field 7" $PULSE2_VPN_FQDN
   ${EndIf}
   !insertmacro INSTALLOPTIONS_SHOW
 FunctionEnd
@@ -149,6 +154,15 @@ Function .onInit
   ${If} $PULSE2_CM_PORT == ""
     StrCpy $PULSE2_CM_PORT ${DEFAULT_PULSE2_CM_PORT}
   ${EndIf}
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; Handle /PULSE2_VPN_FQDN option ;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ${GetOptions} $R0 "/PULSE2_VPN_FQDN=" $0
+  StrCpy $PULSE2_VPN_FQDN $0
+  ${If} $PULSE2_VPN_FQDN == ""
+    StrCpy $PULSE2_VPN_FQDN ${DEFAULT_PULSE2_VPN_FQDN}
+  ${EndIf}
+
   ;;;;;;;;;;;;;;;;;;;;
   ; Handle /S option ;
   ;;;;;;;;;;;;;;;;;;;;
@@ -247,11 +261,19 @@ Please fill the field with the right port."
     ${EndIf}
     StrCpy $PULSE2_CM_PORT $1
     ReadINIStr $2 "$PLUGINSDIR\customoptions.ini" "Field 7" "State"
+    ${If} $2 == ""
+      MessageBox MB_OK|MB_ICONEXCLAMATION "Pulse2 FQDN of VPN is empty! $\n\
+Please fill the field with the right DNS name or IP address."
+      Abort
+    ${EndIf}
+    StrCpy $PULSE2_VPN_FQDN $2
+
   ${EndIF}
-  StrCpy $SOFTETHER_FOLDER_NAME "$PROGRAMFILES64\SoftEther VPN Client\vpncmd.exe"  
+  StrCpy $SOFTETHER_FOLDER_NAME "$PROGRAMFILES\SoftEther VPN Client\vpncmd.exe"  
   ; Fix conf file
   DetailPrint "Using $PULSE2_CM_SERVER:$PULSE2_CM_PORT as Connection Manager."
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_SERVER@@" $PULSE2_CM_SERVER
+  !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@VPN_SERVER_PUBLIC_IP@@" $PULSE2_VPN_FQDN
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_PORT@@" $PULSE2_CM_PORT
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@PULSE2_CM_LOG_PATH@@" $INSTDIR\pulse2-agent.log.txt
   !insertmacro _ReplaceInFile "$INSTDIR\pulse2agent.ini" "@@VPNCMD_PATH@@" $SOFTETHER_FOLDER_NAME
