@@ -44,4 +44,9 @@ class SoftwareInstallError(SmartAgentError):
     def __repr__(self):
         return "Unable to install software: %s" % self.name
 
+class PackageDownloadError(SmartAgentError):
+
+    def __repr__(self):
+        return "Unable to download the package: %s" % self.name
+
 

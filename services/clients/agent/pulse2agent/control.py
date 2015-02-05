@@ -42,7 +42,7 @@ from inventory import InventoryChecker, get_minimal_inventory
 from vpn import VPNLaunchControl
 from shell import Shell
 from pexceptions import SoftwareCheckError, ConnectionError
-from pexceptions import SoftwareInstallError
+from pexceptions import SoftwareInstallError, PackageDownloadError
 
 
 
@@ -294,8 +294,11 @@ class InitialInstalls(Component):
 
     def download(self, url):
         filename = url.split('/')[-1]
-        u = urllib2.urlopen(url)
-
+        try:
+            u = urllib2.urlopen(url)
+        except urllib2.URLError:
+            self.logger.error("Unable to open URL: %s" % url)
+            raise PackageDownloadError(url)
         self.logger.debug("start download from url: %s" % url)
 
         if not os.path.exists(self.temp_dir):
@@ -374,24 +377,27 @@ class FirstRunEtap(Component):
                 vpn_installed = True
 
 
+        try:
+            for sw in missing_software:
+                result = self.parent.initial_installs.install(sw)
+                if not result:
+                    pass
+                    #raise SoftwareRequestError(sw)
 
-        for sw in missing_software:
-            result = self.parent.initial_installs.install(sw)
-            if not result:
-                pass
-                #raise SoftwareRequestError(sw)
+            if self.config.vpn.enabled and not vpn_installed:
 
-        if self.config.vpn.enabled and not vpn_installed:
-
-            if platform.system() == "Windows":
-                result = self.parent.initial_installs.install(["vpnclient"])
-                self.logger.debug("install of vpnclient: %s" % str(result))
-                # TODO - account create on server
-            else:
-                result = self.parent.initial_installs.install(["vpnclient"])
-                self.logger.debug("install of vpnclient: %s" % str(result))
-                result = self.parent.vpn_setter.create_user_on_server()
-                self.logger.debug("create_user_on_server: %s" % str(result))
+                if platform.system() == "Windows":
+                    result = self.parent.initial_installs.install(["vpnclient"])
+                    self.logger.debug("install of vpnclient: %s" % str(result))
+                    # TODO - account create on server
+                else:
+                    result = self.parent.initial_installs.install(["vpnclient"])
+                    self.logger.debug("install of vpnclient: %s" % str(result))
+                    result = self.parent.vpn_setter.create_user_on_server()
+                    self.logger.debug("create_user_on_server: %s" % str(result))
+        except PackageDownloadError:
+            self.logger.warn("Initial install phase failed")
+            return False
         return True
 
 
