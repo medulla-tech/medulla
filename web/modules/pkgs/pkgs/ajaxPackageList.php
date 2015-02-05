@@ -29,7 +29,7 @@ require_once("modules/msc/includes/utilities.php");
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-$filter = array('filter'=> $_GET["filter"], 'location'=> $_GET['location']);
+$filter = array('filter'=> $_GET["filter"], 'location'=> $_GET['location'], 'bundle' => 0);
 $filter1 = $_GET["filter"]. '##'.$_GET['location'];
 
 if ($_GET['location']) {

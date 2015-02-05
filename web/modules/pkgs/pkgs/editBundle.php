@@ -79,6 +79,9 @@ if (isset($_POST['bconfirm'])){
     }
     
     putPackageDetail($_POST['p_api'], $package, True);
+    if (!isXMLRPCError()) {
+        new NotifyWidgetSuccess(_T("Bundle successfully edited", "pkgs"));
+    }
 }
 
 
@@ -156,6 +159,7 @@ else{
 
 $papi_packages = advGetAllPackages(array(
             'filter' => '',
+            'bundle' => 0,
             'packageapi' => $papi
         ), 0, -1);
 
@@ -259,6 +263,7 @@ $f->display();
 jQuery(function(){
     
     var $ = jQuery;
+    $('input[name*=sub_packages]').hide();
 
     // Function to populate select from list
     (function($, window) {
