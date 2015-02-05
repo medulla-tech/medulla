@@ -886,11 +886,6 @@ class SmartAgentPrepare(object):
             return False
 
 
-
-
-
-
-
     def replace(self, pattern, in_script):
         """
         Replaces all occurences based on pattern.
@@ -924,6 +919,36 @@ class SmartAgentPrepare(object):
                                   verbose=1
                                   )
         return True
+
+class BuildSoftEtherClient(object):
+    current_directory = None
+    path = ["vpn", "softether"]
+    command = "build.sh"
+
+    def __init__(self):
+        print "INFO: Prepare SoftEther VPN Client installer for Windows ..."
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        self.build()
+        os.chdir(current_directory)
+
+
+    def build(self):
+        destination = os.path.join(*self.path)
+        # cd vpn/softether/
+        os.chdir(destination)
+
+        cmd = ["sh", "build.sh"]
+        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
+        out, err = p.communicate()
+
+        print "INFO: (build of SoftEther VPN Client) %s" % out
+        if len(err) > 0:
+            print "ERROR: (build of SoftEther VPN Client) %s" % err
+
+
+
+
+
 
 
 def args_parse(script_path, args):
@@ -998,7 +1023,7 @@ if __name__ == "__main__":
     else:
         cm_port = "8443" # TODO - check it in cm.ini
 
-
+    BuildSoftEtherClient()
     sm = SmartAgentPrepare(cm_host, cm_port)
     sys.exit(sm.set_all())
 
