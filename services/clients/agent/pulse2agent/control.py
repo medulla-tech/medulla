@@ -31,8 +31,6 @@ import urllib2
 import fileinput
 
 from distutils import file_util
-from threading import Thread
-from Queue import Queue
 
 from ptypes import CC
 from ptypes import  Component, DispatcherFrame
@@ -43,40 +41,6 @@ from vpn import VPNLaunchControl
 from shell import Shell
 from pexceptions import SoftwareCheckError, ConnectionError
 from pexceptions import SoftwareInstallError, PackageDownloadError
-
-
-
-class SmartAgentQueues(object):
-    """ Container storing all event queues """
-
-    vpn = None
-    stop = None
-    awake = None
-    inventory = None
-
-    def __init__(self):
-
-        self.vpn = Queue()
-        self.stop = Queue()
-        self.awake = Queue()
-        self.inventory = Queue()
-
-
-    def empty_all(self):
-        for queue in self.__dict__.values():
-            if isinstance(queue, Queue):
-                queue.empty()
-
-
-class SmartAgentThread(Thread):
-
-    queue = None
-
-    def __init__(self, config):
-        super(self.__class__, self).__init__()
-
-        self.queue = Queue()
-        self.config = config
 
 
 
@@ -461,11 +425,6 @@ class Dispatcher(DispatcherFrame):
         except Exception, exc:
             self.logger.error("Agent connection failed: %s" % repr(exc))
             return False
-
-
-    def _threads_init(self):
-        pass
-
 
 
 
