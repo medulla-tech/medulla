@@ -194,3 +194,11 @@ foreach($modules as $module => $editForm) {
 $f->display();
 
 ?>
+<script type="text/javascript">
+jQuery(function(){
+    var $ = jQuery;
+    $('input.btnPrimary').click(function () {
+        $('select#secondary.list option').prop('selected', true);
+    });
+});
+</script>
