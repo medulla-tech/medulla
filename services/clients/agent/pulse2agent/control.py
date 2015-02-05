@@ -477,6 +477,9 @@ class Dispatcher(DispatcherFrame):
             if not self._connect():
                 # server not available, try to establish a VPN connection
                 #launch_vpn = VPNLaunchControl(self.config, self.queues.vpn)
+                if not self.inventory_checker.check_vpn_installed():
+                    self.logger.warn("VPN client not installed yet")
+                    return False
                 ret = self.vpn_launch_control.start()
                 if ret == CC.VPN | CC.DONE:
                     # VPN established, try to contact the server
