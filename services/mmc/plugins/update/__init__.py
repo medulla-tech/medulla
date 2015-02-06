@@ -343,6 +343,7 @@ class RpcProxy(RpcProxyI):
         install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
         install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (
             self.updMgrPath, pulse_packages_filter, self.updMgrPath)
+        install_cmd += '; for service in /etc/init.d/{mmc-agent,pulse2-*}; do $service restart; done'
 
         @deferred
         def _runInstall():
