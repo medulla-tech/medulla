@@ -1,110 +1,50 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-01-28 23:46+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-09 01:00+0100\n"
 "PO-Revision-Date: 2015-01-21 11:27+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
+"pulse2/team/ja_JP/)\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/update/includes/panels/product_updates.inc.php:30
-#: modules/update/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "アップデート"
-
-#: modules/update/includes/panels/product_updates.inc.php:43
-#: modules/update/includes/panels/clients_updates.inc.php:42
-msgid "An error occured while fetching updates"
-msgstr "アップデート取得中にエラーが発生しました。"
-
-#: modules/update/includes/panels/product_updates.inc.php:47
-#: modules/update/includes/panels/clients_updates.inc.php:45
-msgid "View updates"
-msgstr "アップデートを表示"
-
-#: modules/update/includes/panels/product_updates.inc.php:48
-msgid "Install updates"
-msgstr "アップデートをインストール"
-
-#: modules/update/includes/panels/product_updates.inc.php:54
-#: modules/update/includes/panels/clients_updates.inc.php:50
-msgid "No updates available."
-msgstr "入手可能なアップデートがありません。"
-
-#: modules/update/includes/panels/product_updates.inc.php:56
-#: modules/update/includes/panels/clients_updates.inc.php:52
-msgid "updates available."
-msgstr "アップデートが入手可能です。"
-
-#: modules/update/includes/panels/clients_updates.inc.php:30
-msgid "Clients Update"
+#: modules/update/update/viewGroupUpdates.php:50
+#, php-format
+msgid "%s's group update manager"
 msgstr ""
 
-#: modules/update/includes/panels/clients_updates.inc.php:64
-msgid "Up-to-date"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:65
-msgid "Updates planned"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:66
-msgid "Updates availables"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:67
-msgid "OS Update disabled"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:68
-msgid "Not registered"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:69
-msgid "Not Supported"
-msgstr ""
-
-#: modules/update/includes/panels/clients_updates.inc.php:92
-msgid "Create a group"
-msgstr ""
-
-#: modules/update/update/installProductUpdates.php:38
-msgid "Installing updates ..."
-msgstr "アップデートインストール中 ..."
-
-#: modules/update/update/localSidebar.php:28
-msgid "Update managment"
-msgstr "アップデート管理"
-
-#: modules/update/update/sidebar.php:39
+#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
 #: modules/update/update/viewGroupUpdates.php:51
-#: modules/update/infoPackage.inc.php:41
 msgid "All updates"
 msgstr "すべてのアップデート"
 
-#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
-msgid "Settings"
-msgstr "設定"
+#: modules/update/includes/panels/clients_updates.inc.php:42
+#: modules/update/includes/panels/product_updates.inc.php:43
+msgid "An error occured while fetching updates"
+msgstr "アップデート取得中にエラーが発生しました。"
+
+#: modules/update/update/viewUpdates.php:52
+msgid "Available"
+msgstr "入手可能"
 
 #: modules/update/update/viewProductUpdates.php:25
 #: modules/update/update/viewProductUpdates.php:51
 msgid "Available updates"
 msgstr "入手可能アップデート"
 
-#: modules/update/update/createUpdateStaticGroup.php:34
-#, php-format
-msgid "Machine %s at %s"
+#: modules/update/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
 msgstr ""
 
 #: modules/update/update/createUpdateStaticGroup.php:50
@@ -112,123 +52,185 @@ msgstr ""
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
-#: modules/update/update/settings.php:57
-msgid "Update settings"
-msgstr "アップデート設定"
+#: modules/update/includes/panels/clients_updates.inc.php:92
+msgid "Create a group"
+msgstr ""
 
-#: modules/update/update/settings.php:62
+#: modules/update/update/ajaxUpdates.php:121
+msgid "Disable"
+msgstr "無効"
+
+#: modules/update/update/ajaxUpdates.php:140
+msgid "Disable selected updates"
+msgstr "選択されたアップデートを無効化"
+
+#: modules/update/update/disableUpdate.php:48
+msgid "Disable this update?"
+msgstr "このアップデートを無効化しますか？"
+
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr "アップデートの無効化"
+
+#: modules/update/update/viewUpdates.php:54
+msgid "Disabled"
+msgstr "無効"
+
+#: modules/update/update/ajaxUpdates.php:117
+msgid "Enable"
+msgstr "有効"
+
+#: modules/update/update/ajaxUpdates.php:139
+msgid "Enable selected updates"
+msgstr "選択されたアップデートを有効化"
+
+#: modules/update/update/enableUpdate.php:47
+msgid "Enable this update?"
+msgstr "このアップデートを有効化しますか？"
+
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr "アップデートの有効化"
+
+#: modules/update/update/settings.php:61
 msgid "Enable update managment for:"
 msgstr "有効にするアップデート管理対象:"
 
-#: modules/update/update/settings.php:78
-msgid "Updates deployment"
-msgstr "アップデートデプロイ"
+#: modules/update/update/viewUpdates.php:53
+msgid "Enabled"
+msgstr "有効"
 
-#: modules/update/update/settings.php:80
+#: modules/update/update/settings.php:79
 msgid "Force now"
 msgstr "今強制する"
 
-#: modules/update/update/viewGroupUpdates.php:47
-msgid "This group doesn't exist"
+#: modules/update/update/viewUpdates.php:50
+msgid "Hide installed update"
 msgstr ""
 
-#: modules/update/update/viewGroupUpdates.php:50
+#: modules/update/includes/panels/product_updates.inc.php:48
+msgid "Install updates"
+msgstr "アップデートをインストール"
+
+#: modules/update/update/ajaxUpdates.php:114
+msgid "Installed count"
+msgstr "インストール数"
+
+#: modules/update/update/installProductUpdates.php:38
+msgid "Installing updates ..."
+msgstr "アップデートインストール中 ..."
+
+#: modules/update/update/createUpdateStaticGroup.php:34
 #, php-format
-msgid "%s's group update manager"
+msgid "Machine %s at %s"
+msgstr ""
+
+#: modules/update/update/ajaxUpdates.php:71
+msgid "No entry found"
+msgstr "登録が見つかりませんでした"
+
+#: modules/update/includes/panels/clients_updates.inc.php:50
+#: modules/update/includes/panels/product_updates.inc.php:54
+msgid "No updates available."
+msgstr "入手可能なアップデートがありません。"
+
+#: modules/update/includes/panels/clients_updates.inc.php:69
+msgid "Not Supported"
 msgstr ""
 
 #: modules/update/update/viewGroupUpdates.php:64
 msgid "Not enough information"
 msgstr ""
 
-#: modules/update/update/disableUpdate.php:48
-msgid "Disable this update?"
-msgstr "このアップデートを無効化しますか？"
-
-#: modules/update/update/enableUpdate.php:47
-msgid "Enable this update?"
-msgstr "このアップデートを有効化しますか？"
-
-#: modules/update/update/viewUpdates.php:37
-#: modules/update/infoPackage.inc.php:32
-msgid "Update manager"
-msgstr "アップデートマネージャー"
-
-#: modules/update/update/viewUpdates.php:50
-msgid "Hide installed update"
+#: modules/update/includes/panels/clients_updates.inc.php:68
+msgid "Not registered"
 msgstr ""
 
-#: modules/update/update/viewUpdates.php:52
-msgid "Available"
-msgstr "入手可能"
+#: modules/update/includes/panels/clients_updates.inc.php:67
+msgid "OS Update disabled"
+msgstr ""
 
-#: modules/update/update/viewUpdates.php:53
-msgid "Enabled"
-msgstr "有効"
+#: modules/update/infoPackage.inc.php:69
+msgid "Product Updates installation"
+msgstr "製品アップデートインストール"
 
-#: modules/update/update/viewUpdates.php:54
-msgid "Disabled"
-msgstr "無効"
+#: modules/update/infoPackage.inc.php:77
+msgid "Product Updates installation (ajax)"
+msgstr "製品アップデートインストール (Ajax)"
 
-#: modules/update/update/ajaxUpdates.php:71
-msgid "No entry found"
-msgstr "登録が見つかりませんでした"
+#: modules/update/infoPackage.inc.php:73
+msgid "Product Updates list"
+msgstr "製品アップデート一覧"
 
-#: modules/update/update/ajaxUpdates.php:112
-msgid "Update title"
-msgstr "アップデートタイトル"
+#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
+msgid "Settings"
+msgstr "設定"
+
+#: modules/update/update/settings.php:46
+msgid "The update deployments scheduled successfully."
+msgstr ""
+
+#: modules/update/update/viewGroupUpdates.php:47
+msgid "This group doesn't exist"
+msgstr ""
 
 #: modules/update/update/ajaxUpdates.php:113
 msgid "Type"
 msgstr "タイプ"
 
-#: modules/update/update/ajaxUpdates.php:114
-msgid "Installed count"
-msgstr "インストール数"
+#: modules/update/includes/panels/clients_updates.inc.php:64
+msgid "Up-to-date"
+msgstr ""
 
-#: modules/update/update/ajaxUpdates.php:117
-msgid "Enable"
-msgstr "有効"
+#: modules/update/includes/panels/product_updates.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "アップデート"
 
-#: modules/update/update/ajaxUpdates.php:121
-msgid "Disable"
-msgstr "無効"
+#: modules/update/infoPackage.inc.php:32
+#: modules/update/update/viewUpdates.php:37
+msgid "Update manager"
+msgstr "アップデートマネージャー"
 
-#: modules/update/update/ajaxUpdates.php:139
-msgid "Enable selected updates"
-msgstr "選択されたアップデートを有効化"
+#: modules/update/update/localSidebar.php:28
+msgid "Update managment"
+msgstr "アップデート管理"
 
-#: modules/update/update/ajaxUpdates.php:140
-msgid "Disable selected updates"
-msgstr "選択されたアップデートを無効化"
+#: modules/update/update/settings.php:56
+msgid "Update settings"
+msgstr "アップデート設定"
+
+#: modules/update/update/ajaxUpdates.php:112
+msgid "Update title"
+msgstr "アップデートタイトル"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 #: modules/update/infoPackage.inc.php:88 modules/update/infoPackage.inc.php:93
 msgid "Updates"
 msgstr "アップデート"
 
+#: modules/update/includes/panels/clients_updates.inc.php:66
+msgid "Updates availables"
+msgstr ""
+
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr "アップデートデプロイ"
+
 #: modules/update/infoPackage.inc.php:47
 msgid "Updates list"
 msgstr "アップデート一覧"
 
-#: modules/update/infoPackage.inc.php:51
-msgid "Enable update"
-msgstr "アップデートの有効化"
+#: modules/update/includes/panels/clients_updates.inc.php:65
+msgid "Updates planned"
+msgstr ""
 
-#: modules/update/infoPackage.inc.php:55
-msgid "Disable update"
-msgstr "アップデートの無効化"
+#: modules/update/includes/panels/clients_updates.inc.php:45
+#: modules/update/includes/panels/product_updates.inc.php:47
+msgid "View updates"
+msgstr "アップデートを表示"
 
-#: modules/update/infoPackage.inc.php:69
-msgid "Product Updates installation"
-msgstr "製品アップデートインストール"
-
-#: modules/update/infoPackage.inc.php:73
-msgid "Product Updates list"
-msgstr "製品アップデート一覧"
-
-#: modules/update/infoPackage.inc.php:77
-msgid "Product Updates installation (ajax)"
-msgstr "製品アップデートインストール (Ajax)"
-
-
+#: modules/update/includes/panels/clients_updates.inc.php:52
+#: modules/update/includes/panels/product_updates.inc.php:56
+msgid "updates available."
+msgstr "アップデートが入手可能です。"
