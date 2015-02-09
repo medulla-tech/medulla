@@ -31,5 +31,5 @@ if [ ! -e ${VPN_ARCHIVE} ]; then
     fi	
 fi
 
-unzip -o ${VPN_ARCHIVE}
+7z x ${VPN_ARCHIVE}
 makensis -V1 softether-installer.nsi
