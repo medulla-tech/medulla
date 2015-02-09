@@ -83,7 +83,7 @@ installerdata = \
 
 
 nobase_posixclient_SCRIPTS = $(posixclientscripts) 
-nobase_posixclient_DATA = $(posixclientdata) 
+nobase_posixclient_DATA = $(posixclientdata) $(installernsi)
 
 install-data-local:
 	$(MKDIR_P) $(DESTDIR)$(posixclientdir)/templates/deb/package/opt
