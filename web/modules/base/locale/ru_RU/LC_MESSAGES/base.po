@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-01-28 17:19+0100\n"
+"POT-Creation-Date: 2015-02-05 17:16+0100\n"
 "PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
@@ -482,23 +482,23 @@ msgstr "Нет доступных элементов"
 msgid "Select entity"
 msgstr "Выберите объект"
 
-#: includes/PageGenerator.php:2634 includes/PageGenerator.php:2702
-#: includes/PageGenerator.php:2728 modules/base/groups/members.php:188
+#: includes/PageGenerator.php:2634 includes/PageGenerator.php:2703
+#: includes/PageGenerator.php:2729 modules/base/groups/members.php:188
 #: modules/base/groups/edit.php:117
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: includes/PageGenerator.php:2638 includes/PageGenerator.php:2706
+#: includes/PageGenerator.php:2638 includes/PageGenerator.php:2707
 #: modules/base/groups/delete.php:66 modules/base/groups/members.php:189
 #: modules/base/users/backup.php:91 modules/ppolicy/default/delete.php:46
 msgid "Cancel"
 msgstr "Отмена"
 
-#: includes/PageGenerator.php:2880
+#: includes/PageGenerator.php:2881
 msgid "Select all"
 msgstr "Выделить все"
 
-#: includes/PageGenerator.php:2880
+#: includes/PageGenerator.php:2881
 msgid "Unselect all"
 msgstr "Снять выделение"
 
