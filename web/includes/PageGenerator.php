@@ -1251,13 +1251,14 @@ class AjaxFilter extends HtmlElement {
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
             </div>
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-                <img src="graph/search.gif" style="position:relative; float: left; left:4px;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
+            <div id="searchBest">
+                <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
+                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                          onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
                                  pushSearch<?php echo $this->formid ?>();
                                  return false;" />
-                </span>
+            </div>
             </div>
 
             <script type="text/javascript">
@@ -1489,28 +1490,31 @@ class AjaxFilterLocation extends AjaxFilter {
         <form name="Form" id="Form" action="#" onsubmit="return false;">
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
+            <div id="searchBest">
                 <?php foreach ($this->checkbox as $checkbox)
                     {
                         $checkbox->display();
                     }
                     ?>
-                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
                 <span class="searchfield">
                     <?php
                     $this->location->display();
                     ?>
-                </span>&nbsp;
-                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                </span>
+                <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                          onclick="document.getElementById('param').value = '';
                                  pushSearch();
                                  return false;" />
-                </span>
+            </div>
             </div>
 
             <script type="text/javascript">
                 jQuery('#param').focus();
+                if(!(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)) {
+                    jQuery("#searchBest").width(jQuery("#searchBest").width()+20);
+                }
 
         <?php
         if (isset($this->storedfilter)) {
@@ -1629,7 +1633,6 @@ class AjaxLocation extends AjaxFilterLocation {
                         $checkbox->display();
                     }
                     ?>
-                    <img src="graph/search.gif"/>
                     <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
                     <span class="locationfield">
                         <?php

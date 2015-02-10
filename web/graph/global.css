@@ -738,6 +738,10 @@ li.wait a {
     color: #FFF;
 }
 
+.user_container {
+    padding-top: 40px;
+}
+
 #container .action{
 	line-height: 18px;
 }
@@ -985,9 +989,14 @@ form {
     top: 0px;
 }
 
+select#location.searchfieldreal.noborder {
+  margin-right: 0px;
+}
+input#param.searchfieldreal {
+}
+
 .searchbox {
 	/*background-color: #eee;*/
-    border:1px solid #ccc;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     border-radius: 4px;
@@ -997,7 +1006,23 @@ form {
     padding: 10px 10px 10px 10px;
     margin-bottom: 30px
     /*height: 36px;*/
+
 }
+
+#searchBest{
+    background: url('search.gif') #FFF no-repeat;
+    padding-left: 55px;
+    border-radius: 6px;
+    background-position: left center;
+    margin-right: 0;
+    border: 1px solid #ccc;
+    height:30px;
+    min-width: 230px;
+}
+
+#searchBest input, #searchBest select{border:0; max-height:28px}
+
+
 
 .searchbox input {
     /*margin-right: 0px !important;*/
@@ -1031,7 +1056,7 @@ form {
     /*left: -7px;*/
     position: relative;
     top: 17px;
-    margin-left: 9px;
+    margin-right: 9px;
 }
 
 .items {
@@ -1059,7 +1084,12 @@ form {
     /*padding: 0px;*/
 }
 
-.searchfield img{margin-right: 5px;}
+img.searchfield {
+    top: 5px;
+    left: -22px;
+    display: float;
+    margin-right: -36px;
+}
 
 #Location img {
     vertical-align: middle;
@@ -1237,7 +1267,7 @@ a.tooltip:hover img{
     background-color: #EEE ;
     border: 1px solid #A0A0A0;
     font-size: 10px;
-    margin: .66em 0 20px;
+    margin: 2em 0 20px;
     padding: .2em 0;
 }
 
