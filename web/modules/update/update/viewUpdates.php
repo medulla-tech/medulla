@@ -59,3 +59,6 @@ $ajax->display();
 echo "<br/><br/>";
 $ajax->displayDivToUpdate();
 ?>
+<script type="text/javascript">
+jQuery("#searchBest").width(jQuery("#searchBest").width()+20);
+</script>

@@ -371,8 +371,7 @@ class AjaxFilterCommands extends AjaxFilter {
         <form name="Form" id="<?php print $this->formid; ?>" action="#" onsubmit="return false;">
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
-                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
-                &nbsp;
+            <div id="searchBest">
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
                         return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
@@ -418,6 +417,7 @@ class AjaxFilterCommands extends AjaxFilter {
                     <!-- </form> -->
                 <?php } ?>
 
+            </div>
             </div>
 
             <script type="text/javascript">
@@ -549,7 +549,6 @@ class AjaxFilterCommandsStates extends AjaxFilter {
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
             <div id="searchSpan" class="searchbox" style="float: right;">
-                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
 
                 <span class="searchfield">
                     <?php

@@ -79,7 +79,6 @@ class AjaxPrintGraph extends AjaxFilterLocation {
         <form name="FormLocationGraph" id="FormLocationGraph" action="#" onsubmit="return false;">
             <div id="Location">
                 <span id="searchSpan" class="searchbox">
-                    <img src="graph/search.gif"/>
                     <span class="locationtext">&nbsp;<?php echo _T("Select graph", "monitoring") ?>:&nbsp;</span>
                     <span class="locationfield">
                         <?php
