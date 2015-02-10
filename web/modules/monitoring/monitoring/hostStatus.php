@@ -33,10 +33,19 @@ require("localSidebar.php");
 //require_once("modules/pulse2/includes/utilities.php");
 
 if (isset($_GET['apiId'])) {
-	$apiId = $_GET['apiId'];
-} else {
-	new NotifyWidgetFailure(_T("No api authentification token found!!!", "monitoring"));
-	return;
+    $apiId = $_GET['apiId'];
+}
+else {
+    try {
+        // connect to Zabbix API
+        $api = new ZabbixApi(getZabbixUri()."/api_jsonrpc.php", getZabbixUsername(), getZabbixPassword());
+        $apiId = $api->getApiAuth();
+    }
+    catch(Exception $e) {
+        // Exception in ZabbixApi catched
+        print $e->getMessage();
+        return;
+    }
 }
 
 if (isset($_GET['hostid'])) {

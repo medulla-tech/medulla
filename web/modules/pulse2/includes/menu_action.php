@@ -38,7 +38,7 @@ $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", 
 $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
 $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
-$imgMonitoring = new ActionItem(_T("Monitoring", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
+$imgMonitoring = new ActionItem(_T("Monitoring", "pulse2"),"hostStatus", "monitoring", "monitoring", "monitoring", "monitoring");
 
 $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction, $imgMonitoring);
 
