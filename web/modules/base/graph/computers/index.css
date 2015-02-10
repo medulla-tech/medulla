@@ -119,6 +119,17 @@ li.imaging a {
         color: #FFF;
 }
 
+li.monitoring a {
+        padding: 1px 3px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/monitoring.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
 li.addbootmenu a {
     background-image:url("modules/imaging/graph/images/imaging-add.png");
     background-position:left top;
