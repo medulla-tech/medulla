@@ -1874,7 +1874,7 @@ class SideMenu {
      *  print the SideMenu and the sideMenuItem
      */
     function display() {
-        echo "<style>#section {}</style>";
+        echo "<style>#section {margin-left:200px;}</style>";
         echo "<div id=\"sidebar\">\n";
         echo "<ul class=\"" . $this->className . "\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {

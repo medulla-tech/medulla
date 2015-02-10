@@ -51,8 +51,8 @@ a:hover { color: #000;/*opacity: 1;*/}
 a.btn { color: #333; }
 a.btn-primary, a.btn-info, a.btn-danger { color: white; }
 
-a.link { color: #2A557E; border-bottom: 1px dotted #777; text-decoration: none;}
-a.link:hover { color: #000; border-bottom: 1px dotted #777; background: #ddd; }
+a.link { color: #2A557E; /*border-bottom: 1px dotted #777;*/ text-decoration: none;}
+a.link:hover { color: #000; /*border-bottom: 1px dotted #777; background: #ddd;*/ }
 
 img {
     border: none;
@@ -291,10 +291,13 @@ p {
 /* ---------------------------------------- */
 
 #sidebar {
-    margin-bottom: 25px;
-    border: 1px solid #ccc;
-    border-width: 0px 1px 1px 1px;
-    margin-top: -1px;
+    left: 0;
+    min-height: 300px;
+    padding: 0;
+    position: absolute;
+    top: 109px;
+    width: 200px;
+    border-top: 1px solid #ccc;
 }
 
 * html #sidebar { /* lte IE6 */
@@ -308,11 +311,14 @@ p {
 }
 
 #sidebar ul li {
-    /*clear: both;*/
+    /*clear: both;
+    float: left;
+    line-height: 41px;*/
     margin: 0px;
     padding: 0px;
-    line-height: 41px;
-    float: left;
+    width: 200px;
+    
+    
 }
 
 #sidebar ul li a {
@@ -320,9 +326,11 @@ p {
     background-repeat: no-repeat;
     background-color:#f5f6f7;
     color: #8fa0b1;
-    padding: 13px 40px;
-    border: 1px solid #ccc;
-    margin-left: -1px;
+    padding: 12px 8px 12px 60px;
+    background-position: 20px 0;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    display: block;
 }
 
 #sidebar ul li a:hover {
@@ -383,7 +391,7 @@ p {
 
 #content {
     background: #f7f7f7;
-    padding: 0px 30px 30px 30px ;
+    padding: 0px 30px 100px 30px ;
     border-top: 1px solid #d4d4d4;
 }
 
@@ -392,13 +400,15 @@ p {
     min-height: 350px;
     /* IE6 fake min-height */
     height: auto !important;
-    height: 350px;
+    /*height: 350px;*/
+    /*margin-left: 200px;*/
+    padding-top: 10px;
 }
 
 #section h1, h2, h3, h4, h5, h6 {
     color: #666;
     font-weight: normal;
-    padding: 0 0 5px 0;
+    padding: 0 0 0px 0;
     margin: 0;
     /*background-color: #e1e1e1;*/
 }
@@ -416,7 +426,7 @@ p.listInfos {
     font-size: 9px;
     height: 22px;
     line-height: 22px;
-    margin: 5px 0 0;
+    margin: 0px  0 5px  0;
     padding: 0;
     /*padding: 90px 0 0 15px;
     margin: -15px 15px 0 15px;
@@ -939,10 +949,14 @@ td.machineAction { text-align: right; }
     color: #8FA0B1;
     font-size: 11px;
     background: #fff;
-    border-top: 1px solid #ddd;
-    padding: 15px 0 0px 30px;
+    border-top: 3px solid #B3BECA;
+    padding: 5px 0 10px 30px;
     height: 20px;
-    margin: 0px 0 20px 0;
+    margin: 0px 0 0px 0;
+    position: fixed;
+    bottom: 0px;
+    z-index: 1000;
+    width: 100%
 }
 
 #footer a {
@@ -972,14 +986,17 @@ form {
 }
 
 .searchbox {
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    border-radius: 2px;
+	/*background-color: #eee;*/
+    border:1px solid #ccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
     position: relative;
     top: 0px;
     right: 0px;
-    padding-top: 5px;
-    height: 36px;
+    padding: 10px 10px 10px 10px;
+    margin-bottom: 30px
+    /*height: 36px;*/
 }
 
 .searchbox input {
@@ -1011,9 +1028,9 @@ form {
 
 .loader {
     float: right;
-    left: -7px;
+    /*left: -7px;*/
     position: relative;
-    top: 11px;
+    top: 17px;
     margin-left: 9px;
 }
 
@@ -1106,11 +1123,18 @@ form.inplaceeditor-form input[type="text"] {
 }
 
 .popup {
-    position: absolute;
-    background: #fff;
+
+ 	left: 1512px;
+    top: 50px;
+    width: 200px;
+    background:#fff;
+    background: none repeat scroll 0 0 #fff;
     border: 1px solid #bababa;
-    margin: 144px 0px 0px -180px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
+    margin: 5px;
     padding: 10px;
+    position: absolute;
     z-index: 999;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
@@ -1120,10 +1144,6 @@ form.inplaceeditor-form input[type="text"] {
     -o-box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.3);
     filter:progid:DXImageTransform.Microsoft.Shadow(color=#aaaaaa, Direction=NaN, Strength=2);
-
-    left: 1512px;
-    top: 50px;
-    width: 200px;
 }
 .overlay {
     height:100%;
