@@ -45,6 +45,9 @@ class ImagingApi (MyXmlrpc):
         self.logger = logging.getLogger('imaging')
         self.logger.info("Initializing %s" % self.myType)
 
+    def xmlrpc_getActiveConvergenceForHost(self, uuid):
+        return Imaging().getActiveConvergenceForHost(uuid)
+
     def xmlrpc_logClientAction(self, mac, level, phase, message):
         return self.api.logClientAction(mac, level, phase, message)
 
