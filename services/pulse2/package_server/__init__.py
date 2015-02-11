@@ -32,7 +32,7 @@ import sys
 from pulse2.package_server.config import config_addons
 from pulse2.package_server.common import Common
 from pulse2.package_server.common.serializer import PkgsRsyncStateSerializer
-from pulse2.package_server.imaging.tftp_server import ImagingTFTPServer
+#from pulse2.package_server.imaging.tftp_server import ImagingTFTPServer
 import pulse2.utils
 
 from threading import Thread
@@ -75,22 +75,22 @@ class ThreadPackageDetect(ThreadPackageHelper):
         l.start(self.config.package_detect_loop)
 
 
-class ThreadTFTP(ThreadPackageHelper):
-    def runSub(self):
-        try:
-            if self.working:
-                self.logger.debug("TFTP Thread is already running")
-                return
-            self.working = True
-            logging.getLogger().debug("Starting TFTP Server")
-            tftp = ImagingTFTPServer()
-            tftp.listen()
-        except Exception, e:
-            logging.getLogger().error('an Exception happened when trying to start TFTPServer:' + str(e))
-        self.working = False
-
-    def run(self):
-        self.runSub()
+#class ThreadTFTP(ThreadPackageHelper):
+#    def runSub(self):
+#        try:
+#            if self.working:
+#                self.logger.debug("TFTP Thread is already running")
+#                return
+#            self.working = True
+#            logging.getLogger().debug("Starting TFTP Server")
+#            tftp = ImagingTFTPServer()
+#            tftp.listen()
+#        except Exception, e:
+#            logging.getLogger().error('an Exception happened when trying to start TFTPServer:' + str(e))
+#        self.working = False
+#
+#    def run(self):
+#        self.runSub()
 
 
 class ThreadPackageGlobalMirror(ThreadPackageHelper):
@@ -298,11 +298,11 @@ class ThreadLauncher(pulse2.utils.Singleton):
         self.logger.info("Starting TFTPServer thread")
 
         # TFTPServer disabled (waiting to be stabilized)
-        if 0:
-            threadtftp = ThreadTFTP(config)
-            threadtftp.setDaemon(True)
-            threadtftp.start()
-            self.logger.info("TFTPServer thread started")
+        #if 0:
+        #    threadtftp = ThreadTFTP(config)
+        #    threadtftp.setDaemon(True)
+        #    threadtftp.start()
+        #    self.logger.info("TFTPServer thread started")
 
 
         from pulse2.package_server import thread_webserver
