@@ -26,6 +26,7 @@ Used to read facts about an image
 import os
 import re
 import logging
+from json import loads
 
 # some useful constants
 PULSE2_IMAGING_EXCLUDE_FNAME = 'exclude'
@@ -65,14 +66,37 @@ class Pulse2Image:
         self.progress = 0
         self.current_part = None
 
+        if isRevoImage(directory):
+            try:
+                self._readGRUB()
+                self._readSize()
+            except Exception, e:
+                if raises:
+                    raise e
+            self._readLog()
+            self._readProgress()
+        elif isDavosImage(directory):
+            # Davos image
+            try:
+                self._readDavosJSON()
+            except Exception, e:
+                if raises:
+                    raise e
+
+    def _readDavosJSON(self):
+        jsonPath = os.path.join(self.directory, 'davosInfo.json')
+        logPath = os.path.join(self.directory, 'davos.log')
+
+        info = loads(open(jsonPath, 'r').read())
+
+        self.title = info['title']
+        self.desc = info['description']
+        self.size = info['size']
+        self.has_error = info['has_error']
         try:
-            self._readGRUB()
-            self._readSize()
-        except Exception, e:
-            if raises:
-                raise e
-        self._readLog()
-        self._readProgress()
+            self.logs = open(logPath, 'r').readlines()
+        except:
+            self.logs = []
 
     def _readGRUB(self):
         """
@@ -81,11 +105,14 @@ class Pulse2Image:
         FIXME: why do we need to read the GRUB FILE ?
         """
         # open grub file
+
+        # All below this is shit
         try:
             fd_grub_file = file(os.path.join(self.directory, PULSE2_IMAGING_GRUB_FNAME))
         except Exception, e:
             logging.getLogger().error("Pulse2Image : can't read %s : %s" % (fd_grub_file, e))
             raise e
+
 
         # read grub file
         for line_grub_file in fd_grub_file:
@@ -103,6 +130,7 @@ class Pulse2Image:
             line_grub_file_part = re.search("^#?ptabs \(hd([0-9]+)\) ", line_grub_file)
             if line_grub_file_part != None:  # got one disk
                 hd_number = int(line_grub_file_part.group(1))
+
                 self.disks[hd_number] = {}
                 self.disks[hd_number]['line'] = line_grub_file.rstrip("\n").lstrip("#")
 
@@ -209,9 +237,9 @@ class Pulse2ImageList:
         return ret
 
 
-def isPulse2Image(folder):
+def isRevoImage(folder):
     """
-    Return true if directory is a Pulse 2 image
+    Return true if directory is a Revo image (old backend)
     """
     if os.path.isdir(folder):
         should_contain = [
@@ -230,3 +258,15 @@ def isPulse2Image(folder):
         except OSError:
             return False
     return False
+
+def isDavosImage(folder):
+    """
+    Return true if directory is a Davos image (Clonezilla based)
+    """
+    if os.path.isdir(folder):
+        if os.path.isfile(os.path.join(folder, 'davosInfo.json')):
+            return True
+
+
+def isPulse2Image(folder):
+    return isRevoImage(folder) or isDavosImage(folder)
