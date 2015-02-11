@@ -193,7 +193,26 @@ class ImagingMenu:
         self.dont_check_disk_size = False  # check that the target disk is large enough
 
         self.diskless_opts = list()  # revo* options put on diskless command line
-        self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
+
+        # kernel options put on diskless command line
+        # Check if Davos or revo
+        if self.config.imaging_api['diskless_folder'] == "davos":
+            self.kernel_opts = ['boot=live',
+                'config',
+                'noswap',
+                'edd=on',
+                'nomodeset',
+                'nosplash',
+                'noprompt',
+                'vga=788',
+                'fetch=tftp://%s/%s/fs.squashfs' % (PackageServerConfig().public_ip, self.config.imaging_api['diskless_folder'])]
+
+            # If we have a mac, we put it in kernel params
+            if macaddress is not None:
+                self.kernel_opts.append('mac='+ macaddress)
+        else:
+            self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
+
         self.protocol = 'nfs'  # by default
         self.rawmode = ''  # raw mode backup
         self.mtftp_timeout = '10' # MTFTP wait timeout
@@ -690,7 +709,15 @@ class ImagingImageItem(ImagingItem):
     Hold an imaging menu item for a image to restore
     """
 
+    # Important: This is a cmdline for a restore process
+    # For "Create an image" it's a bootservice and its command line is in the DB
+    # TODO: for clonezilla backend it will be useful to clean some of unused params
+
+    # Grub cmdlines
     CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## ##PROTOCOL## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+    if self.config.imaging_api['diskless_folder'] == "davos":
+        CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## ##PROTOCOL## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+
     PROTOCOL = {
         'nfs'   : 'revorestorenfs',
         'tftp'  : '',
