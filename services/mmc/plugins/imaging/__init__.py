@@ -48,6 +48,7 @@ APIVERSION = "0:0:0"
 
 NOAUTHNEEDED = ['computerRegister',
                 'imagingServerRegister',
+                'getGeneratedMenu',
                 'isImagingServerRegistered',
                 'getComputerByMac',
                 'imageRegister',

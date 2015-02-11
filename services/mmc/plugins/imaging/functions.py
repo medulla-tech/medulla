@@ -46,6 +46,16 @@ import pulse2.utils
 
 
 class ImagingRpcProxy(RpcProxyI):
+
+    def getGeneratedMenu(self, mac):
+        # uuid
+        logger = logging.getLogger()
+        db_computer = ComputerManager().getComputerByMac(mac)
+        uuid = 'UUID' + str(db_computer.id)
+        menu = generateMenus(logger, ImagingDatabase(), [uuid], unique=True)
+        return xmlrpcCleanup(menu)
+
+
     """ XML/RPC Bindings """
     ################################################### web def
     """ Functions to access the web default values as defined in the configuration """
@@ -128,7 +138,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def hasMoreThanOneEthCard(self, uuids):
         ctx = self.currentContext
-        return hasMoreThanOneEthCard(ctx, uuids) 
+        return hasMoreThanOneEthCard(ctx, uuids)
 
     def getProfileBootMenu(self, target_id, start = 0, end = -1, filter = ''):
         """
@@ -1507,7 +1517,7 @@ class ImagingRpcProxy(RpcProxyI):
         ret = computersUnregister(computers_UUID, backup)
         return ret
 
-            
+
 
     def checkComputerForImaging(self, computerUUID):
         """
@@ -2407,6 +2417,7 @@ class ImagingRpcProxy(RpcProxyI):
 
             while True :
                 computer = self.__get_computer(MACAddress)
+                time.sleep(1)
                 if computer :
                     return computer
                 if time.time() > (start + timeout) :
@@ -3292,7 +3303,8 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
         menu['default_item_wol'] = 0
     return (menu, menu_items, h_pis)
 
-def generateMenus(logger, db, uuids):
+
+def generateMenus(logger, db, uuids, unique=False):
     logger = logging.getLogger()
     logger.debug("generateMenus for %s"%(str(uuids)))
     # get target location
@@ -3355,7 +3367,10 @@ def generateMenus(logger, db, uuids):
                 if not distinct_loc[loc_uuid][1][t_uuid]['images'][order].has_key('post_install_script'):
                     distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = []
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'].append(pis)
-    return distinct_loc
+    if unique:
+        return distinct_loc.values()[0][1].values()[0]
+    else:
+        return distinct_loc
 
 
 def computersUnregister(computers_UUID, backup):
