@@ -441,7 +441,7 @@ class InventoryServerEndpoint(Endpoint):
                 return uuid
             @d.addErrback
             def eb(failure):
-                self.logger.error("Update of target <%s> failed: %s" % str(failure))
+                self.logger.error("Update of target <%s> failed: %s" % (uuid, str(failure)))
                 return failure
             return d
 
