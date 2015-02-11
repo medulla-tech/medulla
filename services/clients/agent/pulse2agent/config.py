@@ -46,6 +46,7 @@ class Config(object):
         command = "/opt/vpnclient/cpncmd"
         command_args = ["localhost", "/CLIENT", "/CMD:AccountConnect", "pulse2connection"]
         startup_delay = 5
+        common_connection_for_all = False
 
     class inventory(object):
         windows_reg_path = r"SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall"

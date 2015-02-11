@@ -103,14 +103,16 @@ class VPNSetter(Component):
 
         return False
 
-    def installer_win_prepare(self, command):
+    def get_created_connection(self):
+
         response = self._create_user_on_server()
         self.logger.debug("vpn_setter: received response: %s" % response)
         try:
             if isinstance(response, list):
                 if len(response) == 4:
                     host, port, user, password = response
-                    return "%s /S"
+                    return "/VPN_SERVER=%s /VPN_PORT=%s /VPN_LOGIN=%s /VPN_PASSWORD=%s" % (host, port, user, password)
+
             raise SoftwareInstallError("vpnclient")
         except ValueError:
             raise SoftwareInstallError("vpnclient")
@@ -196,7 +198,7 @@ class InitialInstalls(Component):
 
     __component_name__ = "initial_installs"
 
-    def install(self, software):
+    def install(self, software, *args):
         """
         Gets the requested from server and installs it.
 
@@ -224,13 +226,13 @@ class InitialInstalls(Component):
 
         for command in commands:
             self.logger.info("execute command: %s" % command)
-            self.do_cmd(command)
+            self.do_cmd(command, *args)
 
         # TODO - include a delete phase
 
 
 
-    def do_cmd(self, command):
+    def do_cmd(self, command, *args):
         if "##server##" in command:
             command = command.replace("##server##",
                                       "http://%s" % self.config.vpn.host)
@@ -239,6 +241,9 @@ class InitialInstalls(Component):
             self.logger.debug("dwnld url: %s" % url)
             self.download(url)
             return
+        if "##args##" in command:
+            command = command.replace("##args##", " ".join(args)).strip()
+
         if "##tmp##" in command:
 
             command = command.replace("##tmp##", "").strip()
@@ -351,9 +356,16 @@ class FirstRunEtap(Component):
             if self.config.vpn.enabled and not vpn_installed:
 
                 if platform.system() == "Windows":
-                    result = self.parent.initial_installs.install(["vpnclient"])
+                    if self.config.vpn.common_connection_for_all:
+                        result = self.parent.initial_installs.install(["vpnclient"])
+                    else:
+                        args = self.parent.vpn_setter.get_created_connection()
+                        self.logger.debug("created args: %s" % str(args))
+                        result = self.parent.initial_installs.install(["vpnclient"], args)
+
+                        self.logger.debug("install of vpnclient: %s" % str(result))
+
                     self.logger.debug("install of vpnclient: %s" % str(result))
-                    # TODO - account create on server
                 else:
                     result = self.parent.initial_installs.install(["vpnclient"])
                     self.logger.debug("install of vpnclient: %s" % str(result))
