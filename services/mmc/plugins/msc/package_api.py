@@ -643,6 +643,9 @@ class GetPackagesAdvanced:
                 self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
         except KeyError:
             pass
-        # Sort on the mirror order then on the label, and finally on the version number
-        self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
+        try:
+            # Sort on the mirror order then on the label, and finally on the version number
+            self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
+        except Exception, e:
+            logging.getLogger().warning('Cannot sort packages: %s', str(e))
         self.deferred.callback(self.packages)
