@@ -71,7 +71,8 @@ class Imaging(object):
         @raise ValueError: if the configuration is not right
         """
         basefolder = self.config.imaging_api['base_folder']
-        for folder in ['base', 'bootloader', 'bootmenus', 'diskless',
+        # Skip bootmenus folder because it is generated dynamically now
+        for folder in ['base', 'bootloader', 'diskless',
                        'computers', 'inventories', 'masters', 'postinst']:
             optname = folder + '_folder'
             dirname = self.config.imaging_api[optname]
@@ -132,6 +133,53 @@ class Imaging(object):
         args0 = (self.config.imaging_api['uuid'], )
         d = client.callRemote(func, *args0)
         d.addCallbacks(_success, _error)
+
+
+    def getBuiltMenu(self, mac):
+        global menu_data
+        menu_data = None
+        def _success(menu):
+            global menu_data
+            if not isMenuStructure(menu):
+                self.logger.error("Invalid menu structure for computer MAC %s" % mac)
+                # TODO: generate default menu
+                menu_data = ''
+
+            try:
+                #self.logger.debug('Setting menu for computer UUID/MAC/hostname %s/%s/%s' % (cuuid, macaddress, hostname))
+                imb = ImagingComputerMenuBuilder(self.config, mac, menu)
+                imenu = imb.make()
+                menu_data = imenu.buildMenu()
+
+            except Exception, e:
+                self.logger.exception("Error while setting new menu of computer uuid/mac")
+                # if cant generate specific menu, use default menu
+                # or minimal menu genre "Continue usual startup"
+                menu_data = ''
+
+        def _error(error):
+            global menu_data
+            menu_data = ''
+            self.logger.error("Error while retrieving PXE Params: %s" % error)
+        RPCReplay().init()
+        RPCReplay().firstRun()
+        client = self._getXMLRPCClient()
+        func = 'imaging.getGeneratedMenu'
+        args0 = (mac, )
+        d = client.callRemote(func, *args0)
+        d.addCallbacks(_success, _error)
+        while menu_data is None:
+            pass
+        return menu_data
+
+    def getActiveConvergenceForHost(self, uuid):
+        RPCReplay().init()
+        RPCReplay().firstRun()
+        client = self._getXMLRPCClient()
+        func = 'dyngroup.get_active_convergence_for_host'
+        args0 = (uuid,)
+        d = client.callRemote(func, *args0)
+        return d
 
 
     def _getXMLRPCClient(self):
