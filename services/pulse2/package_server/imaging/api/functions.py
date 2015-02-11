@@ -152,7 +152,7 @@ class Imaging(object):
                 menu_data = imenu.buildMenu()
 
             except Exception, e:
-                self.logger.exception("Error while setting new menu of computer uuid/mac")
+                self.logger.exception("Error while setting new menu of computer uuid/mac %s", str(e))
                 # if cant generate specific menu, use default menu
                 # or minimal menu genre "Continue usual startup"
                 menu_data = ''
