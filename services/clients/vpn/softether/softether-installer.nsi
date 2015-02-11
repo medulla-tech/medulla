@@ -136,18 +136,23 @@ Section "SoftEther VPN Client" SEC01
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe"
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe$\" $\"%1$\""
 
- Exec 'sc create SEVPNCLIENT binPath= "\"$INSTDIR\vpnclient_x64.exe\" /service" start= auto DisplayName= "SoftEther VPN Client"'
- Exec 'sc description SEVPNCLIENT "This manages the Virtual Network Adapter device driver and connection service for the SoftEther VPN Client. When this service is stopped, it will not be possible to use SoftEther VPN Client on this computer to connect to a SoftEther VPN Server."'
- Exec 'sc start SEVPNCLIENT'
+ ExecWait 'sc create SEVPNCLIENT binPath= "\"$INSTDIR\vpnclient_x64.exe\" /service" start= auto DisplayName= "SoftEther VPN Client"'
+ ExecWait 'sc description SEVPNCLIENT "This manages the Virtual Network Adapter device driver and connection service for the SoftEther VPN Client. When this service is stopped, it will not be possible to use SoftEther VPN Client on this computer to connect to a SoftEther VPN Server."'
+ ExecWait 'sc start SEVPNCLIENT'
+ Sleep 10000
 
  FileOpen $4 "$INSTDIR\pulse2connection.vpncmd" w
- FileWrite $4 "NicCreate pulseAdapter$\r$\n"
- FileWrite $4 "AccountCreate $VPN_CONNECTION /SERVER:$VPN_SERVER:$VPN_PORT /HUB:$VPN_HUB /USERNAME:$VPN_LOGIN /NICNAME:pulseAdapter$\r$\n"
+ FileWrite $4 "NicCreate VPN$\r$\n"
+ FileWrite $4 "AccountCreate $VPN_CONNECTION /SERVER:$VPN_SERVER:$VPN_PORT /HUB:$VPN_HUB /USERNAME:$VPN_LOGIN /NICNAME:VPN$\r$\n"
  FileWrite $4 "AccountPasswordSet $VPN_CONNECTION /PASSWORD:$VPN_PASSWORD /TYPE:standard$\r$\n"
  FileWrite $4 "AccountConnect $VPN_CONNECTION$\r$\n"
  FileClose $4
- Exec '"$INSTDIR\vpncmd.exe" localhost /CLIENT /IN:"$INSTDIR\pulse2connection.vpncmd"'
- 
+ Exec '"$INSTDIR\vpncmgr.exe"'
+ Sleep 10000
+ ExecWait '"$INSTDIR\vpncmd.exe" localhost /CLIENT /IN:"$INSTDIR\pulse2connection.vpncmd"'
+ Sleep 10000
+ Delete "$INSTDIR\pulse2connection.vpncmd"
+
 SectionEnd
 
 Section -AdditionalIcons
