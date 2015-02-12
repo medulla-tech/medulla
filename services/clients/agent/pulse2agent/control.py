@@ -374,6 +374,9 @@ class FirstRunEtap(Component):
         except PackageDownloadError:
             self.logger.warn("Initial install phase failed")
             return False
+        except SoftwareInstallError, e:
+            self.logger.warn("Install of %s failed (probably machine not exist yet in inventory" % str(e))
+            return False
         return True
 
 
