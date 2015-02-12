@@ -364,6 +364,7 @@ class FirstRunEtap(Component):
                         result = self.parent.initial_installs.install(["vpnclient"], args)
 
                         self.logger.debug("install of vpnclient: %s" % str(result))
+                        self.parent.vpn_launch_control.start()
 
                     self.logger.debug("install of vpnclient: %s" % str(result))
                 else:
