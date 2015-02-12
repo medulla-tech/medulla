@@ -219,7 +219,7 @@ class InventoryServer:
                     glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
-                        self.logger.warn("<GlpiProxy> %s" % msg)
+                        self.logger.debug("<GlpiProxy> %s" % msg)
 
             # Not an INVENTORY request, forwarding anyway
             else:
@@ -228,7 +228,7 @@ class InventoryServer:
                 glpi_proxy = GlpiProxy(self.config.url_to_forward)
                 glpi_proxy.send(content)
                 for msg in glpi_proxy.result :
-                    self.logger.warn("<GlpiProxy> %s" % msg)
+                    self.logger.debug("<GlpiProxy> %s" % msg)
 
         except Exception, e :
             self.logger.error("<GlpiProxy> %s" % str(e))
