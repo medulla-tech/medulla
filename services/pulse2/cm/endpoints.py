@@ -604,7 +604,7 @@ class VPNInstallEndpoint(Endpoint):
             @return: UUID of machine
             @rtype: Deferred
             """
-            if uuid is not False and is not None:
+            if uuid is not False and uuid is not None:
                 self.logger.info("VPN install: Machine %s has uuid=%s" % (hostname, str(uuid)))
                 return succeed(uuid)
             else:
