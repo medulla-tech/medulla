@@ -20,6 +20,10 @@
 VPN_ARCHIVE="SoftEtherVPNClient.zip"
 VPN_URL="http://pulse2.mandriva.org/pub/pulse2/misc/${VPN_ARCHIVE}"
 
+if [ -e ${VPN_ARCHIVE} ]; then
+    echo "Erasing previous SoftEther Installer archive..."	
+    rm -f ${VPN_ARCHIVE}
+fi	
 if [ ! -e ${VPN_ARCHIVE} ]; then
     echo "Downloading ${VPN_ARCHIVE}..."
     curl --progress-bar -o ${VPN_ARCHIVE} ${VPN_URL}
@@ -31,5 +35,5 @@ if [ ! -e ${VPN_ARCHIVE} ]; then
     fi	
 fi
 
-7z x ${VPN_ARCHIVE}
+7z x -y ${VPN_ARCHIVE}
 makensis -V1 softether-installer.nsi
