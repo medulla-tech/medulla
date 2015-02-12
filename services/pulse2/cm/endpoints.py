@@ -608,7 +608,8 @@ class VPNInstallEndpoint(Endpoint):
                 self.logger.info("VPN install: Machine %s has uuid=%s" % (hostname, str(uuid)))
                 return succeed(uuid)
             else:
-                return fail(None)
+                #return fail(None)
+                return succeed(None)
 
         @d.addCallback
         def create_user(uuid):
@@ -618,6 +619,11 @@ class VPNInstallEndpoint(Endpoint):
             @param uuid: UUID of machine as username
             @type uuid: str
             """
+            if uuid is None:
+                self.logger.warn("VPN install: cannot get uuid of machine from %s" % from_ip)
+                self.logger.warn("VPN install: Account will not be created")
+                return False
+
             path = os.path.join(self.config.vpn.scripts_path,
                                 "vpn-server-user-create.sh",
                                 )
