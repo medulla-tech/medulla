@@ -1970,7 +1970,7 @@ class Glpi08(DyngroupDatabaseHelper):
 
 		# Last inventory date
 		date_mod = machine.date_mod
-		if self.fusionagents is not None:
+		if self.fusionagents is not None and last_contact is not None:
 		    date_mod = last_contact
 
                 l = [
