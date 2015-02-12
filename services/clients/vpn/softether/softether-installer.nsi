@@ -36,6 +36,8 @@
 !insertmacro GetParameters
 !insertmacro GetOptions
 
+!include "x64.nsh"
+
 ; Command line parameters
 Var /GLOBAL VPN_SERVER
 Var /GLOBAL VPN_PORT
@@ -43,7 +45,7 @@ Var /GLOBAL VPN_HUB
 Var /GLOBAL VPN_CONNECTION
 Var /GLOBAL VPN_LOGIN
 Var /GLOBAL VPN_PASSWORD
-
+Var /GLOBAL SOFTETHER_VPNCLIENT
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "softether-silent-install.exe"
@@ -100,6 +102,12 @@ Function .onInit
   ${GetOptions} $R0 "/VPN_PASSWORD=" $0
   StrCpy $VPN_PASSWORD $0
 
+  ${If} ${RunningX64}
+    StrCpy $SOFTETHER_VPNCLIENT "vpnclient_x64.exe"
+  ${Else}
+    StrCpy $SOFTETHER_VPNCLIENT "vpnclient.exe"
+  ${EndIf}       
+
 FunctionEnd
 
 
@@ -127,16 +135,16 @@ Section "SoftEther VPN Client" SEC01
 
  WriteRegStr HKCR ".vpn" "" "vpnfile"
  WriteRegStr HKCR "vpnfile" "" "VPN Client Connection Setting File"
- WriteRegStr HKCR "vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe"
- WriteRegStr HKCR "vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe$\" $\"%1$\""
+ WriteRegStr HKCR "vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT"
+ WriteRegStr HKCR "vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT$\" $\"%1$\""
  WriteRegBin HKLM "SOFTWARE\SoftEther Project\Network Settings" "LastMachineHash" f2852e5545015b7dbb6325fdef6ad11f03528434
  WriteRegDWORD HKLM "SOFTWARE\SoftEther Project\VPN Command Line Utility" "InstalledVersion" 0x24e9
  WriteRegStr HKLM "SOFTWARE\Classes\.vpn" "" "vpnfile"
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile" "" "VPN Client Connection Setting File"
- WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe"
- WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\vpnclient_x64.exe$\" $\"%1$\""
+ WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT"
+ WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT$\" $\"%1$\""
 
- ExecWait 'sc create SEVPNCLIENT binPath= "\"$INSTDIR\vpnclient_x64.exe\" /service" start= auto DisplayName= "SoftEther VPN Client"'
+ ExecWait 'sc create SEVPNCLIENT binPath= "\"$INSTDIR\$SOFTETHER_VPNCLIENT\" /service" start= auto DisplayName= "SoftEther VPN Client"'
  ExecWait 'sc description SEVPNCLIENT "This manages the Virtual Network Adapter device driver and connection service for the SoftEther VPN Client. When this service is stopped, it will not be possible to use SoftEther VPN Client on this computer to connect to a SoftEther VPN Server."'
  ExecWait 'sc start SEVPNCLIENT'
  Sleep 10000
