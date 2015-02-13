@@ -36,6 +36,7 @@ from twisted.internet.protocol import ProcessProtocol
 from twisted.internet.error import ProcessDone
 
 from mmc.client.async import Proxy
+from pulse2.network import NetUtils
 
 class MethodNotFound(Exception):
     def __repr__(self):
@@ -301,15 +302,20 @@ class InventoryServerEndpoint(Endpoint):
     mmc_proxy = None
 
 
-    def get_valid_mac(self, inventory, from_ip):
-        hostname, system, osversion, networks = inventory
+    def get_netmask(self, networks, from_ip):
 
         for name, ip, mac, netmask in networks:
             if ip.startswith("127"):
                 # exclude the loopack
                 continue
             if ip == from_ip:
-                return mac
+                if NetUtils.netmask_validate(netmask):
+                    return netmask
+                else:
+                    return "255.0.0.0"
+        else:
+            return "255.0.0.0"
+
 
 
 
@@ -339,12 +345,13 @@ class InventoryServerEndpoint(Endpoint):
 
         hostname, system, osversion, networks = inventory
         macs = [mac for (name, ip, mac, mask) in networks]
+        netmask = self.get_netmask(networks, from_ip)
 
         d = self._get_machine_uuid(hostname, macs)
         # UUID of machine
         d.addCallback(self.get_uuid_callback, hostname, macs, inventory)
         # IP address update for UUID (msc.target table)
-        d.addCallback(self.update_target_ip, from_ip)
+        d.addCallback(self.update_target_ip, from_ip, netmask)
         @d.addErrback
         def eb_uuid(failure):
             self.logger.warn("Getting of UUID for machine '%s' failed: %s" % (hostname, str(failure)))
@@ -420,7 +427,7 @@ class InventoryServerEndpoint(Endpoint):
 
 
 
-    def update_target_ip(self, uuid, ip):
+    def update_target_ip(self, uuid, ip, netmask):
         """
         Replacing of default IP address by an actual checked IP.
 
@@ -430,14 +437,17 @@ class InventoryServerEndpoint(Endpoint):
         @param ip: Actual IP address
         @type ip: str
 
+        @param netmask: Detected netmask
+        @type netmask: str
+
         @rtype: Deferred
         """
         if uuid != False and uuid is not None:
 
-            d = self.mmc_proxy.callRemote("msc.update_target_ip", uuid, ip)
+            d = self.mmc_proxy.callRemote("msc.update_target_ip", uuid, ip, netmask)
             @d.addCallback
             def cb(ignored):
-                self.logger.info("New IP of target <%s>: %s" % (uuid, ip))
+                self.logger.info("New IP/netmask of target <%s>: %s/%s" % (uuid, ip, netmask))
                 return uuid
             @d.addErrback
             def eb(failure):

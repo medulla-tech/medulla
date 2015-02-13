@@ -1440,7 +1440,7 @@ class MscDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._session
-    def updateTargetIP(self, session, uuid, ip):
+    def updateTargetIP(self, session, uuid, ip, netmask):
         """
         Updates IP address of all records according to UUID.
 
@@ -1449,6 +1449,9 @@ class MscDatabase(DatabaseHelper):
 
         @param ip: actualized IP address of machine
         @type ip: str
+
+        @param netmask: actualized netmask of machine
+        @type netmask: str
         """
         # TODO - add a timestamp column "last_update" and update it
         now = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -1461,6 +1464,7 @@ class MscDatabase(DatabaseHelper):
         for target in query.all():
             logging.getLogger().info("Target updated by SmartAgent: old IP: %s => new IP: %s" % (target.target_ipaddr, ip))
             target.target_ipaddr = ip
+            target.target_target_network = netmask
             target.last_update = now
             session.add(target)
             session.flush()

@@ -558,7 +558,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
                                                                             hostname,
                                                                             macs))
-    def update_target_ip(self, uuid, ip):
+    def update_target_ip(self, uuid, ip, netmask):
         """
         Updates IP address of all records according to UUID.
 
@@ -567,8 +567,11 @@ class RpcProxy(RpcProxyI):
 
         @param ip: actualized IP address of machine
         @type ip: str
+
+        @param netmask: actualized netmask of machine
+        @type netmask: str
         """
-        return xmlrpcCleanup(MscDatabase().updateTargetIP(uuid, ip))
+        return xmlrpcCleanup(MscDatabase().updateTargetIP(uuid, ip, netmask))
 
 
     def checkLightPullCommands(self, uuid):
