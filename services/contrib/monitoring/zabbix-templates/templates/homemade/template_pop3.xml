@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2015-01-08T09:27:14Z</date>
+    <date>2015-02-13T16:03:12Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -62,4 +62,16 @@
             <screens/>
         </template>
     </templates>
+    <triggers>
+        <trigger>
+            <expression>{POP3:net.tcp.service[pop].last(0)}=0</expression>
+            <name>POP3 Trigger</name>
+            <url/>
+            <status>0</status>
+            <priority>2</priority>
+            <description/>
+            <type>0</type>
+            <dependencies/>
+        </trigger>
+    </triggers>
 </zabbix_export>
