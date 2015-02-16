@@ -1464,7 +1464,7 @@ class MscDatabase(DatabaseHelper):
         for target in query.all():
             logging.getLogger().info("Target updated by SmartAgent: old IP: %s => new IP: %s" % (target.target_ipaddr, ip))
             target.target_ipaddr = ip
-            target.target_target_network = netmask
+            target.target_network = netmask
             target.last_update = now
             session.add(target)
             session.flush()
