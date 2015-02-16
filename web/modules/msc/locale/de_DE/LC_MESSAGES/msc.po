@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 01:00+0100\n"
+"POT-Creation-Date: 2015-02-16 01:00+0100\n"
 "PO-Revision-Date: 2015-01-21 13:57+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -609,7 +609,7 @@ msgstr "Konvergenz auf"
 msgid "Copy Mode"
 msgstr "Kopiermodus"
 
-#: modules/msc/includes/widgets.inc.php:402
+#: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
 msgstr ""
 
@@ -740,7 +740,7 @@ msgstr "Ein Inventar nach erfolgreicher Ausführung erstellen"
 
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
 #: modules/msc/includes/functions.php:336
-#: modules/msc/includes/widgets.inc.php:390
+#: modules/msc/includes/widgets.inc.php:389
 #: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
 msgstr "Ist erfolgt"
@@ -844,7 +844,7 @@ msgstr "Abgelaufene Aufgaben"
 
 #: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
 #: modules/msc/includes/functions.php:335
-#: modules/msc/includes/widgets.inc.php:392
+#: modules/msc/includes/widgets.inc.php:391
 #: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
 msgstr "Fehlgeschlagen"
@@ -939,7 +939,7 @@ msgstr "IP Addr."
 msgid "Ignored"
 msgstr "Ignoriert"
 
-#: modules/msc/includes/widgets.inc.php:394
+#: modules/msc/includes/widgets.inc.php:393
 msgid "In progress"
 msgstr "Laufend"
 
@@ -1186,7 +1186,7 @@ msgstr "Zeit überlaufen: %percent% (%d Rechner)"
 msgid "Over-timed: %percent% (%d packages)"
 msgstr "Zeit überlaufen: %percent% (%d Pakete)"
 
-#: modules/msc/includes/widgets.inc.php:396
+#: modules/msc/includes/widgets.inc.php:395
 #: modules/msc/msc/ajaxLogsFilter.php:432
 msgid "Overtime"
 msgstr "Overtime"
@@ -1597,7 +1597,7 @@ msgstr "Skript starten"
 msgid "Start the script"
 msgstr "Starten des Skripts"
 
-#: modules/msc/includes/widgets.inc.php:388
+#: modules/msc/includes/widgets.inc.php:387
 msgid "State filter"
 msgstr "Zustandfilter"
 
@@ -1640,7 +1640,7 @@ msgid "Stop a command"
 msgstr "Einen Befehl stoppen"
 
 #: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/includes/widgets.inc.php:398
+#: modules/msc/includes/widgets.inc.php:397
 #: modules/msc/msc/ajaxLogsFilter.php:431
 msgid "Stopped"
 msgstr "Angehalten"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 01:00+0100\n"
+"POT-Creation-Date: 2015-02-16 01:00+0100\n"
 "PO-Revision-Date: 2014-12-16 14:51+0000\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -72,7 +72,7 @@ msgid "Alert"
 msgstr ""
 
 #: modules/monitoring/monitoring/ajaxMonitoringAlert.php:179
-#: modules/monitoring/monitoring/hostStatus.php:76
+#: modules/monitoring/monitoring/hostStatus.php:85
 #: modules/monitoring/monitoring/index.php:41
 msgid "Alerts"
 msgstr ""
@@ -219,7 +219,7 @@ msgstr ""
 msgid "Go to page"
 msgstr ""
 
-#: modules/monitoring/monitoring/hostStatus.php:94
+#: modules/monitoring/monitoring/hostStatus.php:103
 #: modules/monitoring/monitoring/viewgraphics.php:45
 msgid "Graphics"
 msgstr ""
@@ -324,7 +324,6 @@ msgstr ""
 #: modules/monitoring/monitoring/deleteSnmp.php:37
 #: modules/monitoring/monitoring/deleteTrigger.php:37
 #: modules/monitoring/monitoring/editSnmp.php:37
-#: modules/monitoring/monitoring/hostStatus.php:38
 #: modules/monitoring/monitoring/mediaManager.php:37
 #: modules/monitoring/monitoring/modifTrigger.php:37
 #: modules/monitoring/monitoring/triggerManager.php:37
@@ -375,7 +374,7 @@ msgstr ""
 msgid "No host id found!!!"
 msgstr ""
 
-#: modules/monitoring/monitoring/hostStatus.php:47
+#: modules/monitoring/monitoring/hostStatus.php:56
 msgid "No host id or cn found!!!"
 msgstr ""
 
@@ -451,11 +450,11 @@ msgstr ""
 msgid "Select entity"
 msgstr ""
 
-#: modules/monitoring/includes/functions.php:83
+#: modules/monitoring/includes/functions.php:82
 msgid "Select graph"
 msgstr ""
 
-#: modules/monitoring/includes/functions.php:97
+#: modules/monitoring/includes/functions.php:96
 msgid "Select period"
 msgstr ""
 

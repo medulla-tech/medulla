@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 01:00+0100\n"
+"POT-Creation-Date: 2015-02-16 01:00+0100\n"
 "PO-Revision-Date: 2015-01-21 13:57+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
@@ -609,7 +609,7 @@ msgstr ""
 msgid "Copy Mode"
 msgstr "コピーモード"
 
-#: modules/msc/includes/widgets.inc.php:402
+#: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
 msgstr ""
 
@@ -740,7 +740,7 @@ msgstr "実行を完了してから棚卸を行ってください"
 
 #: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
 #: modules/msc/includes/functions.php:336
-#: modules/msc/includes/widgets.inc.php:390
+#: modules/msc/includes/widgets.inc.php:389
 #: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
 msgstr "完了"
@@ -844,7 +844,7 @@ msgstr "期限超過タスク"
 
 #: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
 #: modules/msc/includes/functions.php:335
-#: modules/msc/includes/widgets.inc.php:392
+#: modules/msc/includes/widgets.inc.php:391
 #: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
 msgstr "失敗"
@@ -939,7 +939,7 @@ msgstr "IP アドレス"
 msgid "Ignored"
 msgstr "無視"
 
-#: modules/msc/includes/widgets.inc.php:394
+#: modules/msc/includes/widgets.inc.php:393
 msgid "In progress"
 msgstr "進行中"
 
@@ -1186,7 +1186,7 @@ msgstr "時間超過: %percent% (%d コンピューター)"
 msgid "Over-timed: %percent% (%d packages)"
 msgstr "時間超過: %percent% (%d パッケージ)"
 
-#: modules/msc/includes/widgets.inc.php:396
+#: modules/msc/includes/widgets.inc.php:395
 #: modules/msc/msc/ajaxLogsFilter.php:432
 msgid "Overtime"
 msgstr "時間超過"
@@ -1596,7 +1596,7 @@ msgstr "スクリプトの開始"
 msgid "Start the script"
 msgstr "スクリプトを開始"
 
-#: modules/msc/includes/widgets.inc.php:388
+#: modules/msc/includes/widgets.inc.php:387
 msgid "State filter"
 msgstr "状態フィルタ"
 
@@ -1639,7 +1639,7 @@ msgid "Stop a command"
 msgstr "コマンドを停止"
 
 #: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/includes/widgets.inc.php:398
+#: modules/msc/includes/widgets.inc.php:397
 #: modules/msc/msc/ajaxLogsFilter.php:431
 msgid "Stopped"
 msgstr "停止"
