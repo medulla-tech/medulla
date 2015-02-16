@@ -128,7 +128,8 @@ class Endpoint(object):
 class AgentsInstallMap(object):
     """Common attributes containing the install commands of agents by platform."""
 
-    windows = ["##wget## ##server##/downloads/win32/pulse2-win32-agents-pack-silent.exe",
+    windows = ['netsh advfirewall firewall add rule name="SSH port" dir=in action=allow protocol=TCP localport=22',
+               "##wget## ##server##/downloads/win32/pulse2-win32-agents-pack-silent.exe",
                "##tmp## pulse2-win32-agents-pack-silent.exe"]
     debian = ["wget -O - ##server##/downloads/pulse2-agents.gpg.key | apt-key add -",
               "echo 'deb ##server##/downloads/debian common main' >> /etc/apt/sources.list",
