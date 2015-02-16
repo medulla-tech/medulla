@@ -215,11 +215,27 @@ class RpcProxy(RpcProxyI):
     ##
     # machines
     ##
+
+    # this dictionnary contains all received IP addresses of machines
+    # sending its heartbeat to CM.
+    #
+    # format : {UUID: IP,}
+    # TODO - this solution is temporary, better to stock all IPs
+    # in the 'target' table.
+    ip_table = {}
+
     def getMachine(self, params):
         ctx = self.currentContext
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
 
     def scheduler_choose_client_ip(self, scheduler, uuid):
+        if uuid in self.ip_table:
+            ip = self.ip_table[uuid]
+            logging.getLogger().debug('IP address for %s found: %s' % (uuid, ip))
+            return ip
+        else:
+            logging.getLogger().warn('IP address for %s not received yet from CM' % (uuid))
+
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         network = computer[1]
@@ -571,6 +587,7 @@ class RpcProxy(RpcProxyI):
         @param netmask: actualized netmask of machine
         @type netmask: str
         """
+        self.ip_table[uuid] = ip
         return xmlrpcCleanup(MscDatabase().updateTargetIP(uuid, ip, netmask))
 
 
