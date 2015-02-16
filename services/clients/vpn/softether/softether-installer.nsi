@@ -46,6 +46,7 @@ Var /GLOBAL VPN_CONNECTION
 Var /GLOBAL VPN_LOGIN
 Var /GLOBAL VPN_PASSWORD
 Var /GLOBAL SOFTETHER_VPNCLIENT
+Var /GLOBAL REBOOT_AFTER_INSTALL
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "softether-silent-install.exe"
@@ -62,6 +63,13 @@ Function .onInit
   ;;;;;;;;;;;;;;;;;;;;;;;
   ${GetParameters} $R0
 
+  ${GetOptions} $R0 /S $0
+  ${If} ${Errors} ; "Silent mode" flag not set
+    SetSilent normal
+  ${Else} ; "Silent mode" flag set
+    SetSilent silent
+  ${EndIf}
+ 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ; Handle /VPN_SERVER option ;
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -101,7 +109,16 @@ Function .onInit
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ${GetOptions} $R0 "/VPN_PASSWORD=" $0
   StrCpy $VPN_PASSWORD $0
-
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ; Handle /REBOOT option ;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ${GetOptions} $R0 /R $0
+  ${If} ${Errors} ; not set
+    StrCpy $REBOOT_AFTER_INSTALL false 
+  ${Else}
+    StrCpy $REBOOT_AFTER_INSTALL true 
+  ${EndIf}
+ 
   ${If} ${RunningX64}
     StrCpy $SOFTETHER_VPNCLIENT "vpnclient_x64.exe"
   ${Else}
@@ -192,8 +209,14 @@ Function un.onInit
 FunctionEnd
 
 Function .onInstSuccess
-   MessageBox MB_YESNO|MB_ICONEXCLAMATION "A reboot is required to finish the installation. Do you wish to reboot now?" IDNO +2
-   Reboot
+  ${If} $REBOOT_AFTER_INSTALL == "true"
+    ${IfNot} ${Silent}
+      MessageBox MB_YESNO|MB_ICONEXCLAMATION "A reboot is required to finish the installation. Do you wish to reboot now?" IDNO +2
+      Reboot
+    ${Else}
+      Reboot
+    ${EndIf}
+  ${EndIf}
 FunctionEnd
 
 
