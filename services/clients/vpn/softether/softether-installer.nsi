@@ -154,7 +154,7 @@ Section "SoftEther VPN Client" SEC01
  FileWrite $4 "NicCreate VPN$\r$\n"
  FileWrite $4 "AccountCreate $VPN_CONNECTION /SERVER:$VPN_SERVER:$VPN_PORT /HUB:$VPN_HUB /USERNAME:$VPN_LOGIN /NICNAME:VPN$\r$\n"
  FileWrite $4 "AccountPasswordSet $VPN_CONNECTION /PASSWORD:$VPN_PASSWORD /TYPE:standard$\r$\n"
- FileWrite $4 "AccountRetrySet $VPN_CONNECTION /NUM:0$\r$\n"
+ FileWrite $4 "AccountRetrySet $VPN_CONNECTION /NUM:0 /INTERVAL:5$\r$\n"
  FileWrite $4 "AccountConnect $VPN_CONNECTION$\r$\n"
  FileClose $4
  Exec '"$INSTDIR\vpncmgr.exe"'
