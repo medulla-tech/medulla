@@ -1,55 +1,70 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <info@janusww.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 01:00+0100\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2015-02-13 17:18+0100\n"
 "PO-Revision-Date: 2014-12-22 15:11+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_TW/)\n"
-"Language: zh_TW\n"
+"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/dyngroup/dyngroup/details.php:30
+#: modules/dyngroup/dyngroup/add_groups.php:68
+#: modules/dyngroup/dyngroup/add_groups.php:236
 #, php-format
-msgid "%s's details"
-msgstr "%s 的詳情"
+msgid "Computers list has been truncated at %d computers"
+msgstr "在 %d 台電腦上的電腦清單已被截斷"
 
-#: modules/dyngroup/includes/request.php:179
-#, php-format
-msgid "%s) Search %s %s %s in module %s"
-msgstr "%s) 在模組 %s %s %s 中搜尋 %s"
+#: modules/dyngroup/dyngroup/add_groups.php:147
+msgid "Group successfully modified"
+msgstr "已成功修改群組"
 
-#: modules/dyngroup/includes/request.php:177
-#, php-format
-msgid "%s) Search %s %s (%s) in module %s"
-msgstr "%s) 在模組 %s %s %s 中搜尋 (%s)"
-
-#: modules/dyngroup/includes/double.php:51
-msgid "->"
-msgstr "->"
-
-#: modules/dyngroup/includes/groups.inc.php:245
-#, php-format
-msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
-msgstr "<li>%s 屬於 <a href=\"%s\">%s</a></li>"
-
-#: modules/dyngroup/includes/groups.inc.php:267
+#: modules/dyngroup/dyngroup/add_groups.php:153
 msgid ""
-"<p>These computers will move to this group and their bootmenus <strong>will "
-"be rewritten</strong></p>"
-msgstr ""
-"<p>這些電腦將移至此群組，並且它們的開機功能表<strong>將被重新寫入</strong></"
-"p>"
+"Imaging group modified, but some machines were not added to existing imaging"
+" group, because they have more than one ethernet card:"
+msgstr "已修改影像群組，但是一些機器沒有新增至現有影像群組，因為它們有多個 Ethernet 卡："
+
+#: modules/dyngroup/dyngroup/add_groups.php:161
+msgid "Imaging group successfully modified"
+msgstr "已成功修改影像群組"
+
+#: modules/dyngroup/dyngroup/add_groups.php:166
+#: modules/dyngroup/dyngroup/import_from_file.php:41
+msgid "Group successfully created"
+msgstr "已成功建立群組"
+
+#: modules/dyngroup/dyngroup/add_groups.php:202
+msgid "Group failed to modify"
+msgstr "無法修改群組"
+
+#: modules/dyngroup/dyngroup/add_groups.php:205
+#, php-format
+msgid "Imaging group failed to modify.<br/>Can't add %s"
+msgstr "無法修改影像群組。<br/>不能新增 %s"
+
+#: modules/dyngroup/dyngroup/add_groups.php:207
+msgid "Imaging group failed to modify"
+msgstr "無法修改影像群組"
+
+#: modules/dyngroup/dyngroup/add_groups.php:213
+#: modules/dyngroup/dyngroup/save.php:100
+#: modules/dyngroup/dyngroup/save.php:102
+msgid "You must specify a group name"
+msgstr "必須指定一個群組名稱"
+
+#: modules/dyngroup/dyngroup/add_groups.php:215
+msgid "You must specify an imaging group name"
+msgstr "必須指定一個影像群組名稱"
 
 #: modules/dyngroup/dyngroup/add_groups.php:218
 #: modules/dyngroup/dyngroup/import_from_file.php:45
@@ -57,6 +72,23 @@ msgstr ""
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "名稱為 '%s' 的群組已經存在"
+
+#: modules/dyngroup/dyngroup/add_groups.php:220
+#, php-format
+msgid "An imaging group already exists with name '%s'"
+msgstr "名稱為 '%s' 的影像群組已經存在"
+
+#: modules/dyngroup/dyngroup/creator.php:129
+msgid "Choose the module you want to query : "
+msgstr "選擇您要查詢的模組："
+
+#: modules/dyngroup/dyngroup/creator.php:222
+msgid "Comparison operator : "
+msgstr "比較運算子："
+
+#: modules/dyngroup/dyngroup/creator.php:235
+msgid "Date"
+msgstr "日期"
 
 #: modules/dyngroup/dyngroup/creator.php:238
 #: modules/dyngroup/dyngroup/creator.php:247
@@ -68,176 +100,48 @@ msgstr "名稱為 '%s' 的群組已經存在"
 msgid "Add"
 msgstr "新增"
 
-#: modules/dyngroup/dyngroup/localSidebar.php:31
-msgid "Add a group"
-msgstr "新增一個群組"
+#: modules/dyngroup/dyngroup/creator.php:273
+#: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
+msgid "Modify"
+msgstr "修改"
 
-#: modules/dyngroup/dyngroup/groupshead.php:35
-msgid "Add a static group"
-msgstr "新增一個靜態群組"
+#: modules/dyngroup/dyngroup/creator.php:276
+#: modules/dyngroup/dyngroup/creator.php:282
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
+#: modules/dyngroup/includes/groups.inc.php:167
+msgid "Yes"
+msgstr "是"
 
-#: modules/dyngroup/includes/autocomplete.php:44
-msgid "Add a value"
-msgstr "新增一個值"
+#: modules/dyngroup/dyngroup/creator.php:277
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
+#: modules/dyngroup/includes/groups.inc.php:168
+msgid "No"
+msgstr "否"
 
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
-msgid "Add an imaging group"
-msgstr "新增一個影像群組"
+#: modules/dyngroup/dyngroup/creator.php:299
+msgid "The request is : "
+msgstr "該請求為："
 
-#: modules/dyngroup/dyngroup/import_from_file.php:57
-msgid "Add shortcut"
-msgstr "新增捷徑"
+#: modules/dyngroup/dyngroup/creator.php:316
+msgid "Go to save step"
+msgstr "移至儲存步驟"
 
-#: modules/dyngroup/dyngroup/localSidebar.php:30
-msgid "All groups"
-msgstr "全部群組"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
-msgid "All imaging groups"
-msgstr "全部影像群組"
-
-#: modules/dyngroup/includes/groups.inc.php:178
-msgid "All machines"
-msgstr "全部機器"
-
-#: modules/dyngroup/includes/groups.inc.php:268
-msgid "All related images to these computers will be <strong>DELETED</strong>"
-msgstr "將<strong>刪除</strong>這些電腦的所有相關影像"
-
-#: modules/dyngroup/includes/groups.inc.php:38
-msgid "All share entities"
-msgstr "所有共用項目"
-
-#: modules/dyngroup/dyngroup/add_groups.php:220
-#, php-format
-msgid "An imaging group already exists with name '%s'"
-msgstr "名稱為 '%s' 的影像群組已經存在"
-
-#: modules/dyngroup/dyngroup/delete_group.php:38
-#, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
-msgstr "是否確定要刪除群組 <b>%s</b>？<br/>（可在其他群組中使用它）。"
-
-#: modules/dyngroup/dyngroup/delete_group.php:32
-#, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr "是否確定要刪除影像群組<b>%s</b> ？</b>"
-
-#: modules/dyngroup/dyngroup/delete_group.php:77
-#: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/includes/groups.inc.php:86
-#: modules/dyngroup/includes/groups.inc.php:281
-msgid "Cancel"
-msgstr "取消"
-
-#: modules/dyngroup/dyngroup/save.php:146
-msgid "Check"
-msgstr "檢查"
-
-#: modules/dyngroup/dyngroup/creator.php:129
-msgid "Choose the module you want to query : "
-msgstr "選擇您要查詢的模組："
-
-#: modules/dyngroup/dyngroup/details.php:49
-msgid "Close"
-msgstr "關閉"
-
-#: modules/dyngroup/dyngroup/creator.php:222
-msgid "Comparison operator : "
-msgstr "比較運算子："
+#: modules/dyngroup/dyngroup/creator.php:323
+msgid "Identification"
+msgstr "識別碼"
 
 #: modules/dyngroup/dyngroup/creator.php:324
 msgid "Computer name"
 msgstr "電腦名稱"
 
-#: modules/dyngroup/infoPackage.inc.php:48
-#: modules/dyngroup/infoPackage.inc.php:109
-msgid "Computers Group Creator"
-msgstr "電腦群組建立器"
-
-#: modules/dyngroup/infoPackage.inc.php:75
-msgid "Computers Group Creator Sub Request Delete"
-msgstr "電腦群組建立器子請求刪除"
-
-#: modules/dyngroup/infoPackage.inc.php:61
-msgid "Computers Group Creator Sub Request Editor"
-msgstr "電腦群組建立器子請求編輯器"
-
-#: modules/dyngroup/infoPackage.inc.php:89
-#: modules/dyngroup/infoPackage.inc.php:113
-msgid "Computers Group Editor"
-msgstr "電腦群組編輯器"
-
-#: modules/dyngroup/infoPackage.inc.php:99
-msgid "Computers Group Sub Request Delete"
-msgstr "電腦群組子請求刪除"
-
-#: modules/dyngroup/infoPackage.inc.php:94
-msgid "Computers Group Sub Request Editor"
-msgstr "電腦群組子請求編輯器"
-
-#: modules/dyngroup/dyngroup/add_groups.php:68
-#: modules/dyngroup/dyngroup/add_groups.php:236
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "在 %d 台電腦上的電腦清單已被截斷"
-
-#: modules/dyngroup/includes/groups.inc.php:242
-msgid "Computers listed below are already part of another imaging group."
-msgstr "下面列出的電腦已經屬於另一個影像群組。"
-
-#: modules/dyngroup/includes/groups.inc.php:257
-msgid "Computers listed below are already stand-alone registered in imaging."
-msgstr "下面列出的電腦已經在影像群組中獨立註冊。"
-
-#: modules/dyngroup/includes/groups.inc.php:85
-#: modules/dyngroup/includes/groups.inc.php:280
-msgid "Confirm"
-msgstr "確認"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:140
-msgid "Csv export"
-msgstr "Csv 匯出"
-
-#: modules/dyngroup/infoPackage.inc.php:182
-msgid "Csv's export"
-msgstr "Csv 格式的匯出"
-
-#: modules/dyngroup/dyngroup/creator.php:235
-msgid "Date"
-msgstr "日期"
-
-#: modules/dyngroup/includes/request.php:129
-msgid "Delete"
-msgstr "刪除"
-
-#: modules/dyngroup/infoPackage.inc.php:157
-msgid "Delete a group of computers"
-msgstr "刪除一個電腦群組"
-
-#: modules/dyngroup/dyngroup/delete_group.php:37
-#: modules/dyngroup/dyngroup/delete_group.php:39
-msgid "Delete group"
-msgstr "刪除群組"
-
-#: modules/dyngroup/dyngroup/delete_group.php:31
-#: modules/dyngroup/dyngroup/delete_group.php:33
-msgid "Delete imaging group"
-msgstr "刪除影像群組"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:62
-msgid "Delete this group"
-msgstr "刪除此群組"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:64
-msgid "Delete this imaging group"
-msgstr "刪除此影像群組"
-
-#: modules/dyngroup/dyngroup/creator.php:334
-msgid "Dell, HP, Apple ..."
-msgstr "Dell、HP、Apple ..."
+#: modules/dyngroup/dyngroup/creator.php:325
+msgid "Hostname of the computer"
+msgstr "電腦的主機名稱"
 
 #: modules/dyngroup/dyngroup/creator.php:326
 msgid "Description"
@@ -247,363 +151,210 @@ msgstr "說明"
 msgid "Description of the computer"
 msgstr "電腦的說明"
 
-#: modules/dyngroup/infoPackage.inc.php:139
-msgid "Detailed page of save a group of computers"
-msgstr "儲存一個電腦群組的詳細頁面"
+#: modules/dyngroup/dyngroup/creator.php:328
+msgid "Inventory number"
+msgstr "清查號"
 
-#: modules/dyngroup/infoPackage.inc.php:119
-msgid "Display a groups of computers"
-msgstr "顯示一個電腦群組"
-
-#: modules/dyngroup/dyngroup/save.php:165
-msgid "Display content"
-msgstr "顯示內容"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
-msgid "Display this group's content"
-msgstr "顯示此群組的內容"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:120
-msgid "Display this imaging group's content"
-msgstr "顯示此影像群組的內容"
-
-#: modules/dyngroup/dyngroup/tab.php:41
-msgid "Dynamic group creation"
-msgstr "動態群組建立"
-
-#: modules/dyngroup/infoPackage.inc.php:51
-#: modules/dyngroup/infoPackage.inc.php:65
-#: modules/dyngroup/infoPackage.inc.php:79
-msgid "Dynamic group creation's tab"
-msgstr "動態群組建立的標籤"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Dynamic imaging group:"
-msgstr "動態影像群組："
-
-#: modules/dyngroup/infoPackage.inc.php:30
-msgid "Dyngroup"
-msgstr "動態群組"
-
-#: modules/dyngroup/includes/request.php:128
-msgid "Edit"
-msgstr "編輯"
-
-#: modules/dyngroup/dyngroup/edithead.php:40
-msgid "Edit a dynamic group"
-msgstr "編輯一個動態群組"
-
-#: modules/dyngroup/dyngroup/edithead.php:52
-#: modules/dyngroup/dyngroup/groupshead.php:37
-msgid "Edit a static group"
-msgstr "編輯一個靜態群組"
-
-#: modules/dyngroup/dyngroup/edithead.php:43
-#: modules/dyngroup/dyngroup/edithead.php:54
-msgid "Edit an imaging group"
-msgstr "編輯一個影像群組"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:110
-msgid "Edit this group"
-msgstr "編輯此群組"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
-msgid "Edit this imaging group"
-msgstr "編輯此影像群組"
-
-#: modules/dyngroup/dyngroup/creator.php:341
-msgid "Entity"
-msgstr "實體"
-
-#: modules/dyngroup/includes/dyngroup.php:468
-msgid "Failed to load some msc module"
-msgstr "無法載入一些 msc 模組"
-
-#: modules/dyngroup/includes/dyngroup.php:461
-msgid "Failed to load some pkgs module"
-msgstr "無法載入一些 pkgs 模組"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:99
-msgid "Favourite"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/listFavourite.php:29
-msgid "Favourite group list"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/localSidebar.php:29
-msgid "Favourite groups"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:316
-msgid "Go to save step"
-msgstr "移至儲存步驟"
-
-#: modules/dyngroup/dyngroup/delete_group.php:60
-#, php-format
-msgid "Group %s was successfully deleted"
-msgstr "已成功刪除群組 %s"
-
-#: modules/dyngroup/dyngroup/display.php:60
-#, php-format
-msgid "Group '%s' content"
-msgstr "群組 '%s' 內容"
-
-#: modules/dyngroup/dyngroup/tab.php:40
-msgid "Group creation"
-msgstr "群組建立"
-
-#: modules/dyngroup/dyngroup/add_groups.php:202
-msgid "Group failed to modify"
-msgstr "無法修改群組"
-
-#: modules/dyngroup/dyngroup/edit_share.php:89
-msgid "Group failed to share"
-msgstr "無法共用群組"
-
-#: modules/dyngroup/dyngroup/list.php:29
-msgid "Group list"
-msgstr "群組清單"
-
-#: modules/dyngroup/includes/groups.inc.php:120
-#: modules/dyngroup/includes/groups.inc.php:124
-msgid "Group members"
-msgstr "群組成員"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
-#: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
-msgid "Group name"
-msgstr "群組名稱"
-
-#: modules/dyngroup/infoPackage.inc.php:162
-msgid "Group of computers details"
-msgstr "電腦群組詳情"
-
-#: modules/dyngroup/includes/groups.inc.php:61
-msgid "Group share"
-msgstr "群組共用"
-
-#: modules/dyngroup/dyngroup/add_groups.php:166
-#: modules/dyngroup/dyngroup/import_from_file.php:41
-msgid "Group successfully created"
-msgstr "已成功建立群組"
-
-#: modules/dyngroup/dyngroup/add_groups.php:147
-msgid "Group successfully modified"
-msgstr "已成功修改群組"
-
-#: modules/dyngroup/dyngroup/edit_share.php:81
-msgid "Group successfully shared"
-msgstr "已成功共用群組"
+#: modules/dyngroup/dyngroup/creator.php:329
+msgid "Your internal inventory number"
+msgstr "您的內部清查號"
 
 #: modules/dyngroup/dyngroup/creator.php:330
 msgid "Hardware"
 msgstr "硬體"
 
-#: modules/dyngroup/dyngroup/details.php:55
-msgid "Hide"
-msgstr "隱藏"
+#: modules/dyngroup/dyngroup/creator.php:331
+msgid "System type"
+msgstr "系統類型"
 
-#: modules/dyngroup/dyngroup/creator.php:325
-msgid "Hostname of the computer"
-msgstr "電腦的主機名稱"
+#: modules/dyngroup/dyngroup/creator.php:332
+msgid "Laptop, Desktop, Rack Mount Chassis ..."
+msgstr "筆記型電腦、桌上型電腦、電腦機殼..."
 
-#: modules/dyngroup/dyngroup/creator.php:323
-msgid "Identification"
-msgstr "識別碼"
+#: modules/dyngroup/dyngroup/creator.php:333
+msgid "System manufacturer"
+msgstr "系統製造商"
+
+#: modules/dyngroup/dyngroup/creator.php:334
+msgid "Dell, HP, Apple ..."
+msgstr "Dell、HP、Apple ..."
+
+#: modules/dyngroup/dyngroup/creator.php:335
+msgid "System model"
+msgstr "系統型號"
+
+#: modules/dyngroup/dyngroup/creator.php:336
+msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+msgstr "Latitude E6420、ProLiant DL120、MacBookAir5,2 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:337
+msgid "Location"
+msgstr "位置"
+
+#: modules/dyngroup/dyngroup/creator.php:338
+msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
+msgstr "總部大樓三樓 401 房間... （使用者定義）"
+
+#: modules/dyngroup/dyngroup/creator.php:339
+msgid "State"
+msgstr "狀態"
+
+#: modules/dyngroup/dyngroup/creator.php:340
+msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
+msgstr "在生產中、在維護中、已停用... （使用者定義）"
+
+#: modules/dyngroup/dyngroup/creator.php:341
+msgid "Entity"
+msgstr "實體"
+
+#: modules/dyngroup/dyngroup/creator.php:342
+msgid "Organizational structure (automatic assignment)"
+msgstr "組織結構（自動指派）"
+
+#: modules/dyngroup/dyngroup/creator.php:343
+msgid "Software"
+msgstr "軟體"
+
+#: modules/dyngroup/dyngroup/creator.php:344
+msgid "Operating system"
+msgstr "作業系統"
+
+#: modules/dyngroup/dyngroup/creator.php:345
+msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
+msgstr "Microsoft Windows 7、Debian GNU/Linux 7.1 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:346
+msgid "Installed software"
+msgstr "安裝的軟體"
+
+#: modules/dyngroup/dyngroup/creator.php:347
+msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
+msgstr "Mozilla Firefox、LibreOffice、Microsoft Office 2003 ..."
+
+#: modules/dyngroup/dyngroup/creator.php:348
+msgid "Installed software (specific version)"
+msgstr "安裝的軟體（特定版本）"
+
+#: modules/dyngroup/dyngroup/creator.php:349
+msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
+msgstr "兩步查詢：Mozilla Firefox -> 23.0.1，LibreOffice -> 4.0.4 ..."
+
+#: modules/dyngroup/dyngroup/delete_group.php:31
+#: modules/dyngroup/dyngroup/delete_group.php:33
+msgid "Delete imaging group"
+msgstr "刪除影像群組"
+
+#: modules/dyngroup/dyngroup/delete_group.php:32
+#, php-format
+msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
+msgstr "是否確定要刪除影像群組<b>%s</b> ？</b>"
+
+#: modules/dyngroup/dyngroup/delete_group.php:37
+#: modules/dyngroup/dyngroup/delete_group.php:39
+msgid "Delete group"
+msgstr "刪除群組"
+
+#: modules/dyngroup/dyngroup/delete_group.php:38
+#, php-format
+msgid ""
+"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
+"other group)."
+msgstr "是否確定要刪除群組 <b>%s</b>？<br/>（可在其他群組中使用它）。"
 
 #: modules/dyngroup/dyngroup/delete_group.php:57
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr "已成功刪除影像群組 %s"
 
-#: modules/dyngroup/dyngroup/display.php:62
+#: modules/dyngroup/dyngroup/delete_group.php:60
 #, php-format
-msgid "Imaging group '%s' content"
-msgstr "影像群組 '%s' 內容"
+msgid "Group %s was successfully deleted"
+msgstr "已成功刪除群組 %s"
 
-#: modules/dyngroup/dyngroup/tab.php:61
-msgid "Imaging group creation"
-msgstr "影像群組建立"
+#: modules/dyngroup/dyngroup/delete_group.php:77
+#: modules/dyngroup/dyngroup/remove_machine.php:58
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:281
+msgid "Cancel"
+msgstr "取消"
 
-#: modules/dyngroup/dyngroup/add_groups.php:207
-msgid "Imaging group failed to modify"
-msgstr "無法修改影像群組"
-
-#: modules/dyngroup/dyngroup/add_groups.php:205
+#: modules/dyngroup/dyngroup/details.php:30
 #, php-format
-msgid "Imaging group failed to modify.<br/>Can't add %s"
-msgstr "無法修改影像群組。<br/>不能新增 %s"
+msgid "%s's details"
+msgstr "%s 的詳情"
 
-#: modules/dyngroup/dyngroup/add_groups.php:153
-msgid ""
-"Imaging group modified, but some machines were not added to existing imaging "
-"group, because they have more than one ethernet card:"
-msgstr ""
-"已修改影像群組，但是一些機器沒有新增至現有影像群組，因為它們有多個 Ethernet "
-"卡："
-
-#: modules/dyngroup/dyngroup/add_groups.php:161
-msgid "Imaging group successfully modified"
-msgstr "已成功修改影像群組"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Imaging group:"
-msgstr "影像群組"
-
-#: modules/dyngroup/dyngroup/list_profiles.php:30
-msgid "Imaging groups"
-msgstr "影像群組："
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:135
-msgid "Imaging management"
-msgstr "影像管理"
-
-#: modules/dyngroup/dyngroup/tab.php:81
-msgid "Imaging server selection"
-msgstr "影像伺服器選擇"
-
-#: modules/dyngroup/dyngroup/creator.php:340
-msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
-msgstr "在生產中、在維護中、已停用... （使用者定義）"
-
-#: modules/dyngroup/dyngroup/creator.php:346
-msgid "Installed software"
-msgstr "安裝的軟體"
-
-#: modules/dyngroup/dyngroup/creator.php:348
-msgid "Installed software (specific version)"
-msgstr "安裝的軟體（特定版本）"
-
-#: modules/dyngroup/dyngroup/creator.php:328
-msgid "Inventory number"
-msgstr "清查號"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:105
-msgid "Inventory on this group"
-msgstr "此群組上的清查"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:122
-msgid "Inventory on this imaging group"
-msgstr "此影像群組上的清查"
-
-#: modules/dyngroup/dyngroup/creator.php:332
-msgid "Laptop, Desktop, Rack Mount Chassis ..."
-msgstr "筆記型電腦、桌上型電腦、電腦機殼..."
-
-#: modules/dyngroup/dyngroup/creator.php:336
-msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
-msgstr "Latitude E6420、ProLiant DL120、MacBookAir5,2 ..."
-
-#: modules/dyngroup/infoPackage.inc.php:144
-#: modules/dyngroup/infoPackage.inc.php:152
-msgid "List all groups of computers"
-msgstr "列出全部電腦群組"
-
-#: modules/dyngroup/infoPackage.inc.php:148
-msgid "List favourite groups"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:337
-msgid "Location"
-msgstr "位置"
-
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:119
-#: modules/dyngroup/includes/groups.inc.php:123
-msgid "Make favourite"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/creator.php:345
-msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
-msgstr "Microsoft Windows 7、Debian GNU/Linux 7.1 ..."
-
-#: modules/dyngroup/dyngroup/creator.php:273
-#: modules/dyngroup/includes/autocomplete.php:31
-#: modules/dyngroup/includes/double.php:39
-msgid "Modify"
-msgstr "修改"
-
-#: modules/dyngroup/dyngroup/creator.php:347
-msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
-msgstr "Mozilla Firefox、LibreOffice、Microsoft Office 2003 ..."
-
-#: modules/dyngroup/dyngroup/save.php:78
-msgid "Name :"
-msgstr "名稱："
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
-#: modules/dyngroup/dyngroup/creator.php:277
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:168
-msgid "No"
-msgstr "否"
-
-#: modules/dyngroup/dyngroup/creator.php:344
-msgid "Operating system"
-msgstr "作業系統"
-
-#: modules/dyngroup/dyngroup/creator.php:342
-msgid "Organizational structure (automatic assignment)"
-msgstr "組織結構（自動指派）"
-
-#: modules/dyngroup/dyngroup/header.php:28
-msgid "Please choose the type of group you want to create"
-msgstr "請選擇您要建立的群組類型"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:130
-msgid "Read log"
-msgstr "讀取記錄"
+#: modules/dyngroup/dyngroup/details.php:49
+msgid "Close"
+msgstr "關閉"
 
 #: modules/dyngroup/dyngroup/details.php:52
 msgid "Regenerate"
 msgstr "重新產生"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:57
-msgid "Remove Computer"
-msgstr "移除電腦"
+#: modules/dyngroup/dyngroup/details.php:55
+msgid "Hide"
+msgstr "隱藏"
 
-#: modules/dyngroup/dyngroup/remove_machine.php:48
-msgid "Remove a computer"
-msgstr "移除電腦"
+#: modules/dyngroup/dyngroup/details.php:57
+msgid "Show"
+msgstr "顯示"
 
-#: modules/dyngroup/infoPackage.inc.php:167
-msgid "Remove a computer from a computers group"
-msgstr "從一個電腦群組中刪除一台電腦"
-
-#: modules/dyngroup/dyngroup/save_detail.php:28
-msgid "Request saver"
-msgstr "請求省電模式"
-
-#: modules/dyngroup/dyngroup/save.php:30
+#: modules/dyngroup/dyngroup/display.php:60
 #, php-format
-msgid "Request saver (%s)"
-msgstr "請求省電模式 (%s)"
+msgid "Group '%s' content"
+msgstr "群組 '%s' 內容"
 
-#: modules/dyngroup/dyngroup/save.php:94
-msgid "Save"
-msgstr "儲存"
+#: modules/dyngroup/dyngroup/display.php:62
+#, php-format
+msgid "Imaging group '%s' content"
+msgstr "影像群組 '%s' 內容"
 
-#: modules/dyngroup/infoPackage.inc.php:134
-msgid "Save a group of computers"
-msgstr "儲存一個電腦群組"
+#: modules/dyngroup/dyngroup/edit_share.php:41
+#, php-format
+msgid "Share group '%s' with"
+msgstr "與以下對象共用群組 '%s'："
 
-#: modules/dyngroup/includes/request.php:125
-msgid "Search part"
-msgstr "搜尋零件"
+#: modules/dyngroup/dyngroup/edit_share.php:81
+msgid "Group successfully shared"
+msgstr "已成功共用群組"
 
-#: modules/dyngroup/infoPackage.inc.php:129
-msgid "Second page of result/request group creator"
-msgstr "第二頁結果/請求群組建立器"
+#: modules/dyngroup/dyngroup/edit_share.php:89
+msgid "Group failed to share"
+msgstr "無法共用群組"
 
-#: modules/dyngroup/dyngroup/tab.php:102
-msgid "Select an imaging server for this group"
-msgstr "為此群組選擇一個影像伺服器"
+#: modules/dyngroup/dyngroup/edithead.php:40
+msgid "Edit a dynamic group"
+msgstr "編輯一個動態群組"
+
+#: modules/dyngroup/dyngroup/edithead.php:43
+#: modules/dyngroup/dyngroup/edithead.php:54
+msgid "Edit an imaging group"
+msgstr "編輯一個影像群組"
+
+#: modules/dyngroup/dyngroup/edithead.php:52
+#: modules/dyngroup/dyngroup/groupshead.php:37
+msgid "Edit a static group"
+msgstr "編輯一個靜態群組"
+
+#: modules/dyngroup/dyngroup/groupshead.php:35
+msgid "Add a static group"
+msgstr "新增一個靜態群組"
+
+#: modules/dyngroup/dyngroup/header.php:28
+msgid "Please choose the type of group you want to create"
+msgstr "請選擇您要建立的群組類型"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:51
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
+msgid "Group name"
+msgstr "群組名稱"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:57
+msgid "Add shortcut"
+msgstr "新增捷徑"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:59
 msgid "Select the file you want to import"
@@ -613,46 +364,64 @@ msgstr "選擇您要匯入的檔案"
 msgid "Select what is inside the file"
 msgstr "選擇檔案中的內容"
 
-#: modules/dyngroup/infoPackage.inc.php:124
-msgid "Share a group of computers"
-msgstr "共用一個電腦群組"
+#: modules/dyngroup/dyngroup/list.php:29
+msgid "Group list"
+msgstr "群組清單"
 
-#: modules/dyngroup/dyngroup/edit_share.php:41
+#: modules/dyngroup/dyngroup/list_profiles.php:30
+msgid "Imaging groups"
+msgstr "影像群組："
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
+msgid "All imaging groups"
+msgstr "全部影像群組"
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
+msgid "Add an imaging group"
+msgstr "新增一個影像群組"
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Imaging group:"
+msgstr "影像群組"
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Dynamic imaging group:"
+msgstr "動態影像群組："
+
+#: modules/dyngroup/dyngroup/remove_machine.php:48
+msgid "Remove a computer"
+msgstr "移除電腦"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:54
 #, php-format
-msgid "Share group '%s' with"
-msgstr "與以下對象共用群組 '%s'："
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
+msgstr "您將從群組 <b>%s</b> 中移除電腦 <b>%s</b> 。"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:111
-msgid "Share this group"
-msgstr "共用此群組"
+#: modules/dyngroup/dyngroup/remove_machine.php:57
+msgid "Remove Computer"
+msgstr "移除電腦"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:128
-msgid "Share this imaging group"
-msgstr "共用此影像群組"
+#: modules/dyngroup/dyngroup/save_detail.php:28
+msgid "Request saver"
+msgstr "請求省電模式"
 
-#: modules/dyngroup/dyngroup/details.php:57
-msgid "Show"
-msgstr "顯示"
+#: modules/dyngroup/dyngroup/save_detail.php:42
+#, php-format
+msgid "This request has been saved as %s (id=%s)"
+msgstr "此請求已儲存為 %s (id=%s)"
 
-#: modules/dyngroup/dyngroup/creator.php:343
-msgid "Software"
-msgstr "軟體"
+#: modules/dyngroup/dyngroup/save_detail.php:44
+#, php-format
+msgid "This result has been saved as %s (id=%s)"
+msgstr "此結果已儲存為 %s (id=%s)"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:114
-msgid "Software deployment on this group"
-msgstr "此群組上的軟體部署"
+#: modules/dyngroup/dyngroup/tab.php:40
+msgid "Group creation"
+msgstr "群組建立"
 
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
-msgid "Software deployment on this imaging group"
-msgstr "此影像群組上的軟體部署"
-
-#: modules/dyngroup/dyngroup/save.php:146
-msgid "Specify a boolean operator between sub-requests"
-msgstr "在子請求之間指定一個布林運算子"
-
-#: modules/dyngroup/dyngroup/creator.php:339
-msgid "State"
-msgstr "狀態"
+#: modules/dyngroup/dyngroup/tab.php:41
+msgid "Dynamic group creation"
+msgstr "動態群組建立"
 
 #: modules/dyngroup/dyngroup/tab.php:42
 msgid "Static group creation"
@@ -662,43 +431,108 @@ msgstr "靜態群組建立"
 msgid "Static group creation from import"
 msgstr "從匯入中建立靜態群組"
 
-#: modules/dyngroup/infoPackage.inc.php:57
-#: modules/dyngroup/infoPackage.inc.php:71
-#: modules/dyngroup/infoPackage.inc.php:85
-msgid "Static group creation from import's tab"
-msgstr "從匯入標籤中建立靜態群組"
-
-#: modules/dyngroup/infoPackage.inc.php:54
-#: modules/dyngroup/infoPackage.inc.php:68
-#: modules/dyngroup/infoPackage.inc.php:82
-msgid "Static group creation's tab"
-msgstr "靜態群組建立的標籤"
+#: modules/dyngroup/dyngroup/tab.php:61
+msgid "Imaging group creation"
+msgstr "影像群組建立"
 
 #: modules/dyngroup/dyngroup/tab.php:78
 msgid "Static imaging group"
 msgstr "靜態影像群組"
 
-#: modules/dyngroup/dyngroup/creator.php:333
-msgid "System manufacturer"
-msgstr "系統製造商"
+#: modules/dyngroup/dyngroup/tab.php:81
+msgid "Imaging server selection"
+msgstr "影像伺服器選擇"
 
-#: modules/dyngroup/dyngroup/creator.php:335
-msgid "System model"
-msgstr "系統型號"
+#: modules/dyngroup/dyngroup/tab.php:102
+msgid "Select an imaging server for this group"
+msgstr "為此群組選擇一個影像伺服器"
 
-#: modules/dyngroup/dyngroup/creator.php:331
-msgid "System type"
-msgstr "系統類型"
+#: modules/dyngroup/dyngroup/tmpdisplay.php:31
+#, php-format
+msgid "Temporary result display for '%s'"
+msgstr "'%s' 的暫存結果顯示"
 
 #: modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: modules/dyngroup/infoPackage.inc.php:104
 msgid "Temporary result display"
 msgstr "暫存結果顯示"
 
-#: modules/dyngroup/dyngroup/tmpdisplay.php:31
+#: modules/dyngroup/dyngroup/tmpdisplay.php:55
+msgid "back"
+msgstr "上一頁"
+
+#: modules/dyngroup/dyngroup/update.php:30
+msgid "Update machines name cache in dyngroup"
+msgstr "在動態群組中更新機器名稱快取"
+
+#: modules/dyngroup/dyngroup/update.php:35
 #, php-format
-msgid "Temporary result display for '%s'"
-msgstr "'%s' 的暫存結果顯示"
+msgid "update machine cache : %s machines"
+msgstr "更新機器快取：%s 台機器"
+
+#: modules/dyngroup/dyngroup/listFavourite.php:29
+msgid "Favourite group list"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:29
+msgid "Favourite groups"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/localSidebar.php:30
+msgid "All groups"
+msgstr "全部群組"
+
+#: modules/dyngroup/dyngroup/localSidebar.php:31
+msgid "Add a group"
+msgstr "新增一個群組"
+
+#: modules/dyngroup/dyngroup/save.php:30
+#, php-format
+msgid "Request saver (%s)"
+msgstr "請求省電模式 (%s)"
+
+#: modules/dyngroup/dyngroup/save.php:30
+msgid "group"
+msgstr "群組"
+
+#: modules/dyngroup/dyngroup/save.php:30
+msgid "profile"
+msgstr "設定檔"
+
+#: modules/dyngroup/dyngroup/save.php:78
+msgid "Name :"
+msgstr "名稱："
+
+#: modules/dyngroup/dyngroup/save.php:80
+msgid "save as"
+msgstr "另存新檔"
+
+#: modules/dyngroup/dyngroup/save.php:80
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:72
+msgid "query"
+msgstr "查詢"
+
+#: modules/dyngroup/dyngroup/save.php:80
+msgid "result"
+msgstr "結果"
+
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/includes/groups.inc.php:119
+#: modules/dyngroup/includes/groups.inc.php:123
+msgid "Make favourite"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/save.php:94
+msgid "Save"
+msgstr "儲存"
+
+#: modules/dyngroup/dyngroup/save.php:146
+msgid "Specify a boolean operator between sub-requests"
+msgstr "在子請求之間指定一個布林運算子"
+
+#: modules/dyngroup/dyngroup/save.php:146
+msgid "Check"
+msgstr "檢查"
 
 #: modules/dyngroup/dyngroup/save.php:152
 #, php-format
@@ -716,107 +550,270 @@ msgstr "布林方程式 '%s' 無效。<br/>不是子請求的相同編號"
 msgid "The boolean equation is valid"
 msgstr "布林方程式有效"
 
-#: modules/dyngroup/dyngroup/creator.php:299
-msgid "The request is : "
-msgstr "該請求為："
+#: modules/dyngroup/dyngroup/save.php:165
+msgid "Display content"
+msgstr "顯示內容"
 
-#: modules/dyngroup/dyngroup/creator.php:338
-msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr "總部大樓三樓 401 房間... （使用者定義）"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:62
+msgid "Delete this group"
+msgstr "刪除此群組"
 
-#: modules/dyngroup/dyngroup/save_detail.php:42
-#, php-format
-msgid "This request has been saved as %s (id=%s)"
-msgstr "此請求已儲存為 %s (id=%s)"
-
-#: modules/dyngroup/dyngroup/save_detail.php:44
-#, php-format
-msgid "This result has been saved as %s (id=%s)"
-msgstr "此結果已儲存為 %s (id=%s)"
-
-#: modules/dyngroup/dyngroup/creator.php:349
-msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
-msgstr "兩步查詢：Mozilla Firefox -> 23.0.1，LibreOffice -> 4.0.4 ..."
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:97
-msgid "Type"
-msgstr "類型"
-
-#: modules/dyngroup/infoPackage.inc.php:187
-msgid "Update machine cache"
-msgstr "更新機器快取"
-
-#: modules/dyngroup/dyngroup/update.php:30
-msgid "Update machines name cache in dyngroup"
-msgstr "在動態群組中更新機器名稱快取"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:117
-msgid "Update on this group"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:76
-#: modules/dyngroup/dyngroup/creator.php:276
-#: modules/dyngroup/dyngroup/creator.php:282
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:167
-msgid "Yes"
-msgstr "是"
-
-#: modules/dyngroup/dyngroup/add_groups.php:213
-#: modules/dyngroup/dyngroup/save.php:100
-#: modules/dyngroup/dyngroup/save.php:102
-msgid "You must specify a group name"
-msgstr "必須指定一個群組名稱"
-
-#: modules/dyngroup/dyngroup/add_groups.php:215
-msgid "You must specify an imaging group name"
-msgstr "必須指定一個影像群組名稱"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:54
-#, php-format
-msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr "您將從群組 <b>%s</b> 中移除電腦 <b>%s</b> 。"
-
-#: modules/dyngroup/dyngroup/creator.php:329
-msgid "Your internal inventory number"
-msgstr "您的內部清查號"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:55
-msgid "back"
-msgstr "上一頁"
-
-#: modules/dyngroup/dyngroup/save.php:30
-msgid "group"
-msgstr "群組"
-
-#: modules/dyngroup/dyngroup/save.php:30
-msgid "profile"
-msgstr "設定檔"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:72
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "query"
-msgstr "查詢"
-
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "result"
-msgstr "結果"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:64
+msgid "Delete this imaging group"
+msgstr "刪除此影像群組"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:72
 #, php-format
 msgid "result (%s)"
 msgstr "結果 (%s)"
 
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "save as"
-msgstr "另存新檔"
-
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:74
 msgid "static group"
 msgstr "靜態群組"
 
-#: modules/dyngroup/dyngroup/update.php:35
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:97
+msgid "Type"
+msgstr "類型"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:99
+msgid "Favourite"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
+msgid "Display this group's content"
+msgstr "顯示此群組的內容"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:105
+msgid "Inventory on this group"
+msgstr "此群組上的清查"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:110
+msgid "Edit this group"
+msgstr "編輯此群組"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:111
+msgid "Share this group"
+msgstr "共用此群組"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:130
+msgid "Read log"
+msgstr "讀取記錄"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:114
+msgid "Software deployment on this group"
+msgstr "此群組上的軟體部署"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:117
+msgid "Update on this group"
+msgstr ""
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:120
+msgid "Display this imaging group's content"
+msgstr "顯示此影像群組的內容"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:122
+msgid "Inventory on this imaging group"
+msgstr "此影像群組上的清查"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
+msgid "Edit this imaging group"
+msgstr "編輯此影像群組"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:128
+msgid "Share this imaging group"
+msgstr "共用此影像群組"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
+msgid "Software deployment on this imaging group"
+msgstr "此影像群組上的軟體部署"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:135
+msgid "Imaging management"
+msgstr "影像管理"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:140
+msgid "Csv export"
+msgstr "Csv 匯出"
+
+#: modules/dyngroup/includes/autocomplete.php:44
+msgid "Add a value"
+msgstr "新增一個值"
+
+#: modules/dyngroup/includes/double.php:51
+msgid "->"
+msgstr "->"
+
+#: modules/dyngroup/includes/request.php:125
+msgid "Search part"
+msgstr "搜尋零件"
+
+#: modules/dyngroup/includes/request.php:128
+msgid "Edit"
+msgstr "編輯"
+
+#: modules/dyngroup/includes/request.php:129
+msgid "Delete"
+msgstr "刪除"
+
+#: modules/dyngroup/includes/request.php:177
 #, php-format
-msgid "update machine cache : %s machines"
-msgstr "更新機器快取：%s 台機器"
+msgid "%s) Search %s %s (%s) in module %s"
+msgstr "%s) 在模組 %s %s %s 中搜尋 (%s)"
+
+#: modules/dyngroup/includes/request.php:179
+#, php-format
+msgid "%s) Search %s %s %s in module %s"
+msgstr "%s) 在模組 %s %s %s 中搜尋 %s"
+
+#: modules/dyngroup/includes/groups.inc.php:38
+msgid "All share entities"
+msgstr "所有共用項目"
+
+#: modules/dyngroup/includes/groups.inc.php:61
+msgid "Group share"
+msgstr "群組共用"
+
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:280
+msgid "Confirm"
+msgstr "確認"
+
+#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:124
+msgid "Group members"
+msgstr "群組成員"
+
+#: modules/dyngroup/includes/groups.inc.php:178
+msgid "All machines"
+msgstr "全部機器"
+
+#: modules/dyngroup/includes/groups.inc.php:242
+msgid "Computers listed below are already part of another imaging group."
+msgstr "下面列出的電腦已經屬於另一個影像群組。"
+
+#: modules/dyngroup/includes/groups.inc.php:245
+#, php-format
+msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
+msgstr "<li>%s 屬於 <a href=\"%s\">%s</a></li>"
+
+#: modules/dyngroup/includes/groups.inc.php:257
+msgid "Computers listed below are already stand-alone registered in imaging."
+msgstr "下面列出的電腦已經在影像群組中獨立註冊。"
+
+#: modules/dyngroup/includes/groups.inc.php:267
+msgid ""
+"<p>These computers will move to this group and their bootmenus <strong>will "
+"be rewritten</strong></p>"
+msgstr "<p>這些電腦將移至此群組，並且它們的開機功能表<strong>將被重新寫入</strong></p>"
+
+#: modules/dyngroup/includes/groups.inc.php:268
+msgid "All related images to these computers will be <strong>DELETED</strong>"
+msgstr "將<strong>刪除</strong>這些電腦的所有相關影像"
+
+#: modules/dyngroup/includes/dyngroup.php:461
+msgid "Failed to load some pkgs module"
+msgstr "無法載入一些 pkgs 模組"
+
+#: modules/dyngroup/includes/dyngroup.php:468
+msgid "Failed to load some msc module"
+msgstr "無法載入一些 msc 模組"
+
+#: modules/dyngroup/infoPackage.inc.php:30
+msgid "Dyngroup"
+msgstr "動態群組"
+
+#: modules/dyngroup/infoPackage.inc.php:48
+#: modules/dyngroup/infoPackage.inc.php:109
+msgid "Computers Group Creator"
+msgstr "電腦群組建立器"
+
+#: modules/dyngroup/infoPackage.inc.php:51
+#: modules/dyngroup/infoPackage.inc.php:65
+#: modules/dyngroup/infoPackage.inc.php:79
+msgid "Dynamic group creation's tab"
+msgstr "動態群組建立的標籤"
+
+#: modules/dyngroup/infoPackage.inc.php:54
+#: modules/dyngroup/infoPackage.inc.php:68
+#: modules/dyngroup/infoPackage.inc.php:82
+msgid "Static group creation's tab"
+msgstr "靜態群組建立的標籤"
+
+#: modules/dyngroup/infoPackage.inc.php:57
+#: modules/dyngroup/infoPackage.inc.php:71
+#: modules/dyngroup/infoPackage.inc.php:85
+msgid "Static group creation from import's tab"
+msgstr "從匯入標籤中建立靜態群組"
+
+#: modules/dyngroup/infoPackage.inc.php:61
+msgid "Computers Group Creator Sub Request Editor"
+msgstr "電腦群組建立器子請求編輯器"
+
+#: modules/dyngroup/infoPackage.inc.php:75
+msgid "Computers Group Creator Sub Request Delete"
+msgstr "電腦群組建立器子請求刪除"
+
+#: modules/dyngroup/infoPackage.inc.php:89
+#: modules/dyngroup/infoPackage.inc.php:113
+msgid "Computers Group Editor"
+msgstr "電腦群組編輯器"
+
+#: modules/dyngroup/infoPackage.inc.php:94
+msgid "Computers Group Sub Request Editor"
+msgstr "電腦群組子請求編輯器"
+
+#: modules/dyngroup/infoPackage.inc.php:99
+msgid "Computers Group Sub Request Delete"
+msgstr "電腦群組子請求刪除"
+
+#: modules/dyngroup/infoPackage.inc.php:119
+msgid "Display a groups of computers"
+msgstr "顯示一個電腦群組"
+
+#: modules/dyngroup/infoPackage.inc.php:124
+msgid "Share a group of computers"
+msgstr "共用一個電腦群組"
+
+#: modules/dyngroup/infoPackage.inc.php:129
+msgid "Second page of result/request group creator"
+msgstr "第二頁結果/請求群組建立器"
+
+#: modules/dyngroup/infoPackage.inc.php:134
+msgid "Save a group of computers"
+msgstr "儲存一個電腦群組"
+
+#: modules/dyngroup/infoPackage.inc.php:139
+msgid "Detailed page of save a group of computers"
+msgstr "儲存一個電腦群組的詳細頁面"
+
+#: modules/dyngroup/infoPackage.inc.php:144
+#: modules/dyngroup/infoPackage.inc.php:152
+msgid "List all groups of computers"
+msgstr "列出全部電腦群組"
+
+#: modules/dyngroup/infoPackage.inc.php:148
+msgid "List favourite groups"
+msgstr ""
+
+#: modules/dyngroup/infoPackage.inc.php:157
+msgid "Delete a group of computers"
+msgstr "刪除一個電腦群組"
+
+#: modules/dyngroup/infoPackage.inc.php:162
+msgid "Group of computers details"
+msgstr "電腦群組詳情"
+
+#: modules/dyngroup/infoPackage.inc.php:167
+msgid "Remove a computer from a computers group"
+msgstr "從一個電腦群組中刪除一台電腦"
+
+#: modules/dyngroup/infoPackage.inc.php:182
+msgid "Csv's export"
+msgstr "Csv 格式的匯出"
+
+#: modules/dyngroup/infoPackage.inc.php:187
+msgid "Update machine cache"
+msgstr "更新機器快取"
+
+
