@@ -143,6 +143,7 @@ Section "SoftEther VPN Client" SEC01
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile" "" "VPN Client Connection Setting File"
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\DefaultIcon" "" "C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT"
  WriteRegStr HKLM "SOFTWARE\Classes\vpnfile\shell\open\command" "" "$\"C:\Program Files\SoftEther VPN Client\$SOFTETHER_VPNCLIENT$\" $\"%1$\""
+ WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Run" "SoftEther VPN Client Manager" "$INSTDIR\vpncmgr.exe"
 
  ExecWait 'sc create SEVPNCLIENT binPath= "\"$INSTDIR\$SOFTETHER_VPNCLIENT\" /service" start= auto DisplayName= "SoftEther VPN Client"'
  ExecWait 'sc description SEVPNCLIENT "This manages the Virtual Network Adapter device driver and connection service for the SoftEther VPN Client. When this service is stopped, it will not be possible to use SoftEther VPN Client on this computer to connect to a SoftEther VPN Server."'
@@ -153,6 +154,7 @@ Section "SoftEther VPN Client" SEC01
  FileWrite $4 "NicCreate VPN$\r$\n"
  FileWrite $4 "AccountCreate $VPN_CONNECTION /SERVER:$VPN_SERVER:$VPN_PORT /HUB:$VPN_HUB /USERNAME:$VPN_LOGIN /NICNAME:VPN$\r$\n"
  FileWrite $4 "AccountPasswordSet $VPN_CONNECTION /PASSWORD:$VPN_PASSWORD /TYPE:standard$\r$\n"
+ FileWrite $4 "AccountRetrySet $VPN_CONNECTION /NUM:0$\r$\n"
  FileWrite $4 "AccountConnect $VPN_CONNECTION$\r$\n"
  FileClose $4
  Exec '"$INSTDIR\vpncmgr.exe"'
@@ -187,6 +189,11 @@ FunctionEnd
 Function un.onInit
  MessageBox MB_ICONQUESTION|MB_YESNO|MB_DEFBUTTON2 "Are you sure you want to completely remove $(^Name) and all of its components?" IDYES +2
  Abort
+FunctionEnd
+
+Function .onInstSuccess
+   MessageBox MB_YESNO|MB_ICONEXCLAMATION "A reboot is required to finish the installation. Do you wish to reboot now?" IDNO +2
+   Reboot
 FunctionEnd
 
 
