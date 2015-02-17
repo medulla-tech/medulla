@@ -153,6 +153,7 @@ class PackageParserXML:
                 queries['Qversion'],
                 queries['boolcnd'],
                 licenses,
+                [],
                 associateinventory
             )
         except Exception, e:
