@@ -4,7 +4,6 @@ import time
 from socket import socket, AF_INET, SOCK_STREAM
 
 
-from pulse2agent.connect import Connector
 
 PORT = 5555
 HOST = 'localhost'
