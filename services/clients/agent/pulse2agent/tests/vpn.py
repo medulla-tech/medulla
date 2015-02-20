@@ -21,8 +21,6 @@
 import logging
 logging.basicConfig()
 
-import os
-import time
 import Queue
 import threading
 import tempfile
@@ -186,7 +184,7 @@ class Test00_VPNLaunchControl(TestCase):
 
             client_connection, address = server.accept()
             if client_connection:
-                result = client_connection.recv(1024)
+                result = client_connection.recv(1024) # pyflakes.ignore
                 client_connection.close()
 
 

@@ -1,7 +1,7 @@
 import os
 import ssl
 import time
-from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR, SHUT_RDWR
+from socket import socket, AF_INET, SOCK_STREAM
 
 
 from pulse2agent.connect import Connector

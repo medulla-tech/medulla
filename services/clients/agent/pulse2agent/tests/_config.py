@@ -26,7 +26,7 @@ import tempfile
 try:
     from twisted.trial.unittest import TestCase
 except ImportError:
-    from unittest import TestCase, main
+    from unittest import TestCase, main # pyflakes.ignore
 
 from pulse2agent._config import ExtendedConfigParser, ConfigReader
 from pulse2agent._config import InvalidSection, DefaultsNotFound

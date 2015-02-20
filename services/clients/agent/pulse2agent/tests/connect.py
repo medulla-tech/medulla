@@ -20,11 +20,9 @@
 # MA 02110-1301, USA.
 
 import os
-import random
 import time
 import Queue
 import threading
-import tempfile
 
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 """
