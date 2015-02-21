@@ -38,6 +38,7 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.sql.expression import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
+from sqlalchemy.exc import OperationalError
 
 from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
@@ -73,7 +74,10 @@ class Glpi08(DyngroupDatabaseHelper):
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
         logging.getLogger().debug('Trying to detect if GLPI version is lesser than 0.84')
-        self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+	try:
+            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+	except OperationalError: # Maybe GLPI 0.85...
+	    return False
         if self._glpi_version < '0.84':
             logging.getLogger().debug('GLPI version lesser than 0.84 found !')
             return True
@@ -109,7 +113,10 @@ class Glpi08(DyngroupDatabaseHelper):
             self.logger.warn("Your database is not in utf8, will fallback in latin1")
             setattr(Glpi08, "decode", decode_latin1)
             setattr(Glpi08, "encode", encode_latin1)
-        self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+	try:
+            self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
+	except OperationalError:
+	    return False
         self.metadata = MetaData(self.db)
         self.initMappers()
         self.logger.info("Glpi is in version %s" % (self.glpi_version))
