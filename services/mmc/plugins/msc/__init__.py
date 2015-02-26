@@ -224,6 +224,12 @@ class RpcProxy(RpcProxyI):
     # in the 'target' table.
     ip_table = {}
 
+    def get_ip(self, uuid):
+        if uuid in self.ip_table:
+            return self.ip_table[uuid]
+        else:
+            return False
+
     def getMachine(self, params):
         ctx = self.currentContext
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
