@@ -1153,7 +1153,7 @@ form.inplaceeditor-form input[type="text"] {
 
 .popup {
 
- 	left: 1512px;
+    left: 1512px;
     top: 50px;
     width: 200px;
     background:#fff;
@@ -1163,7 +1163,7 @@ form.inplaceeditor-form input[type="text"] {
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
     margin: 5px;
     padding: 10px;
-    position: absolute;
+    position: fixed;
     z-index: 999;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;

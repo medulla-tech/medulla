@@ -116,14 +116,14 @@ $root = $conf["global"]["root"];
                 var left = Math.max(0, evt.clientX - jQuery('#popup').outerWidth() + jQuery(window).scrollLeft());
                 var top = Math.max(0, evt.clientY + jQuery(window).scrollTop());
                 jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
+                //jQuery('#popup').css({'left': 20 + "%", 'top': 20 + "%"});
             }
 
             function _centerPlacement(evt) {
-
                 jQuery('#popup').css({
                     'width': '50%',
                     'left': '25%',
-                    'top': '15%'
+                    'top': '50%'
                 });
                 jQuery('#overlay').fadeIn().click(closePopup);
             }
@@ -206,7 +206,7 @@ $root = $conf["global"]["root"];
                     jQuery('#popup').css({
                         'width': '50%',
                         'left': '25%',
-                        'top': '15%'
+                        'top': '25%'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
@@ -239,7 +239,7 @@ $root = $conf["global"]["root"];
                     jQuery('#popup').css({
                         'width': '50%',
                         'left': '25%',
-                        'top': '15%'
+                        'top':  '25%'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
