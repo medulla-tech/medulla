@@ -70,6 +70,7 @@ class MscConfig(MscDatabaseConfig):
     sa_localcert = ""
 
     # WEB interface stuff
+    web_def_entity_filtering = False
     web_def_awake = 0
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_inventory = 1
@@ -261,6 +262,8 @@ class MscConfig(MscDatabaseConfig):
                             raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # some default web interface values
+        if self.cp.has_option("web", "web_def_entity_filtering"):
+            self.web_def_entity_filtering = self.cp.getint("web", "web_def_entity_filtering")
         if self.cp.has_option("web", "web_def_awake"):
             self.web_def_awake = self.cp.getint("web", "web_def_awake")
         if self.cp.has_option("web", "web_def_date_fmt"):

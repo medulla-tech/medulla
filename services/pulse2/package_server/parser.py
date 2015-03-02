@@ -69,10 +69,6 @@ class PackageParserXML:
             root = root[0]
             pid = root.getAttribute('id')
 
-            appstream_family = ''
-            if root.hasAttribute('appstream_family'):
-                appstream_family = root.getAttribute('appstream_family')
-
             tmp = root.getElementsByTagName('name')[0]
             name = tmp.firstChild.wholeText.strip()
             version = root.getElementsByTagName('version')[0]
@@ -147,7 +143,7 @@ class PackageParserXML:
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
                 reboot,
-                appstream_family,
+                0,
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],
@@ -332,11 +328,6 @@ class PackageParserJSON:
             try:
                 pid = data['id']
 
-                if 'appstream_family' in data:
-                    appstream_family = data['appstream_family']
-                else:
-                    appstream_family = ''
-
                 name = data['name'].strip()
 
                 v_txt = data['version'] or '0'
@@ -348,6 +339,11 @@ class PackageParserJSON:
                     sub_packages = data['sub_packages']
                 except KeyError:
                     sub_packages = []
+
+                try:
+                    entity_id = data['entity_id']
+                except KeyError:
+                    entity_id = 0
 
                 # Inventory section
                 licenses = data['inventory']['licenses']
@@ -370,7 +366,7 @@ class PackageParserJSON:
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
                 reboot,
-                appstream_family,
+                entity_id,
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],
@@ -400,6 +396,9 @@ class PackageParserJSON:
         
         # Sub packages if exists
         data['sub_packages'] = package.sub_packages
+ 
+        # Entity info if exist
+        data['entity_id'] = package.entity_id
 
         # Inventory section
         data['inventory'] = {}
@@ -419,6 +418,4 @@ class PackageParserJSON:
         data['commands']['postCommandSuccess'] = {'name':package.postcmd_ok.name, 'command':package.postcmd_ok.command}
         data['commands']['postCommandFailure'] = {'name':package.postcmd_ko.name, 'command':package.postcmd_ko.command}
         
-        data['appstream_family'] = package.appstream_family
-
-        return json.dumps(data)
+        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))

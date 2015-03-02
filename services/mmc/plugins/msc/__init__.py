@@ -344,6 +344,12 @@ class RpcProxy(RpcProxyI):
         return (len(result), result[start:end])
 
     def pa_adv_getAllPackages(self, filt, start, end):
+        ctx = self.currentContext
+        locations = ComputerLocationManager().getUserLocations(ctx.userid)
+        # Get root location for the user
+        root_location_id = locations[0]['uuid'].replace('UUID', '')
+        filt['entity_id'] = root_location_id
+
         start = int(start)
         end = int(end)
         ctx = self.currentContext

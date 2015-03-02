@@ -97,7 +97,7 @@ class Package:
         self.specifiedFiles = []
 
     def init(self, id, label, version, size, description, cmd, initcmd='',
-             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, appstream_family='', Qvendor='',
+             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, entity_id=None, Qvendor='',
              Qsoftware='', Qversion='', boolcnd='', licenses='', sub_packages=[],
              associateinventory=0):
         self.label = label
@@ -112,7 +112,6 @@ class Package:
         self.postcmd_ok = getCommandFromH(postcmd_ok)
         self.postcmd_ko = getCommandFromH(postcmd_ko)
         self.reboot = reboot
-        self.appstream_family = appstream_family
         self.id = id
         self.root = ''
         self.Qvendor = Qvendor
@@ -121,6 +120,7 @@ class Package:
         self.boolcnd = boolcnd
         self.licenses = licenses
         self.sub_packages = sub_packages
+        self.entity_id = entity_id
         self.associateinventory = associateinventory
 
     def addFile(self, file):
@@ -148,7 +148,6 @@ class Package:
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
             'reboot':self.reboot,
-            'appstream_family': self.appstream_family,
             'files':self.files.toH(),
             'Qvendor':self.Qvendor,
             'Qsoftware':self.Qsoftware,
@@ -156,6 +155,7 @@ class Package:
             'boolcnd':self.boolcnd,
             'licenses': self.licenses,
             'sub_packages': self.sub_packages,
+            'entity_id': self.entity_id,
             'associateinventory': self.associateinventory
         }
         if self.root != '':
@@ -205,9 +205,7 @@ class Package:
             self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
         else:
             self.postcmd_ko = Command()
-        self.appstream_family = ''
-        if h.has_key('appstream_family'):
-            self.appstream_family = h['appstream_family']
+        self.entity_id = 0
         self.reboot = 0
         if h.has_key('reboot'):
             self.reboot = h['reboot']
@@ -226,6 +224,8 @@ class Package:
             self.licenses = h['licenses']
         if 'sub_packages' in h:
             self.sub_packages = h['sub_packages']
+        if 'entity_id' in h:
+            self.entity_id = h['entity_id']
         if h.has_key('associateinventory'):
             self.associateinventory = h['associateinventory']
         return self

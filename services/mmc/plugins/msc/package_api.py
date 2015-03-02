@@ -638,7 +638,9 @@ class GetPackagesAdvanced:
                     self.packages = [p for p in self.packages if p[0]['sub_packages']]
                 else:
                     self.packages = [p for p in self.packages if not p[0]['sub_packages']]
-                
+            
+            if 'entity_id' in self.filt and MscConfig().web_def_entity_filtering:
+                self.packages = [p for p in self.packages if p[0]['entity_id'] == self.filt['entity_id']]    
             if self.filt['filter']:
                 self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
         except KeyError:

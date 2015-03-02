@@ -43,6 +43,7 @@ from mmc.plugins.pulse2.utils import notificationManager
 from mmc.plugins.pkgs.package_put_api import PackagePutA
 from mmc.plugins.pkgs.user_packageapi_api import UserPackageApiApi
 from mmc.plugins.pkgs.config import PkgsConfig
+from pulse2.managers.location import ComputerLocationManager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
@@ -193,6 +194,13 @@ class RpcProxy(RpcProxyI):
         return d
 
     def ppa_putPackageDetail(self, pp_api_id, package, need_assign = True):
+        # Patching package with entity_id
+        ctx = self.currentContext
+        locations = ComputerLocationManager().getUserLocations(ctx.userid)
+        # Get root location for the user
+        root_location_id = locations[0]['uuid'].replace('UUID', '')
+        package['entity_id'] = root_location_id
+        logging.getLogger().fatal(locations)
         def _ppa_putPackageDetail(result, pp_api_id = pp_api_id, package = package, need_assign = need_assign):
             for upa in result:
                 if upa['uuid'] == pp_api_id:
