@@ -284,13 +284,24 @@ jQuery(function(){
     
     
     $('form').submit(function(e){
-        
+       
+        // Check if we have at least 2 packages
+        if (jQuery('select[name*=sub_packages]').length < 2){
+            alert(<?php print json_encode(_T('Error, at least two packages are required to create a bundle.', 'pkgs')); ?>);
+            e.preventDefault();
+            return;
+        } 
         
         var selected_packages = [];
         jQuery('select[name*=sub_packages]').each(function(){
+            // If there is a null package abort here
+            if ($(this).val() == null){
+                $(this).css('border', '1px solid red');
+                e.preventDefault();
+                return;
+            }
             selected_packages.push($(this).val());
         });
-        console.log(selected_packages);
         unique = selected_packages.filter(function(value, index, ctx) {
             return index == selected_packages.indexOf(value);
         });
@@ -320,6 +331,9 @@ jQuery(function(){
         var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
          newline.find('input[type=text]').val('');
          newline.find('textarea').val('');
+         newline.find('select').val(null);
+//         newline.find('select option:first').attr('selected', 'selected');
+
 
          newline.find('.removeShare').click(function(){
             if (jQuery('.removeShare').length > 1)
@@ -364,11 +378,16 @@ jQuery(function(){
                     }
                     
                     jQuery('select[name*=sub_packages]').replaceOptions(package_list);
+                    default_option = jQuery('<option value="" disabled selected></option>').text(<?php print json_encode(_T('Select a package', 'pkgs')); ?>); 
+                    jQuery('select[name*=sub_packages]').prepend(default_option);
                 }
         );
         
         
     }); 
+    default_option = jQuery('<option value="" disabled selected></option>').text('Select a package'); 
+    jQuery('select[name*=sub_packages]').prepend(default_option);
+
     
 });   
    
