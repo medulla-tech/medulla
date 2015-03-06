@@ -1858,8 +1858,7 @@ class Inventory(DyngroupDatabaseHelper):
                 actif = True
 
             ## line two comments deleted 
-            if line.startswith('#'):
-               #self.logger.debug('comment %s' % (line))            
+            if line.startswith('#'):        
                continue
             try:
                 ## The first column may contain the quoted entity list
@@ -1870,7 +1869,6 @@ class Inventory(DyngroupDatabaseHelper):
                     rule = m.group(2)
                 else:
                     entities, rule = line.split(None, 1)
-                #self.logger.debug('entities %s rule %s' % (entities,rule))      
                 ## rule line working on severals entity 
                 entitieslist = entities.split(',')
                 entitieslist1 = [x for x in entitieslist if re.match('^[a-zA-Z0-9]{3,64}$', x)]
@@ -1878,10 +1876,7 @@ class Inventory(DyngroupDatabaseHelper):
                 entitiesNoExist = list(set(entitieslist1) - set(entitieslist))
                 if len(entitiesNoExist) != 0:
                     self.logger.debug('entities %s not exist ' % (entitiesNoExist))
-                #entitieslist = [x for x in entitieslist if re.match('^[a-zA-Z0-9\/]{3,64}$', x)]
-                #entitieslist = [x for x in entitieslist if self.locationExistsbypath(x)] 
                 # list empty  
-                #self.logger.debug('list entity nb %d'%len(entitieslist) )
                 if len(entitieslist) <= 0: #not entitieslist:# and 
                     self.logger.debug('empty list entity')
                     continue
@@ -1889,14 +1884,6 @@ class Inventory(DyngroupDatabaseHelper):
                 # check rules
                 # colonne 2 operator  EMPTY or AND or OR
                 words = rule.split()
-                
-                ###rule must be 4 or 5 Column     
-                #cols = line.split()
-                #self.logger.debug('rule nb cols %d' % (len(cols)))
-                #if len(cols) != 4 or len(cols) != 5:
-                    #self.logger.debug('not rule legal ignored %s' % (line))     
-                    #continue
-                
                 prefix = 'none'
                 subexprs = []
                 if not words or ( len(words) < 3) :
@@ -1912,12 +1899,8 @@ class Inventory(DyngroupDatabaseHelper):
                 else:    
                     self.logger.debug('operator error in rule')
                     continue
-                    
-                #self.logger.debug('test sur word %s ' % words)
                 operand1, operator, operand2 = words[0:3]
                 operator = operator.lower()
-                #self.logger.debug('operator %s test match' % (operator))
-                #self.logger.debug('operatorstab %s ' % (operatorstab))
                 if operator.strip() in operatorstab:
                     # TODO: Maybe check operand1 value
                     if operator.strip() in operatorlist:
@@ -1999,11 +1982,8 @@ class Inventory(DyngroupDatabaseHelper):
         return Location['data'][0]['Label']
 
     def addEntityRule(self, ruleobj):
-        #self.logger.debug('add Rule %s' % (ruleobj))
         nblignerule = len(ruleobj['target_location'])
         ref = self.parse_file_rule()
-        #self.logger.debug('ref %s' % (ref))
-        
         idrule=int(ruleobj['numRuleadd'])
         supprime=[]
         ajusteindex=[]

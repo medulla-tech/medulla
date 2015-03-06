@@ -26,8 +26,7 @@
 require_once("modules/inventory/includes/xmlrpc.php");
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-// recupere id
-// Array ( [module] => inventory [submod] => inventory [action] => EditEntity [id] => 2 [Label] => dede [Labelval] => root -> dede [mod] => )
+
 $ID = intval(@max($_GET['id'],$_POST['id']));
 $NAME = $_GET['Label'];
 $PARENTID = intval(@max($_GET['parentId'],$_POST['parentId']));

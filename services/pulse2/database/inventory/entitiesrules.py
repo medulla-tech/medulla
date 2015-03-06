@@ -32,10 +32,6 @@ class EntitiesRules:
     """
     Class for object that computes an inventory entity list according to a
     computer inventory and rules.
-    
-plugins/inventory/provisioning_plugins/network_to_entity/__init__.py:44:class NetworkRules(EntitiesRules):
-
-
     It allows the inventory server to assign a computer to an entity.
     """
 
@@ -43,7 +39,6 @@ plugins/inventory/provisioning_plugins/network_to_entity/__init__.py:44:class Ne
         self.logger = logging.getLogger()
         self.conf = conffile
         self.rules = []
-        #self.operators = ['match']
         self.operators =["match","equal","noequal","contains","nocontains","starts","finishes"]
         self._readRulesFile()
 
@@ -111,7 +106,6 @@ plugins/inventory/provisioning_plugins/network_to_entity/__init__.py:44:class Ne
         """
         Return the values of the given parameter from input, or an empty list
         if no value found.
-
         In this implementation, input must be the inventory of a computer (i.e.
         a dict with all inventory components)
         """
@@ -190,7 +184,6 @@ plugins/inventory/provisioning_plugins/network_to_entity/__init__.py:44:class Ne
 
 
 class DefaultEntityRules:
-
     """
     This default class assign all computers to the same entity.
     """

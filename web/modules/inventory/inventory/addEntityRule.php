@@ -21,7 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 require_once("modules/inventory/includes/xmlrpc.php");
 require_once("modules/inventory/includes/addentityrule.inc.php");
 require("modules/base/computers/localSidebar.php");
@@ -55,7 +55,7 @@ $params = array(
 
 if (isset($_GET["filter"]) && $_GET["filter"])
     $params['filters']= $_GET["filter"];
- 
+
 // Receiving form data
 if (isset($_POST['bconfirm'])){
     if (!isset($_GET['numRule'])){
