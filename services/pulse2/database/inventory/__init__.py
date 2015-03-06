@@ -34,18 +34,22 @@ from mmc.database.utilities import DbObject # pyflakes.ignore
 from mmc.database.database_helper import DatabaseHelper, DBObj # pyflakes.ignore
 from pulse2.database.inventory.mapping import OcsMapping
 from pulse2.utils import same_network, Singleton, isUUID
-
+from mmc.site import mmcconfdir
+from pulse2.utils import checkEntityName
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
         Integer, ForeignKey, or_, desc, func, not_, distinct
 from sqlalchemy.orm import create_session, mapper
 import sqlalchemy.databases
-
+from lxml import etree 
 import datetime
 import re
 import logging
+import os
 
+ 
+
+from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 MAX_REQ_NUM = 100
-
 
 class UserTable(object):
     pass
@@ -95,7 +99,6 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Initialize all SQLalchemy mappers needed for the inventory database
         """
-
         self.table = {}
         self.klass = {}
         self.version = Table("Version", self.metadata, autoload = True)
@@ -476,7 +479,6 @@ class Inventory(DyngroupDatabaseHelper):
             return self.optimizedQuery(ctx, filt)
         else:
             result = self.getMachinesOnly(ctx, filt)
-
         tables = self.config.content
         if len(tables) == 1 and "Registry" in tables:
             # The inventory to display is to be taken from the same Registry
@@ -1027,13 +1029,6 @@ class Inventory(DyngroupDatabaseHelper):
         if len(owners) > 0:
             # the most frequent occurence of user
             return max(owners, key=owners.get)
-
-
-
-
-
-
-
 
 
 
@@ -1636,7 +1631,6 @@ class Inventory(DyngroupDatabaseHelper):
     def createEntity(self, name, parent_name = False):
         """
         Create a new entity under parent entity
-
         If parent_name is False the parent will be the root entity
         """
         session = create_session()
@@ -1653,10 +1647,407 @@ class Inventory(DyngroupDatabaseHelper):
                     raise Exception("Parent entity %s doesn't exists" % parent_name)
                 else:
                     e.parentId = p.id
-
             session.add(e)
             session.flush()
         session.close()
+
+    def createLocation(self, name, parent_name):
+        """
+        Create a new location under parent entity
+        If parent_name is False the parent will be the root entity
+        """
+        session = create_session()
+        e = self.klass['Entity']()
+        e.Label = name
+        e.parentId = parent_name
+        session.add(e)
+        session.flush()
+        session.close()
+        return True
+
+    def deleteEntities(self, id, Label, parentId):
+        self.logger.debug('deleteEntities regle %s' % (id))
+        session = create_session()
+        session.query(self.klass['Entity']).filter_by(id = id).delete()
+        f = session.query(self.klass['Entity']).filter_by(parentId = id).all()
+        for i in f:
+            i.parentId = parentId
+        session.flush()
+
+    def updateEntities(self, id, name):
+        """
+        update Label entity
+        """
+        session = create_session()
+        try:
+            e = session.query(self.klass['Entity']).filter_by(id = id).one()
+            e.Label = name
+            session.flush()
+        except Exception:
+            raise Exception("entity id %s doesn't exists" % id)
+        session.close()
+
+    def search_label_parent(self, labeltab, idlabel):
+        for index in range(len(labeltab)):
+            if labeltab[index]["id"] == idlabel :
+                return index
+        return -1
+
+    def getLocationAll(self, params=None):
+        """
+        get entity and return path entity
+        """
+        if params == None:
+            params={'min':0,'filters':'' }
+        session = create_session()
+        val=session.query(self.klass['Entity']).order_by(self.table['Entity'].c.id)
+        maxi=0
+        tab=[]
+        tabretour=[]
+        for i in val:
+            ref={}
+            ref["parentId"] = i.parentId
+            ref["Label"] = i.Label
+            ref["id"] = i.id
+            ref['parentidval']=i.parentId
+            ref["Labelval"] = i.Label
+            tab.append(ref)
+        for index in range(len(tab)):
+            if tab[index]['id'] != tab[index]['parentidval']:
+                indexpa = self.search_label_parent(tab, tab[index]['parentidval'])
+                if indexpa != -1 :
+                    tab[index]['Labelval']="%s -> %s"%(tab[indexpa]['Labelval'],tab[index]['Labelval'])
+        if params['filters'] and str(params['filters']).strip() != "":
+            for index in range(len(tab)):
+                if str(params['filters']).strip() in tab[index]['Labelval'].strip():
+                    tabretour.append(tab[index])
+        else:
+            tabretour=tab
+        try:
+            params['max']
+        except KeyError:
+            params['max'] = str(len(tabretour)+1) 
+        ref1={}
+        ref1['count']=len(tabretour)
+        ref1['data']=tabretour[int(params['min']):int(params['max'])]
+        return ref1
+
+    def moveEntityRuleUp(self, idrule):        
+        idrule1 = int(idrule)
+        newNumRule = idrule1 - 1
+        if (idrule1 -1) <= 0:
+            return False
+        ref = self.parse_file_rule()
+        nb_regle = ref['nb_regle']
+        nb_ligne = ref['count']
+        for index in range(0, nb_ligne):
+            numRule = int(ref['data'][index]['numRule'])
+            if numRule == idrule1:
+                ref['data'][index]['numRule']=newNumRule
+            if numRule == newNumRule:
+                ref['data'][index]['numRule']=idrule1
+        #save objet orderby numrule
+        self.rewritte_file_rule_obj(ref)
+        return True
+
+    def moveEntityRuleDown(self, idrule):
+        idrule1 = int(idrule)
+        newNumRule = int(idrule1) + 1
+        ref = self.parse_file_rule()
+        nb_regle = int(ref['nb_regle'])
+        nb_ligne = int(ref['count'])
+        if (idrule1 + 1) > nb_regle:
+            return False
+        for index in range(0, nb_ligne)[::-1]:
+            numRule = int(ref['data'][index]['numRule'])
+            if numRule == idrule1:
+                ref['data'][index]['numRule']=newNumRule
+            if numRule == newNumRule:
+                ref['data'][index]['numRule']=idrule1
+        self.rewritte_file_rule_obj(ref)
+        return True
+
+    def confFileRule(self):
+        cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
+        config = Pulse2OcsserverConfigParser()
+        config.setup(cfgfile) 
+        if not config.entities_rules_file:
+            logging.getLogger().warn("Error conf file  entities_rules_file in inventory-server.ini missing")
+            raise 
+        if not os.path.isfile(config.entities_rules_file):
+            fichier = open(config.entities_rules_file, "w")
+            fichier.close()
+        return config.entities_rules_file
+
+    def rewritte_file_rule_obj(self, ref):
+        conffile = self.confFileRule()
+        fichier = open(conffile, "w")
+        for index in range(0, ref['nb_regle']):
+            for index1 in range(0, ref['count']):
+                if int(ref['data'][index1]['numRule']) == index+1:
+                    if not ref['data'][index]['actif']:
+                        actif="#"
+                    else:
+                        actif=""
+                    fichier.write("#@%d" % (index+1) + "\n")
+                    
+                    strstring= "%s\"%s\"   %s   %s   %s   %s" % (actif,
+                                                     ref['data'][index1]['entitie'], 
+                                                     ref['data'][index1]['aggregator'],
+                                                     ref['data'][index1]['operand1'],  
+                                                     ref['data'][index1]['operator'],
+                                                     ref['data'][index1]['operand2'])
+                    fichier.write(strstring + "\n")
+        fichier.close()
+
+    def operatorTagAll(self):
+        listType=["Network/IP"]
+        cfgfile = os.path.join(mmcconfdir,"pulse2","inventory-server","inventory-server.ini")
+        config = Pulse2OcsserverConfigParser()
+        config.setup(cfgfile)
+        listma = []
+        for ttt in config.rules_matching:
+            key,value = ttt
+            listmalist =  value.split(",")
+            listType.extend(listmalist)
+        return listType
+
+
+    def operatorType(self):
+        listType=[]
+        OcsNGMapXml = mmcconfdir + "/pulse2/inventory-server/OcsNGMap.xml"
+        tree = etree.parse(OcsNGMapXml)
+        for MappedObject in tree.xpath("/MappedFields/MappedObject"):
+            listType.append( MappedObject.get("name"))
+        return listType
+
+    def operatorTag(self,MappedObject):
+        listTag=[]
+        OcsNGMapXml= mmcconfdir + "/pulse2/inventory-server/OcsNGMap.xml"
+        tree = etree.parse(OcsNGMapXml)
+        for MappedField in tree.xpath("/MappedFields/MappedObject[@name='"+MappedObject+"']/MappedField"):
+            listTag.append(MappedField.get("to"))
+        return listTag
+
+    def parse_file_rule(self, param=None ):
+        operatorstab = ['match']
+        rulestab = []
+        tabretour=[]
+        operatorlist=["match","equal","noequal","contains","nocontains","starts","finishes"]
+        #conffile = mmcconfdir + '/pulse2/inventory-server/entities-rules'        
+        actif = False
+        tab=[]
+        ret={}
+        conffile =  self.confFileRule()
+        num = 0
+
+        for line in file(conffile):
+            line = line.replace('\t',' ')
+            line = line.strip()          
+            #line empty ignored 
+            if not line.strip():
+                continue
+            #line comment actif
+            if line.startswith('#@'):
+                num = int(line[2:])-1
+                continue
+            if line.startswith('#'):
+                actif = False
+                line=line[1:]
+            else:
+                actif = True
+
+            ## line two comments deleted 
+            if line.startswith('#'):
+               #self.logger.debug('comment %s' % (line))            
+               continue
+            try:
+                ## The first column may contain the quoted entity list
+                m = re.search('^"(.+)"\W+(.*)$', line)
+
+                if m:
+                    entities = m.group(1)
+                    rule = m.group(2)
+                else:
+                    entities, rule = line.split(None, 1)
+                #self.logger.debug('entities %s rule %s' % (entities,rule))      
+                ## rule line working on severals entity 
+                entitieslist = entities.split(',')
+                entitieslist1 = [x for x in entitieslist if re.match('^[a-zA-Z0-9]{3,64}$', x)]
+                entitieslist = [x for x in entitieslist1 if self.locationExists(x)]
+                entitiesNoExist = list(set(entitieslist1) - set(entitieslist))
+                if len(entitiesNoExist) != 0:
+                    self.logger.debug('entities %s not exist ' % (entitiesNoExist))
+                #entitieslist = [x for x in entitieslist if re.match('^[a-zA-Z0-9\/]{3,64}$', x)]
+                #entitieslist = [x for x in entitieslist if self.locationExistsbypath(x)] 
+                # list empty  
+                #self.logger.debug('list entity nb %d'%len(entitieslist) )
+                if len(entitieslist) <= 0: #not entitieslist:# and 
+                    self.logger.debug('empty list entity')
+                    continue
+
+                # check rules
+                # colonne 2 operator  EMPTY or AND or OR
+                words = rule.split()
+                
+                ###rule must be 4 or 5 Column     
+                #cols = line.split()
+                #self.logger.debug('rule nb cols %d' % (len(cols)))
+                #if len(cols) != 4 or len(cols) != 5:
+                    #self.logger.debug('not rule legal ignored %s' % (line))     
+                    #continue
+                
+                prefix = 'none'
+                subexprs = []
+                if not words or ( len(words) < 3) :
+                    self.logger.debug('line mal former')
+                    # line mal former                 
+                    continue
+                
+                if len(words) == 4 and words[0].lower() in ['and', 'or']:
+                    prefix = words[0].lower()
+                    words = words[1:]
+                elif len(words) == 3 :
+                    prefix = ""
+                else:    
+                    self.logger.debug('operator error in rule')
+                    continue
+                    
+                #self.logger.debug('test sur word %s ' % words)
+                operand1, operator, operand2 = words[0:3]
+                operator = operator.lower()
+                #self.logger.debug('operator %s test match' % (operator))
+                #self.logger.debug('operatorstab %s ' % (operatorstab))
+                if operator.strip() in operatorstab:
+                    # TODO: Maybe check operand1 value
+                    if operator.strip() in operatorlist:
+                        if operator.strip() == 'match':
+                            #verify regexp compile
+                            try:
+                                regexp = re.compile(operand2)
+                                #self.logger.debug("compile regexp :  %s ok" % (operand2) )
+                            except Exception:
+                                #self.logger.debug("no compile regexp %s" % (operator) )
+                                continue
+                    else:
+                        self.logger.debug("Operator %s is not supported for rule, skipping" % (operator) )
+                        continue
+                num = num + 1
+                for ent in entitieslist:
+                    ref={}
+                    ref['numRule'] = num
+                    ref['entitie'] = ent
+                    ref['aggregator']=prefix
+                    ref['operand1']=operand1
+                    ref['operator']=operator
+                    ref['operand2']=operand2
+                    ref['actif']=actif
+                    tab.append(ref)
+            except Exception:
+                self.logger.debug("exception on %s rule"% (line) )
+                pass
+
+        if param != None and ['filters'] and str(param['filters']).strip() != "":
+            for index in range(len(tab)):
+                if str(param['filters']).strip() in tab[index]['entitie'].strip():
+                    tabretour.append(tab[index])
+        else:
+            tabretour=tab
+        ret['count'] = len(tabretour)
+        ret['nb_regle']  = num
+        if param != None:
+            param['max'] = str(len(tabretour)+1)
+            ret['data']  = tabretour[int(param['min']):int(param['max'])]
+            return ret
+        else:
+            ret['data']  = tabretour
+            return ret
+
+    def deleteEntityRule(self, idrule):
+        self.logger.debug('delete Rule %s' % (idrule))
+        supprime=[]
+        ajusteindex=[]
+        ref = self.parse_file_rule()
+        nb_regle = int(ref['nb_regle'])
+        nb_ligne = int(ref['count'])
+        if int(idrule) > (nb_regle): 
+            return False
+        for index in range(0, nb_ligne):
+            numRule = int(ref['data'][index]['numRule'])
+            if numRule == int(idrule):
+                supprime.append(index)
+                
+            elif numRule > int(idrule):
+                ajusteindex.append(index)
+                self.logger.debug('ajusteindex %s' % (index))
+        for val in ajusteindex:
+            ref['data'][val]['numRule'] = int(ref['data'][val]['numRule'] -1)
+        for val in supprime[::-1]:
+            self.logger.debug('delete ligne %s' % (index))
+            del ref['data'][val]
+        ref['nb_regle']=ref['nb_regle']-1
+        ref['count']=ref['count']-len(supprime)
+        self.rewritte_file_rule_obj(ref)
+        return True
+
+    def getNameIdentityById(self, id):
+        Location = self.getLocationAll(None)
+        for val in Location['data']:
+            if str(val['id']) ==  id:
+                return val['Label']
+                #return val['Labelval'].replace(' -> ', '/')
+        return Location['data'][0]['Label']
+
+    def addEntityRule(self, ruleobj):
+        #self.logger.debug('add Rule %s' % (ruleobj))
+        nblignerule = len(ruleobj['target_location'])
+        ref = self.parse_file_rule()
+        #self.logger.debug('ref %s' % (ref))
+        
+        idrule=int(ruleobj['numRuleadd'])
+        supprime=[]
+        ajusteindex=[]
+        nb_regle = int(ref['nb_regle'])
+        nb_ligne = int(ref['count'])
+        numreglemodifier = int(ruleobj['numRuleadd'])
+        #if numreglemodifier < 
+        for index in range(0, nb_ligne):
+            self.logger.debug('nb_ligne %d index %d numero de rule%d ' % (nb_ligne,index,int(ref['data'][index]['numRule'])))
+            numRule = int(ref['data'][index]['numRule'])
+            if numRule == int(idrule):
+                supprime.append(index)
+                self.logger.debug('supprime line %s' % (valindex))
+        for val in supprime[::-1]:
+            del ref['data'][val]
+            self.logger.debug('supprime line %s' % (val))
+        self.logger.debug('nb_ligne %d nb_ligne %d' % (nb_ligne,nb_ligne - len(supprime)))    
+        nb_ligne = nb_ligne - len(supprime)
+        #insere dans liste new regle
+        for index in range (0, nblignerule):
+            ref1={}
+            ref1['operand1'] = ruleobj['operator'][index]
+            ref1['operand2'] = ruleobj['patterns'][index]
+            ref1['entitie'] = self.getNameIdentityById(str(ruleobj['target_location'][index]))
+            ref1['aggregator'] = ruleobj['aggregator'].lower()
+            ref1['operator'] = ruleobj['operators'][index]
+            try:
+                if ruleobj['active']:
+                    active = True
+                else:
+                    active = False
+            except:
+                active = False
+            ref1['actif'] = active
+            ref1['numRule'] = int(ruleobj['numRuleadd'])
+            ref['data'].append(ref1)
+            
+            self.logger.debug('add %s' % (ref1))   
+        ref['count'] = nb_ligne + nblignerule
+        numreglemodifier = int(ruleobj['numRuleadd'])
+        if numreglemodifier > nb_regle :       
+            ref['nb_regle']=int(ref['nb_regle'])+1
+        self.rewritte_file_rule_obj(ref)
+        return True
 
     def locationExists(self, location):
         """
@@ -1670,6 +2061,18 @@ class Inventory(DyngroupDatabaseHelper):
             ret = False
         session.close()
         return ret
+
+    def locationExistsbypath(self, location):
+        """
+        Returns true if the given location exists in database
+        """
+        location.replace(' -> ', '/')
+        locationobj = self.getLocationAll(None)
+        for val in locationobj['data']:
+            if val['Labelval'] ==  location:
+                return True
+        return False
+
 
     @DatabaseHelper._session
     def getMachineByOsLike(self, session, ctx, osnames, count = 0):
@@ -1962,6 +2365,7 @@ class Inventory(DyngroupDatabaseHelper):
                 ens.append(toUUID(str(q.id)))
         session.close()
         return ens
+
 
     def getLocationParentPath(self, loc_uuid):
         """
@@ -2619,6 +3023,9 @@ class InventoryCreator(Inventory):
             k = i+k
         if k == 0:
             return False
+        
+        
+        
         dates = date.split(' ')
         if len(dates) != 2:
             # Fix needed for MAC OS OCS inventory agent, which is using a
@@ -2922,5 +3329,7 @@ class InventoryNetworkComplete :
         @rtype: dict
         """
         return self._inventory
+
+
 
 

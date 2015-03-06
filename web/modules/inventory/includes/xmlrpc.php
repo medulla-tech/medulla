@@ -109,4 +109,56 @@ function getMachineByOwner($user) {
 function getReport($uuid,$lang){
     return xmlCall("inventory.getReport", array($uuid,$lang));
 }
+
+function getLocationAll($params) {
+    return xmlCall("inventory.getLocationAll",array($params));
+}
+
+function updateEntities($id,$name) {
+    return xmlCall("inventory.updateEntities",array($id,$name));
+}
+
+function createLocation($name, $parent_name){
+    return xmlCall("inventory.createLocation",array($name, $parent_name));
+}
+
+function deleteEntities($id, $Label, $parentId){
+    return xmlCall("inventory.deleteEntities",array($id, $Label, $parentId));
+}
+
+function parse_file_rule($params){
+    return xmlCall("inventory.parse_file_rule",array($params));
+}
+
+// function rewritte_file_rule(){
+//     return xmlCall("inventory.rewritte_file_rule",array());
+// }
+
+function moveEntityRuleDown($idrule){
+    return xmlCall("inventory.moveEntityRuleDown",array($idrule));
+}
+
+function moveEntityRuleUp($idrule){
+    return xmlCall("inventory.moveEntityRuleUp",array($idrule));
+}
+
+function  operatorType(){
+    return xmlCall("inventory.operatorType",array());
+}
+
+function  operatorTag($MappedObject){
+    return xmlCall("inventory.operatorTag",array($MappedObject));
+}
+
+function  operatorTagAll(){
+    return xmlCall("inventory.operatorTagAll",array());
+}
+
+function addEntityRule($ruleobj){
+    return xmlCall("inventory.addEntityRule",array($ruleobj));
+}
+
+function deleteEntityRule($idrule){
+    return xmlCall("inventory.deleteEntityRule",array($idrule));
+}
 ?>

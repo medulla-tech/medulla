@@ -66,6 +66,41 @@ class InventoryLocation(ComputerLocationI):
     def getLocationName(self, loc_uuid):
         return Inventory().getLocationName(loc_uuid)
 
+    def getLocationAll(self, params):
+        return Inventory().getLocationAll(params)
+
+    def updateEntities(self, id, name):
+        return Inventory().updateEntities(id, name)
+
+    def createLocation(self, name, parent_name):
+        return Inventory().createLocation(name, parent_name)
+
+    def deleteEntities(self, id, Label, parentId):
+        return Inventory().deleteEntities( id, Label, parentId)
+
+    def parse_file_rule(self, param):
+        return Inventory().parse_file_rule(param)
+
+    def moveEntityRuleDown(self, idrule):
+        return Inventory().moveEntityRuleDown( idrule)
+
+    def moveEntityRuleUp(self, idrule):
+        return Inventory().moveEntityRuleUp( idrule)
+
+    def operatorType(self):
+        return Inventory().operatorType()
+
+    def operatorTag(self,MappedObject):
+        return Inventory().operatorTag(MappedObject)
+
+    def operatorTagAll(self):
+        return Inventory().operatorTagAll()
+
+    def addEntityRule(self, ruleobj):
+        return Inventory().addEntityRule(ruleobj)
+
+    def deleteEntityRule(self, idrule):
+        return Inventory().deleteEntityRule(idrule)
 
 def convertLocations(hloc):
     location = hloc[0]

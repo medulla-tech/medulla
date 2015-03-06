@@ -133,7 +133,8 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.default_entity = self.cp.get('main', 'default_entity')
         if self.cp.has_option('main', 'entities_rules_file'):
             self.entities_rules_file = self.cp.get('main', 'entities_rules_file')
-
+        if self.cp.has_section('RulesMatching'):
+            self.rules_matching = self.cp.items('RulesMatching')
         if self.cp.has_option('main', 'hostname'):
             path = self.cp.get("main", "hostname").split('|')
             self.hostname = path[0].split('/')

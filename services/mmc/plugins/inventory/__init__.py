@@ -268,3 +268,39 @@ def getLicensesCount(vendor, software, version):
                                                      vendor=vendor,
                                                      version=version,
                                                      count=1))
+
+def getLocationAll(params):
+    return InventoryLocation().getLocationAll(params)
+
+def updateEntities(id, name):
+    return InventoryLocation().updateEntities(id, name)
+
+def createLocation(name, parent_name):
+    return InventoryLocation().createLocation(name, parent_name)
+
+def deleteEntities(id, Label, parentId):
+    return InventoryLocation().deleteEntities(id, Label, parentId)
+
+def parse_file_rule(param):
+    return InventoryLocation().parse_file_rule(param)
+
+def moveEntityRuleDown(idrule):
+    return InventoryLocation().moveEntityRuleDown(idrule)
+
+def moveEntityRuleUp(idrule):
+    return InventoryLocation().moveEntityRuleUp(idrule)
+
+def operatorType():
+    return InventoryLocation().operatorType()
+
+def operatorTag(MappedObject):
+    return InventoryLocation().operatorTag(MappedObject)
+
+def operatorTagAll():
+    return InventoryLocation().operatorTagAll()
+
+def addEntityRule(ruleobj):
+    return InventoryLocation().addEntityRule(ruleobj)
+
+def deleteEntityRule(idrule):
+    return InventoryLocation().deleteEntityRule(idrule)
