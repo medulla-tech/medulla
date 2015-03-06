@@ -108,11 +108,6 @@ class OcsMapping(Singleton):
         """
         Parse the given XML string which is the content of a OCS inventory.
         """
-        #pour debug
-        Fichier = open('/root/PMC.xml','r')
-        xmltext = Fichier.read()
-        Fichier.close()
-        
         self.logger = logging.getLogger()
         xml = None
         try:
