@@ -67,6 +67,39 @@ posixclientdata = agents.conf \
 		agent/pulse2agent/vpn.py
 
 installernsi = agent/win32/installer.nsi \
+	       agent/win32/customoptions.ini \
+	       agent/win32/artwork/header.bmp \
+	       agent/win32/artwork/uninstall.ico \
+	       agent/win32/artwork/wizard.bmp \
+	       agent/win32/artwork/install.ico \
+	       agent/win32/libs/StrRep.nsh \
+	       agent/win32/libs/ReplaceInFile.nsh \
+	       agent/win32/libs/VersionCompare.nsh \
+	       agent/win32/libs/InstallOptionsMacro.nsh \
+               agent/win32/bin/cx_Logging.pyd \
+               agent/win32/bin/_hashlib.pyd \
+               agent/win32/bin/win32api.pyd \
+               agent/win32/bin/unicodedata.pyd \
+               agent/win32/bin/MSVCR90.dll \
+               agent/win32/bin/select.pyd \
+               agent/win32/bin/Microsoft.VC90.CRT.manifest \
+               agent/win32/bin/pythoncom27.dll \
+               agent/win32/bin/msvcm90.dll \
+               agent/win32/bin/win32pipe.pyd \
+               agent/win32/bin/pulse2agent.ini \
+               agent/win32/bin/python27.dll \
+               agent/win32/bin/service.exe \
+               agent/win32/bin/msvcp90.dll \
+               agent/win32/bin/_ssl.pyd \
+               agent/win32/bin/library.zip \
+               agent/win32/bin/bz2.pyd \
+               agent/win32/bin/pywintypes27.dll \
+               agent/win32/bin/win32evtlog.pyd \
+               agent/win32/bin/mfc90.dll \
+               agent/win32/bin/pyexpat.pyd \
+               agent/win32/bin/_socket.pyd \
+               agent/win32/bin/win32ui.pyd \
+	       agent/win32/plugins/services.dll \
 	       vpn/softether/softether-installer.nsi
 
 installerdata = \

@@ -44,9 +44,9 @@ Var /GLOBAL PULSE2_VPN_FQDN
 
 Var /GLOBAL SOFTETHER_FOLDER_NAME
 ; Default values for PULSE2_CM
-!define DEFAULT_PULSE2_CM_SERVER "10.0.0.1"
+!define DEFAULT_PULSE2_CM_SERVER "@@pulse_fqdn@@"
 !define DEFAULT_PULSE2_CM_PORT "8443"
-!define DEFAULT_PULSE2_VPN_FQDN "smart-pulse.vpn"
+!define DEFAULT_PULSE2_VPN_FQDN "@@pulse_public_fqdn@@"
 
 ; Service name (from the Windows view)
 !define WINSVCNAME "pulse2-agent"
