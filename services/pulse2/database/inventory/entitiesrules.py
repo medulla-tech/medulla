@@ -94,7 +94,7 @@ class EntitiesRules:
             except Exception:
                 self.logger.error("Error while reading this rule: %s" % line)
                 raise
-   
+
     def reload_file_rule(self):
         self.rules = []
         self._readRulesFile()

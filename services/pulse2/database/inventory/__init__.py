@@ -46,7 +46,7 @@ import re
 import logging
 import os
 
- 
+
 
 from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 MAX_REQ_NUM = 100

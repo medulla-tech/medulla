@@ -40,7 +40,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
         @rtype: list
         """
         return [ "Bios", "BootDisk", "BootGeneral", "BootMem", "BootPart", "BootPCI", "Controller", "Custom", "Drive", "Hardware", "Input", "Memory", "Modem", "Monitor", "Network", "Port", "Printer", "Slot", "Software", "Sound", "Storage", "VideoCard", "Registry", "Entity", "InventoryDebugLog" ]
-           
+
     def getInventoryNoms(self, table = None):
         """
         @return: Return all available nomenclatures tables
@@ -55,7 +55,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
         if noms.has_key(table):
             return noms[table]
         return None
- 
+
 class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
     list = {
             'Software/ProductName':['string'],
