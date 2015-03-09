@@ -110,7 +110,7 @@ $f->add(
     new TrFormElement(_T("Active", "inventory"), new CheckboxTpl('active')), array("value" => ($rule[0]['actif'] == 1 ? 'checked' : ''))
 );
 
-$selectOperatorType=new SelectItemtitle("operator[]",_T('selection from this item','inventory')."\n".);
+$selectOperatorType=new SelectItemtitle("operator[]",_T('selection from this item','inventory')."\n");
 $selectOperatorType->setElements($operatorType);
 $selectOperatorType->setElementsVal($operatorType);
 
