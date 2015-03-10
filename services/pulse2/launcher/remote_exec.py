@@ -292,7 +292,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote pull (rsyncproxy/sync) failed for CoH #%d" % command_id)
             return result
-
+ 
     logging.getLogger().warn("Remote pull failed for CoH #%d" % command_id)
     return None
 
@@ -405,7 +405,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote delete (ssh/sync) failed for CoH #%d" % command_id)
             return result
-    logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id)
+    logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_exec(command_id, client, command, wrapper_timeout):
@@ -489,7 +489,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
             if not result :
                 logging.getLogger().warn("Remote exec (ssh/sync) failed for CoH #%d" % command_id)
             return result
-    logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id)
+    logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_quickaction(command_id, client, command, wrapper_timeout):
@@ -507,7 +507,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
         # command is issued though our wrapper, time to build it
 
         if not LauncherConfig().is_ssh_available:
-            logging.getLogger().warn("Can't do remote quickaction because ssh is not available")
+            logging.getLogger().warn("Can't do remote quickaction because ssh is not available") 
             return False
 
         # Built "thru" command
@@ -753,10 +753,10 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
                 env_=envir
             )
             if not result :
-                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id)
+                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id) 
             return result
 
-    logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id)
+    logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id) 
     return None
 
 def sync_remote_reboot(command_id, client, wrapper_timeout):
@@ -830,7 +830,7 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
             )
             if not result :
                 logging.getLogger().warn("Remote boot (ssh/async) failed for CoH #%d" % command_id)
-            return result
+            return result 
         elif mode == 'sync':
             result = pulse2.launcher.process_control.commandRunner(
                 command_list,
@@ -915,7 +915,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
             )
             if not result :
                 logging.getLogger().warn("Remote halt (ssh/async) failed for CoH #%d" % command_id)
-            return result
+            return result  
         elif mode == 'sync':
             result = pulse2.launcher.process_control.commandRunner(
                 command_list,

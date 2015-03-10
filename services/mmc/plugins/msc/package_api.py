@@ -182,10 +182,7 @@ class SendBundleCommand:
             else:
                 params['do_wol'] = 'off'
 
-            # If is an empty Package, avoid file uploading
-            if 'size' in pinfos:
-                if pinfos['size'] == 0 :
-                    pinfos['files'] = None
+
             # override possible choice of do_reboot from the gui by the one declared in the package
             # (in bundle mode, the gui does not offer enough choice to say when to reboot)
             params['do_reboot'] = pinfos['do_reboot']
@@ -198,7 +195,7 @@ class SendBundleCommand:
             command['order_in_bundle'] = order
             command['proxies'] = self.proxies
             command['fk_bundle'] = bundle.id
-            command['do_windows_update'] = "disable"
+            command['do_windows_update'] = "disable" 
             commands.append(command)
         add = MscDatabase().addCommands(self.ctx, self.session, self.targets, commands, self.gid)
         if type(add) != int:
@@ -339,12 +336,12 @@ class SendPackageCommand:
         if self.pid != None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
-
+        
         # If is an empty Package, avoid file uploading
         if 'size' in self.pinfos:
             if self.pinfos['size'] == 0 :
                 self.pinfos['files'] = None
-
+        
         # Prepare command parameters for database insertion
         cmd = prepareCommand(self.pinfos, self.params)
 
@@ -633,21 +630,10 @@ class GetPackagesAdvanced:
                 self.packages.extend(packages)
         # Apply filter if wanted
         try:
-            if 'bundle' in self.filt:
-                if self.filt['bundle'] == 1:
-                    self.packages = [p for p in self.packages if p[0]['sub_packages']]
-                else:
-                    self.packages = [p for p in self.packages if not p[0]['sub_packages']]
-            
-            if 'entity_id' in self.filt and MscConfig().web_def_entity_filtering:
-                self.packages = [p for p in self.packages if p[0]['entity_id'] == self.filt['entity_id']]    
             if self.filt['filter']:
                 self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
         except KeyError:
             pass
-        try:
-            # Sort on the mirror order then on the label, and finally on the version number
-            self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
-        except Exception, e:
-            logging.getLogger().warning('Cannot sort packages: %s', str(e))
+        # Sort on the mirror order then on the label, and finally on the version number
+        self.packages.sort(lambda x, y: 10*cmp(x[1], y[1]) + 5*cmp(x[0]['label'], y[0]['label']) + cmp(x[0]['version'], y[0]['version']))
         self.deferred.callback(self.packages)

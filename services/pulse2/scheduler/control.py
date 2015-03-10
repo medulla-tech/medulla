@@ -478,14 +478,12 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                                                                  launchers[0])
                     self.logger.debug("Circuit #%s: assigned launcher <%s>" %
                             (circuit.id, launchers[0]))
-                    launcher = launchers[0]
                 else:
                     launcher = self.config.launchers.keys()[0]
                     circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
                                                                  launcher)
                     self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" %
                                   (launcher, circuit.id))
-            circuit.cohq.coh.setCurrentLauncher(launcher)
             circuits.append(circuit)
         return circuits
 

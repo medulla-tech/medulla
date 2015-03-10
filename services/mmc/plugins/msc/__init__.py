@@ -215,33 +215,11 @@ class RpcProxy(RpcProxyI):
     ##
     # machines
     ##
-
-    # this dictionnary contains all received IP addresses of machines
-    # sending its heartbeat to CM.
-    #
-    # format : {UUID: IP,}
-    # TODO - this solution is temporary, better to stock all IPs
-    # in the 'target' table.
-    ip_table = {}
-
-    def get_ip(self, uuid):
-        if uuid in self.ip_table:
-            return self.ip_table[uuid]
-        else:
-            return False
-
     def getMachine(self, params):
         ctx = self.currentContext
         return xmlrpcCleanup2(Machines().getMachine(ctx, params))
 
     def scheduler_choose_client_ip(self, scheduler, uuid):
-        if uuid in self.ip_table:
-            ip = self.ip_table[uuid]
-            logging.getLogger().debug('IP address for %s found: %s' % (uuid, ip))
-            return ip
-        else:
-            logging.getLogger().warn('IP address for %s not received yet from CM' % (uuid))
-
         ctx = self.currentContext
         computer = ComputerManager().getComputer(ctx, {'uuid': uuid}, True)
         network = computer[1]
@@ -344,12 +322,6 @@ class RpcProxy(RpcProxyI):
         return (len(result), result[start:end])
 
     def pa_adv_getAllPackages(self, filt, start, end):
-        ctx = self.currentContext
-        locations = ComputerLocationManager().getUserLocations(ctx.userid)
-        # Get root location for the user
-        root_location_id = locations[0]['uuid'].replace('UUID', '')
-        filt['entity_id'] = root_location_id
-
         start = int(start)
         end = int(end)
         ctx = self.currentContext
@@ -506,38 +478,6 @@ class RpcProxy(RpcProxyI):
 
         return d
 
-
-    def delete_bundle(self, bundle_id):
-        """
-        Deletes a bundle with all related sub-elements.
-
-        @param bundle_id: Bundle id
-        @type bundle_id: int
-        """
-        return MscDatabase().deleteBundle(bundle_id)
-
-
-    def delete_command(self, cmd_id):
-        """
-        Deletes a command with all related sub-elements.
-
-        @param cmd_id: Commands id
-        @type cmd_id: int
-        """
-        return MscDatabase().deleteCommand(cmd_id)
-
-
-    def delete_command_on_host(self, coh_id):
-        """
-        Deletes a command on host with all related sub-elements.
-
-        @param coh_id: CommandsOnHost id
-        @type coh_id: int
-        """
-        return MscDatabase().deleteCommandOnHost(coh_id)
-
-
-
     def is_pull_target(self, uuid):
         """
         Returns True if the machine is a known pull client
@@ -586,22 +526,6 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ComputerManager().getComputerByHostnameAndMacs(ctx,
                                                                             hostname,
                                                                             macs))
-    def update_target_ip(self, uuid, ip, netmask):
-        """
-        Updates IP address of all records according to UUID.
-
-        @param uuid: UUID of machine
-        @type uuid: str
-
-        @param ip: actualized IP address of machine
-        @type ip: str
-
-        @param netmask: actualized netmask of machine
-        @type netmask: str
-        """
-        self.ip_table[uuid] = ip
-        return xmlrpcCleanup(MscDatabase().updateTargetIP(uuid, ip, netmask))
-
 
     def checkLightPullCommands(self, uuid):
         """
@@ -693,11 +617,6 @@ class RpcProxy(RpcProxyI):
     def get_target_for_coh(self, coh_id):
         ctx = self.currentContext
         return xmlrpcCleanup2(MscDatabase().getTargetForCoh(ctx, coh_id))
-
-    def get_targets_for_coh(self, coh_ids):
-        ctx = self.currentContext
-        result = MscDatabase().getTargetsForCoh(ctx, coh_ids)
-        return [xmlrpcCleanup2(x) for x in result]
 
     def get_commands_history(self, coh_id):
         ctx = self.currentContext
@@ -852,9 +771,6 @@ class RpcProxy(RpcProxyI):
 
     def get_web_def_attempts_per_day(self):
         return xmlrpcCleanup(MscConfig().web_def_attempts_per_day)
-
-    def get_web_def_allow_delete(self):
-        return xmlrpcCleanup(MscConfig().web_def_allow_delete)
 
 
 ##

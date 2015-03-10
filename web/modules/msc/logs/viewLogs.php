@@ -261,7 +261,7 @@ if (strlen($_GET['uuid'])) {
 
     function refresh_page() {
         // If we find a loading image, we refresh after 3 seconds
-        if (jQuery('img[alt="running"]').length != 0) {
+        if (jQuery('img[alt="WORK_IN_PROGRESS"]').length != 0) {
             // Reload the page
             window.location.reload();
             setTimeout('refresh_page();', 5000);

@@ -321,9 +321,7 @@ function getPhaseLabels() {
         'reboot' => _T('Restart', 'msc'),
         'halt' => _T('Shutdown', 'msc'),
         'pre_menu' => _T('Before bootmenu actions', 'msc'),
-	'post_menu' => _T('After bootmenu actions', 'msc'),
-	'unlock_reboot' => _T('Unlock & Reboot','msc'),
-	'lock_reboot' => _T('Lock & Reboot','msc'),
+        'post_menu' => _T('After bootmenu actions', 'msc'),
         'done' => _T('Finish', 'msc')
     );
 }

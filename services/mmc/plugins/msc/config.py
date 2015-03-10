@@ -70,7 +70,6 @@ class MscConfig(MscDatabaseConfig):
     sa_localcert = ""
 
     # WEB interface stuff
-    web_def_entity_filtering = False
     web_def_awake = 0
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_inventory = 1
@@ -101,9 +100,6 @@ class MscConfig(MscDatabaseConfig):
     web_def_max_clients_per_proxy = 10
     web_def_proxy_number = 2
     web_def_proxy_selection_mode = "semi_auto"
-
-    # Allow to delete commands and bundles from audit
-    web_def_allow_delete = False
 
     # VNC applet behavior
     web_vnc_show_icon = True
@@ -153,7 +149,6 @@ class MscConfig(MscDatabaseConfig):
 
     # Windows Update command
     wu_command = "/usr/share/pulse-update-manager/pulse-update-manager"
-    unlock_lock_phase = False
 
     def init(self, name, conffile = None):
         self.name = name
@@ -217,10 +212,6 @@ class MscConfig(MscDatabaseConfig):
         if self.cp.has_option("msc", "wu_command"):
             self.wu_command = self.cp.get("msc", "wu_command")
 
-        if self.cp.has_option("msc", "unlock_lock_phase"):
-            self.unlock_lock_phase = self.cp.getboolean("msc", "unlock_lock_phase")
-
-
 
         for section in self.cp.sections():
             if re.compile("^scheduler_[0-9]+$").match(section):
@@ -263,8 +254,6 @@ class MscConfig(MscDatabaseConfig):
                             raise Exception('I need at least Python Twisted 2.5 to handle peer checking')
 
         # some default web interface values
-        if self.cp.has_option("web", "web_def_entity_filtering"):
-            self.web_def_entity_filtering = self.cp.getint("web", "web_def_entity_filtering")
         if self.cp.has_option("web", "web_def_awake"):
             self.web_def_awake = self.cp.getint("web", "web_def_awake")
         if self.cp.has_option("web", "web_def_date_fmt"):
@@ -320,10 +309,6 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_coh_life_time = self.cp.getint("web", "web_def_coh_life_time")
         if self.cp.has_option("web", "web_def_attempts_per_day"):
             self.web_def_proxy_selection_mode = self.cp.get("web", "web_def_attempts_per_day")
-
-        # Allow to delete commands and bundles from audit
-        if self.cp.has_option("web", "web_def_allow_delete"):
-            self.web_def_allow_delete = self.cp.get("web", "web_def_allow_delete")
 
         # VNC stuff
         if self.cp.has_option("web", "vnc_show_icon"):

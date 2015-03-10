@@ -371,7 +371,8 @@ class AjaxFilterCommands extends AjaxFilter {
         <form name="Form" id="<?php print $this->formid; ?>" action="#" onsubmit="return false;">
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
-            <div id="searchBest">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
+                &nbsp;
                 <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch<?php echo $this->divid; ?>();
                         return false;" />
                     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
@@ -395,29 +396,10 @@ class AjaxFilterCommands extends AjaxFilter {
                         <label for="cbx_overtimed" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Overtime', 'msc')); ?></label>
                         <input type="checkbox" name="cbx_state[]" id="cbx_stopped" value="stopped" style="top: 2px; left: 5px; position: relative; float: left" />
                         <label for="cbx_stopped" style="padding: 7px 10px; position: relative; float: left"><?php print(_T('Stopped', 'msc')); ?></label>
-                        <input type="hidden" name="create_group" value="" />
-                        <br/>
-                        <div style="margin:2px 7px -5px 5px" align="right">
-                            <input id="btnCreateGroup"  type="button" value="<?php print _T('Create a group'); ?>" class="btnPrimary">
-                        </div>
-                        <script type="text/javascript">
-                            var $ = jQuery;
-                            $(function() {
-                                $('#btnCreateGroup').click(function(){
-                                    var create_group_field = $(this).parents('form:first').find('input[name=create_group]');
-                                    create_group_field.val('1');
-                                    pushSearch<?php echo $this->divid; ?>();
-                                    setTimeout(function(){
-                                        create_group_field.val('');
-                                    }, 1000);
-                                });
-                            });
-                        </script>
                     </span>
                     <!-- </form> -->
                 <?php } ?>
 
-            </div>
             </div>
 
             <script type="text/javascript">
@@ -549,6 +531,7 @@ class AjaxFilterCommandsStates extends AjaxFilter {
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
             <div id="searchSpan" class="searchbox" style="float: right;">
+                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
 
                 <span class="searchfield">
                     <?php

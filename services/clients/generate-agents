@@ -1013,19 +1013,19 @@ if __name__ == "__main__":
         pgen = PackagesGenerator(inventory_url, tag)
         pgen.generate_all()
 
-    if "cm-host" in kwargs:
-        cm_host = kwargs["cm-host"]
-    else:
-        cm_host = inv.host
+    #if "cm-host" in kwargs:
+    #    cm_host = kwargs["cm-host"]
+    #else:
+    #    cm_host = inv.host
 
-    if "cm-port" in kwargs:
-        cm_port = kwargs["cm-port"]
-    else:
-        cm_port = "8443" # TODO - check it in cm.ini
+    #if "cm-port" in kwargs:
+    #    cm_port = kwargs["cm-port"]
+    #else:
+    #    cm_port = "8443" # TODO - check it in cm.ini
 
-    BuildSoftEtherClient()
-    sm = SmartAgentPrepare(cm_host, cm_port)
-    sys.exit(sm.set_all())
+    #BuildSoftEtherClient()
+    #sm = SmartAgentPrepare(cm_host, cm_port)
+    #sys.exit(sm.set_all())
 
 
 
