@@ -234,7 +234,6 @@ class CommandsOnHost(object):
         return {
             'id': self.id,
             'fk_commands': self.fk_commands,
-            'fk_target' : self.fk_target,
             'host': self.host,
             'start_date': self.start_date,
             'end_date': self.end_date,
