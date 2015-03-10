@@ -100,7 +100,7 @@ class SchedulerConfig(object):
     mode = 'async'
     password = 'password'
     port = 8000
-    resolv_order = ['fqdn', 'shortname', 'netbios', 'ip', 'first']
+    resolv_order = ['ip', 'fqdn', 'shortname', 'netbios', 'first']
     preferred_network = [(None, None)]
     netbios_path = "/usr/bin/nmblookup"
     scheduler_path = '/usr/sbin/pulse2-scheduler'
