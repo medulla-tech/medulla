@@ -95,8 +95,55 @@ function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
 }
 
+function get_targets_for_coh($coh_ids) {
+    return xmlCall('msc.get_targets_for_coh', array($coh_ids));
+}
+
 function displayLogs($params) {
-    return xmlCall('msc.displayLogs', array($params));
+
+    $result1 = xmlCall('msc.displayLogs', array($params));
+
+    if (!empty($_GET['create_group'])){
+
+        // Small hack to include all pages
+        $params['min'] = 0;
+        $params['max'] = 9999999;
+
+        $result = xmlCall('msc.displayLogs', array($params));
+
+        require_once("modules/dyngroup/includes/dyngroup.php");
+        require_once("modules/dyngroup/includes/xmlrpc.php");
+
+        
+        // Group name
+        $cmd_name = $result[1][0][0]['title'];
+        $groupname = sprintf (_T("%s deployment subgroup - %s", "msc"), $cmd_name, date("Y-m-d H:i:s"));
+
+        // Creating group with displayLogs result filter
+        $coh_ids = array();
+        foreach ($result[1] as $entry){
+            $coh_ids[] = $entry[3]['id'];
+        }
+
+        $targets = get_targets_for_coh($coh_ids);
+
+        // Adding group members
+        $groupmembers = array();
+        foreach ($targets as $target) {
+            $uuid = $target['target_uuid'];
+            $cn = $target['target_name'];
+            $groupmembers["$uuid##$cn"] = array('hostname' => $cn, 'uuid' => $uuid);
+        }
+
+        $group = new Group();
+        $group->create($groupname, False);
+        $group->addMembers($groupmembers);
+
+        $link = urlStrRedirect("base/computers/display", array('gid'=>$group->id));
+        new NotifyWidgetSuccess(sprintf(_T('Deploy subgroup created successfully. <br/><a href="%s" target="_blank">View group</a>', "msc"), $link));
+    }
+
+    return $result1;
 }
 
 function setCommandsFilter($param) {
@@ -208,6 +255,15 @@ function extend_command($cmd_id, $start_date, $end_date) {
  */
 function expire_all_package_commands($pid) {
     return xmlCall('msc.expire_all_package_commands', array($pid));
+}
+function delete_bundle($id) {
+    return xmlCall('msc.delete_bundle', array($id));
+}
+function delete_command($id) {
+    return xmlCall('msc.delete_command', array($id));
+}
+function delete_command_on_host($id) {
+    return xmlCall('msc.delete_command_on_host', array($id));
 }
 
 ?>
