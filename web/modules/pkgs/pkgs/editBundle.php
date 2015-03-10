@@ -385,8 +385,12 @@ jQuery(function(){
         
         
     }); 
-    default_option = jQuery('<option value="" disabled selected></option>').text('Select a package'); 
-    jQuery('select[name*=sub_packages]').prepend(default_option);
+    default_option = jQuery('<option value="" disabled></option>').text('Select a package'); 
+    selected_default_option = jQuery('<option value="" disabled selected></option>').text('Select a package'); 
+    if (jQuery('select[name*=sub_packages]').length < 2)
+        jQuery('select[name*=sub_packages]').prepend(selected_default_option);
+    else
+        jQuery('select[name*=sub_packages]').prepend(default_option);
 
     
 });   
