@@ -630,8 +630,12 @@ class GetPackagesAdvanced:
                 self.packages.extend(packages)
         # Apply filter if wanted
         try:
-            if self.filt['filter']:
-                self.packages = filter(lambda p: re.search(self.filt['filter'], p[0]['label'], re.I), self.packages)
+            if 'bundle' in self.filt:
+                if self.filt['bundle'] == 1:
+                    self.packages = [p for p in self.packages if p[0]['sub_packages']]
+                else:
+                    self.packages = [p for p in self.packages if not p[0]['sub_packages']]
+
         except KeyError:
             pass
         # Sort on the mirror order then on the label, and finally on the version number
