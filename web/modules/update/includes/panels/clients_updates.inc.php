@@ -28,7 +28,7 @@ $options = array(
     "id" => "updateclient",
     "refresh" => 14400,
     "title" => _("Clients Update"),
-    "enable" => TRUE
+    "enable" => FALSE
 );
 
 class ClientUpdatePanel extends Panel {
