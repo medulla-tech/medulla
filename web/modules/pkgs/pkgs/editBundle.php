@@ -232,13 +232,14 @@ for ($i = 0 ; $i < count($package['sub_packages']) ; $i++) {
     );
     
     $f->add(
-        new TrFormElement(_T('Folder','pkgs'), new multifieldTpl($fields)),
+        new TrFormElement(_T('Package','pkgs') . " (" . ($i+1) . ')', new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
 }
+print '<script type="text/javascript">window.pkg_count = ' . $i . ';</script>';
 
 // Add Share button
-$addShareBtn = new buttonTpl('addShare',_T('Add folder','pkgs'));
+$addShareBtn = new buttonTpl('addShare',_T('Add bundle','pkgs'));
 $addShareBtn->setClass('btnPrimary');
 $f->add(
     new TrFormElement('', $addShareBtn),
@@ -263,7 +264,7 @@ $f->display();
 jQuery(function(){
     
     var $ = jQuery;
-    $('input[name*=sub_packages]').hide();
+    //$('input[name*=sub_packages]').hide();
 
     // Function to populate select from list
     (function($, window) {
@@ -320,24 +321,32 @@ jQuery(function(){
         
      // Remove Share button
      jQuery('.removeShare').click(function(){
-         if (jQuery('.removeShare').length > 1)
+         if (jQuery('.removeShare').length > 1){
              jQuery(this).parents('tr:first').remove();
+             window.pkg_count--;
+         }
      });
      
      
      // Add Share button
-     jQuery('#addShare').click(function(){
+    jQuery('#addShare').click(function(){
+        window.pkg_count = window.pkg_count || 1;
         shareLine = jQuery('.removeShare:first').parents('tr:first').clone();
         var newline = shareLine.clone().insertBefore(jQuery(this).parents('tr:first'));
          newline.find('input[type=text]').val('');
          newline.find('textarea').val('');
          newline.find('select').val(null);
+         var label = newline.find('td.label');
+         window.pkg_count++;
+         label.text(label.text().replace('(1)', '(' + window.pkg_count + ')'))
 //         newline.find('select option:first').attr('selected', 'selected');
 
 
          newline.find('.removeShare').click(function(){
-            if (jQuery('.removeShare').length > 1)
+            if (jQuery('.removeShare').length > 1){
                 jQuery(this).parents('tr:first').remove();
+                window.pkg_count--;
+            }
         });
      });
      
