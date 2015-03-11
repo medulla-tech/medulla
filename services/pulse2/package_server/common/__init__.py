@@ -514,9 +514,21 @@ class Common(pulse2.utils.Singleton):
 
                 package_index += 1
                 sub_pid = sub_pkg['pid']
-                condition = sub_pkg['condition']
-                condition = condition # for avoid pyflakes, to be used later
+                condition = sub_pkg['condition'].strip()
+
+                # Converting condition to bash friendly syntax
+                condition = re.sub('(\d+)',
+                        lambda g: ' ( RC' + g.group(0) + ' == 0 ) ',
+                        condition )
+
                 sub_package = self.packages[sub_pid]
+
+                # Init the return code to 1
+                bundle_command.append('RC%d=1' % package_index)
+
+                # If condition isnt empty add the if statement
+                if condition:
+                    bundle_command.append('if (( %s )); then' % condition)
 
                 # Generating command for this sub_package
                 bundle_command.append('mkdir %s' % sub_pid)
@@ -527,6 +539,9 @@ class Common(pulse2.utils.Singleton):
                 bundle_command.append('bash %s.sh' % sub_pid)
                 bundle_command.append('RC%d=$?' % package_index)
                 bundle_command.append('cd ..')
+
+                if condition:
+                    bundle_command.append('fi')
 
 
                 # Generating zip file for package
@@ -539,7 +554,7 @@ class Common(pulse2.utils.Singleton):
                         continue
 
                     zip.write(os.path.join(path, sub_pid, __file.name), __file.name)
-                    zip.writestr(sub_pid + '.sh', sub_package.cmd.command)
+                zip.writestr(sub_pid + '.sh', sub_package.cmd.command)
 
                 zip.close()
 
