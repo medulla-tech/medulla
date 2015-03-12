@@ -279,7 +279,9 @@ if ($proxyActive) {
 
             connection_attemps++;
             
-            // By default, use the host and port of server that served this file
+	    // By default, use the host and port of server that served this file
+	    // We can use $_SERVER['SERVER_ADDR'] as host if launcher is on the same server
+	    // host = '<?php print $_SERVER['SERVER_ADDR']; ?>';
             host = '<?php print $host; ?>';
             port = '<?php print $port; ?>';
 
