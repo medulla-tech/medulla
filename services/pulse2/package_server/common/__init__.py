@@ -554,7 +554,7 @@ class Common(pulse2.utils.Singleton):
                         continue
 
                     zip.write(os.path.join(path, sub_pid, __file.name), __file.name)
-                zip.writestr(sub_pid + '.sh', sub_package.cmd.command)
+                zip.writestr(sub_pid + '.sh', sub_package.cmd.command.encode('utf8', 'ignore'))
 
                 zip.close()
 
