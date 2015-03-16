@@ -41,7 +41,7 @@ from pulse2.launcher.config import LauncherConfig
 from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
 @HasSufficientMemory(80)
-def commandRunner(cmd, cbCommandEnd):
+def commandRunner(cmd, cbCommandEnd, env_={}):
     """
     Return a Deferred resulting in the stdout output of a shell command.
     Only used in sync mode.
@@ -53,7 +53,7 @@ def commandRunner(cmd, cbCommandEnd):
             process,
             cmd[0],
             map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
-            None, # env
+            env_, # env
             None, # path
             None, # uid
             None, # gid
@@ -69,7 +69,7 @@ def commandRunner(cmd, cbCommandEnd):
     return process.deferred
 
 @HasSufficientMemory(80)
-def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind):
+def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind, env_={}):
     """
     """
     if ProcessList().existsProcess(id):
@@ -82,19 +82,17 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
 
     process = commandProtocol(cmd)
     process.id = id
+
+    # If ssh args found on env and its a list join it
+    if 'SSHARGS' in env_ and isinstance(env_['SSHARGS'], list):
+        env_['SSHARGS'] = ' '.join(env_['SSHARGS'])
+
     # FIXME: codec should be taken from conf file
     try:
         process.handler = twisted.internet.reactor.spawnProcess(
             process,
             cmd[0],
-            map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
-            None, # env
-            None, # path
-            None, # uid
-            None, # gid
-            None, # usePTY
-            { 1: 'r', 2: 'r' } # FDs: closing STDIN as not used
-        )
+            map(lambda(x): x.encode('utf-8', 'ignore'), cmd), env=env_, childFDs={ 1: 'r', 2: 'r' })
     except OSError, e:
         logging.getLogger().error('launcher %s: failed daemonization in commandForker: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
         # do some cleanup

@@ -392,7 +392,7 @@ except twisted.python.usage.UsageError, errortext:
     print '%s: Try --help for usage details.' % (sys.argv[0])
     sys.exit(PULSE2_WRAPPER_ERROR_FAILURE)
 
-purged_env = {} # hold "secured" env vars
+purged_env = os.environ # hold "secured" env vars
 
 # catch ssh-agent auth socket if available for further usage
 if os.getenv('SSH_AUTH_SOCK'):
