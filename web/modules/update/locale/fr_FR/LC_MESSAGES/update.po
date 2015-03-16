@@ -1,52 +1,112 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 #   <acecile@mandriva.com>, 2013, 2014.
 #   <ibelahmar@mandriva.com>, 2014.
 #   <jcvassort@mandriva.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-16 01:00+0100\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2015-03-12 19:00+0100\n"
 "PO-Revision-Date: 2015-02-02 16:44+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/fr_FR/)\n"
-"Language: fr_FR\n"
+"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/pulse2/team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/update/update/viewGroupUpdates.php:50
-#, php-format
-msgid "%s's group update manager"
-msgstr ""
+#: modules/update/includes/panels/product_updates.inc.php:30
+#: modules/update/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "Mises à jour"
 
-#: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
-#: modules/update/update/viewGroupUpdates.php:51
-msgid "All updates"
-msgstr "Toutes les mises à jour"
-
-#: modules/update/includes/panels/clients_updates.inc.php:42
 #: modules/update/includes/panels/product_updates.inc.php:43
+#: modules/update/includes/panels/clients_updates.inc.php:42
 msgid "An error occured while fetching updates"
 msgstr "Une erreur s'est produite lors de la récupération des mises à jour"
 
-#: modules/update/update/viewUpdates.php:52
-msgid "Available"
-msgstr "Disponible"
+#: modules/update/includes/panels/product_updates.inc.php:47
+#: modules/update/includes/panels/clients_updates.inc.php:45
+msgid "View updates"
+msgstr "Voir les mises à jour"
+
+#: modules/update/includes/panels/product_updates.inc.php:48
+msgid "Install updates"
+msgstr "Installer les mises à jour"
+
+#: modules/update/includes/panels/product_updates.inc.php:54
+#: modules/update/includes/panels/clients_updates.inc.php:50
+msgid "No updates available."
+msgstr "Aucune maj disponible."
+
+#: modules/update/includes/panels/product_updates.inc.php:56
+#: modules/update/includes/panels/clients_updates.inc.php:52
+msgid "updates available."
+msgstr "mise(s) à jour disponible(s)"
+
+#: modules/update/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:64
+msgid "Up-to-date"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:65
+msgid "Updates planned"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:66
+msgid "Updates availables"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:67
+msgid "OS Update disabled"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:68
+msgid "Not registered"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:69
+msgid "Not Supported"
+msgstr ""
+
+#: modules/update/includes/panels/clients_updates.inc.php:92
+msgid "Create a group"
+msgstr ""
+
+#: modules/update/update/installProductUpdates.php:38
+msgid "Installing updates ..."
+msgstr "Installation des mises à jour..."
+
+#: modules/update/update/localSidebar.php:28
+msgid "Update managment"
+msgstr "Gestion des mises à jour"
+
+#: modules/update/update/sidebar.php:39
+#: modules/update/update/viewGroupUpdates.php:51
+#: modules/update/infoPackage.inc.php:41
+msgid "All updates"
+msgstr "Toutes les mises à jour"
+
+#: modules/update/update/sidebar.php:51 modules/update/infoPackage.inc.php:59
+msgid "Settings"
+msgstr "Paramètres"
 
 #: modules/update/update/viewProductUpdates.php:25
 #: modules/update/update/viewProductUpdates.php:51
 msgid "Available updates"
 msgstr "Maj disponibles"
 
-#: modules/update/includes/panels/clients_updates.inc.php:30
-msgid "Clients Update"
+#: modules/update/update/createUpdateStaticGroup.php:34
+#, php-format
+msgid "Machine %s at %s"
 msgstr ""
 
 #: modules/update/update/createUpdateStaticGroup.php:50
@@ -54,185 +114,127 @@ msgstr ""
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
-#: modules/update/includes/panels/clients_updates.inc.php:92
-msgid "Create a group"
+#: modules/update/update/viewGroupUpdates.php:47
+msgid "This group doesn't exist"
 msgstr ""
 
-#: modules/update/update/ajaxUpdates.php:121
-msgid "Disable"
-msgstr "Désactiver"
-
-#: modules/update/update/ajaxUpdates.php:140
-msgid "Disable selected updates"
-msgstr "Désactiver les maj"
-
-#: modules/update/update/disableUpdate.php:48
-msgid "Disable this update?"
-msgstr "Désactiver cette mise à jour?"
-
-#: modules/update/infoPackage.inc.php:55
-msgid "Disable update"
-msgstr "Désactiver la mise à jour"
-
-#: modules/update/update/viewUpdates.php:54
-msgid "Disabled"
-msgstr "Désactivée"
-
-#: modules/update/update/ajaxUpdates.php:117
-msgid "Enable"
-msgstr "Activer"
-
-#: modules/update/update/ajaxUpdates.php:139
-msgid "Enable selected updates"
-msgstr "Activer les maj"
-
-#: modules/update/update/enableUpdate.php:47
-msgid "Enable this update?"
-msgstr "Activer cette mise à jour?"
-
-#: modules/update/infoPackage.inc.php:51
-msgid "Enable update"
-msgstr "Activer la mise à jour"
-
-#: modules/update/update/settings.php:61
-msgid "Enable update managment for:"
-msgstr "Activer la gestion des mises à jour pour:"
-
-#: modules/update/update/viewUpdates.php:53
-msgid "Enabled"
-msgstr "Activée"
-
-#: modules/update/update/settings.php:79
-msgid "Force now"
-msgstr "Appliquer maintenant"
-
-#: modules/update/update/viewUpdates.php:50
-msgid "Hide installed update"
-msgstr ""
-
-#: modules/update/includes/panels/product_updates.inc.php:48
-msgid "Install updates"
-msgstr "Installer les mises à jour"
-
-#: modules/update/update/ajaxUpdates.php:114
-msgid "Installed count"
-msgstr "Nombre d'inst."
-
-#: modules/update/update/installProductUpdates.php:38
-msgid "Installing updates ..."
-msgstr "Installation des mises à jour..."
-
-#: modules/update/update/createUpdateStaticGroup.php:34
+#: modules/update/update/viewGroupUpdates.php:50
 #, php-format
-msgid "Machine %s at %s"
-msgstr ""
-
-#: modules/update/update/ajaxUpdates.php:71
-msgid "No entry found"
-msgstr "Aucune entrée trouvée"
-
-#: modules/update/includes/panels/clients_updates.inc.php:50
-#: modules/update/includes/panels/product_updates.inc.php:54
-msgid "No updates available."
-msgstr "Aucune maj disponible."
-
-#: modules/update/includes/panels/clients_updates.inc.php:69
-msgid "Not Supported"
+msgid "%s's group update manager"
 msgstr ""
 
 #: modules/update/update/viewGroupUpdates.php:64
 msgid "Not enough information"
 msgstr ""
 
-#: modules/update/includes/panels/clients_updates.inc.php:68
-msgid "Not registered"
-msgstr ""
+#: modules/update/update/disableUpdate.php:48
+msgid "Disable this update?"
+msgstr "Désactiver cette mise à jour?"
 
-#: modules/update/includes/panels/clients_updates.inc.php:67
-msgid "OS Update disabled"
-msgstr ""
+#: modules/update/update/enableUpdate.php:47
+msgid "Enable this update?"
+msgstr "Activer cette mise à jour?"
 
-#: modules/update/infoPackage.inc.php:69
-msgid "Product Updates installation"
-msgstr "Installation des maj du produit"
+#: modules/update/update/ajaxUpdates.php:71
+msgid "No entry found"
+msgstr "Aucune entrée trouvée"
 
-#: modules/update/infoPackage.inc.php:77
-msgid "Product Updates installation (ajax)"
-msgstr "Installation des maj du produit (ajax)"
-
-#: modules/update/infoPackage.inc.php:73
-msgid "Product Updates list"
-msgstr "Liste des maj du produit"
-
-#: modules/update/infoPackage.inc.php:59 modules/update/update/sidebar.php:51
-msgid "Settings"
-msgstr "Paramètres"
-
-#: modules/update/update/settings.php:46
-msgid "The update deployments scheduled successfully."
-msgstr ""
-
-#: modules/update/update/viewGroupUpdates.php:47
-msgid "This group doesn't exist"
-msgstr ""
+#: modules/update/update/ajaxUpdates.php:112
+msgid "Update title"
+msgstr "Nom de la mise à jour"
 
 #: modules/update/update/ajaxUpdates.php:113
 msgid "Type"
 msgstr "Type"
 
-#: modules/update/includes/panels/clients_updates.inc.php:64
-msgid "Up-to-date"
+#: modules/update/update/ajaxUpdates.php:114
+msgid "Installed count"
+msgstr "Nombre d'inst."
+
+#: modules/update/update/ajaxUpdates.php:117
+msgid "Enable"
+msgstr "Activer"
+
+#: modules/update/update/ajaxUpdates.php:121
+msgid "Disable"
+msgstr "Désactiver"
+
+#: modules/update/update/ajaxUpdates.php:139
+msgid "Enable selected updates"
+msgstr "Activer les maj"
+
+#: modules/update/update/ajaxUpdates.php:140
+msgid "Disable selected updates"
+msgstr "Désactiver les maj"
+
+#: modules/update/update/settings.php:46
+msgid "The update deployments scheduled successfully."
 msgstr ""
-
-#: modules/update/includes/panels/product_updates.inc.php:30
-#: modules/update/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr "Mises à jour"
-
-#: modules/update/infoPackage.inc.php:32
-#: modules/update/update/viewUpdates.php:37
-msgid "Update manager"
-msgstr "Gestionnaire de mises à jour"
-
-#: modules/update/update/localSidebar.php:28
-msgid "Update managment"
-msgstr "Gestion des mises à jour"
 
 #: modules/update/update/settings.php:56
 msgid "Update settings"
 msgstr "Paramètres des mises à jour"
 
-#: modules/update/update/ajaxUpdates.php:112
-msgid "Update title"
-msgstr "Nom de la mise à jour"
+#: modules/update/update/settings.php:61
+msgid "Enable update managment for:"
+msgstr "Activer la gestion des mises à jour pour:"
+
+#: modules/update/update/settings.php:77
+msgid "Updates deployment"
+msgstr "Déploiement des mises à jour"
+
+#: modules/update/update/settings.php:79
+msgid "Force now"
+msgstr "Appliquer maintenant"
+
+#: modules/update/update/viewUpdates.php:37
+#: modules/update/infoPackage.inc.php:32
+msgid "Update manager"
+msgstr "Gestionnaire de mises à jour"
+
+#: modules/update/update/viewUpdates.php:50
+msgid "Hide installed update"
+msgstr ""
+
+#: modules/update/update/viewUpdates.php:52
+msgid "Available"
+msgstr "Disponible"
+
+#: modules/update/update/viewUpdates.php:53
+msgid "Enabled"
+msgstr "Activée"
+
+#: modules/update/update/viewUpdates.php:54
+msgid "Disabled"
+msgstr "Désactivée"
 
 #: modules/update/infoPackage.inc.php:36 modules/update/infoPackage.inc.php:44
 #: modules/update/infoPackage.inc.php:88 modules/update/infoPackage.inc.php:93
 msgid "Updates"
 msgstr "Mises à jour"
 
-#: modules/update/includes/panels/clients_updates.inc.php:66
-msgid "Updates availables"
-msgstr ""
-
-#: modules/update/update/settings.php:77
-msgid "Updates deployment"
-msgstr "Déploiement des mises à jour"
-
 #: modules/update/infoPackage.inc.php:47
 msgid "Updates list"
 msgstr "Liste de mises à jour"
 
-#: modules/update/includes/panels/clients_updates.inc.php:65
-msgid "Updates planned"
-msgstr ""
+#: modules/update/infoPackage.inc.php:51
+msgid "Enable update"
+msgstr "Activer la mise à jour"
 
-#: modules/update/includes/panels/clients_updates.inc.php:45
-#: modules/update/includes/panels/product_updates.inc.php:47
-msgid "View updates"
-msgstr "Voir les mises à jour"
+#: modules/update/infoPackage.inc.php:55
+msgid "Disable update"
+msgstr "Désactiver la mise à jour"
 
-#: modules/update/includes/panels/clients_updates.inc.php:52
-#: modules/update/includes/panels/product_updates.inc.php:56
-msgid "updates available."
-msgstr "mise(s) à jour disponible(s)"
+#: modules/update/infoPackage.inc.php:69
+msgid "Product Updates installation"
+msgstr "Installation des maj du produit"
+
+#: modules/update/infoPackage.inc.php:73
+msgid "Product Updates list"
+msgstr "Liste des maj du produit"
+
+#: modules/update/infoPackage.inc.php:77
+msgid "Product Updates installation (ajax)"
+msgstr "Installation des maj du produit (ajax)"
+
+
