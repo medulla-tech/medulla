@@ -62,14 +62,14 @@ class Description(resource.Resource):
                     request.args.has_key('type') and request.args['type'] == description['type']:
                 style = 'selected'
 
-            body += "<tr class='mandriva "+style+"'><td class='mandriva "+style+"'>"+description['proto']+"://"+description['server']+":"+description['port']+description['mp']+"</td><td class='mandriva "+style+"'>"+description['type']+"</td>"
+            body += "<tr class='mandriva "+style+"'><td class='mandriva "+style+"'>"+description['proto']+"://"+description['server']+":"+str(description['port'])+description['mp']+"</td><td class='mandriva "+style+"'>"+description['type']+"</td>"
             try:
                 if description['type'] == 'mirror_files':
                     if not self.status[description['mp']]:
                         body += "<td class='mandriva "+style+"'>content</td>"
                         body += self.__down()
                     else:
-                        url = "?uri="+description['proto']+"://"+description['server']+":"+description['port']+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
+                        url = "?uri="+description['proto']+"://"+description['server']+":"+str(description['port'])+cgi.escape(description['mp'])+"&proto="+description['proto']+"&server="+description['server']+"&port="+str(description['port'])+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
                         serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                         body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href=\""+url+"\">content</a></td>"
                         body += self.__up()
@@ -79,7 +79,7 @@ class Description(resource.Resource):
                     # import xmlrpclib
                     # client = xmlrpclib.ServerProxy('%s://%s:%s%s'%(description['proto'], description['server'], str(description['port']), description['mp']))
                     # ret = client.getServerDetails()
-                    url = "?proto="+description['proto']+"&server="+description['server']+"&port="+description['port']+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
+                    url = "?proto="+description['proto']+"&server="+description['server']+"&port="+str(description['port'])+"&mp="+cgi.escape(description['mp'])+"&type="+description['type']
                     serverdetail[description['server']+':'+str(description['port'])+description['mp']] = url
                     body += "<td class='mandriva "+style+"'><a class='mandriva "+style+"' href='"+url+"'>details</a></td>"
                     body += self.__up()
