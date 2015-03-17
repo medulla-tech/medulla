@@ -532,8 +532,8 @@ class Common(Singleton):
 
 class ThreadedHTTPServer(ForkingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
-     request_queue_size = 10000
-     max_children = 10000
+    request_queue_size = 10000
+    max_children = 10000
 
 class InventoryGetService(Singleton):
     def initialise(self, config):
