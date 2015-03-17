@@ -37,7 +37,7 @@ import sys
 import imp
 import traceback
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
-from SocketServer import ThreadingMixIn
+from SocketServer import ThreadingMixIn, ForkingMixIn
 from threading import Thread, Semaphore
 import threading
 
@@ -530,8 +530,10 @@ class Common(Singleton):
         self.sem.release()
         return (deviceId, from_ip, content)
 
-class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+class ThreadedHTTPServer(ForkingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
+     request_queue_size = 10000
+     max_children = 10000
 
 class InventoryGetService(Singleton):
     def initialise(self, config):
@@ -602,7 +604,7 @@ class InventoryGetService(Singleton):
             server_class = SecureThreadedHTTPServer
             self.httpd = server_class(server_address, handler_class, self.config)
         else:
-            server_class = HTTPServer
+            #server_class = HTTPServer
             self.httpd = server_class(server_address, handler_class)
         if hasattr(self.httpd, 'daemon_threads'):
             self.httpd.daemon_threads = True
