@@ -31,7 +31,6 @@ from sets import Set
 import datetime
 import calendar, hashlib
 from configobj import ConfigObj
-from xmlrpclib import ProtocolError
 
 from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Integer, Date, ForeignKey, asc, or_, not_, desc, func, distinct
@@ -3731,45 +3730,17 @@ class Glpi084(DyngroupDatabaseHelper):
         session = create_session()
         id = fromUUID(uuid)
 
-        machine = session.query(Machine).filter(self.machine.c.id == id).first()
-
-        if machine:
-            webservice_ok = True
-            try:
-                self._get_webservices_client()
-            except ProtocolError, e:
-                webservice_ok = False
-            except Exception, e:
-                webservice_ok = False
-
-            if self.config.webservices['purge_machine']:
-                if webservice_ok:
-                    return self.purgeMachine(machine.id)
-                else:
-                    self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
-
-            connection = self.getDbConnection()
-            trans = connection.begin()
-            try:
-                machine.is_deleted = True
-            except Exception, e :
-                self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
-                session.flush()
-                session.close()
-                trans.rollback()
-
-                return False
-
+        try:
+            session.query(Machine).filter_by(id=id).delete()
+            session.commit()
             session.flush()
             session.close()
-            trans.commit()
             self.logger.debug("Machine (uuid=%s) successfully deleted" % uuid)
-
             return True
-
-        else:
+        except Exception, e:
+            self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
             return False
-
+       
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights=None):
         # User settings
