@@ -3667,9 +3667,13 @@ class Glpi08(DyngroupDatabaseHelper):
 
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights=None):
+        # Check if the user exits or not
+        try:
+            user = session.query(User).filter_by(name=username).one()
+        except NoResultFound:
+            user = User()
+            user.name = username
         # User settings
-        user = User()
-        user.name = username
         user.password = hashlib.sha1(password).hexdigest()
         user.firstname = ''
         user.realname = ''

@@ -3740,12 +3740,17 @@ class Glpi084(DyngroupDatabaseHelper):
         except Exception, e:
             self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
             return False
-       
+
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights=None):
+        # Check if the user exits or not
+        try:
+            user = session.query(User).filter_by(name=username).one()
+        except NoResultFound:
+            user = User()
+            user.name = username
+
         # User settings
-        user = User()
-        user.name = username
         user.password = hashlib.sha1(password).hexdigest()
         user.firstname = ''
         user.realname = ''
@@ -3793,7 +3798,7 @@ class Glpi084(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Location).filter_by(id=id).one()
@@ -3803,24 +3808,24 @@ class Glpi084(DyngroupDatabaseHelper):
         entity.level = parent_id
 
         entity = self.updateEntityCompleteName(entity)
-        
+
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def updateEntityCompleteName(self, session, entity):
         # Get parent entity object
         parent_entity = session.query(Location).filter_by(id=entity.entities_id).one()
         completename = parent_entity.completename + ' > ' + entity.name
         entity.completename = completename
-        
+
         # Update all children complete names
         children = session.query(Location).filter_by(entities_id=entity.id).all()
-        
+
         for item in children:
             self.updateEntityCompleteName(item)
-        
+
         return entity
 
     def removeEntity(self, entity_id):
@@ -3853,7 +3858,7 @@ class Glpi084(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def editLocation(self, session, id, name, parent_id, comment):
         location = session.query(Locations).filter_by(id=id).one()
@@ -3863,24 +3868,24 @@ class Glpi084(DyngroupDatabaseHelper):
         location.level = parent_id
 
         location = self.updateLocationCompleteName(location)
-        
+
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def updateLocationCompleteName(self, session, location):
         # Get parent location object
         parent_location = session.query(Locations).filter_by(id=location.locations_id).one()
         completename = parent_location.completename + ' > ' + location.name
         location.completename = completename
-        
+
         # Update all children complete names
         children = session.query(Locations).filter_by(locations_id=location.id).all()
-        
+
         for item in children:
             self.updateLocationCompleteName(item)
-        
+
         return location
 
     @DatabaseHelper._listinfo
