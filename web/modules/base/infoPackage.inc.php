@@ -325,6 +325,37 @@ if (hasComputerManagerWorking()) {
         $submod->addPage($page);
     }
 
+    if (in_array("inventory", $_SESSION["modulesList"])) {
+        $page = new Page("entityList", _T('Entities', 'inventory'));
+        $page->setFile("modules/inventory/inventory/entityList.php");
+        $submod->addPage($page);
+
+        $page = new Page("entityRules", _T('Entity rules', 'inventory'));
+        $page->setFile("modules/inventory/inventory/entityRules.php");
+        $submod->addPage($page);
+        
+        $page = new Page("addEntity", _T('Add entity', 'inventory'));
+        $page->setFile("modules/inventory/inventory/addEntity.php");
+        $submod->addPage($page);
+
+        $page = new Page("addEntityRule", _T('Add entity rule', 'inventory'));
+        $page->setFile("modules/inventory/inventory/addEntityRule.php");
+        $submod->addPage($page);
+
+        $page = new Page("deleteEntityRule", _T("Delete entity rule", "inventory"));
+        $page->setFile("modules/inventory/inventory/deleteEntityRule.php");
+        $page->setOptions(array("visible" => False, "noHeader" => True));
+        $submod->addPage($page);
+
+        $page = new Page("EditEntity", _T('Edit Entity', 'inventory'));
+        $page->setFile("modules/inventory/inventory/EditEntity.php");
+        $submod->addPage($page);
+        
+        $page = new Page("deleteEntity", _T('Delete Entity', 'inventory'));
+        $page->setFile("modules/inventory/inventory/deleteEntity.php");
+        $submod->addPage($page);
+    }
+    
     $page = new Page("get_file", _("Download inventory of one machine"));
     $page->setFile("modules/base/computers/get_file.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
