@@ -48,6 +48,10 @@ function web_def_inventory() {
     return __web_def_in_session_msc("inventory");
 }
 
+function web_def_reboot() {
+    return __web_def_in_session_msc("reboot");
+}
+
 function web_def_mode() {
     return __web_def_in_session_msc("mode");
 }

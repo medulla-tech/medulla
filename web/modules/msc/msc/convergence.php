@@ -116,7 +116,7 @@ else {
     $params["ltitle"] = _T('Convergence on ') . $name;
     $params["start_script"] = 'on';
     $params["clean_on_success"] = 'on';
-    $params["do_reboot"] = getPackageHasToReboot($p_api, $_GET["pid"]) == 1 ? 'on': '';
+    $params["do_reboot"] = (getPackageHasToReboot($p_api, $_GET["pid"]) == 1 || web_def_reboot() == 1) ? 'on': '';
     $params["do_wol"] = web_def_awake() == 1 ? 'on' : '';
     $params["do_inventory"] = web_def_inventory() == 1 ? 'on' : '';
     $params["maxbw"] = web_def_maxbw();

@@ -290,7 +290,7 @@ class RenderedMSCBundleSort extends RenderedMSCBundleSortParent {
         $f->add(new HiddenTpl("create_directory"),                      array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("start_script"),                          array("value" => 'on',                              "hide" => True));
         $f->add(new HiddenTpl("clean_on_success"),                      array("value" => 'on',                              "hide" => True));
-        $f->add(new HiddenTpl("do_reboot"),                             array("value" => '',                                "hide" => True));
+        $f->add(new HiddenTpl("do_reboot"),                             array("value" => web_def_reboot() ? "on" : ""));
         $f->add(new HiddenTpl("bundle_title"),                          array("value" => get_new_bundle_title(count($this->members)),"hide" => True));
         $f->add(new HiddenTpl("maxbw"),                                 array("value" => web_def_maxbw(),                   "hide" => True));
 	$f->add(new HiddenTpl("copy_mode"),                             array("value" => web_def_mode(),                    "hide" => True));

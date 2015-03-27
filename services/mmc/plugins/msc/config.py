@@ -74,6 +74,7 @@ class MscConfig(MscDatabaseConfig):
     web_def_awake = 0
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
     web_def_inventory = 1
+    web_def_reboot = 0
     web_def_mode = "push"
     web_force_mode = True
     web_def_maxbw = "0"
@@ -270,6 +271,8 @@ class MscConfig(MscDatabaseConfig):
             self.web_def_date_fmt = self.cp.get("web", "web_def_date_fmt")
         if self.cp.has_option("web", "web_def_inventory"):
             self.web_def_inventory = self.cp.getint("web", "web_def_inventory")
+        if self.cp.has_option("web", "web_def_reboot"):
+            self.web_def_reboot = self.cp.getint("web", "web_def_reboot")
         if self.cp.has_option("web", "web_def_mode"):
             self.web_def_mode = self.cp.get("web", "web_def_mode")
         if self.cp.has_option("web", "web_force_mode"):

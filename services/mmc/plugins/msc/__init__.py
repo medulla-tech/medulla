@@ -781,6 +781,9 @@ class RpcProxy(RpcProxyI):
     def get_web_def_inventory(self):
         return xmlrpcCleanup(MscConfig().web_def_inventory)
 
+    def get_web_def_reboot(self):
+        return xmlrpcCleanup(MscConfig().web_def_reboot)
+
     def get_web_def_mode(self):
         return xmlrpcCleanup(MscConfig().web_def_mode)
 
