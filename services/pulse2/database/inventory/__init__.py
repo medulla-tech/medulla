@@ -1992,15 +1992,12 @@ class Inventory(DyngroupDatabaseHelper):
         numreglemodifier = int(ruleobj['numRuleadd'])
         #if numreglemodifier < 
         for index in range(0, nb_ligne):
-            self.logger.debug('nb_ligne %d index %d numero de rule%d ' % (nb_ligne,index,int(ref['data'][index]['numRule'])))
             numRule = int(ref['data'][index]['numRule'])
             if numRule == int(idrule):
                 supprime.append(index)
-                self.logger.debug('supprime line %s' % (valindex))
         for val in supprime[::-1]:
             del ref['data'][val]
             self.logger.debug('supprime line %s' % (val))
-        self.logger.debug('nb_ligne %d nb_ligne %d' % (nb_ligne,nb_ligne - len(supprime)))    
         nb_ligne = nb_ligne - len(supprime)
         #insere dans liste new regle
         for index in range (0, nblignerule):

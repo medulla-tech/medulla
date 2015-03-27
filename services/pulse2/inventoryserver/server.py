@@ -36,6 +36,7 @@ import os
 import sys
 import imp
 import traceback
+import cPickle
 from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 from SocketServer import ThreadingMixIn, ForkingMixIn
 from threading import Thread, Semaphore
@@ -52,6 +53,13 @@ from pulse2.inventoryserver.utils import InventoryUtils, canDoInventory
 from pulse2.inventoryserver.scheduler import AttemptToScheduler
 from pulse2.inventoryserver.glpiproxy import GlpiProxy, resolveGlpiMachineUUIDByMAC, hasKnownOS
 
+def decosingleton(cls):
+    instances = {}
+    def getinstance():
+        if cls not in instances:
+            instances[cls] = cls()
+        return instances[cls]
+    return getinstance
 
 class InventoryServer:
     def log_message(self, format, *args):
@@ -126,9 +134,8 @@ class InventoryServer:
             self.logger.info("INVENTORY received from %s (DEVICEID: %s)" % (from_ip, deviceid))
             resp = '<?xml version="1.0" encoding="utf-8" ?><REPLY><RESPONSE>no_account_update</RESPONSE></REPLY>'
             Common().addInventory(deviceid, from_ip, cont)
-
         # Forwarding the inventories to GLPI (if enabled)
-        if self.config.enable_forward :
+        if self.config.enable_forward or self.config.enable_forward_ocsserver:
             self.glpi_forward(content, from_ip, query)
 
         self.send_response(200)
@@ -219,7 +226,7 @@ class InventoryServer:
                     glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
-                        self.logger.debug("<GlpiProxy> %s" % msg)
+                        self.logger.warn("<GlpiProxy> %s" % msg)
 
             # Not an INVENTORY request, forwarding anyway
             else:
@@ -228,7 +235,7 @@ class InventoryServer:
                 glpi_proxy = GlpiProxy(self.config.url_to_forward)
                 glpi_proxy.send(content)
                 for msg in glpi_proxy.result :
-                    self.logger.debug("<GlpiProxy> %s" % msg)
+                    self.logger.warn("<GlpiProxy> %s" % msg)
 
         except Exception, e :
             self.logger.error("<GlpiProxy> %s" % str(e))
@@ -312,7 +319,6 @@ class InventoryFix :
         return self._inventory
 
 
-
 class HttpInventoryServer(BaseHTTPServer.BaseHTTPRequestHandler, InventoryServer):
     def __init__(self, *args):
         self.logger = logging.getLogger()
@@ -383,7 +389,7 @@ class TreatInv(Thread):
             except Exception, exc :
                 self.logger.error("LightPull: An error occurred when trying to resolve UUID from GLPI: %s" % str(exc))
 
-        if self.config.enable_forward:
+        if self.config.enable_forward and not self.config.enable_forward_ocsserver:
             return False
 
         # Native case - inventory handling
@@ -489,7 +495,7 @@ class TreatInv(Thread):
             ret = None
             if isinstance(result, list) and len(result) == 2 :
                 # disabling light pull on GLPI mode when Pulse2 inventory creator is enabled
-                if not self.config.enable_forward :
+                if not self.config.enable_forward or self.config.enable_forward_ocsserver:
                     ret, machine_uuid = result
                     AttemptToScheduler(content, machine_uuid)
             else :
@@ -507,8 +513,10 @@ class TreatInv(Thread):
             self.logger.exception(e)
 
         return True
-
-class Common(Singleton):
+    
+##Singleton
+@decosingleton
+class Common():
     inventories = []
     sem = Semaphore()
     shutdownRequest = False
@@ -530,7 +538,12 @@ class Common(Singleton):
         self.sem.release()
         return (deviceId, from_ip, content)
 
-class ThreadedHTTPServer(ForkingMixIn, HTTPServer):
+class ThreadedHTTPServerFork(ForkingMixIn, HTTPServer):
+    """Handle requests in a separate thread."""
+    request_queue_size = 10000
+    max_children = 10000
+
+class ThreadedHTTPServerThread(ThreadingMixIn, HTTPServer):
     """Handle requests in a separate thread."""
     request_queue_size = 10000
     max_children = 10000
@@ -542,13 +555,12 @@ class InventoryGetService(Singleton):
         self.bind = config.bind
         self.port = int(config.port)
         self.config = config
-
         try:
             OcsMapping().initialize(self.xmlmapping)
         except IOError, e:
             self.logger.error(e)
             return False
-        if self.config.enable_forward:
+        if self.config.enable_forward and not self.config.enable_forward_ocsserver:
             return True
 
         try:
@@ -586,11 +598,10 @@ class InventoryGetService(Singleton):
 
         return True
 
-    def run(self, server_class=ThreadedHTTPServer, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
+    def run(self, server_class=ThreadedHTTPServerThread, handler_class=HttpInventoryServer): # by default launch a multithreaded server without ssl
         # Install SIGTERM handler
         signal.signal(signal.SIGTERM, self.handler)
         signal.signal(signal.SIGINT, self.handler)
-
         self.logger.debug("Start launching of treat inventory thread")
         self.treatinv = TreatInv(self.config)
         self.treatinv.setDaemon(True)
@@ -604,8 +615,12 @@ class InventoryGetService(Singleton):
             server_class = SecureThreadedHTTPServer
             self.httpd = server_class(server_address, handler_class, self.config)
         else:
-            #server_class = HTTPServer
+            if self.config.enable_forward and not self.config.enable_forward_ocsserver:
+                server_class = ThreadedHTTPServerFork
+            else:
+                server_class = ThreadedHTTPServerThread
             self.httpd = server_class(server_address, handler_class)
+
         if hasattr(self.httpd, 'daemon_threads'):
             self.httpd.daemon_threads = True
         self.httpd.serve_forever()

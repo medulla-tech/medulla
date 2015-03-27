@@ -30,7 +30,7 @@ import string
 import uuid
 import readline   # pyflakes.ignore
 import shutil
-import netifaces as net
+import netifaces
 import netaddr
 import hashlib
 from copy import deepcopy
@@ -117,6 +117,8 @@ def read_passwd(prompt, default, check=False):
     return pwd
 
 re_ip4 = re.compile(r'([0-9]{1,3})(\.([0-9]{1,3})){3}')
+
+
 def read_ip(prompt, default):
     """ TODO: IPv6
     """
@@ -146,16 +148,16 @@ class DistroHandler(object):
 
     def enable_srv(self, name):
         # Start scripts
-        for runlevel in (2,3,4,5):
+        for runlevel in (2, 3, 4, 5):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel},
+                       {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/ln -fs ../init.d/%(name)s /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel},
+                       {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -165,14 +167,14 @@ class DistroHandler(object):
         # Start scripts
         for runlevel in (2,3,4,5):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/S20%(name)s" % \
-                           {'name': name, 'runlevel': runlevel},
+                       {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
         # Stop scripts
         for runlevel in (0,1,6):
             ret = call("/bin/rm -f /etc/rc%(runlevel)i.d/K01%(name)s" % \
-                           {'name': name, 'runlevel': runlevel},
+                       {'name': name, 'runlevel': runlevel},
                        shell=True)
             if ret != 0:
                 return False
@@ -180,18 +182,18 @@ class DistroHandler(object):
 
     def start_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s start" % {'name': name}, shell=True)
-        return ret==0
+        return ret == 0
 
     def stop_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s stop" % {'name': name}, shell=True)
-        return ret==0
+        return ret == 0
 
     def reload_srv(self, name):
         ret = call("/etc/rc2.d/S20%(name)s reload" % {'name': name}, shell=True)
-        return ret==0
+        return ret == 0
+
 
 class DebianHandler(DistroHandler):
-
     ldap_schemas_dir = "/etc/ldap/schema/"
     ldap_config = True
     apache_service = "apache2"
@@ -218,7 +220,7 @@ class DebianHandler(DistroHandler):
                            shell=True)
             else:
                 ret = call("/sbin/insserv %s" % name, shell=True)
-        return ret==0
+        return ret == 0
 
     def disable_srv(self, name):
         default_config = os.path.join(sysconfdir, 'default', name)
@@ -231,22 +233,23 @@ class DebianHandler(DistroHandler):
                            shell=True)
             else:
                 ret = call("/sbin/insserv -r %s" % name, shell=True)
-        return ret==0
+        return ret == 0
 
     def start_srv(self, name):
         ret = call("/usr/sbin/invoke-rc.d %s start" % name,
                    shell=True)
-        return ret==0
+        return ret == 0
 
     def stop_srv(self, name):
         ret = call("/usr/sbin/invoke-rc.d %s stop" % name,
                    shell=True)
-        return ret==0
+        return ret == 0
 
     def reload_srv(self, name):
         ret = call("/usr/sbin/invoke-rc.d %s reload" % name,
                    shell=True)
-        return ret==0
+        return ret == 0
+
 
 class SystemctlHandler(object):
     ldap_schemas_dir = None
@@ -278,6 +281,7 @@ class SystemctlHandler(object):
         ret = call("/sbin/service %(name)s reload" % {'name': name}, shell=True)
         return ret==0
 
+
 def get_distro_handler():
     if os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -286,11 +290,12 @@ def get_distro_handler():
     else:
         return DistroHandler()
 
+
 class Service(object):
     name = None
-    clsnames = [ 'SrvMmcAgent',
-                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
-                 'SrvScheduler', 'SrvConnectionManager' ]
+    clsnames = ['SrvMmcAgent',
+                'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
+                'SrvScheduler', 'SrvConnectionManager' ]
 
     def __init__(self, handler, config):
         self.config = config
@@ -335,11 +340,13 @@ class Service(object):
                 if fatal:
                     sys.exit(1)
 
+
 class SrvMmcAgent(Service):
     name = 'mmc-agent'
 
     def restart(self, *args, **kwargs):
         super(SrvMmcAgent, self).restart(fatal=True)
+
 
 class SrvApache(Service):
     name = None
@@ -356,8 +363,10 @@ class SrvInventoryserver(Service):
     def is_enable(self):
         return self.config['inventory.service.enable']
 
+
 class SrvLauncher(Service):
     name = 'pulse2-launchers'
+
 
 class SrvPkgServer(Service):
     name = 'pulse2-package-server'
@@ -365,8 +374,10 @@ class SrvPkgServer(Service):
     def is_enable(self):
         return self.config['package.service.enable']
 
+
 class SrvScheduler(Service):
     name = 'pulse2-scheduler'
+
 
 class SrvConnectionManager(Service):
     name = 'pulse2-cm'
@@ -436,11 +447,11 @@ class Pulse2ConfigFile(object):
     - load the config file
     - then populate with default values if not set from the file
     """
-    clsnames = [ 'PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
-                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
-                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
-                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 'CMConfig',
-                 'MMCAgentConfig', 'UUIDResolverConfig' , 'PluginsReportConfig', 'PluginsUpdateConfig', 'PluginsMonitoringConfig']
+    clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
+                'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
+                'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
+                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 'CMConfig',
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsReportConfig', 'PluginsUpdateConfig', 'PluginsMonitoringConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -491,7 +502,6 @@ class Pulse2ConfigFile(object):
                 log.error(str(e))
                 sys.exit(1)
 
-
         elif os.path.exists(fpath + '.gz'):
             fpath = fpath + '.gz'
             log.debug("Load config file %s" % fpath)
@@ -509,7 +519,6 @@ class Pulse2ConfigFile(object):
 
         if self.local_config:
             self.config = apply_conf_diff(self.config, self.local_config, True)
-
 
     def _populate(self, d):
         if not self.config:
@@ -601,67 +610,87 @@ class LoggingConfig(Pulse2ConfigFile):
              'formatter_form01': {'format': '%(asctime)s %(levelname)s %(message)s'}}
         self._populate(d)
 
+
 class MMCAgentConfig(Pulse2ConfigFile):
     path = 'agent/config.ini'
+
 
 class PluginsPkgConfig(Pulse2ConfigFile):
     path = 'plugins/pkgs.ini'
 
+
 class PluginsImagingConfig(Pulse2ConfigFile):
     path = 'plugins/imaging.ini'
+
 
 class PluginsGlpiConfig(Pulse2ConfigFile):
     path = 'plugins/glpi.ini'
 
+
 class PluginsBaseConfig(Pulse2ConfigFile):
     path = 'plugins/base.ini'
+
 
 class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
 
+
 class PluginsReportConfig(Pulse2ConfigFile):
     path = 'plugins/report.ini'
+
 
 class PluginsUpdateConfig(Pulse2ConfigFile):
     path = 'plugins/update.ini'
 
+
 class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
+
 
 class PluginsPulse2Config(Pulse2ConfigFile):
     path = 'plugins/pulse2.ini'
 
+
 class PluginsMscConfig(Pulse2ConfigFile):
     path = 'plugins/msc.ini'
 
+
 class PluginsBackuppcConfig(Pulse2ConfigFile):
     path = 'plugins/backuppc.ini'
+
 
 class InventoryServerConfig(LoggingConfig):
     path = 'pulse2/inventory-server/inventory-server.ini'
     log_path = 'pulse2-inventory-server.log'
 
+
 class LaunchersConfig(LoggingConfig):
     path = 'pulse2/launchers/launchers.ini'
     log_path = 'pulse2-launchers.log'
+
 
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
 
+
 class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
     log_path = 'pulse2-scheduler.log'
+
 
 class CMConfig(LoggingConfig):
     path = 'pulse2/cm/cm.ini'
     log_path = 'pulse2-cm.log'
 
+
 class UUIDResolverConfig(Pulse2ConfigFile):
     path = 'pulse2/uuid-resolver/uuid-resolver.ini'
 
+
 class PluginsMonitoringConfig(Pulse2ConfigFile):
     path = 'plugins/monitoring.ini'
+
 
 class SetupApp(object):
     defaults = {}
@@ -735,6 +764,26 @@ class SetupApp(object):
         else:
             return read_ip(name, default)
 
+    def find_ip(self):
+        for ip_interface in netifaces.interfaces():
+            if ip_interface == "lo":
+                continue
+            try:
+                return netifaces.ifaddresses(ip_interface)[2][0]['addr']
+            except:
+                pass
+        return "127.0.0.1"
+
+    def net_mask_ip(self, adr):
+        interfacedeclare = netifaces.interfaces()
+        for ip_interface in interfacedeclare:
+            try:
+                ip4_adresse = netifaces.ifaddresses(ip_interface)[2][0]['addr']
+                if ip4_adresse == adr :
+                    return netifaces.ifaddresses(ip_interface)[2][0]['netmask']
+            except:
+                pass
+        return "255.255.255.0"
 
     def load_defaults(self):
         """ Load default values from config files objects
@@ -760,7 +809,7 @@ class SetupApp(object):
 
         self.defaults['dbuser'] = self.confs['plugins/pulse2.ini'].get('database', 'dbuser')
         passwd = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
-        if passwd=='mmc':
+        if passwd == 'mmc':
             # If passwd in config file is the default (weak) one, prefer generating a random one
             self.defaults['dbpasswd'] = gen_passwd()
         else:
@@ -768,25 +817,24 @@ class SetupApp(object):
 
         self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
 
-        self.defaults['glpiurl'] = self.options["glpi_url"] or "http://localhost"
+        self.defaults['glpiurl'] = self.options["glpi_url"] or "http://127.0.0.1"
         self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
         self.defaults['glpidbpassword'] = self.options["glpi_dbpassword"] or ""
         self.defaults['glpidbname'] = self.options["glpi_dbname"] or "glpi"
-        self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "localhost"
+        self.defaults['glpidbhost'] = self.options["glpi_dbhost"] or "127.0.0.1"
         self.defaults['glpi_purge_machines'] = self.options["glpi_purge_machines"]
         self.defaults['glpi_webservices_user'] = self.options["glpi_webservices_user"]
         self.defaults['glpi_webservices_passwd'] = self.options["glpi_webservices_passwd"]
-        self.defaults['ipexternal'] = self.options["ipexternal"] or None
+        self.defaults['ipexternal'] = self.options["ipexternal"] or self.find_ip()
         self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
         self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
-	address = net.ifaddresses('eth0')[2][0]['addr']
-	self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
-	self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
-	self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
-	netmask = net.ifaddresses('eth0')[2][0]['netmask']
-	cidr = netaddr.IPNetwork('%s/%s' %(address, netmask)).cidr
+        address = self.defaults['ipexternal']
+        netmask = self.net_mask_ip(address)
+        self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
+        self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
+        self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
+        cidr = netaddr.IPNetwork('%s/%s' % (address, netmask)).cidr
         self.defaults['monitoring_nmap_network'] = self.options["monitoring_nmap_network"] or str(cidr)
-
 
     def read_config(self):
         """ Read some global config values
@@ -801,15 +849,16 @@ class SetupApp(object):
                                                          self.defaults['ipexternal'])
         self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
         self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
-	self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
+        self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
         self.config['monitoring_username'] = self.read_opt('Zabbix admin', self.defaults['monitoring_username'])
         # Generate a password for zabbix root if zabbix on localhost
-	address = net.ifaddresses('eth0')[2][0]['addr']
-	if self.config['monitoring_url']=="http://"+address+"/zabbix":
-        	self.defaults['monitoring_password'] = gen_passwd()
-	self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
-        self.config['monitoring_nmap_network'] = self.read_ip('NMAP network to discover', self.defaults['monitoring_nmap_network'])
-
+        address = self.config['server.ip.external']
+        netmask = self.net_mask_ip(address)
+        if self.config['monitoring_url'] == "http://"+address+"/zabbix":
+            self.defaults['monitoring_password'] = gen_passwd()
+        self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
+        self.config['monitoring_nmap_network'] = self.read_ip('NMAP network to discover',
+                                                              self.defaults['monitoring_nmap_network'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -875,7 +924,7 @@ class SetupApp(object):
         # LDAP password for UUID resolver
         self.confs['pulse2/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
 
-    def get_existing_databases (self, conn):
+    def get_existing_databases(self, conn):
         """ Get a list of existing databases
         """
         databases = []
@@ -972,9 +1021,9 @@ class SetupApp(object):
                 if e.orig[0]==1396:
                     # This error means 'user exists'
                     log.debug('User already exists: %s@%s' % (self.config['dbuser'], host))
-                elif e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
-                                                                                                    self.config['dbhost']))
+                elif e.orig[0] == 1044:
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
+                        self.config['dbuser'], self.config['dbhost']))
                     sys.exit(2)
                 else:
                     raise e
@@ -992,17 +1041,17 @@ class SetupApp(object):
                     conn.execute('GRANT ALL on `%s`.* to %%s@%%s' % module, self.config['dbuser'], host)
             except sa.exc.OperationalError, e:
                 if e.orig[0]==1044:
-                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (self.config['dbuser'],
-                                                                                                    self.config['dbhost']))
+                    log.error('Access denied: please check user \'%s\'@\'%s\' has grant rights.' % (
+                        self.config['dbuser'], self.config['dbhost']))
                     sys.exit(2)
                 else:
                     raise e
 
-	# Change zabbix root password if localhost
-	address = net.ifaddresses('eth0')[2][0]['addr']
-	if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
-		passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest()
-		conn.execute('USE zabbix; UPDATE `users` SET `passwd`="%s",`autologout`="900" WHERE `userid`="1";' % passwd)
+        # Change zabbix root password if localhost
+        address = self.config['server.ip.external']
+        if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
+            passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest()
+            conn.execute('USE zabbix; UPDATE `users` SET `passwd`="%s",`autologout`="900" WHERE `userid`="1";' % passwd)
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
@@ -1075,9 +1124,6 @@ class SetupApp(object):
         self.confs['plugins/monitoring.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/monitoring.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-
-
-
     def init_glpi(self):
         """GLPI coupling"""
 
@@ -1096,11 +1142,10 @@ class SetupApp(object):
             fusion_url = "http://%s/plugins/fusioninventory/front/plugin_fusioninventory.communication.php" % url
 
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
-        glpi_conf.set("authentication_glpi","baseurl", base_url)
-        glpi_conf.set("provisioning_glpi","doauth", 1)
-        glpi_conf.set("provisioning_glpi","profiles_order", "profile1 profile2 profile3")
+        glpi_conf.set("authentication_glpi", "baseurl", base_url)
+        glpi_conf.set("provisioning_glpi", "doauth", 1)
+        glpi_conf.set("provisioning_glpi", "profiles_order", "profile1 profile2 profile3")
         glpi_conf.set("provisioning_glpi", "exclude", "root")
-
 
         db_user = self.read_opt("GLPI database user", self.defaults["glpidbuser"])
         glpi_conf.set("main", "dbuser", db_user)
@@ -1110,19 +1155,18 @@ class SetupApp(object):
         glpi_conf.set("main", "dbhost", db_host)
         db_name = self.read_opt("GLPI database name", self.defaults["glpidbname"])
         glpi_conf.set("main", "dbname", db_name)
-	glpi_purge_machines = self.read_opt("Purge machines from GLPI dustbin", self.defaults['glpi_purge_machines'])
-	glpi_webservices_user = self.read_opt("GLPI Webservices Username", self.defaults['glpi_webservices_user'])
-	glpi_webservices_passwd = self.read_opt("GLPI Webservices password", self.defaults['glpi_webservices_passwd'])
-	if glpi_purge_machines:
+        glpi_purge_machines = self.read_opt("Purge machines from GLPI dustbin", self.defaults['glpi_purge_machines'])
+        glpi_webservices_user = self.read_opt("GLPI Webservices Username", self.defaults['glpi_webservices_user'])
+        glpi_webservices_passwd = self.read_opt("GLPI Webservices password", self.defaults['glpi_webservices_passwd'])
+        if glpi_purge_machines:
             glpi_conf.set("webservices", "purge_machine", 1)
             glpi_conf.set("webservices", "glpi_base_url", url)
             glpi_conf.set("webservices", "glpi_username", glpi_webservices_user)
             glpi_conf.set("webservices", "glpi_password", glpi_webservices_passwd)
 
-        if self.defaults['inventory.service.enable'] :
+        if self.defaults['inventory.service.enable']:
             invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
             invsvr_conf.set("main", "url_to_forward", fusion_url)
-
 
     def init_misc(self):
         # Setup server IP address
@@ -1133,20 +1177,20 @@ class SetupApp(object):
         conf.set('main', 'public_ip', self.config['server.ip.external'])
 
         # Base GLPI configuration
-        if self.config["glpi.plugin.enable"] :
+        if self.config["glpi.plugin.enable"]:
             self.confs['plugins/glpi.ini'].set('main', 'disable', 0)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 1)
             self.confs['plugins/base.ini'].set('computers', 'method', 'glpi')
             self.confs['plugins/report.ini'].set('data', 'indicators', 'indicators.xml')
-            if self.defaults['package.service.enable'] :
+            if self.defaults['package.service.enable']:
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
                 pkg_conf.set("imaging_api", "glpi_mode", True)
 
-            if self.defaults['inventory.service.enable'] :
+            if self.defaults['inventory.service.enable']:
                 invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
                 invsvr_conf.set("main", "enable_forward", True)
 
-        else :
+        else:
             self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
             self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
@@ -1156,28 +1200,26 @@ class SetupApp(object):
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
                 pkg_conf.set("imaging_api", "glpi_mode", False)
 
-            if self.defaults['inventory.service.enable'] :
+            if self.defaults['inventory.service.enable']:
                 invsvr_conf = self.confs["pulse2/inventory-server/inventory-server.ini"]
                 invsvr_conf.set("main", "enable_forward", False)
 
-
-	# Enable BackupPC module
+        #Enable BackupPC module
         self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
 
-	# Change monitoring webservices variables
+        # Change monitoring webservices variables
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_url', self.config['monitoring_url'])
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_username', self.config['monitoring_username'])
         self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_password', self.config['monitoring_password'])
         self.confs['plugins/monitoring.ini'].set('data', 'nmap_network', self.config['monitoring_nmap_network'])
 
-
         # Ensure various dirs are created
-        for path in [ self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
-                      self.confs['plugins/msc.ini'].get('msc', 'repopath'),
-                      self.confs['plugins/msc.ini'].get('msc', 'qactionspath'),
-                      self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
-                      self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
-                      LoggingConfig.log_dir ]:
+        for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'repopath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'qactionspath'),
+                     self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
+                     self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
+                     LoggingConfig.log_dir]:
             if not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
@@ -1226,7 +1268,7 @@ class SetupApp(object):
 
     def restart_services(self):
         for srv in self.services:
-            if srv.is_enable :
+            if srv.is_enable:
                 srv.restart()
 
     def post_restart(self):
@@ -1235,9 +1277,9 @@ class SetupApp(object):
             binpath = path_lookup('pulse2-package-server-register-imaging')
             ps_conf = self.confs['pulse2/package-server/package-server.ini']
             basecmd = binpath + ' -m https://%s:%s@%s:%s ' % (ps_conf.get('mmc_agent', 'username'),
-                                                             ps_conf.get('mmc_agent', 'password'),
-                                                             ps_conf.get('mmc_agent', 'host'),
-                                                             ps_conf.get('mmc_agent', 'port'))
+                                                              ps_conf.get('mmc_agent', 'password'),
+                                                              ps_conf.get('mmc_agent', 'host'),
+                                                              ps_conf.get('mmc_agent', 'port'))
             cmd = basecmd + '--check'
             log.debug('Call: %s' % cmd)
             if call(cmd, shell=True) == 0:
@@ -1245,7 +1287,7 @@ class SetupApp(object):
                 log.info('Registering imaging server')
                 cmd = basecmd + '--name \'Local imaging server\''
                 log.debug('Call: %s' % cmd)
-                if call(cmd, shell=True)<>0:
+                if call(cmd, shell=True) != 0:
                     log.error('Can not register imaging server')
             else:
                 log.info('Imaging server already registered')
@@ -1255,23 +1297,21 @@ class SetupApp(object):
         if binpath is not None:
             cmd = binpath + ' -a -e ' + self.config['backuppc_entity'] + ' -p http://' + self.config['backuppc_ip'] + '/backuppc/index.cgi'
             log.debug('Call: %s' % cmd)
-            if call(cmd, shell=True)<>0:
+            if call(cmd, shell=True) != 0:
                 log.error('Unable to associate BackupPC server on %(backuppc_ip)s to entity %(backuppc_entity)s' % self.config)
             else:
                 log.info('BackupPC server http://%(backuppc_ip)s/backuppc/index.cgi associated to entity %(backuppc_entity)s' % self.config)
-        else :
+        else:
             log.error("BackupPC server is not probably installed")
-
 
         binpath = path_lookup('pulse2-create-group')
         grp_name = self.config['defaultUserGroup']
         cmd = "%s '%s'" % (binpath, grp_name)
         log.debug('Call: %s' % cmd)
-        if call(cmd, shell=True) <> 0:
+        if call(cmd, shell=True) != 0:
             log.error("Unable to create group '%s'" % grp_name)
         else:
             log.info("Group %s successfully created" % grp_name)
-
 
     def commit(self):
         """ Write down all config files
@@ -1384,7 +1424,6 @@ if __name__ == '__main__':
     parser.add_option("--zabbix-nmap-network", dest="monitoring_nmap_network",
                       help="Network discovery network")
 
-
     # Parse and analyse args
     (options, args) = parser.parse_args()
     if options.debug:
@@ -1411,24 +1450,24 @@ if __name__ == '__main__':
         'ldapbasedn': options.ldapbasedn,
         'ldapadmindn': options.ldapadmindn,
         'ldappasswd': options.ldappasswd,
-        'server_inventory' : not options.disable_inventory,
-        'server_package' : not options.disable_package,
-        'glpi_enable' : options.enable_glpi,
-        'glpi_purge_machines' : options.glpi_purge_machines,
-        'glpi_webservices_user' : options.glpi_webservices_user,
-        'glpi_webservices_passwd' : options.glpi_webservices_passwd,
-        'glpi_url' : options.glpiurl,
-        'glpi_dbuser' : options.glpidbuser,
-        'glpi_dbpassword' : options.glpidbpasswd,
-        'glpi_dbname' : options.glpidbname,
-        'glpi_dbhost' : options.glpidbhost,
-        'ipexternal' : options.ipexternal,
-        'backuppc_ip' : options.backuppc_ip,
-        'backuppc_entity' : options.backuppc_entity,
-	'monitoring_url' : options.monitoring_url,
-	'monitoring_username' : options.monitoring_username,
-	'monitoring_password' : options.monitoring_password,
-	'monitoring_nmap_network' : options.monitoring_nmap_network,
+        'server_inventory': not options.disable_inventory,
+        'server_package': not options.disable_package,
+        'glpi_enable': options.enable_glpi,
+        'glpi_purge_machines': options.glpi_purge_machines,
+        'glpi_webservices_user': options.glpi_webservices_user,
+        'glpi_webservices_passwd': options.glpi_webservices_passwd,
+        'glpi_url': options.glpiurl,
+        'glpi_dbuser': options.glpidbuser,
+        'glpi_dbpassword': options.glpidbpasswd,
+        'glpi_dbname': options.glpidbname,
+        'glpi_dbhost': options.glpidbhost,
+        'ipexternal': options.ipexternal,
+        'backuppc_ip': options.backuppc_ip,
+        'backuppc_entity': options.backuppc_entity,
+        'monitoring_url': options.monitoring_url,
+        'monitoring_username': options.monitoring_username,
+        'monitoring_password': options.monitoring_password,
+        'monitoring_nmap_network': options.monitoring_nmap_network,
     }
 
     # Run the setup app

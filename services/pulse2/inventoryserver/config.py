@@ -50,6 +50,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
     cacert = mmcconfdir + '/pulse2/inventory-server/keys/cacert.pem'
     localcert = mmcconfdir + '/pulse2/inventory-server/keys/privkey.pem'
     enable_forward = False
+    enable_forward_ocsserver = False
     url_to_forward = "http://localhost/glpi/plugins/fusioninventory/front/plugin_fusioninventory.communication.php"
     inventory_periodicity = 24
 
@@ -75,6 +76,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
 
     def setup(self, config_file):
         InventoryDatabaseConfig.setup(self, config_file)
+        self.rules_matching = []
         if self.dbname == None:
             self.dbname = 'inventory'
 
@@ -112,6 +114,8 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
             self.localcert = self.cp.get('main', 'localcert')
         if self.cp.has_option('main', 'enable_forward'):
             self.enable_forward = self.cp.getboolean('main', 'enable_forward')
+        if self.cp.has_option('main', 'enable_forward_ocsserver'):
+            self.enable_forward_ocsserver = self.cp.getboolean('main', 'enable_forward_ocsserver')
         if self.cp.has_option('main', 'url_to_forward'):
             self.url_to_forward = self.cp.get('main', 'url_to_forward')
         if self.cp.has_option('main', 'inventory_periodicity'):
