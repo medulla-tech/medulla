@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-16 01:13+0100\n"
+"POT-Creation-Date: 2015-03-27 14:18+0100\n"
 "PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/mds/team/ja_JP/)\n"
@@ -1243,7 +1243,7 @@ msgid "Login"
 msgstr "ログイン"
 
 #: modules/base/includes/publicFunc.php:310
-#: modules/base/infoPackage.inc.php:357 index.php:213
+#: modules/base/infoPackage.inc.php:388 index.php:213
 msgid "Password"
 msgstr "パスワード"
 
@@ -1273,7 +1273,7 @@ msgstr "電子メールアドレス"
 
 #: modules/base/includes/publicFunc.php:347
 #: modules/base/includes/publicFunc.php:350
-#: modules/base/infoPackage.inc.php:349
+#: modules/base/infoPackage.inc.php:380
 msgid "Telephone number"
 msgstr "電話番号"
 
@@ -1282,12 +1282,12 @@ msgid "Mobile number"
 msgstr "携帯番号"
 
 #: modules/base/includes/publicFunc.php:362
-#: modules/base/infoPackage.inc.php:351
+#: modules/base/infoPackage.inc.php:382
 msgid "Fax number"
 msgstr "FAX 番号"
 
 #: modules/base/includes/publicFunc.php:367
-#: modules/base/infoPackage.inc.php:352
+#: modules/base/infoPackage.inc.php:383
 msgid "Home phone number"
 msgstr "電話番号 (家庭)"
 
@@ -1310,7 +1310,7 @@ msgid ""
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
-#: modules/base/infoPackage.inc.php:353
+#: modules/base/infoPackage.inc.php:384
 msgid "Primary group"
 msgstr "プライマリグループ"
 
@@ -1323,7 +1323,7 @@ msgid "All groups"
 msgstr "すべてのグループ"
 
 #: modules/base/includes/publicFunc.php:447
-#: modules/base/infoPackage.inc.php:354
+#: modules/base/infoPackage.inc.php:385
 msgid "Secondary groups"
 msgstr "セカンダリグループ"
 
@@ -1345,12 +1345,12 @@ msgid "Warning: an existing directory may belong to another user !"
 msgstr "警告: 既存のディレクトリは別のユーザーに所属する可能性があります！"
 
 #: modules/base/includes/publicFunc.php:473
-#: modules/base/infoPackage.inc.php:346
+#: modules/base/infoPackage.inc.php:377
 msgid "Login shell"
 msgstr "ログインシェル"
 
 #: modules/base/includes/publicFunc.php:478
-#: modules/base/infoPackage.inc.php:355
+#: modules/base/infoPackage.inc.php:386
 msgid "Common name"
 msgstr "共通の名前"
 
@@ -1363,7 +1363,7 @@ msgstr ""
 "アドレス帳などのため)。"
 
 #: modules/base/includes/publicFunc.php:484
-#: modules/base/infoPackage.inc.php:356
+#: modules/base/infoPackage.inc.php:387
 msgid "Preferred name to be used"
 msgstr "使用される名前"
 
@@ -1563,7 +1563,7 @@ msgid "New password"
 msgstr "新規パスワード"
 
 #: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:53
-#: modules/base/infoPackage.inc.php:358
+#: modules/base/infoPackage.inc.php:389
 msgid "Confirm your password"
 msgstr "パスワードを確認する"
 
@@ -1868,43 +1868,43 @@ msgstr "コンピューターの削除"
 msgid "Ajax part of computers list"
 msgstr "コンピューターの Ajax 部分一覧"
 
-#: modules/base/infoPackage.inc.php:328
+#: modules/base/infoPackage.inc.php:359
 msgid "Download inventory of one machine"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:341
+#: modules/base/infoPackage.inc.php:372
 msgid "User photo"
 msgstr "ユーザーの写真"
 
-#: modules/base/infoPackage.inc.php:342
+#: modules/base/infoPackage.inc.php:373
 msgid "User login"
 msgstr "ユーザーログイン"
 
-#: modules/base/infoPackage.inc.php:343
+#: modules/base/infoPackage.inc.php:374
 msgid "User name"
 msgstr "ユーザー名"
 
-#: modules/base/infoPackage.inc.php:344
+#: modules/base/infoPackage.inc.php:375
 msgid "User firstname"
 msgstr "ユーザーの名前"
 
-#: modules/base/infoPackage.inc.php:345
+#: modules/base/infoPackage.inc.php:376
 msgid "User home directory"
 msgstr "ユーザーホームディレクトリ"
 
-#: modules/base/infoPackage.inc.php:347
+#: modules/base/infoPackage.inc.php:378
 msgid "User title"
 msgstr "ユーザーの肩書"
 
-#: modules/base/infoPackage.inc.php:348
+#: modules/base/infoPackage.inc.php:379
 msgid "Mail address"
 msgstr "メールアドレス"
 
-#: modules/base/infoPackage.inc.php:350
+#: modules/base/infoPackage.inc.php:381
 msgid "Mobile phone number"
 msgstr "携帯電話番号"
 
-#: modules/base/infoPackage.inc.php:359
+#: modules/base/infoPackage.inc.php:390
 msgid "Enable/Disable user account"
 msgstr "ユーザーアカウントの有効化/無効化"
 

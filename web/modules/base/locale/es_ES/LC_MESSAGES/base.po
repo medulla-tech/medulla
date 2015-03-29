@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-16 01:13+0100\n"
+"POT-Creation-Date: 2015-03-27 14:18+0100\n"
 "PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/team/es_ES/)\n"
@@ -1243,7 +1243,7 @@ msgid "Login"
 msgstr "Nombre de usuario"
 
 #: modules/base/includes/publicFunc.php:310
-#: modules/base/infoPackage.inc.php:357 index.php:213
+#: modules/base/infoPackage.inc.php:388 index.php:213
 msgid "Password"
 msgstr "Contraseña"
 
@@ -1273,7 +1273,7 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:347
 #: modules/base/includes/publicFunc.php:350
-#: modules/base/infoPackage.inc.php:349
+#: modules/base/infoPackage.inc.php:380
 msgid "Telephone number"
 msgstr "Número de teléfono"
 
@@ -1282,12 +1282,12 @@ msgid "Mobile number"
 msgstr "Teléfono móvil"
 
 #: modules/base/includes/publicFunc.php:362
-#: modules/base/infoPackage.inc.php:351
+#: modules/base/infoPackage.inc.php:382
 msgid "Fax number"
 msgstr "Número de fax"
 
 #: modules/base/includes/publicFunc.php:367
-#: modules/base/infoPackage.inc.php:352
+#: modules/base/infoPackage.inc.php:383
 msgid "Home phone number"
 msgstr "Teléfono personal"
 
@@ -1310,7 +1310,7 @@ msgid ""
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
-#: modules/base/infoPackage.inc.php:353
+#: modules/base/infoPackage.inc.php:384
 msgid "Primary group"
 msgstr "Grupo primario"
 
@@ -1323,7 +1323,7 @@ msgid "All groups"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:447
-#: modules/base/infoPackage.inc.php:354
+#: modules/base/infoPackage.inc.php:385
 msgid "Secondary groups"
 msgstr ""
 
@@ -1345,12 +1345,12 @@ msgid "Warning: an existing directory may belong to another user !"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:473
-#: modules/base/infoPackage.inc.php:346
+#: modules/base/infoPackage.inc.php:377
 msgid "Login shell"
 msgstr "Intérprete de comandos"
 
 #: modules/base/includes/publicFunc.php:478
-#: modules/base/infoPackage.inc.php:355
+#: modules/base/infoPackage.inc.php:386
 msgid "Common name"
 msgstr "Nombre común (CN)"
 
@@ -1363,7 +1363,7 @@ msgstr ""
 "direcciones de Thunderbird) para mostrar las entradas de usuario."
 
 #: modules/base/includes/publicFunc.php:484
-#: modules/base/infoPackage.inc.php:356
+#: modules/base/infoPackage.inc.php:387
 msgid "Preferred name to be used"
 msgstr "Nombre preferido para usar"
 
@@ -1569,7 +1569,7 @@ msgid "New password"
 msgstr "Nueva contraseña"
 
 #: modules/base/users/passwd.php:68 modules/base/users/resetpasswd.php:53
-#: modules/base/infoPackage.inc.php:358
+#: modules/base/infoPackage.inc.php:389
 msgid "Confirm your password"
 msgstr "Confirmar contraseña"
 
@@ -1882,43 +1882,43 @@ msgstr "Eliminar equipo"
 msgid "Ajax part of computers list"
 msgstr "Parte Ajax de la lista de equipos"
 
-#: modules/base/infoPackage.inc.php:328
+#: modules/base/infoPackage.inc.php:359
 msgid "Download inventory of one machine"
 msgstr ""
 
-#: modules/base/infoPackage.inc.php:341
+#: modules/base/infoPackage.inc.php:372
 msgid "User photo"
 msgstr "Foto del usuario"
 
-#: modules/base/infoPackage.inc.php:342
+#: modules/base/infoPackage.inc.php:373
 msgid "User login"
 msgstr "Inicio de sesión"
 
-#: modules/base/infoPackage.inc.php:343
+#: modules/base/infoPackage.inc.php:374
 msgid "User name"
 msgstr "Nombre de usuario"
 
-#: modules/base/infoPackage.inc.php:344
+#: modules/base/infoPackage.inc.php:375
 msgid "User firstname"
 msgstr "Nombre"
 
-#: modules/base/infoPackage.inc.php:345
+#: modules/base/infoPackage.inc.php:376
 msgid "User home directory"
 msgstr "Directorio de inicio del usuario"
 
-#: modules/base/infoPackage.inc.php:347
+#: modules/base/infoPackage.inc.php:378
 msgid "User title"
 msgstr "Título del usuario"
 
-#: modules/base/infoPackage.inc.php:348
+#: modules/base/infoPackage.inc.php:379
 msgid "Mail address"
 msgstr "Correo electrónico"
 
-#: modules/base/infoPackage.inc.php:350
+#: modules/base/infoPackage.inc.php:381
 msgid "Mobile phone number"
 msgstr "Teléfono móvil"
 
-#: modules/base/infoPackage.inc.php:359
+#: modules/base/infoPackage.inc.php:390
 msgid "Enable/Disable user account"
 msgstr "Activar/Desactivar cuenta de usuario"
 
