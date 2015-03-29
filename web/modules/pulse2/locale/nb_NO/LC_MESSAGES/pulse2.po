@@ -1,36 +1,59 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# 
+## Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-23 01:00+0100\n"
-"PO-Revision-Date: 2015-03-16 00:11+0000\n"
+"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
+"POT-Creation-Date: 2015-03-27 16:22+0100\n"
+"PO-Revision-Date: 2015-03-29 23:10+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: nb_NO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:34
+msgid "Inventory"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:35
+msgid "extTicket issue"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:36
 msgid "Backup status"
 msgstr ""
 
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
+#: modules/pulse2/includes/menu_action.php:37
+msgid "Remote control"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:99
-msgid "Csv export"
+#: modules/pulse2/includes/menu_action.php:38
+#: modules/pulse2/includes/menu_group_action.php:64
+#: modules/pulse2/includes/menu_group_action.php:81
+msgid "Read log"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:39
+msgid "Software deployment"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:40
+#: modules/pulse2/includes/menu_group_action.php:86
+msgid "Imaging management"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:41
+msgid "Monitoring"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:47
@@ -45,85 +68,64 @@ msgstr ""
 msgid "Display this group's content"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:76
-msgid "Display this imaging group's content"
+#: modules/pulse2/includes/menu_group_action.php:56
+msgid "Inventory on this group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:61
 msgid "Edit this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:78
-msgid "Edit this imaging group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:40
-#: modules/pulse2/includes/menu_group_action.php:86
-msgid "Imaging management"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:34
-msgid "Inventory"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:56
-msgid "Inventory on this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:72
-msgid "Inventory on this profile"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:41
-msgid "Monitoring"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:38
-#: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:81
-msgid "Read log"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:37
-msgid "Remote control"
-msgstr ""
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr ""
-
 #: modules/pulse2/includes/menu_group_action.php:62
 msgid "Share this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:79
-msgid "Share this imaging group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:39
-msgid "Software deployment"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:65
 msgid "Software deployment on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:82
-msgid "Software deployment on this imaging group"
-msgstr ""
-
 #: modules/pulse2/includes/menu_group_action.php:68
 msgid "Update on this group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_action.php:35
-msgid "extTicket issue"
+#: modules/pulse2/includes/menu_group_action.php:72
+msgid "Inventory on this profile"
 msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:76
+msgid "Display this imaging group's content"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:78
+msgid "Edit this imaging group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:79
+msgid "Share this imaging group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:82
+msgid "Software deployment on this imaging group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:99
+msgid "Csv export"
+msgstr ""
+
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr ""
+
+
