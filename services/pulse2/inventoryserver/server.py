@@ -69,6 +69,7 @@ class InventoryServer:
         from_ip = self.client_address[0]
         dest_path = self.path
         self.logger.debug("HTTP GET request received for %s from %s" % (str(dest_path), str(from_ip)))
+        self.send_response(200)
 
     def do_POST(self):
         content = self.rfile.read(int(self.headers['Content-Length']))
