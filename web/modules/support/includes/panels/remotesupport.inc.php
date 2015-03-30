@@ -26,7 +26,7 @@ require_once("modules/support/includes/xmlrpc.php");
 $options = array(
     "class" => "RemoteSupportPanel",
     "id" => "remotesupport",
-    "refresh" => 10,
+    "refresh" => 3600,
     "title" => _T("Remote support", "support"),
 );
 
