@@ -80,7 +80,7 @@ class InventoryServer:
         # handle compressed inventories
         # application/x-compress is for OCS
         # application/x-compress is for Fusion
-        if self.headers['Content-Type'].lower() in ['application/x-compress', 'application/x-compress-zlib']:
+        if 'compress' in self.headers['Content-Type']:
             try:
                 decomp = decompressobj()
                 content = decomp.decompress(content)
