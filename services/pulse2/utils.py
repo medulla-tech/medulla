@@ -679,7 +679,7 @@ class HasSufficientMemory :
         self.mem_limit = mem_limit
         self.neg_ret_value = neg_ret_value
 
-    def __call__(self, fnc, *args):
+    def __call__(self, fnc, *args, **kwargs):
         """
         @param fnc: decorated function
         @type fnc: function type
@@ -687,9 +687,9 @@ class HasSufficientMemory :
         @returns: decorated function or neg_ret_value
         """
 
-        def wrapped (*args) :
+        def wrapped (*args, **kwargs) :
             if psutil.virtual_memory().percent < self.mem_limit :
-                 return fnc(*args)
+                 return fnc(*args, **kwargs)
             else :
                  logging.getLogger().warn("Not enough memory to run '%s'" % fnc.__name__)
                  return self.neg_ret_value
