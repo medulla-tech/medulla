@@ -102,6 +102,15 @@ class InventoryLocation(ComputerLocationI):
     def deleteEntityRule(self, idrule):
         return Inventory().deleteEntityRule(idrule)
 
+    def setLocationsForUser(self, username, attrs):
+        return Inventory().setLocationsForUser(username, attrs)
+
+    def getLocationsForUser(self, username):
+        return Inventory().getLocationsForUser(username)
+
+    def delUser(self, username):
+        return Inventory().delUser(username)
+
 def convertLocations(hloc):
     location = hloc[0]
     level = hloc[1]

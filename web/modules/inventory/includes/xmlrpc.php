@@ -161,4 +161,16 @@ function addEntityRule($ruleobj){
 function deleteEntityRule($idrule){
     return xmlCall("inventory.deleteEntityRule",array($idrule));
 }
+function getLocationsForUser($username){
+    return xmlCall("inventory.getLocationsForUser", array($username));
+}
+
+function setLocationsForUser($username, $attr){
+    return xmlCall("inventory.setLocationsForUser", array($username, $attr));
+}
+
+function delUser($username){
+    return xmlCall("inventory.delUser", array($username));
+}
+
 ?>
