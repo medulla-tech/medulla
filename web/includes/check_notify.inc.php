@@ -38,14 +38,14 @@ if (isset($_SESSION['notify']) && count($_SESSION['notify']) > 0) {
     echo "
     <script type=\"text/javascript\">
         PopupWindow(null, null, 0,function(evt){
-
+            var windowheight     = (jQuery(window).height()/2+jQuery(window).scrollTop()-25)+'px';
             jQuery('#popup').css({
                 'width': '50%',
                 'left': '25%',
                 'top':'15%'
             });
+            jQuery('#popup').css('top', windowheight);
             jQuery('#overlay').fadeIn().click(closePopup);
-            
         },$content);
     </script>";
 }
