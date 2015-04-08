@@ -49,6 +49,7 @@ ssh_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-secure
 vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
 inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
 sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
+msi_webservice_url=http://msi-agents.mandriva.com/
 
 # Command line options handling
 
@@ -378,4 +379,9 @@ if [ ! ${download_only} -eq 1 ]; then
     echo "No imaging module found. Skipping files copy for postinstall."
     echo
   fi
+
+  # Generating msi agents
+  echo " Generating MSI silent agents ..."
+  curl --progress-bar -o pulse2_agents_silent.msi --data-urlencode "ip=$my_fqdn" --data-urlencode "tag=<ag" --data-urlencode "key@/root/.ssh/id_rsa.pub" $msi_webservice_url>
+
 fi
