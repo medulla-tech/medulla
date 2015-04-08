@@ -2931,17 +2931,18 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getMachineByMacAddress(self, ctx, filt):
-        """ @return: all computers that have this mac address """
-        session = create_session()
+    @DatabaseHelper._session
+    def getMachineByMacAddress(self, session, ctx, macs):
+        """ @return: all computers that have these mac addresses """
+        if isinstance(macs, str):
+            macs = [macs]
         query = session.query(Machine).select_from(self.machine.join(self.network))
         query = query.filter(self.machine.c.deleted == 0).filter(self.machine.c.is_template == 0)
-        query = query.filter(self.network.c.ifmac == filt)
+        query = query.filter(self.network.c.ifmac.in_(macs))
         query = self.__filter_on(query)
         if ctx != 'imaging_module':
             query = self.__filter_on_entity(query, ctx)
         ret = query.all()
-        session.close()
         return ret
 
     @DatabaseHelper._session

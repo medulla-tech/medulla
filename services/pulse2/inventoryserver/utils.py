@@ -158,6 +158,8 @@ class InventoryUtils :
         @return: bool
         """
         xmldoc = parseString(xml_content)
+        if not xmldoc.getElementsByTagName('OSNAME'):
+            return False
         osname = xmldoc.getElementsByTagName('OSNAME')[0].firstChild.nodeValue
         return osname == 'Unknown operating system (PXE network boot inventory)'
 

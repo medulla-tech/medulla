@@ -69,6 +69,11 @@ class InventoryServer:
         from_ip = self.client_address[0]
         dest_path = self.path
         self.logger.debug("HTTP GET request received for %s from %s" % (str(dest_path), str(from_ip)))
+        if dest_path.startswith('/lpull?'):
+            macs = dest_path.split('?')[1]
+            macs = [x for x in macs.split('&') if x != '']
+            self.logger.debug('Light Pull requested for macs %s' % macs)
+            AttemptToScheduler('<xml/>', resolveGlpiMachineUUIDByMAC(macs))
         self.send_response(200)
 
     def do_POST(self):
@@ -227,7 +232,7 @@ class InventoryServer:
                     glpi_proxy = GlpiProxy(self.config.url_to_forward)
                     glpi_proxy.send(content)
                     for msg in glpi_proxy.result :
-                        self.logger.warn("<GlpiProxy> %s" % msg)
+                        self.logger.debug("<GlpiProxy> %s" % msg)
 
             # Not an INVENTORY request, forwarding anyway
             else:
@@ -236,7 +241,7 @@ class InventoryServer:
                 glpi_proxy = GlpiProxy(self.config.url_to_forward)
                 glpi_proxy.send(content)
                 for msg in glpi_proxy.result :
-                    self.logger.warn("<GlpiProxy> %s" % msg)
+                    self.logger.debug("<GlpiProxy> %s" % msg)
 
         except Exception, e :
             self.logger.error("<GlpiProxy> %s" % str(e))
