@@ -2634,7 +2634,7 @@ class Inventory(DyngroupDatabaseHelper):
         session.close()
 
         for res in results:
-            ret.append((res.id, res.Date))
+            ret.append((res.id, datetime.datetime.combine(res.Date, res.Time)))
         return ret
 
     def countComputerInventoryHistory(self, ctx, params):

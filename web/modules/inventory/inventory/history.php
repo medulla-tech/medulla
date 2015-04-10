@@ -60,7 +60,7 @@ $inventory_history = getMachineInventoryHistory($params);
 
 // Loop through the inventory history to extract infos
 foreach($inventory_history as $inventory) {
-    $inventoriesDates[] = substr(_toDate($inventory[1]),0, 10);
+    $inventoriesDates[] = _toDate($inventory[1]);
     // Add the details link (unless we are on the last line)
     if($i < count($inventory_history) - 1) {
         $detailsButtons[] = new ActionItem(_T("View differences since previous inventory", "inventory"), "invdiff", "display");
