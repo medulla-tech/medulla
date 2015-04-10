@@ -358,6 +358,74 @@ if ($_GET['uuid'] != '') {
             $n->display();
         }
         print "</div>";
+
+        if ($_GET['part'] == 'Registry'){
+
+            // Reading pmu cfg
+            $cfg = json_decode(file_get_contents('/etc/mmc/pmu.json'));
+            $registry_deploy_cfg = json_encode($cfg->registry_deploy);
+
+            ?>
+            <script type="text/javascript">
+            // Remove toJSON shipped with prototype
+            if(window.Prototype) {
+                delete Object.prototype.toJSON;
+                delete Array.prototype.toJSON;
+                delete Hash.prototype.toJSON;
+                delete String.prototype.toJSON;
+            }
+
+            jQuery.urlParam = function(name){
+                var results = new RegExp('[\?&amp;]' + name + '=([^&amp;#]*)').exec(window.location.href);
+                return results[1] || 0;
+            }
+            
+            jQuery(function(){
+                var $=jQuery;
+                // Make field editable
+                $('table tbody tr').each(function(){
+                    var key = $(this).find('td:first').text();
+                    var value = $(this).find('td:last').text();
+                    var input = $('<input type="text" />')
+                        .attr('name', key)
+                        .val(value);
+                    $(this).find('td:last').html(input);
+                })
+                // Add confirm button
+                var confirmBtn = $('<input id="confirmRegistry" type="button" value="Valider les changements" class="btnPrimary ">');
+                confirmBtn.css('margin-bottom', '10px');
+                confirmBtn.click(function(){
+                    var param_string = '';
+                    $('form#registryForm').serialize().split('&').each(function(param){
+                        param_string += param + ' ';
+                    });
+                    
+                    var uuid = jQuery.urlParam('uuid') || jQuery.urlParam('objectUUID'); 
+                    cmd_params = <?php print $registry_deploy_cfg; ?>; 
+                    cmd_params.deploy_params.parameters = param_string;
+                    cmd_params.deploy_params.ltitle = 'regchange - ' + (new Date()).toLocaleString();
+                    cmd_params.uuids = [ uuid ];
+                    console.log(JSON.stringify(cmd_params));
+                    $.ajax({
+                        type: "POST",
+                        url: "main.php?module=base&submod=computers&action=ajaxDeployPackage",
+                        contentType: 'application/json; charset=utf-8',
+                        dataType: 'json',
+                        data: JSON.stringify(cmd_params),
+                        success: function(data){$('body').append(data);},
+                        failure: function(errMsg) {
+                            alert(errMsg);
+                        }
+                    });
+                });
+                $('<form id="registryForm" />').insertBefore('table')
+                        .append($('table'))
+                        .append(confirmBtn);
+            });
+            </script>
+            <?php
+        }
+
         ?><a href='<?php echo urlStr("inventory/inventory/csv", array('table' => $table, 'uuid' => $_GET["uuid"])) ?>'><img src='modules/inventory/graph/csv.png' alt='export csv'/></a>
 
         <?php

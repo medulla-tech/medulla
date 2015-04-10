@@ -88,6 +88,12 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False));
     $submod->addPage($page);
 
+    // A customer specific page to handle specific deployement 
+    $page = new Page("ajaxDeployPackage", _T('Deploy specific package', 'msc'));
+    $page->setFile("modules/msc/msc/ajaxDeployPackage.php");
+    $page->setOptions(array("visible" => False, "AJAX" => True));
+    $submod->addPage($page);
+
     $page = new Page("groupmsctabs", _T("Secure control on a group of computers", "msc"));
     $page->setFile("modules/msc/msc/tabs.php");
     $page->setOptions(array("visible" => False));
