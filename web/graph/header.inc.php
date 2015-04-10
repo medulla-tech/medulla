@@ -123,7 +123,7 @@ $root = $conf["global"]["root"];
                 jQuery('#popup').css({
                     'width': '50%',
                     'left': '25%',
-                    'top': '50%'
+                    'top': '15%'
                 });
                 jQuery('#overlay').fadeIn().click(closePopup);
             }
