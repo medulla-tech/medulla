@@ -499,6 +499,9 @@ class Inventory(DyngroupDatabaseHelper):
                         { 'cn' : [machine.Name],
                           'objectUUID' : [uuid] } ]
                 computers[uuid] = tmp
+                machine_attributes = machine.toDN(ctx)[1]
+                for k, v in machine_attributes.iteritems():
+                    computers[uuid][1][k] = v
                 # Keep UUID order
                 uuids.append(uuid)
             if len(uuids):
