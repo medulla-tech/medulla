@@ -24,6 +24,7 @@
 -- Table structure for table `RightUserEntities`
 --
 
+START TRANSACTION;
 
 CREATE TABLE  IF NOT EXISTS  RightUserEntities (
   fk_User int(11) unsigned NOT NULL,
@@ -32,3 +33,6 @@ CREATE TABLE  IF NOT EXISTS  RightUserEntities (
   KEY fk_Entity (fk_Entity)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+UPDATE Version SET Number = 15;
+
+COMMIT;

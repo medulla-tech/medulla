@@ -16,7 +16,9 @@
 -- You should have received a copy of the GNU General Public License
 -- along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 
+START TRANSACTION;
 
 ALTER TABLE `Hardware` ADD `Owner` VARCHAR(32) NULL;
 UPDATE Version SET Number = 14;
 
+COMMIT;
