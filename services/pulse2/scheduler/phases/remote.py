@@ -853,7 +853,7 @@ class ExecutionPhase(RemoteControlPhase):
             cohq = CoHQuery(self.coh.id)
             if not self.dispatcher.local_proxy_may_continue(cohq):
                 self.logger.info("Circuit #%s: execution postponed, waiting for some clients" % self.coh.id)
-                if not self.isStateStopped():
+                if not self.coh.isStateStopped():
                     self.coh.setStateScheduled()
         if ret not in (DIRECTIVE.NEXT,
                        DIRECTIVE.GIVE_UP,

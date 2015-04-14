@@ -110,8 +110,8 @@ class MscQueryManager(MscContainer):
                        if not (c.qm.coh.isStateStopped() or c.qm.coh.isStatePaused())
                        and c.qm.cmd.in_valid_time()
                    ]
-        if len(coh_ids) > 1:
-            circuits = [c for c in circuits if c.id in coh_ids]
+        if len(coh_ids) >= 1:
+            circuits = [c for c in circuits if c.qm.cmd.id in coh_ids]
             return circuits
         else :
             return []
@@ -234,7 +234,7 @@ class MscQueryManager(MscContainer):
         order_in_bundle = cmd.order_in_bundle
         target_uuid = target.target_uuid
 
-        nbr = len([c for c in self.get_active_circuits() 
+        nbr = len([c for c in self.get_active_circuits([cmd.id]) 
                  if fk_bundle == c.qm.cmd.fk_bundle
                  and order_in_bundle == c.qm.cmd.order_in_bundle
                  and target_uuid == c.qm.target.target_uuid
@@ -257,7 +257,8 @@ class MscQueryManager(MscContainer):
             - 'error': Something wrong was found in the command (usually mess in priorities)
             - an int: I'm a client and the returned value is the CoH I will use
         """
-        proxy_mode = self.get_proxy_mode_for_command(cohq)
+        cmd_id = cohq.cmd.id
+        proxy_mode = self.get_proxy_mode_for_command(cmd_id)
         if proxy_mode == 'queue':
             return self.local_proxy_attempt_queue_mode(cohq)
         elif proxy_mode == 'split':
@@ -280,13 +281,13 @@ class MscQueryManager(MscContainer):
 
         spotted_priorities = {}
 
-        circuits = [c for c in self.get_active_circuits() if c.qm.cmd.id==id]
+        circuits = [c for c in self.get_active_circuits([cmd_id]) if c.qm.cmd.id==cmd_id]
         for c in circuits :
-            if c.qm.cmd.order_in_proxy != None: # some potential proxy
-                if c.qm.cmd.order_in_proxy in spotted_priorities:
-                    spotted_priorities[c.qm.cmd.order_in_proxy] += 1
+            if c.qm.coh.order_in_proxy != None: # some potential proxy
+                if c.qm.coh.order_in_proxy in spotted_priorities:
+                    spotted_priorities[c.qm.coh.order_in_proxy] += 1
                 else:
-                    spotted_priorities[c.qm.cmd.order_in_proxy] = 1
+                    spotted_priorities[c.qm.coh.order_in_proxy] = 1
 
         if len(spotted_priorities) == 0:
             return False
@@ -329,6 +330,7 @@ class MscQueryManager(MscContainer):
             self.logger.debug("scheduler %s: coh #%s probed on %s, got %s" % (self.config.name, proxy, uuid, result))
             return (result, uuid, proxy)
 
+        cmd_id = cohq.cmd.id
         if cohq.coh.getOrderInProxy() is None:   # I'm a client: I MUST use a proxy server ...
             temp_dysfunc_proxy = list() # proxies with no data (UPLOADED != DONE)
             def_dysfunc_proxy = list()  # proxies with no data (UPLOADED != DONE) and which definitely wont't process further (current_state != scheduled)
@@ -338,7 +340,7 @@ class MscQueryManager(MscContainer):
             # are linked to the same command
             # are not our CoH
             # are proxy server
-            circuits = [c for c in self.get_active_circuits() 
+            circuits = [c for c in self.get_active_circuits([cmd_id]) 
                                 if c.qm.cmd.id == cohq.cmd.id
                                and c.qm.coh.id != cohq.coh.id
                                and c.qm.coh.order_in_proxy is None]
@@ -370,7 +372,7 @@ class MscQueryManager(MscContainer):
 
             for proxy in available_proxy: # proxy is the proxy coh id
                 #proxyCoH = session.query(CommandsOnHost).get(proxy)
-                proxy_target = [c.qm.target for c in self.get_active_circuits() if c.qm.coh.id==proxy]
+                proxy_target = [c.qm.target for c in self.get_active_circuits([cmd_id]) if c.qm.coh.id==proxy]
                 assert len(proxy_target) == 1
 
                 #proxyT = session.query(Target).get(proxyCoH.getIdTarget())
@@ -390,7 +392,7 @@ class MscQueryManager(MscContainer):
             return dl
 
         else:                                                               # I'm a server: let's upload
-            self.logger.debug("scheduler %s: coh #%s become local proxy server" % (self.config.name, cohq.coh.id))
+            self.logger.error("scheduler %s: coh #%s become local proxy server" % (self.config.name, cohq.coh.id))
             return 'server'
 
 
@@ -404,7 +406,8 @@ class MscQueryManager(MscContainer):
         # iterate over CoH which
         # are linked to the same command
         # are not our CoH
-        circuits = [c for c in self.get_active_circuits() 
+        cmd_id = cohq.cmd.id
+        circuits = [c for c in self.get_active_circuits([cmd_id]) 
                             if c.qm.cmd.id==cohq.cmd.id
                            and c.qm.coh.id != cohq.coh.id]
 
@@ -485,7 +488,7 @@ class MscQueryManager(MscContainer):
         assert len(commands_ids) == 1
 
         cmd_id = commands_ids[0]
-        circuits = [c for c in self.get_active_circuits() 
+        circuits = [c for c in self.get_active_circuits([cmd_id]) 
                             if c.qm.cmd.id==cmd_id
                            and c.qm.coh.fk_use_as_proxy==id
                            and c.qm.phase.is_running()
@@ -509,10 +512,11 @@ class MscQueryManager(MscContainer):
         if cohq.coh.isLocalProxy(): # proxy server, way for clients to be done
             self.logger.debug("scheduler %s: checking if we may continue coh #%s" % (self.config.name, cohq.coh.id))
             our_client_count = 0
-            clients = [c for c in self.get_active_circuits() 
+            cmd_id = cohq.cmd.id
+            clients = [c for c in self.get_active_circuits([cmd_id]) 
                                if c.qm.cmd.id==cohq.cmd.id
                               and c.qm.coh.id != cohq.coh.id
-                              and not c.qm.phase.id_done()
+                              and not c.qm.phase.is_done()
                               and not c.qm.coh.isStateDone()
                               and not c.qm.coh.isStateOverTimed()]
 
