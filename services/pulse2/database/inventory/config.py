@@ -86,7 +86,9 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
             'Software/ProductVersion' : 'string'
     }
     halfstatic = {
-            'Registry/Value/display name' : ['string', 'Path', 'DisplayName']
+            'Registry/Value/display name' : ['string', 'Path', 'DisplayName'],
+            'Registry/Value/nomRegistryPath codePDV':['string', 'Path', 'codePDV'],
+            'Registry/Value/nomRegistryPath hardwareSerial':['string', 'Path', 'hardwareSerial']
     }
     expert_mode = {}
     graph = {}
