@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 16:22+0100\n"
-"PO-Revision-Date: 2015-03-06 15:41+0000\n"
+"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"PO-Revision-Date: 2015-04-10 09:35+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
 #: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:530
 #: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:598
 msgid "Date"
 msgstr "Дата"
 
@@ -56,6 +56,28 @@ msgstr ""
 
 #: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
+msgid "Entity right"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:83
+msgid "Remove entity for user"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right for user"
 msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:31
@@ -111,10 +133,10 @@ msgid "Input"
 msgstr "Вход"
 
 #: modules/inventory/infoPackage.inc.php:57
-#: modules/inventory/inventory/ajaxViewPart.php:227
-#: modules/inventory/inventory/ajaxViewPart.php:528
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:596
 msgid "Memory"
 msgstr "Память"
 
@@ -143,9 +165,9 @@ msgid "Sound"
 msgstr "Звук"
 
 #: modules/inventory/infoPackage.inc.php:67
-#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/ajaxViewPart.php:228
 msgid "Storage"
 msgstr "Хранение"
 
@@ -167,13 +189,13 @@ msgstr "Реестр"
 
 #: modules/inventory/infoPackage.inc.php:76
 #: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:461
+#: modules/inventory/inventory/ajaxViewPart.php:529
 msgid "View"
 msgstr "Вид"
 
 #: modules/inventory/infoPackage.inc.php:80
 #: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:462
+#: modules/inventory/inventory/ajaxViewPart.php:530
 msgid "Information"
 msgstr ""
 
@@ -320,10 +342,10 @@ msgstr ""
 
 #: modules/inventory/inventory/EditEntity.php:55
 #: modules/inventory/inventory/addEntity.php:50
-#: modules/inventory/inventory/ajaxViewPart.php:492
-#: modules/inventory/inventory/ajaxViewPart.php:508
 #: modules/inventory/inventory/deleteEntity.php:64
 #: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/ajaxViewPart.php:560
+#: modules/inventory/inventory/ajaxViewPart.php:576
 msgid "Name"
 msgstr "Имя"
 
@@ -471,10 +493,6 @@ msgstr ""
 msgid "must not contain space character"
 msgstr ""
 
-#: modules/inventory/inventory/addEntityRule.php:180
-msgid "Remove"
-msgstr ""
-
 #: modules/inventory/inventory/addEntityRule.php:194
 msgid "Criterion"
 msgstr ""
@@ -556,295 +574,6 @@ msgstr "Новый компьютер"
 #: modules/inventory/inventory/ajaxIncoming.php:91
 msgid "Elements"
 msgstr "Элементы"
-
-#: modules/inventory/inventory/ajaxViewPart.php:83
-msgid " (Not an antivirus)"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:106
-msgid "Click here to see this computer on manufacturer website"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:121
-#: modules/inventory/inventory/view.php:74
-msgid "Properties"
-msgstr "Свойства"
-
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:75
-msgid "Value"
-msgstr "Значение"
-
-#: modules/inventory/inventory/ajaxViewPart.php:140
-msgid "No record found for this period."
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:143
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:144
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:147
-msgid "No record found."
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:226
-msgid "Processors"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:229
-msgid "Controllers"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:230
-msgid "Network Cards"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:231
-msgid "Drives"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:232
-msgid "Graphic Cards"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:233
-msgid "Sound Cards"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:234
-msgid "Others"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:490
-msgid "Yes"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:491
-msgid "No"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:493
-#: modules/inventory/inventory/i18n_labels.php:108
-msgid "Network Type"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:494
-#: modules/inventory/inventory/i18n_labels.php:93
-msgid "MAC Address"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:495
-#: modules/inventory/inventory/i18n_labels.php:86
-msgid "IP"
-msgstr "IP"
-
-#: modules/inventory/inventory/ajaxViewPart.php:496
-msgid "Netmask"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:497
-#: modules/inventory/inventory/i18n_labels.php:81
-msgid "Gateway"
-msgstr "Шлюз"
-
-#: modules/inventory/inventory/ajaxViewPart.php:498
-#: modules/inventory/inventory/i18n_labels.php:61
-msgid "Device"
-msgstr "Устройство"
-
-#: modules/inventory/inventory/ajaxViewPart.php:499
-msgid "Mount Point"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:500
-msgid "Filesystem"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:501
-#: modules/inventory/inventory/ajaxViewPart.php:525
-#: modules/inventory/inventory/i18n_labels.php:133
-msgid "Size"
-msgstr "Размер"
-
-#: modules/inventory/inventory/ajaxViewPart.php:502
-msgid "Free Size"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:503
-msgid "Supplier"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:504
-msgid "Invoice Number"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:505
-msgid "Date Of Purchase"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:506
-msgid "Warranty End Date"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:507
-#: modules/inventory/inventory/i18n_labels.php:162
-msgid "Vendor"
-msgstr "Производитель"
-
-#: modules/inventory/inventory/ajaxViewPart.php:509
-#: modules/inventory/inventory/i18n_labels.php:163
-msgid "Version"
-msgstr "Версия"
-
-#: modules/inventory/inventory/ajaxViewPart.php:510
-msgid "Computer Name"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:511
-#: modules/inventory/inventory/i18n_labels.php:60
-msgid "Description"
-msgstr "Описание"
-
-#: modules/inventory/inventory/ajaxViewPart.php:512
-msgid "Entity (Location)"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:513
-msgid "Entity"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:514
-#: modules/inventory/inventory/i18n_labels.php:91
-msgid "Location"
-msgstr "Локализация"
-
-#: modules/inventory/inventory/ajaxViewPart.php:515
-msgid "Last Logged User"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:516
-msgid "OS"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:517
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "Operating System"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:518
-msgid "Computer Type"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:519
-msgid "Model / Type"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:520
-#: modules/inventory/inventory/i18n_labels.php:103
-msgid "Model"
-msgstr "Модель"
-
-#: modules/inventory/inventory/ajaxViewPart.php:521
-#: modules/inventory/inventory/i18n_labels.php:98
-msgid "Manufacturer"
-msgstr "Производитель"
-
-#: modules/inventory/inventory/ajaxViewPart.php:522
-msgid "Serial Number"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:523
-#: modules/inventory/inventory/i18n_labels.php:79
-msgid "Frequency"
-msgstr "Частота"
-
-#: modules/inventory/inventory/ajaxViewPart.php:524
-#: modules/inventory/inventory/i18n_labels.php:156
-msgid "Type"
-msgstr "Тип"
-
-#: modules/inventory/inventory/ajaxViewPart.php:526
-msgid "Bandwidth"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:527
-msgid "Writer"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:529
-msgid "Comment"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:531
-#: modules/inventory/inventory/i18n_labels.php:159
-msgid "User"
-msgstr "Пользователь"
-
-#: modules/inventory/inventory/ajaxViewPart.php:532
-msgid "Category"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:533
-msgid "Action"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:534
-msgid "Today"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:535
-msgid "Last 7 days"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:536
-msgid "Last 30 days"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:537
-msgid "All"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:538
-msgid "Service Pack"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:539
-msgid "Windows Key"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:540
-msgid "Domain"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:541
-#: modules/inventory/inventory/i18n_labels.php:147
-msgid "State"
-msgstr "Состояние"
-
-#: modules/inventory/inventory/ajaxViewPart.php:542
-msgid "Unknown"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:543
-msgid "Inventory Number"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:545
-msgid "Enabled"
-msgstr ""
-
-#: modules/inventory/inventory/ajaxViewPart.php:546
-msgid "Up-to-date"
-msgstr ""
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
@@ -963,14 +692,6 @@ msgstr ""
 msgid "back"
 msgstr "назад"
 
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "Просмотр различий с предыдущей инвентаризации"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr ""
-
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
 msgstr "Приложение"
@@ -1087,6 +808,16 @@ msgstr ""
 msgid "Department"
 msgstr "Департамент"
 
+#: modules/inventory/inventory/i18n_labels.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:579
+msgid "Description"
+msgstr "Описание"
+
+#: modules/inventory/inventory/i18n_labels.php:61
+#: modules/inventory/inventory/ajaxViewPart.php:566
+msgid "Device"
+msgstr "Устройство"
+
 #: modules/inventory/inventory/i18n_labels.php:62
 msgid "Disk"
 msgstr "Диск"
@@ -1151,9 +882,19 @@ msgstr ""
 msgid "Freq"
 msgstr "Част"
 
+#: modules/inventory/inventory/i18n_labels.php:79
+#: modules/inventory/inventory/ajaxViewPart.php:591
+msgid "Frequency"
+msgstr "Частота"
+
 #: modules/inventory/inventory/i18n_labels.php:80
 msgid "Func"
 msgstr "Функция"
+
+#: modules/inventory/inventory/i18n_labels.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:565
+msgid "Gateway"
+msgstr "Шлюз"
 
 #: modules/inventory/inventory/i18n_labels.php:83
 msgid "Hardware Version"
@@ -1167,6 +908,11 @@ msgstr "Заголовок"
 msgid "High Mem"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:86
+#: modules/inventory/inventory/ajaxViewPart.php:563
+msgid "IP"
+msgstr "IP"
+
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
 msgstr ""
@@ -1179,8 +925,18 @@ msgstr "Ключ"
 msgid "Length"
 msgstr "Длина"
 
+#: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:582
+msgid "Location"
+msgstr "Локализация"
+
 #: modules/inventory/inventory/i18n_labels.php:92
 msgid "Low Mem"
+msgstr ""
+
+#: modules/inventory/inventory/i18n_labels.php:93
+#: modules/inventory/inventory/ajaxViewPart.php:562
+msgid "MAC Address"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:94
@@ -1195,6 +951,11 @@ msgstr ""
 msgid "Manuf"
 msgstr "Произв"
 
+#: modules/inventory/inventory/i18n_labels.php:98
+#: modules/inventory/inventory/ajaxViewPart.php:589
+msgid "Manufacturer"
+msgstr "Производитель"
+
 #: modules/inventory/inventory/i18n_labels.php:99
 msgid "Media"
 msgstr "Носитель"
@@ -1207,9 +968,19 @@ msgstr ""
 msgid "Misc SMB"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:103
+#: modules/inventory/inventory/ajaxViewPart.php:588
+msgid "Model"
+msgstr "Модель"
+
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
 msgstr "Модем"
+
+#: modules/inventory/inventory/i18n_labels.php:108
+#: modules/inventory/inventory/ajaxViewPart.php:561
+msgid "Network Type"
+msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "Num"
@@ -1229,6 +1000,11 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:113
 msgid "Os Architecture"
+msgstr ""
+
+#: modules/inventory/inventory/i18n_labels.php:114
+#: modules/inventory/inventory/ajaxViewPart.php:585
+msgid "Operating System"
 msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:115
@@ -1296,6 +1072,12 @@ msgstr "Сектор"
 msgid "Serial"
 msgstr "Серийный номер"
 
+#: modules/inventory/inventory/i18n_labels.php:133
+#: modules/inventory/inventory/ajaxViewPart.php:569
+#: modules/inventory/inventory/ajaxViewPart.php:593
+msgid "Size"
+msgstr "Размер"
+
 #: modules/inventory/inventory/i18n_labels.php:134
 #: modules/inventory/inventory/slot.php:27
 msgid "Slot"
@@ -1341,6 +1123,11 @@ msgstr ""
 msgid "Standard Type"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:147
+#: modules/inventory/inventory/ajaxViewPart.php:609
+msgid "State"
+msgstr "Состояние"
+
 #: modules/inventory/inventory/i18n_labels.php:149
 msgid "Subnet Mask"
 msgstr ""
@@ -1369,6 +1156,11 @@ msgstr ""
 msgid "Total Space"
 msgstr ""
 
+#: modules/inventory/inventory/i18n_labels.php:156
+#: modules/inventory/inventory/ajaxViewPart.php:592
+msgid "Type"
+msgstr "Тип"
+
 #: modules/inventory/inventory/i18n_labels.php:157
 msgid "Type Machine"
 msgstr ""
@@ -1377,9 +1169,32 @@ msgstr ""
 msgid "Used"
 msgstr "Использованный"
 
+#: modules/inventory/inventory/i18n_labels.php:159
+#: modules/inventory/inventory/ajaxViewPart.php:599
+msgid "User"
+msgstr "Пользователь"
+
 #: modules/inventory/inventory/i18n_labels.php:160
 msgid "VRAM Size"
 msgstr ""
+
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/ajaxViewPart.php:122
+msgid "Value"
+msgstr "Значение"
+
+#: modules/inventory/inventory/i18n_labels.php:162
+#: modules/inventory/inventory/ajaxViewPart.php:575
+msgid "Vendor"
+msgstr "Производитель"
+
+#: modules/inventory/inventory/i18n_labels.php:163
+#: modules/inventory/inventory/ajaxViewPart.php:577
+msgid "Version"
+msgstr "Версия"
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
@@ -1491,5 +1306,208 @@ msgstr ""
 #, php-format
 msgid "Inventory of %s"
 msgstr "Инвентаризация %s"
+
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "Свойства"
+
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+msgid "Controllers"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:230
+msgid "Network Cards"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:231
+msgid "Drives"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+msgid "Sound Cards"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:558
+msgid "Yes"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:559
+msgid "No"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:564
+msgid "Netmask"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:567
+msgid "Mount Point"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:568
+msgid "Filesystem"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:570
+msgid "Free Size"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:571
+msgid "Supplier"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:572
+msgid "Invoice Number"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:573
+msgid "Date Of Purchase"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:574
+msgid "Warranty End Date"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:578
+msgid "Computer Name"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:580
+msgid "Entity (Location)"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:581
+msgid "Entity"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:583
+msgid "Last Logged User"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:584
+msgid "OS"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:586
+msgid "Computer Type"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:587
+msgid "Model / Type"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:590
+msgid "Serial Number"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:594
+msgid "Bandwidth"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:595
+msgid "Writer"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:597
+msgid "Comment"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:600
+msgid "Category"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:601
+msgid "Action"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:602
+msgid "Today"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:603
+msgid "Last 7 days"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:604
+msgid "Last 30 days"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:605
+msgid "All"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:606
+msgid "Service Pack"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:607
+msgid "Windows Key"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:608
+msgid "Domain"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:610
+msgid "Unknown"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:611
+msgid "Inventory Number"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:613
+msgid "Enabled"
+msgstr ""
+
+#: modules/inventory/inventory/ajaxViewPart.php:614
+msgid "Up-to-date"
+msgstr ""
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Просмотр различий с предыдущей инвентаризации"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr ""
 
 

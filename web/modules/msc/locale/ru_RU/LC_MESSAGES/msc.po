@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 16:22+0100\n"
-"PO-Revision-Date: 2015-02-02 00:19+0000\n"
+"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"PO-Revision-Date: 2015-04-10 09:36+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
@@ -562,6 +562,108 @@ msgid ""
 "target=\"_blank\">View group</a>"
 msgstr ""
 
+#: modules/msc/includes/utilities.php:32
+msgid "Bytes"
+msgstr "Байты"
+
+#: modules/msc/includes/utilities.php:35
+#, php-format
+msgid "%3.1f %s%s"
+msgstr "%3.1f %s%s"
+
+#: modules/msc/includes/widgets.inc.php:27
+#, php-format
+msgid "Quick action path %s don't exists"
+msgstr "Быстрый путь действий %s не существует"
+
+#: modules/msc/includes/widgets.inc.php:33
+msgid "Other/N.A."
+msgstr "Другие/N.A."
+
+#: modules/msc/includes/widgets.inc.php:45
+#, php-format
+msgid "%s status"
+msgstr "состояние %s"
+
+#: modules/msc/includes/widgets.inc.php:74
+#, php-format
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions"
+" to access it"
+msgstr "группа \"%s\" не найдена в модуле MSC, или у вас нет права доступа к ней"
+
+#: modules/msc/includes/widgets.inc.php:96
+#, php-format
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr "хост %s не найден в модуле MSC, или у вас нет права доступа к нему"
+
+#: modules/msc/includes/widgets.inc.php:117
+msgid "You don't have the right permissions to display this command"
+msgstr "У вас нет права доступа для просмотра данной команды"
+
+#: modules/msc/includes/widgets.inc.php:184
+#, php-format
+msgid "Quick action on %s"
+msgstr "Быстрое действие над %s"
+
+#: modules/msc/includes/widgets.inc.php:232
+msgid "Execute action..."
+msgstr "Выполнение..."
+
+#: modules/msc/includes/widgets.inc.php:255
+msgid "Quick action list is empty"
+msgstr "список быстрых действий пуст"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:517
+#: modules/msc/logs/localSidebar.php:28 modules/msc/infoPackage.inc.php:50
+msgid "My commands"
+msgstr "Мои команды"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:517
+msgid "All users commands"
+msgstr "Команды всех пользователей"
+
+#: modules/msc/includes/widgets.inc.php:387
+msgid "State filter"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:389
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:334
+#: modules/msc/msc/ajaxLogsFilter.php:429
+msgid "Done"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:391
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:333
+#: modules/msc/msc/ajaxLogsFilter.php:430
+msgid "Failed"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:393
+msgid "In progress"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:395
+#: modules/msc/msc/ajaxLogsFilter.php:432
+msgid "Overtime"
+msgstr ""
+
+#: modules/msc/includes/widgets.inc.php:397
+#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
+#: modules/msc/msc/ajaxLogsFilter.php:431
+msgid "Stopped"
+msgstr "Остановлен"
+
+#: modules/msc/includes/widgets.inc.php:401
+msgid "Create a group"
+msgstr ""
+
 #: modules/msc/includes/functions.php:25
 msgid "Upload in progress"
 msgstr "Выполняется загрузка"
@@ -651,27 +753,14 @@ msgid "Not reachable"
 msgstr "Недостижимый"
 
 #: modules/msc/includes/functions.php:47
-#: modules/msc/includes/functions.php:333
+#: modules/msc/includes/functions.php:331
 #: modules/msc/msc/ajaxDownloadFile.php:77
 msgid "Ready"
 msgstr "Готово"
 
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:336
-#: modules/msc/includes/widgets.inc.php:389
-#: modules/msc/msc/ajaxLogsFilter.php:429
-msgid "Done"
-msgstr ""
-
 #: modules/msc/includes/functions.php:49
 msgid "Paused"
 msgstr "Приостановлен"
-
-#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/includes/widgets.inc.php:397
-#: modules/msc/msc/ajaxLogsFilter.php:431
-msgid "Stopped"
-msgstr "Остановлен"
 
 #: modules/msc/includes/functions.php:52
 msgid "Scheduled"
@@ -680,13 +769,6 @@ msgstr "Запланирован"
 #: modules/msc/includes/functions.php:53
 msgid "Rescheduled"
 msgstr "Перенесен"
-
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:335
-#: modules/msc/includes/widgets.inc.php:391
-#: modules/msc/msc/ajaxLogsFilter.php:430
-msgid "Failed"
-msgstr ""
 
 #: modules/msc/includes/functions.php:55
 msgid "Time Exceeded"
@@ -745,285 +827,14 @@ msgid "After bootmenu actions"
 msgstr ""
 
 #: modules/msc/includes/functions.php:325
-msgid "Unlock & Reboot"
-msgstr ""
-
-#: modules/msc/includes/functions.php:326
-msgid "Lock & Reboot"
-msgstr ""
-
-#: modules/msc/includes/functions.php:327
 msgid "Finish"
 msgstr ""
 
-#: modules/msc/includes/functions.php:334
+#: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
 msgid "Running"
 msgstr ""
-
-#: modules/msc/includes/utilities.php:32
-msgid "Bytes"
-msgstr "Байты"
-
-#: modules/msc/includes/utilities.php:35
-#, php-format
-msgid "%3.1f %s%s"
-msgstr "%3.1f %s%s"
-
-#: modules/msc/includes/widgets.inc.php:27
-#, php-format
-msgid "Quick action path %s don't exists"
-msgstr "Быстрый путь действий %s не существует"
-
-#: modules/msc/includes/widgets.inc.php:33
-msgid "Other/N.A."
-msgstr "Другие/N.A."
-
-#: modules/msc/includes/widgets.inc.php:45
-#, php-format
-msgid "%s status"
-msgstr "состояние %s"
-
-#: modules/msc/includes/widgets.inc.php:74
-#, php-format
-msgid ""
-"group \"%s\" is not defined in the MSC module, or you don't have permissions"
-" to access it"
-msgstr "группа \"%s\" не найдена в модуле MSC, или у вас нет права доступа к ней"
-
-#: modules/msc/includes/widgets.inc.php:96
-#, php-format
-msgid ""
-"%s host is not defined in the MSC module, or you don't have permissions to "
-"access it"
-msgstr "хост %s не найден в модуле MSC, или у вас нет права доступа к нему"
-
-#: modules/msc/includes/widgets.inc.php:117
-msgid "You don't have the right permissions to display this command"
-msgstr "У вас нет права доступа для просмотра данной команды"
-
-#: modules/msc/includes/widgets.inc.php:184
-#, php-format
-msgid "Quick action on %s"
-msgstr "Быстрое действие над %s"
-
-#: modules/msc/includes/widgets.inc.php:232
-msgid "Execute action..."
-msgstr "Выполнение..."
-
-#: modules/msc/includes/widgets.inc.php:255
-msgid "Quick action list is empty"
-msgstr "список быстрых действий пуст"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517 modules/msc/infoPackage.inc.php:50
-#: modules/msc/logs/localSidebar.php:28
-msgid "My commands"
-msgstr "Мои команды"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517
-msgid "All users commands"
-msgstr "Команды всех пользователей"
-
-#: modules/msc/includes/widgets.inc.php:387
-msgid "State filter"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:393
-msgid "In progress"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:395
-#: modules/msc/msc/ajaxLogsFilter.php:432
-msgid "Overtime"
-msgstr ""
-
-#: modules/msc/includes/widgets.inc.php:401
-msgid "Create a group"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:42
-msgid "Secure Control"
-msgstr "Безопасное Управление"
-
-#: modules/msc/infoPackage.inc.php:46
-msgid "Audit"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
-msgid "All user commands"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:56
-msgid "Commands logs"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:59
-msgid "Show all logs"
-msgstr "Показать все журналы"
-
-#: modules/msc/infoPackage.inc.php:61
-msgid "Show pending task's logs"
-msgstr "Показать журналы ожидающих задач"
-
-#: modules/msc/infoPackage.inc.php:63
-msgid "Show running task's logs"
-msgstr "Показать журналы выполняющихся задач"
-
-#: modules/msc/infoPackage.inc.php:65
-msgid "Show finished task's logs"
-msgstr "Показать журналы завершенных задач"
-
-#: modules/msc/infoPackage.inc.php:68
-msgid "Show custom state task's logs"
-msgstr "Показать пользовательские журналы состояний задач"
-
-#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:257
-#: modules/msc/infoPackage.inc.php:262
-msgid "logs list"
-msgstr "Список журналов"
-
-#: modules/msc/infoPackage.inc.php:74
-msgid "consolidated logs list"
-msgstr "консолидированный список журналов"
-
-#: modules/msc/infoPackage.inc.php:77
-msgid "the state list"
-msgstr "список состояний"
-
-#: modules/msc/infoPackage.inc.php:86
-msgid "Remove machine from pull mode"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:91
-msgid "Secure control on a group of computers"
-msgstr "Безопасное управление группой компьютеров"
-
-#: modules/msc/infoPackage.inc.php:95
-msgid "MSC launch tab for a group"
-msgstr "Вкладка запуска MSC для группы"
-
-#: modules/msc/infoPackage.inc.php:98
-msgid "MSC bundle tab for a group"
-msgstr "Вкладка набора пакетов MSC для группы"
-
-#: modules/msc/infoPackage.inc.php:101
-msgid "MSC logs tab for a group"
-msgstr "Вкладка журналов MSC для группы"
-
-#: modules/msc/infoPackage.inc.php:106
-msgid "Secure control on computer"
-msgstr "Безопасное упрявление компьютером"
-
-#: modules/msc/infoPackage.inc.php:110
-msgid "MSC launch tab for a machine"
-msgstr "Вкладка запуска MSC для машины"
-
-#: modules/msc/infoPackage.inc.php:113
-msgid "MSC bundle tab for a machine"
-msgstr "Вкладка набора пакетов MSC для машины"
-
-#: modules/msc/infoPackage.inc.php:116
-msgid "MSC logs tab for a machine"
-msgstr "Вкладка журналов MSC для машины"
-
-#: modules/msc/infoPackage.inc.php:121
-msgid "Download file from a computer"
-msgstr "Загрузить файс с компьютера"
-
-#: modules/msc/infoPackage.inc.php:127
-msgid "Remove a downloaded file"
-msgstr "Удалить загруженный файл"
-
-#: modules/msc/infoPackage.inc.php:133
-msgid "Get a downloaded file"
-msgstr "Получить загруженный файл"
-
-#: modules/msc/infoPackage.inc.php:139
-msgid "Take control of a computer"
-msgstr "Управлять компьютером"
-
-#: modules/msc/infoPackage.inc.php:146
-msgid "Play a command"
-msgstr "Запустить команду"
-
-#: modules/msc/infoPackage.inc.php:152
-msgid "Pause a command"
-msgstr "Приостановить команду"
-
-#: modules/msc/infoPackage.inc.php:158
-msgid "Stop a command"
-msgstr "Остановить команду"
-
-#: modules/msc/infoPackage.inc.php:164
-msgid "Command status"
-msgstr "Состояние команды"
-
-#: modules/msc/infoPackage.inc.php:170
-msgid "Reschedule a command"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:176
-msgid "Delete a command"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:183
-msgid "Single command status"
-msgstr "Состояние одной команды"
-
-#: modules/msc/infoPackage.inc.php:188
-msgid "Show package's details"
-msgstr "Показать информацию о пакетах"
-
-#: modules/msc/infoPackage.inc.php:194
-msgid "Launch a command"
-msgstr "Запустить команду"
-
-#: modules/msc/infoPackage.inc.php:200
-msgid "Launch a advanced command"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:206
-msgid "Software convergence configuration"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:212
-msgid "Launch a quick action command"
-msgstr "Запустить команду быстрого действия"
-
-#: modules/msc/infoPackage.inc.php:217 modules/msc/msc/packages.php:29
-msgid "Packages"
-msgstr "Пакеты"
-
-#: modules/msc/infoPackage.inc.php:222
-msgid "Ping and probe"
-msgstr "Выполнить команду рing и попробовать"
-
-#: modules/msc/infoPackage.inc.php:227
-msgid "Ping"
-msgstr "Ping"
-
-#: modules/msc/infoPackage.inc.php:232
-msgid "Platform"
-msgstr "Платформа"
-
-#: modules/msc/infoPackage.inc.php:237
-msgid "MAC Addr."
-msgstr "MAC-адрес"
-
-#: modules/msc/infoPackage.inc.php:242
-msgid "IP Addr."
-msgstr "IP-адрес"
-
-#: modules/msc/infoPackage.inc.php:247 modules/msc/msc/download_file.php:32
-msgid "Download file page"
-msgstr "Загрузить страницу файла"
-
-#: modules/msc/infoPackage.inc.php:252
-msgid "Csv's export"
-msgstr "Экспорт csv"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
@@ -1134,6 +945,10 @@ msgstr "Показать пользовательские журналы сос�
 #: modules/msc/logs/finished.php:33
 msgid "Show all finished task's logs"
 msgstr "Показать журналы всех завершенных задач"
+
+#: modules/msc/logs/localSidebar.php:29 modules/msc/infoPackage.inc.php:53
+msgid "All user commands"
+msgstr ""
 
 #: modules/msc/logs/pending.php:33
 msgid "Show all pending task's logs"
@@ -1347,6 +1162,10 @@ msgstr ""
 #: modules/msc/msc/delete.php:57
 msgid "Delete this command"
 msgstr ""
+
+#: modules/msc/msc/download_file.php:32 modules/msc/infoPackage.inc.php:253
+msgid "Download file page"
+msgstr "Загрузить страницу файла"
 
 #: modules/msc/msc/download_file.php:39
 msgid "The download is in progress."
@@ -1924,6 +1743,10 @@ msgstr "Остановить %s %s на хосте %s"
 msgid "Label"
 msgstr "Ярлык"
 
+#: modules/msc/msc/packages.php:29 modules/msc/infoPackage.inc.php:223
+msgid "Packages"
+msgstr "Пакеты"
+
 #: modules/msc/msc/reschedule.php:40
 msgid "Reschedule this command"
 msgstr ""
@@ -2151,5 +1974,178 @@ msgstr ""
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
 msgstr ""
+
+#: modules/msc/infoPackage.inc.php:42
+msgid "Secure Control"
+msgstr "Безопасное Управление"
+
+#: modules/msc/infoPackage.inc.php:46
+msgid "Audit"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:56
+msgid "Commands logs"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:59
+msgid "Show all logs"
+msgstr "Показать все журналы"
+
+#: modules/msc/infoPackage.inc.php:61
+msgid "Show pending task's logs"
+msgstr "Показать журналы ожидающих задач"
+
+#: modules/msc/infoPackage.inc.php:63
+msgid "Show running task's logs"
+msgstr "Показать журналы выполняющихся задач"
+
+#: modules/msc/infoPackage.inc.php:65
+msgid "Show finished task's logs"
+msgstr "Показать журналы завершенных задач"
+
+#: modules/msc/infoPackage.inc.php:68
+msgid "Show custom state task's logs"
+msgstr "Показать пользовательские журналы состояний задач"
+
+#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:263
+#: modules/msc/infoPackage.inc.php:268
+msgid "logs list"
+msgstr "Список журналов"
+
+#: modules/msc/infoPackage.inc.php:74
+msgid "consolidated logs list"
+msgstr "консолидированный список журналов"
+
+#: modules/msc/infoPackage.inc.php:77
+msgid "the state list"
+msgstr "список состояний"
+
+#: modules/msc/infoPackage.inc.php:86
+msgid "Remove machine from pull mode"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:92
+msgid "Deploy specific package"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:97
+msgid "Secure control on a group of computers"
+msgstr "Безопасное управление группой компьютеров"
+
+#: modules/msc/infoPackage.inc.php:101
+msgid "MSC launch tab for a group"
+msgstr "Вкладка запуска MSC для группы"
+
+#: modules/msc/infoPackage.inc.php:104
+msgid "MSC bundle tab for a group"
+msgstr "Вкладка набора пакетов MSC для группы"
+
+#: modules/msc/infoPackage.inc.php:107
+msgid "MSC logs tab for a group"
+msgstr "Вкладка журналов MSC для группы"
+
+#: modules/msc/infoPackage.inc.php:112
+msgid "Secure control on computer"
+msgstr "Безопасное упрявление компьютером"
+
+#: modules/msc/infoPackage.inc.php:116
+msgid "MSC launch tab for a machine"
+msgstr "Вкладка запуска MSC для машины"
+
+#: modules/msc/infoPackage.inc.php:119
+msgid "MSC bundle tab for a machine"
+msgstr "Вкладка набора пакетов MSC для машины"
+
+#: modules/msc/infoPackage.inc.php:122
+msgid "MSC logs tab for a machine"
+msgstr "Вкладка журналов MSC для машины"
+
+#: modules/msc/infoPackage.inc.php:127
+msgid "Download file from a computer"
+msgstr "Загрузить файс с компьютера"
+
+#: modules/msc/infoPackage.inc.php:133
+msgid "Remove a downloaded file"
+msgstr "Удалить загруженный файл"
+
+#: modules/msc/infoPackage.inc.php:139
+msgid "Get a downloaded file"
+msgstr "Получить загруженный файл"
+
+#: modules/msc/infoPackage.inc.php:145
+msgid "Take control of a computer"
+msgstr "Управлять компьютером"
+
+#: modules/msc/infoPackage.inc.php:152
+msgid "Play a command"
+msgstr "Запустить команду"
+
+#: modules/msc/infoPackage.inc.php:158
+msgid "Pause a command"
+msgstr "Приостановить команду"
+
+#: modules/msc/infoPackage.inc.php:164
+msgid "Stop a command"
+msgstr "Остановить команду"
+
+#: modules/msc/infoPackage.inc.php:170
+msgid "Command status"
+msgstr "Состояние команды"
+
+#: modules/msc/infoPackage.inc.php:176
+msgid "Reschedule a command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:182
+msgid "Delete a command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:189
+msgid "Single command status"
+msgstr "Состояние одной команды"
+
+#: modules/msc/infoPackage.inc.php:194
+msgid "Show package's details"
+msgstr "Показать информацию о пакетах"
+
+#: modules/msc/infoPackage.inc.php:200
+msgid "Launch a command"
+msgstr "Запустить команду"
+
+#: modules/msc/infoPackage.inc.php:206
+msgid "Launch a advanced command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:212
+msgid "Software convergence configuration"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:218
+msgid "Launch a quick action command"
+msgstr "Запустить команду быстрого действия"
+
+#: modules/msc/infoPackage.inc.php:228
+msgid "Ping and probe"
+msgstr "Выполнить команду рing и попробовать"
+
+#: modules/msc/infoPackage.inc.php:233
+msgid "Ping"
+msgstr "Ping"
+
+#: modules/msc/infoPackage.inc.php:238
+msgid "Platform"
+msgstr "Платформа"
+
+#: modules/msc/infoPackage.inc.php:243
+msgid "MAC Addr."
+msgstr "MAC-адрес"
+
+#: modules/msc/infoPackage.inc.php:248
+msgid "IP Addr."
+msgstr "IP-адрес"
+
+#: modules/msc/infoPackage.inc.php:258
+msgid "Csv's export"
+msgstr "Экспорт csv"
 
 

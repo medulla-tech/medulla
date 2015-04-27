@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 16:22+0100\n"
-"PO-Revision-Date: 2015-03-06 15:41+0000\n"
+"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"PO-Revision-Date: 2015-04-10 09:36+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
 "MIME-Version: 1.0\n"
@@ -20,9 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0\n"
 
 #: modules/inventory/includes/html.php:65
-#: modules/inventory/inventory/ajaxViewPart.php:188
-#: modules/inventory/inventory/ajaxViewPart.php:530
 #: modules/inventory/inventory/i18n_labels.php:53
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:598
 msgid "Date"
 msgstr "日付"
 
@@ -57,6 +57,28 @@ msgstr "> %s 日: %percent% (%d)"
 #: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr "最終在庫日"
+
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
+msgid "Entity right"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:83
+msgid "Remove entity for user"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right"
+msgstr ""
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right for user"
+msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:31
 #: modules/inventory/infoPackage.inc.php:36
@@ -111,10 +133,10 @@ msgid "Input"
 msgstr "入力"
 
 #: modules/inventory/infoPackage.inc.php:57
-#: modules/inventory/inventory/ajaxViewPart.php:227
-#: modules/inventory/inventory/ajaxViewPart.php:528
 #: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:596
 msgid "Memory"
 msgstr "メモリ"
 
@@ -143,9 +165,9 @@ msgid "Sound"
 msgstr "サウンド"
 
 #: modules/inventory/infoPackage.inc.php:67
-#: modules/inventory/inventory/ajaxViewPart.php:228
 #: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/ajaxViewPart.php:228
 msgid "Storage"
 msgstr "ストレージ"
 
@@ -167,13 +189,13 @@ msgstr "レジストリ"
 
 #: modules/inventory/infoPackage.inc.php:76
 #: modules/inventory/inventory/ajaxIncoming.php:84
-#: modules/inventory/inventory/ajaxViewPart.php:461
+#: modules/inventory/inventory/ajaxViewPart.php:529
 msgid "View"
 msgstr "表示"
 
 #: modules/inventory/infoPackage.inc.php:80
 #: modules/inventory/inventory/ajaxIncoming.php:85
-#: modules/inventory/inventory/ajaxViewPart.php:462
+#: modules/inventory/inventory/ajaxViewPart.php:530
 msgid "Information"
 msgstr "情報"
 
@@ -320,10 +342,10 @@ msgstr ""
 
 #: modules/inventory/inventory/EditEntity.php:55
 #: modules/inventory/inventory/addEntity.php:50
-#: modules/inventory/inventory/ajaxViewPart.php:492
-#: modules/inventory/inventory/ajaxViewPart.php:508
 #: modules/inventory/inventory/deleteEntity.php:64
 #: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/ajaxViewPart.php:560
+#: modules/inventory/inventory/ajaxViewPart.php:576
 msgid "Name"
 msgstr "名前"
 
@@ -471,10 +493,6 @@ msgstr ""
 msgid "must not contain space character"
 msgstr ""
 
-#: modules/inventory/inventory/addEntityRule.php:180
-msgid "Remove"
-msgstr ""
-
 #: modules/inventory/inventory/addEntityRule.php:194
 msgid "Criterion"
 msgstr ""
@@ -556,297 +574,6 @@ msgstr "新規コンピューター"
 #: modules/inventory/inventory/ajaxIncoming.php:91
 msgid "Elements"
 msgstr "要素"
-
-#: modules/inventory/inventory/ajaxViewPart.php:83
-msgid " (Not an antivirus)"
-msgstr " (アンチウイルスでない)"
-
-#: modules/inventory/inventory/ajaxViewPart.php:106
-msgid "Click here to see this computer on manufacturer website"
-msgstr "ここをクリックして、メーカーウェブサイトでこのコンピューターを確認してください。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:121
-#: modules/inventory/inventory/view.php:74
-msgid "Properties"
-msgstr "プロパティ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
-#: modules/inventory/inventory/inventory_diff.php:76
-#: modules/inventory/inventory/inventory_diff.php:101
-#: modules/inventory/inventory/view.php:75
-msgid "Value"
-msgstr "値"
-
-#: modules/inventory/inventory/ajaxViewPart.php:140
-msgid "No record found for this period."
-msgstr "この期間にレコードが見つかりませんでした。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:143
-msgid "Unable to detect any Antivirus software on this machine."
-msgstr "このマシン上でアンチウイルスソフトウェアを検出できません。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:144
-msgid ""
-"Please ensure you are running GLPI with FusionInventory plugin and "
-"FusionInventory Agent on this client."
-msgstr ""
-"このクライアント上で、必ず FusionInventory プラグインと FusionInventory エージェントとともに GLPI "
-"を実行してください。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:147
-msgid "No record found."
-msgstr "レコードが見つかりませんでした。"
-
-#: modules/inventory/inventory/ajaxViewPart.php:226
-msgid "Processors"
-msgstr "プロセッサ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:229
-msgid "Controllers"
-msgstr "コントローラー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:230
-msgid "Network Cards"
-msgstr "ネットワークカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:231
-msgid "Drives"
-msgstr "ドライブ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:232
-msgid "Graphic Cards"
-msgstr "グラフィックカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:233
-msgid "Sound Cards"
-msgstr "サウンドカード"
-
-#: modules/inventory/inventory/ajaxViewPart.php:234
-msgid "Others"
-msgstr "その他"
-
-#: modules/inventory/inventory/ajaxViewPart.php:490
-msgid "Yes"
-msgstr "はい"
-
-#: modules/inventory/inventory/ajaxViewPart.php:491
-msgid "No"
-msgstr "いいえ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:493
-#: modules/inventory/inventory/i18n_labels.php:108
-msgid "Network Type"
-msgstr "ネットワークタイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:494
-#: modules/inventory/inventory/i18n_labels.php:93
-msgid "MAC Address"
-msgstr "MAC アドレス"
-
-#: modules/inventory/inventory/ajaxViewPart.php:495
-#: modules/inventory/inventory/i18n_labels.php:86
-msgid "IP"
-msgstr "IP"
-
-#: modules/inventory/inventory/ajaxViewPart.php:496
-msgid "Netmask"
-msgstr "ネットマスク"
-
-#: modules/inventory/inventory/ajaxViewPart.php:497
-#: modules/inventory/inventory/i18n_labels.php:81
-msgid "Gateway"
-msgstr "ゲートウェイ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:498
-#: modules/inventory/inventory/i18n_labels.php:61
-msgid "Device"
-msgstr "デバイス"
-
-#: modules/inventory/inventory/ajaxViewPart.php:499
-msgid "Mount Point"
-msgstr "マウントポイント"
-
-#: modules/inventory/inventory/ajaxViewPart.php:500
-msgid "Filesystem"
-msgstr "ファイルシステム"
-
-#: modules/inventory/inventory/ajaxViewPart.php:501
-#: modules/inventory/inventory/ajaxViewPart.php:525
-#: modules/inventory/inventory/i18n_labels.php:133
-msgid "Size"
-msgstr "サイズ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:502
-msgid "Free Size"
-msgstr "フリーサイズ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:503
-msgid "Supplier"
-msgstr "サプライヤー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:504
-msgid "Invoice Number"
-msgstr "請求書番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:505
-msgid "Date Of Purchase"
-msgstr "購入日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:506
-msgid "Warranty End Date"
-msgstr "保証終了日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:507
-#: modules/inventory/inventory/i18n_labels.php:162
-msgid "Vendor"
-msgstr "ベンダー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:509
-#: modules/inventory/inventory/i18n_labels.php:163
-msgid "Version"
-msgstr "バージョン"
-
-#: modules/inventory/inventory/ajaxViewPart.php:510
-msgid "Computer Name"
-msgstr "コンピューター名"
-
-#: modules/inventory/inventory/ajaxViewPart.php:511
-#: modules/inventory/inventory/i18n_labels.php:60
-msgid "Description"
-msgstr "内容"
-
-#: modules/inventory/inventory/ajaxViewPart.php:512
-msgid "Entity (Location)"
-msgstr "エンティティ (場所)"
-
-#: modules/inventory/inventory/ajaxViewPart.php:513
-msgid "Entity"
-msgstr "エンティティ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:514
-#: modules/inventory/inventory/i18n_labels.php:91
-msgid "Location"
-msgstr "メーカー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:515
-msgid "Last Logged User"
-msgstr "最終ログユーザー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:516
-msgid "OS"
-msgstr "OS"
-
-#: modules/inventory/inventory/ajaxViewPart.php:517
-#: modules/inventory/inventory/i18n_labels.php:114
-msgid "Operating System"
-msgstr "オペレーティングシステム"
-
-#: modules/inventory/inventory/ajaxViewPart.php:518
-msgid "Computer Type"
-msgstr "コンピュータータイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:519
-msgid "Model / Type"
-msgstr "モデル / タイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:520
-#: modules/inventory/inventory/i18n_labels.php:103
-msgid "Model"
-msgstr "モデル"
-
-#: modules/inventory/inventory/ajaxViewPart.php:521
-#: modules/inventory/inventory/i18n_labels.php:98
-msgid "Manufacturer"
-msgstr "メーカー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:522
-msgid "Serial Number"
-msgstr "シリアル番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:523
-#: modules/inventory/inventory/i18n_labels.php:79
-msgid "Frequency"
-msgstr "周波数"
-
-#: modules/inventory/inventory/ajaxViewPart.php:524
-#: modules/inventory/inventory/i18n_labels.php:156
-msgid "Type"
-msgstr "タイプ"
-
-#: modules/inventory/inventory/ajaxViewPart.php:526
-msgid "Bandwidth"
-msgstr "帯域幅"
-
-#: modules/inventory/inventory/ajaxViewPart.php:527
-msgid "Writer"
-msgstr "ライター"
-
-#: modules/inventory/inventory/ajaxViewPart.php:529
-msgid "Comment"
-msgstr "コメント"
-
-#: modules/inventory/inventory/ajaxViewPart.php:531
-#: modules/inventory/inventory/i18n_labels.php:159
-msgid "User"
-msgstr "ユーザー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:532
-msgid "Category"
-msgstr "カテゴリー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:533
-msgid "Action"
-msgstr "アクション"
-
-#: modules/inventory/inventory/ajaxViewPart.php:534
-msgid "Today"
-msgstr "今日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:535
-msgid "Last 7 days"
-msgstr "過去 7 日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:536
-msgid "Last 30 days"
-msgstr "過去 30 日"
-
-#: modules/inventory/inventory/ajaxViewPart.php:537
-msgid "All"
-msgstr "すべて"
-
-#: modules/inventory/inventory/ajaxViewPart.php:538
-msgid "Service Pack"
-msgstr "サービスパック"
-
-#: modules/inventory/inventory/ajaxViewPart.php:539
-msgid "Windows Key"
-msgstr "Windows キー"
-
-#: modules/inventory/inventory/ajaxViewPart.php:540
-msgid "Domain"
-msgstr "ドメイン"
-
-#: modules/inventory/inventory/ajaxViewPart.php:541
-#: modules/inventory/inventory/i18n_labels.php:147
-msgid "State"
-msgstr "状態"
-
-#: modules/inventory/inventory/ajaxViewPart.php:542
-msgid "Unknown"
-msgstr "不明"
-
-#: modules/inventory/inventory/ajaxViewPart.php:543
-msgid "Inventory Number"
-msgstr "在庫番号"
-
-#: modules/inventory/inventory/ajaxViewPart.php:545
-msgid "Enabled"
-msgstr "有効"
-
-#: modules/inventory/inventory/ajaxViewPart.php:546
-msgid "Up-to-date"
-msgstr "最新"
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
@@ -965,14 +692,6 @@ msgstr ""
 msgid "back"
 msgstr "戻る"
 
-#: modules/inventory/inventory/history.php:66
-msgid "View differences since previous inventory"
-msgstr "前の在庫からの差異を表示"
-
-#: modules/inventory/inventory/history.php:75
-msgid "Inventory Date"
-msgstr "在庫日"
-
 #: modules/inventory/inventory/i18n_labels.php:26
 msgid "Application"
 msgstr "アプリケーション"
@@ -1089,6 +808,16 @@ msgstr "納品日"
 msgid "Department"
 msgstr "部門"
 
+#: modules/inventory/inventory/i18n_labels.php:60
+#: modules/inventory/inventory/ajaxViewPart.php:579
+msgid "Description"
+msgstr "内容"
+
+#: modules/inventory/inventory/i18n_labels.php:61
+#: modules/inventory/inventory/ajaxViewPart.php:566
+msgid "Device"
+msgstr "デバイス"
+
 #: modules/inventory/inventory/i18n_labels.php:62
 msgid "Disk"
 msgstr "ディスク"
@@ -1153,9 +882,19 @@ msgstr "フリースペース"
 msgid "Freq"
 msgstr "周波数"
 
+#: modules/inventory/inventory/i18n_labels.php:79
+#: modules/inventory/inventory/ajaxViewPart.php:591
+msgid "Frequency"
+msgstr "周波数"
+
 #: modules/inventory/inventory/i18n_labels.php:80
 msgid "Func"
 msgstr "機能"
+
+#: modules/inventory/inventory/i18n_labels.php:81
+#: modules/inventory/inventory/ajaxViewPart.php:565
+msgid "Gateway"
+msgstr "ゲートウェイ"
 
 #: modules/inventory/inventory/i18n_labels.php:83
 msgid "Hardware Version"
@@ -1169,6 +908,11 @@ msgstr "ヘッド"
 msgid "High Mem"
 msgstr "ハイメモリ"
 
+#: modules/inventory/inventory/i18n_labels.php:86
+#: modules/inventory/inventory/ajaxViewPart.php:563
+msgid "IP"
+msgstr "IP"
+
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
 msgstr "IP アドレス"
@@ -1181,9 +925,19 @@ msgstr "キー"
 msgid "Length"
 msgstr "長さ"
 
+#: modules/inventory/inventory/i18n_labels.php:91
+#: modules/inventory/inventory/ajaxViewPart.php:582
+msgid "Location"
+msgstr "メーカー"
+
 #: modules/inventory/inventory/i18n_labels.php:92
 msgid "Low Mem"
 msgstr "ローメモリ"
+
+#: modules/inventory/inventory/i18n_labels.php:93
+#: modules/inventory/inventory/ajaxViewPart.php:562
+msgid "MAC Address"
+msgstr "MAC アドレス"
 
 #: modules/inventory/inventory/i18n_labels.php:94
 msgid "MIB"
@@ -1195,6 +949,11 @@ msgstr "MAC アドレス"
 
 #: modules/inventory/inventory/i18n_labels.php:97
 msgid "Manuf"
+msgstr "メーカー"
+
+#: modules/inventory/inventory/i18n_labels.php:98
+#: modules/inventory/inventory/ajaxViewPart.php:589
+msgid "Manufacturer"
 msgstr "メーカー"
 
 #: modules/inventory/inventory/i18n_labels.php:99
@@ -1209,9 +968,19 @@ msgstr "その他のメモリ"
 msgid "Misc SMB"
 msgstr "その他の SMB"
 
+#: modules/inventory/inventory/i18n_labels.php:103
+#: modules/inventory/inventory/ajaxViewPart.php:588
+msgid "Model"
+msgstr "モデル"
+
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
 msgstr "モデム"
+
+#: modules/inventory/inventory/i18n_labels.php:108
+#: modules/inventory/inventory/ajaxViewPart.php:561
+msgid "Network Type"
+msgstr "ネットワークタイプ"
 
 #: modules/inventory/inventory/i18n_labels.php:109
 msgid "Num"
@@ -1232,6 +1001,11 @@ msgstr "OS インストール日"
 #: modules/inventory/inventory/i18n_labels.php:113
 msgid "Os Architecture"
 msgstr "OS アーキテクチャ"
+
+#: modules/inventory/inventory/i18n_labels.php:114
+#: modules/inventory/inventory/ajaxViewPart.php:585
+msgid "Operating System"
+msgstr "オペレーティングシステム"
 
 #: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/pci.php:27
@@ -1298,6 +1072,12 @@ msgstr "セクター"
 msgid "Serial"
 msgstr "シリアル"
 
+#: modules/inventory/inventory/i18n_labels.php:133
+#: modules/inventory/inventory/ajaxViewPart.php:569
+#: modules/inventory/inventory/ajaxViewPart.php:593
+msgid "Size"
+msgstr "サイズ"
+
 #: modules/inventory/inventory/i18n_labels.php:134
 #: modules/inventory/inventory/slot.php:27
 msgid "Slot"
@@ -1343,6 +1123,11 @@ msgstr "標準内容"
 msgid "Standard Type"
 msgstr "標準タイプ"
 
+#: modules/inventory/inventory/i18n_labels.php:147
+#: modules/inventory/inventory/ajaxViewPart.php:609
+msgid "State"
+msgstr "状態"
+
 #: modules/inventory/inventory/i18n_labels.php:149
 msgid "Subnet Mask"
 msgstr "サブネットマスク"
@@ -1371,6 +1156,11 @@ msgstr "合計メモリ"
 msgid "Total Space"
 msgstr "合計スペース"
 
+#: modules/inventory/inventory/i18n_labels.php:156
+#: modules/inventory/inventory/ajaxViewPart.php:592
+msgid "Type"
+msgstr "タイプ"
+
 #: modules/inventory/inventory/i18n_labels.php:157
 msgid "Type Machine"
 msgstr "マシンタイプ"
@@ -1379,9 +1169,32 @@ msgstr "マシンタイプ"
 msgid "Used"
 msgstr "使用済"
 
+#: modules/inventory/inventory/i18n_labels.php:159
+#: modules/inventory/inventory/ajaxViewPart.php:599
+msgid "User"
+msgstr "ユーザー"
+
 #: modules/inventory/inventory/i18n_labels.php:160
 msgid "VRAM Size"
 msgstr "VRAM サイズ"
+
+#: modules/inventory/inventory/i18n_labels.php:161
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/ajaxViewPart.php:122
+msgid "Value"
+msgstr "値"
+
+#: modules/inventory/inventory/i18n_labels.php:162
+#: modules/inventory/inventory/ajaxViewPart.php:575
+msgid "Vendor"
+msgstr "ベンダー"
+
+#: modules/inventory/inventory/i18n_labels.php:163
+#: modules/inventory/inventory/ajaxViewPart.php:577
+msgid "Version"
+msgstr "バージョン"
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
@@ -1491,5 +1304,210 @@ msgstr ""
 #, php-format
 msgid "Inventory of %s"
 msgstr "%s の在庫"
+
+#: modules/inventory/inventory/view.php:74
+#: modules/inventory/inventory/ajaxViewPart.php:121
+msgid "Properties"
+msgstr "プロパティ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr " (アンチウイルスでない)"
+
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr "ここをクリックして、メーカーウェブサイトでこのコンピューターを確認してください。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr "この期間にレコードが見つかりませんでした。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr "このマシン上でアンチウイルスソフトウェアを検出できません。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+"このクライアント上で、必ず FusionInventory プラグインと FusionInventory エージェントとともに GLPI "
+"を実行してください。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr "レコードが見つかりませんでした。"
+
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr "プロセッサ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+msgid "Controllers"
+msgstr "コントローラー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:230
+msgid "Network Cards"
+msgstr "ネットワークカード"
+
+#: modules/inventory/inventory/ajaxViewPart.php:231
+msgid "Drives"
+msgstr "ドライブ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr "グラフィックカード"
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+msgid "Sound Cards"
+msgstr "サウンドカード"
+
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
+msgstr "その他"
+
+#: modules/inventory/inventory/ajaxViewPart.php:558
+msgid "Yes"
+msgstr "はい"
+
+#: modules/inventory/inventory/ajaxViewPart.php:559
+msgid "No"
+msgstr "いいえ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:564
+msgid "Netmask"
+msgstr "ネットマスク"
+
+#: modules/inventory/inventory/ajaxViewPart.php:567
+msgid "Mount Point"
+msgstr "マウントポイント"
+
+#: modules/inventory/inventory/ajaxViewPart.php:568
+msgid "Filesystem"
+msgstr "ファイルシステム"
+
+#: modules/inventory/inventory/ajaxViewPart.php:570
+msgid "Free Size"
+msgstr "フリーサイズ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:571
+msgid "Supplier"
+msgstr "サプライヤー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:572
+msgid "Invoice Number"
+msgstr "請求書番号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:573
+msgid "Date Of Purchase"
+msgstr "購入日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:574
+msgid "Warranty End Date"
+msgstr "保証終了日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:578
+msgid "Computer Name"
+msgstr "コンピューター名"
+
+#: modules/inventory/inventory/ajaxViewPart.php:580
+msgid "Entity (Location)"
+msgstr "エンティティ (場所)"
+
+#: modules/inventory/inventory/ajaxViewPart.php:581
+msgid "Entity"
+msgstr "エンティティ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:583
+msgid "Last Logged User"
+msgstr "最終ログユーザー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:584
+msgid "OS"
+msgstr "OS"
+
+#: modules/inventory/inventory/ajaxViewPart.php:586
+msgid "Computer Type"
+msgstr "コンピュータータイプ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:587
+msgid "Model / Type"
+msgstr "モデル / タイプ"
+
+#: modules/inventory/inventory/ajaxViewPart.php:590
+msgid "Serial Number"
+msgstr "シリアル番号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:594
+msgid "Bandwidth"
+msgstr "帯域幅"
+
+#: modules/inventory/inventory/ajaxViewPart.php:595
+msgid "Writer"
+msgstr "ライター"
+
+#: modules/inventory/inventory/ajaxViewPart.php:597
+msgid "Comment"
+msgstr "コメント"
+
+#: modules/inventory/inventory/ajaxViewPart.php:600
+msgid "Category"
+msgstr "カテゴリー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:601
+msgid "Action"
+msgstr "アクション"
+
+#: modules/inventory/inventory/ajaxViewPart.php:602
+msgid "Today"
+msgstr "今日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:603
+msgid "Last 7 days"
+msgstr "過去 7 日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:604
+msgid "Last 30 days"
+msgstr "過去 30 日"
+
+#: modules/inventory/inventory/ajaxViewPart.php:605
+msgid "All"
+msgstr "すべて"
+
+#: modules/inventory/inventory/ajaxViewPart.php:606
+msgid "Service Pack"
+msgstr "サービスパック"
+
+#: modules/inventory/inventory/ajaxViewPart.php:607
+msgid "Windows Key"
+msgstr "Windows キー"
+
+#: modules/inventory/inventory/ajaxViewPart.php:608
+msgid "Domain"
+msgstr "ドメイン"
+
+#: modules/inventory/inventory/ajaxViewPart.php:610
+msgid "Unknown"
+msgstr "不明"
+
+#: modules/inventory/inventory/ajaxViewPart.php:611
+msgid "Inventory Number"
+msgstr "在庫番号"
+
+#: modules/inventory/inventory/ajaxViewPart.php:613
+msgid "Enabled"
+msgstr "有効"
+
+#: modules/inventory/inventory/ajaxViewPart.php:614
+msgid "Up-to-date"
+msgstr "最新"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "前の在庫からの差異を表示"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "在庫日"
 
 

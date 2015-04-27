@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 16:22+0100\n"
-"PO-Revision-Date: 2015-02-02 00:19+0000\n"
+"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"PO-Revision-Date: 2015-04-10 09:36+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -547,6 +547,108 @@ msgid ""
 "target=\"_blank\">View group</a>"
 msgstr ""
 
+#: modules/msc/includes/utilities.php:32
+msgid "Bytes"
+msgstr "位元組"
+
+#: modules/msc/includes/utilities.php:35
+#, php-format
+msgid "%3.1f %s%s"
+msgstr "%3.1f %s%s"
+
+#: modules/msc/includes/widgets.inc.php:27
+#, php-format
+msgid "Quick action path %s don't exists"
+msgstr "快速動作路徑 %s 不存在"
+
+#: modules/msc/includes/widgets.inc.php:33
+msgid "Other/N.A."
+msgstr "其它／不可用"
+
+#: modules/msc/includes/widgets.inc.php:45
+#, php-format
+msgid "%s status"
+msgstr "%s 狀態"
+
+#: modules/msc/includes/widgets.inc.php:74
+#, php-format
+msgid ""
+"group \"%s\" is not defined in the MSC module, or you don't have permissions"
+" to access it"
+msgstr "群組 \"%s\" 在 MSC 模組中未定義，或您沒有其存取權限"
+
+#: modules/msc/includes/widgets.inc.php:96
+#, php-format
+msgid ""
+"%s host is not defined in the MSC module, or you don't have permissions to "
+"access it"
+msgstr "%s 主機在 MSC 模組中未定義，或您沒有其存取權限"
+
+#: modules/msc/includes/widgets.inc.php:117
+msgid "You don't have the right permissions to display this command"
+msgstr "您沒有顯示此命令的正確權限"
+
+#: modules/msc/includes/widgets.inc.php:184
+#, php-format
+msgid "Quick action on %s"
+msgstr "%s 上的快速動作"
+
+#: modules/msc/includes/widgets.inc.php:232
+msgid "Execute action..."
+msgstr "執行動作..."
+
+#: modules/msc/includes/widgets.inc.php:255
+msgid "Quick action list is empty"
+msgstr "快速動作清單是空的"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:517
+#: modules/msc/logs/localSidebar.php:28 modules/msc/infoPackage.inc.php:50
+msgid "My commands"
+msgstr "我的命令"
+
+#: modules/msc/includes/widgets.inc.php:345
+#: modules/msc/includes/widgets.inc.php:517
+msgid "All users commands"
+msgstr "所有使用者命令"
+
+#: modules/msc/includes/widgets.inc.php:387
+msgid "State filter"
+msgstr "狀態篩選器"
+
+#: modules/msc/includes/widgets.inc.php:389
+#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
+#: modules/msc/includes/functions.php:334
+#: modules/msc/msc/ajaxLogsFilter.php:429
+msgid "Done"
+msgstr "完成"
+
+#: modules/msc/includes/widgets.inc.php:391
+#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
+#: modules/msc/includes/functions.php:333
+#: modules/msc/msc/ajaxLogsFilter.php:430
+msgid "Failed"
+msgstr "失敗"
+
+#: modules/msc/includes/widgets.inc.php:393
+msgid "In progress"
+msgstr "進行中"
+
+#: modules/msc/includes/widgets.inc.php:395
+#: modules/msc/msc/ajaxLogsFilter.php:432
+msgid "Overtime"
+msgstr "加班"
+
+#: modules/msc/includes/widgets.inc.php:397
+#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
+#: modules/msc/msc/ajaxLogsFilter.php:431
+msgid "Stopped"
+msgstr "已停止"
+
+#: modules/msc/includes/widgets.inc.php:401
+msgid "Create a group"
+msgstr ""
+
 #: modules/msc/includes/functions.php:25
 msgid "Upload in progress"
 msgstr "正在上傳"
@@ -636,27 +738,14 @@ msgid "Not reachable"
 msgstr "無法連線"
 
 #: modules/msc/includes/functions.php:47
-#: modules/msc/includes/functions.php:333
+#: modules/msc/includes/functions.php:331
 #: modules/msc/msc/ajaxDownloadFile.php:77
 msgid "Ready"
 msgstr "就緒"
 
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:336
-#: modules/msc/includes/widgets.inc.php:389
-#: modules/msc/msc/ajaxLogsFilter.php:429
-msgid "Done"
-msgstr "完成"
-
 #: modules/msc/includes/functions.php:49
 msgid "Paused"
 msgstr "已暫停"
-
-#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
-#: modules/msc/includes/widgets.inc.php:397
-#: modules/msc/msc/ajaxLogsFilter.php:431
-msgid "Stopped"
-msgstr "已停止"
 
 #: modules/msc/includes/functions.php:52
 msgid "Scheduled"
@@ -665,13 +754,6 @@ msgstr "已排程"
 #: modules/msc/includes/functions.php:53
 msgid "Rescheduled"
 msgstr "已重新排程"
-
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:335
-#: modules/msc/includes/widgets.inc.php:391
-#: modules/msc/msc/ajaxLogsFilter.php:430
-msgid "Failed"
-msgstr "失敗"
 
 #: modules/msc/includes/functions.php:55
 msgid "Time Exceeded"
@@ -730,285 +812,14 @@ msgid "After bootmenu actions"
 msgstr "在開機功能表動作後"
 
 #: modules/msc/includes/functions.php:325
-msgid "Unlock & Reboot"
-msgstr ""
-
-#: modules/msc/includes/functions.php:326
-msgid "Lock & Reboot"
-msgstr ""
-
-#: modules/msc/includes/functions.php:327
 msgid "Finish"
 msgstr "完成"
 
-#: modules/msc/includes/functions.php:334
+#: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
 msgid "Running"
 msgstr "正在執行"
-
-#: modules/msc/includes/utilities.php:32
-msgid "Bytes"
-msgstr "位元組"
-
-#: modules/msc/includes/utilities.php:35
-#, php-format
-msgid "%3.1f %s%s"
-msgstr "%3.1f %s%s"
-
-#: modules/msc/includes/widgets.inc.php:27
-#, php-format
-msgid "Quick action path %s don't exists"
-msgstr "快速動作路徑 %s 不存在"
-
-#: modules/msc/includes/widgets.inc.php:33
-msgid "Other/N.A."
-msgstr "其它／不可用"
-
-#: modules/msc/includes/widgets.inc.php:45
-#, php-format
-msgid "%s status"
-msgstr "%s 狀態"
-
-#: modules/msc/includes/widgets.inc.php:74
-#, php-format
-msgid ""
-"group \"%s\" is not defined in the MSC module, or you don't have permissions"
-" to access it"
-msgstr "群組 \"%s\" 在 MSC 模組中未定義，或您沒有其存取權限"
-
-#: modules/msc/includes/widgets.inc.php:96
-#, php-format
-msgid ""
-"%s host is not defined in the MSC module, or you don't have permissions to "
-"access it"
-msgstr "%s 主機在 MSC 模組中未定義，或您沒有其存取權限"
-
-#: modules/msc/includes/widgets.inc.php:117
-msgid "You don't have the right permissions to display this command"
-msgstr "您沒有顯示此命令的正確權限"
-
-#: modules/msc/includes/widgets.inc.php:184
-#, php-format
-msgid "Quick action on %s"
-msgstr "%s 上的快速動作"
-
-#: modules/msc/includes/widgets.inc.php:232
-msgid "Execute action..."
-msgstr "執行動作..."
-
-#: modules/msc/includes/widgets.inc.php:255
-msgid "Quick action list is empty"
-msgstr "快速動作清單是空的"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517 modules/msc/infoPackage.inc.php:50
-#: modules/msc/logs/localSidebar.php:28
-msgid "My commands"
-msgstr "我的命令"
-
-#: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517
-msgid "All users commands"
-msgstr "所有使用者命令"
-
-#: modules/msc/includes/widgets.inc.php:387
-msgid "State filter"
-msgstr "狀態篩選器"
-
-#: modules/msc/includes/widgets.inc.php:393
-msgid "In progress"
-msgstr "進行中"
-
-#: modules/msc/includes/widgets.inc.php:395
-#: modules/msc/msc/ajaxLogsFilter.php:432
-msgid "Overtime"
-msgstr "加班"
-
-#: modules/msc/includes/widgets.inc.php:401
-msgid "Create a group"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:42
-msgid "Secure Control"
-msgstr "安全控制"
-
-#: modules/msc/infoPackage.inc.php:46
-msgid "Audit"
-msgstr "稽核"
-
-#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
-msgid "All user commands"
-msgstr "所有使用者命令"
-
-#: modules/msc/infoPackage.inc.php:56
-msgid "Commands logs"
-msgstr "命令記錄檔"
-
-#: modules/msc/infoPackage.inc.php:59
-msgid "Show all logs"
-msgstr "顯示所有記錄檔"
-
-#: modules/msc/infoPackage.inc.php:61
-msgid "Show pending task's logs"
-msgstr "顯示擱置工作的記錄檔"
-
-#: modules/msc/infoPackage.inc.php:63
-msgid "Show running task's logs"
-msgstr "顯示執行中工作的記錄檔"
-
-#: modules/msc/infoPackage.inc.php:65
-msgid "Show finished task's logs"
-msgstr "顯示已完成工作的記錄檔"
-
-#: modules/msc/infoPackage.inc.php:68
-msgid "Show custom state task's logs"
-msgstr "顯示自訂狀態工作的記錄檔"
-
-#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:257
-#: modules/msc/infoPackage.inc.php:262
-msgid "logs list"
-msgstr "記錄檔清單"
-
-#: modules/msc/infoPackage.inc.php:74
-msgid "consolidated logs list"
-msgstr "合併的記錄檔清單"
-
-#: modules/msc/infoPackage.inc.php:77
-msgid "the state list"
-msgstr "狀態清單"
-
-#: modules/msc/infoPackage.inc.php:86
-msgid "Remove machine from pull mode"
-msgstr "從提取模式移除電腦"
-
-#: modules/msc/infoPackage.inc.php:91
-msgid "Secure control on a group of computers"
-msgstr "一組電腦上的安全控制"
-
-#: modules/msc/infoPackage.inc.php:95
-msgid "MSC launch tab for a group"
-msgstr "一個群組的 MSC 啟動標籤"
-
-#: modules/msc/infoPackage.inc.php:98
-msgid "MSC bundle tab for a group"
-msgstr "一個群組的 MSC 套件組合標籤"
-
-#: modules/msc/infoPackage.inc.php:101
-msgid "MSC logs tab for a group"
-msgstr "一個群組的 MSC 記錄檔標籤"
-
-#: modules/msc/infoPackage.inc.php:106
-msgid "Secure control on computer"
-msgstr "電腦上的安全控制"
-
-#: modules/msc/infoPackage.inc.php:110
-msgid "MSC launch tab for a machine"
-msgstr "一台電腦的 MSC 啟動標籤"
-
-#: modules/msc/infoPackage.inc.php:113
-msgid "MSC bundle tab for a machine"
-msgstr "一台電腦的 MSC 套件組合標籤"
-
-#: modules/msc/infoPackage.inc.php:116
-msgid "MSC logs tab for a machine"
-msgstr "一台電腦的 MSC 記錄檔標籤"
-
-#: modules/msc/infoPackage.inc.php:121
-msgid "Download file from a computer"
-msgstr "從一台電腦下載檔案"
-
-#: modules/msc/infoPackage.inc.php:127
-msgid "Remove a downloaded file"
-msgstr "移除一個已下載的檔案"
-
-#: modules/msc/infoPackage.inc.php:133
-msgid "Get a downloaded file"
-msgstr "取得一個已下載的檔案"
-
-#: modules/msc/infoPackage.inc.php:139
-msgid "Take control of a computer"
-msgstr "控制一台電腦"
-
-#: modules/msc/infoPackage.inc.php:146
-msgid "Play a command"
-msgstr "播放命令"
-
-#: modules/msc/infoPackage.inc.php:152
-msgid "Pause a command"
-msgstr "暫停命令"
-
-#: modules/msc/infoPackage.inc.php:158
-msgid "Stop a command"
-msgstr "停止命令"
-
-#: modules/msc/infoPackage.inc.php:164
-msgid "Command status"
-msgstr "命令狀態"
-
-#: modules/msc/infoPackage.inc.php:170
-msgid "Reschedule a command"
-msgstr "重新排程命令"
-
-#: modules/msc/infoPackage.inc.php:176
-msgid "Delete a command"
-msgstr ""
-
-#: modules/msc/infoPackage.inc.php:183
-msgid "Single command status"
-msgstr "單個命令狀態"
-
-#: modules/msc/infoPackage.inc.php:188
-msgid "Show package's details"
-msgstr "顯示封裝的詳情"
-
-#: modules/msc/infoPackage.inc.php:194
-msgid "Launch a command"
-msgstr "啟動命令"
-
-#: modules/msc/infoPackage.inc.php:200
-msgid "Launch a advanced command"
-msgstr "啟動進階命令"
-
-#: modules/msc/infoPackage.inc.php:206
-msgid "Software convergence configuration"
-msgstr "軟體聚合設定"
-
-#: modules/msc/infoPackage.inc.php:212
-msgid "Launch a quick action command"
-msgstr "啟動快速動作命令"
-
-#: modules/msc/infoPackage.inc.php:217 modules/msc/msc/packages.php:29
-msgid "Packages"
-msgstr "封裝"
-
-#: modules/msc/infoPackage.inc.php:222
-msgid "Ping and probe"
-msgstr "Ping 和探查"
-
-#: modules/msc/infoPackage.inc.php:227
-msgid "Ping"
-msgstr "Ping"
-
-#: modules/msc/infoPackage.inc.php:232
-msgid "Platform"
-msgstr "平台"
-
-#: modules/msc/infoPackage.inc.php:237
-msgid "MAC Addr."
-msgstr "MAC 位址"
-
-#: modules/msc/infoPackage.inc.php:242
-msgid "IP Addr."
-msgstr "IP 位址"
-
-#: modules/msc/infoPackage.inc.php:247 modules/msc/msc/download_file.php:32
-msgid "Download file page"
-msgstr "下載檔案頁面"
-
-#: modules/msc/infoPackage.inc.php:252
-msgid "Csv's export"
-msgstr "Csv 格式的匯出"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
@@ -1119,6 +930,10 @@ msgstr "顯示自訂狀態工作的記錄檔"
 #: modules/msc/logs/finished.php:33
 msgid "Show all finished task's logs"
 msgstr "顯示所有已完成工作的記錄檔"
+
+#: modules/msc/logs/localSidebar.php:29 modules/msc/infoPackage.inc.php:53
+msgid "All user commands"
+msgstr "所有使用者命令"
 
 #: modules/msc/logs/pending.php:33
 msgid "Show all pending task's logs"
@@ -1330,6 +1145,10 @@ msgstr ""
 #: modules/msc/msc/delete.php:57
 msgid "Delete this command"
 msgstr ""
+
+#: modules/msc/msc/download_file.php:32 modules/msc/infoPackage.inc.php:253
+msgid "Download file page"
+msgstr "下載檔案頁面"
 
 #: modules/msc/msc/download_file.php:39
 msgid "The download is in progress."
@@ -1895,6 +1714,10 @@ msgstr "停止主機 %s 上的 %s%s "
 msgid "Label"
 msgstr "標籤"
 
+#: modules/msc/msc/packages.php:29 modules/msc/infoPackage.inc.php:223
+msgid "Packages"
+msgstr "封裝"
+
 #: modules/msc/msc/reschedule.php:40
 msgid "Reschedule this command"
 msgstr "重新排程此命令"
@@ -2126,5 +1949,178 @@ msgstr "已連線"
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
 msgstr "至"
+
+#: modules/msc/infoPackage.inc.php:42
+msgid "Secure Control"
+msgstr "安全控制"
+
+#: modules/msc/infoPackage.inc.php:46
+msgid "Audit"
+msgstr "稽核"
+
+#: modules/msc/infoPackage.inc.php:56
+msgid "Commands logs"
+msgstr "命令記錄檔"
+
+#: modules/msc/infoPackage.inc.php:59
+msgid "Show all logs"
+msgstr "顯示所有記錄檔"
+
+#: modules/msc/infoPackage.inc.php:61
+msgid "Show pending task's logs"
+msgstr "顯示擱置工作的記錄檔"
+
+#: modules/msc/infoPackage.inc.php:63
+msgid "Show running task's logs"
+msgstr "顯示執行中工作的記錄檔"
+
+#: modules/msc/infoPackage.inc.php:65
+msgid "Show finished task's logs"
+msgstr "顯示已完成工作的記錄檔"
+
+#: modules/msc/infoPackage.inc.php:68
+msgid "Show custom state task's logs"
+msgstr "顯示自訂狀態工作的記錄檔"
+
+#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:263
+#: modules/msc/infoPackage.inc.php:268
+msgid "logs list"
+msgstr "記錄檔清單"
+
+#: modules/msc/infoPackage.inc.php:74
+msgid "consolidated logs list"
+msgstr "合併的記錄檔清單"
+
+#: modules/msc/infoPackage.inc.php:77
+msgid "the state list"
+msgstr "狀態清單"
+
+#: modules/msc/infoPackage.inc.php:86
+msgid "Remove machine from pull mode"
+msgstr "從提取模式移除電腦"
+
+#: modules/msc/infoPackage.inc.php:92
+msgid "Deploy specific package"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:97
+msgid "Secure control on a group of computers"
+msgstr "一組電腦上的安全控制"
+
+#: modules/msc/infoPackage.inc.php:101
+msgid "MSC launch tab for a group"
+msgstr "一個群組的 MSC 啟動標籤"
+
+#: modules/msc/infoPackage.inc.php:104
+msgid "MSC bundle tab for a group"
+msgstr "一個群組的 MSC 套件組合標籤"
+
+#: modules/msc/infoPackage.inc.php:107
+msgid "MSC logs tab for a group"
+msgstr "一個群組的 MSC 記錄檔標籤"
+
+#: modules/msc/infoPackage.inc.php:112
+msgid "Secure control on computer"
+msgstr "電腦上的安全控制"
+
+#: modules/msc/infoPackage.inc.php:116
+msgid "MSC launch tab for a machine"
+msgstr "一台電腦的 MSC 啟動標籤"
+
+#: modules/msc/infoPackage.inc.php:119
+msgid "MSC bundle tab for a machine"
+msgstr "一台電腦的 MSC 套件組合標籤"
+
+#: modules/msc/infoPackage.inc.php:122
+msgid "MSC logs tab for a machine"
+msgstr "一台電腦的 MSC 記錄檔標籤"
+
+#: modules/msc/infoPackage.inc.php:127
+msgid "Download file from a computer"
+msgstr "從一台電腦下載檔案"
+
+#: modules/msc/infoPackage.inc.php:133
+msgid "Remove a downloaded file"
+msgstr "移除一個已下載的檔案"
+
+#: modules/msc/infoPackage.inc.php:139
+msgid "Get a downloaded file"
+msgstr "取得一個已下載的檔案"
+
+#: modules/msc/infoPackage.inc.php:145
+msgid "Take control of a computer"
+msgstr "控制一台電腦"
+
+#: modules/msc/infoPackage.inc.php:152
+msgid "Play a command"
+msgstr "播放命令"
+
+#: modules/msc/infoPackage.inc.php:158
+msgid "Pause a command"
+msgstr "暫停命令"
+
+#: modules/msc/infoPackage.inc.php:164
+msgid "Stop a command"
+msgstr "停止命令"
+
+#: modules/msc/infoPackage.inc.php:170
+msgid "Command status"
+msgstr "命令狀態"
+
+#: modules/msc/infoPackage.inc.php:176
+msgid "Reschedule a command"
+msgstr "重新排程命令"
+
+#: modules/msc/infoPackage.inc.php:182
+msgid "Delete a command"
+msgstr ""
+
+#: modules/msc/infoPackage.inc.php:189
+msgid "Single command status"
+msgstr "單個命令狀態"
+
+#: modules/msc/infoPackage.inc.php:194
+msgid "Show package's details"
+msgstr "顯示封裝的詳情"
+
+#: modules/msc/infoPackage.inc.php:200
+msgid "Launch a command"
+msgstr "啟動命令"
+
+#: modules/msc/infoPackage.inc.php:206
+msgid "Launch a advanced command"
+msgstr "啟動進階命令"
+
+#: modules/msc/infoPackage.inc.php:212
+msgid "Software convergence configuration"
+msgstr "軟體聚合設定"
+
+#: modules/msc/infoPackage.inc.php:218
+msgid "Launch a quick action command"
+msgstr "啟動快速動作命令"
+
+#: modules/msc/infoPackage.inc.php:228
+msgid "Ping and probe"
+msgstr "Ping 和探查"
+
+#: modules/msc/infoPackage.inc.php:233
+msgid "Ping"
+msgstr "Ping"
+
+#: modules/msc/infoPackage.inc.php:238
+msgid "Platform"
+msgstr "平台"
+
+#: modules/msc/infoPackage.inc.php:243
+msgid "MAC Addr."
+msgstr "MAC 位址"
+
+#: modules/msc/infoPackage.inc.php:248
+msgid "IP Addr."
+msgstr "IP 位址"
+
+#: modules/msc/infoPackage.inc.php:258
+msgid "Csv's export"
+msgstr "Csv 格式的匯出"
 
 
