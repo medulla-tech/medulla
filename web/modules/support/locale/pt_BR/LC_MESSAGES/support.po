@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2014-12-09 16:05+0000\n"
 "Last-Translator: Francisco Panis Kaseker <francisco@mandriva.com.br>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
@@ -18,6 +18,28 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
+
+#: modules/support/includes/panels/remotesupport.inc.php:30
+#: modules/support/infoPackage.inc.php:35
+msgid "Remote support"
+msgstr "Suporte remoto"
+
+#: modules/support/includes/panels/remotesupport.inc.php:44
+#: modules/support/infoPackage.inc.php:44
+msgid "Disconnect"
+msgstr "Desconectar"
+
+#: modules/support/includes/panels/remotesupport.inc.php:47
+msgid "Connect to support"
+msgstr "Conectar ao suporte"
+
+#: modules/support/includes/panels/remotesupport.inc.php:54
+msgid "Download archive"
+msgstr "Baixar arquivo"
+
+#: modules/support/includes/panels/remotesupport.inc.php:57
+msgid "Extract log and config files"
+msgstr "Extrair log e arquivos de configuração"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
@@ -59,28 +81,6 @@ msgstr "Links"
 #: modules/support/includes/panels/license.inc.php:131
 msgid "Activate again / Use another subscription"
 msgstr "Ativar novamente / Outra licença"
-
-#: modules/support/includes/panels/remotesupport.inc.php:30
-#: modules/support/infoPackage.inc.php:35
-msgid "Remote support"
-msgstr "Suporte remoto"
-
-#: modules/support/includes/panels/remotesupport.inc.php:44
-#: modules/support/infoPackage.inc.php:44
-msgid "Disconnect"
-msgstr "Desconectar"
-
-#: modules/support/includes/panels/remotesupport.inc.php:47
-msgid "Connect to support"
-msgstr "Conectar ao suporte"
-
-#: modules/support/includes/panels/remotesupport.inc.php:54
-msgid "Download archive"
-msgstr "Baixar arquivo"
-
-#: modules/support/includes/panels/remotesupport.inc.php:57
-msgid "Extract log and config files"
-msgstr "Extrair log e arquivos de configuração"
 
 #: modules/support/infoPackage.inc.php:40
 msgid "Collect"

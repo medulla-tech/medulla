@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2014-12-22 15:12+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/pulse2/team/ru_RU/)\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "Объекты root"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "Все мои объекты"
 
 #: modules/pulse2/includes/menu_action.php:34
 msgid "Inventory"
@@ -113,9 +113,9 @@ msgstr ""
 msgid "Csv export"
 msgstr ""
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "Все мои объекты"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Объекты root"
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"

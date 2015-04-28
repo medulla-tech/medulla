@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:52+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2015-01-20 13:37+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
@@ -38,9 +38,10 @@ msgstr "Adicionar entidade."
 msgid "Edit entity"
 msgstr "Editar entidade"
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addLocation.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:212
 #: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/addEntityRule.php:72
 msgid "Name"
 msgstr "Nome"
 
@@ -48,124 +49,33 @@ msgstr "Nome"
 msgid "Parent entity"
 msgstr "Hierarquia da entidade"
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addLocation.php:101
 #: modules/glpi/glpi/ajaxViewPart.php:232
+#: modules/glpi/glpi/addEntityRule.php:77
 msgid "Description"
 msgstr "Descrição"
 
-#: modules/glpi/glpi/addEntityRule.php:31
-msgid "The entity rule has been added successfully."
-msgstr "A regra da entidade foi adicionada com sucesso."
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr "Máquina com %s instalada em %s"
 
-#: modules/glpi/glpi/addEntityRule.php:35
-msgid "The entity rule has been edited successfully."
-msgstr "A regra da entidade foi editada com sucesso."
+#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "A lista de computadores foi truncada em %d computadores"
 
-#: modules/glpi/glpi/addEntityRule.php:59
-#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
-msgid "Add entity rule"
-msgstr "Adicionar regra da entidade"
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Último inventário é menos que %s dias a %s"
 
-#: modules/glpi/glpi/addEntityRule.php:67
-msgid "Active"
-msgstr "Ativo"
-
-#: modules/glpi/glpi/addEntityRule.php:86
-msgid "Aggregator"
-msgstr "Agregador"
-
-#: modules/glpi/glpi/addEntityRule.php:98
-msgid "IP Address"
-msgstr "Endereço IP"
-
-#: modules/glpi/glpi/addEntityRule.php:99
-msgid "Hostname"
-msgstr "Nome do host"
-
-#: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:261
-msgid "Domain"
-msgstr "Domínio"
-
-#: modules/glpi/glpi/addEntityRule.php:101
-msgid "Computer serial"
-msgstr "Número de série do computador"
-
-#: modules/glpi/glpi/addEntityRule.php:102
-msgid "Subnet"
-msgstr "Subnet"
-
-#: modules/glpi/glpi/addEntityRule.php:103
-msgid "Inventory Tag"
-msgstr "Tag de inventário"
-
-#: modules/glpi/glpi/addEntityRule.php:113
-msgid "equal to"
-msgstr "igual a"
-
-#: modules/glpi/glpi/addEntityRule.php:114
-msgid "different from"
-msgstr "diferente de"
-
-#: modules/glpi/glpi/addEntityRule.php:115
-msgid "contains"
-msgstr "contém"
-
-#: modules/glpi/glpi/addEntityRule.php:116
-msgid "does not contain"
-msgstr "não contém"
-
-#: modules/glpi/glpi/addEntityRule.php:117
-msgid "starts with"
-msgstr "inicia com"
-
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
-msgid "finishes by"
-msgstr "finaliza com"
-
-#: modules/glpi/glpi/addEntityRule.php:120
-msgid "matches (regex)"
-msgstr "combina (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:121
-msgid "does not match (regex)"
-msgstr "não combina (regex)"
-
-#: modules/glpi/glpi/addEntityRule.php:122
-msgid "exists"
-msgstr "existe"
-
-#: modules/glpi/glpi/addEntityRule.php:123
-msgid "does not exist"
-msgstr "não existe"
-
-#: modules/glpi/glpi/addEntityRule.php:138
-#: modules/glpi/includes/publicFunc.php:142
-msgid "Remove"
-msgstr "Remover"
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr "Critério"
-
-#: modules/glpi/glpi/addEntityRule.php:155
-msgid "Add criterion"
-msgstr "Adicionar critério"
-
-#: modules/glpi/glpi/addEntityRule.php:168
-#: modules/glpi/glpi/addEntityRule.php:190
-msgid "Do not assign"
-msgstr "Não atribuir"
-
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr "Entidade de destino"
-
-#: modules/glpi/glpi/addEntityRule.php:200
-msgid "Target location"
-msgstr "Local de destino"
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Último inventário é mais que %s dias a %s"
 
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
@@ -187,46 +97,6 @@ msgstr "Editar localização"
 #: modules/glpi/glpi/addLocation.php:96
 msgid "Parent location"
 msgstr "Hierarquia do local"
-
-#: modules/glpi/glpi/ajaxEntityList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxLocationList.php:51
-msgid "No entry found"
-msgstr "Nenhuma entrada encontrada"
-
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
-msgstr "Nome da entidade"
-
-#: modules/glpi/glpi/ajaxEntityList.php:68
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:250
-msgid "Comment"
-msgstr "Comentario"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
-msgstr "Nome da regra"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr "Editar regra"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr "Mover regra para cima"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr "Mover regra para baixo"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr "Remover regra"
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr "Nome da localização"
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
@@ -442,6 +312,12 @@ msgstr "Largura de Banda"
 msgid "Writer"
 msgstr "Escritor"
 
+#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
+#: modules/glpi/glpi/ajaxLocationList.php:68
+msgid "Comment"
+msgstr "Comentario"
+
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
 msgstr "Data"
@@ -482,6 +358,11 @@ msgstr "Service Pack"
 msgid "Windows Key"
 msgstr "Chave do Windows"
 
+#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/glpi/glpi/addEntityRule.php:100
+msgid "Domain"
+msgstr "Domínio"
+
 #: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "State"
 msgstr "Estado"
@@ -506,6 +387,144 @@ msgstr "Atualizado"
 msgid "Invalid hostname"
 msgstr "Hostname Inválido"
 
+#: modules/glpi/glpi/addEntityRule.php:31
+msgid "The entity rule has been added successfully."
+msgstr "A regra da entidade foi adicionada com sucesso."
+
+#: modules/glpi/glpi/addEntityRule.php:35
+msgid "The entity rule has been edited successfully."
+msgstr "A regra da entidade foi editada com sucesso."
+
+#: modules/glpi/glpi/addEntityRule.php:59
+#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
+msgid "Add entity rule"
+msgstr "Adicionar regra da entidade"
+
+#: modules/glpi/glpi/addEntityRule.php:67
+msgid "Active"
+msgstr "Ativo"
+
+#: modules/glpi/glpi/addEntityRule.php:86
+msgid "Aggregator"
+msgstr "Agregador"
+
+#: modules/glpi/glpi/addEntityRule.php:98
+msgid "IP Address"
+msgstr "Endereço IP"
+
+#: modules/glpi/glpi/addEntityRule.php:99
+msgid "Hostname"
+msgstr "Nome do host"
+
+#: modules/glpi/glpi/addEntityRule.php:101
+msgid "Computer serial"
+msgstr "Número de série do computador"
+
+#: modules/glpi/glpi/addEntityRule.php:102
+msgid "Subnet"
+msgstr "Subnet"
+
+#: modules/glpi/glpi/addEntityRule.php:103
+msgid "Inventory Tag"
+msgstr "Tag de inventário"
+
+#: modules/glpi/glpi/addEntityRule.php:113
+msgid "equal to"
+msgstr "igual a"
+
+#: modules/glpi/glpi/addEntityRule.php:114
+msgid "different from"
+msgstr "diferente de"
+
+#: modules/glpi/glpi/addEntityRule.php:115
+msgid "contains"
+msgstr "contém"
+
+#: modules/glpi/glpi/addEntityRule.php:116
+msgid "does not contain"
+msgstr "não contém"
+
+#: modules/glpi/glpi/addEntityRule.php:117
+msgid "starts with"
+msgstr "inicia com"
+
+#: modules/glpi/glpi/addEntityRule.php:118
+#: modules/glpi/glpi/addEntityRule.php:119
+msgid "finishes by"
+msgstr "finaliza com"
+
+#: modules/glpi/glpi/addEntityRule.php:120
+msgid "matches (regex)"
+msgstr "combina (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:121
+msgid "does not match (regex)"
+msgstr "não combina (regex)"
+
+#: modules/glpi/glpi/addEntityRule.php:122
+msgid "exists"
+msgstr "existe"
+
+#: modules/glpi/glpi/addEntityRule.php:123
+msgid "does not exist"
+msgstr "não existe"
+
+#: modules/glpi/glpi/addEntityRule.php:138
+#: modules/glpi/includes/publicFunc.php:142
+msgid "Remove"
+msgstr "Remover"
+
+#: modules/glpi/glpi/addEntityRule.php:149
+msgid "Criterion"
+msgstr "Critério"
+
+#: modules/glpi/glpi/addEntityRule.php:155
+msgid "Add criterion"
+msgstr "Adicionar critério"
+
+#: modules/glpi/glpi/addEntityRule.php:168
+#: modules/glpi/glpi/addEntityRule.php:190
+msgid "Do not assign"
+msgstr "Não atribuir"
+
+#: modules/glpi/glpi/addEntityRule.php:180
+msgid "Target entity"
+msgstr "Entidade de destino"
+
+#: modules/glpi/glpi/addEntityRule.php:200
+msgid "Target location"
+msgstr "Local de destino"
+
+#: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
+#: modules/glpi/glpi/ajaxLocationList.php:51
+msgid "No entry found"
+msgstr "Nenhuma entrada encontrada"
+
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr "Nome da entidade"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
+msgstr "Nome da regra"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
+msgstr "Editar regra"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr "Mover regra para cima"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr "Mover regra para baixo"
+
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr "Remover regra"
+
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:30
 #, php-format
 msgid "Antivirus status is OK at %s"
@@ -521,43 +540,9 @@ msgstr "Antivírus não está rodando ou não atualizado em %s"
 msgid "No antivirus found at %s"
 msgstr "Nenhum antivírus encontrado em %s"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createOSStaticGroup.php:52
-#: modules/glpi/glpi/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "A lista de computadores foi truncada em %d computadores"
-
-#: modules/glpi/glpi/createOSStaticGroup.php:34
-#, php-format
-msgid "Machine with %s installed at %s"
-msgstr "Máquina com %s instalada em %s"
-
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "Último inventário é menos que %s dias a %s"
-
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "Último inventário é mais que %s dias a %s"
-
-#: modules/glpi/glpi/deleteEntityRule.php:31
-msgid "The entity rule has been deleted successfully."
-msgstr "A entidade da regra foi removida com sucesso."
-
-#: modules/glpi/glpi/deleteEntityRule.php:36
-msgid "Delete this rule?"
-msgstr "Remover esta regra?"
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr "Lista de entidade"
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
-msgstr "Todas as entidades"
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
+msgstr "Nome da localização"
 
 #: modules/glpi/glpi/entityRules.php:28 modules/glpi/glpi/localSidebar.php:30
 #: modules/glpi/infoPackage.inc.php:96
@@ -567,6 +552,14 @@ msgstr "Regras das entidades"
 #: modules/glpi/glpi/entityRules.php:36
 msgid "All rules"
 msgstr "Todas as regas"
+
+#: modules/glpi/glpi/deleteEntityRule.php:31
+msgid "The entity rule has been deleted successfully."
+msgstr "A entidade da regra foi removida com sucesso."
+
+#: modules/glpi/glpi/deleteEntityRule.php:36
+msgid "Delete this rule?"
+msgstr "Remover esta regra?"
 
 #: modules/glpi/glpi/localSidebar.php:26 modules/glpi/infoPackage.inc.php:70
 msgid "Entities"
@@ -583,6 +576,14 @@ msgstr "Localizações"
 #: modules/glpi/glpi/localSidebar.php:29
 msgid "Add a location"
 msgstr "Adicionar uma localização"
+
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr "Lista de entidade"
+
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
+msgstr "Todas as entidades"
 
 #: modules/glpi/glpi/locationList.php:28
 msgid "Location list"
@@ -646,9 +647,33 @@ msgstr "Obter relatório XLS"
 msgid "Hide Windows Updates"
 msgstr "Esconder Updates do Windows"
 
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr "Atributos da entidade"
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr "Permissões da entidade"
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr "Adicionar permissões a entidade"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:32
+msgid "Operating systems"
+msgstr "Sistemas operacionais"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:48
+msgid "Other"
+msgstr "Outro"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:51
+msgid "Other Windows"
+msgstr "Outro Windows"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:91
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
 msgid "Create a group"
 msgstr "Criar um grupo"
 
@@ -679,30 +704,6 @@ msgstr "> %s dias: %percent% (%d)"
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr "Última data do inventário"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:32
-msgid "Operating systems"
-msgstr "Sistemas operacionais"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:48
-msgid "Other"
-msgstr "Outro"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:51
-msgid "Other Windows"
-msgstr "Outro Windows"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr "Atributos da entidade"
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr "Permissões da entidade"
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr "Adicionar permissões a entidade"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"

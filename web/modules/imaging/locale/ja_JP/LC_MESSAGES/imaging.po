@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:52+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2015-02-21 16:58+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
@@ -19,298 +19,1225 @@ msgstr ""
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/imaging/imaging/addimage.php:64
-#: modules/imaging/imaging/addservice.php:63
+#: modules/imaging/manage/service_del.php:42
+#, php-format
+msgid "Service <strong>%s</strong> removed from default boot menu"
+msgstr "サービス <strong>%s</strong> がデフォルトブートメニューから削除されました"
+
+#: modules/imaging/manage/service_del.php:48
+#: modules/imaging/manage/service_show_used.php:83
+#: modules/imaging/manage/master_add.php:54
+#: modules/imaging/manage/service_add.php:54
+#: modules/imaging/manage/imaging_server_link.php:64
+#: modules/imaging/manage/master_remove.php:41
+#: modules/imaging/manage/service_remove.php:48
+#: modules/imaging/imaging/showtarget.php:90
+#, php-format
+msgid "Boot menu generation failed for package server: %s"
+msgstr "コンピューターのブートメニュー生成に失敗しました : %s"
+
+#: modules/imaging/manage/service_del.php:64
+#, php-format
+msgid "Remove the boot service <b>%s</b> from the default boot menu"
+msgstr "ブートサービス <b>%s</b> をデフォルトブートメニューから削除"
+
+#: modules/imaging/manage/ajaxLogs.php:45
+msgid "No log available."
+msgstr "利用可能なログがありません。"
+
+#: modules/imaging/manage/ajaxLogs.php:51
+#: modules/imaging/manage/ajaxLogs.php:67
+msgid "Status unknow"
+msgstr "ステータス不明"
+
+#: modules/imaging/manage/ajaxLogs.php:52
+#: modules/imaging/includes/logs.inc.php:28
+msgid "Boot"
+msgstr "ブート"
+
+#: modules/imaging/manage/ajaxLogs.php:53
+#: modules/imaging/includes/logs.inc.php:25
+msgid "Menu"
+msgstr "メニュー"
+
+#: modules/imaging/manage/ajaxLogs.php:54
+#: modules/imaging/includes/logs.inc.php:29
+msgid "Restoration"
+msgstr "リストア"
+
+#: modules/imaging/manage/ajaxLogs.php:55
+#: modules/imaging/includes/logs.inc.php:27
+msgid "Backup"
+msgstr "バックアップ"
+
+#: modules/imaging/manage/ajaxLogs.php:56
+#: modules/imaging/includes/logs.inc.php:30
+msgid "Post-imaging"
+msgstr "ポスト-イメージング"
+
+#: modules/imaging/manage/ajaxLogs.php:57
+#: modules/imaging/includes/logs.inc.php:31
+msgid "Error"
+msgstr "エラー"
+
+#: modules/imaging/manage/ajaxLogs.php:58
+#: modules/imaging/manage/postinstall_delete.php:67
+#: modules/imaging/manage/ajaxMasterLevel2.php:68
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
+#: modules/imaging/imaging/bootmenu.php:257
+#: modules/imaging/includes/logs.inc.php:34
+msgid "Delete"
+msgstr "削除"
+
+#: modules/imaging/manage/ajaxLogs.php:59
+#: modules/imaging/includes/logs.inc.php:26
+msgid "Inventory"
+msgstr "在庫"
+
+#: modules/imaging/manage/ajaxLogs.php:61
+#: modules/imaging/includes/logs.inc.php:35
+msgid "Restore in progress"
+msgstr "リストア実行中"
+
+#: modules/imaging/manage/ajaxLogs.php:62
+#: modules/imaging/includes/logs.inc.php:36
+msgid "Restore done"
+msgstr "リストアが完了しました"
+
+#: modules/imaging/manage/ajaxLogs.php:63
+#: modules/imaging/includes/logs.inc.php:37
+msgid "Restore failed"
+msgstr "リストアが失敗しました"
+
+#: modules/imaging/manage/ajaxLogs.php:64
+#: modules/imaging/includes/logs.inc.php:38
+msgid "Backup in progress"
+msgstr "バックアップ実行中"
+
+#: modules/imaging/manage/ajaxLogs.php:65
+#: modules/imaging/includes/logs.inc.php:39
+msgid "Backup done"
+msgstr "バックアップが完了しました"
+
+#: modules/imaging/manage/ajaxLogs.php:66
+#: modules/imaging/includes/logs.inc.php:40
+msgid "Backup failed"
+msgstr "バックアップが失敗しました"
+
+#: modules/imaging/manage/ajaxLogs.php:109
+#: modules/imaging/imaging/ajaxLogs.php:90
+msgid "Timestamp"
+msgstr "タイムスタンプ"
+
+#: modules/imaging/manage/ajaxLogs.php:111
+#: modules/imaging/imaging/ajaxLogs.php:94
+msgid "Target"
+msgstr "ターゲット"
+
+#: modules/imaging/manage/ajaxLogs.php:112
+#: modules/imaging/imaging/ajaxLogs.php:95
+msgid "Message"
+msgstr "メッセージ"
+
+#: modules/imaging/manage/service_show_used.php:65
+#: modules/imaging/manage/service_show_used.php:77
+msgid "Removal of boot service failed"
+msgstr "ブートサービスの削除に失敗しました"
+
+#: modules/imaging/manage/service_show_used.php:71
 #: modules/imaging/imaging/bootmenu_remove.php:72
 #: modules/imaging/imaging/showtarget.php:78
-#: modules/imaging/manage/service_show_used.php:71
+#: modules/imaging/imaging/addimage.php:64
+#: modules/imaging/imaging/addservice.php:63
 #, php-format
 msgid "Boot menu generation failed for computer: %s"
 msgstr "コンピューターのブートメニュー生成に失敗しました : %s"
 
-#: modules/imaging/imaging/addimage.php:123
+#: modules/imaging/manage/service_show_used.php:108
+#: modules/imaging/imaging/showtarget.php:123
+msgid "Show all targets that use that image in their boot menu"
+msgstr "ブートメニュー内でこのイメージを使用するすべてのターゲットを表示する"
+
+#: modules/imaging/manage/service_show_used.php:115
+#, php-format
+msgid "Remove this boot service from imaging server %s"
+msgstr "このブートサービスをイメージングサーバー %s から削除する"
+
+#: modules/imaging/manage/service_show_used.php:116
+#: modules/imaging/imaging/showtarget.php:139
+msgid "Imaging server"
+msgstr "イメージングサーバー"
+
+#: modules/imaging/manage/service_show_used.php:123
+#: modules/imaging/imaging/showtarget.php:146
+#, php-format
+msgid "Remove this master from computer %s"
+msgstr "コンピューター %s からこのマスターを削除する"
+
+#: modules/imaging/manage/service_show_used.php:124
+#: modules/imaging/imaging/showtarget.php:147
+msgid "Imaging group"
+msgstr "イメージンググループ"
+
+#: modules/imaging/manage/service_show_used.php:124
+#: modules/imaging/imaging/configure.php:39
+#: modules/imaging/imaging/showtarget.php:147
+msgid "Computer"
+msgstr "コンピューター"
+
+#: modules/imaging/manage/service_show_used.php:139
+msgid ""
+"If you want to remove this boot service from one or more targets, check "
+"these targets and click on the remove button"
+msgstr "このブートサービスを 1 つあるいは複数のターゲットから削除する場合は、これらのターゲットを確認し、削除ボタンをクリックしてください。"
+
+#: modules/imaging/manage/service_show_used.php:141
+#: modules/imaging/imaging/showtarget.php:164
+msgid "Select all"
+msgstr "すべて選択"
+
+#: modules/imaging/manage/service_show_used.php:143
+#: modules/imaging/imaging/showtarget.php:166
+msgid "Unselect all"
+msgstr "すべて選択解除"
+
+#: modules/imaging/manage/service_show_used.php:144
+#: modules/imaging/manage/master_delete.php:54
+#: modules/imaging/manage/master_remove.php:69
+#: modules/imaging/imaging/bootmenu_remove.php:93
+#: modules/imaging/imaging/showtarget.php:167
+#: modules/imaging/imaging/images_delete.php:59
+msgid "Remove"
+msgstr "削除"
+
+#: modules/imaging/manage/service_show_used.php:145
+#: modules/imaging/manage/postinstall_delete.php:68
+#: modules/imaging/manage/master_delete.php:55
+#: modules/imaging/manage/master_iso.php:86
+#: modules/imaging/manage/master_remove.php:70
+#: modules/imaging/imaging/bootmenu_remove.php:94
+#: modules/imaging/imaging/images_iso.php:100
+#: modules/imaging/imaging/configure.php:374
+#: modules/imaging/imaging/showtarget.php:168
+#: modules/imaging/imaging/images_delete.php:60
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: modules/imaging/manage/postinstall_delete.php:44
+#, php-format
+msgid "<strong>%s</strong> script deleted"
+msgstr "<strong>%s</strong> スクリプトが削除されました"
+
+#: modules/imaging/manage/postinstall_delete.php:51
+#, php-format
+msgid "<strong>%s</strong> script wasn't deleted"
+msgstr "<strong>%s</strong> スクリプトは削除されませんでした"
+
+#: modules/imaging/manage/postinstall_delete.php:59
+msgid "Can't delete this post-imaging script, it's a global script."
+msgstr "このポスト-イメージングスクリプトは削除できません。グローバルスクリプトです。"
+
+#: modules/imaging/manage/postinstall_delete.php:63
+#: modules/imaging/infoPackage.inc.php:117
+msgid "Delete post-imaging script"
+msgstr "ポスト-イメージングスクリプトの削除"
+
+#: modules/imaging/manage/postinstall_delete.php:65
+#, php-format
+msgid "Are you sure you want to delete the <b>%s</b> script ?"
+msgstr "本当に <b>%s</b> スクリプトを削除しますか？"
+
+#: modules/imaging/manage/ajaxBootmenu.php:29
+#: modules/imaging/imaging/bootmenu.php:254
+msgid "Move Up"
+msgstr "上へ移動"
+
+#: modules/imaging/manage/ajaxBootmenu.php:30
+#: modules/imaging/imaging/bootmenu.php:255
+msgid "Move down"
+msgstr "下へ移動"
+
+#: modules/imaging/manage/ajaxBootmenu.php:93
+msgid "Default boot menu configuration"
+msgstr "デフォルトブートメニュー設定"
+
+#: modules/imaging/manage/ajaxBootmenu.php:96
+#: modules/imaging/manage/ajaxServiceLevel2.php:91
+#: modules/imaging/manage/master_edit.php:53
+#: modules/imaging/manage/ajaxMasterLevel2.php:106
+#: modules/imaging/manage/service_edit.php:54
+#: modules/imaging/imaging/bootmenu.php:347
+#: modules/imaging/imaging/ajaxServices.php:98
+#: modules/imaging/imaging/ajaxImages.php:155
+#: modules/imaging/imaging/images.php:104
+msgid "Label"
+msgstr "ラベル"
+
+#: modules/imaging/manage/ajaxBootmenu.php:98
+#: modules/imaging/manage/ajaxFormWin81.php:894
+#: modules/imaging/manage/ajaxServiceLevel2.php:93
+#: modules/imaging/manage/ajaxFormWin8.php:894
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
+#: modules/imaging/manage/ajaxFormWin7.php:848
+#: modules/imaging/manage/master_edit.php:57
+#: modules/imaging/manage/ajaxMasterLevel2.php:108
+#: modules/imaging/manage/service_edit.php:59
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
+#: modules/imaging/imaging/bootmenu.php:349
+#: modules/imaging/imaging/ajaxServices.php:99
+#: modules/imaging/imaging/ajaxImages.php:157
+#: modules/imaging/imaging/images.php:108
+#: modules/imaging/includes/post_install_script.php:65
+msgid "Description"
+msgstr "内容"
+
+#: modules/imaging/manage/ajaxBootmenu.php:99
+msgid "Default"
+msgstr "デフォルト"
+
+#: modules/imaging/manage/ajaxBootmenu.php:100
+#: modules/imaging/manage/master_add.php:105
+#: modules/imaging/manage/service_add.php:104
+#: modules/imaging/manage/bootmenu_edit.php:86
+#: modules/imaging/imaging/bootmenu.php:167
+#: modules/imaging/imaging/bootmenu.php:352
+#: modules/imaging/imaging/addimage.php:137
+#: modules/imaging/imaging/addservice.php:120
+msgid "Displayed"
+msgstr "表示済"
+
+#: modules/imaging/manage/ajaxBootmenu.php:101
+msgid "Default on WOL"
+msgstr "WOL のデフォルト "
+
+#: modules/imaging/manage/ajaxBootmenu.php:102
+#: modules/imaging/manage/master_add.php:109
+#: modules/imaging/manage/service_add.php:108
+#: modules/imaging/manage/bootmenu_edit.php:96
+#: modules/imaging/imaging/bootmenu.php:177
+#: modules/imaging/imaging/bootmenu.php:355
+#: modules/imaging/imaging/addimage.php:141
+#: modules/imaging/imaging/addservice.php:124
+msgid "Displayed on WOL"
+msgstr "WOL で表示済"
+
+#: modules/imaging/manage/ajaxBootmenu.php:105
+#: modules/imaging/imaging/bootmenu.php:256
+msgid "Edit"
+msgstr "編集"
+
+#: modules/imaging/manage/unattended.php:75
+msgid "form not found"
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:88
+msgid "Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:103
+msgid "error create file"
+msgstr ""
+
+#: modules/imaging/manage/unattended.php:139
+msgid "Choose package source"
+msgstr ""
+
+#: modules/imaging/manage/ajaxService.php:27
+msgid "Manage services"
+msgstr "サービスを管理"
+
+#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
+#, php-format
+msgid "<b>%s</b> was already added to Boot Services"
+msgstr "<b>%s</b> は、すでにブートサービスに追加されています。"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:37
+msgid "Boot service successfully created"
+msgstr "ブートサービスが作成されました"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:43
+msgid "Error while creating Boot Service"
+msgstr "ブートサービス作成中のエラーです"
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:54
+#, php-format
+msgid "Add <b>%s</b> to available Boot Services ?"
+msgstr "<b>%s</b> を利用可能なブートサービスに追加しますか？"
+
+#: modules/imaging/manage/ajaxFormWin81.php:532
+#: modules/imaging/manage/ajaxFormWin8.php:532
+#: modules/imaging/manage/ajaxFormWin7.php:491
+msgid "Installation Notes"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:540
+#: modules/imaging/manage/ajaxFormWin8.php:540
+#: modules/imaging/manage/ajaxFormWin7.php:499
+#: modules/imaging/manage/master_iso.php:67
+#: modules/imaging/imaging/images_iso.php:81
+msgid "Title"
+msgstr "タイトル"
+
+#: modules/imaging/manage/ajaxFormWin81.php:549
+#: modules/imaging/manage/ajaxFormWin8.php:549
+#: modules/imaging/manage/ajaxFormWin7.php:508
+msgid "General Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:582
+#: modules/imaging/manage/ajaxFormWin8.php:582
+#: modules/imaging/manage/ajaxFormWin7.php:540
+msgid "Product Key:"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:590
+#: modules/imaging/manage/ajaxFormWin8.php:590
+#: modules/imaging/manage/ajaxFormWin7.php:548
+msgid "Accept EULA"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:598
+#: modules/imaging/manage/ajaxFormWin8.php:598
+#: modules/imaging/manage/ajaxFormWin7.php:556
+msgid "Skip automatic activation"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:606
+#: modules/imaging/manage/ajaxFormWin8.php:607
+#: modules/imaging/manage/ajaxFormWin7.php:564
+msgid "Skip License Rearm"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:617
+#: modules/imaging/manage/ajaxFormWin8.php:616
+#: modules/imaging/manage/ajaxFormWin7.php:573
+msgid "Setup Language"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:622
+#: modules/imaging/manage/ajaxFormWin8.php:621
+#: modules/imaging/manage/ajaxFormWin7.php:578
+msgid "Computer Name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:627
+#: modules/imaging/manage/ajaxFormWin8.php:626
+#: modules/imaging/manage/ajaxFormWin7.php:583
+msgid "Organization Name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:635
+#: modules/imaging/manage/ajaxFormWin8.php:634
+#: modules/imaging/manage/ajaxFormWin7.php:591
+msgid "Specialize Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:636
+#: modules/imaging/manage/ajaxFormWin8.php:635
+#: modules/imaging/manage/ajaxFormWin7.php:592
+msgid "Configure Specialize Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:646
+#: modules/imaging/manage/ajaxFormWin8.php:645
+#: modules/imaging/manage/ajaxFormWin7.php:602
+msgid "Extend OS Partition"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:654
+#: modules/imaging/manage/ajaxFormWin8.php:653
+#: modules/imaging/manage/ajaxFormWin7.php:610
+msgid "Copy Profile"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:662
+#: modules/imaging/manage/ajaxFormWin8.php:661
+#: modules/imaging/manage/ajaxFormWin7.php:618
+msgid "Show Windows Live"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:669
+#: modules/imaging/manage/ajaxFormWin8.php:668
+#: modules/imaging/manage/ajaxFormWin7.php:625
+msgid "Regional Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:670
+#: modules/imaging/manage/ajaxFormWin8.php:669
+#: modules/imaging/manage/ajaxFormWin7.php:626
+msgid "Configure International Settings in Windows"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:680
+#: modules/imaging/manage/ajaxFormWin8.php:679
+#: modules/imaging/manage/ajaxFormWin7.php:636
+msgid "Keyboard or input method"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:688
+#: modules/imaging/manage/ajaxFormWin8.php:687
+#: modules/imaging/manage/ajaxFormWin7.php:644
+msgid "Currency and Date format"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:696
+#: modules/imaging/manage/ajaxFormWin8.php:696
+#: modules/imaging/manage/ajaxFormWin7.php:652
+msgid "Time Zone"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:704
+#: modules/imaging/manage/ajaxFormWin8.php:704
+#: modules/imaging/manage/ajaxFormWin7.php:660
+msgid "UI Language"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:711
+#: modules/imaging/manage/ajaxFormWin8.php:711
+#: modules/imaging/manage/ajaxFormWin7.php:667
+msgid "Out Of Box Experience"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:722
+#: modules/imaging/manage/ajaxFormWin8.php:722
+#: modules/imaging/manage/ajaxFormWin7.php:678
+msgid "Network Location"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:730
+#: modules/imaging/manage/ajaxFormWin8.php:730
+#: modules/imaging/manage/ajaxFormWin7.php:686
+msgid "Protect Your Computer"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:739
+#: modules/imaging/manage/ajaxFormWin8.php:739
+#: modules/imaging/manage/ajaxFormWin7.php:694
+msgid "System Updates"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:747
+#: modules/imaging/manage/ajaxFormWin8.php:747
+#: modules/imaging/manage/ajaxFormWin7.php:702
+msgid "Hide EULA page"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:755
+#: modules/imaging/manage/ajaxFormWin8.php:755
+#: modules/imaging/manage/ajaxFormWin7.php:710
+msgid "Disable auto daylight timeset"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:763
+#: modules/imaging/manage/ajaxFormWin8.php:763
+#: modules/imaging/manage/ajaxFormWin7.php:718
+msgid "Hide wireless setup in OOBE"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:771
+#: modules/imaging/manage/ajaxFormWin8.php:771
+#: modules/imaging/manage/ajaxFormWin7.php:726
+msgid "Skip machine OOBE"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:779
+#: modules/imaging/manage/ajaxFormWin8.php:779
+#: modules/imaging/manage/ajaxFormWin7.php:734
+msgid "Skip user OOBE"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:785
+#: modules/imaging/manage/ajaxFormWin8.php:785
+#: modules/imaging/manage/ajaxFormWin7.php:739
+msgid "Category View"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:785
+#: modules/imaging/manage/ajaxFormWin8.php:785
+#: modules/imaging/manage/ajaxFormWin7.php:739
+msgid "Classic View"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:788
+#: modules/imaging/manage/ajaxFormWin8.php:788
+#: modules/imaging/manage/ajaxFormWin7.php:742
+msgid "Control Panel View"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:793
+#: modules/imaging/manage/ajaxFormWin8.php:793
+#: modules/imaging/manage/ajaxFormWin7.php:747
+msgid "Large"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:793
+#: modules/imaging/manage/ajaxFormWin8.php:793
+#: modules/imaging/manage/ajaxFormWin7.php:747
+msgid "Small"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:796
+#: modules/imaging/manage/ajaxFormWin8.php:796
+#: modules/imaging/manage/ajaxFormWin7.php:750
+msgid "Control Panel Icon Size"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:803
+#: modules/imaging/manage/ajaxFormWin8.php:803
+#: modules/imaging/manage/ajaxFormWin7.php:757
+msgid "Partition Settings"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:814
+#: modules/imaging/manage/ajaxFormWin8.php:814
+#: modules/imaging/manage/ajaxFormWin7.php:768
+msgid "Wipe Disk"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:822
+#: modules/imaging/manage/ajaxFormWin8.php:822
+#: modules/imaging/manage/ajaxFormWin7.php:776
+msgid "Install to disk"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:830
+#: modules/imaging/manage/ajaxFormWin8.php:830
+#: modules/imaging/manage/ajaxFormWin7.php:784
+msgid "Main Partition Format"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:843
+#: modules/imaging/manage/ajaxFormWin8.php:843
+#: modules/imaging/manage/ajaxFormWin7.php:797
+msgid "Main Partition Letter"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:851
+#: modules/imaging/manage/ajaxFormWin8.php:851
+#: modules/imaging/manage/ajaxFormWin7.php:805
+msgid "Partition Order"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:858
+#: modules/imaging/manage/ajaxFormWin8.php:858
+#: modules/imaging/manage/ajaxFormWin7.php:812
+msgid "Administrators Account"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:866
+#: modules/imaging/manage/ajaxFormWin8.php:866
+#: modules/imaging/manage/ajaxFormWin7.php:820
+msgid "Password"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:873
+#: modules/imaging/manage/ajaxFormWin8.php:873
+#: modules/imaging/manage/ajaxFormWin7.php:827
+msgid "User Account"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:881
+#: modules/imaging/manage/ajaxFormWin8.php:881
+#: modules/imaging/manage/ajaxFormWin7.php:835
+msgid "User Name"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:889
+#: modules/imaging/manage/ajaxFormWin8.php:889
+#: modules/imaging/manage/ajaxFormWin7.php:843
+msgid "Group"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:899
+#: modules/imaging/manage/ajaxFormWin8.php:899
+#: modules/imaging/manage/ajaxFormWin7.php:853
+msgid "Password: (Optional)"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:906
+#: modules/imaging/manage/ajaxFormWin8.php:906
+#: modules/imaging/manage/ajaxFormWin7.php:860
+msgid "Auto Logon"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:914
+#: modules/imaging/manage/ajaxFormWin8.php:914
+#: modules/imaging/manage/ajaxFormWin7.php:868
+msgid "UAC"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:922
+#: modules/imaging/manage/ajaxFormWin8.php:922
+#: modules/imaging/manage/ajaxFormWin7.php:876
+msgid "Enable Firewall"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:930
+#: modules/imaging/manage/ajaxFormWin8.php:930
+msgid "Customer Experience Improvement Program (CEIP)"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:938
+#: modules/imaging/manage/ajaxFormWin8.php:938
+msgid "System Background Colour"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:950
+#: modules/imaging/manage/ajaxFormWin8.php:970
+#: modules/imaging/manage/ajaxFormWin7.php:883
+#: modules/imaging/manage/master_edit.php:70
+#: modules/imaging/manage/service_edit.php:69
+#: modules/imaging/manage/ajaxConfiguration.php:191
+#: modules/imaging/manage/bootmenu_edit.php:101
+#: modules/imaging/manage/postinstall_edit.php:126
+#: modules/imaging/imaging/bootmenu.php:182
+msgid "Validate"
+msgstr "検証"
+
+#: modules/imaging/manage/ajaxFormWin81.php:950
+#: modules/imaging/manage/ajaxFormWin8.php:970
+#: modules/imaging/manage/ajaxFormWin7.php:883
+msgid "Create Xml Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/manage/ajaxFormWin81.php:958
+#: modules/imaging/manage/ajaxFormWin8.php:978
+#: modules/imaging/manage/ajaxFormWin7.php:894
+msgid "Xml Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:49
+msgid "Add service to default boot menu"
+msgstr "サービスをデフォルトブートメニューに追加"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:50
+msgid "Remove service from default boot menu"
+msgstr "サービスをデフォルトブートメニューから削除"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:51
+msgid "Delete service"
+msgstr "サービスを削除"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:52
+msgid "Show where service is used"
+msgstr "サービスが使用されている場所を表示"
+
+#: modules/imaging/manage/ajaxServiceLevel2.php:94
+#: modules/imaging/imaging/ajaxImages.php:160
+msgid "In boot menu"
+msgstr "ブートメニュー内"
+
+#: modules/imaging/manage/master_add.php:48
+#, php-format
+msgid "Image <strong>%s</strong> added to default boot menu"
+msgstr "イメージ <strong>%s</strong> がデフォルトブートメニューに追加されました"
+
 #: modules/imaging/manage/master_add.php:89
+#: modules/imaging/imaging/addimage.php:123
 #, php-format
 msgid "Add the image <b>%s</b> to <b>%s</b>"
 msgstr "イメージ <b>%s</b> を <b>%s</b> に追加"
 
-#: modules/imaging/imaging/addimage.php:135
-#: modules/imaging/imaging/addservice.php:118
-#: modules/imaging/imaging/bootmenu.php:162
-#: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/master_add.php:103
 #: modules/imaging/manage/service_add.php:102
+#: modules/imaging/manage/bootmenu_edit.php:81
+#: modules/imaging/imaging/bootmenu.php:162
+#: modules/imaging/imaging/addimage.php:135
+#: modules/imaging/imaging/addservice.php:118
 msgid "Selected by default"
 msgstr "デフォルト選択"
 
-#: modules/imaging/imaging/addimage.php:137
-#: modules/imaging/imaging/addservice.php:120
-#: modules/imaging/imaging/bootmenu.php:167
-#: modules/imaging/imaging/bootmenu.php:352
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/master_add.php:105
-#: modules/imaging/manage/service_add.php:104
-msgid "Displayed"
-msgstr "表示済"
-
-#: modules/imaging/imaging/addimage.php:139
-#: modules/imaging/imaging/addservice.php:122
-#: modules/imaging/imaging/bootmenu.php:172
-#: modules/imaging/manage/bootmenu_edit.php:91
 #: modules/imaging/manage/master_add.php:107
 #: modules/imaging/manage/service_add.php:106
+#: modules/imaging/manage/bootmenu_edit.php:91
+#: modules/imaging/imaging/bootmenu.php:172
+#: modules/imaging/imaging/addimage.php:139
+#: modules/imaging/imaging/addservice.php:122
 msgid "Selected by default on WOL"
 msgstr "WOL でのデフォルト選択"
 
-#: modules/imaging/imaging/addimage.php:141
-#: modules/imaging/imaging/addservice.php:124
-#: modules/imaging/imaging/bootmenu.php:177
-#: modules/imaging/imaging/bootmenu.php:355
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/master_add.php:109
-#: modules/imaging/manage/service_add.php:108
-msgid "Displayed on WOL"
-msgstr "WOL で表示済"
+#: modules/imaging/manage/ajaxStatus.php:27
+msgid "Status"
+msgstr "ステータス"
 
-#: modules/imaging/imaging/addservice.php:106
+#: modules/imaging/manage/ajaxStatus.php:40
+msgid "Space available on server"
+msgstr "サーバー上での使用可能スペース"
+
+#: modules/imaging/manage/ajaxStatus.php:44
+msgid "Load on server"
+msgstr "サーバー上でロード"
+
+#: modules/imaging/manage/ajaxStatus.php:51
+msgid "Synchronization state"
+msgstr "同期状態"
+
+#: modules/imaging/manage/ajaxStatus.php:55
+msgid "Up-to-date"
+msgstr "最新"
+
+#: modules/imaging/manage/ajaxStatus.php:60
+msgid "Stats"
+msgstr "統計"
+
+#: modules/imaging/manage/ajaxStatus.php:61
+msgid "client(s) registered"
+msgstr "登録クライアント"
+
+#: modules/imaging/manage/ajaxStatus.php:61
+msgid "with custom menu"
+msgstr "カスタムメニューを有する"
+
+#: modules/imaging/manage/ajaxStatus.php:62
+msgid "client(s) have rescue image(s)"
+msgstr "クライアントは回復イメージを有しています"
+
+#: modules/imaging/manage/ajaxStatus.php:65
+msgid "masters are available"
+msgstr "マスターは利用可能です"
+
+#: modules/imaging/manage/ajaxStatus.php:71
+msgid "Recent activity"
+msgstr "最近のアクティビティ"
+
+#: modules/imaging/manage/ajaxStatus.php:80
+msgid "Can't connect to the imaging server linked to the selected entity."
+msgstr "選択されたエンティティにリンクされたイメージングサーバーに接続できません。"
+
+#: modules/imaging/manage/service_add.php:48
 #, php-format
-msgid "Add the boot service <b>%s</b> to <b>%s</b>"
-msgstr "ブートサービス <b>%s</b> を <b>%s</b> に追加"
+msgid "Service <strong>%s</strong> added to default boot menu"
+msgstr "サービス <strong>%s</strong> がデフォルトブートメニューに追加されました"
 
-#: modules/imaging/imaging/ajaxImages.php:70
-msgid "Add image to boot menu"
-msgstr "イメージをブートメニューに追加"
+#: modules/imaging/manage/service_add.php:88
+#, php-format
+msgid "Add the boot service <b>%s</b> to the default boot menu"
+msgstr "ブートサービス <b>%s</b> がデフォルトブートメニューに追加されました"
 
-#: modules/imaging/imaging/ajaxImages.php:71
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
+msgid "No imaging server available for association."
+msgstr "関連で利用できるイメージングサーバーがありません。"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
+#, php-format
+msgid "Link this Imaging Server to the '%s' entity."
+msgstr "このイメージングサーバーを '%s' エンティティへリンク"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
+msgid "Associate an entity to an imaging server"
+msgstr "エンティティをイメージングサーバーに関連させる"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
+#: modules/imaging/includes/post_install_script.php:63
+msgid "Name"
+msgstr "名前"
+
+#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
+msgid "Identifier"
+msgstr "識別子"
+
+#: modules/imaging/manage/master_edit.php:43
+msgid "Edit master : "
+msgstr "マスターの編集 : "
+
+#: modules/imaging/manage/master_edit.php:94
+#, php-format
+msgid "Master <strong>%s</strong> modified with success"
+msgstr "マスター <strong>%s</strong> の変更に成功しました"
+
+#: modules/imaging/manage/master_delete.php:36
+#, php-format
+msgid "Image <strong>%s</strong> deleted from the imaging server."
+msgstr "イメージ <strong>%s</strong> がイメージングサーバーから削除されました。"
+
+#: modules/imaging/manage/master_delete.php:50
+#: modules/imaging/infoPackage.inc.php:60
+msgid "Delete master"
+msgstr "マスターの削除"
+
+#: modules/imaging/manage/master_delete.php:52
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> master ?"
+msgstr "本当に <b>%s</b> マスターを削除しますか？"
+
+#: modules/imaging/manage/save_configuration.php:65
+#, php-format
+msgid "Imaging server <strong>%s</strong> configuration saved."
+msgstr "イメージングサーバー <strong>%s</strong> 設定が保存されました。"
+
+#: modules/imaging/manage/save_configuration.php:70
+#: modules/imaging/manage/location.php:59
+#: modules/imaging/manage/location.php:62
+#, php-format
+msgid ""
+"Boot menu generation failed for package server: %s<br /><br />Check "
+"/var/log/mmc/pulse2-package-server.log"
+msgstr ""
+"パッケージサーバーのブートメニュー生成が失敗しました: %s<br /><br />Check /var/log/mmc/pulse2-package-"
+"server.log"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:47
+msgid "No master available."
+msgstr "利用できるマスターがありません。"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:49
+msgid ""
+"To define a master, browse to the computers module click on the imaging icon"
+" for the computer you wish to make a master from, then choose &quot;Images "
+"and Masters&quot;, followed by clicking the edit button on a backup image to"
+" convert it to a master."
+msgstr ""
+"マスターを定義するには、このコンピューターモジュールを参照してマスターを作成するコンピューターのイメージングアイコンをクリックします。それから、バックアップイメージ上の編集ボタンをクリックして"
+" &quot;イメージおよびマスター&quot; を選択してマスターに変換してください。"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:55
+msgid "Add image to default boot menu"
+msgstr "イメージをデフォルトブートメニューに追加"
+
+#: modules/imaging/manage/ajaxMasterLevel2.php:56
 #: modules/imaging/imaging/bootmenu_remove.php:89
+#: modules/imaging/imaging/ajaxImages.php:71
 #: modules/imaging/infoPackage.inc.php:233
 #: modules/imaging/infoPackage.inc.php:314
-#: modules/imaging/manage/ajaxMasterLevel2.php:56
 msgid "Remove from boot menu"
 msgstr "ブートメニューから削除"
 
-#: modules/imaging/imaging/ajaxImages.php:73
-msgid "Delete the image"
-msgstr "イメージを削除"
-
-#: modules/imaging/imaging/ajaxImages.php:74
 #: modules/imaging/manage/ajaxMasterLevel2.php:69
+#: modules/imaging/imaging/ajaxImages.php:74
 msgid "Show target using that image"
 msgstr "このイメージを使用してターゲットを表示"
 
-#: modules/imaging/imaging/ajaxImages.php:77
-#: modules/imaging/imaging/ajaxImages.php:175
-#: modules/imaging/manage/ajaxMasterLevel2.php:118
-msgid "Edit image"
-msgstr "イメージを編集"
-
-#: modules/imaging/imaging/ajaxImages.php:79
-msgid "View image log"
-msgstr "イメージログを表示"
-
-#: modules/imaging/imaging/ajaxImages.php:155
-#: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/imaging/bootmenu.php:347
-#: modules/imaging/imaging/images.php:104
-#: modules/imaging/manage/ajaxBootmenu.php:96
-#: modules/imaging/manage/ajaxMasterLevel2.php:106
-#: modules/imaging/manage/ajaxServiceLevel2.php:91
-#: modules/imaging/manage/master_edit.php:53
-#: modules/imaging/manage/service_edit.php:54
-msgid "Label"
-msgstr "ラベル"
-
-#: modules/imaging/imaging/ajaxImages.php:157
-#: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/imaging/bootmenu.php:349
-#: modules/imaging/imaging/images.php:108
-#: modules/imaging/includes/post_install_script.php:65
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/ajaxBootmenu.php:98
-#: modules/imaging/manage/ajaxFormWin7.php:848
-#: modules/imaging/manage/ajaxFormWin8.php:894
-#: modules/imaging/manage/ajaxFormWin81.php:894
-#: modules/imaging/manage/ajaxMasterLevel2.php:108
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/service_edit.php:59
-msgid "Description"
-msgstr "内容"
-
-#: modules/imaging/imaging/ajaxImages.php:158
 #: modules/imaging/manage/ajaxMasterLevel2.php:109
+#: modules/imaging/imaging/ajaxImages.php:158
 msgid "Created"
 msgstr "作成済"
 
-#: modules/imaging/imaging/ajaxImages.php:159
 #: modules/imaging/manage/ajaxMasterLevel2.php:110
+#: modules/imaging/imaging/ajaxImages.php:159
 msgid "Size (compressed)"
 msgstr "サイズ (圧縮)"
 
-#: modules/imaging/imaging/ajaxImages.php:160
-#: modules/imaging/manage/ajaxServiceLevel2.php:94
-msgid "In boot menu"
-msgstr "ブートメニュー内"
+#: modules/imaging/manage/ajaxMasterLevel2.php:111
+msgid "In default boot menu"
+msgstr "デフォルトブートメニュー内"
 
-#: modules/imaging/imaging/ajaxImages.php:162
-#: modules/imaging/imaging/ajaxServices.php:102
-msgid "From profile"
-msgstr "プロファイルから"
-
-#: modules/imaging/imaging/ajaxImages.php:168
 #: modules/imaging/manage/ajaxMasterLevel2.php:114
+#: modules/imaging/imaging/ajaxImages.php:168
 msgid "Create bootable iso"
 msgstr "ブート可能 ISO を作成"
 
-#: modules/imaging/imaging/ajaxLogs.php:90
-#: modules/imaging/manage/ajaxLogs.php:109
-msgid "Timestamp"
-msgstr "タイムスタンプ"
+#: modules/imaging/manage/ajaxMasterLevel2.php:118
+#: modules/imaging/imaging/ajaxImages.php:77
+#: modules/imaging/imaging/ajaxImages.php:175
+msgid "Edit image"
+msgstr "イメージを編集"
 
-#: modules/imaging/imaging/ajaxLogs.php:94
-#: modules/imaging/manage/ajaxLogs.php:111
-msgid "Target"
-msgstr "ターゲット"
+#: modules/imaging/manage/master_iso.php:42
+#: modules/imaging/infoPackage.inc.php:69
+msgid "Create iso from master"
+msgstr "マスターから ISO を作成"
 
-#: modules/imaging/imaging/ajaxLogs.php:95
-#: modules/imaging/manage/ajaxLogs.php:112
-msgid "Message"
-msgstr "メッセージ"
+#: modules/imaging/manage/master_iso.php:44
+#, php-format
+msgid "Iso of master <strong>%s</strong> has been launched in background."
+msgstr "マスター <strong>%s</strong> の ISO が、バックグラウンドで起動されました。"
+
+#: modules/imaging/manage/master_iso.php:46
+#, php-format
+msgid ""
+"The files will be stored in the directory %s of the server at the end of the"
+" backup."
+msgstr "ファイルは、バックアップ終了時にディレクトリ %s に保存されます。"
+
+#: modules/imaging/manage/master_iso.php:48
+msgid "Please go to the status page to check the iso creation status."
+msgstr "ステータスページに移動して、 ISO 作成ステータスを確認してください。"
+
+#: modules/imaging/manage/master_iso.php:50
+msgid ""
+"This operation will last according to the amount of data of the master."
+msgstr "この操作は、マスターのデータ量に応じて継続します。"
+
+#: modules/imaging/manage/master_iso.php:65
+#, php-format
+msgid "Create iso for <strong>%s</strong>"
+msgstr "<strong>%s</strong> ISO の作成"
+
+#: modules/imaging/manage/master_iso.php:72
+#: modules/imaging/imaging/images_iso.php:86
+msgid "Media size"
+msgstr "メディアサイズ"
+
+#: modules/imaging/manage/master_iso.php:85
+msgid "Launch backup"
+msgstr "バックアップ起動"
+
+#: modules/imaging/manage/bootmenu_down.php:39
+#, php-format
+msgid "Failed to move down <strong>%s</strong> in the default boot menu"
+msgstr "デフォルトブートメニューで <strong>%s</strong> を下げるのに失敗しました"
+
+#: modules/imaging/manage/imaging_server_link.php:59
+#, php-format
+msgid ""
+"Link between imaging server <strong>%s</strong> and the entity "
+"<strong>%s</strong> succeeded."
+msgstr ""
+"イメージングサーバー <strong>%s</strong> とエンティティ <strong>%s</strong> 間のリンクに成功しました。"
+
+#: modules/imaging/manage/imaging_server_link.php:93
+#, php-format
+msgid ""
+"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
+"'<b>%s</b>'"
+msgstr "本当にイメージングサーバー '<b>%s</b>' をエンティティ '<b>%s</b>' にリンクしますか？"
+
+#: modules/imaging/manage/ajaxPostInstall.php:27
+msgid "Available post-imaging scripts"
+msgstr "利用可能ポスト-イメージング スクリプト"
+
+#: modules/imaging/manage/master_remove.php:36
+#, php-format
+msgid "Image <strong>%s</strong> removed from default boot menu."
+msgstr "イメージ <strong>%s</strong> がデフォルトブートメニューから削除されました。"
+
+#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/infoPackage.inc.php:57
+msgid "Remove master"
+msgstr "マスターの除外"
+
+#: modules/imaging/manage/master_remove.php:67
+#, php-format
+msgid "Are you sure you want to remove <b>%s</b> master ?"
+msgstr "本当に <b>%s</b> マスターを削除しますか？"
+
+#: modules/imaging/manage/bootmenu_up.php:39
+#, php-format
+msgid "Failed to move <strong>%s</strong> in the default boot menu"
+msgstr "デフォルトブートメニューでの <strong>%s</strong> の移動に失敗しました"
+
+#: modules/imaging/manage/service_edit.php:46
+msgid "Edit service : "
+msgstr "サービス編集 : "
+
+#: modules/imaging/manage/service_edit.php:64
+msgid "In default bootmenu"
+msgstr "デフォルトブートメニュー内"
+
+#: modules/imaging/manage/service_edit.php:79
+#, php-format
+msgid "Service <strong>%s</strong> modified with success"
+msgstr "サービス <strong>%s</strong> の変更に成功しました"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
+msgid "Create Boot Service"
+msgstr "ブートサービスを作成"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
+msgid "Edit script"
+msgstr "スクリプトを編集"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
+msgid "Boot Service already created"
+msgstr "ブートサービスはすでに作成されています"
+
+#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
+msgid "Duplicate"
+msgstr "複製"
+
+#: modules/imaging/manage/ajaxConfiguration.php:28
+msgid "Imaging server configuration"
+msgstr "イメージングサーバー設定"
+
+#: modules/imaging/manage/ajaxConfiguration.php:84
+msgid "Menu language"
+msgstr "メニュー言語"
+
+#: modules/imaging/manage/ajaxConfiguration.php:87
+msgid "PXE Password"
+msgstr "PXE パスワード"
+
+#: modules/imaging/manage/ajaxConfiguration.php:88
+msgid "Leave this field empty to unset PXE Password"
+msgstr "このフィールドを空に残して PXE パスワード設定を解除する"
+
+#: modules/imaging/manage/ajaxConfiguration.php:107
+msgid "Default menu parameters"
+msgstr "デフォルトメニューパラメータ"
+
+#: modules/imaging/manage/ajaxConfiguration.php:111
+#: modules/imaging/imaging/configure.php:43
+msgid "Default menu label"
+msgstr "デフォルトメニューラベル"
+
+#: modules/imaging/manage/ajaxConfiguration.php:114
+msgid "Default menu timeout"
+msgstr "デフォルトメニュータイムアウト"
+
+#: modules/imaging/manage/ajaxConfiguration.php:122
+msgid "Hide menu"
+msgstr "メニュー非表示"
+
+#: modules/imaging/manage/ajaxConfiguration.php:127
+#: modules/imaging/imaging/configure.php:62
+msgid "Restoration options"
+msgstr "リストアオプション"
+
+#: modules/imaging/manage/ajaxConfiguration.php:135
+#: modules/imaging/imaging/configure.php:70
+msgid "nfs"
+msgstr "NFS"
+
+#: modules/imaging/manage/ajaxConfiguration.php:136
+#: modules/imaging/imaging/configure.php:72
+msgid "mtftp"
+msgstr "MTFTP"
+
+#: modules/imaging/manage/ajaxConfiguration.php:143
+#: modules/imaging/imaging/configure.php:79
+msgid "(default)"
+msgstr "(デフォルト)"
+
+#: modules/imaging/manage/ajaxConfiguration.php:156
+#: modules/imaging/imaging/configure.php:92
+msgid "Restoration type"
+msgstr "リストアタイプ"
+
+#: modules/imaging/manage/ajaxConfiguration.php:159
+#: modules/imaging/imaging/configure.php:95
+msgid "Restoration: MTFTP maximum waiting (in sec)"
+msgstr "リストア: MTFTP 最大待機 (秒)"
+
+#: modules/imaging/manage/ajaxConfiguration.php:163
+#: modules/imaging/imaging/configure.php:100
+msgid "Boot options"
+msgstr "ブートオプション"
+
+#: modules/imaging/manage/ajaxConfiguration.php:166
+#: modules/imaging/imaging/configure.php:103
+msgid "Full path to the XPM displayed at boot"
+msgstr "ブートで表示される XPM へのフルパス"
+
+#: modules/imaging/manage/ajaxConfiguration.php:169
+#: modules/imaging/imaging/configure.php:107
+msgid "Message displayed during backup/restoration"
+msgstr "バックアップ/リストア間に表示されるメッセージ"
+
+#: modules/imaging/manage/localSidebar.php:28
+msgid "Imaging server status"
+msgstr "イメージングサーバーステータス"
+
+#: modules/imaging/manage/localSidebar.php:31
+#: modules/imaging/infoPackage.inc.php:55
+msgid "Manage masters"
+msgstr "マスターの管理"
+
+#: modules/imaging/manage/localSidebar.php:34
+#: modules/imaging/infoPackage.inc.php:73
+msgid "Manage boot services"
+msgstr "ブートサービスの管理"
+
+#: modules/imaging/manage/localSidebar.php:37
+#: modules/imaging/infoPackage.inc.php:91
+msgid "Default boot menu"
+msgstr "デフォルトブートメニュー"
+
+#: modules/imaging/manage/localSidebar.php:40
+#: modules/imaging/infoPackage.inc.php:103
+msgid "Post-imaging scripts"
+msgstr "ポスト-イメージングスクリプト"
+
+#: modules/imaging/manage/localSidebar.php:43
+msgid "Imaging Configuration"
+msgstr "イメージング設定"
+
+#: modules/imaging/manage/service_remove.php:42
+#, php-format
+msgid "Service <strong>%s</strong> successfully removed"
+msgstr "サービス <strong>%s</strong> が削除されました"
+
+#: modules/imaging/manage/service_remove.php:64
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
+msgstr "本当に <b>%s</b> ブートサービスを削除しますか？"
+
+#: modules/imaging/manage/bootmenu_edit.php:68
+#, php-format
+msgid "Edit : %s"
+msgstr "編集 : %s"
+
+#: modules/imaging/manage/bootmenu_edit.php:77
+msgid "Default menu item label"
+msgstr "デフォルトメニュー項目ラベル"
+
+#: modules/imaging/manage/ajaxMaster.php:27
+#: modules/imaging/imaging/images.php:69
+msgid "Available masters"
+msgstr "利用可能マスター"
+
+#: modules/imaging/manage/postinstall_edit.php:90
+#, php-format
+msgid "<strong>%s</strong> script %s"
+msgstr "<strong>%s</strong>  スクリプト %s"
+
+#: modules/imaging/manage/postinstall_edit.php:97
+#, php-format
+msgid "<strong>%s</strong> script wasn't %s"
+msgstr "<strong>%s</strong>  スクリプトは %s ではありませんでした"
+
+#: modules/imaging/manage/postinstall_edit.php:122
+msgid "Script value"
+msgstr "スクリプト値"
 
 #: modules/imaging/imaging/ajaxLogs.php:96
 msgid "State"
 msgstr "状態"
-
-#: modules/imaging/imaging/ajaxServices.php:51
-msgid "Add service to boot menu"
-msgstr "サービスをブートメニューに追加"
-
-#: modules/imaging/imaging/ajaxServices.php:52
-msgid "Remove service from boot menu"
-msgstr "ブートメニューからサービスを削除"
-
-#: modules/imaging/imaging/ajaxServices.php:100
-msgid "In bootmenu"
-msgstr "ブートメニュー内"
-
-#: modules/imaging/imaging/bootmenu.php:74
-#: modules/imaging/imaging/bootmenu.php:113
-#, php-format
-msgid "Failed to move item <strong>%s</strong> in the boot menu"
-msgstr "ブートメニュー内の項目 <strong>%s</strong> の移動に失敗しました"
-
-#: modules/imaging/imaging/bootmenu.php:137
-msgid "Edition of item"
-msgstr "項目のエディション"
-
-#: modules/imaging/imaging/bootmenu.php:182
-#: modules/imaging/manage/ajaxConfiguration.php:191
-#: modules/imaging/manage/ajaxFormWin7.php:883
-#: modules/imaging/manage/ajaxFormWin8.php:970
-#: modules/imaging/manage/ajaxFormWin81.php:950
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/postinstall_edit.php:126
-#: modules/imaging/manage/service_edit.php:69
-msgid "Validate"
-msgstr "検証"
-
-#: modules/imaging/imaging/bootmenu.php:254
-#: modules/imaging/manage/ajaxBootmenu.php:29
-msgid "Move Up"
-msgstr "上へ移動"
-
-#: modules/imaging/imaging/bootmenu.php:255
-#: modules/imaging/manage/ajaxBootmenu.php:30
-msgid "Move down"
-msgstr "下へ移動"
-
-#: modules/imaging/imaging/bootmenu.php:256
-#: modules/imaging/manage/ajaxBootmenu.php:105
-msgid "Edit"
-msgstr "編集"
-
-#: modules/imaging/imaging/bootmenu.php:257
-#: modules/imaging/includes/logs.inc.php:34
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/manage/ajaxMasterLevel2.php:68
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/postinstall_delete.php:67
-msgid "Delete"
-msgstr "削除"
-
-#: modules/imaging/imaging/bootmenu.php:289
-msgid "master from the profile"
-msgstr "プロファイルからマスター"
-
-#: modules/imaging/imaging/bootmenu.php:291
-msgid "master"
-msgstr "マスター"
-
-#: modules/imaging/imaging/bootmenu.php:298
-msgid "boot service from profile"
-msgstr "プロファイルからのブートサービス"
-
-#: modules/imaging/imaging/bootmenu.php:300
-msgid "boot service"
-msgstr "ブートサービス"
-
-#: modules/imaging/imaging/bootmenu.php:340
-msgid ""
-"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
-"default boot entry."
-msgstr "デフォルトブート登録を定義するには、\"事前選択\" あるいは \"WOL での事前選択\" を使用してください。"
-
-#: modules/imaging/imaging/bootmenu.php:343
-#: modules/imaging/imaging/bootmenu.php:345
-msgid ""
-"If the default entry is an image creation or restore, the following network "
-"boots will fall back to the first menu entry."
-msgstr "デフォルト登録がイメージ作成あるいはリストアである場合は、次のネットワークブートが第一メニュー登録にフォールバックします。"
-
-#: modules/imaging/imaging/bootmenu.php:345
-msgid ""
-"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
-" this value will be set on all the computers in this group."
-msgstr "\"事前選択\" あるいは \"WOL での事前選択\" 登録を変更する場合は、この値はこのグループ内の全コンピューターに設定されます。"
-
-#: modules/imaging/imaging/bootmenu.php:350
-msgid "Preselected choice"
-msgstr "事前選択"
-
-#: modules/imaging/imaging/bootmenu.php:353
-msgid "Preselected choice on WOL"
-msgstr "WOL での事前選択"
 
 #: modules/imaging/imaging/bootmenu_remove.php:92
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr "本当に <b>%s</b> をブートメニューから削除しますか？"
 
-#: modules/imaging/imaging/bootmenu_remove.php:93
-#: modules/imaging/imaging/images_delete.php:59
-#: modules/imaging/imaging/showtarget.php:167
-#: modules/imaging/manage/master_delete.php:54
-#: modules/imaging/manage/master_remove.php:69
-#: modules/imaging/manage/service_show_used.php:144
-msgid "Remove"
-msgstr "削除"
+#: modules/imaging/imaging/images_iso.php:44
+msgid "Please specify a title for the ISO image file."
+msgstr "ISO イメージファイルのタイトルを指定してください。"
 
-#: modules/imaging/imaging/bootmenu_remove.php:94
-#: modules/imaging/imaging/configure.php:374
-#: modules/imaging/imaging/images_delete.php:60
-#: modules/imaging/imaging/images_iso.php:100
-#: modules/imaging/imaging/showtarget.php:168
-#: modules/imaging/manage/master_delete.php:55
-#: modules/imaging/manage/master_iso.php:86
-#: modules/imaging/manage/master_remove.php:70
-#: modules/imaging/manage/postinstall_delete.php:68
-#: modules/imaging/manage/service_show_used.php:145
-msgid "Cancel"
-msgstr "キャンセル"
+#: modules/imaging/imaging/images_iso.php:53
+msgid "Create ISO image from master"
+msgstr "マスターから ISO イメージを作成"
+
+#: modules/imaging/imaging/images_iso.php:55
+#, php-format
+msgid ""
+"The ISO image generation of master <strong>%s</strong> has been launched in "
+"background."
+msgstr "マスター <strong>%s</strong> の ISO イメージ生成が、バックグラウンドで起動されました。"
+
+#: modules/imaging/imaging/images_iso.php:57
+msgid ""
+"The ISO image file will be stored into the imaging server at the end of the "
+"backup."
+msgstr "ISO イメージ ファイルは、バックアップの最後にイメージングサーバーに保存されます。"
+
+#: modules/imaging/imaging/images_iso.php:64
+msgid "This operation will last according to the master size."
+msgstr "この操作は、マスターのサイズに応じて継続します。"
+
+#: modules/imaging/imaging/images_iso.php:78
+#, php-format
+msgid "Generate ISO for <strong>%s</strong>"
+msgstr "<strong>%s</strong> の ISO を生成"
+
+#: modules/imaging/imaging/images_iso.php:83
+msgid ""
+"Please select media size. If your data exceeds the volume size, several "
+"files of your media size will be created."
+msgstr "メディアサイズを選択してください。データがボリュームサイズを超過している場合は、メディアサイズのファイルがいくつか作成されます。"
+
+#: modules/imaging/imaging/images_iso.php:99
+msgid "Start ISO generation"
+msgstr "ISO 生成開始"
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -318,72 +1245,16 @@ msgid "%s menu parameters"
 msgstr "%s メニューパラメータ"
 
 #: modules/imaging/imaging/configure.php:39
-#: modules/imaging/imaging/showtarget.php:147
-#: modules/imaging/manage/service_show_used.php:124
-msgid "Computer"
-msgstr "コンピューター"
-
-#: modules/imaging/imaging/configure.php:39
 msgid "Profile"
 msgstr "プロファイル"
-
-#: modules/imaging/imaging/configure.php:43
-#: modules/imaging/manage/ajaxConfiguration.php:111
-msgid "Default menu label"
-msgstr "デフォルトメニューラベル"
 
 #: modules/imaging/imaging/configure.php:47
 msgid "Menu timeout"
 msgstr "メニュータイムアウト"
 
-#: modules/imaging/imaging/configure.php:62
-#: modules/imaging/manage/ajaxConfiguration.php:127
-msgid "Restoration options"
-msgstr "リストアオプション"
-
-#: modules/imaging/imaging/configure.php:70
-#: modules/imaging/manage/ajaxConfiguration.php:135
-msgid "nfs"
-msgstr "NFS"
-
 #: modules/imaging/imaging/configure.php:71
 msgid "tftp"
 msgstr "TFTP"
-
-#: modules/imaging/imaging/configure.php:72
-#: modules/imaging/manage/ajaxConfiguration.php:136
-msgid "mtftp"
-msgstr "MTFTP"
-
-#: modules/imaging/imaging/configure.php:79
-#: modules/imaging/manage/ajaxConfiguration.php:143
-msgid "(default)"
-msgstr "(デフォルト)"
-
-#: modules/imaging/imaging/configure.php:92
-#: modules/imaging/manage/ajaxConfiguration.php:156
-msgid "Restoration type"
-msgstr "リストアタイプ"
-
-#: modules/imaging/imaging/configure.php:95
-#: modules/imaging/manage/ajaxConfiguration.php:159
-msgid "Restoration: MTFTP maximum waiting (in sec)"
-msgstr "リストア: MTFTP 最大待機 (秒)"
-
-#: modules/imaging/imaging/configure.php:100
-#: modules/imaging/manage/ajaxConfiguration.php:163
-msgid "Boot options"
-msgstr "ブートオプション"
-
-#: modules/imaging/imaging/configure.php:103
-#: modules/imaging/manage/ajaxConfiguration.php:166
-msgid "Full path to the XPM displayed at boot"
-msgstr "ブートで表示される XPM へのフルパス"
-
-#: modules/imaging/imaging/configure.php:107
-#: modules/imaging/manage/ajaxConfiguration.php:169
-msgid "Message displayed during backup/restoration"
-msgstr "バックアップ/リストア間に表示されるメッセージ"
 
 #: modules/imaging/imaging/configure.php:151
 msgid "Target options"
@@ -554,6 +1425,143 @@ msgstr "このハードディスクを選択"
 msgid "Partition number: %d"
 msgstr "パーティション数: %d"
 
+#: modules/imaging/imaging/bootmenu.php:74
+#: modules/imaging/imaging/bootmenu.php:113
+#, php-format
+msgid "Failed to move item <strong>%s</strong> in the boot menu"
+msgstr "ブートメニュー内の項目 <strong>%s</strong> の移動に失敗しました"
+
+#: modules/imaging/imaging/bootmenu.php:137
+msgid "Edition of item"
+msgstr "項目のエディション"
+
+#: modules/imaging/imaging/bootmenu.php:289
+msgid "master from the profile"
+msgstr "プロファイルからマスター"
+
+#: modules/imaging/imaging/bootmenu.php:291
+msgid "master"
+msgstr "マスター"
+
+#: modules/imaging/imaging/bootmenu.php:298
+msgid "boot service from profile"
+msgstr "プロファイルからのブートサービス"
+
+#: modules/imaging/imaging/bootmenu.php:300
+msgid "boot service"
+msgstr "ブートサービス"
+
+#: modules/imaging/imaging/bootmenu.php:340
+msgid ""
+"Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
+"default boot entry."
+msgstr "デフォルトブート登録を定義するには、\"事前選択\" あるいは \"WOL での事前選択\" を使用してください。"
+
+#: modules/imaging/imaging/bootmenu.php:343
+#: modules/imaging/imaging/bootmenu.php:345
+msgid ""
+"If the default entry is an image creation or restore, the following network "
+"boots will fall back to the first menu entry."
+msgstr "デフォルト登録がイメージ作成あるいはリストアである場合は、次のネットワークブートが第一メニュー登録にフォールバックします。"
+
+#: modules/imaging/imaging/bootmenu.php:345
+msgid ""
+"When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
+" this value will be set on all the computers in this group."
+msgstr "\"事前選択\" あるいは \"WOL での事前選択\" 登録を変更する場合は、この値はこのグループ内の全コンピューターに設定されます。"
+
+#: modules/imaging/imaging/bootmenu.php:350
+msgid "Preselected choice"
+msgstr "事前選択"
+
+#: modules/imaging/imaging/bootmenu.php:353
+msgid "Preselected choice on WOL"
+msgstr "WOL での事前選択"
+
+#: modules/imaging/imaging/ajaxServices.php:51
+msgid "Add service to boot menu"
+msgstr "サービスをブートメニューに追加"
+
+#: modules/imaging/imaging/ajaxServices.php:52
+msgid "Remove service from boot menu"
+msgstr "ブートメニューからサービスを削除"
+
+#: modules/imaging/imaging/ajaxServices.php:100
+msgid "In bootmenu"
+msgstr "ブートメニュー内"
+
+#: modules/imaging/imaging/ajaxServices.php:102
+#: modules/imaging/imaging/ajaxImages.php:162
+msgid "From profile"
+msgstr "プロファイルから"
+
+#: modules/imaging/imaging/ajaxImages.php:70
+msgid "Add image to boot menu"
+msgstr "イメージをブートメニューに追加"
+
+#: modules/imaging/imaging/ajaxImages.php:73
+msgid "Delete the image"
+msgstr "イメージを削除"
+
+#: modules/imaging/imaging/ajaxImages.php:79
+msgid "View image log"
+msgstr "イメージログを表示"
+
+#: modules/imaging/imaging/showtarget.php:72
+#: modules/imaging/imaging/showtarget.php:84
+msgid "Removal of master failed"
+msgstr "マスターの削除に失敗しました"
+
+#: modules/imaging/imaging/showtarget.php:138
+#, php-format
+msgid "Remove this master from imaging server %s"
+msgstr "イメージングサーバー %s からこのマスターを削除する"
+
+#: modules/imaging/imaging/showtarget.php:162
+msgid ""
+"If you want to remove this master from one or more targets, check these "
+"targets and click on the remove button"
+msgstr "1 つあるいは複数のターゲットからこのマスターを削除する場合は、これらのターゲットをチェックし、削除ボタンをクリックしてください。"
+
+#: modules/imaging/imaging/images.php:67
+msgid "Available images"
+msgstr "利用可能イメージ"
+
+#: modules/imaging/imaging/images.php:93
+msgid "Edition of image"
+msgstr "イメージエディション"
+
+#: modules/imaging/imaging/images.php:95
+msgid "Edition of master"
+msgstr "マスターエディション"
+
+#: modules/imaging/imaging/images.php:124
+#: modules/imaging/imaging/images.php:151
+msgid "Save"
+msgstr "保存"
+
+#: modules/imaging/imaging/images.php:126
+msgid "Save (converting to image)"
+msgstr "保存 (イメージに変換)"
+
+#: modules/imaging/imaging/images.php:128
+msgid "Convert to master"
+msgstr "マスターに変換"
+
+#: modules/imaging/imaging/images.php:192
+msgid "Image backup logs"
+msgstr "イメージバックアップログ"
+
+#: modules/imaging/imaging/images_delete.php:55
+#: modules/imaging/infoPackage.inc.php:385
+msgid "Delete image"
+msgstr "イメージの削除"
+
+#: modules/imaging/imaging/images_delete.php:57
+#, php-format
+msgid "Are you sure you want to delete <b>%s</b> image ?"
+msgstr "本当に <b>%s</b> マスターを削除しますか？"
+
 #: modules/imaging/imaging/header.php:34
 msgid ""
 "You have modified this target's boot menu, if you are done please click on "
@@ -601,161 +1609,10 @@ msgstr ""
 "このコンピューターは、現在 \"%s\" のメンバーです。<a "
 "href=\"%s\">ここをクリックすると</a>、グループを離脱しブートメニューをカスタマイズします。"
 
-#: modules/imaging/imaging/images.php:67
-msgid "Available images"
-msgstr "利用可能イメージ"
-
-#: modules/imaging/imaging/images.php:69
-#: modules/imaging/manage/ajaxMaster.php:27
-msgid "Available masters"
-msgstr "利用可能マスター"
-
-#: modules/imaging/imaging/images.php:93
-msgid "Edition of image"
-msgstr "イメージエディション"
-
-#: modules/imaging/imaging/images.php:95
-msgid "Edition of master"
-msgstr "マスターエディション"
-
-#: modules/imaging/imaging/images.php:124
-#: modules/imaging/imaging/images.php:151
-msgid "Save"
-msgstr "保存"
-
-#: modules/imaging/imaging/images.php:126
-msgid "Save (converting to image)"
-msgstr "保存 (イメージに変換)"
-
-#: modules/imaging/imaging/images.php:128
-msgid "Convert to master"
-msgstr "マスターに変換"
-
-#: modules/imaging/imaging/images.php:192
-msgid "Image backup logs"
-msgstr "イメージバックアップログ"
-
-#: modules/imaging/imaging/images_delete.php:55
-#: modules/imaging/infoPackage.inc.php:385
-msgid "Delete image"
-msgstr "イメージの削除"
-
-#: modules/imaging/imaging/images_delete.php:57
+#: modules/imaging/imaging/addservice.php:106
 #, php-format
-msgid "Are you sure you want to delete <b>%s</b> image ?"
-msgstr "本当に <b>%s</b> マスターを削除しますか？"
-
-#: modules/imaging/imaging/images_iso.php:44
-msgid "Please specify a title for the ISO image file."
-msgstr "ISO イメージファイルのタイトルを指定してください。"
-
-#: modules/imaging/imaging/images_iso.php:53
-msgid "Create ISO image from master"
-msgstr "マスターから ISO イメージを作成"
-
-#: modules/imaging/imaging/images_iso.php:55
-#, php-format
-msgid ""
-"The ISO image generation of master <strong>%s</strong> has been launched in "
-"background."
-msgstr "マスター <strong>%s</strong> の ISO イメージ生成が、バックグラウンドで起動されました。"
-
-#: modules/imaging/imaging/images_iso.php:57
-msgid ""
-"The ISO image file will be stored into the imaging server at the end of the "
-"backup."
-msgstr "ISO イメージ ファイルは、バックアップの最後にイメージングサーバーに保存されます。"
-
-#: modules/imaging/imaging/images_iso.php:64
-msgid "This operation will last according to the master size."
-msgstr "この操作は、マスターのサイズに応じて継続します。"
-
-#: modules/imaging/imaging/images_iso.php:78
-#, php-format
-msgid "Generate ISO for <strong>%s</strong>"
-msgstr "<strong>%s</strong> の ISO を生成"
-
-#: modules/imaging/imaging/images_iso.php:81
-#: modules/imaging/manage/ajaxFormWin7.php:499
-#: modules/imaging/manage/ajaxFormWin8.php:540
-#: modules/imaging/manage/ajaxFormWin81.php:540
-#: modules/imaging/manage/master_iso.php:67
-msgid "Title"
-msgstr "タイトル"
-
-#: modules/imaging/imaging/images_iso.php:83
-msgid ""
-"Please select media size. If your data exceeds the volume size, several "
-"files of your media size will be created."
-msgstr "メディアサイズを選択してください。データがボリュームサイズを超過している場合は、メディアサイズのファイルがいくつか作成されます。"
-
-#: modules/imaging/imaging/images_iso.php:86
-#: modules/imaging/manage/master_iso.php:72
-msgid "Media size"
-msgstr "メディアサイズ"
-
-#: modules/imaging/imaging/images_iso.php:99
-msgid "Start ISO generation"
-msgstr "ISO 生成開始"
-
-#: modules/imaging/imaging/showtarget.php:72
-#: modules/imaging/imaging/showtarget.php:84
-msgid "Removal of master failed"
-msgstr "マスターの削除に失敗しました"
-
-#: modules/imaging/imaging/showtarget.php:90
-#: modules/imaging/manage/imaging_server_link.php:64
-#: modules/imaging/manage/master_add.php:54
-#: modules/imaging/manage/master_remove.php:41
-#: modules/imaging/manage/service_add.php:54
-#: modules/imaging/manage/service_del.php:48
-#: modules/imaging/manage/service_remove.php:48
-#: modules/imaging/manage/service_show_used.php:83
-#, php-format
-msgid "Boot menu generation failed for package server: %s"
-msgstr "コンピューターのブートメニュー生成に失敗しました : %s"
-
-#: modules/imaging/imaging/showtarget.php:123
-#: modules/imaging/manage/service_show_used.php:108
-msgid "Show all targets that use that image in their boot menu"
-msgstr "ブートメニュー内でこのイメージを使用するすべてのターゲットを表示する"
-
-#: modules/imaging/imaging/showtarget.php:138
-#, php-format
-msgid "Remove this master from imaging server %s"
-msgstr "イメージングサーバー %s からこのマスターを削除する"
-
-#: modules/imaging/imaging/showtarget.php:139
-#: modules/imaging/manage/service_show_used.php:116
-msgid "Imaging server"
-msgstr "イメージングサーバー"
-
-#: modules/imaging/imaging/showtarget.php:146
-#: modules/imaging/manage/service_show_used.php:123
-#, php-format
-msgid "Remove this master from computer %s"
-msgstr "コンピューター %s からこのマスターを削除する"
-
-#: modules/imaging/imaging/showtarget.php:147
-#: modules/imaging/manage/service_show_used.php:124
-msgid "Imaging group"
-msgstr "イメージンググループ"
-
-#: modules/imaging/imaging/showtarget.php:162
-msgid ""
-"If you want to remove this master from one or more targets, check these "
-"targets and click on the remove button"
-msgstr "1 つあるいは複数のターゲットからこのマスターを削除する場合は、これらのターゲットをチェックし、削除ボタンをクリックしてください。"
-
-#: modules/imaging/imaging/showtarget.php:164
-#: modules/imaging/manage/service_show_used.php:141
-msgid "Select all"
-msgstr "すべて選択"
-
-#: modules/imaging/imaging/showtarget.php:166
-#: modules/imaging/manage/service_show_used.php:143
-msgid "Unselect all"
-msgstr "すべて選択解除"
+msgid "Add the boot service <b>%s</b> to <b>%s</b>"
+msgstr "ブートサービス <b>%s</b> を <b>%s</b> に追加"
 
 #: modules/imaging/imaging/tabs.php:61
 msgid "Default menu has been successfully restored."
@@ -876,192 +1733,14 @@ msgstr "マスター"
 msgid "Not enough information"
 msgstr "十分な情報がありません"
 
-#: modules/imaging/includes/ajaxcommon.inc.php:37
-#: modules/imaging/includes/ajaxcommon.inc.php:57
-msgid "root"
-msgstr "ルート"
-
-#: modules/imaging/includes/ajaxcommon.inc.php:84
-#, php-format
-msgid "Imaging server of entity %s"
-msgstr "エンティティ %s のイメージングサーバー"
-
-#: modules/imaging/includes/ajaxcommon.inc.php:103
-msgid "the entity itself"
-msgstr "エンティティ自体"
-
-#: modules/imaging/includes/ajaxcommon.inc.php:120
-#, php-format
-msgid ""
-"Boot menu generation is still in progress for the following items : %s. "
-"Please wait or reload the page %shere%s."
-msgstr "ブートメニューは生成は、次の項目についてまだ進行中です : %s。お待ちいただくか、ページ %shere%s を再読み込みしてください。"
-
-#: modules/imaging/includes/ajaxcommon.inc.php:135
-#, php-format
-msgid ""
-"You have modified the boot menu for the following items : %s. If you are "
-"done please click on \"Generate Menu\" to update the computer boot menu."
-msgstr ""
-"次の項目についてブートメニューを変更しました : %s。完了した場合は、\"メニューの生成\" "
-"をクリックして、コンピューターのブートメニューをアップデートしてください。"
-
 #: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
 #, php-format
 msgid "Available imaging servers for entity %s"
 msgstr "エンティティ %s の利用可能イメージングサーバー"
 
-#: modules/imaging/includes/includes.php:35
-msgid "There was an error (this is a default message)."
-msgstr "エラーがありました (これはデフォルトメッセージです)。"
-
-#: modules/imaging/includes/includes.php:36
-msgid "The nomenclature is missing."
-msgstr "名称集がありません。"
-
-#: modules/imaging/includes/includes.php:37
-msgid "This imaging server don't exists."
-msgstr "このイメージングサーバーは存在していません。"
-
-#: modules/imaging/includes/includes.php:38
-msgid "This entity already exists."
-msgstr "このエンティティはすでに存在しています。"
-
-#: modules/imaging/includes/includes.php:39
-msgid "You asked for an unexisting menu item."
-msgstr "存在しないメニュー項目を要求しました。"
-
-#: modules/imaging/includes/includes.php:40
-msgid "This target has no menu."
-msgstr "このターゲットにはメニューがありません。"
-
-#: modules/imaging/includes/includes.php:41
-msgid "This entity has no default menu, you first need to set one."
-msgstr "このエンティティにはデフォルトメニューがありません。まず 1 つ設定する必要があります。"
-
-#: modules/imaging/includes/includes.php:42
-msgid "This image already exists."
-msgstr "このイメージはすでに存在しています。"
-
-#: modules/imaging/includes/includes.php:43
-msgid "This computer already exists."
-msgstr "このコンピューターはすでに存在しています。"
-
-#: modules/imaging/includes/includes.php:44
-msgid ""
-"You need to register this computer's imaging server to be able to use "
-"imaging."
-msgstr "イメージングの使用を可能にするには、このコンピューターのイメージングサーバーを登録する必要があります。"
-
-#: modules/imaging/includes/includes.php:195
-msgid "Uptime: "
-msgstr "アップタイム: "
-
-#: modules/imaging/includes/includes.php:197
-msgid "day"
-msgstr "日"
-
-#: modules/imaging/includes/includes.php:200
-msgid "hour"
-msgstr "時間"
-
-#: modules/imaging/includes/includes.php:202
-msgid "minute"
-msgstr "分"
-
-#: modules/imaging/includes/includes.php:206
-msgid "Memory"
-msgstr "メモリ"
-
-#: modules/imaging/includes/includes.php:209
-msgid "Swap"
-msgstr "スワップ"
-
-#: modules/imaging/includes/includes.php:221
-msgid "Never"
-msgstr "しない"
-
-#: modules/imaging/includes/includes.php:224
-#: modules/imaging/includes/includes.php:230
-msgid "As soon as possible"
-msgstr "できる限り早く"
-
-#: modules/imaging/includes/includes.php:232
-msgid "<i>undefined</i>"
-msgstr "<i>未定義</i> "
-
-#: modules/imaging/includes/includes.php:301
-msgid "Backup log messages"
-msgstr "バックアップログメッセージ"
-
-#: modules/imaging/includes/logs.inc.php:25
-#: modules/imaging/manage/ajaxLogs.php:53
-msgid "Menu"
-msgstr "メニュー"
-
-#: modules/imaging/includes/logs.inc.php:26
-#: modules/imaging/manage/ajaxLogs.php:59
-msgid "Inventory"
-msgstr "在庫"
-
-#: modules/imaging/includes/logs.inc.php:27
-#: modules/imaging/manage/ajaxLogs.php:55
-msgid "Backup"
-msgstr "バックアップ"
-
-#: modules/imaging/includes/logs.inc.php:28
-#: modules/imaging/manage/ajaxLogs.php:52
-msgid "Boot"
-msgstr "ブート"
-
-#: modules/imaging/includes/logs.inc.php:29
-#: modules/imaging/manage/ajaxLogs.php:54
-msgid "Restoration"
-msgstr "リストア"
-
-#: modules/imaging/includes/logs.inc.php:30
-#: modules/imaging/manage/ajaxLogs.php:56
-msgid "Post-imaging"
-msgstr "ポスト-イメージング"
-
-#: modules/imaging/includes/logs.inc.php:31
-#: modules/imaging/manage/ajaxLogs.php:57
-msgid "Error"
-msgstr "エラー"
-
 #: modules/imaging/includes/logs.inc.php:33
 msgid "Status unknown"
 msgstr "ステータス不明"
-
-#: modules/imaging/includes/logs.inc.php:35
-#: modules/imaging/manage/ajaxLogs.php:61
-msgid "Restore in progress"
-msgstr "リストア実行中"
-
-#: modules/imaging/includes/logs.inc.php:36
-#: modules/imaging/manage/ajaxLogs.php:62
-msgid "Restore done"
-msgstr "リストアが完了しました"
-
-#: modules/imaging/includes/logs.inc.php:37
-#: modules/imaging/manage/ajaxLogs.php:63
-msgid "Restore failed"
-msgstr "リストアが失敗しました"
-
-#: modules/imaging/includes/logs.inc.php:38
-#: modules/imaging/manage/ajaxLogs.php:64
-msgid "Backup in progress"
-msgstr "バックアップ実行中"
-
-#: modules/imaging/includes/logs.inc.php:39
-#: modules/imaging/manage/ajaxLogs.php:65
-msgid "Backup done"
-msgstr "バックアップが完了しました"
-
-#: modules/imaging/includes/logs.inc.php:40
-#: modules/imaging/manage/ajaxLogs.php:66
-msgid "Backup failed"
-msgstr "バックアップが失敗しました"
 
 #: modules/imaging/includes/logs.inc.php:45
 msgid "Boot menu shown"
@@ -1203,15 +1882,92 @@ msgstr "コンピューター UUID が送信されました"
 msgid "Failed to send a Computer UUID"
 msgstr "コンピューター UUID の送信に失敗しました"
 
+#: modules/imaging/includes/includes.php:35
+msgid "There was an error (this is a default message)."
+msgstr "エラーがありました (これはデフォルトメッセージです)。"
+
+#: modules/imaging/includes/includes.php:36
+msgid "The nomenclature is missing."
+msgstr "名称集がありません。"
+
+#: modules/imaging/includes/includes.php:37
+msgid "This imaging server don't exists."
+msgstr "このイメージングサーバーは存在していません。"
+
+#: modules/imaging/includes/includes.php:38
+msgid "This entity already exists."
+msgstr "このエンティティはすでに存在しています。"
+
+#: modules/imaging/includes/includes.php:39
+msgid "You asked for an unexisting menu item."
+msgstr "存在しないメニュー項目を要求しました。"
+
+#: modules/imaging/includes/includes.php:40
+msgid "This target has no menu."
+msgstr "このターゲットにはメニューがありません。"
+
+#: modules/imaging/includes/includes.php:41
+msgid "This entity has no default menu, you first need to set one."
+msgstr "このエンティティにはデフォルトメニューがありません。まず 1 つ設定する必要があります。"
+
+#: modules/imaging/includes/includes.php:42
+msgid "This image already exists."
+msgstr "このイメージはすでに存在しています。"
+
+#: modules/imaging/includes/includes.php:43
+msgid "This computer already exists."
+msgstr "このコンピューターはすでに存在しています。"
+
+#: modules/imaging/includes/includes.php:44
+msgid ""
+"You need to register this computer's imaging server to be able to use "
+"imaging."
+msgstr "イメージングの使用を可能にするには、このコンピューターのイメージングサーバーを登録する必要があります。"
+
+#: modules/imaging/includes/includes.php:195
+msgid "Uptime: "
+msgstr "アップタイム: "
+
+#: modules/imaging/includes/includes.php:197
+msgid "day"
+msgstr "日"
+
+#: modules/imaging/includes/includes.php:200
+msgid "hour"
+msgstr "時間"
+
+#: modules/imaging/includes/includes.php:202
+msgid "minute"
+msgstr "分"
+
+#: modules/imaging/includes/includes.php:206
+msgid "Memory"
+msgstr "メモリ"
+
+#: modules/imaging/includes/includes.php:209
+msgid "Swap"
+msgstr "スワップ"
+
+#: modules/imaging/includes/includes.php:221
+msgid "Never"
+msgstr "しない"
+
+#: modules/imaging/includes/includes.php:224
+#: modules/imaging/includes/includes.php:230
+msgid "As soon as possible"
+msgstr "できる限り早く"
+
+#: modules/imaging/includes/includes.php:232
+msgid "<i>undefined</i>"
+msgstr "<i>未定義</i> "
+
+#: modules/imaging/includes/includes.php:301
+msgid "Backup log messages"
+msgstr "バックアップログメッセージ"
+
 #: modules/imaging/includes/post_install_script.php:28
 msgid "Not selected"
 msgstr "選択されていません"
-
-#: modules/imaging/includes/post_install_script.php:63
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-msgid "Name"
-msgstr "名前"
 
 #: modules/imaging/includes/post_install_script.php:66
 msgid "Order"
@@ -1220,6 +1976,36 @@ msgstr "順序"
 #: modules/imaging/includes/post_install_script.php:88
 msgid "This value is already used."
 msgstr "この値はすでに使用されています。"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:37
+#: modules/imaging/includes/ajaxcommon.inc.php:57
+msgid "root"
+msgstr "ルート"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:84
+#, php-format
+msgid "Imaging server of entity %s"
+msgstr "エンティティ %s のイメージングサーバー"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:103
+msgid "the entity itself"
+msgstr "エンティティ自体"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:120
+#, php-format
+msgid ""
+"Boot menu generation is still in progress for the following items : %s. "
+"Please wait or reload the page %shere%s."
+msgstr "ブートメニューは生成は、次の項目についてまだ進行中です : %s。お待ちいただくか、ページ %shere%s を再読み込みしてください。"
+
+#: modules/imaging/includes/ajaxcommon.inc.php:135
+#, php-format
+msgid ""
+"You have modified the boot menu for the following items : %s. If you are "
+"done please click on \"Generate Menu\" to update the computer boot menu."
+msgstr ""
+"次の項目についてブートメニューを変更しました : %s。完了した場合は、\"メニューの生成\" "
+"をクリックして、コンピューターのブートメニューをアップデートしてください。"
 
 #: modules/imaging/infoPackage.inc.php:33
 msgid "Imaging service"
@@ -1237,21 +2023,6 @@ msgstr ""
 msgid "Server status"
 msgstr "サーバーステータス"
 
-#: modules/imaging/infoPackage.inc.php:55
-#: modules/imaging/manage/localSidebar.php:31
-msgid "Manage masters"
-msgstr "マスターの管理"
-
-#: modules/imaging/infoPackage.inc.php:57
-#: modules/imaging/manage/master_remove.php:65
-msgid "Remove master"
-msgstr "マスターの除外"
-
-#: modules/imaging/infoPackage.inc.php:60
-#: modules/imaging/manage/master_delete.php:50
-msgid "Delete master"
-msgstr "マスターの削除"
-
 #: modules/imaging/infoPackage.inc.php:63
 msgid "Edit master"
 msgstr "マスターの編集"
@@ -1259,16 +2030,6 @@ msgstr "マスターの編集"
 #: modules/imaging/infoPackage.inc.php:66
 msgid "Add master"
 msgstr "マスターの追加"
-
-#: modules/imaging/infoPackage.inc.php:69
-#: modules/imaging/manage/master_iso.php:42
-msgid "Create iso from master"
-msgstr "マスターから ISO を作成"
-
-#: modules/imaging/infoPackage.inc.php:73
-#: modules/imaging/manage/localSidebar.php:34
-msgid "Manage boot services"
-msgstr "ブートサービスの管理"
 
 #: modules/imaging/infoPackage.inc.php:75
 msgid "Edit service"
@@ -1287,11 +2048,6 @@ msgstr "サービスの追加"
 msgid "Show used services"
 msgstr "使用されているサービスを表示"
 
-#: modules/imaging/infoPackage.inc.php:91
-#: modules/imaging/manage/localSidebar.php:37
-msgid "Default boot menu"
-msgstr "デフォルトブートメニュー"
-
 #: modules/imaging/infoPackage.inc.php:93
 msgid "Up service"
 msgstr "サービスのアップ"
@@ -1300,11 +2056,6 @@ msgstr "サービスのアップ"
 #: modules/imaging/infoPackage.inc.php:99
 msgid "Down service"
 msgstr "サービスのダウン"
-
-#: modules/imaging/infoPackage.inc.php:103
-#: modules/imaging/manage/localSidebar.php:40
-msgid "Post-imaging scripts"
-msgstr "ポスト-イメージングスクリプト"
 
 #: modules/imaging/infoPackage.inc.php:105
 #: modules/imaging/infoPackage.inc.php:108
@@ -1318,11 +2069,6 @@ msgstr "インストール後スクリプトからブートサービスを作成
 #: modules/imaging/infoPackage.inc.php:114
 msgid "Redirect to Boot Services page"
 msgstr "ブートサービスページへリダイレクト"
-
-#: modules/imaging/infoPackage.inc.php:117
-#: modules/imaging/manage/postinstall_delete.php:63
-msgid "Delete post-imaging script"
-msgstr "ポスト-イメージングスクリプトの削除"
 
 #: modules/imaging/infoPackage.inc.php:121
 msgid "Imaging configuration"
@@ -1481,751 +2227,5 @@ msgstr "ターゲット上のイメージパラメータを編集"
 #: modules/imaging/infoPackage.inc.php:389
 msgid "Create iso image"
 msgstr "ISO イメージを作成"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:40
-msgid "No imaging server available for association."
-msgstr "関連で利用できるイメージングサーバーがありません。"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:47
-#, php-format
-msgid "Link this Imaging Server to the '%s' entity."
-msgstr "このイメージングサーバーを '%s' エンティティへリンク"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:70
-msgid "Associate an entity to an imaging server"
-msgstr "エンティティをイメージングサーバーに関連させる"
-
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:77
-msgid "Identifier"
-msgstr "識別子"
-
-#: modules/imaging/manage/ajaxBootmenu.php:93
-msgid "Default boot menu configuration"
-msgstr "デフォルトブートメニュー設定"
-
-#: modules/imaging/manage/ajaxBootmenu.php:99
-msgid "Default"
-msgstr "デフォルト"
-
-#: modules/imaging/manage/ajaxBootmenu.php:101
-msgid "Default on WOL"
-msgstr "WOL のデフォルト "
-
-#: modules/imaging/manage/ajaxConfiguration.php:28
-msgid "Imaging server configuration"
-msgstr "イメージングサーバー設定"
-
-#: modules/imaging/manage/ajaxConfiguration.php:84
-msgid "Menu language"
-msgstr "メニュー言語"
-
-#: modules/imaging/manage/ajaxConfiguration.php:87
-msgid "PXE Password"
-msgstr "PXE パスワード"
-
-#: modules/imaging/manage/ajaxConfiguration.php:88
-msgid "Leave this field empty to unset PXE Password"
-msgstr "このフィールドを空に残して PXE パスワード設定を解除する"
-
-#: modules/imaging/manage/ajaxConfiguration.php:107
-msgid "Default menu parameters"
-msgstr "デフォルトメニューパラメータ"
-
-#: modules/imaging/manage/ajaxConfiguration.php:114
-msgid "Default menu timeout"
-msgstr "デフォルトメニュータイムアウト"
-
-#: modules/imaging/manage/ajaxConfiguration.php:122
-msgid "Hide menu"
-msgstr "メニュー非表示"
-
-#: modules/imaging/manage/ajaxFormWin7.php:491
-#: modules/imaging/manage/ajaxFormWin8.php:532
-#: modules/imaging/manage/ajaxFormWin81.php:532
-msgid "Installation Notes"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:508
-#: modules/imaging/manage/ajaxFormWin8.php:549
-#: modules/imaging/manage/ajaxFormWin81.php:549
-msgid "General Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:540
-#: modules/imaging/manage/ajaxFormWin8.php:582
-#: modules/imaging/manage/ajaxFormWin81.php:582
-msgid "Product Key:"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:548
-#: modules/imaging/manage/ajaxFormWin8.php:590
-#: modules/imaging/manage/ajaxFormWin81.php:590
-msgid "Accept EULA"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:556
-#: modules/imaging/manage/ajaxFormWin8.php:598
-#: modules/imaging/manage/ajaxFormWin81.php:598
-msgid "Skip automatic activation"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:564
-#: modules/imaging/manage/ajaxFormWin8.php:607
-#: modules/imaging/manage/ajaxFormWin81.php:606
-msgid "Skip License Rearm"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:573
-#: modules/imaging/manage/ajaxFormWin8.php:616
-#: modules/imaging/manage/ajaxFormWin81.php:617
-msgid "Setup Language"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:578
-#: modules/imaging/manage/ajaxFormWin8.php:621
-#: modules/imaging/manage/ajaxFormWin81.php:622
-msgid "Computer Name"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:583
-#: modules/imaging/manage/ajaxFormWin8.php:626
-#: modules/imaging/manage/ajaxFormWin81.php:627
-msgid "Organization Name"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:591
-#: modules/imaging/manage/ajaxFormWin8.php:634
-#: modules/imaging/manage/ajaxFormWin81.php:635
-msgid "Specialize Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:592
-#: modules/imaging/manage/ajaxFormWin8.php:635
-#: modules/imaging/manage/ajaxFormWin81.php:636
-msgid "Configure Specialize Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:602
-#: modules/imaging/manage/ajaxFormWin8.php:645
-#: modules/imaging/manage/ajaxFormWin81.php:646
-msgid "Extend OS Partition"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:610
-#: modules/imaging/manage/ajaxFormWin8.php:653
-#: modules/imaging/manage/ajaxFormWin81.php:654
-msgid "Copy Profile"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:618
-#: modules/imaging/manage/ajaxFormWin8.php:661
-#: modules/imaging/manage/ajaxFormWin81.php:662
-msgid "Show Windows Live"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:625
-#: modules/imaging/manage/ajaxFormWin8.php:668
-#: modules/imaging/manage/ajaxFormWin81.php:669
-msgid "Regional Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:626
-#: modules/imaging/manage/ajaxFormWin8.php:669
-#: modules/imaging/manage/ajaxFormWin81.php:670
-msgid "Configure International Settings in Windows"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:636
-#: modules/imaging/manage/ajaxFormWin8.php:679
-#: modules/imaging/manage/ajaxFormWin81.php:680
-msgid "Keyboard or input method"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:644
-#: modules/imaging/manage/ajaxFormWin8.php:687
-#: modules/imaging/manage/ajaxFormWin81.php:688
-msgid "Currency and Date format"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:652
-#: modules/imaging/manage/ajaxFormWin8.php:696
-#: modules/imaging/manage/ajaxFormWin81.php:696
-msgid "Time Zone"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:660
-#: modules/imaging/manage/ajaxFormWin8.php:704
-#: modules/imaging/manage/ajaxFormWin81.php:704
-msgid "UI Language"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:667
-#: modules/imaging/manage/ajaxFormWin8.php:711
-#: modules/imaging/manage/ajaxFormWin81.php:711
-msgid "Out Of Box Experience"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:678
-#: modules/imaging/manage/ajaxFormWin8.php:722
-#: modules/imaging/manage/ajaxFormWin81.php:722
-msgid "Network Location"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:686
-#: modules/imaging/manage/ajaxFormWin8.php:730
-#: modules/imaging/manage/ajaxFormWin81.php:730
-msgid "Protect Your Computer"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:694
-#: modules/imaging/manage/ajaxFormWin8.php:739
-#: modules/imaging/manage/ajaxFormWin81.php:739
-msgid "System Updates"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:702
-#: modules/imaging/manage/ajaxFormWin8.php:747
-#: modules/imaging/manage/ajaxFormWin81.php:747
-msgid "Hide EULA page"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:710
-#: modules/imaging/manage/ajaxFormWin8.php:755
-#: modules/imaging/manage/ajaxFormWin81.php:755
-msgid "Disable auto daylight timeset"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:718
-#: modules/imaging/manage/ajaxFormWin8.php:763
-#: modules/imaging/manage/ajaxFormWin81.php:763
-msgid "Hide wireless setup in OOBE"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:726
-#: modules/imaging/manage/ajaxFormWin8.php:771
-#: modules/imaging/manage/ajaxFormWin81.php:771
-msgid "Skip machine OOBE"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:734
-#: modules/imaging/manage/ajaxFormWin8.php:779
-#: modules/imaging/manage/ajaxFormWin81.php:779
-msgid "Skip user OOBE"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:739
-#: modules/imaging/manage/ajaxFormWin8.php:785
-#: modules/imaging/manage/ajaxFormWin81.php:785
-msgid "Category View"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:739
-#: modules/imaging/manage/ajaxFormWin8.php:785
-#: modules/imaging/manage/ajaxFormWin81.php:785
-msgid "Classic View"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:742
-#: modules/imaging/manage/ajaxFormWin8.php:788
-#: modules/imaging/manage/ajaxFormWin81.php:788
-msgid "Control Panel View"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:747
-#: modules/imaging/manage/ajaxFormWin8.php:793
-#: modules/imaging/manage/ajaxFormWin81.php:793
-msgid "Large"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:747
-#: modules/imaging/manage/ajaxFormWin8.php:793
-#: modules/imaging/manage/ajaxFormWin81.php:793
-msgid "Small"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:750
-#: modules/imaging/manage/ajaxFormWin8.php:796
-#: modules/imaging/manage/ajaxFormWin81.php:796
-msgid "Control Panel Icon Size"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:757
-#: modules/imaging/manage/ajaxFormWin8.php:803
-#: modules/imaging/manage/ajaxFormWin81.php:803
-msgid "Partition Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:768
-#: modules/imaging/manage/ajaxFormWin8.php:814
-#: modules/imaging/manage/ajaxFormWin81.php:814
-msgid "Wipe Disk"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:776
-#: modules/imaging/manage/ajaxFormWin8.php:822
-#: modules/imaging/manage/ajaxFormWin81.php:822
-msgid "Install to disk"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:784
-#: modules/imaging/manage/ajaxFormWin8.php:830
-#: modules/imaging/manage/ajaxFormWin81.php:830
-msgid "Main Partition Format"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:797
-#: modules/imaging/manage/ajaxFormWin8.php:843
-#: modules/imaging/manage/ajaxFormWin81.php:843
-msgid "Main Partition Letter"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:805
-#: modules/imaging/manage/ajaxFormWin8.php:851
-#: modules/imaging/manage/ajaxFormWin81.php:851
-msgid "Partition Order"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:812
-#: modules/imaging/manage/ajaxFormWin8.php:858
-#: modules/imaging/manage/ajaxFormWin81.php:858
-msgid "Administrators Account"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:820
-#: modules/imaging/manage/ajaxFormWin8.php:866
-#: modules/imaging/manage/ajaxFormWin81.php:866
-msgid "Password"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:827
-#: modules/imaging/manage/ajaxFormWin8.php:873
-#: modules/imaging/manage/ajaxFormWin81.php:873
-msgid "User Account"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:835
-#: modules/imaging/manage/ajaxFormWin8.php:881
-#: modules/imaging/manage/ajaxFormWin81.php:881
-msgid "User Name"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:843
-#: modules/imaging/manage/ajaxFormWin8.php:889
-#: modules/imaging/manage/ajaxFormWin81.php:889
-msgid "Group"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:853
-#: modules/imaging/manage/ajaxFormWin8.php:899
-#: modules/imaging/manage/ajaxFormWin81.php:899
-msgid "Password: (Optional)"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:860
-#: modules/imaging/manage/ajaxFormWin8.php:906
-#: modules/imaging/manage/ajaxFormWin81.php:906
-msgid "Auto Logon"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:868
-#: modules/imaging/manage/ajaxFormWin8.php:914
-#: modules/imaging/manage/ajaxFormWin81.php:914
-msgid "UAC"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:876
-#: modules/imaging/manage/ajaxFormWin8.php:922
-#: modules/imaging/manage/ajaxFormWin81.php:922
-msgid "Enable Firewall"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:883
-#: modules/imaging/manage/ajaxFormWin8.php:970
-#: modules/imaging/manage/ajaxFormWin81.php:950
-msgid "Create Xml Windows Answer File Generator"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:894
-#: modules/imaging/manage/ajaxFormWin8.php:978
-#: modules/imaging/manage/ajaxFormWin81.php:958
-msgid "Xml Windows Answer File Generator"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin8.php:930
-#: modules/imaging/manage/ajaxFormWin81.php:930
-msgid "Customer Experience Improvement Program (CEIP)"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin8.php:938
-#: modules/imaging/manage/ajaxFormWin81.php:938
-msgid "System Background Colour"
-msgstr ""
-
-#: modules/imaging/manage/ajaxLogs.php:45
-msgid "No log available."
-msgstr "利用可能なログがありません。"
-
-#: modules/imaging/manage/ajaxLogs.php:51
-#: modules/imaging/manage/ajaxLogs.php:67
-msgid "Status unknow"
-msgstr "ステータス不明"
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:47
-msgid "No master available."
-msgstr "利用できるマスターがありません。"
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:49
-msgid ""
-"To define a master, browse to the computers module click on the imaging icon"
-" for the computer you wish to make a master from, then choose &quot;Images "
-"and Masters&quot;, followed by clicking the edit button on a backup image to"
-" convert it to a master."
-msgstr ""
-"マスターを定義するには、このコンピューターモジュールを参照してマスターを作成するコンピューターのイメージングアイコンをクリックします。それから、バックアップイメージ上の編集ボタンをクリックして"
-" &quot;イメージおよびマスター&quot; を選択してマスターに変換してください。"
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:55
-msgid "Add image to default boot menu"
-msgstr "イメージをデフォルトブートメニューに追加"
-
-#: modules/imaging/manage/ajaxMasterLevel2.php:111
-msgid "In default boot menu"
-msgstr "デフォルトブートメニュー内"
-
-#: modules/imaging/manage/ajaxPostInstall.php:27
-msgid "Available post-imaging scripts"
-msgstr "利用可能ポスト-イメージング スクリプト"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:51
-msgid "Create Boot Service"
-msgstr "ブートサービスを作成"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:52
-msgid "Edit script"
-msgstr "スクリプトを編集"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:54
-msgid "Boot Service already created"
-msgstr "ブートサービスはすでに作成されています"
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:95
-msgid "Duplicate"
-msgstr "複製"
-
-#: modules/imaging/manage/ajaxService.php:27
-msgid "Manage services"
-msgstr "サービスを管理"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:49
-msgid "Add service to default boot menu"
-msgstr "サービスをデフォルトブートメニューに追加"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:50
-msgid "Remove service from default boot menu"
-msgstr "サービスをデフォルトブートメニューから削除"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:51
-msgid "Delete service"
-msgstr "サービスを削除"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:52
-msgid "Show where service is used"
-msgstr "サービスが使用されている場所を表示"
-
-#: modules/imaging/manage/ajaxStatus.php:27
-msgid "Status"
-msgstr "ステータス"
-
-#: modules/imaging/manage/ajaxStatus.php:40
-msgid "Space available on server"
-msgstr "サーバー上での使用可能スペース"
-
-#: modules/imaging/manage/ajaxStatus.php:44
-msgid "Load on server"
-msgstr "サーバー上でロード"
-
-#: modules/imaging/manage/ajaxStatus.php:51
-msgid "Synchronization state"
-msgstr "同期状態"
-
-#: modules/imaging/manage/ajaxStatus.php:55
-msgid "Up-to-date"
-msgstr "最新"
-
-#: modules/imaging/manage/ajaxStatus.php:60
-msgid "Stats"
-msgstr "統計"
-
-#: modules/imaging/manage/ajaxStatus.php:61
-msgid "client(s) registered"
-msgstr "登録クライアント"
-
-#: modules/imaging/manage/ajaxStatus.php:61
-msgid "with custom menu"
-msgstr "カスタムメニューを有する"
-
-#: modules/imaging/manage/ajaxStatus.php:62
-msgid "client(s) have rescue image(s)"
-msgstr "クライアントは回復イメージを有しています"
-
-#: modules/imaging/manage/ajaxStatus.php:65
-msgid "masters are available"
-msgstr "マスターは利用可能です"
-
-#: modules/imaging/manage/ajaxStatus.php:71
-msgid "Recent activity"
-msgstr "最近のアクティビティ"
-
-#: modules/imaging/manage/ajaxStatus.php:80
-msgid "Can't connect to the imaging server linked to the selected entity."
-msgstr "選択されたエンティティにリンクされたイメージングサーバーに接続できません。"
-
-#: modules/imaging/manage/bootmenu_down.php:39
-#, php-format
-msgid "Failed to move down <strong>%s</strong> in the default boot menu"
-msgstr "デフォルトブートメニューで <strong>%s</strong> を下げるのに失敗しました"
-
-#: modules/imaging/manage/bootmenu_edit.php:68
-#, php-format
-msgid "Edit : %s"
-msgstr "編集 : %s"
-
-#: modules/imaging/manage/bootmenu_edit.php:77
-msgid "Default menu item label"
-msgstr "デフォルトメニュー項目ラベル"
-
-#: modules/imaging/manage/bootmenu_up.php:39
-#, php-format
-msgid "Failed to move <strong>%s</strong> in the default boot menu"
-msgstr "デフォルトブートメニューでの <strong>%s</strong> の移動に失敗しました"
-
-#: modules/imaging/manage/imaging_server_link.php:59
-#, php-format
-msgid ""
-"Link between imaging server <strong>%s</strong> and the entity "
-"<strong>%s</strong> succeeded."
-msgstr ""
-"イメージングサーバー <strong>%s</strong> とエンティティ <strong>%s</strong> 間のリンクに成功しました。"
-
-#: modules/imaging/manage/imaging_server_link.php:93
-#, php-format
-msgid ""
-"Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
-"'<b>%s</b>'"
-msgstr "本当にイメージングサーバー '<b>%s</b>' をエンティティ '<b>%s</b>' にリンクしますか？"
-
-#: modules/imaging/manage/localSidebar.php:28
-msgid "Imaging server status"
-msgstr "イメージングサーバーステータス"
-
-#: modules/imaging/manage/localSidebar.php:43
-msgid "Imaging Configuration"
-msgstr "イメージング設定"
-
-#: modules/imaging/manage/location.php:59
-#: modules/imaging/manage/location.php:62
-#: modules/imaging/manage/save_configuration.php:70
-#, php-format
-msgid ""
-"Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
-msgstr ""
-"パッケージサーバーのブートメニュー生成が失敗しました: %s<br /><br />Check /var/log/mmc/pulse2-package-"
-"server.log"
-
-#: modules/imaging/manage/master_add.php:48
-#, php-format
-msgid "Image <strong>%s</strong> added to default boot menu"
-msgstr "イメージ <strong>%s</strong> がデフォルトブートメニューに追加されました"
-
-#: modules/imaging/manage/master_delete.php:36
-#, php-format
-msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr "イメージ <strong>%s</strong> がイメージングサーバーから削除されました。"
-
-#: modules/imaging/manage/master_delete.php:52
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr "本当に <b>%s</b> マスターを削除しますか？"
-
-#: modules/imaging/manage/master_edit.php:43
-msgid "Edit master : "
-msgstr "マスターの編集 : "
-
-#: modules/imaging/manage/master_edit.php:94
-#, php-format
-msgid "Master <strong>%s</strong> modified with success"
-msgstr "マスター <strong>%s</strong> の変更に成功しました"
-
-#: modules/imaging/manage/master_iso.php:44
-#, php-format
-msgid "Iso of master <strong>%s</strong> has been launched in background."
-msgstr "マスター <strong>%s</strong> の ISO が、バックグラウンドで起動されました。"
-
-#: modules/imaging/manage/master_iso.php:46
-#, php-format
-msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr "ファイルは、バックアップ終了時にディレクトリ %s に保存されます。"
-
-#: modules/imaging/manage/master_iso.php:48
-msgid "Please go to the status page to check the iso creation status."
-msgstr "ステータスページに移動して、 ISO 作成ステータスを確認してください。"
-
-#: modules/imaging/manage/master_iso.php:50
-msgid ""
-"This operation will last according to the amount of data of the master."
-msgstr "この操作は、マスターのデータ量に応じて継続します。"
-
-#: modules/imaging/manage/master_iso.php:65
-#, php-format
-msgid "Create iso for <strong>%s</strong>"
-msgstr "<strong>%s</strong> ISO の作成"
-
-#: modules/imaging/manage/master_iso.php:85
-msgid "Launch backup"
-msgstr "バックアップ起動"
-
-#: modules/imaging/manage/master_remove.php:36
-#, php-format
-msgid "Image <strong>%s</strong> removed from default boot menu."
-msgstr "イメージ <strong>%s</strong> がデフォルトブートメニューから削除されました。"
-
-#: modules/imaging/manage/master_remove.php:67
-#, php-format
-msgid "Are you sure you want to remove <b>%s</b> master ?"
-msgstr "本当に <b>%s</b> マスターを削除しますか？"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:37
-msgid "Boot service successfully created"
-msgstr "ブートサービスが作成されました"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:43
-msgid "Error while creating Boot Service"
-msgstr "ブートサービス作成中のエラーです"
-
-#: modules/imaging/manage/postinstall_create_boot_service.php:54
-#, php-format
-msgid "Add <b>%s</b> to available Boot Services ?"
-msgstr "<b>%s</b> を利用可能なブートサービスに追加しますか？"
-
-#: modules/imaging/manage/postinstall_delete.php:44
-#, php-format
-msgid "<strong>%s</strong> script deleted"
-msgstr "<strong>%s</strong> スクリプトが削除されました"
-
-#: modules/imaging/manage/postinstall_delete.php:51
-#, php-format
-msgid "<strong>%s</strong> script wasn't deleted"
-msgstr "<strong>%s</strong> スクリプトは削除されませんでした"
-
-#: modules/imaging/manage/postinstall_delete.php:59
-msgid "Can't delete this post-imaging script, it's a global script."
-msgstr "このポスト-イメージングスクリプトは削除できません。グローバルスクリプトです。"
-
-#: modules/imaging/manage/postinstall_delete.php:65
-#, php-format
-msgid "Are you sure you want to delete the <b>%s</b> script ?"
-msgstr "本当に <b>%s</b> スクリプトを削除しますか？"
-
-#: modules/imaging/manage/postinstall_edit.php:90
-#, php-format
-msgid "<strong>%s</strong> script %s"
-msgstr "<strong>%s</strong>  スクリプト %s"
-
-#: modules/imaging/manage/postinstall_edit.php:97
-#, php-format
-msgid "<strong>%s</strong> script wasn't %s"
-msgstr "<strong>%s</strong>  スクリプトは %s ではありませんでした"
-
-#: modules/imaging/manage/postinstall_edit.php:122
-msgid "Script value"
-msgstr "スクリプト値"
-
-#: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
-#, php-format
-msgid "<b>%s</b> was already added to Boot Services"
-msgstr "<b>%s</b> は、すでにブートサービスに追加されています。"
-
-#: modules/imaging/manage/save_configuration.php:65
-#, php-format
-msgid "Imaging server <strong>%s</strong> configuration saved."
-msgstr "イメージングサーバー <strong>%s</strong> 設定が保存されました。"
-
-#: modules/imaging/manage/service_add.php:48
-#, php-format
-msgid "Service <strong>%s</strong> added to default boot menu"
-msgstr "サービス <strong>%s</strong> がデフォルトブートメニューに追加されました"
-
-#: modules/imaging/manage/service_add.php:88
-#, php-format
-msgid "Add the boot service <b>%s</b> to the default boot menu"
-msgstr "ブートサービス <b>%s</b> がデフォルトブートメニューに追加されました"
-
-#: modules/imaging/manage/service_del.php:42
-#, php-format
-msgid "Service <strong>%s</strong> removed from default boot menu"
-msgstr "サービス <strong>%s</strong> がデフォルトブートメニューから削除されました"
-
-#: modules/imaging/manage/service_del.php:64
-#, php-format
-msgid "Remove the boot service <b>%s</b> from the default boot menu"
-msgstr "ブートサービス <b>%s</b> をデフォルトブートメニューから削除"
-
-#: modules/imaging/manage/service_edit.php:46
-msgid "Edit service : "
-msgstr "サービス編集 : "
-
-#: modules/imaging/manage/service_edit.php:64
-msgid "In default bootmenu"
-msgstr "デフォルトブートメニュー内"
-
-#: modules/imaging/manage/service_edit.php:79
-#, php-format
-msgid "Service <strong>%s</strong> modified with success"
-msgstr "サービス <strong>%s</strong> の変更に成功しました"
-
-#: modules/imaging/manage/service_remove.php:42
-#, php-format
-msgid "Service <strong>%s</strong> successfully removed"
-msgstr "サービス <strong>%s</strong> が削除されました"
-
-#: modules/imaging/manage/service_remove.php:64
-#, php-format
-msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
-msgstr "本当に <b>%s</b> ブートサービスを削除しますか？"
-
-#: modules/imaging/manage/service_show_used.php:65
-#: modules/imaging/manage/service_show_used.php:77
-msgid "Removal of boot service failed"
-msgstr "ブートサービスの削除に失敗しました"
-
-#: modules/imaging/manage/service_show_used.php:115
-#, php-format
-msgid "Remove this boot service from imaging server %s"
-msgstr "このブートサービスをイメージングサーバー %s から削除する"
-
-#: modules/imaging/manage/service_show_used.php:139
-msgid ""
-"If you want to remove this boot service from one or more targets, check "
-"these targets and click on the remove button"
-msgstr "このブートサービスを 1 つあるいは複数のターゲットから削除する場合は、これらのターゲットを確認し、削除ボタンをクリックしてください。"
-
-#: modules/imaging/manage/unattended.php:75
-msgid "form not found"
-msgstr ""
-
-#: modules/imaging/manage/unattended.php:88
-msgid "Windows Answer File Generator"
-msgstr ""
-
-#: modules/imaging/manage/unattended.php:103
-msgid "error create file"
-msgstr ""
-
-#: modules/imaging/manage/unattended.php:139
-msgid "Choose package source"
-msgstr ""
 
 

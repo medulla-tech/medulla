@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2014-12-22 15:12+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/pulse2/team/zh_TW/)\n"
@@ -18,9 +18,9 @@ msgstr ""
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0\n"
 
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "根實體"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "所有我的實體"
 
 #: modules/pulse2/includes/menu_action.php:34
 msgid "Inventory"
@@ -113,9 +113,9 @@ msgstr "此影像群組上的軟體部署"
 msgid "Csv export"
 msgstr "Csv 匯出"
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "所有我的實體"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "根實體"
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:53+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2015-01-20 20:18+0000\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/pulse2/team/pt_BR/)\n"
@@ -22,9 +22,9 @@ msgstr ""
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "Entidade root"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "Todas as minhas entidades"
 
 #: modules/pulse2/includes/menu_action.php:34
 msgid "Inventory"
@@ -117,9 +117,9 @@ msgstr "Implantação de software nesse grupo de imagens"
 msgid "Csv export"
 msgstr "Exportar em CSV"
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "Todas as minhas entidades"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Entidade root"
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"

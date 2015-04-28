@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:53+0200\n"
-"PO-Revision-Date: 2015-04-27 13:43+0000\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
+"PO-Revision-Date: 2015-04-28 07:34+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -17,8 +17,8 @@ msgstr ""
 "Language: en_US\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:34
@@ -112,8 +112,8 @@ msgstr ""
 msgid "Csv export"
 msgstr ""
 
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
 msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:34

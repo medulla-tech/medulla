@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-04-23 15:52+0200\n"
+"POT-Creation-Date: 2015-04-28 09:25+0200\n"
 "PO-Revision-Date: 2014-12-16 13:37+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/pulse2/team/ja_JP/)\n"
@@ -35,9 +35,10 @@ msgstr ""
 msgid "Edit entity"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addLocation.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:212
 #: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/addEntityRule.php:72
 msgid "Name"
 msgstr "名前"
 
@@ -45,124 +46,33 @@ msgstr "名前"
 msgid "Parent entity"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
-#: modules/glpi/glpi/addLocation.php:101
+#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addLocation.php:101
 #: modules/glpi/glpi/ajaxViewPart.php:232
+#: modules/glpi/glpi/addEntityRule.php:77
 msgid "Description"
 msgstr "内容"
 
-#: modules/glpi/glpi/addEntityRule.php:31
-msgid "The entity rule has been added successfully."
-msgstr ""
+#: modules/glpi/glpi/createOSStaticGroup.php:34
+#, php-format
+msgid "Machine with %s installed at %s"
+msgstr "%s が %s にインストールされたマシン "
 
-#: modules/glpi/glpi/addEntityRule.php:35
-msgid "The entity rule has been edited successfully."
-msgstr ""
+#: modules/glpi/glpi/createOSStaticGroup.php:52
+#: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "%d 台のコンピューターで、コンピューター一覧がトランケートされました"
 
-#: modules/glpi/glpi/addEntityRule.php:59
-#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
-msgid "Add entity rule"
-msgstr ""
+#: modules/glpi/glpi/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "最新の在庫は、%s で %s 日未満です"
 
-#: modules/glpi/glpi/addEntityRule.php:67
-msgid "Active"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:86
-msgid "Aggregator"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:98
-msgid "IP Address"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:99
-msgid "Hostname"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:261
-msgid "Domain"
-msgstr "ドメイン"
-
-#: modules/glpi/glpi/addEntityRule.php:101
-msgid "Computer serial"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:102
-msgid "Subnet"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:103
-msgid "Inventory Tag"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:113
-msgid "equal to"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:114
-msgid "different from"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:115
-msgid "contains"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:116
-msgid "does not contain"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:117
-msgid "starts with"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:118
-#: modules/glpi/glpi/addEntityRule.php:119
-msgid "finishes by"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:120
-msgid "matches (regex)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:121
-msgid "does not match (regex)"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:122
-msgid "exists"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:123
-msgid "does not exist"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:138
-#: modules/glpi/includes/publicFunc.php:142
-msgid "Remove"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:155
-msgid "Add criterion"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:168
-#: modules/glpi/glpi/addEntityRule.php:190
-msgid "Do not assign"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr ""
-
-#: modules/glpi/glpi/addEntityRule.php:200
-msgid "Target location"
-msgstr ""
+#: modules/glpi/glpi/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "最新の在庫は、%s で %s 日以上です"
 
 #: modules/glpi/glpi/addLocation.php:34
 msgid "The location has been added successfully."
@@ -183,46 +93,6 @@ msgstr ""
 
 #: modules/glpi/glpi/addLocation.php:96
 msgid "Parent location"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityList.php:51
-#: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxLocationList.php:51
-msgid "No entry found"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityList.php:66
-msgid "Entity name"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityList.php:68
-#: modules/glpi/glpi/ajaxLocationList.php:68
-#: modules/glpi/glpi/ajaxViewPart.php:250
-msgid "Comment"
-msgstr "コメント"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:69
-msgid "Edit rule"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:70
-msgid "Move rule up"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:71
-msgid "Move rule down"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxEntityRules.php:72
-msgid "Delete rule"
-msgstr ""
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:83
@@ -439,6 +309,12 @@ msgstr "帯域幅"
 msgid "Writer"
 msgstr "ライター"
 
+#: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
+#: modules/glpi/glpi/ajaxLocationList.php:68
+msgid "Comment"
+msgstr "コメント"
+
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
 msgstr "日付"
@@ -479,6 +355,11 @@ msgstr "サービスパック"
 msgid "Windows Key"
 msgstr "Windows キー"
 
+#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/glpi/glpi/addEntityRule.php:100
+msgid "Domain"
+msgstr "ドメイン"
+
 #: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "State"
 msgstr "状態"
@@ -503,6 +384,144 @@ msgstr "最新"
 msgid "Invalid hostname"
 msgstr "不正なホスト名です"
 
+#: modules/glpi/glpi/addEntityRule.php:31
+msgid "The entity rule has been added successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:35
+msgid "The entity rule has been edited successfully."
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:59
+#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
+msgid "Add entity rule"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:67
+msgid "Active"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:86
+msgid "Aggregator"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:98
+msgid "IP Address"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:99
+msgid "Hostname"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:101
+msgid "Computer serial"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:102
+msgid "Subnet"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:103
+msgid "Inventory Tag"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:113
+msgid "equal to"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:114
+msgid "different from"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:115
+msgid "contains"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:116
+msgid "does not contain"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:117
+msgid "starts with"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:118
+#: modules/glpi/glpi/addEntityRule.php:119
+msgid "finishes by"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:120
+msgid "matches (regex)"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:121
+msgid "does not match (regex)"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:122
+msgid "exists"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:123
+msgid "does not exist"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:138
+#: modules/glpi/includes/publicFunc.php:142
+msgid "Remove"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:149
+msgid "Criterion"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:155
+msgid "Add criterion"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:168
+#: modules/glpi/glpi/addEntityRule.php:190
+msgid "Do not assign"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:180
+msgid "Target entity"
+msgstr ""
+
+#: modules/glpi/glpi/addEntityRule.php:200
+msgid "Target location"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityList.php:51
+#: modules/glpi/glpi/ajaxEntityRules.php:51
+#: modules/glpi/glpi/ajaxLocationList.php:51
+msgid "No entry found"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityList.php:66
+msgid "Entity name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityRules.php:66
+msgid "Rule name"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityRules.php:69
+msgid "Edit rule"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityRules.php:70
+msgid "Move rule up"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityRules.php:71
+msgid "Move rule down"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxEntityRules.php:72
+msgid "Delete rule"
+msgstr ""
+
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:30
 #, php-format
 msgid "Antivirus status is OK at %s"
@@ -518,42 +537,8 @@ msgstr "%s のアンチウィルスは実行されていない、あるいは最
 msgid "No antivirus found at %s"
 msgstr "%s にアンチウィルスが見つかりませんでした"
 
-#: modules/glpi/glpi/createAntivirusStaticGroup.php:46
-#: modules/glpi/glpi/createOSStaticGroup.php:52
-#: modules/glpi/glpi/createStaticGroup.php:43
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "%d 台のコンピューターで、コンピューター一覧がトランケートされました"
-
-#: modules/glpi/glpi/createOSStaticGroup.php:34
-#, php-format
-msgid "Machine with %s installed at %s"
-msgstr "%s が %s にインストールされたマシン "
-
-#: modules/glpi/glpi/createStaticGroup.php:30
-#, php-format
-msgid "Latest inventory is less than %s days at %s"
-msgstr "最新の在庫は、%s で %s 日未満です"
-
-#: modules/glpi/glpi/createStaticGroup.php:33
-#, php-format
-msgid "Latest inventory is more than %s days at %s"
-msgstr "最新の在庫は、%s で %s 日以上です"
-
-#: modules/glpi/glpi/deleteEntityRule.php:31
-msgid "The entity rule has been deleted successfully."
-msgstr ""
-
-#: modules/glpi/glpi/deleteEntityRule.php:36
-msgid "Delete this rule?"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:28
-msgid "Entity list"
-msgstr ""
-
-#: modules/glpi/glpi/entityList.php:36
-msgid "All entities"
+#: modules/glpi/glpi/ajaxLocationList.php:66
+msgid "Location name"
 msgstr ""
 
 #: modules/glpi/glpi/entityRules.php:28 modules/glpi/glpi/localSidebar.php:30
@@ -563,6 +548,14 @@ msgstr ""
 
 #: modules/glpi/glpi/entityRules.php:36
 msgid "All rules"
+msgstr ""
+
+#: modules/glpi/glpi/deleteEntityRule.php:31
+msgid "The entity rule has been deleted successfully."
+msgstr ""
+
+#: modules/glpi/glpi/deleteEntityRule.php:36
+msgid "Delete this rule?"
 msgstr ""
 
 #: modules/glpi/glpi/localSidebar.php:26 modules/glpi/infoPackage.inc.php:70
@@ -579,6 +572,14 @@ msgstr ""
 
 #: modules/glpi/glpi/localSidebar.php:29
 msgid "Add a location"
+msgstr ""
+
+#: modules/glpi/glpi/entityList.php:28
+msgid "Entity list"
+msgstr ""
+
+#: modules/glpi/glpi/entityList.php:36
+msgid "All entities"
 msgstr ""
 
 #: modules/glpi/glpi/locationList.php:28
@@ -643,9 +644,33 @@ msgstr ""
 msgid "Hide Windows Updates"
 msgstr "Windows Update を非表示"
 
+#: modules/glpi/includes/publicFunc.php:86
+msgid "Entity attributes"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:154
+msgid "Entity right"
+msgstr ""
+
+#: modules/glpi/includes/publicFunc.php:160
+msgid "Add entity right"
+msgstr ""
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:32
+msgid "Operating systems"
+msgstr "オペレーティングシステム"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:48
+msgid "Other"
+msgstr "その他"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:51
+msgid "Other Windows"
+msgstr "その他の Windows"
+
+#: modules/glpi/includes/panels/os_repartition.inc.php:91
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
 msgid "Create a group"
 msgstr "グループを作成"
 
@@ -676,30 +701,6 @@ msgstr "> %s 日: %percent% (%d)"
 #: modules/glpi/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
 msgstr "最新在庫日付"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:32
-msgid "Operating systems"
-msgstr "オペレーティングシステム"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:48
-msgid "Other"
-msgstr "その他"
-
-#: modules/glpi/includes/panels/os_repartition.inc.php:51
-msgid "Other Windows"
-msgstr "その他の Windows"
-
-#: modules/glpi/includes/publicFunc.php:86
-msgid "Entity attributes"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:154
-msgid "Entity right"
-msgstr ""
-
-#: modules/glpi/includes/publicFunc.php:160
-msgid "Add entity right"
-msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
