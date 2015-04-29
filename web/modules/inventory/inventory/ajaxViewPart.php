@@ -365,8 +365,18 @@ if ($_GET['uuid'] != '') {
             $cfg = json_decode(file_get_contents('/etc/mmc/pmu.json'));
             $registry_deploy_cfg = json_encode($cfg->registry_deploy);
 
+            // registry keys who will be editable, create /etc/mmc/editable_registry file
+            // with only a list of editable keys.
+            // Example:
+            // ["codePDV","agence"]
+            $editable_registry = file_get_contents('/etc/mmc/editable_registry');
+
             ?>
             <script type="text/javascript">
+
+            // $editable_registry is False is file doesn't exists
+            var editable_registry = <?php print (($editable_registry) ? $editable_registry : "[]") ?>;
+
             // Remove toJSON shipped with prototype
             if(window.Prototype) {
                 delete Object.prototype.toJSON;
@@ -382,12 +392,13 @@ if ($_GET['uuid'] != '') {
             
             jQuery(function(){
                 var $=jQuery;
-                // Make field editable
+                // Make field editable only if key is in editable_registry array
                 $('table tbody tr').each(function(){
                     var key = $(this).find('td:first').text();
                     var value = $(this).find('td:last').text();
                     var input = $('<input type="text" />')
                         .attr('name', key)
+                        .attr('readonly', editable_registry.indexOf(key) == -1 ? true : false)
                         .val(value);
                     $(this).find('td:last').html(input);
                 })
