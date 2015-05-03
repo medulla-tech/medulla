@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 14:18+0100\n"
+"POT-Creation-Date: 2015-04-28 09:42+0200\n"
 "PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/mds/team/de_DE/)\n"
@@ -42,32 +42,32 @@ msgstr "Login oder mail"
 msgid "Back"
 msgstr "Zurück"
 
-#: graph/navbar.inc.php:40
+#: graph/navbar.inc.php:73
 msgid "standard mode"
 msgstr "Standard-Modus"
 
-#: graph/navbar.inc.php:42
+#: graph/navbar.inc.php:75
 msgid "expert mode"
 msgstr "Experten-Modus"
 
-#: graph/navbar.inc.php:47
+#: graph/navbar.inc.php:80
 msgid "Click to switch to"
 msgstr "umschalten zu"
 
-#: graph/navbar.inc.php:48
+#: graph/navbar.inc.php:81
 msgid "logout"
 msgstr "abmelden"
 
-#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
+#: graph/navbar.inc.php:83 logout/index.php:48 logout/index.php:55
 msgid "Logout"
 msgstr "Logout"
 
-#: graph/navbar.inc.php:62 modules/base/main/default.php:89
+#: graph/navbar.inc.php:106 modules/base/main/default.php:89
 #: modules/base/infoPackage.inc.php:43
 msgid "Home"
 msgstr "Übersicht"
 
-#: graph/navbar.inc.php:97
+#: graph/navbar.inc.php:127
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
@@ -201,22 +201,6 @@ msgstr "kompletten Trackback zeigen"
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
 msgstr "vollständiger Traceback"
-
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
-#: includes/PageGenerator.php:1128
-#: modules/base/includes/AjaxFilterLog.inc.php:96
-#: modules/base/includes/AjaxFilterLog.inc.php:100
-msgid "Previous"
-msgstr "zurück"
-
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
-#: includes/PageGenerator.php:1138
-#: modules/base/includes/AjaxFilterLog.inc.php:107
-#: modules/base/includes/AjaxFilterLog.inc.php:111
-msgid "Next"
-msgstr "nächste"
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
@@ -419,6 +403,20 @@ msgstr "Freitag"
 msgid "Saturday"
 msgstr "Samstag"
 
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
+#: includes/PageGenerator.php:1128 includes/ajaxTools.php:63
+#: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100
+msgid "Previous"
+msgstr "zurück"
+
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
+#: includes/PageGenerator.php:1138 includes/ajaxTools.php:74
+#: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111
+msgid "Next"
+msgstr "nächste"
+
 #: includes/FormGenerator.php:621
 msgid "Now"
 msgstr "Jetzt"
@@ -483,11 +481,11 @@ msgstr "Nummerierung"
 msgid "Go to page"
 msgstr "Gehe zur Seite"
 
-#: includes/PageGenerator.php:1416
+#: includes/PageGenerator.php:1417
 msgid "No item available"
 msgstr "Keine Eintrag vorhanden"
 
-#: includes/PageGenerator.php:1633
+#: includes/PageGenerator.php:1636
 msgid "Select entity"
 msgstr "Wähle Einheit"
 
@@ -511,7 +509,7 @@ msgstr "alle wählen"
 msgid "Unselect all"
 msgstr "alle abwählen"
 
-#: logout/index.php:50
+#: logout/index.php:51
 msgid "Your session will be closed"
 msgstr "Ihre Sitzung wird geschlossen"
 
@@ -1271,12 +1269,12 @@ msgstr "Benutzerattribute"
 
 #: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-#: index.php:207
+#: index.php:209
 msgid "Login"
 msgstr "Benutzername"
 
 #: modules/base/includes/publicFunc.php:310
-#: modules/base/infoPackage.inc.php:388 index.php:213
+#: modules/base/infoPackage.inc.php:388 index.php:215
 msgid "Password"
 msgstr "Passwort"
 
@@ -1569,11 +1567,6 @@ msgstr "Sie löschen den Benutzer <b>%s</b>."
 msgid "Delete all user's files"
 msgstr "alle Benutzer-Dateien löschen"
 
-#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
-#: modules/base/infoPackage.inc.php:171
-msgid "User list"
-msgstr "Benutzerliste"
-
 #: modules/base/users/loguser.php:39
 msgid "User log"
 msgstr "Benutzer Protokoll"
@@ -1804,6 +1797,11 @@ msgstr "Konto aktivieren"
 #: modules/base/users/edit.php:183
 msgid "Disable account"
 msgstr "Konto deaktivieren"
+
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:171
+msgid "User list"
+msgstr "Benutzerliste"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
@@ -2047,19 +2045,19 @@ msgstr ""
 "und die MMC-Agent abgemeldet.Sie wurden aufgrund der abgelaufenen Sitzung "
 "zwischen der MMC Web-Interface und die MMC-Agent abgemeldet."
 
-#: index.php:183
+#: index.php:185
 msgid "Forgot password ?"
 msgstr "Passwort vergessen ?"
 
-#: index.php:194
+#: index.php:196
 msgid "Server"
 msgstr "Server"
 
-#: index.php:201
+#: index.php:203
 msgid "Language"
 msgstr "Sprache"
 
-#: index.php:226
+#: index.php:228
 msgid "Connect"
 msgstr "verbinden"
 

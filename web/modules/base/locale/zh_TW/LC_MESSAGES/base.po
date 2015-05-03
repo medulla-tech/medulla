@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-03-27 14:18+0100\n"
+"POT-Creation-Date: 2015-04-28 09:42+0200\n"
 "PO-Revision-Date: 2015-01-28 16:20+0000\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/mds/team/zh_TW/)\n"
@@ -39,32 +39,32 @@ msgstr "登入或郵件"
 msgid "Back"
 msgstr "上一頁"
 
-#: graph/navbar.inc.php:40
+#: graph/navbar.inc.php:73
 msgid "standard mode"
 msgstr "標準模式"
 
-#: graph/navbar.inc.php:42
+#: graph/navbar.inc.php:75
 msgid "expert mode"
 msgstr "專業模式"
 
-#: graph/navbar.inc.php:47
+#: graph/navbar.inc.php:80
 msgid "Click to switch to"
 msgstr "按一下以切換至"
 
-#: graph/navbar.inc.php:48
+#: graph/navbar.inc.php:81
 msgid "logout"
 msgstr "登出"
 
-#: graph/navbar.inc.php:50 logout/index.php:48 logout/index.php:53
+#: graph/navbar.inc.php:83 logout/index.php:48 logout/index.php:55
 msgid "Logout"
 msgstr "登出"
 
-#: graph/navbar.inc.php:62 modules/base/main/default.php:89
+#: graph/navbar.inc.php:106 modules/base/main/default.php:89
 #: modules/base/infoPackage.inc.php:43
 msgid "Home"
 msgstr "首頁"
 
-#: graph/navbar.inc.php:97
+#: graph/navbar.inc.php:127
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
@@ -196,22 +196,6 @@ msgstr "顯示完整引用"
 #: includes/ErrorHandling.php:78
 msgid "Complete Traceback"
 msgstr "完整引用"
-
-#: includes/ajaxTools.php:63 includes/ajaxTools.php:69
-#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
-#: includes/PageGenerator.php:1128
-#: modules/base/includes/AjaxFilterLog.inc.php:96
-#: modules/base/includes/AjaxFilterLog.inc.php:100
-msgid "Previous"
-msgstr "上一步"
-
-#: includes/ajaxTools.php:74 includes/ajaxTools.php:82
-#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
-#: includes/PageGenerator.php:1138
-#: modules/base/includes/AjaxFilterLog.inc.php:107
-#: modules/base/includes/AjaxFilterLog.inc.php:111
-msgid "Next"
-msgstr "下一步"
 
 #: includes/xmlrpc.inc.php:166
 msgid "Can't connect to MMC agent"
@@ -403,6 +387,20 @@ msgstr "星期五"
 msgid "Saturday"
 msgstr "星期六"
 
+#: includes/FormGenerator.php:619 includes/PageGenerator.php:881
+#: includes/PageGenerator.php:1128 includes/ajaxTools.php:63
+#: includes/ajaxTools.php:69 modules/base/includes/AjaxFilterLog.inc.php:96
+#: modules/base/includes/AjaxFilterLog.inc.php:100
+msgid "Previous"
+msgstr "上一步"
+
+#: includes/FormGenerator.php:620 includes/PageGenerator.php:895
+#: includes/PageGenerator.php:1138 includes/ajaxTools.php:74
+#: includes/ajaxTools.php:82 modules/base/includes/AjaxFilterLog.inc.php:107
+#: modules/base/includes/AjaxFilterLog.inc.php:111
+msgid "Next"
+msgstr "下一步"
+
 #: includes/FormGenerator.php:621
 msgid "Now"
 msgstr "現在"
@@ -472,11 +470,11 @@ msgstr "分頁"
 msgid "Go to page"
 msgstr "移至頁面"
 
-#: includes/PageGenerator.php:1416
+#: includes/PageGenerator.php:1417
 msgid "No item available"
 msgstr "無可用項目"
 
-#: includes/PageGenerator.php:1633
+#: includes/PageGenerator.php:1636
 msgid "Select entity"
 msgstr "選擇實體"
 
@@ -500,7 +498,7 @@ msgstr "全選"
 msgid "Unselect all"
 msgstr "取消全選"
 
-#: logout/index.php:50
+#: logout/index.php:51
 msgid "Your session will be closed"
 msgstr "將關閉您的工作階段"
 
@@ -1232,12 +1230,12 @@ msgstr "使用者屬性"
 
 #: modules/base/includes/publicFunc.php:295
 #: modules/base/users/ajaxFilter.php:68 modules/base/views/index.tpl.php:78
-#: index.php:207
+#: index.php:209
 msgid "Login"
 msgstr "登入"
 
 #: modules/base/includes/publicFunc.php:310
-#: modules/base/infoPackage.inc.php:388 index.php:213
+#: modules/base/infoPackage.inc.php:388 index.php:215
 msgid "Password"
 msgstr "密碼"
 
@@ -1520,11 +1518,6 @@ msgstr "您將刪除使用者<b>%s</b>。"
 msgid "Delete all user's files"
 msgstr "刪除所有使用者的檔案"
 
-#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
-#: modules/base/infoPackage.inc.php:171
-msgid "User list"
-msgstr "使用者清單"
-
 #: modules/base/users/loguser.php:39
 msgid "User log"
 msgstr "使用者記錄檔"
@@ -1746,6 +1739,11 @@ msgstr "啟用帳戶"
 #: modules/base/users/edit.php:183
 msgid "Disable account"
 msgstr "停用帳戶"
+
+#: modules/base/users/index.php:31 modules/base/views/index.tpl.php:43
+#: modules/base/infoPackage.inc.php:171
+msgid "User list"
+msgstr "使用者清單"
 
 #: modules/base/infoPackage.inc.php:36
 msgid "User, group and computer management"
@@ -1987,19 +1985,19 @@ msgid ""
 "and the MMC agent expired."
 msgstr "您已登出，因為 MMC 網頁介面與 MMC 代理程式之間的工作階段已過期。"
 
-#: index.php:183
+#: index.php:185
 msgid "Forgot password ?"
 msgstr "忘記密碼？"
 
-#: index.php:194
+#: index.php:196
 msgid "Server"
 msgstr "伺服器"
 
-#: index.php:201
+#: index.php:203
 msgid "Language"
 msgstr "語言"
 
-#: index.php:226
+#: index.php:228
 msgid "Connect"
 msgstr "連線"
 
