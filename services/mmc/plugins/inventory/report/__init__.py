@@ -109,6 +109,24 @@ class exportedReport(object):
             results.append({'entity_id': entity, 'value': count})
         return results
 
+    def getAllComputerCountByAgencies(self, entities, agencies):
+        """
+        Get computer count for agency
+
+        @param agency: list of computer to count by agency
+
+        @return: count of machines by entity
+        """
+        if isinstance(agencies, basestring):
+            agencies = [agencies]
+        results = []
+        for entity in self._getEntitiesIds(entities):
+            self.ctx.locationsid = [entity]
+            self.ctx.agencies = agencies
+            count = self.db.getAllComputersByAgencies(self.ctx, agencies, count=1)
+            results.append({'entity_id': entity, 'value': count})
+        return results
+
     def getComputerCountByTypes(self, entities, types):
         """
         Get computer count for types

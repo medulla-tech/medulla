@@ -2264,6 +2264,42 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     @DatabaseHelper._session
+    def getAllComputersByAgencies(self, session, ctx, agencies, count=1):
+        """ @return: all machines that have this type """
+        if int(count) == 1:
+            query = session.query(func.count(distinct(Machine.id)))
+        else:
+            query = session.query(Machine)
+
+        query = query.select_from(self.machine
+                    .join(
+                        self.table['hasEntity'],
+                        (self.table['hasEntity'].c.machine == self.machine.c.id) \
+                    )
+                    .join(self.table['Inventory'],
+                        self.table['Inventory'].c.id == self.table['hasEntity'].c.inventory
+                    )
+                    .join(self.table['hasRegistry'],
+                        self.table['hasRegistry'].c.machine == self.machine.c.id
+                    )
+                    .join(self.table['Registry'],
+                        self.table['Registry'].c.id == self.table['hasRegistry'].c.registry
+                    )
+                )
+
+        query = query.filter(self.inventory.c.Last == 1)
+        if hasattr(ctx, 'locationsid'):
+            query = query.filter(self.table['hasEntity'].c.entity.in_(ctx.locationsid))
+
+        query = query.filter(self.table['Registry'].c.Value.in_(agencies))
+
+        if int(count) == 1:
+            ret = int(query.scalar())
+        else:
+            ret = query.all()
+        return ret
+
+    @DatabaseHelper._session
     def getMachineByType(self, session, ctx, types, count=0):
         """ @return: all machines that have this type """
         if isinstance(types, basestring):
