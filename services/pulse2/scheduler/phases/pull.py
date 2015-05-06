@@ -93,7 +93,7 @@ class UploadPhase(PullPhase):
 class ExecutionPhase(PullPhase):
     name = "execute"
 
-    @launcher_proxymethod("pull_completed_execution")
+    @launcher_proxymethod("pull_completed_exec")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 
@@ -101,7 +101,7 @@ class ExecutionPhase(PullPhase):
 class DeletePhase(PullPhase):
     name = "delete"
 
-    @launcher_proxymethod("pull_completed_deletion")
+    @launcher_proxymethod("pull_completed_delete")
     def parse_result(self, (exitcode, stdout, stderr)):
         return self.parse_pull_phase_result((exitcode, stdout, stderr))
 

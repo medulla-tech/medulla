@@ -116,20 +116,20 @@ class class02commandsTest(unittest.TestCase):
         self.assertEqual(result, True)
 
 
-    def test204completed_quick_action (self):
-        result=server.completed_quick_action('launcher_01',("","",""),"1")
+    def test204completed_quickaction (self):
+        result=server.completed_quickaction('launcher_01',("","",""),"1")
         self.assertEqual(result, True)
 
     def test205completed_pull(self):
         result=server.completed_pull('launcher_01',("","",""),"1")
         self.assertEqual(result, True)
 
-    def test206completed_execution(self):
-        result=server.completed_execution('launcher_01',("","",""),"1")
+    def test206completed_exec(self):
+        result=server.completed_exec('launcher_01',("","",""),"1")
         self.assertEqual(result, True)
 
-    def test207completed_deletion(self):
-        result=server.completed_deletion('launcher_01',("","",""),"1")
+    def test207completed_delete(self):
+        result=server.completed_delete('launcher_01',("","",""),"1")
         self.assertEqual(result, True)
 
     def test208completed_inventory(self):

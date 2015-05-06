@@ -38,6 +38,29 @@ from pulse2.launcher.config import LauncherConfig
 from pulse2.launcher.xmlrpc import getProxy
 from pulse2.consts import PULSE2_WRAPPER_ARG_SEPARATOR
 
+def get_command_result(command_id, command_list, mode, group, envir, step, step_log):
+   if mode == 'async':
+       result = pulse2.launcher.process_control.commandForker(
+           command_list,
+           __cb_async_process_end,
+           command_id,
+           LauncherConfig().defer_results,
+           'completed_' + step,
+           LauncherConfig().max_command_age,
+           group,
+           step,
+           env_=envir
+       )
+   elif mode == 'sync':
+       result = pulse2.launcher.process_control.commandRunner(
+           command_list,
+           __cb_sync_process_end,
+           env_=envir
+       )
+   if not result :
+       logging.getLogger().warn("%s failed for CoH #%d" % (step_log, command_id))
+   return result
+
 def sync_remote_push(command_id, client, files_list, wrapper_timeout):
     """ Handle remote copy on target, sync mode """
     return remote_push(command_id, client, files_list, 'sync', wrapper_timeout)
@@ -98,30 +121,7 @@ def remote_push(command_id, client, files_list, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_push',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'push',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote push (rsyncssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote push (rsyncssh/async) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'push', 'Remote push (rsyncssh/async)')    
 
     logging.getLogger().warn("Remote push failed for CoH #%d" % command_id)
     return None
@@ -200,30 +200,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_pull',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'pull',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote pull (wget/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote pull (wget/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'pull', 'Remote pull (wget/async)')    
     elif client['protocol'] == "rsyncproxy":
         # Built "thru" command
         thru_command_list  = [LauncherConfig().ssh_path]
@@ -268,30 +245,7 @@ def remote_pull(command_id, client, files_list, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_pull',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'pull',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote pull (rsyncproxy/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote pull (rsyncproxy/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'pull', 'Remote pull (rsyncproxy/async)')    
  
     logging.getLogger().warn("Remote pull failed for CoH #%d" % command_id)
     return None
@@ -381,30 +335,7 @@ def remote_delete(command_id, client, files_list, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_deletion',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'delete',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote delete (ssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote delete (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'delete', 'Remote delete (ssh/async)')    
     logging.getLogger().warn("Remote delete failed for CoH #%d" % command_id) 
     return None
 
@@ -465,30 +396,7 @@ def remote_exec(command_id, client, command, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_execution',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'exec',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote exec (ssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote exec (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'exec', 'Remote exec (ssh/async)')    
     logging.getLogger().warn("Remote exec failed for CoH #%d" % command_id) 
     return None
 
@@ -548,30 +456,7 @@ def remote_quickaction(command_id, client, command, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_quick_action',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'quickaction',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote quickaction (ssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote quickaction (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'quickaction', 'Remote quickaction (ssh/async)')    
 
     logging.getLogger().warn("Remote quickaction failed for CoH #%d" % command_id)
     return None
@@ -638,30 +523,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_direct',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'direct',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote direct (ssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote direct (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'direct', 'Remote direct (ssh/async)')    
 
     logging.getLogger().warn("Remote direct failed for CoH #%d" % command_id)
     return None
@@ -731,30 +593,7 @@ def remote_inventory(command_id, client, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_inventory',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'inventory',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote inventory (ssh/async) failed for CoH #%d" % command_id)
-            return result
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote inventory (ssh/sync) failed for CoH #%d" % command_id) 
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'inventory', 'Remote inventory (ssh/async)')    
 
     logging.getLogger().warn("Remote inventory failed for CoH #%d" % command_id) 
     return None
@@ -816,32 +655,9 @@ def remote_reboot(command_id, client, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_reboot',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'reboot',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote boot (ssh/async) failed for CoH #%d" % command_id)
-            return result 
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote boot (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'reboot', 'Remote reboot (ssh/async)')    
 
-    logging.getLogger().warn("Remote boot failed for CoH #%d" % command_id)
+    logging.getLogger().warn("Remote reboot failed for CoH #%d" % command_id)
     return None
 
 def sync_remote_halt(command_id, client, wrapper_timeout):
@@ -901,30 +717,7 @@ def remote_halt(command_id, client, mode, wrapper_timeout):
         if client['action']:
             command_list += ['--action', client['action']]
 
-        if mode == 'async':
-            result = pulse2.launcher.process_control.commandForker(
-                command_list,
-                __cb_async_process_end,
-                command_id,
-                LauncherConfig().defer_results,
-                'completed_halt',
-                LauncherConfig().max_command_age,
-                client['group'],
-                'halt',
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote halt (ssh/async) failed for CoH #%d" % command_id)
-            return result  
-        elif mode == 'sync':
-            result = pulse2.launcher.process_control.commandRunner(
-                command_list,
-                __cb_sync_process_end,
-                env_=envir
-            )
-            if not result :
-                logging.getLogger().warn("Remote halt (ssh/sync) failed for CoH #%d" % command_id)
-            return result
+        return get_command_result(command_id, command_list, mode, client['group'], envir, 'halt', 'Remote halt (ssh/async)')    
     logging.getLogger().warn("Remote halt failed for CoH #%d" % command_id)
     return None
 

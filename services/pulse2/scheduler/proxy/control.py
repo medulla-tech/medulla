@@ -70,9 +70,9 @@ class App :
 
         self.forwarder.append_cached_method("completed_push")
         self.forwarder.append_cached_method("completed_pull")
-        self.forwarder.append_cached_method("completed_quick_action")
-        self.forwarder.append_cached_method("completed_execution")
-        self.forwarder.append_cached_method("completed_deletion")
+        self.forwarder.append_cached_method("completed_quickaction")
+        self.forwarder.append_cached_method("completed_exec")
+        self.forwarder.append_cached_method("completed_delete")
         self.forwarder.append_cached_method("completed_inventory")
         self.forwarder.append_cached_method("completed_reboot")
         self.forwarder.append_cached_method("completed_halt")

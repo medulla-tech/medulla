@@ -30,8 +30,8 @@ from pulse2.scheduler.queries import machine_has_commands, verify_target
 def get_dlp_method(phase):
     methods = {"wol": "pull_completed_wol",
                "upload": "pull_completed_pull",
-               "execute": "pull_completed_execution",
-               "delete": "pull_completed_deletion",
+               "execute": "pull_completed_exec",
+               "delete": "pull_completed_delete",
                "inventory": "pull_completed_inventory",
                "reboot": "pull_completed_reboot",
                "halt": "pull_completed_halt",

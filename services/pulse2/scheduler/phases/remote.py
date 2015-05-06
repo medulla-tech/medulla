@@ -878,11 +878,11 @@ class ExecutionPhase(RemoteControlPhase):
                 return "async_remote_exec"
 
 
-    @launcher_proxymethod("completed_execution")
+    @launcher_proxymethod("completed_exec")
     def parseExecutionResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
-    @launcher_proxymethod("completed_quick_action")
+    @launcher_proxymethod("completed_quickaction")
     def parseQuickActionResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 
@@ -919,7 +919,7 @@ class DeletePhase(RemoteControlPhase):
 
 
 
-    @launcher_proxymethod("completed_deletion")
+    @launcher_proxymethod("completed_delete")
     def parseDeleteResult(self, (exitcode, stdout, stderr)):
         return self.parse_remote_phase_result((exitcode, stdout, stderr))
 

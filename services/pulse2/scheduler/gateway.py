@@ -149,10 +149,10 @@ class SchedulerGateway(UnixProtocol):
 
 
 
-    def completed_quick_action(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_quickaction(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
-                                              "completed_quick_action", 
+                                              "completed_quickaction", 
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
@@ -170,17 +170,17 @@ class SchedulerGateway(UnixProtocol):
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_execution(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_exec(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
-                                              "completed_execution", 
+                                              "completed_exec", 
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
-    def completed_deletion(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
+    def completed_delete(self, launcher, (exitcode, stdout, stderr), id, from_dlp=False):
         return MscDispatcher().run_proxymethod(launcher, 
                                               id, 
-                                              "completed_deletion", 
+                                              "completed_delete", 
                                               (exitcode, stdout, stderr),
                                               from_dlp
                                               )
