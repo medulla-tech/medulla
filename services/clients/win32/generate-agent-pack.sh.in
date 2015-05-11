@@ -382,6 +382,6 @@ if [ ! ${download_only} -eq 1 ]; then
 
   # Generating msi agents
   echo " Generating MSI silent agents ..."
-  curl --progress-bar -o pulse2_agents_silent.msi --data-urlencode "ip=$my_fqdn" --data-urlencode "tag=<ag" --data-urlencode "key@/root/.ssh/id_rsa.pub" $msi_webservice_url>
+  curl --progress-bar -o pulse2_agents_silent.msi --data-urlencode "ip=$my_fqdn" --data-urlencode "tag=$tag" --data-urlencode "key@/root/.ssh/id_rsa.pub" $msi_webservice_url
 
 fi
