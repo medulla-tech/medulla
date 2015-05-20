@@ -3049,6 +3049,9 @@ class Machine(object):
             (ret[1]['macAddress'], ret[1]['ipHostNumber'], ret[1]['subnetMask'],  ret[1]['networkUuids']) = orderIpAdresses(net[1])
             ret[1]['networkUuids'] = map(lambda x:'UUID'+str(x),ret[1]['networkUuids'])
         # If a hardware table field is requested
+        if 'inventoryDate' in requested_cols:
+            history = Inventory().getComputerInventoryHistory(ctx, {'uuid': toUUID(self.id), 'max': 1})
+            ret[1]['inventoryDate'] = history[0][1].strftime("%Y/%m/%d %H:%M:%S")
         if set(['os','user','type','domain','fullname']) & requested_cols:
             hardware = Inventory().getLastMachineInventoryPart(ctx, "Hardware", {'uuid':toUUID(self.id)})
             if len(hardware):
