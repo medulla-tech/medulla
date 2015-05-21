@@ -27,6 +27,7 @@ from datetime import datetime
 import xml.etree.ElementTree as ET
 import gettext
 from gettext import bindtextdomain
+from functools import wraps
 
 logger = logging.getLogger()
 
@@ -162,21 +163,45 @@ class RpcProxy(RpcProxyI):
             result[attr_section['module']].append(attr_section)
         return result
 
+    def set_report_path(temp_path='/var/tmp', report_path='report-%d', pdf_name='report.pdf', xls_name='report.xls', svg_path='svg'):
+        """
+        This decorator sets path reports and adds these variables to the decorated function:
+          * temp_path
+          * report_path
+          * pdf_path
+          * xls_path
+          * svg_path
+
+        Thanks to http://stackoverflow.com/questions/17862185/how-to-inject-variable-into-scope-with-a-decorator-in-python
+        """
+        report_path = os.path.join(temp_path, report_path % int(time.time()))
+        pdf_path = os.path.join(report_path, pdf_name)
+        xls_path = os.path.join(report_path, xls_name)
+        svg_path = os.path.join(report_path, svg_path)
+        def decorator(f):
+            @wraps(f)
+            def wrapper(*args, **kwargs):
+                g = f.func_globals
+                g['temp_path'] = temp_path
+                g['report_path'] = report_path
+                g['pdf_path'] = pdf_path
+                g['xls_path'] = xls_path
+                g['svg_path'] = svg_path
+                os.makedirs(report_path)
+                os.makedirs(svg_path)
+                os.chmod(report_path, 511)
+                os.chmod(svg_path, 511)
+                return f(*args, **kwargs)
+            return wrapper
+        return decorator
+        
+    @set_report_path()
     def generate_report(self, period, sections, tables, items, entities, lang):
         setup_lang(lang)
         indent_str = ''
 
         entities = [int(str(entity).replace('UUID', '')) for entity in entities]
 
-        temp_path = '/var/tmp/'
-        report_path = os.path.join(temp_path, 'report-%d' % int(time.time()))
-        pdf_path = os.path.join(report_path, 'report.pdf')
-        xls_path = os.path.join(report_path, 'report.xls')
-        svg_path = os.path.join(report_path, 'svg')
-        os.mkdir(report_path)
-        os.mkdir(svg_path)
-        os.chmod(report_path, 511)
-        os.chmod(svg_path, 511)
         result = {'sections': []}
         #try:
             #getLocationName = ComputerLocationManager().getLocationName
