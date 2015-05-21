@@ -187,14 +187,186 @@ class RpcProxy(RpcProxyI):
                 g['pdf_path'] = pdf_path
                 g['xls_path'] = xls_path
                 g['svg_path'] = svg_path
-                os.makedirs(report_path)
-                os.makedirs(svg_path)
+                try:
+                    os.makedirs(report_path)
+                    os.makedirs(svg_path)
+                except:
+                    pass
                 os.chmod(report_path, 511)
                 os.chmod(svg_path, 511)
                 return f(*args, **kwargs)
             return wrapper
         return decorator
         
+    @set_report_path()
+    def generate_report_from_csv(self, csv_files, delimiter='|', lang='C'):
+        if not isinstance(csv_files, list):
+            csv_files = [csv_files]
+        setup_lang(lang)
+
+        result = {'sections': []}
+
+        xmltemp = ET.parse(os.path.join(reportconfdir, 'templates', self.config.reportTemplate)).getroot()
+        if xmltemp.tag != 'template':
+            logger.error('Incorrect XML')
+            return False
+
+        # Setting default params
+        locale = {}
+        locale['DATE_FORMAT'] = '%Y/%m/%d'
+
+        # Filling global pdf_vars
+        pdf_vars = {
+            '__USERNAME__': self.currentContext.userid,
+            '__COMPANY__': self.config.company,
+            '__COMPANY_LOGO_PATH__': self.config.company_logo_path,
+            '__PULSE_LOGO_PATH__': self.config.pulse_logo_path,
+        }
+
+        pdf = PDFGenerator(path=pdf_path, locale=locale)
+
+        def _hf_format(str):
+            """
+            _hf_format for header-footer format
+            Add needed double-quotes and replace PDF variables with
+            good values
+
+            @return: well formated content for header or footer
+            """
+            str = _T(str)
+            if str.count('###css_counter###') == 2:
+                # 1st css_counter is current page
+                str = str.replace('###css_counter###', '" counter(page) "', 1)
+                #2nd css_counter is CSS total pages count
+                str = str.replace('###css_counter###', '" counter(pages) "', 1)
+                if not str.startswith('counter(page)'):
+                    str = '"' + str
+                if not str.endswith('counter(pages)'):
+                    str = str + '"'
+            else:
+                str = '"' + str + '"'
+            return _replace_pdf_vars(str)
+
+        def _hf_feeder(tag):
+            """
+            This function feed header or footer
+
+            @param tag: XML tag content (header or footer)
+            @type tag: xml object
+
+            @param to_feed: item who will be feeded: header or footer
+            @type to_feed: str
+            """
+            for entry in tag:
+                if 'logo' in entry.attrib:
+                    logo = entry.attrib['logo']
+                    background_css = """
+                    background: url(%s);
+                    background-repeat: no-repeat;
+                    background-size: Auto 50px;
+                    width: 200px;
+                    """ % _replace_pdf_vars(logo)
+                    try:
+                        setattr(pdf, '_'.join([tag.tag, entry.tag, 'background']), background_css)
+                    except Exception, e:
+                        logging.getLogger().warn("Something were wrong where setting background for %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn("Exception: %s", e)
+                if entry.text is not None:
+                    try:
+                        setattr(pdf, '_'.join([tag.tag, entry.tag]), _hf_format(entry.text))
+                    except Exception, e:
+                        logging.getLogger().warn("Something were wrong where feeding %s: tag is %s", entry.tag, tag.tag)
+                        logging.getLogger().warn("Exception: %s", e)
+
+        def _localization(loc_tag):
+            for entry in loc_tag:
+                if entry.tag.lower() != 'entry':
+                    continue
+                locale[entry.attrib['name']] = _T(entry.attrib['value'])
+
+            # Setting Period start and period end PDF var
+            pdf_vars['__PERIOD_START__'] = datetime.strptime(time.strftime("%Y-%m-%d"), "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
+            pdf_vars['__PERIOD_END__'] = datetime.strptime(time.strftime("%Y-%m-%d"), "%Y-%m-%d").strftime(locale['DATE_FORMAT'])
+            pdf_vars['__NOW_DATE__'] = datetime.now().strftime(locale['DATE_FORMAT'])
+            pdf_vars['__NOW_HOUR__'] = datetime.now().strftime('%H:%M:%S')
+
+        def _replace_pdf_vars(text):
+            for key in pdf_vars:
+                text = text.replace(key, pdf_vars[key])
+            return text
+
+        def _h1(text):
+            pdf.h1(_T(text))
+
+        def _h2(text):
+            pdf.h2(_T(text))
+
+        def _h3(text):
+            pdf.h3(_T(text))
+
+        def _html(text):
+            #TODO: Add vars replacers
+            pdf.pushHTML(_replace_pdf_vars(text))
+
+        def _homepage(text):
+            pdf.pushHomePageHTML(_replace_pdf_vars(_T(text)))
+
+        def _sum_None(lst):
+            result = None
+            for x in lst:
+                if x is not None:
+                    if result is not None:
+                        result += x
+                    else:
+                        result = x
+            return result
+
+        # Browsing all childs
+        for level1 in xmltemp:
+            attr1 = translate_attrs(level1.attrib)
+            ## =========< localization strings >===================
+            if level1.tag.lower() == 'localization':
+                _localization(level1)
+            ## =========< H1 >===================
+            if level1.tag.lower() == 'h1':
+                _h1(level1.text)
+            ## =========< H2 >===================
+            if level1.tag.lower() == 'h2':
+                _h2(level1.text)
+            ## =========< H3 >===================
+            if level1.tag.lower() == 'h3':
+                _h3(level1.text)
+            ## =========< HTML >===================
+            if level1.tag.lower() == 'html':
+                _html(level1.text)
+            ## =========< HTML >===================
+            if level1.tag.lower() == 'homepage':
+                _homepage(level1.text)
+            if level1.tag.lower() in ['footer', 'header']:
+                _hf_feeder(level1)
+            ## =========< SECTION >===================
+        
+        for csv_file in csv_files:
+            with open(csv_file) as f:
+                headers_fetched = False
+                values = []
+                for line in f:
+                    if headers_fetched:
+                        val = [x for x in line.split(delimiter)]
+                        title = val.pop(0)
+                        values.append(val)
+                    else:
+                        headers = [x for x in line.split(delimiter)]
+                        headers.pop(0)
+                        headers_fetched = True
+            csv_name = os.path.splitext(os.path.basename(csv_file))[0]
+            pdf.pushTable(title, {'headers': headers, 'values': values})
+
+        # Saving outputs
+        pdf.save()
+        result['pdf_path'] = pdf_path
+        return result
+
     @set_report_path()
     def generate_report(self, period, sections, tables, items, entities, lang):
         setup_lang(lang)
