@@ -28,6 +28,7 @@ $options = array(
     "id" => "license",
     "refresh" => 3600,
     "title" => _T("Subscription info", "support"),
+    "enable" => FALSE
 );
 
 class LicensePanel extends Panel {

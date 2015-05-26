@@ -28,7 +28,7 @@ $options = array(
     "id" => "appstream",
     "refresh" => 14400,
     "title" => _("Appstream"),
-    "enable" => TRUE
+    "enable" => FALSE
 );
 
 class AppstreamPanel extends Panel {

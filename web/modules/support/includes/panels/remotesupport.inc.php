@@ -27,15 +27,16 @@ $options = array(
     "class" => "RemoteSupportPanel",
     "id" => "remotesupport",
     "refresh" => 3600,
-    "title" => _T("Remote support", "support"),
+    "title" => _T("Extract logs", "support"),
 );
 
 class RemoteSupportPanel extends Panel {
 
 	function display_content() {
 
-            get_license_info(); 
-
+	    /*
+	     * Disable reverse SSH support as reverse SSH server is shutted down
+	     *
 	    if (established())
 	    {
                 echo '<p><div style="text-align: center"><font color="green">Your server is now connected to:</font></div></p>
@@ -46,6 +47,7 @@ class RemoteSupportPanel extends Panel {
 	    else {
                 echo '<div style="text-align: center"><a class="btn btn-info btn-small" href="' . urlStrRedirect("support/support/connect") . '">' . _('Connect to support') . '</a></div>';
 	    }
+	     */
 	    if (collector_in_progress()){
                 echo '<p><div style="text-align: center"><img src="modules/msc/graph/images/status/inprogress.gif" alt=""/></div></p>';
 	    }
