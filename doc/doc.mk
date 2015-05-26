@@ -46,7 +46,7 @@ kill_lo:
 	xsltproc --nonet --output $@ $(top_srcdir)/doc/docbook-xhtml.xsl $<
 
 DocumentConverter.py:
-	wget -O $@ http://www.artofsolving.com/files/DocumentConverter.py
+	wget -O $@ https://raw.githubusercontent.com/mirkonasato/pyodconverter/master/DocumentConverter.py
 
 tar:
 	$(MAKE) distdir distdir=build
