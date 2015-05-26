@@ -61,9 +61,9 @@ def activate():
 
     DashboardManager().register_panel(Panel('appstream'))
 
-    TaskManager().addTask("pkgs.updateAppstreamPackages",
-                        (updateAppstreamPackages,),
-                        cron_expression='23 10 * * *')
+    #TaskManager().addTask("pkgs.updateAppstreamPackages",
+    #                    (updateAppstreamPackages,),
+    #                    cron_expression='23 10 * * *')
     return True
 
 class ContextMaker(ContextMakerI):

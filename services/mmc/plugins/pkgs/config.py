@@ -43,7 +43,7 @@ class PkgsConfig(PluginConfig):
     tmp_dir = os.path.join('/tmp', 'pkgs_tmp')
     
     # Appstream settings
-    appstream_url = "https://appstream.mandriva.com"
+    appstream_url = ""
 
     def readConf(self):
         """

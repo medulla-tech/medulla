@@ -48,10 +48,10 @@ def activate():
     DM.register_panel(RemoteSupportPanel("remotesupport"))
     DM.register_panel(license_panel)
 
-    TaskManager().addTask("support.get_license_info",
-                          (LicenseChecker().get_license_info,),
-                          cron_expression=config.cron_search_for_updates
-                          )
+    #TaskManager().addTask("support.get_license_info",
+    #                      (LicenseChecker().get_license_info,),
+    #                      cron_expression=config.cron_search_for_updates
+    #                      )
 
     LicenseChecker().get_license_info(True)
 

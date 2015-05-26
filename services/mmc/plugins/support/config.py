@@ -39,13 +39,13 @@ class SupportConfig(PluginConfig):
 
         self.pid_path = "/var/run/pulse2/ssh_support"
         self.ssh_path = "/usr/bin/ssh"
-        self.support_url = "rssh.mandriva.com"
+        self.support_url = ""
         self.support_user = "support"
         self.identify_file = "/etc/mmc/plugins/support/id_rsa"
         self.check_pid_delay = 2
         self.session_timeout = 7200
 
-        self.license_server_url = "https://serviceplace.mandriva.com/api/v1/support"
+        self.license_server_url = ""
         self.install_id_path = "/etc/pulse-licensing/installation_id"
         self.install_uuid = None
 
