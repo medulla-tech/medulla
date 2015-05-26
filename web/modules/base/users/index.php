@@ -36,9 +36,4 @@ $ajax->displayDivToUpdate();
 
 ?>
 
-<script type="text/javascript">
-jQuery(function(){
- var $ = jQuery;
- $('#container').addClass('user_container');
-});
-</script>
+

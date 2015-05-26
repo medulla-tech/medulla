@@ -294,12 +294,11 @@ class SubModule {
 
             if (!$selected) {
                 $css = '#navbar ul li#navbar'.$this->getName().' {
-                    width: '.$this->_imgsize.';
+                    width: '.$this->_imgsize.'px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a {
                     background: url("'.$this->_img.'.png") no-repeat transparent;
                     background-position: 50% 10px;
-
                 }
                 #navbar ul li#navbar'.$this->getName().' a:hover {
                     background: url("'.$this->_img.'_hl.png") no-repeat transparent;
@@ -310,9 +309,11 @@ class SubModule {
                     width: '.$this->_imgsize.'px;
                 }
                 #navbar ul li#navbar'.$this->getName().' a {
-                    background: url("'.$this->_img.'_select.png") no-repeat #1b1e21;
-                    color: #fff;
-                    background-position: 50% 10px;
+                    background: url("'.$this->_img.'_select.png") no-repeat white;
+                    border-left: 1px solid #B2B2B2;
+                    border-right: 1px solid #B2B2B2;
+                    color: #EE5010;
+                    background-position: 50% 8px;
                 }';
             }
 

@@ -7,7 +7,7 @@ $auditManager = new AuditCodesManager();
 if($_GET["filtertype"] == "object" or $_GET["filtertype"] == "user"){
 ?>
     
-    <span class="searchfield"><input type="text" class="searchfieldreal" style="width : 100px;" name="param" id="param" onkeyup="pushSearch(); return false;" />
+    <img src="graph/search.gif" style="vertical-align: middle;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" style="width : 100px;" name="param" id="param" onkeyup="pushSearch(); return false;" />
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
     onclick="document.getElementById('param').value =''; pushSearch(); return false;" />
     </span>

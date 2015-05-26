@@ -31,39 +31,6 @@ $root = $conf["global"]["root"];
 
 <div id="header">
 
-
-
-<!--navbar-->
-<div id="navbar">
-<?php
-if (getMMCLogo()) {
-?>
-<a href="https://www.mandriva.com/pulse2/">
-	<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
-</a>
-<?php
-}
-?>
-
-<ul>
-<?php
-
-autoGenerateNavbar(); //auto generation of navbar for new modules;
-
-if ($_SESSION["login"]=='root') {
-    $favact = "_disabled";
-} else {
-    $favact = "";
-}
-
-?>
-</ul>
-</div>
-<!--navbar-->
-
-
-
-<!--menuTopRight-->
 <div id="menuTopRight">
 
   <ul>
@@ -86,18 +53,7 @@ if (isExpertMode()) {
 
   </ul>
 </div>
-<!--menuTopRight-->
 
-
-
-
-</div>
-
-
-
-
-
-<!--path-->
 <p class="path">
 <?php
 /* Path automatic creation */
@@ -116,10 +72,24 @@ if (is_object($action)) {
 }
 ?>
 </p>
-<!--path-->
+</div>
 
+<div id="navbar">
+<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+    <ul>
+<?php
 
+autoGenerateNavbar(); //auto generation of navbar for new modules;
 
+if ($_SESSION["login"]=='root') {
+    $favact = "_disabled";
+} else {
+    $favact = "";
+}
+
+?>
+</ul>
+</div>
 
 <div id="overlay" class="overlay" style="display: none"></div>
 <div id="popup" class="popup" style="display: none;">

@@ -26,8 +26,8 @@ function getMMCLogo() {
     $logos = scandir($basedir);
     // remove . and .. entries
     $logos = array_slice($logos, 2);
-    if (!is_file($basedir . $logos[0]))
-        return false;
+    // reverse the array so that _mandriva.png is the last one
+    rsort($logos);
     return $basedir . $logos[0];
 }
 

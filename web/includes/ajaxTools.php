@@ -99,7 +99,7 @@ if (strstr($action,'?')===False) {
     <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
 
     <div id="searchSpan" class="searchbox" style="float: right;">
-    <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onKeyUp="pushSearch(); return false;">
+    <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onKeyUp="pushSearch(); return false;">
     <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
     onClick="document.getElementById('param').value =''; pushSearch(); return false;">
     </span>
