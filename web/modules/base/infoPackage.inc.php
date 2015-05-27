@@ -206,12 +206,6 @@ $page->setFile("modules/base/users/logview.php",
                    array("AJAX" =>False,"visible"=>False));
 $submod->addPage($page);
 
-if (in_array("monitoring", $_SESSION["modulesList"])) {
-    $page = new Page("discovery",_("Discovery"));
-    $page->setFile("modules/monitoring/monitoring/discovery.php");
-    $submod->addPage($page);
-}
-
 $page = new Page("ajaxLogFilter");
 $page->setFile("modules/base/audit/ajaxLogFilter.php",
 	               array("AJAX" =>True,"visible"=>False));
@@ -226,12 +220,6 @@ $page = new Page("backup",_("Backup user files"));
 $page->setFile("modules/base/users/backup.php",
                array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
-
-if (in_array("monitoring", $_SESSION["modulesList"])) {
-    $page = new Page("discovery",_("Discovery"));
-    $page->setFile("modules/monitoring/monitoring/discovery.php");
-    $submod->addPage($page);
-}
 
 $page = new Page("resetpasswd",_("Reset user password"));
 $page->setImg("modules/base/graph/access/img/icn_global_active.gif",
@@ -318,12 +306,6 @@ if (hasComputerManagerWorking()) {
     $page->setFile("modules/base/computers/ajaxComputersList.php");
     $page->setOptions(array("visible"=>False, "AJAX" =>True));
     $submod->addPage($page);
-
-    if (in_array("monitoring", $_SESSION["modulesList"])) {
-        $page = new Page("discovery",_("Discovery"));
-        $page->setFile("modules/monitoring/monitoring/discovery.php");
-        $submod->addPage($page);
-    }
 
     if (in_array("inventory", $_SESSION["modulesList"])) {
         $page = new Page("entityList", _T('Entities', 'inventory'));
