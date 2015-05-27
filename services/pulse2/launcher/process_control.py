@@ -40,6 +40,15 @@ from pulse2.utils import Singleton, HasSufficientMemory
 from pulse2.launcher.config import LauncherConfig
 from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
+def _checkEnvArgs(env_={}):
+    """
+    If ssh args found on env and its a list join it
+    """
+    if 'SSHARGS' in env_ and isinstance(env_['SSHARGS'], list):
+        env_['SSHARGS'] = ' '.join(env_['SSHARGS'])
+
+    return env_
+
 @HasSufficientMemory(80)
 def commandRunner(cmd, cbCommandEnd, env_={}):
     """
@@ -47,19 +56,14 @@ def commandRunner(cmd, cbCommandEnd, env_={}):
     Only used in sync mode.
     """
     process = commandProtocol(cmd)
+
+    env_ = _checkEnvArgs(env_=env_)
     # FIXME: codec should be taken from conf file
     try:
         process.handler = twisted.internet.reactor.spawnProcess(
             process,
             cmd[0],
-            map(lambda(x): x.encode('utf-8', 'ignore'), cmd),
-            env_, # env
-            None, # path
-            None, # uid
-            None, # gid
-            None, # usePTY
-            { 0: "w", 1: 'r', 2: 'r' } # FDs: not closing STDIN (might be used)
-        )
+            map(lambda(x): x.encode('utf-8', 'ignore'), cmd), env=env_, childFDs={ 1: 'r', 2: 'r' })
     except OSError, e:
         logging.getLogger().error('launcher %s: failed daemonization in commandRunner: %d (%s)' % (LauncherConfig().name, e.errno, e.strerror))
         return False
@@ -83,9 +87,7 @@ def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_t
     process = commandProtocol(cmd)
     process.id = id
 
-    # If ssh args found on env and its a list join it
-    if 'SSHARGS' in env_ and isinstance(env_['SSHARGS'], list):
-        env_['SSHARGS'] = ' '.join(env_['SSHARGS'])
+    env_ = _checkEnvArgs(env_=env_)
 
     # FIXME: codec should be taken from conf file
     try:
