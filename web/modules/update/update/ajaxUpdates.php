@@ -22,11 +22,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 require_once("modules/update/includes/xmlrpc.inc.php");
 require_once("modules/update/includes/utils.inc.php");
 
 echo "<br/><br/>";
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -35,35 +35,21 @@ if (isset($_GET["start"]))
 else
     $start = 0;
 
+
 $params = array(
     'min' => $start,
     'max' => $start + $maxperpage,
     'filters' => array()
 );
+
 if (isset($_GET["status"]))
     $params['filters']['status'] = $_GET["status"];
 
 if (isset($_GET["os_class_id"]))
     $params['filters']['os_class_id'] = $_GET["os_class_id"];
 
-if (isset($_GET["gid"])) {
-    $params['gid'] = $_GET["gid"];
-    print ("<div id=\"gid\" style=\"display:none;\">".$params['gid']."</div>");
-}
-if (isset($_GET["uuids"]))
-    $params['uuids'] = $_GET["uuids"];
-
-if (isset($_GET["filter"]) && $_GET["filter"]) {
-   $params['like_filters']['title'] = $_GET["filter"];
-   // to get all elements
-   unset($params['max']);
-}
-
-if (isset($_GET["hide_installed_update"])) {
-    $params['hide_installed_update'] = true;
-} else {
-    $params['hide_installed_update'] = false;
-}
+if (isset($_GET["filter"]) && $_GET["filter"])
+    $params['like_filters']['title'] = $_GET["filter"];
 
 extract(get_updates($params));
 
@@ -71,20 +57,13 @@ if (!$count) {
     print _T('No entry found', 'update');
     return;
 }
-//to disable pagination
-if (isset($_GET["filter"]) && $_GET["filter"]) {
-   $maxperpage=$count;
-   $_REQUEST['maxperpage']=$count;
-}
+
 //  Listinfo params
 $listinfoParams = array();
+
 $checkboxes = array();
 foreach ($data as $row) {
-    if (isset($_GET["gid"])) {
-        $listinfoParams[] = array('id' => $row['id'],'gid' => $_GET["gid"]);
-    } else {
-        $listinfoParams[] = array('id' => $row['id']);
-    }
+    $listinfoParams[] = array('id' => $row['id']);
     $checkboxes[] = '<input type="checkbox" name="selected_updates[]" value="' . $row['id'] . '">';
 }
 
@@ -99,34 +78,23 @@ $cols['targets'] = array();
 for ($i = 0; $i < count($cols['total_targets']); $i++){
     $cols['targets'][] = $cols['total_installed'][$i] . ' / ' . $cols['total_targets'][$i];
 }
-for ($i = 0; $i < count($cols['info_url']); $i++){
-    $cols['title_url'][$i]='<a href="'.$cols['info_url'][$i];
-    $cols['title_url'][$i].='" title="'.$cols['description'][$i].'">';
-    $cols['title_url'][$i].=$cols['title'][$i].'</a>';
-}
+
 // Printing selected updates form
 print '<form id="sel_updates_form">';
 
 $n = new OptimizedListInfos($checkboxes, $check_all, '', '10px');
 $n->first_elt_padding = '0';
-$n->addExtraInfo($cols['title_url'], _T("Update title", "update"));
+$n->addExtraInfo($cols['title'], _T("Update title", "update"));
+$n->addExtraInfo($cols['uuid'], _T("UUID", "update"));
 $n->addExtraInfo($cols['type_str'], _T("Type", "update"));
 $n->addExtraInfo($cols['targets'], _T("Installed count", "update"));
-#Disable only for global view and status=enable
-if ( isset($_GET["gid"]) or  $_GET["status"] != 1 ) {
+
 $n->addActionItem(new ActionPopupItem(_T("Enable", "update"), "enableUpdate", "enable", "id", "update", "update"));
-}
-#Disable only for global view and status=disable
-if ( isset($_GET["gid"]) or  $_GET["status"] != 2 ) {
 $n->addActionItem(new ActionPopupItem(_T("Disable", "update"), "disableUpdate", "disable", "id", "update", "update"));
-}
-if (isset($_GET['gid'])){
-    print ('<input type="hidden" name="gid" value="'.$_GET['gid'].'"/>');
-}
+
 $n->setParamInfo($listinfoParams);
 $n->setItemCount($count);
-
-$n->setNavBar(new AjaxNavBar($count, $status,"updateSearchParam",$maxperpage));
+$n->setNavBar(new AjaxNavBar($count, $status));
 $n->start = 0;
 $n->end = $maxperpage;
 $n->disableFirstColumnActionLink();
@@ -135,23 +103,26 @@ $n->display();
 
 // End selected updates form
 print '</form>';
+
 ?>
 <input id="btnEnableUpdates" type="button" value="<?php print _T('Enable selected updates', 'update'); ?>" class="btnPrimary">
 <input id="btnDisableUpdates" type="button" value="<?php print _T('Disable selected updates', 'update'); ?>" class="btnPrimary">
+
 <script type="text/javascript">
+
 // Enable Updates button
 jQuery('#btnEnableUpdates').click(function(){
+
     jQuery.ajax({
-        url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
-        type: 'POST',
-        data: jQuery('#sel_updates_form').serialize(),
-        success: function(result){
-            pushSearch();
-        }
+	url: '<?php print urlStrRedirect("update/update/enableUpdate"); ?>',
+	type: 'POST',
+	data: jQuery('#sel_updates_form').serialize(),
+	success: function(result){
+	    pushSearch();
+	}
     });
 
 });
-
 
 // Disable Updates button
 jQuery('#btnDisableUpdates').click(function(){
@@ -169,7 +140,7 @@ jQuery('#btnDisableUpdates').click(function(){
 
 // Check all checkbox
 jQuery('#check_all').click(function(){
-    jQuery(this).parents('table:first').find('input[type=checkbox]').prop('checked', jQuery(this).is(':checked'));
+    jQuery(this).parents('table:first').find('input[type=checkbox]').prop('checked', jQuery(this).is(':checked')); 
 });
 
 

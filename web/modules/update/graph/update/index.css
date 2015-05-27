@@ -1,7 +1,7 @@
 li.enable a {
         padding: 0px 0px 5px 16px;
         margin: 0 0px 0 0px;
-        background-image: url("/mmc/img/common/icn_yes.gif");
+        background-image: url("img/common/icn_yes.gif");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 16px;
@@ -12,7 +12,7 @@ li.enable a {
 li.disable a {
         padding: 0px 0px 5px 16px;
         margin: 0 0px 0 0px;
-        background-image: url("/mmc/graph/croix.gif");
+        background-image: url("graph/croix.gif");
         background-repeat: no-repeat;
         background-position: left top;
         line-height: 16px;

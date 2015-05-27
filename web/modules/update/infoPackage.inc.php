@@ -74,6 +74,8 @@ $page = new Page("viewProductUpdates", _T("Product Updates list", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+
+
 $page = new Page("ajaxInstallProductUpdates", _T("Product Updates installation (ajax)", "update"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
@@ -81,17 +83,4 @@ $submod->addPage($page);
 $mod->addSubmod($submod);
 
 $MMCApp->addModule($mod);
-
-/* Add update for Group pages */
-$base = &$MMCApp->getModule('base');
-$submod = & $base->getSubmod('computers');
-$page = new Page("view_updates", _T("Updates", "update"));
-$page->setFile("modules/update/update/viewGroupUpdates.php");
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
-
-$page = new Page("createUpdateStaticGroup", _T("Updates", "update"));
-$page->setFile("modules/update/update/createUpdateStaticGroup.php");
-$page->setOptions(array("visible"=>False));
-$submod->addPage($page);
 ?>

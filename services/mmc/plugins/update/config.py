@@ -25,7 +25,6 @@ from mmc.database.config import DatabaseConfig
 
 
 class updateConfig(PluginConfig, DatabaseConfig):
-
     def __init__(self, name='update', conffile=None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
@@ -35,25 +34,11 @@ class updateConfig(PluginConfig, DatabaseConfig):
     def readConf(self):
         PluginConfig.readConf(self)
         DatabaseConfig.setup(self, self.conffile)
-        #update_command
         try:
-            self.update_commands_cron = self.get(
-                'main', 'update_commands_cron')
+            self.update_commands_cron = self.get('main', 'update_commands_cron')
         except (NoOptionError, NoSectionError):
             self.update_commands_cron = '10 12 * * *'
         try:
-            self.enable_update_commands = int(
-                self.get('main', 'enable_update_commands'))
+            self.enable_update_commands = int(self.get('main', 'enable_update_commands'))
         except:
             self.enable_update_commands = 1
-        #add_update_description
-        try:
-            self.add_update_description_cron = self.get(
-                'main', 'add_update_description_cron')
-        except (NoOptionError, NoSectionError):
-            self.add_update_description_cron = '0 */1 * * *'
-        try:
-            self.enable_update_description = int(
-                self.get('main', 'enable_update_description'))
-        except:
-            self.enable_update_description = 1

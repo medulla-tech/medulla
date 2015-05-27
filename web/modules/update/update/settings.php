@@ -43,7 +43,8 @@ if (isset($_POST['bconfirm'])){
 // Create update commands
 if (isset($_GET['create_update_commands'])){
     create_update_commands();
-    new NotifyWidgetSuccess(sprintf(_T("The update deployments scheduled successfully.", "update")));
+    header("Location: " . urlStrRedirect("update/update/settings"));
+    return;
 }
 
 // ============================================================
@@ -52,11 +53,10 @@ if (isset($_GET['create_update_commands'])){
 include dirname(__FILE__) . '/sidebar.php';
 
 
-if (! ($_GET['module'] == 'base' && $_GET['submod'] == 'computers')) {
-    $p = new PageGenerator(_T("Update settings", 'update'));
-    $p->setSideMenu($sidemenu);
-    $p->display();
-}
+
+$p = new PageGenerator(_T("Update settings", 'update'));
+$p->setSideMenu($sidemenu);
+$p->display();
 
 print '<h2><br/>' . _T('Enable update managment for:', 'update') . '</h2>';
 

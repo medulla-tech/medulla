@@ -32,22 +32,16 @@ $MMCApp = & MMCApp::getInstance();
 
 include dirname(__FILE__) . '/sidebar.php';
 
-# if on base/computer module , dont create a new page (for group view)
-if (! ($_GET['module'] == 'base' && $_GET['submod'] == 'computers')) {
-    $p = new PageGenerator(_T("Update manager", 'update'));
-    $p->setSideMenu($sidemenu);
-    $p->display();
-}
+$p = new PageGenerator(_T("Update manager", 'update'));
+$p->setSideMenu($sidemenu);
+$p->display();
 $params = array();
 
 if (isset($_GET["os_class_id"]))
     $params['os_class_id'] = $_GET["os_class_id"];
 
-if (isset($_GET['gid']))
-    $params['gid'] = $_GET["gid"];
-
 $ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
-$ajax->addCheckbox(new Checkbox("hide_installed_update",_T("Hide installed update","update")));
+
 $ajax->setElements(array(
                          _T('Available', 'update'),
                          _T('Enabled', 'update'),
