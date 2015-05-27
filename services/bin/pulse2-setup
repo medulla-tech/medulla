@@ -451,7 +451,7 @@ class Pulse2ConfigFile(object):
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 'CMConfig',
-                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsReportConfig', 'PluginsUpdateConfig', 'PluginsMonitoringConfig']
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsReportConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -688,10 +688,6 @@ class UUIDResolverConfig(Pulse2ConfigFile):
     path = 'pulse2/uuid-resolver/uuid-resolver.ini'
 
 
-class PluginsMonitoringConfig(Pulse2ConfigFile):
-    path = 'plugins/monitoring.ini'
-
-
 class SetupApp(object):
     defaults = {}
     confs = {}
@@ -716,7 +712,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update', 'monitoring']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -828,13 +824,6 @@ class SetupApp(object):
         self.defaults['ipexternal'] = self.options["ipexternal"] or self.find_ip()
         self.defaults['backuppc_ip'] = self.options["backuppc_ip"] or '127.0.0.1'
         self.defaults['backuppc_entity'] = self.options["backuppc_entity"] or 'UUID1'
-        address = self.defaults['ipexternal']
-        netmask = self.net_mask_ip(address)
-        self.defaults['monitoring_url'] = self.options["monitoring_url"] or "http://"+address+"/zabbix"
-        self.defaults['monitoring_username'] = self.options["monitoring_username"] or 'Admin'
-        self.defaults['monitoring_password'] = self.options["monitoring_password"] or 'zabbix'
-        cidr = netaddr.IPNetwork('%s/%s' % (address, netmask)).cidr
-        self.defaults['monitoring_nmap_network'] = self.options["monitoring_nmap_network"] or str(cidr)
 
     def read_config(self):
         """ Read some global config values
@@ -849,16 +838,6 @@ class SetupApp(object):
                                                          self.defaults['ipexternal'])
         self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
         self.config['backuppc_entity'] = self.read_opt('BackupPC Entity', self.defaults['backuppc_entity'])
-        self.config['monitoring_url'] = self.read_opt('Zabbix uri', self.defaults['monitoring_url'])
-        self.config['monitoring_username'] = self.read_opt('Zabbix admin', self.defaults['monitoring_username'])
-        # Generate a password for zabbix root if zabbix on localhost
-        address = self.config['server.ip.external']
-        netmask = self.net_mask_ip(address)
-        if self.config['monitoring_url'] == "http://"+address+"/zabbix":
-            self.defaults['monitoring_password'] = gen_passwd()
-        self.config['monitoring_password'] = self.read_passwd('Zabbix password', self.defaults['monitoring_password'])
-        self.config['monitoring_nmap_network'] = self.read_ip('NMAP network to discover',
-                                                              self.defaults['monitoring_nmap_network'])
 
     def init_ldap(self):
         invalids = ['ldapurl', 'ldapbasedn', 'ldapadmindn', 'ldappasswd']
@@ -988,7 +967,6 @@ class SetupApp(object):
                     log.info("Removing computer %s data..." % comp_uuid)
                     shutil.rmtree(comp_dir)
 
-        env = os.environ
         for module in self.dbmodules:
             log.info("Update database schema for module %s" % module)
             db_control = DBControl(user=self.config['dbadminuser'],
@@ -1034,7 +1012,7 @@ class SetupApp(object):
 
             # Grant rights in DB
             try:
-                dbs = self.dbmodules + ['zabbix']
+                dbs = self.dbmodules
                 for module in dbs:
                     log.info('Grant rights on db %s' % module)
                     # Put db name without sqlalchemy quoting: it was surrounded by `''
@@ -1046,12 +1024,6 @@ class SetupApp(object):
                     sys.exit(2)
                 else:
                     raise e
-
-        # Change zabbix root password if localhost
-        address = self.config['server.ip.external']
-        if self.defaults['monitoring_url'] == "http://"+address+"/zabbix":
-            passwd = hashlib.md5(self.defaults['monitoring_password']).hexdigest()
-            conn.execute('USE zabbix; UPDATE `users` SET `passwd`="%s",`autologout`="900" WHERE `userid`="1";' % passwd)
 
         conn.execute('FLUSH PRIVILEGES')
         conn.close()
@@ -1118,11 +1090,6 @@ class SetupApp(object):
         self.confs['plugins/backuppc.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/backuppc.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
-
-	#monitoring
-        self.confs['plugins/monitoring.ini'].set('database', 'dbhost', self.config['dbhost'])
-        self.confs['plugins/monitoring.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/monitoring.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
     def init_glpi(self):
         """GLPI coupling"""
@@ -1206,12 +1173,6 @@ class SetupApp(object):
 
         #Enable BackupPC module
         self.confs['plugins/backuppc.ini'].set('main', 'disable', 0)
-
-        # Change monitoring webservices variables
-        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_url', self.config['monitoring_url'])
-        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_username', self.config['monitoring_username'])
-        self.confs['plugins/monitoring.ini'].set('webservices', 'monitoring_password', self.config['monitoring_password'])
-        self.confs['plugins/monitoring.ini'].set('data', 'nmap_network', self.config['monitoring_nmap_network'])
 
         # Ensure various dirs are created
         for path in [self.confs['plugins/base.ini'].get('backup-tools', 'destpath'),
@@ -1415,14 +1376,6 @@ if __name__ == '__main__':
                       help="BackupPC IP, you can specify port. Per example: 127.0.0.1:81")
     parser.add_option("--backuppc-entity", dest="backuppc_entity",
                       help="Entity who will be linked to BackupPC (default: UUID1)")
-    parser.add_option("--zabbix-uri", dest="monitoring_url",
-                      help="Zabbix API uri. Per example: http://192.168.1.1/zabbix/")
-    parser.add_option("--zabbix-user", dest="monitoring_username",
-                      help="Zabbix admin username")
-    parser.add_option("--zabbix-password", dest="monitoring_password",
-                      help="Zabbix admin password")
-    parser.add_option("--zabbix-nmap-network", dest="monitoring_nmap_network",
-                      help="Network discovery network")
 
     # Parse and analyse args
     (options, args) = parser.parse_args()
@@ -1464,10 +1417,6 @@ if __name__ == '__main__':
         'ipexternal': options.ipexternal,
         'backuppc_ip': options.backuppc_ip,
         'backuppc_entity': options.backuppc_entity,
-        'monitoring_url': options.monitoring_url,
-        'monitoring_username': options.monitoring_username,
-        'monitoring_password': options.monitoring_password,
-        'monitoring_nmap_network': options.monitoring_nmap_network,
     }
 
     # Run the setup app

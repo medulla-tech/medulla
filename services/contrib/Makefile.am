@@ -168,33 +168,4 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	monit/pulse2 \
 	test-xmlrpc.php \
 	test-xmlrpc.examples \
-	test-xmlrpc.py \
-	monitoring/sql/schema-001.sql \
-	monitoring/zabbix-templates/README \
-	monitoring/zabbix-templates/zabbix_api.py \
-	monitoring/zabbix-templates/zabbix_configuration.py \
-        monitoring/zabbix-templates/templates/homemade/template_http.xml \
-        monitoring/zabbix-templates/templates/homemade/template_icmp.xml \
-        monitoring/zabbix-templates/templates/homemade/template_ldap.xml \
-        monitoring/zabbix-templates/templates/homemade/template_ssh.xml \
-        monitoring/zabbix-templates/templates/homemade/template_pop3.xml \
-        monitoring/zabbix-templates/templates/homemade/template_https.xml \
-        monitoring/zabbix-templates/templates/homemade/template_imap.xml \
-        monitoring/zabbix-templates/templates/homemade/template_smtp.xml \
-        monitoring/zabbix-templates/templates/contrib/Zbx_exchange_template.xml \
-        monitoring/zabbix-templates/templates/contrib/File-Template_Exchange_Client_Access_Server.xml \
-        monitoring/zabbix-templates/templates/contrib/File-Template_Exchange_Mailbox_Servers.xml \
-        monitoring/zabbix-templates/templates/contrib/File-Template_Exchange_Common_Servers_Performance_Monitoring.xml \
-        monitoring/zabbix-templates/templates/contrib/Template_Windows_2008_R2_DNS_Server_Performance_Monitoring.xml \
-        monitoring/zabbix-templates/templates/contrib/app_mysql.xml \
-        monitoring/zabbix-templates/templates/contrib/barco_zabbix_export.xml \
-        monitoring/zabbix-templates/templates/contrib/Template_Windows_2008_R2_Domain_Controller_Performance_Monitor.xml \
-        monitoring/zabbix-templates/templates/contrib/File-Template_Exchange_Mailbox_Servers_Performance_Monitoring.xml \
-        monitoring/zabbix-templates/templates/contrib/File-Template_Exchange_Common_Servers.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Zbx_citrix_template.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Template_Windows_2008_R2_Server_Performance_Monitoring.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Template_Windows_2008_R2_DNS_Server.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Template_Windows_2008_R2_IIS_Servers.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Template_Windows_2008_R2_Server.xml \
-        monitoring/zabbix-templates/templates/contrib/failed/Template_Windows_2008_R2_Domain_Controller.xml \
-        monitoring/zabbix-templates/templates/app_mysql.xml
+	test-xmlrpc.py
