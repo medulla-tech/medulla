@@ -1254,7 +1254,10 @@ class Inventory(DyngroupDatabaseHelper):
                 # Build the dictionary using the partTable column names as keys
                 tmp = {}
                 for col in partTable.columns:
-                    tmp[col.name] = eval("res[0]." + col.name)
+                    tmp_value = eval("res[0]." + col.name)
+                    if isinstance(tmp_value, unicode):
+                        tmp_value = tmp_value.encode('utf-8')
+                    tmp[col.name] = tmp_value
                 # Build a time tuple for the appearance timestamp
                 d = res[4]
                 if type(res[4]) == str:
