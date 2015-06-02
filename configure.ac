@@ -28,7 +28,7 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
 AC_CANONICAL_TARGET
 
-AM_INIT_AUTOMAKE([1.9 tar-ustar -Wno-portability])
+AM_INIT_AUTOMAKE([1.9 tar-ustar -Wno-portability foreign])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES(yes)])
 AC_CONFIG_MACRO_DIR([m4])
 

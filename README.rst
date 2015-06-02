@@ -1,4 +1,5 @@
-#Pulse2
+Pulse2
+======
 
 Pulse 2 helps organizations ranging from a few computers to 100 000+
 heterogeneous computers to inventory, maintain, update and take full
@@ -7,7 +8,8 @@ computers spread on many sites.  It supports heterogeneous platforms
 such as MS Windows, GNU/Linux (Mandriva, Redhat, Debian, Ubuntu.,
 etc.), Mac OSX, HP-UX, IBM AIX and Solaris systems.
 
-####Configuration
+Configuration
+~~~~~~~~~~~~~
 
 Pulse2 is designed in a very distributed way, involving several agents
 running together on the same machine or not. Each agent having its own 
@@ -44,7 +46,8 @@ The following options can be used:
 `--confdir=DIR`
    Path to configuration directory. Default to /etc/mmc
 
-####Pulse2 clients
+Pulse2 clients
+~~~~~~~~~~~~~~
 
 * Win32:
   A complete win32 client agent pack can be built with the script 
