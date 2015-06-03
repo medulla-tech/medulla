@@ -43,12 +43,17 @@ vnc_file=pulse2-rda-agent-${vnc_ver}.msi
 inv_file=inventory-agent-${inv_ver}.exe
 sfx_file=7zsd.sfx
 
+# Main win32 download folder
+# https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AAB6x1z2466gMSHdqdj4aKT_a/win32
+
+# Main mac download folder
+# https://www.dropbox.com/sh/qdrpsttj8tqsn2q/AAC4AN0h_TKtfkRocQawQQMHa
+
 # Compute downloads url
-base_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32
-ssh_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-secure-agent/${ssh_file}
-vnc_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
-inv_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
-sfx_url=http://pulse2.mandriva.org/pub/pulse2/client/windows/win32/${sfx_file}
+ssh_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AAAf_GsqCWFweOSSgnT0lGY-a/win32/pulse2-secure-agent/${ssh_file}
+vnc_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AAC2EwQKH2DWv6cl6wq9z7aXa/win32/pulse2-rda-agent/${vnc_file}
+inv_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AADiKKkV5FWgTZNS56h_2RFra/win32/inventory-agent/${inv_file}
+sfx_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AADRiFpDVy4QLgOVTvW_7nqOa/win32/${sfx_file}
 msi_webservice_url=http://msi-agents.mandriva.com/
 
 # Command line options handling

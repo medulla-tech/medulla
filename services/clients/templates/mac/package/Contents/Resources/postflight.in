@@ -46,7 +46,7 @@ inv_server_tag=$(sed '2q;d' ${inv_file})
 
 fusion_version="2.2.7-3"
 fusion_archive=fusioninventory-agent_macosx-intel_${fusion_version}.pkg.tar.gz
-fusion_url=http://pulse2.mandriva.org/pub/pulse2/client/mac/inventory-agent/${fusion_archive}
+fusion_url=https://www.dropbox.com/sh/qdrpsttj8tqsn2q/AAC141YHO3YS1Quvobv9Bq_Ga/inventory-agent/${fusion_archive}
 fusion_pkg="FusionInventory-Agent.pkg"
 fusion_cfg=/opt/fusioninventory-agent/agent.cfg
 ssh_pub_key="${PREFIX}/id_rsa.pub"
