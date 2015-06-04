@@ -54,3 +54,8 @@ Pulse2 clients
   /var/lib/pulse2/clients/win32/generate-agent-pack.sh
 
   It takes as only argument path to the ssh public key to include into the pack.
+
+Pulse2 misc documentation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For some documentations, scripts, how-to and more, `click here <https://www.dropbox.com/sh/wgn4yckax8083tg/AACb7sfP2jnft8prhSrafumNa>`_.
