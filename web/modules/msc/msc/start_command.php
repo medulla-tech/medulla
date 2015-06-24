@@ -83,7 +83,7 @@ $params["maxbw"] = web_def_maxbw();
 $params["deployment_intervals"] = web_def_deployment_intervals();
 
 $prefix = '';
-if (strlen($_POST["gid"])) {
+if (isset($_POST["gid"]) && strlen($_POST["gid"])) {
     $prefix = 'group';
 }
 
