@@ -31,7 +31,7 @@ $pid = $_GET["pid"];
 $p_api = new ServerAPI();
 $p_api->fromURI($_GET["papi"]);
 $details = getPackageDetails($p_api, $_GET["pid"]);
-$name = $details['name'];
+$name = $details['label'];
 
 $a_param = array(_T("Label", 'msc'), _T("Version", 'msc'), _T('Command', 'msc'));
 $a_value = array($details['label'], $details['version'], $details['command']['command']);
