@@ -518,6 +518,17 @@ class Inventory(DyngroupDatabaseHelper):
                     for inv in row[1]:
                         computers[uuid][1][inv["Path"]] = inv["Value"]
             # Build the result
+            ret1={}
+            result = self.getMachinesOnly(ctx, filt)
+            for m in result: # glpi mapping
+                if m.uuid() in uuids:
+                    attributcomputer =  m.toDN(ctx)[1]
+                    keycomputer =attributcomputer.keys()
+                    for ky in keycomputer:
+                        computers[m.uuid()][1][ky] = attributcomputer[ky]            
+            
+            
+            
             ret = []
             for uuid in uuids:
                 ret.append(computers[uuid])
@@ -2158,7 +2169,7 @@ class Inventory(DyngroupDatabaseHelper):
             #self.logger.debug('add %s' % (ref1))
         ref['count'] = nb_ligne + nblignerule
         numreglemodifier = int(ruleobj['numRuleadd'])
-        if numreglemodifier > nb_regle :       
+        if numreglemodifier > nb_regle :
             ref['nb_regle']=int(ref['nb_regle'])+1
         self.rewritte_file_rule_obj(ref)
         return True
