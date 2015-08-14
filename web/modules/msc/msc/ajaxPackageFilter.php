@@ -45,7 +45,7 @@ if ($_GET['uuid']) {
     $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
 }
 $label->display();
-
+echo "<br><br>";
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
     $return = 0;
     if ($associateinventory) {
