@@ -96,6 +96,21 @@ function fetchIniFile() {
         }
     }
 
+    /* indice de durete du mot de passe */
+    if (!isset($conf["global"]["weakPassword"])) {
+        $conf["global"]["weakPassword"] = 40;
+    }
+    else{
+       if($conf["global"]["weakPassword"]< 15) $conf["global"]["weakPassword"] = 15;
+    }
+    if (!isset($conf["global"]["minsizepassword"]))
+    {
+        $conf["global"]["minsizepassword"] = 6;
+    }
+    else{
+       if($conf["global"]["minsizepassword"]< 5)$conf["global"]["minsizepassword"] = 5;
+    }
+
     /* Put the quantities proposed in the selector for the maxperpage value in
        an array */
     if (isset($conf["global"]["pagination"])) {

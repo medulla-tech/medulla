@@ -68,6 +68,7 @@ function _base_completeUserEntry(&$entry) {
 function _base_verifInfo($FH, $mode) {
 
     global $error;
+    global $conf;
 
     $base_errors = "";
     $uid = $FH->getPostValue("uid");
@@ -77,7 +78,7 @@ function _base_verifInfo($FH, $mode) {
     $primary = $FH->getPostValue("primary");
     $firstname = $FH->getPostValue("givenName");
     $lastname = $FH->getPostValue("sn");
-
+    $durete= $FH->testpassword($pass);
     if (!preg_match("/^[a-zA-Z0-9][A-Za-z0-9_.-]*$/", $uid)) {
         $base_errors .= _("User's name invalid !")."<br/>";
         setFormError("uid");
@@ -92,6 +93,21 @@ function _base_verifInfo($FH, $mode) {
         $base_errors .= _("Password is empty.")."<br/>";
         setFormError("pass");
     }
+    else if( strlen($pass)< intval($conf["global"]["minsizepassword"])  ){
+       $base_errors .= _("Minimum")." ".$conf["global"]["minsizepassword"]." "._("characters for the password")."<br/>";
+       setFormError("pass");
+    }
+    else if($FH->testpassword($pass)< intval($conf["global"]["weakPassword"])){
+      if($durete < 5 ) $msgval=_("very weak");
+      else
+      if($durete < 15 ) $msgval=_("weak");
+      else
+      if($durete < 40 ) $msgval=_("medium");
+      else
+      $msgval=_("good");
+      $base_errors .= _("Password"). " : ". $msgval. "<br/>";
+      setFormError("pass");
+    }
 
     if ($mode == "add" && $lastname == '') {
         $base_errors .= _("Last name is empty.")."<br/>";
@@ -101,8 +117,6 @@ function _base_verifInfo($FH, $mode) {
         $base_errors .= _("First name is empty.")."<br/>";
         setFormError("givenName");
     }
-
-
 
     if ($pass != $confpass) {
         $base_errors .= _("The confirmation password does not match the new password.")." <br/>";

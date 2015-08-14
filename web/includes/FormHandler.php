@@ -112,6 +112,78 @@ class FormHandler {
             return false;
     }
 
+/**
+ * \brief       Calcule la dureté d'un mot de passe
+ * \details     pour chaque caractere on attribut une valeur
+ *                 1 point minuscule
+ *                 2 points Majuscule
+ *                 3 points chiffre
+ *                 5 points autres caracteres
+ *               add un bonus pour chaque ensemble utilise
+ *               on Calcul du coefficient points/longueur
+ *               on Calcul du coefficient de la diversité des types de caractères...
+ *               on Multiplication le coefficient de diversité avec la longueur de la chaine
+ 
+ * \param     $mdp  le mot de passe passé en paramètre
+ * \return    Un \e Entier :  indice de durete du mot de passe
+ */
+    function testpassword($mdp)     {
+        // On récupère la longueur du mot de passe
+        $longueur = strlen($mdp);
+        $point=0;$point_min=0;$point_maj=0;$point_caracteres=0;$point_chiffre=0;
+        $testdiversification=1;
+        $testdiversificationautre=0;
+        $testdiversificationmin=0;
+        $testdiversificationmaj=0;
+        $testdiversificationchif=0;
+        // On fait une boucle pour lire chaque lettre
+        for($i = 0; $i < $longueur; $i++)       {
+            // On sélectionne une à une chaque lettre
+            // $i étant à 0 lors du premier passage de la boucle
+            $lettre = $mdp[$i];
+            if ($lettre>='a' && $lettre<='z'){
+                    // On ajoute 1 point pour une minuscule
+                    $point = $point + 1;
+                    // On rajoute le bonus pour une minuscule
+                    $point_min = 1;
+                    $testdiversificationmin=1;
+            }
+            else if ($lettre>='A' && $lettre <='Z'){
+                    // On ajoute 2 points pour une majuscule
+                    $point = $point + 2;
+                    // On rajoute le bonus pour une majuscule
+                    $point_maj = 2;
+                    $testdiversificationmaj=1;
+            }
+            else if ($lettre>='0' && $lettre<='9'){
+                    // On ajoute 3 points pour un chiffre
+                    $point = $point + 3;
+                    // On rajoute le bonus pour un chiffre
+                    $point_chiffre = 3;
+                    $testdiversificationchif=1;
+            }
+            else {
+                    // On ajoute 5 points pour un caractère autre
+                    $point = $point + 5;
+                    // On rajoute le bonus pour un caractère autre
+                    $point_caracteres = 5;
+                    $testdiversificationautre=1;
+            }
+        }
+        // Calcul du coefficient points/longueur
+        $etape1 = $point / $longueur;
+        // Calcul du coefficient de la diversité des types de caractères...
+        $etape2 = $point_min + $point_maj + $point_chiffre + $point_caracteres;
+        // Multiplication du coefficient de diversité avec celui de la longueur
+        $resultat = $etape1 * $etape2;
+        // Multiplication du résultat par la longueur de la chaîne
+        $final = $resultat * $longueur;
+        $test = 5-($testdiversificationautre + $testdiversificationchif + $testdiversificationmaj + $testdiversificationmin) ;
+        if($test != 1 ) $test=$test*2;
+        $final = $final/$test;
+        return intval($final);
+    }
+
     /* Get all updated values */
     function getValues() {
         return $this->data;
