@@ -1817,6 +1817,44 @@ class Inventory(DyngroupDatabaseHelper):
         #clear entitie of deleted user
         if fkuser != -1:
             self.delUserEntitiesbyfkUser(fkuser)
+            
+    def updateNameWithHardwareHost(self, uuid, name):
+        """
+        name machine est synchronisée avec le host du hardware
+        """
+        session = create_session()
+        query = session.query(Machine)
+        query = query.select_from(self.machine
+                    .join(self.table['hasHardware'], self.machine.c.id == self.table['hasHardware'].c.machine)
+                    .join(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)
+                )
+        query = query.filter( 
+                and_(
+                    self.machine.c.id == fromUUID(uuid),
+                    self.inventory.c.Last == 1,
+                )
+            )
+        ret = query.all()
+        session1 = create_session()
+        query1 = session1.query(Hardware)
+        query1 = query1.select_from(self.hardware
+                    .join(self.table['hasHardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                    .join(self.machine, self.machine.c.id == self.table['hasHardware'].c.machine)
+                    .join(self.table['Inventory'], self.table['Inventory'].c.id == self.table['hasHardware'].c.inventory)                 
+                )
+        query1 = query1.filter( 
+                and_(
+                    self.machine.c.id == fromUUID(uuid),
+                    self.inventory.c.Last == 1,
+                )
+            )
+        ret1 = query1.all()
+        session1.close()
+        if ret1[0].Host != ret[0].Name :
+            ret[0].Name=ret1[0].Host
+            session.flush()
+        session.close()
 
     def deleteEntities(self, id, Label, parentId):
         session = create_session()
