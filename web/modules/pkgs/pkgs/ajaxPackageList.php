@@ -72,6 +72,7 @@ foreach ($packages as $p) {
         $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
     }
 }
+echo "<br>";
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
 }
