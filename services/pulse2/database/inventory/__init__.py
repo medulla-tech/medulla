@@ -269,9 +269,13 @@ class Inventory(DyngroupDatabaseHelper):
             if set(['macAddress','ipHostNumber','subnetMask']) & requested_cols:
                 join_query = join_query.outerjoin(self.table['hasNetwork'], self.table['hasNetwork'].c.machine == Machine.id).outerjoin(self.table['Network'], self.table['Network'].c.id == self.table['hasNetwork'].c.network)
             if set(['os','user','type','domain','fullname']) & requested_cols:
-                join_query = join_query.outerjoin(self.table['hasHardware'], self.table['hasHardware'].c.machine == Machine.id).outerjoin(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
+                join_query = join_query.outerjoin(self.table['hasHardware'],
+                                                  and_(self.table['hasHardware'].c.machine == Machine.id,
+                                                       self.table['hasHardware'].c.inventory == self.inventory.c.id)).outerjoin(self.table['Hardware'], self.table['Hardware'].c.id == self.table['hasHardware'].c.hardware)
             if "Registry" in self.config.content:
-                join_query = join_query.outerjoin(self.table['hasRegistry'], self.table['hasRegistry'].c.machine == Machine.id).outerjoin(self.table['Registry'], self.table['Registry'].c.id == self.table['hasRegistry'].c.registry)
+                join_query = join_query.outerjoin(self.table['hasRegistry'],
+                                                  and_( self.table['hasRegistry'].c.machine == Machine.id,
+                                                        self.table['hasRegistry'].c.inventory == self.inventory.c.id)).outerjoin(self.table['Registry'], self.table['Registry'].c.id == self.table['hasRegistry'].c.registry)
 
         if count:
             query = session.query(func.count(Machine.id)).select_from(join_query).filter(query_filter)
