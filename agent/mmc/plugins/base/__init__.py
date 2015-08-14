@@ -2376,7 +2376,7 @@ class Computers(ldapUserGroupControl, ComputerI):
         """
         return len(self.getComputersList(filt))
 
-    def getRestrictedComputersList(self, ctx, min, max, filt, advanced):
+    def getRestrictedComputersList(self, ctx, min, max, filt, advanced, justid):
         """
         we can't do that directly in ldap, so we do it in python, just to return less xml...
         """
@@ -2563,9 +2563,9 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersListLen(ctx, filt))
 
-    def getRestrictedComputersList(self, min = 0, max = -1, filt = None, advanced = True):
+    def getRestrictedComputersList(self, min = 0, max = -1, filt = None, advanced = True, justid=False):
         ctx = self.currentContext
-        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, advanced))
+        return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, advanced, justid))
 
     def getComputerCount(self, filt = {}):
         ctx = self.currentContext
