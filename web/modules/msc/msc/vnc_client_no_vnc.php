@@ -46,7 +46,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
         echo "
             <HTML>
             <head>
-                <title>Mandriva Management Console</title>
+                <title>Siveo Pulse</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
                 
             </head>

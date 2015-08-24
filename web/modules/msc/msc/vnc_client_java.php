@@ -35,9 +35,8 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
         echo "
             <HTML>
             <head>
-                <title>Mandriva Management Console</title>
-                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-                
+                <title>Siveo Pulse</title>
+                <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />                
             </head>
             <BODY style='background-color: #FFFFFF;'>
             <center>
@@ -46,7 +45,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                         <h2 style='color: red;'>"._T("Connection Failed !", "msc") . "</h2>
                         <br/>
                         "._T("Connection was refused by the other side.", "msc") . "<br/>
-                            
+
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
@@ -61,7 +60,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
         echo "
             <HTML>
             <head>
-                <title>Mandriva Management Console</title>
+                <title>Siveo Pulse</title>
                 <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
             </head>
             <BODY style='background-color: #FFFFFF;'>
