@@ -83,7 +83,7 @@ if (isset($_GET["agentsessionexpired"])) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-        <title>Mandriva Linux / Mandriva Management Console</title>
+        <title>Siveo Pulse</title>
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
