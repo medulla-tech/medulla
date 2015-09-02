@@ -23,6 +23,8 @@
 """
 Contains singleton classes that writes to the audit backend
 """
+# standard modules
+import time
 
 import socket
 import sys
@@ -360,6 +362,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init MySQL table for audit database version 2
         """
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("name", String(15), nullable=False),
@@ -431,7 +434,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         self.record_table=Table("record", self.metadata,
                             Column("id", Integer, primary_key=True),
-                            Column("date", DateTime , default=func.now(), nullable=False),
+                            Column("date", DateTime , default=nowsystem, nullable=False),
                             Column("result", Boolean, nullable=False),
                             Column("initiator_id", Integer, ForeignKey('initiator.id'), nullable=False),
                             Column("source_id", Integer, ForeignKey('source.id'), nullable=False),
@@ -446,6 +449,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         FIXME: to check
         PostgreSQL db tables for audit database version 2
         """
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         self.module_table = Table("module", self.metadata,
                             Column("id", Integer, primary_key=True),
                             Column("name", String(15), nullable=False)
@@ -507,7 +511,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         self.record_table=Table("record", self.metadata,
                              Column("id", Integer, primary_key=True),
-                             Column("date", DateTime, default=func.now(), nullable=False),
+                             Column("date", DateTime, default=nowsystem, nullable=False),
                              Column("result", Boolean, nullable=False),
                              Column("initiator_id", Integer, ForeignKey('initiator.id'), nullable=False),
                              Column("source_id", Integer, ForeignKey('source.id')),
