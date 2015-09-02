@@ -888,7 +888,7 @@ class MscDatabase(DatabaseHelper):
         return []
 
     def getAllCommandsConsult(self, ctx, min, max, filt, expired = True):
-
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         session = create_session()
 
         # ====== GENERATING FILTERS ============================
@@ -908,9 +908,9 @@ class MscDatabase(DatabaseHelper):
         #filters = filters & (self.commands.c.fk_bundle == self.bundle.c.id)
 
         if expired:
-            filters = and_(filters, (self.commands.c.end_date <= func.now()))
+            filters = and_(filters, (self.commands.c.end_date <= nowsystem))
         else:
-            filters = and_(filters, (self.commands.c.end_date > func.now()))
+            filters = and_(filters, (self.commands.c.end_date > nowsystem))
 
         # Adding command type filtering
         # Show default commands type=0 and convegence commands type=2
@@ -1043,6 +1043,7 @@ class MscDatabase(DatabaseHelper):
 
     ###################
     def __displayLogsQuery(self, ctx, params, session):
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
         if params['gid'] != None:
             query = query.filter(self.target.c.id_group == params['gid'])
@@ -1062,9 +1063,9 @@ class MscDatabase(DatabaseHelper):
 
         # Finished param
         if 'finished' in params and params['finished'] == '1':
-            query = query.filter(self.commands.c.end_date <= func.now())
+            query = query.filter(self.commands.c.end_date <= nowsystem)
         elif 'finished' in params and params['finished'] == '0':
-            query = query.filter(self.commands.c.end_date > func.now())
+            query = query.filter(self.commands.c.end_date > nowsystem)
 
         return query.group_by(self.commands.c.id).order_by(desc(params['order_by']))
 
@@ -1083,6 +1084,7 @@ class MscDatabase(DatabaseHelper):
         return True
 
     def __displayLogsQuery2(self, ctx, params, session, count = False):
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         filter = []
         group_by = False
         group_clause = False
@@ -1117,9 +1119,9 @@ class MscDatabase(DatabaseHelper):
 
         # Finished param
         if 'finished' in params and params['finished'] == '1':
-            filter.append(self.commands.c.end_date <= func.now())
+            filter.append(self.commands.c.end_date <= nowsystem)
         elif 'finished' in params and params['finished'] == '0':
-            filter.append(self.commands.c.end_date > func.now())
+            filter.append(self.commands.c.end_date > nowsystem)
 
         # Filtering on COH State
         if 'state' in params and params['state']:

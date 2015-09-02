@@ -40,7 +40,9 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, \
         Integer, ForeignKey, or_, desc, func, not_, distinct
 from sqlalchemy.orm import create_session, mapper
 import sqlalchemy.databases
-from lxml import etree 
+from lxml import etree
+# standard modules
+import time
 import datetime
 import re
 import logging
@@ -2613,6 +2615,7 @@ class Inventory(DyngroupDatabaseHelper):
         return ret
 
     def __getInventoryHistory(self, session, days, only_new, pattern, max = 10, min = 0):
+        nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         if only_new:
             only_new_filter = self.inventory.c.Last == 1
         else:
@@ -2621,7 +2624,7 @@ class Inventory(DyngroupDatabaseHelper):
         return session.query(self.klass['Inventory']).add_entity(Machine). \
                   select_from(self.table['hasInventory'].join(self.machine). \
                   join(self.table['Inventory'])). \
-                  filter(and_((func.to_days(func.now()) - func.to_days(self.klass['Inventory'].Date)) <= days, \
+                  filter(and_((func.to_days(nowsystem) - func.to_days(self.klass['Inventory'].Date)) <= days, \
                   Machine.Name.like('%' + pattern + '%'), only_new_filter)). \
                   order_by(self.klass['Inventory'].id.desc()).group_by(self.klass['Inventory'].id). \
                   offset(min)
