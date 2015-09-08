@@ -73,7 +73,11 @@ function openSocket($proto, $conf) {
            certificate check
            or stream_socket_client function not available (PHP 5 only),
         */
-        $sock = fsockopen($proto.$_SESSION["XMLRPC_agent"]["host"], $_SESSION["XMLRPC_agent"]["port"], $errNo, $errString);
+        $context = stream_context_create();
+        stream_context_set_option($context, "ssl", "allow_self_signed", true);
+        stream_context_set_option($context, "ssl", "verify_peer", false);
+        stream_context_set_option($context, "ssl", "peer_name", "cert");
+        $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     } else {
         $context = stream_context_create();
