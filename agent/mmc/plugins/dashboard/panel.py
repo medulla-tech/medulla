@@ -49,6 +49,11 @@ class GeneralPanel(Panel):
 
     def serialize(self):
         memory = psutil.virtual_memory()
+        if hasattr(psutil, 'boot_time'):
+        	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.boot_time()))
+        else:
+        	uptime = str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME))
+        	        
         try:
             dist = platform.linux_distribution()
         except:
@@ -57,7 +62,7 @@ class GeneralPanel(Panel):
             'hostname': socket.gethostname(),
             'dist': dist,
             'load': [str(val) for val in os.getloadavg()],
-            'uptime': str(datetime.now() - datetime.fromtimestamp(psutil.BOOT_TIME)),
+            'uptime': uptime,
             'users': len(getUsersLdap()),
             'memory': {
                 'total': size_format(memory.total),
