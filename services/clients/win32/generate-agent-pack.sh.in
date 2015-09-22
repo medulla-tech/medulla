@@ -50,11 +50,15 @@ sfx_file=7zsd.sfx
 # https://www.dropbox.com/sh/qdrpsttj8tqsn2q/AAC4AN0h_TKtfkRocQawQQMHa
 
 # Compute downloads url
-ssh_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AAAf_GsqCWFweOSSgnT0lGY-a/win32/pulse2-secure-agent/${ssh_file}
-vnc_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AAC2EwQKH2DWv6cl6wq9z7aXa/win32/pulse2-rda-agent/${vnc_file}
-inv_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AADiKKkV5FWgTZNS56h_2RFra/win32/inventory-agent/${inv_file}
-sfx_url=https://www.dropbox.com/sh/wu6o0nmcgsq7b6d/AADRiFpDVy4QLgOVTvW_7nqOa/win32/${sfx_file}
-msi_webservice_url=http://msi-agents.mandriva.com/
+ssh_url=http://repo.pulse2.fr/pub/pulse2/client/windows/win32/pulse2-secure-agent/${ssh_file}
+vnc_url=http://repo.pulse2.fr/pub/pulse2/client/windows/win32/pulse2-rda-agent/${vnc_file}
+inv_url=http://repo.pulse2.fr/pub/pulse2/client/windows/win32/inventory-agent/${inv_file}
+sfx_url=http://repo.pulse2.fr/pub/pulse2/client/windows/win32/${sfx_file}
+
+# Unfortunately, MSI agent service is no more alive :-(
+# the idea was to provide a service to generate MSI version of Pulse's agents
+# Maybe it will rebirth later...
+#msi_webservice_url=http://msi-agents.mandriva.com/
 
 # Command line options handling
 
