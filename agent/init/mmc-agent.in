@@ -19,7 +19,7 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 ### BEGIN INIT INFO
 # Provides:          mmc-agent
-# Required-Start:    $remote_fs slapd
+# Required-Start:    $remote_fs slapd mysql
 # Required-Stop:     slapd
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
