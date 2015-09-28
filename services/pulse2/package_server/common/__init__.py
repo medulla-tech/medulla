@@ -700,7 +700,8 @@ class Common(pulse2.utils.Singleton):
             internals_files = [x.name for x in self.packages[pid].files.internals]
 
             # If all, then we delete all files
-            files = internals_files
+            if all:
+                files = internals_files
 
             for _file in files:
                 filepath = os.path.join(path, _file)
