@@ -51,13 +51,6 @@ if ($is_gp != 1) {
 
 if ($is_gp != 1) { // Simple group
     $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers");
-
-    if (in_array("inventory", $_SESSION["supportModList"])) {
-        $actions['inventory'] = new ActionItem(_T("Inventory on this group", "dyngroup"),"groupinvtabs","inventory","inventory", "base", "computers");
-    } else {
-        # TODO implement the glpi inventory on groups
-        #    $n->addActionItem(new ActionItem(_T("Inventory on this group", "dyngroup"),"groupglpitabs","inventory","inventory", "base", "computers"));
-    }
     $actions['edit'] = new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers");
     $actions['share'] = new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers");
     if (in_array("msc", $_SESSION["supportModList"])) {
