@@ -292,7 +292,7 @@ function _base_baseEdit($FH, $mode) {
         $loginTpl = new HiddenTpl("uid");
     }
     $f->add(
-        new TrFormElement(_("Login"), $loginTpl),
+        new TrFormElement(_("Login")."*", $loginTpl),
         array("value" => $uid)
     );
 
@@ -307,11 +307,11 @@ function _base_baseEdit($FH, $mode) {
     }*/
 
     $f->add(
-        new TrFormElement(_("Password"), new PasswordTpl("pass")),
+        new TrFormElement(_("Password")."*", new PasswordTpl("pass")),
         array("value" => "")
     );
     $f->add(
-        new TrFormElement(_("Confirm password"), new PasswordTpl("confpass")),
+        new TrFormElement(_("Confirm password")."*", new PasswordTpl("confpass")),
         array("value" => "")
     );
 
@@ -321,17 +321,17 @@ function _base_baseEdit($FH, $mode) {
     );
 
     $f->add(
-        new TrFormElement(_("Last name"), new InputTpl("sn")),
+        new TrFormElement(_("Last name")."*", new InputTpl("sn")),
         array("value"=> $FH->getArrayOrPostValue("sn"))
     );
 
     $f->add(
-        new TrFormElement(_("First name"), new InputTpl("givenName")),
+        new TrFormElement(_("First name")."*", new InputTpl("givenName")),
         array("value"=> $FH->getArrayOrPostValue("givenName"))
     );
 
     $f->add(
-        new TrFormElement(_("Title"), new InputTpl("title")),
+        new TrFormElement(_("Title")."*", new InputTpl("title")),
         array("value"=> $FH->getArrayOrPostValue("title"))
     );
 
