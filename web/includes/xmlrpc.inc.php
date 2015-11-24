@@ -25,23 +25,13 @@
 require_once("ErrorHandling.php");
 
 /**
- * Little class to encapsulate string into a XML-RPC binary string
- */
-class Trans {
-    var $scalar;
-    var $xmlrpc_type;
-}
-
-/**
  * Return a Trans object so that a potentially non XML-safe string can be sent
  * into the XML-RPC stream.
  * e.g. a password can contains the & character, so the password string must be encoded.
  */
 function prepare_string($pass) {
-    $obj = new Trans();
-    $obj->scalar = "$pass";
-    $obj->xmlrpc_type = "base64";
-    return $obj;
+    xmlrpc_set_type($pass, 'base64');
+    return $pass;
 }
 
 /**
