@@ -28,7 +28,8 @@ $MMCApp->render();
         </div><!-- section -->
     </div><!-- content -->
     <div id="footer">
-        MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
+    <a href="http://www.mandriva.com"target="blank"><img src="graph/mandriva-logo.png" alt ="[x]"/></a>
+        &nbsp;|&nbsp;&nbsp;MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
     </div>
 </div><!-- wrapper -->
 </body>

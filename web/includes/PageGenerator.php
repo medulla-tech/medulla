@@ -683,7 +683,7 @@ class ListInfos extends HtmlElement {
             if ($this->extraInfo) {
                 foreach ($this->extraInfo as $arrayTMP) {
                     echo "<td>";
-                    if (isset($arrayTMP[$idx]) && is_object($arrayTMP[$idx]) && is_subclass_of($arrayTMP[$idx], "HtmlContainer")) {
+                    if (isset($arrayTMP[$idx]) && is_subclass_of($arrayTMP[$idx], "HtmlContainer")) {
                         $arrayTMP[$idx]->display();
                     } else if (isset($arrayTMP[$idx]) && trim($arrayTMP[$idx]) != "") {
                         echo_obj($arrayTMP[$idx]);
@@ -1251,13 +1251,14 @@ class AjaxFilter extends HtmlElement {
                 <img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/>
             </div>
             <div id="searchSpan<?php echo $this->formid ?>" class="searchbox" style="float: right;">
-                <img src="graph/search.gif" style="position:relative; top: 5px; float: left;" alt="search" /> <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
+            <div id="searchBest">
+                <input type="text" class="searchfieldreal" name="param" id="param<?php echo $this->formid ?>" onkeyup="pushSearch<?php echo $this->formid ?>();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 4px;"
+                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                          onclick="document.getElementById('param<?php echo $this->formid ?>').value = '';
                                  pushSearch<?php echo $this->formid ?>();
                                  return false;" />
-                </span>
+            </div>
             </div>
 
             <script type="text/javascript">
@@ -1489,28 +1490,31 @@ class AjaxFilterLocation extends AjaxFilter {
         <form name="Form" id="Form" action="#" onsubmit="return false;">
             <div id="loader"><img id="loadimg" src="<?php echo $root; ?>img/common/loader.gif" alt="loader" class="loader"/></div>
             <div id="searchSpan" class="searchbox" style="float: right;">
+            <div id="searchBest">
                 <?php foreach ($this->checkbox as $checkbox)
                     {
                         $checkbox->display();
                     }
                     ?>
-                <img src="graph/search.gif" style="position:relative; top: 2px; float: left;" alt="search" />
                 <span class="searchfield">
                     <?php
                     $this->location->display();
                     ?>
-                </span>&nbsp;
-                <span class="searchfield"><input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
+                </span>
+                <input type="text" class="searchfieldreal" name="param" id="param" onkeyup="pushSearch();
                         return false;" />
-                    <img src="graph/croix.gif" alt="suppression" style="position:relative; top : 3px;"
+                    <img class="searchfield" src="graph/croix.gif" alt="suppression" style="position:relative;"
                          onclick="document.getElementById('param').value = '';
                                  pushSearch();
                                  return false;" />
-                </span>
+            </div>
             </div>
 
             <script type="text/javascript">
                 jQuery('#param').focus();
+                if(!(navigator.userAgent.toLowerCase().indexOf('chrome') > -1)) {
+                    jQuery("#searchBest").width(jQuery("#searchBest").width()+20);
+                }
 
         <?php
         if (isset($this->storedfilter)) {
@@ -1629,7 +1633,6 @@ class AjaxLocation extends AjaxFilterLocation {
                         $checkbox->display();
                     }
                     ?>
-                    <img src="graph/search.gif"/>
                     <span class="locationtext">&nbsp;<?php echo _("Select entity") ?>:&nbsp;</span>
                     <span class="locationfield">
                         <?php
@@ -1750,7 +1753,7 @@ class SideMenuItem {
     function display() {
         if (hasCorrectAcl($this->module, $this->submod, $this->action)) {
             echo '<li id="' . $this->cssId . '">';
-            echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>' . "\n";
+            echo '<a href="' . $this->getLink() . '">' . $this->text . '</a></li>';
         }
     }
 
@@ -1778,10 +1781,8 @@ class SideMenuItem {
 
         if ($active) {
             return "#sidebar ul.$this->submod li#$this->cssId a {
-                        background-color: #f6f6f6;
-                        color: #444;
-                        border-bottom: solid 1px #ccc;
-                        border-top: solid 1px #ccc;
+                        background-color: #2295d2;
+                        color: #fff;
                         $bgi_active
             }";
         } else if ($bgi_inactive) {
@@ -1876,14 +1877,13 @@ class SideMenu {
      *  print the SideMenu and the sideMenuItem
      */
     function display() {
-        echo "<style>#section { margin-left: 200px; border-left: 2px solid #bbb; }</style>";
+        echo "<style>#section {margin-left:200px;}</style>";
         echo "<div id=\"sidebar\">\n";
         echo "<ul class=\"" . $this->className . "\">\n";
         foreach ($this->itemArray as $objSideMenuItem) {
             $objSideMenuItem->display();
         }
-        echo "</ul>\n";
-        echo "</div>\n";
+        echo "</ul><div class=\"clearer\"></div></div>";
     }
 
     /**
@@ -2253,7 +2253,7 @@ class NotifyWidget {
     }
 
     function end() {
-        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup();return false;">' . _("Close") . '</button></div></div>';
+        $str = '<div style="clear: left; text-align: right; margin-top: 1em;"><button class="btn btn-small" onclick="closePopup()">' . _("Close") . '</button></div></div>';
         return $str;
     }
 
@@ -2696,7 +2696,7 @@ class PopupForm extends Form {
     }
 
     function setQuestion($msg) {
-        $this->ask = $msg;
+        $this->ask = $ask;
     }
 
     function addValidateButtonWithFade($name) {
@@ -2726,7 +2726,7 @@ class PopupWindowForm extends PopupForm {
     }
 
     function addValidateButtonWithFade($name) {
-        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=530, height=300'); return false;\"");
+        $this->buttons[] = $this->getButtonString($name, _("Confirm"), "btnPrimary", "onclick=\"jQuery('popup').fadeOut(); window.open('" . $this->target_uri . "', '', 'toolbar=no, location=no, menubar=no, status=no, status=no, scrollbars=yes, width=330, height=200'); return false;\"");
     }
 
 }

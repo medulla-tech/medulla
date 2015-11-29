@@ -25,7 +25,7 @@ $root = $conf["global"]["root"];
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>Siveo Pulse</title>
+        <title>Mandriva Management Console</title>
         <link href="graph/master.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="imagetoolbar" content="false" />
@@ -116,10 +116,10 @@ $root = $conf["global"]["root"];
                 var left = Math.max(0, evt.clientX - jQuery('#popup').outerWidth() + jQuery(window).scrollLeft());
                 var top = Math.max(0, evt.clientY + jQuery(window).scrollTop());
                 jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
+                //jQuery('#popup').css({'left': 20 + "%", 'top': 20 + "%"});
             }
 
             function _centerPlacement(evt) {
-
                 jQuery('#popup').css({
                     'width': '50%',
                     'left': '25%',
@@ -206,7 +206,7 @@ $root = $conf["global"]["root"];
                     jQuery('#popup').css({
                         'width': '50%',
                         'left': '25%',
-                        'top': '15%'
+                        'top': '25%'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 
@@ -239,7 +239,7 @@ $root = $conf["global"]["root"];
                     jQuery('#popup').css({
                         'width': '50%',
                         'left': '25%',
-                        'top': '15%'
+                        'top':  '25%'
                     });
                     jQuery('#overlay').fadeIn().click(closePopup);
 

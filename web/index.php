@@ -5,7 +5,7 @@
  *
  * $Id$
  *
- * This file is part of Management Console (MMC).
+ * This file is part of Mandriva Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +83,7 @@ if (isset($_GET["agentsessionexpired"])) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-        <title>Siveo Pulse</title>
+        <title>Mandriva Linux / Mandriva Management Console</title>
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
@@ -94,9 +94,11 @@ if (isset($_GET["agentsessionexpired"])) {
 
 <div id="loginBox">
         <div id="header">
-        <div id="headerLeft"><div id="headerRight">
+        <!--<div id="headerLeft"><div id="headerRight">
             <p class="lock"></p>
-        </div></div></div>
+        </div></div>-->
+<img src="img/login/pulse_logo.png" alt ="[x]"/></a>
+        </div>
 
         <div id="interface">
         <div id="content">

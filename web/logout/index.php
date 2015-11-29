@@ -46,8 +46,10 @@ if (isset($_POST["delog"])) {
 
 ?>
 <h2><?php echo  _("Logout") ?></h2>
+<hr style="color: #ccc;background-color: #ccc;height: 1px;border: 0 none;" />
 
 <p><?php echo  _("Your session will be closed") ?></p>
+<br>
 
 <form method="post" action="logout/index.php">
 <input type="submit" name="delog" class="btnPrimary" value="<?php echo  _("Logout") ?>" />

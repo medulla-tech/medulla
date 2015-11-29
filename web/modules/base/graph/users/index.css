@@ -2,14 +2,14 @@ form.audit_nok {
     background: #f4e5e5;
     border: 2px solid #C53A3A;
     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;    
+    -webkit-border-radius: 10px;
 }
 
 form.audit_ok {
     background: #EAFDEA;
     border: 2px solid #28892B;
     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;    
+    -webkit-border-radius: 10px;
 }
 
 form.audit_ok td.label, form.audit_nok td.label {
@@ -20,15 +20,17 @@ form.audit_ok td.label, form.audit_nok td.label {
 form.audit_ok td.label:after, form.audit_nok td.label:after {
     content: " :";
 }
-li.extticket a {
-        padding: 3px 3px 3px 20px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/extticket_shortcut.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
+
+
+td.userName {
+    padding: 0 0 0 34px;
+    background-image: url("modules/base/graph/users/img/icn_usersList.gif");
+    background-position: 11px 10px;
 }
 
+td.userNameDisabled {
+    padding: 0 0 0 34px;
+    background-image: url("modules/base/graph/users/img/icn_usersList.gif");
+    background-position: 11px 10px;
+}
 
