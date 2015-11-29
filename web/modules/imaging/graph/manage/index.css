@@ -1,5 +1,5 @@
 div.membarfree {
-    border-right: 1px solid #27537C;
+    border-right: 1px solid #2295D2;
     height: 12px;
     background: url("img/main/bg_status_blue.gif") repeat-x left top transparent;
     padding: 0;
@@ -27,7 +27,7 @@ div.membarcache {
 
 div.status {
     float: left;
-    width: 49%;
+    width: 50%;
 }
 
 div.status_block {
@@ -50,8 +50,9 @@ div.status_block h3 {
 }
 
 div.status_block p {
-    padding-top: 0;
+    padding-top: 15px;
     padding-bottom: 3px;
+    font-size: 12px;
 }
 
 div.status_block p.stat {
