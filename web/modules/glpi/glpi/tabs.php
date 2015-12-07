@@ -49,10 +49,6 @@ else {
     $glpi_link = 'GLPI';
 }
 
-// JM 20141209 removed GLPI link
-unset($glpi_link);
-// endof JM 20141209
-
 $p = new TabbedPageGenerator();
 $p->setSideMenu($sidemenu);
 if (isset($_SESSION['pull_targets']) && in_array($uuid, $_SESSION['pull_targets'])) {
