@@ -103,7 +103,7 @@ class ErrorHandlingItem {
     }
 
     function match($errorMsg) {
-        return ereg($this->regexp, $errorMsg, $this->regs);
+        return preg_match($this->regexp, $errorMsg, $this->regs);
     }
 
     function getMsg() {

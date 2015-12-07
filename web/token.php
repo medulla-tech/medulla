@@ -38,7 +38,7 @@ $lang = $decoded_token[3];
 $error = "";
 
 /* Session creation */
-$ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
+$ip = preg_replace('@\.@','',$_SERVER["REMOTE_ADDR"]);
 $sessionid = md5 (time() . $ip . mt_rand());
 
 session_destroy();

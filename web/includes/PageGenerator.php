@@ -2385,7 +2385,7 @@ function urlStrRedirect($link, $param = array()) {
 
 function findInSideBar($sidebar, $query) {
     foreach ($sidebar['content'] as $arr) {
-        if (ereg($query, $arr['link'])) {
+        if (preg_match("/$query/", $arr['link'])) {
             return $arr['text'];
         }
     }

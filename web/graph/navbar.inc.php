@@ -107,7 +107,7 @@ if ($_GET["submod"] != "main" && $_GET["action"] != "default")
 $MMCApp =&MMCApp::getInstance();
 $mod = $MMCApp->_modules[$_GET['module']];
 $submod = $mod->_submod[$_GET['submod']];
-list($m, $s, $a) = split('/',$submod->_defaultpage,3);
+list($m, $s, $a) = preg_split('@/@',$submod->_defaultpage,3);
 print '<a href="'. urlStr("$m/$s/$a") .'">' . $submod->getDescription() . '</a>';
 $action = $submod->_pages[$_GET["action"]];
 if (is_object($action)) {

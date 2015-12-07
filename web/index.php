@@ -45,7 +45,7 @@ if (isset($_POST["bConnect"])) {
     $pass = $_POST["password"];
 
     /* Session creation */
-    $ip = ereg_replace('\.','',$_SERVER["REMOTE_ADDR"]);
+    $ip = preg_replace('@\.@','',$_SERVER["REMOTE_ADDR"]);
     $sessionid = md5 (time() . $ip . mt_rand());
 
     session_destroy();
@@ -83,7 +83,7 @@ if (isset($_GET["agentsessionexpired"])) {
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-        <title>Mandriva Linux / Mandriva Management Console</title>
+        <title>Siveo / Management Console</title>
         <link href="graph/login/index.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="icon" href="img/common/favicon.ico" />
