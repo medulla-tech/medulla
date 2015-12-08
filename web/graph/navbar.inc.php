@@ -38,8 +38,8 @@ $root = $conf["global"]["root"];
 <?php
 if (getMMCLogo()) {
 ?>
-<a href="https://www.mandriva.com/pulse2/">
-	<img src="<?=getMMCLogo()?>" alt="Mandriva" id="logo" />
+<a href="https://www.siveo.net/solution-2/pulse-en/">
+	<img src="<?=getMMCLogo()?>" alt="SIVEO Pulse" id="logo" />
 </a>
 <?php
 }
