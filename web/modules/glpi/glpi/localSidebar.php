@@ -22,12 +22,12 @@
  */
 
 /* Add new sidemenu item */
-
+/*
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entities", "glpi"), "base", "computers",  "entityList", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add an entity", "glpi"), "base", "computers", "addEntity", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Locations", "glpi"), "base", "computers",  "locationList", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a location", "glpi"), "base", "computers", "addLocation", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Entity rules", "glpi"), "base", "computers", "entityRules", "", ""));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add entity rule", "glpi"), "base", "computers", "addEntityRule", "", ""));
-
+*/
 ?>
