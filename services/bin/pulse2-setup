@@ -860,14 +860,17 @@ class SetupApp(object):
                 invalids += ['ldapbasedn', 'ldapadmindn', 'ldappasswd']
                 log.error("Invalid credentials, check base DN, admin DN and password.")
                 log.debug(str(e))
+                sys.exit()
             except ldap.SERVER_DOWN, e:
                 invalids += ['ldapurl']
                 log.error("Incorrect server")
                 log.debug(str(e))
+                sys.exit()
             except ldap.UNWILLING_TO_PERFORM, e:
                 invalids += ['ldappasswd']
                 log.error("Empty password not supported")
                 log.debug(str(e))
+                sys.exit()
         log.info("Connection to LDAP succesfull.")
 
         # Check mmc schema is installed
