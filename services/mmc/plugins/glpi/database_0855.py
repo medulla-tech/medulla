@@ -3698,8 +3698,8 @@ class Glpi0855(DyngroupDatabaseHelper):
 
     def purgeMachine(self, id):
         to_delete = {
-            'Computer': {
-                str(id): 1
+            'Computer':  {
+                'id': {'id': str(id)}
             }
         }
 
