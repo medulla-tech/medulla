@@ -41,7 +41,7 @@ function createAclArray($aclString) {
     $retaclattr = array();
 
     /* get pages ACL */
-    $arrayMod = preg_split(':', $acl);
+    $arrayMod = preg_split('/:/', $acl);
     foreach($arrayMod as $items) {
         if (substr_count($items, "#") == 2) {
             list($mod, $submod, $action) = split('#', $items);
