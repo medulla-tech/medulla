@@ -219,7 +219,7 @@ class ImageTpl extends AbstractTpl {
         if ($arrParam['value'])
             $img = "data:image/jpeg;base64," . base64_encode($arrParam['value']->scalar);
         else
-            $img = "img/users/icn_users_large.gif";
+            $img = "modules/base/graph/users/img/icn_users_large.gif";
         echo '
                 <img src=' . $img . ' style="border-width: 1px; border-style: solid" />
             </td>
@@ -235,7 +235,7 @@ class ImageTpl extends AbstractTpl {
         if ($arrParam['value'])
             $img = "data:image/jpeg;base64," . base64_encode($arrParam['value']->scalar);
         else
-            $img = "img/users/icn_users_large.gif";
+            $img = "modules/base/graph/users/img/icn_users_large.gif";
         echo '<img src=' . $img . ' style="border-width: 1px; border-style: solid" />';
     }
 
