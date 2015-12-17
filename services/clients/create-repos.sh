@@ -25,8 +25,8 @@
 # ---------------------- GPG KEY GENERATE ----------------------------
 
 BASE_DIR=$(dirname $0)
-NAME="Mandriva Support" 
-EMAIL="sales@mandriva.com"
+NAME="Siveo Support"
+EMAIL="support@siveo.net"
 HOME="/root"
 GPG_KEY_CONF=$HOME/gpg-key-conf
 GPG_KEY_FILE="pulse2-agents.gpg.key"
