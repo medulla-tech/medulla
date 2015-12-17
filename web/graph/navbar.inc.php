@@ -38,7 +38,7 @@ $root = $conf["global"]["root"];
 <?php
 if (getMMCLogo()) {
 ?>
-<a href="https://www.siveo.net/solution-2/pulse-en/">
+<a href="http://www.siveo.net/solution-2/pulse-en/">
 	<img src="<?=getMMCLogo()?>" alt="SIVEO Pulse" id="logo" />
 </a>
 <?php
