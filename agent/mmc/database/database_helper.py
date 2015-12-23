@@ -33,7 +33,10 @@ from mmc.database.sqlalchemy_tests import checkSqlalchemy, MIN_VERSION, MAX_VERS
 from sqlalchemy import func
 from sqlalchemy.orm import sessionmaker, Query
 from sqlalchemy.exc import NoSuchTableError
-from sqlalchemy.orm.util import _entity_descriptor
+try:
+    from sqlalchemy.orm.util import _entity_descriptor
+except ImportError:
+    from sqlalchemy.orm.base import _entity_descriptor
 
 Session = sessionmaker()
 logger = logging.getLogger()
