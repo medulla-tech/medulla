@@ -21,7 +21,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once("modules/dyngroup/includes/includes.php");
-
+$location ="";
 $id = quickGet('gid');
 $group = new Group($id, False);
 $type = quickGet('type');
@@ -39,14 +39,30 @@ if ($type == 1) { // Imaging group
     $delete = _T("Delete group", "dyngroup");
 }
 
-if (quickGet('valid')) {
+// jfk
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
             // Get Current Location
             include('modules/imaging/includes/xmlrpc.inc.php');
             $location = xmlrpc_getProfileLocation($id);
+            $objprocess=array();
+            $scriptmulticast = 'multicast.sh';
+            $path="/tmp/";
+            $objprocess['location']=$location;
+            $objprocess['process'] = $path.$scriptmulticast;
+            if (xmlrpc_check_process_multicast($objprocess)){
+                $msg = _T("The group cannot be deleted as a multicast deployment is currently running.", "imaging");
+                echo' <form action="'.urlStr("imaging/manage/list$stype").'" method="post">
+                <p>'.$msg.'</p>
+                    <input name="bback" type="submit" class="btnSecondary" value="'._T("Cancel", "dyngroup").'" onClick="closePopup();return true;"/>
+                </form>';
+                    exit;  
+            }
         }
     }
+    
+if (quickGet('valid')) {
+
     $group->delete();
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
@@ -71,7 +87,6 @@ if (quickGet('valid')) {
 <?php
 printf($popup, $_GET["groupname"]);
 ?>
-
     </p>
     <input name='valid' type="submit" class="btnPrimary" value="<?php echo $delete ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "dyngroup"); ?>" onClick="closePopup();

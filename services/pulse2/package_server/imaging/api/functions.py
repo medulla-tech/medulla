@@ -1000,6 +1000,42 @@ class Imaging(object):
         return ret
 
     ## Imaging server configuration
+    def imagingServermenuMulticast(self, objmenu):
+        # create menu mukticast jfk imagingServermenuMulticast
+        m =ImagingMulticastMenuBuilder(objmenu)
+        ret =m.make()
+        return [ret]
+
+    ## Imaging server configuration
+    def check_process_multicast(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return check_process(objprocess['process'])
+
+    def muticast_script_exist(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return os.path.exists(objprocess['process'])
+
+    def clear_script_multicast(self, objprocess):
+        ## suppression commande multicast multicast jfk clear_script_multicast
+        # renvoi le groupe a regenerer bootmenu pour unicast
+        #f = open(objprocess['process'],'r')
+        f = open("/tmp/multicast.sh",'r')
+        lignes  = f.readlines()
+        f.close()
+        s=[x.split("=")[1].strip(' \t\n\r') for x in lignes if x.startswith( 'groupuuid' ) ]
+        self.logger.info('*******######## %s' % s)
+        if len(s)== 0:
+            return -1
+        os.remove(objprocess['process'])
+        return s[0]
+
+    def start_process_multicast(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return start_process(objprocess['process'])
+
+    def stop_process_multicast(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return stop_process(objprocess['process'])
 
     def imagingServerConfigurationSet(self, conf):
         """

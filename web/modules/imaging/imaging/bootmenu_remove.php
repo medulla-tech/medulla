@@ -64,7 +64,28 @@ if (quickGet('valid')) {
 
         // Synchronize boot menu
         if ($type == 'group') {
-            $ret = xmlrpc_synchroProfile($target_uuid);
+            $location = getCurrentLocation();
+            if ($location == "UUID1")
+                $location_name = _T("root", "pulse2");
+            else
+                $location_name = xmlrpc_getLocationName($location);
+            // jfk    
+            $objprocess=array();
+            $scriptmulticast = 'multicast.sh';
+            $path="/tmp/";
+            $objprocess['location']=$location;
+            $objprocess['process'] = $path.$scriptmulticast;
+          
+            if (xmlrpc_check_process_multicast($objprocess)){
+                $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
+                new NotifyWidgetFailure($msg);
+                header("Location: " . urlStrRedirect("imaging/manage/index"));
+                exit;  
+            }
+            else{
+                $ret = xmlrpc_synchroProfile($target_uuid);
+                xmlrpc_clear_script_multicast($objprocess);
+            }
         } else {
             $ret = xmlrpc_synchroComputer($target_uuid);
         }

@@ -61,6 +61,7 @@ import inspect
 import posixpath
 import psutil
 import logging
+import sys
 
 # python 2.3 fallback for set() in xmlrpcleanup
 try:
@@ -570,6 +571,42 @@ def get_ip_address(ifname):
         0x8915,  # SIOCGIFADDR
         struct.pack('256s', ifname)
     )[20:24])
+
+def start_process(processname):
+    """ ##jfk """
+    import subprocess
+    subprocess.Popen([processname], shell=True)
+    return check_process(processname)
+
+def stop_process(processname):
+    """ ##jfk
+    """
+    import subprocess
+    import signal
+    proc = subprocess.Popen(["pgrep", processname], stdout=subprocess.PIPE)# Kill process.
+    for pid in proc.stdout:
+        logging.getLogger().debug("kill pid %d "%int(pid))
+        os.kill(int(pid), signal.SIGTERM)
+        # Check if the process that we killed is alive.
+        try: 
+            os.kill(int(pid), 0)
+        except OSError as ex:
+            logging.getLogger().warn("wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT"% processname)
+            raise Exception("""wasn't able to kill the process %s 
+                                HINT:use signal.SIGKILL or signal.SIGABORT"""% processname)
+    return not check_process(processname)
+
+def check_process(processname):
+    """ ##jfk
+    """
+    import re
+    import subprocess
+    returnprocess = False
+    s = subprocess.Popen(["ps", "ax"],stdout=subprocess.PIPE)
+    for x in s.stdout:
+        if re.search(processname, x):
+            returnprocess = True
+    return returnprocess
 
 def get_default_netif():
     """ Read the default interface directly from /proc.

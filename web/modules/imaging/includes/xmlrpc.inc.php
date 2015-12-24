@@ -21,6 +21,37 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
+ 
+ //check process jfk
+function xmlrpc_check_process($process) {
+    return xmlCall("imaging.check_process", array($process));
+ }
+ 
+function xmlrpc_imagingServermenuMulticast($obj){
+    return xmlCall("imaging.imagingServermenuMulticast", $obj);
+}
+
+function xmlrpc_check_process_multicast ($objprocess){
+    // check process running
+    return xmlCall("imaging.check_process_multicast", array($objprocess));
+}
+
+function xmlrpc_stop_process_multicast ($objprocess){
+    return xmlCall("imaging.stop_process_multicast", array($objprocess));
+}
+
+function xmlrpc_start_process_multicast ($objprocess){
+    return xmlCall("imaging.start_process_multicast", array($objprocess));
+}
+
+function xmlrpc_muticast_script_exist ($objprocess){
+    return xmlCall("imaging.muticast_script_exist", array($objprocess));
+}
+
+function xmlrpc_clear_script_multicast ($objprocess){
+    return xmlCall("imaging.clear_script_multicast", array($objprocess));
+}
+
 function xmlrpc_isProfileRegistered($profile_uuid) {
     # we call as long as it's not registered, but once it is,
     # we can store that information in the session.
@@ -37,6 +68,9 @@ function xmlrpc_isProfileRegistered($profile_uuid) {
 function xmlrpc_getProfileLocation($target_uuid) {
     return xmlCall("imaging.getProfileLocation", array($target_uuid));
 }
+
+
+
 
 function xmlrpc_getMyMenuProfile($target_uuid) {
     return xmlCall("imaging.getMyMenuProfile", array($target_uuid));
@@ -182,6 +216,11 @@ function xmlrpc_moveItemDownInMenu4Location($loc_id, $item_uuid) {
 
 function xmlrpc_moveItemUpInMenu4Location($loc_id, $item_uuid) {
     return xmlCall("imaging.moveItemUpInMenu4Location", array($loc_id, $item_uuid));
+}
+
+
+function xmlrpc_setMethod4location($location, $method) {
+    return xmlCall("imaging.setMethod4location", array($location, $method));
 }
 
 /* Images */

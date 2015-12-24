@@ -55,7 +55,10 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = 'UUID' + str(db_computer.id)
         menu = generateMenus(logger, ImagingDatabase(), [uuid], unique=True)
         return xmlrpcCleanup(menu)
-
+    
+    def check_process(self, process):
+        #jfk  print pulse2.utils.check_process(process)
+        return xmlrpcCleanup(pulse2.utils.check_process(process))
 
     """ XML/RPC Bindings """
     ################################################### web def
@@ -408,6 +411,112 @@ class ImagingRpcProxy(RpcProxyI):
         db = ImagingDatabase()
         db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
+
+    #def setMethod4location(self, location, method):
+        #"""jfk method unicast or multicast"""
+        #db = ImagingDatabase()
+        #db.multicast_create(location , method)
+        
+    def imagingServermenuMulticast(self, objmenu):
+        # jfk 
+        location=objmenu['location']
+        db = ImagingDatabase()
+        #logger = logging.getLogger()
+        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.imagingServermenuMulticast(objmenu)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+    
+    ## Imaging server configuration
+    def check_process_multicast(self, process):
+        #return True
+        # controle execution process multicast jfk check_process_multicast
+        location=process['location']
+        db = ImagingDatabase()
+        #logger = logging.getLogger()
+        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.check_process_multicast(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+  
+    def muticast_script_exist(self,process):
+        # controle existance  multicast script jfk check_process_multicast
+        location=process['location']
+        db = ImagingDatabase()
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.muticast_script_exist(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
+    def clear_script_multicast(self, process):
+        # controle existance  multicast script jfk check_process_multicast
+        location=process['location']
+        db = ImagingDatabase()
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.clear_script_multicast(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
+    def start_process_multicast(self,process):
+        # controle execution process multicast jfk check_process_multicast
+        logging.getLogger().error("**** process %s"%process)
+        location=process['location']
+        db = ImagingDatabase()
+        #logger = logging.getLogger()
+        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.start_process_multicast(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        logging.getLogger().error("**** deferred %s"%deferred)
+        return deferred
+
+    def stop_process_multicast(self,process):
+        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast jfk check_process_multicast
+        location=process['location']
+        db = ImagingDatabase()
+        #logger = logging.getLogger()
+        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.stop_process_multicast(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
 
     ###### IMAGES
     def imagingServerISOCreate(self, image_uuid, size, title):

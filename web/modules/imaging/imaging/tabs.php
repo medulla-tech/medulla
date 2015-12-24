@@ -82,8 +82,31 @@ if (isset($_GET['leave_group'], $_GET['group_uuid'], $params['uuid'])) {
 if (isset($_POST['bsync'])) {
     if (isset($params['uuid'])) {
         $ret = xmlrpc_synchroComputer($params['uuid']);
-    } else {
-        $ret = xmlrpc_synchroProfile($params['gid']);
+    }
+    else {
+        $location = getCurrentLocation();
+        if ($location == "UUID1")
+            $location_name = _T("root", "pulse2");
+        else
+            $location_name = xmlrpc_getLocationName($location);
+        // jfk    
+        $objprocess=array();
+        $scriptmulticast = 'multicast.sh';
+        $path="/tmp/";
+        $objprocess['location']=$location;
+        $objprocess['process'] = $path.$scriptmulticast;
+        //if (xmlrpc_muticast_script_exist($objprocess)){
+        
+        if (xmlrpc_check_process_multicast($objprocess)){
+            $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
+            new NotifyWidgetFailure($msg);
+            header("Location: " . urlStrRedirect("imaging/manage/index"));
+            exit;  
+        }
+        else{
+            $ret = xmlrpc_synchroProfile($params['gid']);
+            xmlrpc_clear_script_multicast($objprocess);
+        }
     }
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
@@ -193,7 +216,9 @@ if (isset($params['uuid'])) {
             }
 
             $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), "modules/imaging/imaging/bootmenu.php", $params);
-            $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $params);
+            $ddd=$params;
+            $ddd['namee'] = "llllllllll";
+            $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $ddd);
             $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), "modules/imaging/imaging/services.php", $params);
             $p->addTab("tabimlogs", _T("Imaging log", 'imaging'), "", "modules/imaging/imaging/logs.php", $params);
             $p->addTab("tabconfigure", _T("Menu configuration", 'imaging'), "", "modules/imaging/imaging/configure.php", $params);

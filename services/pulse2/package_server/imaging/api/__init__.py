@@ -105,6 +105,36 @@ class ImagingApi (MyXmlrpc):
     def xmlrpc_imagingServerISOCreate(self, imageUUID, size, title):
         return self.api.imagingServerISOCreate(imageUUID, size, title)
 
+    def xmlrpc_imagingServermenuMulticast(self, objmenu):
+        """
+        #jfk
+        """
+        return self.api.imagingServermenuMulticast(objmenu)
+
+    ## Imaging server configuration
+    def xmlrpc_check_process_multicast(self,objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return self.api.check_process_multicast(objprocess)
+
+    def xmlrpc_start_process_multicast(self,objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        self.logger.info("*****start  %s" % objprocess)
+        
+        return self.api.start_process_multicast(objprocess)
+
+    def xmlrpc_muticast_script_exist(self,objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return self.api.muticast_script_exist(objprocess)
+
+    def xmlrpc_clear_script_multicast(self,objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        return self.api.clear_script_multicast(objprocess)
+
+    def xmlrpc_stop_process_multicast(self,objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        self.logger.info("*****stop  %s" % objprocess)
+        return self.api.stop_process_multicast(objprocess)
+
     def xmlrpc_imagingServerConfigurationSet(self, conf):
         return self.api.imagingServerConfigurationSet(conf)
 

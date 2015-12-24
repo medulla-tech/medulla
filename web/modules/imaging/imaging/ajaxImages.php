@@ -55,6 +55,8 @@ $is_in_profile = False;
 
 if ($type == 'group') {
     $all = xmlrpc_getProfileImages($_GET['gid'], $start, $end, $filter);
+    
+    
 } else {
     $all = xmlrpc_getComputerImages($_GET['uuid'], $start, $end, $filter);
 }
@@ -64,13 +66,22 @@ if ($displayMaster) {
 } else {
     list($count, $images) = $all['images'];
 }
+
+
+    
 $params = getParams();
 
 $addActions = array();
+
+
 $addAction = new ActionPopupItem(_T("Add image to boot menu", "imaging"), "addimage", "addbootmenu", "image", "base", "computers", null, 300, "add");
 $delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "bootmenu_remove", "delbootmenu", "item", "base", "computers", $type."tabbootmenu", 300, "delete");
+
+ 
 $emptyAction = new EmptyActionItem();
 $destroyAction = new ActionPopupItem(_T("Delete the image", "imaging"), "images_delete", "delete", "image", "base", "computers", $type."tabimages", 300, "delete");
+
+
 $showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"), "showtarget", "showtarget", "image", "base", "computers");
 
 $editActions = array();
@@ -92,13 +103,16 @@ $a_destroy = array();
 $a_logs = array();
 $a_info = array();
 $l_im = array();
+
 foreach ($images as $image) {
     $name = $image['name'];
     $l_params = $params;
+    $l_params['is_master'] =  $image['is_master'];
+    $l_params["uuidmaster"] = $image['uuid'];
     $l_params["itemid"] = $image['imaging_uuid'];
     $l_params["itemlabel"] = urlencode($name);
     $l_params["target_uuid"] = $_GET['target_uuid'];
-
+    $l_params["target_name"] = $_GET['target_name'];
     if (isset($image['read_only']) && $image['read_only']) $is_in_profile = True;
 
     if (in_array("dyngroup", $_SESSION["modulesList"])) {
@@ -150,7 +164,6 @@ if (!$actions) {
         }
     }
 }
-
 // show images list
 $l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
 $l->setParamInfo($list_params);
@@ -161,7 +174,6 @@ $l->addExtraInfo($a_inbootmenu, _T("In boot menu", "imaging"));
 if ($is_in_profile) {
     $l->addExtraInfo($a_fromprofile, _T("From profile", "imaging"));
 }
-
 $l->addActionItemArray($addActions);
 
 $l->addActionItem(
@@ -169,7 +181,26 @@ $l->addActionItem(
         "images_iso", "backup", "image", "base", "computers")
 );
 
-// if not in boot menu
+//jfk if not in boot menu
+if ($type == 'group') {
+ $location = getCurrentLocation();
+ if ($location == "UUID1")
+    $location_name = _T("root", "pulse2");
+        else
+    $location_name = xmlrpc_getLocationName($location);
+        $objprocess=array();
+        $scriptmulticast = 'multicast.sh';
+        $path="/tmp/";
+        $objprocess['location']=$location;
+        $objprocess['process'] = $path.$scriptmulticast;
+
+ if (!xmlrpc_muticast_script_exist($objprocess)){
+    $l->addActionItem(
+    new ActionPopupItem(_T("Multicast init", "imaging")." ".$location_name,
+            "multicast", "imaging", "image", "base", "computers")
+        );
+    }
+}
 if ($actions) {
     $l->addActionItem(
         new ActionItem(_T("Edit image", "imaging"),
