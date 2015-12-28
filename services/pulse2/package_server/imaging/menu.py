@@ -877,7 +877,7 @@ def changeDefaultMenuItem(macaddress, value):
     return False
 
 
-##jfk
+
 class ImagingMulticastMenuBuilder:
     """
     Class that builds an imaging menu according to its dict structure.

@@ -573,13 +573,13 @@ def get_ip_address(ifname):
     )[20:24])
 
 def start_process(processname):
-    """ ##jfk """
+    """  """
     import subprocess
     subprocess.Popen([processname], shell=True)
     return check_process(processname)
 
 def stop_process(processname):
-    """ ##jfk
+    """ 
     """
     import subprocess
     import signal
@@ -597,7 +597,7 @@ def stop_process(processname):
     return not check_process(processname)
 
 def check_process(processname):
-    """ ##jfk
+    """ 
     """
     import re
     import subprocess
