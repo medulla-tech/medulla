@@ -1006,10 +1006,25 @@ class Imaging(object):
         ret =m.make()
         return [ret]
 
+    def _check_process_drbl_mozilla(self):
+        """ check server dbrl running
+        """
+        import re
+        import subprocess
+        s = subprocess.Popen("ps cax | grep drbl-ocs",
+                             shell=True,
+                             stdout=subprocess.PIPE
+                           )
+        returnprocess = False
+        for x in s.stdout:
+            if re.search("drbl-ocs", x):
+                returnprocess = True
+        return returnprocess
+
     ## Imaging server configuration
     def check_process_multicast(self, objprocess):
-        # controle execution process multicast 
-        return check_process(objprocess['process'])
+        # controle execution process multicast jfk check_process_multicast
+        return self._check_process_drbl_mozilla()
 
     def muticast_script_exist(self, objprocess):
         # controle script execution process multicast exist
@@ -1029,11 +1044,18 @@ class Imaging(object):
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
-        return start_process(objprocess['process'])
+        start_process(objprocess['process'])
+        return self._check_process_drbl_mozilla()
 
     def stop_process_multicast(self, objprocess):
         # stop execution process multicast
-        return stop_process(objprocess['process'])
+        import subprocess
+        s = subprocess.Popen("/usr/sbin/drbl-ocs -h 127.0.0.1 stop",
+                             shell=True,
+                             stdout=subprocess.PIPE
+                           )
+        stop_process(objprocess['process'])
+        return self._check_process_drbl_mozilla()
 
     def imagingServerConfigurationSet(self, conf):
         """
