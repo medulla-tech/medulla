@@ -28,7 +28,7 @@ require_once("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
 if (isProfilesEnable() && areProfilesPossible()) {
     $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("All imaging groups", "dyngroup"), "imaging", "manage",  "list_profiles")
+        new SideMenuItem(_T("All imaging groups", "dyngroup"), "imaging", "manage",  "list_profiles","img/machines/icn_allGroups_active.gif", "img/machines/icn_allGroups_ro.gif")
     );
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("Add an imaging group", "dyngroup"), "imaging", "manage", "computersprofilecreator", "img/machines/icn_addMachines_active.gif", "img/machines/icn_addMachines_ro.gif")
