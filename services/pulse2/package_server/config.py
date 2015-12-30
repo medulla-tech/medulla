@@ -314,11 +314,11 @@ class P2PServerCP(pulse2.utils.Singleton):
             # will contain the boot menus, served by tftp
             bootmenus_folder = 'bootmenus'
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
-            diskless_folder = 'diskless'
+            diskless_folder = 'davos'
             # diskless kernel
-            diskless_kernel = 'kernel'
+            diskless_kernel = 'vmlinuz'
             # diskless initrd
-            diskless_initrd = 'initrd'
+            diskless_initrd = 'initrd.img'
             # diskless initrd for CD-ROM
             diskless_initrdcd = 'initrdcd'
             # diskless memtest tool
