@@ -37,7 +37,7 @@ from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem, ImagingMulticastMenuBuilder
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
