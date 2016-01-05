@@ -954,6 +954,11 @@ drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "
                                         self.disk[0],
                                         self.menu['master'])
         self.template="""
+timeout 10
+default 0
+splashimage /bootloader/bootsplash.xpm
+color 7/1 15/3
+        
 title Restore Multicast
 
 desc %s
