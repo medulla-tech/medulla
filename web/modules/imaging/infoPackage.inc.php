@@ -396,7 +396,7 @@ if (!empty($submod)) {
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
     //jfk
-    $page = new Page("multicast", _T("init multipast", "imaging"));
+    $page = new Page("multicast", _T("init multicast", "imaging"));
     $page->setFile("modules/imaging/imaging/multicast.php");
     $page->setOptions(array("visible" => False, "noHeader" => True));
     $submod->addPage($page);
