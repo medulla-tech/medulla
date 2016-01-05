@@ -1001,12 +1001,12 @@ class Imaging(object):
 
     ## Imaging server configuration
     def imagingServermenuMulticast(self, objmenu):
-        # create menu mukticast 
+        # create menu multicast 
         m =ImagingMulticastMenuBuilder(objmenu)
         ret =m.make()
         return [ret]
 
-    def _check_process_drbl_mozilla(self):
+    def _checkProcessDrblClonezilla(self):
         """ check server dbrl running
         """
         import re
@@ -1024,10 +1024,10 @@ class Imaging(object):
     ## Imaging server configuration
     def check_process_multicast(self, objprocess):
         # controle execution process multicast jfk check_process_multicast
-        return self._check_process_drbl_mozilla()
+        return self._checkProcessDrblClonezilla()
 
     def muticast_script_exist(self, objprocess):
-        # controle script execution process multicast exist
+        # controle script existance script multicast
         return os.path.exists(objprocess['process'])
 
     def clear_script_multicast(self, objprocess):
@@ -1045,7 +1045,7 @@ class Imaging(object):
     def start_process_multicast(self, objprocess):
         # start execution process multicast
         start_process(objprocess['process'])
-        return self._check_process_drbl_mozilla()
+        return self._checkProcessDrblClonezilla()
 
     def stop_process_multicast(self, objprocess):
         # stop execution process multicast
@@ -1055,7 +1055,7 @@ class Imaging(object):
                              stdout=subprocess.PIPE
                            )
         stop_process(objprocess['process'])
-        return self._check_process_drbl_mozilla()
+        return self._checkProcessDrblClonezilla()
 
     def imagingServerConfigurationSet(self, conf):
         """
