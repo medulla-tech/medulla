@@ -968,8 +968,9 @@ kernel (nd)/davos/vmlinuz boot=live config noswap edd=on nomodeset nosplash nopr
 initrd (nd)/davos/initrd.img"""
 
     def ipSelect(self,ipcomp):
+        ipcomp1 = ipcomp.split(":")
         self.logger.debug("ip %s"%(ipcomp))
-        ipcompPart=ipcomp.split(".")
+        ipcompPart = ipcomp[0].split(".")
         score = 0
         for i in [0,1,2,3]:
             self.logger.debug("compare %s  avec %s"%(self.ipPart[i],ipcompPart[i]))
