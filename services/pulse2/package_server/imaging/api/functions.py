@@ -1033,14 +1033,17 @@ class Imaging(object):
     def clear_script_multicast(self, objprocess):
         ## suppression commande multicast 
         # renvoi le groupe a regenerer bootmenu pour unicast
-        f = open("/tmp/multicast.sh",'r')
-        lignes  = f.readlines()
-        f.close()
-        s=[x.split("=")[1].strip(' \t\n\r') for x in lignes if x.startswith( 'groupuuid' ) ]
-        if len(s)== 0:
+        if os.path.exists("/tmp/multicast.sh"):
+            f = open("/tmp/multicast.sh",'r')
+            lignes  = f.readlines()
+            f.close()
+            s=[x.split("=")[1].strip(' \t\n\r') for x in lignes if x.startswith( 'groupuuid' ) ]
+            if len(s)== 0:
+                return -1
+            os.remove("/tmp/multicast.sh")
+            return s[0]
+        else:
             return -1
-        os.remove(objprocess['process'])
-        return s[0]
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
