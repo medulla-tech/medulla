@@ -965,7 +965,8 @@ desc %s
 
 kernel (nd)/davos/vmlinuz boot=live config noswap edd=on nomodeset nosplash noprompt vga=788 fetch=tftp://%s/davos/fs.squashfs mac=%s revorestorenfs image_uuid=%s davos_action=RESTORE_IMAGE_MULTICAST
 
-initrd (nd)/davos/initrd.img"""
+initrd (nd)/davos/initrd.img
+"""
 
     def ipSelect(self,ipcomp):
         ipcomp1 = ipcomp.split(":")

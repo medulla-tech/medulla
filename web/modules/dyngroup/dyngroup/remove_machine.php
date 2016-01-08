@@ -29,7 +29,7 @@ $uuid = quickGet('objectUUID');
 
 if (quickGet('valid')) {
     if (in_array("imaging", $_SESSION["modulesList"])) {
-        include('modules/imaging/includes/xmlrpc.inc.php');
+        require_once('modules/imaging/includes/xmlrpc.inc.php');
         if (xmlrpc_isProfileRegistered($gid)) {
             // Get Current Location
             $location = xmlrpc_getProfileLocation($gid);

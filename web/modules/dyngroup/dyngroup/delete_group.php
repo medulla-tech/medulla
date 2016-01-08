@@ -21,6 +21,10 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 require_once("modules/dyngroup/includes/includes.php");
+if (in_array("imaging", $_SESSION["modulesList"])) {
+            // Get Current Location
+            require_once('modules/imaging/includes/xmlrpc.inc.php');
+            }
 $location ="";
 $id = quickGet('gid');
 $group = new Group($id, False);
