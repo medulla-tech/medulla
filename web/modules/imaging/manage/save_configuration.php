@@ -30,7 +30,7 @@ require_once("includes/acl.inc.php");
 require_once("includes/session.inc.php");
 require_once("includes/PageGenerator.php");
 require("modules/imaging/includes/includes.php");
-require("modules/imaging/includes/xmlrpc.inc.php");
+require_once("modules/imaging/includes/xmlrpc.inc.php");
 
 $location = getCurrentLocation();
 $params = getParams();

@@ -22,7 +22,7 @@
  */
 
 if(in_array("imaging", $_SESSION["modulesList"]))
-    require('modules/imaging/includes/xmlrpc.inc.php');
+    require_once('modules/imaging/includes/xmlrpc.inc.php');
 
 require_once('modules/dyngroup/includes/dyngroup.php'); // for getPGobject method
 

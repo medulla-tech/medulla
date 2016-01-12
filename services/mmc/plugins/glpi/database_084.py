@@ -51,6 +51,8 @@ from mmc.plugins.glpi.utilities import complete_ctx
 from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode_utf8, encode_utf8, fromUUID, toUUID, setUUID
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
+from distutils.version import LooseVersion, StrictVersion
+
 
 
 class Glpi084(DyngroupDatabaseHelper):
@@ -77,7 +79,8 @@ class Glpi084(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
 	except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
-        if self._glpi_version >= '0.84':
+        if LooseVersion(self._glpi_version) >= LooseVersion('0.84') and LooseVersion(self._glpi_version) <  LooseVersion("0.85"):
+#	if self._glpi_version >= '0.84':
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
         else:
