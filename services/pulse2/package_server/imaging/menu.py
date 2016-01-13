@@ -958,7 +958,7 @@ timeout 10
 default 0
 splashimage /bootloader/bootsplash.xpm
 color 7/1 15/3
-        
+
 title Restore Multicast
 
 desc %s
