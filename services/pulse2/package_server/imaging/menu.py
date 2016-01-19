@@ -985,7 +985,7 @@ initrd (nd)/davos/initrd.img
 
     def choiseMacadress(self):
         rest = True
-        for k, v in self.menu['conputer'].iteritems():
+        for k, v in self.menu['computer'].iteritems():
             if self.ipSelect(v):
                 mac = pulse2.utils.reduceMACAddress(k)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))

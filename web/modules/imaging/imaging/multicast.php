@@ -35,7 +35,6 @@ $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 if ($_POST) {
     $nb = extract($_POST);
-    //$location = $itemid;
     $location = getCurrentLocation();
     $list = getRestrictedComputersList(0, -1, array('gid'=> $gid, 'hostname'=> '', 'location'=> $location), False);
     list($count, $masters) = xmlrpc_getLocationImages($location);
@@ -78,7 +77,7 @@ if ($_POST) {
     }
     $objval=array();
     
-    $objval['conputer']=array();
+    $objval['computer']=array();
     if ( count($list) < intval($numbercomputer)){
         $msg = sprintf( _T("Sorry Multicast menu has not been created : (there is no  %d computers in the group)"),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
@@ -104,8 +103,8 @@ if ($_POST) {
             printf ("%s :: %s<br>",$net[1]['macAddress'][$t],$net[1]['ipHostNumber'][$t] );
         }
     }
-    $objval['conputer']= $mach;
-    if (count($objval['conputer']) == 0 )
+    $objval['computer']= $mach;
+    if (count($objval['computer']) == 0 )
     {
         $msg = _T("Sorry Multicast menu has not been created : (there is no computers in the group)", "imaging");
         new NotifyWidgetFailure($msg);
