@@ -40,13 +40,13 @@ if ($_POST) {
     list($count, $masters) = xmlrpc_getLocationImages($location);
     if (count($list) == 0 )
     {
-        $msg = _T("Sorry Multicast menu has not been created : (there is no computers in the group]", "imaging");
+        $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);
-         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
+        header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
     if (!isset($numbercomputer)){
-        $msg = sprintf( _T("Sorry Multicast menu has not been created : (nb computers no defined)"));
+        $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
@@ -54,32 +54,28 @@ if ($_POST) {
     {
         $numbercomputer = intval($numbercomputer);
     }
-
     if (!(gettype ( $numbercomputer ) == "integer")){
-        $msg = sprintf( _T("Sorry Multicast menu has not been created : (nb computers missing)"));
+        $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-
     if ( count($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Sorry Multicast menu has not been created : (there is no  %d computers in the group) (nb computers between ]0,%d]"),intval($numbercomputer),count($list));
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     };
-
     if (intval($numbercomputer)==0 ){
-        $msg = sprintf( _T("Sorry Multicast menu has not been created : (nb computers between [1,%d])"),count($list));
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
     $objval=array();
-    
     $objval['computer']=array();
     if ( count($list) < intval($numbercomputer)){
-        $msg = sprintf( _T("Sorry Multicast menu has not been created : (there is no  %d computers in the group)"),intval($numbercomputer));
+        $msg = sprintf( _T("Multicast menu has not been created : the imaging group contains %d computers and you have entered %d"),count($list),intval($numbercomputer));   
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
@@ -104,15 +100,18 @@ if ($_POST) {
         }
     }
     $objval['computer']= $mach;
+
+    
+    
     if (count($objval['computer']) == 0 )
     {
-        $msg = _T("Sorry Multicast menu has not been created : (there is no computers in the group)", "imaging");
+        $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
     if (!isset($objval['path']) || $objval['path']=="" ){
-        $msg = _T("Sorry Multicast menu has not been created : (Sorry! path mater missing", "imaging");
+        $msg = _T("Multicast menu has not been created : the selected master is missing on disk", "imaging");
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
