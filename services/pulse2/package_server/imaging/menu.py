@@ -899,12 +899,12 @@ class ImagingMulticastMenuBuilder:
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip
         self.ipPart=self.public_ip.split(".")
-        self.listnameinterface=os.listdir("/sys/class/net/")
-        for interface in self.listnameinterface:
-            if pulse2.utils.get_ip_address(interface)==self.public_ip:
-                self.nameinterface=interface
-                break
-        self.logger.info('interface [%s] ip [%s]'%(self.nameinterface,self.public_ip))
+        #self.listnameinterface=os.listdir("/sys/class/net/")
+        #for interface in self.listnameinterface:
+            #if pulse2.utils.get_ip_address(interface)==self.public_ip:
+                #self.nameinterface=interface
+                #break
+        #self.logger.info('interface [%s] ip [%s]'%(self.nameinterface,self.public_ip))
         self.action = "startdisk"
         diskfile = os.path.join(self.menu['path'], "disk")
         #load disk restore
