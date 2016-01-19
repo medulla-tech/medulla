@@ -35,7 +35,8 @@ $label = urldecode($_GET['itemlabel']);
 $params = getParams();
 if ($_POST) {
     $nb = extract($_POST);
-    $location = $itemid;
+    //$location = $itemid;
+    $location = getCurrentLocation();
     $list = getRestrictedComputersList(0, -1, array('gid'=> $gid, 'hostname'=> '', 'location'=> $location), False);
     list($count, $masters) = xmlrpc_getLocationImages($location);
     if (count($list) == 0 )
