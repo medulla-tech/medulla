@@ -1184,7 +1184,7 @@ class SetupApp(object):
                      self.confs['plugins/msc.ini'].get('msc', 'download_directory_path'),
                      self.confs['pulse2/package-server/package-server.ini'].get('main', 'tmp_input_dir'),
                      LoggingConfig.log_dir]:
-            if not os.path.isdir(path):
+	     if path and not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
 
