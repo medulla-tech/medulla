@@ -802,6 +802,7 @@ class SetupApp(object):
         self.defaults['inventory.service.enable'] = self.options["server_inventory"]
         self.defaults['package.service.enable'] = self.options["server_package"]
         self.defaults['glpi.plugin.enable'] = self.options["glpi_enable"]
+        self.defaults['backup.service.enable'] = self.options["server_backup"]
 
         self.defaults['ldapurl'] = self.options['ldapurl'] or self.confs['plugins/base.ini'].get('ldap', 'ldapurl')
         self.defaults['ldapbasedn'] = self.options['ldapbasedn'] or self.confs['plugins/base.ini'].get('ldap', 'baseDN')
@@ -844,6 +845,8 @@ class SetupApp(object):
                                                            self.defaults['glpi.plugin.enable'])
         self.config['package.service.enable'] = self.read_bool('Enable package server (proxy)',
                                                                self.defaults['package.service.enable'])
+        self.config['backup.service.enable'] = self.read_bool('Enable backup server (backuppc)',
+                                                               self.defaults['backup.service.enable'])
         self.config['server.ip.external'] = self.read_ip('Server external IP address',
                                                          self.defaults['ipexternal'])
         self.config['backuppc_ip'] = self.read_opt('BackupPC IP', self.defaults['backuppc_ip'])
@@ -1268,7 +1271,7 @@ class SetupApp(object):
 
         # Associate local BackupPC server to first entity (UUID1)
         binpath = path_lookup('pulse2-backup-servers')
-        if binpath is not None:
+        if binpath is not None and self.config['backup.service.enable']:
             cmd = binpath + ' -a -e ' + self.config['backuppc_entity'] + ' -p http://' + self.config['backuppc_ip'] + '/backuppc/index.cgi'
             log.debug('Call: %s' % cmd)
             if call(cmd, shell=True) != 0:
@@ -1363,6 +1366,9 @@ if __name__ == '__main__':
     parser.add_option("--disable-package", dest="disable_package",
                       default=False, action="store_true",
                       help="Disable package server")
+    parser.add_option("--disable-backup", dest="disable_backup",
+                      default=False, action="store_true",
+                      help="Disable backup server")
     parser.add_option("--glpi-enable", dest="enable_glpi",
                       default=False, action="store_true",
                       help="Enable GLPI plugin")
