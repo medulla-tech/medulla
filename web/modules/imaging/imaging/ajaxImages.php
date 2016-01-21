@@ -32,6 +32,7 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require_once('../includes/xmlrpc.inc.php');
+require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
