@@ -258,32 +258,42 @@ class SystemctlHandler(object):
     apache_dir = None
 
     def enable_srv(self, name):
-        ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config, shell=True)
+        else:
+            ret = call("/usr/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
 
     def disable_srv(self, name):
-        ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
+        default_config = os.path.join(sysconfdir, 'default', name)
+        if os.path.exists(default_config):
+            ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config, shell=True)
+        else:
+            ret = call("/usr/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
 
     def start_srv(self, name):
-        ret = call("/sbin/service %(name)s start" % {'name': name}, shell=True)
+        ret = call("/usr/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
         return ret==0
 
     def stop_srv(self, name):
-        ret = call("/sbin/service %(name)s stop" % {'name': name}, shell=True)
+        ret = call("/bin/systemctl stop %(name)s.service" % {'name': name}, shell=True)
         return ret==0
 
     def reload_srv(self, name):
-        ret = call("/sbin/service %(name)s reload" % {'name': name}, shell=True)
+        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True) 
         return ret==0
 
 
 def get_distro_handler():
-    if os.path.exists('/usr/sbin/update-rc.d'):
+    if os.path.exists('/bin/systemctl'):
+        return SystemctlHandler()
+    elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
     elif os.path.exists('/bin/systemctl'):
         return SystemctlHandler()
