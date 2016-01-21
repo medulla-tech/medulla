@@ -1,3 +1,9 @@
+Pulse 2 3.3.0
+=============
+ * [BUGFIX]  Allow to disable backuppc 
+ * [BUGFIX]  Enhance systemd support in pulse2-setup
+ * [FEATURE] Add Multicast support
+
 Pulse 2 1.3.0
 =============
 
