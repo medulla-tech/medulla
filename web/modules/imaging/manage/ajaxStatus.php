@@ -93,6 +93,9 @@ if (!empty($global_status)) {
  $objprocess=array();
  $objprocess['location']=$_GET['location'];
  $objprocess['process'] = $path.$scriptmulticast;
+ 
+if (xmlrpc_muticast_script_exist($objprocess)){ 
+ 
 // detection si multicast terminer 
 echo '<script type="text/javascript">';
 echo '
