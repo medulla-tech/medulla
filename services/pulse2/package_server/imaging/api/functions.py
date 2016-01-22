@@ -1025,6 +1025,10 @@ class Imaging(object):
     def check_process_multicast(self, objprocess):
         # controle execution process multicast jfk check_process_multicast
         return self._checkProcessDrblClonezilla()
+    
+    def check_process_multicast_finish(self, objprocess):
+        # controle process multicast terminat
+        return os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
 
     def muticast_script_exist(self, objprocess):
         # controle script existance script multicast
@@ -1033,6 +1037,8 @@ class Imaging(object):
     def clear_script_multicast(self, objprocess):
         ## suppression commande multicast 
         # renvoi le groupe a regenerer bootmenu pour unicast
+        if os.path.exists("/tmp/processmulticast"):
+            os.remove("/tmp/processmulticast")
         if os.path.exists("/tmp/multicast.sh"):
             f = open("/tmp/multicast.sh",'r')
             lignes  = f.readlines()

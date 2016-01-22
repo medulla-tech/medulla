@@ -54,6 +54,11 @@ $page = new Page("multicastaction");
 $page->setFile("modules/imaging/manage/multicastaction.php");
 $submod->addPage($page);
 
+
+$page = new Page("ajaxcheckstatusmulticast");
+$page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
+$submod->addPage($page);
+
 $page = new Page("index", _T("Server status", "imaging"));
 $submod->addPage($page);
 

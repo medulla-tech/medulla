@@ -40,6 +40,10 @@ function xmlrpc_stop_process_multicast ($objprocess){
     return xmlCall("imaging.stop_process_multicast", array($objprocess));
 }
 
+function xmlrpc_check_process_multicast_finish ($objprocess){
+    return xmlCall("imaging.check_process_multicast_finish", array($objprocess));
+}
+
 function xmlrpc_start_process_multicast ($objprocess){
     return xmlCall("imaging.start_process_multicast", array($objprocess));
 }

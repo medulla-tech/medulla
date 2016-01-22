@@ -451,7 +451,25 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             deferred = []
         return deferred
-  
+    
+    def check_process_multicast_finish(self, process):
+        #return True
+        # controle execution process multicast jfk check_process_multicast
+        location=process['location']
+        db = ImagingDatabase()
+        #logger = logging.getLogger()
+        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.check_process_multicast_finish(process)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+    
     def muticast_script_exist(self,process):
         # controle existance  multicast script jfk check_process_multicast
         location=process['location']
@@ -483,8 +501,7 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def start_process_multicast(self,process):
-        # controle execution process multicast jfk check_process_multicast
-        logging.getLogger().error("**** process %s"%process)
+        # controle execution process multicast
         location=process['location']
         db = ImagingDatabase()
         #logger = logging.getLogger()

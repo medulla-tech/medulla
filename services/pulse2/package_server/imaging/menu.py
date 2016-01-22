@@ -933,6 +933,7 @@ class ImagingMulticastMenuBuilder:
                                         #self.nameinterface )
 
         self.templatecmdline = """#!/bin/bash
+echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast  
 mastername="%s"
 localisationmaster="%s"
 masteruuid=%s

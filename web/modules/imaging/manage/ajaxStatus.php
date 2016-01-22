@@ -88,22 +88,33 @@ if (!empty($global_status)) {
  // 1) start /tmp/multicast.sh
  -->
  <?php
- 
-
  $scriptmulticast = 'multicast.sh';
  $path="/tmp/";
  $objprocess=array();
  $objprocess['location']=$_GET['location'];
  $objprocess['process'] = $path.$scriptmulticast;
+// detection si multicast terminer 
+echo '<script type="text/javascript">';
+echo '
+var locations = "'.$_GET['location'].'";';
+echo 'var path = "'.$path.'";';
+echo 'var scriptmulticast = "'.$scriptmulticast.'";';
+echo'
+var interval = setInterval(function() {
+        var request = jQuery.ajax({
+            url: "modules/imaging/manage/ajaxcheckstatusmulticast.php",
+            type: "GET",
+            data: {"location" :locations,"path": path,"scriptmulticast" : scriptmulticast}
+    });
+    request.done(function(msg) {
+        if(msg==1){ jQuery("#checkprocess").hide(); }
+    });
+},1000);
+ </script>';
 
-            
- if (xmlrpc_muticast_script_exist($objprocess)){
     echo '
-        <div class="status">
-            <div class="status_block">';
-            
-            //xmlrpc_getProfileLocation($target_uuid)
-            
+        <div class="status" id="checkprocess">
+        <div class="status_block">  ';
     // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
     $objprocess['process'] = $scriptmulticast;
     if (xmlrpc_check_process_multicast($objprocess)){
@@ -143,7 +154,6 @@ if (!empty($global_status)) {
         echo '" />    
         </form>';
         echo "<br>";
-        
         echo '<form action="'; 
         echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="clear" />';
@@ -155,10 +165,7 @@ if (!empty($global_status)) {
         echo _T("Clear multicast deploy", "imaging");
         echo '" />    
         </form>';
-        
-        
-        
-            }
+    }
     echo'
             </div>
         </div>';

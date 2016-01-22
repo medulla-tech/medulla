@@ -389,7 +389,12 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:stop_process_multicast", objprocess)
         return d
 
-
+    def check_process_multicast_finish(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        d = self.callRemote("check_process_multicast_finish", objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast_finish", objprocess)
+        return d
+    
 class ImagingApi(Imaging):
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
