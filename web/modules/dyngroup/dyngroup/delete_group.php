@@ -47,7 +47,7 @@ if ($type == 1) { // Imaging group
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
             // Get Current Location
-            include('modules/imaging/includes/xmlrpc.inc.php');
+            require_once('modules/imaging/includes/xmlrpc.inc.php');
             $location = xmlrpc_getProfileLocation($id);
             $objprocess=array();
             $scriptmulticast = 'multicast.sh';
