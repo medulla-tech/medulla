@@ -46,7 +46,11 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
         Date, Integer, ForeignKey, asc, or_, not_, desc, func, distinct
 from sqlalchemy.orm import create_session, mapper
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
-from sqlalchemy.sql.expression import ColumnOperators
+
+try:
+    from sqlalchemy.sql.expression import ColumnOperators
+except ImportError:
+    from sqlalchemy.sql.operators import ColumnOperators
 
 import logging
 import re
