@@ -3,4 +3,5 @@ Pulse 2 3.3.0
  * [BUGFIX]  Allow to disable backuppc 
  * [BUGFIX]  Enhance systemd support in pulse2-setup
  * [FEATURE] Add Multicast support
-
+ * [BUGFIX]  Fix support for new sqlalchemy
+ * [BUGFIX]  Fix support for new python-twisted
