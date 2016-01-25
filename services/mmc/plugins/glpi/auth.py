@@ -26,7 +26,12 @@ import urllib
 import re
 
 from twisted.internet import reactor, defer
-from twisted.web.client import HTTPClientFactory, _parse, getPage
+try:
+    from twisted.web.client import HTTPClientFactory, _parse, getPage
+    parseAvailable = True
+except ImportError:
+    from twisted.web.client import HTTPClientFactory, _URI, getPage
+    parseAvailable = False
 
 from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI
 from mmc.support.mmctools import getConfigFile
@@ -117,9 +122,17 @@ def getPageWithHeader(url, contextFactory=None, *args, **kwargs):
     Same as twisted.web.client.getPage, but we keep the HTTP header in the
     result thanks to the HTTPClientFactoryWithHeader class
     """
-    scheme, host, port, path = _parse(url)
+    if parseAvailable:
+        scheme, host, port, path = _parse(url)
+    else:
+        uri = _URI.fromBytes(url)
+        scheme = uri.scheme
+        host = uri.host
+        port = uri.port
+
     factory = HTTPClientFactoryWithHeader(url, *args, **kwargs)
     d = factory.deferred
+
     if scheme == 'https':
         from twisted.internet import ssl
         if contextFactory is None:
