@@ -458,6 +458,14 @@ else {
             $profileNetworks = xmlrpc_getProfileNetworks($target_uuid);
             foreach ($profileNetworks as $networks) {
                 $networks = $networks[1];
+                foreach (range(0, count($networks['ipHostNumber']) - 1) as $i) {
+                    if(filter_var($networks['ipHostNumber'][$i], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) == ""){
+                        unset($networks['ipHostNumber'][$i]);
+                        unset($networks['macAddress'][$i]);
+                        unset($networks['networkUuids'][$i]);
+                        unset($networks['domain'][$i]);
+                    }
+                }
                 if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                     if (count($networks['macAddress']) > 1) {
                         $f->push(new Table());
@@ -582,7 +590,6 @@ else {
                 $f->pop();
             }
         }
-
         /*
          * Network card selection
          * If more than one network card, display a select form to select the one to use with imaging
@@ -590,7 +597,14 @@ else {
         if ($is_registering && $type == '') {
             $networks = xmlCall('base.getComputersNetwork', array(array('uuid'=>$_GET["target_uuid"])));
             $networks = $networks[0][1];
-
+            foreach (range(0, count($networks['ipHostNumber']) - 1) as $i) {
+                if(filter_var($networks['ipHostNumber'][$i], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) == ""){
+                    unset($networks['ipHostNumber'][$i]);
+                    unset($networks['macAddress'][$i]);
+                    unset($networks['networkUuids'][$i]);
+                    unset($networks['domain'][$i]);
+                }
+            }
             if (is_array($networks) && count($networks) > 1 and isset($networks['macAddress'])) {
                 if (count($networks['macAddress']) > 1) {
                     $f->push(new Table());
