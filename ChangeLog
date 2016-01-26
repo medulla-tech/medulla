@@ -5,3 +5,4 @@ Pulse 2 3.3.0
  * [FEATURE] Add Multicast support
  * [BUGFIX]  Fix support for new sqlalchemy
  * [BUGFIX]  Fix support for new python-twisted
+ * [BUGFIX]  Fix pulse2-cm initscipt for debian
