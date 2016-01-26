@@ -1424,6 +1424,7 @@ if __name__ == '__main__':
         'ldappasswd': options.ldappasswd,
         'server_inventory': not options.disable_inventory,
         'server_package': not options.disable_package,
+        'server_backup': not options.disable_backup,
         'glpi_enable': options.enable_glpi,
         'glpi_purge_machines': options.glpi_purge_machines,
         'glpi_webservices_user': options.glpi_webservices_user,
