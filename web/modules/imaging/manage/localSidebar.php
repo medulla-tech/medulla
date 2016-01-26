@@ -42,7 +42,11 @@ $sidemenu->addSideMenuItem(
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("Imaging Configuration","imaging"), "imaging", "manage", "configuration", "modules/imaging/graph/images/imaging-configuration-active.png", "modules/imaging/graph/images/imaging-configuration-inactive.png")
 );
-
+// $sidemenu->addSideMenuItem(
+//     new SideMenuItem(_T("Windows Sysprep Answer File","imaging"), "imaging", "manage", "unattended", 
+//  "modules/imaging/graph/images/imaging-configuration-active.png", 
+//  "modules/imaging/graph/images/imaging-configuration-inactive.png")
+// );
 if (in_array("dyngroup", $_SESSION["modulesList"])) {
     require("modules/dyngroup/dyngroup/localImagingSidebar.php");
 }

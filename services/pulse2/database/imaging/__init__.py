@@ -3152,6 +3152,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def getListImagingServerAssociated(self):
+        """
+        method return list imaging server associated
+        @return: @return: list of imaging server associated
+        @rtype: list
+        """
+        session = create_session()
+        q = session.query(ImagingServer).filter(self.imaging_server.c.associated == 1)
+        q = q.all()
+        session.close()
+        return q
 
     def __getLinkedImagingServerForEntity(self, session, loc_id):
         """
