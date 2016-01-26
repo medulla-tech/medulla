@@ -262,7 +262,7 @@ class SystemctlHandler(object):
         if os.path.exists(default_config):
             ret = call("sed -i 's/ENABLE=no/ENABLE=yes/' %s" % default_config, shell=True)
         else:
-            ret = call("/usr/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
+            ret = call("/bin/systemctl enable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
@@ -272,13 +272,13 @@ class SystemctlHandler(object):
         if os.path.exists(default_config):
             ret = call("sed -i 's/ENABLE=yes/ENABLE=no/' %s" % default_config, shell=True)
         else:
-            ret = call("/usr/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
+            ret = call("/bin/systemctl disable %(name)s.service" % {'name': name}, shell=True)
         if ret != 0:
             return False
         return ret==0
 
     def start_srv(self, name):
-        ret = call("/usr/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
+        ret = call("/bin/systemctl start %(name)s.service" % {'name': name}, shell=True)
         return ret==0
 
     def stop_srv(self, name):
