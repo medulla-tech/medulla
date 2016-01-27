@@ -37,7 +37,8 @@ $objprocess['location']=$location;
 $objprocess['process'] = $path.$scriptmulticast;
 if( xmlrpc_check_process_multicast_finish($objprocess)){
     $objprocess['process'] = $path.$scriptmulticast;
-    xmlrpc_clear_script_multicast($objprocess);
+    $gr = xmlrpc_clear_script_multicast($objprocess);
+            if ($gr != -1) xmlrpc_synchroProfile($gr);
     echo "1";
 }
 else{

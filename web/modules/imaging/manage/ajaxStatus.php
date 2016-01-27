@@ -179,7 +179,8 @@ var interval = setInterval(function() {
         $objprocess['process'] = $scriptmulticast;
         xmlrpc_stop_process_multicast ($objprocess);
         $objprocess['process'] = $path.$scriptmulticast;
-        xmlrpc_clear_script_multicast($objprocess);
+        $gr = xmlrpc_clear_script_multicast($objprocess);
+            if ($gr != -1) xmlrpc_synchroProfile($gr);
     }
 }
 ?>
