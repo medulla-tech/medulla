@@ -2326,8 +2326,38 @@ class ImagingRpcProxy(RpcProxyI):
                 defer_list = defer.DeferredList(defer_list)
                 defer_list.addCallback(sendResult)
                 return defer_list
-
         return [True]
+
+    def Windows_Answer_list_File(self,start=0,end=-1):
+        """
+            returns a list of names (with extension, without full path) of all files 
+        """
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+        if not path.exists(filexml):
+            makedirs(filexml, 0722)
+        files = []
+        osfile = []
+        for name in listdir(filexml):
+            absolufile = path.join(filexml, name)
+            if name.endswith('.xml') and path.isfile(absolufile):
+                files.append(name)
+                fichier = open(absolufile,"r")
+                for ligne in fichier:
+                    if ligne.startswith("OS"):
+                        print ligne
+                        osfile.append(ligne)
+                        break;
+                else:
+                    osfile.append("os missing")
+                fichier.close()
+        # create object reponse
+        result = {}
+        result['count'] = len(files)
+        if end == -1:
+            end = result['count']
+        result['file'] = files[start:end]
+        result['os'] = osfile[start:end]
+        return result
 
     def Windows_Answer_File_Generator(self, xmlWAFG, title):
         filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
