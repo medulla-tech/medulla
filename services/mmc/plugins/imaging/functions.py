@@ -3376,7 +3376,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
             for tt in ListImagingServerAssociated:
                 for z in keyvaleur:
                     distinct_loc[z][0]=tt
-                    synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+            synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
             #return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
