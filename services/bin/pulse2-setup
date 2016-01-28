@@ -291,12 +291,10 @@ class SystemctlHandler(object):
 
 
 def get_distro_handler():
-    if os.path.exists('/bin/systemctl'):
+    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') == "/lib/systemd/systemd":
         return SystemctlHandler()
     elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
-    elif os.path.exists('/bin/systemctl'):
-        return SystemctlHandler()
     else:
         return DistroHandler()
 
