@@ -1043,7 +1043,7 @@ initrd (nd)/davos/initrd.img
             fid.close()
             os.chmod(fichier, stat.S_IXUSR| stat.S_IWUSR |stat.S_IRUSR)
             self.logger.debug('Successfully wrote multicast command into file %s' % ( fichier))
-            return False
+            return True
         except IOError, e:
             self.logger.error("While writing commande for multicast command"
                          % (filename, e))
