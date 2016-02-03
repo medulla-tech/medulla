@@ -30,6 +30,7 @@ import re
 from sets import Set
 import datetime
 import calendar, hashlib
+import time
 from configobj import ConfigObj
 from xmlrpclib import ProtocolError
 
@@ -1484,12 +1485,23 @@ class Glpi0855(DyngroupDatabaseHelper):
         return ret
 
     def getMachinesLocations(self, machine_uuids):
-        session = create_session()
-        q = session.query(Entities).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
-        session.close()
+        time.sleep(20 )
         ret = {}
-        for loc, mid in q:
-            ret[toUUID(mid)] = loc.toH()
+        session = create_session()
+        q = session.query(Entities.id,Entities.name,Entities.completename,Entities.comment,Entities.level).all()
+        l = session.query(Machine.id,Machine.entities_id,Machine.name).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        #realise la jointure en python probleme sinon de cache
+        for z in l:#machine
+            for k in q : #entity
+                if z.entities_id == k.id:
+                    val={}
+                    val['uuid']=toUUID(k.id)
+                    val['name']=k.name
+                    val['completename']=k.completename
+                    val['comments']=k.comment
+                    val['level']=k.level
+                    ret[toUUID(z.id)] = val
+        session.close() 
         return ret
 
     def getUsersInSameLocations(self, userid, locations = None):
