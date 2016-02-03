@@ -151,13 +151,20 @@ if ($_POST) {
 //     echo "</pre>";
 //     exit;
     $list =  xmlrpc_imagingServermenuMulticast($objval);
-    $msg = _T("Multicast menu has been successfully created.", "imaging");
-    new NotifyWidgetSuccess($msg);
-    header("Location: " . urlStrRedirect("imaging/manage/index"));
+    if($list == 1){
+        $msg = _T("Multicast menu has been successfully created.", "imaging");
+        new NotifyWidgetSuccess($msg);
+        header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
     }
+    else{
+        $msg = _T("Multicast menu has not been created : verify server imaging running", "imaging");
+        new NotifyWidgetFailure($msg);
+        header("Location: " . urlStrRedirect("imaging/manage/index"));
+        exit;
+    }
+}
 ?>
-
 <h2>
 <?php echo sprintf(_T("deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast", "imaging"), $label,$_GET[target_name]) ?>
 </h2>
