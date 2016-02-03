@@ -80,6 +80,7 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     };
+
     $objval['location']=$location;
     $objval['nbcomputer'] = intval($numbercomputer);
     foreach($masters as $val){
@@ -90,19 +91,48 @@ if ($_POST) {
             $objval['master'] =$_POST['uuidmaster'];
         }
     }
+
     $objval['group'] = $target_uuid;
     $profileNetworks1 = xmlrpc_getProfileNetworks($target_uuid);
+
     $mach=array();
     foreach($profileNetworks1 as $net){
         for ($t=0;$t<count($net[1]['macAddress']);$t++){
-            $mach[$net[1]['macAddress'][$t]]=$net[1]['ipHostNumber'][$t];
-            printf ("%s :: %s<br>",$net[1]['macAddress'][$t],$net[1]['ipHostNumber'][$t] );
+            $ip = explode(":", $net[1]['ipHostNumber'][$t]);
+            if (filter_var($ip[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {;
+                $mach[$net[1]['macAddress'][$t]]=$ip[0];
+                printf ("%s :: %s<br>",$net[1]['macAddress'][$t],$ip[0]);
+            }
         }
     }
-    $objval['computer']= $mach;
+    // list machine sans ipv4
+    $machine = array();
+    foreach($profileNetworks1 as $net){
+        $recherche = False;
+        foreach($net[1]['ipHostNumber'] as $ip){
+            $ip1 = explode(":", $ip);
+            if (filter_var($ip1[0], FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+                $recherche = True;
+                break;
+            }
+        }
+        if ($recherche == False ){
+            $machine[]=$net[1]['objectUUID'][0];
+        };
+    }
+    $nbmachine = count($machine);
+    if($nbmachine !=0 ){
+        $msg = $nbmachine." "._T("computers have a [IPV6] interfaces address exclusively in the group", "imaging")."\n".
+        "list machines : [".implode(" ",$machine)."]";
+        new NotifyWidgetFailure($msg);
+        header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
+        exit;
+    }
 
+     
+    $objval['computer']= $mach;
     
-    
+
     if (count($objval['computer']) == 0 )
     {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
@@ -116,6 +146,10 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
+//     echo "<pre>";
+//     print_r ($objval);
+//     echo "</pre>";
+//     exit;
     $list =  xmlrpc_imagingServermenuMulticast($objval);
     $msg = _T("Multicast menu has been successfully created.", "imaging");
     new NotifyWidgetSuccess($msg);
@@ -154,4 +188,3 @@ if ($_POST) {
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _("Cancel"); ?>" onclick="closePopup();
             return false;" />
 </form>
-
