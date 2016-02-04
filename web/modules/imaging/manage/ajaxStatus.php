@@ -61,8 +61,10 @@ if (!empty($global_status)) {
             <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?> (<?php echo $customMenu_count; ?> <?php echo _T("with custom menu", "imaging") ?>)</p>
             <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>
             <p class="stat"><img src="img/common/cd.png" />
-                <strong><?php echo $short_status['master']; ?></strong>
-                <?php echo _T("masters are available", "imaging") ?>
+            <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
+                <strong>
+                <?php echo $short_status['master']." "; ?></strong><?php echo _T("masters are available", "imaging").'</a>'; ?>
+            </p>
         </div>
     </div>
  <!-- //jfk -->
