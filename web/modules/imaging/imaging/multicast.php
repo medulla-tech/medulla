@@ -158,7 +158,7 @@ if ($_POST) {
         exit;
     }
     else{
-        $msg = _T("Multicast menu has not been created : verify server imaging running", "imaging");
+        $msg = _T("Multicast menu has not been created : check that the imaging server is running", "imaging");
         new NotifyWidgetFailure($msg);
         header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
