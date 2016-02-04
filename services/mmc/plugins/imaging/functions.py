@@ -3363,21 +3363,24 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
     if len(defer_list) == 0:
+        distinct_locs = distinct_loc
         keyvaleur = distinct_loc.keys()
         for tt in ListImagingServerAssociated:
             for z in keyvaleur:
                 distinct_loc[z][0]=tt
                 synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+        return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
     else:
         def sendResult(results, distinct_loc = distinct_loc, target_type = target_type, pid = pid, db = db):
             for result, uuids in results:
                 db.delProfileMenuTarget(uuids)
+            distinct_locs = distinct_loc    
             keyvaleur = distinct_loc.keys()
             for tt in ListImagingServerAssociated:
                 for z in keyvaleur:
                     distinct_loc[z][0]=tt
-            synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
-            #return synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+                    synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = macs)
+            return synchroTargetsSecondPart(ctx, distinct_locs, target_type, pid, macs = macs)
         defer_list = defer.DeferredList(defer_list)
         defer_list.addCallback(sendResult)
         return defer_list

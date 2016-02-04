@@ -151,7 +151,7 @@ if ($_POST) {
 //     echo "</pre>";
 //     exit;
     $list =  xmlrpc_imagingServermenuMulticast($objval);
-    if($list == 1){
+    if($list[0] == 1){
         $msg = _T("Multicast menu has been successfully created.", "imaging");
         new NotifyWidgetSuccess($msg);
         header("Location: " . urlStrRedirect("imaging/manage/index"));

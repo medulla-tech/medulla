@@ -3870,7 +3870,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target = None
         if not self.isTargetRegister(uuid, type, session):
             if location_id == None:
-                location = ComputerLocationManager().getMachinesLocations([uuid])
+                location = ComputerLocationManager().getMachinesLocations1([uuid])
                 location_id = location[uuid]['uuid']
             loc = self.getLinkedEntityByEntityUUID(location_id)
             target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)

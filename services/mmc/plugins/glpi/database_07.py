@@ -1243,7 +1243,10 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = session.query(Location).count()
         session.close()
         return ret
-
+    
+    def getMachinesLocations1(self, machine_uuids):
+        return self.getMachinesLocations( machine_uuids)
+    
     def getMachinesLocations(self, machine_uuids):
         session = create_session()
         q = session.query(Location).add_column(self.machine.c.ID).select_from(self.location.join(self.machine)).filter(self.machine.c.ID.in_(map(fromUUID, machine_uuids))).all()

@@ -124,7 +124,14 @@ class ComputerLocationManager(Singleton):
             return klass().getMachinesLocations(machine_uuids)
         except KeyError:
             return True
-
+    
+    def getMachinesLocations1(self, machine_uuids):
+        try:
+            klass = self.components[self.main]
+            return klass().getMachinesLocations1(machine_uuids)
+        except KeyError:
+            return True
+    
     def getLocationsFromPathString(self, location_path):
         try:
             klass = self.components[self.main]
@@ -181,6 +188,10 @@ class ComputerLocationI(Singleton):
         pass
 
     def getMachinesLocations(self, machine_uuids):
+        """ should return the location in which the machines are as a dict {machine_uuid:location} """
+        pass
+    
+    def getMachinesLocations1(self, machine_uuids):
         """ should return the location in which the machines are as a dict {machine_uuid:location} """
         pass
 

@@ -209,6 +209,8 @@ def getGlpiMachineUri():
 def getMachineUUIDByMacAddress(mac):
     return xmlrpcCleanup(Glpi().getMachineUUIDByMacAddress(mac))
 
+def getMachinesLocations1(uuids):
+    return xmlrpcCleanup(Glpi().getMachinesLocations1(uuids))
 
 def getMachinesLocations(uuids):
     return xmlrpcCleanup(Glpi().getMachinesLocations(uuids))

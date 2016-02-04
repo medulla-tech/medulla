@@ -1485,7 +1485,32 @@ class Glpi0855(DyngroupDatabaseHelper):
         return ret
 
     def getMachinesLocations(self, machine_uuids):
-        time.sleep(20 )
+        session = create_session()
+        q = session.query(Entities.id, Entities.name, Entities.completename, Entities.comment, Entities.level).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        ret = {}
+        for idp, namep,namepc,commentp,levelp,machineid in q:
+            val={}
+            val['uuid']=toUUID(idp)
+            val['name']=namep
+            val['completename']=namepc
+            val['comments']=commentp
+            val['level']=levelp
+            ret[toUUID(machineid)] = val
+        session.close()
+        return ret
+
+    #def getMachinesLocations(self, machine_uuids):
+        #self.logger.info("***********getMachinesLocations");
+        #session = create_session()
+        #q = session.query(Entities).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
+        #session.close()
+        #ret = {}
+        #for loc, mid in q:
+            #ret[toUUID(mid)] = loc.toH()
+        #return ret
+    
+    def getMachinesLocations1(self, machine_uuids):
+        time.sleep(20)
         ret = {}
         session = create_session()
         q = session.query(Entities.id,Entities.name,Entities.completename,Entities.comment,Entities.level).all()

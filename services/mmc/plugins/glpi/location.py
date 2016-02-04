@@ -67,6 +67,9 @@ class GlpiLocation(ComputerLocationI):
     def getMachinesLocations(self, machine_uuids):
         return Glpi().getMachinesLocations(machine_uuids)
 
+    def getMachinesLocations1(self, machine_uuids):
+        return Glpi().getMachinesLocations1(machine_uuids)
+
     def getLocationsFromPathString(self, location_path):
         return Glpi().getLocationsFromPathString(location_path)
 

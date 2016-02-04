@@ -57,6 +57,9 @@ class InventoryLocation(ComputerLocationI):
     def getMachinesLocations(self, machine_uuids):
         return Inventory().getComputersLocations(machine_uuids)
 
+    def getMachinesLocations1(self, machine_uuids):
+        return Inventory().getComputersLocations1(machine_uuids)
+    
     def getLocationsFromPathString(self, location_path):
         return Inventory().getLocationsFromPathString(location_path)
 
