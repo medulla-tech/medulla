@@ -986,7 +986,7 @@ initrd (nd)/davos/initrd.img
             return True
         return False
 
-    def choiseMacadress(self):
+    def chooseMacAddress(self):
         rest = True
         for k, v in self.menu['computer'].iteritems():
             if self.isValidIPv4Address(v):
@@ -1035,7 +1035,7 @@ initrd (nd)/davos/initrd.img
         """
         """
         ##generation bootmenu for multicast
-        if not self.choiseMacadress():
+        if not self.chooseMacAddress():
             return False
         ##generation command line in tmp
         fichier = os.path.join("/tmp","multicast.sh")
