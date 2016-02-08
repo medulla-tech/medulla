@@ -162,7 +162,10 @@ class P2PServerCP(pulse2.utils.Singleton):
             self.public_ip = self.cp.get("main", 'public_ip')
         else:
             self.public_ip = self.bind
-
+        if self.cp.has_option('main', 'public_mask'):
+            self.public_mask = self.cp.get("main", 'public_mask')
+        else:
+            self.public_mask = '255.255.255.0'
         if sys.platform != "win32":
             if self.cp.has_section('daemon'):
                 if self.cp.has_option('daemon', 'pidfile'):

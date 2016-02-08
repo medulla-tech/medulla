@@ -898,6 +898,7 @@ class ImagingMulticastMenuBuilder:
         self.logger.debug('creation commande et menu [%s] '%(menu))
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip
+        self.public_mask = PackageServerConfig().public_mask
         self.ipPart=self.public_ip.split(".")
         #self.listnameinterface=os.listdir("/sys/class/net/")
         #for interface in self.listnameinterface:
