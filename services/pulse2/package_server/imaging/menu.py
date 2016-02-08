@@ -898,10 +898,10 @@ class ImagingMulticastMenuBuilder:
         self.logger.debug('creation commande et menu [%s] '%(menu))
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip
-        self.adress_server = self.ipV4toDecimal(self.public_ip)
+        self.server_address = self.ipV4toDecimal(self.public_ip)
         self.public_mask = PackageServerConfig().public_mask
         self.mask_server = self.ipV4toDecimal(self.public_mask)
-        self.reseauserver = self.adress_server & self.mask_server
+        self.networkserver = self.server_address & self.mask_server
         self.ipPart=self.public_ip.split(".")
         #self.listnameinterface=os.listdir("/sys/class/net/")
         #for interface in self.listnameinterface:
@@ -977,19 +977,19 @@ initrd (nd)/davos/initrd.img
         d = ipv4.split('.')
         return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) +int(d[3])
 
-    def isValidAdressIpV4(self, adressmachine):
-        self.logger.info("controle adress machine %s dans reseau %s"%(adressmachine,self.reseauserver))
+    def isValidIPv4Address(self, adressmachine):
+        self.logger.info("controle of the machine address %s in network %s"%(adressmachine,self.networkserver))
         adressmachine = adressmachine.split(":")[0]
         reseaumachine = self.ipV4toDecimal(adressmachine) &  self.mask_server
-        if self.reseauserver == reseaumachine :
-            self.logger.info("adress machine %s dans reseau %s"%(adressmachine,self.reseauserver))
+        if self.networkserver == reseaumachine :
+            self.logger.info("machine address %s in network %s"%(adressmachine,self.networkserver))
             return True
         return False
 
     def choiseMacadress(self):
         rest = True
         for k, v in self.menu['computer'].iteritems():
-            if self.isValidAdressIpV4(v):
+            if self.isValidIPv4Address(v):
                 mac = pulse2.utils.reduceMACAddress(k)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
                 menuval= self.template%( self.menu['description'],
