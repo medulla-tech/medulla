@@ -1429,10 +1429,7 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = session.query(Location).count()
         session.close()
         return ret
-    
-    def getMachinesLocations1(self, machine_uuids):
-        return self.getMachinesLocations( machine_uuids)
-    
+
     def getMachinesLocations(self, machine_uuids):
         session = create_session()
         q = session.query(Location).add_column(self.machine.c.id).select_from(self.location.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
@@ -3347,6 +3344,10 @@ class Glpi08(DyngroupDatabaseHelper):
         ret = unique(map(lambda m: m.mac, query.all()))
         session.close()
         return ret
+
+    def getAllHostnamesid(self):
+        """ use only glpi 0.855"""
+        pass
 
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []

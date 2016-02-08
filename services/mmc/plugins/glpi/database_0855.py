@@ -1508,26 +1508,6 @@ class Glpi0855(DyngroupDatabaseHelper):
         #for loc, mid in q:
             #ret[toUUID(mid)] = loc.toH()
         #return ret
-    
-    def getMachinesLocations1(self, machine_uuids):
-        time.sleep(20)
-        ret = {}
-        session = create_session()
-        q = session.query(Entities.id,Entities.name,Entities.completename,Entities.comment,Entities.level).all()
-        l = session.query(Machine.id,Machine.entities_id,Machine.name).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
-        #realise la jointure en python probleme sinon de cache
-        for z in l:#machine
-            for k in q : #entity
-                if z.entities_id == k.id:
-                    val={}
-                    val['uuid']=toUUID(k.id)
-                    val['name']=k.name
-                    val['completename']=k.completename
-                    val['comments']=k.comment
-                    val['level']=k.level
-                    ret[toUUID(z.id)] = val
-        session.close() 
-        return ret
 
     def getUsersInSameLocations(self, userid, locations = None):
         """
@@ -3482,6 +3462,20 @@ class Glpi0855(DyngroupDatabaseHelper):
         Get a machine mac addresses
         """
         return self.getMachinesMac(uuid)[uuid]
+
+    def getAllHostnamesid(self):
+        #"""
+        #@return: all uuid hostname defined in the GLPI database
+        #`computertypes_id`
+        #"""
+        session = create_session()
+        query = session.query(Machine.id)
+        query = query.filter(self.machine.c.is_deleted == 0).filter(and_(self.machine.c.is_template == 0,self.machine.c.computertypes_id==2))
+        ret = query.all()
+        session.close()
+        #for q in ret:
+            #result.append(rq.id)
+        return [toUUID(x.id) for x in ret]
 
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []

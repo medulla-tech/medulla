@@ -3564,6 +3564,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return True
 
+    def _synchroEntitieMachineTarget(self, entity , computer_uuid ):
+        session = create_session()
+        try:
+            target=session.query( Target).filter_by(uuid=computer_uuid).one()
+            self.logger.info("valeur computer_uuid :%s"%computer_uuid)
+            self.logger.info("valeur target.fk_entity :%s"%target.fk_entity)
+            self.logger.info("valeurentity :%s"%fromUUID(entity))
+            self.logger.info("*************************")
+            #stmt = update(Target).where(uuid.c.id==computer_uuid).values(fk_entity=fromUUID(entity))
+            target.fk_entity = str(fromUUID(entity))
+            session.flush()
+        except InvalidRequestError, e:
+            self.logger.info("InvalidRequestError :%s"%e.message)
+            session.close()
+            return False
+        return True
+
     def changeTargetsSynchroState(self, uuids, target_type, state):
         session = create_session()
         synchro_states = self.__getSynchroStates(uuids, target_type, session)
@@ -3870,7 +3887,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         target = None
         if not self.isTargetRegister(uuid, type, session):
             if location_id == None:
-                location = ComputerLocationManager().getMachinesLocations1([uuid])
+                location = ComputerLocationManager().getMachinesLocations([uuid])
                 location_id = location[uuid]['uuid']
             loc = self.getLinkedEntityByEntityUUID(location_id)
             target = self.__createTarget(session, uuid, params['target_name'], type, loc.id, menu.id, params)
