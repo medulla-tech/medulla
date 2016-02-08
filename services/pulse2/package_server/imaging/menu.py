@@ -898,7 +898,10 @@ class ImagingMulticastMenuBuilder:
         self.logger.debug('creation commande et menu [%s] '%(menu))
         self.menu = menu
         self.public_ip = PackageServerConfig().public_ip
+        self.adress_server = self.ipV4toDecimal(self.public_ip)
         self.public_mask = PackageServerConfig().public_mask
+        self.mask_server = self.ipV4toDecimal(self.public_mask)
+        self.reseauserver = self.adress_server & self.mask_server
         self.ipPart=self.public_ip.split(".")
         #self.listnameinterface=os.listdir("/sys/class/net/")
         #for interface in self.listnameinterface:
@@ -970,25 +973,23 @@ kernel (nd)/davos/vmlinuz boot=live config noswap edd=on nomodeset nosplash nopr
 initrd (nd)/davos/initrd.img
 """
 
-    def ipSelect(self,ipcomp):
-        ipcomp1 = ipcomp.split(":")
-        self.logger.debug("ip %s"%(ipcomp))
-        ipcompPart = ipcomp1[0].split(".")
-        score = 0
-        for i in [0,1,2,3]:
-            self.logger.debug("compare %s  avec %s"%(self.ipPart[i],ipcompPart[i]))
-            if int(ipcompPart[i])==int(self.ipPart[i]):
-                score = score+1
-        self.logger.debug("score %d   for %s"%(score,ipcomp))
-        if  score >= 3 :
-            self.logger.debug("score True")
+    def ipV4toDecimal(self, ipv4):
+        d = ipv4.split('.')
+        return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) +int(d[3])
+
+    def isValidAdressIpV4(self, adressmachine):
+        self.logger.info("controle adress machine %s dans reseau %s"%(adressmachine,self.reseauserver))
+        adressmachine = adressmachine.split(":")[0]
+        reseaumachine = self.ipV4toDecimal(adressmachine) &  self.mask_server
+        if self.reseauserver == reseaumachine :
+            self.logger.info("adress machine %s dans reseau %s"%(adressmachine,self.reseauserver))
             return True
         return False
 
     def choiseMacadress(self):
         rest = True
         for k, v in self.menu['computer'].iteritems():
-            if self.ipSelect(v):
+            if self.isValidAdressIpV4(v):
                 mac = pulse2.utils.reduceMACAddress(k)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
                 menuval= self.template%( self.menu['description'],
