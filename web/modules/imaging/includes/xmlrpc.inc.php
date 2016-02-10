@@ -25,7 +25,7 @@
  //check process jfk
 function xmlrpc_check_process($process) {
     return xmlCall("imaging.check_process", array($process));
- }
+}
  
 function xmlrpc_imagingServermenuMulticast($obj){
     return xmlCall("imaging.imagingServermenuMulticast", $obj);
@@ -37,7 +37,13 @@ function xmlrpc_check_process_multicast ($objprocess){
 }
 
 function xmlrpc_stop_process_multicast ($objprocess){
+   
     return xmlCall("imaging.stop_process_multicast", array($objprocess));
+}
+
+function xmlrpc_checkDeploymentUDPSender ($objprocess){
+    // $objprocess idem que pour xmlrpc_imagingServermenuMulticast
+    return xmlCall("imaging.checkDeploymentUDPSender", array($objprocess));
 }
 
 function xmlrpc_check_process_multicast_finish ($objprocess){

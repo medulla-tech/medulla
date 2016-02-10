@@ -370,7 +370,13 @@ class Imaging(Pulse2Api):
         d = self.callRemote("start_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:start_process_multicast", objprocess)
         return d
-
+    
+    def checkDeploymentUDPSender(self, objprocess):
+        # controle execution process multicast jfk check_process_multicast
+        d = self.callRemote("checkDeploymentUDPSender", objprocess)
+        d.addErrback(self.onErrorRaise, "Imaging:checkDeploymentUDPSender", objprocess)
+        return d
+    
     def muticast_script_exist(self, objprocess):
         # controle execution process multicast jfk check_process_multicast
         d = self.callRemote("muticast_script_exist", objprocess)

@@ -25,7 +25,7 @@
 Class to manage imaging mmc-agent api
 imaging plugin
 """
-
+import time
 import logging
 from twisted.internet import defer
 from sets import Set as set
@@ -43,10 +43,11 @@ from pulse2.database.imaging import ImagingDatabase, NoImagingServerError
 from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
-
+import threading
 from os import path, makedirs
 
 class ImagingRpcProxy(RpcProxyI):
+    CheckThread = {}
 
     def getGeneratedMenu(self, mac):
         # uuid
@@ -412,17 +413,17 @@ class ImagingRpcProxy(RpcProxyI):
         db.setLocationSynchroState(loc_id, P2ISS.TODO)
         return db.moveItemDownInMenu4Location(loc_id, mi_uuid)
 
-    #def setMethod4location(self, location, method):
-        #"""jfk method unicast or multicast"""
-        #db = ImagingDatabase()
-        #db.multicast_create(location , method)
-        
     def imagingServermenuMulticast(self, objmenu):
-        # jfk 
+        try:    
+            if ImagingRpcProxy.CheckThread[objmenu['location']]==False:
+                ImagingRpcProxy.CheckThread[objmenu['location']] = True
+        except KeyError:
+            ImagingRpcProxy.CheckThread[objmenu['location']] = True
+        finally:
+            a = threading.Thread(None, self.monitorsUDPSender, None, (objmenu,))
+            a.start()
         location=objmenu['location']
         db = ImagingDatabase()
-        #logger = logging.getLogger()
-        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
         i = ImagingApi(imaging_server.encode('utf8'))
@@ -435,12 +436,9 @@ class ImagingRpcProxy(RpcProxyI):
     
     ## Imaging server configuration
     def check_process_multicast(self, process):
-        #return True
         # controle execution process multicast jfk check_process_multicast
         location=process['location']
         db = ImagingDatabase()
-        #logger = logging.getLogger()
-        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
         
@@ -451,17 +449,14 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             deferred = []
         return deferred
-    
+
     def synchroEntitieMachineTarget(self):
         return _synchroEntitieMachineTarget()
-    
+
     def check_process_multicast_finish(self, process):
-        #return True
         # controle execution process multicast jfk check_process_multicast
         location=process['location']
         db = ImagingDatabase()
-        #logger = logging.getLogger()
-        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
         
@@ -472,7 +467,7 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             deferred = []
         return deferred
-    
+
     def muticast_script_exist(self,process):
         # controle existance  multicast script jfk check_process_multicast
         location=process['location']
@@ -489,7 +484,12 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def clear_script_multicast(self, process):
-        # controle existance  multicast script jfk check_process_multicast
+        #check if the script is installed multicast.sh
+        try:    
+            if ImagingRpcProxy.CheckThread[process['location']]==True:
+                ImagingRpcProxy.CheckThread[process['location']] = False
+        except KeyError:        
+            ImagingRpcProxy.CheckThread[process['location']] = False
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -504,11 +504,9 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def start_process_multicast(self,process):
-        # controle execution process multicast
+        # Multicast start
         location=process['location']
         db = ImagingDatabase()
-        #logger = logging.getLogger()
-        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
         
@@ -518,16 +516,56 @@ class ImagingRpcProxy(RpcProxyI):
             deferred.addCallback(lambda x: x)
         else:
             deferred = []
-        logging.getLogger().error("**** deferred %s"%deferred)
         return deferred
 
-    def stop_process_multicast(self,process):
-        # controle execution process multicast jfk check_process_multicast
-        # controle execution process multicast jfk check_process_multicast
+    def monitorsUDPSender(self,objmenu):
+        temp=10;
+        while(ImagingRpcProxy.CheckThread[objmenu['location']] == True):
+            time.sleep(temp)
+            result=self.checkDeploymentUDPSender(objmenu)
+            if result['tranfert'] == True:
+                ImagingRpcProxy.CheckThread[objmenu['location']] = False
+                break
+        else:
+            logging.getLogger().info("regenerated menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+            self.synchroProfile(objmenu['group'])
+
+    def checkDeploymentUDPSender(self,process):
+        """
+        check whether multicast transfer is in progress
+        """
+        resultat = False
+        logger = logging.getLogger()
         location=process['location']
         db = ImagingDatabase()
-        #logger = logging.getLogger()
-        #image, imaging_server = db.getImageAndImagingServer(image_uuid)
+        my_is = db.getImagingServerByUUID(location)
+        imaging_server = my_is.url
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i == None:
+            logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
+            return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
+
+        def treatResult(results):
+            if results:
+                resultat=results
+                return [results]
+            else:
+                resultat=[]
+                return []
+
+        d = i.checkDeploymentUDPSender(process)
+        d.addCallback(treatResult)
+        return resultat
+
+    def stop_process_multicast(self,process):
+        # Multicast stop
+        try:    
+            if ImagingRpcProxy.CheckThread[process['location']]==True:
+                ImagingRpcProxy.CheckThread[process['location']] = False
+        except KeyError:        
+            ImagingRpcProxy.CheckThread[process['location']] = False
+        location=process['location']
+        db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
         i = ImagingApi(imaging_server.encode('utf8'))

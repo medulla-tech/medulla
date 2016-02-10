@@ -107,12 +107,9 @@ class ImagingApi (MyXmlrpc):
 
     def xmlrpc_imagingServermenuMulticast(self, objmenu):
         """
-        #jfk
         """
         return self.api.imagingServermenuMulticast(objmenu)
 
-    
-    
     ## Imaging server configuration
     def xmlrpc_check_process_multicast(self, objprocess):
         # controle execution process multicast jfk check_process_multicast
@@ -133,6 +130,10 @@ class ImagingApi (MyXmlrpc):
     def xmlrpc_clear_script_multicast(self,objprocess):
         # controle execution process multicast jfk check_process_multicast
         return self.api.clear_script_multicast(objprocess)
+
+    def xmlrpc_checkDeploymentUDPSender(self,objprocess):
+        # check transfert starting multicast
+        return self.api.checkDeploymentUDPSender(objprocess)
 
     def xmlrpc_stop_process_multicast(self,objprocess):
         # controle execution process multicast jfk check_process_multicast

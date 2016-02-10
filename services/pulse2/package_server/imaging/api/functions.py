@@ -26,7 +26,8 @@ Pulse 2 Package Server Imaging API common functions
 import logging
 import os
 import shutil
-
+import re
+import subprocess
 from time import gmtime
 import uuid
 
@@ -1002,15 +1003,12 @@ class Imaging(object):
     ## Imaging server configuration
     def imagingServermenuMulticast(self, objmenu):
         # create menu multicast 
-        m =ImagingMulticastMenuBuilder(objmenu)
-        ret =m.make()
+        m = ImagingMulticastMenuBuilder(objmenu)
+        ret = m.make()
         return [ret]
 
     def _checkProcessDrblClonezilla(self):
-        """ check server dbrl running
-        """
-        import re
-        import subprocess
+        """ check server dbrl running"""
         s = subprocess.Popen("ps cax | grep drbl-ocs",
                              shell=True,
                              stdout=subprocess.PIPE
@@ -1019,15 +1017,16 @@ class Imaging(object):
         for x in s.stdout:
             if re.search("drbl-ocs", x):
                 returnprocess = True
+        s.stdout.close()
         return returnprocess
 
     ## Imaging server configuration
     def check_process_multicast(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # check execution process multicast
         return self._checkProcessDrblClonezilla()
     
     def check_process_multicast_finish(self, objprocess):
-        # controle process multicast terminat
+        # check process multicast terminat
         return os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
 
     def muticast_script_exist(self, objprocess):
@@ -1056,9 +1055,29 @@ class Imaging(object):
         start_process(objprocess['process'])
         return self._checkProcessDrblClonezilla()
 
+    def checkDeploymentUDPSender(self, objprocess):
+        """ check UDPsender transfert """
+        result = {}
+        result['data']=""
+        result['tranfert'] = False
+        if os.path.isfile("/tmp/udp-sender.log"):
+            s = subprocess.Popen("grep 'Starting transfer'  /tmp/udp-sender.log",
+                            shell=True)
+            s.stdout.close()
+            if s.wait() == 0:
+                result['tranfert'] = True
+            else:
+                result['tranfert'] = False
+            r = subprocess.Popen("tail -n 1 /tmp/udp-sender.log ",
+                            shell=True,
+                            stdout=subprocess.PIPE)
+            for x in r.stdout:
+                result['data']= x
+            r.stdout.close()
+        return result
+
     def stop_process_multicast(self, objprocess):
         # stop execution process multicast
-        import subprocess
         s = subprocess.Popen("/usr/sbin/drbl-ocs -h 127.0.0.1 stop",
                              shell=True,
                              stdout=subprocess.PIPE
