@@ -525,7 +525,7 @@ class ImagingRpcProxy(RpcProxyI):
             logging.getLogger().info("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
             logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
-            if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == False:
+            if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
                 logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
                 ImagingRpcProxy.checkThread[objmenu['location']] = False
