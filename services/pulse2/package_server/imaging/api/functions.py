@@ -1063,7 +1063,6 @@ class Imaging(object):
         if os.path.isfile("/tmp/udp-sender.log"):
             s = subprocess.Popen("grep 'Starting transfer'  /tmp/udp-sender.log",
                             shell=True)
-            s.stdout.close()
             if s.wait() == 0:
                 result['tranfert'] = True
             else:
