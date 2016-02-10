@@ -47,8 +47,8 @@ import threading
 from os import path, makedirs
 
 class ImagingRpcProxy(RpcProxyI):
-    CheckThread = {}
-
+    checkThread = {}
+    checkThreadData={}
     def getGeneratedMenu(self, mac):
         # uuid
         logger = logging.getLogger()
@@ -415,10 +415,10 @@ class ImagingRpcProxy(RpcProxyI):
 
     def imagingServermenuMulticast(self, objmenu):
         try:    
-            if ImagingRpcProxy.CheckThread[objmenu['location']]==False:
-                ImagingRpcProxy.CheckThread[objmenu['location']] = True
+            if ImagingRpcProxy.checkThread[objmenu['location']]==False:
+                ImagingRpcProxy.checkThread[objmenu['location']] = True
         except KeyError:
-            ImagingRpcProxy.CheckThread[objmenu['location']] = True
+            ImagingRpcProxy.checkThread[objmenu['location']] = True
         finally:
             a = threading.Thread(None, self.monitorsUDPSender, None, (objmenu,))
             a.start()
@@ -486,10 +486,10 @@ class ImagingRpcProxy(RpcProxyI):
     def clear_script_multicast(self, process):
         #check if the script is installed multicast.sh
         try:    
-            if ImagingRpcProxy.CheckThread[process['location']]==True:
-                ImagingRpcProxy.CheckThread[process['location']] = False
+            if ImagingRpcProxy.checkThread[process['location']]==True:
+                ImagingRpcProxy.checkThread[process['location']] = False
         except KeyError:        
-            ImagingRpcProxy.CheckThread[process['location']] = False
+            ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -520,14 +520,19 @@ class ImagingRpcProxy(RpcProxyI):
 
     def monitorsUDPSender(self,objmenu):
         temp=10;
-        while(ImagingRpcProxy.CheckThread[objmenu['location']] == True):
+        while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
             time.sleep(temp)
+            logging.getLogger().info("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
-            if result['tranfert'] == True:
-                ImagingRpcProxy.CheckThread[objmenu['location']] = False
-                break
+            logging.getLogger().info("['tranfert']"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+            try:
+                if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
+                    ImagingRpcProxy.CheckThread[objmenu['location']] = False
+                    break
+            except:
+                pass
         else:
-            logging.getLogger().info("regenerated menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+            logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
 
     def checkDeploymentUDPSender(self,process):
@@ -547,23 +552,23 @@ class ImagingRpcProxy(RpcProxyI):
 
         def treatResult(results):
             if results:
+                ImagingRpcProxy.checkThreadData[process['location']]=results
                 resultat=results
-                return [results]
+                return [resultat]
             else:
-                resultat=[]
+                ImagingRpcProxy.checkThreadData={}
                 return []
-
         d = i.checkDeploymentUDPSender(process)
         d.addCallback(treatResult)
-        return resultat
+        return d
 
     def stop_process_multicast(self,process):
         # Multicast stop
         try:    
-            if ImagingRpcProxy.CheckThread[process['location']]==True:
-                ImagingRpcProxy.CheckThread[process['location']] = False
+            if ImagingRpcProxy.checkThread[process['location']]==True:
+                ImagingRpcProxy.checkThread[process['location']] = False
         except KeyError:        
-            ImagingRpcProxy.CheckThread[process['location']] = False
+            ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
