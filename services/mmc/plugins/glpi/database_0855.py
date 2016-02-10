@@ -3470,11 +3470,9 @@ class Glpi0855(DyngroupDatabaseHelper):
         #"""
         session = create_session()
         query = session.query(Machine.id)
-        query = query.filter(self.machine.c.is_deleted == 0).filter(and_(self.machine.c.is_template == 0,self.machine.c.computertypes_id==2))
+        query = query.filter(and_(self.machine.c.is_deleted == 0,self.machine.c.is_template == 0))
         ret = query.all()
         session.close()
-        #for q in ret:
-            #result.append(rq.id)
         return [toUUID(x.id) for x in ret]
 
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
