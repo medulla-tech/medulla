@@ -524,13 +524,14 @@ class ImagingRpcProxy(RpcProxyI):
             time.sleep(temp)
             logging.getLogger().info("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
-            logging.getLogger().info("['tranfert']"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
-            try:
-                if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
-                    ImagingRpcProxy.CheckThread[objmenu['location']] = False
-                    break
-            except:
-                pass
+            logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+            if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == False:
+                logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
+                ImagingRpcProxy.checkThread[objmenu['location']] = False
+                logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+                self.synchroProfile(objmenu['group'])
+                return
         else:
             logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
@@ -541,6 +542,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         resultat = False
         logger = logging.getLogger()
+        logging.getLogger().info("**** checkDeploymentUDPSender %s"%process)
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -549,7 +551,7 @@ class ImagingRpcProxy(RpcProxyI):
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
             return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
-
+        
         def treatResult(results):
             if results:
                 ImagingRpcProxy.checkThreadData[process['location']]=results
@@ -558,6 +560,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 ImagingRpcProxy.checkThreadData={}
                 return []
+        
         d = i.checkDeploymentUDPSender(process)
         d.addCallback(treatResult)
         return d
