@@ -536,6 +536,7 @@ class ImagingRpcProxy(RpcProxyI):
                     return
             except KeyError:
                 logging.getLogger().info("[initialisation checkThreadData]")
+                ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
             logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))

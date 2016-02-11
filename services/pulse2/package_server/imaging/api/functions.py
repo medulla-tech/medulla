@@ -1055,7 +1055,7 @@ class Imaging(object):
         start_process(objprocess['process'])
         return self._checkProcessDrblClonezilla()
 
-     def checkDeploymentUDPSender(self, objprocess):
+    def checkDeploymentUDPSender(self, objprocess):
         result = {}
         result['data']=""
         result['tranfert'] = False
