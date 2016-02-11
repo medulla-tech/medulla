@@ -1055,25 +1055,41 @@ class Imaging(object):
         start_process(objprocess['process'])
         return self._checkProcessDrblClonezilla()
 
-    def checkDeploymentUDPSender(self, objprocess):
-        """ check UDPsender transfert """
+     def checkDeploymentUDPSender(self, objprocess):
         result = {}
         result['data']=""
         result['tranfert'] = False
+        self.logger.info('verify exist file /tmp/udp-sender.log')
         if os.path.isfile("/tmp/udp-sender.log"):
+            self.logger.info('file /tmp/udp-sender.log exist')
+            self.logger.info("exec : grep 'Starting transfer'  /tmp/udp-sender.log")  
             s = subprocess.Popen("grep 'Starting transfer'  /tmp/udp-sender.log",
-                            shell=True)
-            if s.wait() == 0:
+                            shell=True,
+                            stdout=subprocess.PIPE)
+            result['tranfert'] = False
+            for x in s.stdout:
                 result['tranfert'] = True
+                break;
+            s.stdout.close()
+            s.wait()
+            if result['tranfert'] == True:
+                self.logger.info("Starting transfer exist in the file")
             else:
-                result['tranfert'] = False
-            r = subprocess.Popen("tail -n 1 /tmp/udp-sender.log ",
+                self.logger.info("Starting transfer no exist in the file")
+            self.logger.info("exec : tail -n 1 /tmp/udp-sender.log  -> for next bar progression")     
+            r = subprocess.Popen("tail -n 1 /tmp/udp-sender.log",
                             shell=True,
                             stdout=subprocess.PIPE)
             for x in r.stdout:
                 result['data']= x
+            r.wait()
+            self.logger.info("last line of /tmp/udp-sender.log: %s"%result['data'])     
             r.stdout.close()
+        else:
+            self.logger.info('file /tmp/udp-sender.log no exist')
+        self.logger.info("return function checkDeploymentUDPSender on imaging server: %s"%result )   
         return result
+
 
     def stop_process_multicast(self, objprocess):
         # stop execution process multicast

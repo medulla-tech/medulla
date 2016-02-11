@@ -524,14 +524,19 @@ class ImagingRpcProxy(RpcProxyI):
             time.sleep(temp)
             logging.getLogger().info("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
-            logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
-            if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
+            try:
+                logging.getLogger().info("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
                 logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
+                    logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                    ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
+                    ImagingRpcProxy.checkThread[objmenu['location']] = False
+                    logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+                    self.synchroProfile(objmenu['group'])
+                    return
+            except KeyError:
+                logging.getLogger().info("[initialisation checkThreadData]")
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
-                ImagingRpcProxy.checkThread[objmenu['location']] = False
-                logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
-                self.synchroProfile(objmenu['group'])
-                return
         else:
             logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
