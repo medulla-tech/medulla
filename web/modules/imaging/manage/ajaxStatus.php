@@ -67,7 +67,6 @@ if (!empty($global_status)) {
             </p>
         </div>
     </div>
- <!-- //jfk -->
  <!--// regles de gestions affichage.
  
  // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"

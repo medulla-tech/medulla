@@ -89,7 +89,6 @@ if (isset($_POST['bsync'])) {
             $location_name = _T("root", "pulse2");
         else
             $location_name = xmlrpc_getLocationName($location);
-        // jfk    
         $objprocess=array();
         $scriptmulticast = 'multicast.sh';
         $path="/tmp/";

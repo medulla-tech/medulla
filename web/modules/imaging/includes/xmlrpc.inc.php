@@ -22,7 +22,7 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
  
- //check process jfk
+ //check process
 function xmlrpc_check_process($process) {
     return xmlCall("imaging.check_process", array($process));
 }

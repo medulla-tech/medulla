@@ -112,23 +112,23 @@ class ImagingApi (MyXmlrpc):
 
     ## Imaging server configuration
     def xmlrpc_check_process_multicast(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         return self.api.check_process_multicast(objprocess)
     
     def xmlrpc_check_process_multicast_finish(self, objprocess):
         return self.api.check_process_multicast_finish(objprocess)
     
     def xmlrpc_start_process_multicast(self,objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         self.logger.debug("start  %s" % objprocess)
         return self.api.start_process_multicast(objprocess)
 
     def xmlrpc_muticast_script_exist(self,objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast 
         return self.api.muticast_script_exist(objprocess)
 
     def xmlrpc_clear_script_multicast(self,objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast 
         return self.api.clear_script_multicast(objprocess)
 
     def xmlrpc_checkDeploymentUDPSender(self,objprocess):
@@ -136,7 +136,7 @@ class ImagingApi (MyXmlrpc):
         return self.api.checkDeploymentUDPSender(objprocess)
 
     def xmlrpc_stop_process_multicast(self,objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         self.logger.debug("stop  %s" % objprocess)
         return self.api.stop_process_multicast(objprocess)
 

@@ -43,7 +43,6 @@ if ($type == 1) { // Imaging group
     $delete = _T("Delete group", "dyngroup");
 }
 
-// jfk
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
             // Get Current Location

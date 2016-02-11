@@ -352,7 +352,6 @@ class Imaging(Pulse2Api):
 
     def imagingServermenuMulticast(self, objmenu):
         """
-        jfk
         create bootmenu multicast from the imaging server
         """
         d = self.callRemote("imagingServermenuMulticast", objmenu)
@@ -360,43 +359,43 @@ class Imaging(Pulse2Api):
         return d
     
     def check_process_multicast(self,objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("check_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast", objprocess)
         return d
     
     def start_process_multicast(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("start_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:start_process_multicast", objprocess)
         return d
     
     def checkDeploymentUDPSender(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("checkDeploymentUDPSender", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:checkDeploymentUDPSender", objprocess)
         return d
     
     def muticast_script_exist(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("muticast_script_exist", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:muticast_script_exist", objprocess)
         return d
 
     def clear_script_multicast(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("clear_script_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:clear_script_multicast", objprocess)
         return d
 
     def stop_process_multicast(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("stop_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:stop_process_multicast", objprocess)
         return d
 
     def check_process_multicast_finish(self, objprocess):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         d = self.callRemote("check_process_multicast_finish", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast_finish", objprocess)
         return d

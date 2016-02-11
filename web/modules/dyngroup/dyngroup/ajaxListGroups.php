@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
- //jfk
+
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require("modules/pulse2/includes/profiles_xmlrpc.inc.php");
 
@@ -66,14 +66,12 @@ if ($is_gp != 1) { // Simple Group
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
-//jfk
     if($is_gp == 1){
         $profile = xmlrpc_getProfileLocation($group->id);
         $ids[] =  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp,'profile'=>$profile);
     }else{
         $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp);
     }
-    //jfk 
     
     $name[]= $group->getName();
     if ($group->isDyn()) {

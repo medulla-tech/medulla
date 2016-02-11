@@ -182,7 +182,7 @@ $l->addActionItem(
         "images_iso", "backup", "image", "base", "computers")
 );
 
-//jfk if not in boot menu
+// if not in boot menu
 if ($type == 'group') {
  $location = getCurrentLocation();
  if ($location == "UUID1")

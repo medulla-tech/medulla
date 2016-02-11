@@ -58,7 +58,6 @@ class ImagingRpcProxy(RpcProxyI):
         return xmlrpcCleanup(menu)
     
     def check_process(self, process):
-        #jfk  print pulse2.utils.check_process(process)
         return xmlrpcCleanup(pulse2.utils.check_process(process))
 
     """ XML/RPC Bindings """
@@ -436,7 +435,7 @@ class ImagingRpcProxy(RpcProxyI):
     
     ## Imaging server configuration
     def check_process_multicast(self, process):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -454,7 +453,7 @@ class ImagingRpcProxy(RpcProxyI):
         return _synchroEntitieMachineTarget()
 
     def check_process_multicast_finish(self, process):
-        # controle execution process multicast jfk check_process_multicast
+        # controle execution process multicast finish
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -469,7 +468,7 @@ class ImagingRpcProxy(RpcProxyI):
         return deferred
 
     def muticast_script_exist(self,process):
-        # controle existance  multicast script jfk check_process_multicast
+        # controle existance multicast script
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
@@ -522,24 +521,24 @@ class ImagingRpcProxy(RpcProxyI):
         temp=10;
         while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
             time.sleep(temp)
-            logging.getLogger().info("monitorsUDPSender")
+            logging.getLogger().debug("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
             try:
-                logging.getLogger().info("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
-                logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                logging.getLogger().debug("[checkThreadData] %s"%ImagingRpcProxy.checkThreadData)
+                logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                 if ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] == True:
-                    logging.getLogger().info("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
+                    logging.getLogger().debug("[tranfert] %s"%ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'])
                     ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
                     ImagingRpcProxy.checkThread[objmenu['location']] = False
-                    logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+                    logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
                     self.synchroProfile(objmenu['group'])
                     return
             except KeyError:
-                logging.getLogger().info("[initialisation checkThreadData]")
+                logging.getLogger().debug("[initialisation checkThreadData]")
                 ImagingRpcProxy.checkThreadData[objmenu['location']]={}
                 ImagingRpcProxy.checkThreadData[objmenu['location']]['tranfert'] = False
         else:
-            logging.getLogger().info("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
+            logging.getLogger().debug("REGENERATE menu group %s [%s]"%(objmenu['description'],objmenu['group']))
             self.synchroProfile(objmenu['group'])
 
     def checkDeploymentUDPSender(self,process):
@@ -548,7 +547,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         resultat = False
         logger = logging.getLogger()
-        logging.getLogger().info("**** checkDeploymentUDPSender %s"%process)
+        logging.getLogger().debug("checkDeploymentUDPSender %s"%process)
         location=process['location']
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
