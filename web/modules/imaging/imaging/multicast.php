@@ -174,7 +174,7 @@ if ($_POST) {
                 <?php echo _T('Number of machines to wait for', 'imaging'); ?>
             </td>
             <td>
-                <input name="numbercomputer" type="text" value="" />
+                <input style="width:5em;" name="numbercomputer" type="text" value="" />
             </td>
         </tr>
      </table>
