@@ -3540,8 +3540,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
             return False
 
-
-
     def setLocationSynchroState(self, uuid, state):
         self.logger.debug(">>> setLocationSynchroState %s %s"%(uuid, str(state)))
         session = create_session()
