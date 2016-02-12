@@ -449,9 +449,6 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = []
         return deferred
 
-    def synchroEntitieMachineTarget(self):
-        return _synchroEntitieMachineTarget()
-
     def check_process_multicast_finish(self, process):
         # controle execution process multicast finish
         location=process['location']
@@ -3281,15 +3278,6 @@ def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     ret = synchroTargets(ctx, uuids, ctype)
     return xmlrpcCleanup(ret)
 
-def _synchroEntitieMachineTarget():
-    logging.getLogger().info("synchroEntitieMachineTarget")
-    locationsuuid = ComputerLocationManager().getAllHostnamesid()
-    locations = ComputerLocationManager().getMachinesLocations(locationsuuid)
-    db = ImagingDatabase()
-    for t in locations.keys():
-        db._synchroEntitieMachineTarget(locations[t]['uuid'], t)
-    return [t  for t in locations.keys()]
-
 def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     """
     synchronize boot menus
@@ -3512,8 +3500,6 @@ def chooseImagingApiUrl(location):
 
 
 def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
-    # verifie coherence target
-    _synchroEntitieMachineTarget()
     menu['bootservices'] = {}
     menu['images'] = {}
     default_item_counter = 0 # keep track of the item number to generate a relative default menu entry number

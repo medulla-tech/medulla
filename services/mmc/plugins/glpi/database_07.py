@@ -3084,10 +3084,6 @@ class Glpi07(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def getAllHostnamesid(self):
-        """ use only glpi 0.855"""
-        pass
-
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
         ret_ifaddr = []

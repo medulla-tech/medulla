@@ -118,13 +118,6 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return True
 
-    def getAllHostnamesid(self):
-        try:
-            klass = self.components[self.main]
-            return klass().getAllHostnamesid()
-        except KeyError:
-            return True
-
     def getMachinesLocations(self, machine_uuids):
         try:
             klass = self.components[self.main]

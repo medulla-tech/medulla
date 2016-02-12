@@ -64,9 +64,6 @@ class GlpiLocation(ComputerLocationI):
     def getUsersInSameLocations(self, userid):
         return Glpi().getUsersInSameLocations(userid)
 
-    def getAllHostnamesid(self):
-        return Glpi().getAllHostnamesid()
-    
     def getMachinesLocations(self, machine_uuids):
         return Glpi().getMachinesLocations(machine_uuids)
 

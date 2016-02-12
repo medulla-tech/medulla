@@ -3463,18 +3463,6 @@ class Glpi0855(DyngroupDatabaseHelper):
         """
         return self.getMachinesMac(uuid)[uuid]
 
-    def getAllHostnamesid(self):
-        #"""
-        #@return: all uuid hostname defined in the GLPI database
-        #`computertypes_id`
-        #"""
-        session = create_session()
-        query = session.query(Machine.id)
-        query = query.filter(and_(self.machine.c.is_deleted == 0,self.machine.c.is_template == 0))
-        ret = query.all()
-        session.close()
-        return [toUUID(x.id) for x in ret]
-
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
         ret_ifaddr = []

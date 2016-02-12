@@ -3449,10 +3449,6 @@ class Glpi084(DyngroupDatabaseHelper):
         Get a machine mac addresses
         """
         return self.getMachinesMac(uuid)[uuid]
-
-    def getAllHostnamesid(self):
-        """ use only glpi 0.855"""
-        pass
     
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
