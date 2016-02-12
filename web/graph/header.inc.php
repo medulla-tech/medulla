@@ -115,8 +115,8 @@ $root = $conf["global"]["root"];
             function _defaultPlacement(evt) {
                 var window_width = jQuery(window).width();
                 var  window_height = jQuery(window).height();
-                var top = (height_window / 2) - (jQuery('#popup').height() / 2) + jQuery(window).scrollTop();
-                var left = (width_window/ 2) - (jQuery('#popup').width() / 2) + jQuery(window).scrollLeft();
+                var top = (window_height/ 2) - (jQuery('#popup').height() / 2) + jQuery(window).scrollTop();
+                var left = (window_width/ 2) - (jQuery('#popup').width() / 2) + jQuery(window).scrollLeft();
                 jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
             }
 
