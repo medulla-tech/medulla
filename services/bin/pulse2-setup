@@ -303,7 +303,7 @@ class Service(object):
     name = None
     clsnames = ['SrvMmcAgent',
                 'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
-                'SrvScheduler', 'SrvConnectionManager' ]
+                'SrvScheduler' ]
 
     def __init__(self, handler, config):
         self.config = config
@@ -387,10 +387,6 @@ class SrvScheduler(Service):
     name = 'pulse2-scheduler'
 
 
-class SrvConnectionManager(Service):
-    name = 'pulse2-cm'
-
-
 def apply_conf_diff(origin, current, only_override=False):
     """
     Removes or overrides the default values and remaining options.
@@ -458,7 +454,7 @@ class Pulse2ConfigFile(object):
     clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
-                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 'CMConfig',
+                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsReportConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
@@ -685,11 +681,6 @@ class PackageServerConfig(LoggingConfig):
 class SchedulerConfig(LoggingConfig):
     path = 'pulse2/scheduler/scheduler.ini'
     log_path = 'pulse2-scheduler.log'
-
-
-class CMConfig(LoggingConfig):
-    path = 'pulse2/cm/cm.ini'
-    log_path = 'pulse2-cm.log'
 
 
 class UUIDResolverConfig(Pulse2ConfigFile):
