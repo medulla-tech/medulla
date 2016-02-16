@@ -902,9 +902,6 @@ class SetupApp(object):
         self.confs['plugins/base.ini'].set('ldap', 'password', self.config['ldappasswd'])
         self.confs['plugins/base.ini'].set('ldap', 'defaultUserGroup', self.config['defaultUserGroup'])
 
-        # LDAP password for Connection Manager
-        self.confs['pulse2/cm/cm.ini'].set('mmc', 'ldap_passwd', self.config['ldappasswd'])
-
         # LDAP password for UUID resolver
         self.confs['pulse2/uuid-resolver/uuid-resolver.ini'].set('ldap', 'password', self.config['ldappasswd'])
 
