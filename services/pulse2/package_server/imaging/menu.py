@@ -789,7 +789,7 @@ class ImagingImageItem(ImagingItem):
                 try:
                     # write header
                     f = file(postinst, 'w+')
-                    f.write('#!/bin/sh\n')
+                    f.write('#!/bin/bash\n')
                     f.write('\n')
                     f.write('. /usr/lib/libpostinst.sh')
                     f.write('\n')
