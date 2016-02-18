@@ -59,6 +59,7 @@ $tabjavascript.=$str."';";
 echo '<div style="color: blue;font-size: 16px;" id="msg">';
 echo _T("Copy of master Not Started", "imaging");
 echo '</div>';
+echo '<br>';
 for ($i=0;$i<$nbprocess;$i++){
     echo '<div id="ab'.$process[$i].'">';
     echo _T("Copy of master", "imaging").$_GET['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
