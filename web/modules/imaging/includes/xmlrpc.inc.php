@@ -3,6 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2015 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -60,6 +61,22 @@ function xmlrpc_muticast_script_exist ($objprocess){
 
 function xmlrpc_clear_script_multicast ($objprocess){
     return xmlCall("imaging.clear_script_multicast", array($objprocess));
+}
+
+function xmlrpc_checkProcessCloneMasterToLocation ($nameprog){
+    return xmlCall("imaging.checkProcessCloneMasterToLocation", array($nameprog));
+}
+
+function xmlrpc_startProcessClone ($objetclone ){
+    return xmlCall("imaging.startProcessClone", array($objetclone));
+}
+
+function xmlrpc_statusProcessBarClone ($listlogfiles ){
+    return xmlCall("imaging.statusProcessBarClone", array($listlogfiles));
+}
+
+function xmlrpc_statusReadFile ($files){
+    return xmlCall("imaging.statusReadFile", array($files));
 }
 
 function xmlrpc_isProfileRegistered($profile_uuid) {

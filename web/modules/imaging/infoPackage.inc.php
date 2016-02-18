@@ -48,6 +48,10 @@ $page->setFile("modules/imaging/manage/ajaxgenereAWFGxml.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+//jfk4
+$page = new Page("ajaxcheckprogressbar");
+$page->setFile("modules/imaging/manage/ajaxcheckprogressbar.php");
+$submod->addPage($page);
 
 $page = new Page("multicastaction");
 $page->setFile("modules/imaging/manage/multicastaction.php");
@@ -72,6 +76,14 @@ $submod->addPage($page);
 $page = new Page("master_edit", _T("Edit master", "imaging"));
 $page->setOptions(array("visible" => False));
 $submod->addPage($page);
+
+$page = new Page("master_clone", _T("master clone", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+$page = new Page("synchromaster", _T("master clone", "imaging"));
+$page->setOptions(array("visible" => False));
+$submod->addPage($page);
+
 $page = new Page("master_add", _T("Add master", "imaging"));
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
