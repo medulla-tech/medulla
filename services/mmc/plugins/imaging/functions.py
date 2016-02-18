@@ -529,7 +529,7 @@ class ImagingRpcProxy(RpcProxyI):
     def ClearFileStatusProcess(self):
         logger = logging.getLogger()
         logger.debug("ClearFileStatusProcess")
-        fichier = open("/tmp/synch-masters.out", "w")
+        fichier = open("/tmp/pulse2-synch-masters.out", "w")
         fichier.close()
         return True
 
@@ -551,14 +551,14 @@ class ImagingRpcProxy(RpcProxyI):
         self.ClearFileStatusProcess()
         logger = logging.getLogger()
         logger.debug("startProcessClone %s"%objetclone)
-        if not path.isfile("/usr/bin/synch-masters"):
-            logger.debug("script /usr/bin/synch-masters missing")
+        if not path.isfile("/usr/bin/pulse2-synch-masters"):
+            logger.debug("script /usr/bin/pulse2-synch-masters missing")
             return
         if len(objetclone['server_imaging']) == 0:
             return
         for k,v in objetclone['server_imaging'].iteritems():
-            logger.debug("/usr/bin/synch-masters %s %s %s\n"%(fromUUID(objetclone['location']),fromUUID(k),objetclone['masteruuid']))
-            args = ["nohup", "/bin/bash", "/usr/bin/synch-masters", str(fromUUID(objetclone['location'])),str(fromUUID(k)),str(objetclone['masteruuid'])]
+            logger.debug("/usr/bin/pulse2-synch-masters %s %s %s\n"%(fromUUID(objetclone['location']),fromUUID(k),objetclone['masteruuid']))
+            args = ["nohup", "/bin/bash", "/usr/bin/pulse2-synch-masters", str(fromUUID(objetclone['location'])),str(fromUUID(k)),str(objetclone['masteruuid'])]
             logger.debug("objname == %s "%(args))
             subprocess.Popen(args)
         return

@@ -50,7 +50,7 @@ $label = $master['name'];
 $desc = $master['desc'];
 $master_uuid = $master['uuid'];
 $process1 = array();
-$process  = xmlrpc_checkProcessCloneMasterToLocation("synch-masters");
+$process  = xmlrpc_checkProcessCloneMasterToLocation("pulse2-synch-masters");
 
 $index = 0;
 foreach($process as $d ){
