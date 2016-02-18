@@ -20,13 +20,13 @@
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
 function list_all_entities_id() {
-	local ENTITIES_ID=`echo "SELECT id FROM Entity where id > 1;" | mysql -uroot imaging --silent`
+	local ENTITIES_ID=`echo "SELECT id FROM Entity where id > 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
 	echo ${ENTITIES_ID}
 }
 
 function list_all_masters() {
-	local MASTERS_UUID=`echo "SELECT DISTINCT(uuid) FROM Image WHERE is_master=1" | mysql -uroot imaging --silent`
+	local MASTERS_UUID=`echo "SELECT DISTINCT(uuid) FROM Image WHERE is_master=1" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
 	echo ${MASTERS_UUID}
 }
@@ -37,14 +37,14 @@ function duplicate_database_records() {
 	local TO_ENTITY_ID=$1
 	local MASTER_UUID=$2
 	
-	if [[ ! -n `echo "SELECT Image.id, Image.uuid, ImageOnImagingServer.fk_image, ImageOnImagingServer.fk_imaging_server FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id WHERE uuid='${MASTER_UUID}' AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql -uroot imaging --silent` ]]; then
+	if [[ ! -n `echo "SELECT Image.id, Image.uuid, ImageOnImagingServer.fk_image, ImageOnImagingServer.fk_imaging_server FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id WHERE uuid='${MASTER_UUID}' AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Get id of master
-		local MASTER_ID=`echo "SELECT id FROM Image where uuid='${MASTER_UUID}' LIMIT 1;" | mysql -uroot imaging --silent`
+		local MASTER_ID=`echo "SELECT id FROM Image where uuid='${MASTER_UUID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 		# Duplicate master record and create necessary records in ImageOnImagingServer and MasteredOn
-		local NEW_MASTER_ID=`echo "INSERT INTO Image (path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state) SELECT path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state FROM Image WHERE id = ${MASTER_ID}; SELECT LAST_INSERT_ID();" | mysql -uroot imaging --silent`
-		echo "INSERT INTO ImageOnImagingServer (fk_image, fk_imaging_server) VALUES (${NEW_MASTER_ID}, ${TO_ENTITY_ID})" | mysql -uroot imaging
-		local FK_IMAGING_LOG=`echo "SELECT fk_imaging_log FROM MasteredOn WHERE fk_image = ${MASTER_ID} LIMIT 1" | mysql -uroot imaging --silent`
-		echo "INSERT INTO MasteredOn (fk_image, fk_imaging_log) VALUES (${NEW_MASTER_ID}, ${FK_IMAGING_LOG})" | mysql -uroot imaging
+		local NEW_MASTER_ID=`echo "INSERT INTO Image (path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state) SELECT path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state FROM Image WHERE id = ${MASTER_ID}; SELECT LAST_INSERT_ID();" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+		echo "INSERT INTO ImageOnImagingServer (fk_image, fk_imaging_server) VALUES (${NEW_MASTER_ID}, ${TO_ENTITY_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
+		local FK_IMAGING_LOG=`echo "SELECT fk_imaging_log FROM MasteredOn WHERE fk_image = ${MASTER_ID} LIMIT 1" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+		echo "INSERT INTO MasteredOn (fk_image, fk_imaging_log) VALUES (${NEW_MASTER_ID}, ${FK_IMAGING_LOG})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
 		echo "### Duplicating database record for master ${MASTER_UUID}... Done"
 	else
 		echo "### No database record duplication needed for master ${MASTER_UUID}"
@@ -54,7 +54,7 @@ function duplicate_database_records() {
 function list_postimaging_scripts() {
 	local MASTER_UUID=$1
 	
-	local SCRIPTS_ID=`echo "SELECT DISTINCT(PostInstallScriptInImage.fk_post_install_script) FROM Image INNER JOIN PostInstallScriptInImage ON PostInstallScriptInImage.fk_image = Image.id WHERE Image.uuid='${MASTER_UUID}';" | mysql -uroot imaging --silent`
+	local SCRIPTS_ID=`echo "SELECT DISTINCT(PostInstallScriptInImage.fk_post_install_script) FROM Image INNER JOIN PostInstallScriptInImage ON PostInstallScriptInImage.fk_image = Image.id WHERE Image.uuid='${MASTER_UUID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
 	echo ${SCRIPTS_ID}
 }
@@ -65,9 +65,9 @@ function duplicate_postimaging_scripts() {
 	local TO_ENTITY_ID=$1
 	local SCRIPT_ID=$2
 	
-	if [[ ! -n `echo "SELECT PostInstallScript.id, PostInstallScriptOnImagingServer.fk_post_install_script, PostInstallScriptOnImagingServer.fk_imaging_server FROM PostInstallScript INNER JOIN PostInstallScriptOnImagingServer ON PostInstallScriptOnImagingServer.fk_post_install_script = PostInstallScript.id WHERE PostInstallScript.id=${SCRIPT_ID} AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql -uroot imaging --silent` ]]; then
+	if [[ ! -n `echo "SELECT PostInstallScript.id, PostInstallScriptOnImagingServer.fk_post_install_script, PostInstallScriptOnImagingServer.fk_imaging_server FROM PostInstallScript INNER JOIN PostInstallScriptOnImagingServer ON PostInstallScriptOnImagingServer.fk_post_install_script = PostInstallScript.id WHERE PostInstallScript.id=${SCRIPT_ID} AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Duplicate the record on PostInstallScriptOnImagingServer
-		echo "INSERT INTO PostInstallScriptOnImagingServer (fk_post_install_script, fk_imaging_server) VALUES (${SCRIPT_ID}, ${TO_ENTITY_ID})" | mysql -uroot imaging
+		echo "INSERT INTO PostInstallScriptOnImagingServer (fk_post_install_script, fk_imaging_server) VALUES (${SCRIPT_ID}, ${TO_ENTITY_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
 		echo "### Duplicating post-imaging script ${SCRIPT_ID} record... Done"
 	else
 		echo "### No record duplication needed for script ${SCRIPT_ID}"
@@ -84,11 +84,11 @@ function synch_master_files() {
 	# Synchronize the contents
 	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/masters/${MASTER_UUID}/ /var/lib/pulse2/imaging/masters/${MASTER_UUID}/ >> /tmp/synch_masters_${PID}.log
 	else
 		# We are synching from pulse main server to remote imaging server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 /var/lib/pulse2/imaging/masters/${MASTER_UUID}/ root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/masters/${MASTER_UUID}/ >> /tmp/synch_masters_${PID}.log
 	fi
 	
@@ -104,11 +104,11 @@ function synch_postinst_folder() {
 	# Synchronize the folder
 	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/ /var/lib/pulse2/imaging/postinst/
 	else
 		# We are synching from pulse main server to remote imaging server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 /var/lib/pulse2/imaging/postinst/ root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/
 	fi
 	
@@ -160,6 +160,7 @@ function run_synch_master() {
 # For synching all masters to all entities, call run_synch_all_from_mainpulse
 # To synch one master to one entity, call run_synch_master <FROM_ENTITY_ID> <TO_ENTITY_ID> <MASTER_UUID>
 
+exec &> /tmp/pulse2-synch-masters.log
 PID=$$
 # Find out if a synch has already been done
 grep "$1 1 $3" /tmp/pulse2-synch-masters.out
