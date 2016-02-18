@@ -119,6 +119,12 @@ $l->addActionItem(
     "master_edit", "edit", "master", "imaging", "manage")
 );
 
+$l->addActionItem(
+    new ActionItem(_T("Master Clone", "imaging"),
+    "master_clone", "start", "master", "imaging", "manage")
+);
+
+
 $l->addActionItemArray($a_destroy);
 
 $l->setTableHeaderPadding(1);
