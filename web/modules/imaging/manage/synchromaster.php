@@ -79,8 +79,8 @@ echo '
 function strtotab(chaine){
     var reg=new RegExp("[ ]+", "g");
     var tableau=chaine.split(reg);
-    tableau.pop();
-    tableau.shift();
+//     tableau.pop();
+//     tableau.shift();
     return tableau;
 }';
 
@@ -97,7 +97,7 @@ var interval = setInterval(function() {
 
     request.done(function(msg) {
         var regUrl = new RegExp("[a-zA-Z._-]", "gi");
-        var t = JSON.parse(msg)        
+        var t = JSON.parse(msg)
         var keyvaleur=Object.keys(t)
         var terminer=new Array();
         for(var i= 0; i < keyvaleur.length; i++){

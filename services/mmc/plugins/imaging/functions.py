@@ -531,7 +531,7 @@ class ImagingRpcProxy(RpcProxyI):
         lignes = fichier.readlines()
         fichier.close()
         return lignes
-    
+
     def ClearFileStatusProcess(self):
         logger = logging.getLogger()
         logger.debug("ClearFileStatusProcess")
@@ -540,6 +540,7 @@ class ImagingRpcProxy(RpcProxyI):
         return True
 
     def statusProcessBarClone(self, listfilelog):
+        import json
         logger = logging.getLogger()
         logger.debug("statusProcessBarClone %s"%listfilelog)
         data={}
@@ -550,7 +551,20 @@ class ImagingRpcProxy(RpcProxyI):
                     fichier = open("/tmp/%s"%f, "r")
                     lignes = fichier.readlines()
                     fichier.close()
-                    data[f]=str(lignes[-1]).split("\r")[-1]
+                    #data[f]=str(lignes).split("\r")[-1]
+                    kk=str(lignes[-1]).split("\r")[-1]
+                    kk = kk.strip()
+                    kkl=kk.split(" ")
+                    kk = [x for x in kkl if x !=""]
+                    if kk[1] == "0%" and len(kk) > 4 :
+                        logger.debug("transfer terminer pour %s"%f)
+                        data[f]="0 100% 0MB/s xx:xx:xx"
+                    else : 
+                        data[f]=' '.join(kk)
+                else:
+                    logger.debug("file empty /tmp/%s"%f)
+            else:
+                logger.debug("file missing /tmp/%s"%f)
         return json.dumps(data)
 
     def startProcessClone(self, objetclone):
