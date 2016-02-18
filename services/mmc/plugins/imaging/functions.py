@@ -48,6 +48,12 @@ from os import path, makedirs, listdir
 import subprocess
 import json
 
+def fromUUID(uuid):
+    return int(uuid.replace('UUID', ''))
+
+def toUUID(id):
+    return "UUID%s" % (str(id))
+
 class ImagingRpcProxy(RpcProxyI):
     checkThread = {}
     checkThreadData={}
