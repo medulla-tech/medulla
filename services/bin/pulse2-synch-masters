@@ -167,6 +167,7 @@ grep "$1 1 $3" /tmp/pulse2-synch-masters.out
 if [[ $1  != "1" && $? -ne 0 ]]; then
 	# If the source is a remote imaging server, synch to main pulse first. Rerun the same script with new parameters
 	echo "0000 $1 1 $3" >> /tmp/pulse2-synch-masters.out
+	echo "${PID} $1 $2 $3" >> /tmp/pulse2-synch-masters.out
 	touch /tmp/synch_masters_${PID}.log
 	/usr/bin/pulse2-synch-masters $1 1 $3
 fi
