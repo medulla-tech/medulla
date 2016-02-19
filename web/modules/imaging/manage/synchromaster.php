@@ -42,11 +42,11 @@ if( $nbprocess == 0){
     header("Location: " . urlStrRedirect("imaging/manage/master"));
     exit;
 }
-$p = new PageGenerator(sprintf(_T("Master copy: %s", "imaging"),  $_SESSION['processclone']['label']));
+$p = new PageGenerator(sprintf(_T("Master copy: %s ( %s )", "imaging"),  $_SESSION['processclone']['label'] ,$_SESSION['processclone']['desc']));
 $sidemenu->forceActiveItem("master");
 $p->setSideMenu($sidemenu);
 $p->display();
-echo $_SESSION['processclone']['desc'];
+
 $tab=array();
 $tabjavascript="var ArrayProcesslog = '";
 foreach($process as $log){
@@ -54,7 +54,7 @@ foreach($process as $log){
 }
 $str=implode(",", $tab) ;
 $tabjavascript.=$str."';";
-echo '<div style="color: blue;font-size: 16px;" id="msg">';
+echo '<div style="font-weight : bolder;" id="msg">';
 echo _T("Copy of master Not Started", "imaging");
 echo '</div>';
 echo '<br>';
@@ -113,24 +113,25 @@ var interval = setInterval(function() {
                 jQuery(messageerreur).text(tableau[4])
                 jQuery(bb).text("")
             }
-            if (tableau[1] == 100 ){
-                jQuery(po).text("'._T("Complete", "imaging").'");
-            }
-            else{
-                jQuery(po).text("'._T("In progress", "imaging").'");
-            }
+//             if (tableau[1] == 100 ){
+//                 jQuery(po).text("'._T("Complete", "imaging").'");
+//             }
+//             else{
+//                 jQuery(po).text("'._T("In progress", "imaging").'");
+//             }
             jQuery(pb).attr("value",tableau[1]);
             terminer.push(tableau[1])
         }
         var finih_clone = 1;
         for (var i= 0; i < terminer.length; i++){
-            if (terminer[i] != 100){
+            if (terminer[i] < 100){
                 finih_clone= 0;
                 break;
             }
         }
         if ( finih_clone == 1 ){
             jQuery("#msg").text("'._T("Copy of master complete", "imaging").'");
+            clearInterval(interval);
         }
         else{
             jQuery("#msg").text("'._T("Copy of master In progress", "imaging").'");
