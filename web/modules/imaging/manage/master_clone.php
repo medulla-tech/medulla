@@ -80,13 +80,11 @@ else{
         if(count($_POST) == 0) {
             $p = new PageGenerator(_T("Clone master : ", "imaging").$label);
         }else{
-            echo "<pre>";
-            print_r( $_POST );
-            print_r(xmlrpc_startProcessClone($_POST));
+            $_SESSION['processclone']=$process1;
+            xmlrpc_startProcessClone($_POST);
             header("Location: " . urlStrRedirect("imaging/manage/synchromaster",$process1));
             exit;
-            echo "</pre>";
-            $p = new PageGenerator(_T("Clone master progression : ", "imaging").$label);
+            //$p = new PageGenerator(_T("Clone master progression : ", "imaging").$label);
         }
         $sidemenu->forceActiveItem("master");
         $p->setSideMenu($sidemenu);

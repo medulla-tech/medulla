@@ -42,11 +42,11 @@ if( $nbprocess == 0){
     header("Location: " . urlStrRedirect("imaging/manage/master"));
     exit;
 }
-$p = new PageGenerator(sprintf(_T("Master copy: %s", "imaging"), $_GET['label']));
+$p = new PageGenerator(sprintf(_T("Master copy: %s", "imaging"),  $_SESSION['processclone']['label']));
 $sidemenu->forceActiveItem("master");
 $p->setSideMenu($sidemenu);
 $p->display();
-echo "$desc";
+echo $_SESSION['processclone']['desc'];
 $tab=array();
 $tabjavascript="var ArrayProcesslog = '";
 foreach($process as $log){
@@ -61,7 +61,7 @@ echo '<br>';
 for ($i=0;$i<$nbprocess;$i++){
     if ($processsinfos[$process[$i]]['startpoint'] == "" || $processsinfos[$process[$i]]['endpoint'] == ""){break;}
     echo '<div id="ab'.$process[$i].'">';
-    echo _T("Copy of master", "imaging").$_GET['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
+    echo _T("Copy of master", "imaging"). $_SESSION['processclone']['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
     echo '</div>';
     echo '<div>';
     echo '<p style="color: blue;" id="po'.$process[$i].'">';
