@@ -38,7 +38,6 @@ list($list, $values) = getEntitiesSelectableElements();
         $processsinfos[$dede[0]]['startpoint']=array_pop(explode('>',$list['UUID'.$dede[1]]));
         $processsinfos[$dede[0]]['endpoint']=array_pop(explode('>',$list['UUID'.$dede[2]]));
     }
-
 if( $nbprocess == 0){
     header("Location: " . urlStrRedirect("imaging/manage/master"));
     exit;
@@ -53,7 +52,6 @@ $tabjavascript="var ArrayProcesslog = '";
 foreach($process as $log){
     $tab[] = "synch_masters_".$log.".log";
 }
-
 $str=implode(",", $tab) ;
 $tabjavascript.=$str."';";
 echo '<div style="color: blue;font-size: 16px;" id="msg">';
@@ -61,6 +59,7 @@ echo _T("Copy of master Not Started", "imaging");
 echo '</div>';
 echo '<br>';
 for ($i=0;$i<$nbprocess;$i++){
+    if ($processsinfos[$process[$i]]['startpoint'] == "" || $processsinfos[$process[$i]]['endpoint'] == ""){break;}
     echo '<div id="ab'.$process[$i].'">';
     echo _T("Copy of master", "imaging").$_GET['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
     echo '</div>';
@@ -94,28 +93,32 @@ var interval = setInterval(function() {
             type: "GET",
             data: {"params": ArrayProcesslog}
     });
-
     request.done(function(msg) {
         var regUrl = new RegExp("[a-zA-Z._-]", "gi");
-        var t = JSON.parse(msg)
+        var t = JSON.parse(msg)        
         var keyvaleur=Object.keys(t)
         var terminer=new Array();
         for(var i= 0; i < keyvaleur.length; i++){
-            console.log(t[keyvaleur[i]]);
-            console.log(keyvaleur[i]);
-            var numprocess =  keyvaleur[i].replace(regUrl,"");
-            bb="#bb"+ numprocess
-            jQuery(bb).text(t[keyvaleur[i]])
             var tableau = strtotab(t[keyvaleur[i]]);
-            tableau[1] = tableau[1].replace(/(\s+)?.$/, "")
+            var numprocess =  keyvaleur[i].replace(regUrl,"");
+            messageerreur="#messageerreur"+ numprocess
+            bb="#bb"+ numprocess
             po="#po"+ numprocess
+            pb="#pb"+ numprocess
+            tableau[1] = tableau[1].replace(/(\s+)?.$/, "")
+            // verify code ereur si % > 100 convention script en erreur
+            if (tableau[1] <= 100 ){
+                jQuery(bb).text(t[keyvaleur[i]])
+            } else{
+                jQuery(messageerreur).text(tableau[4])
+                jQuery(bb).text("")
+            }
             if (tableau[1] == 100 ){
                 jQuery(po).text("'._T("Complete", "imaging").'");
             }
             else{
                 jQuery(po).text("'._T("In progress", "imaging").'");
             }
-            pb="#pb"+ numprocess
             jQuery(pb).attr("value",tableau[1]);
             terminer.push(tableau[1])
         }

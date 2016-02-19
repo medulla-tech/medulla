@@ -1,5 +1,4 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
@@ -22,7 +21,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
 /* Get MMC includes */
 require("../../../includes/config.inc.php");
 require("../../../includes/i18n.inc.php");
@@ -31,7 +29,6 @@ require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/includes.php");
 require('../includes/xmlrpc.inc.php');
-
 $params = getParams();
 $location = $_SESSION['imaging_location']['used'];
 
@@ -56,7 +53,6 @@ $addAction = new ActionPopupItem(_T("Add image to default boot menu", "imaging")
 $delAction = new ActionPopupItem(_T("Remove from boot menu", "imaging"), "master_remove", "delbootmenu", "master", "imaging", "manage", $type."tabbootmenu", 300, "delete");
 $emptyAction = new EmptyActionItem();
 $addActions = array();
-
 $a_label = array();
 $a_desc = array();
 $a_date = array();
@@ -64,10 +60,8 @@ $a_size = array();
 $a_is_in_menu = array();
 $a_destroy = array();
 $l_im = array();
-
 $destroyAction = new ActionPopupItem(_T("Delete", "imaging"), "master_delete", "delete", "master", "imaging", "manage");
 $showImAction = new ActionPopupItem(_T("Show target using that image", "imaging"), "showtarget", "showtarget", "image", "base", "computers");
-
 foreach ($masters as $master) {
     $l_params = array();
     $l_params = $params;
@@ -79,9 +73,7 @@ foreach ($masters as $master) {
     } else {
         $addActions[] = $delAction;
     }
-
     $list_params[] = $l_params;
-
     $a_label[] = sprintf("%s%s", '<img src="modules/imaging/graph/images/imaging-action.png" style="vertical-align: middle" /> ', $master['name']);
     $a_desc[] = $master['desc'];
     $a_date[] = _toDate($master['creation_date']);
@@ -89,7 +81,6 @@ foreach ($masters as $master) {
     $a_is_in_menu[] = ($master['menu_item']?True:False);
     $l_im[] = array($master['imaging_uuid'], null, null);
 }
-
 if (count($l_im) != 0) {
     $ret = xmlrpc_areImagesUsed($l_im);
     foreach ($masters as $image) {
@@ -100,8 +91,6 @@ if (count($l_im) != 0) {
         }
     }
 }
-
-
 // show images list
 $l = new OptimizedListInfos($a_label, _T("Label", "imaging"));
 $l->setParamInfo($list_params);
@@ -118,15 +107,20 @@ $l->addActionItem(
     new ActionItem(_T("Edit image", "imaging"),
     "master_edit", "edit", "master", "imaging", "manage")
 );
-
-$l->addActionItem(
+$process  = xmlrpc_checkProcessCloneMasterToLocation("synch-masters");
+if (count($process) > 0){
+      $l->addActionItem(
+    new ActionItem(_T("copy master In progress", "imaging"),
+    "synchromaster", "start", "master", "imaging", "manage")
+);
+}else
+{
+    $l->addActionItem(
     new ActionItem(_T("Master Clone", "imaging"),
     "master_clone", "start", "master", "imaging", "manage")
 );
-
-
+}
 $l->addActionItemArray($a_destroy);
-
 $l->setTableHeaderPadding(1);
 $l->disableFirstColumnActionLink();
 $l->setItemCount($count);
@@ -134,10 +128,7 @@ $l->setNavBar(new AjaxNavBar($count, $filter, "updateSearchParamformLevel2"));
 $l->start = 0;
 $l->end = $maxperpage;
 $l->display();
-
-
 ?>
-
 <!-- inject styles -->
 <link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
 
