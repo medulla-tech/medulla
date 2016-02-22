@@ -568,6 +568,8 @@ class ImagingRpcProxy(RpcProxyI):
         return json.dumps(data)
 
     def startProcessClone(self, objetclone):
+        test = self.checkProcessCloneMasterToLocation('/bin/bash /usr/bin/pulse2-synch-masters');
+        if len(test) > 0 : return
         self.ClearFileStatusProcess()
         logger = logging.getLogger()
         logger.debug("startProcessClone %s"%objetclone)
