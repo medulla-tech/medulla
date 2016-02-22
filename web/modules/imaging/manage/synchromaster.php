@@ -65,7 +65,7 @@ for ($i=0;$i<$nbprocess;$i++){
     echo '</div>';
     echo '<div>';
     echo '<p style="color: blue;" id="po'.$process[$i].'">';
-    echo "Not Started";
+    //echo "Not Started";
     echo "</p>";
     echo'<progress id="pb'.$process[$i].'" 
      max="100" value="0" form="form-id">0%</progress>
