@@ -62,6 +62,6 @@ if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imagin
 
 right_top_shortcuts_display();
 $ajax->display();
-
+echo "<br /><br /><br /><br />";
 $ajax->displayDivToUpdate();
 ?>
