@@ -39,8 +39,8 @@ if (!$response['err']) {
     $datetimes = $response['datetimes'];
     $ages = $response['ages'];
     for ($i=0;$i<count($points);$i++) {
-        $param_str = "host=".$_GET['host']."&backupnum=".$points[$i]."&sharename=".$_GET['sharename'];
-        $param_str.= "&dir=".$_GET['dir'];
+        $param_str = "host=".$_GET['host']."&backupnum=".$points[$i]."&sharename=".urlencode($_GET['sharename']);
+        $param_str.= "&dir=".urlencode($_GET['dir']);
         
         preg_match("#.+ (.+)#",$datetimes[$i],$result);
         $time = time() - floatval($ages[$i])*24*60*60; 
