@@ -38,3 +38,10 @@ progress::-webkit-progress-value {
    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4),
                0 2px 5px 0px rgba(0,0,0,0.3); 
 } 
+
+/* couleur de la barre de progression pour internet explorer 10 et 11 */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { 
+   progress {
+	   color : gray;
+   }
+}
