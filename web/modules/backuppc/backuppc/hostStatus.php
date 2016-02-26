@@ -130,6 +130,7 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['XferMethod'] = 'rsync';
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
     $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
+    $cfg['RsyncRestoreArgs'] = explode(" ", "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super");
     $cfg['PingCmd'] = '/bin/true';
     $backup_manager_cmd = '/usr/bin/pulse2-backup-handler $host $hostIP $type $cmdType';
     $cfg['DumpPreUserCmd'] = $cfg['DumpPostUserCmd'] = $backup_manager_cmd;

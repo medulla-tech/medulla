@@ -622,6 +622,7 @@ def set_backup_for_host(uuid):
     config['XferMethod'] = 'rsync'
     config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
+    config['RsyncRestoreArgs'] = "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(' ')
     config['PingCmd'] = '/bin/true'
     set_host_config(uuid,config)
     # Adding host to the DB
