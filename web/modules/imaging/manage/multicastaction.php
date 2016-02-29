@@ -59,6 +59,10 @@ if (    isset($multicast) &&
  
     switch ($multicast) {
         case "start":
+            $objprocess['group']=$_SESSION['PARAMMULTICAST']['gid'];
+            $objprocess['description']=$_SESSION['PARAMMULTICAST']['itemlabel'];
+            $objprocess['master']=$_SESSION['PARAMMULTICAST']['uuidmaster'];
+            $objprocess['path']="/var/lib/pulse2/imaging/masters/".$_SESSION['PARAMMULTICAST']['uuidmaster'];
             $objprocess['process'] = $path.$process;
             xmlrpc_start_process_multicast($objprocess);
             break;
@@ -73,6 +77,7 @@ if (    isset($multicast) &&
             $objprocess['process'] = $path.$process;
             $gr = xmlrpc_clear_script_multicast($objprocess);
             if ($gr != -1) xmlrpc_synchroProfile($gr);
+            unset($_SESSION['PARAMMULTICAST']);
             break;
     }
 }

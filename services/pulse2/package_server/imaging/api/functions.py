@@ -1026,8 +1026,38 @@ class Imaging(object):
         return self._checkProcessDrblClonezilla()
     
     def check_process_multicast_finish(self, objprocess):
-        # check process multicast terminat
-        return os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
+        # controle process multicast terminat
+        result = {}
+        pathfile= "/var/lib/pulse2/imaging/masters/%s"%objprocess['uuidmaster']
+        partition = self._listPart(pathfile)
+        result['partitionlist']=[x.strip(' \t\n\r') for x in partition[0].split(' ')]
+        result['indexpartition']=-1
+        result['sizebloctranfert']="O"
+        result['partionname']=""
+        if os.path.exists("/tmp/udp-sender.log"):
+            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1; } /Starting transfer/{aa+=1;} /RETX/{ dd=$3;} END{ee=sprintf(\"%d %s\",aa,dd);print ee;}'",
+                            shell=True,
+                            stdout=subprocess.PIPE)
+            line=[x.strip(' \t\n\r') for x in r.stdout]
+            r.wait()
+            r.stdout.close()
+            if len (line) == 1 and line[0] != "-1":
+                lineinformation = line[0].split(' ') lineinformation) lineinformation[0])
+                result['indexpartition']=int(lineinformation[0]) result['indexpartition'])
+                result['sizebloctranfert']=lineinformation[1]
+                if int(result['indexpartition']) != -1:
+                    result['partionname']=result['partitionlist'][result['indexpartition']]
+        result ['finish'] = os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
+        
+        if os.path.exists("/tmp/multicastdescription.txt"):
+            f = open("/tmp/multicastdescription.txt",'r')
+            lignes  = f.readlines()
+            f.close()
+            result['informations'] = lignes
+        if os.path.exists("/tmp/multicast.sh") and result ['finish'] == True:
+            os.remove("/tmp/multicast.sh")
+            os.remove("/tmp/processmulticast")
+        return json.dumps(result)
 
     def muticast_script_exist(self, objprocess):
         # controle script existance script multicast
@@ -1052,9 +1082,78 @@ class Imaging(object):
 
     def start_process_multicast(self, objprocess):
         # start execution process multicast
+        #efface file 
+        if os.path.exists("/tmp/udp-sender.log"):
+            os.remove("/tmp/udp-sender.log")
+        if os.path.exists("/tmp/multicastdescription.txt"):
+            os.remove("/tmp/multicastdescription.txt")
+        self._listPartition( objprocess)
         start_process(objprocess['process'])
         return self._checkProcessDrblClonezilla()
 
+    def _listDisk(self, pathfiles):
+        if os.path.isfile("%s/disk"%pathfiles):
+            f = open("%s/disk"%pathfiles,'r')
+            lignes  = f.readlines()
+            f.close()
+            return [x.strip(' \t\n\r') for x in lignes]
+
+    def _listPart(self, pathfiles):
+        if os.path.isfile("%s/parts"%pathfiles):
+            f = open("%s/parts"%pathfiles,'r')
+            lignes  = f.readlines()
+            f.close()
+            return [x.strip(' \t\n\r') for x in lignes]
+        
+    def _listPartition(self, objprocess):
+        self.logger.info('******_listPartition %s'%objprocess)
+        patitiondisk = []
+        #if not os.path.isfile("/tmp/multicastdescription.txt"):
+        fe = open("/tmp/multicastdescription.txt",'w')
+        fe.write("group %s\n"%(str(objprocess['group'])))
+        fe.write("description %s\n"%(objprocess['description']))
+        #fe.write("nbcomputer %s\n"%(str(objprocess['nbcomputer'])))
+        fe.write("location %s\n"%(objprocess['location']))
+        #fe.write("size %s\n"%(str(objprocess['size'])))
+        bootable = "no"
+        disk = self._listDisk(objprocess['path'])
+        diskorder = ' '.join(disk)
+        fe.write("diskorder %s\n"% diskorder)
+        part = self._listPart( objprocess['path'])
+        order = ' '.join(part)
+        fe.write("partorder %s\n"% order)
+        for diskel in disk:
+            if os.path.isfile("%s/%s-pt.sf"%(objprocess['path'],diskel)):
+                f = open("%s/%s-pt.sf"%(objprocess['path'],diskel),'r')
+                lignes  = f.readlines()
+                f.close()
+                for t in lignes:
+                    self.logger.info('lignes %s'%t)
+                    if (t.startswith( '/dev' )):
+                        datapart={}
+                        #traitement
+                        data=[x.strip('type=, \t\n\r')  for x in t.split(" ") if x !=""]
+                        self.logger.info('data %s'%data)
+                        data1 = data[0].split('/')
+                        self.logger.info('data1 %s'%data1)
+                        datadesc = {}
+                        datadesc["size"] = data[5].strip(', \t\n\r')
+                        datadesc["start"] = data[3].strip(', \t\n\r')
+                        datadesc["type"] = data[6].strip('type=, \t\n\r')
+                        if len(data) >= 8:
+                            datadesc["bootable"] = "yes"
+                            bootable="yes"
+                        else:
+                            datadesc["bootable"] = "no"
+                            bootable="no"
+                        datapart[data1[2]]=datadesc
+                        patitiondisk.append(datapart)
+                        fe.write("%s %s %s %s\n"%(data1[2], data[5].strip(', \t\n\r'), data[6].strip('type=, \t\n\r'), bootable))
+        fe.close()  
+        return patitiondisk
+        
+        
+        
     def checkDeploymentUDPSender(self, objprocess):
         result = {}
         result['data']=""
@@ -1076,18 +1175,6 @@ class Imaging(object):
                 self.logger.info("Starting transfer exist in the file")
             else:
                 self.logger.info("Starting transfer no exist in the file")
-            self.logger.info("exec : tail -n 1 /tmp/udp-sender.log  -> for next bar progression")     
-            r = subprocess.Popen("tail -n 1 /tmp/udp-sender.log",
-                            shell=True,
-                            stdout=subprocess.PIPE)
-            for x in r.stdout:
-                result['data']= x
-            r.wait()
-            self.logger.info("last line of /tmp/udp-sender.log: %s"%result['data'])     
-            r.stdout.close()
-        else:
-            self.logger.info('file /tmp/udp-sender.log no exist')
-        self.logger.info("return function checkDeploymentUDPSender on imaging server: %s"%result )   
         return result
 
 

@@ -151,6 +151,18 @@ if ($_POST) {
 //     exit;
     $list =  xmlrpc_imagingServermenuMulticast($objval);
     if($list[0] == 1){
+        $Paramsmulticast=array(
+            "gid"=>$gid,
+            "from"=>$from,
+            "is_master"=>$is_master,
+            "uuidmaster"=>$uuidmaster,
+            "itemid"=>$itemid,
+            "itemlabel"=>$itemlabel,
+            "target_uuid"=>$target_uuid,
+            "target_name"=>$target_name,
+        );
+        $_SESSION['PARAMMULTICAST']=$Paramsmulticast;
+    
         $msg = _T("Multicast menu has been successfully created.", "imaging");
         new NotifyWidgetSuccess($msg);
         header("Location: " . urlStrRedirect("imaging/manage/index"));
@@ -183,10 +195,8 @@ if ($_POST) {
         <input name="from"  type="hidden" value="<?php echo $from; ?>" />
         <input name="is_master" type="hidden" value="<?php echo $is_master; ?>" />
         <input name="uuidmaster" type="hidden" value="<?php echo $uuidmaster; ?>" />
-        <input name="is_master" type="hidden" value="<?php echo $is_master; ?>" />
         <input name="itemid" type="hidden" value="<?php echo $itemid; ?>" />
         <input name="itemlabel" type="hidden" value="<?php echo $itemlabel; ?>" />
-        <input name="itemid" type="hidden" value="<?php echo $itemid; ?>" />
         <input name="target_uuid" type="hidden" value="<?php echo $target_uuid; ?>" />
         <input name="target_name" type="hidden" value="<?php echo $target_name; ?>" />
   

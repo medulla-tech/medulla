@@ -540,7 +540,6 @@ class ImagingRpcProxy(RpcProxyI):
         return True
 
     def statusProcessBarClone(self, listfilelog):
-        import json
         logger = logging.getLogger()
         logger.debug("statusProcessBarClone %s"%listfilelog)
         data={}

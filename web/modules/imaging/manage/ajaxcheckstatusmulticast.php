@@ -1,8 +1,7 @@
+<?php session_start(); ?>
 <?php
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2015 Mandriva, http://www.mandriva.com
- * (c) 2015-2016 Siveo, http://www.siveo.net/
+ * (c) 2015-2016 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -35,13 +34,10 @@ extract($_GET);
 $objprocess=array();
 $objprocess['location']=$location;
 $objprocess['process'] = $path.$scriptmulticast;
-if( xmlrpc_check_process_multicast_finish($objprocess)){
-    $objprocess['process'] = $path.$scriptmulticast;
-    $gr = xmlrpc_clear_script_multicast($objprocess);
-            if ($gr != -1) xmlrpc_synchroProfile($gr);
-    echo "1";
-}
-else{
-    echo "0";
-}
+
+$objprocess['uuidmaster'] = $uuidmaster;
+$objprocess['itemlabel'] = $itemlabel;
+$objprocess['gid'] = $gid;
+$a=xmlrpc_check_process_multicast_finish($objprocess);
+echo $a;
 ?>

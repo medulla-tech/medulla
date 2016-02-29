@@ -89,29 +89,66 @@ if (!empty($global_status)) {
  // 1) start /tmp/multicast.sh
  -->
  <?php
- $scriptmulticast = 'multicast.sh';
- $path="/tmp/";
- $objprocess=array();
- $objprocess['location']=$_GET['location'];
- $objprocess['process'] = $path.$scriptmulticast;
- 
+$resultdisplay1 = array();
+$scriptmulticast = 'multicast.sh';
+$path="/tmp/";
+$objprocess=array();
+$objprocess['location']=$_GET['location'];
+$objprocess['process'] = $path.$scriptmulticast;
+$objprocess['process'] = $scriptmulticast;
+if (!isset($_SESSION['PARAMMULTICAST'])){
+    $objprocess['process'] = $scriptmulticast;
+    $objprocess['process'] = $scriptmulticast;
+    xmlrpc_stop_process_multicast ($objprocess);
+    $objprocess['process'] = $path.$scriptmulticast;
+    xmlrpc_clear_script_multicast($objprocess);
+}
+else{
+    $objprocess['gid'] = $_SESSION['PARAMMULTICAST']['gid'];
+    $objprocess['uuidmaster'] = $_SESSION['PARAMMULTICAST']['uuidmaster'];
+    $objprocess['itemlabel'] = $_SESSION['PARAMMULTICAST']['itemlabel'];
+    $objprocess['path'] = $path;
+    $objprocess['scriptmulticast'] = $scriptmulticast;
+    $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
+    $informationdisk = $resultdisplay['informations'];
+    foreach ( $resultdisplay['partitionlist'] as $partition ){
+        foreach($informationdisk as $valeur ){
+            $pos = strpos($valeur, $partition);
+            if  ($pos !== False && $pos == 0 ){
+                $resultdisplay1[$partition] =  explode(" ",$valeur);
+            }
+        }
+    }   
+}
+$objprocess['process'] = $path.$scriptmulticast;
 if (xmlrpc_muticast_script_exist($objprocess)){ 
  
 // detection si multicast terminer 
 echo '<script type="text/javascript">';
-echo '
-var locations = "'.$_GET['location'].'";';
+echo '<script type="text/javascript">';
+echo 'var locations = "'.$_GET['location'].'";';
+echo 'var uuidmaster = "'.$_SESSION['PARAMMULTICAST']['uuidmaster'].'";';
+echo 'var itemlabel = "'.$_SESSION['PARAMMULTICAST']['itemlabel'].'";';
+echo 'var gid = "'.$_SESSION['PARAMMULTICAST']['gid'].'";';
 echo 'var path = "'.$path.'";';
 echo 'var scriptmulticast = "'.$scriptmulticast.'";';
+echo 'var transfertbloctaille = 78';
 echo'
 var interval = setInterval(function() {
         var request = jQuery.ajax({
             url: "modules/imaging/manage/ajaxcheckstatusmulticast.php",
             type: "GET",
-            data: {"location" :locations,"path": path,"scriptmulticast" : scriptmulticast}
+            data: {"location" :locations,"gid":gid,"uuidmaster":uuidmaster,"itemlabel":itemlabel,"path": path,"scriptmulticast" : scriptmulticast}
     });
     request.done(function(msg) {
-        if(msg==1){ jQuery("#checkprocess").hide(); }
+        var t = JSON.parse(msg)
+        taille = t["sizebloctranfert"] * transfertbloctaille;
+        progressbar = "#"+ t["partionname"]
+        jQuery(progressbar).attr("value",taille);
+       if(t["finish"]==true){
+            jQuery("#checkprocess").hide();
+            clearInterval(interval);
+        }
     });
 },1000);
  </script>';
@@ -143,6 +180,9 @@ var interval = setInterval(function() {
     }
     else{
         // script arreter afficher bouton start
+//         if ( !isset($_SESSION['PARAMMULTICAST'])){
+//                 echo "desolé impossible session terminer";        
+//         }
         echo'<h3>';
         echo _T('START Multicast Current Location', 'imaging');
         echo'</h3>';
@@ -170,6 +210,15 @@ var interval = setInterval(function() {
         echo '" />    
         </form>';
     }
+    foreach ( $resultdisplay['partitionlist'] as $partition ){
+        echo "<p>";
+            echo $resultdisplay1[$partition][0].
+            "size [".$resultdisplay1[$partition][1] ."] ".
+            "type [".$resultdisplay1[$partition][2] ."] ".
+            "bootable [".$resultdisplay1[$partition][3]."]";
+            echo '<progress id="'.$partition.'" max="'.$resultdisplay1[$partition][1].'" value="0" form="form-id">0%</progress>';
+        echo "</p>";
+    }   
     echo'
             </div>
         </div>';
@@ -181,7 +230,7 @@ var interval = setInterval(function() {
         xmlrpc_stop_process_multicast ($objprocess);
         $objprocess['process'] = $path.$scriptmulticast;
         $gr = xmlrpc_clear_script_multicast($objprocess);
-            if ($gr != -1) xmlrpc_synchroProfile($gr);
+        if ($gr != -1) xmlrpc_synchroProfile($gr);
     }
 }
 ?>
