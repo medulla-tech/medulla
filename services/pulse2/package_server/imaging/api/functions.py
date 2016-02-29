@@ -1043,7 +1043,7 @@ class Imaging(object):
             r.stdout.close()
             if len (line) == 1 and line[0] != "-1":
                 lineinformation = line[0].split(' ')
-                result['indexpartition']=int(lineinformation[0]) result['indexpartition'])
+                result['indexpartition']=int(lineinformation[0])
                 result['sizebloctranfert']=lineinformation[1]
                 if int(result['indexpartition']) != -1:
                     result['partionname']=result['partitionlist'][result['indexpartition']]
