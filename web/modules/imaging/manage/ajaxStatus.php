@@ -132,7 +132,7 @@ echo 'var itemlabel = "'.$_SESSION['PARAMMULTICAST']['itemlabel'].'";';
 echo 'var gid = "'.$_SESSION['PARAMMULTICAST']['gid'].'";';
 echo 'var path = "'.$path.'";';
 echo 'var scriptmulticast = "'.$scriptmulticast.'";';
-echo 'var transfertbloctaille = 78';
+echo 'var transfertbloctaille = 1024';
 echo'
 var interval = setInterval(function() {
         var request = jQuery.ajax({
