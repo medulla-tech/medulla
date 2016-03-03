@@ -126,16 +126,16 @@ else{
     $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
     //$tailleimagedisk = ;
     foreach($resultdisplay['sizeuser'] as $dd){
-        $tableau = explode(" ",$dd);
-        switch($tableau[6]){
+        $tableau = preg_split('/\s+/', $dd);
+        switch($tableau[4]){
             case "GB" :
-                        $tailleimagedisk[] = intval(($tableau[5]*1000000000.));
+                        $tailleimagedisk[] = intval(($tableau[3]*1000000000.));
                         break;
             case "MB" :
-                        $tailleimagedisk[] = intval(($tableau[5]*1000000.));
+                        $tailleimagedisk[] = intval(($tableau[3]*1000000.));
                         break;
             case "KB" :
-                        $tailleimagedisk[] = intval(($tableau[5]*1000.));
+                        $tailleimagedisk[] = intval(($tableau[3]*1000.));
                         break;
        }
     }
