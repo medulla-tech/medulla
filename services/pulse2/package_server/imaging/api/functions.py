@@ -1024,31 +1024,35 @@ class Imaging(object):
     def check_process_multicast(self, objprocess):
         # check execution process multicast
         return self._checkProcessDrblClonezilla()
-    
+
     def check_process_multicast_finish(self, objprocess):
         # controle process multicast terminat
         result = {}
         pathfile= "/var/lib/pulse2/imaging/masters/%s"%objprocess['uuidmaster']
         partition = self._listPart(pathfile)
+        result['sizeuser']=self._sizeTransferReel(pathfile)
         result['partitionlist']=[x.strip(' \t\n\r') for x in partition[0].split(' ')]
         result['indexpartition']=-1
         result['sizebloctranfert']="O"
         result['partionname']=""
+        result['beforebytesend']=long(0)
+        result['bytesend']=long(0)
         if os.path.exists("/tmp/udp-sender.log"):
-            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1; } /Starting transfer/{aa+=1;} /RETX/{ dd=$3;} END{ee=sprintf(\"%d %s\",aa,dd);print ee;}'",
+            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /RETX/{ dd=$3;} END{ee=sprintf(\"%d %s %s %s\",aa,dd,e,a);print ee;}'",
                             shell=True,
                             stdout=subprocess.PIPE)
             line=[x.strip(' \t\n\r') for x in r.stdout]
             r.wait()
             r.stdout.close()
-            if len (line) == 1 and line[0] != "-1":
-                lineinformation = line[0].split(' ')
+            lineinformation = [x.strip(' \t\n\r') for x in line[0].split(' ') if x.strip(' \t\n\r') != ""]
+            if lineinformation[0] != "-1" and len (lineinformation) >= 4:
                 result['indexpartition']=int(lineinformation[0])
                 result['sizebloctranfert']=lineinformation[1]
+                result['beforebytesend']=long(lineinformation[2])
+                result['bytesend']=long(lineinformation[3])
                 if int(result['indexpartition']) != -1:
                     result['partionname']=result['partitionlist'][result['indexpartition']]
         result ['finish'] = os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
-        
         if os.path.exists("/tmp/multicastdescription.txt"):
             f = open("/tmp/multicastdescription.txt",'r')
             lignes  = f.readlines()
@@ -1057,6 +1061,7 @@ class Imaging(object):
         if os.path.exists("/tmp/multicast.sh") and result ['finish'] == True:
             os.remove("/tmp/multicast.sh")
             os.remove("/tmp/processmulticast")
+        self.logger.debug('check_process_multicast_finish %s'%result)
         return json.dumps(result)
 
     def muticast_script_exist(self, objprocess):
@@ -1098,13 +1103,20 @@ class Imaging(object):
             f.close()
             return [x.strip(' \t\n\r') for x in lignes]
 
+    def _sizeTransferReel(self, pathfiles):
+        if os.path.isfile("%s/clonezilla-img"%pathfiles):
+            f = open("%s/clonezilla-img"%pathfiles,'r')
+            lignes  = f.readlines()
+            f.close()
+            return [x.strip(' \t\n\r') for x in lignes  if x.startswith( 'Space in use:' )]
+
     def _listPart(self, pathfiles):
         if os.path.isfile("%s/parts"%pathfiles):
             f = open("%s/parts"%pathfiles,'r')
             lignes  = f.readlines()
             f.close()
             return [x.strip(' \t\n\r') for x in lignes]
-        
+
     def _listPartition(self, objprocess):
         self.logger.info('******_listPartition %s'%objprocess)
         patitiondisk = []
