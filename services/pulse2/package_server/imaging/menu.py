@@ -675,6 +675,12 @@ class ImagingBootServiceItem(ImagingItem):
         # Create and write sh file
         try:
             f = open(os.path.join(postinst_scripts_folder, script_file[0]), 'w')
+            f.write('#!/bin/bash\n')
+            f.write('\n')
+            f.write('. /usr/lib/libpostinst.sh')
+            f.write('\n')
+            f.write('set -v\n')
+            f.write('\n')
             f.write(script_file[1])
             f.close()
             self.logger.info('File %s successfully created', os.path.join(postinst_scripts_folder, script_file[0]))
