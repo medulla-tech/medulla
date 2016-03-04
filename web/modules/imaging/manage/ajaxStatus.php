@@ -189,8 +189,9 @@ var interval = setInterval(barprogress,2000);
         // "affichage bouton arrêt"
         // voir apres pour bar de progression
         $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
-        echo  "Master : ".$nom_master."<br>";  
+          
         echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
+        echo  "Master : ".$nom_master."<br>";
         echo '<form action="'; 
         echo urlStr("imaging/manage/multicastaction/");
         echo '" method="POST">';
@@ -209,8 +210,8 @@ var interval = setInterval(barprogress,2000);
     }
     else{
         $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
-        echo  "Master : ".$nom_master."<br>";
         echo "<h3>"._T('Multicast Current Location', 'imaging').'</h3>';
+        echo  "Master : ".$nom_master."<br>";
         echo '<form action="'; 
         echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="start" />';
