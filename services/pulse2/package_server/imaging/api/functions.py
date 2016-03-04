@@ -1027,29 +1027,29 @@ class Imaging(object):
 
     def check_process_multicast_finish(self, objprocess):
         # controle process multicast terminat
+        if not os.path.exists("/tmp/multicastdescription.txt"):
+            self._listPartition(objprocess)
         result = {}
         pathfile= "/var/lib/pulse2/imaging/masters/%s"%objprocess['uuidmaster']
         partition = self._listPart(pathfile)
-        result['sizeuser']=self._sizeTransferReel(pathfile)
+        result['sizeuser']={}
         result['partitionlist']=[x.strip(' \t\n\r') for x in partition[0].split(' ')]
+        for x in result['partitionlist']:
+            result['sizeuser'][x]=self._sizeImgDevice(pathfile, x)
         result['indexpartition']=-1
-        result['sizebloctranfert']="O"
         result['partionname']=""
-        result['beforebytesend']=long(0)
         result['bytesend']=long(0)
         if os.path.exists("/tmp/udp-sender.log"):
-            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /RETX/{ dd=$3;} END{ee=sprintf(\"%d %s %s %s\",aa,dd,e,a);print ee;}'",
+            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} END{ee=sprintf(\"%d %s\",aa,a);print ee;}'",
                             shell=True,
                             stdout=subprocess.PIPE)
             line=[x.strip(' \t\n\r') for x in r.stdout]
             r.wait()
             r.stdout.close()
             lineinformation = [x.strip(' \t\n\r') for x in line[0].split(' ') if x.strip(' \t\n\r') != ""]
-            if lineinformation[0] != "-1" and len (lineinformation) >= 4:
+            if lineinformation[0] != "-1" and len (lineinformation) >= 2: 
                 result['indexpartition']=int(lineinformation[0])
-                result['sizebloctranfert']=lineinformation[1]
-                result['beforebytesend']=long(lineinformation[2])
-                result['bytesend']=long(lineinformation[3])
+                result['bytesend']=long(lineinformation[1])
                 if int(result['indexpartition']) != -1:
                     result['partionname']=result['partitionlist'][result['indexpartition']]
         result ['finish'] = os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
@@ -1061,7 +1061,6 @@ class Imaging(object):
         if os.path.exists("/tmp/multicast.sh") and result ['finish'] == True:
             os.remove("/tmp/multicast.sh")
             os.remove("/tmp/processmulticast")
-        self.logger.debug('check_process_multicast_finish %s'%result)
         return json.dumps(result)
 
     def muticast_script_exist(self, objprocess):
@@ -1085,6 +1084,16 @@ class Imaging(object):
         else:
             return -1
 
+    def _sizeImgDevice(self, pathfiles, device):
+        cmd="ls -al %s/%s* | awk 'BEGIN{ result = 0; } /ptcl-img/{ result = result + $5; } END{ee = sprintf(\"%%17.0f\",result); gsub(/ /,\"\",ee); print ee}'"%(pathfiles,device)
+        r = subprocess.Popen(cmd,
+                            shell=True,
+                            stdout=subprocess.PIPE)
+        line=[x.strip(' \t\n\r') for x in r.stdout]
+        r.wait()
+        r.stdout.close()
+        return line[0]
+
     def start_process_multicast(self, objprocess):
         # start execution process multicast
         #efface file 
@@ -1104,6 +1113,7 @@ class Imaging(object):
             return [x.strip(' \t\n\r') for x in lignes]
 
     def _sizeTransferReel(self, pathfiles):
+        # return Space in use disk 
         if os.path.isfile("%s/clonezilla-img"%pathfiles):
             f = open("%s/clonezilla-img"%pathfiles,'r')
             lignes  = f.readlines()
@@ -1118,15 +1128,22 @@ class Imaging(object):
             return [x.strip(' \t\n\r') for x in lignes]
 
     def _listPartition(self, objprocess):
-        self.logger.info('******_listPartition %s'%objprocess)
         patitiondisk = []
         #if not os.path.isfile("/tmp/multicastdescription.txt"):
         fe = open("/tmp/multicastdescription.txt",'w')
-        fe.write("group %s\n"%(str(objprocess['group'])))
-        fe.write("description %s\n"%(objprocess['description']))
-        #fe.write("nbcomputer %s\n"%(str(objprocess['nbcomputer'])))
+        #exceptions.KeyError:
+        try:
+            fe.write("group %s\n"%(str(objprocess['gid'])))
+            fe.write("description %s\n"%(objprocess['itemlabel']))
+            objprocess['path']="/var/lib/pulse2/imaging/masters/%s"%(objprocess['uuidmaster'])
+        except KeyError:
+            pass
+        try:
+           fe.write("group %s\n"%(str(objprocess['group'])))
+           fe.write("description %s\n"%(objprocess['description']))
+        except KeyError:
+            pass
         fe.write("location %s\n"%(objprocess['location']))
-        #fe.write("size %s\n"%(str(objprocess['size'])))
         bootable = "no"
         disk = self._listDisk(objprocess['path'])
         diskorder = ' '.join(disk)
@@ -1140,14 +1157,11 @@ class Imaging(object):
                 lignes  = f.readlines()
                 f.close()
                 for t in lignes:
-                    self.logger.info('lignes %s'%t)
                     if (t.startswith( '/dev' )):
                         datapart={}
                         #traitement
                         data=[x.strip('type=, \t\n\r')  for x in t.split(" ") if x !=""]
-                        self.logger.info('data %s'%data)
                         data1 = data[0].split('/')
-                        self.logger.info('data1 %s'%data1)
                         datadesc = {}
                         datadesc["size"] = data[5].strip(', \t\n\r')
                         datadesc["start"] = data[3].strip(', \t\n\r')
@@ -1163,17 +1177,12 @@ class Imaging(object):
                         fe.write("%s %s %s %s\n"%(data1[2], data[5].strip(', \t\n\r'), data[6].strip('type=, \t\n\r'), bootable))
         fe.close()  
         return patitiondisk
-        
-        
-        
+
     def checkDeploymentUDPSender(self, objprocess):
         result = {}
         result['data']=""
         result['tranfert'] = False
-        self.logger.info('verify exist file /tmp/udp-sender.log')
         if os.path.isfile("/tmp/udp-sender.log"):
-            self.logger.info('file /tmp/udp-sender.log exist')
-            self.logger.info("exec : grep 'Starting transfer'  /tmp/udp-sender.log")  
             s = subprocess.Popen("grep 'Starting transfer'  /tmp/udp-sender.log",
                             shell=True,
                             stdout=subprocess.PIPE)
@@ -1183,10 +1192,10 @@ class Imaging(object):
                 break;
             s.stdout.close()
             s.wait()
-            if result['tranfert'] == True:
-                self.logger.info("Starting transfer exist in the file")
-            else:
-                self.logger.info("Starting transfer no exist in the file")
+            #if result['tranfert'] == True:
+                #self.logger.debug("Starting transfer exist in the file")
+            #else:
+                #self.logger.debug("Starting transfer no exist in the file")
         return result
 
 

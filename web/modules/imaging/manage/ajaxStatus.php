@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- *
+ * (c) 2015 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -70,7 +70,6 @@ if (!empty($global_status)) {
                 </p>
         </div>
     </div>
- <!-- //jfk -->
  <!--// regles de gestions affichage.
  // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
  
@@ -92,14 +91,6 @@ if (!empty($global_status)) {
  
  // progress bar script ajaxcheckstatusmulticast appel toutes les 5 secondes xmlrpc_check_process_multicast_finish
  -->
- <!--
- $scriptmulticast = 'multicast.sh';
- $path="/tmp/";
-if (xmlrpc_check_process_multicast_finish($objprocess)){
-{
-    $objprocess['process'] = $path.$scriptmulticast;
-    xmlrpc_clear_script_multicast($objprocess);
-}--> 
  <?php
  $resultdisplay1 = array();
 $scriptmulticast = 'multicast.sh';
@@ -124,20 +115,10 @@ else{
     $objprocess['path'] = $path;
     $objprocess['scriptmulticast'] = $scriptmulticast;
     $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
-    //$tailleimagedisk = ;
-    foreach($resultdisplay['sizeuser'] as $dd){
-        $tableau = preg_split('/\s+/', $dd);
-        switch($tableau[4]){
-            case "GB" :
-                        $tailleimagedisk[] = intval(($tableau[3]*1000000000.));
-                        break;
-            case "MB" :
-                        $tailleimagedisk[] = intval(($tableau[3]*1000000.));
-                        break;
-            case "KB" :
-                        $tailleimagedisk[] = intval(($tableau[3]*1000.));
-                        break;
-       }
+
+    $arraytaille = get_object_vars($resultdisplay['sizeuser']);
+    foreach($resultdisplay['partitionlist'] as $dd){
+        $tailleimagedisk[]=$arraytaille[$dd];
     }
     $informationdisk = $resultdisplay['informations'];
     foreach ( $resultdisplay['partitionlist'] as $partition ){
@@ -151,7 +132,6 @@ else{
 }
 $objprocess['process'] = $path.$scriptmulticast;
 if (xmlrpc_muticast_script_exist($objprocess)){
- //jQuery("#checkprocess").hide();
 echo '<script type="text/javascript">';
 echo 'var locations = "'.$_GET['location'].'";';
 echo 'var uuidmaster = "'.$_SESSION['PARAMMULTICAST']['uuidmaster'].'";';
@@ -162,7 +142,6 @@ echo 'var scriptmulticast = "'.$scriptmulticast.'";';
 echo 'var transfertbloctaille = 1024;';
 echo '
 function barprogress() {
-//         console.log("path=" + path);
         var request = jQuery.ajax({
             url: "modules/imaging/manage/ajaxcheckstatusmulticast.php",
             type: "GET",
@@ -170,71 +149,64 @@ function barprogress() {
     });
     request.done(function(msg) {
         var t = JSON.parse(msg)
-        //console.log(t);
         progressbar = "#"+ t["partionname"];
         tailleprogressbar = "#"+ t["partionname"]+"span";
         if ( t["indexpartition"] > 0 ){
             for( i=0 ; i< t["indexpartition"];i++){
                 namepartition = t["partitionlist"][i]
                 progressbar1 = "#"+ namepartition;
-                tailleprogressbar1 = "#" + namepartition + "span";
-                console.log(tailleprogressbar1);
                 console.log(jQuery(progressbar1).attr("max"));
                 jQuery(progressbar1).attr("value",jQuery(progressbar1).attr("max"));
-                jQuery(tailleprogressbar1).text(jQuery(progressbar1).attr("max"));
-                //jQuery(progressbar1).attr("value",taille);
             }
         }
-        taille0 = t["bytesend"];
-        taille1 = t["beforebytesend"];
-        taille = Math.max(taille0, taille1);
+        taille = t["bytesend"];
         console.log("taille " + taille + "   partition "  + t["partionname"] +"  finish " + t["finish"])
         jQuery(progressbar).attr("value",taille);
         tailletransfert =  taille ;
-        jQuery(tailleprogressbar).text(tailletransfert);
         if(t["finish"]==true){
-            jQuery("#checkprocess").hide();
+            jQuery("#complete").hide( "slow" );
+            jQuery("#completespan").show( "slow");
             clearInterval(interval);
         }
     });
 }';
 echo 'barprogress();';
+
 echo'
 var interval = setInterval(barprogress,2000);
  </script>';
+    $charvaleur = array("+");//liste de caracteres remplacés dans le nom du  master
     echo '
         <div class="status" id="checkprocess">
         <div class="status_block">  ';
     // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
     $objprocess['process'] = $scriptmulticast;
     if (xmlrpc_check_process_multicast($objprocess)){
-        // script /tmp/multicast.sh run
         // "affichage bouton arrêt"
         // voir apres pour bar de progression
-        echo'<h3>';
-        echo _T('STOP Multicast Current Location', 'imaging');
-        echo'</h3>';
+        $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
+        echo  "Master : ".$nom_master."<br>";  
+        echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
         echo '<form action="'; 
         echo urlStr("imaging/manage/multicastaction/");
         echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="stop" />';
         echo '<input name="location"  type="hidden" value="'.$objprocess['location'].'" />';
         echo '<input name="process"  type="hidden" value="'.$scriptmulticast.'" />';
-        echo '<input name="path" type="hidden" value="'.$path.'" />
-        <input name="bgo" type="submit" class="btnPrimary"
+        echo '<input name="path" type="hidden" value="'.$path.'" />';
+        echo '<span style="display:none;" id="completespan">Complete</span>';
+        echo '<div id="complete">';
+        echo '<input name="bgo" type="submit" class="btnPrimary"
         value="';
         echo _T("Stop multicast deploy", "imaging");
-        echo '" />    
-        </form>';
+        echo '" /> ';
+        echo '</div>';
+        echo '</form>';
     }
     else{
-        // script arreter afficher bouton start
-//         if ( !isset($_SESSION['PARAMMULTICAST'])){
-//                 echo "desolé impossible session terminer";
-//         }
-        //echo'<h3>';echo "This file full path and file name is '" . __FILE__ . "'.\n";
-        echo _T('START Multicast Current Location', 'imaging');
-        echo'</h3>';
+        $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
+        echo  "Master : ".$nom_master."<br>";
+        echo "<h3>"._T('Multicast Current Location', 'imaging').'</h3>';
         echo '<form action="'; 
         echo urlStr("imaging/manage/multicastaction/"); echo '" method="POST">';
         echo '<input name="multicast"  type="hidden" value="start" />';
@@ -260,18 +232,18 @@ var interval = setInterval(barprogress,2000);
         </form>';
             }
         $index=0;
-        echo  "Master [". $objprocess['itemlabel']."]";
         foreach ( $resultdisplay['partitionlist'] as $partition ){
-            
             echo "<p>";
                 $tailledisk = intval($resultdisplay1[$partition][1]) * 512;
                 $taillediskfMo =  round ($tailledisk /(1024*1024),2);
                 echo '<strong>'.$resultdisplay1[$partition][0].'</strong>'.
-                " size [".$taillediskfMo." Mo] ".
-                " type [".$resultdisplay1[$partition][2] ."] ".
-                " bootable [".$resultdisplay1[$partition][3]."] ".
-                " Space in use [".round ($tailleimagedisk[$index] /(1024*1024),2)." MB] Tranfer [";
-                echo '<span id='. $partition  .'span>'.' 0</span> bytes]';
+                " Size [".$taillediskfMo." MB] ".
+                " Type [".$resultdisplay1[$partition][2] ."] ";
+              
+                if (strcmp($resultdisplay1[$partition][3], "yes") == 1) echo "Bootable";
+                echo " Space in use [".round ($tailleimagedisk[$index] /(1024*1024),2)." MB]";
+                // Tranfer [";
+                //echo '<span id='. $partition  .'span>'.' 0</span> bytes]';
                 echo '<progress id="'.$partition.'" max="'.$tailleimagedisk[$index].'" value="0" form="form-id">0%</progress>';
             echo "</p>";
             $index=$index+1;
