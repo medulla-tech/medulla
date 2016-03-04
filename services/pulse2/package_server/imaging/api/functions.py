@@ -1030,6 +1030,7 @@ class Imaging(object):
         if not os.path.exists("/tmp/multicastdescription.txt"):
             self._listPartition(objprocess)
         result = {}
+        result['complete']=False
         pathfile= "/var/lib/pulse2/imaging/masters/%s"%objprocess['uuidmaster']
         partition = self._listPart(pathfile)
         result['sizeuser']={}
@@ -1040,16 +1041,18 @@ class Imaging(object):
         result['partionname']=""
         result['bytesend']=long(0)
         if os.path.exists("/tmp/udp-sender.log"):
-            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} END{ee=sprintf(\"%d %s\",aa,a);print ee;}'",
+            r = subprocess.Popen("cat /tmp/udp-sender.log | awk 'BEGIN{ aa=-1;bb =0;a=\"0\"; } /^[0-9]./{ e=a; a= $NF; } /Starting transfer/{aa+=1;} /Transfer complete/{bb+=1;} END{ee=sprintf(\"%d %s %d\",aa,a,bb);print ee;}'",
                             shell=True,
                             stdout=subprocess.PIPE)
             line=[x.strip(' \t\n\r') for x in r.stdout]
             r.wait()
             r.stdout.close()
             lineinformation = [x.strip(' \t\n\r') for x in line[0].split(' ') if x.strip(' \t\n\r') != ""]
-            if lineinformation[0] != "-1" and len (lineinformation) >= 2: 
+            if lineinformation[0] != "-1" and len (lineinformation) >= 3: 
                 result['indexpartition']=int(lineinformation[0])
                 result['bytesend']=long(lineinformation[1])
+                if len(result['partitionlist']) == int(lineinformation[2]):
+                    result['complete']=True
                 if int(result['indexpartition']) != -1:
                     result['partionname']=result['partitionlist'][result['indexpartition']]
         result ['finish'] = os.path.exists("/tmp/processmulticast") and not self._checkProcessDrblClonezilla()
