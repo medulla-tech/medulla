@@ -9,3 +9,4 @@ Pulse 2 3.3.0
  * [FEATURE] Management of multiple entities in Imaging
  * [BUGFIX]  Fix restore of a specific version of a file
  * [BUGFIX]  Fix permissions of restored files
+ * [BUGFIX]  Fix bootservices in imaging for use with davos
