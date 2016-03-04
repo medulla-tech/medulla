@@ -155,18 +155,22 @@ function barprogress() {
             for( i=0 ; i< t["indexpartition"];i++){
                 namepartition = t["partitionlist"][i]
                 progressbar1 = "#"+ namepartition;
-                console.log(jQuery(progressbar1).attr("max"));
+                //console.log(jQuery(progressbar1).attr("max"));
                 jQuery(progressbar1).attr("value",jQuery(progressbar1).attr("max"));
             }
         }
         taille = t["bytesend"];
-        console.log("taille " + taille + "   partition "  + t["partionname"] +"  finish " + t["finish"])
+        console.log("taille " + taille + "   partition "  + t["partionname"] +"  finish " + t["finish"]+ " Complete "+  t["complete"])
         jQuery(progressbar).attr("value",taille);
         tailletransfert =  taille ;
-        if(t["finish"]==true){
+        if(t["complete"]==true){
             jQuery("#complete").hide( "slow" );
             jQuery("#completespan").show( "slow");
-            clearInterval(interval);
+        }
+        if(t["finish"]==true){
+//             jQuery("#complete").hide( "slow" );
+//             jQuery("#completespan").show( "slow");
+             clearInterval(interval);
         }
     });
 }';
