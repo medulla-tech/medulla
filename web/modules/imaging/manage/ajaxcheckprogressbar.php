@@ -1,4 +1,7 @@
-<?php session_start(); ?>
+<?php
+session_name("PULSESESSION");
+session_start();
+?>
 <?php
 /*
  * (c) 2015 Siveo, http://http://www.siveo.net

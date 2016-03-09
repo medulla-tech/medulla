@@ -4,7 +4,7 @@
 Example of how to use this uploader class...
 You can uncomment the following lines (minus the require) to use these as your defaults.
 /******************************************/
-
+session_name("PULSESESSION");
 session_start();
 // Current path is [mmc_web_dir]/modules/pkgs/lib/fileuploader/
 require_once("../../../../includes/xmlrpc.inc.php"); // For isXMLRPCError() function
