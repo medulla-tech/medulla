@@ -3842,34 +3842,30 @@ class Glpi0855(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-
+ 
     @DatabaseHelper._session
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Entities).filter_by(id=id).one()
         entity.entities_id = parent_id #parent
         entity.name = entity_name
         entity.comment = comment
-        entity.level = parent_id
-
+        #entity.level = parent_id
         entity = self.updateEntityCompleteName(entity)
-        
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def updateEntityCompleteName(self, session, entity):
         # Get parent entity object
         parent_entity = session.query(Entities).filter_by(id=entity.entities_id).one()
         completename = parent_entity.completename + ' > ' + entity.name
         entity.completename = completename
-        
+        entity.level = parent_entity.level + 1
         # Update all children complete names
         children = session.query(Entities).filter_by(entities_id=entity.id).all()
-        
         for item in children:
             self.updateEntityCompleteName(item)
-        
         return entity
 
     def removeEntity(self, entity_id):
