@@ -21,6 +21,7 @@
  */
 
 ob_start();
+session_name("PULSESESSION");
 session_start();
 require("includes/config.inc.php");
 require_once("modules/base/includes/users.inc.php");
@@ -43,6 +44,7 @@ $sessionid = md5 (time() . $ip . mt_rand());
 
 session_destroy();
 session_id($sessionid);
+session_name("PULSESESSION");
 session_start();
 
 $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];

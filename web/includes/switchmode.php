@@ -26,7 +26,7 @@
 
 require("config.inc.php");
 require("../modules/base/includes/edit.inc.php");
-
+session_name("PULSESESSION");
 session_start();
 
 if (isExpertMode()) {

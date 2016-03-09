@@ -320,6 +320,7 @@ function xmlCall($method, $params = null) {
             // Destroy and recreate session to eliminate
             // modules session params
             session_destroy();
+            session_name("PULSESESSION");
             session_start();
 
             // Restoring session params

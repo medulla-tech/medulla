@@ -25,7 +25,7 @@
 /**
  * this file provide session registration
  */
-
+session_name("PULSESESSION");
 session_start();
 session_cache_expire (30);
 

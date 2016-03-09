@@ -1,5 +1,5 @@
 <?php
-
+session_name("PULSESESSION");
 session_start();
 require("includes/config.inc.php");
 require("modules/base/includes/users.inc.php");

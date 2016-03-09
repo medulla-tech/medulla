@@ -23,6 +23,7 @@
  */
 
 ob_start();
+session_name("PULSESESSION");
 session_start();
 
 if (isset($_POST['lang']))
@@ -50,6 +51,7 @@ if (isset($_POST["bConnect"])) {
 
     session_destroy();
     session_id($sessionid);
+    session_name("PULSESESSION");
     session_start();
 
     $_SESSION["ip_addr"] = $_SERVER["REMOTE_ADDR"];
