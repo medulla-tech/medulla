@@ -3833,17 +3833,16 @@ class Glpi0855(DyngroupDatabaseHelper):
         entity.entities_id = parent_id #parent
         entity.name = entity_name
         entity.comment = comment
-        entity.level = parent_id
         # Get parent entity object
         parent_entity = session.query(Entities).filter_by(id=parent_id,).one()
         completename = parent_entity.completename + ' > ' + entity_name
         entity.completename = completename
-
+        entity.level = parent_entity.level + 1
         session.add(entity)
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Entities).filter_by(id=id).one()
