@@ -231,6 +231,7 @@ class RpcProxy(RpcProxyI):
                       "macs"      : noNoneList(network["macAddress"]),
                       "netmasks"  : noNoneList(network["subnetMask"]),
                       }
+        result = xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
         return xmlrpcCleanup2(mmc.plugins.msc.client.scheduler.choose_client_ip(scheduler, interfaces))
 
 
