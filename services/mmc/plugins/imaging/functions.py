@@ -513,7 +513,7 @@ class ImagingRpcProxy(RpcProxyI):
         db = ImagingDatabase()
         my_is = db.getImagingServerByUUID(location)
         imaging_server = my_is.url
-        
+
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.start_process_multicast(process)
@@ -592,13 +592,16 @@ class ImagingRpcProxy(RpcProxyI):
         s = subprocess.Popen(   "ps aux | grep '%s' |grep -v grep | awk -F \" \" '{  print $2 }' "%name,
                                 shell = True,
                                 stdout = subprocess.PIPE
-                           )        
+                           )
         for x in s.stdout:
             returnprocesspid.append(x.strip(' \t\n\r'))
         s.stdout.close()
         return returnprocesspid
 
     def monitorsUDPSender(self,objmenu):
+        """
+            Menu group regenerated immediately started transferring multicast udp
+        """
         temp=10;
         while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
             for i in threading.enumerate():
