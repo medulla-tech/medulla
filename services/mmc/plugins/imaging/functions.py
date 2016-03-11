@@ -598,12 +598,14 @@ class ImagingRpcProxy(RpcProxyI):
         s.stdout.close()
         return returnprocesspid
 
-
-
-
     def monitorsUDPSender(self,objmenu):
         temp=10;
         while(ImagingRpcProxy.checkThread[objmenu['location']] == True):
+            for i in threading.enumerate():
+                if i.getName() == "MainThread" and not i.isAlive():
+                    logging.getLogger().debug("[checkThreadData terminate monitorsUDPSender]")
+                    ImagingRpcProxy.checkThread[objmenu['location']] = False
+                    return
             time.sleep(temp)
             logging.getLogger().debug("monitorsUDPSender")
             result=self.checkDeploymentUDPSender(objmenu)
@@ -640,7 +642,7 @@ class ImagingRpcProxy(RpcProxyI):
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
             return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
-        
+
         def treatResult(results):
             if results:
                 ImagingRpcProxy.checkThreadData[process['location']]=results
@@ -649,7 +651,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 ImagingRpcProxy.checkThreadData={}
                 return []
-        
+
         d = i.checkDeploymentUDPSender(process)
         d.addCallback(treatResult)
         return d
