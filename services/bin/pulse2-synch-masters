@@ -84,7 +84,7 @@ function synch_master_files() {
 	# Synchronize the contents
 	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		if [ ! $? -eq 0 ]; then
 			echo " 0 101% 0.00kB/s  0:00:00 mysql connection error" > /tmp/synch_masters_${PID}.log
 			exit 1
@@ -96,7 +96,7 @@ function synch_master_files() {
 		fi
 	else
 		# We are synching from pulse main server to remote imaging server
-		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		if [ ! $? -eq 0 ]; then
 			echo " 0 101% 0.00kB/s  0:00:00 mysql connection error" > /tmp/synch_masters_${PID}.log
 			exit 1
@@ -120,11 +120,11 @@ function synch_postinst_folder() {
 	# Synchronize the folder
 	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/ /var/lib/pulse2/imaging/postinst/
 	else
 		# We are synching from pulse main server to remote imaging server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer where fk_entity='${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 /var/lib/pulse2/imaging/postinst/ root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/
 	fi
 	
