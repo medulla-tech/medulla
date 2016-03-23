@@ -45,6 +45,8 @@ function duplicate_database_records() {
 		# Duplicate master record and create necessary records in ImageOnImagingServer and MasteredOn
 		local NEW_MASTER_ID=`echo "INSERT INTO Image (path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state) SELECT path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state FROM Image WHERE id = ${MASTER_ID}; SELECT LAST_INSERT_ID();" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 		echo "INSERT INTO ImageOnImagingServer (fk_image, fk_imaging_server) VALUES (${NEW_MASTER_ID}, ${TO_IMAGING_SERVER_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
+		local FK_IMAGING_LOG=`echo "SELECT fk_imaging_log FROM MasteredOn WHERE fk_image = ${MASTER_ID} LIMIT 1" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+		echo "INSERT INTO MasteredOn (fk_image, fk_imaging_log) VALUES (${NEW_MASTER_ID}, ${FK_IMAGING_LOG})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
 		echo "### Duplicating database record for master ${MASTER_UUID}... Done"
 	else
 		echo "### No database record duplication needed for master ${MASTER_UUID}"
