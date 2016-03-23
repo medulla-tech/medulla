@@ -37,14 +37,14 @@ function duplicate_database_records() {
 	local TO_ENTITY_ID=$1
 	local MASTER_UUID=$2
 	
-	if [[ ! -n `echo "SELECT Image.id, Image.uuid, ImageOnImagingServer.fk_image, ImageOnImagingServer.fk_imaging_server FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id WHERE uuid='${MASTER_UUID}' AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
+	local TO_IMAGING_SERVER_ID=`echo "SELECT ImagingServer.id FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE uuid='UUID${TO_ENTITY_ID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+	
+	if [[ ! -n `echo "SELECT Image.id, Image.uuid, ImageOnImagingServer.fk_image, ImageOnImagingServer.fk_imaging_server FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id WHERE uuid='${MASTER_UUID}' AND fk_imaging_server = ${TO_IMAGING_SERVER_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Get id of master
 		local MASTER_ID=`echo "SELECT id FROM Image where uuid='${MASTER_UUID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 		# Duplicate master record and create necessary records in ImageOnImagingServer and MasteredOn
 		local NEW_MASTER_ID=`echo "INSERT INTO Image (path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state) SELECT path, name, uuid, Image.desc, checksum, size, is_master, creation_date, fk_creator, ntblfix, fk_state FROM Image WHERE id = ${MASTER_ID}; SELECT LAST_INSERT_ID();" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
-		echo "INSERT INTO ImageOnImagingServer (fk_image, fk_imaging_server) VALUES (${NEW_MASTER_ID}, ${TO_ENTITY_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
-		local FK_IMAGING_LOG=`echo "SELECT fk_imaging_log FROM MasteredOn WHERE fk_image = ${MASTER_ID} LIMIT 1" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
-		echo "INSERT INTO MasteredOn (fk_image, fk_imaging_log) VALUES (${NEW_MASTER_ID}, ${FK_IMAGING_LOG})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
+		echo "INSERT INTO ImageOnImagingServer (fk_image, fk_imaging_server) VALUES (${NEW_MASTER_ID}, ${TO_IMAGING_SERVER_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
 		echo "### Duplicating database record for master ${MASTER_UUID}... Done"
 	else
 		echo "### No database record duplication needed for master ${MASTER_UUID}"
@@ -65,9 +65,11 @@ function duplicate_postimaging_scripts() {
 	local TO_ENTITY_ID=$1
 	local SCRIPT_ID=$2
 	
-	if [[ ! -n `echo "SELECT PostInstallScript.id, PostInstallScriptOnImagingServer.fk_post_install_script, PostInstallScriptOnImagingServer.fk_imaging_server FROM PostInstallScript INNER JOIN PostInstallScriptOnImagingServer ON PostInstallScriptOnImagingServer.fk_post_install_script = PostInstallScript.id WHERE PostInstallScript.id=${SCRIPT_ID} AND fk_imaging_server = ${TO_ENTITY_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
+	local TO_IMAGING_SERVER_ID=`echo "SELECT ImagingServer.id FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE uuid='UUID${TO_ENTITY_ID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+	
+	if [[ ! -n `echo "SELECT PostInstallScript.id, PostInstallScriptOnImagingServer.fk_post_install_script, PostInstallScriptOnImagingServer.fk_imaging_server FROM PostInstallScript INNER JOIN PostInstallScriptOnImagingServer ON PostInstallScriptOnImagingServer.fk_post_install_script = PostInstallScript.id WHERE PostInstallScript.id=${SCRIPT_ID} AND fk_imaging_server = ${TO_IMAGING_SERVER_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Duplicate the record on PostInstallScriptOnImagingServer
-		echo "INSERT INTO PostInstallScriptOnImagingServer (fk_post_install_script, fk_imaging_server) VALUES (${SCRIPT_ID}, ${TO_ENTITY_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
+		echo "INSERT INTO PostInstallScriptOnImagingServer (fk_post_install_script, fk_imaging_server) VALUES (${SCRIPT_ID}, ${TO_IMAGING_SERVER_ID})" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging
 		echo "### Duplicating post-imaging script ${SCRIPT_ID} record... Done"
 	else
 		echo "### No record duplication needed for script ${SCRIPT_ID}"
