@@ -431,8 +431,6 @@ class ImagingRpcProxy(RpcProxyI):
             a.start()
         location=objmenu['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.imagingServermenuMulticast(objmenu)
@@ -446,8 +444,6 @@ class ImagingRpcProxy(RpcProxyI):
         # controle execution process multicast
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.check_process_multicast(process)
@@ -460,8 +456,6 @@ class ImagingRpcProxy(RpcProxyI):
         # controle execution process multicast finish
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.check_process_multicast_finish(process)
@@ -474,8 +468,6 @@ class ImagingRpcProxy(RpcProxyI):
         # controle existance multicast script
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.muticast_script_exist(process)
@@ -493,8 +485,6 @@ class ImagingRpcProxy(RpcProxyI):
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.clear_script_multicast(process)
@@ -507,8 +497,6 @@ class ImagingRpcProxy(RpcProxyI):
         # Multicast start
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.start_process_multicast(process)
@@ -634,8 +622,6 @@ class ImagingRpcProxy(RpcProxyI):
         logging.getLogger().debug("checkDeploymentUDPSender %s"%process)
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
@@ -663,8 +649,6 @@ class ImagingRpcProxy(RpcProxyI):
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
-        logger = logging.getLogger()
-        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.stop_process_multicast(process)
