@@ -430,9 +430,9 @@ class ImagingRpcProxy(RpcProxyI):
             a = threading.Thread(None, self.monitorsUDPSender, None, (objmenu,))
             a.start()
         location=objmenu['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.imagingServermenuMulticast(objmenu)
@@ -445,10 +445,9 @@ class ImagingRpcProxy(RpcProxyI):
     def check_process_multicast(self, process):
         # controle execution process multicast
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
-        
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.check_process_multicast(process)
@@ -460,10 +459,9 @@ class ImagingRpcProxy(RpcProxyI):
     def check_process_multicast_finish(self, process):
         # controle execution process multicast finish
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
-        
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.check_process_multicast_finish(process)
@@ -475,10 +473,9 @@ class ImagingRpcProxy(RpcProxyI):
     def muticast_script_exist(self,process):
         # controle existance multicast script
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
-        
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.muticast_script_exist(process)
@@ -495,10 +492,9 @@ class ImagingRpcProxy(RpcProxyI):
         except KeyError:        
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
-        
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.clear_script_multicast(process)
@@ -510,10 +506,9 @@ class ImagingRpcProxy(RpcProxyI):
     def start_process_multicast(self,process):
         # Multicast start
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
-
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.start_process_multicast(process)
@@ -638,9 +633,9 @@ class ImagingRpcProxy(RpcProxyI):
         logger = logging.getLogger()
         logging.getLogger().debug("checkDeploymentUDPSender %s"%process)
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i == None:
             logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
@@ -667,9 +662,9 @@ class ImagingRpcProxy(RpcProxyI):
         except KeyError:        
             ImagingRpcProxy.checkThread[process['location']] = False
         location=process['location']
-        db = ImagingDatabase()
-        my_is = db.getImagingServerByUUID(location)
-        imaging_server = my_is.url
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        logger = logging.getLogger()
+        logger.debug("url for entity location %s : %s"%(location,imaging_server))
         i = ImagingApi(imaging_server.encode('utf8'))
         if i != None:
             deferred = i.stop_process_multicast(process)
@@ -1595,10 +1590,12 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
+        logging.getLogger().debug("linkImagingServerToLocation : is_uuid %s loc_id %s loc_name%s" % (is_uuid,loc_id,loc_name))
         db = ImagingDatabase()
         try:
             ret = db.linkImagingServerToEntity(is_uuid, loc_id, loc_name)
             my_is = db.getImagingServerByUUID(is_uuid)
+            logging.getLogger().debug("getImagingServerByUUID : is_uuid %s " % (is_uuid))
             Pulse2Manager().putPackageServerEntity(my_is.packageserver_uuid, loc_id)
             db.setLocationSynchroState(loc_id, P2ISS.TODO)
         except Exception, e:
@@ -1622,6 +1619,7 @@ class ImagingRpcProxy(RpcProxyI):
             * the error in case of failure
         @rtype: list
         """
+        logging.getLogger().debug("unlinkImagingServerToLocation : is_uuid %s loc_id %s " % (is_uuid,loc_id))
         db = ImagingDatabase()
         success1 = success2 = False
         try:
