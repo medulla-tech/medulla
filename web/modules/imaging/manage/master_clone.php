@@ -29,7 +29,7 @@ require_once('modules/imaging/includes/post_install_script.php');
 $location = getCurrentLocation();
 list($list, $values) = getEntitiesSelectableElements();
 foreach($list as $key => $value ){
-    if (stripos($value, ">") === false) {
+    if (xmlrpc_doesLocationHasImagingServer($key) != 1) {
         unset($list[$key]);
         unset($values[$key]);
     }

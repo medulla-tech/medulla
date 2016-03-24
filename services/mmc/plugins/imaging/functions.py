@@ -438,7 +438,7 @@ class ImagingRpcProxy(RpcProxyI):
         else:
             deferred = []
         return deferred
-    
+
     ## Imaging server configuration
     def check_process_multicast(self, process):
         # controle execution process multicast

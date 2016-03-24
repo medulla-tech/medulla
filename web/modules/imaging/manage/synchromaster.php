@@ -61,7 +61,7 @@ echo '<br>';
 for ($i=0;$i<$nbprocess;$i++){
     if ($processsinfos[$process[$i]]['startpoint'] == "" || $processsinfos[$process[$i]]['endpoint'] == ""){break;}
     echo '<div id="ab'.$process[$i].'">';
-    echo _T("Copy of master", "imaging"). $_SESSION['processclone']['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
+    echo _T("Copy of master", "imaging")." ". $_SESSION['processclone']['label']. " from ".$processsinfos[$process[$i]]['startpoint']." to ".$processsinfos[$process[$i]]['endpoint'];
     echo '</div>';
     echo '<div>';
     echo '<p style="color: blue;" id="po'.$process[$i].'">';
