@@ -19,11 +19,10 @@
 # You should have received a copy of the GNU General Public License
 # along with MMC.  If not, see <http://www.gnu.org/licenses/>.
 #
-
-function list_all_imaging_servers_id() {
-	local IMAGING_SERVERS_ID=`echo "SELECT id FROM ImagingServer;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
+function list_all_entities_id() {
+	local ENTITIES_ID=`echo "SELECT id FROM Entity where id > 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
-	echo ${IMAGING_SERVERS_ID}
+	echo ${ENTITIES_ID}
 }
 
 function list_all_masters() {
@@ -35,8 +34,10 @@ function list_all_masters() {
 function duplicate_database_records() {
 	echo "Duplicating database record for master $2..."
 	
-	local TO_IMAGING_SERVER_ID=$1
+	local TO_ENTITY_ID=$1
 	local MASTER_UUID=$2
+	
+	local TO_IMAGING_SERVER_ID=`echo "SELECT ImagingServer.id FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE uuid='UUID${TO_ENTITY_ID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
 	if [[ ! -n `echo "SELECT Image.id, Image.uuid, ImageOnImagingServer.fk_image, ImageOnImagingServer.fk_imaging_server FROM Image INNER JOIN ImageOnImagingServer ON ImageOnImagingServer.fk_image = Image.id WHERE uuid='${MASTER_UUID}' AND fk_imaging_server = ${TO_IMAGING_SERVER_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Get id of master
@@ -63,8 +64,10 @@ function list_postimaging_scripts() {
 function duplicate_postimaging_scripts() {
 	echo "Duplicating post-imaging script $2 record..."
 	
-	local TO_IMAGING_SERVER_ID=$1
+	local TO_ENTITY_ID=$1
 	local SCRIPT_ID=$2
+	
+	local TO_IMAGING_SERVER_ID=`echo "SELECT ImagingServer.id FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE uuid='UUID${TO_ENTITY_ID}';" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent`
 	
 	if [[ ! -n `echo "SELECT PostInstallScript.id, PostInstallScriptOnImagingServer.fk_post_install_script, PostInstallScriptOnImagingServer.fk_imaging_server FROM PostInstallScript INNER JOIN PostInstallScriptOnImagingServer ON PostInstallScriptOnImagingServer.fk_post_install_script = PostInstallScript.id WHERE PostInstallScript.id=${SCRIPT_ID} AND fk_imaging_server = ${TO_IMAGING_SERVER_ID};" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent` ]]; then
 		# Duplicate the record on PostInstallScriptOnImagingServer
@@ -78,14 +81,14 @@ function duplicate_postimaging_scripts() {
 function synch_master_files() {
 	echo "Synching contents of master $3..."
 	
-	local FROM_IMAGING_SERVER_ID=$1
-	local TO_IMAGING_SERVER_ID=$2
+	local FROM_ENTITY_ID=$1
+	local TO_ENTITY_ID=$2
 	local MASTER_UUID=$3
 	
 	# Synchronize the contents
-	if [[ ${FROM_IMAGING_SERVER_ID}  != "1" ]]; then
+	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer WHERE id='${FROM_IMAGING_SERVER_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		if [ ! $? -eq 0 ]; then
 			echo " 0 101% 0.00kB/s  0:00:00 mysql connection error" > /tmp/synch_masters_${PID}.log
 			exit 1
@@ -97,7 +100,7 @@ function synch_master_files() {
 		fi
 	else
 		# We are synching from pulse main server to remote imaging server
-		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer WHERE id='${TO_IMAGING_SERVER_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		if [ ! $? -eq 0 ]; then
 			echo " 0 101% 0.00kB/s  0:00:00 mysql connection error" > /tmp/synch_masters_${PID}.log
 			exit 1
@@ -115,17 +118,17 @@ function synch_master_files() {
 function synch_postinst_folder() {
 	echo "Synching contents of postinst folder..."
 	
-	local FROM_IMAGING_SERVER_ID=$1
-	local TO_IMAGING_SERVER_ID=$2
+	local FROM_ENTITY_ID=$1
+	local TO_ENTITY_ID=$2
 	
 	# Synchronize the folder
-	if [[ ${FROM_IMAGING_SERVER_ID}  != "1" ]]; then
+	if [[ ${FROM_ENTITY_ID}  != "1" ]]; then
 		# We are synching from remote imaging server to pulse main server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer WHERE id='${FROM_IMAGING_SERVER_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${FROM_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/ /var/lib/pulse2/imaging/postinst/
 	else
 		# We are synching from pulse main server to remote imaging server
-		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer WHERE id='${TO_IMAGING_SERVER_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
+		local IP_IMAGING_SERVER=`echo "SELECT url FROM ImagingServer INNER JOIN Entity ON ImagingServer.fk_entity = Entity.id WHERE Entity.uuid='UUID${TO_ENTITY_ID}' LIMIT 1;" | mysql --defaults-extra-file=/root/.my.cnf -uroot imaging --silent | grep -o '[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}'`
 		rsync -az --info=progress2 /var/lib/pulse2/imaging/postinst/ root@${IP_IMAGING_SERVER}:/var/lib/pulse2/imaging/postinst/
 	fi
 	
@@ -133,49 +136,49 @@ function synch_postinst_folder() {
 }
 
 function run_synch_all_from_mainpulse() {
-	echo "Starting synching of all imaging servers and masters..."
+	echo "Starting synching of all entities and masters..."
 	
-	local IMAGING_SERVERS_ID=$(list_all_imaging_servers_id)
+	local ENTITIES_ID=$(list_all_entities_id)
 	local MASTERS_UUID=$(list_all_masters)
-	local FROM_IMAGING_SERVER_ID='1'
+	local FROM_ENTITY_ID='1'
 	
-	for TO_IMAGING_SERVER_ID in ${IMAGING_SERVERS_ID}; do
-		echo "Local imaging server will be synched to imaging server ${TO_IMAGING_SERVER_ID}"
+	for TO_ENTITY_ID in ${ENTITIES_ID}; do
+		echo "Root entity will be synched to entity ${ENTITY_ID}"
 		for MASTER_UUID in ${MASTERS_UUID}; do
 			echo "Master ${MASTER_UUID} will be synched"
-			synch_master_files ${FROM_IMAGING_SERVER_ID} ${TO_IMAGING_SERVER_ID} ${MASTER_UUID}
-			duplicate_database_records ${TO_IMAGING_SERVER_ID} ${MASTER_UUID}
+			synch_master_files ${FROM_ENTITY_ID} ${TO_ENTITY_ID} ${MASTER_UUID}
+			duplicate_database_records ${TO_ENTITY_ID} ${MASTER_UUID}
 			local SCRIPTS_ID=$(list_postimaging_scripts ${MASTER_UUID})
 			for SCRIPT_ID in ${SCRIPTS_ID}; do
-				duplicate_postimaging_scripts ${TO_IMAGING_SERVER_ID} ${SCRIPT_ID}
+				duplicate_postimaging_scripts ${TO_ENTITY_ID} ${SCRIPT_ID}
 			done
 		done
-		synch_postinst_folder ${FROM_IMAGING_SERVER_ID} ${TO_IMAGING_SERVER_ID}
+		synch_postinst_folder ${FROM_ENTITY_ID} ${TO_ENTITY_ID}
 	done
 	
-	echo "### Synching of all imaging servers and masters complete"
+	echo "### Synching of all entities and masters complete"
 }
 
 function run_synch_master() {
-	echo "Starting synching of master $3 to imaging server $2..."
+	echo "Starting synching of master $3 to entity $2..."
 	
-	local FROM_IMAGING_SERVER_ID=$1
-	local TO_IMAGING_SERVER_ID=$2
+	local FROM_ENTITY_ID=$1
+	local TO_ENTITY_ID=$2
 	local MASTER_UUID=$3
 	local SCRIPTS_ID=$(list_postimaging_scripts ${MASTER_UUID})
 	
-	synch_master_files ${FROM_IMAGING_SERVER_ID} ${TO_IMAGING_SERVER_ID} ${MASTER_UUID}
-	synch_postinst_folder ${FROM_IMAGING_SERVER_ID} ${TO_IMAGING_SERVER_ID}
-	duplicate_database_records ${TO_IMAGING_SERVER_ID} ${MASTER_UUID}
+	synch_master_files ${FROM_ENTITY_ID} ${TO_ENTITY_ID} ${MASTER_UUID}
+	synch_postinst_folder ${FROM_ENTITY_ID} ${TO_ENTITY_ID}
+	duplicate_database_records ${TO_ENTITY_ID} ${MASTER_UUID}
 	for SCRIPT_ID in ${SCRIPTS_ID}; do
-		duplicate_postimaging_scripts ${TO_IMAGING_SERVER_ID} ${SCRIPT_ID}
+		duplicate_postimaging_scripts ${TO_ENTITY_ID} ${SCRIPT_ID}
 	done
 	
-	echo "### Synching of master ${MASTER_UUID} to imaging server ${TO_IMAGING_SERVER_ID} complete"
+	echo "### Synching of master ${MASTER_UUID} to entity ${ENTITY_ID} complete"
 }
 
-# For synching all masters to all imaging servers, call run_synch_all_from_mainpulse
-# To synch one master to one imaging server, call run_synch_master <FROM_IMAGING_SERVER_ID> <TO_IMAGING_SERVER_ID> <MASTER_UUID>
+# For synching all masters to all entities, call run_synch_all_from_mainpulse
+# To synch one master to one entity, call run_synch_master <FROM_ENTITY_ID> <TO_ENTITY_ID> <MASTER_UUID>
 
 exec &> /tmp/pulse2-synch-masters.log
 PID=$$
