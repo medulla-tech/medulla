@@ -28,6 +28,7 @@ The original inventory is sent using one line per kind of
 import re # the main job here : doing regex !
 import time
 import xml.etree.ElementTree as ET  # form XML Building
+import logging
 
 # here are the regex
 MACADDR_RE  = re.compile("^MAC Address:(.+)$") # MAC Address
@@ -594,20 +595,23 @@ class BootInventory:
             mo = re.match(IPADDR_RE, line)
             if mo :
                 self.ipaddr_info['ip'] = mo.group(1)
+                ipval= self.ipaddr_info['ip'].split(":")[0]
+                self.ipaddr_info['ip']=ipval
                 self.ipaddr_info['port'] = int(mo.group(2), 10)
                 continue
-            
+
             mo = re.match(GATEWAY_RE, line)
             if mo :
                 self.gateway_info = mo.group(1)
                 continue
-            
             mo = re.match(NETMASK_RE, line)
             if mo :
                 self.netmask_info = mo.group(1)
+                logging.getLogger().info("netmask_info load self.netmask_info%s"%str(self.netmask_info))
                 # Compute network address (subnet) from ip and netmask
                 if self.netmask_info and self.ipaddr_info['ip']:
                     try:
+                        iparr=self.ipaddr_info['ip'].split(":")[0]
                         iparr=self.ipaddr_info['ip'].split('.')
                         netmaskarr=self.netmask_info.split('.')
                         subnet=[]
@@ -617,8 +621,6 @@ class BootInventory:
                     except:
                         pass
                 continue
-
-
             self.unprocessed.append(line) # finally, store lines which didn't match
 
     def dump(self):
@@ -645,7 +647,7 @@ class BootInventory:
         """
         Return an OCS XML string
         """
-
+        logging.getLogger().debug("dumpOCS hostname %s  entity %s "%(hostname,entity))
 	REQUEST = ET.Element('REQUEST')
 
 	DEVICEID = ET.SubElement(REQUEST,'DEVICEID')
@@ -672,8 +674,6 @@ class BootInventory:
 
 	###### BIOS SECTION ##########################
 	BIOS = ET.SubElement(CONTENT,'BIOS')
-
-
 
 	ASSETTAG = ET.SubElement(BIOS,'ASSETTAG')
 	ASSETTAG.text = ''
@@ -712,7 +712,9 @@ class BootInventory:
 	HARDWARE = ET.SubElement(CONTENT,'HARDWARE')
 
 	IPADDR = ET.SubElement(HARDWARE,'IPADDR')
-	IPADDR.text = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+	ipval = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+	ipval=self.ipaddr_info['ip'].split(":")[0]
+	IPADDR.text = ipval
 	
 	DEFAULTGATEWAY = ET.SubElement(HARDWARE,'DEFAULTGATEWAY')
 	DEFAULTGATEWAY.text = self.gateway_info.strip(' \t\n\r').strip()
@@ -749,7 +751,6 @@ class BootInventory:
             CPUS = ET.SubElement(CONTENT, 'CPUS')
             PROCESSORS = ET.SubElement(CPUS, 'SPEED')
             PROCESSORS.text = str(int(self.freqcpu_info / 1000))
-
             PROCESSORT = ET.SubElement(CPUS, 'NAME')
             PROCESSORT.text = FAMCPU_H[self.famcpu_code]
 
@@ -761,7 +762,9 @@ class BootInventory:
 	DESCRIPTION.text = 'eth0'
 
 	IPADDRESS = ET.SubElement(NETWORKS,'IPADDRESS')
-	IPADDRESS.text = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+	ipval = self.ipaddr_info['ip'].strip(' \t\n\r').strip()
+	ipval = ipval.split(":")[0]
+        IPADDRESS.text = ipval
 
 	MACADDR = ET.SubElement(NETWORKS,'MACADDR')
 	MACADDR.text = self.macaddr_info.strip(' \t\n\r').strip()
@@ -814,7 +817,7 @@ class BootInventory:
 			
 			TYPE = ET.SubElement(DRIVES,'TYPE')
 			TYPE.text = 'hd'+str(diskid)+'p'+str(partid)
-		
+
 	# MEMORY SECTION #####################################
 
 	for mem_slot in self.memory_info:
@@ -848,4 +851,6 @@ class BootInventory:
 			else:
 				SPEED.text = 'N/A'
 
-	return '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
+	a = '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
+	logging.getLogger().debug("create xml :\n%s"%a)
+	return a

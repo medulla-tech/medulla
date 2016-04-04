@@ -144,6 +144,21 @@ class PXEImagingApi (PXEMethodParser):
                                  LOG_STATE.MENU,
                                  "identification failure")
 
+    def ipV4toDecimal(self, ipv4):
+        d = ipv4.split('.')
+        return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) +int(d[3])
+
+    def decimaltoIpV4(self,ipdecimal):
+        a=float(ipdecimal)/(256*256*256)
+        b = (a - int(a))*256
+        c = (b - int(b))*256
+        d = (c - int(c))*256
+        return "%s.%s.%s.%s"%(int(a),int(b),int(c),int(d))
+
+    def subnetreseau(self, adressmachine, mask):
+        adressmachine = adressmachine.split(":")[0]
+        reseaumachine = self.ipV4toDecimal(adressmachine) &  self.ipV4toDecimal(mask)
+        return self.decimaltoIpV4(reseaumachine)
 
     def glpi_register(self, mac, hostname, ip_address):
         """
@@ -159,12 +174,14 @@ class PXEImagingApi (PXEMethodParser):
         @type ip_address: str
 
         """
+        logging.getLogger().debug("glpi_register")
         boot_inv = BootInventory()
         boot_inv.macaddr_info = mac
         boot_inv.ipaddr_info = {'ip': ip_address, 'port': 0}
-
+        # add information network in xml glpi
+        boot_inv.netmask_info = P2PServerCP().public_mask
+        boot_inv.subnet_info  = self.subnetreseau(boot_inv.ipaddr_info['ip'],boot_inv.netmask_info)
         inventory = boot_inv.dumpOCS(hostname, "root")
-
         return self.send_inventory(inventory, hostname)
 
     @assign(0xAF)
@@ -216,6 +233,7 @@ class PXEImagingApi (PXEMethodParser):
         @rtype: deferred
         """
         # XXX - A little hack to add networking info on GLPI mode
+        logging.getLogger().debug("injectInventory mac %s ip : %s \n\n" %(mac,ip_address))
         if not "Mc" in inventory :
             inventory = inventory + "\nMAC Address:%s\n" % mac
         else :
@@ -224,22 +242,21 @@ class PXEImagingApi (PXEMethodParser):
             inventory = inventory + "\nIP Address:%\n" % ip_address
         else :
             inventory = inventory.replace("IPADDR", "IP Address")
-
-        inventory = [i.strip() for i in inventory.split("\n")]
-        parsed_inventory = BootInventory(inventory).dump()
-
+        inventory = [i.strip(' \t\n\r').lstrip('\x00\x00').strip() for i in inventory.split("\n")]
+        logging.getLogger().debug("low level inventory: %s\n" %(inventory))
+        parsed_inventory1 = BootInventory(inventory)
+        parsed_inventory = parsed_inventory1.dump()
         self.api.logClientAction(mac,
                                  LOG_LEVEL.DEBUG,
                                  LOG_STATE.MENU,
                                  "boot menu shown")
-
         # 1st step - inject inventory trough imaging (only disk info)
         d = self.api.injectInventory(mac, parsed_inventory)
 
         # 2nd step - send inventory by HTTP POST to inventory server
         d.addCallback(self._injectedInventoryOk, mac, inventory)
         d.addErrback(self._injectedInventoryError)
-
+        #self.send_inventory(parsed_inventory1., hostname)
         return d
 
     def _injectedInventoryError(self, failure):
@@ -319,7 +336,7 @@ class PXEImagingApi (PXEMethodParser):
         entity = computer['entity']
 
         inventory = inventory.dumpOCS(hostname, entity)
-
+        logging.getLogger().debug("send invotory depuis _injectedInventorySend")
         d = self.send_inventory(inventory, hostname)
         @d.addCallback
         def _cb(result):
@@ -361,6 +378,7 @@ class PXEImagingApi (PXEMethodParser):
 
             # POST the inventory to the inventory server
             logging.getLogger().debug("PXE Proxy: PXE inventory forwarded to inventory server at %s" % url)
+            logging.getLogger().debug("POST the inventory to the inventory server \nINVENTORY\n %s" % inventory)
             d = getPage(url,
                         method='POST',
                         postdata=inventory,
@@ -370,10 +388,12 @@ class PXEImagingApi (PXEMethodParser):
                             'User-Agent': 'Pulse2 Imaging server inventory hook'
                         },
                        )
+
+
             @d.addCallback
             def _cb (result):
                 if result :
-                    logging.getLogger().info("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
+                    logging.getLogger().debug("PXE Proxy: PXE inventory from client %s successfully injected" % hostname)
                 return result
 
             return d
