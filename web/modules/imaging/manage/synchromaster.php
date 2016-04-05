@@ -25,7 +25,9 @@ require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
+
 // recuperation pid des process
+sleep(3);
 $process  = xmlrpc_checkProcessCloneMasterToLocation("/bin/bash /usr/bin/pulse2-synch-masters");
 $nbprocess = count($process);
 $processsinfos = array();
