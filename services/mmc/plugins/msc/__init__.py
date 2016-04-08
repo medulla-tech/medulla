@@ -317,7 +317,9 @@ class RpcProxy(RpcProxyI):
         g.deferred.addCallback(lambda x: len(x))
         return g.deferred
 
-    def _range(self, result, start, end):
+    def _range(self, result, start, end, filter=""):
+        if filter != "":
+            result=[ x  for x in result if (filter in x[0]['label'] or filter in x[0]['description']) ]
         if end == -1:
             return (len(result), result[start:len(result)])
         return (len(result), result[start:end])
@@ -329,7 +331,7 @@ class RpcProxy(RpcProxyI):
         g = mmc.plugins.msc.package_api.GetPackagesAdvanced(ctx, filt)
         g.deferred = defer.Deferred()
         g.get()
-        g.deferred.addCallback(self._range, start, end)
+        g.deferred.addCallback(self._range, start, end ,filt['filter'])
         return g.deferred
 
     ##
