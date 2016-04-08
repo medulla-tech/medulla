@@ -113,11 +113,9 @@ $root = $conf["global"]["root"];
 
             // Popup under mouseevent
             function _defaultPlacement(evt) {
-                var window_width = jQuery(window).width();
-                var  window_height = jQuery(window).height();
-                var top = (window_height/ 2) - (jQuery('#popup').height() / 2) + jQuery(window).scrollTop();
-                var left = (window_width/ 2) - (jQuery('#popup').width() / 2) + jQuery(window).scrollLeft();
-                jQuery('#popup').css({'left': left + "px", 'top': top + "px"});
+                jQuery('#popup').css("position", "fixed");
+                jQuery('#popup').css("top", (jQuery(window).height()/2 - jQuery('#popup').height()/2) + "px");
+                jQuery('#popup').css("left", (jQuery(window).width()/2 - jQuery('#popup').width()/2) + "px");
             }
 
             function _centerPlacement(evt) {
