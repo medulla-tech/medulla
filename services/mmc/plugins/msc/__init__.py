@@ -319,7 +319,7 @@ class RpcProxy(RpcProxyI):
 
     def _range(self, result, start, end, filter=""):
         if filter != "":
-            result=[ x  for x in result if (filter in x[0]['label'] or filter in x[0]['description']) ]
+            result=[ x  for x in result if (filter.lower() in x[0]['label'].lower() or filter in x[0]['description'].lower()) ]
         if end == -1:
             return (len(result), result[start:len(result)])
         return (len(result), result[start:end])
