@@ -5,7 +5,7 @@ rc=$2
 
 if [ ! -z $1 ]; then
 
-    sed -i "s/^AC_INIT.*$/AC_INIT\(project, [$1], [http:\/\/projects.mandriva.org\/projects\/mmc]\)/" configure.ac
+    sed -i "s/^AC_INIT.*$/AC_INIT\(project, [$1], [http:\/\/www.siveo.net]\)/" configure.ac
     sed -i "s/^VERSION = .*$/VERSION = \"$1\"/" agent/mmc/agent.py
     sed -i "s/^release = .*$/release = '$1'/" ../doc/source/conf.py
 
