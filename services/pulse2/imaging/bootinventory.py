@@ -453,6 +453,9 @@ class BootInventory:
 	self.memory_info = []
 
         for line in data: # process line per line
+            line=line.replace('\\~','')
+            line=line.replace('\~','')
+            line=line.replace('\x06','')
             if not len(line):
                 continue
 
@@ -541,6 +544,7 @@ class BootInventory:
                 self.sys_info['product'] = mo.group(2)
                 self.sys_info['version'] = mo.group(3)
                 self.sys_info['serial'] = mo.group(4)
+                self.sys_info['serial'] = re.sub(r'[^a-zA-Z0-9-]',r'',self.sys_info['serial'])
                 self.sys_info['uuid'] = mo.group(5)
                 continue
 
@@ -706,7 +710,10 @@ class BootInventory:
 	SMODEL.text = self.sys_info['product'].strip(' \t\n\r').strip()
 
 	SSN = ET.SubElement(BIOS,'SSN')
-	SSN.text = self.sys_info['serial'].strip(' \t\n\r').strip()
+	txtssn = self.sys_info['serial'].strip(' \t\n\r').strip()
+	if txtssn == "":
+            txtssn ="0"
+	SSN.text = txtssn 
 
 	#### HARDWARE SECTION ###############################
 	HARDWARE = ET.SubElement(CONTENT,'HARDWARE')
