@@ -21,7 +21,30 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once("includes/xmlrpc.inc.php");
+//jfk
+class EmptyActionItem1 extends ActionItem {
 
+    function EmptyActionItem() {
+        //$this->classCss='empty';
+        $this->desc='';
+    }
+
+    function display($param = null, $extraParams = Array()) {
+        echo "<li class=\"" . $this->classCss . "\">";
+        echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
+        echo "onclick=\"return false;\">&nbsp;</a>";
+        print "</li>";
+    }
+    function setClassCss($name) {
+        $this->classCss = $name;
+    }
+    function setDescription($name) {
+        $this->desc = $name;
+    }
+}
+ 
 function list_computers($names, $filter, $count = 0, $delete_computer = false, $remove_from_result = false, $is_group = false, $msc_can_download_file = false, $msc_vnc_show_icon = false) {
     /* $pull_list is an array with UUIDs of pull machines */
     $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
@@ -36,7 +59,8 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
-
+    //jfk
+    $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "vncclientg", "computer", "base", "computers");
     $actionInventory = array();
     $actionLogs = array();
     $actionMsc = array();
@@ -112,11 +136,54 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
         }
+        
+               if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
+
+            $indicetab = count($actionVncClient);
+            if(isset($uuids[$indicetab])){
+                $presence = xmlrpc_getPresenceuuid( $uuids[$indicetab]);
+            }
+            else{
+                $presence = False;
+            }
+            if ($presence){
+                $actionVncClient[] = $vncClientAction;
+            }else
+            {//show icone vnc griser jfk
+                $actionVncClient[] = $vncClientActiongriser;
+            }
+        }else
         if ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
         }
         $params[] = $value;
     }
+
+    foreach($params as &$element ){
+    //jfk
+//     print_r($_SESSION["supportModList"]);
+        if (in_array("guacamole", $_SESSION["supportModList"])) {
+            $element['vnctype'] = "guacamole";
+        }
+        else{
+            if (web_def_use_no_vnc()==1){
+                $element['vnctype']="novnc";
+            }
+            else{
+                $element['vnctype']="appletjava";
+            }
+        }
+    }
+
+//     echo "<pre>";
+//         print_r( $params);//getPresenceuuid
+//     echo "</pre>";
+        
+//         if ($msc_vnc_show_icon) {
+//             $actionVncClient[] = $vncClientAction;
+//         }
+//         $params[] = $value;
+//     }
 
     if (isset($filter['location'])) {
         $filter = $filter['hostname'] . '##'. $filter['location'];

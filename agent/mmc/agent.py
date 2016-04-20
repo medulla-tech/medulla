@@ -701,11 +701,20 @@ class MMCApp(object):
         reactor.addSystemEventTrigger('before', 'shutdown', self.cleanUp)
         logger.info("Listening to XML-RPC requests on %s:%s"
                     % (self.config.host, self.config.port))
+        #Start client XMPP if module xmppmaster enable
+        if PluginManager().isEnabled("xmppmaster"):
+            logger.info("Start client mmc Xmpp XmppMaster")
+            self.modulexmppmaster = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread()
+            self.modulexmppmaster.setDaemon(True)
+            self.modulexmppmaster.start()
 
     def cleanUp(self):
         """
         function call before shutdown of reactor
-        """
+        """#self.modulexmppmaster
+        if PluginManager().isEnabled("xmppmaster") and self.modulexmppmaster.isAlive():
+            logger.info('mmc-agent xmppmaster stop...')
+            self.modulexmppmaster.stop()
         logger.info('mmc-agent shutting down, cleaning up...')
         l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
         l.commit()
