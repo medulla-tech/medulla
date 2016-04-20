@@ -808,6 +808,7 @@ class BootInventory:
 		
 		DISKSIZE = ET.SubElement(STORAGES,'DISKSIZE')
 		DISKSIZE.text = str(v['lba_size_mb'])
+#### mandriva-management-console/pulse-imaging-client
 
 	# DRIVES SECTION #####################################
 
