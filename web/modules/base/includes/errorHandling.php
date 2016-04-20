@@ -49,7 +49,7 @@ $errItem->setAdvice(_("Set the home directory in a different location or force t
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'Password is too young to change', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem("/{'info': 'Password is too young to change', 'desc': 'Constraint violation'}/");
 $errItem->setMsg(_("Your password is too young to change."));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password is too young to change."));
 $errItem->setTraceBackDisplay(False);
