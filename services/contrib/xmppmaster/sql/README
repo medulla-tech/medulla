@@ -1,0 +1,32 @@
+This directory contains every material needed to create the database
+required by the xmppmaster module to store its informations.
+
+As the PULSE2 evolve, so does the xmppmaster database. This directory contains the
+base schema (schema-001.sql) and subsequents evolutions (schema-xxx.sql).
+
+To obtain a state-of-the-art xmppmaster database, just run the install script.
+
+
+mysql> source /usr/share/doc/mmc/contrib/xmppmaster/sql/schema-001.sql
+
+mysql> SHOW GRANTS FOR 'mmc'@'localhost';
++------------------------------------------------------------------------------------------------------------+
+| Grants for mmc@localhost                                                                                   |
++------------------------------------------------------------------------------------------------------------+
+| GRANT USAGE ON *.* TO 'mmc'@'localhost' IDENTIFIED BY PASSWORD '*5987sqdsqfdqfqfqqfqfqfqfsqfc<cd<<qFC' |
+| GRANT ALL PRIVILEGES ON `update`.* TO 'mmc'@'localhost'                                                    |
+| GRANT ALL PRIVILEGES ON `report`.* TO 'mmc'@'localhost'                                                    |
+| GRANT ALL PRIVILEGES ON `backuppc`.* TO 'mmc'@'localhost'                                                  |
+| GRANT ALL PRIVILEGES ON `pulse2`.* TO 'mmc'@'localhost'                                                    |
+| GRANT ALL PRIVILEGES ON `msc`.* TO 'mmc'@'localhost'                                                       |
+| GRANT ALL PRIVILEGES ON `inventory`.* TO 'mmc'@'localhost'                                                 |
+| GRANT ALL PRIVILEGES ON `imaging`.* TO 'mmc'@'localhost'                                                   |
+| GRANT ALL PRIVILEGES ON `dyngroup`.* TO 'mmc'@'localhost'                                                  |
++------------------------------------------------------------------------------------------------------------+
+
+verify 
+GRANT ALL PRIVILEGES ON `xmppmaster`.*  TO 'mmc'@'localhost' 
+
+else
+mysql> GRANT ALL PRIVILEGES ON `xmppmaster`.*  TO 'mmc'@'localhost' ;
+

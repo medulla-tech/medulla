@@ -1,0 +1,66 @@
+@echo off
+set domaine=corvac
+set disk=d&#58;
+set chemin=%disk%&#092;perso
+set user=%1
+set pass=%2
+echo -----------------------------------------
+echo Creation du dossier personnel utilisateur
+echo -----------------------------------------
+&#58;&#58;
+if &#34;%user%&#34;==&#34;&#34; set /p user=Donner le nom de l'utilisateur &#58; 
+if &#34;%pass%&#34;==&#34;&#34; set /p password=Donner un password &#58;
+&#58;&#58;
+echo.
+if exist %chemin%&#092;%user%&#092;*.* goto USER_OK
+echo -- Creation du dossier perso de %user%
+pause &#58;
+&#58;&#58;
+echo creation du dossier personnel
+&#58;&#58;
+mkdir d&#58;&#092;perso&#092;%user%&#092; 
+net user %user% %password% /ADD /passwordchg&#58;no /scriptpath&#58;logon.bat 
+net share %user%=%chemin%&#092;%user% /unlimited 
+attrib +h %chemin%&#092;%user% 
+&#58;&#58;d&#58;&#092;perso&#092;%user%&#092;profil /e /s 
+&#58;&#58;
+pause &#58;
+echo Définition du propriétaire
+REM call subinacl /subdirectories %chemin%&#092;%user% /owner=%domaine%&#092;%user%
+&#58;&#58;
+&#58;&#58;
+echo -- Affectation des droits
+echo.
+&#58;&#58;
+&#58;&#58; Modification des permissions NTFS &#58;
+&#58;&#58;  L'utilisateur a accès au partage
+&#58;&#58;  L'administrateur aussi
+subinacl /Share %user% /grant=%domaine%&#092;%USER%=F
+subinacl /Share %user% /grant=%domaine%&#092;administrateur=F
+&#58;&#58;
+&#58;&#58;
+&#58;&#58; Compte &#34;Tout le monde&#34; &#58; supprimer
+cacls %chemin%&#092;%user% /R &#34;Tout le monde&#34; /E
+&#58;&#58;
+&#58;&#58; Affectation des droits pour l'adminsitrateur &#58; Contrôle total
+cacls %chemin%&#092;%user% /g %domaine%&#092;administrateur&#58;F /E /t
+&#58;&#58;
+&#58;&#58; Affectation des droits pour l'utilisateur &#58;
+&#58;&#58;  
+cacls %chemin%&#092;%user% /g %domaine%&#092;%user%&#58;F /E /t
+&#58;&#58;
+&#58;&#58;
+&#58;&#58;
+&#58;&#58;
+pause &#58;
+echo.
+echo -- Process termine
+echo.
+GOTO FIN
+&#58;USER_OK
+echo.
+echo Un dossier de ce nom existe deja !
+echo Verifiez le nom d'utilisateur.
+echo.
+&#58;&#58;
+&#58;FIN
