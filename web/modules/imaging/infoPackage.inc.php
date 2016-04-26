@@ -51,15 +51,18 @@ $submod->addPage($page);
 //jfk4
 $page = new Page("ajaxcheckprogressbar");
 $page->setFile("modules/imaging/manage/ajaxcheckprogressbar.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 $page = new Page("multicastaction");
 $page->setFile("modules/imaging/manage/multicastaction.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 
 $page = new Page("ajaxcheckstatusmulticast");
 $page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 $page = new Page("index", _T("Server status", "imaging"));
