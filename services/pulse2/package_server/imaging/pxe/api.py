@@ -77,7 +77,7 @@ class PXEImagingApi (PXEMethodParser):
         """
         Machine inscription by PXE imaging client.
 
-        If the GLPI backend is used, a minimal inventory is sended to glpiproxy
+        If the GLPI backend is used, a minimal inventory is sent to glpiproxy
         two seconds before the inscription by imaging backend.
 
         @param mac: MAC address
