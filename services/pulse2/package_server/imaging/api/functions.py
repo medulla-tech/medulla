@@ -271,6 +271,7 @@ class Imaging(object):
             return False
 
         if not isMACAddress(mac):
+	    # TODO: Add better error message.
             raise TypeError
 
         self.logger.debug('Imaging: Client %s sent a log message while %s (%s) : %s' % (mac, phase, level, message))
