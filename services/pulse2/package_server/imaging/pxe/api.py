@@ -585,7 +585,7 @@ class PXEImagingApi (PXEMethodParser):
     @assign(0x4C)
     def logClientAction(self, mac, level, phase, message):
         """
-        Imaging client logs sended to mmc.
+        Imaging client logs sent to mmc.
 
         This logs will be displayed on imaging log tab of computer.
 
