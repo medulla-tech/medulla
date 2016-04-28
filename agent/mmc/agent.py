@@ -2,6 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com
+# (c) 2016 siveo, http://www.siveo.net
 #
 # $Id$
 #
@@ -65,7 +66,7 @@ sys.path.append("plugins")
 
 Fault = xmlrpclib.Fault
 ctx = None
-VERSION = "3.1.90"
+VERSION = "3.1.83"
 
 
 class MmcServer(xmlrpc.XMLRPC, object):
@@ -708,13 +709,17 @@ class MMCApp(object):
             self.modulexmppmaster.setDaemon(True)
             self.modulexmppmaster.start()
 
+
+
     def cleanUp(self):
         """
         function call before shutdown of reactor
-        """#self.modulexmppmaster
-        if PluginManager().isEnabled("xmppmaster") and self.modulexmppmaster.isAlive():
-            logger.info('mmc-agent xmppmaster stop...')
-            self.modulexmppmaster.stop()
+        """
+        if PluginManager().isEnabled("xmppmaster"):
+            #self.modulexmppmaster
+            if self.modulexmppmaster.isAlive():
+                logger.info('mmc-agent xmppmaster stop...')
+                self.modulexmppmaster.stop()
         logger.info('mmc-agent shutting down, cleaning up...')
         l = AuditFactory().log(u'MMC-AGENT', u'MMC_AGENT_SERVICE_STOP')
         l.commit()
