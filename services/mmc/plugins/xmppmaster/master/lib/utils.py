@@ -1,5 +1,25 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; -*-
+#
+# (c) 2016 siveo, http://www.siveo.net
+#
+# This file is part of Pulse 2, http://www.siveo.net
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+
 import netifaces
 import json
 import subprocess
@@ -13,7 +33,15 @@ from pprint import pprint
 import hashlib
 from functools import wraps
 import base64
+from importlib import import_module
 
+pathbase = os.path.abspath(os.curdir)
+
+pathseelfplugins = os.path.join(pathbase, "pluginmaster")
+
+sys.path.append(pathseelfplugins)
+
+#import PluginRecvMuctest
 if sys.platform.startswith('win'):
     import wmi
     import pythoncom
@@ -159,8 +187,6 @@ def isMacOsUserAdmin():
         return True
     else:
         return False
-    
-    
 
 #listplugins = ['.'.join(fn.split('.')[:-1]) for fn in os.listdir(pathplugins) if fn.endswith(".py") and fn != "__init__.py"]
 def name_random(nb, pref=""):
@@ -182,10 +208,34 @@ def load_plugin(name):
     return mod
 
 
-def call_plugin(name, *args, **kwargs):    
+def call_plugin(name, *args, **kwargs):
     pluginaction = load_plugin(name)
     pluginaction.action(*args, **kwargs)
-    
+
+
+def load_plugin_recv(name):
+    mod = __import__("pluginrecv_%s" % name)
+    return mod
+
+def call_pluginrecv(name, *args, **kwargs):
+    pluginob = load_plugin_recv(name)
+    pluginob.action(*args, **kwargs)
+
+
+def include(filename):
+    if os.path.exists(filename): 
+        execfile(filename)
+
+#def plugingrecever(class,msg):
+    #for element in os.listdir("%s/plugins/xmppmaster/master/lib/"%os.getcwd()):
+        #if element.startswith( 'PluginRecvMuc' ) and element.endswith(".py"):
+            #include("%s/plugins/xmppmaster/master/lib/%s"%(os.getcwd(),element))
+            
+
+def import_from(module, name):
+    module = __import__(module, fromlist=[name])
+    return getattr(module, name)
+
 
 def getIpListreduite():
     listmacadress={}
@@ -510,3 +560,5 @@ def pulginprocess(func):
             return
         return response
     return wrapper
+
+

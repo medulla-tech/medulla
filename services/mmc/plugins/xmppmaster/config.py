@@ -1,4 +1,22 @@
-# -*- coding: utf-8 -*-
+#
+# (c) 2016 siveo, http://www.siveo.net
+#
+# This file is part of Pulse 2, http://www.siveo.net
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 from mmc.support.config import PluginConfig #, ConfigException
 from pulse2.database.xmppmaster.config import XmppMasterDatabaseConfig
@@ -24,8 +42,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.showinfomaster = False
         self.showplugins = False
         self.debugmode = "NOTSET"
-        
-        
+
+
     def readConf(self):
         """
         Read the configuration file using the ConfigParser API.
@@ -47,20 +65,29 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.jidsalonlog="log@%s"%self.get('salon', 'server')
         self.jidsaloncommand="command@%s"%self.get('salon', 'server')
         self.passwordconnexionmuc=self.get('salon', 'password')
+
+        ###################SALON CONFIGURATION DYNAMIQUE AGENT#######################confjidsalon
+        #information configuration dynamique
+        self.confjidsalon = "%s@%s"%(self.get('configurationserver', 'confnamesalon'),self.get('salon', 'server'))
+        self.confpasswordmuc = self.get('configurationserver', 'confpasswordmuc')
         ########chat#############
         # le jidagent doit être la plus petite valeur de la liste des macs.
         self.chatserver=self.get('chat', 'server')
         # plus petite mac adress
-        self.jidagent="%s@%s/%s"%(utils.name_jid(),self.get('chat', 'server'),platform.node())
+        self.jidagent = "%s@%s/%s"%(utils.name_jid(),self.get('chat', 'server'),platform.node())
         self.jidagentsiveo = "%s@%s"%(self.get('global', 'ordre'),self.get('chat', 'server'))
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
+        #################""default connection ###################""
+        ### parameters conection server si pas server relais dispo ####
+        self.defaultserverrelaisip = self.get('defaultconnection', 'serverip')
+        self.defaultserverrelaisport = self.get('defaultconnection', 'port')
 
         #self.inventory = self.get('inventorypulse', 'inventory')
 
-        self.jidagent="%s@%s/%s"%("master",self.chatserver,"MASTER")
-        self.NickName="MASTER"
+        self.jidagent = "%s@%s/%s"%("master",self.chatserver,"MASTER")
+        self.NickName = "MASTER"
 
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.information={}

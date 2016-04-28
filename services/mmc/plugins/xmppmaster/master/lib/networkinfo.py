@@ -1,5 +1,23 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8; -*-
+#
+# (c) 2016 siveo, http://www.siveo.net
+#
+# This file is part of Pulse 2, http://www.siveo.net
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+# MA 02110-1301, USA.
 
 import netifaces
 import json
@@ -41,6 +59,22 @@ class  networkagentinfo:
         #mac = mac.replace("/","")
         return mac
 
+    def getuser(self):
+        if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
+            obj = utils.simplecommandestr("users")
+        else:
+            #todo
+            #return utilisateur windows
+            obj={}
+            obj['result']="inconue"
+            c = wmi.WMI().Win32_ComputerSystem
+            computer = c()[0]
+            for propertyName in sorted( list( c.properties ) ):
+                if propertyName == "UserName":
+                    obj['result'] = getattr( computer, propertyName, '' ).split("\\")[1]
+        dd = [i.strip("\n") for i in obj['result'].split(" ") if i != ""]
+        return list(set(dd))
+
     def networkobjet(self, sessionid, action):
         self.messagejson={}
         self.messagejson['action']     = action
@@ -62,7 +96,7 @@ class  networkagentinfo:
                     self.messagejson['dhcp']   = 'True'
                 else:
                     self.messagejson['dhcp']   = 'False'
-                
+
                 self.messagejson['listdns']    = self.listdnslinux()
                 self.messagejson['listipinfo'] = self.getLocalIipAddress()
                 self.messagejson['dnshostname']= platform.node()
@@ -146,7 +180,7 @@ class  networkagentinfo:
         code_result= p.wait()
         system=result[0].rstrip('\n')    
         """renvoi la liste des ip gateway en fonction de l'interface linux"""
-    
+
         if system == "init":
             p = subprocess.Popen('cat /var/log/syslog | grep -e DHCPACK | tail -n10 | awk \'{print $(NF-2)"@" $NF}\'',
                                     shell=True,
@@ -154,7 +188,7 @@ class  networkagentinfo:
                                     stderr=subprocess.STDOUT)
             result = p.stdout.readlines()
             code_result= p.wait()
-            
+
             for i in range(len(result)):
                 result[i]=result[i].rstrip('\n')    
                 d = result[i].split("@")
@@ -175,14 +209,14 @@ class  networkagentinfo:
                     ipadress = ""
                     ipdhcp = colonne[-1:][0]
                 elif "bound to" in i:
-                    for z in colonne:                    
+                    for z in colonne:
                         if self.validIP(z):
                             ipadress = z
                             if  ipdhcp != "":
                                 obj1[ipadress] = ipdhcp
                             break
                     ipdhcp = ""
-                    ipadress = ""    
+                    ipadress = ""
                 else:
                     continue
         return obj1
@@ -227,7 +261,7 @@ class  networkagentinfo:
                         i = i.rstrip('\n')
                         colonne = i.split("=")
                         if len(colonne) != 2:
-                            colonne = i.split(":")                    
+                            colonne = i.split(":")
                         if colonne[0].strip().startswith('yiaddr'):
                             #yiaddr = 192.168.0.12
                             partinfo["ipaddress"] = colonne[1].strip()
@@ -236,7 +270,7 @@ class  networkagentinfo:
                             partinfo["macaddress"] = colonne[1].strip()
                         elif colonne[0].strip().startswith('subnet_mask'):
                             #subnet_mask (ip): 255.255.255.0
-                            partinfo["mask"] = colonne[1].strip()                        
+                            partinfo["mask"] = colonne[1].strip()
                         elif colonne[0].strip().startswith('router'):
                             #router (ip_mult): {192.168.0.1}
                             partinfo["gateway"] = colonne[1].strip(" {}")
@@ -267,7 +301,7 @@ class  networkagentinfo:
         dhcpserver = self.IpDhcp()
         ip_addresses = []
         interfaces = netifaces.interfaces()
-        for i in interfaces:       
+        for i in interfaces:
             if i == 'lo': continue
             iface = netifaces.ifaddresses(i).get(netifaces.AF_INET)
             if iface:
@@ -281,7 +315,7 @@ class  networkagentinfo:
                         except:
                             obj['broadcast']   = "0.0.0.0"
                         try:
-                            if dataroute[str(i)] != None:                       
+                            if dataroute[str(i)] != None:
                                 obj['gateway'] = dataroute[str(i)]
                             else:
                                 obj['gateway'] = "0.0.0.0"
@@ -298,7 +332,7 @@ class  networkagentinfo:
                                 obj['dhcpserver'] = "0.0.0.0" 
                         except:
                             obj['dhcp'] = 'False'
-                            obj['dhcpserver'] = "0.0.0.0"         
+                            obj['dhcpserver'] = "0.0.0.0"
                         ip_addresses.append(obj)
         return ip_addresses
 
@@ -315,18 +349,6 @@ class  networkagentinfo:
             dns.append(i.rstrip('\n'))
         return dns
 
-    ##print json.dumps(networkobjet("desder"), indent=4, sort_keys=True)
-
-#er=networkagent("ddd","ddddd",["e0:06:e6:c7:9b:7f","d6:45:49:94:74:b0"])
-##er=networkagent("ddd","ddddd")
-#print json.dumps(er.messagejson, indent=4, sort_keys=True)
-###
-"""
-cads ubuntu
-l’activation par défaut du paquet resolvconf. Ce paquet permet de gérer le contenu du fichier resolv.conf de façon plus précise. Tout ce passe dans le dossier /etc/resolvconf/resolv.conf.d/. Il contient trois fichiers : base, head, original, qui ont chacun un rôle plus ou moins important dans le contenu du resolv.conf.
-
-"""
-###
 class updatedns:
     def __init__(self, sessionid, action ='resultupdatednsinfo',param=[]):
         self.sessionid = sessionid
@@ -347,20 +369,19 @@ class updatedns:
                 mon_fichier.write("nameserver\t%s"%param)
             print windowsservice('networking','restart')  
         elif sys.platform.startswith('win'):
-            
             pass
         elif sys.platform.startswith('darwin'):
             pass
         else:
             self.messagejson['data']['msg']="Error: commande sur Osnon pris en compte"
             self.messagejson['ret']=254
-        
+
 ##netinfo = networkagentinfo("25", resultaction, strip_list)
 def interfacename(mac):  
     for i in netifaces.interfaces():
         if isInterfaceToMacadress(i,mac):
             return i
-    return ""    
+    return ""
 
 
 def lit_networkconf():
@@ -413,7 +434,7 @@ def rewriteInterfaceTypeRedhad(file, data,interface):
         strr="\n".join(ll)    
         inputFile = open(file, 'wb')
         inputFile.write(strr)
-        inputFile.close()    
+        inputFile.close()
     except:
         return False
     return True
@@ -482,9 +503,9 @@ def getWindowsNameInterfaceForMacadress(macadress):
     for lig in obj['result']:
         l = lig.lower()
         mac = macadress.lower()
-        if l.startswith(mac):                
+        if l.startswith(mac):
             element=lig.split(' ')
             element[0]=''
             fin = [x for x in element if x.strip()!=""]
             return  " ".join(fin)
-                
+

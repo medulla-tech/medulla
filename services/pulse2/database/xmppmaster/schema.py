@@ -1,9 +1,8 @@
 # -*- coding: utf-8; -*-
 #
-# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
-# (c) 2007-2013 Mandriva, http://www.mandriva.com/
+# (c) 2016 siveo, http://www.siveo.net
 #
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2, http://www.siveo.net
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -19,12 +18,12 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
-from sqlalchemy import Column, String, Integer,  ForeignKey
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
 from sqlalchemy.orm import relationship
+import datetime
 
 Base = declarative_base()
 
@@ -32,6 +31,19 @@ Base = declarative_base()
 class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
+
+
+
+class UserLog(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'userlog'
+    # ====== Fields =============================
+    # Here we define columns for the table machines.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    msg = Column(String(255), nullable=False)
+    datelog =  Column(DateTime, default=datetime.datetime.utcnow)
+    type =  Column(String(10), nullable=False,default = "info")
 
 class Machines(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -49,6 +61,8 @@ class Machines(Base, XmppMasterDBObj):
     subnetxmpp = Column(String(45))
     macadress = Column(String(45))
     agenttype= Column(String(20))
+    classutil = Column(String(20))
+
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -78,9 +92,59 @@ class RelaisServer(Base, XmppMasterDBObj):
     subnet = Column(String(45))
     nameserver = Column(String(45))
     ipserver = Column(String(45))
+    port = Column(Integer)
     mask = Column(String(45))
     jid = Column(String(45))
-    
+    longitude = Column(String(45))
+    latitude = Column(String(45))
+    actif=  Column(Boolean, unique=False)
+    classutil = Column(String(10))
+
+class Regles(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'regles'
+    # ====== Fields =============================
+    # Here we define columns for the table network.
+    # Notice that each column is also a normal Python instance attribute.
+    name =Column(String(45))
+    description = Column(String(45))
+    level = Column(Integer)
+
+class Users(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'users'
+    # ====== Fields =============================
+    # Here we define columns for the table network.
+    # Notice that each column is also a normal Python instance attribute.
+    namesession = Column(String(45))
+    hostname = Column(String(45))
+    city = Column(String(45))
+    region_name = Column(String(45))
+    time_zone = Column(String(45))
+    longitude = Column(String(45))
+    latitude = Column(String(45))
+    postal_code = Column(String(45))
+    country_code = Column(String(45))
+    country_name = Column(String(45))
+
+class Has_machinesusers(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'has_machinesusers'
+    # ====== ForeignKey =============================
+    machines_id = Column(Integer, ForeignKey('machines.id'))
+    users_id = Column(Integer, ForeignKey('users.id'))
+    machines = relationship(Machines)
+    users = relationship(Users)
+
+class Has_relaisserverregles(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'has_relaisserverregles'
+    # ====== ForeignKey =============================
+    regles_id = Column(Integer, ForeignKey('regles.id'))
+    relaisserver_id = Column(Integer)
+    sujet = Column(String(45))
+    order = Column(String(45))
+    regles = relationship(Regles)
 
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
