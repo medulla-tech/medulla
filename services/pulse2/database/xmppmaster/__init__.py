@@ -24,32 +24,6 @@
 xmppmaster database handler
 """
 
-## -*- coding: utf-8; -*-
-#
-# (c) 2016 siveo, http://www.siveo.net/
-#
-# $Id$
-#
-# This file is part of Mandriva Management Console (MMC).
-#
-# MMC is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# MMC is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with MMC; if not, write to the Free Software
-# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-"""
-xmppmaster database handler
-"""
-
 # SqlAlchemy
 from sqlalchemy import create_engine, MetaData, select, func
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
@@ -137,7 +111,8 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def addPresenceMachine(self, session, jid, plateform, hostname, archi, 
-                           uuid_inventorymachine, p_xmpp, subnetxmpp, macadress, agenttype, classutil='private'):
+                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil='private'):
+        print "%s %s %s %s %s %s %s %s %s %s"%(jid, plateform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil)
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -184,23 +159,34 @@ class XmppMasterDatabase(DatabaseHelper):
         #return new_network.toDict()
 
     @DatabaseHelper._session
-    def addServerRelais(self, session, urlguacamole, subnet, nameserver, ipserver, port, mask, jid, longitude="",latitude="",actif=False,classutil="private"):
+    def addServerRelais(self, session,
+                        urlguacamole,
+                        subnet,
+                        nameserver,
+                        groupedeploy,
+                        ipserver,
+                        ipconnection,
+                        portconnection,
+                        port, mask, jid, longitude="", latitude="", actif=False, classutil="private"):
         sql = "SELECT count(*) as nb FROM xmppmaster.relaisserver where `relaisserver`.`nameserver`='%s';"%nameserver
         nb = session.execute(sql)
         session.commit()
         session.flush()
         result=[x for x in nb][0][0]
         #logging.getLogger().info("nb %d"%result)
-        if result == 0 : 
+        if result == 0 :
             try:
                 new_relaisserver = RelaisServer()
                 new_relaisserver.urlguacamole = urlguacamole
                 new_relaisserver.subnet = subnet
                 new_relaisserver.nameserver = nameserver
+                new_relaisserver.groupedeploy = groupedeploy
                 new_relaisserver.ipserver = ipserver
                 new_relaisserver.port = port
                 new_relaisserver.mask = mask
                 new_relaisserver.jid = jid
+                new_relaisserver.ipconnection = ipconnection
+                new_relaisserver.portconnection = portconnection
                 new_relaisserver.longitude = longitude
                 new_relaisserver.latitude = latitude
                 new_relaisserver.actif = actif
@@ -378,29 +364,60 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def IpAndPortConnectionFromServerRelais(self, session, id):
         """ return ip et port serveur relais pour la connection"""
+        #sql = """SELECT 
+                    #ipserver, port, jid
+                 #FROM
+                    #xmppmaster.relaisserver
+                 #WHERE
+                    #id = %s;"""%id;
         sql = """SELECT 
-                    ipserver, port
+                    ipconnection, port, jid, urlguacamole
                  FROM
                     xmppmaster.relaisserver
                  WHERE
                     id = %s;"""%id;
+        print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
-        return [x for x in result]
+        return list( [x for x in result][0])
 
+    @DatabaseHelper._session
+    def jidserverrelaisforip(self, session, ip ):
+        """ return ip et port serveur relais pour la connection"""
+        #sql ="""SELECT 
+                    #jid
+                #FROM
+                    #xmppmaster.relaisserver
+                #WHERE
+                    #ipserver = '%s';"""%ip;
+        sql ="""SELECT 
+                    jid
+                FROM
+                    xmppmaster.relaisserver
+                WHERE
+                    ipconnection = '%s';"""%ip;
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
+        
 
     @DatabaseHelper._session
     def IdlonglatServerRelais(self, session, classutilMachine = "private",  actif=1):
         """ return ip et long et lat serveurs relais"""
         if classutilMachine == "private":
             sql = """SELECT 
-                        id,longitude,latitude
+                        id, longitude, latitude
                     FROM
                         xmppmaster.relaisserver
                     WHERE
                             `relaisserver`.`actif` = %d 
-                        AND `relaisserver`.`classutil` = '%s';"""%(actif,classutilMachine)
+                        AND `relaisserver`.`classutil` = '%s';"""%(actif, classutilMachine)
         else:
             sql = """SELECT 
                         id,longitude,latitude
@@ -408,6 +425,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.relaisserver
                     WHERE
                             `relaisserver`.`actif` = %d;"""%(actif)
+        print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -436,7 +454,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def hasmachineusers(self, session, useradd, idmachine):
-        sql = "INSERT INTO `xmppmaster`.`has_machinesusers` (`users_id`, `machines_id`) VALUES ('%s', '%s');"%(useradd,idmachine)
+        sql = """INSERT 
+                INTO `xmppmaster`.`has_machinesusers` (`users_id`, `machines_id`) 
+                VALUES ('%s', '%s');"""%(useradd,idmachine)
         session.execute(sql)
         session.commit()
         session.flush()
@@ -453,7 +473,13 @@ class XmppMasterDatabase(DatabaseHelper):
     def listMacAdressforMachine(self, session, id_machine):
         try:
             #sql = "SELECT group_concat(concat('%s',mac,'%s')) as listmac FROM xmppmaster.network where machines_id = '%s'  limit 1;"%('"','"',id_machine)
-            sql = "SELECT group_concat(concat(mac)) as listmac FROM xmppmaster.network where machines_id = '%s'  limit 1;"%(id_machine)
+            sql = """SELECT 
+                        GROUP_CONCAT(CONCAT(mac)) AS listmac
+                    FROM
+                        xmppmaster.network
+                    WHERE
+                        machines_id = '%s'
+                    LIMIT 1;"""%(id_machine)
             #logging.getLogger().info(" sql %s"%sql)
             listMacAdress = session.execute(sql)
             session.commit()
@@ -467,18 +493,27 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def updateMachineidinventory(self, session, id_machineinventory, idmachine):
         try:
-            sql = "UPDATE `machines` SET `uuid_inventorymachine`='%s' WHERE `id`='%s';"%(id_machineinventory,idmachine)
+            sql = """UPDATE `machines` 
+                    SET 
+                        `uuid_inventorymachine` = '%s'
+                    WHERE
+                        `id` = '%s';"""%(id_machineinventory,idmachine)
             #logging.getLogger().debug("sql %s"%sql)
             updatedb = session.execute(sql)
             session.commit()
             session.flush()
         except Exception, e:
-            logging.getLogger().error(str(e))    
+            logging.getLogger().error(str(e))
         return updatedb
 
     @DatabaseHelper._session
     def getPresenceuuid(self, session, uuid):
-        sql = "SELECT COUNT(*) as 'nb' FROM `xmppmaster`.`machines` where `xmppmaster`.`machines`.`uuid_inventorymachine` = '%s';"%(uuid)
+        sql = """SELECT 
+                    COUNT(*) AS 'nb'
+                FROM
+                    `xmppmaster`.`machines`
+                WHERE
+                    `xmppmaster`.`machines`.`uuid_inventorymachine` = '%s';"""%(uuid)
         #logging.getLogger().debug("sql :%s"%(sql))
         presence = session.execute(sql)
         session.commit()
@@ -493,20 +528,39 @@ class XmppMasterDatabase(DatabaseHelper):
         print "delPresenceMachine" 
         result = ['-1']
         try:
-            sql = "SELECT id, hostname FROM xmppmaster.machines where xmppmaster.machines.jid='%s';"%jid
+            sql = """SELECT 
+                        id, hostname, agenttype
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        xmppmaster.machines.jid = '%s';"""%jid
             #logging.getLogger().debug(" sql %s"%sql)
             id = session.execute(sql)
             session.commit()
             session.flush()
             result=[x for x in id][0]
-            sql  = "DELETE FROM `xmppmaster`.`machines` WHERE `xmppmaster`.`machines`.`id`='%s';"%result[0]
-            sql1 = "DELETE FROM `xmppmaster`.`network` WHERE `network`.`machines_id`='%s';"%result[0]
-            sql3 = "DELETE FROM `xmppmaster`.`has_machinesusers` WHERE `has_machinesusers`.`machines_id`='%s';"%result[0]
-            sql2 = "UPDATE `xmppmaster`.`relaisserver` SET `actif`='0' WHERE `xmppmaster`.`relaisserver`.`nameserver`='%s';"%result[1]
-            print sql3
+            sql  = """DELETE FROM `xmppmaster`.`machines` 
+                    WHERE
+                        `xmppmaster`.`machines`.`id` = '%s';"""%result[0]
+
+            sql1 = """DELETE FROM `xmppmaster`.`network` 
+                    WHERE
+                        `network`.`machines_id` = '%s';"""%result[0]
+
+            sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers` 
+                    WHERE
+                        `has_machinesusers`.`machines_id` = '%s';"""%result[0]
+            print "*******************************"
+            print "%s"%result
+            if result[2] == "relaisserver":
+                sql2 = """UPDATE `xmppmaster`.`relaisserver` 
+                            SET 
+                                `actif` = '0'
+                            WHERE
+                                `xmppmaster`.`relaisserver`.`nameserver` = '%s';"""%result[1]
+                supp2 = session.execute(sql2)
             supp  = session.execute(sql)
             supp1 = session.execute(sql1)
-            supp2 = session.execute(sql2)
             supp3 = session.execute(sql3)
             session.commit()
             session.flush()
@@ -516,7 +570,14 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getGuacamoleRelaisServerMachineUuid(self, session, uuid):
-        sql="SELECT * FROM xmppmaster.machines INNER JOIN xmppmaster.relaisserver ON xmppmaster.relaisserver.subnet = xmppmaster.machines.subnetxmpp where xmppmaster.machines.uuid_inventorymachine = '%s';"%uuid  ;
+        sql = """SELECT 
+                    *
+                FROM
+                    xmppmaster.machines
+                        INNER JOIN
+                    xmppmaster.relaisserver ON xmppmaster.relaisserver.subnet = xmppmaster.machines.subnetxmpp
+                WHERE
+                    xmppmaster.machines.uuid_inventorymachine = '%s';"""%uuid  ;
         serverrelais = session.execute(sql)
         session.commit()
         session.flush()

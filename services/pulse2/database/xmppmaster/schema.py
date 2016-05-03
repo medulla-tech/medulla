@@ -18,6 +18,7 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+
 from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
@@ -25,13 +26,13 @@ from mmc.database.database_helper import DBObj
 from sqlalchemy.orm import relationship
 import datetime
 
+
 Base = declarative_base()
 
 
 class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
-
 
 
 class UserLog(Base, XmppMasterDBObj):
@@ -91,8 +92,11 @@ class RelaisServer(Base, XmppMasterDBObj):
     urlguacamole =Column(String(80))
     subnet = Column(String(45))
     nameserver = Column(String(45))
+    groupedeploy = Column(String(45))
     ipserver = Column(String(45))
     port = Column(Integer)
+    ipconnection = Column(String(45))
+    portconnection = Column(Integer)
     mask = Column(String(45))
     jid = Column(String(45))
     longitude = Column(String(45))

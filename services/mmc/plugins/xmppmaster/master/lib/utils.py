@@ -24,6 +24,8 @@ import netifaces
 import json
 import subprocess
 import sys, os, platform
+
+import os.path
 import logging
 import ConfigParser
 import random
@@ -510,17 +512,34 @@ def methodservice():
             print method  
     finally:
         pythoncom.CoUninitialize ()
-        
+
 def file_get_content(path):
     inputFile = open(path, 'r')     #Open test.txt file in read mode
     content = inputFile.read()
-    inputFile.close()        
+    inputFile.close()
     return content
 
 def file_put_content(filename, contents,mode="w"):
     fh = open(filename, mode)
-    fh.write(contents)  
-    fh.close()  
+    fh.write(contents)
+    fh.close()
+
+def replacefile(contents, pathfilewrite=None, pathfileget=None):
+    """
+        ecrit contents dans pathfilewrite si pas None
+        remplace contents par contenue du fichier pathfileget si il existe.
+    """
+    if pathfilewrite != None:
+        fh = open(pathfilewrite,"w")
+        fh.write(contents)
+        fh.close()
+    #inject file 
+    if pathfileget != None:
+        if os.path.isfile(pathfileget):
+            inputFile = open(pathfileget, 'r')
+            contents = inputFile.read()
+            inputFile.close()
+    return contents
 
 ##windows
 #def listusergroup():

@@ -373,7 +373,7 @@ class updatedns:
         elif sys.platform.startswith('darwin'):
             pass
         else:
-            self.messagejson['data']['msg']="Error: commande sur Osnon pris en compte"
+            self.messagejson['data']['msg']="Error: command ignored yet"
             self.messagejson['ret']=254
 
 ##netinfo = networkagentinfo("25", resultaction, strip_list)
