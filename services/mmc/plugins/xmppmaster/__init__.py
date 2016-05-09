@@ -21,6 +21,7 @@
 """
 Plugin to manage the interface with xmppmastr
 """
+
 import logging
 import os,sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -50,7 +51,6 @@ def getApiVersion():
 
 def dede():
     logging.getLogger().info("test")
-
 
 
 def activate():

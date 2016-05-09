@@ -580,4 +580,38 @@ def pulginprocess(func):
         return response
     return wrapper
 
+def pulginmaster(func):
+    def wrapper( objetxmpp, action, sessionid, data, message, ret ):
+        if action.startswith("result"):
+            action = action[:6]
+        if objetxmpp.session.isexist(sessionid):
+            objsessiondata = objetxmpp.session.sessionfromsessiondata(sessionid)
+        else:
+            objsessiondata = None
+        response = func( objetxmpp, action, sessionid, data, message, ret, objsessiondata)
+        return response
+    return wrapper
+
+
+
+def pulginmastersessionaction( sessionaction, timeminute = 10 ):
+    def decorateur(func):
+        def wrapper(objetxmpp, action, sessionid, data, message, ret, dataobj):
+            #avant
+            if action.startswith("result"):
+                action = action[6:]
+            if objetxmpp.session.isexist(sessionid):
+                if sessionaction == "actualise":
+                    objetxmpp.session.reactualisesession(sessionid, 10)
+                objsessiondata = objetxmpp.session.sessionfromsessiondata(sessionid)
+            else:
+                objsessiondata = None
+            response = func( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessiondata)
+            if sessionaction == "clear" and objsessiondata != None:
+                objetxmpp.session.clear(sessionid)
+            elif sessionaction == "actualise":
+                objetxmpp.session.reactualisesession(sessionid, 10)
+            return response
+        return wrapper
+    return decorateur
 

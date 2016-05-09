@@ -115,7 +115,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Sera traitée par les deux gestionnaires.
         self.add_event_handler("groupchat_message", self.muc_message)
 
+        self.add_event_handler("pluginaction", self.pluginaction)
 
+    def pluginaction(self,result):
+        print result
 
     def affichedata(self,data):
         if self.config.showinfomaster:
@@ -631,8 +634,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 if not dataobj.has_key('sessionid'):
                     dataobj['sessionid'] = "absente"
+                del dataobj['data']
                 try:
-                    msg['body']= ''
+                    msg['body']= dataobj
                     call_plugin(dataobj['action'],
                                 self,
                                 dataobj['action'],
