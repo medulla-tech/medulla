@@ -42,11 +42,9 @@ class SupportPanel extends Panel {
                 echo '<p><a href="mailto:' . $this->data['support_mail']. '">' . $this->data['support_mail'] . '</a></p>';
             if ($this->data['support_phone'])
                 echo '<p>' . _("Phone :") . ' ' . $this->data['support_phone'] . '</p>';
-            echo '</div>';
         }
 
         if ($this->data['users'] > 0 || $this->data['computers'] > 0) {
-            echo '<div class="subpanel"><h4>' . _("License") . '</h4>';
             $this->display_licence("users", _("Users : "));
             $this->display_licence("computers", _("Computers : "));
             echo '</div>';
