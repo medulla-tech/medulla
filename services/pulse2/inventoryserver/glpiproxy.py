@@ -28,8 +28,8 @@ from xml.dom.minidom import parseString
 from pulse2.inventoryserver.utils import MMCProxy
 
 
-class _ErrorHandler :
-    """ 
+class _ErrorHandler:
+    """
     Abstract class to implement error handling of XML responses from GLPI.
     """
     _message = []
@@ -42,19 +42,19 @@ class _ErrorHandler :
         response = response.strip()
         self._parse(response)
 
-    def _parse (self, response):
+    def _parse(self, response):
         """ Parsing the XML response """
-        raise NotImplemented
-       
+        raise NotImplementedError
+
     def __iter__(self):
-        for msg in self._message :
+        for msg in self._message:
             yield msg
 
     def __len__(self):
         return len(self._message)
 
 
-class FusionErrorHandler (_ErrorHandler):
+class FusionErrorHandler(_ErrorHandler):
     """
     Response parsing on check of occurence an error element on XML format.
     """
@@ -65,23 +65,20 @@ class FusionErrorHandler (_ErrorHandler):
     #     <ERROR>XML not well formed!</ERROR>
     # </REPLY>
 
-    def _parse (self, response):
+    def _parse(self, response):
         try:
             dom = parseString(response)
             for node in dom.getElementsByTagName('ERROR'):
-                if node.nodeType == node.ELEMENT_NODE :
+                if node.nodeType == node.ELEMENT_NODE:
                     self._message.append('An error occurred while talking with GLPI (details follow)')
                     self._message.append("Error was: %s" % str(node.firstChild.nodeValue))
-        except Exception, exc :
+        except Exception, exc:
             self._message.append('An error occurred while talking with GLPI (details follow)')
             self._message.append('Raw error was: %s' % str(response))
             self._message.append('With exception: %s' % str(exc))
 
 
-
-
-
-class GlpiProxy :
+class GlpiProxy:
     """ Sending inventories to GLPI with an error handling."""
 
     HEADER = {"Pragma": "no-cache",
@@ -178,4 +175,4 @@ def hasKnownOS(uuid):
         proxy = mmc.proxy
         return proxy.glpi.hasKnownOS(uuid)
     return False
-    
+
