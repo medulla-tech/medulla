@@ -313,7 +313,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # CDROM bootloader
             cdrom_bootloader = 'cdrom_boot'
             # Boot splash screen
-            bootsplash_file = 'bootsplash.xpm'
+            bootsplash_file = 'bootsplash.png'
             # will contain the boot menus, served by tftp
             bootmenus_folder = 'bootmenus'
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
