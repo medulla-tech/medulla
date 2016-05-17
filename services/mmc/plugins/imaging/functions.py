@@ -25,7 +25,6 @@
 Class to manage imaging mmc-agent api
 imaging plugin
 """
-import time
 import logging
 from twisted.internet import defer
 from sets import Set as set
