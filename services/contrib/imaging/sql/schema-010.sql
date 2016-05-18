@@ -34,14 +34,14 @@ UPDATE BootService SET default_name = 'diskless', default_desc = 'Diskless Boot'
 UPDATE Internationalization SET label = 'diskless' WHERE id = 8;
 UPDATE BootService SET default_name = 'memtest', default_desc = 'Memory Test', value = 'KERNEL ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_MEMTEST##\nAPPEND --type=openbsd' WHERE id = 5;
 UPDATE Internationalization SET label = 'memtest' WHERE id = 10;
-INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('hdt','Hardware Information',33,34,'COM32 hdt.c32');
 INSERT INTO Internationalization (id, label, fk_language) VALUES (33, 'hdt', 2);
 INSERT INTO Internationalization (id, label, fk_language) VALUES (34, 'Données Matérielles', 2);
-INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('reboot','Reboot',35,36,'COM32 reboot.c32');
+INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('hdt','Hardware Information',33,34,'COM32 hdt.c32');
 INSERT INTO Internationalization (id, label, fk_language) VALUES (35, 'reboot', 2);
 INSERT INTO Internationalization (id, label, fk_language) VALUES (36, 'Redémarrer', 2);
-INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('poweroff','Power Off',37,38,'COM32 poweroff.c32');
+INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('reboot','Reboot',35,36,'COM32 reboot.c32');
 INSERT INTO Internationalization (id, label, fk_language) VALUES (37, 'poweroff', 2);
 INSERT INTO Internationalization (id, label, fk_language) VALUES (38, 'Eteindre', 2);
+INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('poweroff','Power Off',37,38,'COM32 poweroff.c32');
 
 UPDATE version set Number = 10;
