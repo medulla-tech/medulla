@@ -44,4 +44,8 @@ INSERT INTO Internationalization (id, label, fk_language) VALUES (37, 'poweroff'
 INSERT INTO Internationalization (id, label, fk_language) VALUES (38, 'Eteindre', 2);
 INSERT INTO BootService (default_name, default_desc, fk_name, fk_desc, value) VALUES ('poweroff','Power Off',37,38,'COM32 poweroff.c32');
 
+-- Update bootsplash location
+UPDATE Menu SET background_uri = '##PULSE2_BOOTSPLASH_FILE##' WHERE id = 1;
+UPDATE Menu SET background_uri = '##PULSE2_BOOTSPLASH_FILE##' WHERE id = 2;
+
 UPDATE version set Number = 10;

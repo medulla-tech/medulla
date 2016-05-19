@@ -875,7 +875,7 @@ class ImagingMulticastMenuBuilder:
 
         @return the object
         """
-        
+
         self.pathBootMenu = os.path.join(PackageServerConfig().imaging_api['base_folder'],
                             PackageServerConfig().imaging_api['bootmenus_folder'])
         self.logger = logging.getLogger('imaging')
@@ -909,19 +909,19 @@ class ImagingMulticastMenuBuilder:
 #waitting=%s
 #locationuuid=%s
 #cat /var/lib/pulse2/imaging/masters/%s/sda1.ntfs-ptcl-img.uncomp.aa |udp-sender --full-duplex --min-clients %s --interface %s --nokbd --mcast-all-addr 224.0.0.1 --portbase 2232 --ttl 1"""%(
-                                        #self.menu['description'] , 
-                                        #self.menu['path'] , 
-                                        #self.menu['master'] , 
+                                        #self.menu['description'] ,
+                                        #self.menu['path'] ,
+                                        #self.menu['master'] ,
                                         #self.menu['size'] ,
                                         #self.menu['group'] ,
                                         #self.menu['nbcomputer'],
-                                        #self.menu['location'],                                        
+                                        #self.menu['location'],
                                         #self.menu['master'] ,
                                         #self.menu['nbcomputer'],
                                         #self.nameinterface )
 
         self.templatecmdline = """#!/bin/bash
-echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast  
+echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast
 echo "" > /tmp/udp-sender.log
 mastername="%s"
 localisationmaster="%s"
@@ -931,9 +931,9 @@ groupuuid=%s
 waitting=%s
 locationuuid=%s
 drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
-                                        self.menu['description'] , 
-                                        self.menu['path'] , 
-                                        self.menu['master'] , 
+                                        self.menu['description'] ,
+                                        self.menu['path'] ,
+                                        self.menu['master'] ,
                                         self.menu['size'] ,
                                         self.menu['group'] ,
                                         self.menu['nbcomputer'],
@@ -946,7 +946,7 @@ drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "
         self.template="""
 UI vesamenu.c32
 TIMEOUT 100
-MENU BACKGROUND /bootloader/bootsplash.png
+MENU BACKGROUND bootsplash.png
 MENU WIDTH 78
 MENU MARGIN 4
 MENU ROWS 10
