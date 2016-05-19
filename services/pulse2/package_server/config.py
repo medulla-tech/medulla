@@ -309,7 +309,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # base folder
             base_folder = '/var/lib/pulse2/imaging'
             # will contain the bootloader material (revoboot + splashscreen), served by tftp
-            bootloader_folder = 'bootloader'
+            bootloader_folder = '../bootloader'
             # CDROM bootloader
             cdrom_bootloader = 'cdrom_boot'
             # Boot splash screen
@@ -317,7 +317,7 @@ class P2PServerCP(pulse2.utils.Singleton):
             # will contain the boot menus, served by tftp
             bootmenus_folder = 'bootmenus'
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
-            diskless_folder = 'davos'
+            diskless_folder = '../davos'
             # diskless kernel
             diskless_kernel = 'vmlinuz'
             # diskless initrd
