@@ -244,6 +244,7 @@ class ImagingMenu:
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
+            ('##PULSE2_INVENTORIES_DIR##', self.config.imaging_api['inventories_folder'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
             ('##PULSE2_REVO_RAW##', self.rawmode, 'global'),
             ('##REVOWAIT##', self.mtftp_timeout, 'global')

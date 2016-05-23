@@ -26,7 +26,7 @@ SET NAMES 'utf8';
 -- Update menu items for Davos and PXELINUX
 UPDATE BootService SET default_name = 'continue', default_desc = 'Continue Usual Startup', value = 'LOCALBOOT 0' WHERE id = 1;
 UPDATE Internationalization SET label = 'continue' WHERE id = 2;
-UPDATE BootService SET default_name = 'register', default_desc = 'Register as Pulse client', value = 'COM32 inventory.c32' WHERE id = 2;
+UPDATE BootService SET default_name = 'register', default_desc = 'Register as Pulse client', value = 'COM32 inventory.c32\nAPPEND dump_path=##PULSE2_INVENTORIES_DIR##' WHERE id = 2;
 UPDATE Internationalization SET label = 'register' WHERE id = 4;
 UPDATE BootService SET default_name = 'backup', default_desc = 'Create a Backup', value = 'KERNEL ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL##\nAPPEND ##PULSE2_KERNEL_OPTS## ##PULSE2_REVO_RAW## ##PULSE2_DISKLESS_OPTS## davos_action=SAVE_IMAGE\nINITRD ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##' WHERE id = 3;
 UPDATE Internationalization SET label = 'backup' WHERE id = 6;
