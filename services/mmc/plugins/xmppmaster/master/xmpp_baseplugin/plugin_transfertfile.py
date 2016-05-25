@@ -43,7 +43,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                                                 'sessionid': sessionid,
                                                 'status': 'start', 
                                                 'to' : message['from'],
-                                                'form' : message['to'] ,
+                                                'from' : message['to'] ,
                                                 'file' : data['ou']})
             return
         else:
@@ -60,7 +60,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'sessionid': sessionid,
                             'status': 'process',
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : sessiondata.getdatasession()['ou']})
             if md5trame != dataobj['md5trame']:
                 objetxmpp.event("pluginaction", { 'action': action,
@@ -68,7 +68,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'status': 'error',
                             'msgerror' : "transfert error",
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' :  sessiondata.getdatasession()['ou']})
                 raise
             writefileappend(sessiondata.getdatasession()['ou'], data1)
@@ -82,7 +82,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'status': 'error',
                             'msgerror' : "transfert error",
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : sessiondata.getdatasession()['ou']})
                 raise
             result['end'] = True
@@ -91,7 +91,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'status': 'finished', 
                             'success': True,
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' :  sessiondata.getdatasession()['ou']})
             objetxmpp.session.clear(sessionid)
     except Exception as e:

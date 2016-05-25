@@ -19,7 +19,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                                          'sessionid': sessionid,
                                          'status': 'start', 
                                          'to' : message['from'],
-                                         'form' : message['to'] ,
+                                         'from' : message['to'] ,
                                          'file' : data['namesource']})
             datasession={
                             'fichier' : data['namesource'], 
@@ -47,7 +47,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'msgerror' : "IOError ERROR on file %s"%namefile,
                             'size' : sessiondata.getdatasession()['pointeurfichier'],
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : namefile})
             dataerreur['data']['msg'] = "IOError ERROR on file %s"%namefile
             dataerreur['ret'] = 255
@@ -66,7 +66,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'success': True,
                             'size' : sessiondata.getdatasession()['pointeurfichier'],
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : namefile})
             objetxmpp.session.clear(sessionid)
             return
@@ -78,7 +78,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'status': 'process',
                             'size' : pointeur,
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : namefile})
 
         sessiondata.datasession['pointeurfichier'] = pointeur
@@ -92,7 +92,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                             'msgerror' : str(e),
                             'size' : sessiondata.getdatasession()['pointeurfichier'],
                             'to' : message['from'],
-                            'form' : message['to'] ,
+                            'from' : message['to'] ,
                             'file' : namefile})
         dataerreur['data']['msg'] = str(e)
         dataerreur['ret'] = 255

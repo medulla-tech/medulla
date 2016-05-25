@@ -706,12 +706,33 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def muc_presenceConf(self, presence):
         print presence
         pass
+
     def muc_offlineConf(self, presence):
         print presence
         pass
+
     def muc_onlineConf(self, presence):
         print presence
         pass
+
+    def envoicommand(self, jid, action , data={}, datasession = {}, encodebase64 = False):
+        command={
+            'action' : action,
+            'base64' : encodebase64,
+            'sessionid': name_random(5, "command"),
+            'data' : ''
+            }
+
+        if encodebase64 :
+            command['data'] = base64.b64encode(json.dumps(data))
+        else:
+            command['data'] = data
+        datasession['callbackcommand'] = "commandend"
+        self.session.createsessiondatainfo(command['sessionid'], datasession,10)
+        print "send message"
+        self.send_message(mto = jid,
+                        mbody = json.dumps(command),
+                        mtype = 'groupchat')
 
 #todo faire class 
 def stopxmpp():
