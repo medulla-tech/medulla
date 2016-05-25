@@ -409,10 +409,10 @@ class PXEImagingApi (PXEMethodParser):
             logging.getLogger().debug("PXE Proxy: Hardware inventory injected successfully into imaging")
 
             # need the hostname and entity to send this inventory
-            d = self.api.getComputerByMac(mac)
+            #d = self.api.getComputerByMac(mac)
 
-            d.addCallback(self._injectedInventorySend, mac, inventory)
-            d.addErrback(self._injectedInventoryErrorGetComputer, mac)
+            #d.addCallback(self._injectedInventorySend, mac, inventory)
+            #d.addErrback(self._injectedInventoryErrorGetComputer, mac)
 
     def _injectedInventoryErrorGetComputer(self, failure, mac):
         """ An error occured while getting the hostname """
