@@ -363,7 +363,7 @@ class ImagingMenu:
         Write the boot menu to disk
         """
         if self.mac:
-            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
+            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
             self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
         else:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], self.DEFAULT_MENU_FILE)
