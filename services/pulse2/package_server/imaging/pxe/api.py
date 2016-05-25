@@ -38,6 +38,8 @@ from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
 from pulse2.package_server.imaging.pxe.tracking import EntryTracking, MTFTPTracker
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
+import re
+import xml.etree.ElementTree as ET  # form XML Building
 
 class PXEImagingApi (PXEMethodParser):
     """
@@ -216,7 +218,125 @@ class PXEImagingApi (PXEMethodParser):
             logging.getLogger().warn("PXE Proxy: client authentification FAILED")
             return succeed("ko")
 
+    def ip_adressexml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "NETWORKS":
+                        for dd in cc:
+                            if dd.tag == "IPADDRESS":
+                                return dd.text
+        return ""
 
+
+    def mac_adressexml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "NETWORKS":
+                        for dd in cc:
+                            if dd.tag == "MACADDR":
+                                return dd.text
+        return ""
+
+    def hostname_xml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "HARDWARE":
+                        for dd in cc:
+                            if dd.tag == "NAME":
+                                return dd.text
+        return ""
+
+    @assign(0xBA)
+    def InventorySysLinux(self, mac, inventory, ip_address):
+        """
+        Minimal inventory received from PXE.
+
+        @param mac: MAC address
+        @type mac: str
+
+        @param inventory: inventory from PXE
+        @type inventory: str
+
+        @rtype: deferred
+        """
+        logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
+
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+
+        ipadress = self.ip_adressexml(file_content)
+        mac1= self.mac_adressexml(file_content)
+        hostnamexml = self.hostname_xml(file_content)
+
+        inventory ="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s"%(file_content)
+        logging.getLogger().debug("###########0xBA InventorySysLinux inventory\n%s\n " %(inventory))
+        logging.getLogger().debug("###########0xBA mac \n%s\n " %(mac))
+        logging.getLogger().debug("###########0xBA ip_address \n%s\n " %(ip_address))
+        ip_address = ipadress
+        mac =  mac1
+
+        self.api.logClientAction(mac,
+                                 LOG_LEVEL.DEBUG,
+                                 LOG_STATE.MENU,
+                                 "boot menu shown")
+        if not "Mc" in inventory :
+            inventory = inventory + "\nMAC Address:%s\n" % mac
+        else :
+            inventory = inventory.replace("Mc", "MAC Address")
+        if not "IPADDR" in inventory :
+            inventory = inventory + "\nIP Address:%\n" % ipadress
+        else :
+            inventory = inventory.replace("IPADDR", "IP Address")
+        parsed_inventory1 = BootInventory()
+        logging.getLogger().debug("initialise")
+        parsed_inventory1.initialise(file_content)
+        parsed_inventory = parsed_inventory1.dump()
+        logging.getLogger().debug("###########0xBA parsed_inventory \n%s\n " %(parsed_inventory))
+        self.api.logClientAction(mac,
+                                 LOG_LEVEL.DEBUG,
+                                 LOG_STATE.MENU,
+                                 "boot menu shown")
+        d = self.api.injectInventory(mac, parsed_inventory)
+
+        # 2nd step - send inventory by HTTP POST to inventory server
+        d.addCallback(self._injectedInventoryOk, mac, inventory)
+        d.addErrback(self._injectedInventoryError)
+        #self.send_inventory(parsed_inventory1., hostname)
+        return d
+
+    @assign(0xBB)
+    def computerRegisterSyslinux(self, mac, inventory, ip_address):
+        """
+        Minimal inventory received from PXE.
+
+        @param mac: MAC address
+        @type mac: str
+
+        @param inventory: inventory from PXE
+        @type inventory: str
+
+        @rtype: deferred
+        """
+        logging.getLogger().debug("FIRST ENREGISTREMENT TO ALLOW INVENTORY")
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+
+        ipadress = self.ip_adressexml(file_content)
+        mac1= self.mac_adressexml(file_content)
+        hostnamexml = self.hostname_xml(file_content)
+        inventory ="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s"%(file_content)
+
+        ip_address = ipadress
+        mac =  mac1
+        logging.getLogger().debug("**************** Inventorysyslinux \n%s\n " %(inventory))
+        return self.send_inventory(inventory, hostnamexml)
+    
 
     #  ------------------------ process inventory ---------------------------
     @assign(0xAA)
