@@ -124,7 +124,7 @@ class PXEImagingApi (PXEMethodParser):
 
         @rtype: deferred
         """
-        logging.getLogger().debug("FIRST ENREGISTREMENT TO ALLOW INVENTORY")
+        logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
         m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
         file_content = str(m.group(0))
         ipadress = self.ip_adressexml(file_content)
