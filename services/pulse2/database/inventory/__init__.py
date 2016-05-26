@@ -1214,7 +1214,7 @@ class Inventory(DyngroupDatabaseHelper):
 
         # ============== Network ================================
 
-        if part == 'Network' or part == 'NetworkCards':
+        if part in ["Network", "NetworkCards"]:
             Network = Inventory().getLastMachineInventoryPart(ctx, "Network", params)
             if Network:
                 for item in Network[0][1]:
