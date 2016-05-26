@@ -232,13 +232,13 @@ class ImagingMenu:
         # key 'when' : when to perform the replacement (only 'global' for now)
         replacements = [
             ('##PULSE2_LANG##', PackageServerConfig().pxe_keymap, 'global'),
+            ('##PULSE2_PUBLIC_IP##', PackageServerConfig().public_ip, 'global'),
             ('##PULSE2_BOOTLOADER_DIR##', self.config.imaging_api['bootloader_folder'], 'global'),
+            ('##PULSE2_TOOLS_DIR##', self.config.imaging_api['tools_folder'], 'global'),
             ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
             ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
             ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
             ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
-            ('##PULSE2_DISKLESS_MEMTEST##', self.config.imaging_api['diskless_memtest'], 'global'),
-            ('##PULSE2_DISKLESS_DBAN##', self.config.imaging_api['diskless_dban'], 'global'),
             ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
             ('##PULSE2_KERNEL_OPTS##', ' '.join(self.kernel_opts), 'global'),
             ('##PULSE2_MASTERS_DIR##', self.config.imaging_api['masters_folder'], 'global'),
@@ -815,7 +815,7 @@ def changeDefaultMenuItem(macaddress, value):
     logger = logging.getLogger('imaging')
     filename = os.path.join(config.imaging_api['base_folder'],
                             config.imaging_api['bootmenus_folder'],
-                            pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
+                            '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
     logger.debug('Changing default boot menu item of computer MAC %s'
                  % macaddress)
     newlines = ''
@@ -983,7 +983,7 @@ INITRD ../davos/initrd.img
         for k, v in self.menu['computer'].iteritems():
             if self.isValidIPv4Address(v):
                 mac = pulse2.utils.reduceMACAddress(k)
-                filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
+                filename = '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(mac)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
                 menuval= self.template%( self.menu['description'],
                                 self.public_ip,
