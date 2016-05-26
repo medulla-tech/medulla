@@ -26,7 +26,7 @@ SUBDIRS += pulse2 plugins
 endif
 
 imagingstatedir = $(localstatedir)/lib/pulse2/imaging
-imagingdirs = bootmenus computers custom inventories masters isos archives
+imagingdirs = bootmenus computers tools inventories masters isos archives
 
 examplesdir = @examplesdir@
 
