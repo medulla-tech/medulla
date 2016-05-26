@@ -42,6 +42,7 @@ import re
 import xml.etree.ElementTree as ET  # form XML Building
 import time
 
+
 class PXEImagingApi (PXEMethodParser):
     """
     A frame to recognize the method definitions to build.
