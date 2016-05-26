@@ -23,10 +23,11 @@ class StringExtractor(ContentHandler):
         self.valid_elems = elems
         self.target = target
 
-    def startElement(self, name, attrs):
+    def startelement(self, name, attrs):
         for attr in attrs.keys():
             if attr in self.valid_attrs:
-                self.target.send((self._locator.getLineNumber(), None, attrs[attr], ""))
+                self.target.send((self._locator.getLineNumber(),
+                                  None, attrs[attr], ""))
 
         if name in self.valid_elems:
             self._current_ch = ""
@@ -36,13 +37,14 @@ class StringExtractor(ContentHandler):
         if isinstance(self._current_ch, basestring):
             self._current_ch += ch
 
-    def endElement(self, name):
+    def endelement(self, name):
         if self._current_ch:
-            self.target.send((self._current_ch_line, None, self._current_ch, ""))
+            self.target.send((self._current_ch_line,
+                              None, self._current_ch, ""))
         self._current_ch = False
         self._current_ch_line = None
 
-    def endDocument(self):
+    def enddocument(self):
         self.target.close()
 
 
