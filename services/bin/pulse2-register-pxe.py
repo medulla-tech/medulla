@@ -45,22 +45,15 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
 
-def senddata1(requete,ip ="127.0.0.1", port =1001 ):
+def senddata(requete,ip ="127.0.0.1", port =1001 ):
     adresse=(ip,port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     logger.debug("send pxe xml for registration :%s"% requete)
     monSocket.sendto("\xBB%s" % requete, adresse)
-    #monSocket.setblocking(0)
-    #ready = select.select([monSocket], [], [], 5)
-    #reponse=''
-    #if ready[0]:
-        #reponse, adr = monSocket.recvfrom(buf)
     time.sleep(0.2)
     monSocket.sendto("\xBA%s" % requete, adresse)
-    #ready = select.select([monSocket], [], [], 5)
-    reponse=''
-    #if ready[0]:
-        #reponse, adr = monSocket.recvfrom(buf)
+    time.sleep(0.2)
+    monSocket.sendto("\xBA%s" % requete, adresse)
     monSocket.close()
 
 def mac_adressexml(file_content):
@@ -122,7 +115,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         xmldata="%s%s\nMc:%s"%(header,file_content,mac)
                         logger.debug("xml recv from client pxe %s"% xmldata)
                         os.remove(name)
-                        senddata1(xmldata,'127.0.0.1',conf['port'])
+                        senddata(xmldata,'127.0.0.1',conf['port'])
                     except:
                         logger.error("error udp send to %s:%d"%('127.0.0.1',conf['port']))
                 except:
