@@ -226,18 +226,19 @@ class PXEImagingApi (PXEMethodParser):
         @return: "ok" if correct, otherwise "ko"
         @rtype: str
         """
-        def __sha1_crypt_password(password):
+        def __sha512_crypt_password(password):
             if not password: return ''
-            import hashlib
-            passphrase = 'DzmCpUs3'
-            return hashlib.sha1(password + passphrase).hexdigest()
+            import crypt, base64
+            passphrase = '$6$DzmCpUs3$'
+            return crypt.crypt(password, passphrase)
+
         self.api.logClientAction(mac,
                                  LOG_LEVEL.INFO,
                                  LOG_STATE.IDENTITY,
                                  "menu identification request")
 
 
-        if __sha1_crypt_password(password) == P2PServerCP().pxe_password:
+        if __sha512_crypt_password(password) == P2PServerCP().pxe_password:
             logging.getLogger().debug("PXE Proxy: client authentification OK")
             return succeed('ok')
         else :

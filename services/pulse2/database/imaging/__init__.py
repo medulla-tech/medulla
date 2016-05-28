@@ -3509,11 +3509,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def __sha1_crypt_password(self,password):
-            if not password: return ''
-            import hashlib
-            passphrase = 'DzmCpUs3'
-            return hashlib.sha1(password + passphrase).hexdigest()
+    def __sha512_crypt_password(self,password):
+        if not password: return ''
+        import crypt, base64
+        passphrase = '$6$DzmCpUs3$'
+        return crypt.crypt(password, passphrase)
 
     def getPXEPasswordHash(self, location_uuid):
         session = create_session()
@@ -3526,7 +3526,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         try:
             location = session.query(Entity).filter(Entity.uuid == uuid).one()
             if 'pxe_password' in params:
-                location.pxe_password = self.__sha1_crypt_password(params['pxe_password'])
+                location.pxe_password = self.__sha512_crypt_password(params['pxe_password'])
             if 'pxe_keymap' in params:
                 location.pxe_keymap = params['pxe_keymap']
             elif 'language' in params:
