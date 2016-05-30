@@ -758,7 +758,6 @@ class Machines(object):
     def toH(self):
         return {
             'id':self.id,
-            'uuid':id2uuid(self.id),
             'hostname':self.name,
             'uuid':self.uuid
         }
