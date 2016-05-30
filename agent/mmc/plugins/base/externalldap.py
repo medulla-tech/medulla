@@ -89,7 +89,6 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                     ret = True
                 except ldap.INVALID_CREDENTIALS:
                     self.logger.debug("Invalid credentials")
-                    pass
         except Exception, e:
             self.logger.exception(e)
             ret = False

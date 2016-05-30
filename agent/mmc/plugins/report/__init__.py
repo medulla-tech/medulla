@@ -117,7 +117,6 @@ def setup_lang(lang):
         _gettext = lang.gettext
     except IOError:
         logger.exception("Failed to load langage file")
-        pass
 
 
 class ContextMaker(ContextMakerI):
