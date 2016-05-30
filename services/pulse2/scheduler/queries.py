@@ -495,7 +495,6 @@ def get_cohs_with_failed_phase(id, phase_name):
         ).filter(database.commands_on_host_phase.c.name==phase_name
         ).filter(database.commands_on_host_phase.c.state=="failed")
     return [q.id for q in query.all()]
-    session.close()
 
 
 def is_command_finished(scheduler_name, id):
