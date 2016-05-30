@@ -36,7 +36,7 @@ else {
 $groupmembers = getMachineListByState($_GET['group']);
 
 $group = new Group();
-$group->create($groupname, False);
+$group->create($groupname, false);
 $group->addMembers($groupmembers);
 
 $truncate_limit = getMaxElementsForStaticList();

@@ -32,7 +32,7 @@ $maxperpage = $conf["global"]["maxperpage"];
 // ==================== GLPI DISPLAY PART FUNCTION =============================
 // =============================================================================
 
-function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $partTitle = null) {
+function display_part($part, $get, $simpleTableParts, $displayNavBar = true, $partTitle = null) {
     $uuid = '';
     if (isset($get['uuid'])) {
         $uuid = $get['uuid'];
@@ -50,9 +50,9 @@ function display_part($part, $get, $simpleTableParts, $displayNavBar = True, $pa
     global $maxperpage;
     $end = 100; // There is no need for multipaging in these parts
 
-    $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : False;
-    $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? True : False;
-    $history_delta = (isset($get['history_delta'])) ? $get['history_delta'] : False;
+    $hide_win_updates = (isset($get['hide_win_updates'])) ? $get['hide_win_updates'] : false;
+    $hide_win_updates = (strtolower($hide_win_updates) == 'true') ? true : false;
+    $history_delta = (isset($get['history_delta'])) ? $get['history_delta'] : false;
 
     $options = array(
         'hide_win_updates' => $hide_win_updates,
@@ -235,7 +235,7 @@ if ($_GET['uuid'] != '') {
             );
 
             foreach ($hardwareParts as $part => $title) {
-                display_part($part, $_GET, $simpleTableParts, False, $title);
+                display_part($part, $_GET, $simpleTableParts, false, $title);
             }
         } else {
             display_part($part, $_GET, $simpleTableParts);
@@ -374,7 +374,7 @@ if ($_GET['uuid'] != '') {
             ?>
             <script type="text/javascript">
 
-            // $editable_registry is False is file doesn't exists
+            // $editable_registry is false is file doesn't exists
             var editable_registry = <?php print (($editable_registry) ? $editable_registry : "[]") ?>;
 
             // Remove toJSON shipped with prototype

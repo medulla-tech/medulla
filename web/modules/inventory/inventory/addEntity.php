@@ -62,7 +62,7 @@ $entities_select->setElements($entity_list);
 $entities_select->setElementsVal($entity_val);
 $f->add(
     new TrFormElement(_T('Parent entity','inventory'), $entities_select),
-    array("value" => 1,"required" => True)
+    array("value" => 1,"required" => true)
 );
 $f->pop();
 $f->addValidateButton("bconfirm");
