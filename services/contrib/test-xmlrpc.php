@@ -156,7 +156,7 @@ if ($conf["debug"]["level"]!=0) {
     $str .= "XML RPC CALL FUNCTION: $method(";
     if (!$params) {
         $params = "null";
-    } else if (is_array($params)) {
+    } elseif (is_array($params)) {
         $str .= implode (',',$params);
     } else {
         $str .= $params;
