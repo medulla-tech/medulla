@@ -253,8 +253,6 @@ class Commands(object):
             'id': self.id,
             'state': self.state,
             'creation_date': self.creation_date,
-            'start_date': self.start_date,
-            'end_date': self.end_date,
             'sum_running': self.sum_running,
             'sum_done': self.sum_done,
             'sum_stopped': self.sum_stopped,
