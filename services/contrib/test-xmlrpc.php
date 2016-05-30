@@ -157,7 +157,7 @@ if ($conf["debug"]["level"]!=0) {
     if (!$params) {
         $params = "null";
     } elseif (is_array($params)) {
-        $str .= implode (',',$params);
+        $str .= implode(',',$params);
     } else {
         $str .= $params;
     }
