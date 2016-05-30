@@ -45,15 +45,15 @@ formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
 hdlr.setFormatter(formatter)
 logger.addHandler(hdlr)
 
-def senddata(requete,ip ="127.0.0.1", port =1001 ):
+def senddata(query,ip ="127.0.0.1", port =1001 ):
     adresse=(ip,port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    logger.debug("send pxe xml for registration :%s"% requete)
-    monSocket.sendto("\xBB%s" % requete, adresse)
+    logger.debug("Send PXE xml for registration :%s"% query)
+    monSocket.sendto("\xBB%s" % query, adresse)
     time.sleep(0.2)
-    monSocket.sendto("\xBA%s" % requete, adresse)
+    monSocket.sendto("\xBA%s" % query, adresse)
     time.sleep(0.2)
-    monSocket.sendto("\xBA%s" % requete, adresse)
+    monSocket.sendto("\xBA%s" % query, adresse)
     monSocket.close()
 
 def mac_adressexml(file_content):
@@ -109,21 +109,21 @@ class MyEventHandler(pyinotify.ProcessEvent):
                 file_content=file_content.replace('\\t','')
                 try:
                     mac = mac_adressexml(file_content)
-                    try: #######
-                        # add Mc:mac adresse fin de la trame
+                    try:
+                        # add Mc:mac address end of datagram
                         header='<?xml version="1.0" encoding="utf-8"?>'
                         xmldata="%s%s\nMc:%s"%(header,file_content,mac)
-                        logger.debug("xml recv from client pxe %s"% xmldata)
+                        logger.debug("XML recv from pxe client %s"% xmldata)
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
                     except:
-                        logger.error("error udp send to %s:%d"%('127.0.0.1',conf['port']))
+                        logger.error("UDP error sending to %s:%d"%('127.0.0.1',conf['port']))
                 except:
-                    logger.error("error mac adress")
+                    logger.error("MAC address error")
             except:
-                logger.error("error gzip file %s"%str(name))
+                logger.error("Error extracting file %s"%str(name))
 
-class watchInventory: 
+class watchInventory:
     def __init__(self):
         #threading.Thread.__init__(self)
         self.eh = MyEventHandler()
@@ -134,7 +134,7 @@ class watchInventory:
         #self.mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  # watched events
         self.notifier = pyinotify.ThreadedNotifier(self.wm, self.eh)
         self.notifier.start()
-        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY  # watched eventspyinotify.IN_DELETE | 
+        mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY  # watched eventspyinotify.IN_DELETE |
         self.wm.add_watch( '/var/lib/pulse2/imaging/inventories',mask, rec=True)
 
     def stop(self):
@@ -158,7 +158,7 @@ if __name__ == '__main__':
             mode = logging.DEBUG
             print "pid file: %d\n"%os.getpid()
         elif option == "-h":
-            print "configure in file '%s' \n[imaging_api]\npxe_port=???\n "%inifile
+            print "Configure in file '%s' \n[imaging_api]\npxe_port=???\n "%inifile
             print "\t<launch program> [option]\n"
             print "\t[-f <file configuration>]\n\t[-d] debug mode no daemonized"
             sys.exit(0)
@@ -182,7 +182,7 @@ if __name__ == '__main__':
                 # exit first parent
                 sys.exit(0)
         except OSError, e:
-            print >>sys.stderr, "fork #1 failed: %d (%s)" % (e.errno, e.strerror)
+            print >>sys.stderr, "Fork #1 failed: %d (%s)" % (e.errno, e.strerror)
             sys.exit(1)
         # decouple from parent environment
         os.close(sys.stdin.fileno())
@@ -206,7 +206,7 @@ if __name__ == '__main__':
             sys.exit(1)
     try:
         logger.setLevel(mode)
-        logger.debug("mode debug")
+        logger.debug("Debug mode")
         a = watchInventory()
         a.run()
     except KeyboardInterrupt:
