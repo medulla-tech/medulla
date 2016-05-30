@@ -705,7 +705,6 @@ class BootInventory:
                                 self.bios_info['date'] = dd.text
                             elif dd.tag == "BMANUFACTURER":
                                 self.bios_info['vendor'] = dd.text
-                                pass
                             elif dd.tag == "BVERSION":
                                 self.bios_info['version'] = dd.text
                                 self.sys_info['version'] = dd.text

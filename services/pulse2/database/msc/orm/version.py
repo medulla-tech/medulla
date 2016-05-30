@@ -32,4 +32,3 @@ class Version(object):
 
     def getDbVersion(self):
         return self.version;
-    pass

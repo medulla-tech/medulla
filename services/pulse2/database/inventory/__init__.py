@@ -2118,7 +2118,6 @@ class Inventory(DyngroupDatabaseHelper):
                     tab.append(ref)
             except Exception:
                 self.logger.debug("exception on %s rule"% (line) )
-                pass
 
         if param != None and ['filters'] and str(param['filters']).strip() != "":
             for index in range(len(tab)):
