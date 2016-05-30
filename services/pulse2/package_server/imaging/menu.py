@@ -363,7 +363,7 @@ class ImagingMenu:
         Write the boot menu to disk
         """
         if self.mac:
-            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
+            filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
             self.logger.debug('Preparing to write boot menu for computer MAC %s into file %s' % (self.mac, filename))
         else:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], self.DEFAULT_MENU_FILE)
@@ -815,7 +815,7 @@ def changeDefaultMenuItem(macaddress, value):
     logger = logging.getLogger('imaging')
     filename = os.path.join(config.imaging_api['base_folder'],
                             config.imaging_api['bootmenus_folder'],
-                            '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
+                            pulse2.utils.normalizeMACAddressForPXELINUX(macaddress))
     logger.debug('Changing default boot menu item of computer MAC %s'
                  % macaddress)
     newlines = ''
@@ -983,7 +983,7 @@ INITRD ../davos/initrd.img
         for k, v in self.menu['computer'].iteritems():
             if self.isValidIPv4Address(v):
                 mac = pulse2.utils.reduceMACAddress(k)
-                filename = '01-' + pulse2.utils.normalizeMACAddressForPXELINUX(mac)
+                filename = pulse2.utils.normalizeMACAddressForPXELINUX(mac)
                 self.logger.debug("create bootMenu [%s] Computer ip [%s]"%(k,v))
                 menuval= self.template%( self.menu['description'],
                                 self.public_ip,

@@ -419,7 +419,7 @@ def normalizeMACAddressForPXELINUX(mac):
     """
     assert isMACAddress(mac)
     macaddress = '-'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
-    return macaddress.lower()
+    return '01-' + macaddress.lower()
 
 
 def macToNode(mac):
