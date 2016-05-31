@@ -97,7 +97,7 @@ class ImagingDefaultMenuBuilder:
         m.setSplashImage(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
-        m.setDefaultItem(int(self.menu['default_item']))
+        m.setDefaultItem(self.menu['default_item'])
         m.setProtocol(self.menu['protocol'])
         m.setMTFTPTimeout(self.menu['mtftp_restore_timeout'])
         self.logger.debug('bootcli: %s' % self.menu['bootcli'])
@@ -177,7 +177,7 @@ class ImagingMenu:
         self.menuitems = {}
         self.timeout = 0  # the menu timeout
         self.default_item = 0  # the menu default entry
-        self.default_item_wol = 0  # the menu default entry on WOL
+        self.default_item_WOL = 0  # the menu default entry on WOL
         self.splashimage = None  # the menu splashimage
         self.message = None
         self.keyboard = None  # the menu keymap, None is C
@@ -426,7 +426,6 @@ class ImagingMenu:
         """
             set the default item number
         """
-        assert(type(value) == int)
         self.default_item = value
 
     def addImageEntry(self, position, entry):

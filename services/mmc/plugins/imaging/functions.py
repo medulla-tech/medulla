@@ -3408,10 +3408,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         # If wol is True, generated bootmenu is the WOL one
         if wol:
             for uuid in menus:
-                if 'default_item_wol' in menus[uuid]:
-                    menus[uuid]['default_item'] = menus[uuid]['default_item_wol']
-                elif 'default_item_WOL' in menus[uuid]:
-                    menus[uuid]['default_item'] = menus[uuid]['default_item_WOL']
+                menus[uuid]['default_item'] = menus[uuid]['default_item_WOL']
 
         # store into to_register the list of menus to register
         to_register = {}
@@ -3575,16 +3572,17 @@ def chooseImagingApiUrl(location):
 def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
     menu['bootservices'] = {}
     menu['images'] = {}
-    default_item_counter = 0 # keep track of the item number to generate a relative default menu entry number
-    wol_item_counter = 0 # same for wol
     for mi in menu_items:
         if menu['fk_default_item'] == mi.id:
-            menu['default_item'] = default_item_counter
+            if 'image' in dir(mi):
+                menu['default_item'] = mi.image.name
+            else:
+                menu['default_item'] = mi.boot_service.default_name
         if menu['fk_default_item_WOL'] == mi.id:
-            menu['default_item_WOL'] = wol_item_counter
-            menu['default_item_wol'] = wol_item_counter # TODO : remove
-        default_item_counter += 1
-        wol_item_counter += 1
+            if 'image' in dir(mi):
+                menu['default_item_WOL'] = mi.image.name
+            else:
+                menu['default_item_WOL'] = mi.boot_service.default_name
         mi = mi.toH()
         if mi.has_key('image'):
             if h_pis.has_key(mi['image']['id']):
@@ -3611,7 +3609,6 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
         menu['default_item'] = 0
     if not menu.has_key('default_item_WOL') or menu['default_item_WOL'] == None:
         menu['default_item_WOL'] = 0
-        menu['default_item_wol'] = 0
     return (menu, menu_items, h_pis)
 
 
