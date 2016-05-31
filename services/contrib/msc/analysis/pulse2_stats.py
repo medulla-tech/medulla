@@ -155,23 +155,23 @@ def read_logs(log_dir, start_date, stop_date):
                         # Convert str to dict
                         dump = eval(stats)
 
-                        if dump.has_key('global'):
+                        if 'global' in dump:
 
-                            if not launchers.has_key(launcher):
+                            if not launcher in launchers:
                                 launchers[launcher] = {}
-                            if launchers[launcher].has_key(stamp):
+                            if stamp in launchers[launcher]:
                                 launchers[launcher][stamp] += int(dump['global']['running'])
                             else:
                                 launchers[launcher][stamp] = int(dump['global']['running'])
 
-                        if dump.has_key('by_group'):
+                        if 'by_group' in dump:
 
                             # For each group available
                             for group in dump['by_group'].keys():
-                                if not groups.has_key(group):
+                                if not group in groups:
                                     groups[group] = {}
                                 # If this group as already an entry for this time (from an other launcher), we add the new one
-                                if groups[group].has_key(stamp):
+                                if stamp in groups[group]:
                                     groups[group][stamp] += int(dump['by_group'][group]['running'])
                                 else:
                                     groups[group][stamp] = int(dump['by_group'][group]['running'])
@@ -213,9 +213,9 @@ if __name__ == "__main__":
         for group in group_list:
 
             for hour in group_hours:
-                if not groups_actions.has_key(group):
+                if not group in groups_actions:
                     groups_actions[group] = []
-                if groups[group].has_key(hour):
+                if hour in groups[group]:
                     groups_actions[group].append(groups[group][hour])
                 else:
                     groups_actions[group].append(0)
@@ -238,9 +238,9 @@ if __name__ == "__main__":
         for launch in launcher_list:
 
             for hour in launch_hours:
-                if not launch_actions.has_key(launch):
+                if not launch in launch_actions:
                     launch_actions[launch] = []
-                if launchers[launch].has_key(hour):
+                if hour in launchers[launch]:
                     launch_actions[launch].append(launchers[launch][hour])
                 else:
                     launch_actions[launch].append(0)

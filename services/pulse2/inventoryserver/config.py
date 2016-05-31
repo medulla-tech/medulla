@@ -147,7 +147,7 @@ class Pulse2OcsserverConfigParser(InventoryDatabaseConfig):
 
             if len(self.hostname) == 3:
                 nom = self.getInventoryNoms()
-                if nom.has_key(self.hostname[0]):
+                if self.hostname[0] in nom:
                     self.hostname[2][0] = ('nom%s%s' % (self.hostname[0], self.hostname[2][0]), self.hostname[2][0])
 
         if self.cp.has_section("daemon"):

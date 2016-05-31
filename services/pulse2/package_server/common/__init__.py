@@ -137,7 +137,7 @@ class Common(pulse2.utils.Singleton):
                         'file_access_port':mirror_params['file_access_port'],
                         'file_access_path':mirror_params['file_access_path']
                     }
-                    if mirror_params.has_key('mirror'):
+                    if 'mirror' in mirror_params:
                         access = {
                             'proto':'',
                             'file_access_uri':'',

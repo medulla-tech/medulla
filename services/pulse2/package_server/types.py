@@ -176,57 +176,57 @@ class Package:
         self.label = h['label']
         self.version = h['version']
         self.id = h['id']
-        if h.has_key('size') and h['size'] != '':
+        if 'size' in h and h['size'] != '':
             self.size = h['size']
         else:
             self.size = "0"
-        if h.has_key('description'):
+        if 'description' in h:
             self.description = h['description']
         else:
             self.description = ''
 
-        if h.has_key('installInit'):
+        if 'installInit' in h:
             self.initcmd = getCommandFromH(h['installInit'])
         else:
             self.initcmd = Command()
-        if h.has_key('preCommand'):
+        if 'preCommand' in h:
             self.precmd = getCommandFromH(h['preCommand'])
         else:
             self.precmd = Command()
-        if h.has_key('command'):
+        if 'command' in h:
             self.cmd = getCommandFromH(h['command'])
         else:
             self.cmd = Command()
-        if h.has_key('postCommandSuccess'):
+        if 'postCommandSuccess' in h:
             self.postcmd_ok = getCommandFromH(h['postCommandSuccess'])
         else:
             self.postcmd_ok = Command()
-        if h.has_key('postCommandFailure'):
+        if 'postCommandFailure' in h:
             self.postcmd_ko = getCommandFromH(h['postCommandFailure'])
         else:
             self.postcmd_ko = Command()
         self.entity_id = 0
         self.reboot = 0
-        if h.has_key('reboot'):
+        if 'reboot' in h:
             self.reboot = h['reboot']
         self.root = ''
-        if h.has_key('basepath'):
+        if 'basepath' in h:
             self.root = h['basepath']
-        if h.has_key('Qvendor'):
+        if 'Qvendor' in h:
             self.Qvendor = h['Qvendor']
-        if h.has_key('Qsoftware'):
+        if 'Qsoftware' in h:
             self.Qsoftware = h['Qsoftware']
-        if h.has_key('Qversion'):
+        if 'Qversion' in h:
             self.Qversion = h['Qversion']
-        if h.has_key('boolcnd'):
+        if 'boolcnd' in h:
             self.boolcnd = h['boolcnd']
-        if h.has_key('licenses'):
+        if 'licenses'in h:
             self.licenses = h['licenses']
         if 'sub_packages' in h:
             self.sub_packages = h['sub_packages']
         if 'entity_id' in h:
             self.entity_id = h['entity_id']
-        if h.has_key('associateinventory'):
+        if 'associateinventory' in h:
             self.associateinventory = h['associateinventory']
         return self
 
@@ -257,9 +257,9 @@ class AFiles:
             return map(lambda x: x.toURI(), self.internals)
         else:
             d = pulse2.package_server.common.Common().h_desc(mp)
-            if d.has_key("mirror_url") and d['mirror_url'] != '':
+            if "mirror_url" in d and d['mirror_url'] != '':
                 where = d['mirror_url']
-            elif d.has_key("url") and d['url'] != '':
+            elif "url" in d and d['url'] != '':
                 where = "%s_files"%(d['url'])
             else:
                 where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
@@ -269,16 +269,16 @@ class File:
     def __init__(self, name = None, path = '/', checksum = None, size = 0, access = None, id = None):
         if access is None: # dont modify the default value!
             access = {}
-        if access.has_key('mirror'):
+        if 'mirror' in access:
             self.where = access['mirror']
         else:
-            if not access.has_key('proto'):
+            if not 'proto' in access:
                 access['proto'] = 'http'
-            if not access.has_key('file_access_uri'):
+            if not 'file_access_uri' in access:
                 access['file_access_uri'] = '127.0.0.1'
-            if not access.has_key('file_access_port'):
+            if not 'file_access_port' in access:
                 access['file_access_port'] = '80'
-            if not access.has_key('file_access_path'):
+            if not 'file_access_path' in access:
                 access['file_access_path'] = ''
             self.where = "%s://%s:%s%s" % (access['proto'], access['file_access_uri'], str(access['file_access_port']), access['file_access_path'])
         
@@ -297,9 +297,9 @@ class File:
         else:
             if where == None:
                 d = pulse2.package_server.common.Common().h_desc(mp)
-                if d.has_key("mirror_url") and d['mirror_url'] != '':
+                if "mirror_url".d and d['mirror_url'] != '':
                     where = d['mirror_url']
-                elif d.has_key("mirror_mp") and d['mirror_mp'] != '':
+                elif "mirror_mp".d and d['mirror_mp'] != '':
                     where = "%s://%s:%s%s" % (d['proto'], d['server'], str(d['port']), d['mirror_mp'])
                 else:
                     where = "%s://%s:%s%s_files" % (d['proto'], d['server'], str(d['port']), d['mp'])
@@ -341,7 +341,7 @@ class Machine:
         return { 'name' : self.name, 'uuid' : self.uuid }
 
     def from_h(self, h):
-        if h.has_key('name'):
+        if 'name' in h:
             self.name = h['name']
         else:
             self.name = ''
@@ -363,7 +363,7 @@ class User:
         return { 'name' : self.name, 'uuid' : self.uuid }
 
     def from_h(self, h):
-        if h.has_key('name'):
+        if 'name' in h:
             self.name = h['name']
         else:
             self.name = ''

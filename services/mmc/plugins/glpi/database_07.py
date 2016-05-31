@@ -902,7 +902,7 @@ class Glpi07(DyngroupDatabaseHelper):
         elif toH:
             ret = map(lambda m: m.toH(), query.all())
         else:
-            if filt is not None and filt.has_key('get'):
+            if filt is not None and 'get' in filt:
                 ret = self.__formatMachines(query.all(), advanced, filt['get'], empty_macs)
             else:
                 ret = self.__formatMachines(query.all(), advanced, None, empty_macs)
@@ -2343,7 +2343,7 @@ class Glpi07(DyngroupDatabaseHelper):
             locs[l.ID] = l.parentID
 
         def __getParent(i):
-            if locs.has_key(i):
+            if i in locs:
                 return locs[i]
             else:
                 return None
@@ -3067,7 +3067,7 @@ class Glpi07(DyngroupDatabaseHelper):
         ret = {}
         for n, cid in query:
             cuuid = toUUID(cid)
-            if not ret.has_key(cuuid):
+            if not cuuid in ret:
                 ret[cuuid] = []
             if not n.ifmac in ret[cuuid]:
                 ret[cuuid].append(n.ifmac)

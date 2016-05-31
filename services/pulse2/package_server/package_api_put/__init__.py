@@ -144,7 +144,7 @@ class PackageApiPut(PackageApiGet):
         self.logger.debug("xmlrpc_putPackageDetail")
         pa = Package()
         pa.fromH(package)
-        if Common().dontgivepkgs.has_key(pa.id) and len(Common().dontgivepkgs[pa.id]) > 0:
+        if pa.id in Common().dontgivepkgs and len(Common().dontgivepkgs[pa.id]) > 0:
             return (False, "This package is curently locked")
 
         ret = Common().editPackage(package['id'], pa, need_assign, self.mp)

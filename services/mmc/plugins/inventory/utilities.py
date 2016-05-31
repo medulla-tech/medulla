@@ -42,7 +42,7 @@ def getInventoryNoms(table = None):
 
     if table == None:
         return noms
-    if noms.has_key(table):
+    if table in noms:
         return noms[table]
     return None
     

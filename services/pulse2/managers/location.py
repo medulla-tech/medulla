@@ -55,7 +55,7 @@ class ComputerLocationManager(Singleton):
         return True
 
     def displayLocalisationBar(self):
-        if self.components.has_key(self.main):
+        if self.main in self.components:
             klass = self.components[self.main]
             ret = klass().displayLocalisationBar()
         else:
