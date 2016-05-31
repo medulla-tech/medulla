@@ -45,7 +45,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         query_filter = None
 
         try:
-            if not filt.has_key('query'):
+            if not 'query' in filt:
                 return (join_query, query_filter)
             query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:
@@ -97,7 +97,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     join_q = join_q.join(join_tab)
 
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
-                if self.filters.has_key(ctx.userid):
+                if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
@@ -134,7 +134,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     join_q = join_q.join(join_tab)
 
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
-                if self.filters.has_key(ctx.userid):
+                if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
@@ -177,7 +177,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                     join_q = join_q.join(join_tab)
 
                 q = query.add_column(grpby).select_from(join_q).filter(filt)
-                if self.filters.has_key(ctx.userid):
+                if ctx.userid in self.filters:
                     q = q.filter(self.filters[ctx.userid])
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)

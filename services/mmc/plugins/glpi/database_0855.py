@@ -1083,7 +1083,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         elif toH:
             ret = map(lambda m: m.toH(), query.all())
         else:
-            if filt is not None and filt.has_key('get'):
+            if filt is not None and 'get' in filt:
                 ret = self.__formatMachines(query.all(),
                                             advanced,
                                             filt['get'],
@@ -2661,7 +2661,7 @@ class Glpi0855(DyngroupDatabaseHelper):
             locs[l.id] = l.entities_id
 
         def __getParent(i):
-            if locs.has_key(i):
+            if i in locs:
                 return locs[i]
             else:
                 return None

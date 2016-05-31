@@ -587,7 +587,7 @@ class RpcProxy(RpcProxyI):
         cache = {}
         for c in ret1:
             if c['gid']:
-                if cache.has_key("G%s"%(c['gid'])):
+                if "G%s"%(c['gid']) in cache:
                     c['target'] = cache["G%s"%(c['gid'])]
                 else:
                     group = DyngroupDatabase().get_group(ctx, c['gid'], True)
@@ -602,7 +602,7 @@ class RpcProxy(RpcProxyI):
                         c['target'] = group.name
                     cache["G%s"%(c['gid'])] = c['target']
             else:
-                if cache.has_key("M%s"%(c['uuid'])):
+                if "M%s"%(c['uuid']) in cache:
                     c['target'] = cache["M%s"%(c['uuid'])]
                 else:
                     if not ComputerLocationManager().doesUserHaveAccessToMachine(ctx, c['uuid']):

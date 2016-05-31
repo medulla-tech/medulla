@@ -71,7 +71,7 @@ class PackagePutA(Pulse2Api):
     def putPackageDetail(self, package, need_assign = True):
         if self.initialized_failed:
             return -1
-        if package.has_key('mode') and package['mode'] == 'creation' and package['id'] == '':
+        if 'mode' in package and package['mode'] == 'creation' and package['id'] == '':
             package['id'] = str(uuid1())
         d = self.callRemote("putPackageDetail", package, need_assign)
         d.addErrback(self.onError, "putPackageDetail", package, -1)

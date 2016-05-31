@@ -153,7 +153,7 @@ class Inventory(DyngroupDatabaseHelper):
                           Column("inventory", Integer, ForeignKey("Inventory.id"), primary_key=True),
                           Column(item.lower(), Integer, ForeignKey(item + ".id"), primary_key=True)
                           ]
-            if noms.has_key(item):
+            if item in noms:
                 for nom in noms[item]:
                     nomitem = "nom" + item + nom
                     self.table[nomitem] = Table(nomitem, self.metadata, autoload = True)
@@ -362,9 +362,9 @@ class Inventory(DyngroupDatabaseHelper):
                     machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, gid, 0, -1, ''))
                 else:
                      filt = ''
-                     if pattern.has_key('hostname'):
+                     if 'hostname' in pattern:
                          filt = pattern['hostname']
-                     if pattern.has_key('filter'):
+                     if 'filter' in pattern:
                          filt = pattern['filter']
                      if count:
                          # when the entities will be in dyngroup, we will be able to use
@@ -375,9 +375,9 @@ class Inventory(DyngroupDatabaseHelper):
                          max = -1
                          if 'location' not in pattern:
                              # this check will be useless when the entities will be in dyngroup
-                             if pattern.has_key('min'):
+                             if 'min' in pattern:
                                  min = pattern['min']
-                             if pattern.has_key('max'):
+                             if 'max' in pattern:
                                  max = pattern['max']
                          machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, gid, min, max, filt))
 
@@ -578,13 +578,13 @@ class Inventory(DyngroupDatabaseHelper):
     def mapping(self, ctx, query, invert = False):
         q = query[2].split('/')
         table, field = q[0:2]
-        if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
+        if query[2] in PossibleQueries().possibleQueries('double'): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
                 self.mapping(ctx, [None, None, value[0][0], query[3][0]]),
                 self.mapping(ctx, [None, None, value[1][0], query[3][1]])
             )
-        elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
+        elif query[2] in PossibleQueries().possibleQueries('triple'): # triple search
             queries = PossibleQueries().possibleQueries('triple')[query[2]]
 
             vendor_query = queries[0][0]
@@ -605,7 +605,7 @@ class Inventory(DyngroupDatabaseHelper):
                 _getMapping(software_query, software_value),
                 _getMapping(version_query, version_value),
             )
-        elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
+        elif query[2] in PossibleQueries().possibleQueries('list'): # list search
             if table == 'Machine':
                 partKlass = Machine
             else:
@@ -623,7 +623,7 @@ class Inventory(DyngroupDatabaseHelper):
                 value = value.replace('*', '%')
                 return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
 
-        elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
+        elif query[2] in PossibleQueries().possibleQueries('halfstatic'): # halfstatic search
             if table == 'Machine':
                 partKlass = Machine
             else:
@@ -1249,10 +1249,10 @@ class Inventory(DyngroupDatabaseHelper):
             result = result.group_by(grp)
 
         # if needed, filter by date and limit the first date
-        if(params.has_key('date')) and params['date'] != '':
+        if('date' in params) and params['date'] != '':
                 result.order_by(desc(self.klass['Inventory'].Date))
 
-        if params.has_key('min') and params.has_key('max'):
+        if 'min' in params and 'max' in params:
             result = result.offset(int(params['min']))
             result = result.limit(int(params['max']) - int(params['min']))
 
@@ -1281,12 +1281,12 @@ class Inventory(DyngroupDatabaseHelper):
                     y, m, day = res[4].split("-")
                     d = datetime.datetime(int(y), int(m), int(day))
                 tmp["timestamp"] = d
-                if not machine_inv.has_key(res[1]):
+                if res[1] in not machine_inv:
                     machine_inv[res[1]] = []
                     machine_uuid[res[1]] = toUUID(res[2])
                 if len(res) > 5:
                     noms = self.config.getInventoryNoms()
-                    if noms.has_key(part):
+                    if part in noms:
                         for i in range(5, len(res)):
                             tmp[noms[part][i-5]] = res[i]
                 machine_inv[res[1]].append(tmp)
@@ -1317,7 +1317,7 @@ class Inventory(DyngroupDatabaseHelper):
         # one machine only view
         #select_from = select_from.join(self.table['hasEntity'], self.table['hasEntity'].c.machine == self.machine.c.id)
 
-        if noms.has_key(part):
+        if part in noms:
             for nom in noms[part]:
                 nomTable = self.table['nom%s%s' % (part, nom)]
                 select_from = select_from.join(nomTable)
@@ -1325,9 +1325,9 @@ class Inventory(DyngroupDatabaseHelper):
                 grp_by.append(nomTable.c.id)
 
         # Apply a filter on the inventory's date if needed
-        if params.has_key('date') and params['date'] != '':
+        if 'date' in params and params['date'] != '':
             result = result.select_from(select_from).filter(self.klass['Inventory'].Date <= params['date'])
-        elif params.has_key('inventoryId') and params['inventoryId'] != '':
+        elif 'inventoryId' in params and params['inventoryId'] != '':
             result = result.select_from(select_from).filter(self.klass['Inventory'].id == params['inventoryId'])
         else:
             result = result.select_from(select_from).filter(self.inventory.c.Last == 1)
@@ -1342,7 +1342,7 @@ class Inventory(DyngroupDatabaseHelper):
             result = result.filter(self.klass['Hardware'].Owner == params["Owner"])
 
         # Apply a filter on the software ProductName if asked in parameters (the filter is loaded from a config file)
-        if params.has_key('software_filter') and params['software_filter'] == True and part == 'Software':
+        if 'software_filter' in params and params['software_filter'] == True and part == 'Software':
             # Get the list of software filters
             software_filter = self.config.getSoftwareFilter()
             for softFilter in software_filter:
@@ -1350,11 +1350,11 @@ class Inventory(DyngroupDatabaseHelper):
                 result = result.filter(not_(partKlass.ProductName.like(softFilter)))
 
         # Apply a filter to hide windows updates
-        if params.has_key('hide_win_updates') and params['hide_win_updates'] == True and part == 'Software':
+        if 'hide_win_updates' in params and params['hide_win_updates'] == True and part == 'Software':
             result = result.filter(not_(partKlass.ProductName.op('regexp')('KB[0-9]+(-v[0-9]+)?(v[0-9]+)?')))
 
         # this can't be put in __filterQuer because it's not a generic filter on Machine...
-        if params.has_key('where') and params['where'] != '':
+        if 'where' in params and params['where'] != '':
             for where in params['where']:
                 if hasattr(partTable.c, where[0]):
                     if type(where[1]) == list:
@@ -1362,7 +1362,7 @@ class Inventory(DyngroupDatabaseHelper):
                     else:
                         result = result.filter(getattr(partTable.c, where[0]) == where[1])
                 else:
-                    if noms.has_key(part):
+                    if part in noms:
                         try:
                             noms[part].index(where[0])
                             nomTableName = 'nom%s%s' % (part, where[0])
@@ -1382,9 +1382,9 @@ class Inventory(DyngroupDatabaseHelper):
         """
         @part param is current tab of inventory
         """
-        if params.has_key('hostname') and params['hostname'] != '':
+        if 'hostname' in params and params['hostname'] != '':
             query = query.filter(Machine.Name==params['hostname'])
-        if params.has_key('filter') and params['filter'] != '': # params['filter'] is keyword entered in search field
+        if 'filter' in params and params['filter'] != '': # params['filter'] is keyword entered in search field
             # Search keyword in all columns of this tab
             clauses = []
             for column in self.__getattribute__(part.lower()).c: # All columns of current tab
@@ -1393,9 +1393,9 @@ class Inventory(DyngroupDatabaseHelper):
             # Don't forget to search into Machine's Name
             clauses.append(Machine.Name.like('%'+params['filter']+'%'))
             query = query.filter(or_(*clauses))
-        if params.has_key('uuid') and params['uuid'] != '':
+        if 'uuid' in params and params['uuid'] != '':
             query = query.filter(Machine.id==fromUUID(params['uuid']))
-        if params.has_key('uuids'):
+        if 'uuids' in params:
             if type(params['uuids']) == list and len(params['uuids']) > 0:
                 uuids = map(lambda m: fromUUID(m), params['uuids'])
                 query = query.filter(Machine.id.in_(uuids))
@@ -2706,14 +2706,14 @@ class Inventory(DyngroupDatabaseHelper):
         """
         ret = []
         machineId = ""
-        if params.has_key('uuid'):
+        if 'uuid' in params:
             uuid = params['uuid']
             machineId = fromUUID(uuid)
-        if params.has_key('min'):
+        if 'min' in params:
             min = params['min']
         else:
             min = 0
-        if params.has_key('max'):
+        if 'max' in params:
             max = params['max']
         else:
             max = 10
@@ -2770,13 +2770,13 @@ class Inventory(DyngroupDatabaseHelper):
         machineId = ""
         current_inventory_id = None
 
-        if params.has_key('uuid'):
+        if 'uuid' in params:
             uuid = params['uuid']
             # Get the machine ID from the uuid given in the parameters to get all infos about the machine
             machineId = fromUUID(uuid)
         else:
             return [{}, {}]
-        if params.has_key('inventoryId'):
+        if 'inventoryId' in params:
             current_inventory_id = int(params['inventoryId'])
         else:
             return [{}, {}]
