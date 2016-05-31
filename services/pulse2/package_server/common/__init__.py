@@ -812,7 +812,7 @@ class Common(pulse2.utils.Singleton):
         ret = []
         try:
             for k in self.reverse:
-                if self.mp2p.has_key(k):
+                if k in self.mp2p:
                     ret.append(k)
         except Exception, e:
             self.logger.error("reverse failed")
@@ -821,7 +821,7 @@ class Common(pulse2.utils.Singleton):
         return ret
 
     def getFile(self, fid, mp = None):
-        if self.files.has_key(fid):
+        if fid in self.files:
             return self.files[fid].toURI(mp)
         return None
 
@@ -898,7 +898,7 @@ class Common(pulse2.utils.Singleton):
         failure = False
         # check that the last modification date is old enough
         if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
-            if self.temp_check_changes['LAST'].has_key(pid):
+            if pid in self.temp_check_changes['LAST']:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = False
             else:
                 self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
@@ -915,7 +915,7 @@ class Common(pulse2.utils.Singleton):
 
         # check that the package size has not change between two detect loop (detected one loop after the package is here for real)
         if self.config.SMART_DETECT_SIZE in self.config.package_detect_smart_method:
-            if not self.temp_check_changes['SIZE'].has_key(pid):
+            if not pid in self.temp_check_changes['SIZE']:
                 self.temp_check_changes['SIZE'][pid] = [0, 0]
             previous, previous_t = self.temp_check_changes['SIZE'][pid]
             if (t - previous_t) < (self.config.package_detect_loop - 1): # only try this method once per detect loop
@@ -927,12 +927,12 @@ class Common(pulse2.utils.Singleton):
                     self.temp_check_changes['SIZE'][pid] = [size, t]
                     self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
                     failure = True
-            if failure and (self.newAssociation.has_key(pid) or self.inEdition.has_key(pid)):
+            if failure and (pid in self.newAssociation or pid in self.inEdition):
                 failure = False
             known_action = True
 
         if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
-            if not self.temp_check_changes['LOOP'].has_key(pid):
+            if not pid in self.temp_check_changes['LOOP']:
                 self.temp_check_changes['LOOP'][pid] = {}
             self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = False
             Find().find(dir, self.__subHasChangedLoop, [pid,time.time(),runid])
@@ -969,9 +969,9 @@ class Common(pulse2.utils.Singleton):
     def __initialiseChangedLast(self, pid, file, s = None):
         if s == None:
             s = self.__getDate(file)
-        if not self.temp_check_changes['LAST'].has_key(pid):
+        if not pid in self.temp_check_changes['LAST']:
             self.temp_check_changes['LAST'][pid] = { '###DATE###' : s }
-        elif not self.temp_check_changes['LAST'][pid].has_key('###DATE###') or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
+        elif not '###DATE###' in self.temp_check_changes['LAST'][pid] or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
             self.temp_check_changes['LAST'][pid]['###DATE###'] = s
 
     def __subHasChangedLast(self, file, pid, t):
@@ -983,18 +983,18 @@ class Common(pulse2.utils.Singleton):
         if (t - s) < self.config.package_detect_smart_time:
             # if the file has just been associated
             # TODO check if the file has just been edited
-            if self.newAssociation.has_key(pid) or self.inEdition.has_key(pid):
+            if pid in self.newAssociation or pid in self.inEdition:
                 self.__initialiseChangedLast(pid, file, s)
                 self.logger.debug("\t")
 
-            if not self.temp_check_changes['LAST'][pid].has_key('###DATE###'):
+            if not '###DATE###' in self.temp_check_changes['LAST'][pid]:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
             elif self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
 
     def __subHasChangedLoop(self, file, pid, t, runid = -1):
         s = self.__getDate(file)
-        if self.temp_check_changes['LOOP'][pid].has_key(file):
+        if file in self.temp_check_changes['LOOP'][pid]:
             if s != self.temp_check_changes['LOOP'][pid][file][0]:
                 self.temp_check_changes['LOOP'][pid][file][0] = s
                 self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
@@ -1012,22 +1012,22 @@ class Common(pulse2.utils.Singleton):
         if os.path.basename(file) == self.CONFFILE:
             l_package = self.parser.parse(file)
             if l_package == None: return
-            if self.working_pkgs.has_key(l_package.id): return
+            if l_package.id in self.working_pkgs: return
             l_package.setRoot(os.path.dirname(file))
             isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
-            if not self.already_declared.has_key(file):
+            if not file in self.already_declared:
                 if isReady == self.SMART_DETECT_CHANGES:
                     self.logger.debug("'%s' has changed recently"%(str(l_package.id)))
                 else:
-                    if not self.need_assign.has_key(l_package.id):
+                    if not l_package.id in self.need_assign:
                         self.logger.debug("detect a new package %s"%(l_package.id))
                         self._createMD5File(os.path.dirname(file))
                         pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
                         self.associatePackage2mp(pid, mp)
                         self.already_declared[file] = True
-                        if self.newAssociation.has_key(pid):
+                        if pid in self.newAssociation:
                             del self.newAssociation[pid]
-                        if self.inEdition.has_key(pid):
+                        if pid in self.inEdition:
                             del self.inEdition[pid]
                         self.packageDetectionDate[pid] = self.__getDate(file)
                         if self.config.package_mirror_activate:
@@ -1035,7 +1035,7 @@ class Common(pulse2.utils.Singleton):
                     else:
                         self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
             else:
-                if self.inEdition.has_key(l_package.id): # the config file has been changed from the gui, only need to get new date and size
+                if l_package.id in self.inEdition: # the config file has been changed from the gui, only need to get new date and size
                     pid = l_package.id
                     self.logger.debug("detect an already detected package (edition mode) : %s"%(pid))
                     del self.inEdition[pid]
@@ -1075,7 +1075,7 @@ class Common(pulse2.utils.Singleton):
         # End compatibility code
 
         if os.path.basename(file) == self.CONFFILE:
-            if self.already_declared.has_key(file) and self.already_declared[file]:
+            if file in self.already_declared and self.already_declared[file]:
                 self._treatDir(os.path.dirname(file), mp, access)
                 return
 
@@ -1083,9 +1083,9 @@ class Common(pulse2.utils.Singleton):
             self._createMD5File(os.path.dirname(file))
             pid = self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
-            if self.newAssociation.has_key(pid):
+            if pid in self.newAssociation:
                 del self.newAssociation[pid]
-            if self.inEdition.has_key(pid):
+            if pid in self.inEdition:
                 del self.inEdition[pid]
             self.packageDetectionDate[pid] = self.__getDate(file)
             l_package = self.packages[pid]
@@ -1121,7 +1121,7 @@ class Common(pulse2.utils.Singleton):
                     self.working_pkgs[pid] = l_package
 
                 self.mp2p[mp].append(pid)
-                if not force and self.packages.has_key(pid) and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid):
+                if not force and pid in self.packages and not pid in self.newAssociation and not pid in self.inEdition:
                     if new:
                         self.logger.debug("package '%s' already exists" % (pid))
                     return False
@@ -1177,7 +1177,7 @@ class Common(pulse2.utils.Singleton):
         if access is None: # dont modify the default value!
             access = {}
         (fsize, fmd5) = [0,0]
-        if not self.file_properties.has_key(f):
+        if not f in self.file_properties:
             fsize = os.path.getsize(f)
             fmd5 = md5file(f)
             self.logger.debug('ish: Creating md5 entry for '+f)
@@ -1187,7 +1187,7 @@ class Common(pulse2.utils.Singleton):
 
         file = File(os.path.basename(f), path, fmd5, fsize, access, fid)
         self.packages[pid].addFile(file)
-        if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
+        if file.id in self.fid2file and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")
         self.fid2file[file.id] = file.checksum
         return fsize
@@ -1204,7 +1204,7 @@ class Common(pulse2.utils.Singleton):
 
     def _buildReverse(self):
         for package in self.working_pkgs.values():
-            if not self.reverse.has_key(package.label):
+            if not package.label in self.reverse:
                 self.reverse[package.label] = {}
             self.reverse[package.label][package.version] = package.id
 

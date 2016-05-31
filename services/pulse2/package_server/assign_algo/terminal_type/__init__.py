@@ -65,9 +65,9 @@ class MMUserAssignAlgo(MMAssignAlgo):
         return ret
     
     def getMachineMirror(self, m):
-        if not self.assign.has_key(m['uuid']):
+        if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not self.assign[m['uuid']].has_key('getMirror'):
+        if not 'getMirror' in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMirror'] = []
             if type != None:
@@ -76,9 +76,9 @@ class MMUserAssignAlgo(MMAssignAlgo):
         return self.assign[m['uuid']]['getMirror']
         
     def getMachineMirrorFallback(self, m):
-        if not self.assign.has_key(m['uuid']):
+        if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not self.assign[m['uuid']].has_key('getFallbackMirror'):
+        if not 'getFallbackMirror' in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getFallbackMirror'] = []
             if type != None:
@@ -87,9 +87,9 @@ class MMUserAssignAlgo(MMAssignAlgo):
         return self.assign[m['uuid']]['getFallbackMirror']
 
     def getMachinePackageApi(self, m):
-        if not self.assign.has_key(m['uuid']):
+        if not m['uuid'] in self.assign:
             self.assign[m['uuid']] = {}
-        if not self.assign[m['uuid']].has_key('getMachinePackageApi'):
+        if not 'getMachinePackageApi' in self.assign[m['uuid']]:
             type = self.__getMachineType(m)
             self.assign[m['uuid']]['getMachinePackageApi'] = []
             if type != None:
