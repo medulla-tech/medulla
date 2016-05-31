@@ -136,7 +136,7 @@ class Pulse2Database(DyngroupDatabaseHelper):
         session.close()
         ret = {}
         for pes, e_uuid in ret1:
-            if not ret.has_key(e_uuid):
+            if not e_uuid in ret:
                 ret[e_uuid] = []
             ret[e_uuid].append(pes)
         return ret

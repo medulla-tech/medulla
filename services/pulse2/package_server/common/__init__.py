@@ -160,7 +160,8 @@ class Common(pulse2.utils.Singleton):
                     )
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src: 
+                        del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for mirrors")
                     self.logger.error(str(e))
 
@@ -175,7 +176,8 @@ class Common(pulse2.utils.Singleton):
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src:
+                        del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api get")
                     self.logger.error(e)
 
@@ -190,7 +192,7 @@ class Common(pulse2.utils.Singleton):
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src: del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api put")
                     self.logger.error(e)
 
@@ -203,7 +205,7 @@ class Common(pulse2.utils.Singleton):
             try:
                 proot = self._getPackageRoot(pid)
                 conf_file = os.path.join(proot, self.CONFFILE)
-                if os.path.exists(conf_file) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(conf_file): # EDITED
+                if os.path.exists(conf_file) and pid in self.packageDetectionDate and self.packageDetectionDate[pid] != self.__getDate(conf_file): # EDITED
                     self.logger.debug("Package %s has been modified (%s)" % (pid, conf_file))
                     #self.__removePackage(pid, proot)
                     #todelete.append(pid)
@@ -226,9 +228,9 @@ class Common(pulse2.utils.Singleton):
                 self.suppressFromInternal(pid)
 
     def suppressFromInternal(self, pid):
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.debug("Package %s is not in Common().packages"%(pid))
-            if self.packageDetectionDate.has_key(pid):
+            if pid in self.packageDetectionDate:
                 del self.packageDetectionDate[pid]
         else:
             self.logger.debug("Package %s removed from internal hashes"%(pid))
@@ -242,9 +244,9 @@ class Common(pulse2.utils.Singleton):
                 self.logger.error("Common.suppressFromInternal : an exception happened")
                 self.logger.debug(type(e))
                 self.logger.info(e)
-            if self.packageDetectionDate.has_key(pid):
+            if pid in self.packageDetectionDate:
                 del self.packageDetectionDate[pid]
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 del self.packages[pid]
 
     def __removePackage(self, pid, proot):
@@ -353,7 +355,7 @@ class Common(pulse2.utils.Singleton):
     def getAllPackageRoot(self):
         ret = {}
         for m in self.desc:
-            if m.has_key('src') and not ret.has_key(m['src']):
+            if 'src' in m and not m['src'] ret:
                 ret[m['src']] = None
         return ret.keys()
 
@@ -368,7 +370,7 @@ class Common(pulse2.utils.Singleton):
         PkgsRsyncStateSerializer().serialize()
 
     def isPackageAccessible(self, pid):
-        return (not self.dontgivepkgs.has_key(pid) and not self.need_assign.has_key(pid) and self.packages[pid].hasFile())
+        return (not pid in self.dontgivepkgs and not pid in self.need_assign and self.packages[pid].hasFile())
 
     def getPackagesThatNeedRsync(self):
         if self.dontgivepkgs != {}:
@@ -376,7 +378,7 @@ class Common(pulse2.utils.Singleton):
         ret = []
         rem = []
         for x in self.dontgivepkgs:
-            if not self.packages.has_key(x) or not self.packages[x]:
+            if not x in self.packages or not self.packages[x]:
                 rem.append(x)
             else:
                 ret.append([x, self.dontgivepkgs[x], self.packages[x]])
@@ -385,7 +387,7 @@ class Common(pulse2.utils.Singleton):
         return ret
 
     def removePackagesFromRsyncList(self, pid, target):
-        if self.dontgivepkgs.has_key(pid):
+        if pid in self.dontgivepkgs:
             modif = False
             try:
                 i = self.dontgivepkgs[pid].index(target)
@@ -414,7 +416,7 @@ class Common(pulse2.utils.Singleton):
         # return pid for success
         # raise ARYDEFPKG for already existing package
         try:
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 if self.packages[pid] == pa:
                     return pid
                 raise Exception("ARYDEFPKG")
@@ -423,7 +425,7 @@ class Common(pulse2.utils.Singleton):
             elif self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pa
-            if not self.reverse.has_key(pa.label):
+            if not pa.label in self.reverse:
                 self.reverse[pa.label] = {}
             self.reverse[pa.label][pa.version] = pid
         except Exception, e:
@@ -446,7 +448,7 @@ class Common(pulse2.utils.Singleton):
             if self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pack
-            if not self.reverse.has_key(pack.label):
+            if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
@@ -457,7 +459,7 @@ class Common(pulse2.utils.Singleton):
 
     def editPackage(self, pid, pack, need_assign = True, mp=None):
         try:
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 old = self.packages[pid]
                 try:
                     self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
@@ -474,7 +476,7 @@ class Common(pulse2.utils.Singleton):
             elif self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pack
-            if not self.reverse.has_key(pack.label):
+            if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
@@ -484,7 +486,7 @@ class Common(pulse2.utils.Singleton):
         return pid
 
     def writePackageTo(self, pid, mp):
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
 
@@ -630,7 +632,7 @@ class Common(pulse2.utils.Singleton):
         # Always need assign because this function can
         # add new files to existing package
         Common().need_assign[pid] = True
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             return [False, "This package don't exists"]
         path = self._getPackageRoot(pid)
         self.logger.debug("File association will put files in %s" % (path))
@@ -687,7 +689,7 @@ class Common(pulse2.utils.Singleton):
 
     def removeFilesFromPackage(self,pid,files=[], all=False):
         # Checking if package exists
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             return [False, "This package don't exists"]
         # Checking files param
         if type(files) == str:
@@ -722,7 +724,7 @@ class Common(pulse2.utils.Singleton):
         Physically removes the given package content from the disk (if setted)
         Also mark the package as not available
         """
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
         params = self.h_desc(mp)
@@ -772,7 +774,7 @@ class Common(pulse2.utils.Singleton):
                 return ret
             else:
                 for id in pidlist:
-                    if not self.packages.has_key(id): # shouldn't happen, but who knows...
+                    if not id in self.packages: # shouldn't happen, but who knows...
                         continue
                     p = self.__packageSelection(id, mp, pending, all)
                     if p != None:
@@ -786,7 +788,7 @@ class Common(pulse2.utils.Singleton):
     def __packageSelection(self, pid, mp = None, pending = False, all = False):
         is_acc = self.isPackageAccessible(pid)
         if not all:
-            is_acc = is_acc and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid)
+            is_acc = is_acc and not pid in self.newAssociation and not pid in self.inEdition
         if (is_acc and not pending) or (not is_acc and pending) or (all and is_acc):
             if (mp != None and pid in self.mp2p[mp]) or (mp == None):
                 return self.packages[pid]

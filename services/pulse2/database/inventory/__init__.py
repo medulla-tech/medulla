@@ -1401,14 +1401,14 @@ class Inventory(DyngroupDatabaseHelper):
                 query = query.filter(Machine.id.in_(uuids))
             else:
                 query = query.filter("1 = 0")
-        if params.has_key('gid') and params['gid'] != '':
+        if 'gid' in params and params['gid'] != '':
             if ComputerGroupManager().isrequest_group(ctx, params['gid']):
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().requestresult_group(ctx, params['gid'], 0, -1, ''))
             else:
                 machines = map(lambda m: fromUUID(m), ComputerGroupManager().result_group(ctx, params['gid'], 0, -1, ''))
             query = query.filter(self.machine.c.id.in_(machines))
         # Filter using a list of machine ids
-        if params.has_key('ids') and len(params['ids']):
+        if 'ids' in params and len(params['ids']):
             query = query.filter(self.machine.c.id.in_(params['ids']))
         return query
 
@@ -2742,7 +2742,7 @@ class Inventory(DyngroupDatabaseHelper):
         @rtype: list
         """
         machineId = ""
-        if params.has_key('uuid'):
+        if 'uuid' in params:
             uuid = params['uuid']
             machineId = fromUUID(uuid)
 
@@ -3381,7 +3381,7 @@ class InventoryCreator(Inventory):
                             id = k.id
 
                         nids = {}
-                        if OcsMapping().nomenclatures.has_key(table):
+                        if table in OcsMapping().nomenclatures:
                             for nom in OcsMapping().nomenclatures[table]:
                                 nomName = 'nom%s%s' % (table, nom)
                                 nomKlass = self.klass[nomName]

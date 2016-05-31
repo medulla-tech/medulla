@@ -1162,13 +1162,13 @@ class MscDatabase(DatabaseHelper):
             if max != -1 and max-1 < i:
                 break
             if i < min:
-                if fk_bundle != 'NULL' and fk_bundle != None and not defined.has_key(fk_bundle):
+                if fk_bundle != 'NULL' and fk_bundle != None and not fk_bundle in defined:
                     defined[fk_bundle] = id
                     i += 1
                 elif fk_bundle == 'NULL' or fk_bundle == None:
                     i += 1
                 continue
-            if fk_bundle != 'NULL' and fk_bundle != None and not defined.has_key(fk_bundle):
+            if fk_bundle != 'NULL' and fk_bundle != None and not fk_bundle in defined:
                 defined[fk_bundle] = id
                 ids.append(id)
                 i += 1
@@ -1223,11 +1223,11 @@ class MscDatabase(DatabaseHelper):
             params = {}
         session = create_session()
         for i in ('b_id', 'cmd_id', 'coh_id', 'gid', 'uuid', 'filt'):
-            if not params.has_key(i) or params[i] == '':
+            if not i in params or params[i] == '':
                 params[i] = None
-        if not params.has_key('min'):
+        if not 'min' in params:
             params['min'] = 0
-        if not params.has_key('max'):
+        if not 'max' in params:
             params['max'] = -1
         #if not params.has_key('finished') or params['finished'] == '':
         #    params['finished'] = False
