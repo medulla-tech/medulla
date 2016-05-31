@@ -171,7 +171,7 @@ def get_host_list(pattern=""):
         return _FORMAT_ERROR
     for i in xrange(len(options)):
         if options.eq(i).attr('value') != '#' and pattern in options.eq(i).text():
-            hosts = hosts + [options.eq(i).text()]
+            hosts += [options.eq(i).text()]
     return {'err':0,'data':hosts}
 
 

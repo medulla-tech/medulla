@@ -969,7 +969,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     def get_active_convergences(self, session):
         query = session.query(Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID)
         query = query.filter_by(active= 1)
-        
+
         return [{
             'gid': x[0],
             'papi': cPickle.loads(x[1]),
@@ -989,7 +989,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                     Convergence.packageUUID == package_id,
                 ))
         for line in query:
-            ret = ret + [line.deployGroupId, line.doneGroupId]
+            ret += [line.deployGroupId, line.doneGroupId]
         return ret
 
     @DatabaseHelper._session
