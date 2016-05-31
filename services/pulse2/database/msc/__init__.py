@@ -183,7 +183,7 @@ class MscDatabase(DatabaseHelper):
         query = query.all()
         if type(query) != list:
             ret = query.id
-        elif len(query) > 0:
+        elif query:
             ret = []
             for q in query:
                 ret.append(q.id)

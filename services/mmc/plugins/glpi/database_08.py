@@ -436,7 +436,7 @@ class Glpi08(DyngroupDatabaseHelper):
                     a_filter_on.append(self.machine.c.autoupdatesystems_id.in_(filter_values))
                 if not filter_key in ('state','type','entity','autoupdatesystems_id') :
                     self.logger.warn('dont know how to filter on %s' % (filter_key))
-            if len(a_filter_on) == 0:
+            if a_filter_on == False:
                 return None
             elif len(a_filter_on) == 1:
                 return a_filter_on[0]
@@ -927,7 +927,7 @@ class Glpi08(DyngroupDatabaseHelper):
                                                   filt,
                                                   displayList=False,
                                                   empty_macs=empty_macs)
-            if len(ret) > 0:
+            if ret:
                 raise Exception("NOPERM##%s" % (ret[0][1]['fullname']))
             return False
         return ret.values()[0]
@@ -981,7 +981,7 @@ class Glpi08(DyngroupDatabaseHelper):
         # So, set displayList to True to count on glpi_computers
         # and all needed joined tables
         if 'hostname' in filt:
-            if len(filt['hostname']) > 0:
+            if filt['hostname']:
                 displayList = True
 
         ret = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList, count=True)
@@ -1361,7 +1361,7 @@ class Glpi08(DyngroupDatabaseHelper):
                         ret.append(l)
                 else:
                     ret.append(ploc[0])
-            if len(ret) == 0:
+            if ret == False:
                 ret = []
             session.close()
 
@@ -1945,7 +1945,7 @@ class Glpi08(DyngroupDatabaseHelper):
                 if type is not None:
                     modelType.append(type)
 
-                if len(modelType) == 0:
+                if modelType == False:
                     modelType = ''
                 elif len(modelType) == 1:
                     modelType = modelType[0]
@@ -3261,7 +3261,7 @@ class Glpi08(DyngroupDatabaseHelper):
         """
         ret = self.getMachineByMacAddress('imaging_module', mac)
         if type(ret) == list:
-           if len(ret) != 0:
+           if ret:
               return str(toUUID(ret[0].id))
         return None
 

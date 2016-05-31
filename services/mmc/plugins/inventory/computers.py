@@ -81,7 +81,7 @@ class InventoryComputers(ComputerI):
         ret = []
         for item in computers:
             tmp = [False, {'cn' : [item[0]], 'objectUUID':[item[2]]}]
-            if not len(item[1]):
+            if not item[1]:
                 tmp[1]['ipHostNumber'] = ''
                 tmp[1]['macAddress'] = ''
                 tmp[1]['subnetMask'] = ''
