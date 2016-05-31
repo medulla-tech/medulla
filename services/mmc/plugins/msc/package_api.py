@@ -556,7 +556,7 @@ class GetPackagesGroupFiltered:
                 tmpmerged.append((papi, self.mirrors[i]))
             mergedlist.insert(i, tmpmerged)
 
-        if not len(mergedlist):
+        if mergedlist:
             self.sendResult()
         else:
             plists = []

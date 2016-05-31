@@ -94,7 +94,7 @@ class SupportConfig(PluginConfig):
         else:
             with open(self.install_id_path, "r") as f:
                 content = f.readlines()
-                if len(content) > 0:
+                if content:
                     self.install_uuid = content[0].strip()
 
 

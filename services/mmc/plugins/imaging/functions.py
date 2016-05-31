@@ -550,14 +550,14 @@ class ImagingRpcProxy(RpcProxyI):
 
     def startProcessClone(self, objetclone):
         test = self.checkProcessCloneMasterToLocation('/bin/bash /usr/bin/pulse2-synch-masters');
-        if len(test) > 0 : return
+        if test: return
         self.ClearFileStatusProcess()
         logger = logging.getLogger()
         logger.debug("startProcessClone %s"%objetclone)
         if not path.isfile("/usr/bin/pulse2-synch-masters"):
             logger.debug("script /usr/bin/pulse2-synch-masters missing")
             return
-        if len(objetclone['server_imaging']) == 0:
+        if objetclone['server_imaging'] == False:
             return
         for k,v in objetclone['server_imaging'].iteritems():
             logger.debug("/usr/bin/pulse2-synch-masters %s %s %s\n"%(fromUUID(objetclone['location']),fromUUID(k),objetclone['masteruuid']))
@@ -1062,7 +1062,7 @@ class ImagingRpcProxy(RpcProxyI):
             # check we are going to be able to remove from the menu
             is_used = self.areImagesUsed([[image_uuid, None, None]])
             is_used = is_used[image_uuid]
-            if len(is_used) != 0:
+            if is_used:
                 # some target have that image in their menu
                 if not db.canRemoveFromMenu(image_uuid):
                     return [False, "Can't remove %s from some boot menus" % (image_uuid)]
@@ -1785,7 +1785,7 @@ class ImagingRpcProxy(RpcProxyI):
         except IndexError:
             macaddress = []
         # if we have more than one mac address, we ask the user to chose which NIC he wants
-        if len(macaddress) < 1:
+        if macaddress == False:
             # No MAC address
             ret = 1
         elif pulse2.utils.isLinuxMacAddress(macaddress[0]):
@@ -1813,7 +1813,7 @@ class ImagingRpcProxy(RpcProxyI):
         ret = 0
         ctx = self.currentContext
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
-        if len(uuids):
+        if uuids:
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
             macaddresses = h_macaddresses.values()
             if '' in macaddresses:
@@ -2150,7 +2150,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatComputers>>>>>>")
             logger.debug(results)
 
-        if len(uuids) != 0:
+        if uuids :
             d1 = self.__synchroTargets(uuids, P2IT.COMPUTER)
             d1.addCallback(treatComputers)
             dl.append(d1)
@@ -2163,7 +2163,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatProfiles>>>>>>")
             logger.debug(results)
 
-        if len(pids) != 0:
+        if pids:
             d2 = self.__synchroTargets(pids, P2IT.PROFILE)
             if type(d2) == list and d2[0]:
                 pass
@@ -2179,7 +2179,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatComputersInProfile>>>>>>")
             logger.debug(results)
 
-        if len(pids) != 0:
+        if pids:
             d3 = self.__synchroTargets(pids, P2IT.COMPUTER_IN_PROFILE)
             if type(d3) == list and d3[0]:
                 pass
@@ -2309,7 +2309,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 uuids = [uuid]
 
-            if len(uuids) == 0:
+            if uuids == False:
                 db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
                 return [True]
 
@@ -2432,15 +2432,15 @@ class ImagingRpcProxy(RpcProxyI):
                     failures = []
                     for fail in results:
                         failures.extend(fail[1])
-                    if len(failures) == 0:
+                    if failures == False:
                         db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
                         return [True]
                     db.delProfileMenuTarget(failures)
                     db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.INIT_ERROR)
                     return [False, failures]
 
-                if len(defer_list) == 0:
-                    if len(uuids) == 0: # the profile is empty ...
+                if defer_list == False:
+                    if uuids == False: # the profile is empty ...
                         db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
                         return [True]
                     else: # the profile wasn't empty => we fail to treat it
@@ -3389,7 +3389,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         l_uuids = uuids
 
     # give up if it appears that no menu as to be synced
-    if len(l_uuids) == 0:
+    if l_uuids == False:
         db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
         return [True]
 
@@ -3417,7 +3417,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 to_register[uuid] = menus[uuid]
 
         # drop location processing if there is no menu to register
-        if len(to_register.keys()) == 0:
+        if to_register.keys() == False:
             continue
 
         # store into h_hostnames hostnames of computers to register
@@ -3460,7 +3460,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         h_computers[url].extend(computers)
 
     # if there are some new computers in the profile, register them
-    if len(h_computers.keys()) != 0:
+    if h_computers.keys():
         for url in h_computers:
             computers = h_computers[url]
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
@@ -3483,7 +3483,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
-    if len(defer_list) == 0:
+    if defer_list == False:
         distinct_locs = distinct_loc
         keyvaleur = distinct_loc.keys()
         for tt in ListImagingServerAssociated:
@@ -3525,7 +3525,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
                 failures.append(uuid)
 
         if pid != None:
-            if len(failures) != 0:
+            if failures:
                 db.changeTargetsSynchroState([pid], target_type, P2ISS.TODO)
             else:
                 db.changeTargetsSynchroState([pid], target_type, P2ISS.DONE)
@@ -3556,7 +3556,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
         failures = []
         for s, uuids in results:
             failures.extend(uuids)
-        if len(failures) == 0:
+        if failures == False:
             return [True]
         return [False, failures]
 

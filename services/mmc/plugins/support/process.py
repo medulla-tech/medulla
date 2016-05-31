@@ -176,7 +176,7 @@ class PIDControl(object):
 
         with open(self.pid_path, "r") as f:
             lines = f.readlines()
-            if len(lines) > 0:
+            if lines:
                 try:
                     pid = int(lines[0].strip())
                     return pid
