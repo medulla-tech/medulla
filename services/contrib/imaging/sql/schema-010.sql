@@ -71,7 +71,7 @@ INSERT INTO Internationalization (id, label, fk_language) VALUES (42, 'Antivirus
 INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (11, 'avg','AVG Antivirus',41,42,'KERNEL ../##PULSE2_TOOLS_DIR##/avg/vmlinuz\nINITRD ../##PULSE2_TOOLS_DIR##/avg/initrd.lzm\nAPPEND max_loop=255 vga=791  video=vesafb init=linuxrc reboot=bios');
 INSERT INTO Internationalization (id, label, fk_language) VALUES (43, 'pulse_utilities', 2);
 INSERT INTO Internationalization (id, label, fk_language) VALUES (44, 'Utilitaires', 2);
-INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (12, 'pulse_utilities','Pulse Utilities',43,44,'KERNEL vesamenu.c32\nAPPEND ../##PULSE2_TOOLS_DIR##/utilitaires.menu');
+INSERT INTO BootService (id, default_name, default_desc, fk_name, fk_desc, value) VALUES (12, 'pulse_utilities','Pulse Utilities',43,44,'KERNEL vesamenu.c32\nAPPEND ../##PULSE2_TOOLS_DIR##/utilities.menu');
 INSERT INTO MenuItem VALUES (5,2,0,0,2);
 INSERT INTO BootServiceInMenu VALUES (5,12);
 

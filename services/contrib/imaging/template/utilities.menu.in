@@ -1,0 +1,43 @@
+UI vesamenu.c32
+PROMPT 0
+KBDMAP C.ktl
+MENU BACKGROUND bootsplash.png
+MENU WIDTH 78
+MENU MARGIN 4
+MENU ROWS 10
+MENU VSHIFT 10
+MENU TIMEOUTROW 18
+MENU TABMSGROW 16
+MENU CMDLINEROW 16
+MENU HELPMSGROW 21
+MENU HELPMSGENDROW 29
+
+LABEL pulse_main_menu
+MENU LABEL Back to Pulse Main Menu
+KERNEL vesamenu.c32
+
+LABEL memtest
+MENU LABEL Memory Test
+KERNEL ../tools/memtest/memtest
+APPEND --type=openbsd
+
+LABEL hdt
+MENU LABEL Hardware Information
+COM32 hdt.c32
+
+LABEL dban
+MENU LABEL Shred Hard Drive
+KERNEL ../tools/dban/dban.bzi
+APPEND nuke="dban"
+
+LABEL gparted
+MENU LABEL GParted Partition Editor
+KERNEL ../tools/gparted/vmlinuz
+INITRD ../tools/gparted/initrd.img
+APPEND boot=live config components union=overlay username=user noswap noeject ip= vga=788 fetch=tftp://@@TFTP_SERVER_IP@@/tools/gparted/filesystem.squashfs
+
+LABEL avg
+MENU LABEL AVG Antivirus
+KERNEL ../tools/avg/vmlinuz
+INITRD ../tools/avg/initrd.lzm
+APPEND max_loop=255 vga=791  video=vesafb init=linuxrc reboot=bios
