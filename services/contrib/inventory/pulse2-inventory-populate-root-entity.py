@@ -75,7 +75,7 @@ if __name__ == "__main__":
             ent = select([entity.c.id], and_(entity.c.id == id_entity)).execute().fetchall()
         else:
             ent = select([entity.c.id], and_(entity.c.Label == name_entity)).execute().fetchall()
-        if ent == None or len(ent) == 0:
+        if ent is None or len(ent) == 0:
             print "Cant get the required entity"
             sys.exit(1)
         entity_id = ent[0][0]

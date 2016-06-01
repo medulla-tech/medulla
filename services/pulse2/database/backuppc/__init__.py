@@ -190,7 +190,7 @@ class BackuppcDatabase(DatabaseHelper):
         if host:
             host.backup_profile = newprofile
             session.flush()
-        return host != None
+        return host is not None
 
     @DatabaseHelper._session
     def get_host_period_profile(self, session, uuid):
@@ -207,7 +207,7 @@ class BackuppcDatabase(DatabaseHelper):
         if ret:
             ret.period_profile = newprofile
             session.flush()
-        return ret != None
+        return ret is not None
 
     @DatabaseHelper._session
     def get_hosts_by_backup_profile(self, session, profileid):
@@ -313,7 +313,7 @@ class BackuppcDatabase(DatabaseHelper):
         if host:
             host.pre_backup_script = script
             session.flush()
-        return host != None
+        return host is not None
 
     @DatabaseHelper._session
     def set_host_post_backup_script(self, session, uuid, script):
@@ -321,7 +321,7 @@ class BackuppcDatabase(DatabaseHelper):
         if host:
             host.post_backup_script = script
             session.flush()
-        return host != None
+        return host is not None
     
     @DatabaseHelper._session
     def get_host_pre_restore_script(self, session, uuid):
@@ -337,7 +337,7 @@ class BackuppcDatabase(DatabaseHelper):
         if host:
             host.pre_restore_script = script
             session.flush()
-        return host != None
+        return host is not None
 
     @DatabaseHelper._session
     def set_host_post_restore_script(self, session, uuid, script):
@@ -345,4 +345,4 @@ class BackuppcDatabase(DatabaseHelper):
         if host:
             host.post_restore_script = script
             session.flush()
-        return host != None
+        return host is not None

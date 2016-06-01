@@ -496,7 +496,7 @@ def remote_direct(command_id, client, command, mode, max_log_size, wrapper_timeo
         # Build "exec" command
         real_command = command
 
-        if max_log_size == None:
+        if max_log_size is None:
             # If no max_log_size set, use the value from the configuration file
             max_log_size = LauncherConfig().wrapper_max_log_size
         # Build final command line

@@ -105,7 +105,7 @@ class Package:
         self.label = label
         self.version = version
         self.size = size
-        if self.size == None:
+        if self.size is None:
             self.size = 0
         self.description = description
         self.initcmd = getCommandFromH(initcmd)
@@ -255,7 +255,7 @@ class AFiles:
         return self.toH()
 
     def toURI(self, mp = None):
-        if mp == None:
+        if mp is None:
             return map(lambda x: x.toURI(), self.internals)
         else:
             d = pulse2.package_server.common.Common().h_desc(mp)
@@ -288,16 +288,16 @@ class File:
         self.path = path
         self.checksum = checksum
         self.size = size
-        if id == None:
+        if id is None:
             self.id = md5sum("%s%s" % (self.toS().replace('\\', '/'), str(self.checksum)))
         else:
             self.id = id
 
     def toURI(self, mp = None, where = None):
-        if mp == None:
+        if mp is None:
             return ("%s%s/%s" % (self.where, self.path.replace('\\', '/'), self.name)).replace(' ', '%20')
         else:
-            if where == None:
+            if where is None:
                 d = pulse2.package_server.common.Common().h_desc(mp)
                 if "mirror_url".d and d['mirror_url'] != '':
                     where = d['mirror_url']

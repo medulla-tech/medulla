@@ -55,7 +55,7 @@ def getPubKey(key_name):
     except KeyError:
         key_name = LauncherConfig().ssh_defaultkey
 
-    if key_name == None or key_name == '':
+    if key_name is None or key_name == '':
         key_name = LauncherConfig().ssh_defaultkey
     try:
         ssh_key = open(LauncherConfig().ssh_keys[key_name] + '.pub')

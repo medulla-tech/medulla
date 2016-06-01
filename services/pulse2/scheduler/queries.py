@@ -128,7 +128,7 @@ def get_cohs(cmd_id, scheduler):
             Target.target_uuid == database.pull_targets.c.target_uuid))
     cohs = cohs.filter(database.commands_on_host.c.fk_commands == cmd_id)
     cohs = cohs.filter(database.commands_on_host.c.scheduler == scheduler)
-    cohs = cohs.filter(database.pull_targets.c.target_uuid == None)
+    cohs = cohs.filter(database.pull_targets.c.target_uuid is None)
     cohs = cohs.filter(not_(database.commands_on_host.c.current_state.in_(("failed",
                                                                             "over_timed",
                                                                             "done",
@@ -310,8 +310,8 @@ def get_ids_to_start(scheduler_name, ids_to_exclude =None, top=None):
                      database.commands.c.end_date > now)
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None)
-        ).filter(database.pull_targets.c.target_uuid == None
+                     database.commands_on_host.c.scheduler is None)
+        ).filter(database.pull_targets.c.target_uuid is None
         ).filter(database.commands.c.ready == True)
     if len(ids_to_exclude) > 0 :
         commands_query = commands_query.filter(not_(database.commands_on_host.c.id.in_(ids_to_exclude)))
@@ -377,7 +377,7 @@ def __available_downloads_query(scheduler_name, uuid):
                      database.commands.c.end_date > now)
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None)
+                     database.commands_on_host.c.scheduler is None)
         ).filter(database.target.c.target_uuid == uuid
         ).filter(database.pull_targets.c.target_uuid == uuid)
     session.close()
@@ -462,7 +462,7 @@ def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = None):
         ).filter(database.commands.c.end_date < now
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None))
+                     database.commands_on_host.c.scheduler is None))
 
     #commands_query = commands_query.limit(top)
     if len(ids_to_exclude) > 0 :
@@ -516,7 +516,7 @@ def is_command_finished(scheduler_name, id):
         ).filter(database.commands.c.end_date < now
         ).filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None))
+                     database.commands_on_host.c.scheduler is None))
     nbr = query.count()
     session.close()
     if nbr > 1 :
@@ -549,7 +549,7 @@ def get_commands_stats(scheduler_name, cmd_id=None):
 
     query = query.filter(or_(database.commands_on_host.c.scheduler == '',
                      database.commands_on_host.c.scheduler == scheduler_name,
-                     database.commands_on_host.c.scheduler == None))
+                     database.commands_on_host.c.scheduler is None))
     query = query.group_by(database.commands_on_host.c.fk_commands,
                            database.commands_on_host.c.current_state)
 

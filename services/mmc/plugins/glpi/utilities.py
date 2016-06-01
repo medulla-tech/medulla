@@ -36,7 +36,7 @@ def complete_ctx(ctx):
     """
     Set GLPI user locations and profile in current security context.
     """
-    if not hasattr(ctx, "locations") or ctx.locations == None:
+    if not hasattr(ctx, "locations") or ctx.locations is None:
         logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
         ctx.locations = map(__convert, mmc.plugins.glpi.database.Glpi().getUserLocations(ctx.userid))
         if type(ctx.locations) == list:

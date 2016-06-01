@@ -242,7 +242,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         Set user locations in current security context.
         """
-        if not hasattr(ctx, "locations") or ctx.locations == None:
+        if not hasattr(ctx, "locations") or ctx.locations is None:
             logging.getLogger().debug("adding locations in context for user %s" % (ctx.userid))
             ctx.locations = self.getUserLocations(ctx.userid)
             ctx.locationsid = map(lambda e: e.id, ctx.locations)
@@ -564,7 +564,7 @@ class Inventory(DyngroupDatabaseHelper):
         else:
             partTable = self.table[table]
             haspartTable = self.table["has" + table]
-        if self.config.getInventoryNoms(table) == None:
+        if self.config.getInventoryNoms(table) is None:
             return [haspartTable, partTable, self.inventory]
         self.logger.debug("### Nom")
         ret = [haspartTable, partTable, self.inventory]
@@ -632,7 +632,7 @@ class Inventory(DyngroupDatabaseHelper):
 
             hs = PossibleQueries().possibleQueries('halfstatic')[query[2]]
             condition = 1
-            if self.config.getInventoryNoms(table) == None:
+            if self.config.getInventoryNoms(table) is None:
                 condition = (getattr(partKlass, hs[1]) == hs[2])
             else:
                 noms = self.config.getInventoryNoms(table)
@@ -955,7 +955,7 @@ class Inventory(DyngroupDatabaseHelper):
         return unique(ret)
 
     def __getValuesWhereQuery(self, table, field1, value1, field2, session = None):
-        if session == None:
+        if session is None:
             session = create_session()
         if table == 'Machine':
             partKlass = Machine
@@ -966,7 +966,7 @@ class Inventory(DyngroupDatabaseHelper):
         query = session.query(partKlass).add_column(getattr(partKlass, field2))
         filterDone = False
 
-        if self.config.getInventoryNoms(table) != None:
+        if self.config.getInventoryNoms(table) is not None:
             for nom in self.config.getInventoryNoms(table):
                 hasTable = self.table['has%s'%(table)]
                 nomTableName = 'nom%s%s' % (table, nom)
@@ -1264,7 +1264,7 @@ class Inventory(DyngroupDatabaseHelper):
             machine_inv = {}
             machine_uuid = {}
             for res in result:
-                if inventoryid == None:
+                if inventoryid is None:
                     inventoryid = res[3]
                 #else:
                 #    if inventoryid != res[3]: break
@@ -1414,7 +1414,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def getIdInTable(self, tableName, values, session = None):
         sessionCreator = False
-        if session == None:
+        if session is None:
             sessionCreator = True
             session = create_session()
         klass = self.klass[tableName]
@@ -1435,7 +1435,7 @@ class Inventory(DyngroupDatabaseHelper):
 
     def isElemInTable(self, tableName, values, session = None):
         sessionCreator = False
-        if session == None:
+        if session is None:
             sessionCreator = True
             session = create_session()
         klass = self.klass[tableName]
@@ -1457,7 +1457,7 @@ class Inventory(DyngroupDatabaseHelper):
         return True
 
     def addMachine(self, name, ip, mac, netmask, comment = None, location_uuid = None):
-        if location_uuid == None:
+        if location_uuid is None:
             location_uuid = 'UUID1'
         if not (isUUID(location_uuid)):
             # if location is not valid, raise a ValueError
@@ -1495,7 +1495,7 @@ class Inventory(DyngroupDatabaseHelper):
         h.inventory = i.id
         session.add(h)
         session.flush()
-        if comment != None:
+        if comment is not None:
             custom = self.klass['Custom']
             hasCustom = self.klass['hasCustom']
             c = custom()
@@ -1509,9 +1509,9 @@ class Inventory(DyngroupDatabaseHelper):
             session.add(h)
             session.flush()
 
-        if location_uuid != None:
+        if location_uuid is not None:
             query = session.query(self.klass['Entity']).filter(self.table['Entity'].c.id == fromUUID(location_uuid)).first()
-            if query != None:
+            if query is not None:
                 hasEntity = self.klass['hasEntity']
                 hl = hasEntity()
                 hl.machine = m.id
@@ -1541,7 +1541,7 @@ class Inventory(DyngroupDatabaseHelper):
 #                session.delete(t)
             connection.execute(lt.delete(lt.c.machine == uuid))
 
-        if i == None:
+        if i is None:
             self.logger.error('delMachine : try to remove a None Inventory! (%s)'%uuid)
         else:
             session.delete(i)
@@ -1891,7 +1891,7 @@ class Inventory(DyngroupDatabaseHelper):
         """
         get entity and return path entity
         """
-        if params == None:
+        if params is None:
             params={'min':0,'filters':'' }
         session = create_session()
         val=session.query(self.klass['Entity']).order_by(self.table['Entity'].c.id)
@@ -2119,7 +2119,7 @@ class Inventory(DyngroupDatabaseHelper):
             except Exception:
                 self.logger.debug("exception on %s rule"% (line) )
 
-        if param != None and ['filters'] and str(param['filters']).strip() != "":
+        if param is not None and ['filters'] and str(param['filters']).strip() != "":
             for index in range(len(tab)):
                 if str(param['filters']).strip() in tab[index]['entitie'].strip():
                     tabretour.append(tab[index])
@@ -2127,7 +2127,7 @@ class Inventory(DyngroupDatabaseHelper):
             tabretour=tab
         ret['count'] = len(tabretour)
         ret['nb_regle']  = num
-        if param != None:
+        if param is not None:
             param['max'] = str(len(tabretour)+1)
             ret['data']  = tabretour[int(param['min']):int(param['max'])]
             return ret
@@ -2597,7 +2597,7 @@ class Inventory(DyngroupDatabaseHelper):
         Returns all the users id that share the same locations than the given
         user.
         """
-        if locations == None:
+        if locations is None:
             locations = self.getUserLocations(userid)
         ret = []
         if locations:
@@ -3153,7 +3153,7 @@ def orderIpAdresses(netiface):
         logging.getLogger().debug("Examined network interface: %s" % str(iface))
         if 'IP' in iface and iface['IP'] and iface['MACAddress'] != '00-00-00-00-00-00-00-00-00-00-00':
             logging.getLogger().debug('can work on')
-            if iface['Gateway'] == None or iface['Gateway'] == '':
+            if iface['Gateway'] is None or iface['Gateway'] == '':
                 logging.getLogger().debug("no gateway")
                 ret_ifmac.append(iface['MACAddress'])
                 ret_ifaddr.append(iface['IP'])
@@ -3186,7 +3186,7 @@ class PossibleQueries(Singleton):
         self.halfstatic = config.halfstatic
 
     def possibleQueries(self, value = None): # TODO : need to put this in the conf file
-        if value == None:
+        if value is None:
             return {
                 'list':self.list,
                 'double':self.double,
@@ -3369,7 +3369,7 @@ class InventoryCreator(Inventory):
                         # Look up these columns in the inventory table
                         id = self.getIdInTable(table, trunc_entry, session)
                         # Create them if none found
-                        if id == None:
+                        if id is None:
                             k = klass()
                             for field in trunc_entry:
                                 if type(field) == str or type(field) == unicode:
@@ -3392,7 +3392,7 @@ class InventoryCreator(Inventory):
                                         new_entry[field[1]] = entry[field]
 
                                 nid = self.getIdInTable(nomName, new_entry, session)
-                                if nid == None:
+                                if nid is None:
                                     n = nomKlass()
                                     for field in new_entry:
                                         setattr(n, field, new_entry[field])

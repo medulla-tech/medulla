@@ -104,7 +104,7 @@ class Glpi0855(DyngroupDatabaseHelper):
             self.logger.info("Glpi don't need activation")
             return None
         self.logger.info("Glpi is activating")
-        if config != None:
+        if config is not None:
             self.config = config
         else:
             self.config = GlpiConfig("glpi")
@@ -468,7 +468,7 @@ class Glpi0855(DyngroupDatabaseHelper):
             return query.filter(ret)
 
     def __filter_on_filter(self, query):
-        if self.config.filter_on != None:
+        if self.config.filter_on is not None:
             a_filter_on = []
             for filter_key, filter_values in self.config.filter_on.items():
                 if filter_key == 'state':
@@ -511,7 +511,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         Get the sqlalchemy query to get a list of computers with some filters
         If displayList is True, we are displaying computers list
         """
-        if session == None:
+        if session is None:
             session = create_session()
         query = count and session.query(func.count(Machine.id)) or session.query(Machine)
         if filt:
@@ -567,7 +567,7 @@ class Glpi0855(DyngroupDatabaseHelper):
             else:
                 ctxlocation = None
 
-            if ctxlocation != None:
+            if ctxlocation is not None:
                 locsid = []
                 if isinstance(ctxlocation, list):
                     for loc in ctxlocation:
@@ -736,8 +736,8 @@ class Glpi0855(DyngroupDatabaseHelper):
                         and_(
                             OS.name.ilike('%windows%'),
                             or_(
-                                FusionAntivirus.is_active == None,
-                                FusionAntivirus.uptodate == None,
+                                FusionAntivirus.is_active is None,
+                                FusionAntivirus.uptodate is None,
                                 and_(
                                     FusionAntivirus.name.in_(self.config.av_false_positive),
                                     not_(FusionAntivirus.computers_id.in_(
@@ -769,7 +769,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         return obj
 
     def __addQueryFilter(self, query_filter, eq):
-        if str(query_filter) == str(None): # don't remove the str, sqlalchemy.sql._BinaryExpression == None return True!
+        if str(query_filter) == str(None): # don't remove the str, sqlalchemy.sql._BinaryExpression is None return True!
             query_filter = eq
         else:
             query_filter = and_(query_filter, eq)
@@ -867,7 +867,7 @@ class Glpi0855(DyngroupDatabaseHelper):
                             ret.append(not_(
                                 or_(
                                     partA.like(self.encode(partB)),
-                                    partA == None,
+                                    partA is None,
                                 )
                             ))
                         else:
@@ -880,7 +880,7 @@ class Glpi0855(DyngroupDatabaseHelper):
                             ret.append(
                                 or_(
                                     partA.like(self.encode(partB)),
-                                    partA == None,
+                                    partA is None,
                                 )
                             )
                         else:
@@ -1032,7 +1032,7 @@ class Glpi0855(DyngroupDatabaseHelper):
                 displayList = True
 
         ret = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList, count=True)
-        if ret == None:
+        if ret is None:
             return 0
         session.close()
         return ret
@@ -1066,7 +1066,7 @@ class Glpi0855(DyngroupDatabaseHelper):
                 displayList = True
 
         query = self.__getRestrictedComputersListQuery(ctx, filt, session, displayList)
-        if query == None:
+        if query is None:
             return {}
 
         if self.config.ordered:
@@ -1161,7 +1161,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         Give an LDAP like version of machines
         """
         ret = {}
-        if get != None:
+        if get is not None:
             for m in machines:
                 if isinstance(m, tuple):
                     m = m[0]
@@ -1279,7 +1279,7 @@ class Glpi0855(DyngroupDatabaseHelper):
 
         uuid = self.getMachineUUID(machine)
 
-        if get != None:
+        if get is not None:
             return self.__getAttr(machine, get)
 
         ret = {
@@ -1289,7 +1289,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         }
         if advanced:
             (ret['macAddress'], ret['ipHostNumber'], ret['subnetMask'], domain, ret['networkUuids']) = self.orderIpAdresses(uuid, machine.name, self.getMachineNetwork(uuid))
-            if domain == None:
+            if domain is None:
                 domain = ''
             elif domain != '':
                 domain = '.'+domain
@@ -1332,7 +1332,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         """
         session = create_session()
         qprofile = session.query(Profile).select_from(self.profile.join(self.userprofile).join(self.user)).filter(self.user.c.name == user).first()
-        if qprofile == None:
+        if qprofile is None:
             ret = None
         else:
             ret= qprofile.name
@@ -1378,7 +1378,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         """
         session = create_session()
         qentities = session.query(Entities).select_from(self.entities.join(self.userprofile).join(self.user)).filter(self.user.c.name == user).first()
-        if qentities == None:
+        if qentities is None:
             ret = None
         else:
             ret = qentities.name
@@ -1514,7 +1514,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         Returns all users name that share the same locations with the given
         user
         """
-        if locations == None:
+        if locations is None:
             locations = self.getUserLocations(userid)
         ret = []
         if locations:
@@ -2705,7 +2705,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         for i in lids:
             t = []
             p = __getParent(i)
-            while p != None:
+            while p is not None:
                 t.append(p)
                 p = __getParent(p)
             ret[i] = t
@@ -3512,7 +3512,7 @@ class Glpi0855(DyngroupDatabaseHelper):
                 if not ('ifmac' in iface or iface['ifmac']):
                     continue
             if 'ifaddr' in iface and iface['ifaddr']:
-                if iface['gateway'] == None:
+                if iface['gateway'] is None:
                     ret_ifmac.append(iface['ifmac'])
                     ret_ifaddr.append(iface['ifaddr'])
                     ret_netmask.append(iface['netmask'])

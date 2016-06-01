@@ -133,7 +133,7 @@ class ImagingRpcProxy(RpcProxyI):
         """ convert type from '' or 'group' to P2IT.COMPUTER and P2IT.PROFILE """
         if target_type == '':
             profile = ComputerProfileManager().getComputersProfile(target_id)
-            if profile != None:
+            if profile is not None:
                 target_type = P2IT.COMPUTER_IN_PROFILE
             else:
                 target_type = P2IT.COMPUTER
@@ -431,7 +431,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=objmenu['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.imagingServermenuMulticast(objmenu)
             deferred.addCallback(lambda x: x)
         else:
@@ -444,7 +444,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.check_process_multicast(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -456,7 +456,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.check_process_multicast_finish(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -468,7 +468,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.muticast_script_exist(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -485,7 +485,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.clear_script_multicast(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -497,7 +497,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.start_process_multicast(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -622,7 +622,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i == None:
+        if i is None:
             logger.error("couldn't initialize the ImagingApi to %s"%( my_is.url))
             return [False, "couldn't initialize the ImagingApi to %s"%( my_is.url)]
 
@@ -649,7 +649,7 @@ class ImagingRpcProxy(RpcProxyI):
         location=process['location']
         imaging_server = ImagingDatabase().getEntityUrl(location)
         i = ImagingApi(imaging_server.encode('utf8'))
-        if i != None:
+        if i is not None:
             deferred = i.stop_process_multicast(process)
             deferred.addCallback(lambda x: x)
         else:
@@ -678,7 +678,7 @@ class ImagingRpcProxy(RpcProxyI):
         image, imaging_server = db.getImageAndImagingServer(image_uuid)
 
         i = ImagingApi(imaging_server.url.encode('utf8'))
-        if i == None:
+        if i is None:
             logger.error("couldn't initialize the ImagingApi to %s"%(imaging_server.url))
             return [False, "couldn't initialize the ImagingApi to %s"%(imaging_server.url)]
 
@@ -999,7 +999,7 @@ class ImagingRpcProxy(RpcProxyI):
         db = ImagingDatabase()
         image, ims = db.getImageAndImagingServer(itemUUID)
         api = ImagingApi(ims.url.encode('utf8'))
-        if api != None:
+        if api is not None:
             deferred = api.imageGetLogs(image.uuid)
             deferred.addCallback(lambda x: x)
         else:
@@ -1070,7 +1070,7 @@ class ImagingRpcProxy(RpcProxyI):
             # remove from the imaging server
             im, ims = db.getImageAndImagingServer(image_uuid)
             i = ImagingApi(ims.url.encode('utf8'))
-            if i == None:
+            if i is None:
                 logger.error("couldn't initialize the ImagingApi to %s" % (ims.url))
                 return [False, "couldn't initialize the ImagingApi to %s" % (ims.url)]
 
@@ -1419,7 +1419,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: dict
         """
         mi = ImagingDatabase().getMenuItemByUUID(bs_uuid)
-        if mi != None:
+        if mi is not None:
             return xmlrpcCleanup(mi.toH())
         return False
 
@@ -1735,7 +1735,7 @@ class ImagingRpcProxy(RpcProxyI):
             return [False, False]
 
         profile = ComputerProfileManager().getComputersProfile(computerUUID)
-        if profile == None:
+        if profile is None:
             logger.debug("canIRegisterThisComputer %s : %s", computerUUID, "profile = None")
             return [True]
 
@@ -1925,7 +1925,7 @@ class ImagingRpcProxy(RpcProxyI):
         @rtype: int
         """
         ret = ImagingDatabase().getTargetsCustomMenuFlag([uuid], target_type)
-        if ret != None:
+        if ret is not None:
             return ret
         else:
             raise Exception("Can't get a custom menu flag for %s"%uuid)
@@ -1989,7 +1989,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
         location = db.getImagingServerEntity(imaging_server_uuid)
-        if location == None:
+        if location is None:
             # Package server has not been registered, we return an empty menu
             return {}
 
@@ -2002,9 +2002,9 @@ class ImagingRpcProxy(RpcProxyI):
         for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             name = pis.default_name
             desc = pis.default_desc
-            if name_i18n != None:
+            if name_i18n is not None:
                 name = name_i18n.label
-            if desc_i18n != None:
+            if desc_i18n is not None:
                 desc = desc_i18n.label
             pis = {
                 'id':pis.id,
@@ -2068,7 +2068,7 @@ class ImagingRpcProxy(RpcProxyI):
 
             url = chooseImagingApiUrl(loc_uuid)
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-            if i == None: # do fail
+            if i is None: # do fail
                 db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
                 return defer.fail()
@@ -2103,7 +2103,7 @@ class ImagingRpcProxy(RpcProxyI):
         """
         # Mutable dict macs used as default argument to a method or function
         macs = macs or {} 
-        if ctx == None:
+        if ctx is None:
             ctx = self.currentContext
         return synchroTargets(ctx, uuids, target_type, macs = macs, wol = wol)
 
@@ -2324,7 +2324,7 @@ class ImagingRpcProxy(RpcProxyI):
 
                 url = chooseImagingApiUrl(location[0].uuid)
                 i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-                if i != None:
+                if i is not None:
                     # Current computer's menu is in distinct_loc dictionnary
                     # We're treating a computer, so distinct_loc contains one loc_uuid
                     # we can make a for in:
@@ -2405,7 +2405,7 @@ class ImagingRpcProxy(RpcProxyI):
                     menus = distinct_loc[loc_uuid][1]
                     # to do again when computerRegister is plural
                     i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-                    if i != None:
+                    if i is not None:
                         computers = []
                         for uuid in menus:
                             if db.isTargetRegister(uuid, P2IT.COMPUTER):
@@ -2787,7 +2787,7 @@ class ImagingRpcProxy(RpcProxyI):
         if not imaging_server:
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
         imaging_server = imaging_server[0]
-        if imaging_server == None:
+        if imaging_server is None:
             return [False, "Failed to find the imaging server %s" % imaging_server_uuid]
         loc_id = imaging_server[1].uuid
         imaging_server = imaging_server[0]
@@ -2826,7 +2826,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         uuid = None
         db_computer = self.__inventory_check(MACAddress, waitToBeInventoried)
-        if db_computer != None:
+        if db_computer is not None:
             db_computer_name = ''
             if type(db_computer) == dict:
                 uuid = db_computer['uuid']
@@ -2883,11 +2883,11 @@ class ImagingRpcProxy(RpcProxyI):
                 else:
                     logger.debug("The computer (uuid = %s) is matching with its hostname and one of its MAC addresses (%s)" % (uuid, MACAddress))
 
-        if uuid == None or type(uuid) == list and len(uuid) == 0:
+        if uuid is None or type(uuid) == list and len(uuid) == 0:
             logger.info("the computer %s (%s) does not exist in the backend, trying to add it" % (hostname, MACAddress))
             # the computer does not exists, so we create it
             uuid = ComputerManager().addComputer(None, computer)
-            if uuid == None:
+            if uuid is None:
                 logger.error("failed to create computer %s (%s)" % (hostname, MACAddress))
                 return [False, "failed to create computer %s (%s)" % (hostname, MACAddress)]
             else:
@@ -2900,7 +2900,7 @@ class ImagingRpcProxy(RpcProxyI):
 
         def sendResult(results, uuid): return [True, uuid]
 
-        if not is_registrated and p == None:
+        if not is_registrated and p is None:
             logger.info("Registering computer %s (%s) in imaging module" % (hostname, MACAddress))
             params = {
                 'target_name': hostname,
@@ -3227,7 +3227,7 @@ class ImagingRpcProxy(RpcProxyI):
         Called by the Package Server to get the PXE Password and keymap
         """
         location = ImagingDatabase().getImagingServerEntity(imaging_server_uuid)
-        if location == None:
+        if location is None:
             # Package server has not been registered, we return an empty menu
             return {}
         params = {}
@@ -3279,7 +3279,7 @@ class ImagingRpcProxy(RpcProxyI):
 
             # need to send back the menu to the package server
             profile = ComputerProfileManager().getComputersProfile(computer_uuid)
-            if profile != None:
+            if profile is not None:
                 self.__synchroTargets([computer_uuid], P2IT.COMPUTER_IN_PROFILE)
             else:
                 self.__synchroTargets([computer_uuid], P2IT.COMPUTER)
@@ -3317,7 +3317,7 @@ def chooseMacAddress(ctx, uuid, macs):
     for i in range(0, len(nets['macAddress'])):
         if nets['networkUuids'][i] == nic_uuid:
             mac = nets['macAddress'][i]
-    if mac == None:
+    if mac is None:
         logging.getLogger().error("couldn't find the registered mac address for computer %s"%uuid)
     return mac
 
@@ -3467,7 +3467,7 @@ def synchroTargets(ctx, uuids, target_type, macs = None, wol = False):
         for url in h_computers:
             computers = h_computers[url]
             i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-            if i != None:
+            if i is not None:
                 def treatRegister(results, uuids = to_register.keys(), logger = logger, url = url):
                     if type(results) == list and len(results) > 0 and  results[0] == 'PULSE2_ERR':
                         logger.warn("couldn't connect to the ImagingApi %s"%(url))
@@ -3529,7 +3529,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = None):
                 logger.warn("failed to synchronize menu for %s"%(str(uuid)))
                 failures.append(uuid)
 
-        if pid != None:
+        if pid is not None:
             if failures:
                 db.changeTargetsSynchroState([pid], target_type, P2ISS.TODO)
             else:
@@ -3543,7 +3543,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = None):
     for location_uuid in distinct_loc:
         url = distinct_loc[location_uuid][0]
         i = ImagingApi(url.encode('utf8')) # TODO why do we need to encode....
-        if i == None:
+        if i is None:
             # do fail
             logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
@@ -3612,9 +3612,9 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
             }
             menu['bootservices'][str(mi['order'])] = bs
     # when no default mi has been defined we take the first element of the menu
-    if not 'default_item' in menu or menu['default_item'] == None:
+    if not 'default_item' in menu or menu['default_item'] is None:
         menu['default_item'] = 0
-    if not 'default_item_WOL' in menu or menu['default_item_WOL'] == None:
+    if not 'default_item_WOL' in menu or menu['default_item_WOL'] is None:
         menu['default_item_WOL'] = 0
     return (menu, menu_items, h_pis)
 
@@ -3644,7 +3644,7 @@ def generateMenus(logger, db, uuids, unique=False):
         menu_items = db.getBootMenu(m_uuid, P2IT.COMPUTER, 0, -1, '')
         profile = ComputerProfileManager().getComputersProfile(m_uuid)
         logger.debug("computer %s"%(m_uuid))
-        if profile != None:
+        if profile is not None:
             logger.debug("\tis in profile %s"%(str(profile.id)))
             menu = db.getTargetsMenuTUUID(profile.id)
         else:
@@ -3665,9 +3665,9 @@ def generateMenus(logger, db, uuids, unique=False):
         for pis, im, name_i18n, desc_i18n, pis_order in a_pis:
             name = pis.default_name
             desc = pis.default_desc
-            if name_i18n != None:
+            if name_i18n is not None:
                 name = name_i18n.label
-            if desc_i18n != None:
+            if desc_i18n is not None:
                 desc = desc_i18n.label
 
             pis = {
@@ -3737,7 +3737,7 @@ def computersUnregister(computers_UUID, backup):
 
         db = ImagingDatabase()
 
-        if i != None:
+        if i is not None:
             for computer in targets:
                 computerUUID = computer.uuid
                 # get the list of image uuid

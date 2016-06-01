@@ -599,7 +599,7 @@ class RpcProxy(RpcProxyI):
                     group = DyngroupDatabase().get_group(ctx, c['gid'], True)
                     if type(group) == bool: # we dont have the permission to view the group
                         c['target'] = 'UNVISIBLEGROUP' # TODO!
-                    elif group == None:
+                    elif group is None:
                         c['target'] = 'this group has been deleted'
                     elif hasattr(group, 'ro') and group.ro:
                         logger.debug("user %s access to group %s in RO mode"%(ctx.userid, group.name))

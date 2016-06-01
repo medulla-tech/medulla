@@ -55,7 +55,7 @@ class Commands(object):
         return result
 
     def isPartOfABundle(self):
-        result = self.fk_bundle != None
+        result = self.fk_bundle is not None
         logging.getLogger().debug("isPartOfABundle(#%s): %s" %
                                   (self.id, result))
         return result

@@ -434,7 +434,7 @@ class BootInventory:
 
         @param data : the initial inventory data
         """
-        if data != None :
+        if data is not None :
             self.load(data)
 
     def __str__(self):
@@ -657,7 +657,7 @@ class BootInventory:
             if child.tag == "QUERY":
                 child.text = 'INVENTORY'
             if child.tag == "TAG":
-                if entity != None:
+                if entity is not None:
                     child.text = entity
                 else:
                     child.text = "root"
@@ -721,7 +721,7 @@ class BootInventory:
                             elif dd.tag == "DEFAULTGATEWAY":
                                 pass
                             elif dd.tag == "NAME":
-                                if hostname != None:
+                                if hostname is not None:
                                     dd.text = hostname
                             elif dd.tag == "UUID":
                                 self.sys_info['uuid'] = dd.text

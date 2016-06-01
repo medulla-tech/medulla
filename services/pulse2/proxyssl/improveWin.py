@@ -569,7 +569,7 @@ def xmlUpdate(xmlString, lastInformation):
                                 else:
                                     stringBit = windowsIconGetter(iconpath, nIcon, True )
                                 
-                                if stringBit != None:
+                                if stringBit is not None:
                                     newnode = xmlFile.createElement("ICON")
                                     newtext = xmlFile.createTextNode( stringBit )
                         

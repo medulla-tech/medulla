@@ -166,7 +166,7 @@ class SendBundleCommand:
             title = '' # ie. "no title"
         self.params['bundle_title'] = None
 
-        if title == None or title == '':
+        if title is None or title == '':
             title = get_default_bundle_name(len(self.porders))
         # Insert bundle object
         self.session = create_session()
@@ -264,7 +264,7 @@ def prepareCommand(pinfos, params):
     else:
         ret['title'] = ''
 
-    if ret['title'] == None or ret['title'] == '':
+    if ret['title'] is None or ret['title'] == '':
         localtime = time.localtime()
         ret['title'] = "%s (%s) - %04d/%02d/%02d %02d:%02d:%02d" % (
             pinfos['label'],
@@ -277,7 +277,7 @@ def prepareCommand(pinfos, params):
             localtime[5]
         )
 
-    if pinfos['files'] != None:
+    if pinfos['files'] is not None:
         ret['files'] = map(lambda hm: hm['id']+'##'+hm['path']+'/'+hm['name'], pinfos['files'])
     else:
         ret['files'] = ''
@@ -308,7 +308,7 @@ class SendPackageCommand:
         return self.deferred.callback(id_command)
 
     def send(self):
-        if (self.pid == None or self.pid == '') and 'launchAction' in self.params:
+        if (self.pid is None or self.pid == '') and 'launchAction' in self.params:
             # this is a QA passing by the advanced page
             idcmd = self.params['launchAction']
             result, qas = qa_list_files()
@@ -337,7 +337,7 @@ class SendPackageCommand:
 
     def setRoot(self, root):
         logging.getLogger().debug(root)
-        if self.pid != None and self.pid != '' and not root:
+        if self.pid is not None and self.pid != '' and not root:
             return self.onError("Can't get path for package %s" % self.pid)
         self.root = root
         

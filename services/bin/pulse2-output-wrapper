@@ -203,7 +203,7 @@ class shOutputWrapper(twisted.internet.protocol.ProcessProtocol):
     def processEnded(self, reason):
         """ Fired when process has finished
         """
-        if reason.value.exitCode != None:
+        if reason.value.exitCode is not None:
             # keeps the given exit code
             exitcode = int(reason.value.exitCode)
         else:
@@ -228,7 +228,7 @@ class shCheckCommand(twisted.internet.protocol.ProcessProtocol):
         """ Fired when process has finished
         """
         # compute good exitcode
-        if reason.value.exitCode != None:
+        if reason.value.exitCode is not None:
             # keeps the given exit code
             exitcode = int(reason.value.exitCode)
         else:

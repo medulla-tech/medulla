@@ -73,7 +73,7 @@ class BoolRequest(object):
         return str
 
     def isValid(self):
-        if self.equ == None:
+        if self.equ is None:
             self.logger.debug("isValid: no equation")
             return False
         return self.equ.check()

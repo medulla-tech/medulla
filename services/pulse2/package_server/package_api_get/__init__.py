@@ -37,7 +37,7 @@ class PackageApiGet(MyXmlrpc):
         self.logger = logging.getLogger()
         self.name = name
         self.mp = mp
-        if Common().getPackages(self.mp) == None:
+        if Common().getPackages(self.mp) is None:
             e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
             self.logger.error(e)
             raise e

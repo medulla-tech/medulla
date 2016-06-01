@@ -36,7 +36,7 @@ class Mirror(MyXmlrpc):
         self.logger = logging.getLogger()
         self.name = name
         self.mp = mp
-        if Common().getPackages(self.mp) == None:
+        if Common().getPackages(self.mp) is None:
             e = "(%s) %s : can't initialise at %s correctly"%(self.type, self.name, self.mp)
             self.logger.error(e)
             raise Exception(e)
@@ -59,7 +59,7 @@ class Mirror(MyXmlrpc):
 
     def xmlrpc_getFilePath(self, fid):
         f = Common().getFile(fid, self.mp)
-        if f == None:
+        if f is None:
             return ''
         else:
             return f

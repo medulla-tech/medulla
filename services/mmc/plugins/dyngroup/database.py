@@ -76,7 +76,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         select_from = self.machines.join(self.results).join(self.groups)
         (join_tables, filter_on) = self.__permissions_query(ctx, session)
-        if join_tables == None:
+        if join_tables is None:
             return (select_from, filter_on)
         return (self.__merge_join_query(select_from, join_tables), filter_on)
 
@@ -88,7 +88,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        if filter_on == None:
+        if filter_on is None:
             filter_on = and_(self.groups.c.id == gid)
         else:
             filter_on = and_(self.groups.c.id == gid, filter_on)
@@ -102,7 +102,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         if not session:
             session = create_session()
         select_from, filter_on = self.__getMachinesFirstStep(ctx, session)
-        if filter_on == None:
+        if filter_on is None:
             filter_on = and_(self.groups.c.name == groupname)
         else:
             filter_on = and_(self.groups.c.name == groupname, filter_on)
@@ -259,13 +259,13 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
 
         try:
             if params['dynamic']:
-                groups = groups.filter(self.groups.c.query != None)
+                groups = groups.filter(self.groups.c.query is not None)
         except KeyError:
             pass
 
         try:
             if params['static']:
-                groups = groups.filter(self.groups.c.query == None)
+                groups = groups.filter(self.groups.c.query is None)
         except KeyError:
             pass
 
@@ -276,7 +276,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             pass
 
         try:
-            if params['name'] != None:
+            if params['name'] is not None:
                 groups = groups.filter(self.groups.c.name == params['name'].encode('utf-8'))
         except KeyError:
             pass
@@ -340,7 +340,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         type = 0
         if isProfile:
             type = 1
-        if id == None or id == '':
+        if id is None or id == '':
             if self.countallgroups(ctx, {'name':name, 'owner':ctx.userid}, type) == 0:
                 return False
             else:
@@ -610,7 +610,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except:
             pass
         session.close()
-        return (q != None and q != '')
+        return (q is not None and q != '')
 
     def isrequest_group(self, ctx, id):
         """
@@ -624,7 +624,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         except:
             pass
         session.close()
-        return (q != None and q != '' and self.countresult_group(ctx, id) == 0)
+        return (q is not None and q != '' and self.countresult_group(ctx, id) == 0)
 
     ## GROUP / PROFILE
 
@@ -678,7 +678,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             session = create_session()
         select_from = self.groups
         join_tables, filter_on = self.__permissions_query(ctx, session)
-        if join_tables != None:
+        if join_tables is not None:
             select_from = self.__merge_join_query(select_from, join_tables)
         return (select_from, filter_on)
 
@@ -703,7 +703,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get a group content (machines)
         """
-        if group == None: return []
+        if group is None: return []
         session = create_session()
         if self.isrequest_group(ctx, group.id):
             ret = self.__request(ctx, group.query, group.bool, 0, -1, '', queryManager, session)

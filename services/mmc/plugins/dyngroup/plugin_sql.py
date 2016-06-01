@@ -59,8 +59,8 @@ class SqlPlugin:
 
     def hasValue(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
-        if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+        if datum is not None:
+            if user is None or datum.user is None or user == datum.user:
                 return True
             else:
                 raise Exception("user don't have good rigths")
@@ -68,8 +68,8 @@ class SqlPlugin:
 
     def delete(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
-        if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+        if datum is not None:
+            if user is None or datum.user is None or user == datum.user:
                 self.session.delete(datum)
                 self.session.flush()
                 return key
@@ -80,8 +80,8 @@ class SqlPlugin:
         
     def getValue(self, key, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
-        if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+        if datum is not None:
+            if user is None or datum.user is None or user == datum.user:
                 return datum.value
             else:
                 raise Exception("user don't have good rigths")
@@ -89,8 +89,8 @@ class SqlPlugin:
 
     def setValue(self, key, val, user = None):
         datum = self.session.query(SqlDatumSave).filter(self.sqlDatumSave.c.k == key).first()
-        if datum != None:
-            if user == None or datum.user == None or user == datum.user:
+        if datum is not None:
+            if user is None or datum.user is None or user == datum.user:
                 datum.value = val
                 self.session.add(datum)
             else:

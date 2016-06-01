@@ -102,7 +102,7 @@ class InventoryComputers(ComputerI):
             # Get main imaging entity uuid
             self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
             main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
-            if main_imaging_entity_uuid != None:
+            if main_imaging_entity_uuid is not None:
                 self.logger.debug('Found: %s' % main_imaging_entity_uuid)
                 filt['imaging_entities'] = [main_imaging_entity_uuid]
                 self.logger.debug('Get now children entities of this main imaging entity')

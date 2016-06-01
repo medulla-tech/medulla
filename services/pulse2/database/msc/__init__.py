@@ -795,7 +795,7 @@ class MscDatabase(DatabaseHelper):
         l = []
         for x in ret.all():
             bundle = x[3]
-            if bundle != None:
+            if bundle is not None:
                 bundle = bundle.toH()
             l.append([x[0].toH(), x[1].toH(), x[2].toH(), bundle])
         session.close()
@@ -837,7 +837,7 @@ class MscDatabase(DatabaseHelper):
         l = []
         for x in ret.all():
             bundle = x[3]
-            if bundle != None:
+            if bundle is not None:
                 bundle = bundle.toH()
             l.append([x[0].toH(), x[1].toH(), x[2].toH(), bundle])
         session.close()
@@ -952,8 +952,8 @@ class MscDatabase(DatabaseHelper):
 
         ret = []
         for cmd, bid, target_name, cohid, gid, btitle, target_uuid, machine_pull in cmds:
-            if bid != None: # we are in a bundle
-                if gid != None and gid != '':
+            if bid is not None: # we are in a bundle
+                if gid is not None and gid != '':
                     ret.append({
                             'title':btitle,
                             'creator':cmd.creator,
@@ -994,7 +994,7 @@ class MscDatabase(DatabaseHelper):
                             'deployment_intervals': cmd.deployment_intervals
                     })
             else: # we are not in a bundle
-                if gid != None and gid != '':
+                if gid is not None and gid != '':
                     ret.append({
                             'title':cmd.title,
                             'creator':cmd.creator,
@@ -1045,18 +1045,18 @@ class MscDatabase(DatabaseHelper):
     def __displayLogsQuery(self, ctx, params, session):
         nowsystem = time.strftime("%Y-%m-%d %H:%M:%S")
         query = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target))
-        if params['gid'] != None:
+        if params['gid'] is not None:
             query = query.filter(self.target.c.id_group == params['gid'])
-        if params['uuid'] != None:
+        if params['uuid'] is not None:
             query = query.filter(self.target.c.target_uuid == params['uuid'])
-        if params['filt'] != None:
+        if params['filt'] is not None:
             query = query.filter(self.commands.c.title.like('%'+params['filt']+'%'))
         #if params['finished']:
         #    query = query.filter(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed']))
         else:
             # If we are querying on a bundle, we also want to display the
             # commands_on_host flagged as done
-            #if params['b_id'] == None:
+            #if params['b_id'] is None:
             #    query = query.filter(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
             pass
         query = self.__queryUsersFilter(ctx, query)
@@ -1072,9 +1072,9 @@ class MscDatabase(DatabaseHelper):
     def __doneBundle(self, params, session):
         query = session.query(Commands).select_from(self.commands.join(self.commands_on_host))
         filter = []
-        if params['b_id'] != None:
+        if params['b_id'] is not None:
             filter = [self.commands.c.fk_bundle == params['b_id']]
-        elif params['cmd_id'] != None:
+        elif params['cmd_id'] is not None:
             filter = [self.commands.c.id == params['cmd_id']]
         #filter.append(not_(self.commands_on_host.c.current_state.in_(['done', 'failed', 'over_timed'])))
         query = query.filter(and_(*filter))
@@ -1098,23 +1098,23 @@ class MscDatabase(DatabaseHelper):
 
 
 
-        if params['cmd_id'] != None: # COH
+        if params['cmd_id'] is not None: # COH
             filter = [self.commands.c.id == params['cmd_id']]
-            if params['b_id'] != None:
+            if params['b_id'] is not None:
                 filter.append(self.commands.c.fk_bundle == params['b_id'])
         else: # CMD
-            if params['b_id'] != None:
+            if params['b_id'] is not None:
                 filter = [self.commands.c.fk_bundle == params['b_id']]
             group_by = True
             group_clause = self.commands.c.id
 
-        if params['gid'] != None: # Filter on a machines group id
+        if params['gid'] is not None: # Filter on a machines group id
             filter.append(self.target.c.id_group == params['gid'])
 
-        if params['uuid'] != None: # Filter on a machine uuid
+        if params['uuid'] is not None: # Filter on a machine uuid
             filter.append(self.target.c.target_uuid == params['uuid'])
 
-        if params['filt'] != None: # Filter on a commande names
+        if params['filt'] is not None: # Filter on a commande names
             filter.append(self.commands.c.title.like('%s%s%s' % ('%', params['filt'], '%')) | self.target.c.target_name.like('%s%s%s' % ('%', params['filt'], '%')) )
 
         # Finished param
@@ -1127,7 +1127,7 @@ class MscDatabase(DatabaseHelper):
         if 'state' in params and params['state']:
             filter.append(self.commands_on_host.c.current_state.in_(params['state']))
 
-        #if params['b_id'] == None:
+        #if params['b_id'] is None:
         #    is_done = self.__doneBundle(params, session)
             #if params['finished'] and not is_done: # Filter on finished commands only
             #    filter.append(1 == 0) # send nothing
@@ -1164,17 +1164,17 @@ class MscDatabase(DatabaseHelper):
             if max != -1 and max-1 < i:
                 break
             if i < min:
-                if fk_bundle != 'NULL' and fk_bundle != None and not fk_bundle in defined:
+                if fk_bundle != 'NULL' and fk_bundle is not None and not fk_bundle in defined:
                     defined[fk_bundle] = id
                     i += 1
-                elif fk_bundle == 'NULL' or fk_bundle == None:
+                elif fk_bundle == 'NULL' or fk_bundle is None:
                     i += 1
                 continue
-            if fk_bundle != 'NULL' and fk_bundle != None and not fk_bundle in defined:
+            if fk_bundle != 'NULL' and fk_bundle is not None and not fk_bundle in defined:
                 defined[fk_bundle] = id
                 ids.append(id)
                 i += 1
-            elif fk_bundle == 'NULL' or fk_bundle == None:
+            elif fk_bundle == 'NULL' or fk_bundle is None:
                 ids.append(id)
                 i += 1
         return ids
@@ -1334,7 +1334,7 @@ class MscDatabase(DatabaseHelper):
     def getCommandsOnHost(self, ctx, coh_id):
         session = create_session()
         coh = session.query(CommandsOnHost).get(coh_id)
-        if coh == None:
+        if coh is None:
             self.logger.warn("User %s try to access an coh that don't exists '%s'" % (ctx.userid, coh_id))
             return False
         coh.phases = session.query(CommandsOnHostPhase).filter_by(fk_commands_on_host = coh_id).all()
@@ -1387,7 +1387,7 @@ class MscDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
-        if cmd_id == None or cmd_id == '':
+        if cmd_id is None or cmd_id == '':
             return False
         a_targets = map(lambda target:target[0], self.getTargets(cmd_id, True))
         if ComputerLocationManager().doesUserHaveAccessToMachines(ctx, a_targets):

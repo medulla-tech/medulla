@@ -285,7 +285,7 @@ class MscQueryManager(MscContainer):
 
         circuits = [c for c in self.get_active_circuits([cmd_id]) if c.qm.cmd.id==cmd_id]
         for c in circuits :
-            if c.qm.coh.order_in_proxy != None: # some potential proxy
+            if c.qm.coh.order_in_proxy is not None: # some potential proxy
                 if c.qm.coh.order_in_proxy in spotted_priorities:
                     spotted_priorities[c.qm.coh.order_in_proxy] += 1
                 else:
@@ -425,7 +425,7 @@ class MscQueryManager(MscContainer):
                         best_ready_proxy_server_coh = c.qm.coh.id
 
             elif not c.qm.coh.isStateFailed():   # got a pal which may still do something
-                if c.qm.coh.order_in_proxy != None:     # got a potential proxy server
+                if c.qm.coh.order_in_proxy is not None:     # got a potential proxy server
                     if cohq.coh.order_in_proxy is None:    # i may use this server, as I'm not server myself
                         potential_proxy_server_coh = c.qm.coh.id
                     elif cohq.coh.order_in_proxy > c.qm.coh.order_in_proxy:               
@@ -437,8 +437,8 @@ class MscQueryManager(MscContainer):
         # a proxy that might be used
         # let's take a decision about our future
 
-        if cohq.coh.getOrderInProxy() == None:  # I'm a client: I MUST use a proxy server ...
-            if best_ready_proxy_server_coh != None:    # ... and a proxy seems ready => PROXY CLIENT MODE
+        if cohq.coh.getOrderInProxy() is None:  # I'm a client: I MUST use a proxy server ...
+            if best_ready_proxy_server_coh is not None:    # ... and a proxy seems ready => PROXY CLIENT MODE
                 (current_client_number, max_client_number) = self.get_client_usage_for_proxy(best_ready_proxy_server_coh)
                 if current_client_number < max_client_number:
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" %
@@ -448,7 +448,7 @@ class MscQueryManager(MscContainer):
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s, but proxy is full (%d clients), so I'm waiting" % 
                             (self.config.name, best_ready_proxy_server_coh, cohq.coh.id, current_client_number))
                     return 'waiting'
-            elif potential_proxy_server_coh != None:                        # ... and one may become ready => WAITING
+            elif potential_proxy_server_coh is not None:                        # ... and one may become ready => WAITING
                 self.logger.debug("scheduler %s: coh #%s still waiting for a local proxy to use" % 
                         (self.config.name, cohq.coh.id))
                 return 'waiting'
@@ -457,7 +457,7 @@ class MscQueryManager(MscContainer):
                         (self.config.name, cohq.coh.id))
                 return 'dead'
         else:                                                               # I'm a server: I MAY use a proxy ...
-            if best_ready_proxy_server_coh != None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
+            if best_ready_proxy_server_coh is not None:                         # ... and a proxy seems ready => PROXY CLIENT MODE
                 (current_client_number, max_client_number) = self.get_client_usage_for_proxy(best_ready_proxy_server_coh)
                 if current_client_number < max_client_number:
                     self.logger.debug("scheduler %s: found coh #%s as local proxy for #%s" % 

@@ -40,7 +40,7 @@ def getInventoryNoms(table = None):
         'Registry':['Path']
     }
 
-    if table == None:
+    if table is None:
         return noms
     if table in noms:
         return noms[table]
