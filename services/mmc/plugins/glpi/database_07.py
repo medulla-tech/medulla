@@ -371,7 +371,9 @@ class Glpi07(DyngroupDatabaseHelper):
         return None
 
 
-    def __filter_on_entity(self, query, ctx, other_locids = []):
+    def __filter_on_entity(self, query, ctx, other_locids = None):
+        #Mutable list other_locids used as default argument to a method or function
+        other_locids = other_locids or []
         ret = self.__filter_on_entity_filter(query, ctx, other_locids)
         return query.filter(ret)
 
@@ -380,6 +382,8 @@ class Glpi07(DyngroupDatabaseHelper):
         # number of requests. locationsid is set by
         # glpi.utilities.complete_ctx, but when querying via the dyngroup
         # plugin it is not called.
+        #Mutable list other_locids used as default argument to a method or function
+        other_locids = other_locids or []
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         return self.machine.c.FK_entities.in_(ctx.locationsid + other_locids)
@@ -1510,10 +1514,14 @@ class Glpi07(DyngroupDatabaseHelper):
 
         return ids
 
-    def countLastMachineInventoryPart(self, uuid, part, filt = None, options = {}):
+    def countLastMachineInventoryPart(self, uuid, part, filt = None, options = None):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         return self.getLastMachineInventoryPart(uuid, part, filt = filt, options = options, count = True)
 
-    def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineNetworkPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(Network).add_column(self.networkinterfaces.c.name) \
             .select_from(
@@ -1539,7 +1547,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineStoragePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineStoragePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(Disk).add_column(self.diskfs.c.name).select_from(
                 self.machine.outerjoin(self.disk).outerjoin(self.diskfs)
@@ -1562,7 +1572,9 @@ class Glpi07(DyngroupDatabaseHelper):
                         ret.append(l)
         return ret
 
-    def getLastMachineAdministrativePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineAdministrativePart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(Infocoms).add_column(self.suppliers.c.name).select_from(
                 self.machine.outerjoin(self.infocoms).outerjoin(self.suppliers)
@@ -1588,7 +1600,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         hide_win_updates = False
         if 'hide_win_updates' in options:
             hide_win_updates = options['hide_win_updates']
@@ -1689,7 +1703,9 @@ class Glpi07(DyngroupDatabaseHelper):
             self.logger.error(e)
             return False
 
-    def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineSummaryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(Machine).add_entity(Infocoms) \
             .add_column(self.location.c.name) \
@@ -1780,7 +1796,9 @@ class Glpi07(DyngroupDatabaseHelper):
                 ret.append(l)
         return ret
 
-    def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(ComputerDevice).add_column(self.processor.c.designation) \
             .select_from(
@@ -1802,7 +1820,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = none, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(ComputerDevice) \
             .add_column(self.memoryType.c.name) \
@@ -1829,7 +1849,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineHarddrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineHarddrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(ComputerDevice) \
             .add_column(self.glpi_device_hdd.c.designation) \
@@ -1852,7 +1874,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineNetworkCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineNetworkCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(ComputerDevice) \
             .add_entity(self.klass['glpi_dropdown_network']) \
@@ -1876,7 +1900,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineDrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineDrivesPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(self.klass['glpi_device_drive']).select_from(
                 self.machine.outerjoin(self.computer_device) \
@@ -1897,7 +1923,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineGraphicCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineGraphicCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(self.klass['glpi_device_gfxcard']).add_column(self.interfaceType.c.name) \
             .select_from(
@@ -1921,7 +1949,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineSoundCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineSoundCardsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(self.klass['glpi_device_sndcard']).select_from(
                 self.machine.outerjoin(self.computer_device) \
@@ -1941,7 +1971,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineControllersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineControllersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(ComputerDevice) \
             .add_entity(self.klass['glpi_device_control']).select_from(
@@ -1962,7 +1994,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineOthersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineOthersPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         query = self.filterOnUUID(
             session.query(self.klass['glpi_device_pci']).select_from(
                 self.machine.outerjoin(self.computer_device) \
@@ -1983,7 +2017,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None}, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         # Set options
         history_delta = 'All'
         if 'history_delta' in options:
@@ -2049,7 +2085,9 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineInventoryPart(self, uuid, part, minbound = 0, maxbound = -1, filt = None, options = {}, count = False):
+    def getLastMachineInventoryPart(self, uuid, part, minbound = 0, maxbound = -1, filt = None, options = None, count = False):
+        #Mutable dict options used as default argument to a method or function
+        options = options or {}
         session = create_session()
 
         ret = None
