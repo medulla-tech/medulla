@@ -82,7 +82,6 @@ class Glpi0855(DyngroupDatabaseHelper):
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
 	except OperationalError:
             self._glpi_version = self.db.execute('SELECT value FROM glpi_configs WHERE name = "version"').fetchone().values()[0].replace(' ', '')
-            
         if LooseVersion(self._glpi_version) >=  LooseVersion("0.85") and LooseVersion(self._glpi_version) <  LooseVersion("0.86"):
             logging.getLogger().debug('GLPI version %s found !' % self._glpi_version)
             return True
@@ -493,15 +492,19 @@ class Glpi0855(DyngroupDatabaseHelper):
                 return and_(*a_filter_on)
         return None
 
-    def __filter_on_entity(self, query, ctx, other_locids = []):
+    def __filter_on_entity(self, query, ctx, other_locids = None):
+        # Mutable list used other_locids as default argument to a method or function
+        other_locids = other_locids or []
         ret = self.__filter_on_entity_filter(query, ctx, other_locids)
         return query.filter(ret)
 
-    def __filter_on_entity_filter(self, query, ctx, other_locids = []):
+    def __filter_on_entity_filter(self, query, ctx, other_locids = None):
         # FIXME: I put the locationsid in the security context to optimize the
         # number of requests. locationsid is set by
         # glpi.utilities.complete_ctx, but when querying via the dyngroup
         # plugin it is not called.
+        # Mutable list used other_locids as default argument to a method or function
+        other_locids = other_locids or []
         if not hasattr(ctx, 'locationsid'):
             complete_ctx(ctx)
         return self.machine.c.entities_id.in_(ctx.locationsid + other_locids)
@@ -4006,7 +4009,7 @@ class Glpi0855(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
 
-        # Make sure "Root" entity rule ranking is very high
+        # Make sure "Root" entity rule ranking is very high
         session.query(Rule).filter_by(sub_type='PluginFusioninventoryInventoryRuleEntity',\
             name='Root').update({'ranking': rule.ranking+1}, synchronize_session=False)
 

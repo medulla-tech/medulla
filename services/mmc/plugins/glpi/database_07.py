@@ -2017,7 +2017,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None}, count = False):
+    def getLastMachineHistoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
         #Mutable dict options used as default argument to a method or function
         options = options or {}
         # Set options
