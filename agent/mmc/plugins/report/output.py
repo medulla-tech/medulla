@@ -113,7 +113,9 @@ class XLSGenerator(object):
 
 
 class PDFGenerator(object):
-    def __init__(self, path='/tmp/report.pdf', locale={}):
+    def __init__(self, path='/tmp/report.pdf', locale=None):
+        # Mutable dict locale used as default argument to a method or function
+        locale = locale or {}
         self.homepage = ''
         self.summary = ''
         self.config = ReportConfig("report")
@@ -391,10 +393,14 @@ class PDFGenerator(object):
 
 
 class SVGGenerator(object):
-    def __init__(self, path='/tmp/graph.png', locale={}, extra_css=[]):
+    def __init__(self, path='/tmp/graph.png', locale=None, extra_css=None):
+        # Mutable list extra_css used as default argument to a method or function
+        extra_css = extra_css or []
         self.style = None
         self.chart = None
         self.path = path
+        # Mutable dict locale used as default argument to a method or function
+        self.locale = locale or {}
         self.locale = locale
         self.config = Config()
         self.config.no_data_text = 'No result found'

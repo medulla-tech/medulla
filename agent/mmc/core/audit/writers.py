@@ -222,7 +222,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
 
         return True
 
-    def log(self, module, event, objects = [], current=None , previous=None, parameters = {}):
+    def log(self, module, event, objects = None, current=None , previous=None, parameters = None):
         """
         Allow to log an Action, it uses LogRecordDB
 
@@ -248,6 +248,10 @@ class AuditWriterDB(Singleton, AuditWriterI):
         @param parameters: list of parameters (get with the locals() builtin)
         @type parameters: dict of param
         """
+        # Mutable list objects used as default argument to a method or function
+        objects = objects or []
+        # Mutable dict parameters used as default argument to a method or function
+        parameters = parameters or {}
         try:
             userdn = threading.currentThread().session.contexts['base'].userdn
             user = (userdn, 'USER')
