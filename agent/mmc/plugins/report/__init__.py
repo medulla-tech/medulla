@@ -731,5 +731,7 @@ class RpcProxy(RpcProxyI):
         entities = entities or []
         return ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
 
-    def get_indicator_current_value(self, indicator_name, entities=[]):
+    def get_indicator_current_value(self, indicator_name, entities=None):
+        #Mutable list entities used as default argument to a method or function
+        entities = entities or  []
         return ReportDatabase().get_indicator_current_value(indicator_name, entities)
