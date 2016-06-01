@@ -21,7 +21,7 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
+# CloseKey OpenKey QueryValueEx SetValue SetValueEx HKEY_LOCAL_MACHINE KEY_SET_VALUE REG_SZ 
 import logging
 import os
 import re
@@ -38,7 +38,7 @@ from twisted.web.server import NOT_DONE_YET
 from zlib import decompressobj, compressobj
 
 if os.name == 'nt':
-    from _winreg import * # pyflakes.ignore
+    from _winreg import CloseKey, OpenKey, QueryValueEx, SetValue, SetValueEx, HKEY_LOCAL_MACHINE, KEY_SET_VALUE REG_SZ  # pyflakes.ignore
 
 
 def makeSSLContext(verifypeer, cacert, localcert, log = False):
