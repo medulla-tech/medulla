@@ -1,21 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2012-06-01 11:40+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/team/es_ES/)\n"
+"Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/"
+"team/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: es_ES\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -99,8 +101,7 @@ msgstr "Número de autenticaciones de gracia"
 
 #: modules/ppolicy/default/edit.php:180
 msgid "Force users to change their passwords on the first connection ?"
-msgstr ""
-"Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
+msgstr "Forzar a los usuarios a cambiar la contraseña en la primera conexión ?"
 
 #: modules/ppolicy/default/edit.php:187
 msgid "Password history"
@@ -128,8 +129,8 @@ msgid ""
 "password as soon as possible using the password change page, else your "
 "account will be locked."
 msgstr ""
-"Aviso, se ha autenticado usando el tiempo de gracia en la autenticación. Por"
-" favor cambie su contraseña lo antes posible usando la página de cambio de "
+"Aviso, se ha autenticado usando el tiempo de gracia en la autenticación. Por "
+"favor cambie su contraseña lo antes posible usando la página de cambio de "
 "contraseña, sino lo hace su cuenta será bloqueada."
 
 #: modules/ppolicy/default/warnuser.php:40
@@ -193,10 +194,10 @@ msgid ""
 "is assumed (i.e. the password may be modified whenever and however often is "
 "desired)."
 msgstr ""
-"Este atributo contiene el número de segundos que deben transcurrir entre las"
-" modificaciones de la contraseña. Si este atributo no está presente se "
-"asumen 0 segundos (la contraseña puede ser modificada en cualquier momento y"
-" con la frecuencia que se desee)"
+"Este atributo contiene el número de segundos que deben transcurrir entre las "
+"modificaciones de la contraseña. Si este atributo no está presente se asumen "
+"0 segundos (la contraseña puede ser modificada en cualquier momento y con la "
+"frecuencia que se desee)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
@@ -236,8 +237,8 @@ msgid ""
 "The maximum number of consecutive failed bind attempts is specified in the "
 "\"Password maximum failure\" field below."
 msgstr ""
-"Este indicador especifíca, cuando se encuentra habilitado, que la contraseña"
-" no puede ser usada para autenticar despues de un número especificado de "
+"Este indicador especifíca, cuando se encuentra habilitado, que la contraseña "
+"no puede ser usada para autenticar despues de un número especificado de "
 "fallos consecutivos en la autenticación. El número máximo de intentos "
 "fallidos de autenticación se especifica en el campo situado más abajo "
 "\"Máximo número de fallos en la contraseña\". "
@@ -252,8 +253,8 @@ msgstr ""
 "Este atributo especifica el número de fallos de autenticación consecutivos "
 "que se deben producir hasta que la contraseña no pueda ser usada para "
 "autenticar. Si este atributo no está presente, o si su valor es cero, esta "
-"política no será comprobada, y el valor de \"Bloqueo preventivo de usuario\""
-" será ignorado."
+"política no será comprobada, y el valor de \"Bloqueo preventivo de usuario\" "
+"será ignorado."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:61
 msgid ""
@@ -275,8 +276,8 @@ msgid ""
 "present or if its value is zero, users with expired password will not be "
 "allowed to authenticate."
 msgstr ""
-"Este atributo contiene el número de veces que una contraseña que ha expirado"
-" se puede usar para autenticar a un usuario en el directorio. Si este "
+"Este atributo contiene el número de veces que una contraseña que ha expirado "
+"se puede usar para autenticar a un usuario en el directorio. Si este "
 "atributo no está presente o si su valor es cero, los usuarios con una "
 "contraseña que ha expirado no podrán autenticar. "
 
@@ -293,9 +294,9 @@ msgid ""
 "This attribute indicates how the password quality will be verified while "
 "being modified or added. If this attribute is not present, or if the value "
 "is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check"
-" it (due to a hashed password or other reasons) it will be accepted. A value"
-" of '2' indicates that the server will check the quality, and if the server "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
 msgstr ""
 "Este atributo indica como será verificada la calidad de la contraseña en el "
@@ -303,8 +304,8 @@ msgstr ""
 "su valor es '0', no se forzará la comprobación de calidad de la contraseña. "
 "El varo '1' indica al servidor que debe comprobar la calidad. y si el "
 "servidor no puede comprobarla (por el tipo de cifrado o cualquier otra "
-"razón) esta será aceptada. El valor '2' indica al servidor de debe comprobar"
-" la calidad, y si el servidor no es capaz de comprobarla este devolverá un "
+"razón) esta será aceptada. El valor '2' indica al servidor de debe comprobar "
+"la calidad, y si el servidor no es capaz de comprobarla este devolverá un "
 "error rehusando la contraseña."
 
 #: modules/ppolicy/includes/auditCodes.php:4
@@ -382,9 +383,9 @@ msgid ""
 "If checked, the user must change her password when she first binds to the "
 "LDAP directory after password is set or reset by a password administrator"
 msgstr ""
-"Si marcado, el usuario debe cambiar su contraseña la primera vez que conecte"
-" con el directorio LDAP despues de que su contraseña haya sido establecida o"
-" reseteada por un administrador"
+"Si marcado, el usuario debe cambiar su contraseña la primera vez que conecte "
+"con el directorio LDAP despues de que su contraseña haya sido establecida o "
+"reseteada por un administrador"
 
 #: modules/ppolicy/includes/publicFunc.php:117
 msgid "Enable a specific password policy for this user"
@@ -432,5 +433,3 @@ msgstr "Por defecto"
 #: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Habilitar política de contraseñas para usuario"
-
-

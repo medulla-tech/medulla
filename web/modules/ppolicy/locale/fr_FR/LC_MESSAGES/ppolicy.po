@@ -1,22 +1,24 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <jpbraun@mandriva.com>, 2011, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2012-08-29 15:06+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/team/fr_FR/)\n"
+"Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/"
+"team/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -103,8 +105,7 @@ msgstr "Nombre d'authentifications autorisées en période de grâce"
 #: modules/ppolicy/default/edit.php:180
 msgid "Force users to change their passwords on the first connection ?"
 msgstr ""
-"Forcer les utilisateurs à changer leur mot de passe à la première connexion "
-"?"
+"Forcer les utilisateurs à changer leur mot de passe à la première connexion ?"
 
 #: modules/ppolicy/default/edit.php:187
 msgid "Password history"
@@ -144,8 +145,8 @@ msgid ""
 "password change page."
 msgstr ""
 "Attention, votre mot de passe a été réinitialisé par un administrateur. "
-"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que"
-" possible en utilisant la page de changement de mot de passe."
+"Votre compte LDAP est restreint. Veuillez changer votre mot de passe dès que "
+"possible en utilisant la page de changement de mot de passe."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
@@ -198,9 +199,9 @@ msgid ""
 "desired)."
 msgstr ""
 "Cet attribute contient le nombre de secondes qui doit s'écouler avant de "
-"pouvoir changer le mot de passe. Si cet attribut n'est pas présent, le temps"
-" est fixé à 0 secondes. (i.e. le mot de passe peut être modifié aussi "
-"souvent que désiré)"
+"pouvoir changer le mot de passe. Si cet attribut n'est pas présent, le temps "
+"est fixé à 0 secondes. (i.e. le mot de passe peut être modifié aussi souvent "
+"que désiré)"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
@@ -287,22 +288,22 @@ msgid ""
 "This flag allows to mark the password as having being reset by an "
 "administrator."
 msgstr ""
-"Cette option permet d'indiquer que le mot de passe a été remis à zéro par un"
-" administrateur."
+"Cette option permet d'indiquer que le mot de passe a été remis à zéro par un "
+"administrateur."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:64
 msgid ""
 "This attribute indicates how the password quality will be verified while "
 "being modified or added. If this attribute is not present, or if the value "
 "is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check"
-" it (due to a hashed password or other reasons) it will be accepted. A value"
-" of '2' indicates that the server will check the quality, and if the server "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
 msgstr ""
 "Cet attribut indique comment la qualité du mot de passe est testée lors "
-"qu'il est ajouté ou modifié. Si cet attribut n'est pas présent, ou sa valeur"
-" est '0', le test de qualité n'est pas réalisé. Une valeur de '1' signifie "
+"qu'il est ajouté ou modifié. Si cet attribut n'est pas présent, ou sa valeur "
+"est '0', le test de qualité n'est pas réalisé. Une valeur de '1' signifie "
 "que le serveur LDAP vérifiera sa qualité, et si le serveur ne peut pas le "
 "vérifier il sera tout de même accepté. Une valeur de '2' signifie que le "
 "serveur vérifiera sa qualité, et si le serveur ne peut pas le vérifier, il "
@@ -353,8 +354,8 @@ msgid ""
 "The password of this account has expired. The user cannot change his "
 "password."
 msgstr ""
-"Le mot de passe de ce compte a expiré. L'utilisateur ne peut pas changer son"
-" mot de passe."
+"Le mot de passe de ce compte a expiré. L'utilisateur ne peut pas changer son "
+"mot de passe."
 
 #: modules/ppolicy/includes/publicFunc.php:79
 #, php-format
@@ -369,8 +370,8 @@ msgstr ""
 msgid ""
 "The password of this account has expired. The user can change his password."
 msgstr ""
-"Le mot de passe de ce compte a expiré. L'utilisateur peut changer son mot de"
-" passe."
+"Le mot de passe de ce compte a expiré. L'utilisateur peut changer son mot de "
+"passe."
 
 #: modules/ppolicy/includes/publicFunc.php:88
 msgid "Lock account"
@@ -418,8 +419,7 @@ msgstr "Attributs de politique des mots de passe mis à jour."
 
 #: modules/ppolicy/includes/publicFunc.php:223
 msgid "Apply a password policy for all group users"
-msgstr ""
-"Appliquer une politique des mots de passe à tous les membres du groupe"
+msgstr "Appliquer une politique des mots de passe à tous les membres du groupe"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -440,5 +440,3 @@ msgstr "Défaut "
 #: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Définir une politique de mots de passe pour cet utilisateur"
-
-

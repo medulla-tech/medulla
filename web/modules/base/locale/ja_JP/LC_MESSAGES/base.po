@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 #   <jcvassort@mandriva.com>, 2014.
 msgid ""
@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2015-01-28 16:20+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/mds/team/ja_JP/)\n"
+"Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
+"mds/team/ja_JP/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja_JP\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -68,7 +70,9 @@ msgstr "ホーム"
 msgid ""
 "If this phrase does not change, you browser is not supported by the MMC "
 "application"
-msgstr "このフレーズが変わらない場合は、お使いのブラウザ は、MMC アプリケーションによってサポートされていません"
+msgstr ""
+"このフレーズが変わらない場合は、お使いのブラウザ は、MMC アプリケーションに"
+"よってサポートされていません"
 
 #: graph/header.inc.php:195 graph/header.inc.php:231
 msgid "Yes"
@@ -113,14 +117,16 @@ msgstr "MMC エージェントが LDAP サーバーにコンタクトできま�
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/mmc/plugins/base/ini </li>\n"
 "                            <li>Verify you LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
 "次の手法によって問題を解決してください:\n"
 "⏎\n"
 "                        <ul>⏎\n"
-"                            <li>LDAP サーバーが正しく /etc/mmc/プラグインs/base/ini に設定されていることを確認する </li>⏎\n"
+"                            <li>LDAP サーバーが正しく /etc/mmc/プラグインs/"
+"base/ini に設定されていることを確認する </li>⏎\n"
 "                            <li>LDAP サーバーが起動していることを確認する\n"
 "</li>⏎\n"
 "                        </ul>"
@@ -164,13 +170,16 @@ msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
 "                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
+"                            <li> Your Samba server is not properly "
+"configured</li>\n"
 "                        </ul>"
 msgstr ""
 "smbpasswd が正しく設定されていることを確認してください:⏎\n"
 "                        <ul>⏎\n"
-"                            <li> Ldap サーバーがダウンしている可能性がある</li>⏎\n"
-"                            <li> SAMBA サーバーが適切に設定されていない</li>⏎\n"
+"                            <li> Ldap サーバーがダウンしている可能性がある</"
+"li>⏎\n"
+"                            <li> SAMBA サーバーが適切に設定されていない</"
+"li>⏎\n"
 "                        </ul>"
 
 #: includes/auditCodesManager.php:33
@@ -222,7 +231,9 @@ msgstr "MMC エージェント通信で問題が発生しました"
 msgid ""
 "Timeout when reading data from the MMC agent. Please check network "
 "connectivity and server load."
-msgstr "MMC エージェントからデータを読み取る時に、タイムアウトしました。ネットワーク接続およびサーバー負荷を確認してください。"
+msgstr ""
+"MMC エージェントからデータを読み取る時に、タイムアウトしました。ネットワーク"
+"接続およびサーバー負荷を確認してください。"
 
 #: includes/xmlrpc.inc.php:206
 msgid "Error while reading MMC agent XML-RPC response."
@@ -236,13 +247,17 @@ msgstr "ネットワーク接続を確認してください。"
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
-msgstr "MMC エージェントと通信できません。正しい TCP ポートとプロトコルを使用していることを確認してください。"
+msgstr ""
+"MMC エージェントと通信できません。正しい TCP ポートとプロトコルを使用している"
+"ことを確認してください。"
 
 #: includes/xmlrpc.inc.php:245
 msgid ""
 "The MMC agent didn't give us a session number. Please check the MMC agent "
 "version."
-msgstr "MMC エージェントがセッション番号を提示しませんでした。MMC エージェントのバージョンを確認してください。"
+msgstr ""
+"MMC エージェントがセッション番号を提示しませんでした。MMC エージェントのバー"
+"ジョンを確認してください。"
 
 #: includes/xmlrpc.inc.php:354
 msgid "unknown error"
@@ -252,7 +267,9 @@ msgstr "原因不明のエラー"
 msgid ""
 "This exception is unknown. Please contact us to add an error handling on "
 "this error."
-msgstr "この例外の原因は不明です。当社までご連絡いただき、このエラーに関するエラーハンドリングを追加してください。"
+msgstr ""
+"この例外の原因は不明です。当社までご連絡いただき、このエラーに関するエラーハ"
+"ンドリングを追加してください。"
 
 #: includes/FormGenerator.php:69 includes/FormGenerator.php:291
 #: includes/FormGenerator.php:728 includes/FormGenerator.php:858
@@ -691,8 +708,8 @@ msgid ""
 "You have to check the box <b>\"I am aware that all related images (non-"
 "master) will be deleted\"</b> if you want to remove this computer."
 msgstr ""
-"このコンピューターを削除する場合は、<b>\"関連イメージ (マスターでない) が削除されることを認識しています\"</b> "
-"のボックスにチェックする必要があります。"
+"このコンピューターを削除する場合は、<b>\"関連イメージ (マスターでない) が削除"
+"されることを認識しています\"</b> のボックスにチェックする必要があります。"
 
 #: modules/base/computers/delete.php:38
 msgid "The computer has been deleted."
@@ -708,11 +725,11 @@ msgstr "バックアップを実行しますか？"
 
 #: modules/base/computers/delete.php:53
 msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
+"I am aware that <b>all related images (non-master)</b> will be <b>DELETED</"
+"b>.<br />Check this box if it is what you want."
 msgstr ""
-"私は <b>すべての関連イメージ (マスターでない)</b> が <b>削除される</b>.<br "
-"/>削除される場合は、このボックスをチェックしてください。"
+"私は <b>すべての関連イメージ (マスターでない)</b> が <b>削除される</b>.<br />"
+"削除される場合は、このボックスをチェックしてください。"
 
 #: modules/base/computers/localSidebar.php:5
 msgid "All computers"
@@ -771,7 +788,9 @@ msgstr "グループが変更されました"
 msgid ""
 "Some users can't be removed from this group because this group is their "
 "primary group."
-msgstr "このグループがプライマリグループであるため、ユーザーの一部はこのグループから削除できません。"
+msgstr ""
+"このグループがプライマリグループであるため、ユーザーの一部はこのグループから"
+"削除できません。"
 
 #: modules/base/groups/members.php:128
 #, php-format
@@ -804,7 +823,9 @@ msgstr "グループの追加"
 msgid ""
 "The group name can only contain letters and numeric, and must begin with a "
 "letter"
-msgstr "グループ名には、英数字のみ文字と数字のみ含めることができます。また文字から始める必要があります。"
+msgstr ""
+"グループ名には、英数字のみ文字と数字のみ含めることができます。また文字から始"
+"める必要があります。"
 
 #: modules/base/groups/edit.php:99
 msgid "Group name"
@@ -981,11 +1002,12 @@ msgstr "  および  "
 #: modules/base/includes/users-xmlrpc.inc.php:110
 #, php-format
 msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
+"User %s created but password is not valid regarding your password policies."
+"<br/><strong>You must change the user password.</strong>"
 msgstr ""
-"ユーザー %s "
-"が作成されましたが、パスワードポリシーに対してパスワードが有効ではありません。<br/><strong>ユーザーパスワードを変更する必要があります。</strong>"
+"ユーザー %s が作成されましたが、パスワードポリシーに対してパスワードが有効で"
+"はありません。<br/><strong>ユーザーパスワードを変更する必要があります。</"
+"strong>"
 
 #: modules/base/includes/users-xmlrpc.inc.php:114
 msgid "You cannot add more users."
@@ -1003,18 +1025,23 @@ msgstr "LDAP ログファイルが存在しません。"
 #: modules/base/includes/errorHandling.php:29
 msgid ""
 "Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
+"ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 msgstr ""
 "以下を確認してください:⏎\n"
-"                        <p>このラインが /etc/ldap/slapd.conf or /etc/openldap/slapd.conf にあること:⏎\n"
+"                        <p>このラインが /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf にあること:⏎\n"
 "                        <pre>ログレベル   256</pre></p>⏎\n"
-"                        <p>およびこのラインが次に存在すること /etc/syslog.conf:⏎\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>⏎\n"
+"                        <p>およびこのラインが次に存在すること /etc/syslog."
+"conf:⏎\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
+"ldap/ldap.log)</pre>⏎\n"
 "                        </p>⏎\n"
 "                        "
 
@@ -1034,7 +1061,9 @@ msgstr "このユーザーのホームディレクトリはすでに存在して
 msgid ""
 "Set the home directory in a different location or force the use of the "
 "existing directory (in expert mode)."
-msgstr "ホームディレクトリを異なる場所に設定するか、あえて既存のディレクトリを使用するように設定してください (エキスパートモード)。"
+msgstr ""
+"ホームディレクトリを異なる場所に設定するか、あえて既存のディレクトリを使用す"
+"るように設定してください (エキスパートモード)。"
 
 #: modules/base/includes/errorHandling.php:53
 msgid "Your password is too young to change."
@@ -1044,7 +1073,9 @@ msgstr "パスワードは新しすぎて変更できません。"
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because your password is too young to change."
-msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワードは新しすぎて変更できません。"
+msgstr ""
+"アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワード"
+"は新しすぎて変更できません。"
 
 #: modules/base/includes/errorHandling.php:59
 msgid "Password is in history of old passwords"
@@ -1055,7 +1086,9 @@ msgstr "パスワードは、過去のパスワード履歴に存在していま
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because you already had this password previously."
-msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。このパスワードは以前使用されていたことがあります。"
+msgstr ""
+"アカウントのパスワードポリシーは、パスワードの変更を許可しません。このパス"
+"ワードは以前使用されていたことがあります。"
 
 #: modules/base/includes/errorHandling.php:65
 msgid "Password is not being changed from existing value"
@@ -1069,7 +1102,9 @@ msgstr "パスワードは、ポリシーのクオリティ確認に失敗しま
 msgid ""
 "The password policy of your account doesn't allow you to modify your "
 "password, because your password is not complex enough or is too short."
-msgstr "アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワードが簡単すぎるか短すぎます。"
+msgstr ""
+"アカウントのパスワードポリシーは、パスワードの変更を許可しません。パスワード"
+"が簡単すぎるか短すぎます。"
 
 #: modules/base/includes/errorHandling.php:77
 msgid "The password must contain at least one number"
@@ -1084,8 +1119,7 @@ msgid "The password must contain at least one lower case character"
 msgstr "パスワードは、小文字を最低 1 つ含む必要があります。"
 
 #: modules/base/includes/errorHandling.php:92
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
+msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr "パスワードは、特殊文字を最低 1 つ含む必要があります: #$%&+./:=?@{}"
 
 #: modules/base/includes/errorHandling.php:98
@@ -1162,7 +1196,9 @@ msgstr "マシンのグループからの削除"
 #: modules/base/includes/publicFunc.php:46
 #, php-format
 msgid "Group %s can't be deleted.<br/>%s is the primary group of some users."
-msgstr "グループ %s は削除できません。<br/>%s は、一部のユーザーのプライマリグループです。"
+msgstr ""
+"グループ %s は削除できません。<br/>%s は、一部のユーザーのプライマリグループ"
+"です。"
 
 #: modules/base/includes/publicFunc.php:49
 #, php-format
@@ -1201,7 +1237,9 @@ msgstr "プライマリグループフィールドは、空であることはで
 #: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
-msgstr "グループ  %s は存在していません。プライマリグループとして設定することはできません。"
+msgstr ""
+"グループ  %s は存在していません。プライマリグループとして設定することはできま"
+"せん。"
 
 #: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
@@ -1219,7 +1257,8 @@ msgstr "ユーザーは有効化されました"
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo automatically"
+"                    Install php gd extension to resize the photo "
+"automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:266
@@ -1304,7 +1343,8 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
-"                                  His login shell command is replaced by /bin/false"
+"                                  His login shell command is replaced by /"
+"bin/false"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
@@ -1357,8 +1397,8 @@ msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
 msgstr ""
-"このフィールドは、LDAP クライアントの一部によって、ユーザーエントリーを表示するために使用されます (Thunderbird "
-"アドレス帳などのため)。"
+"このフィールドは、LDAP クライアントの一部によって、ユーザーエントリーを表示す"
+"るために使用されます (Thunderbird アドレス帳などのため)。"
 
 #: modules/base/includes/publicFunc.php:484
 #: modules/base/infoPackage.inc.php:387
@@ -1368,7 +1408,9 @@ msgstr "使用される名前"
 #: modules/base/includes/publicFunc.php:485
 msgid ""
 "This field is used by SAMBA (and other LDAP clients) to display user name."
-msgstr "このフィールドは、SAMBA (および他の LDAP クライアント) によって、ユーザー名を表示するために使用されます。"
+msgstr ""
+"このフィールドは、SAMBA (および他の LDAP クライアント) によって、ユーザー名を"
+"表示するために使用されます。"
 
 #: modules/base/includes/publicFunc.php:491
 msgid "UID"
@@ -1466,7 +1508,9 @@ msgstr "警告: 登録コンピューター数がライセンスを超過しま�
 msgid ""
 "Please contact your administrator for more information. If you are an "
 "administrator, please go to the license status page for more information."
-msgstr "詳細は、担当の管理者にご連絡ください。自分が管理者である場合は、ライセンスステータスページの詳細情報を確認してください。"
+msgstr ""
+"詳細は、担当の管理者にご連絡ください。自分が管理者である場合は、ライセンスス"
+"テータスページの詳細情報を確認してください。"
 
 #: modules/base/status/support.php:50
 msgid "Product name"
@@ -1583,14 +1627,17 @@ msgstr "ユーザーホームディレクトリのバックアップ"
 #: modules/base/users/backup.php:54
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
-msgstr "<b>%s</b> ユーザーのフォルダのバックアップがバックグラウンドで起動されました。"
+msgstr ""
+"<b>%s</b> ユーザーのフォルダのバックアップがバックグラウンドで起動されまし"
+"た。"
 
 #: modules/base/users/backup.php:56
 #, php-format
 msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr "ファイルは、バックアップの最後にサーバーのディレクトリ %s に保存されます。"
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
+msgstr ""
+"ファイルは、バックアップの最後にサーバーのディレクトリ %s に保存されます。"
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
@@ -1610,7 +1657,9 @@ msgstr "%s  のホームディレクトリがアーカイブされます。"
 msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
-msgstr "メディアサイズを選択してください。データがボリュームサイズを超過する場合、メディアサイズのファイルがいくつか作成されます。"
+msgstr ""
+"メディアサイズを選択してください。データがボリュームサイズを超過する場合、メ"
+"ディアサイズのファイルがいくつか作成されます。"
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
@@ -1959,18 +2008,27 @@ msgstr "Web: プラグインがインストールされていません。"
 msgid ""
 "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"will be useful, but <strong>without any warranty</strong>; without even the "
+"implied\n"
 "warranty of merchantability of fitness for a particular purpose. See the\n"
 "GNU General Public License for more details.</p>\n"
 "<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"Moreover, this product is a main and critical component of your information "
+"system. This community version is distributed without professional support "
+"of any kind,\n"
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
 "<p>⏎\n"
-"本製品のコミュニティバージョンは、有益なものとなることを願って配布されていますが、 <strong>いかなる保証もありません </strong>。⏎また特定の目的に対する市場性適合の暗黙の保証もありません。詳細は、GNU General Public ライセンスを参照してください。.</p>⏎\n"
+"本製品のコミュニティバージョンは、有益なものとなることを願って配布されていま"
+"すが、 <strong>いかなる保証もありません </strong>。⏎また特定の目的に対する市"
+"場性適合の暗黙の保証もありません。詳細は、GNU General Public ライセンスを参照"
+"してください。.</p>⏎\n"
 "<p>⏎\n"
-"さらに、本製品はお使いの情報システムの主要かつ重要なコンポーネントです。このコミュニティバージョンは、いかなる種類のプロフェッショナルサポートもありませんし、>⏎以前のバージョンからのアップグレードパスは試験されていませんし認証されていません。\n"
+"さらに、本製品はお使いの情報システムの主要かつ重要なコンポーネントです。この"
+"コミュニティバージョンは、いかなる種類のプロフェッショナルサポートもありませ"
+"んし、>⏎以前のバージョンからのアップグレードパスは試験されていませんし認証さ"
+"れていません。\n"
 "⏎\n"
 "</p>"
 
@@ -1978,7 +2036,9 @@ msgstr ""
 msgid ""
 "Click here to get more information about our support and maintenance "
 "subscription plan."
-msgstr "ここをクリックすると、私たちのサポートおよびメンテナンス購読プランの詳細情報を取得することができます。"
+msgstr ""
+"ここをクリックすると、私たちのサポートおよびメンテナンス購読プランの詳細情報"
+"を取得することができます。"
 
 #: index.php:71
 msgid "Login failed"
@@ -1988,7 +2048,9 @@ msgstr "ログインが失敗しました"
 msgid ""
 "You have been logged out because the session between the MMC web interface "
 "and the MMC agent expired."
-msgstr "MMC Web インターフェースと MMC エージェント間のセッションが終了したので、ログアウトしました。"
+msgstr ""
+"MMC Web インターフェースと MMC エージェント間のセッションが終了したので、ログ"
+"アウトしました。"
 
 #: index.php:185
 msgid "Forgot password ?"
@@ -2005,5 +2067,3 @@ msgstr "言語"
 #: index.php:228
 msgid "Connect"
 msgstr "接続"
-
-
