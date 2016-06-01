@@ -1281,7 +1281,7 @@ class Inventory(DyngroupDatabaseHelper):
                     y, m, day = res[4].split("-")
                     d = datetime.datetime(int(y), int(m), int(day))
                 tmp["timestamp"] = d
-                if res[1] in not machine_inv:
+                if not res[1] in  machine_inv:
                     machine_inv[res[1]] = []
                     machine_uuid[res[1]] = toUUID(res[2])
                 if len(res) > 5:

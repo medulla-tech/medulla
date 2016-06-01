@@ -355,7 +355,7 @@ class Common(pulse2.utils.Singleton):
     def getAllPackageRoot(self):
         ret = {}
         for m in self.desc:
-            if 'src' in m and not m['src'] ret:
+            if 'src' in m and not m['src'] in ret:
                 ret[m['src']] = None
         return ret.keys()
 
