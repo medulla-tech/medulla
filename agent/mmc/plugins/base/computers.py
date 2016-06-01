@@ -378,7 +378,7 @@ class ComputerManager(Singleton):
         klass = self.components[self.main]
         instance = klass()
         ret = instance.getComputersListHeaders(ctx)
-        if ret == None:
+        if ret is None:
             ret = [['cn', 'Computer Name'], ['displayName', 'Description']]
         return ret
 

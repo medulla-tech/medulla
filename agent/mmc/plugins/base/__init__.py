@@ -1691,7 +1691,7 @@ class LdapUserGroupControl:
 
         uids = cSort(uids)
         total = len(uids)
-        if start != None and end != None:
+        if start is not None and end is not None:
             uids = uids[int(start):int(end)]
         ret = []
         for uid in uids:

@@ -110,7 +110,7 @@ class LDAPConnection:
         ldap.set_option(ldap.OPT_DEBUG_LEVEL, config.ldapdebuglevel)
         self.l = ldap.initialize(config.ldapurl)
         self.l.protocol_version = ldap.VERSION3
-        if config.network_timeout != None:
+        if config.network_timeout is not None:
             self._ldapSetOption(self.l, ldap.OPT_NETWORK_TIMEOUT, config.network_timeout)
         if config.start_tls or config.ldapurl.startswith('ldaps://'):
             # Set SSL/TLS options

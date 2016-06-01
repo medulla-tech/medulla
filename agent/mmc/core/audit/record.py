@@ -121,7 +121,7 @@ class AuditRecordDB(AuditRecord):
             # get module object from database
             bdmodule = session.query(Module).filter(parent.module_table.c.name==module).first()
             # insert module object in database if it is not available
-            if bdmodule == None:
+            if bdmodule is None:
                 bdmodule = Module()
                 bdmodule.name = module
                 session.add(bdmodule)
@@ -130,7 +130,7 @@ class AuditRecordDB(AuditRecord):
             # get event object from database
             bdevent = session.query(Event).filter(and_(parent.event_table.c.name == event, parent.event_table.c.module_id == bdmodule.id)).first()
             # insert event object in database if it is not available
-            if bdevent == None:
+            if bdevent is None:
                 bdevent = Event()
                 bdevent.module_id = bdmodule.id
                 bdevent.name = event
@@ -140,7 +140,7 @@ class AuditRecordDB(AuditRecord):
             # get initiator object
             bdinitiator = session.query(Initiator).filter(and_(parent.initiator_table.c.application == initiator[1], parent.initiator_table.c.hostname == initiator[0])).first()
             # put it in database if it is not available
-            if bdinitiator == None:
+            if bdinitiator is None:
                 bdinitiator = Initiator()
                 bdinitiator.application = initiator[1]
                 bdinitiator.hostname = initiator[0]
@@ -150,7 +150,7 @@ class AuditRecordDB(AuditRecord):
             # get source object
             bdsource = session.query(Source).filter(parent.source_table.c.hostname == source).first()
             # put it in database if not available
-            if bdsource == None:
+            if bdsource is None:
                 bdsource = Source()
                 bdsource.hostname = source
                 session.add(bdsource)
@@ -158,7 +158,7 @@ class AuditRecordDB(AuditRecord):
 
             # get user type
             utype = session.query(Type).filter(parent.type_table.c.type == self.user[1]).first()
-            if utype == None:
+            if utype is None:
                 utype = Type()
                 utype.type = self.user[1]
                 session.add(utype)
@@ -166,7 +166,7 @@ class AuditRecordDB(AuditRecord):
 
             # get user object
             bduser = session.query(Object).filter(and_(parent.object_table.c.uri == self.user[0], parent.object_table.c.type_id == utype.id)).first()
-            if bduser == None:
+            if bduser is None:
                 bduser = Object()
                 bduser.uri = self.user[0]
                 bduser.type_id = utype.id
@@ -188,11 +188,11 @@ class AuditRecordDB(AuditRecord):
 
             parentobj = None
             bdobjectlog = None
-            if objects != None:
+            if objects is not None:
                 for i,j in objects:
                     # Get or Insert Type id of object
                     bdtype = session.query(Type).filter(parent.type_table.c.type==j).first()
-                    if bdtype == None:
+                    if bdtype is None:
                         bdtype = Type()
                         bdtype.type = j
                         session.add(bdtype)
@@ -200,7 +200,7 @@ class AuditRecordDB(AuditRecord):
 
                     # Get or insert object
                     obj = session.query(Object).filter(and_(parent.object_table.c.uri==i, parent.object_table.c.type_id==bdtype.id, parent.object_table.c.parent==parentobj)).first()
-                    if obj == None:
+                    if obj is None:
                         obj = Object()
                         obj.uri = i
                         obj.type_id = bdtype.id
@@ -218,9 +218,9 @@ class AuditRecordDB(AuditRecord):
                     # the parent of the next object to store
                     parentobj = obj.id
 
-            if bdobjectlog != None:
+            if bdobjectlog is not None:
                 # Insert current value
-                if current != None:
+                if current is not None:
                     if type(current) == tuple or type(current) == list :
                         for i in current:
                              cv = Current_Value(bdobjectlog, i)
@@ -230,7 +230,7 @@ class AuditRecordDB(AuditRecord):
                         session.add(cv)
 
                 # Insert previous value
-                if previous != None:
+                if previous is not None:
                     if type(previous) == tuple or type(previous) == list:
                         for i in previous:
                              pv = Previous_Value(bdobjectlog, i)
@@ -240,7 +240,7 @@ class AuditRecordDB(AuditRecord):
                         session.add(pv)
 
             # relations on log_parameters
-            if param != None:
+            if param is not None:
                 for i in param:
                     if type(i)==list:
                         for j in i:

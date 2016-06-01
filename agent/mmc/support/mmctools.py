@@ -172,7 +172,7 @@ def xmlrpcCleanup(data):
         ret = data.tuple()
     elif type(data) == struct_time:
         ret = tuple(data)
-    elif data == None:
+    elif data is None:
         ret = False
     elif type(data) == tuple:
         ret = map(lambda x: xmlrpcCleanup(x), data)
@@ -432,7 +432,7 @@ def shlaunchBackground(cmd, desc = None, progressFunc = None, endFunc = None):
     logger = logging.getLogger()
     logger.info("support.mmctools.shlaunchBackground(\""+str(cmd)+"\")")
     shProcess = shSharedProcessProtocol(cmd)
-    if desc == None:
+    if desc is None:
         shProcess.desc = cmd
     else:
         shProcess.desc = desc
