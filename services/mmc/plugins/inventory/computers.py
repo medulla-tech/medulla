@@ -128,7 +128,7 @@ class InventoryComputers(ComputerI):
                 return [False]
         return [True, filt]
 
-    def getRestrictedComputersListLen(self, ctx, filt = {}):
+    def getRestrictedComputersListLen(self, ctx, filt = None):
         if filt == '' or filt is None:
             filt = {}
 
@@ -138,7 +138,7 @@ class InventoryComputers(ComputerI):
 
         return self.inventory.countMachinesOnly(ctx, filt)
 
-    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True, justId = False, toH = False):
+    def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
         if filt == '' or filt is None:
             filt = {}
 

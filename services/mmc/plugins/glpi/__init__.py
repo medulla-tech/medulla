@@ -169,7 +169,9 @@ def getLastMachineInventoryPart(uuid,
                                 minbound=0,
                                 maxbound=-1,
                                 filt=None,
-                                options={}):
+                                options=None):
+    # Mutable dict exclude_names used as default argument to a method or function
+    options = options or {}
     return xmlrpcCleanup(Glpi().getLastMachineInventoryPart(uuid,
                                                             part,
                                                             minbound,
@@ -178,7 +180,9 @@ def getLastMachineInventoryPart(uuid,
                                                             options))
 
 
-def countLastMachineInventoryPart(uuid, part, filt=None, options={}):
+def countLastMachineInventoryPart(uuid, part, filt=None, options=None):
+    # Mutable dict exclude_names used as default argument to a method or function
+    options = options or {}
     return xmlrpcCleanup(Glpi().countLastMachineInventoryPart(uuid,
                                                               part,
                                                               filt,

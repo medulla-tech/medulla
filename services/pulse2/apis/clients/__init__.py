@@ -54,17 +54,21 @@ class Pulse2Api(Pulse2XMLRPCProxy):
         self.initialized_failed = False
 
 
-    def onError(self, error, funcname, args, default_return = []):
+    def onError(self, error, funcname, args, default_return = None):
+        # Mutable list default_return used as default argument to a method or function
+        default_return = default_return or []
         self.logger.warn("%s: %s %s has failed: %s" % (self.name, funcname, args, error))
         return default_return
 
-    def onErrorRaise(self, error, funcname, args, default_return = []):
+    def onErrorRaise(self, error, funcname, args, default_return = None):
         """
         To use as a deferred error back
 
         @returns: a list containing error informations
         @rtype: list
         """
+        # Mutable list default_return used as default argument to a method or function
+        default_return = default_return or []
         if error.type == ConnectionRefusedError:
             self.logger.error("%s %s has failed: connection refused" % (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,

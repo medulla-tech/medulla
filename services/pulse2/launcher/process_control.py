@@ -40,21 +40,26 @@ from pulse2.utils import Singleton, HasSufficientMemory
 from pulse2.launcher.config import LauncherConfig
 from pulse2.consts import PULSE2_WRAPPER_ERROR_SIGNAL_BASE
 
-def _checkEnvArgs(env_={}):
+def _checkEnvArgs(env_=None):
     """
     If ssh args found on env and its a list join it
     """
+    # Mutable dict env_ used as default argument to a method or function
+    env_ = env_ or {}
     if 'SSHARGS' in env_ and isinstance(env_['SSHARGS'], list):
         env_['SSHARGS'] = ' '.join(env_['SSHARGS'])
 
     return env_
 
 @HasSufficientMemory(80)
-def commandRunner(cmd, cbCommandEnd, env_={}):
+def commandRunner(cmd, cbCommandEnd, env_=None):
     """
     Return a Deferred resulting in the stdout output of a shell command.
     Only used in sync mode.
     """
+    # Mutable dict env_ used as default argument to a method or function
+    env_ = env_ or {}
+        
     process = commandProtocol(cmd)
 
     env_ = _checkEnvArgs(env_=env_)
@@ -73,9 +78,11 @@ def commandRunner(cmd, cbCommandEnd, env_={}):
     return process.deferred
 
 @HasSufficientMemory(80)
-def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind, env_={}):
+def commandForker(cmd, cbCommandEnd, id, defer_results, callbackName, max_exec_time, group, kind, env_=None):
     """
     """
+    # Mutable dict env_ used as default argument to a method or function
+    env_ = env_ or {}
     if ProcessList().existsProcess(id):
         logging.getLogger().warn('launcher %s: attempted to add command #%s twice' % (LauncherConfig().name, id))
         return False

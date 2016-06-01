@@ -2081,7 +2081,7 @@ class ImagingRpcProxy(RpcProxyI):
             db.setLocationSynchroState(loc_uuid, P2ISS.TODO)
         return defer.fail()
 
-    def __synchroTargets(self, uuids, target_type, macs = {}, ctx = None, wol = False):
+    def __synchroTargets(self, uuids, target_type, macs = None, ctx = None, wol = False):
         """
         synchronize targets with their imaging servers
 
@@ -2101,6 +2101,8 @@ class ImagingRpcProxy(RpcProxyI):
         @returns: the list of uuids of the target that failed to synchronize
         @rtype: list
         """
+        # Mutable dict macs used as default argument to a method or function
+        macs = macs or {} 
         if ctx == None:
             ctx = self.currentContext
         return synchroTargets(ctx, uuids, target_type, macs = macs, wol = wol)
@@ -3351,7 +3353,7 @@ def synchroComputers(ctx, uuids, ctype = P2IT.COMPUTER):
     ret = synchroTargets(ctx, uuids, ctype)
     return xmlrpcCleanup(ret)
 
-def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
+def synchroTargets(ctx, uuids, target_type, macs = None, wol = False):
     """
     synchronize boot menus
     @param uuids: list of computers UUIDS
@@ -3369,7 +3371,8 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
     @return: Deferred list
     @rtype: defer_list
     """
-
+    # Mutable dict macs used as default argument to a method or function
+    macs = macs or {} 
     # initialize stuff
     logger = logging.getLogger()
     ListImagingServerAssociated=[]
@@ -3506,7 +3509,9 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         defer_list.addCallback(sendResult)
         return defer_list
 
-def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
+def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = None):
+    # Mutable dict macs used as default argument to a method or function
+    macs = macs or {}
     logger = logging.getLogger()
     db = ImagingDatabase()
     def treatFailures(result, location_uuid, url, distinct_loc = distinct_loc, logger = logger, target_type = target_type, pid = pid, db = db):
@@ -3569,7 +3574,9 @@ def chooseImagingApiUrl(location):
     return ImagingDatabase().getEntityUrl(location)
 
 
-def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
+def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = None):
+    # Mutable dict h_pis used as default argument to a method or function
+    h_pis = h_pis or {}
     menu['bootservices'] = {}
     menu['images'] = {}
     for mi in menu_items:

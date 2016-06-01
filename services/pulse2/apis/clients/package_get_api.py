@@ -92,9 +92,11 @@ class PackageGetA(Pulse2Api):
             ret.append(i[1])
         return ret
 
-    def onErrorGetPackageDetailCall(self, error, pids, value = []):
+    def onErrorGetPackageDetailCall(self, error, pids, value = None):
         # when the package server is old, this one call function does not exists
         # so we call several time the existing function
+        # Mutable list value used as default argument to a method or function
+        value = value or []
         self.logger.warn("one of your package server does not support getPackagesDetail, you should update it.")
         ds = []
         for pid in pids:

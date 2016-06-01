@@ -41,7 +41,7 @@ class exportedReport(object):
         self.ctx = SecurityContext()
         self.ctx.userid = "root"
 
-    def _getEntitiesIds(self, entities=[]):
+    def _getEntitiesIds(self, entities = None):
         """
         Return a list of entities ids for the request
 
@@ -49,6 +49,8 @@ class exportedReport(object):
         @return: list of entities ids
         """
         # Be sure to get all entities
+        # Mutable list entities used as default argument to a method or function
+        entities = entities or []
         self.ctx.locations = None
         if hasattr(self.ctx, 'locationsid'):
             del self.ctx.locationsid
@@ -77,7 +79,7 @@ class exportedReport(object):
                 results.append(os_result)
         return results
 
-    def getComputerCountByOSes(self, entities, os_names, exclude_names=[]):
+    def getComputerCountByOSes(self, entities, os_names, exclude_names=None):
         """
         Get computer count for os_names
 
@@ -86,6 +88,8 @@ class exportedReport(object):
 
         @return: count of machines by entity
         """
+        # Mutable list exclude_names used as default argument to a method or function
+        exclude_names = exclude_names or []
         if isinstance(os_names, basestring):
             os_names = [os_names]
 
@@ -218,7 +222,7 @@ class exportedReport(object):
                 results.append(soft_result)
         return results
 
-    def getComputerCountBySoftwares(self, entities, soft_names, exclude_names={}):
+    def getComputerCountBySoftwares(self, entities, soft_names, exclude_names=None):
         """
         Get computer count for software names
 
@@ -233,6 +237,8 @@ class exportedReport(object):
 
         @return: count of machines by entity
         """
+        # Mutable dict exclude_names used as default argument to a method or function
+        exclude_names = exclude_names or {}
         softs = self._constructSoftwaresList(soft_names)
         excludes = self._constructSoftwaresList(exclude_names)
         results = self._getComputerCountBySoftwares(entities, softs, [])
