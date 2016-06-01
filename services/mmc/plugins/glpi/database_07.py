@@ -1820,7 +1820,7 @@ class Glpi07(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
-    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = none, count = False):
+    def getLastMachineMemoryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
         #Mutable dict options used as default argument to a method or function
         options = options or {}
         query = self.filterOnUUID(
