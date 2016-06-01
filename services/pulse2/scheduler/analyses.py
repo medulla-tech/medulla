@@ -91,7 +91,7 @@ class MscQueryManager(MscContainer):
         return [c for c in self.waiting_circuits if c.id in ids]
 
 
-    def get_active_circuits(self, coh_ids=[]):
+    def get_active_circuits(self, coh_ids=None):
         """
         Get the all circuits already initialized and having a running phase.
 
@@ -101,6 +101,8 @@ class MscQueryManager(MscContainer):
         @return: list of all circuits
         @rtype: list
         """
+        # Mutable list coh_ids used as default argument to a method or function
+        coh_ids = coh_ids or [] 
         if len(self.circuits) == 0 :
             return []
         circuits = [c for c in self.circuits if c.initialized and c.is_running]

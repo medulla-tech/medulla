@@ -83,13 +83,15 @@ class MethodProxy(MscContainer):
         return True
 
 
-    def stop_commands(self, cohs=[]):
+    def stop_commands(self, cohs=None):
         """
         Stops all or selected circuits.
 
         @param cohs: list of commands_on_host
         @type cohs: list
         """
+        # Mutable list cohs used as default argument to a method or function
+        cohs = cohs or []
         cmd_ids = get_commands(cohs)
         active_circuits = [c for c in self._circuits if c.id in cohs]
 

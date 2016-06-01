@@ -33,13 +33,15 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 
 class MirrorApi(MyXmlrpc):
     type = 'MirrorApi'
-    def __init__(self, services = {}, name = '', assign_algo = 'default'):
+    def __init__(self, services = None, name = '', assign_algo = 'default'):
         MyXmlrpc.__init__(self)
         self.name = name
         self.mirrors = {}
         self.url2mirrors = {}
         self.assign = {}
         self.logger = logging.getLogger()
+        # Mutable dict services used as default argument to a method or function
+        services = services or {}
         try:
             for service in services:
                 if service['type'] == 'package_api_get' or service['type'] == 'package_api_put':

@@ -98,8 +98,10 @@ class Package:
 
     def init(self, id, label, version, size, description, cmd, initcmd='',
              precmd='', postcmd_ok='', postcmd_ko='', reboot=0, entity_id=None, Qvendor='',
-             Qsoftware='', Qversion='', boolcnd='', licenses='', sub_packages=[],
+             Qsoftware='', Qversion='', boolcnd='', licenses='', sub_packages=None,
              associateinventory=0):
+        # Mutable list sub_packages used as default argument to a method or function
+        sub_packages = sub_packages or []
         self.label = label
         self.version = version
         self.size = size
