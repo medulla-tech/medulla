@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
+"PO-Revision-Date: 2016-06-02 09:22+0100\n"
+"Last-Translator: Tekmans <tekmans@no-log.org>\n"
 "Language-Team: Spanish (Spain) (http://transifex.mandriva.com/projects/p/mds/"
 "team/es_ES/)\n"
 "MIME-Version: 1.0\n"
@@ -23,21 +23,21 @@ msgstr ""
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
 #: modules/ppolicy/default/edit.php:48
 msgid "Edit password policy"
-msgstr ""
+msgstr "Cambiar la política de contraseñas"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
 msgid "Delete password policy"
-msgstr ""
+msgstr "Eliminar la política de contraseñas"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
 #: modules/ppolicy/includes/localSidebar.php:27
 #: modules/ppolicy/infoPackage.inc.php:46
 msgid "Password policies"
-msgstr ""
+msgstr "Política de contraseña"
 
 #: modules/ppolicy/default/delete.php:29
 msgid "The password policy has been deleted."
-msgstr ""
+msgstr "Política de contraseñas ha sido eliminado."
 
 #: modules/ppolicy/default/delete.php:41
 #, php-format
@@ -45,20 +45,23 @@ msgid ""
 "You will delete the password policy <strong>%s</strong>. Default password "
 "policy will be applied to users that use this password policy."
 msgstr ""
+"Va a eliminar la directiva de contraseñas <strong>%s</strong>. Política de "
+"contraseñas por defecto se aplicará a los usuarios que utilizan esta "
+"política de contraseñas."
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
-msgstr ""
+msgstr "Borrar"
 
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: modules/ppolicy/default/edit.php:44
 #: modules/ppolicy/includes/localSidebar.php:28
 #: modules/ppolicy/infoPackage.inc.php:52
 msgid "Add a password policy"
-msgstr ""
+msgstr "Añadir una política de contraseñas"
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
@@ -66,16 +69,16 @@ msgstr "\"Duración máxima\" debe ser mayor que \"Duración mínima\"."
 
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
-msgstr ""
+msgstr "Atributos modificados"
 
 #: modules/ppolicy/default/edit.php:126
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: modules/ppolicy/default/edit.php:132
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
-msgstr ""
+msgstr "Descripción "
 
 #: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
@@ -121,7 +124,7 @@ msgstr "Duración del bloqueo (segundos)"
 
 #: modules/ppolicy/default/index.php:31
 msgid "Password policies list"
-msgstr ""
+msgstr "Lista de política de contraseñas"
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
@@ -320,15 +323,15 @@ msgstr "Eliminar atributo de política"
 
 #: modules/ppolicy/includes/auditCodes.php:6
 msgid "Add ppolicy to user"
-msgstr ""
+msgstr "Añadir a la política de usuario"
 
 #: modules/ppolicy/includes/auditCodes.php:7
 msgid "Update ppolicy for user"
-msgstr ""
+msgstr "Actualizar la política para el usuario"
 
 #: modules/ppolicy/includes/auditCodes.php:8
 msgid "Delete ppolicy on user"
-msgstr ""
+msgstr "Eliminar la política de usuario"
 
 #: modules/ppolicy/includes/auditCodes.php:11
 #: modules/ppolicy/includes/auditCodes.php:12
@@ -342,17 +345,19 @@ msgstr "Política"
 #: modules/ppolicy/includes/publicFunc.php:83
 #: modules/ppolicy/includes/publicFunc.php:201
 msgid "Password policy management"
-msgstr ""
+msgstr "La gestión de la política de contraseñas"
 
 #: modules/ppolicy/includes/publicFunc.php:64
 msgid "This account is locked by the LDAP directory."
-msgstr ""
+msgstr "Esta cuenta está bloqueada por el directorio LDAP."
 
 #: modules/ppolicy/includes/publicFunc.php:72
 msgid ""
 "The password of this account has expired. The user cannot change his "
 "password."
 msgstr ""
+"La contraseña de esta cuenta ha caducado. El usuario no puede cambiar su "
+"contraseña."
 
 #: modules/ppolicy/includes/publicFunc.php:79
 #, php-format
@@ -360,19 +365,23 @@ msgid ""
 "The password of this account has expired. The user has %s login(s) left to "
 "change his password."
 msgstr ""
+"La contraseña de esta cuenta ha caducado. El usuario tiene %s inicios de "
+"sesión a la izquierda para cambiar su contraseña."
 
 #: modules/ppolicy/includes/publicFunc.php:84
 msgid ""
 "The password of this account has expired. The user can change his password."
 msgstr ""
+"La contraseña de esta cuenta ha caducado. El usuario puede cambiar su "
+"contraseña."
 
 #: modules/ppolicy/includes/publicFunc.php:88
 msgid "Lock account"
-msgstr ""
+msgstr "Bloquear cuenta"
 
 #: modules/ppolicy/includes/publicFunc.php:89
 msgid "If checked, permanently lock the user account"
-msgstr ""
+msgstr "Si se marca, bloquear permanentemente la cuenta de usuario"
 
 #: modules/ppolicy/includes/publicFunc.php:94
 msgid "Password reset flag"
@@ -395,16 +404,17 @@ msgstr "Habilitar política específica de contraseñas para este usuario"
 #: modules/ppolicy/includes/publicFunc.php:224
 msgid "If not set the default password policy is enforced."
 msgstr ""
+"Si no se establece la política de contraseñas por defecto se hace cumplir."
 
 #: modules/ppolicy/includes/publicFunc.php:170
 #, php-format
 msgid "Password policy %s applied."
-msgstr ""
+msgstr "Política de contraseñas %s forzada."
 
 #: modules/ppolicy/includes/publicFunc.php:174
 #, php-format
 msgid "Password policy %s removed."
-msgstr ""
+msgstr "Política de contraseñas % se elimina."
 
 #: modules/ppolicy/includes/publicFunc.php:186
 msgid "Password policy attributes updated."
@@ -412,7 +422,7 @@ msgstr "Atributos de contraseña actualizados"
 
 #: modules/ppolicy/includes/publicFunc.php:223
 msgid "Apply a password policy for all group users"
-msgstr ""
+msgstr "Aplicar una política de contraseñas para todos los usuarios del grupo"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"
@@ -420,11 +430,11 @@ msgstr "Política de contraseñas"
 
 #: modules/ppolicy/infoPackage.inc.php:58
 msgid "Edit a password policy"
-msgstr ""
+msgstr "Cambiar la directiva de contraseñas"
 
 #: modules/ppolicy/infoPackage.inc.php:63
 msgid "Delete a password policy"
-msgstr ""
+msgstr "Eliminar la directiva de contraseñas"
 
 #: modules/ppolicy/infoPackage.inc.php:79
 msgid "Default "
