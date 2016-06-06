@@ -440,7 +440,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ret)
 
     def checkBoolean(self, bool):
-        if bool is None or bool == '':
+        if bool == None or bool == '':
             return [True, -1]
         b = BoolRequest()
         try:
@@ -582,7 +582,7 @@ def __addCtxFilters(ctx, filt = None):
     return filt
 
 def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH = False, filt = None):
-    if query is None: return []
+    if query == None: return []
     if __onlyIn(query, ComputerManager().main):
         ComputerManager().main
         filt = __addCtxFilters(ctx, filt)
@@ -592,7 +592,7 @@ def replyToQuery(ctx, query, bool = None, min = 0, max = 10, justId = False, toH
         return xmlrpcCleanup(QueryManager().replyToQuery(ctx, query, bool, min, max))
 
 def replyToQueryLen(ctx, query, bool = None, filt = None):
-    if query is None: return 0
+    if query == None: return 0
     if __onlyIn(query, ComputerManager().main):
         ComputerManager().main
         filt = __addCtxFilters(ctx, filt)

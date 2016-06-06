@@ -80,7 +80,7 @@ if __name__ == "__main__":
             ent = select([entity.c.id], and_(entity.c.id == id_entity)).execute().fetchall()
         else:
             ent = select([entity.c.id], and_(entity.c.Label == name_entity)).execute().fetchall()
-        if ent is None or len(ent) == 0:
+        if ent == None or len(ent) == 0:
             print "Can't get the required entity"
             sys.exit(1)
         entity_id = ent[0][0]
@@ -123,7 +123,7 @@ if __name__ == "__main__":
                                      and_(A.c.Machine_id == B.c.Machine_id,
                                           A.c.Inventory_id < B.c.Inventory_id))
                          ]) \
-                         .where(B.c.Inventory_id is None)
+                         .where(B.c.Inventory_id == None)
 
     # Query built. Now just combine it with a SQL update
     connection.execute(inventory.update(inventory.c.id.in_(q),

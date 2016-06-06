@@ -817,7 +817,7 @@ def logSniffer():
 
 
         sys.stdout.write(line)
-        if line == '' and LOGSNIFFER.poll() is not None:
+        if line == '' and LOGSNIFFER.poll() != None:
             break
     return True
 

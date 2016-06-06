@@ -137,7 +137,7 @@ for d in hist_data:
     if operation == 'upload_in_progress' and error_code in [4508, 4509]: # mirror probe, ignore
         continue
         
-    if operation is None and error_code == 3001 : # broken bundle ?
+    if operation == None and error_code == 3001 : # broken bundle ?
         operation = 'bundle_failed'
         
     if operation == 'upload_failed' and error_code == 4001 : # package not found ?

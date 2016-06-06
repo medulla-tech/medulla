@@ -261,7 +261,7 @@ class MscDatabase(msc.MscDatabase):
             for command in commands:
                 targets_to_insert = []
                 root = command['root']
-                if root is None:
+                if root == None:
                     root = self.config.repopath
                 for i in range(len(targets)):
                     if push_pull:
@@ -291,7 +291,7 @@ class MscDatabase(msc.MscDatabase):
                                              ))
                 targets_to_insert_list.append(targets_to_insert)
 
-            if session is None:
+            if session == None:
                 session = create_session(transactional = True)
             session.begin()
             ret = []
@@ -457,7 +457,7 @@ class MscDatabase(msc.MscDatabase):
         """
         # Mutable list proxies used as default argument to a method or function
         proxies = proxies or []
-        if root is None:
+        if root == None:
             root = self.config.repopath
 
         time_defaults = self.__getTimeDefaults(start_date, end_date)
@@ -913,7 +913,7 @@ class MscDatabase(msc.MscDatabase):
         # Mutable dict phases used as default argument to a method or function
         phases = phases or {}
         cmd = self.getCommands(ctx, cmd_id)
-        if root is None:
+        if root == None:
             root = self.config.repopath
 
         targets_to_insert = []

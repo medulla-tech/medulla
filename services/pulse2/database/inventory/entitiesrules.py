@@ -141,7 +141,7 @@ class EntitiesRules:
                 tmpresult = False
                 for value in values:
                     if operator == 'match':
-                        tmpresult = operand2.match(value) is not None
+                        tmpresult = operand2.match(value) != None
                     elif operator == 'equal':
                         tmpresult = value == operand2
                     elif operator == 'noequal':
@@ -170,7 +170,7 @@ class EntitiesRules:
                     else:
                         result = True
                 elif mainop == 'or':
-                    if result is not None:
+                    if result != None:
                         result = result or tmpresult
                     else:
                         result = tmpresult

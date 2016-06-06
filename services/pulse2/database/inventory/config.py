@@ -50,7 +50,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
             'Registry':['Path']
         }   
             
-        if table is None:
+        if table == None:
             return noms
         if table in noms:
             return noms[table]

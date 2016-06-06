@@ -527,7 +527,7 @@ class UploadPhase(RemoteControlPhase):
 
         proxyCoH = CoHQuery(self.coh.getUsedProxy())
         # get informations about our proxy
-        if proxyCoH is None:
+        if proxyCoH == None:
             return defer.fail(Exception("Cant access to CoH")).addErrback(self.parsePushError).addErrback(self.got_error_in_error)
 
         #proxy = self.get_client("transfert")
@@ -805,7 +805,7 @@ class UploadPhase(RemoteControlPhase):
         error_code : by default we consider un unknwo error was raised (PULSE2_UNKNOWN_ERROR)
         """
         self.logger.warn("Circuit #%s: push failed, unattented reason: %s" % (self.coh.id, reason.getErrorMessage()))
-        if self.coh is None:
+        if self.coh == None:
             return self.give_up()
         self.update_history_failed(error_code, '', reason.getErrorMessage())
         return self.switch_phase_failed()

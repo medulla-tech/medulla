@@ -509,7 +509,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getTargetsByUUID(self, ids, session = None):
         need_to_close_session = False
-        if session is None:
+        if session == None:
             need_to_close_session = True
             session = create_session()
         n = session.query(Target).filter(self.target.c.uuid.in_(ids)).all()
@@ -536,28 +536,28 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.id == target_id).first() # there should always be only one!
         session.close()
-        if q is None: return q
-        if q[1] is not None and q[1] != 'NOTTRANSLATED':
+        if q == None: return q
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
     def getTargetsMenuTUUID(self, target_id, session = None):
         need_to_close_session = False
-        if session is None:
+        if session == None:
             need_to_close_session = True
             session = create_session()
         q = self.__getTargetsMenuQuery(session)
         q = q.filter(self.target.c.uuid == target_id).first() # there should always be only one!
         if need_to_close_session:
             session.close()
-        if q is None: return q
-        if q[1] is not None and q[1] != 'NOTTRANSLATED':
+        if q == None: return q
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
     def getDefaultSuscribeMenu(self, location, session = None):
         need_to_close_session = False
-        if session is None:
+        if session == None:
             need_to_close_session = True
             session = create_session()
         lang = self.__getLocLanguage(session, location.uuid)
@@ -566,8 +566,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ).filter(self.menu.c.id == 2).first()
         if need_to_close_session:
             session.close()
-        if q is None: return q
-        if q[1] is not None and q[1] != 'NOTTRANSLATED':
+        if q == None: return q
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -593,7 +593,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         @param session (optional) a SQL session to use
         """
         need_to_close_session = False
-        if session is None:
+        if session == None:
             need_to_close_session = True
             session = create_session()
         imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
@@ -608,17 +608,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if need_to_close_session:
             session.close()
 
-        if q is None:
+        if q == None:
             return None
 
-        if q[1] is not None and q[1] != 'NOTTRANSLATED':
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
 
         return q[0]
 
     def getTargetMenu(self, uuid, type, session = None):
         need_to_close_session = False
-        if session is None:
+        if session == None:
             need_to_close_session = True
             session = create_session()
         q = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
@@ -628,8 +628,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ).filter(and_(self.target.c.uuid == uuid, self.target.c.type == type)).first() # there should always be only one!
         if need_to_close_session:
             session.close()
-        if q is None: return q
-        if q[1] is not None and q[1] != 'NOTTRANSLATED':
+        if q == None: return q
+        if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
 
@@ -637,19 +637,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = []
         temporary = {}
         for bs, mi in list_of_both:
-            if mi is not None:
+            if mi != None:
                 temporary[bs.id] = mi
         # used_bs_id = ID of BootService if this BootService is used
         for bs, bs_id, used_bs_id, name_i18n, desc_i18n in list_of_bs:
-            if name_i18n is not None:
+            if name_i18n != None:
                 setattr(bs, 'default_name', name_i18n.label)
-            if desc_i18n is not None:
+            if desc_i18n != None:
                 setattr(bs, 'default_desc', desc_i18n.label)
             if bs_id in temporary:
                 mi = temporary[bs_id]
-                if name_i18n is not None:
+                if name_i18n != None:
                     setattr(mi, 'default_name', name_i18n.label)
-                if desc_i18n is not None:
+                if desc_i18n != None:
                     setattr(mi, 'default_desc', desc_i18n.label)
                 setattr(bs, 'menu_item', mi)
             setattr(bs, 'used_bs_id', used_bs_id)
@@ -659,16 +659,16 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __mergeBootServiceInMenuItem(self, my_list):
         ret = []
         for mi, bs, menu, bsois, name_i18n, desc_i18n in my_list:
-            if bs is not None:
+            if bs != None:
                 setattr(mi, 'boot_service', bs)
-            setattr(mi, 'is_local', (bsois is not None))
-            if menu is not None:
+            setattr(mi, 'is_local', (bsois != None))
+            if menu != None:
                 setattr(mi, 'default', (menu.fk_default_item == mi.id))
                 setattr(mi, 'default_WOL', (menu.fk_default_item_WOL == mi.id))
-            if name_i18n is not None:
+            if name_i18n != None:
                 setattr(mi, 'name', name_i18n.label)
                 setattr(bs, 'default_name', name_i18n.label)
-            if desc_i18n is not None:
+            if desc_i18n != None:
                 setattr(mi, 'desc', desc_i18n.label)
                 setattr(bs, 'default_desc', desc_i18n.label)
             ret.append(mi)
@@ -680,7 +680,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = []
         temporary = {}
         for im, mi in list_of_both:
-            if mi is not None:
+            if mi != None:
                 temporary[im.id] = mi
         targets = {}
         for t, mo in list_of_target:
@@ -696,15 +696,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __mergeBootServiceOrImageInMenuItem(self, mis):
         """ warning this one does not work on a list but on a tuple of 3 elements (mi, bs, im) """
         (menuitem, bootservice, image, menu, name_bs_i18n, desc_bs_i18n) = mis
-        if bootservice is not None:
-            if name_bs_i18n is not None:
+        if bootservice != None:
+            if name_bs_i18n != None:
                 setattr(bootservice, 'default_name', name_bs_i18n.label)
-            if desc_bs_i18n is not None:
+            if desc_bs_i18n != None:
                 setattr(bootservice, 'default_desc', desc_bs_i18n.label)
             setattr(menuitem, 'boot_service', bootservice)
-        if image is not None:
+        if image != None:
             setattr(menuitem, 'image', image)
-        if menu is not None:
+        if menu != None:
             setattr(menuitem, 'default', (menu.fk_default_item == menuitem.id))
             setattr(menuitem, 'default_WOL', (menu.fk_default_item_WOL == menuitem.id))
 
@@ -713,9 +713,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __mergeImageInMenuItem(self, my_list):
         ret = []
         for mi, im, menu in my_list:
-            if im is not None:
+            if im != None:
                 setattr(mi, 'image', im)
-            if menu is not None:
+            if menu != None:
                 setattr(mi, 'default', (menu.fk_default_item == mi.id))
                 setattr(mi, 'default_WOL', (menu.fk_default_item_WOL == mi.id))
             ret.append(mi)
@@ -736,7 +736,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getMenuContent(self, menu_id, type = P2IM.ALL, start = 0, end = -1, filter = '', session = None, loc_id = None):# TODO implement the start/end with a union between q1 and q2
         session_need_close = False
-        if session is None:
+        if session == None:
             session = create_session()
             session_need_close = True
 
@@ -752,7 +752,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             mi_ids = mi_ids.all()
         mi_ids = map(lambda x:x[1], mi_ids)
 
-        if loc_id is not None:
+        if loc_id != None:
             imaging_server = self.getImagingServerByEntityUUID(loc_id, session)
         else:
             imaging_server = self.__getMenusImagingServer(session, menu_id)
@@ -761,7 +761,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if imaging_server:
             is_id = imaging_server.id
             lang = imaging_server.fk_language
-        elif loc_id is not None and menu_id == 2: #this is the suscribe menu
+        elif loc_id != None and menu_id == 2: #this is the suscribe menu
             lang = self.__getLocLanguage(session, loc_id)
 
         q = []
@@ -781,7 +781,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                     .outerjoin(self.boot_service_on_imaging_server) \
             )
-            q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service is None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
+            q1 = q1.filter(and_(self.menu_item.c.id.in_(mi_ids), or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.boot_service_on_imaging_server.c.fk_imaging_server == is_id)))
             q1 = q1.order_by(self.menu_item.c.order).all()
             q1 = self.__mergeBootServiceInMenuItem(q1)
             q.extend(q1)
@@ -802,7 +802,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = session.query(func.max(self.menu_item.c.order)).filter(self.menu_item.c.fk_menu == menu_id)
         ret = q.first()
         session.close()
-        if ret is None:
+        if ret == None:
             return -1
         return ret[0]
 
@@ -923,7 +923,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.imagingServer_lang[loc_id] = ims.fk_language
         else:
             q = session.query(ImagingServer).add_entity(Entity).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
-            if q is not None:
+            if q != None:
                 ims, en = q
                 # the true one! self.imagingServer_entity[id2uuid(ims.id)] = en.uuid
                 # the working one in our context :
@@ -959,7 +959,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang, I18n1.c.id != 1)) \
                 .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                 .outerjoin(self.entity).outerjoin(self.target))
-        q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service is None))
+        q = q.filter(or_(self.target.c.uuid == target_uuid, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
 
@@ -992,7 +992,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(I18n1, and_(self.boot_service.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang, I18n1.c.id != 1)) \
                 .outerjoin(I18n2, and_(self.boot_service.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang, I18n2.c.id != 1)) \
                 .outerjoin(self.entity))
-        q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service is None))
+        q = q.filter(or_(self.entity.c.uuid == loc_id, self.boot_service_on_imaging_server.c.fk_boot_service == None))
         if filter != '':
             q = q.filter(or_(self.boot_service.c.default_desc.like('%'+filter+'%'), self.boot_service.c.value.like('%'+filter+'%')))
 
@@ -1005,7 +1005,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
 
         ## Check if Boot service already exists
-        if session.query(PostInstallScript).filter(and_(self.post_install_script.c.id == uuid2id(script_id), self.post_install_script.c.fk_boot_service is not None)).first():
+        if session.query(PostInstallScript).filter(and_(self.post_install_script.c.id == uuid2id(script_id), self.post_install_script.c.fk_boot_service != None)).first():
             session.logger.warn("A boot service with this name already exists")
             session.close()
             return False
@@ -1069,7 +1069,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         bs_ids = map(lambda bs:bs[1], q1)
         q2 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu.id)
         profile = ComputerProfileManager().getComputersProfile(target_uuid)
-        if profile is not None:
+        if profile != None:
             # this should be the profile uuid!
             menu_root = self.getTargetsMenuTUUID(profile.id)
             q3 = self.__PossibleBootServiceAndMenuItem(session, bs_ids, menu_root.id)
@@ -1228,7 +1228,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def profileChangeDefaultMenuItem(self, imaging_server_uuid, profile_uuid, item_number, session = None):
         session_need_close = False
-        if session is None:
+        if session == None:
             session = create_session()
             session_need_close = True
 
@@ -1247,7 +1247,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         profile = ComputerProfileManager().getComputersProfile(computer_uuid)
         menu = self.getTargetsMenuTUUID(computer_uuid, session)
-        if profile is not None:
+        if profile != None:
             # this should be the profile uuid!
             menu_root = self.getTargetsMenuTUUID(profile.id, session)
             mis = session.query(MenuItem).select_from(self.menu_item.join(self.menu, self.menu.c.id == self.menu_item.c.fk_menu))
@@ -1302,7 +1302,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return imim
 
     def __addService(self, session, bs_uuid, menu, params):
-        if menu is None:
+        if menu == None:
             raise '%s:Please create menu before trying to put a bootservice' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
         mi = self.__createNewMenuItem(session, menu.id, params)
@@ -1340,7 +1340,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def __editService(self, session, bs_uuid, menu, mi, params):
-        if menu is None:
+        if menu == None:
             raise '%s:Please create menu before trying to put a bootservice' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
         mi = self.__fillMenuItem(session, mi, menu.id, params)
@@ -1399,7 +1399,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 bs.fk_name = 1
                 session.add(bs)
         mi = self.__getMenuItemByUUID(session, mi_uuid)
-        if mi is None:
+        if mi == None:
             raise '%s:This MenuItem does not exists'%(P2ERR.ERR_UNEXISTING_MENUITEM)
         self.__fillMenuItem(session, mi, mi.fk_menu, params)
         # TODO : what do we do with ret ?
@@ -1411,7 +1411,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __getFirstMenuItem(self, session, menu_id, exclude = None):
         mi = session.query(MenuItem).filter(self.menu_item.c.fk_menu == menu_id)
-        if exclude is not None:
+        if exclude != None:
             mi = mi.filter(self.menu_item.c.id != exclude)
         mi = mi.order_by(self.menu_item.c.order)
         return mi.first()
@@ -1437,17 +1437,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         first_mi = None
         if menu.fk_default_item == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item = first_mi.id
         if menu.fk_default_item_WOL == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
@@ -1487,17 +1487,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         first_mi = None
         if menu.fk_default_item == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item = first_mi.id
         if menu.fk_default_item_WOL == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
@@ -1515,7 +1515,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getMenuItemByUUID(self, mi_uuid, session = None):
         session_need_close = False
-        if session is None:
+        if session == None:
             session_need_close = True
             session = create_session()
         ims = session.query(ImagingServer).select_from(self.menu_item \
@@ -1610,7 +1610,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         if is_master == P2IIK.IS_MASTER_ONLY and target_type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_uuid)
-            if profile is not None:
+            if profile != None:
                 puuid = profile.id
                 menu = self.getTargetsMenuTUUID(puuid)
                 q1 = self.__PossibleImages(session, puuid, is_master, filt)
@@ -1621,7 +1621,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
                 in_profile = {}
                 for im, mi in q2:
-                    if mi is not None:
+                    if mi != None:
                         in_profile[im.id] = mi
 
                 ret = []
@@ -1648,13 +1648,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             first_mi = None
             if menu.fk_default_item == mi.id:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return False
             if menu.fk_default_item_WOL == mi.id:
-                if first_mi is None:
+                if first_mi == None:
                     first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return False
         session.close()
@@ -1735,7 +1735,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getEntityMasters(self, loc_id, start, end, filt):
         session = create_session()
         menu = self.getEntityDefaultMenu(loc_id)
-        if menu is None:
+        if menu == None:
             raise "%s:Entity does not have a default menu" % (P2ERR.ERR_ENTITY_HAS_NO_DEFAULT_MENU)
         q1 = self.__EntityImages(session, loc_id, filt)
         q1 = q1.group_by(self.image.c.id)
@@ -1811,7 +1811,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return True
 
     def __addImage(self, session, item_uuid, menu, params):
-        if menu is None:
+        if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
         if 'name' in params and not 'default_name' in params:
@@ -1942,7 +1942,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __editImage(self, session, item_uuid, menu, mi, params):
-        if menu is None:
+        if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
 
         mi = self.__fillMenuItem(session, mi, menu.id, params)
@@ -2017,7 +2017,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def isImageInMenu(self, item_uuid, target_uuid = None, target_type = None):
         session = create_session()
         q = self.__queryImageInMenu(session)
-        if target_uuid is not None:
+        if target_uuid != None:
             q = q.filter(and_(self.target.c.uuid == target_uuid, self.target.c.type == target_type, self.image.c.id == uuid2id(item_uuid)))
         else:
             q = q.filter(self.image.c.id == uuid2id(item_uuid))
@@ -2038,7 +2038,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
             # check in imaging server (they can also have a reference in the boot menu)
             q = self.__queryImageInImagingServerMenu(session)
-            if target_uuid is not None and target_type == -1:
+            if target_uuid != None and target_type == -1:
                 q = q.filter(and_(self.image.c.id == uuid2id(item_uuid), self.imaging_server.c.id != uuid2id(target_uuid))).all()
             else:
                 q = q.filter(self.image.c.id == uuid2id(item_uuid)).all()
@@ -2105,7 +2105,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         session = create_session()
         im = session.query(Image).filter(self.image.c.id == uuid2id(item_uuid)).first()
-        if im is None:
+        if im == None:
             raise "%s:Cant find the image you are trying to edit." % (P2ERR.ERR_DEFAULT)
         need_to_be_save = False
         for p in ('name', 'desc', 'is_master', 'size'):
@@ -2166,17 +2166,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         first_mi = None
         if menu.fk_default_item == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item = first_mi.id
         if menu.fk_default_item_WOL == mi.id:
             need_to_save_menu = True
-            if first_mi is None:
+            if first_mi == None:
                 first_mi = self.__getFirstMenuItem(session, menu.id, mi.id)
-                if first_mi is None:
+                if first_mi == None:
                     session.close()
                     return [False, "cant find any other mi"]
             menu.fk_default_item_WOL = first_mi.id
@@ -2441,9 +2441,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __mergePostInstallScriptI18n(self, postinstallscript_list):
         ret = []
         for postinstallscript, order, name_i18n, desc_i18n, im_id in postinstallscript_list:
-            if name_i18n is not None:
+            if name_i18n != None:
                 setattr(postinstallscript, 'default_name', name_i18n.label)
-            if desc_i18n is not None:
+            if desc_i18n != None:
                 setattr(postinstallscript, 'default_desc', desc_i18n.label)
             setattr(postinstallscript, 'image_id', im_id)
             setattr(postinstallscript, 'order', order)
@@ -2460,7 +2460,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log) \
                     .join(self.target, self.target.c.id == self.imaging_log.c.fk_target) \
                 ).filter(and_(self.image.c.id == uuid2id(image_uuid), self.target.c.uuid == uuid, self.target.c.type == target_type)).first()
-        if q1 is None:
+        if q1 == None:
             raise Exception("cant get the image %s for target %s"%(image_uuid, uuid))
 
         ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)) \
@@ -2487,14 +2487,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######################
     def getBootServicesOnTargetById(self, target_id, start, end, filter):
         menu = self.getTargetsMenuTUUID(target_id)
-        if menu is None:
+        if menu == None:
             return []
         menu_items = self.getMenuContent(menu.id, P2IM.BOOTSERVICE, start, end, filter)
         return menu_items
 
     def countBootServicesOnTargetById(self, target_id, filter):
         menu = self.getTargetsMenuTUUID(target_id)
-        if menu is None:
+        if menu == None:
             return 0
         count_items = self.countMenuContent(menu.id, P2IM.BOOTSERVICE, filter)
         return count_items
@@ -2505,7 +2505,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         server, or a global boot service.
         """
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -2515,7 +2515,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.target) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.fk_default_menu == self.menu.c.id) \
                 .outerjoin(self.entity, or_(self.entity.c.id == self.target.c.fk_entity, self.entity.c.id == self.imaging_server.c.fk_entity)))
-        mi = mi.filter(and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id is not None)).first()
+        mi = mi.filter(and_(self.menu_item.c.id == uuid2id(mi_uuid), self.entity.c.id != None)).first()
         loc_id = mi[1].uuid
 
         q = session.query(BootService).add_entity(BootServiceOnImagingServer)
@@ -2524,11 +2524,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.boot_service_on_imaging_server, self.boot_service.c.id == self.boot_service_on_imaging_server.c.fk_boot_service) \
                 .outerjoin(self.imaging_server, self.imaging_server.c.id == self.boot_service_on_imaging_server.c.fk_imaging_server) \
                 .outerjoin(self.entity))
-        q = q.filter(or_(self.boot_service_on_imaging_server.c.fk_boot_service is None, self.entity.c.uuid == loc_id))
+        q = q.filter(or_(self.boot_service_on_imaging_server.c.fk_boot_service == None, self.entity.c.uuid == loc_id))
         q = q.filter(self.menu_item.c.id == uuid2id(mi_uuid))
         q = q.first()
 
-        ret = (q[1] is not None)
+        ret = (q[1] != None)
 
         if session_need_to_close:
             session.close()
@@ -2539,14 +2539,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu_items = []
         if type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
-            if profile is not None:
+            if profile != None:
                 # this should be the profile uuid!
                 menu_root = self.getTargetsMenuTUUID(profile.id)
                 menu_items = self.getMenuContent(menu_root.id, P2IM.ALL, start, end, filter)
 
         menu = self.getTargetsMenuTUUID(target_id)
 
-        if menu is None:
+        if menu == None:
             return menu_items
 
         root_len = len(menu_items)
@@ -2577,14 +2577,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         count_items = 0
         if type == P2IT.COMPUTER:
             profile = ComputerProfileManager().getComputersProfile(target_id)
-            if profile is not None:
+            if profile != None:
                 # this should be the profile uuid!
                 menu_root = self.getTargetsMenuTUUID(profile.id)
                 count_items = self.countMenuContent(menu_root.id, P2IM.ALL, filter)
 
         menu = self.getTargetsMenuTUUID(target_id)
 
-        if menu is None:
+        if menu == None:
             return count_items
 
         count_items += self.countMenuContent(menu.id, P2IM.ALL, filter)
@@ -2592,14 +2592,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getEntityBootMenu(self, loc_id, start, end, filter):
         menu = self.getEntityDefaultMenu(loc_id)
-        if menu is None:
+        if menu == None:
             return []
         menu_items = self.getMenuContent(menu.id, P2IM.ALL, start, end, filter)
         return menu_items
 
     def countEntityBootMenu(self, loc_id, filter):
         menu = self.getEntityDefaultMenu(loc_id)
-        if menu is None:
+        if menu == None:
             return 0
         count_items = self.countMenuContent(menu.id, P2IM.ALL, filter)
         return count_items
@@ -2619,7 +2619,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if str(mi.id) == str(uuid2id(mi_uuid)):
                 move = True
                 mod_mi[0] = mi
-        if mod_mi[0] is not None and mod_mi[1] is not None:
+        if mod_mi[0] != None and mod_mi[1] != None:
             ord = mod_mi[0].order
             mod_mi[0].order = mod_mi[1].order
             mod_mi[1].order = ord
@@ -2669,7 +2669,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for t, i in q:
             # Targets set
             im_total.add(t)
-            if i is not None and not i.is_master:
+            if i != None and not i.is_master:
                 # Targets set with a rescue image
                 im_rescue.add(t)
 
@@ -2692,7 +2692,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImageAndImagingServer(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(Image).add_entity(ImagingServer).select_from(self.imaging_server \
@@ -2706,7 +2706,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImageImagingServer(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(ImagingServer).select_from(self.imaging_server \
@@ -2720,7 +2720,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImagingServerByUUID(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(ImagingServer).filter(self.imaging_server.c.id == uuid2id(uuid)).first()
@@ -2730,11 +2730,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getLinkedEntityByEntityUUID(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(Entity).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
-        if q is None:
+        if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(Entity).add_column(self.entity.c.uuid).select_from(self.imaging_server.join(self.entity)) \
                 .filter(and_(
@@ -2755,11 +2755,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImagingServerByEntityUUID(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity)).filter(self.entity.c.uuid == uuid).first()
-        if q is None:
+        if q == None:
             parent_path = ComputerLocationManager().getLocationParentPath(uuid)
             q = session.query(ImagingServer).add_column(self.entity.c.uuid). \
                 select_from(self.imaging_server.join(self.entity)).filter(and_(
@@ -2824,7 +2824,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getEntityByUUID(self, loc_id, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         ret = session.query(Entity).filter(self.entity.c.uuid == loc_id).first()
@@ -2839,7 +2839,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getMenuByUUID(self, menu_uuid, session = None):
         # dont need the i18n trick here, we just want to modify some menu internals
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(Menu).filter(self.menu.c.id == uuid2id(menu_uuid)).first()
@@ -2849,7 +2849,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getProtocolByUUID(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(Protocol).filter(self.protocol.c.id == uuid2id(uuid)).first()
@@ -2859,7 +2859,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getProtocolByLabel(self, label, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         q = session.query(Protocol).filter(self.protocol.c.label == label).first()
@@ -2883,7 +2883,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         Modify menu in database according to params dict content
         """
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         menu = self.getMenuByUUID(menu_uuid, session)
@@ -2941,7 +2941,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         ret = session.query(Menu).add_column(self.internationalization.c.label).select_from(self.menu \
                 .outerjoin(self.internationalization, and_(self.internationalization.c.id == self.menu.c.fk_name, self.internationalization.c.fk_language == lang)) \
             ).filter(self.menu.c.id == 1).first()
-        if ret[1] is not None and ret[1] != 'NOTTRANSLATED':
+        if ret[1] != None and ret[1] != 'NOTTRANSLATED':
             ret[0].default_name = ret[1]
         return ret[0]
 
@@ -2961,12 +2961,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __duplicateDefaultMenuItem(self, session, loc_id = None, p_id = None):
         # warning ! can't be an image !
         default_list = []
-        if p_id is not None:
+        if p_id != None:
             # get the profile menu
             menu = self.getTargetMenu(p_id, P2IT.PROFILE, session)
             default_list = self.__getMenuItemsInMenu(session, menu.id)
             mi = self.__getDefaultMenuItem(session, menu.id)
-        elif loc_id is not None:
+        elif loc_id != None:
             # get the entity menu
             menu = self.getEntityDefaultMenu(loc_id, session)
             default_list = self.__getMenuItemsInMenu(session, menu.id)
@@ -2995,12 +2995,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 mi_out[0] = menu_item.id
             if mi[1].id == default_menu_item.id:
                 mi_out[1] = menu_item.id
-            if default_bsim is not None:
+            if default_bsim != None:
                 bsim = BootServiceInMenu()
                 bsim.fk_menuitem = menu_item.id
                 bsim.fk_bootservice = default_bsim.fk_bootservice
                 session.add(bsim)
-            if default_iim is not None:
+            if default_iim != None:
                 iim = ImageInMenu()
                 iim.fk_menuitem = menu_item.id
                 iim.fk_image = default_iim.fk_image
@@ -3031,7 +3031,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             menu_items = []
             menu.fk_default_item = default_menu.fk_default_item
             menu.fk_default_item_WOL = default_menu.fk_default_item_WOL
-        elif p_id is not None:
+        elif p_id != None:
             menu_items = []
             menu.fk_default_item = None
             menu.fk_default_item_WOL = None
@@ -3087,7 +3087,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                  filter(and_(self.imaging_server.c.packageserver_uuid == imaging_server_uuid, self.imaging_server.c.associated == True)).\
                  first()
 
-        if entity is None:
+        if entity == None:
             entity = session.query(Entity).\
                     select_from(self.entity.join(self.imaging_server, self.imaging_server.c.fk_entity == self.entity.c.id)).\
                     filter(and_(self.imaging_server.c.id == uuid2id(imaging_server_uuid), self.imaging_server.c.associated == True)).\
@@ -3104,7 +3104,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # checks if IS already exists
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
-        if imaging_server is None:
+        if imaging_server == None:
             raise Exception("%s : No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid))
 
         # checks if entity is not already linked somewhere else
@@ -3144,7 +3144,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         # checks if IS already exists
         imaging_server = self.getImagingServerByUUID(is_uuid, session)
-        if imaging_server is None:
+        if imaging_server == None:
             raise Exception("%s : No server exists with that uuid (%s)" % (P2ERR.ERR_IMAGING_SERVER_DONT_EXISTS, is_uuid))
 
         imaging_server.associated = 0
@@ -3252,7 +3252,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def isTargetRegisterInPackageServer(self, uuid, target_type, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3272,7 +3272,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
-            if q is not None:
+            if q != None:
                 ret = (ret.is_registered_in_package_server == 1)
             else:
                 ret = False
@@ -3283,7 +3283,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def isTargetRegister(self, uuid, target_type, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3302,7 +3302,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
-            ret = (q is not None)
+            ret = (q != None)
 
         if session_need_to_close:
             session.close()
@@ -3340,7 +3340,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getTargetNICuuid(self, uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3358,7 +3358,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######### SYNCHRO
     def getTargetsThatNeedSynchroInEntity(self, loc_id, target_type, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3388,7 +3388,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getComputersSynchroStates(self, uuids, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3403,7 +3403,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getTargetsByCustomMenuInEntity(self, loc_id, custom_menu , session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3602,9 +3602,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mis = mis.filter(and_(self.target.c.uuid.in_(uuids), self.target.c.type == P2IT.COMPUTER_IN_PROFILE)).all()
 
         for mi, bsim, iim in mis:
-            if bsim is not None:
+            if bsim != None:
                 session.delete(bsim)
-            if iim is not None:
+            if iim != None:
                 session.delete(iim)
             session.delete(mi)
 
@@ -3710,11 +3710,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 self.__copyMenuItemInto(mi, new_mi, session)
 
                 # create a bsim if it's a bsim
-                if bsim is not None:
+                if bsim != None:
                     a_bsim.append([new_mi, bsim])
 
                 # create a iim if it's a iim
-                if iim is not None:
+                if iim != None:
                     a_iim.append([new_mi, iim])
 
                 if mi.id == pmenu.fk_default_item:
@@ -3764,9 +3764,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
 
         for mi, target, bsim, iim in pmis:
-            if bsim is not None:
+            if bsim != None:
                 session.delete(bsim)
-            if iim is not None:
+            if iim != None:
                 session.delete(iim)
         session.flush()
 
@@ -3845,7 +3845,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 default_menu = None
                 if profile:
                     default_menu = self.getTargetMenu(profile.id, P2IT.PROFILE, session)
-                if default_menu is None or not profile:
+                if default_menu == None or not profile:
                     location = ComputerLocationManager().getMachinesLocations([uuid])
                     location_id = location[uuid]['uuid']
                     default_menu = self.getEntityDefaultMenu(location_id, session)
@@ -3857,7 +3857,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 if not imaging_server:
                     raise "%s:Can't get this profile's imaging_server%s"%(P2ERR.ERR_DEFAULT,uuid)
                 entity = self.getImagingServerEntity(imaging_server)
-                if entity is None:
+                if entity == None:
                     raise "%s:Can't get the entity associated to this imaging server %s"%(P2ERR.ERR_DEFAULT,imaging_server.id)
                 location_id = entity.uuid
                 default_menu = self.getEntityDefaultMenu(location_id, session)
@@ -3871,7 +3871,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         target = None
         if not self.isTargetRegister(uuid, type, session):
-            if location_id is None:
+            if location_id == None:
                 location = ComputerLocationManager().getMachinesLocations([uuid])
                 location_id = location[uuid]['uuid']
             loc = self.getLinkedEntityByEntityUUID(location_id)
@@ -3936,7 +3936,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if uuid and self.isTargetRegister(uuid, P2IT.PROFILE, session):
             target = self.getTargetsByUUID([uuid])
             whose = [uuid, P2IT.PROFILE, target[0].toH()]
-            if orig_target is not None:
+            if orig_target != None:
                 whose.append(orig_target[0].toH())
             menu = self.getTargetMenu(uuid, P2IT.PROFILE, session)
         # else get the entity menu
@@ -3951,7 +3951,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 loc_id = entity.uuid
 
             menu = self.getEntityDefaultMenu(loc_id, session)
-        if menu is None:
+        if menu == None:
             menu = False
 
         session.close()
@@ -3960,7 +3960,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     ######### POST INSTALL SCRIPT
     def isLocalPostInstallScripts(self, pis_uuid, session = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
 
@@ -3969,11 +3969,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .outerjoin(self.post_install_script_on_imaging_server, self.post_install_script_on_imaging_server.c.fk_post_install_script == self.post_install_script.c.id) \
                 .outerjoin(self.imaging_server, self.post_install_script_on_imaging_server.c.fk_imaging_server == self.imaging_server.c.id) \
                 .outerjoin(self.entity))
-        q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script is None, self.entity.c.uuid == pis_uuid))
+        q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == pis_uuid))
         q = q.filter(self.post_install_script.c.id == uuid2id(pis_uuid))
         q = q.first()
 
-        ret = (q[1] is not None)
+        ret = (q[1] != None)
 
         if session_need_to_close:
             session.close()
@@ -3994,20 +3994,20 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                     .outerjoin(I18n1, and_(self.post_install_script.c.fk_name == I18n1.c.id, I18n1.c.fk_language == lang)) \
                     .outerjoin(I18n2, and_(self.post_install_script.c.fk_desc == I18n2.c.id, I18n2.c.fk_language == lang)) \
                     .outerjoin(self.entity))
-            q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script is None, self.entity.c.uuid == location))
+            q = q.filter(or_(self.post_install_script_on_imaging_server.c.fk_post_install_script == None, self.entity.c.uuid == location))
         q = q.filter(or_(self.post_install_script.c.default_name.like('%'+filter+'%'), self.post_install_script.c.default_desc.like('%'+filter+'%')))
         return q
 
     def __mergePostInstallScriptOnImagingServerInPostInstallScript(self, postinstallscript_list):
         ret = []
         for postinstallscript, postinstallscript_on_imagingserver, name_i18n, desc_i18n in postinstallscript_list:
-            if name_i18n is not None and name_i18n.label != 'NOTTRANSLATED':
+            if name_i18n != None and name_i18n.label != 'NOTTRANSLATED':
             #    setattr(postinstallscript, 'name', name_i18n.label)
                 setattr(postinstallscript, 'default_name', name_i18n.label)
-            if desc_i18n is not None and desc_i18n.label != 'NOTTRANSLATED':
+            if desc_i18n != None and desc_i18n.label != 'NOTTRANSLATED':
             #    setattr(postinstallscript, 'desc', desc_i18n.label)
                 setattr(postinstallscript, 'default_desc', desc_i18n.label)
-            setattr(postinstallscript, 'is_local', (postinstallscript_on_imagingserver is not None))
+            setattr(postinstallscript, 'is_local', (postinstallscript_on_imagingserver != None))
             ret.append(postinstallscript)
         return ret
 
@@ -4069,11 +4069,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getPostInstallScript(self, pis_uuid, session = None, location_id = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         lang = 1
-        if location_id is not None:
+        if location_id != None:
             lang = self.__getLocLanguage(session, location_id)
         else:
             pass
@@ -4103,7 +4103,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             return False
         # have to remove the post install script on imaging server if it exists
         pisois = session.query(PostInstallScriptOnImagingServer).filter(self.post_install_script_on_imaging_server.c.fk_post_install_script == uuid2id(pis_uuid)).first()
-        if pisois is None:
+        if pisois == None:
             # we have a local pis and no pisois !
             return False
         session.delete(pisois)
@@ -4115,11 +4115,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def getImagesPostInstallScript(self, ims, session = None, location_id = None):
         session_need_to_close = False
-        if session is None:
+        if session == None:
             session_need_to_close = True
             session = create_session()
         lang = 1
-        if location_id is not None:
+        if location_id != None:
             lang = self.__getLocLanguage(session, location_id)
 
         I18n1 = sa_exp_alias(self.internationalization)
@@ -4310,7 +4310,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         targets = session.query(Target).select_from(self.target \
                 .join(self.menu, self.target.c.fk_menu == self.menu.c.id) \
             )
-        if profile_UUID is None:
+        if profile_UUID == None:
             targets = targets.filter(self.target.c.type == P2IT.COMPUTER).all()
         else:
             computers = ComputerProfileManager().getProfileContent(profile_UUID)

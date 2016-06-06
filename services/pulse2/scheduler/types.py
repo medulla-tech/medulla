@@ -845,7 +845,7 @@ class Circuit (CircuitBase):
 	if self.id in self.dispatcher.stopped_track :
 	    self.release()
         # if give-up - actual phase is probably running - do not move - wait...
-        if result == DIRECTIVE.GIVE_UP or result is None :
+        if result == DIRECTIVE.GIVE_UP or result == None :
             return lambda : DIRECTIVE.GIVE_UP
         elif result == DIRECTIVE.FAILED :
             self.logger.info("Circuit #%s: failed - releasing" % self.id)

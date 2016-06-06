@@ -154,7 +154,7 @@ def xmlrpcCleanup(data):
         ret = data.tuple()
     elif type(data) == struct_time:
         ret = tuple(data)
-    elif data is None:
+    elif data == None:
         ret = False
     elif type(data) == tuple:
         ret = map(lambda x: xmlrpcCleanup(x), data)
@@ -202,7 +202,7 @@ def unique(s):
     except TypeError:
         u = None # move on to the next method
 
-    if u is not None:
+    if u != None:
         return u.keys()
     del u
 
@@ -219,7 +219,7 @@ def unique(s):
     except TypeError:
         t = None # move on to the next method
 
-    if t is not None:
+    if t != None:
         assert n > 0
         last = t[0]
         lasti = i = 1
@@ -333,7 +333,7 @@ def isCiscoMacAddress(mac_addr):
     if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-f]{4}\.[0-9a-f]{4}\.[0-9a-f]{4})$'
-    return re.match(regex, mac_addr) is not None
+    return re.match(regex, mac_addr) != None
 
 
 def isLinuxMacAddress(mac_addr):
@@ -348,7 +348,7 @@ def isLinuxMacAddress(mac_addr):
     if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]:){5}([0-9a-fA-F][0-9a-fA-F])$'
-    return re.match(regex, mac_addr) is not None
+    return re.match(regex, mac_addr) != None
 
 
 def isWinMacAddress(mac_addr):
@@ -363,7 +363,7 @@ def isWinMacAddress(mac_addr):
     if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^([0-9a-fA-F][0-9a-fA-F]-){5}([0-9a-fA-F][0-9a-fA-F])$'
-    return re.match(regex, mac_addr) is not None
+    return re.match(regex, mac_addr) != None
 
 
 def isShortMacAddress(mac_addr):
@@ -378,7 +378,7 @@ def isShortMacAddress(mac_addr):
     if type(mac_addr) not in [str, unicode]:
         return False
     regex = '^(([0-9a-fA-F]){12})$'
-    return re.match(regex, mac_addr) is not None
+    return re.match(regex, mac_addr) != None
 
 
 def isMACAddress(mac_addr):

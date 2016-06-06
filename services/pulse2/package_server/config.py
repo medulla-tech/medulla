@@ -142,7 +142,7 @@ class P2PServerCP(pulse2.utils.Singleton):
 
     def setup(self, config_file):
         self.config_file = config_file
-        if self.cp is None:
+        if self.cp == None:
             # Load configuration file
             if sys.platform != "win32":
                 self.cp = Pulse2ConfigParser()

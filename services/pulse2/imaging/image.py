@@ -118,17 +118,17 @@ class Pulse2Image:
         for line_grub_file in fd_grub_file:
             # title line
             line_grub_file_part = re.search("^title (.*)$", line_grub_file)
-            if line_grub_file_part is not None:
+            if line_grub_file_part != None:
                 self.title = line_grub_file_part.group(1)
 
             # desc line
             line_grub_file_part = re.search("^desc (.*)$", line_grub_file)
-            if line_grub_file_part is not None:
+            if line_grub_file_part != None:
                 self.desc = line_grub_file_part.group(1)
 
             # ptabs line ?
             line_grub_file_part = re.search("^#?ptabs \(hd([0-9]+)\) ", line_grub_file)
-            if line_grub_file_part is not None:  # got one disk
+            if line_grub_file_part != None:  # got one disk
                 hd_number = int(line_grub_file_part.group(1))
 
                 self.disks[hd_number] = {}
@@ -136,7 +136,7 @@ class Pulse2Image:
 
             # hd line ?
             line_grub_file_part = re.search("^ # \(hd([0-9]+),([0-9]+)\) ([0-9]+) ([0-9]+) ([0-9]+)$", line_grub_file)
-            if line_grub_file_part is not None:  # got one part (first line ?)
+            if line_grub_file_part != None:  # got one part (first line ?)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 start = int(line_grub_file_part.group(3)) * 512
@@ -154,7 +154,7 @@ class Pulse2Image:
 
             # part line ?
             line_grub_file_part = re.search("^#? partcopy \(hd([0-9]+),([0-9]+)\) ([0-9]+) PATH/", line_grub_file)
-            if line_grub_file_part is not None:  # got one part (second line)
+            if line_grub_file_part != None:  # got one part (second line)
                 hd_number = int(line_grub_file_part.group(1))
                 part_number = int(line_grub_file_part.group(2))
                 try:
@@ -179,7 +179,7 @@ class Pulse2Image:
 
         for line_size_file in fd_size_file:
             line_size_file_part = re.search("^([0-9]+)", line_size_file)
-            if not line_size_file_part is None:
+            if not line_size_file_part == None:
                 self.size = int(line_size_file_part.group(1)) * 1024
         fd_size_file.close()
 
@@ -193,7 +193,7 @@ class Pulse2Image:
             for line_log_file in fd_log_file:
                 self.logs.append(line_log_file)
                 line_log_file_error = re.search("^ERROR: ", line_log_file)
-                if not line_log_file_error is None:
+                if not line_log_file_error == None:
                     self.has_error = True
             fd_log_file.close()
         except OSError:
@@ -209,7 +209,7 @@ class Pulse2Image:
             fd_prog_file = open(os.path.join(self.directory, PULSE2_IMAGING_PROGRESS_FNAME))
             for line_prog_file in fd_prog_file:
                 line_prog_file_split = re.search("^([0-9]+): ([0-9]+)%", line_prog_file)
-                if line_prog_file_split is not None:
+                if line_prog_file_split != None:
                     self.current_part = int(line_prog_file_split.group(1))
                     self.progress = int(line_prog_file_split.group(2))
             fd_prog_file.close()

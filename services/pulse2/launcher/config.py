@@ -343,7 +343,7 @@ class LauncherConfig(pulse2.utils.Singleton):
                         'awake_incertitude_factor' : awake_incertitude_factor,
                         'defer_results' : self.getvaluedefaulted(section, 'defer_results', False, 'bool')
                     }
-                    if self.first_scheduler is None:
+                    if self.first_scheduler == None:
                         self.first_scheduler = section
                 except ConfigParser.NoOptionError, error:
                     log.warn("launcher %s: section %s do not seems to be correct (%s), please fix the configuration file" % (self.name, section, error))

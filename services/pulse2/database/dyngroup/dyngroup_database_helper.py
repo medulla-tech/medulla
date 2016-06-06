@@ -40,7 +40,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         self.filters = {}
 
     def filter(self, ctx, join_query, filt, query, grpby, filters = None):
-        if filters is not None:
+        if filters != None:
             self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
@@ -141,7 +141,7 @@ class DyngroupDatabaseHelper(DatabaseHelper):
                 q = q.group_by(grpby).all()
                 res = map(lambda x: x[1], q)
                 self.logger.debug(">>> and : %s %s"%(str(lq), str(len(res))))
-                if result_set is not None:
+                if result_set != None:
                     result_set.intersection_update(Set(res))
                 else:
                     result_set = Set(res)

@@ -180,7 +180,7 @@ class DyngroupDatabase(DatabaseHelper):
         try to get a user, and create it if he does not exits
         """
         session = create_session()
-        if user_id is None:
+        if user_id == None:
             user_id = ctx.userid
         user = self.__getUser(user_id, t)
         if not user:
@@ -208,7 +208,7 @@ class DyngroupDatabase(DatabaseHelper):
         if not session:
             session = create_session()
         users = session.query(Users)
-        if t is None:
+        if t == None:
             users = users.filter(self.users.c.login.in_(logins))
         else:
             users = users.filter(self.users.c.login.in_(logins)).filter(self.users.c.type == t)
@@ -423,7 +423,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         session = create_session()
         pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
-        if pdata is None:
+        if pdata == None:
             pdata = ProfilesData()
             pdata.FK_groups = gid
         pdata.imaging_uuid = imaging_uuid
@@ -439,7 +439,7 @@ class DyngroupDatabase(DatabaseHelper):
         session = create_session()
         pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
         session.close()
-        if pdata is None:
+        if pdata == None:
             return None
         return pdata.imaging_uuid
 
@@ -449,7 +449,7 @@ class DyngroupDatabase(DatabaseHelper):
         """
         session = create_session()
         pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
-        if pdata is None:
+        if pdata == None:
             pdata = ProfilesData()
             pdata.FK_groups = gid
         pdata.entity_uuid = entity_uuid
@@ -465,7 +465,7 @@ class DyngroupDatabase(DatabaseHelper):
         session = create_session()
         pdata = session.query(ProfilesData).filter(self.profilesData.c.FK_groups == gid).first()
         session.close()
-        if pdata is None:
+        if pdata == None:
             return None
         return pdata.entity_uuid
 

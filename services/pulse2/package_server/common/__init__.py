@@ -360,7 +360,7 @@ class Common(pulse2.utils.Singleton):
         return ret.keys()
 
     def rsyncPackageOnMirrors(self, pid = None):
-        if pid is None:
+        if pid == None:
             self.logger.debug("rsyncPackageOnMirrors for all packages")
             for pid in self.packages:
                 self.dontgivepkgs[pid] = self.config.package_mirror_target[:]
@@ -438,7 +438,7 @@ class Common(pulse2.utils.Singleton):
         try:
             old = self.packages[pid]
             try:
-                self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value is not None...
+                self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
             except Exception, e:
                 self.logger.error("Common.reloadPackage : an exception happened")
                 self.logger.debug(type(e))
@@ -462,7 +462,7 @@ class Common(pulse2.utils.Singleton):
             if pid in self.packages:
                 old = self.packages[pid]
                 try:
-                    self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value is not None...
+                    self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
                 except Exception, e:
                     self.logger.error("Common.editPackage : an exception happened")
                     self.logger.debug(type(e))
@@ -763,13 +763,13 @@ class Common(pulse2.utils.Singleton):
         ret = {}
         ordered = []
         try:
-            if pidlist is None:
+            if pidlist == None:
                 for k in self.packages:
-                    if pidlist is not None:
+                    if pidlist != None:
                         if not k in pidlist:
                             continue
                     p = self.__packageSelection(k, mp, pending, all)
-                    if p is not None:
+                    if p != None:
                         ret[k] = p
                 return ret
             else:
@@ -777,7 +777,7 @@ class Common(pulse2.utils.Singleton):
                     if not id in self.packages: # shouldn't happen, but who knows...
                         continue
                     p = self.__packageSelection(id, mp, pending, all)
-                    if p is not None:
+                    if p != None:
                         ordered.append(p)
                 return ordered
         except Exception, e:
@@ -790,7 +790,7 @@ class Common(pulse2.utils.Singleton):
         if not all:
             is_acc = is_acc and not pid in self.newAssociation and not pid in self.inEdition
         if (is_acc and not pending) or (not is_acc and pending) or (all and is_acc):
-            if (mp is not None and pid in self.mp2p[mp]) or (mp is None):
+            if (mp != None and pid in self.mp2p[mp]) or (mp == None):
                 return self.packages[pid]
         return None
 
@@ -838,7 +838,7 @@ class Common(pulse2.utils.Singleton):
             conf_file = os.path.join(file, self.CONFFILE)
             l_package = self.parser.parse(conf_file)
             l_package.setRoot(os.path.dirname(file))
-            if l_package is None:
+            if l_package == None:
                 return False
             if not os.path.exists(os.path.join(src, l_package.id)):
                 self.logger.debug("New valid temporary package detected")
@@ -954,7 +954,7 @@ class Common(pulse2.utils.Singleton):
         return self.SMART_DETECT_ERROR
 
     def __subHasChangedGetGlobalSize(self, dir, pid, previous_t=None):
-        if previous_t is None:
+        if previous_t == None:
             previous_t = time.time() - self.config.package_detect_loop
         self.temp_check_changes['SIZE'][pid] = [0, previous_t]
         Find().find(dir, self.__subHasChangedGetSize, [pid])
@@ -967,7 +967,7 @@ class Common(pulse2.utils.Singleton):
             raise e
 
     def __initialiseChangedLast(self, pid, file, s = None):
-        if s is None:
+        if s == None:
             s = self.__getDate(file)
         if not pid in self.temp_check_changes['LAST']:
             self.temp_check_changes['LAST'][pid] = { '###DATE###' : s }
@@ -1011,7 +1011,7 @@ class Common(pulse2.utils.Singleton):
     def _treatNewConfFile(self, file, mp, access, runid = -1):
         if os.path.basename(file) == self.CONFFILE:
             l_package = self.parser.parse(file)
-            if l_package is None: return
+            if l_package == None: return
             if l_package.id in self.working_pkgs: return
             l_package.setRoot(os.path.dirname(file))
             isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
@@ -1108,11 +1108,11 @@ class Common(pulse2.utils.Singleton):
                 self.logger.debug("loading package metadata (conf_file) in %s"%(file))
 
 
-                if l_package is None:
+                if l_package == None:
                     conf_file = os.path.join(file, self.CONFFILE)
                     l_package = self.parser.parse(conf_file)
                 l_package.setRoot(file)
-                if l_package is None:
+                if l_package == None:
                     self.logger.debug("package failed to parse in %s"%(file))
                     return False
 
@@ -1168,7 +1168,7 @@ class Common(pulse2.utils.Singleton):
             else:
                 self.logger.error("__treatDir failed")
                 self.logger.error(err)
-                if pid is not None:
+                if pid != None:
                     self.mp2p[mp][pid] = None
             raise err
         return str(pid)

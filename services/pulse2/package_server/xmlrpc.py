@@ -56,7 +56,7 @@ class MyXmlrpc(xmlrpc.XMLRPC):
         def _cbRender(result, start, request, functionPath = None, args = None):
             _printExecutionTime(start)
             s = request.getSession() 
-            if result is None: result = 0
+            if result == None: result = 0
             if isinstance(result, xmlrpc.Handler):
                 result = result.result
             if not isinstance(result, Fault):

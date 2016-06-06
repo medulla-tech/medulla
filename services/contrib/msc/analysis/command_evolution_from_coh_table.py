@@ -236,7 +236,7 @@ for command in commandData:
                         coh_table.c.start_date < options.started_before,
                         coh_table.c.start_date > options.started_after,
                     ),
-                    coh_table.c.start_date is None,
+                    coh_table.c.start_date == None,
                 ),
                 coh_table.c.fk_commands == command['id']
             )
@@ -340,7 +340,7 @@ for command in commandData:
             for i in dataCommand['coh'][coh['id']]:
                 if i[1] != 0 :
                     (prev_error, prev_entry, prev_message, prev_state) = (last_error, last_entry, last_message, last_state)
-                    if last_entry is None :
+                    if last_entry == None :
                         (last_entry, last_error, last_message, last_state) = i
                     elif last_entry <= i[0]:
                         (last_entry, last_error, last_message, last_state) = i

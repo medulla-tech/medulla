@@ -59,7 +59,7 @@ class ComputerImagingImaging(ComputerImagingI):
         db = ImagingDatabase()
         ims = db.getImagingServerByUUID(imaging_uuid)
         en = db.getImagingServerEntity(ims.packageserver_uuid)
-        if en is not None:
+        if en != None:
             return en.uuid
         return None
 

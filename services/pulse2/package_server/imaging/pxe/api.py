@@ -415,9 +415,9 @@ class PXEImagingApi (PXEMethodParser):
     def changEntityAndHostName(self, xml, entity=None, hostname=None):
         root = ET.fromstring(xml)
         for child in root:
-            if child.tag == "TAG" and entity is not None:
+            if child.tag == "TAG" and entity != None:
                 child.text = entity
-            elif child.tag == "CONTENT" and hostname is not None:
+            elif child.tag == "CONTENT" and hostname != None:
                 for dd in child:
                     if dd.tag == "HARDWARE":
                         for ee in dd:
@@ -431,7 +431,7 @@ class PXEImagingApi (PXEMethodParser):
         deviceid = "%s-%s"%(hostname, date1)
         root = ET.fromstring(xml)
         for child in root:
-            if child.tag == "DEVICEID" and hostname is not None:
+            if child.tag == "DEVICEID" and hostname != None:
                 child.text = deviceid
             elif child.tag == "CONTENT" :
                 for dd in child:

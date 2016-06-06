@@ -35,7 +35,7 @@ from pulse2.package_server.types import Package
 class PackageParser:
     def init(self, config):
         self.logger = logging.getLogger()
-        if 1:#config.parser is None or config.parser == 'XML':
+        if 1:#config.parser == None or config.parser == 'XML':
             self.parser = PackageParserJSON()
         else:
             self.logger.error("don't know how to parse this kind of package configuration %s" %

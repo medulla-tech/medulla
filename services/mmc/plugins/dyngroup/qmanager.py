@@ -146,18 +146,18 @@ class QueryManager(Singleton):
             if len(value1) < ret[2]:
                 return [ret[0], []]
         elif ret[0] == 'double' and len(ret) > 2:
-            if value2 is None:
+            if value2 == None:
                 if len(value1) < ret[2]:
                     return [ret[0], []]
             elif len(ret) > 3 and len(value2) < ret[3]:
                return [ret[0], []]
         elif ret[0] == 'double':
             table, cols = criterion.split('/')
-            if value2 is None: # ajax search on field 1
+            if value2 == None: # ajax search on field 1
                 return [ret[0], ret[1](ctx, table, cols, value1)]
             else: # ajax search on field 2
                 return [ret[0], ret[1](ctx, table, cols, value1, value2)]
-        if value2 is None:
+        if value2 == None:
             return [ret[0], ret[1](ctx, value1)]
 
         return [ret[0], ret[1](ctx, value1, value2)]
@@ -224,7 +224,7 @@ class QueryManager(Singleton):
         self.logger.debug(values)
 
         br = BoolRequest()
-        if bool is None or bool == '' or bool == 0 or bool == '0':
+        if bool == None or bool == '' or bool == 0 or bool == '0':
             bool = 'AND('+','.join(map(lambda a:a[0][0], values))+')'
 
 
@@ -238,7 +238,7 @@ class QueryManager(Singleton):
         bool = 'AND(A, '+bool+')'
 
         br.parse(bool)
-        if bool is None or not br.isValid(): # no bool specified = only AND
+        if bool == None or not br.isValid(): # no bool specified = only AND
             if len(values.keys()) > 0:
                 retour = values.pop()
                 for val in values:
@@ -275,7 +275,7 @@ class QueryManager(Singleton):
         self.logger.debug(values)
 
         br = BoolRequest()
-        if bool is None or bool == '':
+        if bool == None or bool == '':
             bool = "<AND><p>"+('</p><p>'.join(map(lambda a:a[0][0], values)))+"</p></AND>"
 
         all = ComputerManager().getComputersList(ctx)
@@ -286,7 +286,7 @@ class QueryManager(Singleton):
         bool = '<AND><p>A</p><p>'+bool+'</p></AND>'
 
         br.parseXML(bool)
-        if bool is None or not br.isValid(): # no bool specified = only AND
+        if bool == None or not br.isValid(): # no bool specified = only AND
             if len(values.keys()) > 0:
                 retour = values.pop()
                 for val in values:
@@ -314,7 +314,7 @@ class QueryManager(Singleton):
             values[str(qid)] = [qid, module, criterion, value]
 
         br = BoolRequest()
-        if bool is None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
+        if bool == None or bool == '' or bool == 0 or bool == '0': # no bool specified = only AND
             bool = 'AND('+','.join(map(lambda a:a, values))+')'
 
         br.parse(bool)
@@ -342,7 +342,7 @@ class QueryManager(Singleton):
             a = p2.split(q)
             b = p3.split(a[0])
             c = p3.split(a[1])
-            if re.search(p5, c[1]) is not None:
+            if re.search(p5, c[1]) != None:
                 c[1] = re.sub(p_sep_plural, '', c[1])
             val = p4.split(c[1])
             if len(val) == 1:

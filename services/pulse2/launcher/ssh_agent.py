@@ -77,7 +77,7 @@ def addPrivKeyToSSHAgent(key_name):
         ask the ssh-agent to keep our key
 
     """
-    if key_name is None or key_name == '':
+    if key_name == None or key_name == '':
         key_name = LauncherConfig().ssh_defaultkey
 
     if key_name not in LauncherConfig().ssh_keys.keys():
@@ -90,7 +90,7 @@ def removePrivKeyFromSSHAgent(key_name):
         ask the ssh-agent to keep our key
 
     """
-    if key_name is None or key_name == '':
+    if key_name == None or key_name == '':
         key_name = LauncherConfig().ssh_defaultkey
 
     if key_name not in LauncherConfig().ssh_keys.keys():

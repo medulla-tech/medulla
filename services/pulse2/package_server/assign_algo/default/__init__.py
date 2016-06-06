@@ -62,7 +62,7 @@ class UPUserAssignAlgo(UPAssignAlgo):
     def getUserPackageApi(self, u):
         user = User().from_h(u)
         if not user.uuid in self.assign:
-            if self.package_api_put is not None:
+            if self.package_api_put != None:
                 self.assign[user.uuid] = self.package_api_put
             else:
                 self.assign[user.uuid] = []

@@ -34,7 +34,7 @@ class PossibleQueries(Singleton):
         self.extended = config.extended
 
     def possibleQueries(self, value = None): # TODO : need to put this in the conf file
-        if value is None:
+        if value == None:
             return {
                 'list':self.list,
                 'double':self.double,

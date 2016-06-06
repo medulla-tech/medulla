@@ -38,12 +38,12 @@ class GlpiComputers(ComputerI):
         self.glpi = Glpi()
 
     def getComputer(self, ctx, filt = None, empty_macs=False):
-        if filt is None or filt == '':
+        if filt == None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location is not None:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -104,12 +104,12 @@ class GlpiComputers(ComputerI):
         @return: LDAP results
         @rtype:
         """
-        if filt is None or filt == '':
+        if filt == None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location is not None:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
         except exceptions.AttributeError:
@@ -122,7 +122,7 @@ class GlpiComputers(ComputerI):
             # Get main imaging entity uuid
             self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
             main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
-            if main_imaging_entity_uuid is not None:
+            if main_imaging_entity_uuid != None:
                 self.logger.debug('Found: %s' % main_imaging_entity_uuid)
                 filt['imaging_entities'] = [main_imaging_entity_uuid]
                 self.logger.debug('Get now children entities of this main imaging entity')
@@ -149,12 +149,12 @@ class GlpiComputers(ComputerI):
         return [True, filt]
 
     def getRestrictedComputersListLen(self, ctx, filt = None):
-        if filt is None or filt == '':
+        if filt == None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location is not None:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
@@ -165,12 +165,12 @@ class GlpiComputers(ComputerI):
         return self.glpi.getRestrictedComputersListLen(ctx, filt)
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = None, advanced = True, justId = False, toH = False):
-        if filt is None or filt == '':
+        if filt == None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location is not None:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)
@@ -201,12 +201,12 @@ class GlpiComputers(ComputerI):
         return self.glpi.getTotalComputerCount()
 
     def getComputerCount(self, ctx, filt = None):
-        if filt is None or filt == '':
+        if filt == None or filt == '':
             filt = {}
         try:
             complete_ctx(ctx)
             location = ctx.locations
-            if type(location) != list and location is not None:
+            if type(location) != list and location != None:
                 location = [location]
             filt['ctxlocation'] = location
             filt = self.__restrictLocationsOnImagingServerOrEntity(filt, location, ctx)

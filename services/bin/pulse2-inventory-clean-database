@@ -100,11 +100,11 @@ def deleteWrongInventories(inventory):
 
         to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
                 outerjoin(inventory, has_table, has_table.c.inventory == inventory.c.id).\
-                select(has_table.c.inventory is None).\
+                select(has_table.c.inventory == None).\
                 execute().\
                 fetchall()
             )
-        if to_delete is None:
+        if to_delete == None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).union(set(to_merge)))
@@ -131,11 +131,11 @@ def deleteWrongMachines(machine):
 
         to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
                 outerjoin(machine, has_table, has_table.c.machine == machine.c.id).\
-                select(has_table.c.machine is None).\
+                select(has_table.c.machine == None).\
                 execute().\
                 fetchall()
             )
-        if to_delete is None:
+        if to_delete == None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
@@ -163,7 +163,7 @@ def deleteHasTablesMissingInventories(inventory):
 
         to_delete = map(lambda x: x['inventory'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
             outerjoin(has_table, inventory, has_table.c.inventory == inventory.c.id).\
-            select(inventory.c.id is None).\
+            select(inventory.c.id == None).\
             execute().\
             fetchall()
         )
@@ -189,7 +189,7 @@ def deleteHasTablesMissingMachines(machine):
 
         to_delete = map(lambda x: x['machine'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
             outerjoin(has_table, machine, has_table.c.machine == machine.c.id).\
-            select(machine.c.id is None).\
+            select(machine.c.id == None).\
             execute().\
             fetchall()
         )
@@ -217,7 +217,7 @@ def deleteHasTablesMissingParts(machine):
 
         to_delete = map(lambda x: x[table.lower()], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
             outerjoin(has_table, element, has_table.c.get(table.lower()) == element.c.id).\
-            select(element.c.id is None).\
+            select(element.c.id == None).\
             execute().\
             fetchall()
         )
@@ -245,7 +245,7 @@ def cleanUpInventoryParts(inventory):
 
         to_delete = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
             outerjoin(element, has_table, has_table.c.get(table.lower()) == element.c.id).\
-            select(has_table.c.get(table.lower()) is None).\
+            select(has_table.c.get(table.lower()) == None).\
             execute().\
             fetchall()
         )
@@ -276,11 +276,11 @@ def deleteEmptyInventories(inventory):
 
         to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
                 outerjoin(inventory, has_table, has_table.c.inventory == inventory.c.id).\
-                select(has_table.c.inventory is None).\
+                select(has_table.c.inventory == None).\
                 execute().\
                 fetchall()
             )
-        if to_delete is None:
+        if to_delete == None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
@@ -307,11 +307,11 @@ def deleteEmptyMachines(machine):
 
         to_merge = map(lambda x: x['id'], # I may use list(set()) to deduplicate entries, but it would fake the real number of delete rows (one ID may lead to several rows deleted)
                 outerjoin(machine, has_table, has_table.c.machine == machine.c.id).\
-                select(has_table.c.machine is None).\
+                select(has_table.c.machine == None).\
                 execute().\
                 fetchall()
             )
-        if to_delete is None:
+        if to_delete == None:
             to_delete = to_merge
         else:
             to_delete = list(set(to_delete).intersection(set(to_merge)))
