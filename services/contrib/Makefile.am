@@ -65,6 +65,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/sysprep/sysprep-wg.inf \
 	imaging/template/COPYNUM \
 	imaging/template/header.lst \
+	imaging/template/utilities.menu.in \
 	inventory/README \
 	inventory/lrs-to-pulse2-inventory \
 	inventory/pulse2-inventory-clean-database.README \
