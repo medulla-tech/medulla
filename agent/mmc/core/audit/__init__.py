@@ -33,7 +33,7 @@ class AuditFactory(Singleton):
     def __init__(self, config = None, init = True):
         Singleton.__init__(self)
         if not hasattr(self, 'logaction'):
-            if config is None:
+            if config == None:
                 from mmc.plugins.base import BasePluginConfig
                 from mmc.support.config import PluginConfigFactory
                 try:

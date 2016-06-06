@@ -62,7 +62,7 @@ class AuditReaderDB:
         #
         if plug != 0:
             plugin = self.session.query(Module).filter(self.parent.module_table.c.name.like("%"+plug+"%")).first()
-            if plugin is not None:
+            if plugin != None:
 
                 ql = qlog.filter(self.parent.record_table.c.module_id==plugin.id)
                 qlog = ql
@@ -96,7 +96,7 @@ class AuditReaderDB:
                     ),
                     self.parent.object_table.c.uri.like("%"+user+"%"),
                 )).first()
-            if object_user is None:
+            if object_user==None:
                 self.session.close()
                 return None
             else:
@@ -146,7 +146,7 @@ class AuditReaderDB:
         #
         if type != 0:
             typ = self.session.query(Type).filter(self.parent.type_table.c.type.like("%"+type+"%")).first()
-            if typ is not None:
+            if typ != None:
                 ql = qlog.filter(self.parent.object_table.c.type_id==typ.id).join("obj_log")
                 qlog = ql
             else:
@@ -184,13 +184,13 @@ class AuditReaderDB:
             lagent = self.session.query(Source).filter(self.parent.source_table.c.id == record.source_id).first()
 
             #put params in dict
-            if lparam is not None:
+            if lparam != None:
                 parameters={}
                 for param in lparam :
                     parameters.__setitem__(str(param.param_name),str(param.param_value))
 
             llistobj=[]
-            if listobj is not None:
+            if listobj != None:
                 for objects in listobj:
 
                     lobject = self.session.query(Object).filter(self.parent.object_table.c.id == objects.object_id).first()

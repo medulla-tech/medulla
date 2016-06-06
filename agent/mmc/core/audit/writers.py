@@ -110,7 +110,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init database tables.
         """
-        if version is None:
+        if version == None:
             version = self.getUptodateVersion()
         getattr(self, "_initTables" + self.config.auditdbdriver + "V" + str(version))()
 
@@ -118,7 +118,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Init database mappers.
         """
-        if version is None:
+        if version == None:
             version = self.getUptodateVersion()
         getattr(self, "_initMappers" + self.config.auditdbdriver + "V" + str(version))()
 
@@ -126,7 +126,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Populate tables before the first use.
         """
-        if version is None:
+        if version == None:
             version = self.getUptodateVersion()
         getattr(self, "_populateTables" + self.config.auditdbdriver + "V" + str(version))()
 
@@ -352,7 +352,7 @@ class AuditWriterDB(Singleton, AuditWriterI):
         """
         Update database version number in the version table
         """
-        if version is None:
+        if version == None:
             version = self.getUptodateVersion()
         session = create_session()
         session.execute(self.version_table.delete())
