@@ -62,7 +62,7 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
             command['data'] = base64.b64encode(aaa)
         objetxmpp.send_message( mto=message['from'],
                                 mbody=json.dumps(command),
-                                mtype='groupchat')
+                                mtype='chat')
     except Exception as e:
         print "erreur %s"%str(e)
         objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'from' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})

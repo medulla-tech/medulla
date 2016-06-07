@@ -30,15 +30,15 @@ def action(jsonobj, msg, classxmpp ):
     except:
         classxmpp.send_message( mto=msg['from'],
                             mbody=json.dumps(result),
-                            mtype='groupchat')
+                            mtype='chat')
     
     #print json.dumps(er.messagejson, indent=4, sort_keys=True)
     classxmpp.send_message( mto=msg['from'],
                             mbody=json.dumps(er.messagejson),
-                            mtype='groupchat')
+                            mtype='chat')
 
     #print json.dumps(jsonobj, indent=4, sort_keys=True)
     
     #classxmpp.send_message( mto=msg['from'],
                             #mbody=json.dumps(result),
-                            #mtype='groupchat')
+                            #mtype='chat')

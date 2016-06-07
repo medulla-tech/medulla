@@ -27,29 +27,23 @@
  */
 require_once("modules/pulse2/version.php");
 
-$mod = new Module("xmpp");
+$mod = new Module("xmppmaster");
 $mod->setVersion(VERSION);
 $mod->setRevision(REVISION);
 $mod->setDescription(_T("xmppmaster", "xmppmaster"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(800);
 
-/*
 $submod = new SubModule("xmppmaster");
 $submod->setDescription(_T("xmppmaster", "xmppmaster"));
-$submod->setImg('modules/xmppmaster/img/navbar/bpc');
-$submod->setDefaultPage("xmppmaster/xmppmaster/index");
 
-$page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
+$submod->setVisibility(False);
+
+$page = new Page("consolexmpp", _T('consolexmpp', 'xmppmaster'));
 $submod->addPage($page);
 
-// $page = new Page("EditBackupProfile", _T('Edit Backup Profile', 'backuppc'));
-// $page->setOptions(array("visible"=>False));
-// $submod->addPage($page);
-// 
+$mod->addSubmod($submod);
 
- $mod->addSubmod($submod);*/
-// 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
 

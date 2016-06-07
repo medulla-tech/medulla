@@ -52,7 +52,7 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
             objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid, 'status': 'process','size' : sizefile,'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})
             objetxmpp.send_message( mto=message['from'],
                                 mbody=json.dumps(command),
-                                mtype='groupchat')
+                                mtype='chat')
         else:
             md5file =  md5 (objsessiondata.getdatasession()['whowritefile'])
             if md5file == dataobj['md5']:

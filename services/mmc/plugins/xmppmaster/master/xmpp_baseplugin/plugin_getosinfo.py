@@ -49,10 +49,10 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur ):
         except:
             objetxmpp.send_message( mto=message['from'],
                                     mbody=json.dumps(dataerreur),
-                                    mtype='groupchat')
+                                    mtype='chat')
 
         #print json.dumps(netinfo.messagejson, indent=4, sort_keys=True)
         objetxmpp.send_message( mto=message['from'],
                                 mbody=json.dumps(reponse),
-                                mtype='groupchat')
+                                mtype='chat')
     

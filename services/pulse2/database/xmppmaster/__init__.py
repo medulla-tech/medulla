@@ -405,7 +405,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-        
+
 
     @DatabaseHelper._session
     def IdlonglatServerRelais(self, session, classutilMachine = "private",  actif=1):
@@ -522,6 +522,26 @@ class XmppMasterDatabase(DatabaseHelper):
         if ret[0] == 0 :
             return False
         return True
+
+    @DatabaseHelper._session
+    def getListPresenceMachine(self, session):
+        sql = """SELECT 
+                    jid, agenttype, hostname
+                 FROM
+                    xmppmaster.machines;"""
+        presencelist = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a=[]
+            for t in presencelist:
+                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
+                logging.getLogger().debug("t %s"%t)
+            #a = {"jid": x, for x, y ,z in presencelist}
+            logging.getLogger().debug("a %s"%a)
+            return a
+        except:
+            return -1
 
     @DatabaseHelper._session
     def delPresenceMachine(self, session, jid):

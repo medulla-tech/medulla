@@ -19,6 +19,6 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur ):
         #print json.dumps(er.messagejson, indent=4, sort_keys=True)
         objetxmpp.send_message( mto=message['from'],
                                 mbody=json.dumps(reponse),
-                                mtype='groupchat')
+                                mtype='chat')
         objetxmpp.restartBot()
     

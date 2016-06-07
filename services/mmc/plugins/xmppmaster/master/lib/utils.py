@@ -24,8 +24,6 @@ import netifaces
 import json
 import subprocess
 import sys, os, platform
-
-import os.path
 import logging
 import ConfigParser
 import random
@@ -52,13 +50,45 @@ if sys.platform.startswith('win'):
     import win32netcon
     import socket
 
+def load_plugin(name):
+    mod = __import__("plugin_%s" % name)
+    return mod
+
+def call_plugin(name, *args, **kwargs):
+    pluginaction = load_plugin(name)
+    pluginaction.action(*args, **kwargs)
+
+
+#def load_plugin_recv(name):
+    #mod = __import__("pluginrecv_%s" % name)
+    #return mod
+
+#def call_pluginrecv(name, *args, **kwargs):
+    #pluginob = load_plugin_recv(name)
+    #pluginob.action(*args, **kwargs)
+
+
+#def include(filename):
+    #if os.path.exists(filename): 
+        #execfile(filename)
+
+##def plugingrecever(class,msg):
+    ##for element in os.listdir("%s/plugins/xmppmaster/master/lib/"%os.getcwd()):
+        ##if element.startswith( 'PluginRecvMuc' ) and element.endswith(".py"):
+            ##include("%s/plugins/xmppmaster/master/lib/%s"%(os.getcwd(),element))
+
+
+#def import_from(module, name):
+    #module = __import__(module, fromlist=[name])
+    #return getattr(module, name)
+
 def pathbase():
     return os.path.abspath(os.getcwd())
 
 def pathscript():
     return os.path.abspath(os.path.join(pathbase(),"script"))
 
-def pathlib():
+def pathplugins():
     return os.path.abspath(os.path.join(pathbase(),"plugins"))
 
 def pathlib():
@@ -205,38 +235,7 @@ def md5(fname):
             hash.update(chunk)
     return hash.hexdigest()
 
-def load_plugin(name):
-    mod = __import__("plugin_%s" % name)
-    return mod
 
-
-def call_plugin(name, *args, **kwargs):
-    pluginaction = load_plugin(name)
-    pluginaction.action(*args, **kwargs)
-
-
-def load_plugin_recv(name):
-    mod = __import__("pluginrecv_%s" % name)
-    return mod
-
-def call_pluginrecv(name, *args, **kwargs):
-    pluginob = load_plugin_recv(name)
-    pluginob.action(*args, **kwargs)
-
-
-def include(filename):
-    if os.path.exists(filename): 
-        execfile(filename)
-
-#def plugingrecever(class,msg):
-    #for element in os.listdir("%s/plugins/xmppmaster/master/lib/"%os.getcwd()):
-        #if element.startswith( 'PluginRecvMuc' ) and element.endswith(".py"):
-            #include("%s/plugins/xmppmaster/master/lib/%s"%(os.getcwd(),element))
-            
-
-def import_from(module, name):
-    module = __import__(module, fromlist=[name])
-    return getattr(module, name)
 
 
 def getIpListreduite():
@@ -475,7 +474,7 @@ def joint_compteAD():
                 computer.JoinDomainOrWorkGroup(domaine,password,login,group,3  )
     finally:
         pythoncom.CoUninitialize ()        
-        
+
 def windowsservice(name, action):
     pythoncom.CoInitialize ()
     try:
@@ -512,34 +511,17 @@ def methodservice():
             print method  
     finally:
         pythoncom.CoUninitialize ()
-
+        
 def file_get_content(path):
     inputFile = open(path, 'r')     #Open test.txt file in read mode
     content = inputFile.read()
-    inputFile.close()
+    inputFile.close()        
     return content
 
 def file_put_content(filename, contents,mode="w"):
     fh = open(filename, mode)
-    fh.write(contents)
-    fh.close()
-
-def replacefile(contents, pathfilewrite=None, pathfileget=None):
-    """
-        ecrit contents dans pathfilewrite si pas None
-        remplace contents par contenue du fichier pathfileget si il existe.
-    """
-    if pathfilewrite != None:
-        fh = open(pathfilewrite,"w")
-        fh.write(contents)
-        fh.close()
-    #inject file 
-    if pathfileget != None:
-        if os.path.isfile(pathfileget):
-            inputFile = open(pathfileget, 'r')
-            contents = inputFile.read()
-            inputFile.close()
-    return contents
+    fh.write(contents)  
+    fh.close()  
 
 ##windows
 #def listusergroup():
@@ -549,6 +531,9 @@ def replacefile(contents, pathfilewrite=None, pathfileget=None):
     #print group.Caption
     #for user in group.associators("Win32_GroupUser"):
         #print "  ", user.Caption
+
+
+
 
 #decorateur pour simplifier les plugins
 def pulginprocess(func):
@@ -571,15 +556,18 @@ def pulginprocess(func):
                 result['data'] = base64.b64encode(json.dumps(result['data']))
             objetxmpp.send_message( mto=message['from'],
                                     mbody=json.dumps(result),
-                                    mtype='groupchat')
+                                    mtype='chat')
         except:
             objetxmpp.send_message( mto=message['from'],
                                     mbody=json.dumps(dataerreur),
-                                    mtype='groupchat')
+                                    mtype='chat')
             return
         return response
     return wrapper
 
+# decorateur pour simplifier les plugins
+# verifie session existe.
+# pas de session end 
 def pulginmaster(func):
     def wrapper( objetxmpp, action, sessionid, data, message, ret ):
         if action.startswith("result"):
@@ -614,4 +602,20 @@ def pulginmastersessionaction( sessionaction, timeminute = 10 ):
             return response
         return wrapper
     return decorateur
+
+
+def searchippublic(site = 1):
+    if site == 1:
+        try:
+            page = urllib.urlopen("http://ifconfig.co/json").read()
+            objip = json.loads(page)
+            return objip['ip']
+        except:
+            return searchippublic(2)
+    else:
+        page = urllib.urlopen("http://www.monip.org/").read()
+        ip = page.split("IP : ")[1].split("<br>")[0]
+        return ip
+
+
 

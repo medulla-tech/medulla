@@ -29,12 +29,19 @@ class SessionkeyError(Session, KeyError):
     pass
 
 class sessiondatainfo:
-    def __init__(self, sessionid, datasession = {}, timevalid = 10, functionend = None):
+    def __init__(self, sessionid, datasession = {}, timevalid = 10, eventend = None):
         self.sessionid = sessionid
         #timevalid en minute
         self.timevalid = timevalid
         self.datasession = datasession
-        self.functionend = functionend
+        self.eventend = eventend
+
+    def getdatasession(self):
+        return self.datasession
+
+    def setdatasession(self, data):
+        print "data %s"%data
+        self.datasession['result']=data
 
     def decrementation(self):
         self.timevalid = self.timevalid - 1
@@ -48,12 +55,13 @@ class sessiondatainfo:
         return sessionid == self.sessionid
 
     def callend(self):
-        if self.functionend != None:
-            self.functionend(self.datasession)
+        #signal end function
+        if self.eventend != None:
+            self.eventend.set()
 
     def __repr__(self):
-        return "<session {} validate {}, data {}, functionend {}> ".format(self.sessionid, self.timevalid, self.datasession,self.functionend)
-
+        #return "<session {}, validate {}, data {}, eventend {}> ".format(self.sessionid, self.timevalid, self.datasession, self.eventend)
+        return "<session %s, validate %s, data %s, eventend %s> "%(self.sessionid, self.timevalid, self.datasession, self.eventend)
 
 class session:
     def __init__(self):
@@ -66,8 +74,8 @@ class session:
             self.sessiondata.append(sessiondatainfo)
             return sessiondatainfo
 
-    def createsessiondatainfo(self, sessionid,  datasession = {},timevalid = 10, functionend = None):
-        obj = sessiondatainfo(sessionid, datasession, timevalid, functionend )
+    def createsessiondatainfo(self, sessionid,  datasession = {},timevalid = 10, eventend = None):
+        obj = sessiondatainfo(sessionid, datasession, timevalid, eventend )
         self.sessiondata.append(obj)
         return obj
 
@@ -105,8 +113,14 @@ class session:
     def clear(self, sessionid):
         for i in range(0,self.len()):
             if sessionid==self.sessiondata[i].sessionid:
-                print "clear %s"%self.sessiondata[i].sessionid
-                self.sessiondata.remove(self.sessiondata[i]) 
+                self.sessiondata[i].callend()
+                self.sessiondata.remove(self.sessiondata[i])
+                break;
+
+    def clearnoevent(self, sessionid):
+        for i in range(0,self.len()):
+            if sessionid==self.sessiondata[i].sessionid:
+                self.sessiondata.remove(self.sessiondata[i])
                 break;
 
     def isexist(self, sessionid):
@@ -114,3 +128,9 @@ class session:
             if i.sessionid == sessionid:
                 return True
         return False
+    
+    def sessionevent(self, sessionid):
+        for i in self.sessiondata:
+            if i.sessionid == sessionid and i.eventend != None:
+                return i
+        return None

@@ -48,7 +48,8 @@ import pprint
 
 import cPickle
 import logging
-
+import threading
+import time
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
@@ -68,6 +69,61 @@ else:
 #else:
     #raw_input = input
 
+class simplecommandxmpp:
+    def __init__(self, to, data, timeout, ok, err):
+        global xmpp
+        self.e =  threading.Event()
+        self.result = {}
+        self.data = data
+        self.t = timeout
+        self.xmpp = xmpp
+        self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'],{}, self.t, self.e)
+        self.xmpp.send_message(mto = to,
+                        mbody = json.dumps(data),
+                        mtype = 'chat')
+
+        self.t2 = threading.Thread(name='block1', 
+                      target=self.resultsession)
+        self.t2.start()
+
+    def resultsession(self):
+        while not self.e.isSet():
+            event_is_set = self.e.wait(self.t)
+            #print 'event set: %s'% event_is_set
+            if event_is_set:
+                ok(self.session.datasession['result'])
+            else:
+                err(self.session.datasession['result'])
+                break;
+
+class simplecommandxmpp1:
+    def __init__(self, to, data, timeout):
+        global xmpp
+        self.e =  threading.Event()
+        self.result = {}
+        self.data = data
+        self.t = timeout
+        self.xmpp = xmpp
+        self.sessionid=data['sessionid']
+        self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'],{}, self.t, self.e)
+        self.xmpp.send_message(mto = to,
+                        mbody = json.dumps(data),
+                        mtype = 'chat')
+        self.t2 = threading.Thread(name='command',
+                      target=self.resultsession)
+        self.t2.start()
+
+    def resultsession(self):
+        while not self.e.isSet():
+            event_is_set = self.e.wait(self.t)
+            print 'event est signaler set: %s'% event_is_set
+            if event_is_set:
+                self.result =self.session.datasession['result']
+            else:
+                #tineout
+                break;
+        self.xmpp.session.clearnoevent(self.sessionid)
+        return self.result
 
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf):#jid, password, room, nick):
@@ -220,7 +276,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def loginformation(self,msgdata):
         self.send_message( mbody = msgdata,
                            mto = self.config.jidsalonlog,
-                           mtype ='groupchat')
+                           mtype ='chat')
 
     def start(self, event):
         self.get_roster()
@@ -247,13 +303,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #self.envoicommand('dede1@localhost', 'transfertfile' , {'ou': '/tmp/dede.tarcppplcp'}, {'qui':'/tmp/GeoIP.dat.gz'}, False)
         ##print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
 
-        #stream = self['xep_0047'].open_stream('dede1@localhost')
 
-        #with open('/tmp/dede.tar') as f:
-            #data = f.read()
-            #stream.sendall(data)
-
-        #self.xmpp.plugin['xep_0096'].sendFile("/tmp/dede.tar", )
     def register(self, iq):
         """ cette fonction est appelee pour la registration automatique""" 
         resp = self.Iq()
@@ -271,7 +321,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("No response from server.")
             self.disconnect()
 
-    
+
 
     def showListClient(self):
         #pp = pprint.PrettyPrinter(indent=4)
@@ -448,6 +498,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(reponse),
                         mtype='chat')
 
+    def messagereturnsession(self, msg):
+        data = json.loads(msg['body'])
+        try:
+            if data['sessionid'].startswith("mcc"):
+                sessionmsg = self.session.sessionevent(data['sessionid'])
+                if sessionmsg is not None:
+                    sessionmsg.setdatasession(  data )
+                    sessionmsg.callend()
+                    return True
+                else:
+                    print "pas de session name"
+        except KeyError:
+            print "except"
+            return False
+        return False
+
     def MessagesAgentFromSalonMaster(self, msg):
         ### message from salon master
         ### ejabbert achemine le message.
@@ -455,7 +521,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg['from'].bare == self.config.jidsalonmaster:
             """ message tous les menbres de salon master"""
             return False
-        #if msg['type'] != "groupchat" :
+        #if msg['type'] != "chat" :
             #return False
         #print msg['body']
         if  msg['body'] == "This room is not anonymous":
@@ -656,47 +722,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 #logger.warn("%s == %s" %(key,value))
         #for arg in argv:
             #print "[", arg,"]"
-            
 
-
-#{"end": false, "base64": false, "ret": 255, "sessionid": "command02diy", "action": "resultdownloadfile", "data": {"msg": "local variable 'f' referenced before assignment"}}
-#{'status': 'start', 'form': dede1@localhost, 'to': master@localhost/MASTER, 'sessionid': u'command02diy', 'file': u'/tmp/GeoIP.dat.gz', 'action': u'downloadfile'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'command02diy', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': u'IOError ERROR on file /tmp/GeoIP.dat.gz'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'command02diy', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': "local variable 'f' referenced before assignment"}
-#<message to="dede1@localhost" from="master@localhost/MASTER" xml:lang="en" type="groupchat"><body>{&quot;action&quot;: &quot;downloadfile&quot;, &quot;sessionid&quot;: &quot;command81k7b&quot;, &quot;base64&quot;: false, &quot;data&quot;: {&quot;namesource&quot;: &quot;/tmp/GeoIP.dat.gz&quot;}}</body></message>
-
-#master@localhost/MASTER
-
-#{"end": false, "base64": false, "ret": 255, "sessionid": "command81k7b", "action": "resultdownloadfile", "data": {"msg": "local variable 'f' referenced before assignment"}}
-#{'status': 'start', 'form': dede1@localhost, 'to': master@localhost/MASTER, 'sessionid': u'command81k7b', 'file': u'/tmp/GeoIP.dat.gz', 'action': u'downloadfile'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'command81k7b', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': u'IOError ERROR on file /tmp/GeoIP.dat.gz'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'command81k7b', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': "local variable 'f' referenced before assignment"}
-#<message to="dede1@localhost" from="master@localhost/MASTER" xml:lang="en" type="groupchat"><body>{&quot;action&quot;: &quot;downloadfile&quot;, &quot;sessionid&quot;: &quot;commandxup1q&quot;, &quot;base64&quot;: false, &quot;data&quot;: {&quot;namesource&quot;: &quot;/tmp/GeoIP.dat.gz&quot;}}</body></message>
-
-#master@localhost/MASTER
-
-#{"end": false, "base64": false, "ret": 255, "sessionid": "commandxup1q", "action": "resultdownloadfile", "data": {"msg": "local variable 'f' referenced before assignment"}}
-#{'status': 'start', 'form': dede1@localhost, 'to': master@localhost/MASTER, 'sessionid': u'commandxup1q', 'file': u'/tmp/GeoIP.dat.gz', 'action': u'downloadfile'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'commandxup1q', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': u'IOError ERROR on file /tmp/GeoIP.dat.gz'}
-#{'status': 'error', 'to': master@localhost/MASTER, 'sessionid': u'commandxup1q', 'file': u'/tmp/GeoIP.dat.gz', 'form': dede1@localhost, 'action': u'downloadfile', 'size': 0, 'msgerror': "local variable 'f' referenced before assignment"}
-
-    #print rep
     ### passer des commande or mmc
-    def muc_Messageschell(self,msg):
-        if msg['from'].bare == "commandrelais@localhost":
-            a = json.loads(msg['body'])
-            k = a.keys()
-            datasession = {}
-            data = {}
+    #def muc_Messageschell(self,msg):
+        #if msg['from'].bare == "commandrelais@localhost":
+            #a = json.loads(msg['body'])
+            #k = a.keys()
+            #datasession = {}
+            #data = {}
 
-            if 'session' in k :
-                datasession = a['session']
+            #if 'session' in k :
+                #datasession = a['session']
 
-            if 'data' in k :
-                data  = a['data']
-            self.envoicommand(a['to'], a['pluginname'] , data, datasession)
-            return True
-        return False
+            #if 'data' in k :
+                #data  = a['data']
+            #self.envoicommand(a['to'], a['pluginname'] , data, datasession)
+            #return True
+        #return False
 
 
     def message(self, msg):
@@ -709,23 +751,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.MessagesAgentFromSalonConfig( msg)
             return
 
-        ### mettre en base
-        #print "PPPPPPPPP message %s \n %s %s %s"%(msg,self.config.jidsalonmaster,msg['from'],msg['from'].bare)
         if not self.plugin['xep_0045'].jidInRoom( self.config.jidsalonmaster, msg['from']):
             """ message agent apppartenant à master """
             print "il n appartient pas au salon master"
             return False
 
+        if self.messagereturnsession(msg):
+            print "messagereturnsession **********************"
+            #message from client commande mmc
+            return
+
         #if msg['from'].resource == master:
             #print "envoyé chanel master"
 
-        if self.muc_Messageschell(msg):
-            return
+        #if self.muc_Messageschell(msg):
+            #return
         self.MessagesAgentFromSalonMaster( msg)
 
         self.callpluginmaster(msg)
-
-
 
     def muc_message(self, msg):
         """
@@ -862,13 +905,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody = json.dumps(command),
                         mtype = 'chat')
         return command['sessionid']
+
 #todo faire class 
 def stopxmpp():
     global xmpp
     if xmpp != None:
         xmpp.disconnect()
-
-
 
 def doTask():
     global xmpp
