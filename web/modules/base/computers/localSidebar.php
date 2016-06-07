@@ -19,4 +19,10 @@ if (in_array("dyngroup", $_SESSION["modulesList"])) {
 if (in_array("inventory", $_SESSION["modulesList"])) {
     require("modules/inventory/inventory/localComputersSidebar.php");
 }
+
+if (in_array("xmppmaster", $_SESSION["modulesList"])) {
+    require("modules/xmppmaster/xmppmaster/localSidebar.php");
+}
+
+
 ?>
