@@ -55,45 +55,46 @@ $errItem->setAdvice(_("The password policy of your account doesn't allow you to 
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'Password is in history of old passwords', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem("/{'info': 'Password is in history of old passwords', 'desc': 'Constraint violation'}/");
 $errItem->setMsg(_("Password is in history of old passwords"));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because you already had this password previously."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'Password is not being changed from existing value', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem("/{'info': 'Password is not being changed from existing value', 'desc': 'Constraint violation'}/");
 $errItem->setMsg(_("Password is not being changed from existing value"));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because you already had this password previously."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'Password fails quality checking policy', 'desc': 'Constraint violation'}");
+$errItem = new ErrorHandlingItem("/{'info': 'Password fails quality checking policy', 'desc': 'Constraint violation'}/");
 $errItem->setMsg(_("Password fails quality checking policy."));
 $errItem->setAdvice(_("The password policy of your account doesn't allow you to modify your password, because your password is not complex enough or is too short."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one number.*'");
+$errItem = new ErrorHandlingItem("/{'info': 'The password must contain at least one number/");
 $errItem->setMsg(_("The password must contain at least one number"));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one upper.*'");
+$errItem = new ErrorHandlingItem("/{'info': 'The password must contain at least one upper/");
 $errItem->setMsg(_("The password must contain at least one upper case character"));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one lower.*'");
+$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one lower/");
 $errItem->setMsg(_("The password must contain at least one lower case character"));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one special.*'");
+$errItem = new ErrorHandlingItem("/{'info': 'The password must contain at least one special/");
+//$errItem = new ErrorHandlingItem(": {'info': 'The password must contain at least one special.*'");
 $errItem->setMsg(_("The password must contain at least one special character: #$%&+./:=?@{}"));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
-$errItem = new ErrorHandlingItem(": {'info': 'The password must not contain the same character.*'");
+$errItem = new ErrorHandlingItem("/{'info': 'The password must not contain the same character/");
 $errItem->setMsgFromError("/'info': '(.*)',/");
 $dummyMsg = _("The password must not contain the same character %s times");
 $errItem->setTraceBackDisplay(False);
