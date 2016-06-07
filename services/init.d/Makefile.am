@@ -50,4 +50,4 @@ pulse2-scheduler: pulse2-scheduler.in
 pulse2-launchers: pulse2-launchers.in
 pulse2-imaging-server: pulse2-imaging-server.in
 pulse2-cm: pulse2-cm.in
-pulse2-register-pxe:pulse2-register-pxe.in
+pulse2-register-pxe: pulse2-register-pxe.in
