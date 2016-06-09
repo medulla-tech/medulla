@@ -555,6 +555,13 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q[0].default_name = q[1]
         return q[0]
 
+    def getTargetPackageServer(self, target_id):
+        session = create_session()
+        # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
+        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.uuid == target_id).first()
+        session.close()
+        return query
+
     def getDefaultSuscribeMenu(self, location, session = None):
         need_to_close_session = False
         if session == None:
@@ -676,7 +683,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __mergeMenuItemInImage(self, list_of_im, list_of_both, list_of_target = None):
         # Mutable list list_of_target used as default argument to a method or function
-        list_of_target = list_of_target or [] 
+        list_of_target = list_of_target or []
         ret = []
         temporary = {}
         for im, mi in list_of_both:
@@ -2805,7 +2812,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def updateImagingServer(self, uuid, params = None):
         # Mutable dict params used as default argument to a method or function
-        params = params or {} 
+        params = params or {}
         session = create_session()
         ims = self.getImagingServerByUUID(uuid, session)
         need_to_be_save = False
@@ -4181,14 +4188,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return True
-    
+
     def getLocationImagingServerByServerUUID(self,imaging_server_uuid ):
         session = create_session()
         ims = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
         LocationServer = ims.fk_entity
         session.close()
         return LocationServer
-    
+
     # Computer basic inventory stuff
     def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
         """
