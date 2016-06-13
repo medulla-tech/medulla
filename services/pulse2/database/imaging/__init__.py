@@ -501,6 +501,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return e
 
+    def getTargetPackageServer(self, target_id):
+        session = create_session()
+        # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
+        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.c.uuid == target_id)
+        query = query.all()
+        session.close()
+        return [m for m in query]
+
     def getTargetsById(self, ids):
         session = create_session()
         n = session.query(Target).filter(self.target.c.id.in_(ids)).all()
@@ -558,9 +566,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getTargetPackageServer(self, target_id):
         session = create_session()
         # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
-        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.uuid == target_id).first()
+        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.c.uuid == target_id)
+        query = query.all()
         session.close()
-        return query
+        return [m for m in query]
 
     def getDefaultSuscribeMenu(self, location, session = None):
         need_to_close_session = False
