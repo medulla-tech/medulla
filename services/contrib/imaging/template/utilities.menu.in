@@ -23,7 +23,7 @@ APPEND --type=openbsd
 
 LABEL hdt
 MENU LABEL Hardware Information
-COM32 hdt.c32
+COM32 hdt.c32 dump_path=inventories
 
 LABEL dban
 MENU LABEL Shred Hard Drive
