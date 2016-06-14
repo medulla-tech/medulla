@@ -347,7 +347,7 @@ class ImagingMenu:
             output = self._applyReplacement(self.menuitems[i].getEntry(self.protocol))
             buf += '\n'
             buf += output
-            if PackageServerConfig().pxe_password != '' and 'register' in self.menuitems[i].getEntry(self.protocol):
+            if PackageServerConfig().pxe_password != '' and not 'continue' in self.menuitems[i].getEntry(self.protocol):
                 buf += 'MENU PASSWD\n'
 
         assert(type(buf) == unicode)
