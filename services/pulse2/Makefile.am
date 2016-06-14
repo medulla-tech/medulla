@@ -27,6 +27,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	launcher managers package_server package_server.assign_algo \
 	package_server.assign_algo.default \
 	package_server.assign_algo.terminal_type \
+	package_server.assign_algo.multi_site \
     package_server.common package_server.description \
 	package_server.imaging package_server.imaging.api \
 	package_server.imaging.pxe \
