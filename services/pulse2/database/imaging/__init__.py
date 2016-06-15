@@ -509,6 +509,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return [m for m in query]
 
+    def getImagingServerInfo(self, location_uuid):
+        q = self.getImagingServerByEntityUUID(location_uuid)
+        if not q:
+            return None
+        if isinstance(q, list) :
+            return q[0]
+        else :
+            return q
+
     def getTargetsById(self, ids):
         session = create_session()
         n = session.query(Target).filter(self.target.c.id.in_(ids)).all()

@@ -41,8 +41,10 @@ class MirrorApi(Pulse2Api):
             uuid = [uuid]
             db = ImagingDatabase()
             entity = db.getTargetsEntity(uuid)
-            url = db.getEntityUrl(entity[0][0].uuid)
-            machine ['server']= urlparse(url).hostname
+            machine ['entity']= entity[0][0].uuid
+            serverinfo = db.getImagingServerInfo(entity[0][0].uuid)
+            machine ['server']= urlparse(serverinfo.url).hostname
+            machine ['servernane']=serverinfo.name
         d = self.callRemote("getMirror", machine)
         d.addErrback(self.onError, "MirrorApi:getMirror", machine)
         return d
@@ -80,10 +82,11 @@ class MirrorApi(Pulse2Api):
             db = ImagingDatabase()
             result = db.getTargetPackageServer(uuid)
             machine ['server']= urlparse(result[0].url).hostname
+            machine ['servernane']=result[0].name
         d = self.callRemote("getApiPackage", machine)
         d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
         return d
-    
+
     def getApiPackages(self, machines):
         if self.initialized_failed:
             return []

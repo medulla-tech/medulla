@@ -42,8 +42,9 @@ class MMUserAssignAlgo(MMAssignAlgo):
         if not machine.uuid in self.assign:
             self.assign[machine.uuid] = {}
         if not 'getMirror' in self.assign[machine.uuid]:
-            if server in m:
+            if 'server' in m:
                 server = m['server']
+                logging.getLogger().debug("algo multi_site machine :[ %s ] pserver : (ip : %s name : '%s'] Entity : [ %s ]"%(m['uuid'], m['server'], m['servernane'], m['serveruuid'], m['entity']))
             # Replace the server value
             self.assign[machine.uuid]['getMirror'] = self.mirrors[random.randint(0,len(self.mirrors)-1)].toH()
             self.assign[machine.uuid]['getMirror']['server'] = server
@@ -53,14 +54,15 @@ class MMUserAssignAlgo(MMAssignAlgo):
         return 0
 
     def getMachinePackageApi(self, m):
+        server = ''
         machine = Machine().from_h(m)
         if not machine.uuid in self.assign:
             self.assign[machine.uuid] = {}
         if not 'getMachinePackageApi' in self.assign[machine.uuid]:
             #ip server corresponding to the imaging server of this machine
-            server =''
             if 'server' in m:
                 server = m['server']
+                logging.getLogger().debug("algo multi_site machine :[ %s ] pserver : (ip : %s name : '%s']"%(m['uuid'], m['server'], m['servernane'], m['serveruuid']))
             # Get the package apis and replace the server value
             self.assign[machine.uuid]['getMachinePackageApi'] = []
             self.assign[machine.uuid]['getMachinePackageApi'] += map(lambda papi: papi.toH(), self.package_apis)
