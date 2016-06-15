@@ -563,13 +563,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             q[0].default_name = q[1]
         return q[0]
 
-    def getTargetPackageServer(self, target_id):
-        session = create_session()
-        # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
-        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.c.uuid == target_id)
-        query = query.all()
-        session.close()
-        return [m for m in query]
+
 
     def getDefaultSuscribeMenu(self, location, session = None):
         need_to_close_session = False
