@@ -438,6 +438,25 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = []
         return deferred
 
+    def imagingClearMenuFromUuid(self, uuid):
+        obj={}
+        ctx = self.currentContext
+        obj['mac'] = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
+        obj['uuid']=uuid
+        db = ImagingDatabase()
+        try:
+            location = db.getTargetsEntity([uuid])[0]
+            url = chooseImagingApiUrl(location[0].uuid)
+            i = ImagingApi(url.encode('utf8'))
+            if i != None:
+                deferred = i.imagingClearMenu(obj)
+                deferred.addCallback(lambda x: x)
+            else:
+                deferred = []
+        except :
+            deferred = []
+        return deferred
+
     ## Imaging server configuration
     def check_process_multicast(self, process):
         # controle execution process multicast

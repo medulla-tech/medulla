@@ -350,6 +350,14 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:imagingServerISOCreate", image_uuid, size, title)
         return d
 
+    def imagingClearMenu(self,macadress):
+        """
+        clear bootmenu from the imaging server
+        """
+        d = self.callRemote("imagingClearMenu", macadress)
+        d.addErrback(self.onErrorRaise, "Imaging:imagingClearMenu", macadress)
+        return d
+
     def imagingServermenuMulticast(self, objmenu):
         """
         create bootmenu multicast from the imaging server
@@ -357,7 +365,7 @@ class Imaging(Pulse2Api):
         d = self.callRemote("imagingServermenuMulticast", objmenu)
         d.addErrback(self.onErrorRaise, "Imaging:imagingServermenuMulticast", objmenu)
         return d
-    
+
     def check_process_multicast(self,objprocess):
         # controle execution process multicast
         d = self.callRemote("check_process_multicast", objprocess)

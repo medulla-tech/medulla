@@ -1000,6 +1000,9 @@ class Imaging(object):
             ret = False
         return ret
 
+    def imagingClearMenu(self ,  macadress):
+        return CleanMenu(self.config, macadress).clear()
+
     ## Imaging server configuration
     def imagingServermenuMulticast(self, objmenu):
         # create menu multicast 
