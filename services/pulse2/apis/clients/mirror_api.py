@@ -36,15 +36,18 @@ class MirrorApi(Pulse2Api):
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
-        if 'uuid' in machine:
-            uuid = machine['uuid']
-            uuid = [uuid]
-            db = ImagingDatabase()
-            entity = db.getTargetsEntity(uuid)
-            machine ['entity']= entity[0][0].uuid
-            serverinfo = db.getImagingServerInfo(entity[0][0].uuid)
-            machine ['server']= urlparse(serverinfo.url).hostname
-            machine ['servernane']=serverinfo.name
+        try:
+            if 'uuid' in machine:
+                uuid = machine['uuid']
+                uuid = [uuid]
+                db = ImagingDatabase()
+                entity = db.getTargetsEntity(uuid)
+                machine ['entity']= entity[0][0].uuid
+                serverinfo = db.getImagingServerInfo(entity[0][0].uuid)
+                machine ['server']= urlparse(serverinfo.url).hostname
+                machine ['servernane']=serverinfo.name
+        except:
+            pass
         d = self.callRemote("getMirror", machine)
         d.addErrback(self.onError, "MirrorApi:getMirror", machine)
         return d
@@ -77,12 +80,15 @@ class MirrorApi(Pulse2Api):
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
-        if 'uuid' in machine:
-            uuid = machine['uuid']
-            db = ImagingDatabase()
-            result = db.getTargetPackageServer(uuid)
-            machine ['server']= urlparse(result[0].url).hostname
-            machine ['servernane']=result[0].name
+        try:
+            if 'uuid' in machine:
+                uuid = machine['uuid']
+                db = ImagingDatabase()
+                result = db.getTargetPackageServer(uuid)
+                machine ['server']= urlparse(result[0].url).hostname
+                machine ['servernane']=result[0].name
+        except:
+            pass
         d = self.callRemote("getApiPackage", machine)
         d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
         return d

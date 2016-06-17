@@ -62,7 +62,12 @@ class MMUserAssignAlgo(MMAssignAlgo):
             #ip server corresponding to the imaging server of this machine
             if 'server' in m:
                 server = m['server']
-                logging.getLogger().debug("algo multi_site machine :[ %s ] pserver : (ip : %s name : '%s']"%(m['uuid'], m['server'], m['servernane']))
+                if 'uuid' in m  and 'servernane' in m :
+                    logging.getLogger().debug("algo multi_site machine :[ %s ] pserver : (ip : %s name : '%s']"%(m['uuid'], m['server'], m['servernane']))
+                else:
+                    logging.getLogger().debug("algo multi_site machine pserver : (ip : %s)"% m['server'])
+            else:
+                logging.getLogger().debug("algo multi_site machine server ip missing for machine : %s)"%m['uuid'])
             # Get the package apis and replace the server value
             self.assign[machine.uuid]['getMachinePackageApi'] = []
             self.assign[machine.uuid]['getMachinePackageApi'] += map(lambda papi: papi.toH(), self.package_apis)
