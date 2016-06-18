@@ -693,9 +693,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             ret.append(mi)
         return ret
 
-    def __mergeMenuItemInImage(self, list_of_im, list_of_both, list_of_target = None):
-        # Mutable list list_of_target used as default argument to a method or function
-        list_of_target = list_of_target or []
+    def __mergeMenuItemInImage(self, list_of_im, list_of_both, list_of_target = []):
         ret = []
         temporary = {}
         for im, mi in list_of_both:
@@ -2822,9 +2820,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ims.id
 
-    def updateImagingServer(self, uuid, params = None):
-        # Mutable dict params used as default argument to a method or function
-        params = params or {}
+    def updateImagingServer(self, uuid, params = {}):
         session = create_session()
         ims = self.getImagingServerByUUID(uuid, session)
         need_to_be_save = False
