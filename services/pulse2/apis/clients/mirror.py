@@ -80,15 +80,13 @@ class Mirror(Pulse2Api):
         d.addErrback(self.ebDefault, "Mirror:getFilesURI", fids)
         return d
 
-    def ebDefault(self, error, funcname, args, default_return = None):
+    def ebDefault(self, error, funcname, args, default_return = []):
         """
         To use as a deferred error back
 
         @returns: a list containing error informations
         @rtype: list
         """
-        # Mutable list default_return used as default argument to a method or function
-        default_return = default_return or []
         if error.type == ConnectionRefusedError:
             self.logger.error("%s %s has failed: connection refused" % (funcname, args))
             ret = ['PULSE2_ERR', PULSE2_ERR_CONN_REF,

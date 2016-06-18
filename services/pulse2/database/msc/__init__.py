@@ -1151,9 +1151,7 @@ class MscDatabase(DatabaseHelper):
             return query.all()[0][0]
 
 
-    def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1, params =None):
-        # Mutable dict params used as default argument to a method or function
-        params = params or {}
+    def __displayLogsQueryGetIds(self, cmds, min = 0, max = -1, params = {}):
         i = 0
         min = int(min)
         max = int(max)

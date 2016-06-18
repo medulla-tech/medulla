@@ -448,7 +448,7 @@ def verify_target(coh_id, hostname, mac):
     else :
         return False
 
-def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = None):
+def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     # Mutable list ids_to_exclude used as default argument to a method or function
     ids_to_exclude = ids_to_exclude or []
     database = MscDatabase()

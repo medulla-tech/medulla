@@ -273,7 +273,7 @@ class DyngroupDatabase(DatabaseHelper):
             _session.close()
         return machine.id
 
-    def __updateMachinesTable(self, connection, uuids = None):
+    def __updateMachinesTable(self, connection, uuids = []):
         """
         Remove all rows in the Machines table that are no more needed
 
@@ -281,8 +281,6 @@ class DyngroupDatabase(DatabaseHelper):
         looking for.
         """
         # Get all Machines id that are not a foreign key in Results
-        # Mutable list uuids used as default argument to a method or function
-        uuids = uuids or []        
         if uuids:
             todelete = connection.execute(
                 select([Machines.id], and_(

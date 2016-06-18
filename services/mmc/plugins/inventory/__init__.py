@@ -164,9 +164,7 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(Inventory().getMachineByHostnameAndMacs(ctx, hostname, macs))
 
-    def getAllMachinesInventoryColumn(self, part, column, pattern = None):
-        # Mutable dict pattern used as default argument to a method or function
-        pattern = pattern or {} 
+    def getAllMachinesInventoryColumn(self, part, column, pattern = {}):
         ret = self.getLastMachineInventoryPart(part, pattern)
         # TODO : m.uuid doesn't exists and should do that in just one call
         retour = []

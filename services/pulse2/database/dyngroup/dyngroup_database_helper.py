@@ -57,13 +57,11 @@ class DyngroupDatabaseHelper(DatabaseHelper):
 
         return (join_query, query_filter)
 
-    def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = None, invert = False):
+    def __treatQueryLevel(self, ctx, query, grpby, join_query, queries, join_tables = [], invert = False):
         """
         Use recursively by getAllMachines to build the query
         Used in the dyngroup context, to build AND, OR and NOT queries
         """
-        # Mutable list join_tables used as default argument to a method or function
-        join_tables = join_tables or []
         bool = queries[0]
         level = queries[1]
         if bool == 'OR':

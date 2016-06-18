@@ -67,27 +67,23 @@ class HTTPClient(object):
         urllib2.install_opener(self.opener)
         self.base_url = base_url
 
-    def get(self, url, headers=None):
+    def get(self, url, headers={}):
         """HTTP GET
 
         url should be a string containing a valid URL.
         headers should be a dictionary
         """
-        # Mutable dict headers used as default argument to a method or function
-        headers = headers or {} 
         url = self.base_url + url
         request = urllib2.Request(url, headers=headers)
         return self.execute_request(request)
 
-    def post(self, url, data=None, headers=None):
+    def post(self, url, data=None, headers={}):
         """HTTP POST
 
         url should be a string containing a valid URL.
         data should be a url-encodable dictionary
         headers should be a dictionary
         """
-        # Mutable dict headers used as default argument to a method or function
-        headers = headers or {} 
         url = self.base_url + url
         if data is None:
             postdata = None

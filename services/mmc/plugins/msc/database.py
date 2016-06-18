@@ -445,7 +445,7 @@ class MscDatabase(msc.MscDatabase):
                 fk_bundle = None,
                 order_in_bundle = None,
                 proxy_mode = 'none',
-                proxies = None,
+                proxies = [],
                 state = 'active',
                 is_quick_action=False,
                 cmd_type=0
@@ -455,8 +455,6 @@ class MscDatabase(msc.MscDatabase):
 
         Return a Deferred object resulting to the command id
         """
-        # Mutable list proxies used as default argument to a method or function
-        proxies = proxies or []
         if root == None:
             root = self.config.repopath
 
@@ -850,9 +848,7 @@ class MscDatabase(msc.MscDatabase):
         return target
 
     @DatabaseHelper._session
-    def _get_convergence_soon_ended_commands(self, session, cmd_ids=None):
-        # Mutable list proxies used as default argument to a method or function
-        cmd_ids = cmd_ids or []
+    def _get_convergence_soon_ended_commands(self, session, cmd_ids=[]):
         fmt = "%Y-%m-%d %H:%M:%S"
         now_plus_one_hour = (datetime.datetime.now() + datetime.timedelta(hours=1)).strftime(fmt)
         query = session.query(Commands)
@@ -900,18 +896,14 @@ class MscDatabase(msc.MscDatabase):
                              group_id='',
                              root=None,
                              mode='push',
-                             proxies=None,
-                             phases=None
+                             proxies=[],
+                             phases={}
             ):
         """
         Main func to inject a new command in our MSC database
 
         Return a Deferred object resulting to the command id
         """
-        # Mutable list proxies used as default argument to a method or function
-        proxies = proxies or []
-        # Mutable dict phases used as default argument to a method or function
-        phases = phases or {}
         cmd = self.getCommands(ctx, cmd_id)
         if root == None:
             root = self.config.repopath

@@ -386,13 +386,11 @@ class RpcProxy(RpcProxyI):
             s.userdn = LdapUserGroupControl().searchUserDN(s.userid)
             return s
 
-    def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = None, cmd_type = 0):
+    def add_command_api(self, pid, target, params, p_api, mode, gid = None, proxy = [], cmd_type = 0):
         """
         @param target: must be list of UUID
         @type target: list
         """
-        # Mutable list proxy used as default argument to a method or function
-        proxy = proxy or []
         ctx = self.currentContext
         if gid:
             grp = DyngroupDatabase().get_group(self.getContext(), gid)
@@ -408,9 +406,7 @@ class RpcProxy(RpcProxyI):
         g.deferred.addCallbacks(xmlrpcCleanup, lambda err: err)
         return g.deferred
 
-    def add_bundle_api(self, porders, target, params, mode, gid = None, proxy = None):
-        # Mutable list proxy used as default argument to a method or function
-        proxy = proxy or []
+    def add_bundle_api(self, porders, target, params, mode, gid = None, proxy = []):
         ctx = self.currentContext
         if gid:
             target = ComputerGroupManager().get_group_results(ctx, gid, 0, -1, '', True)
@@ -579,9 +575,7 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(MscDatabase().checkLightPullCommands(uuid))
 
 
-    def displayLogs(self, params = None):
-        # Mutable dict params used as default argument to a method or function
-        params = params or {}
+    def displayLogs(self, params = {}):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().displayLogs(ctx, params))
 
@@ -1025,9 +1019,7 @@ def _get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_i
     ret = MscDatabase()._get_convergence_new_machines_to_add(ctx, cmd_id, convergence_deploy_group_id)
     return xmlrpcCleanup(ret)
 
-def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id, phases=None):
-    # Mutable dict phases used as default argument to a method or function
-    phases = phases or {}
+def _add_machines_to_convergence_command(ctx, cmd_id, new_machine_ids, convergence_group_id, phases={}):
     return MscDatabase().addMachinesToCommand(ctx, cmd_id, new_machine_ids, convergence_group_id, phases=phases)
 
 def _get_convergence_phases(cmd_id, deploy_group_id):

@@ -76,9 +76,7 @@ def get_default_bundle_name(bundle_elem_nb = 0):
     return title
 
 class SendBundleCommand:
-    def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = None):
-        # Mutable list proxies used as default argument to a method or function
-        proxies = proxies or []
+    def __init__(self, ctx, porders, targets, params, mode, gid = None, proxies = []):
         self.ctx = ctx
         self.porders = porders
         self.targets = targets
@@ -285,9 +283,7 @@ def prepareCommand(pinfos, params):
 
 
 class SendPackageCommand:
-    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = None, cmd_type = 0):
-        # Mutable list proxies used as default argument to a method or function
-        proxies = proxies or []
+    def __init__(self, ctx, p_api, pid, targets, params, mode, gid = None, bundle_id = None, order_in_bundle = None, proxies = [], cmd_type = 0):
         self.ctx = ctx
         self.p_api = p_api.copy()
         self.pid = pid
@@ -451,9 +447,7 @@ class GetPackagesFiltered:
         else:
             ret = self.sendResult()
 
-    def sendResult(self, packages = None):
-        # Mutable list packages used as default argument to a method or function
-        packages = packages or []
+    def sendResult(self, packages = []):
         ret = map(lambda m: [m, 0, self.filt['packageapi']], packages)
         self.deferred.callback(ret)
 
@@ -471,9 +465,7 @@ class GetPackagesUuidFiltered:
         logging.getLogger().error("GetPackagesUuidFiltered: %s", str(error))
         return self.deferred.callback([])
 
-    def sendResult(self, packages = None):
-        # Mutable list packages used as default argument to a method or function
-        packages = packages or []
+    def sendResult(self, packages = []):
         self.deferred.callback(packages)
 
     def get(self):
@@ -528,9 +520,7 @@ class GetPackagesGroupFiltered:
         logging.getLogger().error("GetPackagesGroupFiltered: %s", str(error))
         return self.deferred.callback([])
 
-    def sendResult(self, packages = None):
-        # Mutable list packages used as default argument to a method or function
-        packages = packages or []
+    def sendResult(self, packages = []):
         self.deferred.callback(packages)
 
     def get(self):

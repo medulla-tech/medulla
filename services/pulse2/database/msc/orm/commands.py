@@ -184,13 +184,11 @@ class Commands(object):
         now = datetime.datetime.now()
         return now > self.start_date and now < self.end_date
 
-    def getCohIds(self, target_uuids=None):
+    def getCohIds(self, target_uuids=[]):
         """
         Returns the list of commands_on_host linked to this command
         If list of target_uuids, returns only uuids of this list
         """
-        # Mutable list target_uuids used as default argument to a method or function
-        target_uuids = target_uuids or []
         session = sqlalchemy.orm.create_session()
         myCommandOnHosts = session.query(CommandsOnHost)
         if target_uuids:
