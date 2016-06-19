@@ -51,7 +51,8 @@ class PackageGetA(pulse2.apis.clients.package_get_api.PackageGetA):
             port = server['port']
             proto = server['protocol']
             bind = server['server']
-            if 'username' in server and 'password' in server and server['username'] != '':
+            #if 'username' in server and 'password' in server and server['username'] != '':
+            if server.has_key('username') and server.has_key('password') and server['username'] != '':
                 login = "%s:%s@" % (server['username'], server['password'])
                 credentials = "%s:%s" % (server['username'], server['password'])
 
@@ -304,7 +305,8 @@ class SendPackageCommand:
         return self.deferred.callback(id_command)
 
     def send(self):
-        if (self.pid == None or self.pid == '') and 'launchAction' in self.params:
+        #if (self.pid == None or self.pid == '') and 'launchAction' in self.params:
+        if (self.pid == None or self.pid == '') and self.params.has_key('launchAction'):
             # this is a QA passing by the advanced page
             idcmd = self.params['launchAction']
             result, qas = qa_list_files()
@@ -556,7 +558,8 @@ class GetPackagesGroupFiltered:
                 tmpmerged.append((papi, self.mirrors[i]))
             mergedlist.insert(i, tmpmerged)
 
-        if mergedlist:
+        #if mergedlist:
+        if not len(mergedlist):
             self.sendResult()
         else:
             plists = []

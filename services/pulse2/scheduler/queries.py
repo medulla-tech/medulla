@@ -281,18 +281,16 @@ def get_all_phases(id):
     session.close()
     return phases.all()
 
-def any_failed(id, non_fatal_steps=None):
+def any_failed(id, non_fatal_steps=[]):
     # Mutable list non_fatal_steps used as default argument to a method or function
-    non_fatal_steps = non_fatal_steps or []
     for phase in get_all_phases(id):
         if phase.state == "failed" and not phase.name in non_fatal_steps :
             return True
     return False
 
 
-def get_ids_to_start(scheduler_name, ids_to_exclude =None, top=None):
+def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
     # Mutable list ids_to_exclude used as default argument to a method or function
-    ids_to_exclude = ids_to_exclude or []
     database = MscDatabase()
     session = create_session()
 
@@ -450,7 +448,6 @@ def verify_target(coh_id, hostname, mac):
 
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
     # Mutable list ids_to_exclude used as default argument to a method or function
-    ids_to_exclude = ids_to_exclude or []
     database = MscDatabase()
     session = create_session()
 

@@ -29,7 +29,7 @@ from sqlalchemy.ext.declarative import declarative_base; Base = declarative_base
 from mmc.database.database_helper import DBObj
 
 # status global vars
-#global STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED
+global STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED
 (STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED) = xrange(3)
 
 

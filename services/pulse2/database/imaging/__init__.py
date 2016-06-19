@@ -1163,10 +1163,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
-        if 'default' in params and 'default' in params and params['default']:
+        #if 'default' in params and params['default']:
+        if params.has_key('default') and 'default' in params and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
-        if 'default_WOL' in params and 'default_WOL' in params and params['default_WOL']:
+        #if 'default_WOL' in params and params['default_WOL']:
+        if params.has_key('default_WOL') and 'default_WOL' in params and params['default_WOL']:
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
         if is_menu_modified:
@@ -1780,7 +1782,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         im_pis = {}
         for pis, im_id, order in q2:
-            if not im_id in im_pis:
+            if not im_pis.has_key(im_id):
+            #if not im_id in im_pis:
                 im_pis[im_id] = {}
             pis = pis.toH()
             pis['order'] = order
@@ -1830,8 +1833,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __addImage(self, session, item_uuid, menu, params):
         if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
-
-        if 'name' in params and not 'default_name' in params:
+        #if 'name' in params and not 'default_name' in params:
+        if params.has_key('name') and not params.has_key('default_name'):
             params['default_name'] = params['name']
         mi = self.__createNewMenuItem(session, menu.id, params)
         session.flush()
@@ -1927,9 +1930,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
         imaging_log.detail = log['detail']
         imaging_log.fk_imaging_log_level = log['level']
-        if log['state'] in self.r_nomenclatures['ImagingLogState']:
+        #if log['state'] in self.r_nomenclatures['ImagingLogState']:
+        if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
-        elif log['state'] in self.nomenclatures['ImagingLogState']:
+            #elif log['state'] in self.nomenclatures['ImagingLogState']:
+        elif self.nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = log['state']
         else: # this state is unknown!
             self.logger.warn("don't know that imaging log state %s"%(log['state']))
@@ -2423,7 +2428,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = self.__mergePostInstallScriptI18n(q2)
         h_pis_by_imageid = {}
         for pis in q2:
-            if not pis.image_id in h_pis_by_imageid:
+            #if not pis.image_id in h_pis_by_imageid:
+            if not h_pis_by_imageid.has_key(pis.image_id):
                 h_pis_by_imageid[pis.image_id] = []
             h_pis_by_imageid[pis.image_id].append(pis)
 
@@ -2937,7 +2943,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if proto and menu.fk_protocol != proto.id:
                 need_to_be_save = True
                 menu.fk_protocol = proto.id
-        if 'mtftp_restore_timeout' in params and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
+        #if 'mtftp_restore_timeout' in params and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
+        if params.has_key('mtftp_restore_timeout') and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
             need_to_be_save = True
             menu.mtftp_restore_timeout = params['mtftp_restore_timeout']
 
@@ -3283,7 +3290,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for target in q:
                 ret[target.uuid] = (target.is_registered_in_package_server == 1)
             for l_uuid in uuid:
-                if not l_uuid in ret:
+                #if not l_uuid in ret:
+                if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
@@ -3313,7 +3321,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for target in q:
                 ret[target.uuid] = True
             for l_uuid in uuid:
-                if not l_uuid in ret:
+                #if not l_uuid in ret:
+                if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
             q = session.query(Target).filter(and_(self.target.c.uuid == uuid, filt)).first()
@@ -3810,10 +3819,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         registered = self.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE, session)
         for uuid in uuids:
-            if not (uuid in registered and registered[uuid]):
+            #if not (uuid in registered and registered[uuid]):
+            if not (registered.has_key(uuid) and registered[uuid]):
                 loc_id = 0
                 location_id = locations[uuid]['uuid']
-                if not location_id in cache_location_id:
+                #if not location_id in cache_location_id:
+                if not cache_location_id.has_key(location_id):
                     loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
                     cache_location_id[location_id] = loc.id
                 loc_id = cache_location_id[location_id]

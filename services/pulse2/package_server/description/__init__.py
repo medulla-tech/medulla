@@ -32,9 +32,9 @@ import cgi
 class Description(resource.Resource):
     type = 'Description'
     isLeaf = True
-    def __init__(self, services, status = None):
+    def __init__(self, services, status = {}):
         # Mutable dict status used as default argument to a method or function
-        self.status = status or {}
+        self.status = status
         self.services = services
         resource.Resource.__init__(self)
         self.logger = logging.getLogger()

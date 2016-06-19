@@ -44,8 +44,9 @@ class DyngroupDatabaseHelper(DatabaseHelper):
             self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
-        try:
-            if not 'query' in filt:
+        try:            
+            #if not 'query' in filt:
+            if not filt.has_key('query'):
                 return (join_query, query_filter)
             query_filter, join_tables = self.__treatQueryLevel(ctx, query, grpby, join_query, filt['query'])
             for table in join_tables:

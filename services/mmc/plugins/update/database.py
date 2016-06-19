@@ -141,7 +141,8 @@ class updateDatabase(DatabaseHelper):
                 if len(update) > 1:
                     logger.warning('Duplicate enties found, please check that you havent updates with same name AND guid')
 
-                if not update: # if no same update found in db, we create it
+                #if not update: # if no same update found in db, we create it
+                if len(update) == 0: # if no same update found in db, we create it
                     update = Update()
                     update.fromDict(upd)
                     session.add(update)

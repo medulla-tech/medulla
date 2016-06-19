@@ -83,18 +83,16 @@ class ComputerLocationManager(Singleton):
         except KeyError:
             return None
 
-    def getMachinesInLocation(self, location, a_profile = None):
+    def getMachinesInLocation(self, location, a_profile = []):
         # Mutable list a_profile used as default argument to a method or function
-        a_profile = a_profile or []
         try:
             klass = self.components[self.main]
             return klass().getMachinesInLocation(location, a_profile)
         except KeyError:
             return None
 
-    def getLocationsForMachine(self, machine_uuid, a_profile = None):
+    def getLocationsForMachine(self, machine_uuid, a_profile = []):
         # Mutable list a_profile used as default argument to a method or function
-        a_profile = a_profile or []
         try:
             klass = self.components[self.main]
             return klass().getLocationsForMachine(machine_uuid, a_profile)
@@ -164,16 +162,14 @@ class ComputerLocationI(Singleton):
         """ return the linked locations for one user """
         pass
 
-    def getMachinesInLocation(self, location, a_profile = None): # TODO implement and use in glpi module
+    def getMachinesInLocation(self, location, a_profile = []): # TODO implement and use in glpi module
         """ should return the machines that are in the specified location with the good profiles (or any) """
         # Mutable list a_profile used as default argument to a method or function
-        a_profile = a_profile or []
         pass
 
-    def getLocationsForMachine(self, machine_uuid, a_profile = None): # TODO implement and use in glpi module
+    def getLocationsForMachine(self, machine_uuid, a_profile = []): # TODO implement and use in glpi module
         """ should return the locations in which this machine is """
         # Mutable list a_profile used as default argument to a method or function
-        a_profile = a_profile or []
         pass
 
     def getLocationsCount(self):

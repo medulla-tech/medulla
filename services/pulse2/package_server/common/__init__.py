@@ -898,7 +898,8 @@ class Common(pulse2.utils.Singleton):
         failure = False
         # check that the last modification date is old enough
         if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
-            if pid in self.temp_check_changes['LAST']:
+            #if pid in self.temp_check_changes['LAST']:
+            if self.temp_check_changes['LAST'].has_key(pid):
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = False
             else:
                 self.temp_check_changes['LAST'][pid] = { '###HASCHANGED_LAST###':False }
@@ -915,7 +916,8 @@ class Common(pulse2.utils.Singleton):
 
         # check that the package size has not change between two detect loop (detected one loop after the package is here for real)
         if self.config.SMART_DETECT_SIZE in self.config.package_detect_smart_method:
-            if not pid in self.temp_check_changes['SIZE']:
+            if not self.temp_check_changes['SIZE'].has_key(pid):
+                #if not pid in self.temp_check_changes['SIZE']:
                 self.temp_check_changes['SIZE'][pid] = [0, 0]
             previous, previous_t = self.temp_check_changes['SIZE'][pid]
             if (t - previous_t) < (self.config.package_detect_loop - 1): # only try this method once per detect loop
@@ -927,12 +929,14 @@ class Common(pulse2.utils.Singleton):
                     self.temp_check_changes['SIZE'][pid] = [size, t]
                     self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
                     failure = True
-            if failure and (pid in self.newAssociation or pid in self.inEdition):
+            #if failure and (pid in self.newAssociation or pid in self.inEdition):
+            if failure and (self.newAssociation.has_key(pid) or self.inEdition.has_key(pid)):
                 failure = False
             known_action = True
 
         if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
-            if not pid in self.temp_check_changes['LOOP']:
+            #if not pid in self.temp_check_changes['LOOP']:
+            if not self.temp_check_changes['LOOP'].has_key(pid):
                 self.temp_check_changes['LOOP'][pid] = {}
             self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = False
             Find().find(dir, self.__subHasChangedLoop, [pid,time.time(),runid])

@@ -578,13 +578,15 @@ class Inventory(DyngroupDatabaseHelper):
     def mapping(self, ctx, query, invert = False):
         q = query[2].split('/')
         table, field = q[0:2]
-        if query[2] in PossibleQueries().possibleQueries('double'): # double search
+        #if query[2] in PossibleQueries().possibleQueries('double'): # double search
+        if PossibleQueries().possibleQueries('double').has_key(query[2]): # double search
             value = PossibleQueries().possibleQueries('double')[query[2]]
             return and_(# TODO NEED TO PATH TO GET THE GOOD SEP!
                 self.mapping(ctx, [None, None, value[0][0], query[3][0]]),
                 self.mapping(ctx, [None, None, value[1][0], query[3][1]])
             )
-        elif query[2] in PossibleQueries().possibleQueries('triple'): # triple search
+        #elif query[2] in PossibleQueries().possibleQueries('triple'): # triple search
+        elif PossibleQueries().possibleQueries('triple').has_key(query[2]): # triple search
             queries = PossibleQueries().possibleQueries('triple')[query[2]]
 
             vendor_query = queries[0][0]
@@ -605,7 +607,8 @@ class Inventory(DyngroupDatabaseHelper):
                 _getMapping(software_query, software_value),
                 _getMapping(version_query, version_value),
             )
-        elif query[2] in PossibleQueries().possibleQueries('list'): # list search
+        #elif query[2] in PossibleQueries().possibleQueries('list'): # list search
+        elif PossibleQueries().possibleQueries('list').has_key(query[2]): # list search
             if table == 'Machine':
                 partKlass = Machine
             else:
@@ -622,8 +625,8 @@ class Inventory(DyngroupDatabaseHelper):
             else:
                 value = value.replace('*', '%')
                 return and_(getattr(partKlass, field).like(value), self.inventory.c.Last == 1)
-
-        elif query[2] in PossibleQueries().possibleQueries('halfstatic'): # halfstatic search
+        #elif query[2] in PossibleQueries().possibleQueries('halfstatic'): # halfstatic search
+        elif PossibleQueries().possibleQueries('halfstatic').has_key(query[2]): # halfstatic search
             if table == 'Machine':
                 partKlass = Machine
             else:
@@ -1281,7 +1284,8 @@ class Inventory(DyngroupDatabaseHelper):
                     y, m, day = res[4].split("-")
                     d = datetime.datetime(int(y), int(m), int(day))
                 tmp["timestamp"] = d
-                if not res[1] in  machine_inv:
+                #if not res[1] in machine_inv:
+                if not machine_inv.has_key(res[1]):
                     machine_inv[res[1]] = []
                     machine_uuid[res[1]] = toUUID(res[2])
                 if len(res) > 5:
