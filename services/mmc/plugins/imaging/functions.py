@@ -3561,7 +3561,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
                 failures.append(uuid)
 
         if pid != None:
-            if failures:
+            #if failures:
             if len(failures) != 0:
                 db.changeTargetsSynchroState([pid], target_type, P2ISS.TODO)
             else:
