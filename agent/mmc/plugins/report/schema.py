@@ -94,18 +94,15 @@ class Indicator(Base, DBObj):
             self.format_func = str
 
 
-    def getCurrentValue(self, entities = None):
+    def getCurrentValue(self, entities = []):
         #Mutable list entities used as default argument to a method or function
-        entities = entities or  []
         report = import_module('.'.join(['mmc.plugins', self.module, 'report'])).exportedReport()
         args = [entities] + eval('[' + self.params + ']')
         return getattr(report, self.request_function)(*args)
 
-    def getValueAtTime(self, session, ts_min, ts_max , entities = None):
+    def getValueAtTime(self, session, ts_min, ts_max , entities = []):
         # DBClass, aggegate and finalformat functions according to DataType
         #Mutable list entities used as default argument to a method or function
-        entities = entities or  []
-
         ret = session.query(self.aggregate_func(self.dataClass.value))\
                 .filter_by(indicator_id = self.id)
         # Selected entities filter, else all entities are included

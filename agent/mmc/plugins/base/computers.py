@@ -340,9 +340,9 @@ class ComputerManager(Singleton):
         instance = klass()
         return instance.getComputersList(ctx, filt)
 
-    def getComputerCount(self, ctx, filt = None):
+    def getComputerCount(self, ctx, filt = {}):
         # Mutable dict filt used as default argument to a method or function
-        filt = filt or {}
+        #filt = filt or {}
         klass = self.components[self.main]
         instance = klass()
         return instance.getComputerCount(ctx, filt)

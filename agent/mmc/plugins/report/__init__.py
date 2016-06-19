@@ -726,12 +726,11 @@ class RpcProxy(RpcProxyI):
             timestamp = int(time.time())
         ReportDatabase().historize_overwrite_last(timestamp)
 
-    def get_indicator_value_at_time(self, indicator_name, ts_min, ts_max, entities=None):
+    def get_indicator_value_at_time(self, indicator_name, ts_min, ts_max, entities=[]):
         # Mutable list entities used as default argument to a method or function
-        entities = entities or []
+        #entities = entities or []
         return ReportDatabase().get_indicator_value_at_time(indicator_name, ts_min, ts_max, entities)
 
-    def get_indicator_current_value(self, indicator_name, entities=None):
+    def get_indicator_current_value(self, indicator_name, entities=[]):
         #Mutable list entities used as default argument to a method or function
-        entities = entities or  []
         return ReportDatabase().get_indicator_current_value(indicator_name, entities)
