@@ -757,6 +757,7 @@ class ImagingImageItem(ImagingItem):
         # Davos imaging client case
         if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
             self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## ##PROTOCOL## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
 
     def getEntry(self, protocol, network = True):
@@ -767,9 +768,8 @@ class ImagingImageItem(ImagingItem):
         @return: the entry, in a SYSLINUX compatible format.
         """
         buf = 'LABEL %s\n' % self.label
-        buf += 'MENU LABEL %s\n' % self.menulabel
-        if self.label:
-            buf += 'LABEL %s\n' % self.label
+        buf += 'MENU LABEL %s\n' % selflabel
+        buf += self.CMDLINE + '\n'
         return self._applyReplacement(buf, network)
 
     def write(self, config):
