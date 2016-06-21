@@ -137,7 +137,7 @@ class Common(pulse2.utils.Singleton):
                         'file_access_port':mirror_params['file_access_port'],
                         'file_access_path':mirror_params['file_access_path']
                     }
-                    if mirror_params.has_key('mirror'):
+                    if 'mirror' in mirror_params:
                         access = {
                             'proto':'',
                             'file_access_uri':'',
@@ -160,7 +160,8 @@ class Common(pulse2.utils.Singleton):
                     )
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src: 
+                        del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for mirrors")
                     self.logger.error(str(e))
 
@@ -175,7 +176,8 @@ class Common(pulse2.utils.Singleton):
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src:
+                        del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api get")
                     self.logger.error(e)
 
@@ -190,7 +192,7 @@ class Common(pulse2.utils.Singleton):
                     self._getPackages(mirror_params['mount_point'], mirror_params['src'], {}, new, runid)
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if self.mp2src.has_key(mp): del self.mp2src[mp]
+                    if mp in self.mp2src: del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for package api put")
                     self.logger.error(e)
 
@@ -203,7 +205,7 @@ class Common(pulse2.utils.Singleton):
             try:
                 proot = self._getPackageRoot(pid)
                 conf_file = os.path.join(proot, self.CONFFILE)
-                if os.path.exists(conf_file) and self.packageDetectionDate.has_key(pid) and self.packageDetectionDate[pid] != self.__getDate(conf_file): # EDITED
+                if os.path.exists(conf_file) and pid in self.packageDetectionDate and self.packageDetectionDate[pid] != self.__getDate(conf_file): # EDITED
                     self.logger.debug("Package %s has been modified (%s)" % (pid, conf_file))
                     #self.__removePackage(pid, proot)
                     #todelete.append(pid)
@@ -226,9 +228,9 @@ class Common(pulse2.utils.Singleton):
                 self.suppressFromInternal(pid)
 
     def suppressFromInternal(self, pid):
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.debug("Package %s is not in Common().packages"%(pid))
-            if self.packageDetectionDate.has_key(pid):
+            if pid in self.packageDetectionDate:
                 del self.packageDetectionDate[pid]
         else:
             self.logger.debug("Package %s removed from internal hashes"%(pid))
@@ -242,9 +244,9 @@ class Common(pulse2.utils.Singleton):
                 self.logger.error("Common.suppressFromInternal : an exception happened")
                 self.logger.debug(type(e))
                 self.logger.info(e)
-            if self.packageDetectionDate.has_key(pid):
+            if pid in self.packageDetectionDate:
                 del self.packageDetectionDate[pid]
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 del self.packages[pid]
 
     def __removePackage(self, pid, proot):
@@ -353,7 +355,7 @@ class Common(pulse2.utils.Singleton):
     def getAllPackageRoot(self):
         ret = {}
         for m in self.desc:
-            if m.has_key('src') and not ret.has_key(m['src']):
+            if 'src' in m and not m['src'] in ret:
                 ret[m['src']] = None
         return ret.keys()
 
@@ -368,7 +370,7 @@ class Common(pulse2.utils.Singleton):
         PkgsRsyncStateSerializer().serialize()
 
     def isPackageAccessible(self, pid):
-        return (not self.dontgivepkgs.has_key(pid) and not self.need_assign.has_key(pid) and self.packages[pid].hasFile())
+        return (not pid in self.dontgivepkgs and not pid in self.need_assign and self.packages[pid].hasFile())
 
     def getPackagesThatNeedRsync(self):
         if self.dontgivepkgs != {}:
@@ -376,7 +378,7 @@ class Common(pulse2.utils.Singleton):
         ret = []
         rem = []
         for x in self.dontgivepkgs:
-            if not self.packages.has_key(x) or not self.packages[x]:
+            if not x in self.packages or not self.packages[x]:
                 rem.append(x)
             else:
                 ret.append([x, self.dontgivepkgs[x], self.packages[x]])
@@ -385,7 +387,7 @@ class Common(pulse2.utils.Singleton):
         return ret
 
     def removePackagesFromRsyncList(self, pid, target):
-        if self.dontgivepkgs.has_key(pid):
+        if pid in self.dontgivepkgs:
             modif = False
             try:
                 i = self.dontgivepkgs[pid].index(target)
@@ -414,7 +416,7 @@ class Common(pulse2.utils.Singleton):
         # return pid for success
         # raise ARYDEFPKG for already existing package
         try:
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 if self.packages[pid] == pa:
                     return pid
                 raise Exception("ARYDEFPKG")
@@ -423,7 +425,7 @@ class Common(pulse2.utils.Singleton):
             elif self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pa
-            if not self.reverse.has_key(pa.label):
+            if not pa.label in self.reverse:
                 self.reverse[pa.label] = {}
             self.reverse[pa.label][pa.version] = pid
         except Exception, e:
@@ -446,7 +448,7 @@ class Common(pulse2.utils.Singleton):
             if self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pack
-            if not self.reverse.has_key(pack.label):
+            if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
@@ -457,7 +459,7 @@ class Common(pulse2.utils.Singleton):
 
     def editPackage(self, pid, pack, need_assign = True, mp=None):
         try:
-            if self.packages.has_key(pid):
+            if pid in self.packages:
                 old = self.packages[pid]
                 try:
                     self.reverse[old.label][old.version] = None # TODO : can't remove, so we will have to check that value != None...
@@ -474,7 +476,7 @@ class Common(pulse2.utils.Singleton):
             elif self.config.package_mirror_activate:
                 Common().rsyncPackageOnMirrors(pid)
             self.packages[pid] = pack
-            if not self.reverse.has_key(pack.label):
+            if not pack.label in self.reverse:
                 self.reverse[pack.label] = {}
             self.reverse[pack.label][pack.version] = pid
         except Exception, e:
@@ -484,7 +486,7 @@ class Common(pulse2.utils.Singleton):
         return pid
 
     def writePackageTo(self, pid, mp):
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
 
@@ -630,7 +632,7 @@ class Common(pulse2.utils.Singleton):
         # Always need assign because this function can
         # add new files to existing package
         Common().need_assign[pid] = True
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             return [False, "This package don't exists"]
         path = self._getPackageRoot(pid)
         self.logger.debug("File association will put files in %s" % (path))
@@ -687,7 +689,7 @@ class Common(pulse2.utils.Singleton):
 
     def removeFilesFromPackage(self,pid,files=[], all=False):
         # Checking if package exists
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             return [False, "This package don't exists"]
         # Checking files param
         if type(files) == str:
@@ -722,7 +724,7 @@ class Common(pulse2.utils.Singleton):
         Physically removes the given package content from the disk (if setted)
         Also mark the package as not available
         """
-        if not self.packages.has_key(pid):
+        if not pid in self.packages:
             self.logger.error("package %s is not defined"%(pid))
             raise Exception("UNDEFPKG")
         params = self.h_desc(mp)
@@ -772,7 +774,7 @@ class Common(pulse2.utils.Singleton):
                 return ret
             else:
                 for id in pidlist:
-                    if not self.packages.has_key(id): # shouldn't happen, but who knows...
+                    if not id in self.packages: # shouldn't happen, but who knows...
                         continue
                     p = self.__packageSelection(id, mp, pending, all)
                     if p != None:
@@ -786,7 +788,7 @@ class Common(pulse2.utils.Singleton):
     def __packageSelection(self, pid, mp = None, pending = False, all = False):
         is_acc = self.isPackageAccessible(pid)
         if not all:
-            is_acc = is_acc and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid)
+            is_acc = is_acc and not pid in self.newAssociation and not pid in self.inEdition
         if (is_acc and not pending) or (not is_acc and pending) or (all and is_acc):
             if (mp != None and pid in self.mp2p[mp]) or (mp == None):
                 return self.packages[pid]
@@ -810,7 +812,7 @@ class Common(pulse2.utils.Singleton):
         ret = []
         try:
             for k in self.reverse:
-                if self.mp2p.has_key(k):
+                if k in self.mp2p:
                     ret.append(k)
         except Exception, e:
             self.logger.error("reverse failed")
@@ -819,7 +821,7 @@ class Common(pulse2.utils.Singleton):
         return ret
 
     def getFile(self, fid, mp = None):
-        if self.files.has_key(fid):
+        if fid in self.files:
             return self.files[fid].toURI(mp)
         return None
 
@@ -896,6 +898,7 @@ class Common(pulse2.utils.Singleton):
         failure = False
         # check that the last modification date is old enough
         if self.config.SMART_DETECT_LAST in self.config.package_detect_smart_method:
+            #if pid in self.temp_check_changes['LAST']:
             if self.temp_check_changes['LAST'].has_key(pid):
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = False
             else:
@@ -914,6 +917,7 @@ class Common(pulse2.utils.Singleton):
         # check that the package size has not change between two detect loop (detected one loop after the package is here for real)
         if self.config.SMART_DETECT_SIZE in self.config.package_detect_smart_method:
             if not self.temp_check_changes['SIZE'].has_key(pid):
+                #if not pid in self.temp_check_changes['SIZE']:
                 self.temp_check_changes['SIZE'][pid] = [0, 0]
             previous, previous_t = self.temp_check_changes['SIZE'][pid]
             if (t - previous_t) < (self.config.package_detect_loop - 1): # only try this method once per detect loop
@@ -925,11 +929,13 @@ class Common(pulse2.utils.Singleton):
                     self.temp_check_changes['SIZE'][pid] = [size, t]
                     self.logger.debug("package '%s' was modified, '%s' bytes added"%(str(pid), str(size-previous)))
                     failure = True
+            #if failure and (pid in self.newAssociation or pid in self.inEdition):
             if failure and (self.newAssociation.has_key(pid) or self.inEdition.has_key(pid)):
                 failure = False
             known_action = True
 
         if self.config.SMART_DETECT_LOOP in self.config.package_detect_smart_method and False: # TOBEDONE
+            #if not pid in self.temp_check_changes['LOOP']:
             if not self.temp_check_changes['LOOP'].has_key(pid):
                 self.temp_check_changes['LOOP'][pid] = {}
             self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = False
@@ -967,9 +973,9 @@ class Common(pulse2.utils.Singleton):
     def __initialiseChangedLast(self, pid, file, s = None):
         if s == None:
             s = self.__getDate(file)
-        if not self.temp_check_changes['LAST'].has_key(pid):
+        if not pid in self.temp_check_changes['LAST']:
             self.temp_check_changes['LAST'][pid] = { '###DATE###' : s }
-        elif not self.temp_check_changes['LAST'][pid].has_key('###DATE###') or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
+        elif not '###DATE###' in self.temp_check_changes['LAST'][pid] or self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
             self.temp_check_changes['LAST'][pid]['###DATE###'] = s
 
     def __subHasChangedLast(self, file, pid, t):
@@ -981,18 +987,18 @@ class Common(pulse2.utils.Singleton):
         if (t - s) < self.config.package_detect_smart_time:
             # if the file has just been associated
             # TODO check if the file has just been edited
-            if self.newAssociation.has_key(pid) or self.inEdition.has_key(pid):
+            if pid in self.newAssociation or pid in self.inEdition:
                 self.__initialiseChangedLast(pid, file, s)
                 self.logger.debug("\t")
 
-            if not self.temp_check_changes['LAST'][pid].has_key('###DATE###'):
+            if not '###DATE###' in self.temp_check_changes['LAST'][pid]:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
             elif self.temp_check_changes['LAST'][pid]['###DATE###'] < s:
                 self.temp_check_changes['LAST'][pid]['###HASCHANGED_LAST###'] = True
 
     def __subHasChangedLoop(self, file, pid, t, runid = -1):
         s = self.__getDate(file)
-        if self.temp_check_changes['LOOP'][pid].has_key(file):
+        if file in self.temp_check_changes['LOOP'][pid]:
             if s != self.temp_check_changes['LOOP'][pid][file][0]:
                 self.temp_check_changes['LOOP'][pid][file][0] = s
                 self.temp_check_changes['LOOP'][pid]['###HASCHANGED_LOOP###'] = True
@@ -1010,22 +1016,22 @@ class Common(pulse2.utils.Singleton):
         if os.path.basename(file) == self.CONFFILE:
             l_package = self.parser.parse(file)
             if l_package == None: return
-            if self.working_pkgs.has_key(l_package.id): return
+            if l_package.id in self.working_pkgs: return
             l_package.setRoot(os.path.dirname(file))
             isReady = self._hasChanged(os.path.dirname(file), l_package.id, runid)
-            if not self.already_declared.has_key(file):
+            if not file in self.already_declared:
                 if isReady == self.SMART_DETECT_CHANGES:
                     self.logger.debug("'%s' has changed recently"%(str(l_package.id)))
                 else:
-                    if not self.need_assign.has_key(l_package.id):
+                    if not l_package.id in self.need_assign:
                         self.logger.debug("detect a new package %s"%(l_package.id))
                         self._createMD5File(os.path.dirname(file))
                         pid = self._treatDir(os.path.dirname(file), mp, access, True, l_package)
                         self.associatePackage2mp(pid, mp)
                         self.already_declared[file] = True
-                        if self.newAssociation.has_key(pid):
+                        if pid in self.newAssociation:
                             del self.newAssociation[pid]
-                        if self.inEdition.has_key(pid):
+                        if pid in self.inEdition:
                             del self.inEdition[pid]
                         self.packageDetectionDate[pid] = self.__getDate(file)
                         if self.config.package_mirror_activate:
@@ -1033,7 +1039,7 @@ class Common(pulse2.utils.Singleton):
                     else:
                         self.logger.debug("detect a new package that is in assign phase %s"%(l_package.id))
             else:
-                if self.inEdition.has_key(l_package.id): # the config file has been changed from the gui, only need to get new date and size
+                if l_package.id in self.inEdition: # the config file has been changed from the gui, only need to get new date and size
                     pid = l_package.id
                     self.logger.debug("detect an already detected package (edition mode) : %s"%(pid))
                     del self.inEdition[pid]
@@ -1073,7 +1079,7 @@ class Common(pulse2.utils.Singleton):
         # End compatibility code
 
         if os.path.basename(file) == self.CONFFILE:
-            if self.already_declared.has_key(file) and self.already_declared[file]:
+            if file in self.already_declared and self.already_declared[file]:
                 self._treatDir(os.path.dirname(file), mp, access)
                 return
 
@@ -1081,9 +1087,9 @@ class Common(pulse2.utils.Singleton):
             self._createMD5File(os.path.dirname(file))
             pid = self._treatDir(os.path.dirname(file), mp, access)
             self.already_declared[file] = True
-            if self.newAssociation.has_key(pid):
+            if pid in self.newAssociation:
                 del self.newAssociation[pid]
-            if self.inEdition.has_key(pid):
+            if pid in self.inEdition:
                 del self.inEdition[pid]
             self.packageDetectionDate[pid] = self.__getDate(file)
             l_package = self.packages[pid]
@@ -1119,7 +1125,7 @@ class Common(pulse2.utils.Singleton):
                     self.working_pkgs[pid] = l_package
 
                 self.mp2p[mp].append(pid)
-                if not force and self.packages.has_key(pid) and not self.newAssociation.has_key(pid) and not self.inEdition.has_key(pid):
+                if not force and pid in self.packages and not pid in self.newAssociation and not pid in self.inEdition:
                     if new:
                         self.logger.debug("package '%s' already exists" % (pid))
                     return False
@@ -1175,7 +1181,7 @@ class Common(pulse2.utils.Singleton):
         if access is None: # dont modify the default value!
             access = {}
         (fsize, fmd5) = [0,0]
-        if not self.file_properties.has_key(f):
+        if not f in self.file_properties:
             fsize = os.path.getsize(f)
             fmd5 = md5file(f)
             self.logger.debug('ish: Creating md5 entry for '+f)
@@ -1185,7 +1191,7 @@ class Common(pulse2.utils.Singleton):
 
         file = File(os.path.basename(f), path, fmd5, fsize, access, fid)
         self.packages[pid].addFile(file)
-        if self.fid2file.has_key(file.id) and self.fid2file[file.id] != file.checksum:
+        if file.id in self.fid2file and self.fid2file[file.id] != file.checksum:
             raise Exception("DBLFILE")
         self.fid2file[file.id] = file.checksum
         return fsize
@@ -1202,7 +1208,7 @@ class Common(pulse2.utils.Singleton):
 
     def _buildReverse(self):
         for package in self.working_pkgs.values():
-            if not self.reverse.has_key(package.label):
+            if not package.label in self.reverse:
                 self.reverse[package.label] = {}
             self.reverse[package.label][package.version] = package.id
 

@@ -204,48 +204,48 @@ def read_logs(logfiles, start_date, stop_date):
             launcher = res.group(2)
             dump = eval(res.group(3))
 
-            if dump.has_key('global'):
-                if not runnings.has_key(launcher):
+            if 'global' in dump:
+                if not launcher in runnings:
                     runnings[launcher] = {}
-                if not runnings[launcher].has_key(stamp):
+                if not stamp in runnings[launcher]:
                     runnings[launcher][stamp] = int(dump['global']['running'])
                 else:
                     runnings[launcher][stamp] += int(dump['global']['running'])
-                if not zombies.has_key(launcher):
+                if not  in zombies:
                     zombies[launcher] = {}
-                if not zombies[launcher].has_key(stamp):
+                if not stamp in zombies[launcher]:
                     zombies[launcher][stamp] = int(dump['global']['zombie'])
                 else:
                     zombies[launcher][stamp] += int(dump['global']['zombie'])
 
-            if dump.has_key('loadavg'):
-                if not loads.has_key(launcher):
+            if 'loadavg' in dump:
+                if not launcher in loads:
                     loads[launcher] = {}
-                if not loads[launcher].has_key(stamp):
+                if not stamp in loads[launcher]:
                     loads[launcher][stamp] = int(dump['loadavg']['1min'])
                 else:
                     loads[launcher][stamp] += int(dump['loadavg']['1min'])
 
-            if dump.has_key('fd'):
-                if not fds.has_key(launcher):
+            if 'fd' in dump:
+                if not launcher in fds:
                     fds[launcher] = {}
-                if not fds[launcher].has_key(stamp):
+                if not stamp in fds[launcher]:
                     fds[launcher][stamp] = sum(dump['fd'].values())
                 else:
                     fds[launcher][stamp] += sum(dump['fd'].values())
 
-            if dump.has_key('by_group'):
+            if 'by_group' in dump:
                 # Prevent "None" from beeing eval'ed as None
-                if dump['by_group'].has_key(None):
+                if None in dump['by_group']:
                     dump['by_group']["Other"] = dump['by_group'][None]
                     del dump['by_group'][None]
 
                 # For each group available
                 for group in dump['by_group'].keys():
-                    if not groups.has_key(group):
+                    if not group in groups:
                         groups[group] = {}
                     # If this group as already an entry for this time (from an other launcher), we add the new one
-                    if groups[group].has_key(stamp):
+                    if stamp in groups[group]:
                         groups[group][stamp] += int(dump['by_group'][group]['running'])
                     else:
                         groups[group][stamp] = int(dump['by_group'][group]['running'])
@@ -288,9 +288,9 @@ if __name__ == "__main__":
         # Sort groups data for pygraph
         for group in group_list:
             for hour in group_hours:
-                if not groups_actions.has_key(group):
+                if not group in groups_actions:
                     groups_actions[group] = []
-                if groups[group].has_key(hour):
+                if hour in groups[group]:
                     groups_actions[group].append(groups[group][hour])
                 else:
                     groups_actions[group].append(0)
@@ -314,9 +314,9 @@ if __name__ == "__main__":
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
-                if not launch_actions.has_key(launch):
+                if not launch in launch_actions:
                     launch_actions[launch] = []
-                if runnings[launch].has_key(hour):
+                if hour in runnings[launch]:
                     launch_actions[launch].append(runnings[launch][hour])
                 else:
                     launch_actions[launch].append(0)
@@ -338,9 +338,9 @@ if __name__ == "__main__":
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
-                if not launch_zombies.has_key(launch):
+                if not launch.launch_zombies:
                     launch_zombies[launch] = []
-                if zombies[launch].has_key(hour):
+                if hour in zombies[launch]:
                     launch_zombies[launch].append(zombies[launch][hour])
                 else:
                     launch_zombies[launch].append(0)
@@ -362,9 +362,9 @@ if __name__ == "__main__":
         # Sort launchers data for pygraph
         for launch in launcher_list:
             for hour in launch_hours:
-                if not launch_loads.has_key(launch):
+                if not launch in launch_loads:
                     launch_loads[launch] = []
-                if loads[launch].has_key(hour):
+                if hour in loads[launch]:
                     launch_loads[launch].append(loads[launch][hour])
                 else:
                     launch_loads[launch].append(0)

@@ -44,9 +44,11 @@ class DyngroupComputers(ComputerI):
         return []
 
     def getRestrictedComputersListLen(self, ctx, filt = {}):
+        #Mutable dict filt used as default argument to a method or function
         return 0
 
     def getRestrictedComputersList(self, ctx, min = 0, max = -1, filt = {}, advanced = True, justId = False, toH = False):
+        #Mutable dict filt used as default argument to a method or function
         return []
 
     def getComputerCount(self, ctx, filt = None):

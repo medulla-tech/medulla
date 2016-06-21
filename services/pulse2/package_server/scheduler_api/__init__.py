@@ -39,7 +39,7 @@ class SchedulerApi(MyXmlrpc):
         self.config = config
         self.logger = logging.getLogger()
         self.assign = {}
-        if self.config.has_key('schedulers'):
+        if 'schedulers' in self.config:
             self.schedulers = self.config['schedulers'].split(' ')
         else:
             self.schedulers = ['']
@@ -50,7 +50,7 @@ class SchedulerApi(MyXmlrpc):
 
     def xmlrpc_getScheduler(self, m):
         machine = Machine().from_h(m)
-        if not self.assign.has_key(machine.uuid):
+        if not machine.uuid in self.assign:
             self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
         return self.assign[machine.uuid]
 
@@ -58,7 +58,7 @@ class SchedulerApi(MyXmlrpc):
         ret = []
         for m in machines:
             machine = Machine().from_h(m)
-            if not self.assign.has_key(machine.uuid):
+            if not machine.uuid in self.assign:
                 self.assign[machine.uuid] = self.schedulers[random.randint(0,len(self.schedulers)-1)]
             ret.append(self.assign[machine.uuid])
         return ret

@@ -67,9 +67,9 @@ class GlpiComputers(ComputerI):
 
     def getMachineMac(self, ctx, params):
         # format : { 'uuid' : ['mac1' ...], ... }
-        if params.has_key('uuids'):
+        if 'uuids' in params:
             return self.glpi.getMachinesMac(params['uuids'])
-        elif params.has_key('uuid'):
+        elif 'uuid' in params:
             return {params['uuid'] : self.glpi.getMachineMac(params['uuid'])}
 
     def getMachineIp(self, ctx, filt):
@@ -118,7 +118,7 @@ class GlpiComputers(ComputerI):
         return self.glpi.getComputersList(ctx, filt)
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, location, ctx):
-        if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+        if 'imaging_server' in filt and filt['imaging_server'] != '':
             # Get main imaging entity uuid
             self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
             main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])

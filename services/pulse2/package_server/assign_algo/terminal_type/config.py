@@ -58,9 +58,9 @@ class PluginInventoryAAConfig(InventoryDatabaseConfigSkel):
                 url = self.cp.get(section, 'mirror')
                 kind = self.cp.get(section, 'kind')
                 for type in types:
-                    if not self.type2url.has_key(type):
+                    if not type in self.type2url:
                         self.type2url[type] = {}
-                    if not self.type2url[type].has_key(kind):
+                    if not kind in self.type2url[type]:
                         self.type2url[type][kind] = {}
                     self.type2url[type][kind][index] = url
         if len(self.type2url.keys()) == 0:

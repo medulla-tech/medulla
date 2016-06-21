@@ -35,16 +35,19 @@ class MMUserAssignAlgo(MMAssignAlgo):
     assign = {}
     def getMachineMirror(self, m):
         machine = Machine().from_h(m)
-        if not self.assign.has_key(machine.uuid):
+        if not machine.uuid in self.assign:
             self.assign[machine.uuid] = {}
+        #if not 'getMirror' in self.assign[machine.uuid]:
         if not self.assign[machine.uuid].has_key('getMirror'):
             self.assign[machine.uuid]['getMirror'] = self.mirrors[random.randint(0,len(self.mirrors)-1)].toH()
         return self.assign[machine.uuid]['getMirror']
 
     def getMachineMirrorFallback(self, m):
         machine = Machine().from_h(m)
+        #if not machine.uuid in self.assign:
         if not self.assign.has_key(machine.uuid):
             self.assign[machine.uuid] = {}
+        #if not 'getFallbackMirror' in self.assign[machine.uuid]:
         if not self.assign[machine.uuid].has_key('getFallbackMirror'):
             self.assign[machine.uuid]['getFallbackMirror'] = self.mirrors_fallback[random.randint(0,len(self.mirrors_fallback)-1)].toH()
         return self.assign[machine.uuid]['getFallbackMirror']
@@ -61,6 +64,7 @@ class UPUserAssignAlgo(UPAssignAlgo):
 
     def getUserPackageApi(self, u):
         user = User().from_h(u)
+        #if not user.uuid in self.assign:
         if not self.assign.has_key(user.uuid):
             if self.package_api_put != None:
                 self.assign[user.uuid] = self.package_api_put

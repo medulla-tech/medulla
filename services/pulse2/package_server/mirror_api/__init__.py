@@ -40,6 +40,7 @@ class MirrorApi(MyXmlrpc):
         self.url2mirrors = {}
         self.assign = {}
         self.logger = logging.getLogger()
+        # Mutable dict services used as default argument to a method or function
         try:
             for service in services:
                 if service['type'] == 'package_api_get' or service['type'] == 'package_api_put':
@@ -47,34 +48,34 @@ class MirrorApi(MyXmlrpc):
                 else:
                     type = service['type']
 
-                if not self.url2mirrors.has_key(type):
+                if not type in self.url2mirrors:
                     self.url2mirrors[type] = {}
-                if not self.mirrors.has_key(type):
+                if not type in self.mirrors:
                     self.mirrors[type] = []
                 if service['server'] == '':
                     service['server'] = 'localhost'
                 self.mirrors[type].append(Mirror(service['proto'], service['server'], service['port'], service['mp']))
-                if service.has_key('url'):
+                if 'url' in service:
                     self.url2mirrors[type][service['url']] = self.mirrors[type][-1]
             self.logger.debug("(%s) %s api machine/mirror server initialised"%(self.type, self.name))
         except Exception, e:
             self.logger.error("(%s)%s api machine/mirror server can't initialize correctly"%(self.type, self.name))
             raise e
 
-        if self.mirrors.has_key('mirror'):
+        if 'mirror' in self.mirrors:
             mirrors = self.mirrors['mirror']
         else:
             mirrors = []
-        if self.mirrors.has_key('package_api'):
+        if 'package_api' in self.mirrors:
             package_api = self.mirrors['package_api']
         else:
             package_api = []
 
-        if self.url2mirrors.has_key('mirror'):
+        if 'mirror' in self.url2mirrors:
             url2mirrors = self.url2mirrors['mirror']
         else:
             url2mirrors = []
-        if self.url2mirrors.has_key('package_api'):
+        if 'package_api' in self.url2mirrors:
             url2package_api = self.url2mirrors['package_api']
         else:
             url2package_api = []
@@ -85,9 +86,9 @@ class MirrorApi(MyXmlrpc):
 
     def xmlrpc_getServerDetails(self):
         ret = {}
-        if self.mirrors.has_key('package_api'):
+        if 'package_api' in self.mirrors:
             ret['package_api'] = map(lambda x: x.toH(), self.mirrors['package_api'])
-        if self.mirrors.has_key('mirror'):
+        if 'mirror' in self.mirrors:
             ret['mirror'] = map(lambda x: x.toH(), self.mirrors['mirror'])
         return ret
 

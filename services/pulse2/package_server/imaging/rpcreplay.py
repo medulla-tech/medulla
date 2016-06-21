@@ -239,6 +239,7 @@ class RPCReplay(Singleton):
         Error back to be called when a XML-RPC call fails.
         The RPC is saved so that it can be replayed later.
         """
+        # Mutable list default_return used as default argument to a method or function
         self.logger.warn('%s %s has failed: %s' % (funcname, args, error))
         self.logger.info('Storing RPC, it will be replayed later')
         self.store.add(funcname, args, timestamp)

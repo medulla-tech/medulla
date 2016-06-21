@@ -34,7 +34,9 @@ from pulse2.package_server.xmlrpc import MyXmlrpc
 
 class UserPackageApi(MyXmlrpc):
     type = 'UserPackageApi'
-    def __init__(self, services = {}, name = '', assign_algo = 'default'):
+    def __init__(self, services = None, name = '', assign_algo = 'default'):
+        # Mutable dict services used as default argument to a method or function
+        services = services or {}
         MyXmlrpc.__init__(self)
         self.logger = logging.getLogger()
         self.name = name

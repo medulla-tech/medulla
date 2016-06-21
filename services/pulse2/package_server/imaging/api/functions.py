@@ -38,7 +38,7 @@ from pulse2.package_server.config import P2PServerCP as PackageServerConfig
 from pulse2.package_server.imaging.api.client import ImagingXMLRPCClient
 from pulse2.package_server.imaging.cache import UUIDCache
 from pulse2.package_server.imaging.api.status import Status
-from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem, ImagingMulticastMenuBuilder
+from pulse2.package_server.imaging.menu import isMenuStructure, ImagingDefaultMenuBuilder, ImagingComputerMenuBuilder, changeDefaultMenuItem, ImagingBootServiceItem, ImagingMulticastMenuBuilder, CleanMenu
 from pulse2.package_server.imaging.computer import ImagingComputerConfiguration
 from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
@@ -81,8 +81,7 @@ class Imaging(object):
                 dirname = os.path.join(basefolder, dirname)
             if not os.path.isdir(dirname):
                 raise ValueError, "Directory '%s' does not exists. Please check option '%s' in your configuration file." % (dirname, optname)
-        for optname in ['diskless_kernel', 'diskless_initrd',
-                      'diskless_memtest']:
+        for optname in ['diskless_kernel', 'diskless_initrd']:
             fpath = os.path.join(basefolder,
                                  self.config.imaging_api['diskless_folder'],
                                  self.config.imaging_api[optname])
@@ -271,6 +270,7 @@ class Imaging(object):
             return False
 
         if not isMACAddress(mac):
+	    # TODO: Add better error message.
             raise TypeError
 
         self.logger.debug('Imaging: Client %s sent a log message while %s (%s) : %s' % (mac, phase, level, message))
@@ -999,6 +999,9 @@ class Imaging(object):
             self.logger.error('Error while creating ISO image: %s' % e)
             ret = False
         return ret
+
+    def imagingClearMenu(self ,  macadress):
+        return CleanMenu(self.config, macadress).clear()
 
     ## Imaging server configuration
     def imagingServermenuMulticast(self, objmenu):

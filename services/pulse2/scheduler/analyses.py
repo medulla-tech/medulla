@@ -101,6 +101,7 @@ class MscQueryManager(MscContainer):
         @return: list of all circuits
         @rtype: list
         """
+        # Mutable list coh_ids used as default argument to a method or function
         if len(self.circuits) == 0 :
             return []
         circuits = [c for c in self.circuits if c.initialized and c.is_running]

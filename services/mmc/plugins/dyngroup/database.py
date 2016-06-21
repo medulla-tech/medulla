@@ -61,9 +61,9 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
         """
         get all machines defined by the given group name or id
         """
-        if params.has_key('gname'):
+        if 'gname' in params:
             return self.__getMachinesByGroupName(ctx, params['gname'])
-        if params.has_key('gid'):
+        if 'gid' in params:
             return self.__getMachines(ctx, params['gid'])
         return []
 
@@ -240,12 +240,12 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
             groups = groups.filter(filter_on)
 
         if ctx.userid == 'root' \
-                and params.has_key('localSidebar') \
+                and 'localSidebar' in params \
                 and params['localSidebar'] \
                 and root_user:
             groups = groups.filter(self.groups.c.FK_users == root_user.id)
 
-        if params.has_key('canShow'):
+        if 'canShow' in params:
             if params['canShow']:
                 groups = groups.filter(self.shareGroup.c.display_in_menu == 1)
             else:
@@ -969,7 +969,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
     def get_active_convergences(self, session):
         query = session.query(Convergence.deployGroupId, Convergence.papi, Convergence.packageUUID)
         query = query.filter_by(active= 1)
-        
+
         return [{
             'gid': x[0],
             'papi': cPickle.loads(x[1]),
@@ -989,7 +989,7 @@ class DyngroupDatabase(pulse2.database.dyngroup.DyngroupDatabase):
                     Convergence.packageUUID == package_id,
                 ))
         for line in query:
-            ret = ret + [line.deployGroupId, line.doneGroupId]
+            ret += [line.deployGroupId, line.doneGroupId]
         return ret
 
     @DatabaseHelper._session

@@ -73,7 +73,7 @@ class OcsMapping(Singleton):
                 self.tables[xmlname][1][xmlfrom] = xmlto
                 if field.hasAttribute('type') and field.getAttribute('type') == 'nomenclature':
                     self.tables[xmlname][1][xmlfrom] = ('nom%s%s'%(xmlclass, xmlto), xmlto)
-                    if not self.nomenclatures.has_key(xmlclass):
+                    if not xmlclass in self.nomenclatures:
                         self.nomenclatures[xmlclass] = {}
                     self.nomenclatures[xmlclass][xmlto] = True
 

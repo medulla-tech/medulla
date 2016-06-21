@@ -501,6 +501,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return e
 
+    def getTargetPackageServer(self, target_id):
+        session = create_session()
+        # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
+        query = session.query(ImagingServer).select_from(self.imaging_server.join(self.target, self.target.c.fk_entity == self.imaging_server.c.fk_entity)).filter(self.target.c.uuid == target_id)
+        query = query.all()
+        session.close()
+        return [m for m in query]
+
+    def getImagingServerInfo(self, location_uuid):
+        q = self.getImagingServerByEntityUUID(location_uuid)
+        if not q:
+            return None
+        if isinstance(q, list) :
+            return q[0]
+        else :
+            return q
+
     def getTargetsById(self, ids):
         session = create_session()
         n = session.query(Target).filter(self.target.c.id.in_(ids)).all()
@@ -554,6 +571,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if q[1] != None and q[1] != 'NOTTRANSLATED':
             q[0].default_name = q[1]
         return q[0]
+
+
 
     def getDefaultSuscribeMenu(self, location, session = None):
         need_to_close_session = False
@@ -645,7 +664,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 setattr(bs, 'default_name', name_i18n.label)
             if desc_i18n != None:
                 setattr(bs, 'default_desc', desc_i18n.label)
-            if temporary.has_key(bs_id):
+            if bs_id in temporary:
                 mi = temporary[bs_id]
                 if name_i18n != None:
                     setattr(mi, 'default_name', name_i18n.label)
@@ -684,9 +703,9 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for t, mo in list_of_target:
             targets[mo.fk_image] = t.uuid
         for im, im_id in list_of_im:
-            if temporary.has_key(im_id):
+            if im_id in temporary:
                 setattr(im, 'menu_item', temporary[im_id])
-            if len(list_of_target) != 0 and targets.has_key(im.id):
+            if len(list_of_target) != 0 and im.id in targets:
                 setattr(im, 'mastered_on_target_uuid', targets[im.id])
             ret.append(im)
         return ret
@@ -915,7 +934,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __getLocLanguage(self, session, loc_id):
         lang = 1
-        if self.imagingServer_entity.has_key(loc_id):
+        if loc_id in self.imagingServer_entity:
             if not loc_id in self.imagingServer_lang:
                 ims = session.query(ImagingServer).select_from(self.imaging_server.join(self.entity, self.entity.c.id == self.imaging_server.c.fk_entity)).filter(self.entity.c.uuid == loc_id).first()
                 self.imagingServer_lang[loc_id] = ims.fk_language
@@ -1031,7 +1050,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         pis.fk_boot_service = bs.id
 
         # We have script_name, so give correct value for bs.value
-        bs.value = ("kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## davos_action=RUN_BOOTSERVICE bootservice_script=%s \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+        bs.value = ("kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## davos_action=RUN_BOOTSERVICE bootservice_script=%s \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
 
         session.flush()
 
@@ -1128,15 +1147,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return mi
 
     def __fillMenuItem(self, session, mi, menu_id, params):
-        if params.has_key('hidden'):
+        if 'hidden' in params:
             mi.hidden = params['hidden']
         else:
             mi.hidden = True
-        if params.has_key('hidden_WOL'):
+        if 'hidden_WOL' in params:
             mi.hidden_WOL = params['hidden_WOL']
         else:
             mi.hidden_WOL = True
-        if params.has_key('order'):
+        if 'order' in params:
             mi.order = params['order']
         mi.fk_menu = menu_id
         session.add(mi)
@@ -1144,9 +1163,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
     def __addMenuDefaults(self, session, menu, mi, params):
         is_menu_modified = False
+        #if 'default' in params and params['default']:
         if params.has_key('default') and 'default' in params and params['default']:
             is_menu_modified = True
             menu.fk_default_item = mi.id
+        #if 'default_WOL' in params and params['default_WOL']:
         if params.has_key('default_WOL') and 'default_WOL' in params and params['default_WOL']:
             is_menu_modified = True
             menu.fk_default_item_WOL = mi.id
@@ -1762,6 +1783,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         im_pis = {}
         for pis, im_id, order in q2:
             if not im_pis.has_key(im_id):
+            #if not im_id in im_pis:
                 im_pis[im_id] = {}
             pis = pis.toH()
             pis['order'] = order
@@ -1778,7 +1800,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         for im, im_id in q1:
             ret[id2uuid(im_id)] = im.toH()
-            if im_pis.has_key(im_id):
+            if im_id in im_pis:
                 ret[id2uuid(im_id)]['post_install_scripts'] = im_pis[im_id]
         return ret
 
@@ -1811,7 +1833,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def __addImage(self, session, item_uuid, menu, params):
         if menu == None:
             raise '%s:Please create menu before trying to put an image' % (P2ERR.ERR_TARGET_HAS_NO_MENU)
-
+        #if 'name' in params and not 'default_name' in params:
         if params.has_key('name') and not params.has_key('default_name'):
             params['default_name'] = params['name']
         mi = self.__createNewMenuItem(session, menu.id, params)
@@ -1908,8 +1930,10 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         imaging_log.timestamp = datetime.datetime.fromtimestamp(time.mktime(time.localtime()))
         imaging_log.detail = log['detail']
         imaging_log.fk_imaging_log_level = log['level']
+        #if log['state'] in self.r_nomenclatures['ImagingLogState']:
         if self.r_nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = self.r_nomenclatures['ImagingLogState'][log['state']]
+            #elif log['state'] in self.nomenclatures['ImagingLogState']:
         elif self.nomenclatures['ImagingLogState'].has_key(log['state']):
             imaging_log.fk_imaging_log_state = log['state']
         else: # this state is unknown!
@@ -2404,6 +2428,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q2 = self.__mergePostInstallScriptI18n(q2)
         h_pis_by_imageid = {}
         for pis in q2:
+            #if not pis.image_id in h_pis_by_imageid:
             if not h_pis_by_imageid.has_key(pis.image_id):
                 h_pis_by_imageid[pis.image_id] = []
             h_pis_by_imageid[pis.image_id].append(pis)
@@ -2412,14 +2437,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         for im, mi in q1:
             q = self.__mergeMenuItemInImage([(im, im.id)], [[im, mi]])
             q = q[0]
-            if h_pis_by_imageid.has_key(im.id):
+            if im.id in h_pis_by_imageid:
                 setattr(q, 'post_install_scripts', h_pis_by_imageid[im.id])
             ret[mi.order] = q
 
         ret1 = []
         if end != -1:
             for i in range(start, end):
-                if ret.has_key(i):
+                if i in ret:
                     ret1.append(ret[i])
         else:
             ret1 = ret
@@ -2744,7 +2769,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for entity, en_uuid in q:
                 h_temp[en_uuid] = entity
             for en_uuid in parent_path:
-                if h_temp.has_key(en_uuid):
+                if en_uuid in h_temp:
                     q = h_temp[en_uuid]
                     continue
         if session_need_to_close:
@@ -2769,7 +2794,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for imaging_server, en_uuid in q:
                 h_temp[en_uuid] = imaging_server
             for en_uuid in parent_path:
-                if h_temp.has_key(en_uuid):
+                if en_uuid in h_temp:
                     q = h_temp[en_uuid]
                     continue
         if session_need_to_close:
@@ -2868,7 +2893,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menus = self.getMenusByID(menus_id, session)
         for m in menus:
             for p in ['default_name', 'hidden_menu','timeout', 'background_uri', 'message', 'protocol', 'default_item', 'default_item_WOL']:
-                if params.has_key(p):
+                if p in params:
                     setattr(m, p, params[p])
         session.flush()
         session.close()
@@ -2885,14 +2910,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu = self.getMenuByUUID(menu_uuid, session)
         need_to_be_save = False
         # FIXME: could be factorized
-        if params.has_key('default_name') and menu.default_name != params['default_name']:
+        if 'default_name' in params and menu.default_name != params['default_name']:
             need_to_be_save = True
             menu.default_name = params['default_name']
             menu.fk_name = 1
-        if params.has_key('timeout') and menu.timeout != params['timeout']:
+        if 'timeout' in params and menu.timeout != params['timeout']:
             need_to_be_save = True
             menu.timeout = params['timeout']
-        if params.has_key('hidden_menu') and menu.hidden_menu != params['hidden_menu']:
+        if 'hidden_menu' in params and menu.hidden_menu != params['hidden_menu']:
             need_to_be_save = True
             menu.hidden_menu = params['hidden_menu']
 
@@ -2906,18 +2931,19 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             if getattr(menu, option) != params[option]:
                 need_to_be_save = True
                 setattr(menu, option, params[option])
-        if params.has_key('background_uri') and menu.background_uri != params['background_uri']:
+        if 'background_uri' in params and menu.background_uri != params['background_uri']:
             need_to_be_save = True
             menu.background_uri = params['background_uri']
-        if params.has_key('message') and menu.message != params['message']:
+        if 'message' in params and menu.message != params['message']:
             need_to_be_save = True
             menu.message = params['message']
 
-        if params.has_key('protocol'):
+        if 'protocol' in params:
             proto = self.getProtocolByUUID(params['protocol'], session)
             if proto and menu.fk_protocol != proto.id:
                 need_to_be_save = True
                 menu.fk_protocol = proto.id
+        #if 'mtftp_restore_timeout' in params and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
         if params.has_key('mtftp_restore_timeout') and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
             need_to_be_save = True
             menu.mtftp_restore_timeout = params['mtftp_restore_timeout']
@@ -3050,7 +3076,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.hidden_menu = params['hidden_menu']
         menu.background_uri = params['background_uri']
         menu.message = params['message']
-        if params.has_key('protocol'):
+        if 'protocol' in params:
             proto = self.getProtocolByLabel(params['protocol'], session)
             if proto:
                 menu.fk_protocol = proto.id
@@ -3264,6 +3290,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for target in q:
                 ret[target.uuid] = (target.is_registered_in_package_server == 1)
             for l_uuid in uuid:
+                #if not l_uuid in ret:
                 if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
@@ -3294,6 +3321,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             for target in q:
                 ret[target.uuid] = True
             for l_uuid in uuid:
+                #if not l_uuid in ret:
                 if not ret.has_key(l_uuid):
                     ret[l_uuid] = False
         else:
@@ -3318,11 +3346,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 target.nic_uuid = params['choose_network_profile'][uuid]
         if 'nic_uuid' in params:
             target.nic_uuid = params['nic_uuid']
-        if params.has_key('target_opt_kernel'):
+        if 'target_opt_kernel' in params:
             target.kernel_parameters = params['target_opt_kernel']
         else:
             target.kernel_parameters = self.config.web_def_kernel_parameters
-        if params.has_key('target_opt_image'):
+        if 'target_opt_image' in params:
             target.image_parameters = params['target_opt_image']
         else:
             target.image_parameters = self.config.web_def_image_parameters
@@ -3509,11 +3537,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    def __sha1_crypt_password(self,password):
-            if not password: return ''
-            import hashlib
-            passphrase = 'DzmCpUs3'
-            return hashlib.sha1(password + passphrase).hexdigest()
+    def __sha512_crypt_password(self,password):
+        if not password: return ''
+        import crypt, base64
+        passphrase = '$6$DzmCpUs3$'
+        return crypt.crypt(password, passphrase)
 
     def getPXEPasswordHash(self, location_uuid):
         session = create_session()
@@ -3526,7 +3554,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         try:
             location = session.query(Entity).filter(Entity.uuid == uuid).one()
             if 'pxe_password' in params:
-                location.pxe_password = self.__sha1_crypt_password(params['pxe_password'])
+                location.pxe_password = self.__sha512_crypt_password(params['pxe_password'])
             if 'pxe_keymap' in params:
                 location.pxe_keymap = params['pxe_keymap']
             elif 'language' in params:
@@ -3786,20 +3814,22 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         locations = ComputerLocationManager().getMachinesLocations(uuids)
 
         hostnames = {}
-        if params.has_key('hostnames'):
+        if 'hostnames' in params:
             params['hostnames']
 
         registered = self.isTargetRegister(uuids, P2IT.COMPUTER_IN_PROFILE, session)
         for uuid in uuids:
+            #if not (uuid in registered and registered[uuid]):
             if not (registered.has_key(uuid) and registered[uuid]):
                 loc_id = 0
                 location_id = locations[uuid]['uuid']
+                #if not location_id in cache_location_id:
                 if not cache_location_id.has_key(location_id):
                     loc = session.query(Entity).filter(self.entity.c.uuid == location_id).first()
                     cache_location_id[location_id] = loc.id
                 loc_id = cache_location_id[location_id]
                 target_name = ''
-                if hostnames.has_key(uuid):
+                if uuid in hostnames:
                     target_name = hostnames[uuid]
                 target = self.__createTarget(session, uuid, target_name, P2IT.COMPUTER_IN_PROFILE, loc_id, menu.id, params)
             else:
@@ -4177,14 +4207,14 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.flush()
         session.close()
         return True
-    
+
     def getLocationImagingServerByServerUUID(self,imaging_server_uuid ):
         session = create_session()
         ims = session.query(ImagingServer).filter(self.imaging_server.c.packageserver_uuid == imaging_server_uuid).first()
         LocationServer = ims.fk_entity
         session.close()
         return LocationServer
-    
+
     # Computer basic inventory stuff
     def injectInventory(self, imaging_server_uuid, computer_uuid, inventory):
         """

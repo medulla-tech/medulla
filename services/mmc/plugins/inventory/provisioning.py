@@ -76,7 +76,7 @@ class InventoryProvisioner(ProvisionerI):
             try:
                 entities = self.config.profilesEntity[profile].split()
             except KeyError:
-                if self.config.profilesEntity.has_key("default"):
+                if "default" in self.config.profilesEntity:
                     entities = self.config.profilesEntity["default"].split()
                     self.logger.info("Set the default profile to user.")
                     profile = 'default'

@@ -64,7 +64,7 @@ def wolClient(mac_addrs, target_bcast = None):
             bcast = LauncherConfig().wol_bcast
             if target_bcast[i]:
                 bcast = target_bcast[i]
-            if not sorted.has_key(bcast):
+            if not bcast in sorted:
                 sorted[bcast] = []
             sorted[bcast].append(mac_addrs[i])
     for bcat in sorted:

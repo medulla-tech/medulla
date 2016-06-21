@@ -233,6 +233,7 @@ class MscDatabase(msc.MscDatabase):
         coh_to_insert = []
 
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
+        #if targets == False:
         if len(targets) == 0:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
             return -2
@@ -915,6 +916,7 @@ class MscDatabase(msc.MscDatabase):
         existing_coh_ids = [coh.id for coh in cmd.getCohIds(target_uuids=target_uuids)]
 
         targets, targetsdata = self.getComputersData(ctx, targets, group_id)
+        #if targets ==False:
         if len(targets) == 0:
             self.logger.error("The machine list is empty, does your machines have a network interface ?")
             return -2

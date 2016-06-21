@@ -63,10 +63,10 @@ class HTTPClient(object):
 
     def get(self, url, headers={}):
         """HTTP GET
-
         url should be a string containing a valid URL.
         headers should be a dictionary
         """
+        # Mutable dict headers used as default argument to a method or function
         url = self.base_url + url
         request = urllib2.Request(url, headers=headers)
         return self.execute_request(request)
@@ -78,6 +78,7 @@ class HTTPClient(object):
         data should be a url-encodable dictionary
         headers should be a dictionary
         """
+        # Mutable dict headers used as default argument to a method or function
         url = self.base_url + url
         if data is None:
             postdata = None

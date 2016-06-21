@@ -110,6 +110,11 @@ class ImagingApi (MyXmlrpc):
         """
         return self.api.imagingServermenuMulticast(objmenu)
 
+    def xmlrpc_imagingClearMenu(self, objmenu):
+        """
+        """
+        return self.api.imagingClearMenu(objmenu)
+    
     ## Imaging server configuration
     def xmlrpc_check_process_multicast(self, objprocess):
         # controle execution process multicast

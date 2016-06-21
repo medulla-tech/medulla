@@ -84,6 +84,7 @@ class AttemptToScheduler(object):
             return False
 
 
+        #if tasks == False:
         if len(tasks) == 0:
             logger.debug("<Inventory2Scheduler> Light Pull: No deployments scheduled, skipping")
             return

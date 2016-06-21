@@ -413,6 +413,15 @@ def normalizeMACAddress(mac):
     return ':'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
 
 
+def normalizeMACAddressForPXELINUX(mac):
+    """
+    @return: the MAC address normalized for PXELINUX (uses - as separator)
+    """
+    assert isMACAddress(mac)
+    macaddress = '-'.join(map(lambda (x, y): x + y, zip(reduceMACAddress(mac)[0:11:2], reduceMACAddress(mac)[1:12:2]))) # any questions ?
+    return '01-' + macaddress.lower()
+
+
 def macToNode(mac):
     """
     @return: the MAC address in the form of a 48-bits integer
@@ -579,7 +588,7 @@ def start_process(processname):
     return check_process(processname)
 
 def stop_process(processname):
-    """ 
+    """
     """
     import subprocess
     import signal
@@ -588,16 +597,16 @@ def stop_process(processname):
         logging.getLogger().debug("kill pid %d "%int(pid))
         os.kill(int(pid), signal.SIGTERM)
         # Check if the process that we killed is alive.
-        try: 
+        try:
             os.kill(int(pid), 0)
         except OSError as ex:
             logging.getLogger().warn("wasn't able to kill the process %s HINT:use signal.SIGKILL or signal.SIGABORT"% processname)
-            raise Exception("""wasn't able to kill the process %s 
+            raise Exception("""wasn't able to kill the process %s
                                 HINT:use signal.SIGKILL or signal.SIGABORT"""% processname)
     return not check_process(processname)
 
 def check_process(processname):
-    """ 
+    """
     """
     import re
     import subprocess
@@ -732,4 +741,3 @@ class HasSufficientMemory :
                  return self.neg_ret_value
 
         return wrapped
-

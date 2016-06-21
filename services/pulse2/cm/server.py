@@ -45,16 +45,16 @@ class GatheringServer(Protocol):
     _trigger = None
 
     @classmethod
-    def set_handler(self, value):
+    def set_handler(cls, value):
         if hasattr(value, "queue_and_process"):
-            self._handler = value
+            cls._handler = value
         else:
             raise AttributeError, "Handler instance must have 'queue_and_process' attribute"
 
     @classmethod
-    def set_trigger(self, value):
+    def set_trigger(cls, value):
         if hasattr(value, "fire"):
-            self._trigger = value
+            cls._trigger = value
         else:
             raise AttributeError, "Handler instance must have 'fire' attribute"
 

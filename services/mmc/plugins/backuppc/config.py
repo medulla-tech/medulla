@@ -41,6 +41,7 @@ class BackuppcConfig(PluginConfig,BackuppcDatabaseConfig):
         #if not self.confOption: raise ConfigException("Conf error")
         pass
 
+    @staticmethod
     def activate():
         # Get module config from "/etc/mmc/plugins/module_name.ini"
         BackuppcConfig("backuppc")

@@ -46,7 +46,7 @@ class Mirror(MyXmlrpc):
         return map(lambda x: Common().package(x).toH(), Common().getPackages(self.mp))
 
     def xmlrpc_isAvailable(self, pid):
-        return Common().getPackages(self.mp).has_key(pid)
+        return pid in Common().getPackages(self.mp)
 
     def xmlrpc_getFilesURI(self, fids):
         ret = []

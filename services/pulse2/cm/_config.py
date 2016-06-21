@@ -202,7 +202,7 @@ class ConfigReader(type):
 
 
     @classmethod
-    def options(self, section):
+    def options(cls, section):
         """
         Returns a list of options.
 
@@ -219,7 +219,7 @@ class ConfigReader(type):
 
 
     @classmethod
-    def cast_relations(self, parser):
+    def cast_relations(cls, parser):
         """
         Allowed convert methods.
 

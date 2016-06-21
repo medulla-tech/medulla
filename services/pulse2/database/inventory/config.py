@@ -52,7 +52,7 @@ class InventoryDatabaseConfigSkel(DatabaseConfig):
             
         if table == None:
             return noms
-        if noms.has_key(table):
+        if table in noms:
             return noms[table]
         return None
 
@@ -119,7 +119,7 @@ class InventoryDatabaseConfig(InventoryDatabaseConfigSkel):
             # Registry::Path::path||Registry::Value::srvcomment::Path==srvcomment
             if self.cp.has_option("computers", "content") and not self.cp.get("computers", "content") == '':
                 for c in map(lambda x: x.split('::'), self.cp.get("computers", "content").split('||')):
-                    if not self.content.has_key(c[0]):
+                    if not c[0] in self.content:
                         self.content[c[0]] = []
                     self.content[c[0]].append( map(lambda x: desArrayIfUnic(x.split('==')), c[1:]))
 

@@ -282,6 +282,7 @@ def get_all_phases(id):
     return phases.all()
 
 def any_failed(id, non_fatal_steps=[]):
+    # Mutable list non_fatal_steps used as default argument to a method or function
     for phase in get_all_phases(id):
         if phase.state == "failed" and not phase.name in non_fatal_steps :
             return True
@@ -289,6 +290,7 @@ def any_failed(id, non_fatal_steps=[]):
 
 
 def get_ids_to_start(scheduler_name, ids_to_exclude = [], top=None):
+    # Mutable list ids_to_exclude used as default argument to a method or function
     database = MscDatabase()
     session = create_session()
 
@@ -444,9 +446,8 @@ def verify_target(coh_id, hostname, mac):
     else :
         return False
 
-
-
 def process_non_valid(scheduler_name, non_fatal_steps, ids_to_exclude = []):
+    # Mutable list ids_to_exclude used as default argument to a method or function
     database = MscDatabase()
     session = create_session()
 
@@ -494,8 +495,9 @@ def get_cohs_with_failed_phase(id, phase_name):
         ).filter(database.commands.c.id == id
         ).filter(database.commands_on_host_phase.c.name==phase_name
         ).filter(database.commands_on_host_phase.c.state=="failed")
-    return [q.id for q in query.all()]
+    ret = [q.id for q in query.all()]
     session.close()
+    return ret
 
 
 def is_command_finished(scheduler_name, id):

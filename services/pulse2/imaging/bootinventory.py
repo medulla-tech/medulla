@@ -647,6 +647,103 @@ class BootInventory:
             'netmask'   : self.netmask_info,
             'gateway'   : self.gateway_info}
 
+
+    def initialise(self, xml, entity=None, hostname=None):
+        logging.getLogger().debug("initialise xml\n%s"%xml)
+        root = ET.fromstring(xml)
+        for child in root:
+            if child.tag == "DEVICEID":
+                self.deviceid = child.text
+            if child.tag == "QUERY":
+                child.text = 'INVENTORY'
+            if child.tag == "TAG":
+                if entity != None:
+                    child.text = entity
+                else:
+                    child.text = "root"
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "NETWORKS":
+                        for dd in cc:
+                            if dd.tag == "MACADDR":
+                                self.macaddr_info = dd.text
+                            elif dd.tag == "IPMASK":
+                                self.netmask_info = dd.text
+                            elif dd.tag == "IPGATEWAY":
+                                self.gateway_info = dd.text
+                            elif dd.tag == "IPADDRESS":
+                                self.ipaddr_info = dd.text
+                            elif dd.tag == "DESCRIPTION":
+                                pass
+                            elif dd.tag == "IPSUBNET":
+                                pass
+                            elif dd.tag == "STATUS":
+                                pass
+                            elif dd.tag == "TYPE":
+                                pass
+                            if dd.tag == "VIRTUALDEV":
+                                pass
+                    elif cc.tag == "ACCESSLOG":
+                        for dd in cc:
+                            if dd.tag == "LOGDATE":
+                                pass
+                            elif dd.tag == "USERID":
+                                pass
+                    elif cc.tag == "BIOS":
+                        for dd in cc:
+                            if dd.tag == "ASSETTAG":
+                                pass
+                            elif dd.tag == "MMANUFACTURER":
+                                pass
+                            elif dd.tag == "MMODEL":
+                                pass
+                            elif dd.tag == "MSN":
+                                pass
+                            if dd.tag == "SKUNUMBER":
+                                pass
+                            elif dd.tag == "BDATE":
+                                self.bios_info['date'] = dd.text
+                            elif dd.tag == "BMANUFACTURER":
+                                self.bios_info['vendor'] = dd.text
+                            elif dd.tag == "BVERSION":
+                                self.bios_info['version'] = dd.text
+                                self.sys_info['version'] = dd.text
+                            elif dd.tag == "SMANUFACTURER":
+                                self.sys_info['manufacturer'] = dd.text
+                            elif dd.tag == "SMODEL":
+                                self.sys_info['product'] = dd.text
+                            elif dd.tag == "SSN":
+                                self.sys_info['serial'] = dd.text
+                    elif cc.tag == "HARDWARE":
+                        for dd in cc:
+                            if dd.tag == "IPADDR":
+                                pass
+                            elif dd.tag == "DEFAULTGATEWAY":
+                                pass
+                            elif dd.tag == "NAME":
+                                if hostname != None:
+                                    dd.text = hostname
+                            elif dd.tag == "UUID":
+                                self.sys_info['uuid'] = dd.text
+                            if dd.tag == "OSNAME":
+                                pass
+                            elif dd.tag == "CHASSIS_TYPE":
+                                pass
+                            elif dd.tag == "PROCESSORS":
+                                pass
+                            elif dd.tag == "PROCESSORT":
+                                pass
+                    elif cc.tag == "STORAGES":
+                        for dd in cc:
+                            if dd.tag == "NAME":
+                                pass
+                            elif dd.tag == "TYPE":
+                                pass
+                            elif dd.tag == "DISKSIZE":
+                                pass
+        return ""
+
+
     def dumpOCS(self, hostname, entity):
         """
         Return an OCS XML string

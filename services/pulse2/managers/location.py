@@ -55,7 +55,7 @@ class ComputerLocationManager(Singleton):
         return True
 
     def displayLocalisationBar(self):
-        if self.components.has_key(self.main):
+        if self.main in self.components:
             klass = self.components[self.main]
             ret = klass().displayLocalisationBar()
         else:
@@ -84,6 +84,7 @@ class ComputerLocationManager(Singleton):
             return None
 
     def getMachinesInLocation(self, location, a_profile = []):
+        # Mutable list a_profile used as default argument to a method or function
         try:
             klass = self.components[self.main]
             return klass().getMachinesInLocation(location, a_profile)
@@ -91,6 +92,7 @@ class ComputerLocationManager(Singleton):
             return None
 
     def getLocationsForMachine(self, machine_uuid, a_profile = []):
+        # Mutable list a_profile used as default argument to a method or function
         try:
             klass = self.components[self.main]
             return klass().getLocationsForMachine(machine_uuid, a_profile)
@@ -162,10 +164,12 @@ class ComputerLocationI(Singleton):
 
     def getMachinesInLocation(self, location, a_profile = []): # TODO implement and use in glpi module
         """ should return the machines that are in the specified location with the good profiles (or any) """
+        # Mutable list a_profile used as default argument to a method or function
         pass
 
     def getLocationsForMachine(self, machine_uuid, a_profile = []): # TODO implement and use in glpi module
         """ should return the locations in which this machine is """
+        # Mutable list a_profile used as default argument to a method or function
         pass
 
     def getLocationsCount(self):

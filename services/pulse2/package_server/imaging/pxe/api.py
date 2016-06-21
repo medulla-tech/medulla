@@ -38,6 +38,10 @@ from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
 from pulse2.package_server.imaging.pxe.tracking import EntryTracking, MTFTPTracker
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
+import re
+import xml.etree.ElementTree as ET  # form XML Building
+import time
+
 
 class PXEImagingApi (PXEMethodParser):
     """
@@ -77,7 +81,7 @@ class PXEImagingApi (PXEMethodParser):
         """
         Machine inscription by PXE imaging client.
 
-        If the GLPI backend is used, a minimal inventory is sended to glpiproxy
+        If the GLPI backend is used, a minimal inventory is sent to glpiproxy
         two seconds before the inscription by imaging backend.
 
         @param mac: MAC address
@@ -106,6 +110,30 @@ class PXEImagingApi (PXEMethodParser):
         else :
 
             return self._computerRegister(None, hostname, mac)
+
+    @assign(0xBB)
+    def computerRegisterSyslinux(self, mac, inventory, ip_address):
+        """
+        Minimal inventory received from PXE.
+
+        @param mac: MAC address
+        @type mac: str
+
+        @param inventory: inventory from PXE
+        @type inventory: str
+
+        @rtype: deferred
+        """
+        logging.getLogger().debug("FIRST REGISTRATION TO ALLOW INVENTORY")
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+        ipadress = self.ip_adressexml(file_content)
+        mac1= self.mac_adressexml(file_content)
+        hostnamexml = self.hostname_xml(file_content)
+        inventory ="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s"%(file_content)
+        ip_address = ipadress
+        mac =  mac1
+        return self.send_inventory(inventory, hostnamexml)
 
 
     def _computerRegister(self, result, hostname, mac, delay=0):
@@ -198,26 +226,106 @@ class PXEImagingApi (PXEMethodParser):
         @return: "ok" if correct, otherwise "ko"
         @rtype: str
         """
-        def __sha1_crypt_password(password):
+        def __sha512_crypt_password(password):
             if not password: return ''
-            import hashlib
-            passphrase = 'DzmCpUs3'
-            return hashlib.sha1(password + passphrase).hexdigest()
+            import crypt, base64
+            passphrase = '$6$DzmCpUs3$'
+            return crypt.crypt(password, passphrase)
+
         self.api.logClientAction(mac,
                                  LOG_LEVEL.INFO,
                                  LOG_STATE.IDENTITY,
                                  "menu identification request")
 
 
-        if __sha1_crypt_password(password) == P2PServerCP().pxe_password:
+        if __sha512_crypt_password(password) == P2PServerCP().pxe_password:
             logging.getLogger().debug("PXE Proxy: client authentification OK")
             return succeed('ok')
         else :
             logging.getLogger().warn("PXE Proxy: client authentification FAILED")
             return succeed("ko")
 
+    def ip_adressexml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "NETWORKS":
+                        for dd in cc:
+                            if dd.tag == "IPADDRESS":
+                                return dd.text
+        return ""
 
 
+    def mac_adressexml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "NETWORKS":
+                        for dd in cc:
+                            if dd.tag == "MACADDR":
+                                return dd.text
+        return ""
+
+    def hostname_xml(self, file_content ):
+        root = ET.fromstring(file_content)
+        for child in root:
+            if child.tag == "CONTENT":
+                for cc in child:
+                    if cc.tag == "HARDWARE":
+                        for dd in cc:
+                            if dd.tag == "NAME":
+                                return dd.text
+        return ""
+
+    @assign(0xBA)
+    def InventorySysLinux(self, mac, inventory, ip_address):
+        """
+        Minimal inventory received from PXE.
+
+        @param mac: MAC address
+        @type mac: str
+
+        @param inventory: inventory from PXE
+        @type inventory: str
+
+        @rtype: deferred
+        """
+        logging.getLogger().debug("INJECT INVENTORY NEXT HOSTNAME AND ENTITY")
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+
+        ipadress = self.ip_adressexml(file_content)
+        mac1= self.mac_adressexml(file_content)
+        hostnamexml = self.hostname_xml(file_content)
+
+        inventory ="<?xml version=\"1.0\" encoding=\"utf-8\"?>\n%s"%(file_content)
+        ip_address = ipadress
+        mac =  mac1
+
+        self.api.logClientAction(mac,
+                                 LOG_LEVEL.DEBUG,
+                                 LOG_STATE.MENU,
+                                 "boot menu shown")
+        if not "Mc" in inventory :
+            inventory = inventory + "\nMAC Address:%s\n" % mac
+        else :
+            inventory = inventory.replace("Mc", "MAC Address")
+        parsed_inventory1 = BootInventory()
+        parsed_inventory1.initialise(file_content)
+        parsed_inventory = parsed_inventory1.dump()
+        self.api.logClientAction(mac,
+                                 LOG_LEVEL.DEBUG,
+                                 LOG_STATE.MENU,
+                                 "boot menu shown")
+        d = self.api.injectInventory(mac, parsed_inventory)
+
+        # 2nd step - send inventory by HTTP POST to inventory server
+        d.addCallback(self._injectedInventoryOk, mac, inventory)
+        d.addErrback(self._injectedInventoryError)
+        #self.send_inventory(parsed_inventory1., hostname)
+        return d
     #  ------------------------ process inventory ---------------------------
     @assign(0xAA)
     def injectInventory(self, mac, inventory, ip_address):
@@ -243,6 +351,7 @@ class PXEImagingApi (PXEMethodParser):
         else :
             inventory = inventory.replace("IPADDR", "IP Address")
         inventory = [i.strip(' \t\n\r').lstrip('\x00\x00').strip() for i in inventory.split("\n")]
+
         logging.getLogger().debug("low level inventory: %s\n" %(inventory))
         parsed_inventory1 = BootInventory(inventory)
         parsed_inventory = parsed_inventory1.dump()
@@ -280,7 +389,6 @@ class PXEImagingApi (PXEMethodParser):
         @param inventory: inventory from PXE
         @type inventory: str
         """
-
         if isinstance(result, list) and len(result) > 0 \
                 and isinstance(result[0], str) and result[0] == 'PULSE2_ERR':
             logging.getLogger().error("PXE Proxy: Error code = %d when inject inventory" % (result[1]))
@@ -290,9 +398,9 @@ class PXEImagingApi (PXEMethodParser):
 
             # need the hostname and entity to send this inventory
             d = self.api.getComputerByMac(mac)
-
             d.addCallback(self._injectedInventorySend, mac, inventory)
             d.addErrback(self._injectedInventoryErrorGetComputer, mac)
+
 
     def _injectedInventoryErrorGetComputer(self, failure, mac):
         """ An error occured while getting the hostname """
@@ -304,7 +412,34 @@ class PXEImagingApi (PXEMethodParser):
                                  LOG_STATE.INVENTORY,
                                  "hardware inventory not stored")
 
+    def changEntityAndHostName(self, xml, entity=None, hostname=None):
+        root = ET.fromstring(xml)
+        for child in root:
+            if child.tag == "TAG" and entity != None:
+                child.text = entity
+            elif child.tag == "CONTENT" and hostname != None:
+                for dd in child:
+                    if dd.tag == "HARDWARE":
+                        for ee in dd:
+                            if ee.tag == "NAME": 
+                                ee.text = hostname
+        return ET.tostring(root)
 
+    def changdeviceid(self, xml,hostname=None):
+        date1=time.strftime("%Y-%m-%d-%H-%M-%S")
+        logdate=time.strftime("%Y-%m-%d %H:%M:%S")
+        deviceid = "%s-%s"%(hostname, date1)
+        root = ET.fromstring(xml)
+        for child in root:
+            if child.tag == "DEVICEID" and hostname != None:
+                child.text = deviceid
+            elif child.tag == "CONTENT" :
+                for dd in child:
+                    if dd.tag == "ACCESSLOG":
+                        for ee in dd:
+                            if ee.tag == "LOGDATE": 
+                                ee.text = logdate
+        return ET.tostring(root)
 
     def _injectedInventorySend (self, computer, mac, inventory):
         """
@@ -324,18 +459,17 @@ class PXEImagingApi (PXEMethodParser):
                                  LOG_LEVEL.DEBUG,
                                  LOG_STATE.INVENTORY,
                                  "hardware inventory received")
-
         if not isinstance(computer, dict) :
             logging.getLogger().debug("PXE Proxy: Unknown client, ignore received inventory")
             return
-
-        inventory = BootInventory(inventory)
-        inventory.macaddr_info = mac
-
         hostname = computer['shortname']
         entity = computer['entity']
-
-        inventory = inventory.dumpOCS(hostname, entity)
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+        #inventory = parsed_inventory1.changEntityAndHostName(file_content,entity,hostname)
+        file_content = self.changEntityAndHostName(file_content,entity,hostname)
+        inventory = self.changdeviceid(file_content,hostname)
+        inventory ='<?xml version="1.0" encoding="utf-8"?>'+inventory
         logging.getLogger().debug("send invotory depuis _injectedInventorySend")
         d = self.send_inventory(inventory, hostname)
         @d.addCallback
@@ -351,7 +485,22 @@ class PXEImagingApi (PXEMethodParser):
                                      LOG_STATE.INVENTORY,
                                      "hardware inventory not updated")
 
+        self.api.logClientAction(mac,
+                                 LOG_LEVEL.DEBUG,
+                                 LOG_STATE.MENU,
+                                 "menu identification")
 
+        m = re.search('<REQUEST>.*<\/REQUEST>', inventory)
+        file_content = str(m.group(0))
+        ipadress = self.ip_adressexml(file_content)
+        ip_address = ipadress
+        if self.config.imaging_api["glpi_mode"] :
+            d = task.deferLater(reactor, 0, self.glpi_register, mac, hostname, ip_address)
+            d.addCallback(self._computerRegister, hostname, mac, 2)
+            d.addErrback(self._ebRegisterError, mac)
+            return d
+        else :
+            return self._computerRegister(None, hostname, mac)
 
     def send_inventory(self, inventory, hostname):
         """
@@ -585,7 +734,7 @@ class PXEImagingApi (PXEMethodParser):
     @assign(0x4C)
     def logClientAction(self, mac, level, phase, message):
         """
-        Imaging client logs sended to mmc.
+        Imaging client logs sent to mmc.
 
         This logs will be displayed on imaging log tab of computer.
 

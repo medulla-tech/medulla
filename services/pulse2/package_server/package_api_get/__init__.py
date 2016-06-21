@@ -56,7 +56,7 @@ class PackageApiGet(MyXmlrpc):
             p = ret[x].toH()
             self.logger.debug(Common().newAssociation)
             self.logger.debug(Common().inEdition)
-            if Common().newAssociation.has_key(p['id']) or Common().inEdition.has_key(p['id']):
+            if p['id'] in Common().newAssociation or p['id'] in Common().inEdition:
                 p['why'] = 'association'
             r.append(p)
         return r

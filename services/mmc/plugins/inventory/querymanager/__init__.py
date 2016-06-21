@@ -106,7 +106,6 @@ def funcGet(couple, type = 'list'):
             return getListValue
         except ValueError:
             logging.getLogger().warning("%s cant be used as a 'halfstatic' value, please check the syntax of the config file."%(couple))
-            pass
     elif type == 'extended':
         # Get the table and column name from the parameter
         table, col = re.compile('/').split(couple)

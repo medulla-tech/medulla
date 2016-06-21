@@ -61,7 +61,6 @@ def getHealth():
                          'recycle' : str(pool._recycle) }
     except Exception, e:
         logging.getLogger().warn('scheduler %s: HEALTH: got the following error : %s' % (SchedulerConfig().name, e))
-        pass
     return health
 
 def checkPool():

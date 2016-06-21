@@ -33,8 +33,9 @@ class Description(resource.Resource):
     type = 'Description'
     isLeaf = True
     def __init__(self, services, status = {}):
-        self.services = services
+        # Mutable dict status used as default argument to a method or function
         self.status = status
+        self.services = services
         resource.Resource.__init__(self)
         self.logger = logging.getLogger()
         self.logger.info("(%s) initialised with : %s"%(self.type, self.services))
@@ -55,11 +56,11 @@ class Description(resource.Resource):
         body += "<tr class='mandriva'><th class='mandriva'>URL</th><th class='mandriva'>Kind</th><th class='mandriva'>Details</th><th class='mandriva'>State</th></tr>"
         for description in self.services:
             style = ''
-            if request.args.has_key('server') and request.args['server'] == description['server'] and \
-                    request.args.has_key('port') and int(request.args['port']) == int(description['port']) and \
-                    request.args.has_key('proto') and request.args['proto'] == description['proto'] and \
-                    request.args.has_key('mp') and request.args['mp'] == description['mp'] and \
-                    request.args.has_key('type') and request.args['type'] == description['type']:
+            if 'server' in request.args and request.args['server'] == description['server'] and \
+                    'port' in request.args and int(request.args['port']) == int(description['port']) and \
+                    'proto' in request.args and request.args['proto'] == description['proto'] and \
+                    'mp' in request.args and request.args['mp'] == description['mp'] and \
+                    'type' in request.args and request.args['type'] == description['type']:
                 style = 'selected'
 
             body += "<tr class='mandriva "+style+"'><td class='mandriva "+style+"'>"+description['proto']+"://"+description['server']+":"+str(description['port'])+description['mp']+"</td><td class='mandriva "+style+"'>"+description['type']+"</td>"

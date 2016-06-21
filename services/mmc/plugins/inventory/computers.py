@@ -81,6 +81,7 @@ class InventoryComputers(ComputerI):
         ret = []
         for item in computers:
             tmp = [False, {'cn' : [item[0]], 'objectUUID':[item[2]]}]
+            #if not item[1]:
             if not len(item[1]):
                 tmp[1]['ipHostNumber'] = ''
                 tmp[1]['macAddress'] = ''
@@ -98,7 +99,7 @@ class InventoryComputers(ComputerI):
         return self.getRestrictedComputersList(ctx, 0, -1, filt)
 
     def __restrictLocationsOnImagingServerOrEntity(self, filt, ctx):
-        if filt.has_key('imaging_server') and filt['imaging_server'] != '':
+        if 'imaging_server' in filt and filt['imaging_server'] != '':
             # Get main imaging entity uuid
             self.logger.debug('Get main imaging entity UUID of imaging server %s' % filt['imaging_server'])
             main_imaging_entity_uuid = ComputerImagingManager().getImagingServerEntityUUID(filt['imaging_server'])
@@ -172,7 +173,7 @@ class InventoryComputers(ComputerI):
         elif toH:
             return map(lambda m:m.toH(), self.inventory.getMachinesOnly(ctx, filt))
         else:
-            if filt.has_key('get'):
+            if 'get' in filt:
                 return map(lambda m:m.toCustom(filt['get']), self.inventory.getMachinesOnly(ctx, filt))
             else:
                 return self.inventory.getComputersOptimized(ctx, filt)
@@ -196,7 +197,7 @@ class InventoryComputers(ComputerI):
         mac = params['computermac']
         net = params['computernet']
         location = None
-        if params.has_key('location_uuid'):
+        if 'location_uuid' in params:
             location = params['location_uuid']
         ret = self.inventory.addMachine(name, ip, mac, net, comment, location)
         return ret

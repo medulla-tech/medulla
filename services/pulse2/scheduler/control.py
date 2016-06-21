@@ -90,6 +90,7 @@ class MethodProxy(MscContainer):
         @param cohs: list of commands_on_host
         @type cohs: list
         """
+        # Mutable list cohs used as default argument to a method or function
         cmd_ids = get_commands(cohs)
         active_circuits = [c for c in self._circuits if c.id in cohs]
 

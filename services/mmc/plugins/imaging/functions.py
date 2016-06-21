@@ -25,7 +25,6 @@
 Class to manage imaging mmc-agent api
 imaging plugin
 """
-import time
 import logging
 from twisted.internet import defer
 from sets import Set as set
@@ -439,6 +438,25 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = []
         return deferred
 
+    def imagingClearMenuFromUuid(self, uuid):
+        obj={}
+        ctx = self.currentContext
+        obj['mac'] = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
+        obj['uuid']=uuid
+        db = ImagingDatabase()
+        try:
+            location = db.getTargetsEntity([uuid])[0]
+            url = chooseImagingApiUrl(location[0].uuid)
+            i = ImagingApi(url.encode('utf8'))
+            if i != None:
+                deferred = i.imagingClearMenu(obj)
+                deferred.addCallback(lambda x: x)
+            else:
+                deferred = []
+        except :
+            deferred = []
+        return deferred
+
     ## Imaging server configuration
     def check_process_multicast(self, process):
         # controle execution process multicast
@@ -551,6 +569,7 @@ class ImagingRpcProxy(RpcProxyI):
 
     def startProcessClone(self, objetclone):
         test = self.checkProcessCloneMasterToLocation('/bin/bash /usr/bin/pulse2-synch-masters');
+        #if test: return
         if len(test) > 0 : return
         self.ClearFileStatusProcess()
         logger = logging.getLogger()
@@ -559,6 +578,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("script /usr/bin/pulse2-synch-masters missing")
             return
         if len(objetclone['server_imaging']) == 0:
+            #if objetclone['server_imaging'] == False:
             return
         for k,v in objetclone['server_imaging'].iteritems():
             logger.debug("/usr/bin/pulse2-synch-masters %s %s %s\n"%(fromUUID(objetclone['location']),fromUUID(k),objetclone['masteruuid']))
@@ -1063,6 +1083,7 @@ class ImagingRpcProxy(RpcProxyI):
             # check we are going to be able to remove from the menu
             is_used = self.areImagesUsed([[image_uuid, None, None]])
             is_used = is_used[image_uuid]
+            #if is_used:
             if len(is_used) != 0:
                 # some target have that image in their menu
                 if not db.canRemoveFromMenu(image_uuid):
@@ -1786,6 +1807,7 @@ class ImagingRpcProxy(RpcProxyI):
         except IndexError:
             macaddress = []
         # if we have more than one mac address, we ask the user to chose which NIC he wants
+        #if macaddress == False:
         if len(macaddress) < 1:
             # No MAC address
             ret = 1
@@ -1814,6 +1836,7 @@ class ImagingRpcProxy(RpcProxyI):
         ret = 0
         ctx = self.currentContext
         uuids = [c.uuid for c in ComputerProfileManager().getProfileContent(profileUUID)]
+        #if uuids:
         if len(uuids):
             h_macaddresses = getJustOneMacPerComputer(ctx, ComputerManager().getMachineMac(ctx, {'uuids':uuids}))
             macaddresses = h_macaddresses.values()
@@ -2019,6 +2042,7 @@ class ImagingRpcProxy(RpcProxyI):
                 # loc_uuid = None
                 # t_uuid = None
                 if not menu['images'][order].has_key('post_install_script'):
+                #if not 'post_install_script' in menu['images'][order]:
                     menu['images'][order]['post_install_script'] = []
                 menu['images'][order]['post_install_script'].append(pis)
         menu['language'] = db.getLocLanguage(location.uuid)
@@ -2043,6 +2067,7 @@ class ImagingRpcProxy(RpcProxyI):
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 if not menu['images'][order].has_key('post_install_script'):
+                #if not 'post_install_script' in menu['images'][order]:
                     menu['images'][order]['post_install_script'] = []
                 menu['images'][order]['post_install_script'].append(pis)
         menu['language'] = db.getLocLanguage(location.uuid)
@@ -2151,6 +2176,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatComputers>>>>>>")
             logger.debug(results)
 
+        #if uuids :
         if len(uuids) != 0:
             d1 = self.__synchroTargets(uuids, P2IT.COMPUTER)
             d1.addCallback(treatComputers)
@@ -2164,6 +2190,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatProfiles>>>>>>")
             logger.debug(results)
 
+        #if pids:
         if len(pids) != 0:
             d2 = self.__synchroTargets(pids, P2IT.PROFILE)
             if type(d2) == list and d2[0]:
@@ -2180,6 +2207,7 @@ class ImagingRpcProxy(RpcProxyI):
             logger.debug("treatComputersInProfile>>>>>>")
             logger.debug(results)
 
+        #if pids:
         if len(pids) != 0:
             d3 = self.__synchroTargets(pids, P2IT.COMPUTER_IN_PROFILE)
             if type(d3) == list and d3[0]:
@@ -2310,6 +2338,7 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 uuids = [uuid]
 
+            #if uuids == False:
             if len(uuids) == 0:
                 db.changeTargetsSynchroState([uuid], target_type, P2ISS.DONE)
                 return [True]
@@ -2433,15 +2462,18 @@ class ImagingRpcProxy(RpcProxyI):
                     failures = []
                     for fail in results:
                         failures.extend(fail[1])
+                    #if failures == False:
                     if len(failures) == 0:
                         db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
                         return [True]
                     db.delProfileMenuTarget(failures)
                     db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.INIT_ERROR)
                     return [False, failures]
-
+                #if defer_list == False:
+                    #if uuids == False: # the profile is empty
                 if len(defer_list) == 0:
-                    if len(uuids) == 0: # the profile is empty ...
+                    if len(uuids) == 0: # the profile is empty
+
                         db.changeTargetsSynchroState([pid], P2IT.PROFILE, P2ISS.DONE)
                         return [True]
                     else: # the profile wasn't empty => we fail to treat it
@@ -2829,9 +2861,9 @@ class ImagingRpcProxy(RpcProxyI):
             db_computer_name = ''
             if type(db_computer) == dict:
                 uuid = db_computer['uuid']
-                if db_computer.has_key('hostname'):
+                if 'hostname' in db_computer:
                     db_computer_name = db_computer['hostname']
-                elif db_computer.has_key('name'):
+                elif 'name' in db_computer:
                     db_computer_name = db_computer['name']
             elif hasattr(db_computer, 'getUUID'):
                 uuid = db_computer.getUUID()
@@ -2997,9 +3029,9 @@ class ImagingRpcProxy(RpcProxyI):
 
         if type(db_computer) == dict:
             uuid = db_computer['uuid']
-            if db_computer.has_key('hostname'):
+            if 'hostname' in db_computer:
                 db_computer_name = db_computer['hostname']
-            elif db_computer.has_key('name'):
+            elif 'name' in db_computer:
                 db_computer_name = db_computer['name']
         elif hasattr(db_computer, 'getUUID'):
             uuid = db_computer.getUUID()
@@ -3017,10 +3049,10 @@ class ImagingRpcProxy(RpcProxyI):
         if uuid in locations:
             entity = locations[uuid]
         if entity:
-            if entity.has_key('Label') :
+            if 'Label' in entity :
                 entity_name = entity['Label']
             # TODO - temporary GLPI hack
-            elif entity.has_key('completename') :
+            elif 'completename' in entity :
                 entity_name = entity['completename']
 
 
@@ -3046,9 +3078,9 @@ class ImagingRpcProxy(RpcProxyI):
 
         if type(db_computer) == dict:
             uuid = db_computer['uuid']
-            if db_computer.has_key('hostname'):
+            if 'hostname' in db_computer:
                 db_computer_name = db_computer['hostname']
-            elif db_computer.has_key('name'):
+            elif 'name' in db_computer:
                 db_computer_name = db_computer['name']
         elif hasattr(db_computer, 'getUUID'):
             uuid = db_computer.getUUID()
@@ -3390,7 +3422,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         l_uuids = uuids
 
     # give up if it appears that no menu as to be synced
-    if len(l_uuids) == 0:
+    if l_uuids == False:
         db.changeTargetsSynchroState(uuids, target_type, P2ISS.DONE)
         return [True]
 
@@ -3409,10 +3441,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         # If wol is True, generated bootmenu is the WOL one
         if wol:
             for uuid in menus:
-                if 'default_item_wol' in menus[uuid]:
-                    menus[uuid]['default_item'] = menus[uuid]['default_item_wol']
-                elif 'default_item_WOL' in menus[uuid]:
-                    menus[uuid]['default_item'] = menus[uuid]['default_item_WOL']
+                menus[uuid]['default_item'] = menus[uuid]['default_item_WOL']
 
         # store into to_register the list of menus to register
         to_register = {}
@@ -3421,6 +3450,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 to_register[uuid] = menus[uuid]
 
         # drop location processing if there is no menu to register
+        #if to_register.keys() == False:
         if len(to_register.keys()) == 0:
             continue
 
@@ -3464,6 +3494,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
         h_computers[url].extend(computers)
 
     # if there are some new computers in the profile, register them
+    #if h_computers.keys():
     if len(h_computers.keys()) != 0:
         for url in h_computers:
             computers = h_computers[url]
@@ -3487,6 +3518,7 @@ def synchroTargets(ctx, uuids, target_type, macs = {}, wol = False):
                 logger.error("couldn't initialize the ImagingApi to %s"%(url))
 
     distinct_loc = xmlrpcCleanup(distinct_loc)
+    #if defer_list == False:
     if len(defer_list) == 0:
         distinct_locs = distinct_loc
         keyvaleur = distinct_loc.keys()
@@ -3529,6 +3561,7 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
                 failures.append(uuid)
 
         if pid != None:
+            #if failures:
             if len(failures) != 0:
                 db.changeTargetsSynchroState([pid], target_type, P2ISS.TODO)
             else:
@@ -3560,7 +3593,8 @@ def synchroTargetsSecondPart(ctx, distinct_loc, target_type, pid, macs = {}):
         failures = []
         for s, uuids in results:
             failures.extend(uuids)
-        if len(failures) == 0:
+        #if failures == False:
+        if len(failures) == 0:    
             return [True]
         return [False, failures]
 
@@ -3576,19 +3610,20 @@ def chooseImagingApiUrl(location):
 def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis = {}):
     menu['bootservices'] = {}
     menu['images'] = {}
-    default_item_counter = 0 # keep track of the item number to generate a relative default menu entry number
-    wol_item_counter = 0 # same for wol
     for mi in menu_items:
         if menu['fk_default_item'] == mi.id:
-            menu['default_item'] = default_item_counter
+            if 'image' in dir(mi):
+                menu['default_item'] = mi.image.name
+            else:
+                menu['default_item'] = mi.boot_service.default_name
         if menu['fk_default_item_WOL'] == mi.id:
-            menu['default_item_WOL'] = wol_item_counter
-            menu['default_item_wol'] = wol_item_counter # TODO : remove
-        default_item_counter += 1
-        wol_item_counter += 1
+            if 'image' in dir(mi):
+                menu['default_item_WOL'] = mi.image.name
+            else:
+                menu['default_item_WOL'] = mi.boot_service.default_name
         mi = mi.toH()
-        if mi.has_key('image'):
-            if h_pis.has_key(mi['image']['id']):
+        if 'image' in mi:
+            if mi['image']['id'] in h_pis:
                 h_pis[mi['image']['id']].append([loc_uuid, target_uuid, str(mi['order'])])
             else:
                 h_pis[mi['image']['id']] = [[loc_uuid, target_uuid, str(mi['order'])]]
@@ -3609,10 +3644,11 @@ def generateMenusContent(menu, menu_items, loc_uuid, target_uuid = None, h_pis =
             menu['bootservices'][str(mi['order'])] = bs
     # when no default mi has been defined we take the first element of the menu
     if not menu.has_key('default_item') or menu['default_item'] == None:
+    #if not 'default_item' in menu or menu['default_item'] == None:
         menu['default_item'] = 0
     if not menu.has_key('default_item_WOL') or menu['default_item_WOL'] == None:
+    #if not 'default_item_WOL' in menu or menu['default_item_WOL'] == None:
         menu['default_item_WOL'] = 0
-        menu['default_item_wol'] = 0
     return (menu, menu_items, h_pis)
 
 
@@ -3634,7 +3670,7 @@ def generateMenus(logger, db, uuids, unique=False):
         h_targets[target.uuid] = target.toH()
 
     for m_uuid in locations:
-        if locations[m_uuid].has_key('uuid'):
+        if 'uuid' in locations[m_uuid]:
             loc_uuid = locations[m_uuid]['uuid']
         else:
             loc_uuid = "UUID%s"%locations[m_uuid]['id']
@@ -3650,7 +3686,7 @@ def generateMenus(logger, db, uuids, unique=False):
         menu['target'] = h_targets[m_uuid]
         menu, menu_items, h_pis = generateMenusContent(menu, menu_items, loc_uuid, m_uuid, h_pis)
 
-        if distinct_loc.has_key(loc_uuid):
+        if loc_uuid in distinct_loc:
             distinct_loc[loc_uuid][1][m_uuid] = menu
         else:
             url = chooseImagingApiUrl(loc_uuid)
@@ -3677,6 +3713,7 @@ def generateMenus(logger, db, uuids, unique=False):
             a_targets = h_pis[im.id]
             for loc_uuid, t_uuid, order in a_targets:
                 if not distinct_loc[loc_uuid][1][t_uuid]['images'][order].has_key('post_install_script'):
+                #if not 'post_install_script' in distinct_loc[loc_uuid][1][t_uuid]['images'][order]:
                     distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'] = []
                 distinct_loc[loc_uuid][1][t_uuid]['images'][order]['post_install_script'].append(pis)
     if unique:
@@ -3717,6 +3754,7 @@ def computersUnregister(computers_UUID, backup):
     h_location = {}
     for en, target in location:
         en_uuid = en.uuid
+        #if not en_uuid in h_location:
         if not h_location.has_key(en_uuid):
             h_location[en_uuid] = [en, []]
         h_location[en_uuid][1].append(target)

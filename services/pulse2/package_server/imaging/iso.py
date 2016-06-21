@@ -220,15 +220,15 @@ class ISOImage:
         for medianumber in self.medialist:
             args = ['-f', '-v', '-v', '-R']
             # Volume ID
-            args = args + ['-V', 'FIXME TITLE']
+            args += ['-V', 'FIXME TITLE']
             # Application ID
-            args = args + ['-A', 'Pulse 2 Imaging Server']
+            args += ['-A', 'Pulse 2 Imaging Server']
             # Output file
-            args = args + ['-o', '%s-%d.iso' % (self.target, medianumber+1)]
+            args += ['-o', '%s-%d.iso' % (self.target, medianumber+1)]
             # Other options
             args = args + self.medialist[medianumber]['opts'].split()
             # Use graft points
-            args = args + ['-graft-points']
+            args += ['-graft-points']
             for fname in self.medialist[medianumber]['files']:
                 args.append(
                     self.medialist[medianumber]['files'][fname]['dst']

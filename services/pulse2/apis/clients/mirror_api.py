@@ -22,6 +22,8 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 from pulse2.apis.clients import Pulse2Api
+from pulse2.database.imaging import ImagingDatabase
+from urlparse import urlparse
 
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
@@ -34,6 +36,18 @@ class MirrorApi(Pulse2Api):
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
+        try:
+            if 'uuid' in machine:
+                uuid = machine['uuid']
+                uuid = [uuid]
+                db = ImagingDatabase()
+                entity = db.getTargetsEntity(uuid)
+                machine ['entity']= entity[0][0].uuid
+                serverinfo = db.getImagingServerInfo(entity[0][0].uuid)
+                machine ['server']= urlparse(serverinfo.url).hostname
+                machine ['servernane']=serverinfo.name
+        except:
+            pass
         d = self.callRemote("getMirror", machine)
         d.addErrback(self.onError, "MirrorApi:getMirror", machine)
         return d
@@ -63,10 +77,18 @@ class MirrorApi(Pulse2Api):
         return d
 
     def getApiPackage(self, machine):
-        self.logger.debug(machine)
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
+        try:
+            if 'uuid' in machine:
+                uuid = machine['uuid']
+                db = ImagingDatabase()
+                result = db.getTargetPackageServer(uuid)
+                machine ['server']= urlparse(result[0].url).hostname
+                machine ['servernane']=result[0].name
+        except:
+            pass
         d = self.callRemote("getApiPackage", machine)
         d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
         return d

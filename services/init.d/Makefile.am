@@ -21,7 +21,7 @@
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
 initscripts = pulse2-package-server pulse2-inventory-server pulse2-scheduler \
-	pulse2-launchers pulse2-imaging-server pulse2-cm
+	pulse2-launchers pulse2-imaging-server pulse2-cm pulse2-register-pxe
 
 initsysdir = $(sysconfdir)/init.d/
 initsys_SCRIPTS = $(initscripts)
@@ -50,3 +50,4 @@ pulse2-scheduler: pulse2-scheduler.in
 pulse2-launchers: pulse2-launchers.in
 pulse2-imaging-server: pulse2-imaging-server.in
 pulse2-cm: pulse2-cm.in
+pulse2-register-pxe: pulse2-register-pxe.in
