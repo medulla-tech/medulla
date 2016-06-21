@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #  <>, 2007.
 # <>, 2007.
 msgid ""
@@ -10,14 +10,15 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2015-01-28 16:20+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -102,7 +103,8 @@ msgstr ""
 "Løs problemet ved å:\n"
 "                        <ul>\n"
 "                            <li>endre navnet på oppføringen</li>\n"
-"                            <li>slette oppføringen og opprette den på nytt</li>\n"
+"                            <li>slette oppføringen og opprette den på nytt</"
+"li>\n"
 "                        </ul>"
 
 #: includes/commonErrorHandling.php:43
@@ -113,7 +115,8 @@ msgstr ""
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/mmc/plugins/base/ini </li>\n"
 "                            <li>Verify you LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
@@ -157,7 +160,8 @@ msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
 "                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
+"                            <li> Your Samba server is not properly "
+"configured</li>\n"
 "                        </ul>"
 msgstr ""
 
@@ -689,8 +693,8 @@ msgstr ""
 
 #: modules/base/computers/delete.php:53
 msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
+"I am aware that <b>all related images (non-master)</b> will be <b>DELETED</"
+"b>.<br />Check this box if it is what you want."
 msgstr ""
 
 #: modules/base/computers/localSidebar.php:5
@@ -751,8 +755,8 @@ msgid ""
 "Some users can't be removed from this group because this group is their "
 "primary group."
 msgstr ""
-"Noen brukere kan ikke fjernes fra denne gruppen fordi denne gruppen er deres"
-" hovedgruppe."
+"Noen brukere kan ikke fjernes fra denne gruppen fordi denne gruppen er deres "
+"hovedgruppe."
 
 #: modules/base/groups/members.php:128
 #, php-format
@@ -964,8 +968,8 @@ msgstr ""
 #: modules/base/includes/users-xmlrpc.inc.php:110
 #, php-format
 msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
+"User %s created but password is not valid regarding your password policies."
+"<br/><strong>You must change the user password.</strong>"
 msgstr ""
 
 #: modules/base/includes/users-xmlrpc.inc.php:114
@@ -984,10 +988,12 @@ msgstr "LDAP log filer eksisterer ikke."
 #: modules/base/includes/errorHandling.php:29
 msgid ""
 "Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
+"ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 msgstr ""
@@ -1058,8 +1064,7 @@ msgid "The password must contain at least one lower case character"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:92
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
+msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr ""
 
 #: modules/base/includes/errorHandling.php:98
@@ -1175,8 +1180,7 @@ msgstr "Hovedgruppefeltet kan ikke være tomt."
 #: modules/base/includes/publicFunc.php:119
 #, php-format
 msgid "The group %s does not exist, and so can't be set as primary group."
-msgstr ""
-"Gruppen %s eksisterer ikke, og kan derfor ikke settes som hovedgruppe."
+msgstr "Gruppen %s eksisterer ikke, og kan derfor ikke settes som hovedgruppe."
 
 #: modules/base/includes/publicFunc.php:196
 msgid "User photo deleted"
@@ -1194,7 +1198,8 @@ msgstr ""
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo automatically"
+"                    Install php gd extension to resize the photo "
+"automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:266
@@ -1279,7 +1284,8 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
-"                                  His login shell command is replaced by /bin/false"
+"                                  His login shell command is replaced by /"
+"bin/false"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
@@ -1564,8 +1570,8 @@ msgstr ""
 #: modules/base/users/backup.php:56
 #, php-format
 msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
 msgstr ""
 
 #: modules/base/users/backup.php:58
@@ -1932,11 +1938,14 @@ msgstr ""
 msgid ""
 "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"will be useful, but <strong>without any warranty</strong>; without even the "
+"implied\n"
 "warranty of merchantability of fitness for a particular purpose. See the\n"
 "GNU General Public License for more details.</p>\n"
 "<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"Moreover, this product is a main and critical component of your information "
+"system. This community version is distributed without professional support "
+"of any kind,\n"
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
@@ -1972,5 +1981,3 @@ msgstr "Språk"
 #: index.php:228
 msgid "Connect"
 msgstr "Koble til"
-
-

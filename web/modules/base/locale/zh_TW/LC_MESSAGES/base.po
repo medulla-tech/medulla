@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <info@janusww.com>, 2014.
 #   <jcvassort@mandriva.com>, 2014.
 msgid ""
@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2015-01-28 16:20+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/mds/team/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
+"mds/team/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
-"Plural-Forms: nplurals=1; plural=0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -101,9 +103,11 @@ msgid ""
 msgstr ""
 "依照以下方式解決問題：⏎\n"
 "                        <ul>⏎\n"
-"                            <li>                            變更此輸入項目名稱\n"
+"                            <li>                            變更此輸入項目名"
+"稱\n"
 "</li>⏎\n"
-"                            <li>                            刪除此輸入項目，然後重新建立\n"
+"                            <li>                            刪除此輸入項目，"
+"然後重新建立\n"
 "</li>⏎\n"
 "                        </ul>"
 
@@ -115,14 +119,17 @@ msgstr "MMC 代理程式無法連絡您的 LDAP 伺服器"
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/mmc/plugins/base/ini </li>\n"
 "                            <li>Verify you LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
 "依照以下方式解決問題：⏎\n"
 "                        <ul>⏎\n"
-"                            <li>V                            確認已在 /etc/mmc/plugins/base/ini 中正確設定您的 LDAP 伺服器</li>⏎\n"
-"                            <li>                            確認您的 LDAP 伺服器正常工作⏎\n"
+"                            <li>V                            確認已在 /etc/"
+"mmc/plugins/base/ini 中正確設定您的 LDAP 伺服器</li>⏎\n"
+"                            <li>                            確認您的 LDAP 伺"
+"服器正常工作⏎\n"
 "                        </ul>"
 
 #: includes/commonErrorHandling.php:53
@@ -151,8 +158,10 @@ msgid ""
 msgstr ""
 "發生此問題的原因可能是：⏎\n"
 "                        <ul>⏎\n"
-"                            <li>                            此項目已不存在。</li>⏎\n"
-"                            <li>                            您的拼字有誤。</li>⏎\n"
+"                            <li>                            此項目已不存在。"
+"</li>⏎\n"
+"                            <li>                            您的拼字有誤。</"
+"li>⏎\n"
 "                        </ul>"
 
 #: includes/commonErrorHandling.php:77
@@ -164,13 +173,16 @@ msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
 "                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
+"                            <li> Your Samba server is not properly "
+"configured</li>\n"
 "                        </ul>"
 msgstr ""
 "請確認您的 smbpasswd 設定正確：⏎\n"
 "                        <ul>⏎\n"
-"                            <li>                              您的 Ldap 伺服器可能已當機</li>⏎\n"
-"                            <li>                              您的 Samba 伺服器沒有正確設定</li>⏎\n"
+"                            <li>                              您的 Ldap 伺服"
+"器可能已當機</li>⏎\n"
+"                            <li>                              您的 Samba 伺服"
+"器沒有正確設定</li>⏎\n"
 "                        </ul>"
 
 #: includes/auditCodesManager.php:33
@@ -236,7 +248,8 @@ msgstr "請檢查網路連線。"
 msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
-msgstr "無法與 MMC 代理程式通訊。請檢查您是否在使用正確的 TCP 通訊埠和通訊協定。"
+msgstr ""
+"無法與 MMC 代理程式通訊。請檢查您是否在使用正確的 TCP 通訊埠和通訊協定。"
 
 #: includes/xmlrpc.inc.php:245
 msgid ""
@@ -690,7 +703,9 @@ msgstr "電腦清單"
 msgid ""
 "You have to check the box <b>\"I am aware that all related images (non-"
 "master) will be deleted\"</b> if you want to remove this computer."
-msgstr "如果您要移除此電腦，您必須核取方塊<b>\"我知道所有相關圖像（非主要）將被刪除\"</b>。"
+msgstr ""
+"如果您要移除此電腦，您必須核取方塊<b>\"我知道所有相關圖像（非主要）將被刪除"
+"\"</b>。"
 
 #: modules/base/computers/delete.php:38
 msgid "The computer has been deleted."
@@ -706,9 +721,11 @@ msgstr "您要進行備份嗎？"
 
 #: modules/base/computers/delete.php:53
 msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
-msgstr "我知道<b>所有相關圖像（非主要）</b> 將被<b>刪除</b>。<br/>如果您要這樣做，請核取此方塊。"
+"I am aware that <b>all related images (non-master)</b> will be <b>DELETED</"
+"b>.<br />Check this box if it is what you want."
+msgstr ""
+"我知道<b>所有相關圖像（非主要）</b> 將被<b>刪除</b>。<br/>如果您要這樣做，請"
+"核取此方塊。"
 
 #: modules/base/computers/localSidebar.php:5
 msgid "All computers"
@@ -977,9 +994,11 @@ msgstr " 並且 "
 #: modules/base/includes/users-xmlrpc.inc.php:110
 #, php-format
 msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
-msgstr "使用者 %s 已建立，但根據您的密碼政策，密碼無效。<br/><strong>您必須變更使用者密碼。</strong>"
+"User %s created but password is not valid regarding your password policies."
+"<br/><strong>You must change the user password.</strong>"
+msgstr ""
+"使用者 %s 已建立，但根據您的密碼政策，密碼無效。<br/><strong>您必須變更使用者"
+"密碼。</strong>"
 
 #: modules/base/includes/users-xmlrpc.inc.php:114
 msgid "You cannot add more users."
@@ -997,18 +1016,24 @@ msgstr "LDAP 記錄檔不存在。"
 #: modules/base/includes/errorHandling.php:29
 msgid ""
 "Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
+"ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 msgstr ""
 "請確認您：⏎\n"
-"                        <p>                        在您的 /etc/ldap/slapd.conf or /etc/openldap/slapd.conf 有此行：⏎\n"
-"                        <pre>                        loglevel        256</pre></p>⏎\n"
-"                        <p>                        且在 /etc/syslog.conf 中有此行：⏎\n"
-"                        <pre>                        local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>⏎\n"
+"                        <p>                        在您的 /etc/ldap/slapd."
+"conf or /etc/openldap/slapd.conf 有此行：⏎\n"
+"                        <pre>                        loglevel        256</"
+"pre></p>⏎\n"
+"                        <p>                        且在 /etc/syslog.conf 中有"
+"此行：⏎\n"
+"                        <pre>                        local4.*       /var/log/"
+"ldap.log (or /var/log/ldap/ldap.log)</pre>⏎\n"
 "                        </p>⏎\n"
 "                        "
 
@@ -1078,8 +1103,7 @@ msgid "The password must contain at least one lower case character"
 msgstr "密碼必須包含至少一個小寫字元"
 
 #: modules/base/includes/errorHandling.php:92
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
+msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr "密碼必須包含至少一個特殊字元：#$%&+./:=?@{}"
 
 #: modules/base/includes/errorHandling.php:98
@@ -1213,7 +1237,8 @@ msgstr "使用者已啟用"
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo automatically"
+"                    Install php gd extension to resize the photo "
+"automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:266
@@ -1298,7 +1323,8 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
-"                                  His login shell command is replaced by /bin/false"
+"                                  His login shell command is replaced by /"
+"bin/false"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
@@ -1350,7 +1376,8 @@ msgstr "一般名稱"
 msgid ""
 "This field is used by some LDAP clients (for example Thunderbird address "
 "book) to display user entries."
-msgstr "此欄位由一些 LDAP 用戶端（例如 Thunderbird 通訊錄）用於顯示使用者輸入項目。"
+msgstr ""
+"此欄位由一些 LDAP 用戶端（例如 Thunderbird 通訊錄）用於顯示使用者輸入項目。"
 
 #: modules/base/includes/publicFunc.php:484
 #: modules/base/infoPackage.inc.php:387
@@ -1458,7 +1485,9 @@ msgstr "警告：登記的電腦數目已超過您的授權。"
 msgid ""
 "Please contact your administrator for more information. If you are an "
 "administrator, please go to the license status page for more information."
-msgstr "請連絡您的管理員以取得更多資訊。如果您是管理員，請移至授權狀態頁面以取得更多資訊。"
+msgstr ""
+"請連絡您的管理員以取得更多資訊。如果您是管理員，請移至授權狀態頁面以取得更多"
+"資訊。"
 
 #: modules/base/status/support.php:50
 msgid "Product name"
@@ -1580,8 +1609,8 @@ msgstr "<b>%s</b> 使用者資料夾的備份已在背景啟動。"
 #: modules/base/users/backup.php:56
 #, php-format
 msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
+"The files will be stored in the directory %s of the server at the end of the "
+"backup."
 msgstr "檔案將在備份結束時儲存在伺服器的目錄 <b>%s</b> 中。"
 
 #: modules/base/users/backup.php:58
@@ -1602,7 +1631,8 @@ msgstr "%s 主目錄將被存檔。"
 msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
-msgstr "請選擇媒體大小。如果您的資料超出容量大小，將建立幾個您的媒體大小的檔案。"
+msgstr ""
+"請選擇媒體大小。如果您的資料超出容量大小，將建立幾個您的媒體大小的檔案。"
 
 #: modules/base/users/backup.php:83
 msgid "Media size"
@@ -1951,11 +1981,14 @@ msgstr "網頁：外掛程式未安裝"
 msgid ""
 "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"will be useful, but <strong>without any warranty</strong>; without even the "
+"implied\n"
 "warranty of merchantability of fitness for a particular purpose. See the\n"
 "GNU General Public License for more details.</p>\n"
 "<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"Moreover, this product is a main and critical component of your information "
+"system. This community version is distributed without professional support "
+"of any kind,\n"
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
@@ -1965,7 +1998,8 @@ msgstr ""
 "適售性及特定目的之適用性的默示擔保。請參閱⏎\n"
 "GNU 通用公共授權以取得更多詳請。</p>⏎\n"
 "<p>⏎\n"
-"此外，本產品是您資訊系統的主要和關鍵元件。此社群版本之發佈不提供任何類型的專業支援，⏎\n"
+"此外，本產品是您資訊系統的主要和關鍵元件。此社群版本之發佈不提供任何類型的專"
+"業支援，⏎\n"
 "並且不具備從先前版本升級的經測試和認證的路徑。⏎\n"
 "</p>"
 
@@ -2000,5 +2034,3 @@ msgstr "語言"
 #: index.php:228
 msgid "Connect"
 msgstr "連線"
-
-

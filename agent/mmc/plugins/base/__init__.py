@@ -2568,6 +2568,8 @@ class RpcProxy(RpcProxyI):
         return xmlrpcCleanup(ComputerManager().getRestrictedComputersList(ctx, min, max, filt, advanced, justid))
 
     def getComputerCount(self, filt = {}):
+        # Mutable dict extra_css used as default argument to a method or function
+        #filt = filt or {}
         ctx = self.currentContext
         return ComputerManager().getComputerCount(ctx, filt)
 

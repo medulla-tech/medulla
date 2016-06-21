@@ -89,7 +89,6 @@ class ExternalLdapAuthenticator(AuthenticatorI):
                     ret = True
                 except ldap.INVALID_CREDENTIALS:
                     self.logger.debug("Invalid credentials")
-                    pass
         except Exception, e:
             self.logger.exception(e)
             ret = False
@@ -216,7 +215,7 @@ class ExternalLdapProvisioner(ProvisionerI):
                 entities = self.config.profilesEntity[profile].split()
                 self.logger.info("*******ENTITE '%s' " % (entities))
             except KeyError:
-                if self.config.profilesEntity.has_key("default"):
+                if "default" in self.config.profilesEntity:
                     entities = self.config.profilesEntity["default"].split()
                     self.logger.info("Set the default profile to user.")
                     profile = 'default'

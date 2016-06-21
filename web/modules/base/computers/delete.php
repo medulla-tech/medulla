@@ -23,7 +23,9 @@
  */
 
 require_once("modules/base/includes/computers.inc.php");
-
+if (in_array("imaging", $_SESSION["modulesList"])) {
+        require_once('modules/imaging/includes/xmlrpc.inc.php');
+    }
 if (isset($_POST["bconfirm"])) {
     // if checkbox is not checked, don't delete computer
     if (!isset($_POST["imageWarning"])) {
@@ -34,6 +36,9 @@ if (isset($_POST["bconfirm"])) {
     else {
         $uuid = $_POST["objectUUID"];
         $backup = ($_POST["backup"]?True:False);
+        if (in_array("imaging", $_SESSION["modulesList"])) {
+            $dede = xmlrpc_imagingClearMenuFromUuid($uuid);
+        }
         delComputer($uuid, $backup);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));

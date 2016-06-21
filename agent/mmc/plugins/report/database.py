@@ -81,6 +81,10 @@ class ReportDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def disable_indicators_by_name(self, session, includes=[], excludes=[]):
+        ## Mutable list includes used as default argument to a method or function
+        #includes = includes or []
+        ## Mutable list excludes used as default argument to a method or function
+        #excludes = excludes or []
         try:
             query = session.query(Indicator)
             if includes:
@@ -164,6 +168,8 @@ class ReportDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_indicator_value_at_time(self, session, indicator_name, ts_min, ts_max, entities=[]):
+        ## Mutable list entities used as default argument to a method or function
+        #entities = entities or []
         indicator = self.get_indicator_by_name(indicator_name)
         if indicator:
             return indicator.getValueAtTime(session, ts_min, ts_max, entities)
@@ -176,6 +182,8 @@ class ReportDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def get_indicator_current_value(self, session, indicator_name, entities=[]):
+        # Mutable list entities used as default argument to a method or function
+        #entities = entities or []
         indicator = self.get_indicator_by_name(indicator_name)
         if indicator:
             return indicator.getCurrentValue(entities)

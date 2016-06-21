@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <alexandre@mandriva.com.br>, 2012.
 # Sergio Rafael Lemke <sergio@mandriva.com.br>, 2010.
 msgid ""
@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2012-12-13 17:41+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Alexandre Proença <alexandre@mandriva.com.br>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
+"projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -132,8 +134,8 @@ msgid ""
 "account will be locked."
 msgstr ""
 "Aviso, você se conectou usando no modo grace. Por favor, altere a sua senha "
-"assim que possível usando a página de alteração de senha ou a sua conta será"
-" trancada."
+"assim que possível usando a página de alteração de senha ou a sua conta será "
+"trancada."
 
 #: modules/ppolicy/default/warnuser.php:40
 msgid ""
@@ -141,9 +143,9 @@ msgid ""
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
 msgstr ""
-"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é "
-"restrita.Por favor, troque a senha assim que possível usando a página de "
-"alteração de senha."
+"Aviso, sua senha sofreu um reset do administrador. Sua conta LDAP é restrita."
+"Por favor, troque a senha assim que possível usando a página de alteração de "
+"senha."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
 msgid "Minimum age"
@@ -197,8 +199,8 @@ msgid ""
 "desired)."
 msgstr ""
 "Este atributo contém o número de segundos que devem decorrer "
-"entremodificações de senha. Se este atributo não está presente, 0 segundos é"
-" assumido (ex. a senha pode ser alterada quando e como quantas vezesfor "
+"entremodificações de senha. Se este atributo não está presente, 0 segundos é "
+"assumido (ex. a senha pode ser alterada quando e como quantas vezesfor "
 "desejado)."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
@@ -218,8 +220,8 @@ msgid ""
 "administrator."
 msgstr ""
 "Esta bandeira especifica se os usuários devem alterar suas senhas na "
-"primeira conexão ao diretório depois que a senha foi definida ou levou reset"
-" por um administrador."
+"primeira conexão ao diretório depois que a senha foi definida ou levou reset "
+"por um administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:58
 msgid ""
@@ -263,9 +265,9 @@ msgid ""
 "authenticate until reset by a password administrator."
 msgstr ""
 "Este atributo configura o número de segundos que uma senha não poderá ser "
-"usada depois de muitas tentativas de autenticação falhadas. Se este atributo"
-" estiver vazio, ou o valor for 0 a senha não poderá ser usada para "
-"autenticar até que a senha sofra um reset do administrador."
+"usada depois de muitas tentativas de autenticação falhadas. Se este atributo "
+"estiver vazio, ou o valor for 0 a senha não poderá ser usada para autenticar "
+"até que a senha sofra um reset do administrador."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:62
 msgid ""
@@ -292,9 +294,9 @@ msgid ""
 "This attribute indicates how the password quality will be verified while "
 "being modified or added. If this attribute is not present, or if the value "
 "is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check"
-" it (due to a hashed password or other reasons) it will be accepted. A value"
-" of '2' indicates that the server will check the quality, and if the server "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
 msgstr ""
 "Este atributo configura como a qualidade da senha é verificada ao ser "
@@ -432,5 +434,3 @@ msgstr "Padrão"
 #: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Habilitar política de senha para usuário específico"
-
-

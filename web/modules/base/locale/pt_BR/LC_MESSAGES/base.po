@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <alexandre@mandriva.com.br>, 2012.
 #   <andre@mandriva.com>, 2011, 2013, 2014.
 #   <jcvassort@mandriva.com>, 2014.
@@ -14,14 +14,16 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2015-01-28 16:20+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/projects/p/mds/team/pt_BR/)\n"
+"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
+"projects/p/mds/team/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
-"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -109,7 +111,8 @@ msgstr ""
 "Solucione o problema:\n"
 "                        <ul>\n"
 "                            <li>alterando o nome desta entrada</li>\n"
-"                            <li>ou removendo esta entrada antes de recriá-la</li>\n"
+"                            <li>ou removendo esta entrada antes de recriá-"
+"la</li>\n"
 "                        </ul>"
 
 #: includes/commonErrorHandling.php:43
@@ -120,14 +123,17 @@ msgstr "O agente MMC não conseguiu contactar o servidor LDAP"
 msgid ""
 "Solve the problem by:\n"
 "                        <ul>\n"
-"                            <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verify your LDAP server is correctly "
+"configured in /etc/mmc/plugins/base/ini </li>\n"
 "                            <li>Verify you LDAP server is up</li>\n"
 "                        </ul>"
 msgstr ""
 "Solucione o problema:\n"
 "                        <ul>\n"
-"                            <li>Verificando se o seu servidor LDAP está corretamente configurado em /etc/mmc/plugins/base/ini </li>\n"
-"                            <li>Verificando se o servidor LDAP está rodando</li>\n"
+"                            <li>Verificando se o seu servidor LDAP está "
+"corretamente configurado em /etc/mmc/plugins/base/ini </li>\n"
+"                            <li>Verificando se o servidor LDAP está rodando</"
+"li>\n"
 "                        </ul>"
 
 #: includes/commonErrorHandling.php:53
@@ -169,13 +175,15 @@ msgid ""
 "Verify that your smbpasswd is correctly configured:\n"
 "                        <ul>\n"
 "                            <li> Your Ldap server can be down</li>\n"
-"                            <li> Your Samba server is not properly configured</li>\n"
+"                            <li> Your Samba server is not properly "
+"configured</li>\n"
 "                        </ul>"
 msgstr ""
 "Verifique se o smbpasswd está corretamente configurado:\n"
 "                        <ul>\n"
 "                            <li> Seu servidor Ldap pode estar parado</li>\n"
-"                            <li> Seu servidor samba pode não estar propriamente configurado</li>\n"
+"                            <li> Seu servidor samba pode não estar "
+"propriamente configurado</li>\n"
 "                        </ul>"
 
 #: includes/auditCodesManager.php:33
@@ -244,8 +252,8 @@ msgid ""
 "Can't communicate with MMC agent. Please check you're using the right TCP "
 "port and the right protocol."
 msgstr ""
-"Não foi possível comunicar-se com o agente MMC. Favor verificar se você está"
-" usando a porta TCP e o protocolo corretos."
+"Não foi possível comunicar-se com o agente MMC. Favor verificar se você está "
+"usando a porta TCP e o protocolo corretos."
 
 #: includes/xmlrpc.inc.php:245
 msgid ""
@@ -716,11 +724,11 @@ msgstr "Você quer que o backup seja feito ?"
 
 #: modules/base/computers/delete.php:53
 msgid ""
-"I am aware that <b>all related images (non-master)</b> will be "
-"<b>DELETED</b>.<br />Check this box if it is what you want."
+"I am aware that <b>all related images (non-master)</b> will be <b>DELETED</"
+"b>.<br />Check this box if it is what you want."
 msgstr ""
-"Eu estou ciente que <b>todas as images (não master)</b> serão "
-"<b>DELETADAS</b>.<br />Selecione essa caixa se for isso que deseja."
+"Eu estou ciente que <b>todas as images (não master)</b> serão <b>DELETADAS</"
+"b>.<br />Selecione essa caixa se for isso que deseja."
 
 #: modules/base/computers/localSidebar.php:5
 msgid "All computers"
@@ -815,8 +823,8 @@ msgid ""
 "The group name can only contain letters and numeric, and must begin with a "
 "letter"
 msgstr ""
-"O nome do grupo pode conter somente letras e números, e deve começar com uma"
-" letra"
+"O nome do grupo pode conter somente letras e números, e deve começar com uma "
+"letra"
 
 #: modules/base/groups/edit.php:99
 msgid "Group name"
@@ -993,11 +1001,11 @@ msgstr "e"
 #: modules/base/includes/users-xmlrpc.inc.php:110
 #, php-format
 msgid ""
-"User %s created but password is not valid regarding your password "
-"policies.<br/><strong>You must change the user password.</strong>"
+"User %s created but password is not valid regarding your password policies."
+"<br/><strong>You must change the user password.</strong>"
 msgstr ""
-"Usuário %s criado mas a senha não é valida seguindo as politicas de "
-"senha.<br/><strong>Você precisa trocar a senha do usuário.</strong>"
+"Usuário %s criado mas a senha não é valida seguindo as politicas de senha."
+"<br/><strong>Você precisa trocar a senha do usuário.</strong>"
 
 #: modules/base/includes/users-xmlrpc.inc.php:114
 msgid "You cannot add more users."
@@ -1015,18 +1023,22 @@ msgstr "Arquivo de log do LDAP não existe."
 #: modules/base/includes/errorHandling.php:29
 msgid ""
 "Please be sure you have:\n"
-"                        <p>This line in your /etc/ldap/slapd.conf or /etc/openldap/slapd.conf:\n"
+"                        <p>This line in your /etc/ldap/slapd.conf or /etc/"
+"openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>and this line in your /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (or /var/log/ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (or /var/log/"
+"ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 msgstr ""
 "Por favor tenha certeza que voce tem:\n"
-"                        <p>Está linha no seu /etc/ldap/slapd.conf ou /etc/openldap/slapd.conf:\n"
+"                        <p>Está linha no seu /etc/ldap/slapd.conf ou /etc/"
+"openldap/slapd.conf:\n"
 "                        <pre>loglevel        256</pre></p>\n"
 "                        <p>e está linha no seu /etc/syslog.conf:\n"
-"                        <pre>local4.*       /var/log/ldap.log (ou /var/log/ldap/ldap.log)</pre>\n"
+"                        <pre>local4.*       /var/log/ldap.log (ou /var/log/"
+"ldap/ldap.log)</pre>\n"
 "                        </p>\n"
 "                        "
 
@@ -1104,8 +1116,7 @@ msgid "The password must contain at least one lower case character"
 msgstr "A senha precisa pelo menos ter um carácter minusculo"
 
 #: modules/base/includes/errorHandling.php:92
-msgid ""
-"The password must contain at least one special character: #$%&+./:=?@{}"
+msgid "The password must contain at least one special character: #$%&+./:=?@{}"
 msgstr "A senha precisa pelo menos conter um caracter especial: #$%&+./:=?@{}"
 
 #: modules/base/includes/errorHandling.php:98
@@ -1241,7 +1252,8 @@ msgstr "Usuário ativado"
 #, php-format
 msgid ""
 "The photo is too big. The max size is %s x %s.\n"
-"                    Install php gd extension to resize the photo automatically"
+"                    Install php gd extension to resize the photo "
+"automatically"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:266
@@ -1326,7 +1338,8 @@ msgstr ""
 #: modules/base/includes/publicFunc.php:386
 msgid ""
 "A disabled user can't log in any UNIX services.<br/>\n"
-"                                  His login shell command is replaced by /bin/false"
+"                                  His login shell command is replaced by /"
+"bin/false"
 msgstr ""
 
 #: modules/base/includes/publicFunc.php:418
@@ -1616,11 +1629,10 @@ msgstr "O backup da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 #: modules/base/users/backup.php:56
 #, php-format
 msgid ""
-"The files will be stored in the directory %s of the server at the end of the"
-" backup."
-msgstr ""
-"Os arquivos serão armazenados no diretório %s do servidor no final do "
+"The files will be stored in the directory %s of the server at the end of the "
 "backup."
+msgstr ""
+"Os arquivos serão armazenados no diretório %s do servidor no final do backup."
 
 #: modules/base/users/backup.php:58
 msgid "Please go to the status page to check the backup status."
@@ -1987,22 +1999,29 @@ msgstr "web: plugin não está instalado"
 msgid ""
 "<p>\n"
 "The community version of this product is distributed in the hope that it\n"
-"will be useful, but <strong>without any warranty</strong>; without even the implied\n"
+"will be useful, but <strong>without any warranty</strong>; without even the "
+"implied\n"
 "warranty of merchantability of fitness for a particular purpose. See the\n"
 "GNU General Public License for more details.</p>\n"
 "<p>\n"
-"Moreover, this product is a main and critical component of your information system. This community version is distributed without professional support of any kind,\n"
+"Moreover, this product is a main and critical component of your information "
+"system. This community version is distributed without professional support "
+"of any kind,\n"
 "and without a tested and certified upgrade path from previous versions.\n"
 "</p>"
 msgstr ""
 "<p>\n"
 "A versão community deste produto é distribuída com a expectativa que seja\n"
-"útil, porém <strong>sem qualquer garantia</strong>; nem mesmo a garantia implícita de \n"
+"útil, porém <strong>sem qualquer garantia</strong>; nem mesmo a garantia "
+"implícita de \n"
 "comercialização e as de adequação a qualquer propósito. Veja a\n"
 "licença GPL (GNU General Public License) para mais detalhes.</p>\n"
 "<p>\n"
-"Além disso, este produto é um componente crítico do seu sistema de informação.E esta versão community é distribuída sem suporte profissional de qualquer tipo,\n"
-"e sem uma forma testada ou certificada de atualização de versões anteriores.\n"
+"Além disso, este produto é um componente crítico do seu sistema de "
+"informação.E esta versão community é distribuída sem suporte profissional de "
+"qualquer tipo,\n"
+"e sem uma forma testada ou certificada de atualização de versões "
+"anteriores.\n"
 "</p>"
 
 #: license.php:38
@@ -2040,5 +2059,3 @@ msgstr "Idioma"
 #: index.php:228
 msgid "Connect"
 msgstr "Conectar"
-
-

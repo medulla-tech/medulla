@@ -1,22 +1,25 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# 
-## Translators:
+#
+# # Translators:
 #   <i.sence.i@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2012-06-01 11:40+0000\n"
+"PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Philippe Braun <jpbraun@mandriva.com>\n"
-"Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/mds/team/ru_RU/)\n"
+"Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
+"mds/team/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.6.10\n"
 
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
@@ -61,7 +64,8 @@ msgstr ""
 
 #: modules/ppolicy/default/edit.php:62
 msgid "\"Maximum age\" must be greater than \"Minimum age\"."
-msgstr "\"Максимальный возраст\" должен быть больше, чем \"Минимальный возраст\"."
+msgstr ""
+"\"Максимальный возраст\" должен быть больше, чем \"Минимальный возраст\"."
 
 #: modules/ppolicy/default/edit.php:95
 msgid "Attributes updated"
@@ -185,8 +189,8 @@ msgid ""
 "this attribute contains the minimum number of characters that will be "
 "accepted in a password"
 msgstr ""
-"Этот атрибут содержит минимальное количество символов, которое будет принято"
-" в пароле"
+"Этот атрибут содержит минимальное количество символов, которое будет принято "
+"в пароле"
 
 #: modules/ppolicy/includes/ppolicy.inc.php:55
 msgid ""
@@ -196,8 +200,8 @@ msgid ""
 "desired)."
 msgstr ""
 "Этот атрибут содержит количество секунд, которое должно пройти между "
-"изменениями пароля. Если этот атрибут не задан, подразумевается 0 секунд (то"
-" есть пароль может быть изменен так часто, как возможно)."
+"изменениями пароля. Если этот атрибут не задан, подразумевается 0 секунд (то "
+"есть пароль может быть изменен так часто, как возможно)."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:56
 msgid ""
@@ -205,8 +209,8 @@ msgid ""
 "will expire. If this attribute is not present, or if the value is 0 the "
 "password does not expire."
 msgstr ""
-"Этот атрибут содержит количество секунд, по прошествии которых срок действия"
-" модифицированного пароля истечет. Если этот атрибут не задан или его "
+"Этот атрибут содержит количество секунд, по прошествии которых срок действия "
+"модифицированного пароля истечет. Если этот атрибут не задан или его "
 "значение равно 0 срок действия пароля не истекает."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:57
@@ -236,8 +240,8 @@ msgid ""
 "The maximum number of consecutive failed bind attempts is specified in the "
 "\"Password maximum failure\" field below."
 msgstr ""
-"Этот флаг показывает, если включен, что пароль не может быть использован для"
-" аутенфикации после определенного числа сбоев при подключении. Максимальное "
+"Этот флаг показывает, если включен, что пароль не может быть использован для "
+"аутенфикации после определенного числа сбоев при подключении. Максимальное "
 "число сбоев подключений задается в поле \"Максимальное число сбоев пароля\""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:60
@@ -274,8 +278,8 @@ msgid ""
 msgstr ""
 "Этот атрибут содержит количество раз, когда пароль с истекшим сроком "
 "действия может использоваться для аутентификации пользователя в каталоге. "
-"Если этот атрибут не задан или если его значение равно нулю, пользователям с"
-" истекшим сроком действия пароля не будет разрешено проходить аутенфикацию."
+"Если этот атрибут не задан или если его значение равно нулю, пользователям с "
+"истекшим сроком действия пароля не будет разрешено проходить аутенфикацию."
 
 #: modules/ppolicy/includes/ppolicy.inc.php:63
 msgid ""
@@ -288,17 +292,17 @@ msgid ""
 "This attribute indicates how the password quality will be verified while "
 "being modified or added. If this attribute is not present, or if the value "
 "is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check"
-" it (due to a hashed password or other reasons) it will be accepted. A value"
-" of '2' indicates that the server will check the quality, and if the server "
+"that the server will check the quality, and if the server is unable to check "
+"it (due to a hashed password or other reasons) it will be accepted. A value "
+"of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
 msgstr ""
-"Этот атрибут показывает, как проверяется качество пароля при его модификации"
-" или добавлении. Если этот атрибут не задан или его значение равно 0, "
-"проверка качества не будет производиться. Значение '1' показывать что сервер"
-" будет проверять качество и если это невозможно (из за хэшированного пароля "
-"или других причин) он будет принят. Значение '2' показывает что сервер будет"
-" проверять качество и если он не сможет это сделать, то вернет ошибку "
+"Этот атрибут показывает, как проверяется качество пароля при его модификации "
+"или добавлении. Если этот атрибут не задан или его значение равно 0, "
+"проверка качества не будет производиться. Значение '1' показывать что сервер "
+"будет проверять качество и если это невозможно (из за хэшированного пароля "
+"или других причин) он будет принят. Значение '2' показывает что сервер будет "
+"проверять качество и если он не сможет это сделать, то вернет ошибку "
 "принятия пароля."
 
 #: modules/ppolicy/includes/auditCodes.php:4
@@ -425,5 +429,3 @@ msgstr "По умолчанию"
 #: modules/ppolicy/infoPackage.inc.php:82
 msgid "Enable user specific password policy"
 msgstr "Включить пользовательскую политику паролей"
-
-
