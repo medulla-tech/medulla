@@ -768,7 +768,7 @@ class ImagingImageItem(ImagingItem):
         @return: the entry, in a SYSLINUX compatible format.
         """
         buf = 'LABEL %s\n' % self.label
-        buf += 'MENU LABEL %s\n' % selflabel
+        buf += 'MENU LABEL %s\n' % self.label
         buf += self.CMDLINE + '\n'
         return self._applyReplacement(buf, network)
 
