@@ -294,6 +294,26 @@ class ImagingMenu:
             ret.append(_reptable.get(ord(c) ,c))
         return u"".join(ret)
 
+    def hostnamebymac(self):
+        logging.getLogger('imaging').info("*** hostnamebymac")
+
+        target_file = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], "hostnamebymac")
+        logging.getLogger('imaging').info("*** hostnamebymac %s"%target_file)
+        if self.mac:
+            target_file = os.path.join(target_file, pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
+            logging.getLogger('imaging').info("*** recherche mac %s in directory %s"%(self.mac , target_file))
+
+            if os.path.isfile(target_file):
+                logging.getLogger('imaging').info("*** le fichier existe")
+                fichier = open(target_file, "r")
+                line = fichier.read()
+                logging.getLogger('imaging').info("*** hostname  %s "%(line))
+                fichier.close()
+                return line
+            else:
+                logging.getLogger('imaging').info("*** le fichier n existe pas")
+        return ""
+
     def buildMenu(self):
         """
         @return: the SYSLINUX boot menu as a string encoded using CP-437
@@ -335,7 +355,7 @@ class ImagingMenu:
         buf += 'MENU CMDLINEROW 16\n'
         buf += 'MENU HELPMSGROW 21\n'
         buf += 'MENU HELPMSGENDROW 29\n'
-
+        buf += 'MENU TITLE %s\n' % self.hostnamebymac()
         # do we hide the menu ? Splash screen will still be displayed
         if self.hidden:
             buf += 'MENU HIDDEN\n'
