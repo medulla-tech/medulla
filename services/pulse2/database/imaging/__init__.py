@@ -501,6 +501,12 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         return e
 
+    def getAllLocation(self):
+        session = create_session()
+        query = session.query(ImagingServer).all()
+        session.close()
+        return [m[0] for m in query]
+
     def getTargetPackageServer(self, target_id):
         session = create_session()
         # Run the following query: SELECT ImagingServer.url from ImagingServer INNER JOIN Target ON Target.fk_entity = ImagingServer.fk_entity WHERE Target.uuid=target_id;
