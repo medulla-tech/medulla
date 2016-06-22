@@ -44,7 +44,7 @@ from pulse2.package_server.imaging.iso import ISOImage
 from pulse2.package_server.imaging.archiver import Archiver
 from pulse2.package_server.imaging.rpcreplay import RPCReplay
 
-from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable, SingletonN, check_process, start_process, stop_process
+from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc3339Time, humanReadable, SingletonN, check_process, start_process, stop_process, normalizeMACAddressForPXELINUX
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 import json
