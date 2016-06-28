@@ -121,6 +121,16 @@ $ret = $ret[$id];
 ?>
 <form name="showTarget" action="<?php echo urlStr("base/computers/showtarget", $params) ?>" method="post">
     <p><?php printf(_T("Show all targets that use that image in their boot menu", "imaging")); ?></p>
+    <hr />
+    <p><?php printf(_T("If you want to remove this master from one or more targets, check these targets and click on the remove button", "imaging")); ?></p>
+    <p><a onclick="checkAll('imaging_checkbox_', 1);
+            checkAll('computer_checkbox_', 1);" href="javascript:void(0);"><?php printf(_T("Select all", "imaging")); ?></a>
+        / <a onclick="checkAll('imaging_checkbox_', 0);
+            checkAll('computer_checkbox_', 0);" href="javascript:void(0);"><?php printf(_T("Unselect all", "imaging")); ?></a></p>
+    <input name='removeMasters' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />
+    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
+            return false;"/>
+    </br>
 <?php
 foreach ($ret as $target) {
     /*
@@ -158,15 +168,6 @@ if (isset($_GET['from'])) {
     // Come from an imaging server page
 }
 ?>
-    <hr />
-    <p><?php printf(_T("If you want to remove this master from one or more targets, check these targets and click on the remove button", "imaging")); ?></p>
-    <p><a onclick="checkAll('imaging_checkbox_', 1);
-            checkAll('computer_checkbox_', 1);" href="javascript:void(0);"><?php printf(_T("Select all", "imaging")); ?></a>
-        / <a onclick="checkAll('imaging_checkbox_', 0);
-            checkAll('computer_checkbox_', 0);" href="javascript:void(0);"><?php printf(_T("Unselect all", "imaging")); ?></a></p>
-    <input name='removeMasters' type="submit" class="btnPrimary" value="<?php echo _T("Remove", "imaging"); ?>" />
-    <input name="bback" type="submit" class="btnSecondary" value="<?php echo _T("Cancel", "imaging"); ?>" onClick="closePopup();
-            return false;"/>
 </form>
 
 <script type="text/javascript">
