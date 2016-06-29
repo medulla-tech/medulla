@@ -63,7 +63,7 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = 'UUID' + str(db_computer.id)
         menu = generateMenus(logger, ImagingDatabase(), [uuid], unique=True)
         return xmlrpcCleanup(menu)
-    
+
     def check_process(self, process):
         return xmlrpcCleanup(pulse2.utils.check_process(process))
 
@@ -73,14 +73,6 @@ class ImagingRpcProxy(RpcProxyI):
     def get_web_def_date_fmt(self):
         """ get the date format """
         return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
-
-    def get_web_def_possible_protocols(self):
-        """ get the possible protocols """
-        return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllProtocols()))
-
-    def get_web_def_default_protocol(self):
-        """ get the default protocol """
-        return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
 
     def get_web_def_kernel_parameters(self):
         """ get the default kernel parameters """

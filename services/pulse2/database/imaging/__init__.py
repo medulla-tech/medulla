@@ -88,7 +88,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         self.nomenclatures = {
             'ImagingLogState': ImagingLogState,
             'TargetType': TargetType,
-            'Protocol': Protocol,
             'SynchroState': SynchroState,
             'Language': Language,
             'ImageState' : ImageState
@@ -101,7 +100,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 'type': 'TargetType'
             },
             'Menu': {
-                'fk_protocol': 'Protocol',
                 'fk_synchrostate': 'SynchroState'
             },
             'ImagingServer': {
@@ -127,7 +125,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             'hidden_menu': self.config.web_def_default_hidden_menu,
             'background_uri': self.config.web_def_default_background_uri,
             'message': self.config.web_def_default_message,
-            'protocol': self.config.web_def_default_protocol
         }
 
     def loadLanguage(self):
@@ -183,7 +180,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         mapper(PostInstallScript, self.post_install_script)
         mapper(PostInstallScriptInImage, self.post_install_script_in_image)
         mapper(PostInstallScriptOnImagingServer, self.post_install_script_on_imaging_server)
-        mapper(Protocol, self.protocol)
         mapper(SynchroState, self.synchro_state)
         mapper(Target, self.target, properties = {
             'disks' : relation(ComputerDisk,
@@ -229,12 +225,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
 
         self.post_install_script = Table(
             "PostInstallScript",
-            self.metadata,
-            autoload = True
-        )
-
-        self.protocol = Table(
-            "Protocol",
             self.metadata,
             autoload = True
         )
@@ -292,7 +282,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             Column('fk_default_item', Integer),
             # Column('fk_default_item_WOL', Integer, ForeignKey('MenuItem.id')),
             Column('fk_default_item_WOL', Integer),
-            Column('fk_protocol', Integer, ForeignKey('Protocol.id')),
             # fk_name is not an explicit FK, you need to choose the lang before being able to join
             Column('fk_synchrostate', Integer, ForeignKey('SynchroState.id')),
             useexisting=True,
@@ -412,10 +401,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             useexisting=True,
             autoload = True
         )
-
-
-#self.nomenclatures = {'ImagingLogState':ImagingLogState, 'TargetType':TargetType, 'Protocol':Protocol}
-#self.fk_nomenclatures = {'ImagingLog':{'fk_imaging_log_state':'ImagingLogState'}, 'Target':{'type':'TargetType'}, 'Menu':{'fk_protocol':'Protocol'}}
 
     def __loadNomenclatureTables(self):
         session = create_session()
@@ -2874,31 +2859,11 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
         return q
 
-    def getProtocolByUUID(self, uuid, session = None):
-        session_need_to_close = False
-        if session == None:
-            session_need_to_close = True
-            session = create_session()
-        q = session.query(Protocol).filter(self.protocol.c.id == uuid2id(uuid)).first()
-        if session_need_to_close:
-            session.close()
-        return q
-
-    def getProtocolByLabel(self, label, session = None):
-        session_need_to_close = False
-        if session == None:
-            session_need_to_close = True
-            session = create_session()
-        q = session.query(Protocol).filter(self.protocol.c.label == label).first()
-        if session_need_to_close:
-            session.close()
-        return q
-
     def modifyMenus(self, menus_id, params):
         session = create_session()
         menus = self.getMenusByID(menus_id, session)
         for m in menus:
-            for p in ['default_name', 'hidden_menu','timeout', 'background_uri', 'message', 'protocol', 'default_item', 'default_item_WOL']:
+            for p in ['default_name', 'hidden_menu','timeout', 'background_uri', 'message', 'default_item', 'default_item_WOL']:
                 if p in params:
                     setattr(m, p, params[p])
         session.flush()
@@ -2943,17 +2908,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         if 'message' in params and menu.message != params['message']:
             need_to_be_save = True
             menu.message = params['message']
-
-        if 'protocol' in params:
-            proto = self.getProtocolByUUID(params['protocol'], session)
-            if proto and menu.fk_protocol != proto.id:
-                need_to_be_save = True
-                menu.fk_protocol = proto.id
-        #if 'mtftp_restore_timeout' in params and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
-        if params.has_key('mtftp_restore_timeout') and menu.mtftp_restore_timeout != params['mtftp_restore_timeout']:
-            need_to_be_save = True
-            menu.mtftp_restore_timeout = params['mtftp_restore_timeout']
-
         if need_to_be_save:
             session.add(menu)
         if session_need_to_close:
@@ -3047,10 +3001,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.fk_name = default_menu.fk_name
         menu.timeout = default_menu.timeout
         menu.hidden_menu = default_menu.hidden_menu
-        menu.mtftp_restore_timeout = default_menu.mtftp_restore_timeout
         menu.background_uri = default_menu.background_uri
         menu.message = default_menu.message
-        menu.fk_protocol = default_menu.fk_protocol
         menu.ethercard = default_menu.ethercard
         menu.bootcli = default_menu.bootcli
         menu.disklesscli = default_menu.disklesscli
@@ -3082,13 +3034,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         menu.hidden_menu = params['hidden_menu']
         menu.background_uri = params['background_uri']
         menu.message = params['message']
-        if 'protocol' in params:
-            proto = self.getProtocolByLabel(params['protocol'], session)
-            if proto:
-                menu.fk_protocol = proto.id
-        if not menu.fk_protocol:
-            proto = self.getProtocolByLabel(self.config.web_def_default_protocol, session)
-            menu.fk_protocol = proto.id
         menu.fk_default_item = 0
         menu.fk_default_item_WOL = 0
         menu.fk_synchrostate = 1
@@ -3248,13 +3193,6 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session.close()
         self.imagingServer_lang[location] = lang.id
         return True
-
-    # Protocols
-    def getAllProtocols(self):
-        session = create_session()
-        q = session.query(Protocol).all()
-        session.close()
-        return q
 
     ######### REGISTRATION
     def setTargetRegisteredInPackageServer(self, uuid, target_type):
@@ -3688,7 +3626,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         return ret
 
     def __copyMenuInto(self, menu_from, menu_into, session):
-        for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_protocol', 'mtftp_restore_timeout'):
+        for i in ('default_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot'):
             setattr(menu_into, i, getattr(menu_from, i))
         session.add(menu_into)
 
@@ -4450,7 +4388,7 @@ class MasteredOn(DBObject):
     to_be_exported = ['fk_image', 'image', 'fk_imaging_log', 'imaging_log']
 
 class Menu(DBObject):
-    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'mtftp_restore_timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_default_item', 'fk_default_item_WOL', 'fk_protocol', 'protocol', 'synchrostate']
+    to_be_exported = ['id', 'default_name', 'fk_name', 'timeout', 'background_uri', 'message', 'ethercard', 'bootcli', 'disklesscli', 'dont_check_disk_size', 'hidden_menu', 'debug', 'update_nt_boot', 'fk_default_item', 'fk_default_item_WOL', 'synchrostate']
     i18n = ['fk_name']
 
 class MenuItem(DBObject):
@@ -4470,9 +4408,6 @@ class PostInstallScriptInImage(DBObject):
 
 class PostInstallScriptOnImagingServer(DBObject):
     pass
-
-class Protocol(DBObject):
-    to_be_exported = ['id', 'label']
 
 class SynchroState(DBObject):
     to_be_exported = ['id', 'label']

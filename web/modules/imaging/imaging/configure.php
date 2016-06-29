@@ -59,44 +59,6 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
         }
         $f->pop();
 
-        $f->add(new TitleElement(_T("Restoration options", "imaging")));
-        $f->push(new Table());
-        $possible_protocols = web_def_possible_protocols();
-        $default_protocol = web_def_default_protocol();
-        $protocols_choices = array();
-        $protocols_values = array();
-
-        /* translate possibles protocols */
-        _T('nfs', 'imaging');
-        _T('tftp', 'imaging');
-        _T('mtftp', 'imaging');
-        foreach ($possible_protocols as $p) {
-            if ($p['label']) {
-                if ($p['label'] == $menu['protocol']) {
-                    $rest_selected = $p['imaging_uuid'];
-                }
-                if ($p['label'] == $default_protocol) {
-                    $p['label'] = _T($p['label'], 'imaging') . ' ' . _T('(default)', 'imaging');
-                }
-                $protocols_choices[$p['imaging_uuid']] = $p['label'];
-                $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
-            }
-        }
-
-        $rest_type = new RadioTpl("rest_type");
-
-        $rest_type->setChoices($protocols_choices);
-        $rest_type->setValues($protocols_values);
-        $rest_type->setSelected($rest_selected);
-        $f->add(
-            new TrFormElement(_T("Restoration type", "imaging"), $rest_type)
-        );
-        $f->add(
-            new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"),
-            new InputTpl("rest_wait")), array("value" => $menu['mtftp_restore_timeout'])
-        );
-        $f->pop();
-
         $f->add(new TitleElement(_T("Boot options", "imaging")));
         $f->push(new Table());
         $f->add(
@@ -117,14 +79,6 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
         $f->add(new HiddenTpl("default_m_label"),                    array("value" => $menu['default_name'],            "hide" => True));
         $f->add(new HiddenTpl("default_m_timeout"),                    array("value" => $menu['timeout'],            "hide" => True));
 
-        $possible_protocols = web_def_possible_protocols();
-        foreach ($possible_protocols as $p) {
-            if ($p['label'] && $p['label'] == $menu['protocol']) {
-                $rest_selected = $p['imaging_uuid'];
-                continue;
-            }
-        }
-
         $f->add(new HiddenTpl("rest_type"),           array("value" => $rest_selected,            "hide" => True));
         $f->add(new HiddenTpl("rest_wait"),           array("value" => $menu['timeout'],          "hide" => True));
         $f->add(new HiddenTpl("boot_xpm"),            array("value" => $menu['background_uri'],   "hide" => True));
@@ -139,13 +93,6 @@ function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real
             $f->add(new HiddenTpl($str),              array("value" => $value,            "hide" => True));
         }
     }
-            /* $f->add(new TitleElement(_T("Administration options", "imaging")));
-            $f->push(new Table());
-            $f->add(
-                new TrFormElement(_T("Password for adding a new client", "imaging"),
-                new InputTpl("misc_passwd")), array("value" => "")
-            );
-            $f->pop();*/
 
     if ($type == '') {
         $f->add(new TitleElement(_T("Target options", "imaging")));
@@ -230,7 +177,7 @@ if (isset($_POST["bvalid"])) {
          */
         $choose_network_profile = array();
         foreach ($_POST as $key => $value) {
-            /* 
+            /*
              * Feed $choose_network_profile
              * $choose_network_profile = array($machineUUID => $networkUUID, etc..)
              */
@@ -256,12 +203,10 @@ if (isset($_POST["bvalid"])) {
      */
     $params['background_uri'] = $_POST['boot_xpm'];
     $params['message'] = $_POST['boot_msg'];
-    $params['protocol'] = $_POST['rest_type'];
     $params['target_name'] = $target_name;
     $params['target_uuid'] = $target_uuid;
     $params['target_opt_kernel'] = $_POST['target_opt_kernel'];
     $params['target_opt_image'] = $_POST['target_opt_image'];
-    $params['mtftp_restore_timeout'] = $_POST['rest_wait'];
 
     if ($type == 'group') { // Profile
         if (count($choose_network_profile) > 0) {

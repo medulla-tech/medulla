@@ -35,7 +35,7 @@ from twisted.web.client import getPage
 
 from pulse2.package_server.imaging.pxe.parser import PXEMethodParser, assign
 from pulse2.package_server.imaging.pxe.parser import LOG_LEVEL, LOG_STATE
-from pulse2.package_server.imaging.pxe.tracking import EntryTracking, MTFTPTracker
+from pulse2.package_server.imaging.pxe.tracking import EntryTracking
 from pulse2.package_server.config import P2PServerCP
 from pulse2.imaging.bootinventory import BootInventory
 import re
@@ -868,14 +868,9 @@ class PXEImagingApi (PXEMethodParser):
         d = Deferred()
 
         @d.addCallback
-        def delay(result):
-            ret = MTFTPTracker().get_delay(mac, bnum, to)
-            logging.getLogger().debug("PXE Proxy: MTFTP Tracker result: %s" % str(ret))
-            return str(ret)
         @d.addErrback
         def _eb(failure):
             logging.getLogger().warn("PXE Proxy: server status get failed: %s" % str(failure))
 
         d.callback(True)
         return d
-

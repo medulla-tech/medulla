@@ -35,31 +35,6 @@ $default_menu = $config[1];
 $f = new ValidatingForm(array("action" => urlStrRedirect("imaging/manage/save_configuration"),));
 
 $f->add(new HiddenTpl("is_uuid"), array("value" => $imaging_server['imaging_uuid'], "hide" => True));
-/* We dont have this information right now in the database schema
-
-  $f->add(new TitleElement(_T("Traffic control", "imaging")));
-  $f->push(new Table());
-  $interfaces = array("eth0" => "eth0", "eth1" => "eth1");
-  $ifaces = new SelectItem("net_int");
-  $ifaces->setElements($interfaces);
-  $ifaces->setElementsVal($interfaces);
-  $f->add(
-  new TrFormElement(_T("Network interface on which traffic shaping is done", "imaging"),
-  $ifaces)
-  );
-  $f->add(
-  new TrFormElement(_T("Network interface theorical throughput (Mbit)", "imaging"),
-  new InputTpl("net_output")), array("value" => "1000")
-  );
-  $f->add(
-  new TrFormElement(_T("Max. throughput for TFTP restoration (Mbit)", "imaging"),
-  new InputTpl("net_tftp")), array("value" => "1000")
-  );
-  $f->add(
-  new TrFormElement(_T("Max. throughput for NFS restoration (Mbit)", "imaging"),
-  new InputTpl("net_nfs")), array("value" => "1000")
-  );
-  $f->pop(); */
 
 $lang = xmlrpc_getAllKnownLanguages();
 $lang_choices = array();
@@ -123,43 +98,6 @@ $f->add(
 );
 $f->pop();
 
-
-$f->add(new TitleElement(_T("Restoration options", "imaging")));
-$f->push(new Table());
-$possible_protocols = web_def_possible_protocols();
-$default_protocol = web_def_default_protocol();
-$protocols_choices = array();
-$protocols_values = array();
-
-/* translate possibles protocols */
-_T('nfs', 'imaging');
-_T('mtftp', 'imaging');
-foreach ($possible_protocols as $p) {
-    if ($p['label']) {
-        if ($p['label'] == $default_menu['protocol']) {
-            $rest_selected = $p['imaging_uuid'];
-        }
-        if ($p['label'] == $default_protocol) {
-            $p['label'] = _T($p['label'], 'imaging') . ' ' . _T('(default)', 'imaging');
-        }
-        $protocols_choices[$p['imaging_uuid']] = $p['label'];
-        $protocols_values[$p['imaging_uuid']] = $p['imaging_uuid'];
-    }
-}
-
-$rest_type = new RadioTpl("rest_type");
-
-$rest_type->setChoices($protocols_choices);
-$rest_type->setValues($protocols_values);
-$rest_type->setSelected($rest_selected);
-$f->add(
-        new TrFormElement(_T("Restoration type", "imaging"), $rest_type)
-);
-$f->add(
-        new TrFormElement(_T("Restoration: MTFTP maximum waiting (in sec)", "imaging"), new InputTpl("rest_wait")), array("value" => $default_menu['mtftp_restore_timeout'])
-);
-$f->pop();
-
 $f->add(new TitleElement(_T("Boot options", "imaging")));
 $f->push(new Table());
 $f->add(
@@ -172,20 +110,6 @@ $f->add(
 $f->pop();
 
 $f->pop(); /* Closes expert mode div */
-
-/* $f->add(
-  new TrFormElement(_T("Keyboard mapping (empty/fr)", "imaging"),
-  new InputTpl("boot_keyboard")), array("value" => "")
-  );
-  $f->pop();
-
-  $f->add(new TitleElement(_T("Administration options", "imaging")));
-  $f->push(new Table());
-  $f->add(
-  new TrFormElement(_T("Password for adding a new client", "imaging"),
-  new InputTpl("misc_passwd")), array("value" => "")
-  );
-  $f->pop(); */
 
 $_GET["action"] = "save_configuration";
 $f->addButton("bvalid", _T("Validate"));

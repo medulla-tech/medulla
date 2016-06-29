@@ -44,7 +44,6 @@ def isMenuStructure(menu):
     logger = logging.getLogger('imaging')
     if type(menu) == dict:
         for k in ['message',
-                  'protocol',
                   'default_item',
                   'default_item_WOL',
                   'timeout',
@@ -98,8 +97,6 @@ class ImagingDefaultMenuBuilder:
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
         m.setDefaultItem(self.menu['default_item'])
-        m.setProtocol(self.menu['protocol'])
-        m.setMTFTPTimeout(self.menu['mtftp_restore_timeout'])
         self.logger.debug('bootcli: %s' % self.menu['bootcli'])
         m.setBootCLI(self.menu['bootcli'])
         m.hide(self.menu['hidden_menu'])
@@ -210,9 +207,7 @@ class ImagingMenu:
         else:
             self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
 
-        self.protocol = 'nfs'  # by default
         self.rawmode = ''  # raw mode backup
-        self.mtftp_timeout = '10' # MTFTP wait timeout
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -252,8 +247,7 @@ class ImagingMenu:
             ('##PULSE2_PXE_DEBUG##', self.config.imaging_api['pxe_debug'], 'global'),
             ('##PULSE2_PXE_XML##', self.config.imaging_api['pxe_xml'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_REVO_RAW##', self.rawmode, 'global'),
-            ('##REVOWAIT##', self.mtftp_timeout, 'global')
+            ('##PULSE2_REVO_RAW##', self.rawmode, 'global')
             ]
         if self.mac:
             replacements.append(
@@ -372,10 +366,10 @@ class ImagingMenu:
         indices = self.menuitems.keys()
         indices.sort()
         for i in indices:
-            output = self._applyReplacement(self.menuitems[i].getEntry(self.protocol))
+            output = self._applyReplacement(self.menuitems[i].getEntry())
             buf += '\n'
             buf += output
-            if PackageServerConfig().pxe_password != '' and not 'continue' in self.menuitems[i].getEntry(self.protocol):
+            if PackageServerConfig().pxe_password != '' and not 'continue' in self.menuitems[i].getEntry():
                 buf += 'MENU PASSWD\n'
 
         assert(type(buf) == unicode)
@@ -495,14 +489,6 @@ class ImagingMenu:
         """
         self.hidden = False
 
-    def setProtocol(self, value):
-        """
-        Set the restoration protocol.
-        ATM protocol can be 'nfs', 'tftp' or 'tftp'
-        """
-        assert(value in ['nfs', 'tftp', 'mtftp'])
-        self.protocol = value
-
     def setBootCLI(self, value):
         """
         set CLI access on boot (key "E")
@@ -578,12 +564,6 @@ class ImagingMenu:
         value = bool(value)
         if value:
             self.rawmode = 'revoraw'
-
-    def setMTFTPTimeout(self, value):
-        """
-        Set MTFTP wait timeout
-        """
-        self.mtftp_timeout = str(value)
 
     def hide(self, flag):
         """
@@ -693,7 +673,7 @@ class ImagingBootServiceItem(ImagingItem):
         self.value = entry['value']  # the PXELINUX command line
         assert(type(self.value) == unicode)
 
-    def getEntry(self, protocol, network = True):
+    def getEntry(self, network = True):
         """
         Return the entry, in a SYSLINUX compatible format
         """
@@ -764,12 +744,7 @@ class ImagingImageItem(ImagingItem):
     # TODO: for clonezilla backend it will be useful to clean some of unused params
 
     # Grub cmdlines
-    CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## ##PROTOCOL## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
-
-    PROTOCOL = {
-        'nfs'   : 'revorestorenfs',
-        'tftp'  : '',
-        'mtftp' : 'revorestoremtftp'}
+    CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
     POSTINST = '%02d_postinst'
     POSTINSTDIR = 'postinst.d'
@@ -789,11 +764,11 @@ class ImagingImageItem(ImagingItem):
 
         # Davos imaging client case
         if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
-            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## ##PROTOCOL## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
             self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
 
-    def getEntry(self, protocol, network = True):
+    def getEntry(self, network = True):
         """
         @param network: if True, build a menu for a network restoration , else
                         build a menu for a CD-ROM restoration
