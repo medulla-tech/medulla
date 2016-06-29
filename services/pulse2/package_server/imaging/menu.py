@@ -245,6 +245,12 @@ class ImagingMenu:
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
             ('##PULSE2_INVENTORIES_DIR##', self.config.imaging_api['inventories_folder'], 'global'),
+            ('##PULSE2_PXE_MASK##', self.config.imaging_api['pxe_mask'], 'global'),
+            ('##PULSE2_PXE_TFTP_IP##', self.config.imaging_api['pxe_tftp_ip'], 'global'),
+            ('##PULSE2_PXE_SUBNET##', self.config.imaging_api['pxe_subnet'], 'global'),
+            ('##PULSE2_PXE_GATEWAY##', self.config.imaging_api['pxe_gateway'], 'global'),
+            ('##PULSE2_PXE_DEBUG##', self.config.imaging_api['pxe_debug'], 'global'),
+            ('##PULSE2_PXE_XML##', self.config.imaging_api['pxe_xml'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
             ('##PULSE2_REVO_RAW##', self.rawmode, 'global'),
             ('##REVOWAIT##', self.mtftp_timeout, 'global')

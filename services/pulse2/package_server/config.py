@@ -166,6 +166,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             self.public_mask = self.cp.get("main", 'public_mask')
         else:
             self.public_mask = '255.255.255.0'
+
+        
         if sys.platform != "win32":
             if self.cp.has_section('daemon'):
                 if self.cp.has_option('daemon', 'pidfile'):
@@ -392,6 +394,41 @@ class P2PServerCP(pulse2.utils.Singleton):
                 computers_folder = self.cp.get('imaging_api', 'computers_folder')
             if self.cp.has_option('imaging_api', 'inventories_folder'):
                 inventories_folder = self.cp.get('imaging_api', 'inventories_folder')
+
+            if self.cp.has_option('imaging_api', 'pxe_mask'):
+                pxe_mask = self.cp.get("imaging_api", 'pxe_mask')
+            else:
+                pxe_mask = self.public_mask
+
+            if  self.cp.has_option('imaging_api', 'pxe_tftp_ip'):
+                pxe_tftp_ip = self.cp.get("imaging_api", 'pxe_tftp_ip')
+            else:
+                pxe_tftp_ip = self.public_ip
+
+            if  self.cp.has_option('imaging_api', 'pxe_subnet'):
+                pxe_subnet = self.cp.get("imaging_api", 'pxe_subnet')
+            else:
+                pxe_subnet = "calcule subnet"
+
+            if  self.cp.has_option('imaging_api', 'pxe_gateway'):
+                pxe_gateway = self.cp.get("imaging_api", 'pxe_gateway')
+            else:
+                pxe_gateway = self.public_ip
+            pxe_debug = ""
+            if  self.cp.has_option('imaging_api', 'pxe_debug'):
+                if self.cp.getboolean("imaging_api", 'pxe_debug'):
+                    pxe_debug = "debug"
+
+            pxe_xml = ""
+            if  self.cp.has_option('imaging_api', 'pxe_xml'):
+                if self.cp.getboolean("imaging_api", 'pxe_xml'):
+                    pxe_xml = "xml"
+
+            if  self.cp.has_option('imaging_api', 'latence'):
+                pxe_latence = self.cp.getfloat("imaging_api", 'latence')
+            else:
+                pxe_latence = 0.9
+
             if self.cp.has_option('imaging_api', 'masters_folder'):
                 masters_folder = self.cp.get('imaging_api', 'masters_folder')
             if self.cp.has_option('imaging_api', 'postinst_folder'):
@@ -443,6 +480,15 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'diskless_initrdcd'   : diskless_initrdcd,
                 'computers_folder'    : computers_folder,
                 'inventories_folder'  : inventories_folder,
+
+                'pxe_mask'            : pxe_mask,
+                'pxe_tftp_ip'         : pxe_tftp_ip,
+                'pxe_subnet'          : pxe_subnet,
+                'pxe_gateway'         : pxe_gateway,
+                'pxe_debug'           : pxe_debug,
+                'pxe_xml'             : pxe_xml,
+                'pxe_latence'         : pxe_latence,
+
                 'masters_folder'      : masters_folder,
                 'postinst_folder'     : postinst_folder,
                 'archives_folder'     : archives_folder,
