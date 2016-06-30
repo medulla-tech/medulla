@@ -335,10 +335,8 @@ class ImagingMenu:
         # the menu timeout : warning, 0 means "do not wait !"
         if self.timeout == '0':
             buf += 'TIMEOUT 1\n'
-            buf += 'TOTALTIMEOUT 1\n'
         else:
             buf += 'TIMEOUT %d\n' % (int(self.timeout) * 10)
-            buf += 'TOTALTIMEOUT %d\n' % (int(self.timeout) * 10)
 
         # the menu default item
         buf += 'DEFAULT %s\n' % self.default_item
