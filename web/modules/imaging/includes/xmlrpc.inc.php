@@ -22,10 +22,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
-function xmlrpc_imagingClearMenuFromUuidAllLocation($uuid){
-    return xmlCall("imaging.imagingClearMenuFromUuidAllLocation", array($uuid));
-}
- 
 function xmlrpc_imagingClearMenuFromUuid($uuid){
     return xmlCall("imaging.imagingClearMenuFromUuid", array($uuid));
 } 
