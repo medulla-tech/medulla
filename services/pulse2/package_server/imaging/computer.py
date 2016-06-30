@@ -71,8 +71,7 @@ class ImagingComputerConfiguration:
         @param value: string of hostname
         @type value: str
         """
-        assert(type(value) == str)
-        self.hostname = value
+        self.hostname = str(value)
 
     def write(self):
         """
