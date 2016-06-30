@@ -37,8 +37,7 @@ if (isset($_POST["bconfirm"])) {
         $uuid = $_POST["objectUUID"];
         $backup = ($_POST["backup"]?True:False);
         if (in_array("imaging", $_SESSION["modulesList"])) {
-            //$dede = xmlrpc_imagingClearMenuFromUuid($uuid);
-            $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
+            $dede = xmlrpc_imagingClearMenuFromUuid($uuid);
         }
         delComputer($uuid, $backup);
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
