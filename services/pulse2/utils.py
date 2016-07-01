@@ -741,3 +741,16 @@ class HasSufficientMemory :
                  return self.neg_ret_value
 
         return wrapped
+
+
+def subnetForIpMask(ip, netmask):
+    resultat=[]
+    try:
+        ip = map(lambda x: int(x), ip.split('.'))
+        netmask = map(lambda x: int(x), netmask.split('.'))
+        for i in range(4):
+            resultat.append( str(ip[i] & netmask[i]))
+        result=".".join(resultat)
+        return True, result
+    except ValueError:
+        return False, "O.O.O.O"

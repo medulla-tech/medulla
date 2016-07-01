@@ -29,7 +29,7 @@ SET
     default_name = 'register',
     default_desc = 'Register as Pulse client',
     value = 'COM32 inventory.c32
-    APPEND dump_path=##PULSE2_INVENTORIES_DIR## mask=##PULSE2_PXE_MASK## tftp_ip=##PULSE2_PXE_TFTP_IP## subnet=##PULSE2_PXE_SUBNET## gateway=##PULSE2_PXE_GATEWAY## ##PULSE2_PXE_DEBUG## ##PULSE2_PXE_XML##'
+    APPEND dump_path=##PULSE2_INVENTORIES_DIR## mask=##PULSE2_PXE_MASK## timereboot=##PULSE2_PXE_TIME_REBOOT## tftp_ip=##PULSE2_PXE_TFTP_IP## subnet=##PULSE2_PXE_SUBNET## gateway=##PULSE2_PXE_GATEWAY## ##PULSE2_PXE_DEBUG## ##PULSE2_PXE_XML##'
 WHERE
     id = 2;
     

@@ -36,7 +36,7 @@ import pulse2.utils
 import logging
 import os
 from pulse2.xmlrpc import isTwistedEnoughForLoginPass
-from pulse2.utils import isUUID
+from pulse2.utils import isUUID, subnetForIpMask
 
 if sys.platform != "win32":
     import pwd
@@ -408,7 +408,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             if  self.cp.has_option('imaging_api', 'pxe_subnet'):
                 pxe_subnet = self.cp.get("imaging_api", 'pxe_subnet')
             else:
-                pxe_subnet = "calcule subnet"
+                a, b = subnetForIpMask( pxe_tftp_ip, pxe_mask )
+                pxe_subnet = b
 
             if  self.cp.has_option('imaging_api', 'pxe_gateway'):
                 pxe_gateway = self.cp.get("imaging_api", 'pxe_gateway')
@@ -428,6 +429,12 @@ class P2PServerCP(pulse2.utils.Singleton):
                 pxe_latence = self.cp.getfloat("imaging_api", 'latence')
             else:
                 pxe_latence = 0.9
+
+            if  self.cp.has_option('imaging_api', 'pxe_time'):
+                pxe_time = self.cp.get("imaging_api", 'pxe_time')
+            else:
+                pxe_time = '2'
+
 
             if self.cp.has_option('imaging_api', 'masters_folder'):
                 masters_folder = self.cp.get('imaging_api', 'masters_folder')
@@ -488,6 +495,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'pxe_debug'           : pxe_debug,
                 'pxe_xml'             : pxe_xml,
                 'pxe_latence'         : pxe_latence,
+                'pxe_time'            : pxe_time,
 
                 'masters_folder'      : masters_folder,
                 'postinst_folder'     : postinst_folder,

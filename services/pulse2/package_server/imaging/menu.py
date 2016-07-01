@@ -245,6 +245,7 @@ class ImagingMenu:
             ('##PULSE2_PXE_SUBNET##', self.config.imaging_api['pxe_subnet'], 'global'),
             ('##PULSE2_PXE_GATEWAY##', self.config.imaging_api['pxe_gateway'], 'global'),
             ('##PULSE2_PXE_DEBUG##', self.config.imaging_api['pxe_debug'], 'global'),
+            ('##PULSE2_PXE_TIME_REBOOT##', self.config.imaging_api['pxe_time'], 'global'),
             ('##PULSE2_PXE_XML##', self.config.imaging_api['pxe_xml'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
             ('##PULSE2_REVO_RAW##', self.rawmode, 'global')
