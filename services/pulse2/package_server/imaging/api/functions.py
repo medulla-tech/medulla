@@ -449,18 +449,6 @@ class Imaging(object):
         @type imagingData: ????
         """
         target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], uuid)
-        target_file = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], "hostnamebymac")
-        if 'mac' in imagingData and 'hostname' in imagingData:
-            if not os.path.isdir(target_file):
-                try:
-                    os.mkdir(target_file)
-                except Exception, e:
-                    self.logger.error('Imaging: I was not able to create folder %s : %s' % (target_file, e))
-        target_mac = os.path.join(target_file, normalizeMACAddressForPXELINUX(imagingData['mac']))
-        fichier = open(target_mac, "w")
-        fichier.write(imagingData['hostname'])
-        fichier.close()
-
         if os.path.isdir(target_folder):
             self.logger.debug('Imaging: folder %s for client %s : It already exists !' % (target_folder, uuid))
             return True

@@ -86,13 +86,40 @@ class ImagingDefaultMenuBuilder:
             raise TypeError('Bad menu structure')
         self.menu = menu
         self.config = config
+        if 'target' in self.menu: 
+            self.cacheHostname(self.menu['target']['uuid'],self.menu['target']['name'])
+
+    def cacheHostname(self, uuid, name):
+        if uuid:
+            target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'],uuid)
+            if os.path.isdir(target_folder):
+                self.logger.debug('Imaging menu : folder %s for client %s : It already exists !' % (target_folder, uuid))
+                return True
+            if os.path.exists(target_folder):
+                self.logger.warn('Imaging menu : folder %s for client %s : It already exists, but is not a folder !' % (target_folder, uuid))
+                return False
+            try:
+                os.mkdir(target_folder)
+                self.logger.debug('Imaging menu : folder %s for client %s was created' % (target_folder,uuid))
+            except Exception, e:
+                self.logger.error('Imaging menu : I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
+                return False
+            if name:
+                target_folder = os.path.join(target_folder,'hostname')
+                fichier = open(target_folder, "w")
+                fichier.write(name)
+                fichier.close()
+        return True
 
     def make(self, macaddress = None):
         """
         @return: an ImagingMenu object
         @rtype: ImagingMenu
         """
-        m = ImagingMenu(self.config, macaddress)
+        if 'target' in self.menu: 
+            m = ImagingMenu(self.config, macaddress,self.menu['target']['name'],self.menu['target']['uuid'])
+        else:
+            m = ImagingMenu(self.config, macaddress)
         m.setSplashImage(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
@@ -157,7 +184,7 @@ class ImagingMenu:
         4 : 'de',
     }
 
-    def __init__(self, config, macaddress = None):
+    def __init__(self, config, macaddress = None, hostname = None,uuid = None):
         """
         Initialize this object.
 
@@ -169,7 +196,14 @@ class ImagingMenu:
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
         self.mac = macaddress  # the client MAC Address
-
+        if hostname:
+            self.hostname = hostname
+        else:
+            self.hostname = ""
+        if uuid:
+            self.uuid=uuid
+        else:
+            self.uuid=None
         # menu items
         self.menuitems = {}
         self.timeout = 0  # the menu timeout
@@ -295,26 +329,6 @@ class ImagingMenu:
             ret.append(_reptable.get(ord(c) ,c))
         return u"".join(ret)
 
-    def hostnamebymac(self):
-        logging.getLogger('imaging').info("*** hostnamebymac")
-
-        target_file = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'], "hostnamebymac")
-        logging.getLogger('imaging').info("*** hostnamebymac %s"%target_file)
-        if self.mac:
-            target_file = os.path.join(target_file, pulse2.utils.normalizeMACAddressForPXELINUX(self.mac))
-            logging.getLogger('imaging').info("*** recherche mac %s in directory %s"%(self.mac , target_file))
-
-            if os.path.isfile(target_file):
-                logging.getLogger('imaging').info("*** le fichier existe")
-                fichier = open(target_file, "r")
-                line = fichier.read()
-                logging.getLogger('imaging').info("*** hostname  %s "%(line))
-                fichier.close()
-                return line
-            else:
-                logging.getLogger('imaging').info("*** le fichier n existe pas")
-        return ""
-
     def buildMenu(self):
         """
         @return: the SYSLINUX boot menu as a string encoded using CP-437
@@ -356,7 +370,7 @@ class ImagingMenu:
         buf += 'MENU CMDLINEROW 16\n'
         buf += 'MENU HELPMSGROW 21\n'
         buf += 'MENU HELPMSGENDROW 29\n'
-        buf += 'MENU TITLE %s\n' % self.hostnamebymac()
+        buf += 'MENU TITLE %s\n' % self.hostname
         # do we hide the menu ? Splash screen will still be displayed
         if self.hidden:
             buf += 'MENU HIDDEN\n'
