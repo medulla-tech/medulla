@@ -592,12 +592,12 @@ class CleanMenu:
         @param config: a ImagingConfig object
         @type config: object
         @param macaddress: the client MAC Address
-        @type macaddress: string
+        @type macaddress: obj
         """
         self.config = config  # the server configuration
         uuid =     macaddress['uuid']
         self.mac = set(macaddress['mac'][uuid])  # the client MAC Address
-        logging.getLogger('imaging').debug('API CleanMenu %s if exits'%self.mac)
+
 
     def clear(self):
         for i in self.mac:
@@ -605,7 +605,12 @@ class CleanMenu:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.normalizeMACAddressForPXELINUX(i))
             try:
                 os.unlink(filename)
-                logging.getLogger('imaging').debug('clean boot menu for computer MAC %s into file %s' % (i, filename))
+            except Exception, e:
+                pass
+            # clear hostnamebymac
+            target_file = os.path.join(self.config.imaging_api['base_folder'],self.config.imaging_api['computers_folder'], "hostnamebymac",pulse2.utils.normalizeMACAddressForPXELINUX(i))
+            try:
+                os.unlink(target_file)
             except Exception, e:
                 pass
         return True

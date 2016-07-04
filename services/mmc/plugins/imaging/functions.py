@@ -430,6 +430,31 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = []
         return deferred
 
+    def imagingClearMenuFromUuidAllLocation(self, uuid):
+        obj={}
+        ctx = self.currentContext
+        obj['mac'] = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
+        obj['uuid']=uuid
+        db = ImagingDatabase()
+        locationName=[]
+        location = db.getAllLocation()
+        for t in location:
+            self.imagingClearMenuforLocation( obj, t.url)
+            locationName.append(t.name)
+        return locationName
+
+    def imagingClearMenuforLocation(self, obj, location):
+        try:
+            i = ImagingApi(location.encode('utf8'))
+            if i != None:
+                deferred = i.imagingClearMenu(obj)
+                deferred.addCallback(lambda x: x)
+            else:
+                deferred = []
+        except :
+            deferred = []
+        return deferred
+
     def imagingClearMenuFromUuid(self, uuid):
         obj={}
         ctx = self.currentContext
