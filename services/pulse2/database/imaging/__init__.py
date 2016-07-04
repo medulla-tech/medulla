@@ -490,7 +490,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         session = create_session()
         query = session.query(ImagingServer).all()
         session.close()
-        return [m[0] for m in query]
+        return [m for m in query]
 
     def getTargetPackageServer(self, target_id):
         session = create_session()
