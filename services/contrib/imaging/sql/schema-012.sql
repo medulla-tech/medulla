@@ -1,9 +1,9 @@
 --
--- (c) 2012 Mandriva, http://www.mandriva.com/
+-- (c) 2016 Siveo, http://siveo.net/
 --
 -- $Id$
 --
--- This file is part of Pulse 2, http://pulse2.mandriva.org
+-- This file is part of Pulse 2, http://siveo.net
 --
 -- Pulse 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
@@ -23,8 +23,13 @@
 SET SESSION character_set_server=UTF8;
 SET NAMES 'utf8';
 
--- Update menu items for Diskless boot
-UPDATE BootService SET default_name = 'diskless', default_desc = 'Diskless Boot', value = 'KERNEL ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## davos_debug=i\nINITRD ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##' where id='4';
-
-UPDATE version set Number = 11;
-
+-- Update menu items for inventory
+UPDATE BootService 
+SET 
+    default_name = 'register',
+    default_desc = 'Register as Pulse client',
+    value = 'COM32 inventory.c32
+    APPEND dump_path=##PULSE2_INVENTORIES_DIR## mask=##PULSE2_PXE_MASK## timereboot=##PULSE2_PXE_TIME_REBOOT## tftp_ip=##PULSE2_PXE_TFTP_IP## subnet=##PULSE2_PXE_SUBNET## gateway=##PULSE2_PXE_GATEWAY## ##PULSE2_PXE_DEBUG## ##PULSE2_PXE_XML##'
+WHERE
+    id = 2;
+    

@@ -34,7 +34,6 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     """
 
     web_def_date_fmt = "%Y-%m-%d %H:%M:%S"
-    web_def_default_protocol = 'nfs'
     web_def_default_menu_name = 'Menu'
     web_def_default_timeout = '60'
     web_def_default_hidden_menu = False
@@ -54,7 +53,7 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
     resolv_order = ['ip','netbios', 'dns', 'fqdn', 'hosts', 'first']
     preferred_network = ''
     purge_interval = '23 0 * * 0'
- 
+
     def __init__(self, name = 'imaging', conffile = None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
@@ -86,4 +85,3 @@ class ImagingConfig(PluginConfig, ImagingDatabaseConfig):
             self.purge_interval = self.get('main', 'purge_interval')
         except (NoOptionError, NoSectionError):
             self.purge_interval = '23 0 * * 0'
-

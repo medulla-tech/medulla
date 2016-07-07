@@ -63,7 +63,7 @@ class ImagingRpcProxy(RpcProxyI):
         uuid = 'UUID' + str(db_computer.id)
         menu = generateMenus(logger, ImagingDatabase(), [uuid], unique=True)
         return xmlrpcCleanup(menu)
-    
+
     def check_process(self, process):
         return xmlrpcCleanup(pulse2.utils.check_process(process))
 
@@ -73,14 +73,6 @@ class ImagingRpcProxy(RpcProxyI):
     def get_web_def_date_fmt(self):
         """ get the date format """
         return xmlrpcCleanup(ImagingConfig().web_def_date_fmt)
-
-    def get_web_def_possible_protocols(self):
-        """ get the possible protocols """
-        return xmlrpcCleanup(map(lambda p: p.toH(), ImagingDatabase().getAllProtocols()))
-
-    def get_web_def_default_protocol(self):
-        """ get the default protocol """
-        return xmlrpcCleanup(ImagingConfig().web_def_default_protocol)
 
     def get_web_def_kernel_parameters(self):
         """ get the default kernel parameters """
@@ -435,6 +427,31 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = i.imagingServermenuMulticast(objmenu)
             deferred.addCallback(lambda x: x)
         else:
+            deferred = []
+        return deferred
+
+    def imagingClearMenuFromUuidAllLocation(self, uuid):
+        obj={}
+        ctx = self.currentContext
+        obj['mac'] = ComputerManager().getMachineMac(ctx, {'uuid': uuid})
+        obj['uuid']=uuid
+        db = ImagingDatabase()
+        locationName=[]
+        location = db.getAllLocation()
+        for t in location:
+            self.imagingClearMenuforLocation( obj, t.url)
+            locationName.append(t.name)
+        return locationName
+
+    def imagingClearMenuforLocation(self, obj, location):
+        try:
+            i = ImagingApi(location.encode('utf8'))
+            if i != None:
+                deferred = i.imagingClearMenu(obj)
+                deferred.addCallback(lambda x: x)
+            else:
+                deferred = []
+        except :
             deferred = []
         return deferred
 

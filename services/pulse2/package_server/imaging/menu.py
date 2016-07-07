@@ -44,7 +44,6 @@ def isMenuStructure(menu):
     logger = logging.getLogger('imaging')
     if type(menu) == dict:
         for k in ['message',
-                  'protocol',
                   'default_item',
                   'default_item_WOL',
                   'timeout',
@@ -87,19 +86,44 @@ class ImagingDefaultMenuBuilder:
             raise TypeError('Bad menu structure')
         self.menu = menu
         self.config = config
+        if 'target' in self.menu: 
+            self.cacheHostname(self.menu['target']['uuid'],self.menu['target']['name'])
+
+    def cacheHostname(self, uuid, name):
+        if uuid:
+            target_folder = os.path.join(PackageServerConfig().imaging_api['base_folder'], PackageServerConfig().imaging_api['computers_folder'],uuid)
+            if os.path.isdir(target_folder):
+                self.logger.debug('Imaging menu : folder %s for client %s : It already exists !' % (target_folder, uuid))
+                return True
+            if os.path.exists(target_folder):
+                self.logger.warn('Imaging menu : folder %s for client %s : It already exists, but is not a folder !' % (target_folder, uuid))
+                return False
+            try:
+                os.mkdir(target_folder)
+                self.logger.debug('Imaging menu : folder %s for client %s was created' % (target_folder,uuid))
+            except Exception, e:
+                self.logger.error('Imaging menu : I was not able to create folder %s for client %s : %s' % (target_folder, uuid, e))
+                return False
+            if name:
+                target_folder = os.path.join(target_folder,'hostname')
+                fichier = open(target_folder, "w")
+                fichier.write(name)
+                fichier.close()
+        return True
 
     def make(self, macaddress = None):
         """
         @return: an ImagingMenu object
         @rtype: ImagingMenu
         """
-        m = ImagingMenu(self.config, macaddress)
+        if 'target' in self.menu: 
+            m = ImagingMenu(self.config, macaddress,self.menu['target']['name'],self.menu['target']['uuid'])
+        else:
+            m = ImagingMenu(self.config, macaddress)
         m.setSplashImage(self.menu['background_uri'])
         m.setMessage(self.menu['message'])
         m.setTimeout(self.menu['timeout'])
         m.setDefaultItem(self.menu['default_item'])
-        m.setProtocol(self.menu['protocol'])
-        m.setMTFTPTimeout(self.menu['mtftp_restore_timeout'])
         self.logger.debug('bootcli: %s' % self.menu['bootcli'])
         m.setBootCLI(self.menu['bootcli'])
         m.hide(self.menu['hidden_menu'])
@@ -160,7 +184,7 @@ class ImagingMenu:
         4 : 'de',
     }
 
-    def __init__(self, config, macaddress = None):
+    def __init__(self, config, macaddress = None, hostname = None,uuid = None):
         """
         Initialize this object.
 
@@ -172,7 +196,14 @@ class ImagingMenu:
         if macaddress:
             assert pulse2.utils.isMACAddress(macaddress)
         self.mac = macaddress  # the client MAC Address
-
+        if hostname:
+            self.hostname = hostname
+        else:
+            self.hostname = ""
+        if uuid:
+            self.uuid=uuid
+        else:
+            self.uuid=None
         # menu items
         self.menuitems = {}
         self.timeout = 0  # the menu timeout
@@ -210,9 +241,7 @@ class ImagingMenu:
         else:
             self.kernel_opts = list(['quiet'])  # kernel options put on diskless command line
 
-        self.protocol = 'nfs'  # by default
         self.rawmode = ''  # raw mode backup
-        self.mtftp_timeout = '10' # MTFTP wait timeout
 
     def _applyReplacement(self, string, condition = 'global'):
         """
@@ -245,9 +274,15 @@ class ImagingMenu:
             ('##PULSE2_POSTINST_DIR##', self.config.imaging_api['postinst_folder'], 'global'),
             ('##PULSE2_COMPUTERS_DIR##', self.config.imaging_api['computers_folder'], 'global'),
             ('##PULSE2_INVENTORIES_DIR##', self.config.imaging_api['inventories_folder'], 'global'),
+            ('##PULSE2_PXE_MASK##', self.config.imaging_api['pxe_mask'], 'global'),
+            ('##PULSE2_PXE_TFTP_IP##', self.config.imaging_api['pxe_tftp_ip'], 'global'),
+            ('##PULSE2_PXE_SUBNET##', self.config.imaging_api['pxe_subnet'], 'global'),
+            ('##PULSE2_PXE_GATEWAY##', self.config.imaging_api['pxe_gateway'], 'global'),
+            ('##PULSE2_PXE_DEBUG##', self.config.imaging_api['pxe_debug'], 'global'),
+            ('##PULSE2_PXE_TIME_REBOOT##', self.config.imaging_api['pxe_time'], 'global'),
+            ('##PULSE2_PXE_XML##', self.config.imaging_api['pxe_xml'], 'global'),
             ('##PULSE2_BASE_DIR##', self.config.imaging_api['base_folder'], 'global'),
-            ('##PULSE2_REVO_RAW##', self.rawmode, 'global'),
-            ('##REVOWAIT##', self.mtftp_timeout, 'global')
+            ('##PULSE2_REVO_RAW##', self.rawmode, 'global')
             ]
         if self.mac:
             replacements.append(
@@ -335,7 +370,7 @@ class ImagingMenu:
         buf += 'MENU CMDLINEROW 16\n'
         buf += 'MENU HELPMSGROW 21\n'
         buf += 'MENU HELPMSGENDROW 29\n'
-
+        buf += 'MENU TITLE %s\n' % self.hostname
         # do we hide the menu ? Splash screen will still be displayed
         if self.hidden:
             buf += 'MENU HIDDEN\n'
@@ -344,10 +379,10 @@ class ImagingMenu:
         indices = self.menuitems.keys()
         indices.sort()
         for i in indices:
-            output = self._applyReplacement(self.menuitems[i].getEntry(self.protocol))
+            output = self._applyReplacement(self.menuitems[i].getEntry())
             buf += '\n'
             buf += output
-            if PackageServerConfig().pxe_password != '' and not 'continue' in self.menuitems[i].getEntry(self.protocol):
+            if PackageServerConfig().pxe_password != '' and not 'continue' in self.menuitems[i].getEntry():
                 buf += 'MENU PASSWD\n'
 
         assert(type(buf) == unicode)
@@ -467,14 +502,6 @@ class ImagingMenu:
         """
         self.hidden = False
 
-    def setProtocol(self, value):
-        """
-        Set the restoration protocol.
-        ATM protocol can be 'nfs', 'tftp' or 'tftp'
-        """
-        assert(value in ['nfs', 'tftp', 'mtftp'])
-        self.protocol = value
-
     def setBootCLI(self, value):
         """
         set CLI access on boot (key "E")
@@ -551,12 +578,6 @@ class ImagingMenu:
         if value:
             self.rawmode = 'revoraw'
 
-    def setMTFTPTimeout(self, value):
-        """
-        Set MTFTP wait timeout
-        """
-        self.mtftp_timeout = str(value)
-
     def hide(self, flag):
         """
         Hide or display menu
@@ -571,12 +592,12 @@ class CleanMenu:
         @param config: a ImagingConfig object
         @type config: object
         @param macaddress: the client MAC Address
-        @type macaddress: string
+        @type macaddress: obj
         """
         self.config = config  # the server configuration
         uuid =     macaddress['uuid']
         self.mac = set(macaddress['mac'][uuid])  # the client MAC Address
-        logging.getLogger('imaging').debug('API CleanMenu %s if exits'%self.mac)
+
 
     def clear(self):
         for i in self.mac:
@@ -584,7 +605,12 @@ class CleanMenu:
             filename = os.path.join(self.config.imaging_api['base_folder'], self.config.imaging_api['bootmenus_folder'], pulse2.utils.normalizeMACAddressForPXELINUX(i))
             try:
                 os.unlink(filename)
-                logging.getLogger('imaging').debug('clean boot menu for computer MAC %s into file %s' % (i, filename))
+            except Exception, e:
+                pass
+            # clear hostnamebymac
+            target_file = os.path.join(self.config.imaging_api['base_folder'],self.config.imaging_api['computers_folder'], "hostnamebymac",pulse2.utils.normalizeMACAddressForPXELINUX(i))
+            try:
+                os.unlink(target_file)
             except Exception, e:
                 pass
         return True
@@ -660,7 +686,7 @@ class ImagingBootServiceItem(ImagingItem):
         self.value = entry['value']  # the PXELINUX command line
         assert(type(self.value) == unicode)
 
-    def getEntry(self, protocol, network = True):
+    def getEntry(self, network = True):
         """
         Return the entry, in a SYSLINUX compatible format
         """
@@ -731,12 +757,7 @@ class ImagingImageItem(ImagingItem):
     # TODO: for clonezilla backend it will be useful to clean some of unused params
 
     # Grub cmdlines
-    CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## ##PROTOCOL## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
-
-    PROTOCOL = {
-        'nfs'   : 'revorestorenfs',
-        'tftp'  : '',
-        'mtftp' : 'revorestoremtftp'}
+    CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## revosavedir=##PULSE2_MASTERS_DIR## revoinfodir=##PULSE2_COMPUTERS_DIR## revooptdir=##PULSE2_POSTINST_DIR## revobase=##PULSE2_BASE_DIR## revopost revomac=##MAC## revoimage=##PULSE2_IMAGE_UUID## \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
     POSTINST = '%02d_postinst'
     POSTINSTDIR = 'postinst.d'
@@ -756,11 +777,11 @@ class ImagingImageItem(ImagingItem):
 
         # Davos imaging client case
         if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
-            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## ##PROTOCOL## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
             self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
 
-    def getEntry(self, protocol, network = True):
+    def getEntry(self, network = True):
         """
         @param network: if True, build a menu for a network restoration , else
                         build a menu for a CD-ROM restoration

@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva, http://www.mandriva.com
-#
+# (c) 2007-2008 Mandriva, http://www.mandriva.com
 # $Id: mirror_api.py 689 2009-02-06 15:18:43Z oroussy $
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -24,33 +24,52 @@
 from pulse2.apis.clients import Pulse2Api
 from pulse2.database.imaging import ImagingDatabase
 from urlparse import urlparse
-
+import logging
+from pulse2.managers.location import ComputerLocationManager
 # need to get a PackageApiManager, it will manage a PackageApi for each mirror
 # defined in the conf file.
 class MirrorApi(Pulse2Api):
     def __init__(self, *attr):
         self.name = "MirrorApi"
         Pulse2Api.__init__(self, *attr)
-
+#location = db.getTargetsEntity([uuid])[0]
+#url = chooseImagingApiUrl(location[0].uuid)
     def getMirror(self, machine):
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
+        uuid = machine['uuid']
         try:
-            if 'uuid' in machine:
-                uuid = machine['uuid']
-                uuid = [uuid]
-                db = ImagingDatabase()
-                entity = db.getTargetsEntity(uuid)
-                machine ['entity']= entity[0][0].uuid
-                serverinfo = db.getImagingServerInfo(entity[0][0].uuid)
-                machine ['server']= urlparse(serverinfo.url).hostname
-                machine ['servernane']=serverinfo.name
+            entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+            parent_entities = [entity_uuid] + ComputerLocationManager().getLocationParentPath(entity_uuid)
+            url = ''
+            entity_uuid = ''
+            db = ImagingDatabase()
+            for _uuid in parent_entities:
+                urlsearch = db.getEntityUrl(_uuid)
+                if urlsearch is not None:
+                    entity_uuid = _uuid
+                    url = urlsearch
+                    break;
+            Entity_Name = ComputerLocationManager().getLocationName(entity_uuid)
+            machine ['Entity_Name']= Entity_Name
+            serverinfo = db.getImagingServerInfo(entity_uuid)
+            machine ['entity_uuid']= entity_uuid
+            machine ['server']= urlparse(url).hostname
+            machine ['servernane']=serverinfo.name
         except:
-            pass
+            logging.getLogger().error("Cannot get Entity for this machine UUID (%s)" % uuid)
         d = self.callRemote("getMirror", machine)
         d.addErrback(self.onError, "MirrorApi:getMirror", machine)
         return d
+
+    #def getMirror(self, machine):
+        #if self.initialized_failed:
+            #return []
+        #machine = self.convertMachineIntoH(machine)
+        #d = self.callRemote("getMirror", machine)
+        #d.addErrback(self.onError, "MirrorApi:getMirror", machine)
+        #return d
 
     def getMirrors(self, machines):
         if self.initialized_failed:
@@ -80,15 +99,28 @@ class MirrorApi(Pulse2Api):
         if self.initialized_failed:
             return []
         machine = self.convertMachineIntoH(machine)
+        uuid = machine['uuid']
         try:
-            if 'uuid' in machine:
-                uuid = machine['uuid']
-                db = ImagingDatabase()
-                result = db.getTargetPackageServer(uuid)
-                machine ['server']= urlparse(result[0].url).hostname
-                machine ['servernane']=result[0].name
+            entity_uuid = ComputerLocationManager().getMachinesLocations([uuid])[uuid]['uuid']
+            parent_entities = [entity_uuid] + ComputerLocationManager().getLocationParentPath(entity_uuid)
+            url = ''
+            entity_uuid = '' 
+            db = ImagingDatabase()
+            for _uuid in parent_entities:
+                urlsearch = db.getEntityUrl(_uuid)
+                if urlsearch is not None:
+                    entity_uuid = _uuid
+                    url = urlsearch
+                    break;
+            Entity_Name = ComputerLocationManager().getLocationName(entity_uuid)
+            machine ['Entity_Name']= Entity_Name
+            serverinfo = db.getImagingServerInfo(entity_uuid)
+            machine ['entity_uuid']= entity_uuid
+            machine ['server']= urlparse(url).hostname
+            machine ['servernane']=serverinfo.name
         except:
-            pass
+            logging.getLogger().error("Cannot get Entity for this machine UUID (%s)" % uuid)
+
         d = self.callRemote("getApiPackage", machine)
         d.addErrback(self.onError, "MirrorApi:getApiPackage", machine)
         return d
