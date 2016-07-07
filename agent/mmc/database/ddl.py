@@ -47,7 +47,7 @@ def myLogger():
     return log
 
 
-class DBEngine:
+class DBEngine(object):
     def __new__(cls, user, passwd, host, db, port=None, log=None):
         """
         Crate Objet DBEngine or None if not connected
