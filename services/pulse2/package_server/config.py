@@ -167,7 +167,7 @@ class P2PServerCP(pulse2.utils.Singleton):
         else:
             self.public_mask = '255.255.255.0'
 
-        
+
         if sys.platform != "win32":
             if self.cp.has_section('daemon'):
                 if self.cp.has_option('daemon', 'pidfile'):
@@ -320,6 +320,8 @@ class P2PServerCP(pulse2.utils.Singleton):
             bootmenus_folder = 'bootmenus'
             # will contain diskless stuff (kernel, initramfs, additional tools), served by tftp
             diskless_folder = 'davos'
+            # Options passed to Davos at boot
+            davos_options = ''
             # will contain tools, served by tftp
             tools_folder = 'tools'
             # diskless kernel
@@ -382,8 +384,10 @@ class P2PServerCP(pulse2.utils.Singleton):
                 bootmenus_folder = self.cp.get('imaging_api', 'bootmenus_folder')
             if self.cp.has_option('imaging_api', 'diskless_folder'):
                 diskless_folder = self.cp.get('imaging_api', 'diskless_folder')
+            if self.cp.has_option('imaging_api', 'davos_options'):
+                davos_options = self.cp.get('imaging_api', 'davos_options')
             if self.cp.has_option('imaging_api', 'tools_folder'):
-                diskless_folder = self.cp.get('imaging_api', 'tools_folder')
+                tools_folder = self.cp.get('imaging_api', 'tools_folder')
             if self.cp.has_option("imaging_api", 'diskless_kernel'):
                 diskless_kernel = self.cp.get("imaging_api", 'diskless_kernel')
             if self.cp.has_option("imaging_api", 'diskless_initrd'):
@@ -481,6 +485,7 @@ class P2PServerCP(pulse2.utils.Singleton):
                 'bootmenus_folder'    : bootmenus_folder,
                 'cdrom_bootloader'    : cdrom_bootloader,
                 'diskless_folder'     : diskless_folder,
+                'davos_options'       : davos_options,
                 'tools_folder'        : tools_folder,
                 'diskless_kernel'     : diskless_kernel,
                 'diskless_initrd'     : diskless_initrd,
