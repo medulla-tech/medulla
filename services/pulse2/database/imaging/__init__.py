@@ -1041,7 +1041,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         pis.fk_boot_service = bs.id
 
         # We have script_name, so give correct value for bs.value
-        bs.value = ("kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## davos_action=RUN_BOOTSERVICE bootservice_script=%s \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
+        bs.value = ("kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## davos_action=RUN_BOOTSERVICE ##PULSE2_DAVOS_OPTS## bootservice_script=%s \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##") % script_name
 
         session.flush()
 

@@ -86,7 +86,7 @@ class ImagingDefaultMenuBuilder:
             raise TypeError('Bad menu structure')
         self.menu = menu
         self.config = config
-        if 'target' in self.menu: 
+        if 'target' in self.menu:
             self.cacheHostname(self.menu['target']['uuid'],self.menu['target']['name'])
 
     def cacheHostname(self, uuid, name):
@@ -116,7 +116,7 @@ class ImagingDefaultMenuBuilder:
         @return: an ImagingMenu object
         @rtype: ImagingMenu
         """
-        if 'target' in self.menu: 
+        if 'target' in self.menu:
             m = ImagingMenu(self.config, macaddress,self.menu['target']['name'],self.menu['target']['uuid'])
         else:
             m = ImagingMenu(self.config, macaddress)
@@ -266,6 +266,7 @@ class ImagingMenu:
             ('##PULSE2_TOOLS_DIR##', self.config.imaging_api['tools_folder'], 'global'),
             ('##PULSE2_BOOTSPLASH_FILE##', self.config.imaging_api['bootsplash_file'], 'global'),
             ('##PULSE2_DISKLESS_DIR##', self.config.imaging_api['diskless_folder'], 'global'),
+            ('##PULSE2_DAVOS_OPTS##', self.config.imaging_api['davos_options'], 'global'),
             ('##PULSE2_DISKLESS_KERNEL##', self.config.imaging_api['diskless_kernel'], 'global'),
             ('##PULSE2_DISKLESS_INITRD##', self.config.imaging_api['diskless_initrd'], 'global'),
             ('##PULSE2_DISKLESS_OPTS##', ' '.join(self.diskless_opts), 'global'),
@@ -777,8 +778,8 @@ class ImagingImageItem(ImagingItem):
 
         # Davos imaging client case
         if PackageServerConfig().imaging_api['diskless_folder'] == "davos":
-            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
-            self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE \ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE = u"kernel ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ##PULSE2_NETDEVICE##/##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
+            self.CMDLINE = u"kernel ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_KERNEL## ##PULSE2_KERNEL_OPTS## ##PULSE2_DISKLESS_OPTS## image_uuid=##PULSE2_IMAGE_UUID## davos_action=RESTORE_IMAGE ##PULSE2_DAVOS_OPTS##\ninitrd ../##PULSE2_DISKLESS_DIR##/##PULSE2_DISKLESS_INITRD##\n"
 
 
     def getEntry(self, network = True):
