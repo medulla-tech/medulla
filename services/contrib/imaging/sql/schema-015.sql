@@ -27,4 +27,4 @@ SET NAMES 'utf8';
 ALTER TABLE  `Entity` ADD  `clonezilla_restorer_params` VARCHAR( 255 ) NOT NULL DEFAULT '-icrc -icds -nogui -g auto -e1 auto -e2 -c -r -j2 -p true',
                       ADD  `clonezilla_saver_params` VARCHAR( 255 ) NOT NULL DEFAULT '-nogui -q2 -c -j2 -z1p -i 100 -sc -p true';
 
-UPDATE version set Number = 14;
+UPDATE version set Number = 15;
