@@ -151,3 +151,6 @@ class ImagingApi (MyXmlrpc):
 
     def xmlrpc_bsUnlinkShFile(self, datas):
         return self.api.bsUnlinkShFile(datas)
+
+    def xmlrpc_getClonezillaParamsForTarget(self, computerUUID):
+        return self.api.getClonezillaParamsForTarget(computerUUID)

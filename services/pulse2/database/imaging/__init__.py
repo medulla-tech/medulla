@@ -3512,6 +3512,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
             session.close()
             return False
 
+    def getClonezillaSaverParams(self, location_uuid):
+        session = create_session()
+        saver_params = session.query(Entity.clonezilla_saver_params).filter(Entity.uuid == location_uuid).scalar()
+        session.close()
+        return saver_params
+
+    def getClonezillaRestorerParams(self, location_uuid):
+        session = create_session()
+        restorer_params = session.query(Entity.clonezilla_restorer_params).filter(Entity.uuid == location_uuid).scalar()
+        session.close()
+        return restorer_params
+
+    def setLocationClonezillaParams(self, uuid, params):
+        session = create_session()
+        try:
+            location = session.query(Entity).filter(Entity.uuid == uuid).one()
+            if 'clonezilla_saver_params' in params:
+                location.clonezilla_saver_params = params['clonezilla_saver_params']
+            if 'clonezilla_restorer_params' in params:
+                location.clonezilla_restorer_params = params['clonezilla_restorer_params']
+            session.flush()
+            session.close()
+            return True
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            session.close()
+            return False
+
     def setLocationSynchroState(self, uuid, state):
         self.logger.debug(">>> setLocationSynchroState %s %s"%(uuid, str(state)))
         session = create_session()

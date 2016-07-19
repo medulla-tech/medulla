@@ -445,6 +445,14 @@ function xmlrpc_getPXEPasswordHash($location) {
     return xmlCall("imaging.getPXEPasswordHash", array($location));
 }
 
+function xmlrpc_getClonezillaSaverParams($location) {
+    return xmlCall("imaging.getClonezillaSaverParams", array($location));
+}
+
+function xmlrpc_getClonezillaRestorerParams($location) {
+    return xmlCall("imaging.getClonezillaRestorerParams", array($location));
+}
+
 function xmlrpc_setImagingServerConfig($location, $config) {
     return xmlCall("imaging.setImagingServerConfig", array($location, $config));
 }
@@ -499,6 +507,10 @@ function xmlrpc_getComputerByUUID($uuid) {
 
 function xmlrpc_Windows_Answer_File_Generator( $params, $title) {
     return xmlCall("imaging.Windows_Answer_File_Generator", array( $params,$title));
+}
+
+function xmlrpc_getClonezillaParamsForTarget($target_uuid) {
+    return xmlCall("imaging.getClonezillaParamsForTarget", array($target_uuid));
 }
 
 ?>

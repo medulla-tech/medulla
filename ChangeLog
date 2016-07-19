@@ -1,3 +1,6 @@
 Pulse 2 3.4.0
 =============
  * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
+ * [FEATURE] Ability to define Clonezilla options for imaging
+ * [FEATURE] Ability to define NFS mounts for imaging client
+ * [BUGFIX]  Fix database schemas and format

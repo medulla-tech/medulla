@@ -74,6 +74,14 @@ EOS;
 $f->add(
         new TrFormElement($pxe_password_label, new PasswordTpl('pxe_password')), array("value" => xmlrpc_getPXEPasswordHash($location) == '' ? '' : '.......')
 );
+
+$f->add(
+        new TrFormElement(_T('Clonezilla parameters for saving images', 'imaging'), new InputTpl('clonezilla_saver_params')), array("value" => xmlrpc_getClonezillaSaverParams($location))
+);
+$f->add(
+        new TrFormElement(_T('Clonezilla parameters for restoring images', 'imaging'), new InputTpl('clonezilla_restorer_params')), array("value" => xmlrpc_getClonezillaRestorerParams($location))
+);
+
 $f->pop();
 
 $f->push(new DivExpertMode());
