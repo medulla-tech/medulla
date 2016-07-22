@@ -30,6 +30,8 @@ import time
 import gzip
 import os
 import re
+import json
+import datetime
 import xml.etree.ElementTree as ET  # form XML Building
 from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
@@ -38,21 +40,276 @@ import ConfigParser
 #from optparse import OptionParser
 import logging
 import getopt
+import xml.etree.cElementTree as ET
+
 conf ={}
-logger = logging.getLogger('pulse2-register-pxe')
-hdlr = logging.FileHandler('/var/log/mmc/pulse2-register-pxe.log')
-formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-hdlr.setFormatter(formatter)
-logger.addHandler(hdlr)
+#logger = logging.getLogger('pulse2-register-pxe')
+#hdlr = logging.FileHandler('/var/log/mmc/pulse2-register-pxe.log')
+#formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+#hdlr.setFormatter(formatter)
+#logger.addHandler(hdlr)
+
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)s %(message)s',
+                    filename='/var/log/mmc/pulse2-register-pxe.log',
+                    filemode='w')
+
+#logger = logging.getLogger('pulse2-register-pxe')
+
+def subnetForIpMask(ip, netmask):
+    resultat=[]
+    try:
+        ip = map(lambda x: int(x), ip.split('.'))
+        netmask = map(lambda x: int(x), netmask.split('.'))
+        for i in range(4):
+            resultat.append( str(ip[i] & netmask[i]))
+        result=".".join(resultat)
+        return True, result
+    except ValueError:
+        return False, "O.O.O.O"
+
+def sauvefile(name,string):
+    if(logging.getLogger().getEffectiveLevel()<=logging.DEBUG):
+        z=open("/tmp/%s"%name,"w")
+        z.write(string)
+        z.close()
+
+
+
+def parsejsoninventory(file, file_content):
+    #with gzip.open(str(file), 'rb') as f:
+        ##line = f.readline()
+        #file_content=f.read()
+    sauvefile("content.txt",file_content)
+
+    file_content = file_content.decode('ascii', errors='ignore')
+    
+    listcaractere=['\x07','\x00','\\r','\\n','\\t']
+    for c in listcaractere:
+        file_content= file_content.replace(c, '')
+    file_content= file_content.replace('][', '],[')
+    file_content= file_content.replace('}{', '},{')
+    
+    file_content = re.sub('[a-z0-9]*cpu\{',  '', file_content)
+    z1 = re.compile("\}[a-z0-9]*pxe\{").split(file_content)
+    z1[0] = "{" + z1[0] + "}"
+    sauvefile("cpu.txt",z1[0])
+    try:
+        cpu=json.loads(z1[0])
+        logging.getLogger().debug("cpu\n%s"%cpu)
+    except:
+        logging.getLogger().debug("error json cpu")
+    
+    z1 = re.compile("\}[a-z0-9]*syslinux\{").split(z1[1])
+    z1[0] = "{" + z1[0] + "}"
+    sauvefile("pxe.txt",z1[0])
+    try:
+        pxe = json.loads(z1[0])
+        logging.getLogger().debug("pxe\n%s"%pxe)
+    except:
+        logging.getLogger().debug("error json pxe")
+        
+    z1 = re.compile("\}[a-z0-9]*vpd\{").split(z1[1])
+    z1[0] = "{" + z1[0] + "}"
+    sauvefile("syslinux.txt",z1[0])
+    try:
+        logging.getLogger().debug("syslinux\n%s"%syslinux)
+        syslinux=json.loads( z1[0])
+    except:
+        logging.getLogger().debug("error json syslinux")
+
+    z1 = re.compile("\}[a-z0-9]*vesa\{").split(z1[1])
+    z1[0] = "{" + z1[0] + "}"
+    sauvefile("vpd.txt",z1[0])
+    try:
+        vpd=json.loads(z1[0])
+        logging.getLogger().debug("vpd\n%s"%vpd)
+    except:
+        logging.getLogger().error("error json vpd")
+
+    z1 = re.compile("\}[a-z0-9]*disks\{").split(z1[1])
+    z1[0]=str(z1[0])
+    z1[0]= z1[0].replace('}{', '},{')
+    z1[0]="[\n{" + str(z1[0]) + "}\n]"
+    sauvefile("vesa.txt",z1[0])
+    try:
+        vesa=json.loads(z1[0])
+        logging.getLogger().debug("vesa\n%s"%vesa)
+    except:
+        logging.getLogger().error("error json vesa")
+
+    z1 = re.compile("\][a-z0-9]*dmi\{").split(z1[1])
+    z1[0]= "{" + z1[0] + "]"
+    z1[0]= z1[0].replace('}[', '},[')
+    z1[0]= z1[0].replace('][', '],[')
+    z1[0]= "[\n" + z1[0] + "\n]"
+    sauvefile("disks.txt",z1[0])
+    try:
+        disks=json.loads(str(z1[0]))
+        logging.getLogger().debug("disks\n%s"%disks)
+    except:
+        logging.getLogger().error("error json disks")
+
+    z1 = re.compile("\}[a-z0-9]*memory\{").split(z1[1])
+    z1[0] = "[\n{" + z1[0] + "}\n]"
+    z1[0]= z1[0].replace('}{', '},{')
+    z1[0]= z1[0].replace('][', '],[')
+    sauvefile("dmi.txt",z1[0])
+    try:
+        dmi=json.loads(str(z1[0]))
+        logging.getLogger().debug("dmi\n%s"%dmi)
+    except:
+        logging.getLogger().error("error json dmi")
+        
+    z1 = re.compile("\}[a-z0-9]*pci\{").split(z1[1])
+    z1[0] = "[\n{" + z1[0] + "}\n]"
+    z1[0]= z1[0].replace('}{', '},{')
+    z1[0]= z1[0].replace('][', '],[')
+    sauvefile("memory.txt",z1[0])
+    try:
+        memory=json.loads(str(z1[0]))
+        logging.getLogger().debug("memory\n%s"%memory)
+    except:
+        logging.getLogger().error("error json memory")
+    
+    z1 = re.compile("\}[a-z0-9]*acpi\{").split(z1[1])
+    z1[0] = "[" + "{" + z1[0] + "}"+ "]"
+    z1[0]= z1[0].replace('}{', '},{')
+    z1[0]= z1[0].replace('][', '],[')
+    
+    sauvefile("pci.txt",z1[0])
+    try:
+        pci=json.loads(str(z1[0]))
+        logging.getLogger().debug("pci\n%s"%pci)
+    except:
+        logging.getLogger().error("error json pci")
+        
+    z1 = re.compile("\][a-z0-9]*kernel\[").split(z1[1])
+    z1[0]= z1[0].replace('}[', '},[')
+    z1[0]= z1[0].replace('][', '],[')
+    z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
+    sauvefile("acpi.txt",z1[0])
+    try:
+        acpi=json.loads(str(z1[0]))
+        logging.getLogger().debug("acpi\n%s"%acpi)
+    except:
+        logging.getLogger().error("error json acpi")
+
+    z1 = re.compile("\][a-z0-9]*hdt\{").split(z1[1])
+    sauvefile("kernel.txt",z1[0])
+    try:
+        kernel=json.loads(str(z1[0]))
+        logging.getLogger().debug("kernel\n%s"%kernel)
+    except:
+        logging.getLogger().error("error json kernel")
+
+    z1 = re.compile("\}[a-z0-9]*hostname\{").split(z1[1])
+    z1[0]= "{" + str(z1[0]) + "}"
+    sauvefile("hdt.txt",z1[0])
+    try:
+        hdt=json.loads(str(z1[0]))
+        logging.getLogger().debug("hdt\n%s"%hdt)
+    except:
+        logging.getLogger().error("error json hdt")
+
+    z1 = re.compile("\}[a-z0-9]*TRAILER!!!").split(z1[1])
+    z1[0]= "{" + z1[0]+ "}"
+    sauvefile("hostname.txt",z1[0])
+    try:
+        hostname=json.loads(str(z1[0]))
+        logging.getLogger().debug("hostname\n%s"%hostname)
+    except:
+        logging.getLogger().error("error json hostname")
+
+    ##############REQUEST##############
+    
+    date = '{:%Y-%m-%d-%H-%M-%S}'.format(datetime.datetime.now())
+    REQUEST = ET.Element("REQUEST")
+    DEVICEID = ET.SubElement(REQUEST, "DEVICEID").text = hostname['hostname.hostname']+'-'+date
+    QUERY = ET.SubElement(REQUEST, "QUERY").text = "INVENTORY"
+    TAG = ET.SubElement(REQUEST, "TAG").text = "root"
+    CONTENT = ET.SubElement(REQUEST, "CONTENT")
+    
+    ##############ACCESSLOG##############
+    
+    ACCESSLOG = ET.SubElement(CONTENT, "ACCESSLOG")
+    LOGDATE = ET.SubElement(ACCESSLOG, "LOGDATE").text='{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    USERID = ET.SubElement(ACCESSLOG, "USERID").text='N/A'
+    
+    ##############BIOS##############
+
+    BIOS = ET.SubElement(CONTENT, "BIOS")
+    ASSETTAG = ET.SubElement(BIOS, "ASSETTAG").text ="No Asset Information"
+    MMANUFACTURER = ET.SubElement(BIOS, "MMANUFACTURER").text = dmi[1]['dmi.base_board.manufacturer']
+    MMODEL = ET.SubElement(BIOS, "MMODEL").text = dmi[1]['dmi.base_board.product_name']
+    MSN = ET.SubElement(BIOS, "MSN").text = dmi[1]['dmi.base_board.serial']
+    SKUNUMBER = ET.SubElement(BIOS, "SKUNUMBER").text = dmi[2]['dmi.system.sku_number']
+    BDATE = ET.SubElement(BIOS, "BDATE").text = dmi[3]['dmi.bios.release_date']
+    BMANUFACTURER = ET.SubElement(BIOS, "BMANUFACTURER").text = dmi[1]['dmi.base_board.manufacturer']
+    BVERSION = ET.SubElement(BIOS, "BVERSION").text = dmi[3]['dmi.bios.version']
+    SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = dmi[2]['dmi.system.manufacturer']
+    SMODEL = ET.SubElement(BIOS, "SMODEL").text = dmi[2]['dmi.system.product_name']
+    SSN = ET.SubElement(BIOS, "SSN").text = dmi[2]['dmi.system.serial']
+    
+    ##############HARDWARE##############
+    HARDWARE = ET.SubElement(CONTENT, "HARDWARE")
+    CHASSIS_TYPE = ET.SubElement(HARDWARE, "CHASSIS_TYPE").text = dmi[4]['dmi.chassis.type']
+    IPADDR = ET.SubElement(HARDWARE, "IPADDR").text = pxe['pxe.ipaddr']
+    DEFAULTGATEWAY = ET.SubElement(HARDWARE, "DEFAULTGATEWAY").text = conf['pxe_gateway']
+    NAME = ET.SubElement(HARDWARE, "NAME").text = hostname['hostname.hostname']
+    UUID = ET.SubElement(HARDWARE, "UUID").text =  dmi[2]['dmi.system.uuid']
+    OSNAME = ET.SubElement(HARDWARE, "OSNAME").text = "Unknown operating system (PXE network boot inventory)"
+    listcpu_model = cpu["cpu.model"].split()
+    freqcpu_info=str(listcpu_model.pop())
+    PROCESSORS = ET.SubElement(HARDWARE,'PROCESSORS').text = freqcpu_info
+    PROCESSORN = ET.SubElement(HARDWARE,'PROCESSORN').text = str(cpu["cpu.num_cores"])
+    PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT').text = str(cpu["cpu.model_id"])
+    
+    ##############NETWORKS##############
+    
+    NETWORKS = ET.SubElement(CONTENT, "NETWORKS")
+    DESCRIPTION = ET.SubElement(NETWORKS,'DESCRIPTION').text = 'eth0'
+    IPADDRESS = ET.SubElement(NETWORKS,'IPADDRESS').text = pxe['pxe.ipaddr']
+    MACADDR = ET.SubElement(NETWORKS,'MACADDR').text = pxe['pxe.mac_addr']
+    IPMASK = ET.SubElement(NETWORKS,'IPMASK').text = conf['pxe_mask']
+    IPGATEWAY = ET.SubElement(NETWORKS,'IPGATEWAY').text = conf['pxe_gateway']
+    IPSUBNET = ET.SubElement(NETWORKS,'IPSUBNET').text = conf['pxe_subnet']
+    STATUS = ET.SubElement(NETWORKS,'STATUS').text = 'Up'
+    TYPE = ET.SubElement(NETWORKS,'TYPE').text = 'Ethernet'
+    VIRTUALDEV = ET.SubElement(NETWORKS,'VIRTUALDEV').text = '0'
+
+    ##############STORAGES##############
+
+    nombredisk=len(disks)-1
+    if nombredisk >=1 :
+        for diskid in range(1,nombredisk+1):
+            STORAGES = ET.SubElement(CONTENT, "STORAGES")
+            NAME = ET.SubElement(STORAGES, "NAME").text='hd'+str(diskid)
+            TYPE = ET.SubElement(STORAGES, "TYPE").text='disk'
+            DISKSIZE = ET.SubElement(STORAGES, "DISKSIZE").text=disks[diskid][0]['disk->size']
+
+    ##############DRIVES##############
+
+        for diskid in range(1,nombredisk+1):
+            nbpartition = len(disks[diskid])-1
+            if nbpartition >=1 :
+                for partitionid in range(1,nbpartition+1):
+                    DRIVES = ET.SubElement(CONTENT, "DRIVES")
+                    FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM').text=disks[diskid][partitionid]['partition->type']
+                    TOTAL = ET.SubElement(DRIVES,'TOTAL').text=disks[diskid][partitionid]['partition->size']
+                    TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
+    return  '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
+
 
 def senddata(query,ip ="127.0.0.1", port =1001 ):
     adresse=(ip,port)
     monSocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    logger.debug("Send PXE xml for registration :%s"% query)
+    logging.getLogger().debug("Send PXE xml for registration :%s"% query)
     monSocket.sendto("\xBB%s" % query, adresse)
-    time.sleep(0.2)
+    time.sleep(conf['pxe_timesenddata'])
     monSocket.sendto("\xBA%s" % query, adresse)
-    time.sleep(0.2)
+    time.sleep(conf['pxe_timesenddata'])
     monSocket.sendto("\xBA%s" % query, adresse)
     monSocket.close()
 
@@ -81,7 +338,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "CLOSE_WRITE event:", event.pathname
 
     def process_IN_CREATE(self, event):
-        logger.debug("CREATE event:%s"% event.pathname)
+        logging.getLogger().debug("CREATE event:%s"% event.pathname)
         time.sleep(0.005)
         self.traitement(event.pathname)
 
@@ -89,7 +346,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "DELETE event:", event.pathname
 
     def process_IN_MODIFY(self, event):
-        logger.debug("MODIFY event: %s"% event.pathname)
+        logging.getLogger().debug("MODIFY event: %s"% event.pathname)
         time.sleep(0.025)
         self.traitement(event.pathname)
 
@@ -97,37 +354,39 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "OPEN event:"
 
     def traitement(self, name):
+     
         if os.path.isfile(str(name)):
             file_content=""
+            file_content1=""
+            #try:
+            logging.getLogger().info("parse inventory %s",name)
             try:
-                with gzip.open(str(name), 'rb') as f:
-                    file_content = f.read()
-                    f.close()
+                com='zcat %s'%name
+                file_content1 =  os.popen(com).read()
+                file_content=parsejsoninventory(str(name),file_content1)
                 m = re.search('<REQUEST>.*<\/REQUEST>', file_content)
                 file_content = str(m.group(0))
-                file_content=file_content.replace('\\n','')
-                file_content=file_content.replace('\\t','')
                 try:
                     mac = mac_adressexml(file_content)
                     try:
                         # add Mc:mac address end of datagram
                         header='<?xml version="1.0" encoding="utf-8"?>'
                         xmldata="%s%s\nMc:%s"%(header,file_content,mac)
-                        logger.debug("XML recv from pxe client %s"% xmldata)
+                        logging.getLogger().debug("XML recv from pxe client %s"% xmldata)
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
                     except:
-                        logger.error("UDP error sending to %s:%d"%('127.0.0.1',conf['port']))
+                        logging.getLogger().error("UDP error sending to %s:%d"%('127.0.0.1',conf['port']))
                 except:
-                    logger.error("MAC address error")
+                    logging.getLogger().error("MAC address error")
             except:
-                logger.error("Error extracting file %s"%str(name))
+                logging.getLogger().error("Error traitement file %s"%str(name))
 
 class watchInventory:
     def __init__(self):
         #threading.Thread.__init__(self)
         self.eh = MyEventHandler()
-        logger.debug("install inotify")
+        logging.getLogger().info("install inotify")
 
     def run(self):
         self.wm = pyinotify.WatchManager()
@@ -136,15 +395,16 @@ class watchInventory:
         self.notifier.start()
         mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY  # watched eventspyinotify.IN_DELETE |
         self.wm.add_watch( '/var/lib/pulse2/imaging/inventories',mask, rec=True)
+        logging.getLogger().info("watch event /var/lib/pulse2/imaging/inventories")
 
     def stop(self):
         self.notifier.stop()
 
 if __name__ == '__main__':
+    logging.getLogger().info("Star pulse2-register-pxe.py")
     inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
     pidfile="/var/run/pulse2-register-pxe.pid"
     cp = None
-    mode = logging.WARNING
     try:
         opts, suivarg = getopt.getopt(sys.argv[1:], "f:dh")
     except getopt.GetoptError:
@@ -154,9 +414,11 @@ if __name__ == '__main__':
         if option == "-f":
             inifile = argument
         elif option == "-d":
+            logging.getLogger().info("logger mode debug")
             daemonize = False
-            mode = logging.DEBUG
+            logging.getLogger().setLevel(logging.DEBUG)
             print "pid file: %d\n"%os.getpid()
+            print "kill -9 %s"%os.getpid()
         elif option == "-h":
             print "Configure in file '%s' \n[imaging_api]\npxe_port=???\n "%inifile
             print "\t<launch program> [option]\n"
@@ -173,8 +435,66 @@ if __name__ == '__main__':
         conf['port']=int(cp.get('imaging_api', 'pxe_port'))
     else:
         conf['port']=1001
-    if cp.has_option('debug', 'mode'):
-        mode=cp.get('network', 'port')
+
+    if cp.has_option("main", "bind"):  # TODO remove in a future version
+        logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
+        bind = cp.get("main", 'bind')
+    elif cp.has_option('main', 'host'):
+        bind = cp.get("main", 'host')
+
+    if cp.has_option('main', 'public_ip'):
+        public_ip = cp.get("main", 'public_ip')
+    else:
+        public_ip = bind
+
+    if cp.has_option('main', 'public_mask'):
+        public_mask = cp.get("main", 'public_mask')
+    else:
+        public_mask = '255.255.255.0'
+    
+    if cp.has_option('imaging_api', 'pxe_mask'):
+        conf['pxe_mask']=cp.get('imaging_api', 'pxe_mask')
+    else:
+        conf['pxe_mask']=public_mask
+
+    if  cp.has_option('imaging_api', 'pxe_gateway'):
+        conf['pxe_gateway'] = cp.get("imaging_api", 'pxe_gateway')
+    else:
+        conf['pxe_gateway'] = public_ip
+
+    if  cp.has_option('imaging_api', 'pxe_timesenddata'):
+        conf['pxe_timesenddata'] = cp.getfloat("imaging_api", 'pxe_timesenddata')
+    else:
+        conf['pxe_timesenddata'] = 0.2
+
+    if cp.has_option('imaging_api', 'pxe_tftp_ip'):
+        conf['pxe_tftp_ip']=cp.get('imaging_api', 'pxe_tftp_ip')
+    else:
+        conf['pxe_tftp_ip']=bind
+    if conf['pxe_tftp_ip']=="0.0.0.0":
+        logging.getLogger().error("configure pxe_tftp_ip in [%s] section imaging_api"%inifile)
+        print "Error : configure pxe_tftp_ip in [%s] section imaging_api"%inifile
+        sys.exit(255)
+    if not daemonize:
+        if  cp.has_option('imaging_api', 'pxe_debug'):
+            if cp.getboolean("imaging_api", 'pxe_debug'):
+                logging.getLogger().info("logger mode debug")
+                conf['pxe_debug']=logging.DEBUG
+                logging.getLogger().setLevel(logging.DEBUG)
+            else:
+                mode = logging.WARNING
+                conf['pxe_debug']=logging.WARNING
+                logging.getLogger().setLevel(logging.WARNING)
+    else:
+        conf['pxe_debug']=logging.DEBUG
+
+    if  cp.has_option('imaging_api', 'pxe_subnet'):
+        conf['pxe_subnet']=cp.get("imaging_api", 'pxe_subnet') 
+    else:
+        a, b = subnetForIpMask( conf['pxe_tftp_ip'], conf['pxe_mask'] )
+        conf['pxe_subnet'] =b
+    logging.getLogger().info("configuration : %s"%conf)    
+
     if daemonize:
         try:
             pid = os.fork()
@@ -196,17 +516,18 @@ if __name__ == '__main__':
             if pid > 0:
                 # exit from second parent, print eventual PID before
                 print "Daemon PID %d" % pid
+                print "kill -9 $(cat %s"%pidfile
+                logging.getLogger().info("Daemon PID %d" % pid) 
                 os.seteuid(0)
                 os.setegid(0)
-                logger.debug("PID file" + str(pid) + " > " + pidfile)
+                logging.getLogger().info("PID file" + str(pid) + " > " + pidfile)
+                logging.getLogger().info("kill -9 $(cat %s)"%pidfile)
                 os.system("echo " + str(pid) + " > " + pidfile)
                 sys.exit(0)
         except OSError, e:
             print >>sys.stderr, "fork #2 failed: %d (%s)" % (e.errno, e.strerror)
             sys.exit(1)
     try:
-        logger.setLevel(mode)
-        logger.debug("Debug mode")
         a = watchInventory()
         a.run()
     except KeyboardInterrupt:
