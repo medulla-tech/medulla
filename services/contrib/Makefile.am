@@ -62,6 +62,9 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	imaging/sql/schema-010.sql \
 	imaging/sql/schema-011.sql \
 	imaging/sql/schema-012.sql \
+	imaging/sql/schema-013.sql \
+	imaging/sql/schema-014.sql \
+	imaging/sql/schema-015.sql \
 	imaging/sysprep/sysprep-domain.inf \
 	imaging/sysprep/sysprep-name.inf \
 	imaging/sysprep/sysprep-wg.inf \
@@ -86,6 +89,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	inventory/sql/schema-013.sql \
 	inventory/sql/schema-014.sql \
 	inventory/sql/schema-015.sql \
+	inventory/sql/schema-016.sql \
 	inventory/pulse2-inventory-manage-entities \
 	inventory/pulse2-inventory-populate-root-entity.py \
 	inventory/pulse2-inventory-purge-from-date \
@@ -126,6 +130,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/schema-026.sql \
 	msc/sql/schema-027.sql \
 	msc/sql/schema-028.sql \
+	msc/sql/schema-029.sql \
 	msc/qactions/101mdv_test_utf8.msc \
 	msc/qactions/102mdv_test_blocking.msc \
 	msc/qactions/103mdv_test_demux.msc \
@@ -162,6 +167,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	backuppc/sql/README \
 	backuppc/sql/schema-001.sql \
 	backuppc/sql/schema-002.sql \
+	backuppc/sql/schema-003.sql \
 	update/sql/README \
 	update/sql/schema-001.sql \
 	update/sql/schema-002.sql \

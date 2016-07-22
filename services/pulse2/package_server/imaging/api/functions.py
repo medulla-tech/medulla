@@ -1245,3 +1245,18 @@ class Imaging(object):
             ret = False
 
         return ret
+
+    def getClonezillaParamsForTarget(self, computer_uuid):
+        """
+        Method to obtain clonezilla parameters for a computer using its UUID.
+
+        @param computer_uuid: The target UUID
+        @type computer_uuid: str
+
+        @return: the clonezilla parameters
+        @rtype: int
+        """
+        client = self._getXMLRPCClient()
+        func = 'imaging.getClonezillaParamsForTarget'
+        d = client.callRemote(func, computer_uuid)
+        return d

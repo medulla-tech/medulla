@@ -1679,6 +1679,11 @@ class ImagingRpcProxy(RpcProxyI):
         elif imaging_server:
             return [False, ":cant find the default menu for location %s" % (location), xmlrpcCleanup(imaging_server.toH())]
 
+    def getClonezillaSaverParams(self, location_uuid):
+        return ImagingDatabase().getClonezillaSaverParams(location_uuid)
+
+    def getClonezillaRestorerParams(self, location_uuid):
+        return ImagingDatabase().getClonezillaRestorerParams(location_uuid)
 
     def getPXEPasswordHash(self, location_uuid):
         return ImagingDatabase().getPXEPasswordHash(location_uuid)
@@ -1702,6 +1707,9 @@ class ImagingRpcProxy(RpcProxyI):
         # Set PXE params
         if 'pxe_password' in config or 'language' in config:
             db.setLocationPXEParams(location, config)
+        # Set Clonezilla params
+        if 'clonezilla_saver_params' in config or 'clonezilla_restorer_params' in config:
+            db.setLocationClonezillaParams(location, config)
         #
         menu = db.getEntityDefaultMenu(location)
         menu = menu.toH()
@@ -3281,6 +3289,40 @@ class ImagingRpcProxy(RpcProxyI):
         params = {}
         params['pxe_keymap'] = location.pxe_keymap
         params['pxe_password'] = location.pxe_password
+        return xmlrpcCleanup(params)
+
+
+    def getClonezillaParamsForTarget(self, computer_uuid):
+        """
+        Called by davos to get Clonezilla parameters for a machine.
+        Get Clonezilla parameters first for the machine itself and if not
+        defined, get the parameters set at the server level
+
+        @param computer_uuid: the computer on which the action is happening
+        @type computer_uuid: str
+
+        @results: clonezilla parameters
+        @rtype: dict
+        """
+        db = ImagingDatabase()
+        logger = logging.getLogger()
+        params = {}
+        # First find clonezilla parameters for the machine itself
+        # TBD
+        params['clonezilla_saver_params'] = ''
+        params['clonezilla_restorer_params'] = ''
+        # End TBD
+        # If the parameters have not been set for the machine, get the
+        # parameters at entity level
+        if params['clonezilla_saver_params'] == '' or params['clonezilla_restorer_params'] == '':
+            location_uuid = db.getProfileLocation(computer_uuid)
+            logger.info('Asking for Clonezilla parameters set for entity %s', location_uuid)
+            if params['clonezilla_saver_params'] == '':
+                params['clonezilla_saver_params'] = db.getClonezillaSaverParams(location_uuid)
+                logger.info('Found saver parameters: %s', params['clonezilla_saver_params'])
+            if params['clonezilla_restorer_params'] == '':
+                params['clonezilla_restorer_params'] = db.getClonezillaRestorerParams(location_uuid)
+                logger.info('Found restorer parameters: %s', params['clonezilla_restorer_params'])
         return xmlrpcCleanup(params)
 
 

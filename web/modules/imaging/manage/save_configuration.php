@@ -55,6 +55,8 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         $params['language'] = $_POST['language'];
         if ($_POST['pxe_password'] != $_POST['old_pxe_password'])
             $params['pxe_password'] = $_POST['pxe_password'];
+        $params['clonezilla_saver_params'] = $_POST['clonezilla_saver_params'];
+        $params['clonezilla_restorer_params'] = $_POST['clonezilla_restorer_params'];
 
         $ret = xmlrpc_setImagingServerConfig($location, $params);
 

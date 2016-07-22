@@ -60,7 +60,8 @@ NOAUTHNEEDED = ['computerRegister',
                 'linkImagingServerToLocation',
                 'computerChangeDefaultMenuItem',
                 'synchroComputer',
-                'getDefaultMenuItem']
+                'getDefaultMenuItem',
+                'getClonezillaParamsForTarget']
 
 
 def getApiVersion():
