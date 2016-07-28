@@ -4,3 +4,5 @@ Pulse 2 3.6.0
  * [FEATURE] Ability to define Clonezilla options for imaging
  * [FEATURE] Ability to define NFS mounts for imaging client
  * [BUGFIX]  Fix database schemas and format
+ # [BUGFIX] Improve detection of disks and partitions
+ # [BUGFIX] Fix options for PXE registration
