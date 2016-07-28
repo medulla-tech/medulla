@@ -495,12 +495,13 @@ if __name__ == '__main__':
         sys.exit(3)
     cp = ConfigParser.ConfigParser()
     cp.read(inifile)
+    cp.read(inifile + '.local')
 
     conf['ip']="127.0.0.1"
     if cp.has_option('imaging_api', 'pxe_port'):
-        conf['port']=int(cp.get('imaging_api', 'pxe_port'))
+        conf['port'] = int(cp.get('imaging_api', 'pxe_port'))
     else:
-        conf['port']=1001
+        conf['port'] = 1001
 
     if cp.has_option("main", "bind"):  # TODO remove in a future version
         logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
@@ -517,11 +518,11 @@ if __name__ == '__main__':
         public_mask = cp.get("main", 'public_mask')
     else:
         public_mask = '255.255.255.0'
-    
+
     if cp.has_option('imaging_api', 'pxe_mask'):
-        conf['pxe_mask']=cp.get('imaging_api', 'pxe_mask')
+        conf['pxe_mask'] = cp.get('imaging_api', 'pxe_mask')
     else:
-        conf['pxe_mask']=public_mask
+        conf['pxe_mask'] = public_mask
 
     if  cp.has_option('imaging_api', 'pxe_gateway'):
         conf['pxe_gateway'] = cp.get("imaging_api", 'pxe_gateway')
@@ -534,13 +535,11 @@ if __name__ == '__main__':
         conf['pxe_timesenddata'] = 0.2
 
     if cp.has_option('imaging_api', 'pxe_tftp_ip'):
-        conf['pxe_tftp_ip']=cp.get('imaging_api', 'pxe_tftp_ip')
+        conf['pxe_tftp_ip'] = cp.get('imaging_api', 'pxe_tftp_ip')
     else:
-        conf['pxe_tftp_ip']=bind
-    if conf['pxe_tftp_ip']=="0.0.0.0":
-        logging.getLogger().error("configure pxe_tftp_ip in [%s] section imaging_api"%inifile)
-        print "Error : configure pxe_tftp_ip in [%s] section imaging_api"%inifile
-        sys.exit(255)
+        conf['pxe_tftp_ip'] = public_ip
+        logging.getLogger().info("pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile)
+        print "pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile
     if not daemonize:
         if  cp.has_option('imaging_api', 'pxe_debug'):
             if cp.getboolean("imaging_api", 'pxe_debug'):
@@ -555,11 +554,11 @@ if __name__ == '__main__':
         conf['pxe_debug']=logging.DEBUG
 
     if  cp.has_option('imaging_api', 'pxe_subnet'):
-        conf['pxe_subnet']=cp.get("imaging_api", 'pxe_subnet') 
+        conf['pxe_subnet'] = cp.get("imaging_api", 'pxe_subnet')
     else:
         a, b = subnetForIpMask( conf['pxe_tftp_ip'], conf['pxe_mask'] )
-        conf['pxe_subnet'] =b
-    logging.getLogger().info("configuration : %s"%conf)    
+        conf['pxe_subnet'] = b
+    logging.getLogger().info("configuration : %s"%conf)
 
     if daemonize:
         try:
