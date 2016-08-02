@@ -2278,7 +2278,6 @@ class Inventory(DyngroupDatabaseHelper):
 		    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%10%')),\
 		    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%8%')),\
                     not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%7%')),\
-		    not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%Vista%')),\
                     not_(self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%XP%')),
                     self.table['Hardware'].c.OperatingSystem.like('%Microsoft%Windows%')
                 )
