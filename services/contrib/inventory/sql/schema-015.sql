@@ -31,7 +31,7 @@ CREATE TABLE  IF NOT EXISTS  RightUserEntities (
   fk_Entity int(11) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (fk_User,fk_Entity),
   KEY fk_Entity (fk_Entity)
-) ENGINE=INNODB DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 UPDATE Version SET Number = 15;
 

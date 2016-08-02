@@ -70,7 +70,7 @@ CREATE TABLE InventoryDebugLog (
   id int(11) unsigned NOT NULL auto_increment,
   DebugLog text default NULL,
   PRIMARY KEY  (id)
-) ENGINE=INNODB;
+) ENGINE=MYISAM;
 
 --
 -- Table structure for table `hasInventoryDebugLog`
@@ -81,7 +81,7 @@ CREATE TABLE hasInventoryDebugLog (
   inventory mediumint(5) unsigned NOT NULL default '0',
   inventorydebuglog int(11) unsigned NOT NULL default '0',
   PRIMARY KEY  (machine,inventory,inventorydebuglog)
-) ENGINE=INNODB;
+) ENGINE=MYISAM;
 
 --
 -- Database version

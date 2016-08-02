@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `backup_profiles` (
   `excludes` text NOT NULL,
   `encoding` varchar(50) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000 ;
 
 
 INSERT INTO `backup_profiles` (`id`, `profilename`, `sharenames`, `excludes`, `encoding`) VALUES
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `backup_servers` (
   `backupserver_url` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `entity_uuid` (`entity_uuid`)
-) ENGINE=INNODB  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `hosts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `hosts` (
   `backup_profile` int(11) NOT NULL,
   `period_profile` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB  DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `period_profiles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `period_profiles` (
   `incr` float NOT NULL,
   `exclude_periods` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=INNODB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1000;
 
 INSERT INTO `period_profiles` (`id`, `profilename`, `full`, `incr`, `exclude_periods`) VALUES
 (1, 'Nightly', '6.97', '0.97', '7.00=>20.00:1,2,3,4,5,6,7'),
