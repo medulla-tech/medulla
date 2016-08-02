@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS phase (
 		"failed") DEFAULT "ready" NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY (fk_commands_on_host) REFERENCES commands_on_host(id)
-    ) ENGINE=MYISAM;
+    ) ENGINE=INNODB;
 
 ALTER TABLE commands ADD COLUMN sum_running INT NOT NULL DEFAULT 0;
 ALTER TABLE commands ADD COLUMN sum_failed INT NOT NULL DEFAULT 0;

@@ -33,7 +33,7 @@ CREATE TABLE target (
     INDEX coh_ind (id_command_on_host),
     FOREIGN KEY (id_command_on_host) REFERENCES commands_on_host(id_command_on_host),
     PRIMARY KEY (id)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 INSERT INTO target (id_command, target_name) SELECT id_command, target FROM commands;
 
 ALTER TABLE commands \

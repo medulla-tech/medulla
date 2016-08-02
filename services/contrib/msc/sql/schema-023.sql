@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `pull_targets` (
     `scheduler` VARCHAR(32),
     `last_seen_time` DATETIME NOT NULL,
     PRIMARY KEY(`id`)
-) ENGINE=MyISAM;
+) ENGINE=INNODB;
 
 DELETE FROM version;
 INSERT INTO version VALUES("23");

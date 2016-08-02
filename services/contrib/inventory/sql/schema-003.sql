@@ -29,7 +29,7 @@ CREATE TABLE Entity(
     Label varchar(128) default NULL,
     parentId int(11) unsigned,
     PRIMARY KEY  (id)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 --
 -- Table structure for table hasEntity
@@ -40,7 +40,7 @@ CREATE TABLE hasEntity (
     entity int(11) unsigned NOT NULL default '0',
     inventory mediumint(5) unsigned NOT NULL default '0',
     PRIMARY KEY (machine)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 --
 -- Database version

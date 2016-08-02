@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS commands (
     next_connection_delay INT DEFAULT 60,
     max_connection_attempt INT DEFAULT 3,
     PRIMARY KEY (id_command)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS commands_on_host (
     id_command_on_host INT NOT NULL AUTO_INCREMENT,
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS commands_on_host (
 
     PRIMARY KEY (id_command_on_host),
     KEY (id_command)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 CREATE TABLE IF NOT EXISTS commands_history (
     id_command_history INT NOT NULL AUTO_INCREMENT,
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS commands_history (
 
     PRIMARY KEY (id_command_history),
     KEY (id_command_on_host)
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 
 
@@ -122,6 +122,6 @@ CREATE TABLE IF NOT EXISTS commands_history (
 
 CREATE TABLE version (
   Number tinyint(4) unsigned NOT NULL default '0'
-) ENGINE=MYISAM;
+) ENGINE=INNODB;
 
 INSERT INTO version VALUES( '1' );
