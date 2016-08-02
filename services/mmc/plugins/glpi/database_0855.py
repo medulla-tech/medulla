@@ -2623,11 +2623,10 @@ class Glpi0855(DyngroupDatabaseHelper):
 
         if osnames == ["other"]:
             query = query.filter(
-                and_(
-                    not_(OS.name.like('%Microsoft%Windows%')), not_(OS.name.like('%Mageia%')),
-	            # FIXME: Check if this is needed.
-		    # Machine.operatingsystems_id == 0,
-                )
+                or_(
+			and_(
+				not_(OS.name.like('%Microsoft%Windows%')), not_(OS.name.like('%Mageia%')),
+                ), Machine.operatingsystems_id == 0,
             )
         elif osnames == ["otherw"]:
             query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%10%')), OS.name.like('%Microsoft%Windows%8%')),\
