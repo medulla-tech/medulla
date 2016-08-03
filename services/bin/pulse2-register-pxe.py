@@ -32,7 +32,6 @@ import os
 import re
 import json
 import datetime
-import xml.etree.ElementTree as ET  # form XML Building
 from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
@@ -84,7 +83,7 @@ def parsejsoninventory(file, file_content):
     sauvefile("content.txt",file_content)
 
     file_content = file_content.decode('ascii', errors='ignore')
-    
+
     listcaractere=['\x07','\x00','\\r','\\n','\\t']
     for c in listcaractere:
         file_content= file_content.replace(c, '')
@@ -98,7 +97,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("cpu.txt",z1[0])
         try:
-            cpu=json.loads(z1[0])
+            cpu=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("cpu\n%s"%cpu)
         except:
             logging.getLogger().debug("error json cpu")
@@ -111,7 +110,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("pxe.txt",z1[0])
         try:
-            pxe = json.loads(z1[0])
+            pxe = json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pxe\n%s"%pxe)
         except:
             logging.getLogger().debug("error json pxe")
@@ -124,7 +123,7 @@ def parsejsoninventory(file, file_content):
         sauvefile("syslinux.txt",z1[0])
         try:
             logging.getLogger().debug("syslinux\n%s"%syslinux)
-            syslinux=json.loads( z1[0])
+            syslinux=json.loads(str(z1[0]), strict=False)
         except:
             logging.getLogger().debug("error json syslinux")
     else:
@@ -135,7 +134,7 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("vpd.txt",z1[0])
         try:
-            vpd=json.loads(z1[0])
+            vpd=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vpd\n%s"%vpd)
         except:
             logging.getLogger().error("error json vpd")
@@ -149,7 +148,7 @@ def parsejsoninventory(file, file_content):
         z1[0]="[\n{" + str(z1[0]) + "}\n]"
         sauvefile("vesa.txt",z1[0])
         try:
-            vesa=json.loads(z1[0])
+            vesa=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vesa\n%s"%vesa)
         except:
             logging.getLogger().error("error json vesa")
@@ -164,7 +163,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= "[\n" + z1[0] + "\n]"
         sauvefile("disks.txt",z1[0])
         try:
-            disks=json.loads(str(z1[0]))
+            disks=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("disks\n%s"%disks)
         except:
             logging.getLogger().error("error json disks")
@@ -178,7 +177,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("dmi.txt",z1[0])
         try:
-            dmi=json.loads(str(z1[0]))
+            dmi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("dmi\n%s"%dmi)
         except:
             logging.getLogger().error("error json dmi")
@@ -192,7 +191,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("memory.txt",z1[0])
         try:
-            memory=json.loads(str(z1[0]))
+            memory=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("memory\n%s"%memory)
         except:
             logging.getLogger().error("error json memory")
@@ -206,7 +205,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("pci.txt",z1[0])
         try:
-            pci=json.loads(str(z1[0]))
+            pci=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pci\n%s"%pci)
         except:
             logging.getLogger().error("error json pci")
@@ -221,7 +220,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
         sauvefile("acpi.txt",z1[0])
         try:
-            acpi=json.loads(str(z1[0]))
+            acpi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("acpi\n%s"%acpi)
         except:
             logging.getLogger().error("error json acpi")
@@ -232,7 +231,7 @@ def parsejsoninventory(file, file_content):
     if len(z1) > 1:
         sauvefile("kernel.txt",z1[0])
         try:
-            kernel=json.loads(str(z1[0]))
+            kernel=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("kernel\n%s"%kernel)
         except:
             logging.getLogger().error("error json kernel")
@@ -244,7 +243,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= "{" + str(z1[0]) + "}"
         sauvefile("hdt.txt",z1[0])
         try:
-            hdt=json.loads(str(z1[0]))
+            hdt=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hdt\n%s"%hdt)
         except:
             logging.getLogger().error("error json hdt")
@@ -256,7 +255,7 @@ def parsejsoninventory(file, file_content):
         z1[0]= "{" + z1[0]+ "}"
         sauvefile("hostname.txt",z1[0])
         try:
-            hostname=json.loads(str(z1[0]))
+            hostname=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hostname\n%s"%hostname)
         except:
             logging.getLogger().error("error json hostname")
@@ -270,13 +269,13 @@ def parsejsoninventory(file, file_content):
     QUERY = ET.SubElement(REQUEST, "QUERY").text = "INVENTORY"
     TAG = ET.SubElement(REQUEST, "TAG").text = "root"
     CONTENT = ET.SubElement(REQUEST, "CONTENT")
-    
+
     ##############ACCESSLOG##############
-    
+
     ACCESSLOG = ET.SubElement(CONTENT, "ACCESSLOG")
     LOGDATE = ET.SubElement(ACCESSLOG, "LOGDATE").text='{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     USERID = ET.SubElement(ACCESSLOG, "USERID").text='N/A'
-    
+
     ##############BIOS##############
 
     BIOS = ET.SubElement(CONTENT, "BIOS")
@@ -291,7 +290,7 @@ def parsejsoninventory(file, file_content):
     SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = dmi[2]['dmi.system.manufacturer']
     SMODEL = ET.SubElement(BIOS, "SMODEL").text = dmi[2]['dmi.system.product_name']
     SSN = ET.SubElement(BIOS, "SSN").text = dmi[2]['dmi.system.serial']
-    
+
     ##############HARDWARE##############
     HARDWARE = ET.SubElement(CONTENT, "HARDWARE")
     CHASSIS_TYPE = ET.SubElement(HARDWARE, "CHASSIS_TYPE").text = dmi[4]['dmi.chassis.type']
@@ -305,9 +304,9 @@ def parsejsoninventory(file, file_content):
     PROCESSORS = ET.SubElement(HARDWARE,'PROCESSORS').text = freqcpu_info
     PROCESSORN = ET.SubElement(HARDWARE,'PROCESSORN').text = str(cpu["cpu.num_cores"])
     PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT').text = str(cpu["cpu.model_id"])
-    
+
     ##############NETWORKS##############
-    
+
     NETWORKS = ET.SubElement(CONTENT, "NETWORKS")
     DESCRIPTION = ET.SubElement(NETWORKS,'DESCRIPTION').text = 'eth0'
     IPADDRESS = ET.SubElement(NETWORKS,'IPADDRESS').text = pxe['pxe.ipaddr']
@@ -420,7 +419,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "OPEN event:"
 
     def traitement(self, name):
-     
+
         if os.path.isfile(str(name)):
             file_content=""
             file_content1=""
@@ -582,7 +581,7 @@ if __name__ == '__main__':
                 # exit from second parent, print eventual PID before
                 print "Daemon PID %d" % pid
                 print "kill -9 $(cat %s"%pidfile
-                logging.getLogger().info("Daemon PID %d" % pid) 
+                logging.getLogger().info("Daemon PID %d" % pid)
                 os.seteuid(0)
                 os.setegid(0)
                 logging.getLogger().info("PID file" + str(pid) + " > " + pidfile)
