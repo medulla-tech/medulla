@@ -1826,7 +1826,7 @@ class Inventory(DyngroupDatabaseHelper):
             
     def updateNameWithHardwareHost(self, uuid, name):
         """
-        name machine est synchronisée avec le host du hardware
+        machine name is synchronised with hardware's host
         """
         session = create_session()
         query = session.query(Machine)
