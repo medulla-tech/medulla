@@ -2624,12 +2624,13 @@ class Glpi0855(DyngroupDatabaseHelper):
         if osnames == ["other"]:
             query = query.filter(
                 or_(
-                    not_(OS.name.like('%Microsoft%Windows%')),
-                    Machine.operatingsystems_id == 0,
-                )
-            )
+			and_(
+				not_(OS.name.like('%Microsoft%Windows%')), not_(OS.name.like('%Mageia%')),
+                ), Machine.operatingsystems_id == 0,
+            ))
         elif osnames == ["otherw"]:
-            query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%7%')),\
+            query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%10%')), not_(OS.name.like('%Microsoft%Windows%8%')),\
+			    not_(OS.name.like('%Microsoft%Windows%7%')), not_(OS.name.like('%Microsoft%Windows%Vista%')),\
                 not_(OS.name.like('%Microsoft%Windows%XP%')), OS.name.like('%Microsoft%Windows%')))
         # if osnames == ['%'], we want all machines, including machines without OS (used for reporting, per example...)
         elif osnames != ['%']:

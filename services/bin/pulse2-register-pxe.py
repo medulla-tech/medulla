@@ -32,7 +32,6 @@ import os
 import re
 import json
 import datetime
-import xml.etree.ElementTree as ET  # form XML Building
 from pulse2.package_server.config import P2PServerCP
 from mmc.site import mmcconfdir
 import sys
@@ -84,159 +83,199 @@ def parsejsoninventory(file, file_content):
     sauvefile("content.txt",file_content)
 
     file_content = file_content.decode('ascii', errors='ignore')
-    
+
     listcaractere=['\x07','\x00','\\r','\\n','\\t']
     for c in listcaractere:
         file_content= file_content.replace(c, '')
     file_content= file_content.replace('][', '],[')
     file_content= file_content.replace('}{', '},{')
-    
+
+    sauvefile("content1.txt",file_content)
     file_content = re.sub('[a-z0-9]*cpu\{',  '', file_content)
     z1 = re.compile("\}[a-z0-9]*pxe\{").split(file_content)
-    z1[0] = "{" + z1[0] + "}"
-    sauvefile("cpu.txt",z1[0])
-    try:
-        cpu=json.loads(z1[0])
-        logging.getLogger().debug("cpu\n%s"%cpu)
-    except:
-        logging.getLogger().debug("error json cpu")
-    
+    if len(z1) > 1:
+        z1[0] = "{" + z1[0] + "}"
+        sauvefile("cpu.txt",z1[0])
+        try:
+            cpu=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("cpu\n%s"%cpu)
+        except:
+            logging.getLogger().debug("error json cpu")
+    else:
+        z1.insert(0, "")
+
+
     z1 = re.compile("\}[a-z0-9]*syslinux\{").split(z1[1])
-    z1[0] = "{" + z1[0] + "}"
-    sauvefile("pxe.txt",z1[0])
-    try:
-        pxe = json.loads(z1[0])
-        logging.getLogger().debug("pxe\n%s"%pxe)
-    except:
-        logging.getLogger().debug("error json pxe")
-        
+    if len(z1) > 1:
+        z1[0] = "{" + z1[0] + "}"
+        sauvefile("pxe.txt",z1[0])
+        try:
+            pxe = json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("pxe\n%s"%pxe)
+        except:
+            logging.getLogger().debug("error json pxe")
+    else:
+        z1.insert(0, "")
+
     z1 = re.compile("\}[a-z0-9]*vpd\{").split(z1[1])
-    z1[0] = "{" + z1[0] + "}"
-    sauvefile("syslinux.txt",z1[0])
-    try:
-        logging.getLogger().debug("syslinux\n%s"%syslinux)
-        syslinux=json.loads( z1[0])
-    except:
-        logging.getLogger().debug("error json syslinux")
+    if len(z1) > 1:
+        z1[0] = "{" + z1[0] + "}"
+        sauvefile("syslinux.txt",z1[0])
+        try:
+            logging.getLogger().debug("syslinux\n%s"%syslinux)
+            syslinux=json.loads(str(z1[0]), strict=False)
+        except:
+            logging.getLogger().debug("error json syslinux")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\}[a-z0-9]*vesa\{").split(z1[1])
-    z1[0] = "{" + z1[0] + "}"
-    sauvefile("vpd.txt",z1[0])
-    try:
-        vpd=json.loads(z1[0])
-        logging.getLogger().debug("vpd\n%s"%vpd)
-    except:
-        logging.getLogger().error("error json vpd")
+    if len(z1) > 1:
+        z1[0] = "{" + z1[0] + "}"
+        sauvefile("vpd.txt",z1[0])
+        try:
+            vpd=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("vpd\n%s"%vpd)
+        except:
+            logging.getLogger().error("error json vpd")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\}[a-z0-9]*disks\{").split(z1[1])
-    z1[0]=str(z1[0])
-    z1[0]= z1[0].replace('}{', '},{')
-    z1[0]="[\n{" + str(z1[0]) + "}\n]"
-    sauvefile("vesa.txt",z1[0])
-    try:
-        vesa=json.loads(z1[0])
-        logging.getLogger().debug("vesa\n%s"%vesa)
-    except:
-        logging.getLogger().error("error json vesa")
+    if len(z1) > 1:
+        z1[0]=str(z1[0])
+        z1[0]= z1[0].replace('}{', '},{')
+        z1[0]="[\n{" + str(z1[0]) + "}\n]"
+        sauvefile("vesa.txt",z1[0])
+        try:
+            vesa=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("vesa\n%s"%vesa)
+        except:
+            logging.getLogger().error("error json vesa")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\][a-z0-9]*dmi\{").split(z1[1])
-    z1[0]= "{" + z1[0] + "]"
-    z1[0]= z1[0].replace('}[', '},[')
-    z1[0]= z1[0].replace('][', '],[')
-    z1[0]= "[\n" + z1[0] + "\n]"
-    sauvefile("disks.txt",z1[0])
-    try:
-        disks=json.loads(str(z1[0]))
-        logging.getLogger().debug("disks\n%s"%disks)
-    except:
-        logging.getLogger().error("error json disks")
+    if len(z1) > 1:
+        z1[0]= "{" + z1[0] + "]"
+        z1[0]= z1[0].replace('}[', '},[')
+        z1[0]= z1[0].replace('][', '],[')
+        z1[0]= "[\n" + z1[0] + "\n]"
+        sauvefile("disks.txt",z1[0])
+        try:
+            disks=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("disks\n%s"%disks)
+        except:
+            logging.getLogger().error("error json disks")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\}[a-z0-9]*memory\{").split(z1[1])
-    z1[0] = "[\n{" + z1[0] + "}\n]"
-    z1[0]= z1[0].replace('}{', '},{')
-    z1[0]= z1[0].replace('][', '],[')
-    sauvefile("dmi.txt",z1[0])
-    try:
-        dmi=json.loads(str(z1[0]))
-        logging.getLogger().debug("dmi\n%s"%dmi)
-    except:
-        logging.getLogger().error("error json dmi")
-        
+    if len(z1) > 1:
+        z1[0] = "[\n{" + z1[0] + "}\n]"
+        z1[0]= z1[0].replace('}{', '},{')
+        z1[0]= z1[0].replace('][', '],[')
+        sauvefile("dmi.txt",z1[0])
+        try:
+            dmi=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("dmi\n%s"%dmi)
+        except:
+            logging.getLogger().error("error json dmi")
+    else:
+        z1.insert(0, "")
+
     z1 = re.compile("\}[a-z0-9]*pci\{").split(z1[1])
-    z1[0] = "[\n{" + z1[0] + "}\n]"
-    z1[0]= z1[0].replace('}{', '},{')
-    z1[0]= z1[0].replace('][', '],[')
-    sauvefile("memory.txt",z1[0])
-    try:
-        memory=json.loads(str(z1[0]))
-        logging.getLogger().debug("memory\n%s"%memory)
-    except:
-        logging.getLogger().error("error json memory")
-    
+    if len(z1) > 1:
+        z1[0] = "[\n{" + z1[0] + "}\n]"
+        z1[0]= z1[0].replace('}{', '},{')
+        z1[0]= z1[0].replace('][', '],[')
+        sauvefile("memory.txt",z1[0])
+        try:
+            memory=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("memory\n%s"%memory)
+        except:
+            logging.getLogger().error("error json memory")
+    else:
+        z1.insert(0, "")
+
     z1 = re.compile("\}[a-z0-9]*acpi\{").split(z1[1])
-    z1[0] = "[" + "{" + z1[0] + "}"+ "]"
-    z1[0]= z1[0].replace('}{', '},{')
-    z1[0]= z1[0].replace('][', '],[')
-    
-    sauvefile("pci.txt",z1[0])
-    try:
-        pci=json.loads(str(z1[0]))
-        logging.getLogger().debug("pci\n%s"%pci)
-    except:
-        logging.getLogger().error("error json pci")
-        
+    if len(z1) > 1:
+        z1[0] = "[" + "{" + z1[0] + "}"+ "]"
+        z1[0]= z1[0].replace('}{', '},{')
+        z1[0]= z1[0].replace('][', '],[')
+        sauvefile("pci.txt",z1[0])
+        try:
+            pci=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("pci\n%s"%pci)
+        except:
+            logging.getLogger().error("error json pci")
+    else:
+        z1.insert(0, "")
+
+
     z1 = re.compile("\][a-z0-9]*kernel\[").split(z1[1])
-    z1[0]= z1[0].replace('}[', '},[')
-    z1[0]= z1[0].replace('][', '],[')
-    z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
-    sauvefile("acpi.txt",z1[0])
-    try:
-        acpi=json.loads(str(z1[0]))
-        logging.getLogger().debug("acpi\n%s"%acpi)
-    except:
-        logging.getLogger().error("error json acpi")
+    if len(z1) > 1:
+        z1[0]= z1[0].replace('}[', '},[')
+        z1[0]= z1[0].replace('][', '],[')
+        z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
+        sauvefile("acpi.txt",z1[0])
+        try:
+            acpi=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("acpi\n%s"%acpi)
+        except:
+            logging.getLogger().error("error json acpi")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\][a-z0-9]*hdt\{").split(z1[1])
-    sauvefile("kernel.txt",z1[0])
-    try:
-        kernel=json.loads(str(z1[0]))
-        logging.getLogger().debug("kernel\n%s"%kernel)
-    except:
-        logging.getLogger().error("error json kernel")
+    if len(z1) > 1:
+        sauvefile("kernel.txt",z1[0])
+        try:
+            kernel=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("kernel\n%s"%kernel)
+        except:
+            logging.getLogger().error("error json kernel")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\}[a-z0-9]*hostname\{").split(z1[1])
-    z1[0]= "{" + str(z1[0]) + "}"
-    sauvefile("hdt.txt",z1[0])
-    try:
-        hdt=json.loads(str(z1[0]))
-        logging.getLogger().debug("hdt\n%s"%hdt)
-    except:
-        logging.getLogger().error("error json hdt")
+    if len(z1) > 1:
+        z1[0]= "{" + str(z1[0]) + "}"
+        sauvefile("hdt.txt",z1[0])
+        try:
+            hdt=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("hdt\n%s"%hdt)
+        except:
+            logging.getLogger().error("error json hdt")
+    else:
+        z1.insert(0, "")
 
     z1 = re.compile("\}[a-z0-9]*TRAILER!!!").split(z1[1])
-    z1[0]= "{" + z1[0]+ "}"
-    sauvefile("hostname.txt",z1[0])
-    try:
-        hostname=json.loads(str(z1[0]))
-        logging.getLogger().debug("hostname\n%s"%hostname)
-    except:
-        logging.getLogger().error("error json hostname")
-
+    if len(z1) > 1:
+        z1[0]= "{" + z1[0]+ "}"
+        sauvefile("hostname.txt",z1[0])
+        try:
+            hostname=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("hostname\n%s"%hostname)
+        except:
+            logging.getLogger().error("error json hostname")
+    else:
+        z1.insert(0, "")
     ##############REQUEST##############
-    
+
     date = '{:%Y-%m-%d-%H-%M-%S}'.format(datetime.datetime.now())
     REQUEST = ET.Element("REQUEST")
     DEVICEID = ET.SubElement(REQUEST, "DEVICEID").text = hostname['hostname.hostname']+'-'+date
     QUERY = ET.SubElement(REQUEST, "QUERY").text = "INVENTORY"
     TAG = ET.SubElement(REQUEST, "TAG").text = "root"
     CONTENT = ET.SubElement(REQUEST, "CONTENT")
-    
+
     ##############ACCESSLOG##############
-    
+
     ACCESSLOG = ET.SubElement(CONTENT, "ACCESSLOG")
     LOGDATE = ET.SubElement(ACCESSLOG, "LOGDATE").text='{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     USERID = ET.SubElement(ACCESSLOG, "USERID").text='N/A'
-    
+
     ##############BIOS##############
 
     BIOS = ET.SubElement(CONTENT, "BIOS")
@@ -251,7 +290,7 @@ def parsejsoninventory(file, file_content):
     SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = dmi[2]['dmi.system.manufacturer']
     SMODEL = ET.SubElement(BIOS, "SMODEL").text = dmi[2]['dmi.system.product_name']
     SSN = ET.SubElement(BIOS, "SSN").text = dmi[2]['dmi.system.serial']
-    
+
     ##############HARDWARE##############
     HARDWARE = ET.SubElement(CONTENT, "HARDWARE")
     CHASSIS_TYPE = ET.SubElement(HARDWARE, "CHASSIS_TYPE").text = dmi[4]['dmi.chassis.type']
@@ -265,9 +304,9 @@ def parsejsoninventory(file, file_content):
     PROCESSORS = ET.SubElement(HARDWARE,'PROCESSORS').text = freqcpu_info
     PROCESSORN = ET.SubElement(HARDWARE,'PROCESSORN').text = str(cpu["cpu.num_cores"])
     PROCESSORT = ET.SubElement(HARDWARE,'PROCESSORT').text = str(cpu["cpu.model_id"])
-    
+
     ##############NETWORKS##############
-    
+
     NETWORKS = ET.SubElement(CONTENT, "NETWORKS")
     DESCRIPTION = ET.SubElement(NETWORKS,'DESCRIPTION').text = 'eth0'
     IPADDRESS = ET.SubElement(NETWORKS,'IPADDRESS').text = pxe['pxe.ipaddr']
@@ -287,7 +326,17 @@ def parsejsoninventory(file, file_content):
             STORAGES = ET.SubElement(CONTENT, "STORAGES")
             NAME = ET.SubElement(STORAGES, "NAME").text='hd'+str(diskid)
             TYPE = ET.SubElement(STORAGES, "TYPE").text='disk'
-            DISKSIZE = ET.SubElement(STORAGES, "DISKSIZE").text=disks[diskid][0]['disk->size']
+            regex_unit = re.compile(r'[[^0-9. ]')
+            regex_size = re.compile(r'[[^a-zA-Z ]')
+            disk_unit = regex_unit.sub("",disks[diskid][0]['disk->size'])
+            disk_size = regex_size.sub("",disks[diskid][0]['disk->size'])
+            if disk_unit == 'TiB':
+                disk_size = str(int(float(disk_size))*1000000)
+            elif disk_unit == 'GiB':
+                disk_size = str(int(float(disk_size))*1000)
+            else:
+                disk_size = str(int(float(disk_size)))
+            DISKSIZE = ET.SubElement(STORAGES, "DISKSIZE").text=disk_size
 
     ##############DRIVES##############
 
@@ -296,10 +345,26 @@ def parsejsoninventory(file, file_content):
             if nbpartition >=1 :
                 for partitionid in range(1,nbpartition+1):
                     DRIVES = ET.SubElement(CONTENT, "DRIVES")
-                    FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM').text=disks[diskid][partitionid]['partition->type']
-                    TOTAL = ET.SubElement(DRIVES,'TOTAL').text=disks[diskid][partitionid]['partition->size']
-                    TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
-    return  '<?xml version="1.0" encoding="utf-8"?>'+ET.tostring(REQUEST)
+                    try:
+                        FILESYSTEM = ET.SubElement(DRIVES,'FILESYSTEM').text=disks[diskid][partitionid]['partition->type']
+                        regex_unit = re.compile(r'[[^0-9. ]')
+                        regex_size = re.compile(r'[[^a-zA-Z ]')
+                        partition_unit = regex_unit.sub("",disks[diskid][partitionid]['partition->size'])
+                        partition_size = regex_size.sub("",disks[diskid][partitionid]['partition->size'])
+                        if partition_unit == 'TiB':
+                            partition_size = str(int(float(partition_size))*1000000)
+                        elif partition_unit == 'GiB':
+                            partition_size = str(int(float(partition_size))*1000)
+                        else:
+                            partition_size = str(int(float(partition_size)))
+                        TOTAL = ET.SubElement(DRIVES,'TOTAL').text=partition_size
+                        TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
+                    except:
+                        logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s "%(diskid, partitionid))
+
+    xmlstring = ET.tostring(REQUEST)
+    print xmlstring
+    return  '<?xml version="1.0" encoding="utf-8"?>' + xmlstring
 
 
 def senddata(query,ip ="127.0.0.1", port =1001 ):
@@ -354,7 +419,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "OPEN event:"
 
     def traitement(self, name):
-     
+
         if os.path.isfile(str(name)):
             file_content=""
             file_content1=""
@@ -429,12 +494,13 @@ if __name__ == '__main__':
         sys.exit(3)
     cp = ConfigParser.ConfigParser()
     cp.read(inifile)
+    cp.read(inifile + '.local')
 
     conf['ip']="127.0.0.1"
     if cp.has_option('imaging_api', 'pxe_port'):
-        conf['port']=int(cp.get('imaging_api', 'pxe_port'))
+        conf['port'] = int(cp.get('imaging_api', 'pxe_port'))
     else:
-        conf['port']=1001
+        conf['port'] = 1001
 
     if cp.has_option("main", "bind"):  # TODO remove in a future version
         logging.getLogger().warning("'bind' is obsolete, please replace it in your config file by 'host'")
@@ -451,11 +517,11 @@ if __name__ == '__main__':
         public_mask = cp.get("main", 'public_mask')
     else:
         public_mask = '255.255.255.0'
-    
+
     if cp.has_option('imaging_api', 'pxe_mask'):
-        conf['pxe_mask']=cp.get('imaging_api', 'pxe_mask')
+        conf['pxe_mask'] = cp.get('imaging_api', 'pxe_mask')
     else:
-        conf['pxe_mask']=public_mask
+        conf['pxe_mask'] = public_mask
 
     if  cp.has_option('imaging_api', 'pxe_gateway'):
         conf['pxe_gateway'] = cp.get("imaging_api", 'pxe_gateway')
@@ -468,13 +534,11 @@ if __name__ == '__main__':
         conf['pxe_timesenddata'] = 0.2
 
     if cp.has_option('imaging_api', 'pxe_tftp_ip'):
-        conf['pxe_tftp_ip']=cp.get('imaging_api', 'pxe_tftp_ip')
+        conf['pxe_tftp_ip'] = cp.get('imaging_api', 'pxe_tftp_ip')
     else:
-        conf['pxe_tftp_ip']=bind
-    if conf['pxe_tftp_ip']=="0.0.0.0":
-        logging.getLogger().error("configure pxe_tftp_ip in [%s] section imaging_api"%inifile)
-        print "Error : configure pxe_tftp_ip in [%s] section imaging_api"%inifile
-        sys.exit(255)
+        conf['pxe_tftp_ip'] = public_ip
+        logging.getLogger().info("pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile)
+        print "pxe_tftp_ip option is not defined and has been set to public_ip. If incorrect, please configure pxe_tftp_ip in imaging_api section of [%s].local"%inifile
     if not daemonize:
         if  cp.has_option('imaging_api', 'pxe_debug'):
             if cp.getboolean("imaging_api", 'pxe_debug'):
@@ -489,11 +553,11 @@ if __name__ == '__main__':
         conf['pxe_debug']=logging.DEBUG
 
     if  cp.has_option('imaging_api', 'pxe_subnet'):
-        conf['pxe_subnet']=cp.get("imaging_api", 'pxe_subnet') 
+        conf['pxe_subnet'] = cp.get("imaging_api", 'pxe_subnet')
     else:
         a, b = subnetForIpMask( conf['pxe_tftp_ip'], conf['pxe_mask'] )
-        conf['pxe_subnet'] =b
-    logging.getLogger().info("configuration : %s"%conf)    
+        conf['pxe_subnet'] = b
+    logging.getLogger().info("configuration : %s"%conf)
 
     if daemonize:
         try:
@@ -517,7 +581,7 @@ if __name__ == '__main__':
                 # exit from second parent, print eventual PID before
                 print "Daemon PID %d" % pid
                 print "kill -9 $(cat %s"%pidfile
-                logging.getLogger().info("Daemon PID %d" % pid) 
+                logging.getLogger().info("Daemon PID %d" % pid)
                 os.seteuid(0)
                 os.setegid(0)
                 logging.getLogger().info("PID file" + str(pid) + " > " + pidfile)

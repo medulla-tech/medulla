@@ -1,32 +1,24 @@
--- 
--- (c) 2010 Mandriva, http://www.mandriva.com/
--- 
+--
+-- (c) 2016 Siveo, http://siveo.net/
+--
 -- $Id$
--- 
--- This file is part of Pulse 2, http://pulse2.mandriva.org
--- 
+--
+-- This file is part of Pulse 2, http://siveo.net
+--
 -- Pulse 2 is free software; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by
 -- the Free Software Foundation; either version 2 of the License, or
 -- (at your option) any later version.
--- 
+--
 -- Pulse 2 is distributed in the hope that it will be useful,
 -- but WITHOUT ANY WARRANTY; without even the implied warranty of
--- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 -- GNU General Public License for more details.
--- 
+--
 -- You should have received a copy of the GNU General Public License
 -- along with Pulse 2; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
-
-
--- Change MyISAM motor to InnoDB.
-
-ALTER TABLE `backup_profiles` ENGINE = innodb;
-ALTER TABLE `backup_servers` ENGINE = innodb;
-ALTER TABLE `hosts` ENGINE = innodb;
-ALTER TABLE `period_profiles` ENGINE = innodb;
 
 -- Create table auto_inc_1000 to link 1000 value to auto_increment
 CREATE TABLE auto_inc_1000(id INT NOT NULL, PRIMARY KEY(id));
@@ -34,7 +26,6 @@ INSERT INTO auto_inc_1000 VALUE(1000);
 
 
 -- Create trigger to set backuppc.backup_profiles.AUTO_INCREMENT to 1000, even after mysql restart and even if no row upper 1000 exist.
-
 delimiter //
 drop trigger if exists backup_profiles_before_insert;
 CREATE TRIGGER backup_profiles_before_insert BEFORE INSERT ON backup_profiles

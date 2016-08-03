@@ -38,15 +38,25 @@ class os_repartitionPanel extends Panel {
 
         // Declare OS classes
         $osClasses = array(
-            'other',
-            'Microsoft%Windows 7',
+	    'other',
+	    'Mageia 5',
+	    'Mageia 6',
+            'Microsoft%Windows 10',
+            'Microsoft%Windows 8',
+	    'Microsoft%Windows 7',
+	    'Microsoft%Windows Vista',
             'Microsoft%Windows XP',
             'otherw'
         );
 
         $osLabels = array(
-            _T('Other', 'glpi'),
-            'Windows 7',
+	    _T('Other', 'glpi'),
+	    'Mageia 5',
+	    'Mageia 6',
+            'Windows 10',
+            'Windows 8',
+	    'Windows 7',
+	    'Windows Vista',
             'Windows XP',
             _T('Other Windows', 'glpi')
         );
@@ -57,8 +67,13 @@ class os_repartitionPanel extends Panel {
 
 
         $links = array(
-            "$urlRedirect&os=other", // Static group links
-            "$urlRedirect&os=Microsoft Windows 7",
+	    "$urlRedirect&os=other", // Static group links
+	    "$urlRedirect&os=Mageia 5",
+	    "$urlRedirect&os=Mageia 6",
+            "$urlRedirect&os=Microsoft Windows 10",
+            "$urlRedirect&os=Microsoft Windows 8",
+	    "$urlRedirect&os=Microsoft Windows 7",
+	    "$urlRedirect&os=Microsoft Windows Vista",
             "$urlRedirect&os=Microsoft Windows XP",
             "$urlRedirect&os=otherw"
         );

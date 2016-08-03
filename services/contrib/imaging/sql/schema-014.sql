@@ -20,6 +20,8 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+SET SESSION character_set_server=UTF8;
+SET NAMES 'utf8';
 
 -- Create table auto_inc_1000 and auto_inc_10000 to link 1000 or 10000 value to auto_increment
 CREATE TABLE auto_inc_1000(id INT NOT NULL, PRIMARY KEY(id));
@@ -105,5 +107,6 @@ SET NEW.id = auto_incr2;
 END IF;
 END;//
 delimiter ;
+
 
 UPDATE version set Number = 14;
