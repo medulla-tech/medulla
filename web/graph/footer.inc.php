@@ -28,7 +28,7 @@ $MMCApp->render();
         </div><!-- section -->
     </div><!-- content -->
     <div id="footer">
-    <a href="http://www.siveo.org"target="blank"><img src="graph/mandriva-logo.png" alt ="[x]"/></a>
+    <a href="http://www.siveo.net"target="blank"><img src="graph/mandriva-logo.png" alt ="[x]"/></a>
         &nbsp;|&nbsp;&nbsp;MMC Agent <a href="#" onclick="showPopupUp(event,'version.php'); return false;"><?php  echo $_SESSION["modListVersion"]['ver'] ?></a>
     </div>
 </div><!-- wrapper -->
