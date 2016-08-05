@@ -161,7 +161,7 @@ class RenderedMSCBundleChoiceM extends RenderedMSCBundleChoice {
     }
 
     function loadList() {
-        $filter = array('machine'=>$this->machine->hostname, 'uuid'=>$this->machine->uuid);
+        $filter = array('machine'=>$this->machine->hostname, 'uuid'=>$this->machine->uuid, 'filter'=> '');
         list($count, $packages) = advGetAllPackages($filter, 0, -1);
         $this->list = array();
         foreach ($packages as $c_package) {
@@ -190,7 +190,7 @@ class RenderedMSCBundleChoiceG extends RenderedMSCBundleChoice {
     }
 
     function loadList() {
-        $filter = array('group'=>$this->group->id);
+        $filter = array('group'=>$this->group->id, 'filter'=> '');
         list($count, $packages) = advGetAllPackages($filter, 0, -1);
         $this->list = array();
         foreach ($packages as $c_package) {
