@@ -174,6 +174,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	update/sql/schema-004.sql \
 	update/sql/schema-005.sql \
 	update/sql/schema-006.sql \
+	xmppmaster/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \
