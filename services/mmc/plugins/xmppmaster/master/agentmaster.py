@@ -526,7 +526,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #print msg['body']
         if  msg['body'] == "This room is not anonymous":
             return False
-        if not self.plugin['xep_0045'].jidInRoom( self.config.jidsalonmaster, msg['from']):
+        if not self.jidInRoom1( self.config.jidsalonmaster, msg['from']):
             """ message agent apppartenant à master """
             return False
         restartagent = False
@@ -739,19 +739,26 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #self.envoicommand(a['to'], a['pluginname'] , data, datasession)
             #return True
         #return False
-
+    def jidInRoom1(self, room, jid):
+        for nick in self.plugin['xep_0045'].rooms[room]:
+            entry = self.plugin['xep_0045'].rooms[room][nick]
+            if entry is not None and entry['jid'] == jid:
+                logger.debug("%s in room %s"%(jid,room))
+                return True
+        logger.debug("%s not in room %s"%(jid,room))
+        return False 
 
     def message(self, msg):
 
         if msg['from'].bare == self.config.jidsalonmaster or msg['from'].bare == self.config.confjidsalon:
             print " message tous les menbres de salon master or config"
             return False
-        if self.plugin['xep_0045'].jidInRoom( self.config.confjidsalon, msg['from']):
+        if self.jidInRoom1( self.config.confjidsalon, msg['from']):
             print "il appartient au salon config"
             self.MessagesAgentFromSalonConfig( msg)
             return
 
-        if not self.plugin['xep_0045'].jidInRoom( self.config.jidsalonmaster, msg['from']):
+        if not self.jidInRoom1( self.config.jidsalonmaster, msg['from']):
             """ message agent apppartenant à master """
             print "il n appartient pas au salon master"
             return False
