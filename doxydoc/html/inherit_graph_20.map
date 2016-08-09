@@ -1,0 +1,8 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classChart.html" title="Chart" alt="" coords="5,81,59,108"/>
+<area shape="rect" id="node2" href="$classBarChart.html" title="BarChart" alt="" coords="107,56,181,83"/>
+<area shape="rect" id="node6" href="$classPieChart.html" title="PieChart" alt="" coords="107,107,181,133"/>
+<area shape="rect" id="node3" href="$classHorizontalBarChart.html" title="HorizontalBarChart" alt="" coords="229,5,364,32"/>
+<area shape="rect" id="node4" href="$classLineChart.html" title="LineChart" alt="" coords="257,56,336,83"/>
+<area shape="rect" id="node5" href="$classVerticalBarChart.html" title="VerticalBarChart" alt="" coords="237,107,356,133"/>
+</map>

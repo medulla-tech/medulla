@@ -1,0 +1,8 @@
+<map id="PhaseProxyMethodContainer" name="PhaseProxyMethodContainer">
+<area shape="rect" id="node2" href="$classpulse2_1_1scheduler_1_1types_1_1PhaseBase.html" title="PhaseBase" alt="" coords="220,80,313,107"/>
+<area shape="rect" id="node3" href="$classpulse2_1_1scheduler_1_1types_1_1Phase.html" title="Phase" alt="" coords="236,155,297,181"/>
+<area shape="rect" id="node4" href="$classpulse2_1_1scheduler_1_1phases_1_1pull_1_1PullPhase.html" title="PullPhase" alt="" coords="5,229,88,256"/>
+<area shape="rect" id="node5" href="$classpulse2_1_1scheduler_1_1phases_1_1remote_1_1RemoteControlPhase.html" title="RemoteControlPhase" alt="" coords="113,229,263,256"/>
+<area shape="rect" id="node6" href="$classpulse2_1_1scheduler_1_1phases_1_1remote_1_1WUParsePhase.html" title="WUParsePhase" alt="" coords="287,229,406,256"/>
+<area shape="rect" id="node7" href="$classtypes_1_1__MyPhase.html" title="_MyPhase" alt="" coords="431,229,516,256"/>
+</map>
