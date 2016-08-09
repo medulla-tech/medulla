@@ -233,15 +233,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppgateway : %s"%data['xmppgateway'])
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnonreduite : %s"%data['xmppmacnonreduite'])
-            logger.info("ipconnection : %s"%data['ipconnection'])
-            logger.info("portconnection : %s"%data['portconnection'])
-            logger.info("classutil : %s"%data['classutil'])
-            logger.info("ippublic : %s"%data['ippublic'])
+
+            if 'ipconnection' in data:
+                logger.info("ipconnection : %s"%data['ipconnection'])
+            if 'portconnection' in data:
+                logger.info("portconnection : %s"%data['portconnection'])
+            if 'classutil' in data:
+                logger.info("classutil : %s"%data['classutil'])
+            if 'ippublic' in data:
+                logger.info("ippublic : %s"%data['ippublic'])
+
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%self.localisationifo)
             logger.info("-----------------------------------")
+
             logger.info("DETAIL INFORMATIONS")
-            logger.info("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
+            if 'information' in data:
+                logger.info("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
 
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
