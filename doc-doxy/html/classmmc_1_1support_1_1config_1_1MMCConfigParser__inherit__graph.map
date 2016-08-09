@@ -1,0 +1,6 @@
+<map id="MMCConfigParser" name="MMCConfigParser">
+<area shape="rect" id="node2" href="$classmmc_1_1plugins_1_1base_1_1auth_1_1AuthenticatorConfig.html" title="AuthenticatorConfig" alt="" coords="31,80,168,107"/>
+<area shape="rect" id="node4" href="$classmmc_1_1support_1_1config_1_1PluginConfig.html" title="PluginConfig" alt="" coords="204,80,301,107"/>
+<area shape="rect" id="node3" href="$classmmc_1_1plugins_1_1base_1_1externalldap_1_1ExternalLdapAuthenticatorConfig.html" title="ExternalLdapAuthenticator\lConfig" alt="" coords="5,155,183,196"/>
+<area shape="rect" id="node5" href="$classmmc_1_1plugins_1_1ppolicy_1_1PPolicyConfig.html" title="PPolicyConfig" alt="" coords="207,162,312,189"/>
+</map>

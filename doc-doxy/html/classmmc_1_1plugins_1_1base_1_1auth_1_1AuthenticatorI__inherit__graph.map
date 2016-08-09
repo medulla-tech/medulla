@@ -1,0 +1,4 @@
+<map id="AuthenticatorI" name="AuthenticatorI">
+<area shape="rect" id="node2" href="$classmmc_1_1plugins_1_1base_1_1BaseLdapAuthenticator.html" title="ldap authentification " alt="" coords="5,80,168,107"/>
+<area shape="rect" id="node3" href="$classmmc_1_1plugins_1_1base_1_1externalldap_1_1ExternalLdapAuthenticator.html" title="ExternalLdapAuthenticator" alt="" coords="193,80,370,107"/>
+</map>

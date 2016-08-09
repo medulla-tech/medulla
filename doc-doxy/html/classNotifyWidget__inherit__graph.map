@@ -1,0 +1,5 @@
+<map id="NotifyWidget" name="NotifyWidget">
+<area shape="rect" id="node2" href="$classNotifyWidgetFailure.html" title="NotifyWidgetFailure" alt="" coords="5,80,143,107"/>
+<area shape="rect" id="node3" href="$classNotifyWidgetSuccess.html" title="NotifyWidgetSuccess" alt="" coords="167,80,315,107"/>
+<area shape="rect" id="node4" href="$classNotifyWidgetWarning.html" title="NotifyWidgetWarning" alt="" coords="339,80,484,107"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classmmc_1_1plugins_1_1base_1_1auth_1_1AuthenticatorI.html" title="AuthenticatorI" alt="" coords="5,31,108,57"/>
+<area shape="rect" id="node2" href="$classmmc_1_1plugins_1_1base_1_1BaseLdapAuthenticator.html" title="ldap authentification " alt="" coords="163,5,326,32"/>
+<area shape="rect" id="node3" href="$classmmc_1_1plugins_1_1base_1_1externalldap_1_1ExternalLdapAuthenticator.html" title="ExternalLdapAuthenticator" alt="" coords="156,56,333,83"/>
+</map>
