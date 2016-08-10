@@ -32,7 +32,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
                 #part = part + 1
     #except IOError:
         #dataerreur['data']['data'] =''
-        #dataerreur['data']['msg'] = "ERROR : serverrelais  must is linux"
+        #dataerreur['data']['msg'] = "ERROR : relayserver  must is linux"
         #dataerreur['ret'] = 255
         #dataerreur['data']['end'] = False
         #dataerreur['data']['namefiledest']=result['data']['namefiledest']

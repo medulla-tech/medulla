@@ -393,11 +393,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                           mbody=json.dumps(fichierdata),
                           mtype='chat')
 
-    def callInstallConfGuacamole(self, toserverrelais, data):
-        resultcommand={'action' : 'serverrelais',
-                       'sessionid': name_random(5, "serverrelais"),
+    def callInstallConfGuacamole(self, torelayserver, data):
+        resultcommand={'action' : 'relayserver',
+                       'sessionid': name_random(5, "relayserver"),
                        'data' : data }
-        self.send_message(mto = toserverrelais,
+        self.send_message(mto = torelayserver,
                             mbody=json.dumps(resultcommand),
                             mtype='chat')
 
@@ -420,12 +420,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return
         except:
             return
-        if data['agenttype'] == "serverrelais":
+        if data['agenttype'] == "relayserver":
             return
 
         logger.debug("Search Server Relais for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
         XmppMasterDatabase().log("Search Server Relais for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
-        #determination serverrelais pour connexion
+        #determination relayserver pour connexion
         # ordre des regles a appliquer
         ordre =  XmppMasterDatabase().Orderregles()
         indetermine = []
@@ -435,30 +435,30 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 result1= XmppMasterDatabase().algoregleuser(data['information']['users'][0])
                 if len(result1) > 0 :
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
-                    logger.debug("regle user select serverrelais for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                    logger.debug("regle user select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 2:
                 result1= XmppMasterDatabase().algoreglehostname(data['information']['info']['hostname'])
                 if len(result1) > 0 :
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
-                    logger.debug("regle hostname select serverrelais for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                    logger.debug("regle hostname select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 3:
                 result1 = XmppMasterDatabase().algoreglesubnet(data['subnetxmpp'],data['classutil'])
                 if len(result1) > 0 :
                     print result1[0]
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
-                    logger.debug("regle subnet select serverrelais for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                    logger.debug("regle subnet select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 4:
                 if len(indetermine) > 0:
                     result = indetermine
                     logger.warn("server address is made possible among servers (Rule geoPosition)")
                     break;
-                result2 = XmppMasterDatabase().jidserverrelaisforip(self.config.defaultserverrelaisip)
-                result = [self.config.defaultserverrelaisip,self.config.defaultserverrelaisport,result2[0],self.config.defaultserverrelaisbaseurlguacamole]
-                ##self.defaultserverrelaisjid = self.get('defaultconnection', 'jid')
-                logger.debug("regle default select serverrelais for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                result2 = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+                result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,result2[0],self.config.defaultrelayserverbaseurlguacamole]
+                ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
+                logger.debug("regle default select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                 break
             elif x[0] == 5:
                 distance = 40000000000
@@ -490,7 +490,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     else:
                         if relaisserver != -1:
                             result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(relaisserver)
-                            logger.debug("regle geoposition select serverrelais for machine %s user %s \n %s "%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                            logger.debug("regle geoposition select relayserver for machine %s user %s \n %s "%(data['information']['info']['hostname'],data['information']['users'][0],result))
                             break
 
         logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))

@@ -81,8 +81,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.showplugins = self.getboolean('master', 'showplugins')
         #################""default connection ###################""
         ### parameters conection server si pas server relais dispo ####
-        self.defaultserverrelaisip = self.get('defaultconnection', 'serverip')
-        self.defaultserverrelaisport = self.get('defaultconnection', 'port')
+        self.defaultrelayserverip = self.get('defaultconnection', 'serverip')
+        self.defaultrelayserverport = self.get('defaultconnection', 'port')
 
         #self.inventory = self.get('inventorypulse', 'inventory')
 

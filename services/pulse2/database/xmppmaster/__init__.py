@@ -383,7 +383,7 @@ class XmppMasterDatabase(DatabaseHelper):
         return list( [x for x in result][0])
 
     @DatabaseHelper._session
-    def jidserverrelaisforip(self, session, ip ):
+    def jidrelayserverforip(self, session, ip ):
         """ return ip et port serveur relais pour la connection"""
         #sql ="""SELECT 
                     #jid
@@ -598,8 +598,8 @@ class XmppMasterDatabase(DatabaseHelper):
                     xmppmaster.relaisserver ON xmppmaster.relaisserver.subnet = xmppmaster.machines.subnetxmpp
                 WHERE
                     xmppmaster.machines.uuid_inventorymachine = '%s';"""%uuid  ;
-        serverrelais = session.execute(sql)
+        relayserver = session.execute(sql)
         session.commit()
         session.flush()
-        ret=[m for m in serverrelais]
+        ret=[m for m in relayserver]
         return ret

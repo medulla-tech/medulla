@@ -7,7 +7,7 @@ import zlib
 from utils import md5
 import hashlib
 
-plugin={"VERSION": "1.1", "NAME" :"resulttransfertfile","TYPE":"serverrelais"}
+plugin={"VERSION": "1.1", "NAME" :"resulttransfertfile","TYPE":"relayserver"}
 
 @pulginmastersessionaction("actualise",20)
 def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessiondata):

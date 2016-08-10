@@ -7,7 +7,7 @@ import zlib
 from utils import md5
 import hashlib
 
-plugin={"VERSION": "1.1", "NAME" :"resultdownloadfile","TYPE":"serverrelais"}
+plugin={"VERSION": "1.1", "NAME" :"resultdownloadfile","TYPE":"relayserver"}
 
 def writefileappend(name, data):
     try:
