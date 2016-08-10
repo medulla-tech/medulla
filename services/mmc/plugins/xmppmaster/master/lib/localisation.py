@@ -35,14 +35,8 @@ from math import sqrt
 rt = 6371  # rayon terrestre moyen en km
 ### on considere laltitude a rt quelque soit le point.
 import GeoIP
-#install
-#apt-get install python-geoip
-#download base
-#wget -N http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz
-#gzip -d GeoLiteCity.dat.gz
 
 
-### /usr/lib/pymodules/python2.7/mmc/plugins/xmppmaster/master/lib/GeoLiteCity.dat
 class Point:
         def __init__(self, lat1, lon1):
             self.lat=radians(lat1)
@@ -54,7 +48,7 @@ class Point:
 
 class Localisation:
     def __init__(self):
-        self.gi = GeoIP.open("/usr/lib/pymodules/python2.7/mmc/plugins/xmppmaster/master/lib/GeoLiteCity.dat", GeoIP.GEOIP_STANDARD)
+        self.gi = GeoIP.open("/usr/share/GeoIP/GeoLiteCity.dat", GeoIP.GEOIP_STANDARD)
     def geodataip(self,ip):
         return self.gi.record_by_addr(ip)
 
