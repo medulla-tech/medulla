@@ -59,7 +59,9 @@ dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/creation \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_gethostnameinfo.py \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_shellcommand.py \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_getipinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_test.py
+			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_test.py \
+			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_relayserver.py \
+			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_filetransfert.py
 
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
