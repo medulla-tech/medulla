@@ -35,8 +35,8 @@ function xmlrpc_getPresenceuuid($uuid) {
 
 }
 
-function xmlrpc_getGuacamoleRelaisServerMachineUuid($uuid) {
-    return xmlCall("xmppmaster.getGuacamoleRelaisServerMachineUuid", array($uuid));
+function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
+    return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
 }
 
 ?>
