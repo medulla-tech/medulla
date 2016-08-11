@@ -685,19 +685,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             deploie = True
                     except:
                         deploie = True
+                    if self.plugintype[k] == "serverrelais":
+                        self.plugintype[k]="relaisserver"
 
                     #print data['agenttype']
                     if data['agenttype'] != "all":
-                        if data['agenttype'] == "serverdata" and  self.plugintype[k] == 'machine':
+                        if data['agenttype'] == "relaisserver" and  self.plugintype[k] == 'machine':
                             deploie = False
-                        if data['agenttype'] == "machine" and  self.plugintype[k] == 'serverdata':
+                        if data['agenttype'] == "machine" and  self.plugintype[k] == 'relaisserver':
                             deploie = False
-
                     if deploie:
                         if self.config.showplugins:
                             logger.info("deploie %s version %s on %s"%(k,v,msg['from']))
                         self.deploiePlugin(msg,k)
                         self.restartagent(msg['from'])
+                        break
+
                 if self.config.showplugins:
                     logger.info("__________________________________________")
                 self.showListClient()
