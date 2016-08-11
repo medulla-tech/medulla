@@ -1,3 +1,4 @@
+# -*- coding: utf-8; -*-
 #
 # (c) 2016 siveo, http://www.siveo.net
 #
@@ -71,7 +72,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.confjidsalon = "%s@%s"%(self.get('configurationserver', 'confnamesalon'),self.get('salon', 'server'))
         self.confpasswordmuc = self.get('configurationserver', 'confpasswordmuc')
         ########chat#############
-        # le jidagent doit être la plus petite valeur de la liste des macs.
+        # le jidagent doit etre la plus petite valeur de la liste des macs.
         self.chatserver=self.get('chat', 'server')
         # plus petite mac adress
         self.jidagent = "%s@%s/%s"%(utils.name_jid(),self.get('chat', 'server'),platform.node())
