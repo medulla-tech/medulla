@@ -32,7 +32,7 @@ echo "
             hhhhhhhhhhhhhhhh";
 
 if(isset($_GET['objectUUID'])){
-    $dd = xmlrpc_getGuacamoleRelaisServerMachineUuid($_GET['objectUUID']);
+    $dd = xmlrpc_getGuacamoleRelayServerMachineUuid($_GET['objectUUID']);
     print_r($dd);
 }
 

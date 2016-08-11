@@ -75,8 +75,8 @@ def activate():
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
-def getGuacamoleRelaisServerMachineUuid(uuid):
-    return XmppMasterDatabase().getGuacamoleRelaisServerMachineUuid(uuid)
+def getGuacamoleRelayServerMachineUuid(uuid):
+    return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
 
 

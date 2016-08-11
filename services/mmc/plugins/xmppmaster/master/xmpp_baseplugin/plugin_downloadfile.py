@@ -10,7 +10,7 @@ from lib.managesession import sessiondatainfo, session
 #from  lib.utils import file_get_content, file_put_content, typelinux, servicelinuxinit, isprogramme, simplecommande, simplecommandestr, CreateWinUser
 
 
-plugin={"VERSION": "1.1", "NAME" :"downloadfile","TYPE":"all"}
+plugin={"VERSION": "1.0", "NAME" :"downloadfile","TYPE":"all"}
 @pulginprocess
 def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
     try:

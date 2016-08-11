@@ -83,9 +83,9 @@ class Network(Base, XmppMasterDBObj):
     machines = relationship(Machines)
 
 
-class RelaisServer(Base, XmppMasterDBObj):
+class RelayServer(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'relaisserver'
+    __tablename__ = 'relayserver'
     # ====== Fields =============================
     # Here we define columns for the table network.
     # Notice that each column is also a normal Python instance attribute.
@@ -140,12 +140,12 @@ class Has_machinesusers(Base, XmppMasterDBObj):
     machines = relationship(Machines)
     users = relationship(Users)
 
-class Has_relaisserverregles(Base, XmppMasterDBObj):
+class Has_relayserverregles(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'has_relaisserverregles'
+    __tablename__ = 'has_relayserverregles'
     # ====== ForeignKey =============================
     regles_id = Column(Integer, ForeignKey('regles.id'))
-    relaisserver_id = Column(Integer)
+    relayserver_id = Column(Integer)
     sujet = Column(String(45))
     order = Column(String(45))
     regles = relationship(Regles)

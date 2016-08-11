@@ -65,17 +65,17 @@ CREATE TABLE `has_machinesusers` (
 /*!40101 SET character_set_client = @saved_cs_client */;                                                                                                                                                                                                                       
                                                                                                                                                                                                                                                                                
 --                                                                                                                                                                                                                                                                             
--- Table structure for table `has_relaisserverregles`                                                                                                                                                                                                                          
+-- Table structure for table `has_relayserverregles`                                                                                                                                                                                                                          
 --                                                                                                                                                                                                                                                                             
                                                                                                                                                                                                                                                                                
-DROP TABLE IF EXISTS `has_relaisserverregles`;                                                                                                                                                                                                                                 
+DROP TABLE IF EXISTS `has_relayserverregles`;                                                                                                                                                                                                                                 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;                                                                                                                                                                                                                 
 /*!40101 SET character_set_client = utf8 */;                                                                                                                                                                                                                                   
-CREATE TABLE `has_relaisserverregles` (                                                                                                                                                                                                                                        
+CREATE TABLE `has_relayserverregles` (                                                                                                                                                                                                                                        
   `regles_id` int(11) NOT NULL,                                                                                                                                                                                                                                                
   `order` varchar(45) NOT NULL DEFAULT '0',                                                                                                                                                                                                                                    
   `sujet` varchar(45) NOT NULL,
-  `relaisserver_id` int(11) NOT NULL,
+  `relayserver_id` int(11) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -149,7 +149,7 @@ CREATE TABLE `regles` (
 
 LOCK TABLES `regles` WRITE;
 INSERT INTO `regles` VALUES (1,'user','impose relais server pour user',1),
-(2,'hostname','impose relais serveur pour hostname',2),
+(2,'hostname','asocie a hostname has a relay server',2),
 (3,'geoposition','selectionne relais meilleur position',3),
 (4,'subnet','selectionne relais server meme subnet',4),
 (5,'default','selectionne relais par defaut ',5);
@@ -157,13 +157,13 @@ UNLOCK TABLES;
 
 
 --
--- Table structure for table `relaisserver`
+-- Table structure for table `relayserver`
 --
 
-DROP TABLE IF EXISTS `relaisserver`;
+DROP TABLE IF EXISTS `relayserver`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `relaisserver` (
+CREATE TABLE `relayserver` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `urlguacamole` varchar(80) NOT NULL,
   `subnet` varchar(45) NOT NULL,

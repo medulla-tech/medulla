@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from  lib.utils import pulginprocess
-plugin={"VERSION": "2.0", "NAME" :"test"}
+plugin={"VERSION": "1.0", "NAME" :"test"}
 @pulginprocess
 def action( objetxmpp, action, sessionid, data, message, dataerreur,result):
     if data['afficherliste'] [0] !=   'je suis un test':

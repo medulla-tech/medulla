@@ -1,6 +1,6 @@
 
 
-plugin={"VERSION": "2.0", "NAME" :"dede1"}
+plugin={"VERSION": "1.0", "NAME" :"dede1"}
 
 
 def action():

@@ -149,7 +149,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('update plugin', 900 , self.loadpluginlist, repeat=True)
 
         #update configure distante guacamole time all les 6 minutes 
-        self.schedule('surveille reseau', 60 ,self.updateGuacamoleConfigRelaisServer , repeat=True)
+        self.schedule('surveille reseau', 60 ,self.updateGuacamoleConfigRelayServer , repeat=True)
 
         self.add_event_handler("session_start", self.start)
         """ nouvelle presense dans salon Master """
@@ -198,9 +198,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
             if 'shell' in sessiondata.getdatasession().keys() and sessiondata.getdatasession()['shell']:
-                print "ENVOI MESSAGE commandrelais@localhost"
+                print "ENVOI MESSAGE commandrelay@localhost"
                 print rep
-                self.send_message(mto=jid.JID("commandrelais@localhost"),
+                self.send_message(mto=jid.JID("commandrelay@localhost"),
                                 mbody=json.dumps(rep),
                                 mtype='chat')
         #else:
@@ -423,8 +423,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if data['agenttype'] == "relayserver":
             return
 
-        logger.debug("Search Server Relais for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
-        XmppMasterDatabase().log("Search Server Relais for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
+        logger.debug("Search Server Relay for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
+        XmppMasterDatabase().log("Search Server Relay for Connection user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
         #determination relayserver pour connexion
         # ordre des regles a appliquer
         ordre =  XmppMasterDatabase().Orderregles()
@@ -434,20 +434,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if x[0] == 1:
                 result1= XmppMasterDatabase().algoregleuser(data['information']['users'][0])
                 if len(result1) > 0 :
-                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
+                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("regle user select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 2:
                 result1= XmppMasterDatabase().algoreglehostname(data['information']['info']['hostname'])
                 if len(result1) > 0 :
-                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
+                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("regle hostname select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 3:
                 result1 = XmppMasterDatabase().algoreglesubnet(data['subnetxmpp'],data['classutil'])
                 if len(result1) > 0 :
                     print result1[0]
-                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(result1[0].id)
+                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("regle subnet select relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
             elif x[0] == 4:
@@ -463,9 +463,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             elif x[0] == 5:
                 distance = 40000000000
                 listeserver=[]
-                relaisserver = -1
+                relayserver = -1
                 if self.localisationifo != None and self.localisationifo['longitude']!="" and self.localisationifo['latitude']!="":
-                    result1 = XmppMasterDatabase().IdlonglatServerRelais(data['classutil'])
+                    result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                     a=0
                     for x in result1:
                         a=a+1
@@ -475,7 +475,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             print distancecalculer
                             if distancecalculer <= distance:
                                 distance = distancecalculer
-                                relaisserver = x[0]
+                                relayserver = x[0]
                                 listeserver.append(x[0])
                     nbserver = len(listeserver)
                     if nbserver > 1 :
@@ -486,15 +486,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             "%s user %s \npossible server xmpp : id list  %s "%(nbserver, data['information']['info']['hostname'],
                              data['information']['users'][0],listeserver))
                         logger.warn("continues for another rule. Random choice only if no other finds ")
-                        indetermine =  XmppMasterDatabase().IpAndPortConnectionFromServerRelais(listeserver[index])
+                        indetermine =  XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
                     else:
-                        if relaisserver != -1:
-                            result= XmppMasterDatabase().IpAndPortConnectionFromServerRelais(relaisserver)
+                        if relayserver != -1:
+                            result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(relayserver)
                             logger.debug("regle geoposition select relayserver for machine %s user %s \n %s "%(data['information']['info']['hostname'],data['information']['users'][0],result))
                             break
 
         logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))
-        XmppMasterDatabase().log("[user %s hostanme %s] : Server Relais for Connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
+        XmppMasterDatabase().log("[user %s hostanme %s] : Server Relay for Connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
 
         reponse = {
             'action' : 'resultconnectionconf', 
@@ -606,10 +606,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 country_name )
                 useradd = useradd[0]
 
-                #add relaisserver ou update status in base
-                if data['agenttype'] == "relaisserver":
-                    print "add addServerRelais"
-                    XmppMasterDatabase().addServerRelais(data['baseurlguacamole'],
+                #add relayserver ou update status in base
+                if data['agenttype'] == "relayserver":
+                    print "add addServerRelay"
+                    XmppMasterDatabase().addServerRelay(data['baseurlguacamole'],
                                                             data['subnetxmpp'], 
                                                             data['information']['info']['hostname'],#data['machine'][:-3],
                                                             data['deploiement'],
@@ -685,14 +685,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             deploie = True
                     except:
                         deploie = True
-                    if self.plugintype[k] == "serverrelais":
-                        self.plugintype[k]="relaisserver"
+                    if self.plugintype[k] == "relayserver":
+                        self.plugintype[k]="relayserver"
 
                     #print data['agenttype']
                     if data['agenttype'] != "all":
-                        if data['agenttype'] == "relaisserver" and  self.plugintype[k] == 'machine':
+                        if data['agenttype'] == "relayserver" and  self.plugintype[k] == 'machine':
                             deploie = False
-                        if data['agenttype'] == "machine" and  self.plugintype[k] == 'relaisserver':
+                        if data['agenttype'] == "machine" and  self.plugintype[k] == 'relayserver':
                             deploie = False
                     if deploie:
                         if self.config.showplugins:
@@ -707,7 +707,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # indique que la configurations guacamole doit etre faite pour sous reseau subnetxmpp
                 self.updateguacamoleconfig[data['subnetxmpp']] = True
                 # placer ici pour test sans attendre
-                #self.updateGuacamoleConfigRelaisServer()
+                #self.updateGuacamoleConfigRelayServer()
             elif data['action'] == 'participant':
                 resultcommand={'action' : 'participant',
                                 'participant' : self.presencedeploiement }
@@ -736,7 +736,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     ### passer des commande or mmc
     #def muc_Messageschell(self,msg):
-        #if msg['from'].bare == "commandrelais@localhost":
+        #if msg['from'].bare == "commandrelay@localhost":
             #a = json.loads(msg['body'])
             #k = a.keys()
             #datasession = {}
@@ -842,10 +842,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logging.error("structure Message %s   %s " %(msg,str(e)))
 
 
-    def updateGuacamoleConfigRelaisServer(self):
+    def updateGuacamoleConfigRelayServer(self):
         dataguacamoleconf = {}
         datalocationserverguacamoleconf = {}
-        controle="relaisserver"
+        controle="relayserver"
         for machine, data in self.presencedeploiement.iteritems():
             if self.updateguacamoleconfig.has_key(self.presencedeploiement[machine]['subnetxmpp']) and \
             self.updateguacamoleconfig[self.presencedeploiement[machine]['subnetxmpp']] == True:
@@ -857,7 +857,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if not dataguacamoleconf.has_key(self.presencedeploiement[machine]['subnetxmpp']):
                         dataguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']] = []
                     dataguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']].append(data1)
-                elif self.presencedeploiement[machine]['agenttype'] == "relaisserver":
+                elif self.presencedeploiement[machine]['agenttype'] == "relayserver":
                     datalocationserverguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']] = data1
 
         for e, v in datalocationserverguacamoleconf.iteritems():
