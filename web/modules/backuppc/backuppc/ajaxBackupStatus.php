@@ -57,7 +57,6 @@ if (count($data) == 0){
 $cnames = array();
 $params = array();
 
-$_SESSION['backup_hosts'] = $data['hosts'];
 for ($i = 0 ; $i<count($data['hosts']) ; $i++){
 	
 	$cn = $data['hosts'][$i];
@@ -84,6 +83,8 @@ for ($i = 0 ; $i<count($data['hosts']) ; $i++){
 	$cnames[] = $cnames_;
 	$params[] = $param_;
 }
+
+$_SESSION['backup_hosts'] = array_combine($data['hosts'], $cnames);
 
 $count = count($data['hosts']);
 

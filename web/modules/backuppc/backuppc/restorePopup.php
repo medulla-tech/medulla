@@ -25,9 +25,9 @@
 <h2><?php print _T('Restore files','backuppc'); ?></h2>
 <select id="restorehosts">
 	<?php
-		foreach($_SESSION['backup_hosts'] as $host)
+		foreach($_SESSION['backup_hosts'] as $host=>$cn)
 		{
-			echo '<option value="'.$host.'">'.$host.'</option>';
+			echo '<option value="'.$host.'">'.$cn.'</option>';
 		}
 	?>
 </select>
