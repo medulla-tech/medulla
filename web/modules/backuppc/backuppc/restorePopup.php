@@ -23,6 +23,14 @@
  */
 ?>
 <h2><?php print _T('Restore files','backuppc'); ?></h2>
+<select id="restorehosts">
+	<?php
+		foreach($_SESSION['backup_hosts'] as $host=>$cn)
+		{
+			echo '<option value="'.$host.'">'.$cn.'</option>';
+		}
+	?>
+</select>
 <input id="btnRestoreDirect1" type="button" value="<?php print _T('To original folder (overwrite)','backuppc'); ?>" class="btnPrimary" />
 <input id="btnRestoreDirect2" type="button" value="<?php print _T('To alternate folder','backuppc'); ?>" class="btnPrimary" />
 
@@ -32,7 +40,7 @@ jQuery(function(){
 
     jQuery('input#btnRestoreDirect1').click(function(){
         jQuery('#restoredir').val('/');
-        form = jQuery('#restorefiles').serialize();
+        form = jQuery('#restorefiles').serializeArray();
         
         // Test if no checkbox is checked
         if (jQuery('input[type=checkbox]:checked').length == 0)
@@ -40,7 +48,14 @@ jQuery(function(){
                 alert('You must select at least on file.');
                 return;
             }
-        
+
+        //Add hostdest to the queue
+        form.push({
+				name : 'hostdest',
+				value : jQuery('#restorehosts').val()
+        });
+        form = jQuery.param(form);
+
         jQuery.ajax({
             type: "POST",
             url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
@@ -56,7 +71,7 @@ jQuery(function(){
     
     jQuery('input#btnRestoreDirect2').click(function(){
         jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>');
-        form = jQuery('#restorefiles').serialize();
+        form = jQuery('#restorefiles').serializeArray();
         
         // Test if no checkbox is checked
         if (jQuery('input[type=checkbox]:checked').length == 0)
@@ -64,7 +79,13 @@ jQuery(function(){
                 alert('You must select at least on file.');
                 return;
             }
-        
+
+			form.push({
+				name : 'hostdest',
+				value : jQuery('#restorehosts').val()
+        });
+        form = jQuery.param(form);
+
         jQuery.ajax({
             type: "POST",
             url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",

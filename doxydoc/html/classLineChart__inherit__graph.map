@@ -1,0 +1,4 @@
+<map id="LineChart" name="LineChart">
+<area shape="rect" id="node2" href="$classBarChart.html" title="BarChart" alt="" coords="7,80,82,107"/>
+<area shape="rect" id="node3" href="$classChart.html" title="Chart" alt="" coords="18,5,71,32"/>
+</map>

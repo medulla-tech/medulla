@@ -1,0 +1,5 @@
+<map id="ConnectorException" name="ConnectorException">
+<area shape="rect" id="node2" href="$classpulse2agent_1_1connect_1_1ConnectionRefused.html" title="ConnectionRefused" alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node3" href="$classpulse2agent_1_1connect_1_1ConnectionTimeout.html" title="ConnectionTimeout" alt="" coords="168,80,307,107"/>
+<area shape="rect" id="node4" href="$classpulse2agent_1_1connect_1_1UnknownService.html" title="UnknownService" alt="" coords="331,80,453,107"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classpulse2_1_1scheduler_1_1types_1_1PhaseProxyMethodContainer.html" title="PhaseProxyMethodContainer" alt="" coords="5,81,201,108"/>
+<area shape="rect" id="node2" href="$classpulse2_1_1scheduler_1_1types_1_1PhaseBase.html" title="PhaseBase" alt="" coords="249,81,343,108"/>
+<area shape="rect" id="node3" href="$classpulse2_1_1scheduler_1_1types_1_1Phase.html" title="Phase" alt="" coords="391,81,452,108"/>
+<area shape="rect" id="node4" href="$classpulse2_1_1scheduler_1_1phases_1_1pull_1_1PullPhase.html" title="PullPhase" alt="" coords="534,5,617,32"/>
+<area shape="rect" id="node5" href="$classpulse2_1_1scheduler_1_1phases_1_1remote_1_1RemoteControlPhase.html" title="RemoteControlPhase" alt="" coords="500,56,651,83"/>
+<area shape="rect" id="node6" href="$classpulse2_1_1scheduler_1_1phases_1_1remote_1_1WUParsePhase.html" title="WUParsePhase" alt="" coords="516,107,635,133"/>
+<area shape="rect" id="node7" href="$classtypes_1_1__MyPhase.html" title="_MyPhase" alt="" coords="533,157,618,184"/>
+</map>
