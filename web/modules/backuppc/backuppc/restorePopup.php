@@ -38,6 +38,12 @@
 
 jQuery(function(){
 
+//Extract first information send : initial host
+tabl = jQuery('#restorefiles').serializeArray();
+host = tabl[0];
+//modify "selected" attr when id = initial host
+jQuery("#"+host.value).attr('selected','selected');
+
     jQuery('input#btnRestoreDirect1').click(function(){
         jQuery('#restoredir').val('/');
         form = jQuery('#restorefiles').serializeArray();
