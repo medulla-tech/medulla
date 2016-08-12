@@ -57,11 +57,10 @@ if (count($data) == 0){
 $cnames = array();
 $params = array();
 
-
+$_SESSION['backup_hosts'] = $data['hosts'];
 for ($i = 0 ; $i<count($data['hosts']) ; $i++){
 	
 	$cn = $data['hosts'][$i];
-	
     
     if (preg_match('@uuid([0-9]+)@i', $cn, $matches) == 1)
     {
