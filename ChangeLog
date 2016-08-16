@@ -9,3 +9,4 @@ Pulse 2 3.6.0
  * [FEATURE] Add Mageia support in the dashboard
  * [BUGFIX]  Fix the loading of json files containing non printable characters in PXE registration
  * [BUGFIX]  Fix listing packages in Launch Bundle view of computer's secure control
+ * [BUGFIX]  Fix for deployment on targets where IP address has changed
