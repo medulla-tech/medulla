@@ -102,6 +102,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	msc/sql/README \
 	msc/sql/clean-db.sql \
 	msc/sql/purge-old-rows.sql \
+	msc/sql/synch-localglpi-to-msc.sql \
+	msc/sql/synch-remoteglpi-to-msc.sql.in \
 	msc/sql/schema-001.sql \
 	msc/sql/schema-002.sql \
 	msc/sql/schema-003.sql \
