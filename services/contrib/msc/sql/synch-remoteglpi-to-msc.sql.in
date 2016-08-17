@@ -14,7 +14,7 @@ CREATE TABLE `target` (
   `last_update` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `target_uuid` (`target_uuid`(10))
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CONNECTION='mysql://root@@@MYSQL_SERVER@@:@@MYSQL_PORT@@/msc/target';
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CONNECTION='mysql://@@MYSQL_USER@@:@@MYSQL_PASSWORD@@@@@MYSQL_SERVER@@:@@MYSQL_PORT@@/msc/target';
 
 
 USE `glpi`;
