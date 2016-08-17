@@ -1,4 +1,4 @@
-USE `glpi`;
+USE `@@GLPI_DBNAME@@`;
 
 DROP TABLE IF EXISTS `target`;
 CREATE TABLE `target` (
@@ -17,24 +17,24 @@ CREATE TABLE `target` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CONNECTION='mysql://@@MYSQL_USER@@:@@MYSQL_PASSWORD@@@@@MYSQL_SERVER@@:@@MYSQL_PORT@@/msc/target';
 
 
-USE `glpi`;
+USE `@@GLPI_DBNAME@@`;
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS glpi.glpi_ipaddresses_AFTER_UPDATE$$
-USE `glpi`$$
-CREATE DEFINER=`root`@`localhost` TRIGGER `glpi`.`glpi_ipaddresses_AFTER_UPDATE` AFTER UPDATE ON `glpi_ipaddresses` FOR EACH ROW
+DROP TRIGGER IF EXISTS @@GLPI_DBNAME@@.glpi_ipaddresses_AFTER_UPDATE$$
+USE `@@GLPI_DBNAME@@`$$
+CREATE DEFINER=`root`@`localhost` TRIGGER `@@GLPI_DBNAME@@`.`glpi_ipaddresses_AFTER_UPDATE` AFTER UPDATE ON `glpi_ipaddresses` FOR EACH ROW
 BEGIN
 
     CALL update_MSC_Ips(NEW.`mainitems_id`);
 END$$
 DELIMITER ;
 
-USE `glpi`;
+USE `@@GLPI_DBNAME@@`;
 DROP procedure IF EXISTS `update_MSC_Ips`;
 
 DELIMITER $$
-USE `glpi`$$
+USE `@@GLPI_DBNAME@@`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `update_MSC_Ips`(IN id_machine VARCHAR(20))
 BEGIN
 DECLARE uuid varchar(40) ;
@@ -43,19 +43,19 @@ DECLARE idtarget varchar(255) ;
 set uuid =  CONCAT("UUID",id_machine);
 
     SELECT MAX(id) INTO idtarget FROM
-        `glpi`.`target`
+        `@@GLPI_DBNAME@@`.`target`
     WHERE
         target_uuid = uuid;
     IF idtarget IS NOT NULL THEN
         SELECT
             GROUP_CONCAT(`name`    SEPARATOR '||')
         INTO ret FROM
-            glpi.glpi_ipaddresses
+            @@GLPI_DBNAME@@.glpi_ipaddresses
         WHERE
             mainitems_id = id_machine;
     END IF;
     IF ret IS NOT NULL THEN
-        UPDATE `glpi`.`target` SET `target_ipaddr`= ret WHERE `id` = idtarget;
+        UPDATE `@@GLPI_DBNAME@@`.`target` SET `target_ipaddr`= ret WHERE `id` = idtarget;
     END IF;
 END$$
 
