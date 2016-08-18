@@ -82,8 +82,16 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.showplugins = self.getboolean('master', 'showplugins')
         #################""default connection ###################""
         ### parameters conection server si pas server relais dispo ####
+
         self.defaultrelayserverip = self.get('defaultconnection', 'serverip')
+        if self.defaultrelayserverip == "localhost":
+            logging.getLogger().error('parameter section "defaultconnection" serverip not must localhost')
+        if self.defaultrelayserverip == "127.0.0.1":
+            logging.getLogger().error('parameter section "defaultconnection" serverip not must 127.0.0.1')
         self.defaultrelayserverport = self.get('defaultconnection', 'port')
+
+        self.defaultrelayserverbaseurlguacamole=self.get('defaultconnection', 'baseurlguacamole')
+
 
         #self.inventory = self.get('inventorypulse', 'inventory')
 
