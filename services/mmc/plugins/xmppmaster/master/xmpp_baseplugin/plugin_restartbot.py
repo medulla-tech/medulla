@@ -21,4 +21,3 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur ):
                                 mbody=json.dumps(reponse),
                                 mtype='chat')
         objetxmpp.restartBot()
-    
