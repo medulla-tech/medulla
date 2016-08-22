@@ -347,40 +347,24 @@ class LauncherCallingProvider(type):
         @param args: arguments of called method
         @type args: list
         """
-        d = self._get_all_stats()
-        d.addCallback(self._extract_best_candidate)
-        d.addCallback(self._call, method, *args)
-        d.addErrback(self._eb_select)
-        return d
+        d_main = self.is_default_free()
 
-        #@d.addErrback
-        #def _eb(failure):
-        #    err = failure.trap(TCPTimedOutError)
-        #    if err == TCPTimedOutError :
-        #        logging.getLogger().warn("Timeout raised when dispatching the launchers")
-        #    else :
-        #        logging.getLogger().error("An error occured when dispatch the launchers: %s" % failure)
+        @d_main.addCallback
+        def _cb(is_free):
+            if is_free :
+                logging.getLogger().debug("########## SPO ########## default_launcher: %s" % self.default_launcher)
+                d = self._call(self.default_launcher, method, *args)
+                logging.getLogger().debug("########## SPO ########## d: %s" % self.default_launcher)
+                d.addErrback(self._eb_select)
+            else :
+                d = self._get_all_stats()
+                d.addCallback(self._extract_best_candidate)
+                d.addCallback(self._call, method, *args)
+                d.addErrback(self._eb_select)
 
+            return d
 
-        # TODO - create a parameter to switch between standard launchers
-        #        balancing and this 'forcing' of default launcher bellow
-        #        (based on preferred_network in launchers section)
-        #d_main = self.is_default_free()
-        #
-        #@d_main.addCallback
-        #def _cb(is_free):
-        #    if is_free :
-        #        d = self._call(self.default_launcher, method, *args)
-        #        d.addErrback(self._eb_select)
-        #    else :
-        #        d = self._get_all_stats()
-        #        d.addCallback(self._extract_best_candidate)
-        #        d.addCallback(self._call, method, *args)
-        #        d.addErrback(self._eb_select)
-        #
-        #    return d
-        #
-        #return d_main
+        return d_main
 
     def call_method_on_launcher(self, launcher, method, *args):
         """
@@ -466,7 +450,7 @@ class RemoteCallProxy :
     # implements the remote calls with a optimal choice of launcher
     __metaclass__ = LauncherCallingProvider
 
-    def __init__(self, launchers, slots, default_launcher=None):
+    def __init__(self, launchers, slots, default_launcher):
         """
         @param launchers: a dictionnary of all URL addresses of used launchers
         @type launchers: dict
@@ -679,12 +663,3 @@ class RemoteCallProxy :
     @same_call
     def get_zombie_ids(self):
         pass
-
-
-
-
-
-
-
-
-

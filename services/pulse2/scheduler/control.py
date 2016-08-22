@@ -476,12 +476,14 @@ class MscDispatcher (MscQueryManager, MethodProxy):
                 launchers = self.get_launchers_by_network(circuit.network_address)
                 if len(launchers) > 0 :
                     circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
+                                                                 self.slots,
                                                                  launchers[0])
                     self.logger.debug("Circuit #%s: assigned launcher <%s>" %
                             (circuit.id, launchers[0]))
                 else:
                     launcher = self.config.launchers.keys()[0]
                     circuit.launchers_provider = RemoteCallProxy(self.config.launchers_uri,
+                                                                 self.slots,
                                                                  launcher)
                     self.logger.debug("Launcher pre-detect failed, assigning the first launcher '%s' to circuit #%s" %
                                   (launcher, circuit.id))
@@ -868,4 +870,3 @@ class MscDispatcher (MscQueryManager, MethodProxy):
         except Exception, e:
             self.logger.error("Mainloop execution failed: %s" % str(e))
             return True
-
