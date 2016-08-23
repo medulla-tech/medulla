@@ -11,3 +11,4 @@ Pulse 2 3.6.0
  * [BUGFIX]  Fix listing packages in Launch Bundle view of computer's secure control
  * [BUGFIX]  Fix for deployment on targets where IP address has changed
  * [FEATURE] Restore backup to other hosts
+ * [BUGFIX]  Make use of preferred_network for the choice of launcher

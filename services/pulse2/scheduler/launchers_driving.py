@@ -352,9 +352,7 @@ class LauncherCallingProvider(type):
         @d_main.addCallback
         def _cb(is_free):
             if is_free :
-                logging.getLogger().debug("########## SPO ########## default_launcher: %s" % self.default_launcher)
                 d = self._call(self.default_launcher, method, *args)
-                logging.getLogger().debug("########## SPO ########## d: %s" % self.default_launcher)
                 d.addErrback(self._eb_select)
             else :
                 d = self._get_all_stats()
