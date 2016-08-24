@@ -32,7 +32,7 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
-
+from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp,simplecommandxmpp1
 from  xmppmaster import *
 
 VERSION = "1.0.0"
@@ -77,6 +77,31 @@ def getPresenceuuid(uuid):
 
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
+
+def getListPresenceMachine():
+    return XmppMasterDatabase().getListPresenceMachine()
+
+def xmppcommand(cmd,machine):
+    data = {
+	"action": "shellcommand",
+	"sessionid":name_random(8,"mcc_"),
+	"data" : {'cmd' : cmd},
+	"base64" :False
+    }
+    a=simplecommandxmpp1(machine, data , 4)
+    d = a.t2.join()
+    return a.result
+
+def xmppscript(cmd,machine):
+    data = {
+	"action": "shellcommand",
+	"sessionid":name_random(8,"mcc_"),
+	"data" : {'cmd' : cmd},
+	"base64" :False
+    }
+    a=simplecommandxmpp1(machine, data , 4)
+    d = a.t2.join()
+    return a.result
 
 
 

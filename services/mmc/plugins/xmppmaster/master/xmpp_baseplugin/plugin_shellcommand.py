@@ -3,7 +3,7 @@ from  lib.utils import pulginprocess
 import sys, os
 from  lib.utils import file_get_content, file_put_content, typelinux, servicelinuxinit, isprogramme, simplecommande, simplecommandestr, CreateWinUser
 
-plugin={"VERSION": "1.0", "NAME" :"shellcommand"}
+plugin={"VERSION": "1.0", "NAME" :"shellcommand","TYPE":"all"}
 
 # le decorateur @pulginprocess
 # defini squelette du dict result sectionid action et ret definie
