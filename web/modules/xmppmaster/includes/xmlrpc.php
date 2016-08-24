@@ -39,4 +39,22 @@ function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
     return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
 }
 
+
+
+
+function xmlrpc_getListPresenceMachine() {
+    return xmlCall("xmppmaster.getListPresenceMachine", array());
+}
+
+
+function xmlrpc_xmppcommand($command, $machine){
+    return xmlCall("xmppmaster.xmppcommand", array($command,$machine));
+}
+
+function xmlrpc_xmppscript($command, $machine){
+    return xmlCall("xmppmaster.xmppscript", array($command,$machine));
+}
+
+
+
 ?>
