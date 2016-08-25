@@ -3,7 +3,7 @@ import json
 import subprocess
 
 from lib.networkinfo import networkagentinfo
-plugin={"VERSION": "1.0", "NAME" :"installlib"}
+plugin={"VERSION": "1.0", "NAME" :"installlib","TYPE":"all"}
 
 def action(jsonobj, msg, classxmpp ):
     
