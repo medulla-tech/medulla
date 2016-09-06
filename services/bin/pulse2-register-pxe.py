@@ -97,10 +97,11 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("cpu.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             cpu=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("cpu\n%s"%cpu)
         except:
-            logging.getLogger().debug("error json cpu")
+            logging.getLogger().error("Error loading json cpu")
     else:
         z1.insert(0, "")
 
@@ -110,10 +111,11 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("pxe.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pxe = json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pxe\n%s"%pxe)
         except:
-            logging.getLogger().debug("error json pxe")
+            logging.getLogger().error("Error loading json pxe")
     else:
         z1.insert(0, "")
 
@@ -122,10 +124,11 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("syslinux.txt",z1[0])
         try:
-            logging.getLogger().debug("syslinux\n%s"%syslinux)
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             syslinux=json.loads(str(z1[0]), strict=False)
+            logging.getLogger().debug("syslinux\n%s"%syslinux)
         except:
-            logging.getLogger().debug("error json syslinux")
+            logging.getLogger().error("Error loading json syslinux")
     else:
         z1.insert(0, "")
 
@@ -134,10 +137,11 @@ def parsejsoninventory(file, file_content):
         z1[0] = "{" + z1[0] + "}"
         sauvefile("vpd.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vpd=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vpd\n%s"%vpd)
         except:
-            logging.getLogger().error("error json vpd")
+            logging.getLogger().error("Error loading json vpd")
     else:
         z1.insert(0, "")
 
@@ -148,10 +152,11 @@ def parsejsoninventory(file, file_content):
         z1[0]="[\n{" + str(z1[0]) + "}\n]"
         sauvefile("vesa.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vesa=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vesa\n%s"%vesa)
         except:
-            logging.getLogger().error("error json vesa")
+            logging.getLogger().error("Error loading json vesa")
     else:
         z1.insert(0, "")
 
@@ -163,10 +168,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= "[\n" + z1[0] + "\n]"
         sauvefile("disks.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             disks=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("disks\n%s"%disks)
         except:
-            logging.getLogger().error("error json disks")
+            logging.getLogger().error("Error loading json disks")
     else:
         z1.insert(0, "")
 
@@ -177,10 +183,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("dmi.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             dmi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("dmi\n%s"%dmi)
         except:
-            logging.getLogger().error("error json dmi")
+            logging.getLogger().error("Error loading json dmi")
     else:
         z1.insert(0, "")
 
@@ -191,10 +198,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("memory.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             memory=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("memory\n%s"%memory)
         except:
-            logging.getLogger().error("error json memory")
+            logging.getLogger().error("Error loading json memory")
     else:
         z1.insert(0, "")
 
@@ -205,10 +213,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= z1[0].replace('][', '],[')
         sauvefile("pci.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pci=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pci\n%s"%pci)
         except:
-            logging.getLogger().error("error json pci")
+            logging.getLogger().error("Error loading json pci")
     else:
         z1.insert(0, "")
 
@@ -220,10 +229,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= "[\n" + "{" + z1[0]+ "]\n"+ "]"
         sauvefile("acpi.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             acpi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("acpi\n%s"%acpi)
         except:
-            logging.getLogger().error("error json acpi")
+            logging.getLogger().error("Error loading json acpi")
     else:
         z1.insert(0, "")
 
@@ -231,10 +241,11 @@ def parsejsoninventory(file, file_content):
     if len(z1) > 1:
         sauvefile("kernel.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             kernel=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("kernel\n%s"%kernel)
         except:
-            logging.getLogger().error("error json kernel")
+            logging.getLogger().error("Error loading json kernel")
     else:
         z1.insert(0, "")
 
@@ -243,10 +254,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= "{" + str(z1[0]) + "}"
         sauvefile("hdt.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hdt=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hdt\n%s"%hdt)
         except:
-            logging.getLogger().error("error json hdt")
+            logging.getLogger().error("Error loading json hdt")
     else:
         z1.insert(0, "")
 
@@ -255,10 +267,11 @@ def parsejsoninventory(file, file_content):
         z1[0]= "{" + z1[0]+ "}"
         sauvefile("hostname.txt",z1[0])
         try:
+            logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hostname=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hostname\n%s"%hostname)
         except:
-            logging.getLogger().error("error json hostname")
+            logging.getLogger().error("Error loading json hostname")
     else:
         z1.insert(0, "")
     ##############REQUEST##############
@@ -283,13 +296,25 @@ def parsejsoninventory(file, file_content):
     MMANUFACTURER = ET.SubElement(BIOS, "MMANUFACTURER").text = dmi[1]['dmi.base_board.manufacturer']
     MMODEL = ET.SubElement(BIOS, "MMODEL").text = dmi[1]['dmi.base_board.product_name']
     MSN = ET.SubElement(BIOS, "MSN").text = dmi[1]['dmi.base_board.serial']
-    SKUNUMBER = ET.SubElement(BIOS, "SKUNUMBER").text = dmi[2]['dmi.system.sku_number']
+    if dmi[2]['dmi.system.sku_number'].strip() == '':
+        SKUNUMBER = ET.SubElement(BIOS, "SKUNUMBER").text = 'N/A'
+    else:
+        SKUNUMBER = ET.SubElement(BIOS, "SKUNUMBER").text = dmi[2]['dmi.system.sku_number']
     BDATE = ET.SubElement(BIOS, "BDATE").text = dmi[3]['dmi.bios.release_date']
     BMANUFACTURER = ET.SubElement(BIOS, "BMANUFACTURER").text = dmi[1]['dmi.base_board.manufacturer']
     BVERSION = ET.SubElement(BIOS, "BVERSION").text = dmi[3]['dmi.bios.version']
-    SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = dmi[2]['dmi.system.manufacturer']
-    SMODEL = ET.SubElement(BIOS, "SMODEL").text = dmi[2]['dmi.system.product_name']
-    SSN = ET.SubElement(BIOS, "SSN").text = dmi[2]['dmi.system.serial']
+    if dmi[2]['dmi.system.manufacturer'].strip() == '':
+        SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = 'N/A'
+    else:
+        SMANUFACTURER = ET.SubElement(BIOS, "SMANUFACTURER").text = dmi[2]['dmi.system.manufacturer']
+    if dmi[2]['dmi.system.product_name'].strip() == '':
+        SMODEL = ET.SubElement(BIOS, "SMODEL").text = 'N/A'
+    else:
+        SMODEL = ET.SubElement(BIOS, "SMODEL").text = dmi[2]['dmi.system.product_name']
+    if dmi[2]['dmi.system.serial'].strip() == '':
+        SSN = ET.SubElement(BIOS, "SSN").text = 'N/A'
+    else:
+        SSN = ET.SubElement(BIOS, "SSN").text = dmi[2]['dmi.system.serial']
 
     ##############HARDWARE##############
     HARDWARE = ET.SubElement(CONTENT, "HARDWARE")
