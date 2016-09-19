@@ -15,11 +15,11 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
         namefile = sessiondata.getdatasession()['qui']
 
         if dataobj['end']:
-            objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid, 'status': 'finished','success':True,  'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid, 'status': 'finished','success':True,  'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             objetxmpp.session.clear(sessionid)
             return
         if ret != 0:
-            objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid,'status': 'finished','success':False, 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'finished','success':False, 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             objetxmpp.session.clear(sessionid)
             return
 
@@ -33,7 +33,7 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
         try:
             part =  sessiondata.getdatasession()['part']
         except:
-            objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             sessiondata.datasession['part'] = 0
             sessiondata.datasession['pointeur'] = 0
         pointeur =  sessiondata.getdatasession()['pointeur']
@@ -43,10 +43,10 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
             f.seek(pointeur, 0)
             buffer = f.read(25000)
             sessiondata.datasession['pointeur'] = f.tell()
-            objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid,'status': 'process','size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'process','size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             objetxmpp.session.affiche()
         except IOError:
-            objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :'IOError' ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :'IOError' ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             raise
         finally:
             f.close()
@@ -64,4 +64,4 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
                                 mtype='chat')
     except Exception as e:
         print "erreur %s"%str(e)
-        objetxmpp.event("cmdsend", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+        objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})

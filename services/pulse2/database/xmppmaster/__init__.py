@@ -385,12 +385,6 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def jidrelayserverforip(self, session, ip ):
         """ return jid server relay for connection"""
-        #sql ="""SELECT 
-                    #jid
-                #FROM
-                    #xmppmaster.relayserver
-                #WHERE
-                    #ipserver = '%s';"""%ip;
         sql ="""SELECT 
                     jid
                 FROM
