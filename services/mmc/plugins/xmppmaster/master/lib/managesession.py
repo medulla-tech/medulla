@@ -72,7 +72,6 @@ class sessiondatainfo:
 
     def removesessionfile(self):
         namefilesession = os.path.join( self.pathfile, self.sessionid )
-        print "REMOVE INFO SESSION",namefilesession
         os.remove(namefilesession)
 
     def getdatasession(self):

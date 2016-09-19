@@ -30,16 +30,21 @@ import random
 import re
 import traceback, types
 from pprint import pprint
+
 import hashlib
 from functools import wraps
 import base64
 from importlib import import_module
 
-pathbase = os.path.abspath(os.curdir)
 
-pathseelfplugins = os.path.join(pathbase, "pluginmaster")
+sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
-sys.path.append(pathseelfplugins)
+#pathbase = os.path.abspath(os.curdir)
+
+#pathseelfplugins = os.path.join(pathbase, "pluginsmaster")
+
+#sys.path.append(pathseelfplugins)
+#sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 #import PluginRecvMuctest
 if sys.platform.startswith('win'):
@@ -50,10 +55,17 @@ if sys.platform.startswith('win'):
     import win32netcon
     import socket
 
-def load_plugin(name):
-    mod = __import__("plugin_%s" % name)
-    return mod
+def affichedatajson(jsondata):
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(jsondata)
 
+
+def load_plugin(name):
+    print "IMPORTE plugin_%s" % name
+    mod = __import__("plugin_%s" % name)
+    print mod
+    return mod
+#/usr/lib/pymodules/python2.7/mmc/plugins/xmppmaster/master/pluginsmaster
 def call_plugin(name, *args, **kwargs):
     pluginaction = load_plugin(name)
     pluginaction.action(*args, **kwargs)
@@ -581,7 +593,6 @@ def pulginmaster(func):
     return wrapper
 
 
-
 def pulginmastersessionaction( sessionaction, timeminute = 10 ):
     def decorateur(func):
         def wrapper(objetxmpp, action, sessionid, data, message, ret, dataobj):
@@ -616,6 +627,3 @@ def searchippublic(site = 1):
         page = urllib.urlopen("http://www.monip.org/").read()
         ip = page.split("IP : ")[1].split("<br>")[0]
         return ip
-
-
-
