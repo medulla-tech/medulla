@@ -32,29 +32,32 @@ function xmlrpc_getPresenceuuid($uuid) {
     //$str = preg_replace('`[^0-9]`', '', $uuid);
     //return xmlCall("xmppmaster.getPresenceuuid", array($str));
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
-
 }
 
-function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
-    return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
+//JFK
+function xmlrpc_getconfigurationxmpp() {
+    return xmlCall("xmppmaster.getconfigurationxmpp", array());
 }
 
-
-
+function xmlrpc_getGuacamoleRelaisServerMachineUuid($uuid) {
+    return xmlCall("xmppmaster.getGuacamoleRelaisServerMachineUuid", array($uuid));
+}
 
 function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
 }
 
-
 function xmlrpc_xmppcommand($command, $machine){
-    return xmlCall("xmppmaster.xmppcommand", array($command,$machine));
+    return xmlCall("xmppmaster.xmppcommand", array($command, $machine));
 }
 
 function xmlrpc_xmppscript($command, $machine){
-    return xmlCall("xmppmaster.xmppscript", array($command,$machine));
+    return xmlCall("xmppmaster.xmppscript", array($command, $machine));
 }
 
+function xmlrpc_xmppdeploye( $jidrelais, $jidmachine, $name, $time){
+    return xmlCall("xmppmaster.xmppapplicationdeployment", array("applicationdeployment",  $jidrelais, $jidmachine, $name, $time));
+}
 
 
 ?>
