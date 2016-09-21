@@ -32,9 +32,9 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
-from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp,simplecommandxmpp1
+from master.lib.utils import name_random
 from  xmppmaster import *
-
+from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction 
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -46,12 +46,12 @@ logger = logging.getLogger()
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
 
+
 def getApiVersion():
     return APIVERSION
 
 def dede():
     logging.getLogger().info("test")
-
 
 def activate():
     """
@@ -72,6 +72,7 @@ def activate():
 # xmppmaster MAIN FUNCTIONS [HTTP INTERFACE]
 # #############################################################
 
+
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
@@ -80,6 +81,13 @@ def getGuacamoleRelayServerMachineUuid(uuid):
 
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
+
+##JFK
+def getconfigurationxmpp():
+    return configurationxmpp()
+#JFK
+def xmppapplicationdeployment(*args, **kwargs ):
+    return callxmppfunction(*args, **kwargs )
 
 def xmppcommand(cmd,machine):
     data = {
@@ -102,6 +110,5 @@ def xmppscript(cmd,machine):
     a=simplecommandxmpp1(machine, data , 4)
     d = a.t2.join()
     return a.result
-
 
 

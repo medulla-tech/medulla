@@ -77,13 +77,6 @@ def configurationxmpp():
     global xmpp
     return str(xmppMasterConfig())
 
-#class eventprocess:
-    #def __init__(self):
-        #self.event = []
-
-    #def addevent(self,dataevent):
-        #pass
-
 #commandprocess (command, to, eventstart="startfichier", event= "transfert1terminer", eventerror='transferterror' )
 #envoicommand(self, jid, action , data={}, datasession = None, encodebase64 = False, time = 10, eventthread=None)
 #def __init__(self, to, action, data, timeout, precommand, postcommand):
@@ -230,100 +223,6 @@ class simplecommandxmpp1:
                 break;
         self.xmpp.session.clearnoevent(self.sessionid)
         return self.result
-
-
-#class manage_event:
-    #def __init__(self, queue_in, objectxmpp):
-        #self.event=[]
-        #self.queue_in = queue_in
-        #self.namethread =  name_random(5, "threadevent")
-        #self.objectxmpp = objectxmpp
-        #print "****************************manage_event"
-        #self.threadevent = threading.Thread( name = self.namethread, target = self.manage_event_command)
-        #self.threadevent.start()
-
-    #def show_eventloop(self):
-        #print "boucle evenement"
-        #for i in self.event:
-            #print i
-            #print '------------'
-
-    #def addevent(self, event):
-        #self.event.append(event)
-
-    #def delevent(self, event):
-        #self.event.append(event)
-
-    #def manage_event_command(self):
-        #try:
-            #while True:
-                #try:
-                    ##lit event
-                    #print "attente event"
-                    #event = self.queue_in.get(5)
-                    #print "event recu *********************"%event
-                    #if 'sessionid' in event and 'event' in event:
-                        #for i in self.event:
-                            #if i['sessionid'] == event['sessionid'] and event['event'] == i['data']['Devent']:
-                                #i['ret'] = event['result']['codeerror']
-                                #i['data']['result'] = event['result']['resultcommand']
-                                #i['data']['command'] = event['result']['cmddata']
-                                #i['data']['sessionid'] = i['sessionid']
-                                #self.objectxmpp.send_message( mto=i['to'],
-                                            #mbody=json.dumps(i),
-                                            #mtype='chat')
-                                #self.event.remove(i)
-                                #self.show_eventloop()
-                                #break
-                #except TimeoutError:
-                    #print "*******************TimeoutError"
- 
-        #except KeyboardInterrupt:
-            #pass
-        #finally:
-            #print "****************************manage_event end"
-            #pass
-
-#class mannageprocess:
-
-    #def __init__(self, queue_out_session) :
-        #self.processtable = []
-        #self.queue_out_session = queue_out_session
-
-    #def add_processcommand(self, cmddata , sessionid, eventstart = False, eventfinish = False, eventerror = False):
-        #createprocesscommand = Process(target=self.processcommand, args=(cmddata , self.queue_out_session, sessionid, eventstart, eventfinish , eventerror ))
-        #self.processtable.append(createprocesscommand)
-        #createprocesscommand.start()
-
-    #def processcommand( self,  cmddata , queue_out_session, sessionid, eventstart, eventfinish, eventerror):
-        #try: 
-            ##structure message for msgout
-            #msgout = {
-                        #'event': "",
-                        #'sessionid': sessionid,
-                        #'result' : { 'codeerror' : 0, 'resultcommand' : '','cmddata' : cmddata },
-            #}
-            ##if eventstart != False:
-                ##ecrit dans queue_out_session l'evenement eventstart
-                ##msgout['event'] = eventstart
-                ##queue_out_session.put(msgout)
-            #cmd = simplecommandestr(cmddata)
-            #if cmd['code'] != 0 and eventfinish != False:
-                ##ecrit dans queue_out_session l'evenement eventerror
-                #msgout['event'] = eventerror
-                #msgout['result']['resultcommand'] = cmd['result']
-                #msgout['result']['codeerror'] = cmd['code']
-                #queue_out_session.put(msgout)
-            #else :
-                ##ecrit dans queue_out_session l'evenement finish
-                #msgout['event'] = eventfinish
-                #msgout['result']['resultcommand'] = cmd['result']
-                #msgout['result']['codeerror'] = cmd['code']
-                #queue_out_session.put(msgout)
-        #except TimeoutError:
-            #pass
-        #except KeyboardInterrupt:
-            #sys.exit(0)
 
 
 class MUCBot(sleekxmpp.ClientXMPP):
