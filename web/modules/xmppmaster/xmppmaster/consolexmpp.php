@@ -62,7 +62,7 @@ echo "</pre>";*/
         trim($_POST['command'])!= ""
         ){
         $_POST['result']='';
-        $result=xmlrpc_xmppcommand(trim($_POST['command']),trim($_POST['Machine']));
+        $result = xmlrpc_xmppcommand(trim($_POST['command']),trim($_POST['Machine']));
  }else
  {
     $result="";
@@ -103,16 +103,33 @@ echo "</pre>";*/
         if ( isset($_POST['result'])){
             $ear = new TextareaTpl('result');
             $ear->setCols(190);
-            $f->add(
-                new TrFormElement
-                (
-                    "",
-                    $ear
-                ),
-                array("value" => htmlspecialchars($result['data']['result']))
-            );
+            if (array_key_exists('result', $result['data'])) {
+                $f->add(
+                    new TrFormElement
+                    (
+                        "",
+                        $ear
+                    ),
+                    array("value" => htmlspecialchars($result['data']['result']))
+                );
+            }
+            else{
+                $f->add(
+                        new TrFormElement
+                        (
+                            "",
+                            $ear
+                        ),
+                        array("value" => htmlspecialchars($result['data']['msg']))
+                    );
+            }
         }
+        
         $f->push(new Table());
+        if ($result['ret'] != 0){
+            $result['ret']=' <font color="red">'.$result['ret'].'</font>';
+        }
+        
         $f->add(
                     new TrFormElement("",  new SpanElement(_T("Code Return : ", "xmppmaster").$result['ret']))
                 );
