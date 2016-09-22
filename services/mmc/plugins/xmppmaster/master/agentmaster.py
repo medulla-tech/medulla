@@ -217,9 +217,14 @@ class simplecommandxmpp1:
             event_is_set = self.e.wait(self.t)
             print 'event est signaler set: %s'% event_is_set
             if event_is_set:
-                self.result =self.session.datasession['result']
+                self.result = self.session.datasession
             else:
                 #tineout
+                self.result = {u'action': u'resultshellcommand',
+                               u'sessionid': self.sessionid,
+                               u'base64': False,
+                               u'data': {u'msg': "ERROR commande\n timeout %s"%self.t },
+                               u'ret': 125}
                 break;
         self.xmpp.session.clearnoevent(self.sessionid)
         return self.result
