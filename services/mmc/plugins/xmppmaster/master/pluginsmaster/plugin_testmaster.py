@@ -15,3 +15,4 @@ def action( objetxmpp, action, sessionid, data, message, ret, objsessiondata):
     #else:
         #print "erreur"
     print "fff"
+ 
