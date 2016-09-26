@@ -42,6 +42,9 @@ $submod->setVisibility(False);
 $page = new Page("consolexmpp", _T('consolexmpp', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("xmpplauncherdeploy", _T('xmpplauncherdeploy', 'xmppmaster'));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
