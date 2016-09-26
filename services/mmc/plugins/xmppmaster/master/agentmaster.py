@@ -48,7 +48,7 @@ from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
-
+import traceback
 import pprint
 import pluginsmaster
 import cPickle
@@ -573,6 +573,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             fileplugin.close()
         except :
             logger.err(  "erreur lecture fichier")
+            traceback.print_exc(file=sys.stdout)
             return
         #if len(data)!=0:
         fichierdata['action'] = 'installplugin'
@@ -618,6 +619,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return True
         except Exception as e:
             print "ERROR MessagesAgentFromSalonlog %s"%(str(e))
+            traceback.print_exc(file=sys.stdout)
             return False
 
     def MessagesAgentFromSalonConfig(self, msg):
@@ -969,6 +971,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #jfk    
         except Exception as e:
             print "ERROR : infos machine %s"%(str(e))
+            traceback.print_exc(file=sys.stdout)
         return False
 
     def timeout(self, data):
@@ -1085,6 +1088,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     print msg['from']
                     print dataobj
                     print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
+                    traceback.print_exc(file=sys.stdout)
 
                 except Exception as e:
                     logging.error("execution plugin %s %s" % (dataobj['action'], str(e)))
@@ -1095,9 +1099,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     print msg['from']
                     print dataobj
                     print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
+                    traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
             logging.error("structure Message %s   %s " %(msg,str(e)))
+            traceback.print_exc(file=sys.stdout)
 
 
     def updateGuacamoleConfigRelayServer(self):
