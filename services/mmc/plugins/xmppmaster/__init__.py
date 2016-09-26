@@ -79,6 +79,10 @@ def getPresenceuuid(uuid):
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
+def getListPresenceAgent():
+    return ""
+    #return XmppMasterDatabase().getListPresenceAgent()
+
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
 
