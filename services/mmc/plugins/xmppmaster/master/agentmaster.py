@@ -31,10 +31,7 @@ import json
 from optparse import OptionParser
 import copy
 from sleekxmpp.exceptions import IqError, IqTimeout
-
-#from lib.network import networkagent
 from lib.networkinfo import networkagentinfo
-#from lib.configuration import parametreconf
 from lib.managesession import sessiondatainfo, session
 from lib.utils import *
 from lib.managepackage import managepackage
@@ -58,6 +55,7 @@ import time
 from time import mktime
 from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
+from mmc.agent import PluginManager
 
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
@@ -72,9 +70,11 @@ if sys.version_info < (3, 0):
 else:
     raw_input = input
 
+def ObjectXmpp():
+    return PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
+
 #JFK
 def configurationxmpp():
-    global xmpp
     return str(xmppMasterConfig())
 
 #commandprocess (command, to, eventstart="startfichier", event= "transfert1terminer", eventerror='transferterror' )
@@ -82,15 +82,9 @@ def configurationxmpp():
 #def __init__(self, to, action, data, timeout, precommand, postcommand):
 
 
-
-
 def callxmppfunction(functionname, *args, **kwargs ):
-    global xmpp
     print "**call function %s %s %s"%(functionname, args, kwargs)
-    return getattr(xmpp,functionname)( *args, **kwargs)
-
-
-
+    return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
 class xmppcommanddiffered:
     """
@@ -100,8 +94,8 @@ class xmppcommanddiffered:
     session terminer lance post command 
     """
     def __init__(self, to, action, data, timeout, precommand, postcommand):
-        global xmpp
-        if xmpp != None:
+        self.xmpp = ObjectXmpp()
+        if self.xmpp != None:
             self.namethread = name_random(5, "thread")
             self.e =  threading.Event()
             self.t = timeout
@@ -121,24 +115,19 @@ class xmppcommanddiffered:
         Code à exécuter pendant l'exécution du thread.
         """
         #traitement precommand
-        global xmpp
+        self.xmpp = ObjectXmpp()
         if self.precommand != None:
             print "exec command %s"%self.precommand
             a = simplecommandestr(self.precommand)
             ##envoi a log a['result']
             if a['code'] != 0:
-                #print "command error"
-                #print "$$$$$$$ERROR$$$$$$$$"
                 print a['result']
-                #print "$$$$$$$$$$$$$$$$$$$$"
                 return
-            #print "$$$$$$$$$$$$$$$$$$$$"
             print a['result']
-            #print "$$$$$$$$$$$$$$$$$$$$"
         # traitement action xmpp
         #command xmpp avec creation session
         #print "execute command xmpp",self.action
-        self.sessionid = xmpp.envoicommand( self.to, self.action , self.data, datasession = None, encodebase64 = False, time = self.t, eventthread = self.e )
+        self.sessionid = self.xmpp.envoicommand( self.to, self.action , self.data, datasession = None, encodebase64 = False, time = self.t, eventthread = self.e )
 
         #traitement post command lorsque xmppaction terminer
         if self.postcommand != None:
@@ -155,22 +144,21 @@ class xmppcommanddiffered:
                     print b['result']
                 else:
                     #timeout
-                    if not xmpp.session.isexist(self.sessionid):
+                    if not self.xmpp.session.isexist(self.sessionid):
                         print 'action session %s finish by timeout'%self.action
                         print "error timeout "
                         break;
 
-
-
 #def deploieapplication(self, jidrelais, jidmachine, name, time, encodebase64 = False):
 class simplecommandxmpp:
     def __init__(self, to, data, timeout, ok, err):
-        global xmpp
+        #self.xmpp = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
+        self.xmpp = ObjectXmpp()
         self.e =  threading.Event()
         self.result = {}
         self.data = data
         self.t = timeout
-        self.xmpp = xmpp
+
         self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'],{}, self.t, self.e)
         self.xmpp.send_message(mto = to,
                         mbody = json.dumps(data),
@@ -197,17 +185,17 @@ class simplecommandxmpp1:
         return result command
     """
     def __init__(self, to, data, timeout):
-        global xmpp
+        self.xmpp = ObjectXmpp()
+        #self.xmpp = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
         self.e =  threading.Event()
         self.result = {}
         self.data = data
         self.t = timeout
-        self.xmpp = xmpp
         self.sessionid = data['sessionid']
         self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'],{}, self.t, self.e)
-        self.xmpp.send_message(mto = to,
-                            mbody = json.dumps(data),
-                            mtype = 'chat')
+        self.xmpp.send_message( mto = to,
+                                mbody = json.dumps(data),
+                                mtype = 'chat')
         self.t2 = threading.Thread(name='command',
                       target=self.resultsession)
         self.t2.start()
@@ -1204,7 +1192,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return True
         #return self.envoicommand( jidrelais, "applicationdeployment" , data, datasession = None, time=50)
 
-
     def envoicommand(self, jid, action , data={}, datasession = None, encodebase64 = False, time = 10, eventthread=None):
         if datasession == None:
             datasession = {}
@@ -1229,54 +1216,3 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mtype = 'chat')
         return command['sessionid']
 
-#todo faire class 
-def stopxmpp():
-    global xmpp
-    if xmpp != None:
-        #_remove_schedules
-        xmpp.scheduler.quit()
-        xmpp.session.sessionstop()
-        time.sleep(1)
-        #xmpp.scheduler.remove("manage session")
-        xmpp.disconnect()
-
-def doTask():
-    global xmpp
-    tg=xmppMasterConfig()
-
-    if tg.debugmode == "NOTSET":
-        tg.debugmode = 0
-    elif tg.debugmode == "DEBUG":
-        tg.debugmode = 10
-    elif tg.debugmode == "INFO":
-        tg.debugmode = 20
-    if tg.debugmode == "LOG" or tg.debugmode == "DEBUGPULSE":
-        tg.debugmode = 25
-    elif tg.debugmode == "WARNING":
-        tg.debugmode = 30
-    elif tg.debugmode == "ERROR":
-        tg.debugmode = 40
-    elif tg.debugmode == "CRITICAL":
-        tg.debugmode = 50
-    #logging.basicConfig(level=tg.debugmode,
-                        #format='[MASTER] %(levelname)-8s %(message)s')
-    logging.basicConfig(level=tg.debugmode,
-            format='[%(name)s.%(funcName)s:%(lineno)d] %(message)s')
-    #logging.log(tg.debugmode,"=======================================test log")
-    xmpp = MUCBot(tg)
-    xmpp.register_plugin('xep_0030') # Service Discovery
-    xmpp.register_plugin('xep_0045') # Multi-User Chat
-    xmpp.register_plugin('xep_0004') # Data Forms
-    xmpp.register_plugin('xep_0050') # Adhoc Commands
-    xmpp.register_plugin('xep_0199', {'keepalive': True, 'frequency':15})
-    xmpp.register_plugin('xep_0077') # Registration
-    #xmpp.register_plugin('xep_0047') # In-band Registration
-    #xmpp.register_plugin('xep_0096') # file transfert
-    #xmpp.register_plugin('xep_0095') # file transfert
-    xmpp['xep_0077'].force_registration = False
-    xmpp.register_plugin('xep_0279')
-    if xmpp.connect(address=(tg.Server,tg.Port)):
-        xmpp.process(block=True)
-        logger.info("done")
-    else:
-        logger.info("Unable to connect.")

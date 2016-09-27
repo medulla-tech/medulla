@@ -7,8 +7,8 @@ from  lib.utils import pulginprocess
 from lxml import etree
 
 
-plugin={"VERSION": "1.1", "NAME" :"serverrelais","TYPE":"serverrelais"}
-# ce plugin install la configuration de guacamole sur server relais.
+plugin={"VERSION": "1.1", "NAME" :"serverrelais", "TYPE":"relayserver"}
+# Ce plugin install la configuration de guacamole sur server relais.
 # When using guacamole-auth-noauth, you have to logout of Guacamole (or clear cookies, etc.)
 # for changes to noauth-config.xml to take effect.
 def xmlgeneration(nameconfig, protocol, hostname, port):

@@ -23,8 +23,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur, result):
             option_dhcp="-d0 -m%s"%(data['mac'])
         else:
             option_dhcp="-d1 -m%s -i%s -n%s -g%s"%(data['mac'],data['ipaddress'],data['mask'],data['gateway'])
-
-        if typelinuxfamily() == 'debian':            
+        if typelinuxfamily() == 'debian':
             optionarg="perl %s -h1 %s"%(pathscriptperl("reconfigurationVM.pl"),option_dhcp)            
         else:
             optionarg="perl %s -h0 %s"%(pathscriptperl("reconfigurationVM.pl"),option_dhcp)
