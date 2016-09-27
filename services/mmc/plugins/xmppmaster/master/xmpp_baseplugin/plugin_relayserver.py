@@ -7,7 +7,7 @@ from  lib.utils import pulginprocess
 from lxml import etree
 
 
-plugin={"VERSION": "1.0", "NAME" :"relayserver","TYPE":"relayserver"}
+plugin={"VERSION": "1.0", "NAME" : "relayserver", "TYPE" : "relayserver"}
 # ce plugin install la configuration de guacamole sur server relais.
 # When using guacamole-auth-noauth, you have to logout of Guacamole (or clear cookies, etc.)
 # for changes to noauth-config.xml to take effect.
@@ -63,7 +63,6 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur,result):
         result['data']['info'] = data
         result['base64'] = False
     else:
-        #mac os a completer
-        dataerreur['data']['msg'] = "ERROR : relayserver  must is linux"   
+        dataerreur['data']['msg'] = "ERROR : relayserver plugin must be running on Linux"
         dataerreur['ret']=255
         raise
