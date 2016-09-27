@@ -63,7 +63,7 @@ def action( objetxmpp, action, sessionid, data, message, dataerreur,result):
         result['data']['info'] = data
         result['base64'] = False
     else:
-        #mac os a completer
-        dataerreur['data']['msg'] = "ERROR : serverrelais  must is linux"   
-        dataerreur['ret']=255
+        # mac os a completer
+        dataerreur['data']['msg'] = "ERROR : [plugin serverrelais]  serverrelay must is linux"
+        dataerreur['ret'] = 255
         raise
