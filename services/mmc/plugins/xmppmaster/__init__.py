@@ -25,6 +25,7 @@ Plugin to manage the interface with xmppmastr
 import logging
 import os,sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
+import json
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 #from mmc.plugins.base import ComputerI
@@ -34,7 +35,7 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from master.lib.utils import name_random
 from  xmppmaster import *
-from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction 
+from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp, callxmppfunction, ObjectXmpp
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -80,8 +81,7 @@ def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
 def getListPresenceAgent():
-    return ""
-    #return XmppMasterDatabase().getListPresenceAgent()
+    return json.dumps(ObjectXmpp().presencedeploiement, encoding='latin1')
 
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
