@@ -63,7 +63,6 @@ dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/creation \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_test.py \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_relayserver.py \
 			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_filetransfert.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_serverrelais.py \
 			   plugins/xmppmaster/master/pluginsmaster/plugin_testmaster.py \
 			   plugins/xmppmaster/master/pluginsmaster/plugin_resultrestartbot.py
 
