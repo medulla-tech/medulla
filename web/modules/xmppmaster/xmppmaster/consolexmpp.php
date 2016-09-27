@@ -1,10 +1,10 @@
 <?php
 /*
- *  (c) 2016 siveo, http://www.siveo.net
+ * (c) 2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://www.siveo.net.
+ * This file is part of Mandriva Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,11 +20,6 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
-// require("modules/xmppmaster/xmppmaster/localSidebar.php");
-// require("graph/navbar.inc.php");
-//require_once('modules/xmppmaster/includes/xmlrpc.inc.php');
-
 ?>
 <style type='text/css'>
 textarea        {
@@ -37,26 +32,17 @@ display:block;/* pour effectivement centrer ! */
 
 
 <?
+require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
-//require("localSidebar.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $p = new PageGenerator(_T("Console", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-
-/*
-echo "<pre>";
-//print_r(xmlrpc_getListPresenceMachine());
-print_r($_GET );
-print_r($_POST );
-echo "</pre>";*/
-
-
  if (   isset($_POST['bvalid']) &&
         isset($_POST['command']) && 
-        isset($_POST['Machine'])&&
+        isset($_POST['Machine']) &&
         trim($_POST['Machine'])!= "" &&
         trim($_POST['command'])!= ""
         ){
@@ -66,10 +52,7 @@ echo "</pre>";*/
  {
     $result="";
  }
-//  echo "<pre>";
-// print_r($result);
-// echo "</pre>";
- 
+
         $f = new ValidatingForm();
         $f->push(new Table());
         $imss = xmlrpc_getListPresenceMachine();
@@ -123,12 +106,12 @@ echo "</pre>";*/
                     );
             }
         }
-        
+
         $f->push(new Table());
         if ($result['ret'] != 0){
             $result['ret']=' <font color="red">'.$result['ret'].'</font>';
         }
-        
+
         $f->add(
                     new TrFormElement("",  new SpanElement(_T("Code Return : ", "xmppmaster").$result['ret']))
                 );
