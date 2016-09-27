@@ -26,8 +26,7 @@ $sidemenu->addSideMenuItem(
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("xmpp deploy","xmppmaster"), "xmppmaster", "xmppmaster", "xmpplauncherdeploy")
+    new SideMenuItem(_T("xmpp deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
 );
-
 
 ?>

@@ -62,7 +62,6 @@ $p->display();
            $elt_values[$i] =$imss[$i]['jid'];
           $elt[$i]  =$imss[$i]['type']." : ".$imss[$i]['hostname'];
         }
- 
         $imss = new SelectItem("Machine");
         $imss->setElements($elt);
         $imss->setElementsVal($elt_values);

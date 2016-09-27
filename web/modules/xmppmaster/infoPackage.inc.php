@@ -42,7 +42,7 @@ $submod->setVisibility(False);
 $page = new Page("consolexmpp", _T('consolexmpp', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("xmpplauncherdeploy", _T('xmpplauncherdeploy', 'xmppmaster'));
+$page = new Page("deployxmpp", _T('deployxmpp', 'xmppmaster'));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
