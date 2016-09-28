@@ -47,6 +47,9 @@ function xmlrpc_getListPresenceAgent() {
     return xmlCall("xmppmaster.getListPresenceAgent", array());
 }
 
+function xmlrpc_getListPackages(){
+    return xmlCall("xmppmaster.getListPackages", array());
+}
 
 function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
