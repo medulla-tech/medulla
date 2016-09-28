@@ -272,6 +272,25 @@ class XmppMasterDatabase(DatabaseHelper):
             except Exception, e:
                 logging.getLogger().error(str(e))
         return -1
+    
+    @DatabaseHelper._session
+    def ipfromjid(self, session, jid):
+        """ return ip xmpp for JID """
+        sql = """SELECT 
+                    ip_xmpp
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    jid LIKE ('%s%%')
+                                LIMIT 1;"""%jid
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
 
 
     @DatabaseHelper._session

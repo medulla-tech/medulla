@@ -323,61 +323,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 'Merrorevent' : evenementerrorMachine
         }
 
-        sessionid = self.envoicommand( jidrelais, "applicationdeploymenttest" , data, datasession = None, encodebase64 = False)
+        sessionid = self.envoicommand( jidrelais, "applicationdeployment" , data, datasession = None, encodebase64 = False)
         # register les evenements possibles
-        # transfert fil termine
-
-
-        #dataeventfinish = {
-                        #'to' : jidrelais,
-                        #'action': "applicationdeploymenttest" ,
-                        #'sessionid': sessionid,
-                        #'data' : {'Dtypequery' : 'TEVENT' ,'Devent' : evenementfinish },
-                        #'ret' : 0,
-                        #'base64' : False
-                    #}
-        #self.eventmanage.addevent(dataeventfinish)
-        #self.eventmanage.addevent(create_TEVENT(jidrelais,"applicationdeploymenttest",sessionid,evenementfinish ))
-        #dataeventstart = {
-                        #'to' : jidrelais,
-                        #'action': "applicationdeploymenttest" ,
-                        #'sessionid': sessionid,
-                        #'data' : {'Dtypequery' : 'TEVENT' ,'Devent' : evenementstart},
-                        #'ret' : 0,
-                        #'base64' : False
-                    #}
-        #self.eventmanage.addevent(dataeventstart)
-        #self.eventmanage.addevent(create_TEVENT(jidrelais, "applicationdeploymenttest", sessionid, evenementstart ))
-        #dataeventerror = {
-                        #'to' : jidrelais,
-                        #'action': "applicationdeploymenttest" ,
-                        #'sessionid': sessionid,
-                        #'data' : {'Dtypequery' : 'TEVENT' ,'Devent' : evenementerror},
-                        #'ret' : 0,
-                        #'base64' : False
-                    #}
-        #self.eventmanage.addevent(dataeventerror)
-        #self.eventmanage.addevent(create_TEVENT(jidrelais, "applicationdeploymenttest", sessionid, evenementerror ))
         self.eventmanage.show_eventloop()
         #command =  "rsync --delete -av %s %s:%s"%(data['path'], data['iprelais'], data['path'])
         command ="ls -al"
-        #self.mannageprocess.add_processcommand( command , sessionid, evenementstart, evenementfinish, evenementerror)
-        #envoi des TEVENT suivant phase de progression de la commande
-        #self.mannageprocess.add_processcommand( command ,
-                                               #sessionid,
-                                               #self.eventmanage.create_TEVENT(jidrelais, "applicationdeploymenttest", sessionid, evenementstart ),
-                                               #self.eventmanage.create_TEVENT(jidrelais,"applicationdeploymenttest",sessionid,evenementfinish ),
-                                               #self.eventmanage.create_TEVENT(jidrelais, "applicationdeploymenttest", sessionid, evenementerror ))
-
         self.mannageprocess.add_processcommand( command ,
                                                sessionid,
                                                False,
-                                               self.eventmanage.create_TEVENT(jidrelais,"applicationdeploymenttest",sessionid,evenementfinish ),
-                                               self.eventmanage.create_TEVENT(jidrelais, "applicationdeploymenttest", sessionid, evenementerror ))
+                                               self.eventmanage.create_TEVENT(jidrelais,"applicationdeployment",sessionid,evenementfinish ),
+                                               self.eventmanage.create_TEVENT(jidrelais, "applicationdeployment", sessionid, evenementerror ))
     def pluginaction(self,rep):
-        #print type(rep)
-        #print type(rep['from'])
-        #print rep
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
             if 'shell' in sessiondata.getdatasession().keys() and sessiondata.getdatasession()['shell']:

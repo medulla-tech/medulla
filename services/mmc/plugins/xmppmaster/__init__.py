@@ -47,7 +47,6 @@ logger = logging.getLogger()
 # PLUGIN GENERAL FUNCTIONS
 # #############################################################
 
-
 def getApiVersion():
     return APIVERSION
 
@@ -72,7 +71,14 @@ def activate():
 # #############################################################
 # xmppmaster MAIN FUNCTIONS [HTTP INTERFACE]
 # #############################################################
-
+def getListPackages():
+    resultnamepackage = []
+    FichList = [ f for f in os.listdir('/var/lib/pulse2/packages/') if os.path.isfile(os.path.join('/var/lib/pulse2/packages/', f, 'xmppdeploy.json')) ]
+    for package in FichList:
+        with open(os.path.join('/var/lib/pulse2/packages/', package, 'xmppdeploy.json'), "r") as fichier:
+            session = json.load(fichier)
+            resultnamepackage.append(session['info']['name'])
+    return resultnamepackage
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
