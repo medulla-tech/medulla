@@ -1,5 +1,0 @@
-this dir parameter file xmppmaster.ini
-in /etc/mmc/plugind/xmppmaster.ini
-
-[plugins]
-dirplugins = /var/lib/pulse2/xmpp_baseplugin/
