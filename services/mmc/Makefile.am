@@ -35,7 +35,15 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
 	plugins.xmppmaster.master.script.perl
 
-dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/__init__.py
+dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/__init__.py \
+			    plugins/xmppmaster/master/pluginsmaster/__init__.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_resultapplicationdeployment.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_resultrelayserver.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_resulttransfertfile.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_applicationdeployment.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_resultdownloadfile.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_resultrestartbot.py \
+			    plugins/xmppmaster/master/pluginsmaster/plugin_testmaster.py
 
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
