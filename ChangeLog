@@ -14,3 +14,4 @@ Pulse 2 3.6.0
  * [BUGFIX]  Make use of preferred_network for the choice of launcher
  * [FEATURE] Upgrade inventory agent to 2.3.18
  * [BUGFIX]  Enable registration of assembled machines
+ # [BUGFIX]  Fix detection of netmask

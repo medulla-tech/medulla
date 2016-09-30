@@ -320,18 +320,11 @@ class NetworkDetect :
                  (min, max), (min, max), (min, max), (min, max)
         @rtype: generator
         """
-
         ip_dec = NetUtils.ipv4_to_dec(self.ip)
-
-        i = 0
-        for nbr, last_bit in self.get_subnets(self.netmask) :
-
-            value = ip_dec[i]
-
-            octet_range = self.get_valid_range(nbr, last_bit, value)
-            yield octet_range
-
-            i += 1
+        ip_mask =  NetUtils.ipv4_to_dec(self.netmask)
+        for i in range(len(ip_dec)):
+            val=ip_dec[i]&ip_mask[i]
+            yield val
 
     @property
     def network(self):
@@ -339,7 +332,7 @@ class NetworkDetect :
         @return: calculated IPv4 network address
         @rtype: str
         """
-        decimals = [ str(min(r)) for r in self.get_ranges() ]
+        decimals = [ str(r) for r in self.get_ranges() ]
         return ".".join(decimals)
 
     @property
@@ -348,7 +341,7 @@ class NetworkDetect :
         @return: calculated IPv4 broadcast address
         @rtype: str
         """
-        decimals = [ str(max(r)) for r in self.get_ranges() ]
+        decimals = [ str(r) for r in self.get_ranges() ]
         return ".".join(decimals)
 
 
