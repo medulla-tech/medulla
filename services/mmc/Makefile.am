@@ -35,36 +35,7 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
 	plugins.xmppmaster.master.script.perl
 
-dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/creation \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_getosinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_applicationdeployment.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_transfertfile.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/__init__.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_installlib.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_updatednsinfoperl.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_createuser.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_installplugin.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_updatednsinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_dede1.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_listplugins.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_updatehostname.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_dede.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_restartbot.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_updateipinfoperl.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_downloadfile.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_resultdownloadfile.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_updateipinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_getdnsinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_resulttransfertfile.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/README \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_gethostnameinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_shellcommand.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_getipinfo.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_test.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_relayserver.py \
-			   plugins/xmppmaster/master/xmpp_baseplugin/plugin_filetransfert.py \
-			   plugins/xmppmaster/master/pluginsmaster/plugin_testmaster.py \
-			   plugins/xmppmaster/master/pluginsmaster/plugin_resultrestartbot.py
+dist_xmpp_baseplugin_DATA = plugins/xmppmaster/master/xmpp_baseplugin/__init__.py
 
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
