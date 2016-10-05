@@ -82,7 +82,7 @@ uksort($cl1, "my_cmp");
 foreach ($cl1 as $k1 => $k) {
     $names[] = join_value($cl[$k]);
 }
-$count = count(getRestrictedComputersList(0,-1, $filter, False,True));
+$count = getRestrictedComputersListLen($filter);
 /* Check:
  *   - if MSC is configured with file download capability
  *   - if MSC is configured with VNC client capability
