@@ -546,8 +546,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def callInstallConfGuacamole(self, torelayserver, data):
         jidrs = jid.JID(torelayserver).bare
         try:
-            resultcommand={'action' : 'relayserver',
-                        'sessionid': name_random(5, "relayserver"),
+            resultcommand={'action' : 'guacamoleconf',
+                        'sessionid': name_random(5, "guacamoleconf"),
                         'data' : data }
             jsond=json.dumps(resultcommand, encoding='latin1')
             jsond = jsond.replace('0xe0','à')
