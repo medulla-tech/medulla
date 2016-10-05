@@ -254,7 +254,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('update plugin', 900 , self.loadpluginlist, repeat=True)
 
         #update configure distante guacamole time all les 6 minutes 
-        self.schedule('surveille reseau', 10 ,self.updateGuacamoleConfigRelayServer , repeat=True)
+        #self.schedule('surveille reseau', 10 ,self.updateGuacamoleConfigRelayServer , repeat=True)
 
         self.add_event_handler("session_start", self.start)
         """ nouvelle presense dans salon Master """
@@ -544,16 +544,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
             traceback.print_exc(file=sys.stdout)
 
     def callInstallConfGuacamole(self, torelayserver, data):
-        jidrs = jid.JID(torelayserver).bare
+        #jidrs = jid.JID(torelayserver).bare
         try:
-            resultcommand={'action' : 'guacamoleconf',
-                        'sessionid': name_random(5, "guacamoleconf"),
-                        'data' : data }
-            jsond=json.dumps(resultcommand, encoding='latin1')
-            jsond = jsond.replace('0xe0','à')
-            self.send_message(  mto = jidrs,
-                                mbody=jsond,
-                                mtype='chat')
+            body = {'action' : 'guacamoleconf',
+                    'sessionid': name_random(5, "guacamoleconf"),
+                    'data' : data }
+            #jsond=json.dumps(resultcommand, encoding='latin1')
+            #jsond = jsond.replace('0xe0','à')
+            self.send_message(  mto = torelayserver,
+                                mbody = json.dumps(body),
+                                mtype = 'chat')
         except:
             traceback.print_exc(file=sys.stdout)
 
@@ -568,7 +568,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(reponse),
                         mtype='chat')
 
-    #jfk
     def MessagesAgentFromSalonlog(self, msg, data):
         """
         traitement des log 
@@ -862,13 +861,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     for t in results:
                         computer = ComputerManager().getComputerByMac(t)
                         if computer != None:
+                            jidrs = str(jid.JID(data['deploiement']).User)[3:]
+                            jidm = jid.JID(data['from']).domain
+                            jidrs "%s@%s"%(jidrs,jidm)
                             uuid = 'UUID' + str(computer.id)
                             logging.getLogger().debug("uuid   %s"%uuid)
                             XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                            self.callInstallConfGuacamole(self, jidrs, {'hostname' : data['information']['info']['hostname'],
+                                                                        'machine_ip' : data['xmppip'],
+                                                                        'uuid' : str(computer.id) })
                             break
                         else:
                             print "None"
-                        logging.getLogger().debug("*****************")
+                    else:
+                        # install agent inventory
+                        # todo register machine in inventory
+                        pass
 
                 #afffiche information plugins dans les logs
                 if self.config.showplugins:
