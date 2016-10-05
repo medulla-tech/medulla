@@ -1,4 +1,4 @@
-# -*- coding: utf-8; -*-
+# -*- coding:Utf-8; -*-
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007 Mandriva, http://www.mandriva.com/
@@ -43,15 +43,23 @@ from pulse2.database.imaging.types import P2IT, P2ISS, P2IM, P2ERR
 from pulse2.apis.clients.imaging import ImagingApi
 import pulse2.utils
 import threading
-from os import path, makedirs, listdir
+from os import path, makedirs, listdir, remove, rename
 import subprocess
 import json
+import hashlib
 
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
 
 def toUUID(id):
     return "UUID%s" % (str(id))
+
+def md5file(fname):
+     hash = hashlib.md5()
+     with open(fname, "rb") as f:
+         for chunk in iter(lambda: f.read(4096), b""):
+            hash.update(chunk)
+     return hash.hexdigest()
 
 class ImagingRpcProxy(RpcProxyI):
     checkThread = {}
@@ -2519,6 +2527,7 @@ class ImagingRpcProxy(RpcProxyI):
             makedirs(filexml, 0722)
         files = []
         osfile = []
+        descriptionfile = []
         for name in listdir(filexml):
             absolufile = path.join(filexml, name)
             if name.endswith('.xml') and path.isfile(absolufile):
@@ -2532,29 +2541,159 @@ class ImagingRpcProxy(RpcProxyI):
                 else:
                     osfile.append("os missing")
                 fichier.close()
-        # create object reponse
+
+                #Do same thing for file notes
+                fichier = open(absolufile,"r")
+                for ligne in fichier:
+                    if ligne.startswith("Notes:"):
+                        print ligne
+                        descriptionfile.append(ligne[7:-1])
+                        break;
+                else:
+                    descriptionfile.append("Missing description")
+                fichier.close()
+        # create result object
         result = {}
         result['count'] = len(files)
         if end == -1:
             end = result['count']
         result['file'] = files[start:end]
         result['os'] = osfile[start:end]
+        result['description'] = descriptionfile[start:end]
+        #result['description'] = result['description'][7:-1]
         return result
 
     def Windows_Answer_File_Generator(self, xmlWAFG, title):
         filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+        filetmp="/tmp/"
+
         if not path.exists(filexml):
             makedirs(filexml, 0722)
-        filexml = filexml + title
+
+        #test if file already exists
+        if path.isfile(filexml+title) :
+            try :
+                f = open(filetmp+title, 'w')
+                f.write(xmlWAFG)
+            except Exception, e:
+                logging.getLogger().exception(e)
+                return False
+            else:
+                f.close()
+
+            md5tmp = md5file(filetmp+title)
+            md5xml = md5file(filexml+title)
+
+            #In this case, compare md5 checksum between filetmp and filexml
+            if md5tmp != md5xml :
+                #Create new file name
+                newTitle = title.split('.')
+                newTitle = newTitle[0]
+                newTitle = newTitle + '_' + md5tmp+'.xml'
+                #Move tmpfile to correct location
+                rename(filetmp+title, filexml+newTitle)
+                return True
+
+            #Tmpfile is no use anymore
+            else :
+                remove(filetmp+title)
+                return True
+        else :
+            filexml = filexml + title
+            try:
+                f = open(filexml, 'w')
+                f.write(xmlWAFG)
+            except  Exception, e:
+                logging.getLogger().exception(e)
+                return False
+            else:
+                f.close()
+                return True
+
+    def getWindowsAnswerFileParameters(self, filename):
+        """
+        return the parameters list of sysprep answer file
+        """
+
+        filexml = "/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = filexml + filename
+
+        parameters = ""
+        os = ""
+        description = ""
+        #get information from sysprep file
         try:
-            f = open(filexml, 'w')
-            f.write(xmlWAFG)
-        except  Exception, e:
+            f = open(filexml, "r")
+            #get line to add to json object
+            for line in f:
+                    if line.startswith("OS"):
+                        line = line.split(" ")
+                        os = " ".join(line[1:3])
+                        break;
+
+            for line in f:
+                    if line.startswith("Notes"):
+                        line = line.split(" ")
+                        description = " ".join(line[1:])
+                        break;
+
+            for line in f:
+                    if line.startswith("list"):
+                        parameters = parameters + line[18:-1]
+                        break;
+
+            parameters = json.loads(parameters)
+            parameters["Os"] = os
+            parameters['Notes'] = description
+        except Exception, e:
             logging.getLogger().exception(e)
             return False
+
         else:
             f.close()
-        return True
+            return parameters
+
+    def deleteWindowsAnswerFile(self, title):
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = filexml + title
+
+        if path.isfile(filexml) :
+            remove(filexml)
+            return True
+        else :
+            return False
+
+    def selectWindowsAnswerFile(self, title):
+        #"""
+        #Return all the content of sysprep answer file named title if exists.
+        #"""
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+        filexml = filexml + title
+        content, content2 = [], []
+
+        if path.isfile(filexml) :
+        ##Open file
+            try :
+                f = open(filexml, 'r')
+                #Read file content
+                for line in f :
+                    content.append(line)
+
+				#search one specific line
+                for line in content :
+                    if line.startswith("list"):
+                        pass
+                    else :
+                        content2.append(line)
+
+            except Exception, e:
+                logging.getLogger().exception(e)
+                return False
+            else :
+                f.close()
+            return content2
+        else :
+            return False
 
     def getMyMenuComputer(self, uuid):
         """ see getMyMenuTarget """

@@ -505,8 +505,27 @@ function xmlrpc_getComputerByUUID($uuid) {
     return xmlCall("imaging.getComputerByUUID", array($uuid));
 }
 
+function xmlrpc_Windows_Answer_list_File($start, $end)
+{
+	return xmlCall("imaging.Windows_Answer_list_File", array($start,$end));
+}
+
 function xmlrpc_Windows_Answer_File_Generator( $params, $title) {
     return xmlCall("imaging.Windows_Answer_File_Generator", array( $params,$title));
+}
+
+function xmlrpc_deleteWindowsAnswerFile($title)
+{
+	return xmlCall("imaging.deleteWindowsAnswerFile", array($title));
+}
+
+function xmlrpc_selectWindowsAnswerFile($title)
+{
+	return xmlCall("imaging.selectWindowsAnswerFile", array($title));
+}
+function xmlrpc_getWindowsAnswerFileParameters($title)
+{
+	return xmlCall("imaging.getWindowsAnswerFileParameters",array($title));
 }
 
 function xmlrpc_getClonezillaParamsForTarget($target_uuid) {

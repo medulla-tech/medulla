@@ -43,6 +43,21 @@ $page = new Page("unattended", _T("Imaging Unattended", "imaging"));
 $page->setFile("modules/imaging/manage/unattended.php");
 $submod->addPage($page);
 
+//Add sysprepList.php to the module
+$page = new Page("sysprepList", _T("Imaging sysprepList", "imaging"));
+$page->setFile("modules/imaging/manage/sysprepList.php");
+$submod->addPage($page);
+
+//Add sysprepView.php to the module
+$page = new Page("sysprepView", _T("Imaging sysprepView", "imaging"));
+$page->setFile("modules/imaging/manage/sysprepView.php");
+$submod->addPage($page);
+
+// //Add sysprepEdit.php to the module
+// $page = new Page("sysprepEdit", _T("Imaging sysprepEdit", "imaging"));
+// $page->setFile("modules/imaging/manage/sysprepEdit.php");
+// $submod->addPage($page);
+
 $page = new Page("ajaxgenereAWFGxml");
 $page->setFile("modules/imaging/manage/ajaxgenereAWFGxml.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
