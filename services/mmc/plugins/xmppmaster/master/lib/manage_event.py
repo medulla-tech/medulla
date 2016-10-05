@@ -59,7 +59,6 @@ class manage_event:
                     }
                 if self.objectxmpp.session.isexist(i['sessionid']) and jidto == self.objectxmpp.boundjid.bare:
                     ##call plugin i['sessionid'] == msg['from'].bare
-                    print '********APPELLE PLUGIN ****************'
                     call_plugin( i['action'],
                                 self.objectxmpp,
                                         i['action'],
@@ -68,7 +67,6 @@ class manage_event:
                                         msg,
                                         {}
                                         )
-                    #print '******************************'
 
     def delmessage_loop(self, devent):
         #supprime message loop devent
@@ -89,72 +87,6 @@ class manage_event:
     def clear(self, sessionid):
         self.event = [x for x in self.event if x['sessionid'] != sessionid]
 
-    #def manage_event_command(self):
-        #try:
-            #while True:
-                #try:
-                    ##lit event
-                    #print "attente event"
-                    #event = self.queue_in.get(5)
-                    #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                    #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                    #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                    #print 
-                    #if event=="quit":
-                        #break
-                    #self.show_eventloop()
-                    #print "event recu *********************"%event
-                    #if 'sessionid' in event and 'event' in event:
-                        #for i in self.event:
-                            #if i['sessionid'] == event['sessionid'] and event['event'] == i['data']['Devent']:
-                                #i['ret'] = event['result']['codeerror']
-                                #i['data']['result'] = event['result']['resultcommand']
-                                #i['data']['command'] = event['result']['cmddata']
-                                #print "kkkkkeeeeeeeeeeeeekkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                                #print "kkkkkeeeeeeeeeeeeekkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                                #print "kkkkkeeeeeeeeeeeeekkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-                                #self.objectxmpp.send_message( mto=i['to'],
-                                            #mbody=json.dumps(i),
-                                            #mtype='chat')
-                                #self.event.remove(i)
-                                ##self.show_eventloop()
-                                #break
-                    #else:
-                        #self.addevent(event)
-                        #print "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-                        #print "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-                        #print "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
-
-                #except TimeoutError:
-                    #print "*******************TimeoutError"
- 
-        #except KeyboardInterrupt:
-            #pass
-        #finally:
-            #print "****************************manage_event end"
-            #pass
-
-
-
-#{'base64': False,
- #'sessionid': 'commandmrpa8',
- #'ret': 0,
- #'to': 'rspulse@localhost',
- #'_eventype': 'TEVENT',
- #'action': 'applicationdeploymenttest',
- #'data': {'Dtypequery': 'TEVENT', 
-          #'Devent': 'Mastereventfinish_sc1bf',
-          #'result': {'codeerror': 0, 'resultcommand': 'total 72\n\ndrwxr-xr-x  7 root root  4096 Aug 17 13:48 .\n\ndrwxr-xr-x 14 root root  4096 Aug 17 13:48 ..\n\nlrwxrwxrwx  1 root root    35 Aug 17 13:48 __init__.py -> /usr/share/pyshared/mmc/__init__.py\n\n-rw-r--r--  1 root root   131 Aug 17 13:46 __init__.pyc\n\nlrwxrwxrwx  1 root root    32 Aug 17 13:47 agent.py -> /usr/share/pyshared/mmc/agent.py\n\n-rw-r--r--  1 root root 30701 Aug 17 13:46 agent.pyc\n\ndrwxr-xr-x  2 root root  4096 Aug 17 13:48 client\n\ndrwxr-xr-x  5 root root  4096 Aug 17 13:48 core\n\ndrwxr-xr-x  2 root root  4096 Aug 17 13:47 database\n\ndrwxr-xr-x 17 root root  4096 Aug 17 13:48 plugins\n\nlrwxrwxrwx  1 root root    31 Aug 17 13:47 site.py -> /usr/share/pyshared/mmc/site.py\n\n-rw-r--r--  1 root root   423 Aug 17 13:46 site.pyc\n\nlrwxrwxrwx  1 root root    30 Aug 17 13:48 ssl.py -> /usr/share/pyshared/mmc/ssl.py\n\n-rw-r--r--  1 root root  1453 Aug 17 13:46 ssl.pyc\n\ndrwxr-xr-x  2 root root  4096 Aug 17 13:48 support\n',
-                     #'cmddata': 'ls -al'}
-          #}
-#}
-
-#MESSAGE QUEUE {'base64': False, 'sessionid': 'commandhf1j8', 'ret': 0, 'to': 'rspulse@localhost', '_eventype': 'TEVENT',
-               #'action': 'applicationdeploymenttest',
-               #'data': {'Dtypequery': 'TEVENT',
-                        #'Devent': 'Mastereventstart_m0bis'}}
-
-
     def manage_event_command(self):
         try:
             while True:
@@ -169,7 +101,7 @@ class manage_event:
                     print "event recu *********************"%event
                     if 'sessionid' in event and '_eventype' in event:
                         if 'result' in event['data'] and \
-                            'cmddata' in event['data']['result'] and \
+                            'command' in event['data']['result'] and \
                             'codeerror' in event['data']['result'] and \
                             'Dtypequery'  in event['data']['result'] and \
                             'Devent'  in event['data']['result'] :
@@ -180,7 +112,7 @@ class manage_event:
                                     'action': event['action'],
                                     'data' : {
                                         'resultcommand'  :  event['data']['result']['resultcommand'],
-                                        'command' :  event['data']['result']['cmddata'],
+                                        'command' :  event['data']['result']['command'],
                                         'codeerror' : event['data']['result']['codeerror'],
                                         'Dtypequery' : event['data']['Dtypequery'],
                                         'Devent': event['data']['Devent']
@@ -197,24 +129,17 @@ class manage_event:
                                         'Devent': event['data']['Devent']
                                     }
                             }
-                        print "*******SEND MESSAGE************"
-                        print "*******SEND MESSAGE************"
-                        print "*******SEND MESSAGE************"
                         print "SEND MESSAGE %s"%msg
                         self.objectxmpp.send_message( mto = event['to'],
                                             mbody=json.dumps(msg),
                                             mtype='chat')
                     else:
-                        print "*******REGISTER MESSAGE************"
-                        print "*******REGISTER MESSAGE************"
-                        print "*******REGISTER MESSAGE************"
                         self.addevent(event)
 
                 except TimeoutError:
-                    print "*******************TimeoutError"
+                    print "TimeoutError"
  
         except KeyboardInterrupt:
             pass
         finally:
-            print "****************************manage_event end"
-            pass
+            print "manage_event end"

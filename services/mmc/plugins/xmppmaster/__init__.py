@@ -19,23 +19,22 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 """
-Plugin to manage the interface with xmppmastr
+Plugin to manage the interface with xmppmaster
 """
 
 import logging
 import os,sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-import json
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 #from mmc.plugins.base import ComputerI
 #from mmc.plugins.base.computers import ComputerManager
-
+import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from master.lib.utils import name_random
 from  xmppmaster import *
-from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp, callxmppfunction, ObjectXmpp
+from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction, ObjectXmpp
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -71,6 +70,7 @@ def activate():
 # #############################################################
 # xmppmaster MAIN FUNCTIONS [HTTP INTERFACE]
 # #############################################################
+
 def getListPackages():
     resultnamepackage = []
     FichList = [ f for f in os.listdir('/var/lib/pulse2/packages/') if os.path.isfile(os.path.join('/var/lib/pulse2/packages/', f, 'xmppdeploy.json')) ]
@@ -120,5 +120,3 @@ def xmppscript(cmd,machine):
     a=simplecommandxmpp1(machine, data , 4)
     d = a.t2.join()
     return a.result
-
-

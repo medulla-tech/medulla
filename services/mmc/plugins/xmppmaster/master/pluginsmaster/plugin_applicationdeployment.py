@@ -13,13 +13,19 @@ import pprint
 
 def action( objetxmpp, action, sessionid, data, message, ret, dataobj):
     try:
-        if 'typequery' in  data:
-            if data['typequery'] == 'TED':
+        if 'Dtypequery' in  data:
+            if data['Dtypequery'] == 'TED':
                 print "efface session %s"%sessionid
                 #passer deploiement a done dans base
                 objetxmpp.session.clear(sessionid)
-                
-            elif  data['typequery'] == 'TE':
+                print "_______________________________________________________________________"
+                print "___________________________RESULT DEPLOY_______________________________"
+                print "_______________________________________________________________________"
+                pp = pprint.PrettyPrinter(indent=4)
+                pp.pprint(data['descriptor'])
+                print "_______________________________________________________________________"
+
+            elif  data['Dtypequery'] == 'TE':
                 # clear session
                 objetxmpp.session.clear(sessionid)
                 #passer deploiement a error dans base

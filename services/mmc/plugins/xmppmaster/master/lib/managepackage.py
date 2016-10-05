@@ -35,7 +35,7 @@ class managepackage:
                 print "erreur decodage"
                 pass
         return None
-    
+
     @staticmethod
     def getdescriptorpackagename(packagename):
         for t in managepackage.listpackages():

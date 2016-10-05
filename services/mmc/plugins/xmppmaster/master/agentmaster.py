@@ -73,12 +73,11 @@ else:
 def ObjectXmpp():
     return PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
 
-#JFK
 def configurationxmpp():
     return str(xmppMasterConfig())
 
 #commandprocess (command, to, eventstart="startfichier", event= "transfert1terminer", eventerror='transferterror' )
-#envoicommand(self, jid, action , data={}, datasession = None, encodebase64 = False, time = 10, eventthread=None)
+#send_session_command(self, jid, action , data={}, datasession = None, encodebase64 = False, time = 10, eventthread=None)
 #def __init__(self, to, action, data, timeout, precommand, postcommand):
 
 
@@ -90,7 +89,7 @@ class xmppcommanddiffered:
     """
     Thread chargé de lance pres command.
     precommand terminer
-    envoicommand avec session  self, 
+    send_session_command avec session  self, 
     session terminer lance post command 
     """
     def __init__(self, to, action, data, timeout, precommand, postcommand):
@@ -127,7 +126,13 @@ class xmppcommanddiffered:
         # traitement action xmpp
         #command xmpp avec creation session
         #print "execute command xmpp",self.action
-        self.sessionid = self.xmpp.envoicommand( self.to, self.action , self.data, datasession = None, encodebase64 = False, time = self.t, eventthread = self.e )
+        self.sessionid = self.xmpp.send_session_command( self.to,
+                                                        self.action ,
+                                                        self.data,
+                                                        datasession = None,
+                                                        encodebase64 = False,
+                                                        time = self.t,
+                                                        eventthread = self.e )
 
         #traitement post command lorsque xmppaction terminer
         if self.postcommand != None:
@@ -249,7 +254,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.schedule('update plugin', 900 , self.loadpluginlist, repeat=True)
 
         #update configure distante guacamole time all les 6 minutes 
-        self.schedule('surveille reseau', 60 ,self.updateGuacamoleConfigRelayServer , repeat=True)
+        self.schedule('surveille reseau', 10 ,self.updateGuacamoleConfigRelayServer , repeat=True)
 
         self.add_event_handler("session_start", self.start)
         """ nouvelle presense dans salon Master """
@@ -294,13 +299,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
         #attribut nom au evenement
-        dd = name_random(5, "")
+        dd = name_random(5, "deploy_")
         evenementfinish =  "Mastereventfinish_%s"%dd
         evenementstart  =  "Mastereventstart_%s"%dd
         evenementerror  =  "Mastereventerror_%s"%dd
         evenementfinishMachine =  "Machineeventfinish_%s"%dd
         evenementstartMachine  =  "Machineeventstart_%s"%dd
-        evenementerrorMachine  =  "Machineeventerror_%s"%dd                        
+        evenementerrorMachine  =  "Machineeventerror_%s"%dd
         #evenementfinish =  name_random(15, "eventfinish_%s"%name)
         #evenementstart  =  name_random(15, "eventstart_%s"%name)
         #evenementerror  =  name_random(15, "eventerror_%s"%name)
@@ -323,17 +328,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 'Merrorevent' : evenementerrorMachine
         }
 
-        sessionid = self.envoicommand( jidrelais, "applicationdeployment" , data, datasession = None, encodebase64 = False)
-        # register les evenements possibles
+        sessionid = self.send_session_command( jidrelais, "applicationdeployment" , data, datasession = None, encodebase64 = False)
+
         self.eventmanage.show_eventloop()
         #command =  "rsync --delete -av %s %s:%s"%(data['path'], data['iprelais'], data['path'])
         command ="ls -al"
+
+
         self.mannageprocess.add_processcommand( command ,
                                                sessionid,
                                                False,
                                                self.eventmanage.create_TEVENT(jidrelais,"applicationdeployment",sessionid,evenementfinish ),
-                                               self.eventmanage.create_TEVENT(jidrelais, "applicationdeployment", sessionid, evenementerror ))
+                                               self.eventmanage.create_TEVENT(jidrelais, "applicationdeployment", sessionid, evenementerror ),50,[])
     def pluginaction(self,rep):
+        #print type(rep)
+        #print type(rep['from'])
+        #print rep
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
             if 'shell' in sessiondata.getdatasession().keys() and sessiondata.getdatasession()['shell']:
@@ -428,16 +438,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def start(self, event):
         self.get_roster()
         self.send_presence()
-        #join salon Master
-        #print "join salon Muc "
-        #print "%s %s %s"%(self.config.jidsalonmaster,self.config.NickName,self.config.passwordconnexionmuc)
         salonjoin=[self.config.jidsalonmaster,self.config.jidsalonlog,self.config.confjidsalon]
         for salon in salonjoin:
             if salon == self.config.confjidsalon:
                 passwordsalon = self.config.confpasswordmuc
             else:
                 passwordsalon = self.config.passwordconnexionmuc
-            #print "kkkkkkkkkkkkkkkk",salon
             self.plugin['xep_0045'].joinMUC(salon,
                                             self.config.NickName,
                                             # If a room password is needed, use:
@@ -445,10 +451,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             wait=True)
 
         #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-        #self.envoicommand('dede1@localhost', 'downloadfile' , {'namesource':'/tmp/GeoIP.dat.gz'}, {'whowritefile': '/tmp/GeoIP.dat.gz1'}, False)
+        #self.send_session_command('dede1@localhost', 'downloadfile' , {'namesource':'/tmp/GeoIP.dat.gz'}, {'whowritefile': '/tmp/GeoIP.dat.gz1'}, False)
         #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
         ##print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
-        #self.envoicommand('dede1@localhost', 'transfertfile' , {'ou': '/tmp/dede.tarcppplcp'}, {'qui':'/tmp/GeoIP.dat.gz'}, False)
+        #self.send_session_command('dede1@localhost', 'transfertfile' , {'ou': '/tmp/dede.tarcppplcp'}, {'qui':'/tmp/GeoIP.dat.gz'}, False)
         ##print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
 
 
@@ -530,17 +536,26 @@ class MUCBot(sleekxmpp.ClientXMPP):
         fichierdata['base64'] = True
         #print fichierdata
         #print msg['from']
-        self.send_message(mto=msg['from'],
-                          mbody=json.dumps(fichierdata),
-                          mtype='chat')
+        try:
+            self.send_message(mto=msg['from'],
+                            mbody=json.dumps(fichierdata),
+                            mtype='chat')
+        except:
+            traceback.print_exc(file=sys.stdout)
 
     def callInstallConfGuacamole(self, torelayserver, data):
-        resultcommand={'action' : 'relayserver',
-                       'sessionid': name_random(5, "relayserver"),
-                       'data' : data }
-        self.send_message(mto = torelayserver,
-                            mbody=json.dumps(resultcommand),
-                            mtype='chat')
+        jidrs = jid.JID(torelayserver).bare
+        try:
+            resultcommand={'action' : 'relayserver',
+                        'sessionid': name_random(5, "relayserver"),
+                        'data' : data }
+            jsond=json.dumps(resultcommand, encoding='latin1')
+            jsond = jsond.replace('0xe0','à')
+            self.send_message(  mto = jidrs,
+                                mbody=jsond,
+                                mtype='chat')
+        except:
+            traceback.print_exc(file=sys.stdout)
 
     def senderrorconnectionconf(self,msg):
         reponse = {
@@ -921,29 +936,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def timeout(self, data):
         log.warm("%s"%data['timeout'])
 
-    #def timeout(self, *args, **kwargs):
-        #if kwargs is not None:
-            #for key, value in kwargs.iteritems():
-                #logger.warn("%s == %s" %(key,value))
-        #for arg in argv:
-            #print "[", arg,"]"
-
-    ### passer des commande or mmc
-    #def muc_Messageschell(self,msg):
-        #if msg['from'].bare == "commandrelay@localhost":
-            #a = json.loads(msg['body'])
-            #k = a.keys()
-            #datasession = {}
-            #data = {}
-
-            #if 'session' in k :
-                #datasession = a['session']
-
-            #if 'data' in k :
-                #data  = a['data']
-            #self.envoicommand(a['to'], a['pluginname'] , data, datasession)
-            #return True
-        #return False
+ 
     def jidInRoom1(self, room, jid):
         for nick in self.plugin['xep_0045'].rooms[room]:
             entry = self.plugin['xep_0045'].rooms[room][nick]
@@ -991,16 +984,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def callpluginmaster(self, msg):
         try :
             dataobj = json.loads(msg['body'])
-            #dataobj['action']="testmaster"
-            #dataobj['data'] = {}
-            #dataobj['base64'] = False
-            #dataobj['sessionid'] = name_random(5,"sesionid")
-            #dataobj['ret'] = 0
-            #self.session.createsessiondatainfo( dataobj['sessionid'], {'dede':34})
-            #self.session.decrementesessiondatainfo()
-            #self.session.decrementesessiondatainfo()
-            #self.session.decrementesessiondatainfo()
-            #self.session.affiche()
             if dataobj.has_key('action') and dataobj['action'] != "" and dataobj.has_key('data'):
                 if dataobj.has_key('base64') and \
                     ((isinstance(dataobj['base64'],bool) and dataobj['base64'] == True) or 
@@ -1052,19 +1035,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def updateGuacamoleConfigRelayServer(self):
         print "updateGuacamoleConfigRelayServer"
+        #todo modify inscription guacamole to database relayserver
         dataguacamoleconf = {}
         datalocationserverguacamoleconf = {}
         controle="relayserver"
         for machine, data in self.presencedeploiement.iteritems():
+            #print machine
+            #print data
             if self.updateguacamoleconfig.has_key(self.presencedeploiement[machine]['subnetxmpp']) and \
             self.updateguacamoleconfig[self.presencedeploiement[machine]['subnetxmpp']] == True:
                 data1 = copy.deepcopy(data)
                 data1['hostname'] = data['information']['info']['hostname']
                 data1['os'] = data['information']['info']['os']
                 del data1['information']['listipinfo']
+
                 if  self.presencedeploiement[machine]['agenttype'] == "machine":
                     if not dataguacamoleconf.has_key(self.presencedeploiement[machine]['subnetxmpp']):
                         dataguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']] = []
+
                     dataguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']].append(data1)
                 elif self.presencedeploiement[machine]['agenttype'] == "relayserver":
                     datalocationserverguacamoleconf[self.presencedeploiement[machine]['subnetxmpp']] = data1
@@ -1112,43 +1100,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #print "*********muc_onlineConf %s"%presence
         pass
 
-
-#JFK
-    def applicationdeployment1(self, jidrelais, jidmachine, name, time, encodebase64 = False):
-        """ lors d'un deploiement 
-        1er action synchronise le package name precemmand
-        """
-        if not managepackage.getversionpackagename(name):
-            return False
-
-        data =  {
-                "name" : name,
-                "path":managepackage.getpathpackagename(name),
-                "jidrelais": jidrelais,
-                "jidmachine":jidmachine,
-                "jidmaster": self.boundjid.bare,
-                "iprelais" :  XmppMasterDatabase().ipfromjid(jidrelais)[0],
-                "ipmachine": XmppMasterDatabase().ipfromjid(jidmachine)[0],
-                "ipmaster" : self.config.Server,
-                "Dtypequery" : "TQ",
-                "Devent" : "STARDEPLOY"
-        }
-        #print data['ipmaster']
-        #print data['iprelais']
-        #rsync --delete -av localhost:/var/lib/pulse2/packages/ ['192.168.56.2']:/var/lib/pulse2/packages/
-        if data['ipmaster'] ==  data['iprelais']:
-            precommand = None
-        else:
-            precommand =  "rsync --delete -av %s %s:%s"%(data['path'], data['iprelais'], data['path'])
-
-        xmppcommanddiffered(jidrelais,"applicationdeployment", data, 20, precommand, None)
-
-        #faire un rsync
-        ##rsync --delete -anv /var/lib/pulse2/packages/ /tmp/test/
-        return True
-        #return self.envoicommand( jidrelais, "applicationdeployment" , data, datasession = None, time=50)
-
-    def envoicommand(self, jid, action , data={}, datasession = None, encodebase64 = False, time = 10, eventthread=None):
+    def send_session_command(self, jid, action , data = {}, datasession = None, encodebase64 = False, time = 20, eventthread = None):
         if datasession == None:
             datasession = {}
         command={
