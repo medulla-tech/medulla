@@ -67,5 +67,8 @@ function xmlrpc_xmppdeploye( $jidrelais, $jidmachine, $name, $time){
     return xmlCall("xmppmaster.xmppapplicationdeployment", array("applicationdeployment",  $jidrelais, $jidmachine, $name, $time));
 }
 
+function xmlrpc_pluginwakeonlan($pluginname, $macadress){
+    return xmlCall("xmppmaster.xmppplugin", array($pluginname, array("macadress"=>$macadress)));
+}
 
 ?>

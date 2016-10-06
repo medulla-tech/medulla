@@ -45,6 +45,9 @@ $submod->addPage($page);
 $page = new Page("deployxmpp", _T('deployxmpp', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("wakeonlan", _T('wakeonlan', 'xmppmaster'));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

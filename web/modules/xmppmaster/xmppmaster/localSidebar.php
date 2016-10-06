@@ -29,4 +29,8 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("xmpp deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
 );
 
+$sidemenu->addSideMenuItem(
+    new SideMenuItem(_T("xmpp wakeonlan","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+);
+
 ?>
