@@ -85,6 +85,10 @@ def callxmppfunction(functionname, *args, **kwargs ):
     print "**call function %s %s %s"%(functionname, args, kwargs)
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
+def callxmppplugin(plugin, data ):
+    print "**call plugin %s"%(data)
+    ObjectXmpp().callpluginmasterfrommmc(plugin,  data )
+
 class xmppcommanddiffered:
     """
     Thread chargé de lance pres command.
@@ -988,6 +992,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
         attribut type pour selection
         """
         pass
+
+    def callpluginmasterfrommmc(self, plugin, data ):
+        msg={}
+        msg['from'] = self.boundjid.bare
+        msg['body'] = json.dumps({
+                        'action':plugin, 
+                        'ret':0,
+                        'sessionid': name_random(5, plugin),
+                        'data': data })
+        self.callpluginmaster(msg)
+
 
     def callpluginmaster(self, msg):
         try :

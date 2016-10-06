@@ -475,6 +475,17 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._session
+    def listserverrelay(self, session):
+        sql = """SELECT 
+                    jid
+                FROM
+                    xmppmaster.relayserver;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
     def clearMachine(self, session):
         session.execute('TRUNCATE TABLE xmppmaster.machines;')
         session.execute('TRUNCATE TABLE xmppmaster.network;')

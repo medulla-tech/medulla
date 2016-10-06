@@ -34,7 +34,7 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from master.lib.utils import name_random
 from  xmppmaster import *
-from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction, ObjectXmpp
+from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction, ObjectXmpp, callxmppplugin
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -98,6 +98,9 @@ def getconfigurationxmpp():
 #JFK
 def xmppapplicationdeployment(*args, **kwargs ):
     return callxmppfunction(*args, **kwargs )
+
+def xmppplugin(*args, **kwargs ):
+    return callxmppplugin(*args, **kwargs )
 
 def xmppcommand(cmd,machine):
     data = {
