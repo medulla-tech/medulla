@@ -863,7 +863,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         if computer != None:
                             jidrs = str(jid.JID(data['deploiement']).User)[3:]
                             jidm = jid.JID(data['from']).domain
-                            jidrs "%s@%s"%(jidrs,jidm)
+                            jidrs = "%s@%s"%(jidrs,jidm)
                             uuid = 'UUID' + str(computer.id)
                             logging.getLogger().debug("uuid   %s"%uuid)
                             XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
