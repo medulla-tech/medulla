@@ -865,13 +865,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     for t in results:
                         computer = ComputerManager().getComputerByMac(t)
                         if computer != None:
-                            jidrs = str(jid.JID(data['deploiement']).User)[3:]
+                            jidrs = str(jid.JID(data['deploiement']).user)[3:]
                             jidm = jid.JID(data['from']).domain
                             jidrs = "%s@%s"%(jidrs,jidm)
                             uuid = 'UUID' + str(computer.id)
                             logging.getLogger().debug("uuid   %s"%uuid)
                             XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
-                            self.callInstallConfGuacamole(self, jidrs, {'hostname' : data['information']['info']['hostname'],
+                            self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                         'machine_ip' : data['xmppip'],
                                                                         'uuid' : str(computer.id) })
                             break
