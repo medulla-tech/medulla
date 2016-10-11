@@ -949,27 +949,36 @@ class ImagingMulticastMenuBuilder:
         lines = fid.readlines()
         fid.close()
         self.disk=[ x.strip(' \t\n\r"') for x in lines if x.strip(' \t\n\r"')!= ""]
-        #self.templatecmdline = """#!/bin/bash
-#mastername="%s"
-#localisationmaster="%s"
-#masteruuid=%s
-#mastersize=%s
-#groupuuid=%s
-#waitting=%s
-#locationuuid=%s
-#cat /var/lib/pulse2/imaging/masters/%s/sda1.ntfs-ptcl-img.uncomp.aa |udp-sender --full-duplex --min-clients %s --interface %s --nokbd --mcast-all-addr 224.0.0.1 --portbase 2232 --ttl 1"""%(
-                                        #self.menu['description'] ,
-                                        #self.menu['path'] ,
-                                        #self.menu['master'] ,
-                                        #self.menu['size'] ,
-                                        #self.menu['group'] ,
-                                        #self.menu['nbcomputer'],
-                                        #self.menu['location'],
-                                        #self.menu['master'] ,
-                                        #self.menu['nbcomputer'],
-                                        #self.nameinterface )
-
-        self.templatecmdline = """#!/bin/bash
+        
+        if 'maxwaittime' in self.menu:
+            self.templatecmdline = """#!/bin/bash
+echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast
+echo "" > /tmp/udp-sender.log
+mastername="%s"
+localisationmaster="%s"
+masteruuid=%s
+mastersize=%s
+groupuuid=%s
+waitting=%s
+locationuuid=%s
+maxtimetowait=%s
+drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s  --max-time-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
+                                        self.menu['description'] ,
+                                        self.menu['path'] ,
+                                        self.menu['master'] ,
+                                        self.menu['size'] ,
+                                        self.menu['group'] ,
+                                        self.menu['nbcomputer'],
+                                        self.menu['location'],
+                                        self.menu['maxwaittime'],
+                                        self.menu['nbcomputer'],
+                                        self.menu['maxwaittime'],
+                                        self.action,
+                                        self.menu['master'] ,
+                                        self.disk[0],
+                                        self.menu['master'])
+        else:
+            self.templatecmdline = """#!/bin/bash
 echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast
 echo "" > /tmp/udp-sender.log
 mastername="%s"
@@ -992,6 +1001,8 @@ drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "
                                         self.menu['master'] ,
                                         self.disk[0],
                                         self.menu['master'])
+
+
         self.template="""
 UI vesamenu.c32
 TIMEOUT 100

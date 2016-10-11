@@ -20,6 +20,11 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+ ?>
+
+ 
+ 
+ <?php
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
 
@@ -36,6 +41,7 @@ if ($_POST) {
     $location = getCurrentLocation();
     $list = getRestrictedComputersList(0, -1, array('gid'=> $gid, 'hostname'=> '', 'location'=> $location), False);
     list($count, $masters) = xmlrpc_getLocationImages($location);
+
     if (count($list) == 0 )
     {
         $msg = _T("Multicast menu has not been created : there are no computers in the group", "imaging");
@@ -43,6 +49,7 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
+
     if (!isset($numbercomputer)){
         $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
         new NotifyWidgetFailure($msg);
@@ -52,6 +59,7 @@ if ($_POST) {
     {
         $numbercomputer = intval($numbercomputer);
     }
+
     if (!(gettype ( $numbercomputer ) == "integer")){
         $msg = sprintf( _T("Multicast menu has not been created : number of computers missing"));
         new NotifyWidgetFailure($msg);
@@ -127,9 +135,24 @@ if ($_POST) {
         exit;
     }
 
-     
     $objval['computer']= $mach;
-    
+
+    if ( $maxwaittime != "NONE" ){
+        //$maxwaittime=intval($maxwaittime);
+        if (!is_numeric($maxwaittime)){
+            $msg = sprintf( _T("Multicast menu has not been created : --max-time-to-wait missing"));
+            new NotifyWidgetFailure($msg);
+            header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
+            exit;
+        }
+        $objval['maxwaittime']=$maxwaittime;
+        if (intval($maxwaittime) < 60) {
+            $msg = sprintf( _T("Multicast menu has not been created : --max-time-to-wait < 60"));
+            new NotifyWidgetFailure($msg);
+            header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
+            exit;
+        }
+    }
 
     if (count($objval['computer']) == 0 )
     {
@@ -144,10 +167,7 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-//     echo "<pre>";
-//     print_r ($objval);
-//     echo "</pre>";
-//     exit;
+   
     $list =  xmlrpc_imagingServermenuMulticast($objval);
     if($list[0] == 1){
         $Paramsmulticast=array(
@@ -161,7 +181,11 @@ if ($_POST) {
             "target_name"=>$target_name,
         );
         $_SESSION['PARAMMULTICAST']=$Paramsmulticast;
-    
+//      echo "<pre>";
+//     print_r ($objval);
+//     //print_r ($_SESSION['PARAMMULTICAST']);
+//     echo "</pre>";
+//     exit;
         $msg = _T("Multicast menu has been successfully created.", "imaging");
         new NotifyWidgetSuccess($msg);
         header("Location: " . urlStrRedirect("imaging/manage/index"));
@@ -175,12 +199,31 @@ if ($_POST) {
     }
 }
 ?>
+
+<script type="text/javascript">
+
+var defaultvalue= 600;
+
+jQuery('#checkbox1').click(function() {
+        if (!jQuery(this).is(':checked')) {
+            defaultvalue = jQuery('#maxwaittime').val();
+            jQuery("#tableoptionmulticast tr.timewait" ).hide();
+            jQuery('#maxwaittime').val("NONE");
+        }else
+        {
+            jQuery("#tableoptionmulticast tr.timewait" ).show(500);
+            jQuery('#maxwaittime').val(defaultvalue);
+        }
+    });
+</script>
+
 <h2>
 <?php echo sprintf(_T("deploy the master <strong>%s</strong> to this group <strong>%s</strong> in multicast", "imaging"), $label,$_GET[target_name]) ?>
 </h2>
 <form action="<?php echo urlStr("base/computers/multicast", $params) ?>" method="post">
-    <table>
-        <tr>
+
+    <table id="tableoptionmulticast">
+        <tr> 
             <td>
                 <?php echo _T('Number of machines to wait for', 'imaging'); ?>
             </td>
@@ -188,8 +231,24 @@ if ($_POST) {
                 <input style="width:5em;" name="numbercomputer" type="text" value="" />
             </td>
         </tr>
+
+        <tr> 
+           <TD colspan=2>
+           <INPUT type="checkbox" id="checkbox1" name="choix1" value="1" checked >time wait option
+           </TD> 
+        </tr>
+
+        <tr class="timewait">
+            <td>
+                <?php echo _T('start anyways when t seconds since first receiver connection have passed', 'imaging'); ?>
+            </td>
+            <td>
+                <input style="width:5em;" id="maxwaittime" name="maxwaittime" type="text" value="600" />
+            </td>
+        </tr>
+
      </table>
-   
+
         <input name="gid"  type="hidden" value="<?php echo $gid; ?>" />
         <input name="from"  type="hidden" value="<?php echo $from; ?>" />
         <input name="is_master" type="hidden" value="<?php echo $is_master; ?>" />
@@ -198,7 +257,7 @@ if ($_POST) {
         <input name="itemlabel" type="hidden" value="<?php echo $itemlabel; ?>" />
         <input name="target_uuid" type="hidden" value="<?php echo $target_uuid; ?>" />
         <input name="target_name" type="hidden" value="<?php echo $target_name; ?>" />
-  
+
     <input name="bgo" type="submit" class="btnPrimary" value="<?php echo _T("Start multicast deploy", "imaging"); ?>" />
     <input name="bback" type="submit" class="btnSecondary" value="<?php echo _("Cancel"); ?>" onclick="closePopup();
             return false;" />
