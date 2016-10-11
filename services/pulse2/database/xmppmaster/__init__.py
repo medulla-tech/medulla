@@ -257,10 +257,16 @@ class XmppMasterDatabase(DatabaseHelper):
                 return -1
         else:
             try:
-                sql = """UPDATE `xmppmaster`.`users` SET `city`='%s', `region_name`='%s',`time_zone`='%s',
-                `longitude`='%s',`latitude`='%s', `postal_code`='%s',`country_code`='%s', `country_name`='%s'
-                WHERE `xmppmaster`.`users`.`hostname`='%s';"""%(city,region_name,time_zone,longitude,latitude,postal_code,country_code,country_name,hostname)
-                session.execute(sql)
+                session.query(Users).filter(Users.hostname == hostname).\
+                    update({Users.city: city,
+                            Users.region_name:region_name,
+                            Users.time_zone:time_zone,
+                            Users.longitude:longitude,
+                            Users.latitude:latitude,
+                            Users.postal_code:postal_code,
+                            Users.country_code:country_code,
+                            Users.country_name:country_name
+                            })
                 session.commit()
                 session.flush()
                 sql ="select id from `xmppmaster`.`users` WHERE `xmppmaster`.`users`.`hostname`='%s';"%hostname
