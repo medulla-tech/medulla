@@ -803,7 +803,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                 postal_code ,
                                                 country_code,
                                                 country_name )
-                useradd = useradd[0]
+                try:
+                    useradd = useradd[0]
+                except TypeError:
+                    pass
 
                 #add relayserver ou update status in base
                 if data['agenttype'] == "relayserver":
