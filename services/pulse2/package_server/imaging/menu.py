@@ -952,7 +952,7 @@ class ImagingMulticastMenuBuilder:
 
         if 'maxwaittime' in self.menu:
             self.templatecmdline = """#!/bin/bash
-echo -e "NE PAS EFFACER\nDO NOT DELETE" > /tmp/processmulticast
+echo -e "DO NOT DELETE" > /tmp/processmulticast
 echo "" > /tmp/udp-sender.log
 mastername="%s"
 localisationmaster="%s"
