@@ -124,7 +124,7 @@ class xmppcommanddiffered:
             a = simplecommandestr(self.precommand)
             ##envoi a log a['result']
             if a['code'] != 0:
-                print a['result']
+                #print a['result']
                 return
             print a['result']
         # traitement action xmpp
@@ -146,7 +146,7 @@ class xmppcommanddiffered:
                 if event_is_set:
                     #print 'action session %s finish'%self.action
                     #execute sur end session
-                    print "execution shell command action terminer"
+                    #print "execution shell command action terminer"
                     #execute post commande shell
                     b = simplecommandestr(self.postcommand)
                     #envoi b log b['result']
@@ -572,6 +572,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(reponse),
                         mtype='chat')
 
+    ef sendrsconnectiondeploysalon(self, to, data):
+        connection = {
+            'action' : '@@@@@deploysalonON@@@@@', 
+            'sessionid' : name_random(5, "deploysalon"),
+            'data' : [],
+            'ret': 255
+            }
+        self.send_message(mto=to,
+                        mbody=json.dumps(connection),
+                        mtype='chat')
+
     def MessagesAgentFromSalonlog(self, msg, data):
         """
         traitement des log 
@@ -790,9 +801,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     city = str(self.localisationifo['city'])
 
                 logger.info("---------------------adduser")
-                print data['information']['users'][0]
-                print data['information']['info']['hostname']
-                print "add user"
+                #print data['information']['users'][0]
+                #print data['information']['info']['hostname']
+                #print "add user"
                 useradd = XmppMasterDatabase().adduser(   data['information']['users'][0],
                                                 data['information']['info']['hostname'] ,
                                                 city,
@@ -810,7 +821,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 #add relayserver ou update status in base
                 if data['agenttype'] == "relayserver":
-                    print "add addServerRelay"
+                    #print "add addServerRelay"
                     XmppMasterDatabase().addServerRelay(data['baseurlguacamole'],
                                                             data['subnetxmpp'], 
                                                             data['information']['info']['hostname'],#data['machine'][:-3],
@@ -825,14 +836,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             latitude,
                                                             True,
                                                             data['classutil'])
+
                     # creation deployment salon for relayserver
-                    print "********************************************creation salon", data['deploiement']
+                    # send message RS join salon
                     self.plugin['xep_0045'].joinMUC(data['deploiement'],
-                                                self.config.NickName,
-                                                password=self.config.confpasswordmuc,
-                                                wait=True)
-                    #master exit salon for relayserver 
-                    print "********************************************quit  salon", data['deploiement']
+                                                    self.config.NickName,
+                                                    password=self.config.confpasswordmuc,
+                                                    wait=True)
+                    self.sendrsconnectiondeploysalon(data['from'], data['deploiement'])
                     self.plugin['xep_0045'].leaveMUC( data['deploiement'], "MASTER")
                 #add machine
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
@@ -848,7 +859,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             )
                 if idmachine != -1:
                     if useradd != -1:
-                        print "hasmachineusers %s %s"%(useradd,idmachine)
+                        #print "hasmachineusers %s %s"%(useradd,idmachine)
                         XmppMasterDatabase().hasmachineusers(useradd, idmachine)
 
                     logging.debug("addPresenceNetwork pour machine  %d"%idmachine)
@@ -1034,24 +1045,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 )
                 except TypeError:
                     logging.error("TypeError execution plugin %s %s" % (dataobj['action'], sys.exc_info()[0]))
-                    print dataobj['action']
-                    print mydata
-                    print dataobj['ret']
-                    print dataobj['sessionid']
-                    print msg['from']
-                    print dataobj
-                    print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
+                    #print dataobj['action']
+                    #print mydata
+                    #print dataobj['ret']
+                    #print dataobj['sessionid']
+                    #print msg['from']
+                    #print dataobj
+                    #print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
                     traceback.print_exc(file=sys.stdout)
 
                 except Exception as e:
                     logging.error("execution plugin %s %s" % (dataobj['action'], str(e)))
-                    print dataobj['action']
-                    print mydata
-                    print dataobj['ret']
-                    print dataobj['sessionid']
-                    print msg['from']
-                    print dataobj
-                    print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
+                    #print dataobj['action']
+                    #print mydata
+                    #print dataobj['ret']
+                    #print dataobj['sessionid']
+                    #print msg['from']
+                    #print dataobj
+                    #print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
                     traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
@@ -1086,7 +1097,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for e, v in datalocationserverguacamoleconf.iteritems():
             if dataguacamoleconf.has_key(e) and v.has_key('fromjid'):
                 try:
-                    print "install configuration"
+                    #print "install configuration"
                     self.callInstallConfGuacamole(v['fromjid'],dataguacamoleconf[e]) 
                     self.updateguacamoleconfig[e] = False
                 except:
