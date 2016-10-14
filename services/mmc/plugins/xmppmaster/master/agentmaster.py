@@ -519,14 +519,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if os.path.isfile(namefile) :
             logger.debug("file plugin find %s"%namefile)
         else:
-            logger.err("file plugin find %s"%namefile)
+            logger.error("file plugin find %s"%namefile)
             return
         try:
             fileplugin = open(namefile, "rb")
             data=fileplugin.read()
             fileplugin.close()
         except :
-            logger.err(  "erreur lecture fichier")
+            logger.error(  "erreur lecture fichier")
             traceback.print_exc(file=sys.stdout)
             return
         #if len(data)!=0:
