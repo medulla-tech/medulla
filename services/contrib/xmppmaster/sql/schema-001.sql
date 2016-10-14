@@ -100,6 +100,8 @@ CREATE TABLE `machines` (
   `subnetxmpp` varchar(45) DEFAULT NULL,
   `agenttype` varchar(20) CHARACTER SET big5 DEFAULT NULL,
   `classutil` varchar(10) NOT NULL DEFAULT 'private',
+  `groupedeploy` VARCHAR(80) DEFAULT NULL,
+  `urlguacamole` VARCHAR(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `jid_UNIQUE` (`jid`)
