@@ -152,6 +152,13 @@ class Has_relayserverregles(Base, XmppMasterDBObj):
     order = Column(String(45))
     regles = relationship(Regles)
 
+class Has_guacamole(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'has_guacamole'
+    # ====== ForeignKey =============================
+    idguacamole = Column(Integer)
+    idinventory = Column(Integer)
+
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'version'

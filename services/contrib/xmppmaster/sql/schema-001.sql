@@ -226,6 +226,21 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `has_guacamole`
+--
+
+DROP TABLE IF EXISTS `has_guacamole`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `has_guacamole` (
+  `id` int(11) NOT NULL,
+  `idguacamole` int(11) NOT NULL,
+  `idinventory` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
 -- Table structure for table `version`
 --
 
