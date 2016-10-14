@@ -855,7 +855,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             data['subnetxmpp'],
                                                             data['xmppmacaddress'],
                                                             data['agenttype'],
-                                                            data['classutil']
+                                                            data['classutil'],
+                                                            data['baseurlguacamole'],
+                                                            data['deploiement']
                                                             )
                 if idmachine != -1:
                     if useradd != -1:
