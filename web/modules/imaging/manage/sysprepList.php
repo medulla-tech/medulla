@@ -34,11 +34,11 @@ if (isset($_GET['deleteFile'])){
 		new NotifyWidgetSuccess(_("The sysprep answer file has been removed from the imaging system."));
 	}
 }
-// 
-// //Get the list of answer files
+
+//Get the list of answer files
 $list = xmlrpc_Windows_Answer_list_File(0,-1);
 
-// //Display sidemenu
+//Display sidemenu
 $page = new PageGenerator(_T("All Windows Answer Files", 'imaging'));
 $page->setSideMenu($sidemenu);
 $page->display();
@@ -49,13 +49,12 @@ $table = new ListInfos($list['file'], _T("File name", "imaging"));
 //Add informations on each row
 $table->addExtraInfo($list['os'], _T("OS", "imaging"));
 $table->addExtraInfo($list['description'], _T("Description", "imaging"));
-// 
-// //Add actions on each row
+
+//Add actions on each row
 $table->addActionItem(new ActionItem(_T("Display sysprep file","imaging"), "sysprepView", "display", "display", "imaging", "manage"));
-$table->addActionItem(new ActionItem(_T("Add sysprep file ","imaging"),"unattended","addbootmenu","file","imaging","manage"));
-// $table->addActionItem(new ActionItem(_T("Edit sysprep file","imaging"), "unattend", "edit", "edit", "imaging", "manage"));
+$table->addActionItem(new ActionItem(_T("Edit sysprep file","imaging"), "unattended", "edit", "edit", "imaging", "manage"));
 $table->addActionItem(new ActionConfirmItem(_T("Delete sysprep file", 'imaging'), "sysprepList", "delete", "deleteFile", "imaging", "manage", _T('Are you sure you want to unset this sysrep answer file?', 'imaging')));
-// 
-// // Display the list
+
+// Display the list
 $table->display();
 ?>
