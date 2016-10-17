@@ -31,7 +31,7 @@ from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverregles, Base, UserLog
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverregles,Has_guacamole, Base, UserLog
 # Imported last
 import logging
 
@@ -480,6 +480,48 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
 
+#jfk
+
+##SELECT * FROM xmppmaster.has_guacamole where idinventory=1;
+
+
+    @DatabaseHelper._session
+    def addguacamoleidforiventoryid(self, session, idinventory, idguacamole):
+        try:
+            hasguacamole = Has_guacamole()
+            hasguacamole.idguacamole=idguacamole
+            hasguacamole.idinventory=idinventory
+            session.add(hasguacamole)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            #logging.getLogger().error("addPresenceNetwork : %s " % new_network)
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._session
+    def addlistguacamoleidforiventoryid(self, session, idinventory, connection):
+        # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
+        print "delete objet"
+        sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
+                    WHERE
+                        `xmppmaster`.`has_guacamole`.`idinventory` = '%s';"""%idinventory
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+
+        for idguacamole in connection:
+            try:
+                hasguacamole = Has_guacamole()
+                hasguacamole.idguacamole=connection[idguacamole]
+                hasguacamole.idinventory=idinventory
+                hasguacamole.protocole=idguacamole
+                session.add(hasguacamole)
+                session.commit()
+                session.flush()
+            except Exception, e:
+                #logging.getLogger().error("addPresenceNetwork : %s " % new_network)
+                logging.getLogger().error(str(e))
+
     @DatabaseHelper._session
     def listserverrelay(self, session):
         sql = """SELECT 
@@ -620,16 +662,21 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getGuacamoleRelayServerMachineUuid(self, session, uuid):
-        sql = """SELECT 
-                    *
-                FROM
-                    xmppmaster.machines
-                        INNER JOIN
-                    xmppmaster.relayserver ON xmppmaster.relayserver.subnet = xmppmaster.machines.subnetxmpp
-                WHERE
-                    xmppmaster.machines.uuid_inventorymachine = '%s';"""%uuid  ;
-        relayserver = session.execute(sql)
+        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid)
         session.commit()
         session.flush()
         ret=[m for m in relayserver]
-        return ret
+        print ret[0]
+        return ret[0]
+
+    @DatabaseHelper._session
+    def getGuacamoleidforUuid(self, session, uuid):
+        ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocole).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
+        session.commit()
+        session.flush()
+        #ret=[m for m in guacamoleid]
+        #print ret
+        if ret:
+            return [(m[1],m[0]) for m in ret]
+        else:
+            return []

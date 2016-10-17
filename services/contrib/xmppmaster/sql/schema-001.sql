@@ -233,12 +233,13 @@ DROP TABLE IF EXISTS `has_guacamole`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `has_guacamole` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `idguacamole` int(11) NOT NULL,
   `idinventory` int(11) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+  `protocole` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`,`idguacamole`,`idinventory`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `version`

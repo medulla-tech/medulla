@@ -158,6 +158,7 @@ class Has_guacamole(Base, XmppMasterDBObj):
     # ====== ForeignKey =============================
     idguacamole = Column(Integer)
     idinventory = Column(Integer)
+    protocole   = Column(String(10))
 
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
