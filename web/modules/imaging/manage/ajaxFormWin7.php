@@ -1,11 +1,10 @@
 <?php
 /*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -479,13 +478,16 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
 <!--Click on to validate disposed of the response file
 .on smb: // ipPulse / postinst / sysprep /-->
 <?php
-//array('enctype'=>"text/xml")
+if(isset($_SESSION['parameters']))
+{//If this session exists : editing file, else creating file
+	$parameters = $_SESSION['parameters'];
+}
+
     $f = new ValidatingForm(array("id" => "formxml"));
     $f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => True));
     $f->add(new HiddenTpl("infobulexml"),array("value" => '', "hide" => True));
     $f->push(new Table());
-    //------------------jQuery('input[name=codeToCopy]').val(newXml);
-    //------------------
+
     $f->add(
         new TrFormElement("",   new multifieldTpl(
                                                 array(  new SpanElement(_T("Installation Notes", "imaging")),
@@ -497,10 +499,10 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     //_____________
     $f->add(//
         new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
-        array("required" => true )
+        array("required" => true,'value'=>(isset($parameters)) ? $parameters['Title'] : '' )
     );
     //_____________     
-    $f->add(new TrFormElement("Notes".":", new TextareaTpl('Comments')));
+    $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : 'Enter your comments here...'))));
     //------------------
     //------------------
     $f->add(
@@ -529,11 +531,11 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
                         $key5
                 );
     $values = array(
-                        "FJ82H","",
-                        "XT6CR","",
-                        "J8D7P","",
-                        "XQJJ2","",
-                        "GPDD4"
+                        (isset($parameters)) ? $parameters['ProductKey1'] : "FJ82H","",
+                        (isset($parameters)) ? $parameters['ProductKey2'] : "XT6CR","",
+                        (isset($parameters)) ? $parameters['ProductKey3'] : "J8D7P","",
+                        (isset($parameters)) ? $parameters['ProductKey4'] : "XQJJ2","",
+                        (isset($parameters)) ? $parameters['ProductKey5'] : "GPDD4"
     );
     //_____________    
     $f->add(
@@ -546,7 +548,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $EULA->setElementsVal(array('true', 'false'));
     $f->add(
         new TrFormElement(_T('Accept EULA','imaging').":", $EULA),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['AcceptEULA'] : "true","required" => True)
     );
     //_____________
     $Skipactivation = new SelectItemtitle("SkipAutoActivation",$InfoBule_SkipAutoActivation);
@@ -554,7 +556,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $Skipactivation->setElementsVal(array('true', 'false'));
     $f->add(
         new TrFormElement(_T('Skip automatic activation','imaging').":", $Skipactivation),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['SkipAutoActivation'] : "true","required" => True)
     );
     //_____________
     $SkipLicense = new SelectItemtitle("SkipRearm",$InfoBule_SkipRearm);
@@ -562,7 +564,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $SkipLicense->setElementsVal(array('1', '0'));
     $f->add(
         new TrFormElement(_T('Skip License Rearm','imaging').":", $SkipLicense),
-        array("value" => "1","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['SkipRearm'] : "1","required" => True)
     );
     //_____________
     $SetupUILanguage = new SelectItemtitle("SetupUILanguage",$InfoBule_SetupUILanguage);
@@ -571,17 +573,17 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
      //_____________
     $f->add(
         new TrFormElement(_T('Setup Language','imaging').":", $SetupUILanguage),
-        array("value" => "fr-FR","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['SetupUILanguage'] : "fr-FR","required" => True)
     );
     //_____________
     $f->add(
         new TrFormElement(_T('Computer Name','imaging').":", new InputTplTitle('ComputerName',$Infobule_ComputerName)),
-        array("required" => True,"value" =>'windows7-PC')
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] : 'windows7-PC')
     );
     //_____________
     $f->add(
         new TrFormElement(_T('Organization Name','imaging').":", new InputTplTitle('OrginazationName',$InfoBule_OrginazationName)),
-        array("value" => 'Mandriva', "required" => True)
+        array("value" => (isset($parameters)) ? $parameters['OrginazationName'] : 'Mandriva', "required" => True)
     );
     //------------------
     //------------------
@@ -600,7 +602,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $ExtendOSPartition->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Extend OS Partition','imaging').":", $ExtendOSPartition),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['ExtendOSPartition'] : "true","required" => True)
     );
     //_____________
     $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
@@ -608,7 +610,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $CopyProfile->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
     );
     //_____________
     $ShowWindowsLive = new SelectItemtitle("ShowWindowsLive", $InfoBule_ShowWindowsLive);
@@ -616,7 +618,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $ShowWindowsLive->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Show Windows Live','imaging').":", $ShowWindowsLive),
-        array("value" => "false","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['ShowWindowsLive'] : "false","required" => True)
     );
     //------------------
     //------------------
@@ -634,7 +636,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $InputLocale->setElementsVal($valeurInputarray);
     $f->add(
         new TrFormElement(_T('Keyboard or input method','imaging').":", $InputLocale),
-        array("value" =>'1036:0000040c' ,"required" => True)
+        array("value" =>(isset($parameters)) ? $parameters['InputLocale'] : '1036:0000040c' ,"required" => True)
     );
     //_____________
     $UserLocale = new SelectItemtitle("UserLocale",$InfoBule_UserLocale);
@@ -642,7 +644,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $UserLocale->setElementsVal($valUILanguage);
     $f->add(
         new TrFormElement(_T('Currency and Date format','imaging').":", $UserLocale),
-        array("value" =>"fr-FR","required" => True)
+        array("value" =>(isset($parameters)) ? $parameters['UILanguage'] : "fr-FR","required" => True)
     ); 
     //_____________
     $TimeZone = new SelectItemtitle("TimeZone",$InfoBule_TimeZone);
@@ -650,7 +652,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $TimeZone->setElementsVal($val_timezone);
     $f->add(
         new TrFormElement(_T('Time Zone','imaging').":", $TimeZone),
-        array("value" => "Romance Standard Time","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['TimeZone'] : "Romance Standard Time","required" => True)
     );// $val_timezone[$timezoneprobable[0]]
     //_____________
     $UILanguage = new SelectItemtitle("UILanguage",$InfoBule_UILanguage);
@@ -658,7 +660,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $UILanguage->setElementsVal($valUILanguage);
     $f->add(
         new TrFormElement(_T('UI Language','imaging').":", $UILanguage),
-        array("value" =>'fr-FR' ,"required" => True)
+        array("value" =>(isset($parameters)) ? $parameters['UILanguage'] : 'fr-FR' ,"required" => True)
     );
     //---------------------
     //---------------------
@@ -676,7 +678,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $NetworkLocation->setElementsVal(array('Home','Work','Other'));
     $f->add(
         new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
-        array("value" => "Work","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => True)
     );
     //_____________
     $ProtectComputer = new SelectItemtitle("ProtectComputer",$InfoBule_ProtectComputer);
@@ -692,7 +694,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $Updates->setElementsVal(array('1','2','3','4'));
     $f->add(
         new TrFormElement(_T('System Updates','imaging').":", $Updates),
-        array("value" => "3","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
     );
     //_____________
     $HideEULA = new SelectItemtitle("HideEULA",$InfoBule_HideEULA); 
@@ -700,7 +702,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $HideEULA->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Hide EULA page','imaging').":", $HideEULA),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['HideEULA'] : "true","required" => True)
     );
     //_____________
     $DaylightSettings = new SelectItemtitle("DaylightSettings",$InfoBule_DaylightSettings); 
@@ -708,7 +710,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $DaylightSettings->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Disable auto daylight timeset','imaging').":", $DaylightSettings),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['DaylightSettings'] : "true","required" => True)
     );
     //_____________
     $HideWireless = new SelectItemtitle("HideWireless",$Infobule_HideWireless); 
@@ -716,7 +718,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $HideWireless->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Hide wireless setup in OOBE','imaging').":", $HideWireless),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['HideWireless'] : "true","required" => True)
     );
     //_____________
     $MachineOOBE = new SelectItemtitle("MachineOOBE",$InfoBule_MachineOOBE);
@@ -724,7 +726,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $MachineOOBE->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Skip machine OOBE','imaging').":", $MachineOOBE),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['MachineOOBE'] : "true","required" => True)
     );
     //_____________
     $UserOOBE = new SelectItemtitle("UserOOBE",$InfoBule_UserOOBE);
@@ -732,7 +734,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $UserOOBE->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Skip user OOBE','imaging').":", $UserOOBE),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['UserOOBE'] : "true","required" => True)
     );
     //_____________
     $ControlPanelView = new SelectItemtitle("ControlPanelView",$InfoBule_ControlPanelView);
@@ -740,7 +742,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $ControlPanelView->setElementsVal(array('0','1'));
     $f->add(
         new TrFormElement(_T('Control Panel View','imaging').":", $ControlPanelView),
-        array("value" => "1","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['ControlPanelView'] : "1","required" => True)
     );
     //_____________
     $ControlPanelIconSize = new SelectItemtitle("ControlPanelIconSize",$InfoBule_ControlPanelIconSize);
@@ -748,7 +750,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $ControlPanelIconSize->setElementsVal(array('0','1'));
     $f->add(
         new TrFormElement(_T('Control Panel Icon Size','imaging').":", $ControlPanelIconSize),
-        array("value" => "0","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['ControlPanelIconSize'] : "0","required" => True)
     );
     //------------------
     //------------------
@@ -766,7 +768,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $WipeDisk->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Wipe Disk','imaging').":", $WipeDisk),
-        array("value" => "false","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['WipeDisk'] : "false","required" => True)
     );
     //_____________
     $InstallDisk = new SelectItemtitle("InstallDisk",$InfoBule_InstallDisk);
@@ -774,7 +776,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $InstallDisk->setElementsVal($suite0_5);
     $f->add(
         new TrFormElement(_T('Install to disk','imaging').":", $InstallDisk),
-        array("value" => "0","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['InstallDisk'] : "0","required" => True)
     );
     //_____________
     $Format = new SelectItemtitle("Format",$InfoBule_Format);
@@ -782,12 +784,12 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $Format->setElementsVal(array('NTFS','FAT32'));
     $f->add(
         new TrFormElement(_T('Main Partition Format','imaging').":", $Format),
-        array("value" => "NTFS","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['Format'] : "NTFS","required" => True)
     );
     //_____________
     $f->add(
         new TrFormElement($InfoBule_Label, new InputTplTitle('Label',$InfoBule_Label)),
-        array("required" => True,'value' => 'OS')
+        array("required" => True,'value' => (isset($parameters)) ? $parameters['Label'] : 'OS')
     );
     //_____________   
     $DriveLetter = new SelectItemtitle("DriveLetter",$InfoBule_DriveLetter);
@@ -795,7 +797,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $DriveLetter->setElementsVal($DriveLetterTabElement);
     $f->add(
         new TrFormElement(_T('Main Partition Letter','imaging').":", $DriveLetter),
-        array("value" => "C","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['DriveLetter'] : "C","required" => True)
     );
     //_____________
     $PartitionOrder = new SelectItemtitle("PartitionOrder",$InfoBule_PartitionOrder);
@@ -803,7 +805,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $PartitionOrder->setElementsVal($suite2_5);
     $f->add(
         new TrFormElement(_T('Partition Order','imaging').":", $PartitionOrder),
-        array("value" => "2","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['PartitionOrder'] : "2","required" => True)
     );
     //------------------
     //------------------
@@ -819,7 +821,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $f->add(
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,
-                "value" => "bQBhAG4AZAByAGkAdgBhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
+                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "bQBhAG4AZAByAGkAdgBhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
     ); //mandrivaAdministratorPassword
     //--------------
     //--------------
@@ -833,7 +835,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     //_____________
     $f->add(
         new TrFormElement(_T('User Name','imaging'), new InputTplTitle('FullName',$InfoBule_FullName)),
-        array("value" => "Temp","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['FullName'] : "Temp","required" => True)
     );
     //_____________
     $Group = new SelectItemtitle("Group",$InfoBule_Group);
@@ -841,24 +843,24 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $Group->setElementsVal($GroupTabValue);
     $f->add(
         new TrFormElement(_T('Group','imaging').":", $Group),
-        array("value" => "Users","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['Group'] : "Users","required" => True)
     );
     //_____________
     $f->add(
         new TrFormElement(_T('Description','imaging'), new InputTplTitle('Description',$InfoBule_Description)),
-        array("value" => "Temp","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['Description'] : "Temp","required" => True)
     );
     //_____________
     $f->add(
         new TrFormElement(_T('Password: (Optional)','imaging'), new InputTplTitle('Password',$InfoBule_Password)),
-        array("value" => ""));
+        array("value" => (isset($parameters)) ? $parameters['Password'] : ""));
     //_____________
     $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
     $Autologon->setElements($yes_no);
     $Autologon->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
-        array("value" => "true","required" => True)
+        array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
     );
     //_____________
     $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
@@ -866,7 +868,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $EnableUAC->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('UAC','imaging').":", $EnableUAC),
-            array("value" => "false","required" => True)
+            array("value" => (isset($parameters)) ? $parameters['EnableUAC'] : "false","required" => True)
     );
     //_____________
     $EnableFirewall = new SelectItemtitle("EnableFirewall",$InfoBule_EnableFirewall);
@@ -874,12 +876,11 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
     $EnableFirewall->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Enable Firewall','imaging').":", $EnableFirewall),
-            array("value" => "true","required" => True)
+            array("value" => (isset($parameters)) ? $parameters['EnableFirewall'] : "true","required" => True)
     );
     //_____________function addButton($name, $value, $klass = "btnPrimary", $extra = "", $type = "submit") 
     //$f->addButton("bvalid", _T("Validate",'imaging'),"btnPrimary",'style="text-align: center;"');
-    
-    
+
     $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Xml Windows Answer File Generator", "imaging"));
     $rr = new TrFormElementcollapse($bo);
     $rr->setstyle("text-align: center;");
@@ -898,6 +899,7 @@ require("../includes/data_Windows_Answer_File_Generator.inc.php");
                                 )
         )
     );
+
     $f->display();
 //     //------------------
 //     //------------------

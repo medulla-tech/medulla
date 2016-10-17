@@ -102,38 +102,24 @@ define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
             echo _T("error create file", 'imaging').'</p>';
         }else
         {
-        echo '<pre>'.$new.'</pre>';
+            echo '<pre>'.$new.'</pre>';
         }
         exit(0);
     }
-//     if ($_POST['bvalidbutton']== "1" && 
-//         isset($_POST['codeToCopy']) ){
-//             if( !isset($_POST['Location']) || $_POST['Location'] == "")   {
-//                 echo '<p style="text-align:center; color:DarkRed ; font-size: 20px;" >';
-//                 echo _T("title file missing", 'imaging').'</p>';
-//                 exit(0);
-//             }else
-//             {
-//                 $gg = $_POST['codeToCopy'];
-//                 $dom = new DomDocument;
-//                 $dom->preserveWhiteSpace = FALSE;
-//                 $dom->loadXML($gg);
-//                 $dom->formatOutput = true;
-//                 $t=$dom->saveXML();
-//                 $t1 = str_replace ("\r",'',$t);
-//                 $new = htmlspecialchars( $t1, ENT_QUOTES);
-//                 if( ! xmlrpc_Windows_Answer_File_Generator($t,$_POST['Location']))
-//                 {
-//                     echo '<p style="text-align : center; color : DarkRed ; font-size : 20px;" >';
-//                     echo _T("error create file", 'imaging').'</p>';
-//                 }else
-//                 {
-//                 echo '<pre>'.$new.'</pre>';
-//                 }
-//                 
-//                 exit(0);
-//             }
-//     }
+
+	if(isset($_GET['edit']))
+	{
+		if(isset($_SESSION['parameters']))
+			unset($_SESSION['parameters']);
+
+		$_SESSION['parameters'] = xmlrpc_getWindowsAnswerFileParameters($_GET['edit']);
+		$_SESSION['parameters']['Title'] = $_GET['edit'];
+	}
+	else
+	{
+		if(isset($_SESSION['parameters']))
+			unset($_SESSION['parameters']);
+	}
 
     $span = new SpanElement(_T("Choose package source", 'imaging')." : ", "pkgs-title");
     $List=array('Windows 7','Windows 8','Windows 8.1','Windows 10');
@@ -141,11 +127,14 @@ define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
                 'modules/imaging/manage/ajaxFormWin8.php',
                 'modules/imaging/manage/ajaxFormWin81.php',
                 'modules/imaging/manage/ajaxFormWin10.php'];
-    $default_value='\'Windows 7\'';
+
+    $combine = array_combine($List,$list_val);
+
+    $default_value= (isset($_GET['edit'])) ? $_SESSION['parameters']['os'] : '\'Windows 7\'';
     $selectpapi = new ajaxSelectItem('unattended');
     $selectpapi->push($span);
-    $selectpapi->setElements($List);
-    $selectpapi->setElementsVal($list_val);
+    $selectpapi->setElements((isset($_GET['edit'])) ? [$_SESSION['parameters']['Os']] : $List);
+    $selectpapi->setElementsVal((isset($_GET['edit'])) ? [$combine[$_SESSION['parameters']['Os']]] : $list_val);
     $selectpapi->setJsFuncParams([$default_value]);
     $selectpapi->display();
  ?>
