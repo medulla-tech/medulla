@@ -39,8 +39,12 @@ function xmlrpc_getconfigurationxmpp() {
     return xmlCall("xmppmaster.getconfigurationxmpp", array());
 }
 
-function xmlrpc_getGuacamoleRelaisServerMachineUuid($uuid) {
-    return xmlCall("xmppmaster.getGuacamoleRelaisServerMachineUuid", array($uuid));
+function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
+    return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
+}
+
+function xmlrpc_getGuacamoleidforUuid($uuid) {
+    return xmlCall("xmppmaster.getGuacamoleidforUuid", array($uuid));
 }
 
 function xmlrpc_getListPresenceAgent() {
