@@ -40,7 +40,7 @@ class class01ErrorHandler(unittest.TestCase):
         result = FusionErrorHandler(message)
 
         nbr_errors = len(result)
-         
+
         self.assertEqual(nbr_errors, 0)
 
     def test03parse_incorrect_response(self):
@@ -48,10 +48,9 @@ class class01ErrorHandler(unittest.TestCase):
         result = FusionErrorHandler(message)
 
         nbr_errors = len(result)
-         
+
         self.assertNotEqual(nbr_errors, 0)
 
-        
 
 class class02GlpiProxyTest(unittest.TestCase):
     """ Test of forwarding inventories to GLPI """
@@ -65,7 +64,7 @@ class class02GlpiProxyTest(unittest.TestCase):
         result = glpi_proxy.result
 
         nbr_errors = len(result)
-         
+
         self.assertEqual(nbr_errors, 0)
 
     def test02post_incorrect_xml(self):

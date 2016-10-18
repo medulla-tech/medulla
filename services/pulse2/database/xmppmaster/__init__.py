@@ -389,19 +389,12 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def IpAndPortConnectionFromServerRelay(self, session, id):
         """ return ip et port server relay for connection"""
-        #sql = """SELECT 
-                    #ipserver, port, jid
-                 #FROM
-                    #xmppmaster.relayserver
-                 #WHERE
-                    #id = %s;"""%id;
         sql = """SELECT 
                     ipconnection, port, jid, urlguacamole
                  FROM
                     xmppmaster.relayserver
                  WHERE
                     id = %s;"""%id;
-        print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -444,7 +437,6 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.relayserver
                     WHERE
                             `relayserver`.`actif` = %d;"""%(actif)
-        print sql
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -674,8 +666,6 @@ class XmppMasterDatabase(DatabaseHelper):
         ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocole).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
         session.commit()
         session.flush()
-        #ret=[m for m in guacamoleid]
-        #print ret
         if ret:
             return [(m[1],m[0]) for m in ret]
         else:
