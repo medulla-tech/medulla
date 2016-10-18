@@ -887,6 +887,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             uuid = 'UUID' + str(computer.id)
                             logging.getLogger().debug("uuid   %s"%uuid)
                             XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+
                             self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                         'machine_ip' : data['xmppip'],
                                                                         'uuid' : str(computer.id) })
