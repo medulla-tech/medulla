@@ -16,7 +16,7 @@ def action( objetxmpp, action, sessionid, data, message, ret, objsessiondata):
         #host=
         try:
             url = objetxmpp.config.inventory_url
-        except NameError:
+        except:
             url = "http://localhost:9999/"
         inventory = zlib.decompress(base64.b64decode(data['inventory']))
         request = urllib2.Request(url, inventory, HEADER)
