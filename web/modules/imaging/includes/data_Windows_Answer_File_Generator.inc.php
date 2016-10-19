@@ -79,7 +79,6 @@ jQuery( "#buttonform" ).click(function() {
 
 
 jQuery(function () {
-    jQuery('#Comments').val('Enter your comments here...');
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
         if(getExtension( jQuery('#Location').val() ) != "xml"){
@@ -2081,5 +2080,41 @@ class SpanElementtitle extends HtmlElement {
         printf('<span%s id="%s" title="%s" >%s</span>', $class, $this->id, $this->title, $this->content);
     }
 }
+class OptTextareaTpl extends AbstractTpl{
+	var $options = [];
 
+	function __construct($array = [])
+	{
+		if(!isset($array['rows']))
+		{
+			$array['rows'] = 3;
+		}
+		if(!isset($array['cols']))
+		{
+			$array['cols'] = 21;
+		}
+		if(!isset($array['value']))
+		{
+			$array['value']='';
+		}
+		if(!isset($array['id']))
+		{
+			$array['id'] = $array['name'];
+		}
+		$this->options = $array;
+	}
+	
+	function display()
+	{
+	$str ="";
+		foreach($this->options as $key=>$value)
+		{
+			if($key != 'value')
+			{
+				$str .= $key.'="'.$value.'"';
+			}
+		}
+		echo '<textarea '.$str.'>'.$this->options['value'].'</textarea>';
+	}
+}
 ?>
