@@ -110,8 +110,8 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._session
-    def addPresenceMachine(self, session, jid, plateform, hostname, archi, 
-                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil='private'):
+    def addPresenceMachine(self, session, jid, plateform, hostname, archi,
+                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil='private', urlguacamole ="", groupedeploy =""):
         #print "%s %s %s %s %s %s %s %s %s %s"%(jid, plateform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil)
         try:
             new_machine = Machines()
@@ -125,6 +125,8 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.macadress = macadress
             new_machine.agenttype = agenttype
             new_machine.classutil = classutil
+            new_machine.urlguacamole = urlguacamole
+            new_machine.groupedeploy = groupedeploy
             session.add(new_machine)
             session.commit()
             session.flush()

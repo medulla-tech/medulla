@@ -101,7 +101,7 @@ CREATE TABLE `machines` (
   `agenttype` varchar(20) CHARACTER SET big5 DEFAULT NULL,
   `classutil` varchar(10) NOT NULL DEFAULT 'private',
   `groupedeploy` VARCHAR(80) DEFAULT NULL,
-  `urlguacamole` VARCHAR(45) DEFAULT NULL,
+  `urlguacamole` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `jid_UNIQUE` (`jid`)
@@ -167,7 +167,7 @@ DROP TABLE IF EXISTS `relayserver`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `relayserver` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `urlguacamole` varchar(80) NOT NULL,
+  `urlguacamole` varchar(255) NOT NULL,
   `subnet` varchar(45) NOT NULL,
   `nameserver` varchar(45) NOT NULL,
   `ipserver` varchar(45) NOT NULL,
@@ -180,7 +180,7 @@ CREATE TABLE `relayserver` (
   `latitude` varchar(45) DEFAULT NULL,
   `actif` tinyint(1) DEFAULT '0',
   `classutil` varchar(10) NOT NULL DEFAULT 'public',
-  `groupedeploy` varchar(45) NOT NULL,
+  `groupedeploy` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -280,49 +280,3 @@ UNLOCK TABLES;
 
 
 GRANT ALL PRIVILEGES ON `xmppmaster`.*  TO 'mmc'@'localhost' ;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

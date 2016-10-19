@@ -63,8 +63,8 @@ class Machines(Base, XmppMasterDBObj):
     macadress = Column(String(45))
     agenttype= Column(String(20))
     classutil = Column(String(20))
-    urlguacamole =Column(String(80))
-    groupedeploy = Column(String(45))
+    urlguacamole =Column(String(255))
+    groupedeploy = Column(String(80))
 
 
 class Network(Base, XmppMasterDBObj):
