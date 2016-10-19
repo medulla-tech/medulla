@@ -112,7 +112,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def addPresenceMachine(self, session, jid, plateform, hostname, archi, 
                            uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil='private'):
-        print "%s %s %s %s %s %s %s %s %s %s"%(jid, plateform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil)
+        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, plateform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil)
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -173,7 +173,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         result=[x for x in nb][0][0]
-        #logging.getLogger().info("nb %d"%result)
         if result == 0 :
             try:
                 new_relayserver = RelayServer()
@@ -232,10 +231,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
         result=[x for x in nb][0][0]
-
-        logging.getLogger().info("nb %d"%result)
         if result == 0 :
-            print "creation nouvelle users"
             try:
                 new_user = Users()
                 new_user.namesession = namesession
@@ -493,7 +489,6 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def addlistguacamoleidforiventoryid(self, session, idinventory, connection):
         # objet connection: {u'VNC': 60, u'RDP': 58, u'SSH': 59}}
-        print "delete objet"
         sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
                         `xmppmaster`.`has_guacamole`.`idinventory` = '%s';"""%idinventory
@@ -609,7 +604,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def delPresenceMachine(self, session, jid):
-        print "delPresenceMachine" 
         result = ['-1']
         try:
             sql = """SELECT 
@@ -634,8 +628,6 @@ class XmppMasterDatabase(DatabaseHelper):
             sql3 = """DELETE FROM `xmppmaster`.`has_machinesusers` 
                     WHERE
                         `has_machinesusers`.`machines_id` = '%s';"""%result[0]
-            print "*******************************"
-            print "%s"%result
             if result[2] == "relayserver":
                 sql2 = """UPDATE `xmppmaster`.`relayserver` 
                             SET 
@@ -658,7 +650,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         ret=[m for m in relayserver]
-        print ret[0]
         return ret[0]
 
     @DatabaseHelper._session

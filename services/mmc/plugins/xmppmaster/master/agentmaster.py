@@ -754,11 +754,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_name = str(self.localisationifo['country_name'])
                     city = str(self.localisationifo['city'])
 
-                logger.info("---------------------adduser")
-                #print data['information']['users'][0]
-                #print data['information']['info']['hostname']
-                #print "add user"
-                useradd = XmppMasterDatabase().adduser(   data['information']['users'][0],
+                logger.info("add user : %s for machine : %s country_name : %s"%(data['information']['users'][0], 
+                                                                                data['information']['info']['hostname'],
+                                                                                country_name))
+                useradd = XmppMasterDatabase().adduser(data['information']['users'][0],
                                                 data['information']['info']['hostname'] ,
                                                 city,
                                                 region_name ,
@@ -815,33 +814,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             )
                 if idmachine != -1:
                     if useradd != -1:
-                        #print "hasmachineusers %s %s"%(useradd,idmachine)
                         XmppMasterDatabase().hasmachineusers(useradd, idmachine)
-
-                    logging.debug("addPresenceNetwork pour machine  %d"%idmachine)
                     for i in data['information']["listipinfo"]:
                         try:
                             broadcast = i['broadcast']
                         except:
                             broadcast=''
                         XmppMasterDatabase().addPresenceNetwork( i['macaddress'],i['ipaddress'], broadcast, i['gateway'], i['mask'],i['macnonreduite'], idmachine)
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        logging.debug("add Presence Network [Machine : %d]"%idmachine)
                     if data['agenttype'] != "relayserver":
-                        # update uuid machine pour coherence avec inventory
+                        # update uuid machine : consistency with inventory
+                        # call Guacamole config
+                        # or add inventory
                         result = XmppMasterDatabase().listMacAdressforMachine(idmachine)
-
                         results = result[0].split(",")
                         logging.getLogger().debug("listMacAdressforMachine   %s"%results)
                         uuid =''
@@ -861,11 +846,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             else:
                                 print "None"
                         else:
-                            # install agent inventory
-                            # todo register machine in inventory
+                            #register machine in inventory
                             self.callinventory(data['from'], {})
 
-                #afffiche information plugins dans les logs
+                #show logs informations plugins
                 if self.config.showplugins:
                     logger.info("___________________________")
                     logger.info("LIST PLUGINS INSTALLED AGENT")
@@ -886,8 +870,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         deploie = True
                     if self.plugintype[k] == "relayserver":
                         self.plugintype[k]="relayserver"
-
-                    #print data['agenttype']
                     if data['agenttype'] != "all":
                         if data['agenttype'] == "relayserver" and  self.plugintype[k] == 'machine':
                             deploie = False
@@ -903,10 +885,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 if self.config.showplugins:
                     logger.info("__________________________________________")
                 self.showListClient()
-                # indique que la configurations guacamole doit etre faite pour sous reseau subnetxmpp
+                # indicate that the guacamole configurations must be made
+                # for sub network subnetxmpp
                 self.updateguacamoleconfig[data['subnetxmpp']] = True
-                # placer ici pour test sans attendre
-                #self.updateGuacamoleConfigRelayServer()
                 return True
             elif data['action'] == 'participant':
                 resultcommand={'action' : 'participant',
@@ -922,7 +903,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(resultcommand),
                         mtype='chat')
                 return True
-        #jfk
+
         except Exception as e:
             print "ERROR : infos machine %s"%(str(e))
             traceback.print_exc(file=sys.stdout)
@@ -945,13 +926,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if  msg['body'] == "This room is not anonymous":
             return False
 
-
-        #print self.plugin['xep_0045'].rooms
         if msg['from'].bare == self.config.jidsalonmaster or msg['from'].bare == self.config.confjidsalon:
             return False
 
         if self.jidInRoom1( self.config.confjidsalon, msg['from']):
-            #print "*********************il appartient au salon config"
             self.MessagesAgentFromSalonConfig( msg)
             return
 
@@ -961,7 +939,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
 
         if self.messagereturnsession(msg):
-            #print "messagereturnsession **********************"
             #message from client commande mmc
             return
         #JFK
@@ -971,8 +948,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def muc_message(self, msg):
         """
-        fonction traitant tous messages venant d un salon
-        attribut type pour selection
+        function treating all messages coming from a room
+         type attribute to selection
         """
         pass
 
@@ -1014,24 +991,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 )
                 except TypeError:
                     logging.error("TypeError execution plugin %s %s" % (dataobj['action'], sys.exc_info()[0]))
-                    #print dataobj['action']
-                    #print mydata
-                    #print dataobj['ret']
-                    #print dataobj['sessionid']
-                    #print msg['from']
-                    #print dataobj
-                    #print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
                     traceback.print_exc(file=sys.stdout)
 
                 except Exception as e:
                     logging.error("execution plugin %s %s" % (dataobj['action'], str(e)))
-                    #print dataobj['action']
-                    #print mydata
-                    #print dataobj['ret']
-                    #print dataobj['sessionid']
-                    #print msg['from']
-                    #print dataobj
-                    #print os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")
                     traceback.print_exc(file=sys.stdout)
 
         except Exception as e:
@@ -1046,8 +1009,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         datalocationserverguacamoleconf = {}
         controle="relayserver"
         for machine, data in self.presencedeploiement.iteritems():
-            #print machine
-            #print data
             if self.updateguacamoleconfig.has_key(self.presencedeploiement[machine]['subnetxmpp']) and \
             self.updateguacamoleconfig[self.presencedeploiement[machine]['subnetxmpp']] == True:
                 data1 = copy.deepcopy(data)
