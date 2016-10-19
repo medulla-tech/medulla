@@ -13,7 +13,11 @@ def action( objetxmpp, action, sessionid, data, message, ret, objsessiondata):
         print os.environ
         print "plugin_resultinventory"
         print message['from']
-        url = "http://localhost:9999/"
+        #host=
+        try:
+            url = objetxmpp.config.inventory_url
+        except NameError:
+            url = "http://localhost:9999/"
         inventory = zlib.decompress(base64.b64decode(data['inventory']))
         request = urllib2.Request(url, inventory, HEADER)
         response = urllib2.urlopen(request)
