@@ -18,7 +18,7 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-import glob 
+import glob
 import os
 import json
 import pprint
@@ -53,14 +53,12 @@ class sessiondatainfo:
     def jsonsession(self):
         session = { 'sessionid' : self.sessionid,'timevalid':self.timevalid,'datasession':self.datasession}
         return json.dumps(session)
-    
+
     def sauvesession(self):
         namefilesession = os.path.join( self.pathfile, self.sessionid )
         session = { 'sessionid' : self.sessionid, 'timevalid' : self.timevalid, 'datasession' : self.datasession }
         with open(namefilesession, 'w') as f:
             json.dump(session, f, indent = 4)
-        #pp = pprint.PrettyPrinter(indent=4)
-        #pp.pprint(self.datasession)
 
     def updatesessionfromfile(self):
         namefilesession = os.path.join( self.pathfile, self.sessionid )
@@ -103,7 +101,6 @@ class sessiondatainfo:
             self.eventend.set()
 
     def __repr__(self):
-        #return "<session {}, validate {}, data {}, eventend {}> ".format(self.sessionid, self.timevalid, self.datasession, self.eventend)
         return "<session %s, validate %s, data %s, eventend %s> "%(self.sessionid, self.timevalid, self.datasession, self.eventend)
 
 class session:
@@ -148,17 +145,16 @@ class session:
 
     def loadsessions(self):
         listfilesession = [x  for x in glob.glob(os.path.join(self.dirsavesession, "*" )) if (os.path.isfile(x) and os.path.basename(x).startswith( 'command'))]
-        #print listfilesession
         for filesession in listfilesession:
             if self.removefilesessionifnotsignal(filesession):
                 try:
-                    #lasession id est le nom du fichier
+                    # Session id is the name of the file
                     objsession = self.sessionfromsessiondata(os.path.basename(filesession))
                     if objsession== None: raise SessionkeyError
                     objsession.pathfile = self.dirsavesession
                     objsession.updatesessionfromfile()
                 except SessionkeyError:
-                    #session non exist
+                    # Session does not exist
                     objsession = self.createsessiondatainfo(os.path.basename(filesession))
                     objsession.updatesessionfromfile()
 
@@ -185,7 +181,7 @@ class session:
     def __suppsessiondatainfo__(self):
         datasessioninfo = [x  for x in self.sessiondata if x.timevalid <= 0]
         self.sessiondata = [x  for x in self.sessiondata if x.timevalid > 0]
-        #effacefichier persistance session
+        # Delete session persistance file
         for i in datasessioninfo:
             i.removesessionfile()
 
@@ -202,7 +198,7 @@ class session:
         for i in self.sessiondata:
             if i.sessionid == sessionid :
                 return i
-        return None    
+        return None
         #raise SessionkeyError
 
     def reactualisesession(self, sessionid, timeminute = 10):
@@ -245,9 +241,8 @@ class session:
         for i in range(0, self.len()):
             self.sessiondata[i].sauvesession()
         self.sessiondata = []
-            
+
     def sessionsetdata(self, sessionid, data):
         for i in self.sessiondata:
             if i.sessionid == sessionid :
                 i.setdatasession(data)
-

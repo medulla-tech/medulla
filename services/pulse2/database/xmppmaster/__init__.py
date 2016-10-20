@@ -31,7 +31,7 @@ from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverregles,Has_guacamole, Base, UserLog
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog
 # Imported last
 import logging
 
@@ -110,28 +110,28 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._session
-    def addPresenceMachine(self, session, jid, plateform, hostname, archi,
-                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil='private', urlguacamole ="", groupedeploy =""):
-        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, plateform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macadress, agenttype, classutil)
+    def addPresenceMachine(self, session, jid, platform, hostname, archi,
+                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil='private', urlguacamole ="", groupdeploy =""):
+        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, platform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil)
         try:
             new_machine = Machines()
             new_machine.jid = jid
-            new_machine.plateform = plateform
+            new_machine.platform = platform
             new_machine.hostname = hostname
             new_machine.archi = archi
             new_machine.uuid_inventorymachine = uuid_inventorymachine
             new_machine.ip_xmpp = ip_xmpp
             new_machine.subnetxmpp = subnetxmpp
-            new_machine.macadress = macadress
+            new_machine.macaddress = macaddress
             new_machine.agenttype = agenttype
             new_machine.classutil = classutil
             new_machine.urlguacamole = urlguacamole
-            new_machine.groupedeploy = groupedeploy
+            new_machine.groupdeploy = groupdeploy
             session.add(new_machine)
             session.commit()
             session.flush()
             if agenttype == "relayserver":
-                sql = "UPDATE `xmppmaster`.`relayserver` SET `actif`='1' WHERE `xmppmaster`.`relayserver`.`nameserver`='%s'"%hostname;
+                sql = "UPDATE `xmppmaster`.`relayserver` SET `enabled`='1' WHERE `xmppmaster`.`relayserver`.`nameserver`='%s'"%hostname;
                 session.execute(sql)
                 session.commit()
                 session.flush()
@@ -142,11 +142,11 @@ class XmppMasterDatabase(DatabaseHelper):
         return new_machine.id
 
     @DatabaseHelper._session
-    def addPresenceNetwork(self, session, macadress, ipadress, broadcast, gateway, mask, mac, id_machine):
+    def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):
         try:
             new_network = Network()
-            new_network.macadress=macadress
-            new_network.ipadress=ipadress
+            new_network.macaddress=macaddress
+            new_network.ipaddress=ipaddress
             new_network.broadcast=broadcast
             new_network.gateway=gateway
             new_network.mask=mask
@@ -165,11 +165,11 @@ class XmppMasterDatabase(DatabaseHelper):
                         urlguacamole,
                         subnet,
                         nameserver,
-                        groupedeploy,
+                        groupdeploy,
                         ipserver,
                         ipconnection,
                         portconnection,
-                        port, mask, jid, longitude="", latitude="", actif=False, classutil="private"):
+                        port, mask, jid, longitude="", latitude="", enabled=False, classutil="private"):
         sql = "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';"%nameserver
         nb = session.execute(sql)
         session.commit()
@@ -181,7 +181,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.urlguacamole = urlguacamole
                 new_relayserver.subnet = subnet
                 new_relayserver.nameserver = nameserver
-                new_relayserver.groupedeploy = groupedeploy
+                new_relayserver.groupdeploy = groupdeploy
                 new_relayserver.ipserver = ipserver
                 new_relayserver.port = port
                 new_relayserver.mask = mask
@@ -190,7 +190,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.portconnection = portconnection
                 new_relayserver.longitude = longitude
                 new_relayserver.latitude = latitude
-                new_relayserver.actif = actif
+                new_relayserver.enabled = enabled
                 new_relayserver.classutil = classutil
                 session.add(new_relayserver)
                 session.commit()
@@ -199,7 +199,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
         else:
             try:
-                sql = "UPDATE `xmppmaster`.`relayserver` SET `actif`=%s, `classutil`='%s' WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';"%(actif,classutil,nameserver)
+                sql = "UPDATE `xmppmaster`.`relayserver` SET `enabled`=%s, `classutil`='%s' WHERE `xmppmaster`.`relayserver`.`nameserver`='%s';"%(enabled,classutil,nameserver)
                 session.execute(sql)
                 session.commit()
                 session.flush()
@@ -298,87 +298,87 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._session
-    def algoregleuser(self, session, username, classutilMachine = "private", regle = 1, actif=1):
-        #-- type user regles_id` = 1
-        #select `relayserver`.`id` from `relayserver` inner join `has_relayserverregles` ON  `relayserver`.`id` = `has_relayserverregles`.`relayserver_id` 
+    def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
+        #-- type user rules_id` = 1
+        #select `relayserver`.`id` from `relayserver` inner join `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
         #where
-        #`has_relayserverregles`.`regles_id` = 1 and -- type user regles_id` = 1
-        #`has_relayserverregles`.`sujet` = users_machine and -- user de la machine
-        #`relayserver`.`actif` = 1 and
+        #`has_relayserverrules`.`rules_id` = 1 and -- type user rules_id` = 1
+        #`has_relayserverrules`.`subject` = users_machine and -- user de la machine
+        #`relayserver`.`enabled` = 1 and
         #`relayserver`.`classutil` = classutildela machine; -- seulement si classutil dela machine est private
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver` 
                 inner join 
-                    `has_relayserverregles` ON  `relayserver`.`id` = `has_relayserverregles`.`relayserver_id` 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
             where
-                `has_relayserverregles`.`regles_id` = %d 
-                    AND `has_relayserverregles`.`sujet` = '%s' 
-                    AND `relayserver`.`actif` = %d 
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
                     AND `relayserver`.`classutil` = '%s' 
-            limit 1;"""%(regle, username, actif, classutilMachine)
+            limit 1;"""%(rule, username, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id` 
             from `relayserver` 
                 inner join 
-                    `has_relayserverregles` ON  `relayserver`.`id` = `has_relayserverregles`.`relayserver_id` 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
             where
-                `has_relayserverregles`.`regles_id` = %d 
-                    AND `has_relayserverregles`.`sujet` = '%s' 
-                    AND `relayserver`.`actif` = %d 
-            limit 1;"""%(regle, username, actif)
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+            limit 1;"""%(rule, username, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
         return [x for x in result]
 
     @DatabaseHelper._session
-    def algoreglehostname(self, session, hostname, classutilMachine = "private", regle = 2, actif=1):
-        """Recherche server relais impose pour un hostname"""
+    def algorulehostname(self, session, hostname, classutilMachine = "private", rule = 2, enabled=1):
+        """Recherche server relay impose pour un hostname"""
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver` 
                 inner join 
-                    `has_relayserverregles` ON  `relayserver`.`id` = `has_relayserverregles`.`relayserver_id` 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
             where
-                `has_relayserverregles`.`regles_id` = %d 
-                    AND `has_relayserverregles`.`sujet` = '%s' 
-                    AND `relayserver`.`actif` = %d 
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(regle, hostname, actif, classutilMachine)
+            limit 1;"""%(rule, hostname, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id` 
             from `relayserver` 
                 inner join 
-                    `has_relayserverregles` ON  `relayserver`.`id` = `has_relayserverregles`.`relayserver_id` 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
             where
-                `has_relayserverregles`.`regles_id` = %d 
-                    AND `has_relayserverregles`.`sujet` = '%s' 
-                    AND `relayserver`.`actif` = %d 
-            limit 1;"""%(regle, hostname, actif)
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+            limit 1;"""%(rule, hostname, enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
         return [x for x in result]
 
     @DatabaseHelper._session
-    def algoreglesubnet(self, session, subnetmachine, classutilMachine = "private",  actif=1):
-        """recherche server relais avec meme reseau"""
+    def algorulesubnet(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+        """recherche server relay avec meme reseau"""
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver`
             where
-                        `relayserver`.`actif` = %d 
+                        `relayserver`.`enabled` = %d 
                     AND `relayserver`.`subnet` ='%s'
                     AND `relayserver`.`classutil` = '%s'
-            limit 1;"""%(actif, subnetmachine, classutilMachine)
+            limit 1;"""%(enabled, subnetmachine, classutilMachine)
         else:
             sql = """select `relayserver`.`id` 
             from `relayserver`
             where
-                        `relayserver`.`actif` = %d 
+                        `relayserver`.`enabled` = %d 
                     AND `relayserver`.`subnet` ='%s'
-            limit 1;"""%(actif, subnetmachine)
+            limit 1;"""%(enabled, subnetmachine)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -418,7 +418,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     @DatabaseHelper._session
-    def IdlonglatServerRelay(self, session, classutilMachine = "private",  actif=1):
+    def IdlonglatServerRelay(self, session, classutilMachine = "private",  enabled=1):
         """ return long and lat server relay"""
         if classutilMachine == "private":
             sql = """SELECT 
@@ -426,15 +426,15 @@ class XmppMasterDatabase(DatabaseHelper):
                     FROM
                         xmppmaster.relayserver
                     WHERE
-                            `relayserver`.`actif` = %d 
-                        AND `relayserver`.`classutil` = '%s';"""%(actif, classutilMachine)
+                            `relayserver`.`enabled` = %d 
+                        AND `relayserver`.`classutil` = '%s';"""%(enabled, classutilMachine)
         else:
             sql = """SELECT 
                         id,longitude,latitude
                     FROM
                         xmppmaster.relayserver
                     WHERE
-                            `relayserver`.`actif` = %d;"""%(actif)
+                            `relayserver`.`enabled` = %d;"""%(enabled)
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -442,19 +442,19 @@ class XmppMasterDatabase(DatabaseHelper):
 
 
     #@DatabaseHelper._session
-    #def algoregledefault(self, session, subnetmachine, classutilMachine = "private",  actif=1):
+    #def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
         #pass
 
     #@DatabaseHelper._session
-    #def algoreglegeo(self, session, subnetmachine, classutilMachine = "private",  actif=1):
+    #def algorulegeo(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
         #pass
 
     @DatabaseHelper._session
-    def Orderregles(self, session):
+    def Orderrules(self, session):
         sql = """SELECT 
                     *
                 FROM
-                    xmppmaster.regles
+                    xmppmaster.rules
                 ORDER BY level;"""
         result = session.execute(sql)
         session.commit()
@@ -503,7 +503,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 hasguacamole = Has_guacamole()
                 hasguacamole.idguacamole=connection[idguacamole]
                 hasguacamole.idinventory=idinventory
-                hasguacamole.protocole=idguacamole
+                hasguacamole.protocol=idguacamole
                 session.add(hasguacamole)
                 session.commit()
                 session.flush()
@@ -633,7 +633,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if result[2] == "relayserver":
                 sql2 = """UPDATE `xmppmaster`.`relayserver` 
                             SET 
-                                `actif` = '0'
+                                `enabled` = '0'
                             WHERE
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
                 supp2 = session.execute(sql2)
@@ -657,7 +657,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getGuacamoleidforUuid(self, session, uuid):
-        ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocole).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
+        ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
         session.commit()
         session.flush()
         if ret:

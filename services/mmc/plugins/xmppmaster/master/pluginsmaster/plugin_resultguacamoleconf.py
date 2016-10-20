@@ -3,7 +3,7 @@ import traceback
 import sys
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-def action( objetxmpp, action, sessionid, data, message, ret, objsessiondata):
+def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
     print "plugin_resultguacamole : %s"%data
     try:
         XmppMasterDatabase().addlistguacamoleidforiventoryid(data['uuid'], data['connection'])

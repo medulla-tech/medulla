@@ -25,9 +25,6 @@ import logging
 from master.agentmaster import MUCBot
 
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
-#from mmc.plugins.xmppmaster.master.agentmaster import doTask, stopxmpp
-
-#from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.agent import PluginManager
 
 logger = logging.getLogger()
@@ -71,8 +68,6 @@ class xmppMasterthread(threading.Thread):
             tg.debugmode = 40
         elif tg.debugmode == "CRITICAL":
             tg.debugmode = 50
-        #logging.basicConfig(level=tg.debugmode,
-                            #format='[MASTER] %(levelname)-8s %(message)s')
         logging.basicConfig(level=tg.debugmode,
                 format='[%(name)s.%(funcName)s:%(lineno)d] %(message)s')
         #logging.log(tg.debugmode,"=======================================test log")
@@ -84,8 +79,8 @@ class xmppMasterthread(threading.Thread):
         self.xmpp.register_plugin('xep_0199', {'keepalive': True, 'frequency':15})
         self.xmpp.register_plugin('xep_0077') # Registration
         #xmpp.register_plugin('xep_0047') # In-band Registration
-        #xmpp.register_plugin('xep_0096') # file transfert
-        #xmpp.register_plugin('xep_0095') # file transfert
+        #xmpp.register_plugin('xep_0096') # file transfer
+        #xmpp.register_plugin('xep_0095') # file transfer
         self.xmpp['xep_0077'].force_registration = False
         self.xmpp.register_plugin('xep_0279')
         if self.xmpp.connect(address=(tg.Server, tg.Port)):
@@ -94,7 +89,7 @@ class xmppMasterthread(threading.Thread):
         else:
             logger.info("Unable to connect.")
 
-    #todo faire class 
+    #todo faire class
     def stopxmpp(self):
         if self.xmpp != None:
             #_remove_schedules
@@ -110,4 +105,3 @@ class xmppMasterthread(threading.Thread):
 
     def stop(self):
         self.stopxmpp()
-

@@ -1,18 +1,7 @@
 # -*- coding: utf-8 -*-
-from utils import pulginmaster, pulginmastersessionaction
+from utils import pluginmaster, pluginmastersessionaction
 
-@pulginmastersessionaction("actualise",20)
-def action( objetxmpp, action, sessionid, data, message, ret, objsessiondata):
-    #if ret == 0:
-        ###
-        ###objetxmpp.session.reactualisesession(sessionid, 10)
-        ###or
-        #objetxmpp.session.affiche()
-        #objetxmpp.session.clear(sessionid)
-        #print sessionid
-        #print "mmm"
-    objetxmpp.session.affiche()
-    #else:
-        #print "erreur"
+@pluginmastersessionaction("actualise",20)
+def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
+    xmppobject.session.affiche()
     print "fff"
- 

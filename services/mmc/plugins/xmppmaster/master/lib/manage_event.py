@@ -15,12 +15,12 @@ class manage_event:
         self.queue_in = queue_in
         self.namethread =  name_random(5, "threadevent")
         self.objectxmpp = objectxmpp
-        print "****************************manage_event"
+        print "****manage_event"
         self.threadevent = threading.Thread( name = self.namethread, target = self.manage_event_command)
         self.threadevent.start()
 
     def show_eventloop(self):
-        print "boucle evenement"
+        print "Event loop"
         for i in self.event:
             print '------------\n%s\n------------'%i
 
@@ -43,10 +43,10 @@ class manage_event:
                     }
 
     def manage_event_loop(self):
-        #traitement message interne
+        # Process internal message
         for i in self.event:
             if not 'event' in i:
-                # message de type loop
+                # Loop type message
                 jidto = jid.JID(str(i['to'])).bare
                 msg={
                     'from' : jidto,
@@ -58,7 +58,7 @@ class manage_event:
                             }
                     }
                 if self.objectxmpp.session.isexist(i['sessionid']) and jidto == self.objectxmpp.boundjid.bare:
-                    ##call plugin i['sessionid'] == msg['from'].bare
+                    # Call plugin i['sessionid'] == msg['from'].bare
                     call_plugin( i['action'],
                                 self.objectxmpp,
                                         i['action'],
@@ -69,7 +69,7 @@ class manage_event:
                                         )
 
     def delmessage_loop(self, devent):
-        #supprime message loop devent
+        # Delete the loop devent message
         for i in self.event:
             if not 'event' in i:
                 if i['data']['Devent'] == devent:
@@ -77,7 +77,7 @@ class manage_event:
                     break;
 
     def delmessage_loop_Dtypequery(self, Dtypequery):
-        #supprime message loop devent
+        # Delete the loop devent message
         for i in self.event:
             if not 'event' in i:
                 if i['data']['Dtypequery'] == Dtypequery:
@@ -91,21 +91,21 @@ class manage_event:
         try:
             while True:
                 try:
-                    #lit event
-                    print "attente event"
+                    # Reads event
+                    print "Waiting for event"
                     event = self.queue_in.get(5)
-                    print "MESSAGE QUEUE %s"%event
+                    print "Message queue %s"%event
                     if event=="quit":
                         break
                     self.show_eventloop()
-                    print "event recu *********************"%event
+                    print "Event received %s"%event
                     if 'sessionid' in event and '_eventype' in event:
                         if 'result' in event['data'] and \
                             'command' in event['data']['result'] and \
                             'codeerror' in event['data']['result'] and \
                             'Dtypequery'  in event['data']['result'] and \
                             'Devent'  in event['data']['result'] :
-                            msg = { 
+                            msg = {
                                     'ret' : event['ret'],
                                     'sessionid' : event['sessionid'],
                                     'base64' : event['base64'],
@@ -119,7 +119,7 @@ class manage_event:
                                     }
                             }
                         else:
-                            msg = { 
+                            msg = {
                                     'ret' : event['ret'],
                                     'sessionid' : event['sessionid'],
                                     'base64' : event['base64'],
@@ -129,7 +129,7 @@ class manage_event:
                                         'Devent': event['data']['Devent']
                                     }
                             }
-                        print "SEND MESSAGE %s"%msg
+                        print "Send message %s"%msg
                         self.objectxmpp.send_message( mto = event['to'],
                                             mbody=json.dumps(msg),
                                             mtype='chat')
@@ -138,7 +138,7 @@ class manage_event:
 
                 except TimeoutError:
                     print "TimeoutError"
- 
+
         except KeyboardInterrupt:
             pass
         finally:

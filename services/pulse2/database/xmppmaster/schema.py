@@ -54,17 +54,17 @@ class Machines(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     jid = Column(String(45), nullable=False)
-    plateform = Column(String(60))
+    platform = Column(String(60))
     hostname = Column(String(45), nullable=False)
     archi= Column(String(45), nullable=False)
     uuid_inventorymachine= Column(String(45), nullable=False)
     ip_xmpp = Column(String(45))
     subnetxmpp = Column(String(45))
-    macadress = Column(String(45))
+    macaddress = Column(String(45))
     agenttype= Column(String(20))
     classutil = Column(String(20))
     urlguacamole =Column(String(255))
-    groupedeploy = Column(String(80))
+    groupdeploy = Column(String(80))
 
 
 class Network(Base, XmppMasterDBObj):
@@ -73,8 +73,8 @@ class Network(Base, XmppMasterDBObj):
     # ====== Fields =============================
     # Here we define columns for the table network.
     # Notice that each column is also a normal Python instance attribute.
-    macadress = Column(String(45), nullable=False)
-    ipadress = Column(String(45), nullable=False)
+    macaddress = Column(String(45), nullable=False)
+    ipaddress = Column(String(45), nullable=False)
     broadcast = Column(String(45))
     gateway = Column(String(45))
     mask = Column(String(45))
@@ -94,7 +94,7 @@ class RelayServer(Base, XmppMasterDBObj):
     urlguacamole =Column(String(80))
     subnet = Column(String(45))
     nameserver = Column(String(45))
-    groupedeploy = Column(String(45))
+    groupdeploy = Column(String(45))
     ipserver = Column(String(45))
     port = Column(Integer)
     ipconnection = Column(String(45))
@@ -103,12 +103,12 @@ class RelayServer(Base, XmppMasterDBObj):
     jid = Column(String(45))
     longitude = Column(String(45))
     latitude = Column(String(45))
-    actif=  Column(Boolean, unique=False)
+    enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
 
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'regles'
+    __tablename__ = 'rules'
     # ====== Fields =============================
     # Here we define columns for the table network.
     # Notice that each column is also a normal Python instance attribute.
@@ -142,15 +142,15 @@ class Has_machinesusers(Base, XmppMasterDBObj):
     machines = relationship(Machines)
     users = relationship(Users)
 
-class Has_relayserverregles(Base, XmppMasterDBObj):
+class Has_relayserverrules(Base, XmppMasterDBObj):
     # ====== Table name =========================
-    __tablename__ = 'has_relayserverregles'
+    __tablename__ = 'has_relayserverrules'
     # ====== ForeignKey =============================
-    regles_id = Column(Integer, ForeignKey('regles.id'))
+    rules_id = Column(Integer, ForeignKey('rules.id'))
     relayserver_id = Column(Integer)
-    sujet = Column(String(45))
+    subject = Column(String(45))
     order = Column(String(45))
-    regles = relationship(Regles)
+    rules = relationship(Regles)
 
 class Has_guacamole(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -158,7 +158,7 @@ class Has_guacamole(Base, XmppMasterDBObj):
     # ====== ForeignKey =============================
     idguacamole = Column(Integer)
     idinventory = Column(Integer)
-    protocole   = Column(String(10))
+    protocol   = Column(String(10))
 
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================

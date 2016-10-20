@@ -19,7 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-
 import netifaces
 import json
 import subprocess
@@ -30,23 +29,13 @@ import random
 import re
 import traceback, types
 from pprint import pprint
-
 import hashlib
 from functools import wraps
 import base64
 from importlib import import_module
 
-
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
-#pathbase = os.path.abspath(os.curdir)
-
-#pathseelfplugins = os.path.join(pathbase, "pluginsmaster")
-
-#sys.path.append(pathseelfplugins)
-#sys.path.append(os.path.dirname(os.path.realpath(__file__)))
-
-#import PluginRecvMuctest
 if sys.platform.startswith('win'):
     import wmi
     import pythoncom
@@ -55,44 +44,20 @@ if sys.platform.startswith('win'):
     import win32netcon
     import socket
 
-def affichedatajson(jsondata):
+def displayDataJson(jsondata):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(jsondata)
 
 
 def load_plugin(name):
-    print "IMPORTE plugin_%s" % name
+    print "Import plugin_%s" % name
     mod = __import__("plugin_%s" % name)
     print mod
     return mod
-#/usr/lib/pymodules/python2.7/mmc/plugins/xmppmaster/master/pluginsmaster
+
 def call_plugin(name, *args, **kwargs):
     pluginaction = load_plugin(name)
     pluginaction.action(*args, **kwargs)
-
-
-#def load_plugin_recv(name):
-    #mod = __import__("pluginrecv_%s" % name)
-    #return mod
-
-#def call_pluginrecv(name, *args, **kwargs):
-    #pluginob = load_plugin_recv(name)
-    #pluginob.action(*args, **kwargs)
-
-
-#def include(filename):
-    #if os.path.exists(filename): 
-        #execfile(filename)
-
-##def plugingrecever(class,msg):
-    ##for element in os.listdir("%s/plugins/xmppmaster/master/lib/"%os.getcwd()):
-        ##if element.startswith( 'PluginRecvMuc' ) and element.endswith(".py"):
-            ##include("%s/plugins/xmppmaster/master/lib/%s"%(os.getcwd(),element))
-
-
-#def import_from(module, name):
-    #module = __import__(module, fromlist=[name])
-    #return getattr(module, name)
 
 def pathbase():
     return os.path.abspath(os.getcwd())
@@ -110,16 +75,16 @@ def pathscriptperl(name):
     return os.path.abspath(os.path.join(pathbase(),"script","perl",name))
 
 def leplusfrequent(L):
-    """Retourne l'élément le plus fréquent de la liste"""
-    L.sort()  # pour que les éléments identiques soient assemblés
-    n0, e0 = 0, None  # pour conserver le plus fréquent
-    ep = None  # stocke l'élément distinct de la boucle précédente
+    """Returns the most frequent element from the list"""
+    L.sort()  # To assemble indentical elements
+    n0, e0 = 0, None  # To keep the most frequent
+    ep = None  # Store the distinct element from the previous loop
     for e in L:
-        if e != ep:  # si l'élément e a déjà été rencontré, on ne fait rien
+        if e != ep:  # If e has been seen previously, nothing is done
             n = L.count(e)
             if n > n0:
-                n0, e0 = n, e  # on stocke le nouvel élément le plus fréquent
-            ep = e  # on stocke l'élément courant pour la boucle suivante
+                n0, e0 = n, e  # Store the new most frequent element
+            ep = e  # Store current element in next loop
     return e0, n0
 
 class StreamToLogger(object):
@@ -148,12 +113,8 @@ def get_connection_name_from_guid(iface_guids):
             pass
     return iface_names
 
-
-#x = netifaces.interfaces()
-#pprint(get_connection_name_from_guid(x))
-
 def CreateWinUser(login,Password,Groups=['Users']):
-    # Controle si l'utilisateur existe
+    # Check if the user exists
     try:
         d = win32net.NetUserGetInfo(None,login, 1)
         return
@@ -165,13 +126,8 @@ def CreateWinUser(login,Password,Groups=['Users']):
     d['comment'] = ''
     d['flags'] = win32netcon.UF_NORMAL_ACCOUNT | win32netcon.UF_SCRIPT | win32netcon.UF_PASSWD_CANT_CHANGE | win32netcon.UF_DONT_EXPIRE_PASSWD
     d['priv'] = win32netcon.USER_PRIV_USER
-    ##d['home_dir'] = str(objuser['Home'])
     win32net.NetUserAdd(None, 1, d)
-    #d = win32net.NetUserGetInfo(None, 'TestUser', 10)
-    #d['full_name'] = objuser['FullName']
-    #d = win32net.NetUserSetInfo(None, 'TestUser', 10, d)
     domain = win32api.GetDomainName()
-
     d = [{"domainandname" : domain+"\\"+login}]
     for gr in Groups:
         win32net.NetLocalGroupAddMembers(None, gr, 3, d)
@@ -204,7 +160,7 @@ def create_Win_user(username, password, full_name=None, comment=None):
 
     win32net.NetLocalGroupAddMembers(None, 'Users', 3, [
             {'domainandname': r'{0}\{1}'.format(socket.gethostname(), username)}])
-  
+
     hide_user_account(username)
     return True
 
@@ -226,13 +182,12 @@ def isWinUserAdmin():
 
 #mac OS
 def isMacOsUserAdmin():
-    obj=simplecommande("cat /etc/master.passwd")#pour linux "cat /etc/shadow")
+    obj=simplecommand("cat /etc/master.passwd") #For linux "cat /etc/shadow")
     if int(obj['code']) == 0:
         return True
     else:
         return False
 
-#listplugins = ['.'.join(fn.split('.')[:-1]) for fn in os.listdir(pathplugins) if fn.endswith(".py") and fn != "__init__.py"]
 def name_random(nb, pref=""):
     a="abcdefghijklnmopqrstuvwxyz0123456789"
     d=pref
@@ -247,32 +202,29 @@ def md5(fname):
             hash.update(chunk)
     return hash.hexdigest()
 
-
-
-
-def getIpListreduite():
-    listmacadress={}
+def getShortenedIpList():
+    listmacaddress={}
     for i in netifaces.interfaces():
         addrs = netifaces.ifaddresses(i)
         try:
-            if_mac = reduction_mac(addrs[netifaces.AF_LINK][0]['addr'])
+            if_mac = shorten_mac(addrs[netifaces.AF_LINK][0]['addr'])
             if_ip = addrs[netifaces.AF_INET][0]['addr']
-            adresse = int(if_mac,16)
-            if adresse != 0:
-                listmacadress[adresse]= if_mac
+            address = int(if_mac,16)
+            if address != 0:
+                listmacaddress[address]= if_mac
         except :
             pass
-    return listmacadress
+    return listmacaddress
 
 
 def name_jid():
-    dd = getIpListreduite()
+    dd = getShortenedIpList()
     cc = dd.keys()
     cc.sort()
     return dd[cc[0]]
 
-   
-def reduction_mac(mac):
+
+def shorten_mac(mac):
     mac=mac.lower()
     mac = mac.replace(":","")
     mac = mac.replace("-","")
@@ -339,7 +291,7 @@ def is_valid_ipv6(ip):
              |  (?<!:)              #
              |  (?<=:) (?<!::) :    #
              )                      # OR
-         |                          #   A v4 address with NO leading zeros 
+         |                          #   A v4 address with NO leading zeros
             (?:25[0-4]|2[0-4]\d|1\d\d|[1-9]?\d)
             (?: \.
                 (?:25[0-4]|2[0-4]\d|1\d\d|[1-9]?\d)
@@ -352,7 +304,7 @@ def is_valid_ipv6(ip):
 
 
 
-#linux systemd ou init
+#linux systemd or init
 def typelinux():
     p = subprocess.Popen('cat /proc/1/comm',
                             shell=True,
@@ -360,8 +312,8 @@ def typelinux():
                             stderr=subprocess.STDOUT)
     result = p.stdout.readlines()
     code_result= p.wait()
-    system=result[0].rstrip('\n')    
-    """renvoi la liste des ip gateway en fonction de l'interface linux"""
+    system=result[0].rstrip('\n')
+    """returns the list of ip gateway related to the interfaces"""
     return system
 
 def isprogramme(name):
@@ -381,7 +333,7 @@ def isprogramme(name):
     else:
         return False
 
-def simplecommande(cmd):
+def simplecommand(cmd):
     obj={}
     p = subprocess.Popen(cmd,
                             shell=True,
@@ -392,7 +344,7 @@ def simplecommande(cmd):
     obj['result']=result
     return obj
 
-def simplecommandestr(cmd):
+def simplecommandstr(cmd):
     obj={}
     p = subprocess.Popen(cmd,
                             shell=True,
@@ -404,8 +356,8 @@ def simplecommandestr(cmd):
     return obj
 
 
-    
-    
+
+
 def servicelinuxinit(name,action):
     obj={}
     p = subprocess.Popen("/etc/init.d/%s %s"%(name,action),
@@ -452,14 +404,14 @@ def service(name, action): #start | stop | restart | reload
             wmi_sql = "select * from Win32_Service Where Name ='%s'"%name
             wmi_out = wmi_obj.query( wmi_sql )
         finally:
-            pythoncom.CoUninitialize ()    
+            pythoncom.CoUninitialize ()
         for dev in wmi_out:
             print dev.Caption
         pass
     elif sys.platform.startswith('darwin'):
         pass
     return obj
- 
+
 #listservice()
 #FusionInventory Agent
 def listservice():
@@ -485,7 +437,7 @@ def joint_compteAD():
                 print computer.SystemStartupOptions
                 computer.JoinDomainOrWorkGroup(domaine,password,login,group,3  )
     finally:
-        pythoncom.CoUninitialize ()        
+        pythoncom.CoUninitialize ()
 
 def windowsservice(name, action):
     pythoncom.CoInitialize ()
@@ -508,9 +460,9 @@ def windowsservice(name, action):
             dev.StopService()
             dev.StartService()
         else:
-            pass        
- 
- 
+            pass
+
+
 #windowsservice("FusionInventory-Agent", "Stop")
 
 def methodservice():
@@ -520,20 +472,20 @@ def methodservice():
     try:
         c = wmi.WMI ()
         for method in c.Win32_Service._methods:
-            print method  
+            print method
     finally:
         pythoncom.CoUninitialize ()
-        
+
 def file_get_content(path):
     inputFile = open(path, 'r')     #Open test.txt file in read mode
     content = inputFile.read()
-    inputFile.close()        
+    inputFile.close()
     return content
 
 def file_put_content(filename, contents,mode="w"):
     fh = open(filename, mode)
-    fh.write(contents)  
-    fh.close()  
+    fh.write(contents)
+    fh.close()
 
 ##windows
 #def listusergroup():
@@ -547,9 +499,9 @@ def file_put_content(filename, contents,mode="w"):
 
 
 
-#decorateur pour simplifier les plugins
-def pulginprocess(func):
-    def wrapper( objetxmpp, action, sessionid, data, message, dataerreur):
+# decorator to simplify the plugins
+def pluginprocess(func):
+    def wrapper( xmppobject, action, sessionid, data, message, dataerreur):
         resultaction = "result%s"%action
         result={}
         result['action'] = resultaction
@@ -561,58 +513,58 @@ def pulginprocess(func):
         dataerreur['data']['msg'] = "ERROR : %s"%action
         dataerreur['sessionid'] = sessionid
         try:
-            response = func( objetxmpp, action, sessionid, data, message, dataerreur, result)
-            #encode  result['data'] si besoin
+            response = func( xmppobject, action, sessionid, data, message, dataerreur, result)
+            #encode  result['data'] if needed
             print result
             if result['base64'] == True:
                 result['data'] = base64.b64encode(json.dumps(result['data']))
-            objetxmpp.send_message( mto=message['from'],
+            xmppobject.send_message( mto=message['from'],
                                     mbody=json.dumps(result),
                                     mtype='chat')
         except:
-            objetxmpp.send_message( mto=message['from'],
+            xmppobject.send_message( mto=message['from'],
                                     mbody=json.dumps(dataerreur),
                                     mtype='chat')
             return
         return response
     return wrapper
 
-# decorateur pour simplifier les plugins
-# verifie session existe.
-# pas de session end 
-def pulginmaster(func):
-    def wrapper( objetxmpp, action, sessionid, data, message, ret ):
+# decorator to simplify the plugins
+# Check if session exists.
+# No end of session
+def pluginmaster(func):
+    def wrapper( xmppobject, action, sessionid, data, message, ret ):
         if action.startswith("result"):
             action = action[:6]
-        if objetxmpp.session.isexist(sessionid):
-            objsessiondata = objetxmpp.session.sessionfromsessiondata(sessionid)
+        if xmppobject.session.isexist(sessionid):
+            objsessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
         else:
             objsessiondata = None
-        response = func( objetxmpp, action, sessionid, data, message, ret, objsessiondata)
+        response = func( xmppobject, action, sessionid, data, message, ret, objsessiondata)
         return response
     return wrapper
 
 
-def pulginmastersessionaction( sessionaction, timeminute = 10 ):
-    def decorateur(func):
-        def wrapper(objetxmpp, action, sessionid, data, message, ret, dataobj):
+def pluginmastersessionaction( sessionaction, timeminute = 10 ):
+    def decorator(func):
+        def wrapper(xmppobject, action, sessionid, data, message, ret, dataobj):
             #avant
             if action.startswith("result"):
                 action = action[6:]
-            if objetxmpp.session.isexist(sessionid):
+            if xmppobject.session.isexist(sessionid):
                 if sessionaction == "actualise":
-                    objetxmpp.session.reactualisesession(sessionid, 10)
-                objsessiondata = objetxmpp.session.sessionfromsessiondata(sessionid)
+                    xmppobject.session.reactualisesession(sessionid, 10)
+                objsessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
             else:
                 objsessiondata = None
-            response = func( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessiondata)
+            response = func( xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata)
             if sessionaction == "clear" and objsessiondata != None:
-                objetxmpp.session.clear(sessionid)
+                xmppobject.session.clear(sessionid)
             elif sessionaction == "actualise":
-                objetxmpp.session.reactualisesession(sessionid, 10)
+                xmppobject.session.reactualisesession(sessionid, 10)
             return response
         return wrapper
-    return decorateur
+    return decorator
 
 
 def searchippublic(site = 1):

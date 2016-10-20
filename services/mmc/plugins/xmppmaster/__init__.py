@@ -27,14 +27,12 @@ import os,sys
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
-#from mmc.plugins.base import ComputerI
-#from mmc.plugins.base.computers import ComputerManager
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from master.lib.utils import name_random
 from  xmppmaster import *
-from mmc.plugins.xmppmaster.master.agentmaster import simplecommandxmpp, simplecommandxmpp1, configurationxmpp,callxmppfunction, ObjectXmpp, callxmppplugin
+from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,callXmppFunction, ObjectXmpp, callXmppPlugin
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -90,39 +88,38 @@ def getGuacamoleidforUuid(uuid):
     return XmppMasterDatabase().getGuacamoleidforUuid(uuid)
 
 def getListPresenceAgent():
-    return json.dumps(ObjectXmpp().presencedeploiement, encoding='latin1')
+    return json.dumps(ObjectXmpp().presencedeployment, encoding='latin1')
 
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
 
-##JFK
-def getconfigurationxmpp():
-    return configurationxmpp()
-#JFK
-def xmppapplicationdeployment(*args, **kwargs ):
-    return callxmppfunction(*args, **kwargs )
+def getXmppConfiguration():
+    return getXmppConfiguration()
 
-def xmppplugin(*args, **kwargs ):
-    return callxmppplugin(*args, **kwargs )
+def runXmppApplicationDeployment(*args, **kwargs ):
+    return callXmppFunction(*args, **kwargs )
 
-def xmppcommand(cmd,machine):
+def CallXmppPlugin(*args, **kwargs ):
+    return callXmppPlugin(*args, **kwargs )
+
+def runXmppCommand(cmd,machine):
     data = {
 	"action": "shellcommand",
 	"sessionid":name_random(8,"mcc_"),
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=simplecommandxmpp1(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 4)
     d = a.t2.join()
     return a.result
 
-def xmppscript(cmd,machine):
+def runXmppScript(cmd,machine):
     data = {
 	"action": "shellcommand",
 	"sessionid":name_random(8,"mcc_"),
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=simplecommandxmpp1(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 4)
     d = a.t2.join()
     return a.result

@@ -22,7 +22,6 @@
 
 import os
 import sys
-#import math
 from math import cos
 from math import sin
 from math import acos
@@ -30,10 +29,10 @@ from math import asin
 from math import atan2
 from math import degrees
 from math import radians
-from math import sqrt 
+from math import sqrt
 
-rt = 6371  # rayon terrestre moyen en km
-### on considere laltitude a rt quelque soit le point.
+rt = 6371  # Mean Earth radius in km
+# We consider latitude at rt whatever the point
 import GeoIP
 
 
@@ -81,13 +80,13 @@ class Localisation:
 
     def distHaversine(self, p1, p2):
         """
-        #  Calcul de la distance (en km) entre 2 points specifies par leurs
-        #  latitude/longitude avec la formule de Haversine
-        # 
+        #  Calculate the distance (in km) between 2 points specified by their
+        #  latitude/longitude using Haversine formula
+        #
         #   de : Haversine formula - R. W. Sinnott, "Virtues of the Haversine",
         #        Sky and Telescope, vol 68, no 2, 1984
         #        http://www.census.gov/cgi-bin/geo/gisfaq?Q5.1
-        #  
+        #
         """
         dLat  = p2.lat - p1.lat
         dLong = p2.lon - p1.lon
@@ -98,11 +97,9 @@ class Localisation:
 
     def distCosineLaw(self,p1, p2):
         """
-            # Calcul de la distance (en km) entre 2 points specifies par leurs
-            # latitude/longitude en utilisant les fonctions trigonometriques
+            # Calculate the distance (in km) between 2 points specified by their
+            # latitude/longitude using trigonometric functions
             #
         """
         d = acos(sin(p1.lat)*sin(p2.lat) + cos(p1.lat)*cos(p2.lat)*cos(p2.lon-p1.lon)) * rt
         return d
-
-

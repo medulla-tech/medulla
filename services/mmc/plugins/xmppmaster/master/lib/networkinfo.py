@@ -36,35 +36,31 @@ class  networkagentinfo:
         self.action = action
         self.messagejson = {}
         self.networkobjet(self.sessionid, self.action)
-        #print self.messagejson['listipinfo']
-        for d in self.messagejson['listipinfo']:            
-            d['macnonreduite']=d['macaddress']
-            d['macaddress'] = self.reduction_mac(d['macaddress'])
-        #print self.messagejson['listipinfo'] 
+        for d in self.messagejson['listipinfo']:
+            d['macnotshortened']=d['macaddress']
+            d['macaddress'] = self.shorten_mac(d['macaddress'])
         if len(param) != 0 and len(self.messagejson['listipinfo']) != 0:
-            #filtre resultat
+            # Filter result
             dd=[]
-            param1 = map(self.reduction_mac,param)
+            param1 = map(self.shorten_mac,param)
             for d in self.messagejson['listipinfo']:
                 e=[s for s in param1 if d['macaddress'] == s]
                 if len(e)!=0:
                     dd.append(d)
             self.messagejson['listipinfo']=dd
-    #self.NetWorkInfo = json.dumps(self.networkobjet("desder"), indent=4, sort_keys=True)
-    def reduction_mac(self, mac):
+    def shorten_mac(self, mac):
         mac=mac.lower()
         mac = mac.replace(":","")
         mac = mac.replace("-","")
         mac = mac.replace(" ","")
-        #mac = mac.replace("/","")
         return mac
 
     def getuser(self):
         if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
-            obj = utils.simplecommandestr("users")
+            obj = utils.simplecommandstr("users")
         else:
             #todo
-            #return utilisateur windows
+            #Return windows user
             obj={}
             obj['result']="inconue"
             c = wmi.WMI().Win32_ComputerSystem
@@ -87,7 +83,7 @@ class  networkagentinfo:
         if sys.platform.startswith('linux'):
                 # Linux-specific code here...
                 p = subprocess.Popen("ps aux | grep dhclient | grep -v leases | grep -v grep | awk '{print $NF}'",
-                                                    shell=True, 
+                                                    shell=True,
                                                     stdout=subprocess.PIPE,
                                                     stderr=subprocess.STDOUT)
                 result = p.stdout.readlines()
@@ -131,20 +127,20 @@ class  networkagentinfo:
                 except:
                     pass
                 self.messagejson['dnshostname']      = dev.DNSHostName
-            self.messagejson['msg']     = platform.system()    
+            self.messagejson['msg']     = platform.system()
             return self.messagejson
 
         elif sys.platform.startswith('darwin'):
             #code pour MacOs
             return self.MacOsNetworkInfo()
-        else:           
+        else:
             self.messagejson['msg']= "system %s : pas encore pris en compte"%sys.platform
             return self.messagejson
 
     def routeinterface(self):
         """renvoi la liste des ip gateway en fonction de l'interface linux"""
         p = subprocess.Popen('LANG=C route -n | grep \'UG[ \t]\' | awk \'{ print $8"="$2}\'',
-                                                shell=True, 
+                                                shell=True,
                                                 stdout=subprocess.PIPE,
                                                 stderr=subprocess.STDOUT)
         result = p.stdout.readlines()
@@ -153,7 +149,7 @@ class  networkagentinfo:
         obj1={}
         for i in range(len(result)):
             #print result[i].rstrip('\n')
-            result[i]=result[i].rstrip('\n')    
+            result[i]=result[i].rstrip('\n')
             d = result[i].split("=")
             obj1[d[0]]=d[1]
         return obj1
@@ -171,14 +167,14 @@ class  networkagentinfo:
         obj1={}
         system=""
         ipdhcp = ""
-        ipadress = ""
+        ipaddress = ""
         p = subprocess.Popen('cat /proc/1/comm',
                                 shell=True,
                                 stdout=subprocess.PIPE,
                                 stderr=subprocess.STDOUT)
         result = p.stdout.readlines()
         code_result= p.wait()
-        system=result[0].rstrip('\n')    
+        system=result[0].rstrip('\n')
         """renvoi la liste des ip gateway en fonction de l'interface linux"""
 
         if system == "init":
@@ -190,11 +186,10 @@ class  networkagentinfo:
             code_result= p.wait()
 
             for i in range(len(result)):
-                result[i]=result[i].rstrip('\n')    
+                result[i]=result[i].rstrip('\n')
                 d = result[i].split("@")
                 obj1[d[0]]=d[1]
         elif system == "systemd":
-            #p = subprocess.Popen('systemctl status network | grep -i "dhclient\["',
             p = subprocess.Popen('journalctl | grep "dhclient\["',
                                     shell=True,
                                     stdout=subprocess.PIPE,
@@ -206,17 +201,17 @@ class  networkagentinfo:
                 colonne=i.split(" ")
                 if "DHCPACK" in i:
                     ipdhcp = ""
-                    ipadress = ""
+                    ipaddress = ""
                     ipdhcp = colonne[-1:][0]
                 elif "bound to" in i:
                     for z in colonne:
                         if self.validIP(z):
-                            ipadress = z
+                            ipaddress = z
                             if  ipdhcp != "":
-                                obj1[ipadress] = ipdhcp
+                                obj1[ipaddress] = ipdhcp
                             break
                     ipdhcp = ""
-                    ipadress = ""
+                    ipaddress = ""
                 else:
                     continue
         return obj1
@@ -245,14 +240,12 @@ class  networkagentinfo:
                 if_mac = addrs[netifaces.AF_LINK][0]['addr']
                 if_ip = addrs[netifaces.AF_INET][0]['addr']
                 p = subprocess.Popen('ipconfig getpacket %s'%i,
-                                        shell=True, 
+                                        shell=True,
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.STDOUT)
                 result = p.stdout.readlines()
                 code_result= p.wait()
                 if code_result == 0 :
-                    #print if_mac
-                    #print if_ip
                     partinfo={}
                     partinfo["dhcpserver"] = ''
                     partinfo["dhcp"] = 'False'
@@ -292,11 +285,11 @@ class  networkagentinfo:
                         pass
             except:# IndexError, KeyError: #ignore ifaces that dont have MAC or IP
                 pass
-        return self.messagejson   
+        return self.messagejson
 
     ###linux
     def getLocalIipAddress(self):
-        #renvoi objet reseaux linux.
+        # Return linux network object
         dataroute = self.routeinterface()
         dhcpserver = self.IpDhcp()
         ip_addresses = []
@@ -310,7 +303,7 @@ class  networkagentinfo:
                         obj={}
                         obj['ipaddress'] = j['addr']
                         obj['mask']   = j['netmask']
-                        try : 
+                        try :
                             obj['broadcast']   = j['broadcast']
                         except:
                             obj['broadcast']   = "0.0.0.0"
@@ -326,10 +319,10 @@ class  networkagentinfo:
                         try:
                             if dhcpserver[j['addr']] != None:
                                 obj['dhcp'] = 'True'
-                                obj['dhcpserver'] = dhcpserver[j['addr']]    
+                                obj['dhcpserver'] = dhcpserver[j['addr']]
                             else:
                                 obj['dhcp'] = 'False'
-                                obj['dhcpserver'] = "0.0.0.0" 
+                                obj['dhcpserver'] = "0.0.0.0"
                         except:
                             obj['dhcp'] = 'False'
                             obj['dhcpserver'] = "0.0.0.0"
@@ -360,14 +353,13 @@ class updatedns:
         self.messagejson['data']={}
         if len(param) == 0 :
             self.messagejson['ret']=255
-            self.messagejson['data']['msg']="Error: list dns vide"
+            self.messagejson['data']['msg']="Error: DNS list empty"
             return
         if sys.platform.startswith('linux'):
             mon_fichier = open("/etc/resolv.conf", "wb")
             for t in param:
-                #if is_valid_ipv4(param):
                 mon_fichier.write("nameserver\t%s"%param)
-            print windowsservice('networking','restart')  
+            print windowsservice('networking','restart')
         elif sys.platform.startswith('win'):
             pass
         elif sys.platform.startswith('darwin'):
@@ -376,8 +368,8 @@ class updatedns:
             self.messagejson['data']['msg']="Error: command ignored yet"
             self.messagejson['ret']=254
 
-##netinfo = networkagentinfo("25", resultaction, strip_list)
-def interfacename(mac):  
+
+def interfacename(mac):
     for i in netifaces.interfaces():
         if isInterfaceToMacadress(i,mac):
             return i
@@ -431,7 +423,7 @@ def rewriteInterfaceTypeRedhad(file, data,interface):
             ll.append("IPADDR=%s"%data['ipaddress'])
             ll.append("NETMASK=%s"%data['mask'])
             ll.append("GATEWAY=%s"%data['gateway'])
-        strr="\n".join(ll)    
+        strr="\n".join(ll)
         inputFile = open(file, 'wb')
         inputFile.write(strr)
         inputFile.close()
@@ -447,7 +439,7 @@ def rewriteInterfaceTypeDebian(data,interface ):
         inputFile = open("/etc/network/interfaces", 'rb')
         contenue = inputFile.read()
         inputFile.close()
-        #sauve fichier de conf
+        # Save config file
         inputFile = open("/etc/network/interfacesold", 'wb')
         inputFile.write(contenue)
         inputFile.close()
@@ -487,7 +479,7 @@ def typelinuxfamily():
         if t in val:
             return 'debian'
     return 'redhat'
- 
+
 def getsystemressource():
     p = subprocess.Popen('cat /proc/1/comm',
                         shell=True,
@@ -498,14 +490,13 @@ def getsystemressource():
     system=result[0].rstrip('\n')
     return system
 
-def getWindowsNameInterfaceForMacadress(macadress):
-    obj = utils.simplecommande("wmic NIC get MACAddress,NetConnectionID")
+def getWindowsNameInterfaceForMacadress(macaddress):
+    obj = utils.simplecommand("wmic NIC get MACAddress,NetConnectionID")
     for lig in obj['result']:
         l = lig.lower()
-        mac = macadress.lower()
+        mac = macaddress.lower()
         if l.startswith(mac):
             element=lig.split(' ')
             element[0]=''
             fin = [x for x in element if x.strip()!=""]
             return  " ".join(fin)
-

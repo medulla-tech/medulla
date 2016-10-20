@@ -34,7 +34,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def setDefault(self):
         """
-        Set good default for the module if a parameter is missing the
+        Set default for the module if a parameter is missing from the
         configuration file.
         This function is called in the class constructor, so what you
         set here will be overwritten by the readConf method.
@@ -43,6 +43,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.showinfomaster = False
         self.showplugins = False
         self.debugmode = "NOTSET"
+        self.ordreallagent = False
 
 
     def readConf(self):
@@ -59,41 +60,40 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.Port= self.get('connection', 'port')
         self.Server= self.get('connection', 'server')
         self.passwordconnection=self.get('connection', 'password')
-        self.debugmode = self.get('global', 'debug')
-        #########salon############
+        self.debugmode = self.get('global', 'log_level')
+        #########chatroom############
 
-        self.jidsalonmaster="master@%s"%self.get('salon', 'server')
-        self.jidsalonlog="log@%s"%self.get('salon', 'server')
-        self.jidsaloncommand="command@%s"%self.get('salon', 'server')
-        self.passwordconnexionmuc=self.get('salon', 'password')
+        self.jidchatroommaster="master@%s"%self.get('chatroom', 'server')
+        self.jidchatroomlog="log@%s"%self.get('chatroom', 'server')
+        self.jidchatroomcommand="command@%s"%self.get('chatroom', 'server')
+        self.passwordconnexionmuc=self.get('chatroom', 'password')
 
-        ###################SALON CONFIGURATION DYNAMIQUE AGENT#######################confjidsalon
-        #information configuration dynamique
-        self.confjidsalon = "%s@%s"%(self.get('configurationserver', 'confnamesalon'),self.get('salon', 'server'))
-        self.confpasswordmuc = self.get('configurationserver', 'confpasswordmuc')
+        ###################Chatroom for dynamic configuration of agents#######################
+        # Dynamic configuration information
+        self.confjidchatroom = "%s@%s"%(self.get('configuration_server', 'confmuc_chatroom'),self.get('chatroom', 'server'))
+        self.confpasswordmuc = self.get('configuration_server', 'confmuc_password')
         ########chat#############
-        # le jidagent doit etre la plus petite valeur de la liste des macs.
-        self.chatserver=self.get('chat', 'server')
+        # The jidagent must be the smallest value in the list of mac addresses
+        self.chatserver=self.get('chat', 'domain')
         # plus petite mac adress
-        self.jidagent = "%s@%s/%s"%(utils.name_jid(),self.get('chat', 'server'),platform.node())
-        self.jidagentsiveo = "%s@%s"%(self.get('global', 'ordre'),self.get('chat', 'server'))
+        self.jidagent = "%s@%s/%s"%(utils.name_jid(),self.get('chat', 'domain'),platform.node())
+        try:
+            self.jidagentsiveo = "%s@%s"%(self.get('global', 'allow_order'),self.get('chat', 'domain'))
+        except:
+            self.jidagentsiveo = "%s@%s"%("agentsiveo",self.get('chat', 'domain'))
         self.ordreallagent = self.getboolean('global', 'inter_agent')
         self.showinfomaster = self.getboolean('master', 'showinfo')
         self.showplugins = self.getboolean('master', 'showplugins')
-        #################""default connection ###################""
-        ### parameters conection server si pas server relais dispo ####
-
+        #################default connection ###################
+        ### Connection server parameters if no relay server is available ####
         self.defaultrelayserverip = self.get('defaultconnection', 'serverip')
         if self.defaultrelayserverip == "localhost":
-            logging.getLogger().error('parameter section "defaultconnection" serverip not must localhost')
+            logging.getLogger().error('parameter section "defaultconnection" serverip must not be localhost')
         if self.defaultrelayserverip == "127.0.0.1":
-            logging.getLogger().error('parameter section "defaultconnection" serverip not must 127.0.0.1')
+            logging.getLogger().error('parameter section "defaultconnection" serverip must not be 127.0.0.1')
         self.defaultrelayserverport = self.get('defaultconnection', 'port')
+        self.defaultrelayserverbaseurlguacamole=self.get('defaultconnection', 'guacamole_baseurl')
 
-        self.defaultrelayserverbaseurlguacamole=self.get('defaultconnection', 'baseurlguacamole')
-
-
-        #self.inventory = self.get('inventorypulse', 'inventory')
 
         self.jidagent = "%s@%s/%s"%("master",self.chatserver,"MASTER")
         self.NickName = "MASTER"
@@ -101,7 +101,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.information={}
         self.PlateformSystem=platform.platform()
-        self.information['plateform']=self.PlateformSystem
+        self.information['platform']=self.PlateformSystem
         self.OperatingSystem=platform.system()
         self.information['os']=self.OperatingSystem
         self.UnameSystem = platform.uname()

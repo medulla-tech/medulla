@@ -6,23 +6,11 @@ import os.path
 import json
 from multiprocessing import Process, Queue, TimeoutError
 import threading
-from utils import simplecommandestr
+from utils import simplecommandstr
 
 import subprocess
 from threading import Timer
 import logging
-
-
-##!/usr/bin/env python
-## -*- coding: utf-8 -*-
-
-#import sys,os,platform
-#import os.path
-#import json
-#from multiprocessing import Process, Queue, TimeoutError
-#import threading
-#from lib.utils import simplecommandestr
-#import traceback
 
 import subprocess
 from threading import Timer
@@ -49,16 +37,16 @@ class mannageprocess:
         createprocesscommand.start()
 
     def processcommand( self,  command , queue_out_session, sessionid, eventstart, eventfinish, eventerror, timeout, keysdescriptor):
-        #il y a 2 types de messages event ceux de la boucle interne et ceux envoyé en TEVENT
+        # There are 2 types of event messages: those from the internal loop and those sent in TEVENT
         try:
-            #structure message for msgout
+            # Message structure for msgout
             msgout = {
                         'event': "",
                         'sessionid': sessionid,
                         'result' : { 'codeerror' : 0, 'resultcommand' : '','command' : command },
             }
             if eventstart != False:
-                #ecrit dans queue_out_session l'evenement eventstart
+                # Writes the eventstart event in queue_out_session
                 if '_eventype' in eventstart and '_eventype' == 'TEVENT':
                     msgout['event'] = eventstart
                     queue_out_session.put(msgout)
@@ -73,7 +61,7 @@ class mannageprocess:
                 ev = False
 
             print "================================================"
-            print " execution commande in process"
+            print " Command execution process"
             print "================================================"
             print cmd.code_error
             print cmd.stdout
@@ -81,16 +69,15 @@ class mannageprocess:
 
             if ev != False:
                 if '_eventype' in ev and '_eventype' == 'TEVENT':
-                    #ecrit dans queue_out_session le TEVENT
+                    # Writes the TEVENT in queue_out_session
                     msgout['event'] = ev
-                    #msgout['result']['resultcommand'] = cmd['result']
                     msgout['result']['resultcommand'] = cmd.stdout
                     msgout['result']['codeerror'] = cmd.code_error
                     queue_out_session.put(msgout)
                 else:
                     ev['data']['result'] = {'codeerror': cmd.code_error,'command' : command  }
                     for t in keysdescriptor:
-                        if t == 'codeerror' or t=='command': 
+                        if t == 'codeerror' or t=='command':
                             pass
                         elif t == '@resultcommand' :
                             ev['data']['result']['@resultcommand'] = cmd.stdout
@@ -117,8 +104,6 @@ class mannageprocess:
             traceback.print_exc(file=sys.stdout)
             logging.error("error execution process %s sessionid : %s"%(command,sessionid))
             sys.exit(0)
-
-
 
 
 class cmdx(object):

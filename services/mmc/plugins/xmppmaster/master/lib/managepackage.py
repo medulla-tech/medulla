@@ -4,10 +4,9 @@
 import sys,os,platform
 import os.path
 import json
- 
+
 
 class managepackage:
-    #JFK
     @staticmethod
     def packagedir():
         if sys.platform.startswith('linux'):
@@ -32,7 +31,7 @@ class managepackage:
                 jr= json.loads(dd.decode('utf-8', 'ignore'))
                 return jr
             except:
-                print "erreur decodage"
+                print "Decoding error"
                 pass
         return None
 

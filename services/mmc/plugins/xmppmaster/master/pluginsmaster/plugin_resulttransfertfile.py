@@ -1,5 +1,5 @@
 # -*- coding: utf-8; -*-
-from utils import pulginmaster, pulginmastersessionaction
+from utils import pluginmaster, pluginmastersessionaction
 import base64
 import json
 import os
@@ -8,23 +8,23 @@ from utils import md5
 import hashlib
 
 
-@pulginmastersessionaction("actualise",20)
-def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessiondata):
+@pluginmastersessionaction("actualise",20)
+def action( xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata):
     try:
-        sessiondata = objetxmpp.session.sessionfromsessiondata(sessionid)
+        sessiondata = xmppobject.session.sessionfromsessiondata(sessionid)
         namefile = sessiondata.getdatasession()['qui']
 
         if dataobj['end']:
-            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid, 'status': 'finished','success':True,  'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
-            objetxmpp.session.clear(sessionid)
+            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid, 'status': 'finished','success':True,  'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            xmppobject.session.clear(sessionid)
             return
         if ret != 0:
-            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'finished','success':False, 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
-            objetxmpp.session.clear(sessionid)
+            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'finished','success':False, 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            xmppobject.session.clear(sessionid)
             return
 
         command = {
-            'action' : 'transfertfile',
+            'action' : 'transferfile',
             'base64' : False,
             'sessionid': sessionid,
             'data' : ''
@@ -33,7 +33,7 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
         try:
             part =  sessiondata.getdatasession()['part']
         except:
-            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             sessiondata.datasession['part'] = 0
             sessiondata.datasession['pointeur'] = 0
         pointeur =  sessiondata.getdatasession()['pointeur']
@@ -43,10 +43,10 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
             f.seek(pointeur, 0)
             buffer = f.read(25000)
             sessiondata.datasession['pointeur'] = f.tell()
-            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'process','size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
-            objetxmpp.session.affiche()
+            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'process','size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            xmppobject.session.affiche()
         except IOError:
-            objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :'IOError' ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+            xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'error','msgerror' :'IOError' ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
             raise
         finally:
             f.close()
@@ -59,9 +59,9 @@ def action( objetxmpp, action, sessionid, data, message, ret, dataobj, objsessio
             command['end'] = False
             aaa = zlib.compress(buffer)
             command['data'] = base64.b64encode(aaa)
-        objetxmpp.send_message( mto=message['from'],
+        xmppobject.send_message( mto=message['from'],
                                 mbody=json.dumps(command),
                                 mtype='chat')
     except Exception as e:
         print "erreur %s"%str(e)
-        objetxmpp.event("pluginaction", { 'action': 'transfertfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
+        xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'error','msgerror' :str(e) ,'size': sessiondata.getdatasession()['pointeur'], 'to' : message['from'], 'form' : message['to'] ,'file' : sessiondata.getdatasession()['qui']})
