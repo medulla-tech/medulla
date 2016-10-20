@@ -1,11 +1,10 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +21,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/*
-require("graph/navbar.inc.php");
-require("localSidebar.php");
-require_once("modules/backuppc/includes/xmlrpc.php");
-require_once("modules/pulse2/includes/utilities.php");
-
-
-$p = new PageGenerator(_T("Backup status", 'backuppc'));
-$p->setSideMenu($sidemenu);
-$p->display();*/
 
 
 ?>

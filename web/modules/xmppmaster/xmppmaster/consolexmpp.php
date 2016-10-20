@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,13 +41,13 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
  if (   isset($_POST['bvalid']) &&
-        isset($_POST['command']) && 
+        isset($_POST['command']) &&
         isset($_POST['Machine']) &&
         trim($_POST['Machine'])!= "" &&
         trim($_POST['command'])!= ""
         ){
         $_POST['result']='';
-        $result = xmlrpc_xmppcommand(trim($_POST['command']),trim($_POST['Machine']));
+        $result = xmlrpc_runXmppCommand(trim($_POST['command']),trim($_POST['Machine']));
  }else
  {
     $result="";
@@ -67,16 +67,16 @@ $p->display();
         $imss->setElementsVal($elt_values);
 
         $f->add(
-            new TrFormElement(_T("Select an machine", "xmppmaster"), $imss)
+            new TrFormElement(_T("Select a machine", "xmppmaster"), $imss)
         );
 
         $e=new InputTpl('command');
         $f->add(
-            new TrFormElement(_T("commande shell", "xmppmaster"), $e)
+            new TrFormElement(_T("Shell command", "xmppmaster"), $e)
         );
         if ( isset($_POST['result'])){
             $f->add(
-                        new TrFormElement("<br>",  new SpanElement(_T("Resul command", "xmppmaster")." : ". trim($_POST['command'])))
+                        new TrFormElement("<br>",  new SpanElement(_T("Command result", "xmppmaster")." : ". trim($_POST['command'])))
                     );
         }
 

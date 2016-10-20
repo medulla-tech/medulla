@@ -1,12 +1,11 @@
 <?php
 
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,20 +22,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 //======================================================================
-// Main BackupPC communications functions [HTTP]
+// Main XMPP Master communications functions [HTTP]
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
-//jfk
 
 function xmlrpc_getPresenceuuid($uuid) {
-    //$str = preg_replace('`[^0-9]`', '', $uuid);
-    //return xmlCall("xmppmaster.getPresenceuuid", array($str));
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
-//JFK
-function xmlrpc_getconfigurationxmpp() {
-    return xmlCall("xmppmaster.getconfigurationxmpp", array());
+function xmlrpc_getXmppConfiguration() {
+    return xmlCall("xmppmaster.getXmppConfiguration", array());
 }
 
 function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
@@ -59,20 +54,20 @@ function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
 }
 
-function xmlrpc_xmppcommand($command, $machine){
-    return xmlCall("xmppmaster.xmppcommand", array($command, $machine));
+function xmlrpc_runXmppCommand($command, $machine){
+    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine));
 }
 
-function xmlrpc_xmppscript($command, $machine){
-    return xmlCall("xmppmaster.xmppscript", array($command, $machine));
+function xmlrpc_runXmppScript($command, $machine){
+    return xmlCall("xmppmaster.runXmppScript", array($command, $machine));
 }
 
-function xmlrpc_xmppdeploye( $jidrelais, $jidmachine, $name, $time){
-    return xmlCall("xmppmaster.xmppapplicationdeployment", array("applicationdeployment",  $jidrelais, $jidmachine, $name, $time));
+function xmlrpc_runXmppDeployment( $jidrelay, $jidmachine, $name, $time){
+    return xmlCall("xmppmaster.runXmppApplicationDeployment", array("applicationdeployment",  $jidrelay, $jidmachine, $name, $time));
 }
 
-function xmlrpc_pluginwakeonlan($pluginname, $macadress){
-    return xmlCall("xmppmaster.xmppplugin", array($pluginname, array("macadress"=>$macadress)));
+function xmlrpc_runXmppWol($pluginname, $macadress){
+    return xmlCall("xmppmaster.CallXmppPlugin", array($pluginname, array("macadress"=>$macadress)));
 }
 
 ?>

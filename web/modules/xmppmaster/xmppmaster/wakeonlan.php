@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,10 +27,9 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 if (   isset($_POST['bvalid']) &&
-        isset($_POST['macadress'])
+        isset($_POST['macaddress'])
         ){
-        xmlrpc_pluginwakeonlan("wakeonlan", trim($_POST['macadress']));
-        //xmlrpc_wakeonlan(trim($_POST['macadress']));
+        xmlrpc_runXmppWol("wakeonlan", trim($_POST['macaddress']));
  }
 
 $p = new PageGenerator(_T("Wake On Lan", 'xmppmaster'));
@@ -39,9 +38,8 @@ $p->display();
 $f = new ValidatingForm();
 $f->push(new Table());
         $f->add(
-            new TrFormElement(_T("mac adress", "xmppmaster"), new InputTpl('macadress'))
+            new TrFormElement(_T("Mac address", "xmppmaster"), new InputTpl('macaddress'))
         );
 $f->addValidateButton("bvalid");
 $f->pop();
 $f->display();
-

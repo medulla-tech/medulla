@@ -4,7 +4,7 @@
  *
  * $Id$
  *
- * This file is part of Pulse 2, http://www.siveo.net.
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,15 +22,15 @@
  */
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("xmpp console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
+    new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("xmpp deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
+    new SideMenuItem(_T("XMPP Deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
 );
 
 $sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("xmpp wakeonlan","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+    new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
 );
 
 ?>

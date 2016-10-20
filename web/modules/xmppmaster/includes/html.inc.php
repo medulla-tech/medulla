@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2013 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *

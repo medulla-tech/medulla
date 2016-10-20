@@ -1,11 +1,10 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
- * This file is part of Mandriva Management Console (MMC).
+ * This file is part of MMC, http://www.siveo.net
  *
  * MMC is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,17 +34,17 @@ $mod->setAPIVersion("0:0:0");
 $mod->setPriority(800);
 
 $submod = new SubModule("xmppmaster");
-$submod->setDescription(_T("xmppmaster", "xmppmaster"));
+$submod->setDescription(_T("XMPP Master", "xmppmaster"));
 
 $submod->setVisibility(False);
 
-$page = new Page("consolexmpp", _T('consolexmpp', 'xmppmaster'));
+$page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("deployxmpp", _T('deployxmpp', 'xmppmaster'));
+$page = new Page("deployxmpp", _T('XMPP Deploy', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("wakeonlan", _T('wakeonlan', 'xmppmaster'));
+$page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 
 $mod->addSubmod($submod);
