@@ -652,6 +652,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         ret=[m for m in relayserver]
+        print ret[0]
         return ret[0]
 
     @DatabaseHelper._session
