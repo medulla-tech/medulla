@@ -134,11 +134,11 @@ class  networkagentinfo:
             #code pour MacOs
             return self.MacOsNetworkInfo()
         else:
-            self.messagejson['msg']= "system %s : pas encore pris en compte"%sys.platform
+            self.messagejson['msg']= "system %s : not managed yet"%sys.platform
             return self.messagejson
 
     def routeinterface(self):
-        """renvoi la liste des ip gateway en fonction de l'interface linux"""
+        """ Returns the list of ip gateways for linux interfaces """
         p = subprocess.Popen('LANG=C route -n | grep \'UG[ \t]\' | awk \'{ print $8"="$2}\'',
                                                 shell=True,
                                                 stdout=subprocess.PIPE,
@@ -175,7 +175,7 @@ class  networkagentinfo:
         result = p.stdout.readlines()
         code_result= p.wait()
         system=result[0].rstrip('\n')
-        """renvoi la liste des ip gateway en fonction de l'interface linux"""
+        """ Returns the list of ip gateways for linux interfaces """
 
         if system == "init":
             p = subprocess.Popen('cat /var/log/syslog | grep -e DHCPACK | tail -n10 | awk \'{print $(NF-2)"@" $NF}\'',
