@@ -548,7 +548,7 @@ if __name__ == '__main__':
     if  cp.has_option('imaging_api', 'pxe_timesenddata'):
         conf['pxe_timesenddata'] = cp.getfloat("imaging_api", 'pxe_timesenddata')
     else:
-        conf['pxe_timesenddata'] = 0.2
+        conf['pxe_timesenddata'] = 1
 
     if cp.has_option('imaging_api', 'pxe_tftp_ip'):
         conf['pxe_tftp_ip'] = cp.get('imaging_api', 'pxe_tftp_ip')
