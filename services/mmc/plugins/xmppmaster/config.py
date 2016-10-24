@@ -100,8 +100,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
         self.dirplugins = self.get('plugins', 'dirplugins')
         self.information={}
-        self.PlateformSystem=platform.platform()
-        self.information['platform']=self.PlateformSystem
+        self.PlatformSystem=platform.platform()
+        self.information['platform']=self.PlatformSystem
         self.OperatingSystem=platform.system()
         self.information['os']=self.OperatingSystem
         self.UnameSystem = platform.uname()

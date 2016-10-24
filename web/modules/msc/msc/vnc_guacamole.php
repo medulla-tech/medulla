@@ -60,7 +60,7 @@ if ($dd['agenttype'] == "relayserver")
     printf("COMPUTER");
     echo "<hr>";
     echo "<br>";
-    printf("Hostname : %s<br> plateform : %s",$dd['hostname'],$dd['plateform']);
+    printf("Hostname : %s<br> Platform : %s",$dd['hostname'],$dd['platform']);
     printf("<br>IP : %s/%s<br> Macadress : %s",$dd['ip_xmpp'],$dd['subnetxmpp'],$dd['macadress']);
 ?>
 
