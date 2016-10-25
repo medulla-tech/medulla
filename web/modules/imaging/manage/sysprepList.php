@@ -21,10 +21,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/imaging/manage/localSidebar.php");
-require("graph/navbar.inc.php");
-require_once('modules/imaging/includes/includes.php');
-require_once('modules/imaging/includes/xmlrpc.inc.php');
+if(!isset($_GET['tab']) && $_GET['action'] == 'sysprepList')
+{
+	require("modules/imaging/manage/localSidebar.php");
+	require("graph/navbar.inc.php");
+	require_once('modules/imaging/includes/includes.php');
+	require_once('modules/imaging/includes/xmlrpc.inc.php');
+}
 
 //Verify if any file must be deleted
 if (isset($_GET['deleteFile'])){
@@ -34,7 +37,24 @@ if (isset($_GET['deleteFile'])){
 		new NotifyWidgetSuccess(_("The sysprep answer file has been removed from the imaging system."));
 	}
 }
+if(isset($_GET['display']))
+{
 
+
+	//$file must be existing
+	if(!($file = xmlrpc_selectWindowsAnswerFile($_GET['display'])))
+	{
+		$file = array();
+	}
+	echo '<pre>';
+	foreach($file as $line)
+	{
+		echo htmlentities($line);
+	}
+	echo '</pre>';
+}
+else
+{
 //Get the list of answer files
 $list = xmlrpc_Windows_Answer_list_File(0,-1);
 
@@ -57,4 +77,5 @@ $table->addActionItem(new ActionConfirmItem(_T("Delete sysprep file", 'imaging')
 
 // Display the list
 $table->display();
+}
 ?>

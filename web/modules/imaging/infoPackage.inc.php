@@ -53,10 +53,9 @@ $page = new Page("sysprepView", _T("Imaging sysprepView", "imaging"));
 $page->setFile("modules/imaging/manage/sysprepView.php");
 $submod->addPage($page);
 
-// //Add sysprepEdit.php to the module
-// $page = new Page("sysprepEdit", _T("Imaging sysprepEdit", "imaging"));
-// $page->setFile("modules/imaging/manage/sysprepEdit.php");
-// $submod->addPage($page);
+$page = new Page("systemImageManager", _T("System Image Manager", "imaging"));
+$page->setFile("modules/imaging/manage/systemImageManager.php");
+$submod->addPage($page);
 
 $page = new Page("ajaxgenereAWFGxml");
 $page->setFile("modules/imaging/manage/ajaxgenereAWFGxml.php");
