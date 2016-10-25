@@ -41,10 +41,8 @@ $tabList = array(
 // 	'power' => _T('Power', "imaging"),
 );
 
-$i = 0;
 foreach ($tabList as $tab => $str) {
     $page->addTab("$tab", $str, "", "modules/imaging/manage/$tab.php");
-    $i++;
 }
 	$page->display();
  ?>
