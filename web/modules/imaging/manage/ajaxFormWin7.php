@@ -542,7 +542,7 @@ $f->push(new Table());
     );
     //_____________
     $f->add(
-        new TrFormElement(_T('Product Key:','imaging').":", new multifieldTpl($fields)),
+        new TrFormElement(_T('Product Key','imaging').":", new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
     //_____________
@@ -903,12 +903,7 @@ $f->push(new Table());
     );
 
     $f->display();
-//     //------------------
-//     //------------------
-//     $g = new SpanElement(_T("Xml Windows Answer File Generator", "imaging"));
-//     $g->display();
-    //_____________
-//     $h = new Iconereply('awfg_show',_T("AWFG", "imaging"));$h->display();
+
 echo "<div title= 'jffffffffffffffffffffffffffffffffffffffffffffjjj'>";
     echo "<pre  id='codeTocopy2' style='width:100%;'></pre>";
 echo "</div>";
