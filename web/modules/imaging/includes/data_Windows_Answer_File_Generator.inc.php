@@ -164,7 +164,7 @@ function update() {
       }
 
     da=new Date()
-    var dateval = da.getFullYear()+ '-'+da.getMonth() + '-' + da.getDate()
+    var dateval = da.getFullYear()+ '-'+(da.getMonth()+1) + '-' + da.getDate()
     var variables = {
         'Location': jQuery('#Location').val(),
         'Comments': jQuery('#Comments').val(),
@@ -2000,34 +2000,6 @@ class Iconereply extends IconeElement {
         parent::IconeElement($id,'modules/imaging/graph/images/imaging-add.png',"",$title);
     }
 }
-/*
-class buttonTpl extends AbstractTpl {
-    var $class = '';
-    var $cssClass = 'btn btn-small';
-
-    function buttonTpl($id, $value, $class='', $infobulle='') {
-        $this->id = $id;
-        $this->value = $value;
-        $this->class = $class;
-        $this->infobulle = $infobulle;
-    }
-
-    function setClass($class) {
-        $this->cssClass = $class;
-    }
-
-    function display($arrParam) {      
-        if (isset($this->id,$this->value))
-            printf('<input id="%s" title= "%s" type="button" value="%s" class="%s %s" />',
-                    $this->id,
-                    $this->infobulle,
-                    $this->value,
-                    $this->cssClass,
-                    $this->class);
-    }
-}*/
-
-
 
 class buttonTpl extends HtmlElement {
     var $class = '';
@@ -2115,6 +2087,14 @@ class OptTextareaTpl extends AbstractTpl{
 			}
 		}
 		echo '<textarea '.$str.'>'.$this->options['value'].'</textarea>';
+	}
+}
+
+class sepTpl extends AbstractTpl{
+
+	function display()
+	{
+		echo '<hr />';
 	}
 }
 ?>

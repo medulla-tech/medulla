@@ -21,12 +21,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+if(!isset($_GET['tab']) && $_GET['action']=='unattended')
+{
 require("modules/imaging/manage/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
-
+}
 define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
 ?>
 
