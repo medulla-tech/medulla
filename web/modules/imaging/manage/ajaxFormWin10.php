@@ -492,7 +492,7 @@ $f->push(new Table());
    
     //_____________
     $f->add(
-        new TrFormElement(_T('Product Key:','imaging').":", new multifieldTpl($fields)),
+        new TrFormElement(_T('Product Key','imaging').":", new multifieldTpl($fields)),
         array("value" => $values,"required" => True)
     );
     //_____________
