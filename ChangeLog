@@ -1,3 +1,8 @@
+Pulse 2 3.6.1
+=============
+ * [BUGFIX] Clean the sysprep code
+ * [BUGFIX] Modify sysprep interface and form organization.
+
 Pulse 2 3.6.0
 =============
  * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
