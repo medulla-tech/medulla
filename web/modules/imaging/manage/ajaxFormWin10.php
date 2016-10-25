@@ -815,16 +815,7 @@ $f->push(new Table());
         )
     );
     $f->display();
-    
-//     //_____________
-//     $f->addButton("bvalid", _T("Validate"));
-//     $f->display();
-//     //------------------
-//     //------------------
-//     $g = new SpanElement(_T("Xml Windows Answer File Generator", "imaging"));
-//     $g->display();
-//     //_____________
-//     $h = new Iconereply('awfg_show',_T("AWFG", "imaging"));$h->display();
+
     echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
     //_____________
 ?>

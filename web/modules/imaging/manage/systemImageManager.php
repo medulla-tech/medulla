@@ -41,6 +41,7 @@ $tabList = array(
 // 	'power' => _T('Power', "imaging"),
 );
 
+//create tabList, where tab parameter is the page name to display.
 foreach ($tabList as $tab => $str) {
     $page->addTab("$tab", $str, "", "modules/imaging/manage/$tab.php");
 }

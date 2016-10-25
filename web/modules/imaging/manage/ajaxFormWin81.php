@@ -932,7 +932,7 @@ $f->push(new Table());
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,
                 "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "bQBhAG4AZAByAGkAdgBhAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAUABhAHMAcwB3AG8AcgBkAA==")
-    ); //mandrivaAdministratorPassword
+    ); //AdministratorPassword
     
      $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Xml Windows Answer File Generator", "imaging"));
     $rr = new TrFormElementcollapse($bo);
@@ -949,16 +949,7 @@ $f->push(new Table());
         )
     );
     $f->display();
-    
-//     //_____________
-//     $f->addButton("bvalid", _T("Validate"));
-//     $f->display();
-//     //------------------
-//     //------------------
-//     $g = new SpanElement(_T("Xml Windows Answer File Generator", "imaging"));
-//     $g->display();
-//     //_____________
-//     $h = new Iconereply('awfg_show',_T("AWFG", "imaging"));$h->display();
+
     echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
     //_____________
 ?>
