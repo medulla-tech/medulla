@@ -39,7 +39,10 @@ if (isset($_GET['deleteFile'])){
 }
 if(isset($_GET['display']))
 {
-
+	//Add colors for xml
+	echo '<link rel="stylesheet" href="modules/imaging/graph/css/default.min.css">';
+	echo '<script src="modules/imaging/graph/highlight/highlight.min.js"></script>';
+	echo '<script>hljs.initHighlightingOnLoad();</script>';
 
 	//$file must be existing
 	if(!($file = xmlrpc_selectWindowsAnswerFile($_GET['display'])))
