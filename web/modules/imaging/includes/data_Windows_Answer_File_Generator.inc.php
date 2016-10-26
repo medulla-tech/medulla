@@ -1,7 +1,6 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2015-2016 Siveo, http://siveo.net
  *
  * $Id$
  *
@@ -54,9 +53,8 @@ function getExtension(filename){
                     var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" + 
                             jQuery('#Location').val() ;
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
-                    //alert( file + jQuery('#Location').val() + avai)
-                   
                 }
+                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
         });
     }
  /*   
