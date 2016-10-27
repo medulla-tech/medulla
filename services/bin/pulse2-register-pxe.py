@@ -576,7 +576,7 @@ if __name__ == '__main__':
         except OSError, e:
             print >>sys.stderr, "Fork #1 failed: %d (%s)" % (e.errno, e.strerror)
             sys.exit(1)
-        # decouple from parent environment
+        # dissociate from parent environment
         os.close(sys.stdin.fileno())
         os.close(sys.stdout.fileno())
         os.close(sys.stderr.fileno())
