@@ -330,8 +330,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("classutil : %s"%data['classutil'])
             if 'ippublic' in data:
                 logger.info("ippublic : %s"%data['ippublic'])
-            if 'removeservice' in data:
-                logger.info("removeservice : %s"%data['removeservice'])
+            if 'remoteservice' in data:
+                logger.info("remoteservice : %s"%data['remoteservice'])
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%self.localisationifo)
             logger.info("-----------------------------------")
