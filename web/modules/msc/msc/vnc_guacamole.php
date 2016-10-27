@@ -40,17 +40,44 @@ foreach ($ee as $k){
         <h1>REMOTE</h1>
             <table id="tablevnc">
                 <tr>
-
-                    <!--  <td align="center">
-                        <a href="http://www.apple.com/fr/"> <img src="modules/xmppmaster/graph/img/VNCguacamole.png" alt="Mountain View" style="width:104px;height:104px;"></a><br><h1>VNC</h1>
-                    </td>
-                    -->
-                    <td align="center">
-                        <a href="<? echo $url['RDP']; ?>" target="blank"> <img src="modules/xmppmaster/graph/img/RDPguacamole.png" alt="Mountain View" style="width:104px;height:104px;"></a><br><h1>RDP</h1>
-                    </td>
-                    <td align="center">
-                        <a href="<? echo $url['SSH']; ?>" target="blank"><img src="modules/xmppmaster/graph/img/SSHguacamole.png" alt="Mountain View" style="width:104px;height:104px;"></a><br><h1>SSH</h1>
-                    </td>
+                <?
+                foreach ($url as $clef=>$val){
+                    if ($clef == "SSH"){
+                        echo '<td align="center">
+                            <a href="'.$url['SSH'].'" target="blank">
+                            <img src="modules/xmppmaster/graph/img/SSHguacamole.png" 
+                            alt="remote ssh View" 
+                            style="width:104px;height:104px;">
+                            </a>
+                            <br>
+                            <h1>SSH</h1>
+                        </td>';                            
+                        }
+                    if ($clef == "RDP"){
+                        echo '<td align="center">
+                            <a href="'.$url['RDP'].'" target="blank">
+                            <img src="modules/xmppmaster/graph/img/RDPguacamole.png" 
+                            alt="remote rdp View" 
+                            style="width:104px;height:104px;">
+                            </a>
+                            <br>
+                            <h1>RDP</h1>
+                        </td>';                            
+                        }
+                    if ($clef == "VNC"){
+                        echo '<td align="center">
+                            <a href="'.$url['VNC'].'" target="blank">
+                            <img src="modules/xmppmaster/graph/img/VNCguacamole.png" 
+                            alt="remote rdp View" 
+                            style="width:104px;height:104px;">
+                            </a>
+                            <br>
+                            <h1>VNC</h1>
+                        </td>';
+                            
+                        }
+                }
+                ?>
                 </tr>
             </table>
 <?
