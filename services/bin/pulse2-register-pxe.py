@@ -42,11 +42,7 @@ import getopt
 import xml.etree.cElementTree as ET
 
 conf ={}
-#logger = logging.getLogger('pulse2-register-pxe')
-#hdlr = logging.FileHandler('/var/log/mmc/pulse2-register-pxe.log')
-#formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
-#hdlr.setFormatter(formatter)
-#logger.addHandler(hdlr)
+
 
 
 logging.basicConfig(level=logging.DEBUG,
@@ -54,7 +50,7 @@ logging.basicConfig(level=logging.DEBUG,
                     filename='/var/log/mmc/pulse2-register-pxe.log',
                     filemode='w')
 
-#logger = logging.getLogger('pulse2-register-pxe')
+
 
 def subnetForIpMask(ip, netmask):
     resultat=[]
@@ -77,9 +73,6 @@ def sauvefile(name,string):
 
 
 def parsejsoninventory(file, file_content):
-    #with gzip.open(str(file), 'rb') as f:
-        ##line = f.readline()
-        #file_content=f.read()
     sauvefile("content.txt",file_content)
 
     file_content = file_content.decode('ascii', errors='ignore')
@@ -466,13 +459,11 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
 class watchInventory:
     def __init__(self):
-        #threading.Thread.__init__(self)
         self.eh = MyEventHandler()
         logging.getLogger().info("install inotify")
 
     def run(self):
         self.wm = pyinotify.WatchManager()
-        #self.mask = pyinotify.IN_DELETE | pyinotify.IN_CREATE  # watched events
         self.notifier = pyinotify.ThreadedNotifier(self.wm, self.eh)
         self.notifier.start()
         mask = pyinotify.IN_CREATE | pyinotify.IN_MODIFY  # watched eventspyinotify.IN_DELETE |
