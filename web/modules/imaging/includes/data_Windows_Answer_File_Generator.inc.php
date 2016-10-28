@@ -83,6 +83,7 @@ jQuery(function () {
             var namefile=jQuery('#Location').val() + ".xml"
             jQuery('#Location').val( namefile )
         }
+        jQuery("#Location").val(jQuery("#Location").val().replace(/ /g,"_"));
         update(); 
     });
     jQuery( '#ProductKey1' ).on( 'change',  function(){jQuery('#ProductKey1').val(jQuery('#ProductKey1').val().toUpperCase());
