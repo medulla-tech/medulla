@@ -621,7 +621,10 @@ class Glpi0855(DyngroupDatabaseHelper):
                 join_query = join_query.outerjoin(self.fusionantivirus)
                 join_query = join_query.outerjoin(self.os)
 
-            query = query.select_from(join_query).filter(query_filter)
+            if query_filter is None:
+                query = query.select_from(join_query)
+            else:
+                query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
