@@ -4,6 +4,7 @@ Pulse 2 3.6.1
  * [BUGFIX] Modify sysprep interface and form organization.
  * [BUGFIX] show notification when a sysprep answer file is created
  * [BUGFIX] add colors to sysprep xml file when displayed
+ * [BUGFIX] Fix support for new SqlAlchemy
 
 Pulse 2 3.6.0
 =============
