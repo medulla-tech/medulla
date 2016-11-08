@@ -67,8 +67,7 @@ $p->display();
 
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 $oo = json_decode(xmlrpc_getListPresenceAgent(), true);
-$listdespackage = xmlrpc_getListPackage();
-
+$listdespackage = xmlrpc_getListPackages();
 //
 $struct=array();
  foreach ($oo as $k => $v) {
