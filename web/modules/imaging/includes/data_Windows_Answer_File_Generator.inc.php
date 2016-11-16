@@ -2096,4 +2096,21 @@ class sepTpl extends AbstractTpl{
 		echo '<hr />';
 	}
 }
+
+function decryptSysprepPassword($string)
+{
+	$baseCode = base64_decode($string);
+	$baseCode = str_split($baseCode);
+
+	$code = array();
+	for($position = 0; $position<count($baseCode);$position++)
+	{
+		if($position %2 == 0)
+		{
+			$code[] = $baseCode[$position];
+		}
+	}
+		$code = implode($code);
+		return substr($code,0,-8);
+}
 ?>
