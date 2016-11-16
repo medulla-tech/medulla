@@ -121,7 +121,13 @@ jQuery(function () {
     jQuery( '#PartitionOrder' ).on('change', function () { update(); });
     jQuery( '#Group' ).on('change', function () { update(); });
     jQuery( '#Description' ).on('change', function () { update(); });
-    jQuery( '#Password' ).on('change', function () { update(); });
+    jQuery( '#Password' ).on('change', function () {
+        jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',{data:jQuery('#Password').val()}).done(function(result){
+            jQuery('input[name=PasswordEncrypted]').val(result.slice(0,-1));
+            update();
+        });
+        update();
+    });
     jQuery( '#Autologon' ).on('change', function () { update(); });
     jQuery( '#EnableUAC' ).on('change', function () { update(); });
     jQuery( '#Updates' ).on('change', function () { update(); });
@@ -203,7 +209,7 @@ function update() {
         'PartitionOrder': jQuery('#PartitionOrder').find('option:selected').val(),
         'Group': jQuery('#Group').find('option:selected').val(),
         'Description': jQuery('#Description').val(),
-        'Password': jQuery('#Password').val(),
+        'Password': jQuery('input[name=PasswordEncrypted]').val(),
         'PasswordAdmin': jQuery('#PasswordAdmin').val(),
         'Autologon': jQuery('#Autologon').find('option:selected').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
