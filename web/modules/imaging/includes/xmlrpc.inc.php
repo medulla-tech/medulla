@@ -528,6 +528,11 @@ function xmlrpc_getWindowsAnswerFileParameters($title)
 	return xmlCall("imaging.getWindowsAnswerFileParameters",array($title));
 }
 
+function xmlrpc_editWindowsAnswerFile($xmlWAFG, $title)
+{
+	return xmlCall('imaging.editWindowsAnswerFile',array($xmlWAFG, $title));
+}
+
 function xmlrpc_getClonezillaParamsForTarget($target_uuid) {
     return xmlCall("imaging.getClonezillaParamsForTarget", array($target_uuid));
 }
