@@ -414,15 +414,6 @@ $f->add(new TitleElement(_T("Out Of Box Experience","imaging")));
 $f->add(new Iconereply('Out_Of_Box_Experience',$InfoBule_Out_Of_Box_Experience));
 $f->push(new Table());
 
-	
-    //_____________
-    $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
-    $NetworkLocation->setElements(array('Home','Work','Other'));
-    $NetworkLocation->setElementsVal(array('Home','Work','Other'));
-    $f->add(
-        new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
-        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => True)
-    );
     //_____________
     $ProtectComputer = new SelectItemtitle("ProtectComputer",$InfoBule_ProtectComputer);
     $ProtectComputer->setElements($ProtectComputerTabElement);
@@ -431,6 +422,15 @@ $f->push(new Table());
         new TrFormElement(_T('Protect Your Computer','imaging').":", $ProtectComputer),
         array("value" => "1","required" => True)
     );
+    //_____________
+    $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
+    $NetworkLocation->setElements(array('Home','Work','Other'));
+    $NetworkLocation->setElementsVal(array('Home','Work','Other'));
+    $f->add(
+        new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
+        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => True)
+    );
+
     //_____________   
 //     $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
 //     $Updates->setElements($UpdatesTabElement);

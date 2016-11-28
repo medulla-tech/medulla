@@ -285,8 +285,6 @@ function update() {
     };
     fn_Out_Of_Box_Experience=function(){
         var list_id_masque=["NetworkLocation",
-                            "ProtectComputer",
-                            "Updates",
                             "HideEULA",
                             "DaylightSettings",
                             "HideWireless",
