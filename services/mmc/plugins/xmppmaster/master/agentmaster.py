@@ -245,23 +245,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("pluginaction", self.pluginaction)
 
 
-    def applicationdeployment(self, jidrelay, jidmachine, name, time, encodebase64 = False):
+    def applicationdeploymentjson(self, jidrelay, jidmachine, name, time, encodebase64 = False):
         """ For a deployment
         1st action: synchronize the previous package name
+        le packages est sur la machine et aussi dans relais serveur.
         """
         if not managepackage.getversionpackagename(name):
             return False
 
         # Name the event
         dd = name_random(5, "deploy_")
-        evenementfinish =  "Mastereventfinish_%s"%dd
-        evenementstart  =  "Mastereventstart_%s"%dd
-        evenementerror  =  "Mastereventerror_%s"%dd
-        evenementfinishMachine =  "Machineeventfinish_%s"%dd
-        evenementstartMachine  =  "Machineeventstart_%s"%dd
-        evenementerrorMachine  =  "Machineeventerror_%s"%dd
+
         data =  {
                 "name" : name,
+                'methodetransfert' : 'rsync',
                 "path" : managepackage.getpathpackagename(name),
                 "jidrelay": jidrelay,
                 "jidmachine" : jidmachine,
@@ -270,24 +267,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "ipmachine" : XmppMasterDatabase().ipfromjid(jidmachine)[0],
                 "ipmaster" : self.config.Server,
                 "Dtypequery" : "TQ",
-                "Devent" : "STARDEPLOY",
-                'RSstartevent' : evenementstart,
-                'RSfinishevent' : evenementfinish,
-                'RSerrorevent' : evenementerror,
-                'Mstartevent' : evenementstartMachine,
-                'Mfinishevent' : evenementfinishMachine,
-                'Merrorevent' : evenementerrorMachine
+                "Devent" : "STARDEPLOY"
         }
-
-        sessionid = self.send_session_command( jidrelay, "applicationdeployment" , data, datasession = None, encodebase64 = False)
+        print data
+        sessionid = self.send_session_command( jidrelay, "applicationdeploymentjson" , data, datasession = None, encodebase64 = False)
         self.eventmanage.show_eventloop()
-        command = "rsync --delete -av %s %s:%s"%(data['path'], data['iprelay'], data['path'])
-        #command ="ls -al"
-        self.mannageprocess.add_processcommand( command ,
-                                               sessionid,
-                                               False,
-                                               self.eventmanage.create_TEVENT(jidrelay,"applicationdeployment",sessionid,evenementfinish ),
-                                               self.eventmanage.create_TEVENT(jidrelay, "applicationdeployment", sessionid, evenementerror ),50,[])
+
+
     def pluginaction(self,rep):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
