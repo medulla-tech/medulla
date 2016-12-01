@@ -63,7 +63,7 @@ function xmlrpc_runXmppScript($command, $machine){
 }
 
 function xmlrpc_runXmppDeployment( $jidrelay, $jidmachine, $name, $time){
-    return xmlCall("xmppmaster.runXmppApplicationDeployment", array("applicationdeployment",  $jidrelay, $jidmachine, $name, $time));
+    return xmlCall("xmppmaster.runXmppApplicationDeployment", array("applicationdeploymentjson",  $jidrelay, $jidmachine, $name, $time));
 }
 
 function xmlrpc_runXmppWol($pluginname, $macadress){
