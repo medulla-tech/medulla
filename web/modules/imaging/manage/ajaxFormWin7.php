@@ -63,6 +63,7 @@ var template = [
 '<RegisteredOrganization><? echo $strin;?>OrginazationName<? echo $strou;?></RegisteredOrganization>',
 '<RegisteredOwner><? echo $strin;?>FullName<? echo $strou;?></RegisteredOwner>',
 '<ProductKey><? echo $strin;?>ProductKey1<? echo $strou;?>-<? echo $strin;?>ProductKey2<? echo $strou;?>-<? echo $strin;?>ProductKey3<? echo $strou;?>-<? echo $strin;?>ProductKey4<? echo $strou;?>-<? echo $strin;?>ProductKey5<? echo $strou;?></ProductKey>',
+'<CopyProfile><? echo $strin; ?>CopyProfile<? echo $strou; ?></CopyProfile>',
 '</component>',
 '<component name="Microsoft-Windows-Deployment" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ExtendOSPartition>',
@@ -76,6 +77,7 @@ var template = [
 '<RegisteredOrganization><? echo $strin;?>OrginazationName<? echo $strou;?></RegisteredOrganization>',
 '<RegisteredOwner><? echo $strin;?>FullName<? echo $strou;?></RegisteredOwner>',
 '<ProductKey><? echo $strin;?>ProductKey1<? echo $strou;?>-<? echo $strin;?>ProductKey2<? echo $strou;?>-<? echo $strin;?>ProductKey3<? echo $strou;?>-<? echo $strin;?>ProductKey4<? echo $strou;?>-<? echo $strin;?>ProductKey5<? echo $strou;?></ProductKey>',
+'<CopyProfile><? echo $strin; ?>CopyProfile<? echo $strou; ?></CopyProfile>',
 '</component>',
 '</settings>',
 '<settings pass="oobeSystem">',
@@ -84,7 +86,17 @@ var template = [
 '<HideEULAPage><? echo $strin;?>HideEULA<? echo $strou;?></HideEULAPage>',
 '<NetworkLocation><?echo $strin; ?>NetworkLocation<? echo $strou; ?></NetworkLocation>',
 '<ProtectYourPC><? echo $strin;?>ProtectComputer<? echo $strou;?></ProtectYourPC>',
+'<SkipUserOOBE>true</SkipUserOOBE>',
+'<SkipMachineOOBE>true</SkipMachineOOBE>',
 '</OOBE>',
+'<AutoLogon>',
+'<Password>',
+'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
+'<PlainText>false</PlainText>',
+'</Password>',
+'<Username><? echo $strin;?>FullName<? echo $strou; ?></Username>',
+'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
+'</AutoLogon>',
 '<UserAccounts>',
 '<LocalAccounts>',
 '<LocalAccount wcm:action="add">',
@@ -100,9 +112,17 @@ var template = [
 '</LocalAccounts>',
 '<AdministratorPassword>',
 '<Value><? echo $strin; ?>PasswordAdmin<? echo $strou; ?></Value>',
-'<PlainText>true</PlainText>',
+'<PlainText>false</PlainText>',
 '</AdministratorPassword>',
 '</UserAccounts>',
+'<FirstLogonCommands>',
+'<SynchronousCommand wcm:action="add">',
+'<RequiresUserInput>false</RequiresUserInput>',
+'<Order>1</Order>',
+'<Description>Disable auto-update</Description>',
+'<CommandLine>reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update&quot; /v AUOptions /t REG_DWORD /d <? echo $strin; ?>Updates<? echo $strou; ?>/f</CommandLine>',
+'</SynchronousCommand>',
+'</FirstLogonCommands>',
 '</component>',
 '<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<InputLocale><? echo $strin;?>InputLocale<? echo $strou;?></InputLocale>',
@@ -123,7 +143,17 @@ var template = [
 '<HideEULAPage><? echo $strin;?>HideEULA<? echo $strou;?></HideEULAPage>',
 '<NetworkLocation><?echo $strin; ?>NetworkLocation<? echo $strou; ?></NetworkLocation>',
 '<ProtectYourPC><? echo $strin;?>ProtectComputer<? echo $strou;?></ProtectYourPC>',
+'<SkipUserOOBE>true</SkipUserOOBE>',
+'<SkipMachineOOBE>true</SkipMachineOOBE>',
 '</OOBE>',
+'<AutoLogon>',
+'<Password>',
+'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
+'<PlainText>false</PlainText>',
+'</Password>',
+'<Username><? echo $strin;?>FullName<? echo $strou; ?></Username>',
+'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
+'</AutoLogon>',
 '<UserAccounts>',
 '<LocalAccounts>',
 '<LocalAccount wcm:action="add">',
@@ -139,9 +169,17 @@ var template = [
 '</LocalAccounts>',
 '<AdministratorPassword>',
 '<Value><? echo $strin; ?>PasswordAdmin<? echo $strou; ?></Value>',
-'<PlainText>true</PlainText>',
+'<PlainText>false</PlainText>',
 '</AdministratorPassword>',
 '</UserAccounts>',
+'<FirstLogonCommands>',
+'<SynchronousCommand wcm:action="add">',
+'<RequiresUserInput>false</RequiresUserInput>',
+'<Order>1</Order>',
+'<Description>Disable auto-update</Description>',
+'<CommandLine>reg add &quot;HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update&quot; /v AUOptions /t REG_DWORD /d <? echo $strin; ?>Updates<? echo $strou; ?>/f</CommandLine>',
+'</SynchronousCommand>',
+'</FirstLogonCommands>',
 '</component>',
 '</settings>',
 '<cpi:offlineImage cpi:source="catalog:d:/sources/install_windows 7 ultimate.clg" xmlns:cpi="urn:schemas-microsoft-com:cpi" />',
@@ -165,9 +203,10 @@ if(isset($_SESSION['parameters']))
 	$parameters = $_SESSION['parameters'];
 }
 
-    $f = new ValidatingForm(array("id" => "formxml"));
-    $f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => True));
-    $f->add(new HiddenTpl("infobulexml"),array("value" => '', "hide" => True));
+$f = new ValidatingForm(array("id" => "formxml"));
+$f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => True));
+$f->add(new HiddenTpl("infobulexml"),array("value" => '', "hide" => True));
+
 
 //==== NEW SECTION ====
 // Installation Notes
@@ -221,6 +260,7 @@ $f->push(new Table());
                         (isset($parameters)) ? $parameters['ProductKey3'] : "CM74G","",
                         (isset($parameters)) ? $parameters['ProductKey4'] : "RPHKF","",
                         (isset($parameters)) ? $parameters['ProductKey5'] : "PW487"
+
     );
     //_____________    
     $f->add(
@@ -338,6 +378,14 @@ $f->add(new Iconereply('Specialize_Settings',_T("Configure Specialize Settings",
 $f->push(new Table());
 
     //_____________
+    $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
+    $CopyProfile->setElements($yes_no);
+    $CopyProfile->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
+        array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
+    );
+    //_____________
     $ExtendOSPartition = new SelectItemtitle("ExtendOSPartition",$InfoBule_ExtendOSPartition);
     $ExtendOSPartition->setElements($yes_no);
     $ExtendOSPartition->setElementsVal($truefalse);
@@ -345,14 +393,6 @@ $f->push(new Table());
         new TrFormElement(_T('Extend OS Partition','imaging').":", $ExtendOSPartition),
         array("value" => (isset($parameters)) ? $parameters['ExtendOSPartition'] : "true","required" => True)
     );
-    //_____________
-//     $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
-//     $CopyProfile->setElements($yes_no);
-//     $CopyProfile->setElementsVal($truefalse);
-//     $f->add(
-//         new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
-//         array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
-//     );
     //_____________
     $ShowWindowsLive = new SelectItemtitle("ShowWindowsLive", $InfoBule_ShowWindowsLive);
     $ShowWindowsLive->setElements($yes_no);
@@ -423,6 +463,14 @@ $f->push(new Table());
         array("value" => "1","required" => True)
     );
     //_____________
+    $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
+    $Updates->setElements($UpdatesTabElement);
+    $Updates->setElementsVal(array('1','2','3','4'));
+    $f->add(
+        new TrFormElement(_T('System Updates','imaging').":", $Updates),
+        array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
+    );
+    //_____________
     $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
     $NetworkLocation->setElements(array('Home','Work','Other'));
     $NetworkLocation->setElementsVal(array('Home','Work','Other'));
@@ -430,15 +478,6 @@ $f->push(new Table());
         new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
         array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] : "Work","required" => True)
     );
-
-    //_____________   
-//     $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
-//     $Updates->setElements($UpdatesTabElement);
-//     $Updates->setElementsVal(array('1','2','3','4'));
-//     $f->add(
-//         new TrFormElement(_T('System Updates','imaging').":", $Updates),
-//         array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
-//     );
     //_____________
     $HideEULA = new SelectItemtitle("HideEULA",$InfoBule_HideEULA); 
     $HideEULA->setElements($yes_no);
@@ -509,7 +548,7 @@ $f->push(new Table());
     $f->add(
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,
-                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
+                "value" => (isset($parameters)) ? decryptSysprepAdminPassword($parameters['PasswordAdmin']) : "")
     );
 
     $f->add(new HiddenTpl("PasswordAdminEncrypted"), array("value" => "", "hide" => True));
@@ -548,13 +587,13 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? decryptSysprepPassword($parameters['Password']) : ""));
     $f->add(new HiddenTpl("PasswordEncrypted"), array("value" => "", "hide" => True));
     //_____________
-//     $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
-//     $Autologon->setElements($yes_no);
-//     $Autologon->setElementsVal($truefalse);
-//     $f->add(
-//         new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
-//         array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
-//     );
+    $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
+    $Autologon->setElements($yes_no);
+    $Autologon->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
+        array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
+    );
     //_____________
 //     $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
 //     $EnableUAC->setElements($EnableDisabled);
@@ -591,6 +630,7 @@ $f->push(new Table());
     );
     $f->display();
 
+echo "<div id='sysprepCreated'></div>";
 echo "<div title= 'jffffffffffffffffffffffffffffffffffffffffffffjjj'>";
     echo "<pre  id='codeTocopy2' style='width:100%;'></pre>";
 echo "</div>";

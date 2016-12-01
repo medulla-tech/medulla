@@ -23,8 +23,6 @@
  ?>
 <script type="text/javascript">
 
-
-
 function getExtension(filename){
         var parts = filename.split(".");
         return (parts[(parts.length-1)]);
@@ -35,47 +33,27 @@ function getExtension(filename){
             jQuery('#Location').focus()
         }
         else{
-            createxml()
+            createxml();
         }
     });
     createxml = function(){
-    
-    
+
         jQuery.post( "modules/imaging/manage/ajaxgenereAWFGxml.php", 
                             { 
                                 data:  jQuery('#codeTocopy2').text(),
-                                titre: jQuery('#Location').val() 
+                                title: jQuery('#Location').val()
         })
-        .done(function( data1 ) {        
+        .done(function( data1 ) {
             var file =  '  <? echo _T('File','imaging'); ?>  ';  
             var avai =  ' <? echo _T('available','imaging'); ?>'; 
                 if(data1 == 1){
                     var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" + 
-                            jQuery('#Location').val() ;
+                            jQuery('#Location').val();
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
                 }
                 window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
         });
     }
- /*   
- //button subtmit form
-jQuery( "#buttonform" ).click(function() {
-  if( jQuery('#Location').val() != "" ){
-   if(getExtension( jQuery('#Location').val() ) != "xml"){
-    var namefile=jQuery('#Location').val() + ".xml"
-      jQuery('#Location').val( namefile )
-   }
-   jQuery('input[name=bvalidbutton]').val("1");
-   jQuery( "#formxml" ).submit();
-   return false;
-  }
-  jQuery('#Location').focus()
-  return false;
-});*/
-
-
-
-
 jQuery(function () {
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
@@ -122,7 +100,8 @@ jQuery(function () {
     jQuery( '#Group' ).on('change', function () { update(); });
     jQuery( '#Description' ).on('change', function () { update(); });
     jQuery( '#Password' ).on('change', function () {
-        jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',{data:jQuery('#Password').val()}).done(function(result){
+        jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',
+        {data:jQuery('#Password').val(),passwordType:'normal'}).done(function(result){
             jQuery('input[name=PasswordEncrypted]').val(result.slice(0,-1));
             update();
         });
@@ -137,10 +116,16 @@ jQuery(function () {
     jQuery( '#ControlPanelView' ).on('change', function () { update(); });
     jQuery( '#ControlPanelIconSize' ).on('change', function () { update(); });
     jQuery( '#DownloadButton' ).on('change', function () { update(); });
-    jQuery( '#PasswordAdmin' ).on('change', function () { update(); });
+    jQuery( '#PasswordAdmin' ).on('change', function () {
+		jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',
+		{data:jQuery('#PasswordAdmin').val(),passwordType:'admin'}).done(function(result){
+            jQuery('input[name=PasswordAdminEncrypted]').val(result.slice(0,-1));
+            update();
+        });
+        update();
+    });
     update();
 });
-
 
 function update() {
     Msgxml  = "To have the Windows Answer File Generator on \n" + 
@@ -154,7 +139,7 @@ function update() {
     }
     if( jQuery('#Location').val() == "" ||  jQuery('#Location').val() == ".xml" ){
             erreur = 1;
-            msg = "<? echo _T('title missing','imaging'); ?>";
+            msg = "<? echo _T('title missing ex : sysprep.xml','imaging'); ?>";
     }
     if(erreur != 0 ){
             jQuery("#msg_bvalid").text(msg)
@@ -210,7 +195,7 @@ function update() {
         'Group': jQuery('#Group').find('option:selected').val(),
         'Description': jQuery('#Description').val(),
         'Password': jQuery('input[name=PasswordEncrypted]').val(),
-        'PasswordAdmin': jQuery('#PasswordAdmin').val(),
+        'PasswordAdmin': jQuery('input[name=PasswordAdminEncrypted]').val(),
         'Autologon': jQuery('#Autologon').find('option:selected').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
@@ -253,11 +238,11 @@ function update() {
     };
     fn_General_Settings=function(){
         var list_id_masque=[//'SkipProductKey',
-                            'AcceptEULA',
+//                             'AcceptEULA',
                             'ComputerName',
                             'SetupUILanguage',
-                            'SkipRearm',
-                            'SkipAutoActivation'];
+//                             'SkipRearm',
+                            /*'SkipAutoActivation'*/];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -317,18 +302,18 @@ function update() {
             jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
-    fn_Administrators_Account=function(){
-        var list_id_masque=["PasswordAdmin"];
-        jQuery.each(list_id_masque, function( index,value) {
-            jQuery('#'+value).parents("tr").toggle();
-        });
-        if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
-        }
-        else{
-            jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
-        }
-    };
+//     fn_Administrators_Account=function(){
+//         var list_id_masque=["PasswordAdmin"];
+//         jQuery.each(list_id_masque, function( index,value) {
+//             jQuery('#'+value).parents("tr").toggle();
+//         });
+//         if (jQuery('#'+list_id_masque[0]).is(":visible")){
+//             jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+//         }
+//         else{
+//             jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+//         }
+//     };
     fn_User_Account=function(){
         var list_id_masque=["FullName",
                             "Group",
@@ -362,7 +347,7 @@ function update() {
     };
 
     fn_Specialize_Settings=function(){
-        var list_id_masque=["CopyProfile",
+        var list_id_masque=[/*"CopyProfile",*/
                             "ShowWindowsLive",
                             "ExtendOSPartition"];
         jQuery.each(list_id_masque, function( index,value) {
@@ -382,7 +367,7 @@ function update() {
     fn_Regional_Settings()
     fn_Out_Of_Box_Experience()
     fn_Partition_Settings()
-    fn_Administrators_Account()
+//     fn_Administrators_Account()
     fn_Installation_Notes()
     fn_awfg_show()
 </script>
@@ -1791,7 +1776,7 @@ function update() {
                         
         $InfoBule_showxml=
                         _T("Show file XML AWFG", "imaging");   
-                        
+
     class  TrFormElementcollapse extends TrFormElement{
         function TrFormElementcollapse( $tpl, $extraInfo = array()){
             parent::TrFormElement($desc, $tpl, $extraInfo);
@@ -2055,6 +2040,7 @@ class SpanElementtitle extends HtmlElement {
         printf('<span%s id="%s" title="%s" >%s</span>', $class, $this->id, $this->title, $this->content);
     }
 }
+
 class OptTextareaTpl extends AbstractTpl{
 	var $options = [];
 
@@ -2078,22 +2064,23 @@ class OptTextareaTpl extends AbstractTpl{
 		}
 		$this->options = $array;
 	}
-	
+
 	function display()
 	{
 	$str ="";
-		foreach($this->options as $key=>$value)
+		foreach($this->options as $attr=>$value)
 		{
-			if($key != 'value')
+			if($attr != 'value')
 			{
-				$str .= $key.'="'.$value.'"';
+				$str .= $attr.'="'.$value.'"';
 			}
 		}
 		echo '<textarea '.$str.'>'.$this->options['value'].'</textarea>';
 	}
 }
 
-class sepTpl extends AbstractTpl{
+//Used to add separation line in sysprep forms
+class SepTpl extends AbstractTpl{
 
 	function display()
 	{
@@ -2101,9 +2088,15 @@ class sepTpl extends AbstractTpl{
 	}
 }
 
-function decryptSysprepPassword($string)
+//Decrypt the string paramater which is a password
+/*
+1 - convert base64 password parameter to normal string
+2 - remove all 00h characters include in string
+3 - remove 'Password' added to cryption
+*/
+function decryptSysprepPassword($password)
 {
-	$baseCode = base64_decode($string);
+	$baseCode = base64_decode($password);
 	$baseCode = str_split($baseCode);
 
 	$code = array();
@@ -2116,5 +2109,28 @@ function decryptSysprepPassword($string)
 	}
 		$code = implode($code);
 		return substr($code,0,-8);
+}
+
+//Decrypt the string paramater which is a password
+/*
+	1 - convert base64 password parameter to normal string
+	2 - remove all 00h characters include in string
+	3 - remove 'AdministratorPassword' added to cryption
+*/
+function decryptSysprepAdminPassword($adminPassword)
+{
+	$baseCode = base64_decode($adminPassword);
+	$baseCode = str_split($baseCode);
+
+	$code = array();
+	for($position = 0; $position<count($baseCode);$position++)
+	{
+		if($position %2 == 0)
+		{
+			$code[] = $baseCode[$position];
+		}
+	}
+		$code = implode($code);
+		return substr($code,0,-21);
 }
 ?>

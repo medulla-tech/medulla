@@ -21,6 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+//Convert string characters to hexadecimal code
 function strtohex($string)
 {
   $string = str_split($string);
@@ -29,6 +30,13 @@ function strtohex($string)
   return implode('',$string);
 }
 
+//Crypt the string parameter for normal Windows password
+/*
+	1 - Add 'Password' to string
+	2 - Convert each character of the string to hexadecimal
+	3 - Insert 00h between each converted character
+	4 - Convert the converted hexa string to base64 string
+*/
 function cryptSysprepPassword($string)
 {
 	$string .= 'Password';
@@ -43,8 +51,37 @@ function cryptSysprepPassword($string)
 
 	return base64_encode(pack('H*',$hex));
 }
-$password = cryptSysprepPassword($_GET['data']);
-// echo substr($password,0,-2);
+
+//Crypt the string parameter for administrator  Windows password
+/*
+	1 - Add 'AdministratorPassword' to string
+	2 - Convert each character of the string to hexadecimal
+	3 - Insert 00h between each converted character
+	4 - Convert the converted hexa string to base64 string
+*/
+function cryptSysprepAdminPassword($string)
+{
+	$string .= 'AdministratorPassword';
+	$strArray = str_split($string);
+	$hex = array();
+	foreach($strArray as $char)
+	{
+		$hex[] = strtohex($char);
+		$hex[] = '00';
+	}
+	$hex = implode($hex);
+
+	return base64_encode(pack('H*',$hex));
+}
+
+// Conditions executed by data_windows_Answer_file_generator.inc.php which post $_GET['data'] and $_GET['passwordType'] by ajax call
+if($_GET['passwordType'] == 'admin')
+{
+	$password = cryptSysprepAdminPassword($_GET['data']);
+}
+else
+{
+	$password = cryptSysprepPassword($_GET['data']);
+}
 echo $password;
 ?>
-
