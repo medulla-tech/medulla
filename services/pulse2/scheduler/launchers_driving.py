@@ -134,7 +134,8 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         if launcher :
-            logging.getLogger().debug("Calling on launcher: method %s(%s)" % (method, str(args)))
+            logging.getLogger().debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
+            logging.getLogger().debug("Launcher: method %s(%s)" % (method, str(args)))
             uri = self.launchers[launcher]
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
@@ -352,14 +353,16 @@ class LauncherCallingProvider(type):
         @d_main.addCallback
         def _cb(is_free):
             if is_free :
-                d = self._call(self.default_launcher, method, *args)
+                if method == "tcp_sproxy":
+                    d = self._call("launcher_01", method, *args)
+                else:
+                    d = self._call(self.default_launcher, method, *args)
                 d.addErrback(self._eb_select)
             else :
                 d = self._get_all_stats()
                 d.addCallback(self._extract_best_candidate)
                 d.addCallback(self._call, method, *args)
                 d.addErrback(self._eb_select)
-
             return d
 
         return d_main
