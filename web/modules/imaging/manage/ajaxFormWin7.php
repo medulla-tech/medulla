@@ -194,6 +194,7 @@ require("../../../includes/acl.inc.php");
 require("../../../includes/session.inc.php");
 require("../../../includes/PageGenerator.php");
 require("../includes/data_Windows_Answer_File_Generator.inc.php");
+require("../includes/class_form.php");
 ?>
 <!--Click on to validate disposed of the response file
 .on smb: // ipPulse / postinst / sysprep /-->
@@ -404,7 +405,7 @@ $f->push(new Table());
 $f->pop();
 $f->add( new SepTpl());
 
-    
+
 //==== NEW SECTION ====
 // Regional Settings
 //=====================
@@ -561,7 +562,6 @@ $f->add( new SepTpl());
 $f->add(new TitleElement(_T("User Account", "imaging")));
 $f->add(new Iconereply('User_Account', $InfoBule_User_Account ));
 $f->push(new Table());
-
 
     //_____________
     $f->add(
