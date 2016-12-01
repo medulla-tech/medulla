@@ -58,6 +58,7 @@ $page->setFile("modules/imaging/manage/ajaxConvertHexaBase64.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+//Add systemImageManager.php to the module
 $page = new Page("systemImageManager", _T("System Image Manager", "imaging"));
 $page->setFile("modules/imaging/manage/systemImageManager.php");
 $submod->addPage($page);
