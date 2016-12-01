@@ -33,11 +33,28 @@
         $dom->loadXML($_POST['data']);
         $dom->formatOutput = true;
         $t=$dom->saveXML();
-        if( ! xmlrpc_Windows_Answer_File_Generator($t,$_POST['titre'])){
-            echo "0";
+        if(!isset($_SESSION['parameters']))
+        {
+			if( ! xmlrpc_Windows_Answer_File_Generator($t,$_POST['title'])){
+					echo "0";
+			}
+			else{
+				new NotifyWidgetSuccess("Sysprep file has been created");
+
+					echo "1";
+	//             echo "<script>$(location).attr('href',\"main.php?module=imaging&submod=manage&action=systemImageManager\");</script>";
+			}
         }
-        else{
-            new NotifyWidgetSuccess("Sysprep file has been created");
-            echo "1";
+        else
+        {
+			if( ! xmlrpc_editWindowsAnswerFile($t,$_POST['title'])){
+					echo "0";
+			}
+			else{
+				new NotifyWidgetSuccess("Sysprep file has been edited");
+
+					echo "1";
+	//             echo "<script>$(location).attr('href',\"main.php?module=imaging&submod=manage&action=systemImageManager\");</script>";
+			}
         }
 ?>
