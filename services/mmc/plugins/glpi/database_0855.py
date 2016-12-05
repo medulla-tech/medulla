@@ -1428,7 +1428,7 @@ class Glpi0855(DyngroupDatabaseHelper):
     def __get_all_locations(self):
         ret = []
         session = create_session()
-        q = session.query(Entities).group_by(self.entities.c.name).order_by(asc(self.entities.c.completename)).all()
+        q = session.query(Entities).group_by(self.entities.c.completename).order_by(asc(self.entities.c.completename)).all()
         session.close()
         for entities in q:
             ret.append(entities)
