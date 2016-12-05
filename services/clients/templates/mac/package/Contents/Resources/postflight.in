@@ -87,12 +87,13 @@ if [ -d ${fusion_pkg} ]; then
 
     sudo installer -pkg "${fusion_pkg}" -target /
     if grep -q "${inv_server_url}" "${fusion_cfg}"; then
-       echo "Fusion Inventory agent already configured" 
-    else 
-       sudo tee -a ${fusion_cfg} < ${inv_file} 
+       echo "Fusion Inventory agent already configured"
+    else
+       sudo tee -a ${fusion_cfg} < ${inv_file}
     fi
-    echo "INFO: Running initial inventory"
-    sudo /opt/fusioninventory-agent/fusioninventory-agent
+    sudo sed -i -e "s/^backend-collect-timeout =.*$/backend-collect-timeout = 180/" /opt/fusioninventory-agent/agent.cfg
+    echo "INFO: Starting Fusion Inventory service"
+    sudo launchctl start org.fusioninventory.agent
 
 else
     echo "ERROR: downloaded package ${fusion_pkg} not found"
