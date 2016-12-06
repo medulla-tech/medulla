@@ -464,6 +464,9 @@ class MacCreator(AbsCreator):
 #        print "os x dmg create: %s" % out
         self._declare_vnc_password()
 
+        postflight = os.path.join(self.dir_current, self.postflight_file)
+        os.chmod(postflight, 0755)
+
         origin_dir = self.dir_current
         destination = os.path.join(self.dir_current,
                                    self.platform_directory,
@@ -1026,10 +1029,3 @@ if __name__ == "__main__":
     #BuildSoftEtherClient()
     #sm = SmartAgentPrepare(cm_host, cm_port)
     #sys.exit(sm.set_all())
-
-
-
-
-
-
-
