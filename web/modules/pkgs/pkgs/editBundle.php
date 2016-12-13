@@ -165,7 +165,7 @@ $papi_packages = advGetAllPackages(array(
 
 $papi_packages_pids = array();
 $papi_packages_labels = array();
-        
+
 foreach ($papi_packages[1] as $p){
     $papi_packages_pids[] = $p[0]['id'];
     $papi_packages_labels[] = $p[0]['label'];
