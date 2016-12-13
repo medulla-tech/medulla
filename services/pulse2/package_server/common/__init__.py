@@ -89,9 +89,11 @@ class Common(pulse2.utils.Singleton):
 
             self.logger.info("Common : finish loading %d packages" % (len(self.packages)))
             self.working = False
+            self.Boolchange = False
         except Exception, e:
             self.logger.error("Common : failed to finish loading packages")
             self.working = False
+            self.Boolchange = False
             raise e
 
     def debug(self):
@@ -211,6 +213,8 @@ class Common(pulse2.utils.Singleton):
                     #todelete.append(pid)
                     #if conf_file in self.already_declared:
                     #    del self.already_declared[conf_file]
+                    if not self.Boolchange:
+                        self.Boolchange = True
                 elif not os.path.exists(conf_file): # SUPPRESSED
                     self.logger.debug("Package %s no more exists (%s)" % (pid, conf_file))
                     self.__removePackage(pid, proot)
@@ -284,6 +288,13 @@ class Common(pulse2.utils.Singleton):
         if self.working:
             self.logger.debug("Common.detectNewPackages : already working")
             return False
+        if  self.Boolchange:
+            #reinit package
+            desc = self.desc
+            self.init(self.config)
+            self.desc = desc
+            self.Boolchange = False
+            return True
         try: # BUG : need to put the catch level down!
             self.working = True
             self.working_pkgs = {}
