@@ -3908,6 +3908,8 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         q = q.join(Target).filter(Target.uuid == uuid)
         q = q.first()
         session.close()
+        if q == None :
+           return None
         return q.uuid
 
     def getMyMenuTarget(self, uuid, type):
