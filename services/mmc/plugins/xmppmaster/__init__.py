@@ -93,10 +93,28 @@ def getListPresenceAgent():
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
 
+def getshowmachinegrouprelayserver():
+    def Nonevalue(x):
+        if x == None:
+            return ""
+        else:
+            return x
+    machinelist = XmppMasterDatabase().showmachinegrouprelayserver()
+    array=[] 
+    for t in machinelist:
+        z = [ Nonevalue(x) for x in list(t)]
+        ob = {'jid' : z[0], 'type' : z[1], 'os' : z[2], 'rsdeploy' : z[3],'hostname' : z[4] ,'uuid' : z[5],'ip' : z[6],'subnet' : z[7] }
+        array.append(ob)
+    return array
+
 def getXmppConfiguration():
     return getXmppConfiguration()
 
 def runXmppApplicationDeployment(*args, **kwargs ):
+    for count, thing in enumerate(args):
+        print '{0}. {1}'.format(count, thing)
+    for name, value in kwargs.items():
+        print '{0} = {1}'.format(name, value)
     return callXmppFunction(*args, **kwargs )
 
 def CallXmppPlugin(*args, **kwargs ):
