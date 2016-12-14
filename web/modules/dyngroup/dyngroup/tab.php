@@ -112,3 +112,7 @@ if ($type == 0) {
 
 ?>
 
+<script>
+// Select UUID1 by default
+jQuery('#imaging_server option[value="UUID1"]').prop('selected', true);
+</script>
