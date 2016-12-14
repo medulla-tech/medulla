@@ -217,14 +217,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         self.add_event_handler("session_start", self.start)
         """ New presence in Master chatroom """
-        self.add_event_handler("muc::%s::presence" % conf.jidchatroommaster,
-                               self.muc_presenceMaster)
-        """ Unsubscribe from Master chatroom """
-        self.add_event_handler("muc::%s::got_offline" % conf.jidchatroommaster,
-                               self.muc_offlineMaster)
-        """ Subscribe to Master chatroom """
-        self.add_event_handler("muc::%s::got_online" % conf.jidchatroommaster,
-                               self.muc_onlineMaster)
+        #self.add_event_handler("muc::%s::presence" % conf.jidchatroommaster,
+                               #self.muc_presenceMaster)
+        #""" Unsubscribe from Master chatroom """
+        #self.add_event_handler("muc::%s::got_offline" % conf.jidchatroommaster,
+                               #self.muc_offlineMaster)
+        #""" Subscribe to Master chatroom """
+        #self.add_event_handler("muc::%s::got_online" % conf.jidchatroommaster,
+                               #self.muc_onlineMaster)
+
         """ New presence in Conf chatroom """
         self.add_event_handler("muc::%s::presence" % conf.confjidchatroom,
                                self.muc_presenceConf)
@@ -244,6 +245,70 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)
 
+
+
+        #self.add_event_handler ( 'presence', self.presence) 
+        #self.add_event_handler ( 'presence_subscribe', self.subscribe) 
+        #self.add_event_handler ( 'presence_subscribed', self.subscribed)
+        #self.add_event_handler ( 'presence_unavailable', self.unavailable)
+        self.add_event_handler ( 'changed_status', self.changed_status)
+
+    def start(self, event):
+        self.get_roster()
+        self.send_presence()
+        #chatroomjoin=[self.config.jidchatroommaster,self.config.jidchatroomlog,self.config.confjidchatroom]
+        chatroomjoin=[self.config.confjidchatroom]
+        for chatroom in chatroomjoin:
+            if chatroom == self.config.confjidchatroom:
+                passwordchatroom = self.config.confpasswordmuc
+            else:
+                passwordchatroom = self.config.passwordconnexionmuc
+
+            self.plugin['xep_0045'].joinMUC(chatroom,
+                                            self.config.NickName,
+                                            # If a room password is needed, use:
+                                            password=passwordchatroom,
+                                            wait=True)
+
+
+    def changed_status(self,mmm):
+        if mmm['from'].resource == 'MASTER':
+            return
+        #print "qqqqqqqqqqqqqqqqqqqqqqqqqiiiiiiiii %s %s"%(mmm['from'],mmm['type'])
+        if mmm['type'] == 'unavailable':
+            try:
+                result = XmppMasterDatabase().delPresenceMachine(mmm['from'])
+            except:
+                traceback.print_exc(file=sys.stdout)
+            self.showListClient()
+
+    def showListClient(self):
+        self.presencedeployment={}
+        listrs = XmppMasterDatabase().listjidRSdeploy()
+        if len(listrs) != 0:
+            for i in listrs:
+                li = XmppMasterDatabase().listmachinesfromdeploy(i[0])
+                logger.info("RS [%s] for deploy on %s Machine"%(i[0],len(li)-1))
+                logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type","uuid","Machine","jid","platform"))
+                for j in li:
+                    if j[9] == 'relayserver':
+                        TY = 'RSer'
+                    else:
+                        TY = "Mach"
+                    logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
+        else:
+            logger.info("Aucune Machine repertorié")
+    def presence(self, message):
+        pass
+
+    def unavailable(self, message):
+        pass
+
+    def subscribe(self, message):
+        pass
+
+    def subscribed(self, message):
+        pass
 
     def applicationdeploymentjson(self, jidrelay, jidmachine, name, time, encodebase64 = False):
         """ For a deployment
@@ -274,6 +339,52 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.eventmanage.show_eventloop()
 
 
+    #def applicationdeployment(self, jidrelay, jidmachine, name, time, encodebase64 = False):
+        #""" For a deployment
+        #1st action: synchronize the previous package name
+        #"""
+        #if not managepackage.getversionpackagename(name):
+            #return False
+
+        ## Name the event
+        #dd = name_random(5, "deploy_")
+        #evenementfinish =  "Mastereventfinish_%s"%dd
+        #evenementstart  =  "Mastereventstart_%s"%dd
+        #evenementerror  =  "Mastereventerror_%s"%dd
+        #evenementfinishMachine =  "Machineeventfinish_%s"%dd
+        #evenementstartMachine  =  "Machineeventstart_%s"%dd
+        #evenementerrorMachine  =  "Machineeventerror_%s"%dd
+        #data =  {
+                #"name" : name,
+                #"path" : managepackage.getpathpackagename(name),
+                #"jidrelay": jidrelay,
+                #"jidmachine" : jidmachine,
+                #"jidmaster" : self.boundjid.bare,
+                #"iprelay" :  XmppMasterDatabase().ipfromjid(jidrelay)[0],
+                #"ipmachine" : XmppMasterDatabase().ipfromjid(jidmachine)[0],
+                #"ipmaster" : self.config.Server,
+                #"Dtypequery" : "TQ",
+                #"Devent" : "STARDEPLOY",
+                #'RSstartevent' : evenementstart,
+                #'RSfinishevent' : evenementfinish,
+                #'RSerrorevent' : evenementerror,
+                #'Mstartevent' : evenementstartMachine,
+                #'Mfinishevent' : evenementfinishMachine,
+                #'Merrorevent' : evenementerrorMachine
+        #}
+
+        #sessionid = self.send_session_command( jidrelay, "applicationdeployment" , data, datasession = None, encodebase64 = False)
+        #self.eventmanage.show_eventloop()
+        
+        
+        #command = "rsync --delete -av %s %s:%s"%(data['path'], data['iprelay'], data['path'])
+        ##command ="ls -al"
+        #print "COMMAND %s"% command
+        #self.mannageprocess.add_processcommand( command ,
+                                               #sessionid,
+                                               #False,
+                                               #self.eventmanage.create_TEVENT(jidrelay,"applicationdeployment",sessionid,evenementfinish ),
+                                               #self.eventmanage.create_TEVENT(jidrelay, "applicationdeployment", sessionid, evenementerror ),50,[])
     def pluginaction(self,rep):
         if 'sessionid' in rep.keys():
             sessiondata = self.session.sessionfromsessiondata(rep['sessionid'])
@@ -316,8 +427,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("classutil : %s"%data['classutil'])
             if 'ippublic' in data:
                 logger.info("ippublic : %s"%data['ippublic'])
-            if 'remoteservice' in data:
-                logger.info("remoteservice : %s"%data['remoteservice'])
+
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%self.localisationifo)
             logger.info("-----------------------------------")
@@ -356,20 +466,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                            mto = self.config.jidchatroomlog,
                            mtype ='chat')
 
-    def start(self, event):
-        self.get_roster()
-        self.send_presence()
-        chatroomjoin=[self.config.jidchatroommaster,self.config.jidchatroomlog,self.config.confjidchatroom]
-        for chatroom in chatroomjoin:
-            if chatroom == self.config.confjidchatroom:
-                passwordchatroom = self.config.confpasswordmuc
-            else:
-                passwordchatroom = self.config.passwordconnexionmuc
-            self.plugin['xep_0045'].joinMUC(chatroom,
-                                            self.config.NickName,
-                                            # If a room password is needed, use:
-                                            password=passwordchatroom,
-                                            wait=True)
+
+    def signalpresence(self, jid):
+        self.sendPresence(pto=jid, ptype='probe')
 
     def register(self, iq):
         """ called for automatic registration"""
@@ -387,25 +486,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.error("No response from server.")
             self.disconnect()
 
-    def showListClient(self):
-        depl={}
-        l = self.presencedeployment.keys()
-        for t in l:
-            depl[self.presencedeployment[t]['deployment']] = [self.presencedeployment[t]['deployment']]
-        if len(l) != 0:
-            logger.info(  "List of machines in the deployment")
-            for k in depl.keys():
-                logger.info(  "Deployment on [%s]"%k)
-                logger.info('{0:30}|{1:35}|{2:55}|{3:15}'.format("Machine","jid","platform", "type"))
-                for t in l:
-                    if self.presencedeployment[t]['deployment'] == k:
-                        jidbarre=self.presencedeployment[t]['fromjid'].split('/')
-                        logger.info( '{0:30}|{1:35}|{2:55}|{3:15}'.format(self.presencedeployment[t]['machine'][:-3],
-                                                            jidbarre[0],
-                                                            self.presencedeployment[t]['platform'] ,self.presencedeployment[t]['agenttype']))
-        else:
-            if self.config.showinfomaster:
-                logger.info("NO MACHINE")
+
 
     def restartAgent(self , to ):
         if self.config.showplugins:
@@ -525,7 +606,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if data['agenttype'] == "relayserver":
             self.sendErrorConnectionConf(msg)
             return
-
+        #logger.info("%s"% json.dumps(data, indent=4, sort_keys=True))
         logger.debug("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
         XmppMasterDatabase().log("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
         # Defining relay server for connection
@@ -616,6 +697,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mtype='chat')
 
     def messagereturnsession(self, msg):
+        print msg
         data = json.loads(msg['body'])
         try:
             if data['sessionid'].startswith("mcc"):
@@ -638,14 +720,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
+        
         if msg['from'].bare == self.config.jidchatroommaster:
             """ message all members of chatroom master """
             return False
         if  msg['body'] == "This room is not anonymous":
             return False
-        if not (self.jidInRoom1( self.config.jidchatroommaster, msg['from'] ) or self.jidInRoom1(self.config.jidchatroomlog, msg['from'])):
-            """ message agent belonging to master """
-            return False
+        
+        
+        ###a revoir avec presence du groupe deploie dans ces info a compare si ce graupe existe.
+        #if not (self.jidInRoom1( self.config.jidchatroommaster, msg['from'] ) or self.jidInRoom1(self.config.jidchatroomlog, msg['from'])):
+            #""" message agent belonging to master """
+            #return False
         restartAgent = False
         try:
             data = json.loads(msg['body'])
@@ -655,32 +741,44 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.MessagesAgentFromChatroomlog(msg,data)
                 return True
 
+
+
             if data['action'] == 'infomachine' :
+                logger.info("JFK RECUPERE MESSAGE REGISTER")
+
+
+
                 """ Check machine information from agent """
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 if data['ippublic'] != None:
                     self.localisationifo = Localisation().geodataip(data['ippublic'])
                 else:
                     self.localisationifo = {}
-                self.presencedeployment[data['machine']]={
-                    'machine':data['machine'],
-                    'fromchatroom':data['who'],
-                    'fromjid': data['from'],
-                    'deployment':data['deployment'],
-                    'platform':data['platform'],
-                    'information':info,
-                    'portxmpp':data['portxmpp'],
-                    'serverxmpp':data['serverxmpp'],
-                    'xmppip' : data['xmppip'],
-                    'subnetxmpp' : data['subnetxmpp'],
-                    'xmppmask' : data['xmppmask'],
-                    'xmppmacaddress' : data['xmppmacaddress'],
-                    'baseurlguacamole' : data['baseurlguacamole'],
-                    'agenttype' : data['agenttype'],
-                    'localisationifo' : self.localisationifo,
-                    'ipconnection':data['ipconnection'],
-                    'portconnection':data['portconnection']
-                    }
+                #self.presencedeployment[data['machine']]={
+                    #'machine':data['machine'],
+                    #'fromchatroom':data['who'],
+                    #'fromjid': data['from'],
+                    #'deployment':data['deployment'],
+                    #'platform':data['platform'],
+                    #'information':info,
+                    #'portxmpp':data['portxmpp'],
+                    
+                    #'serverxmpp':data['serverxmpp'],
+                    
+                    #'xmppip' : data['xmppip'],
+                    #'subnetxmpp' : data['subnetxmpp'],
+                    
+                    #'xmppmask' : data['xmppmask'],
+                    #'xmppmacaddress' : data['xmppmacaddress'],
+                    #'baseurlguacamole' : data['baseurlguacamole'],
+                    
+                    
+                    #'agenttype' : data['agenttype'],
+                    
+                    #'localisationifo' : self.localisationifo,
+                    #'ipconnection':data['ipconnection'],
+                    #'portconnection':data['portconnection']
+                    #}
 
                 data['information'] = info
                 self.displayData(data)
@@ -703,7 +801,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_code = str(self.localisationifo['country_code'])
                     country_name = str(self.localisationifo['country_name'])
                     city = str(self.localisationifo['city'])
-
+                
+                
+                logger.info("JFK RECUPERE MESSAGE REGISTER adduser")
+                
+                
                 logger.info("add user : %s for machine : %s country_name : %s"%(data['information']['users'][0],
                                                                                 data['information']['info']['hostname'],
                                                                                 country_name))
@@ -742,12 +844,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                     # Creation of deployment chatroom for relay server
                     # Send message RS join chatroom
-                    self.plugin['xep_0045'].joinMUC(data['deployment'],
-                                                    self.config.NickName,
-                                                    password=self.config.confpasswordmuc,
-                                                    wait=True)
-                    self.sendrsconnectiondeploychatroom(data['from'], data['deployment'])
-                    self.plugin['xep_0045'].leaveMUC( data['deployment'], "MASTER")
+                    #self.plugin['xep_0045'].joinMUC(data['deployment'],
+                                                    #self.config.NickName,
+                                                    #password=self.config.confpasswordmuc,
+                                                    #wait=True)
+                    #self.sendrsconnectiondeploychatroom(data['from'], data['deployment'])
+                    #self.plugin['xep_0045'].leaveMUC( data['deployment'], "MASTER")
+                logger.info("JFK RECUPERE MESSAGE REGISTER addPresenceMachine")
                 # Add machine
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                             data['platform'],
@@ -762,6 +865,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             data['baseurlguacamole'],
                                                             data['deployment']
                                                             )
+
+
                 if idmachine != -1:
                     if useradd != -1:
                         XmppMasterDatabase().hasmachineusers(useradd, idmachine)
@@ -783,7 +888,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         for t in results:
                             computer = ComputerManager().getComputerByMac(t)
                             if computer != None:
-                                jidrs = str(jid.JID(data['deployment']).user)[3:]
+                                jidrs = str(jid.JID(data['deployment']).user)
                                 jidm = jid.JID(data['from']).domain
                                 jidrs = "%s@%s"%(jidrs,jidm)
                                 uuid = 'UUID' + str(computer.id)
@@ -791,8 +896,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
                                 self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                             'machine_ip' : data['xmppip'],
-                                                                            'uuid' : str(computer.id),
-                                                                            'remoteservice':data['remoteservice'] })
+                                                                            'uuid' : str(computer.id) })
                                 break
                             else:
                                 print "None"
@@ -841,18 +945,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.updateguacamoleconfig[data['subnetxmpp']] = True
                 return True
             elif data['action'] == 'participant':
-                resultcommand={'action' : 'participant',
-                                'participant' : self.presencedeployment }
-                self.send_message(mto=msg['from'],
-                        mbody=json.dumps(resultcommand),
-                        mtype='chat')
+                # avoir plutot une requette sql
+                #resultcommand={'action' : 'participant',
+                                #'participant' : self.presencedeployment }
+                #self.send_message(mto=msg['from'],
+                        #mbody=json.dumps(resultcommand),
+                        #mtype='chat')
                 return True
             elif data['action'] == 'listparticipant':
-                resultcommand={'action' : 'listparticipant',
-                                'participant' : self.presencedeployment }
-                self.send_message(mto=msg['from'],
-                        mbody=json.dumps(resultcommand),
-                        mtype='chat')
+                #resultcommand={'action' : 'listparticipant',
+                                #'participant' : self.presencedeployment }
+                #self.send_message(mto=msg['from'],
+                        #mbody=json.dumps(resultcommand),
+                        #mtype='chat')
                 return True
 
         except Exception as e:
@@ -880,15 +985,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:
             return False
-
+        logger.info("JFK RECUPERE MESSAGE ICI")
         if self.jidInRoom1( self.config.confjidchatroom, msg['from']):
             self.MessagesAgentFromChatroomConfig( msg)
             return
+        if  msg['type'] == 'groupchat':
+            return
 
-        if not self.jidInRoom1( self.config.jidchatroommaster, msg['from']):
-            """ message agent belonging to master """
-            return False
-
+        self.signalpresence(msg['from'] )
+        logger.info("JFK RECUPERE MESSAGE ICI1")
+        #if not self.jidInRoom1( self.config.jidchatroommaster, msg['from']):
+            #""" message agent belonging to master """
+            #return False
+        logger.info("JFK RECUPERE MESSAGE ICI2")
         if self.messagereturnsession(msg):
             # Message from client of mmc command
             return
@@ -956,47 +1065,52 @@ class MUCBot(sleekxmpp.ClientXMPP):
             traceback.print_exc(file=sys.stdout)
 
 
-    def updateGuacamoleConfigRelayServer(self):
-        print "updateGuacamoleConfigRelayServer"
-        #todo modify inscription guacamole to database relayserver
-        dataguacamoleconf = {}
-        datalocationserverguacamoleconf = {}
-        controle="relayserver"
-        for machine, data in self.presencedeployment.iteritems():
-            if self.updateguacamoleconfig.has_key(self.presencedeployment[machine]['subnetxmpp']) and \
-            self.updateguacamoleconfig[self.presencedeployment[machine]['subnetxmpp']] == True:
-                data1 = copy.deepcopy(data)
-                data1['hostname'] = data['information']['info']['hostname']
-                data1['os'] = data['information']['info']['os']
-                del data1['information']['listipinfo']
+    #def updateGuacamoleConfigRelayServer(self):
+        #print "updateGuacamoleConfigRelayServer"
+        ##todo modify inscription guacamole to database relayserver
+        #dataguacamoleconf = {}
+        #datalocationserverguacamoleconf = {}
+        #controle="relayserver"
+        #for machine, data in self.presencedeployment.iteritems():
+            #if self.updateguacamoleconfig.has_key(self.presencedeployment[machine]['subnetxmpp']) and \
+            #self.updateguacamoleconfig[self.presencedeployment[machine]['subnetxmpp']] == True:
+                #data1 = copy.deepcopy(data)
+                #data1['hostname'] = data['information']['info']['hostname']
+                #data1['os'] = data['information']['info']['os']
+                #del data1['information']['listipinfo']
 
-                if  self.presencedeployment[machine]['agenttype'] == "machine":
-                    if not dataguacamoleconf.has_key(self.presencedeployment[machine]['subnetxmpp']):
-                        dataguacamoleconf[self.presencedeployment[machine]['subnetxmpp']] = []
+                #if  self.presencedeployment[machine]['agenttype'] == "machine":
+                    #if not dataguacamoleconf.has_key(self.presencedeployment[machine]['subnetxmpp']):
+                        #dataguacamoleconf[self.presencedeployment[machine]['subnetxmpp']] = []
 
-                    dataguacamoleconf[self.presencedeployment[machine]['subnetxmpp']].append(data1)
-                elif self.presencedeployment[machine]['agenttype'] == "relayserver":
-                    datalocationserverguacamoleconf[self.presencedeployment[machine]['subnetxmpp']] = data1
+                    #dataguacamoleconf[self.presencedeployment[machine]['subnetxmpp']].append(data1)
+                #elif self.presencedeployment[machine]['agenttype'] == "relayserver":
+                    #datalocationserverguacamoleconf[self.presencedeployment[machine]['subnetxmpp']] = data1
 
-        for e, v in datalocationserverguacamoleconf.iteritems():
-            if dataguacamoleconf.has_key(e) and v.has_key('fromjid'):
-                try:
-                    self.callInstallConfGuacamole(v['fromjid'],dataguacamoleconf[e])
-                    self.updateguacamoleconfig[e] = False
-                except:
-                    pass
+        #for e, v in datalocationserverguacamoleconf.iteritems():
+            #print "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",e,v
+            #if dataguacamoleconf.has_key(e) and v.has_key('fromjid'):
+                #try:
+
+                    #print "e=%s"%e
+                    #print "callInstallConfGuacamole=%s "%(v['fromjid'],dataguacamoleconf[e])
+                    #self.callInstallConfGuacamole(v['fromjid'],dataguacamoleconf[e])
+                    #self.updateguacamoleconfig[e] = False
+                #except:
+                    #pass
 
 
     def muc_offlineMaster(self, presence):
-        if presence['muc']['nick'] != self.config.NickName and presence['muc']['nick'] != "SIVEO":
-            if self.config.showinfomaster:
-                logger.debug("Disconnection of %s"% presence['muc']['nick'])
-            try:
-                del self.presencedeployment[presence['muc']['nick']]
-                result = XmppMasterDatabase().delPresenceMachine( presence['muc']['jid'])
-            except:
-                pass
-            self.showListClient()
+        pass
+        #if presence['muc']['nick'] != self.config.NickName and presence['muc']['nick'] != "SIVEO":
+            #if self.config.showinfomaster:
+                #logger.debug("Disconnection of %s"% presence['muc']['nick'])
+            ##try:
+                ##del self.presencedeployment[presence['muc']['nick']]
+                ##result = XmppMasterDatabase().delPresenceMachine( presence['muc']['jid'])
+            ##except:
+                ##pass
+            ##self.showListClient()
 
 
     def muc_presenceMaster(self, presence):

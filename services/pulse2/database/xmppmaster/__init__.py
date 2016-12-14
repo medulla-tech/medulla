@@ -206,7 +206,6 @@ class XmppMasterDatabase(DatabaseHelper):
             except Exception, e:
                 logging.getLogger().error(str(e))
 
-
     @DatabaseHelper._session
     def adduser(self, session, 
                     namesession,
@@ -276,7 +275,64 @@ class XmppMasterDatabase(DatabaseHelper):
             except Exception, e:
                 logging.getLogger().error(str(e))
         return -1
-    
+
+    @DatabaseHelper._session
+    def showmachinegrouprelayserver(self,session):
+        """ return les machines en fonction du RS """
+        sql = """SELECT 
+                `jid`, `agenttype`, `platform`, `groupdeploy`, `hostname`, `uuid_inventorymachine`, `ip_xmpp`, `subnetxmpp`
+            FROM
+                xmppmaster.machines
+            order BY `groupdeploy` ASC, `agenttype` DESC;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
+    def listjidRSdeploy(self,session):
+        """ return les RS pour le deploiement """
+        sql = """SELECT 
+                    groupdeploy
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    machines.agenttype = 'relayserver';"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
+    def listmachinesfromRSdeploy( self, session, groupdeploy ):
+        """ return les machine suivie par un RS """
+        sql = """SELECT 
+                    *
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    machines.agenttype = 'machine'
+                        AND machines.groupdeploy = '%s';"""%groupdeploy
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
+    def listmachinesfromdeploy( self, session, groupdeploy ):
+        """ return toutes les machines pour un deploy """
+        sql = """SELECT 
+                        *
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                    machines.groupdeploy = '%s'
+                    order BY  `agenttype` DESC;"""%groupdeploy
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
     @DatabaseHelper._session
     def ipfromjid(self, session, jid):
         """ return ip xmpp for JID """
@@ -295,7 +351,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-
 
     @DatabaseHelper._session
     def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
@@ -469,11 +524,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.execute(sql)
         session.commit()
         session.flush()
-
-#jfk
-
-##SELECT * FROM xmppmaster.has_guacamole where idinventory=1;
-
 
     @DatabaseHelper._session
     def addguacamoleidforiventoryid(self, session, idinventory, idguacamole):
