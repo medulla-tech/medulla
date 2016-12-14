@@ -30,121 +30,55 @@ margin:auto; /* exemple pour centrer */
 display:block;/* pour effectivement centrer ! */
 }
 </style>
-
-
 <?
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
-
-function searchjiddeploy($jid, $struct){
-    $datadeploy = array();
-    foreach ( $struct as $chatroomdeploy => $differentmachine){
-        $jidrelayserver = "";
-        $jidmachine = "";
-        foreach ( $differentmachine as $uniquehostname => $infomachine){
-            if ($infomachine['agenttype']  == "relayserver"){
-                $jidrelayserver =  $infomachine['jid'];
-            }
-            if ($infomachine['agenttype']  == "machine" && $infomachine['jid'] == $jid){
-                $jidmachine = $infomachine['jid'];
-            }
-        }
-        if ($jidrelayserver!="" &&  $jidmachine !=""){
-            $datadeploy[]=$jidrelayserver;
-            $datadeploy[]=$jidmachine;
-            return $datadeploy;
-        }
-    }
-    return $datadeploy;
-}
-
-
-$p = new PageGenerator(_T("Console", 'xmppmaster'));
+$elt_afficher=array();
+$p = new PageGenerator(_T("Deploy", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
-
-require_once("modules/xmppmaster/includes/xmlrpc.php");
 $oo = json_decode(xmlrpc_getListPresenceAgent(), true);
 $listdespackage = xmlrpc_getListPackages();
-//
-$struct=array();
- foreach ($oo as $k => $v) {
-    // $hostname = $oo[$k]['information']['info']['hostname'];
-    $struct[$oo[$k]['deployment']][$k]['jid']=$oo[$k]['fromjid'];
-    $struct[$oo[$k]['deployment']][$k]['hostname'] = $oo[$k]['information']['info']['hostname'];
-    $struct[$oo[$k]['deployment']][$k]['agenttype'] = $oo[$k]['agenttype'];
-    $struct[$oo[$k]['deployment']][$k]['ipconnection'] = $oo[$k]['ipconnection'];
-    $struct[$oo[$k]['deployment']][$k]['platform'] = $oo[$k]['information']['info']['platform'];
-    $struct[$oo[$k]['deployment']][$k]['os'] = $oo[$k]['information']['info']['os'];
-    $struct[$oo[$k]['deployment']][$k]['processortype'] = $oo[$k]['information']['info']['hardtype'];
-    $struct[$oo[$k]['deployment']][$k]['users'] = $oo[$k]['information']['users'];
-    foreach ($oo[$k]['information']['listipinfo'] as $dede)
+$imss = xmlrpc_getshowmachinegrouprelayserver();
+    foreach ($imss as $d)
     {
-        $struct[$oo[$k]['deployment']][$k]['macaddress'][] = $dede['macaddress'];
-        $struct[$oo[$k]['deployment']][$k]['ipaddress'][] = $dede['ipaddress'];
+    if( $d['type'] == "machine"){
+        //$elt_values[] = $d['jid'];
+        $elt_values[] = $d['rsdeploy']."|".$d['jid'];
+        $elt_afficher[] = $d['hostname'];
+        }
     }
- }
-
-
-  if (   isset($_POST['bvalid']) &&
-        isset($_POST['package']) &&
-        isset($_POST['Machine']) &&
-        trim($_POST['Machine'])!= "" &&
-        trim($_POST['package'])!= ""
+    if (    isset($_POST['bvalid']) &&
+            isset($_POST['package']) &&
+            isset($_POST['Machine']) &&
+            trim($_POST['Machine'])!= "" &&
+            trim($_POST['package'])!= ""
         ){
-        // searchip
-        //
-        $jid = searchjiddeploy($_POST['Machine'],$struct);
-        if (count($jid)==2)
-        {
+            extract($_POST);
+            $Aob = explode("|", $Machine);
+            $jidrelay=$Aob[0];
+            $jidmachine=$Aob[1];
+            printf ("Deploy <strong>%s</strong> on Machine <strong>%s</strong> by relayserver <strong>%s</strong> ",$package,$jidmachine,$jidrelay);
+            xmlrpc_runXmppDeployment($jidrelay, $jidmachine,$_POST['package'], 40);
+        }else{
+            $f = new ValidatingForm();
+            $f->push(new Table());
+            $imss = new SelectItem("Machine");
+            $imss->setElements($elt_afficher);
+            $imss->setElementsVal($elt_values);
 
-        echo "deploy pckage ". $_POST['package']." on machine ".$jid[1]." from RS". $jid[0];
-        echo "<br>";
-        echo xmlrpc_runXmppDeployment( $jid[0], $jid[1], $_POST['package'], 40);
+            $f->add(
+                new TrFormElement(_T("Select a machine", "xmppmaster"), $imss)
+            );
+            $imss = new SelectItem("package");
+            $imss->setElements($listdespackage);
+            $imss->setElementsVal($listdespackage);
+            $f->add(
+                new TrFormElement(_T("Select a package", "xmppmaster"), $imss)
+            );
+            $f->pop();
+            $f->addValidateButton("bvalid");
+            $f->display();
         }
- }else
- {
-    $result="";
- }
-
-
- //list of machines
- foreach ( $struct as $chatroomdeploy => $differentmachine){
- // deployment chatroom $k
-    foreach ( $differentmachine as $uniquehostname => $infomachine){
-        if ($infomachine['agenttype']  == "machine"){
-            // add the machine to the list
-            // $infomachine['jid'] and $infomachine['hostname'] and $infomachine['192.168.56.2']
-            $elt_values[] = $infomachine['jid'];
-            $elt_afficher[] = $infomachine['hostname'];
-            $elt_ip[] = $infomachine['ipconnection'];
-        }
-    }
- }
-
-$f = new ValidatingForm();
-        $f->push(new Table());
-        $imss = new SelectItem("Machine");
-        $imss->setElements($elt_afficher);
-        $imss->setElementsVal($elt_values);
-
-        $f->add(
-            new TrFormElement(_T("Select a machine", "xmppmaster"), $imss)
-        );
-
-        $imss = new SelectItem("package");
-        $imss->setElements($listdespackage);
-        $imss->setElementsVal($listdespackage);
-
-        $f->add(
-            new TrFormElement(_T("Select a package", "xmppmaster"), $imss)
-        );
-        $f->pop();
-        $f->addValidateButton("bvalid");
-        $f->display();
-
-
-
 ?>
