@@ -96,7 +96,23 @@ class XmppMasterDatabase(DatabaseHelper):
     # =====================================================================
     # xmppmaster FUNCTIONS
     # =====================================================================
-    
+
+    @DatabaseHelper._session
+    def logtext(self, session, text, sessionname='' , type = "noset",priority = 0, who = ''):
+        try:
+            new_log = Logs()
+            new_log.text = text
+            new_log.sessionname = sessionname
+            new_log.type = type
+            new_log.priority = priority
+            new_log.who = who
+            session.add(new_log)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+
     @DatabaseHelper._session
     def log(self, session, msg, type = "info"):
         try:

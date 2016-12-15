@@ -171,9 +171,9 @@ DROP TABLE IF EXISTS `logs`;
 CREATE TABLE `logs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `type` varchar(6) NOT NULL DEFAULT 'noset',
-  `text` tinyblob NOT NULL,
+  `text` varchar(255) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `qualificatif` varchar(40) DEFAULT '',
+  `sessionname` varchar(20) DEFAULT '',
   `priority` int(11) DEFAULT '0',
   `who` varchar(45) DEFAULT '""',
   PRIMARY KEY (`id`)

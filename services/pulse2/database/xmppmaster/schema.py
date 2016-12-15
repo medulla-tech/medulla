@@ -33,7 +33,31 @@ Base = declarative_base()
 class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
+    
+DROP TABLE IF EXISTS `logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `logs` (
 
+  
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+
+class Logs(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'logs'
+    # ====== Fields =============================
+    # Here we define columns for the table machines.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    type = Column(String(6), nullable=False,default = "noset")
+    date = Column(DateTime, default=datetime.datetime.utcnow)
+    text = Column(String(255), nullable=False)
+    sessionname = Column(String(20), nullable=False, default = "")
+    priority = Column(Integer, default = 0)
+    who = Column(String(20), nullable=False, default = "")
 
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
