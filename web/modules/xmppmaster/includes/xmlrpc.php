@@ -66,6 +66,12 @@ function xmlrpc_runXmppScript($command, $machine){
     return xmlCall("xmppmaster.runXmppScript", array($command, $machine));
 }
 
+function xmlrpc_runXmppDeployuuid( $uuid, $name, $time){
+    //deploy package by uuid machine inventory
+    //eg :xmlrpc_runXmppDeployuuid( 'UUID9' ,"7-Zip-Win32-Multi", 40);
+    return xmlCall("xmppmaster.runXmppApplicationDeployment", array("applicationdeployjsonuuid", $uuid, $name, $time));
+}
+
 function xmlrpc_runXmppDeployment( $jidrelay, $jidmachine, $name, $time){
     return xmlCall("xmppmaster.runXmppApplicationDeployment", array("applicationdeploymentjson",  $jidrelay, $jidmachine, $name, $time));
 }
