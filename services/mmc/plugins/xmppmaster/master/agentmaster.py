@@ -310,6 +310,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def subscribed(self, message):
         pass
 
+    def applicationdeployjsonuuid(self, uuidmachine, name, time, encodebase64 = False):
+        """ for deploy
+            deploy if machine in inventory
+        """
+        try:
+            objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
+            jidrelay = objmachine.groupdeploy
+            jidmachine = objmachine.jid
+            if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "" :
+                return self.applicationdeploymentjson( jidrelay, jidmachine, name, time, encodebase64 = False)
+            else:
+                logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
+                return False
+        except:
+            logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
+            return False
+
     def applicationdeploymentjson(self, jidrelay, jidmachine, name, time, encodebase64 = False):
         """ For a deployment
         1st action: synchronize the previous package name
