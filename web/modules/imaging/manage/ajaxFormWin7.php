@@ -89,14 +89,6 @@ var template = [
 '<SkipUserOOBE>true</SkipUserOOBE>',
 '<SkipMachineOOBE>true</SkipMachineOOBE>',
 '</OOBE>',
-'<AutoLogon>',
-'<Password>',
-'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
-'<PlainText>false</PlainText>',
-'</Password>',
-'<Username><? echo $strin;?>FullName<? echo $strou; ?></Username>',
-'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
-'</AutoLogon>',
 '<UserAccounts>',
 '<LocalAccounts>',
 '<LocalAccount wcm:action="add">',
@@ -146,14 +138,6 @@ var template = [
 '<SkipUserOOBE>true</SkipUserOOBE>',
 '<SkipMachineOOBE>true</SkipMachineOOBE>',
 '</OOBE>',
-'<AutoLogon>',
-'<Password>',
-'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
-'<PlainText>false</PlainText>',
-'</Password>',
-'<Username><? echo $strin;?>FullName<? echo $strou; ?></Username>',
-'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
-'</AutoLogon>',
 '<UserAccounts>',
 '<LocalAccounts>',
 '<LocalAccount wcm:action="add">',
@@ -587,13 +571,13 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? decryptSysprepPassword($parameters['Password']) : ""));
     $f->add(new HiddenTpl("PasswordEncrypted"), array("value" => "", "hide" => True));
     //_____________
-    $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
-    $Autologon->setElements($yes_no);
-    $Autologon->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
-        array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
-    );
+ //   $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
+ //   $Autologon->setElements($yes_no);
+ //   $Autologon->setElementsVal($truefalse);
+ //   $f->add(
+ //       new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
+ //       array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
+ //   );
     //_____________
 //     $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
 //     $EnableUAC->setElements($EnableDisabled);

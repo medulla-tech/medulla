@@ -106,7 +106,7 @@ jQuery(function () {
         });
         update();
     });
-    jQuery( '#Autologon' ).on('change', function () { update(); });
+//    jQuery( '#Autologon' ).on('change', function () { update(); });
     jQuery( '#EnableUAC' ).on('change', function () { update(); });
     jQuery( '#Updates' ).on('change', function () { update(); });
     jQuery( '#OrginazationName' ).on('change', function () { update(); });
@@ -194,7 +194,7 @@ function update() {
         'Description': jQuery('#Description').val(),
         'Password': jQuery('input[name=PasswordEncrypted]').val(),
         'PasswordAdmin': jQuery('input[name=PasswordAdminEncrypted]').val(),
-        'Autologon': jQuery('#Autologon').find('option:selected').val(),
+//        'Autologon': jQuery('#Autologon').find('option:selected').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
         'OrginazationName': jQuery('#OrginazationName').val(),
@@ -318,7 +318,7 @@ function update() {
                             "Description",
                             "Password",
                             "EnableUAC",
-                            "Autologon",
+//                            "Autologon",
                             "EnableFirewall"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
@@ -1692,14 +1692,14 @@ function update() {
         $InfoBule_FullName=
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
         
-        $InfoBule_Autologon=
-                        _T('Specifies the account to use to log on to the computer automatically. Autologon credentials are deleted from the unattended installation answer file after Windows Setup is complete','imaging').
-                        "\n".
-                        _T('Important','imaging').
-                        "\n".
-                        _T('Make sure Autologon is disabled on computers that are delivered to customers','imaging').
-                        "\n".
-                        _T('By default, the built-in administrator account is disabled in all default, clean installations','imaging');
+//        $InfoBule_Autologon=
+ //                       _T('Specifies the account to use to log on to the computer automatically. Autologon credentials are deleted from the unattended installation answer file after Windows Setup is complete','imaging').
+ //                       "\n".
+ //                       _T('Important','imaging').
+ //                       "\n".
+ //                       _T('Make sure Autologon is disabled on computers that are delivered to customers','imaging').
+ //                       "\n".
+ //                       _T('By default, the built-in administrator account is disabled in all default, clean installations','imaging');
 
         $InfoBule_EnableUAC= 
                         _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
