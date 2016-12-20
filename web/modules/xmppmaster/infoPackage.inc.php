@@ -47,6 +47,11 @@ $submod->addPage($page);
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("ajaxdeploylog");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();

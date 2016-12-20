@@ -30,6 +30,7 @@ margin:auto; /* exemple pour centrer */
 display:block;/* pour effectivement centrer ! */
 }
 </style>
+
 <?
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
@@ -49,18 +50,33 @@ $imss = xmlrpc_getshowmachinegrouprelayserver();
         $elt_afficher[] = $d['hostname'];
         }
     }
-    if (    isset($_POST['bvalid']) &&
-            isset($_POST['package']) &&
-            isset($_POST['Machine']) &&
-            trim($_POST['Machine'])!= "" &&
-            trim($_POST['package'])!= ""
+    if (   isset($_POST['bvalid']) &&
+        isset($_POST['package']) &&
+        isset($_POST['Machine']) &&
+        trim($_POST['Machine'])!= "" &&
+        trim($_POST['package'])!= ""
         ){
             extract($_POST);
             $Aob = explode("|", $Machine);
             $jidrelay=$Aob[0];
             $jidmachine=$Aob[1];
-            printf ("Deploy <strong>%s</strong> on Machine <strong>%s</strong> by relayserver <strong>%s</strong> ",$package,$jidmachine,$jidrelay);
-            xmlrpc_runXmppDeployment($jidrelay, $jidmachine,$_POST['package'], 40);
+            $sessionid = xmlrpc_runXmppDeployment($jidrelay, $jidmachine,$_POST['package'], 40);
+            printf ("Session %s<br>Deploy <strong>%s</strong> on Machine <strong>%s</strong> by relayserver <strong>%s</strong> ",$sessionid, $package,$jidmachine,$jidrelay);
+            ?>
+            <textarea id="dede" name="textarearesult" rows="10" cols="50"></textarea>
+            <script type="text/javascript">
+                var session = '<? echo $sessionid; ?>';
+                console.log( session );
+                //setInterval("bip", 2000) 
+                function affiche_bonjour(){
+                console.log( session );
+                    jQuery.post( "modules/xmppmaster/xmppmaster/ajaxdeploylog.php",{ data: session }, function( data ) {
+                        jQuery( "#dede" ).text( data ); 
+                    });
+                }
+                setInterval(affiche_bonjour, 3000);
+            </script>
+            <?
         }else{
             $f = new ValidatingForm();
             $f->push(new Table());
@@ -71,9 +87,11 @@ $imss = xmlrpc_getshowmachinegrouprelayserver();
             $f->add(
                 new TrFormElement(_T("Select a machine", "xmppmaster"), $imss)
             );
+
             $imss = new SelectItem("package");
             $imss->setElements($listdespackage);
             $imss->setElementsVal($listdespackage);
+
             $f->add(
                 new TrFormElement(_T("Select a package", "xmppmaster"), $imss)
             );

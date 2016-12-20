@@ -80,4 +80,8 @@ function xmlrpc_runXmppWol($pluginname, $macadress){
     return xmlCall("xmppmaster.CallXmppPlugin", array($pluginname, array("macadress"=>$macadress)));
 }
 
+function xmlrpc_getstepdeployinsession($session){
+    return xmlCall("xmppmaster.getstepdeployinsession", array($session));
+}
+
 ?>
