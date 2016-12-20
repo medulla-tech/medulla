@@ -78,6 +78,9 @@ def getListPackages():
             resultnamepackage.append(session['info']['name'])
     return resultnamepackage
 
+def getstepdeployinsession(sessionname):
+    return XmppMasterDatabase().getstepdeployinsession(sessionname)
+
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 

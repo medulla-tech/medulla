@@ -651,6 +651,32 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._session
+    def getstepdeployinsession(self, session, sessiondeploy):
+        sql = """
+                SELECT 
+            date, text
+        FROM
+            xmppmaster.logs
+        WHERE
+            type = 'deploy'
+                AND sessionname = '%s'
+        ORDER BY id;"""%(sessiondeploy)
+       
+    
+        step = session.execute(sql)
+        session.commit()
+        session.flush()
+        step
+        #return [x for x in step]
+        try:
+            a=[]
+            for t in step:
+                a.append ({'date':t[0],'text':t[1] })
+            return a
+        except:
+            return []
+
+    @DatabaseHelper._session
     def getListPresenceMachine(self, session):
         sql = """SELECT 
                     jid, agenttype, hostname
