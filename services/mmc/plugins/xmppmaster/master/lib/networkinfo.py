@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
 # (c) 2016 siveo, http://www.siveo.net
@@ -38,21 +39,24 @@ class  networkagentinfo:
         self.networkobjet(self.sessionid, self.action)
         for d in self.messagejson['listipinfo']:
             d['macnotshortened']=d['macaddress']
-            d['macaddress'] = self.shorten_mac(d['macaddress'])
+            d['macaddress'] = self.reduction_mac(d['macaddress'])
         if len(param) != 0 and len(self.messagejson['listipinfo']) != 0:
             # Filter result
             dd=[]
-            param1 = map(self.shorten_mac,param)
+            param1 = map(self.reduction_mac,param)
             for d in self.messagejson['listipinfo']:
                 e=[s for s in param1 if d['macaddress'] == s]
                 if len(e)!=0:
                     dd.append(d)
             self.messagejson['listipinfo']=dd
-    def shorten_mac(self, mac):
+
+
+    def reduction_mac(self, mac):
         mac=mac.lower()
         mac = mac.replace(":","")
         mac = mac.replace("-","")
         mac = mac.replace(" ","")
+        #mac = mac.replace("/","")
         return mac
 
     def getuser(self):
@@ -60,9 +64,10 @@ class  networkagentinfo:
             obj = utils.simplecommandstr("users")
         else:
             #todo
-            #Return windows user
+            # Return windows user
             obj={}
             obj['result']="inconue"
+            pythoncom.CoInitialize ()
             c = wmi.WMI().Win32_ComputerSystem
             computer = c()[0]
             for propertyName in sorted( list( c.properties ) ):
@@ -80,6 +85,11 @@ class  networkagentinfo:
         self.messagejson['dhcp']       = 'False'
         self.messagejson['dnshostname']= ''
         self.messagejson['msg']        = platform.system()
+        try :
+            self.messagejson['users']=self.getuser()
+        except:
+            self.messagejson['users']=["system"]
+
         if sys.platform.startswith('linux'):
                 # Linux-specific code here...
                 p = subprocess.Popen("ps aux | grep dhclient | grep -v leases | grep -v grep | awk '{print $NF}'",
@@ -92,7 +102,6 @@ class  networkagentinfo:
                     self.messagejson['dhcp']   = 'True'
                 else:
                     self.messagejson['dhcp']   = 'False'
-
                 self.messagejson['listdns']    = self.listdnslinux()
                 self.messagejson['listipinfo'] = self.getLocalIipAddress()
                 self.messagejson['dnshostname']= platform.node()
@@ -120,7 +129,6 @@ class  networkagentinfo:
                 objnet['mask']       = dev.IPSubnet[0]
                 objnet['dhcp']       = dev.DHCPEnabled
                 objnet['dhcpserver'] = dev.DHCPServer
-                objnet['brodcast'] = ''
                 self.messagejson['listipinfo'].append(objnet)
                 try:
                     self.messagejson['listdns'].append( dev.DNSServerSearchOrder[0] )
@@ -167,7 +175,7 @@ class  networkagentinfo:
         obj1={}
         system=""
         ipdhcp = ""
-        ipaddress = ""
+        ipadress = ""
         p = subprocess.Popen('cat /proc/1/comm',
                                 shell=True,
                                 stdout=subprocess.PIPE,
@@ -190,6 +198,7 @@ class  networkagentinfo:
                 d = result[i].split("@")
                 obj1[d[0]]=d[1]
         elif system == "systemd":
+            #p = subprocess.Popen('systemctl status network | grep -i "dhclient\["',
             p = subprocess.Popen('journalctl | grep "dhclient\["',
                                     shell=True,
                                     stdout=subprocess.PIPE,
@@ -201,17 +210,17 @@ class  networkagentinfo:
                 colonne=i.split(" ")
                 if "DHCPACK" in i:
                     ipdhcp = ""
-                    ipaddress = ""
+                    ipadress = ""
                     ipdhcp = colonne[-1:][0]
                 elif "bound to" in i:
                     for z in colonne:
                         if self.validIP(z):
-                            ipaddress = z
+                            ipadress = z
                             if  ipdhcp != "":
-                                obj1[ipaddress] = ipdhcp
+                                obj1[ipadress] = ipdhcp
                             break
                     ipdhcp = ""
-                    ipaddress = ""
+                    ipadress = ""
                 else:
                     continue
         return obj1
@@ -246,10 +255,11 @@ class  networkagentinfo:
                 result = p.stdout.readlines()
                 code_result= p.wait()
                 if code_result == 0 :
+                    #print if_mac
+                    #print if_ip
                     partinfo={}
                     partinfo["dhcpserver"] = ''
                     partinfo["dhcp"] = 'False'
-                    partinfo["brodcast"] = ''
                     for i in result:
                         i = i.rstrip('\n')
                         colonne = i.split("=")
@@ -287,9 +297,8 @@ class  networkagentinfo:
                 pass
         return self.messagejson
 
-    ###linux
     def getLocalIipAddress(self):
-        # Return linux network object
+        #renvoi objet reseaux linux.
         dataroute = self.routeinterface()
         dhcpserver = self.IpDhcp()
         ip_addresses = []
@@ -342,6 +351,13 @@ class  networkagentinfo:
             dns.append(i.rstrip('\n'))
         return dns
 
+
+"""
+cads ubuntu
+l’activation par défaut du paquet resolvconf. Ce paquet permet de gérer le contenu du fichier resolv.conf de façon plus précise. Tout ce passe dans le dossier /etc/resolvconf/resolv.conf.d/. Il contient trois fichiers : base, head, original, qui ont chacun un rôle plus ou moins important dans le contenu du resolv.conf.
+
+"""
+###
 class updatedns:
     def __init__(self, sessionid, action ='resultupdatednsinfo',param=[]):
         self.sessionid = sessionid
@@ -358,6 +374,7 @@ class updatedns:
         if sys.platform.startswith('linux'):
             mon_fichier = open("/etc/resolv.conf", "wb")
             for t in param:
+                #if is_valid_ipv4(param):
                 mon_fichier.write("nameserver\t%s"%param)
             print windowsservice('networking','restart')
         elif sys.platform.startswith('win'):
@@ -365,9 +382,8 @@ class updatedns:
         elif sys.platform.startswith('darwin'):
             pass
         else:
-            self.messagejson['data']['msg']="Error: command ignored yet"
+            self.messagejson['data']['msg']="Error: command on OS not managed"
             self.messagejson['ret']=254
-
 
 def interfacename(mac):
     for i in netifaces.interfaces():
@@ -439,7 +455,7 @@ def rewriteInterfaceTypeDebian(data,interface ):
         inputFile = open("/etc/network/interfaces", 'rb')
         contenue = inputFile.read()
         inputFile.close()
-        # Save config file
+        #sauve fichier de conf
         inputFile = open("/etc/network/interfacesold", 'wb')
         inputFile.write(contenue)
         inputFile.close()
@@ -473,7 +489,7 @@ def rewriteInterfaceTypeDebian(data,interface ):
 
 def typelinuxfamily():
     debiandist = ['astra', 'canaima', 'collax', 'cumulus', 'damn', 'debian', 'doudoulinux', 'euronode', 'finnix', 'grml', 'kanotix', 'knoppix', 'linex', 'linspire',   'advanced', 'lmde', 'mepis','ocera', 'ordissimo','parsix', 'pureos', 'rays', 'aptosid', 'ubuntu', 'univention', 'xandros']
-    redhadlist=['centos', 'rhel', 'redhat', 'fedora', 'mageia','mga', 'mandiva', 'suse', 'oracle', 'scientific', 'fermi']
+    redhadlist=['centos', 'rhel', 'redhat', 'fedora', 'mageia','mga', 'mandriva', 'suse', 'oracle', 'scientific', 'fermi']
     val = platform.platform().lower()
     for t in debiandist:
         if t in val:
@@ -490,13 +506,17 @@ def getsystemressource():
     system=result[0].rstrip('\n')
     return system
 
-def getWindowsNameInterfaceForMacadress(macaddress):
+def getWindowsNameInterfaceForMacadress(macadress):
     obj = utils.simplecommand("wmic NIC get MACAddress,NetConnectionID")
     for lig in obj['result']:
         l = lig.lower()
-        mac = macaddress.lower()
+        mac = macadress.lower()
         if l.startswith(mac):
             element=lig.split(' ')
             element[0]=''
             fin = [x for x in element if x.strip()!=""]
             return  " ".join(fin)
+
+def getUserName():
+    if sys.platform.startswith('linux'):
+        obj = simplecommand("who | cut -d" "  -f1 | uniq")

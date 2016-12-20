@@ -756,3 +756,19 @@ class XmppMasterDatabase(DatabaseHelper):
             return [(m[1],m[0]) for m in ret]
         else:
             return []
+
+    @DatabaseHelper._session
+    def getPresencejid(self, session, jid):
+        sql = """SELECT COUNT(jid) AS nb
+            FROM
+                 xmppmaster.machines
+             WHERE
+              jid LIKE ('%s%%');"""%(jid)
+        print sql 
+        presencejid = session.execute(sql)
+        session.commit()
+        session.flush()
+        ret=[m[0] for m in presencejid]
+        if ret[0] == 0 :
+            return False
+        return True
