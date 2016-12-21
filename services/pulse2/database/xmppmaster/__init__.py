@@ -764,7 +764,6 @@ class XmppMasterDatabase(DatabaseHelper):
                  xmppmaster.machines
              WHERE
               jid LIKE ('%s%%');"""%(jid)
-        print sql 
         presencejid = session.execute(sql)
         session.commit()
         session.flush()
