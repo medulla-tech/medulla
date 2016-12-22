@@ -681,9 +681,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         ### Message from chatroom master
         ### jabber routes the message.
 
-        if msg['from'].bare == self.config.jidchatroommaster:
-            """ message all members of chatroom master """
-            return False
+        #if msg['from'].bare == self.config.jidchatroommaster:
+            #""" message all members of chatroom master """
+            #return False
         if  msg['body'] == "This room is not anonymous":
             return False
         restartAgent = False
@@ -858,22 +858,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # for sub network subnetxmpp
                 self.updateguacamoleconfig[data['subnetxmpp']] = True
                 return True
-            #elif data['action'] == 'participant':
-                ## avoir plutot une requette sql
-                ##resultcommand={'action' : 'participant',
-                                ##'participant' : self.presencedeployment }
-                ##self.send_message(mto=msg['from'],
-                        ##mbody=json.dumps(resultcommand),
-                        ##mtype='chat')
-                #return True
-            #elif data['action'] == 'listparticipant':
-                ##resultcommand={'action' : 'listparticipant',
-                                ##'participant' : self.presencedeployment }
-                ##self.send_message(mto=msg['from'],
-                        ##mbody=json.dumps(resultcommand),
-                        ##mtype='chat')
-                #return True
-            return True
+            return False
         except Exception as e:
             print "ERROR : machine info %s"%(str(e))
             traceback.print_exc(file=sys.stdout)
