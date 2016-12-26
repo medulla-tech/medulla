@@ -50,7 +50,7 @@ function getExtension(filename){
                             jQuery('#Location').val();
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
                 }
-                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
+                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=sysprepList");
         });
     }
 jQuery(function () {
