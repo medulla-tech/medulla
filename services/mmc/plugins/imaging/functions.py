@@ -2610,6 +2610,20 @@ class ImagingRpcProxy(RpcProxyI):
                 f.close()
                 return True
 
+    def editWindowsAnswerFile(self, xmlWAFG, title):
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+
+        #test if file already exists
+        if path.isfile(filexml+title) :
+            try :
+                f = open(filexml+title, 'w')
+                f.write(xmlWAFG)
+            except Exception, e:
+                logging.getLogger().exception(e)
+                return False
+            else:
+                f.close()
+
     def getWindowsAnswerFileParameters(self, filename):
         """
         return the parameters list of sysprep answer file

@@ -23,59 +23,36 @@
  ?>
 <script type="text/javascript">
 
-
-
 function getExtension(filename){
         var parts = filename.split(".");
         return (parts[(parts.length-1)]);
     }
-    
+
     jQuery( "#bvalid").click(function() {
         if(jQuery('#Location').val()=="" || jQuery('#Location').val()==".xml"){
             jQuery('#Location').focus()
         }
         else{
-            createxml()
+            createxml();
         }
     });
     createxml = function(){
-    
-    
         jQuery.post( "modules/imaging/manage/ajaxgenereAWFGxml.php", 
                             { 
                                 data:  jQuery('#codeTocopy2').text(),
-                                titre: jQuery('#Location').val() 
+                                title: jQuery('#Location').val() 
         })
-        .done(function( data1 ) {        
+        .done(function( data1 ) {
             var file =  '  <? echo _T('File','imaging'); ?>  ';  
             var avai =  ' <? echo _T('available','imaging'); ?>'; 
                 if(data1 == 1){
                     var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" + 
-                            jQuery('#Location').val() ;
+                            jQuery('#Location').val();
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
                 }
                 window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
         });
     }
- /*   
- //button subtmit form
-jQuery( "#buttonform" ).click(function() {
-  if( jQuery('#Location').val() != "" ){
-   if(getExtension( jQuery('#Location').val() ) != "xml"){
-    var namefile=jQuery('#Location').val() + ".xml"
-      jQuery('#Location').val( namefile )
-   }
-   jQuery('input[name=bvalidbutton]').val("1");
-   jQuery( "#formxml" ).submit();
-   return false;
-  }
-  jQuery('#Location').focus()
-  return false;
-});*/
-
-
-
-
 jQuery(function () {
     jQuery('#Comments').bind('input propertychange', function() { update();});
     jQuery( '#Location' ).on('change', function () {
@@ -121,8 +98,15 @@ jQuery(function () {
     jQuery( '#PartitionOrder' ).on('change', function () { update(); });
     jQuery( '#Group' ).on('change', function () { update(); });
     jQuery( '#Description' ).on('change', function () { update(); });
-    jQuery( '#Password' ).on('change', function () { update(); });
-    jQuery( '#Autologon' ).on('change', function () { update(); });
+    jQuery( '#Password' ).on('change', function () {
+        jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',
+        {data:jQuery('#Password').val(),passwordType:'normal'}).done(function(result){
+            jQuery('input[name=PasswordEncrypted]').val(result.slice(0,-1));
+            update();
+        });
+        update();
+    });
+//    jQuery( '#Autologon' ).on('change', function () { update(); });
     jQuery( '#EnableUAC' ).on('change', function () { update(); });
     jQuery( '#Updates' ).on('change', function () { update(); });
     jQuery( '#OrginazationName' ).on('change', function () { update(); });
@@ -131,10 +115,15 @@ jQuery(function () {
     jQuery( '#ControlPanelView' ).on('change', function () { update(); });
     jQuery( '#ControlPanelIconSize' ).on('change', function () { update(); });
     jQuery( '#DownloadButton' ).on('change', function () { update(); });
-    jQuery( '#PasswordAdmin' ).on('change', function () { update(); });
+    jQuery( '#PasswordAdmin' ).on('change', function () {
+jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',{data:jQuery('#PasswordAdmin').val(),passwordType:'admin'}).done(function(result){
+            jQuery('input[name=PasswordAdminEncrypted]').val(result.slice(0,-1));
+            update();
+        });
+        update();
+    });
     update();
 });
-
 
 function update() {
     Msgxml  = "To have the Windows Answer File Generator on \n" + 
@@ -148,7 +137,7 @@ function update() {
     }
     if( jQuery('#Location').val() == "" ||  jQuery('#Location').val() == ".xml" ){
             erreur = 1;
-            msg = "<? echo _T('title missing','imaging'); ?>";
+            msg = "<? echo _T('title missing ex : sysprep.xml','imaging'); ?>";
     }
     if(erreur != 0 ){
             jQuery("#msg_bvalid").text(msg)
@@ -203,9 +192,9 @@ function update() {
         'PartitionOrder': jQuery('#PartitionOrder').find('option:selected').val(),
         'Group': jQuery('#Group').find('option:selected').val(),
         'Description': jQuery('#Description').val(),
-        'Password': jQuery('#Password').val(),
-        'PasswordAdmin': jQuery('#PasswordAdmin').val(),
-        'Autologon': jQuery('#Autologon').find('option:selected').val(),
+        'Password': jQuery('input[name=PasswordEncrypted]').val(),
+        'PasswordAdmin': jQuery('input[name=PasswordAdminEncrypted]').val(),
+//        'Autologon': jQuery('#Autologon').find('option:selected').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
         'OrginazationName': jQuery('#OrginazationName').val(),
@@ -247,11 +236,11 @@ function update() {
     };
     fn_General_Settings=function(){
         var list_id_masque=[//'SkipProductKey',
-                            'AcceptEULA',
+//                             'AcceptEULA',
                             'ComputerName',
                             'SetupUILanguage',
-                            'SkipRearm',
-                            'SkipAutoActivation'];
+//                             'SkipRearm',
+                            /*'SkipAutoActivation'*/];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -279,8 +268,6 @@ function update() {
     };
     fn_Out_Of_Box_Experience=function(){
         var list_id_masque=["NetworkLocation",
-                            "ProtectComputer",
-                            "Updates",
                             "HideEULA",
                             "DaylightSettings",
                             "HideWireless",
@@ -313,25 +300,25 @@ function update() {
             jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
-    fn_Administrators_Account=function(){
-        var list_id_masque=["PasswordAdmin"];
-        jQuery.each(list_id_masque, function( index,value) {
-            jQuery('#'+value).parents("tr").toggle();
-        });
-        if (jQuery('#'+list_id_masque[0]).is(":visible")){
-            jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
-        }
-        else{
-            jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
-        }
-    };
+//     fn_Administrators_Account=function(){
+//         var list_id_masque=["PasswordAdmin"];
+//         jQuery.each(list_id_masque, function( index,value) {
+//             jQuery('#'+value).parents("tr").toggle();
+//         });
+//         if (jQuery('#'+list_id_masque[0]).is(":visible")){
+//             jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
+//         }
+//         else{
+//             jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
+//         }
+//     };
     fn_User_Account=function(){
         var list_id_masque=["FullName",
                             "Group",
                             "Description",
                             "Password",
                             "EnableUAC",
-                            "Autologon",
+//                            "Autologon",
                             "EnableFirewall"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
@@ -358,7 +345,7 @@ function update() {
     };
 
     fn_Specialize_Settings=function(){
-        var list_id_masque=["CopyProfile",
+        var list_id_masque=[/*"CopyProfile",*/
                             "ShowWindowsLive",
                             "ExtendOSPartition"];
         jQuery.each(list_id_masque, function( index,value) {
@@ -378,7 +365,7 @@ function update() {
     fn_Regional_Settings()
     fn_Out_Of_Box_Experience()
     fn_Partition_Settings()
-    fn_Administrators_Account()
+//     fn_Administrators_Account()
     fn_Installation_Notes()
     fn_awfg_show()
 </script>
@@ -1705,14 +1692,14 @@ function update() {
         $InfoBule_FullName=
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
         
-        $InfoBule_Autologon=
-                        _T('Specifies the account to use to log on to the computer automatically. Autologon credentials are deleted from the unattended installation answer file after Windows Setup is complete','imaging').
-                        "\n".
-                        _T('Important','imaging').
-                        "\n".
-                        _T('Make sure Autologon is disabled on computers that are delivered to customers','imaging').
-                        "\n".
-                        _T('By default, the built-in administrator account is disabled in all default, clean installations','imaging');
+//        $InfoBule_Autologon=
+ //                       _T('Specifies the account to use to log on to the computer automatically. Autologon credentials are deleted from the unattended installation answer file after Windows Setup is complete','imaging').
+ //                       "\n".
+ //                       _T('Important','imaging').
+ //                       "\n".
+ //                       _T('Make sure Autologon is disabled on computers that are delivered to customers','imaging').
+ //                       "\n".
+ //                       _T('By default, the built-in administrator account is disabled in all default, clean installations','imaging');
 
         $InfoBule_EnableUAC= 
                         _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
@@ -1786,314 +1773,51 @@ function update() {
                         _T("In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 which represents the index of the color scheme as viewed in the out-of-box experience (OOBE) phase. The colors are indexed in the same manner as Windows 8 colors, from left to right. Samples of the color choices are shown in the following image", "imaging");
                         
         $InfoBule_showxml=
-                        _T("Show file XML AWFG", "imaging");   
-                        
-    class  TrFormElementcollapse extends TrFormElement{
-        function TrFormElementcollapse( $tpl, $extraInfo = array()){
-            parent::TrFormElement($desc, $tpl, $extraInfo);
-        }
-        
-        function display($arrParam = array()) {
-            if (empty($arrParam))
-                $arrParam = $this->options;
-            if (!isset($this->cssErrorName))
-                $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
-            printf('<tr');
-            if ($this->class !== null)
-                printf(' class="%s"', $this->class);
-    //         if ($this->style !== null)
-    //             printf(' style="%s"', $this->style);
-            printf('><td colspan="2"');
-            if ($this->style !== null){
-                printf(' style="%s" ', $this->style);
-            }
-            printf('>');
-            $this->template->display($arrParam);
-            print "</td></tr>";
-        }
-        
-    }
-   
-    
-    function attribut($val,$val1=null){
-        if(isset($val1)){
-            $valeur[0]=$val;
-            $valeur[1]=$val1;
-        }
-        else{
-            $valeur=explode ( "=", $val );
-        }
-        if(isset($valeur[1])){
-            $valeur[0] = trim ( $valeur[0], "\"' " );
-            $valeur[1] = trim ( $valeur[1], "\"' " );
-            if($valeur[1]!="")
-                return $valeur[0]."="."'$valeur[1]'";
-            else
-                return "";
-        }
-        return "";
-    }
-    
-    function add_attribut($attribut){
-        $valattribut="";
-        if (isset($attribut)) {
-            if (is_array($attribut)){
-                foreach ($attribut as $k => $v) {
-                    if (! is_int ( $k )){
-                        $valattribut.=' '.$k.'="'. $v . '"';
-                    }
-                    elseif ($v != "" ){
-                        $valattribut.= ' '. $v;
-                    }
-                }
-            }
-        }elseif ($attribut != "") {
-            $valattribut.=' id="'. $id . '"';
-        } 
-        return $valattribut;
-    }
+                        _T("Show file XML AWFG", "imaging");
 
-    function add_element($element,$name="",$id="",$attribut="",$value="",$stylebalise="xhtml"){
-        $elementhtml.="<".$element;
-        if (isset($name) && $name!="") {
-            $elementhtml.=' name="'. $name . '"';
-        }
-        if (isset($id) && $id != "") {
-            $valid="";
-            if (is_array($id)){
-                $id=implode ( " " , $id );
-            }  
-            $elementhtml.=' id="'. $id . '"';
-        }
-        if ($attribut != "") {
-            $elementhtml.= ' '. add_attribut($attribut);
-        }
-        if(!isset($value)){
-            $value="";
-        }
-        if(isset($stylebalise) && $stylebalise=="xhtml"){
-            $elementhtml.=">".$value."</".$element.">";
-        }
-        else{
-            $elementhtml.=">";
-        }
-        return $elementhtml;
-    }   
-/**
- * simple input template
- */
-class InputTplTitle extends InputTpl {
-    var $title;
-    function InputTplTitle($name,$title=null,$regexp = '/.+/'){
-        $this->title=$title;
-        parent::InputTpl($name,$regexp);
-    }
+//Decrypt the string paramater which is a password
+/*
+	1 - convert base64 password parameter to normal string
+	2 - remove all 00h characters include in string
+	3 - remove 'Password' added to plain text password
+*/
+function decryptSysprepPassword($password)
+{
+	$baseCode = base64_decode($password);
+	$baseCode = str_split($baseCode);
 
-    /**
-     *  display input Element
-     *  $arrParam accept ["value"] to corresponding value
-     */
-    function display($arrParam = array()) {
-        if ($arrParam == '') {
-            $arrParam = $_POST[$this->name];
-        }
-        if (!isset($arrParam['disabled'])) {
-            $arrParam['disabled'] = '';
-        }
-        if (!isset($arrParam['placeholder'])) {
-            $arrParam['placeholder'] = '';
-        }
-
-        $attrs = array(
-            attribut('type',$this->fieldType),
-            attribut('size',$this->size),
-            attribut('value',$arrParam["value"]),
-            attribut('placeholder="' . $arrParam["placeholder"].'"'),
-            attribut($arrParam["disabled"]),
-            attribut("title",$this->title),
-            attribut( isset($arrParam["required"]) ? ' rel="required" ' : ''),
-            attribut( isset($arrParam["required"]) ? ' required="required" ' : ''), 
-            attribut("data-regexp",$this->regexp),
-            attribut("maxlength",$arrParam["maxlength"]),
-            attribut("title",$this->title),           
-            attribut('autocomplete="off"')
-        );
-      
-        echo add_element('span',
-                "" ,
-                "container_input_$this->name",
-                "" ,
-                add_element('input', $this->name, $this->name,$attrs, "", "html" ),
-                "xhtml" );
-        if (isset($arrParam["onchange"])) {
-            print '<script type="text/javascript">';
-            print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
-            print '</script>';
-        }
-    }
-}
-
-class SelectItemtitle extends SelectItem {
-    var $title;
-    /**
-     * constructor
-     */
-    function SelectItemtitle($idElt, $title=null, $jsFunc = null, $style = null) {
-        $this->title=$title;
-        parent::SelectItem($idElt, $jsFunc, $style);
-    }
-    function to_string($paramArray = null) {
-        $ret = "<select";
-        if ($this->title){
-            $ret .= " title=\"" . $this->title . "\"";
-        }
-        if ($this->style) {
-            $ret .= " class=\"" . $this->style . "\"";
-        }
-        if ($this->jsFunc) {
-            $ret .= " onchange=\"" . $this->jsFunc . "(";
-            if ($this->jsFuncParams) {
-                $ret .= implode(", ", $this->jsFuncParams);
-            }
-            $ret .= "); return false;\"";
-        }
-        $ret .= isset($paramArray["required"]) ? ' rel="required"' : '';
-        $ret .= " name=\"" . $this->name . "\" id=\"" . $this->id . "\">\n";
-        $ret .= $this->content_to_string($paramArray);
-        $ret .= "</select>";
-        return $ret;
-    }
-}
-
- /**
- * class add icone clikable as a HtmlElement
- * click launch function fn_"id_element"
- */
-class IconeElement extends HtmlElement {
-    function IconeElement($id, $src, $alt="", $title="", $params = array()) {
-        $this->id = $id;
-        $this->src = $src;
-        $this->alt = $alt;
-        $this->params = $params;
-        $this->title = $title;
-        $this->style= "";
-    }
-    function setstyle($sty){
-        $this->style=$sty;
-    }
-    function display($arrParam = array()) {
-        echo '<img src="'.$this->src.'" id="'.$this->id.'" ';
-        echo ($this->alt != "") ? "alt='$this->alt'" : "alt='image' ";
-        echo ($this->title != "") ? "title='$this->title' " : " ";
-        if( $this->style != "")
-            echo " style='position:relative; top: 3px;cursor: s-resize;' />";
-        else
-            echo " style='".$this->style."' />";
-                      echo "<script type='text/javascript'>
-                        jQuery('#".$this->id."').click(function(){fn_".$this->id."()});
-                        </script>\n";
-    }
-}
-class Iconereply extends IconeElement {
-    function Iconereply($id,$title){
-        parent::IconeElement($id,'modules/imaging/graph/images/imaging-add.png',"",$title);
-    }
-}
-
-class buttonTpl extends HtmlElement {
-    var $class = '';
-    var $cssClass = 'btn btn-small';
-
-    function buttonTpl($id, $value, $class='', $infobulle='', $params = array()) {
-        $this->id = $id;
-        $this->value = $value;
-        $this->class = $class;
-        $this->infobulle = $infobulle;
-        $this->params = $params;
-        $this->style='';
-    }
-    
-    function setstyle($sty){
-        $this->style=$sty;
-    }
-    
-    function setClass($class) {
-        $this->cssClass = $class;
-    }
-
-    function display($arrParam = array()) {      
-        if (isset($this->id,$this->value))
-            printf('<span style="color : red;" id="msg_%s">title missing</span><br><input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
-                    $this->id,$this->id,
-                    $this->infobulle,
-                    $this->value,
-                    $this->cssClass,
-                    $this->class);
-    }
-}
-
-class SpanElementtitle extends HtmlElement {
-
-    function SpanElementtitle($content, $class = Null,$title=Null,$id=null) {
-        $this->name = $class;
-        $this->content = $content;
-        $this->class = $class;
-        $this->title = $title;
-        $this->id=$id;
-    }
-
-    function display($arrParam = array()) {
-        if ($this->class) {
-            $class = ' class="' . $this->class . '"';
-        } else {
-            $class = '';
-        }
-        printf('<span%s id="%s" title="%s" >%s</span>', $class, $this->id, $this->title, $this->content);
-    }
-}
-class OptTextareaTpl extends AbstractTpl{
-	var $options = [];
-
-	function __construct($array = [])
+	$code = array();
+	for($position = 0; $position<count($baseCode);$position++)
 	{
-		if(!isset($array['rows']))
+		if($position %2 == 0)
 		{
-			$array['rows'] = 3;
+			$code[] = $baseCode[$position];
 		}
-		if(!isset($array['cols']))
-		{
-			$array['cols'] = 21;
-		}
-		if(!isset($array['value']))
-		{
-			$array['value']='';
-		}
-		if(!isset($array['id']))
-		{
-			$array['id'] = $array['name'];
-		}
-		$this->options = $array;
 	}
-	
-	function display()
-	{
-	$str ="";
-		foreach($this->options as $key=>$value)
-		{
-			if($key != 'value')
-			{
-				$str .= $key.'="'.$value.'"';
-			}
-		}
-		echo '<textarea '.$str.'>'.$this->options['value'].'</textarea>';
-	}
+		$code = implode($code);
+		return substr($code,0,-8);
 }
 
-class sepTpl extends AbstractTpl{
+//Decrypt the string paramater which is a password
+/*
+       1 - convert base64 password parameter to normal string
+       2 - remove all 00h characters include in string
+       3 - remove 'AdministratorPassword' added to plain text password
+*/
+function decryptSysprepAdminPassword($adminPassword)
+{
+	$baseCode = base64_decode($adminPassword);
+	$baseCode = str_split($baseCode);
 
-	function display()
+	$code = array();
+	for($position = 0; $position<count($baseCode);$position++)
 	{
-		echo '<hr />';
+		if($position %2 == 0)
+		{
+			$code[] = $baseCode[$position];
+		}
 	}
+		$code = implode($code);
+		return substr($code,0,-21);
 }
 ?>
