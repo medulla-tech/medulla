@@ -50,7 +50,7 @@ function getExtension(filename){
                             jQuery('#Location').val();
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
                 }
-                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=sysprepList");
+                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
         });
     }
 jQuery(function () {
@@ -106,7 +106,6 @@ jQuery(function () {
         });
         update();
     });
-//    jQuery( '#Autologon' ).on('change', function () { update(); });
     jQuery( '#EnableUAC' ).on('change', function () { update(); });
     jQuery( '#Updates' ).on('change', function () { update(); });
     jQuery( '#OrginazationName' ).on('change', function () { update(); });
@@ -122,6 +121,11 @@ jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',{data:jQuery('#Pas
         });
         update();
     });
+	jQuery( '#Domain' ).on('change', function () { update(); });
+	jQuery( '#DomainPassword' ).on('change', function () { update(); });
+	jQuery( '#DomainUser' ).on('change', function () { update(); });
+	jQuery( '#JoinDomain' ).on('change', function () { update(); });
+	jQuery( '#MachineObjectOU' ).on('change', function () { update(); });
     update();
 });
 
@@ -194,7 +198,6 @@ function update() {
         'Description': jQuery('#Description').val(),
         'Password': jQuery('input[name=PasswordEncrypted]').val(),
         'PasswordAdmin': jQuery('input[name=PasswordAdminEncrypted]').val(),
-//        'Autologon': jQuery('#Autologon').find('option:selected').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
         'OrginazationName': jQuery('#OrginazationName').val(),
@@ -202,7 +205,12 @@ function update() {
         'CEIPEnabled':jQuery( '#CEIPEnabled').find('option:selected').val(),  
         'ControlPanelView': jQuery('#ControlPanelView').find('option:selected').val(),
         'ControlPanelIconSize': jQuery('#ControlPanelIconSize').find('option:selected').val(),
-        'dateval': dateval
+        'dateval': dateval,
+		'Domain': jQuery('#Domain').val(),
+		'DomainPassword': jQuery('#DomainPassword').val(),
+		'DomainUser' : jQuery('#DomainUser').val(),
+		'JoinDomain' : jQuery('#JoinDomain').val(),
+		'MachineObjectOU' : jQuery('#MachineObjectOU').val(),
     };
         listParameters={}
 
@@ -1421,7 +1429,6 @@ function update() {
                                         _T('Enable','imaging'),
                                         _T('Disabled','imaging'));
 
-                                        
 //Windows 8
         $InfoBule_CEIPEnabled=
                         _T('CEIPEnabled indicates whether the Windows Customer Experience Improvement Program (CEIP) is enabled','imaging').
@@ -1446,20 +1453,20 @@ function update() {
 
         $InfoBule_TimeZone= 
                         _T('Specifies the time zone of the computer. The time zones that are specified in Windows System Image Manager are not localized','imaging');
-        
+
         $InfoBule_Installation_Notes=
                         _T("Meta Information xml", "imaging");
         
         $InfoBule_General_Settings = 
                         _T("Configure General Settings", "imaging");                        
-                                
+
         $InfoBule_ProductKey=
                         _T('Specifies the key used to activate Windows','imaging').
                         "\n".
                         _T('IMPORTANT','imaging').
                         "\n".
                         _T('Entering an invalid product key in the answer file will cause Windows Setup to fail','imaging');                        
-                                
+
         $InfoBule_AcceptEULA=
                         _T('Specifies whether to automatically accept the Microsoft Software License Terms','imaging').
                         "\n".
@@ -1470,8 +1477,7 @@ function update() {
                         _T('No','imaging').
                         " : ".
                         _T('Prompts the user to accept the license terms before proceeding with Windows Setup','imaging');                        
-                                
-                                
+
         $InfoBule_SkipAutoActivation=  
                         _T("Specifies whether Windows attempts to automatically activate",'imaging').
                         "\n".
@@ -1484,7 +1490,7 @@ function update() {
                         _T("false",'imaging').
                         " : ".
                         _T("Specifies that Windows attempts to automatically activate",'imaging');                        
-                                
+
         $InfoBule_SkipRearm= 
                         _T('Specifies whether to run the Windows Software Licensing Rearm program','imaging').
                         "\n".
@@ -1495,33 +1501,34 @@ function update() {
                         _T('No','imaging').
                         " : "
                         ._T('Specifies that the computer is rearmed, restoring the computer to the original, out-of-box state. All activation-related licensing and registry data is removed or reset, and any grace period timers are also reset.','imaging');                        
-                                
+
         $InfoBule_SetupUILanguage=
                         _T('SetupUILanguage defines the language to use in Windows Setup and Windows Deployment Services','imaging');                        
-                                
+
         $Infobule_ComputerName= 
                         _T("Specifies the computer name used to access the computer from the network",'imaging');
 
         $InfoBule_OrginazationName= 
                         _T("Specifies the name of the organization that owns the computer",'imaging');                        
-   
+
         $InfoBule_UserLocale=
-                        _T('Specifies the per-user settings used for formatting dates, times, currency, and numbers in a Windows installation','imaging');                        
-                                
+                        _T('Specifies the per-user settings used for formatting dates, times, currency, and numbers in a Windows installation','imaging');
+
         $Infobule_InputLocale=    
                         _T('Specifies the input language and keyboard layout for a Windows installation', "imaging");                        
-                                
+
         $Infobule_Partition_Settings=
                         _T("Configure Partition Settings", "imaging");                        
-                                
+
         $InfoBule_Label=
                         _T('Main Partition Label','imaging');
-                                
+
         $InfoBule_User_Account = 
                         _T("Configure User Account", "imaging");                        
-                                
+
         $InfoBule_Updates=
                         _T('CommandLine reg','imaging');
+
         $InfoBule_Out_Of_Box_Experience=
                         _T("OOBE specifies the out-of-box experience for the end user", "imaging").
                         "\n".
@@ -1625,13 +1632,13 @@ function update() {
                         _T('false','imaging').
                         " : ".
                         _T('Specifies that Welcome Center is shown','imaging');
-                        
+
         $InfoBule_ControlPanelView= 
                         _T('CommandLine reg Set the Control Panel View to Small Icons','imaging');
 
         $InfoBule_ControlPanelIconSize= 
                         _T('CommandLine reg ControlPanel AllItemsIconView','imaging');
-        
+
         $InfoBule_WipeDisk= 
                         _T('Specifies whether to erase all partitions on the hard disk before adding additional configurations to the disk','imaging').
                         "\n".   
@@ -1672,34 +1679,24 @@ function update() {
                         _T('Synchronous commands start in the order specified in the unattended installation answer file, and each command must finish before the next command starts','imaging').
                         "\n".
                         _T('Synchronous commands are always run before asynchronous commands in the same configuration pass','imaging');
-                        
+
         $InfoBule_Administrators_Account= 
                         _T("Configure Administrators Account", "imaging");
-                        
+
         $InfoBule_PasswordAdmin=
                         _T('Specifies the administrator password of the computer and whether it is hidden in the unattended installation answer file','imaging');
-                        
+
         $InfoBule_Group=
-                        _T('Specifies the name of an existing local security group to which a new LocalAccount will be added during installation','imaging');              
-                        
-                        
+                        _T('Specifies the name of an existing local security group to which a new LocalAccount will be added during installation','imaging');
+
         $InfoBule_Description=
                         _T('Specifies a LocalAccount','imaging');
-        
+
         $InfoBule_Password= 
                         _T('Specifies the password for a LocalAccount and whether the password is hidden in the unattended installation answer file','imaging');
-        
+
         $InfoBule_FullName=
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
-        
-//        $InfoBule_Autologon=
- //                       _T('Specifies the account to use to log on to the computer automatically. Autologon credentials are deleted from the unattended installation answer file after Windows Setup is complete','imaging').
- //                       "\n".
- //                       _T('Important','imaging').
- //                       "\n".
- //                       _T('Make sure Autologon is disabled on computers that are delivered to customers','imaging').
- //                       "\n".
- //                       _T('By default, the built-in administrator account is disabled in all default, clean installations','imaging');
 
         $InfoBule_EnableUAC= 
                         _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
@@ -1762,18 +1759,25 @@ function update() {
 
         $InfoBule_ExtendOSPartition=
                         _T("Specifies whether to extend the partition to fill the entire hard disk", "imaging");
-                        
-                        
-                        
+
         $InfoBule_backgroundWin8=
                         _T("In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as shown in the following image, which represents the index of the color scheme as viewed in the SystemSettings", "imaging");
-                        
 
         $InfoBule_backgroundWin81=
                         _T("In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 which represents the index of the color scheme as viewed in the out-of-box experience (OOBE) phase. The colors are indexed in the same manner as Windows 8 colors, from left to right. Samples of the color choices are shown in the following image", "imaging");
-                        
+
         $InfoBule_showxml=
                         _T("Show file XML AWFG", "imaging");
+
+		$InfoBule_Domain=_T("Domain specifies the name of the domain used for an account authentication. Domain is used to authenticate an account before the computer can be joined to a domain during Windows Setup.", "imaging");
+
+		$InfoBule_DomainPassword=_T("Password specifies the password of the user account used for authentication of an account to the domain before the computer can be joined to a domain during Windows Setup.", "imaging");
+
+		$InfoBule_DomainUser=_T("Username specifies the name of the user account with permission to add the computer to a domain during Windows Setup.","imaging");
+
+		$InfoBule_JoinDomain = _T("Domain to join","imaging");
+
+		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory® on a domain controller in the domain to which the computer is being joined.","imaging");
 
 //Decrypt the string paramater which is a password
 /*
