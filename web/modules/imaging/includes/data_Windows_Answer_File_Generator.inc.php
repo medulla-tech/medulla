@@ -98,14 +98,7 @@ jQuery(function () {
     jQuery( '#PartitionOrder' ).on('change', function () { update(); });
     jQuery( '#Group' ).on('change', function () { update(); });
     jQuery( '#Description' ).on('change', function () { update(); });
-    jQuery( '#Password' ).on('change', function () {
-        jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',
-        {data:jQuery('#Password').val(),passwordType:'normal'}).done(function(result){
-            jQuery('input[name=PasswordEncrypted]').val(result.slice(0,-1));
-            update();
-        });
-        update();
-    });
+    jQuery( '#Password' ).on('change', function () { update(); });
     jQuery( '#EnableUAC' ).on('change', function () { update(); });
     jQuery( '#Updates' ).on('change', function () { update(); });
     jQuery( '#OrginazationName' ).on('change', function () { update(); });
@@ -114,13 +107,7 @@ jQuery(function () {
     jQuery( '#ControlPanelView' ).on('change', function () { update(); });
     jQuery( '#ControlPanelIconSize' ).on('change', function () { update(); });
     jQuery( '#DownloadButton' ).on('change', function () { update(); });
-    jQuery( '#PasswordAdmin' ).on('change', function () {
-jQuery.get('modules/imaging/manage/ajaxConvertHexaBase64.php',{data:jQuery('#PasswordAdmin').val(),passwordType:'admin'}).done(function(result){
-            jQuery('input[name=PasswordAdminEncrypted]').val(result.slice(0,-1));
-            update();
-        });
-        update();
-    });
+    jQuery( '#PasswordAdmin' ).on('change', function () { update(); });
 	jQuery( '#Domain' ).on('change', function () { update(); });
 	jQuery( '#DomainPassword' ).on('change', function () { update(); });
 	jQuery( '#DomainUser' ).on('change', function () { update(); });
@@ -160,7 +147,6 @@ function update() {
     var variables = {
         'Location': jQuery('#Location').val(),
         'Comments': jQuery('#Comments').val(),
-        //'Arch': jQuery('#Arch').val(),
         'ProductKey1': jQuery('#ProductKey1').val().toUpperCase(),
         'ProductKey2': jQuery('#ProductKey2').val().toUpperCase(),
         'ProductKey3': jQuery('#ProductKey3').val().toUpperCase(),
@@ -196,8 +182,8 @@ function update() {
         'PartitionOrder': jQuery('#PartitionOrder').find('option:selected').val(),
         'Group': jQuery('#Group').find('option:selected').val(),
         'Description': jQuery('#Description').val(),
-        'Password': jQuery('input[name=PasswordEncrypted]').val(),
-        'PasswordAdmin': jQuery('input[name=PasswordAdminEncrypted]').val(),
+        'Password': jQuery('#Password').val(),
+        'PasswordAdmin': jQuery('#PasswordAdmin').val(),
         'EnableUAC': jQuery('#EnableUAC').find('option:selected').val(),
         'Updates': jQuery('#Updates').find('option:selected').val(),
         'OrginazationName': jQuery('#OrginazationName').val(),
@@ -1778,50 +1764,4 @@ function update() {
 		$InfoBule_JoinDomain = _T("Domain to join","imaging");
 
 		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory® on a domain controller in the domain to which the computer is being joined.","imaging");
-
-//Decrypt the string paramater which is a password
-/*
-	1 - convert base64 password parameter to normal string
-	2 - remove all 00h characters include in string
-	3 - remove 'Password' added to plain text password
-*/
-function decryptSysprepPassword($password)
-{
-	$baseCode = base64_decode($password);
-	$baseCode = str_split($baseCode);
-
-	$code = array();
-	for($position = 0; $position<count($baseCode);$position++)
-	{
-		if($position %2 == 0)
-		{
-			$code[] = $baseCode[$position];
-		}
-	}
-		$code = implode($code);
-		return substr($code,0,-8);
-}
-
-//Decrypt the string paramater which is a password
-/*
-       1 - convert base64 password parameter to normal string
-       2 - remove all 00h characters include in string
-       3 - remove 'AdministratorPassword' added to plain text password
-*/
-function decryptSysprepAdminPassword($adminPassword)
-{
-	$baseCode = base64_decode($adminPassword);
-	$baseCode = str_split($baseCode);
-
-	$code = array();
-	for($position = 0; $position<count($baseCode);$position++)
-	{
-		if($position %2 == 0)
-		{
-			$code[] = $baseCode[$position];
-		}
-	}
-		$code = implode($code);
-		return substr($code,0,-21);
-}
 ?>

@@ -116,7 +116,7 @@ var template = [
 '<LocalAccount wcm:action="add">',
 '<Password>',
 '<Value><? echo $strin;?>Password<? echo $strou;?></Value>',
-'<PlainText>false</PlainText>',
+'<PlainText>true</PlainText>',
 '</Password>',
 '<Description><? echo $strin;?>Description<? echo $strou;?></Description>',
 '<DisplayName><? echo $strin;?>FullName<? echo $strou;?></DisplayName>',
@@ -126,7 +126,7 @@ var template = [
 '</LocalAccounts>',
 '<AdministratorPassword>',
 '<Value><? echo $strin; ?>PasswordAdmin<? echo $strou; ?></Value>',
-'<PlainText>false</PlainText>',
+'<PlainText>true</PlainText>',
 '</AdministratorPassword>',
 '</UserAccounts>',
 '<FirstLogonCommands>',
@@ -142,14 +142,12 @@ var template = [
 '<InputLocale><? echo $strin;?>InputLocale<? echo $strou;?></InputLocale>',
 '<SystemLocale><? echo $strin;?>SetupUILanguage<? echo $strou;?></SystemLocale>',
 '<UILanguage><? echo $strin;?>UILanguage<? echo $strou;?></UILanguage>',
-'<UILanguageFallback></UILanguageFallback>',
 '<UserLocale><? echo $strin;?>UserLocale<? echo $strou;?></UserLocale>',
 '</component>',
 '<component name="Microsoft-Windows-International-Core" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<InputLocale><? echo $strin;?>InputLocale<? echo $strou;?></InputLocale>',
 '<SystemLocale><? echo $strin;?>SetupUILanguage<? echo $strou;?></SystemLocale>',
 '<UILanguage><? echo $strin;?>UILanguage<? echo $strou;?></UILanguage>',
-'<UILanguageFallback></UILanguageFallback>',
 '<UserLocale><? echo $strin;?>UserLocale<? echo $strou;?></UserLocale>',
 '</component>',
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
@@ -165,7 +163,7 @@ var template = [
 '<LocalAccount wcm:action="add">',
 '<Password>',
 '<Value><? echo $strin;?>Password<? echo $strou;?></Value>',
-'<PlainText>false</PlainText>',
+'<PlainText>true</PlainText>',
 '</Password>',
 '<Description><? echo $strin;?>Description<? echo $strou;?></Description>',
 '<DisplayName><? echo $strin;?>FullName<? echo $strou;?></DisplayName>',
@@ -175,7 +173,7 @@ var template = [
 '</LocalAccounts>',
 '<AdministratorPassword>',
 '<Value><? echo $strin; ?>PasswordAdmin<? echo $strou; ?></Value>',
-'<PlainText>false</PlainText>',
+'<PlainText>true</PlainText>',
 '</AdministratorPassword>',
 '</UserAccounts>',
 '<FirstLogonCommands>',
@@ -445,10 +443,8 @@ $f->push(new Table());
     $f->add(
         new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
         array(  "required" => True,
-                "value" => (isset($parameters)) ? decryptSysprepAdminPassword($parameters['PasswordAdmin']) : "")
+                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
     );
-
-    $f->add(new HiddenTpl("PasswordAdminEncrypted"), array("value" => "", "hide" => True));
 $f->pop();
 $f->add( new SepTpl());
 
@@ -480,8 +476,7 @@ $f->push(new Table());
     //_____________
     $f->add(
         new TrFormElement(_T('Password: (Optional)','imaging'), new InputTplTitle('Password',$InfoBule_Password)),
-        array("value" => (isset($parameters)) ? decryptSysprepPassword($parameters['Password']) : ""));
-    $f->add(new HiddenTpl("PasswordEncrypted"), array("value" => "", "hide" => True));
+        array("value" => (isset($parameters)) ? $parameters['Password'] : ""));
  
     $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Xml Windows Answer File Generator", "imaging"));
     $rr = new TrFormElementcollapse($bo);
