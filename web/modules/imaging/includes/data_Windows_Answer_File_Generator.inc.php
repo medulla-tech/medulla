@@ -32,6 +32,9 @@ function getExtension(filename){
         if(jQuery('#Location').val()=="" || jQuery('#Location').val()==".xml"){
             jQuery('#Location').focus()
         }
+        else if (jQuery('#PasswordAdmin').val()==""){
+            jQuery('#PasswordAdmin').focus()
+        }
         else{
             createxml();
         }
