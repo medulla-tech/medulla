@@ -77,7 +77,7 @@ class Glpi91(DyngroupDatabaseHelper):
         self.config = config
         dburi = self.makeConnectionPath()
         self.db = create_engine(dburi, pool_recycle = self.config.dbpoolrecycle, pool_size = self.config.dbpoolsize)
-        logging.getLogger().debug('Trying to detect if GLPI version is higher than 0.90.5')
+        logging.getLogger().debug('Trying to detect if GLPI version is higher than 9.1')
 	try:
             self._glpi_version = self.db.execute('SELECT version FROM glpi_configs').fetchone().values()[0].replace(' ', '')
 	except OperationalError:
