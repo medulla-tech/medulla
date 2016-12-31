@@ -265,7 +265,7 @@ class Glpi91(DyngroupDatabaseHelper):
         self.fusionantivirus = None
         try:
             self.logger.debug('Try to load fusion antivirus table...')
-            self.fusionantivirus = Table('glpi_plugin_fusioninventory_inventorycomputerantiviruses', self.metadata,
+            self.fusionantivirus = Table('glpi_computerantiviruses', self.metadata,
                 Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
                 Column('manufacturers_id', Integer, ForeignKey('glpi_manufacturers.id')),
                 autoload = True)
