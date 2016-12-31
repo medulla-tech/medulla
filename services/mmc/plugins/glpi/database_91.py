@@ -257,6 +257,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         ## Fusion Inventory tables
 
+        #TODO: Fix, this is now merged in glpi since 9.1
 	# glpi_plugin_fusinvinventory_antivirus
         # this table comes with Fusioninventory plugin and could not exists
         # if you don't use this plugin, so use try / except
