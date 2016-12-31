@@ -67,6 +67,8 @@ class Glpi(DyngroupDatabaseHelper):
             self.database = Glpi0855()
         elif Glpi090().try_activation(self.config):
             self.database = Glpi090()
+        elif Glpi91().try_activation(self.config):
+            self.database = Glpi91()
         else:
             self.logger.warn("Can't load the right database backend for your version of GLPI")
             return False
