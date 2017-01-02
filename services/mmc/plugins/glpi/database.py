@@ -31,7 +31,8 @@ from mmc.plugins.glpi.database_07 import Glpi07
 from mmc.plugins.glpi.database_08 import Glpi08
 from mmc.plugins.glpi.database_084 import  Glpi084
 from mmc.plugins.glpi.database_0855 import Glpi0855
-
+from mmc.plugins.glpi.database_090 import Glpi090
+from mmc.plugins.glpi.database_91 import Glpi91
 
 from pulse2.database.dyngroup.dyngroup_database_helper import DyngroupDatabaseHelper
 
@@ -65,6 +66,10 @@ class Glpi(DyngroupDatabaseHelper):
             self.database = Glpi084()
         elif Glpi0855().try_activation(self.config):
             self.database = Glpi0855()
+        elif Glpi090().try_activation(self.config):
+            self.database = Glpi090()
+        elif Glpi91().try_activation(self.config):
+            self.database = Glpi91()
         else:
             self.logger.warn("Can't load the right database backend for your version of GLPI")
             return False
