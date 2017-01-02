@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.var title = $( "em" ).attr( "title" );
  */
- 
+
  ?>
 <script type="text/javascript">
 
@@ -40,20 +40,20 @@ function getExtension(filename){
         }
     });
     createxml = function(){
-        jQuery.post( "modules/imaging/manage/ajaxgenereAWFGxml.php", 
-                            { 
+        jQuery.post( "modules/imaging/manage/ajaxgenereAWFGxml.php",
+                            {
                                 data:  jQuery('#codeTocopy2').text(),
-                                title: jQuery('#Location').val() 
+                                title: jQuery('#Location').val()
         })
         .done(function( data1 ) {
-            var file =  '  <? echo _T('File','imaging'); ?>  ';  
-            var avai =  ' <? echo _T('available','imaging'); ?>'; 
+            var file =  '  <? echo _T('File','imaging'); ?>  ';
+            var avai =  ' <? echo _T('available','imaging'); ?>';
                 if(data1 == 1){
-                    var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" + 
+                    var  Msgxml1 = "Windows Answer File Generator available\non smb://"+window.location.host +"/postinst/sysprep/" +
                             jQuery('#Location').val();
                     jQuery( "#spanxml" ).attr( "title", Msgxml1 );
                 }
-                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=unattended");
+                window.location.replace("main.php?module=imaging&submod=manage&action=systemImageManager&tab=sysprepList");
         });
     }
 jQuery(function () {
@@ -64,7 +64,7 @@ jQuery(function () {
             jQuery('#Location').val( namefile )
         }
         jQuery("#Location").val(jQuery("#Location").val().replace(/ /g,"_"));
-        update(); 
+        update();
     });
     jQuery( '#ProductKey1' ).on( 'change',  function(){jQuery('#ProductKey1').val(jQuery('#ProductKey1').val().toUpperCase());
     update()});
@@ -120,7 +120,7 @@ jQuery(function () {
 });
 
 function update() {
-    Msgxml  = "To have the Windows Answer File Generator on \n" + 
+    Msgxml  = "To have the Windows Answer File Generator on \n" +
               "smb://" + window.location.host + "/postinst/sysprep/" + jQuery('#Location').val() + "\n" +
               "click on Validation" ;
     jQuery( "#spanxml" ).attr( "title", Msgxml );
@@ -142,7 +142,7 @@ function update() {
       else{
              jQuery( "#bvalid").prop('disabled', false);
              jQuery("#msg_bvalid").hide();
-             
+
       }
 
     da=new Date()
@@ -157,7 +157,7 @@ function update() {
         'ProductKey5': jQuery('#ProductKey5').val().toUpperCase(),
         'EnableFirewall': jQuery('#EnableFirewall').find('option:selected').val(),
         'ShowWindowsLive' : jQuery('#ShowWindowsLive').find('option:selected').val(),
-        'CopyProfile' : jQuery('#CopyProfile').find('option:selected').val(), 
+        'CopyProfile' : jQuery('#CopyProfile').find('option:selected').val(),
         'ExtendOSPartition' :jQuery('#ExtendOSPartition').find('option:selected').val(),
         'SkipAutoActivation': jQuery('#SkipAutoActivation').find('option:selected').val(),
         'SkipRearm': jQuery('#SkipRearm').find('option:selected').val(),
@@ -191,7 +191,7 @@ function update() {
         'Updates': jQuery('#Updates').find('option:selected').val(),
         'OrginazationName': jQuery('#OrginazationName').val(),
         'BGC':jQuery( '#BGC').find('option:selected').val(),
-        'CEIPEnabled':jQuery( '#CEIPEnabled').find('option:selected').val(),  
+        'CEIPEnabled':jQuery( '#CEIPEnabled').find('option:selected').val(),
         'ControlPanelView': jQuery('#ControlPanelView').find('option:selected').val(),
         'ControlPanelIconSize': jQuery('#ControlPanelIconSize').find('option:selected').val(),
         'dateval': dateval,
@@ -319,7 +319,7 @@ function update() {
                             "EnableFirewall"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
-            
+
         });
         if (jQuery('#'+list_id_masque[0]).is(":visible")){
             jQuery('#User_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
@@ -369,7 +369,7 @@ function update() {
 
 
 <?php
- 
+
         $elementInputarray = array(
                                         'Albanian',
                                         'Arabic',
@@ -532,7 +532,7 @@ function update() {
                                         'Wolof',
                                         'Yakut',
                                         'Yoruba');
-        $valeurInputarray = array( 
+        $valeurInputarray = array(
                                         '1052:0000041c',
                                         '1025:00000401',
                                         '66561:00010401',
@@ -694,9 +694,9 @@ function update() {
                                         '1160:00000488',
                                         '1157:00000485',
                                         '1130:0000046a');
-                                    
-                                    
-                                    
+
+
+
         $eleUILanguage  = array(
                                         'Afrikaans - South Africa',
                                         'Albanian - Albania',
@@ -932,7 +932,7 @@ function update() {
                                         'Wolof - Senegal',
                                         'Yi - PRC',
                                         'Yoruba - Nigeria');
-       
+
         $valUILanguage  = array(
                                         'af-ZA',
                                         'sq-AL',
@@ -1168,7 +1168,7 @@ function update() {
                                         'wo-SN',
                                         'ii-CN',
                                         'yo-NG');
-                                        
+
         $element_timezone = array(      '(UTC-12:00) International Date Line West',
                                         '(UTC-11:00) Midway Island, Samoa',
                                         '(UTC-10:00) Hawaii',
@@ -1347,12 +1347,12 @@ function update() {
                                         'New Zealand Standard Time',
                                         'Fiji Standard Time',
                                         'UTC+12',
-                                        'Tonga Standard Time');                                
-       
+                                        'Tonga Standard Time');
+
         $DriveLetterTabElement = array('C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
-       
-       
-       $GroupTabElement=array(  
+
+
+       $GroupTabElement=array(
                                         _T('Account Operators','imaging'),
                                         _T('Administrators','imaging'),
                                         _T('Backup Operators','imaging'),
@@ -1386,34 +1386,34 @@ function update() {
                                         'Replicator',
                                         'SystemOperators',
                                         'Users');
-        $UpdatesTabElement= array(    
+        $UpdatesTabElement= array(
                                         _T('Never check for updates','imaging'),
                                         _T('Check for updates but choose to download and install','imaging'),
                                         _T('Download updates but choose when to install','imaging'),
-                                        _T('Install updates automatically','imaging'));                        
-                                
-        $ProtectComputerTabElement = array( 
+                                        _T('Install updates automatically','imaging'));
+
+        $ProtectComputerTabElement = array(
                                         _T('Recommended settings','imaging'),
                                         _T('Install selective updates','imaging'),
-                                        _T('Do not install selective updates','imaging'));                        
-                                
-        
+                                        _T('Do not install selective updates','imaging'));
+
+
         $yes_no=        array(
                                         _T('Yes','imaging'),
                                         _T('No','imaging'));
-                                
+
         $truefalse = array(
                                         'true',
-                                        'false');                        
-                                
+                                        'false');
+
         $suite2_5 = array(
                                         '2','3','4','5');
         $suite0_5 = array(
                                         '0','1','2','3','4','5');
-                                        
+
         $suite0_24 = array(             '0','1','2','3','4','5','6','7','8','9','10','11','12',
                                         '13','14','15','16','17','18','19','20','21','22','23','24');
-         
+
         $EnableDisabled = array(
                                         _T('Enable','imaging'),
                                         _T('Disabled','imaging'));
@@ -1440,21 +1440,21 @@ function update() {
         $InfoBule_UILanguage=
                         _T('Specifies the default system language to display user interface (UI) items (such as menus, dialog boxes, and help files)','imaging');
 
-        $InfoBule_TimeZone= 
+        $InfoBule_TimeZone=
                         _T('Specifies the time zone of the computer. The time zones that are specified in Windows System Image Manager are not localized','imaging');
 
         $InfoBule_Installation_Notes=
                         _T("Meta Information xml", "imaging");
-        
-        $InfoBule_General_Settings = 
-                        _T("Configure General Settings", "imaging");                        
+
+        $InfoBule_General_Settings =
+                        _T("Configure General Settings", "imaging");
 
         $InfoBule_ProductKey=
                         _T('Specifies the key used to activate Windows','imaging').
                         "\n".
                         _T('IMPORTANT','imaging').
                         "\n".
-                        _T('Entering an invalid product key in the answer file will cause Windows Setup to fail','imaging');                        
+                        _T('Entering an invalid product key in the answer file will cause Windows Setup to fail','imaging');
 
         $InfoBule_AcceptEULA=
                         _T('Specifies whether to automatically accept the Microsoft Software License Terms','imaging').
@@ -1465,9 +1465,9 @@ function update() {
                         "\n".
                         _T('No','imaging').
                         " : ".
-                        _T('Prompts the user to accept the license terms before proceeding with Windows Setup','imaging');                        
+                        _T('Prompts the user to accept the license terms before proceeding with Windows Setup','imaging');
 
-        $InfoBule_SkipAutoActivation=  
+        $InfoBule_SkipAutoActivation=
                         _T("Specifies whether Windows attempts to automatically activate",'imaging').
                         "\n".
                         _T("For automatic activation to complete, a valid Windows product key is required",'imaging').
@@ -1478,9 +1478,9 @@ function update() {
                         "\n".
                         _T("false",'imaging').
                         " : ".
-                        _T("Specifies that Windows attempts to automatically activate",'imaging');                        
+                        _T("Specifies that Windows attempts to automatically activate",'imaging');
 
-        $InfoBule_SkipRearm= 
+        $InfoBule_SkipRearm=
                         _T('Specifies whether to run the Windows Software Licensing Rearm program','imaging').
                         "\n".
                         _T('Yes','imaging').
@@ -1489,31 +1489,31 @@ function update() {
                         "\n".
                         _T('No','imaging').
                         " : "
-                        ._T('Specifies that the computer is rearmed, restoring the computer to the original, out-of-box state. All activation-related licensing and registry data is removed or reset, and any grace period timers are also reset.','imaging');                        
+                        ._T('Specifies that the computer is rearmed, restoring the computer to the original, out-of-box state. All activation-related licensing and registry data is removed or reset, and any grace period timers are also reset.','imaging');
 
         $InfoBule_SetupUILanguage=
-                        _T('SetupUILanguage defines the language to use in Windows Setup and Windows Deployment Services','imaging');                        
+                        _T('SetupUILanguage defines the language to use in Windows Setup and Windows Deployment Services','imaging');
 
-        $Infobule_ComputerName= 
+        $Infobule_ComputerName=
                         _T("Specifies the computer name used to access the computer from the network",'imaging');
 
-        $InfoBule_OrginazationName= 
-                        _T("Specifies the name of the organization that owns the computer",'imaging');                        
+        $InfoBule_OrginazationName=
+                        _T("Specifies the name of the organization that owns the computer",'imaging');
 
         $InfoBule_UserLocale=
                         _T('Specifies the per-user settings used for formatting dates, times, currency, and numbers in a Windows installation','imaging');
 
-        $Infobule_InputLocale=    
-                        _T('Specifies the input language and keyboard layout for a Windows installation', "imaging");                        
+        $Infobule_InputLocale=
+                        _T('Specifies the input language and keyboard layout for a Windows installation', "imaging");
 
         $Infobule_Partition_Settings=
-                        _T("Configure Partition Settings", "imaging");                        
+                        _T("Configure Partition Settings", "imaging");
 
         $InfoBule_Label=
                         _T('Main Partition Label','imaging');
 
-        $InfoBule_User_Account = 
-                        _T("Configure User Account", "imaging");                        
+        $InfoBule_User_Account =
+                        _T("Configure User Account", "imaging");
 
         $InfoBule_Updates=
                         _T('CommandLine reg','imaging');
@@ -1552,18 +1552,18 @@ function update() {
                         "\n".
                         _T('Network discovery is disabled by default on this network type','imaging');
 
-        $InfoBule_ProtectComputer= 
+        $InfoBule_ProtectComputer=
                         _T('Specifies whether to display the Help protect your computer automatically page of Windows Welcome to the user','imaging').
                         "\n".
                         _T('There is no default value. If a value is not set, the page opens during Windows Welcome','imaging').
-                        "\n -1 : ".    
+                        "\n -1 : ".
                         _T('Specifies the recommended level of protection for your computer','imaging').
                         "\n -2 : ".
                         _T('Specifies that only updates are installed','imaging').
                         "\n -3 : ".
                         _T('Specifies that automatic protection is disabled','imaging');
 
-        $InfoBule_HideEULA= 
+        $InfoBule_HideEULA=
                         _T('Specifies whether to hide the Microsoft® Software License Terms page of Windows® Welcome','imaging').
                         "\n".
                         _T('true','imaging').
@@ -1572,9 +1572,9 @@ function update() {
                         "\n".
                         _T('false','imaging').
                         " : ".
-                        _T('Specifies that the Microsoft Software License Terms page of Windows Welcome is displayed','imaging');                
+                        _T('Specifies that the Microsoft Software License Terms page of Windows Welcome is displayed','imaging');
 
-        $InfoBule_DaylightSettings= 
+        $InfoBule_DaylightSettings=
                         _T('Specifies whether the time on the computer is set to daylight saving time','imaging').
                         "\n".
                         _T('true','imaging').
@@ -1583,7 +1583,7 @@ function update() {
                         "\n".
                         _T('false','imaging').
                         " : ".
-                        _T('Specifies that the time on the computer is reset to daylight saving time','imaging');  
+                        _T('Specifies that the time on the computer is reset to daylight saving time','imaging');
 
         $Infobule_HideWireless=
                         _T('Specifies whether to hide the Join Wireless Network screen that appears during Windows® Welcome','imaging').
@@ -1596,7 +1596,7 @@ function update() {
                         " : ".
                         _T('Does not hide the Join Wireless Network screen during Windows Welcome','imaging');
 
-        $InfoBule_MachineOOBE= 
+        $InfoBule_MachineOOBE=
                         _T('Specifies whether to skip Windows Welcome','imaging').
                         "\n".
                         _T('true','imaging').
@@ -1622,15 +1622,15 @@ function update() {
                         " : ".
                         _T('Specifies that Welcome Center is shown','imaging');
 
-        $InfoBule_ControlPanelView= 
+        $InfoBule_ControlPanelView=
                         _T('CommandLine reg Set the Control Panel View to Small Icons','imaging');
 
-        $InfoBule_ControlPanelIconSize= 
+        $InfoBule_ControlPanelIconSize=
                         _T('CommandLine reg ControlPanel AllItemsIconView','imaging');
 
-        $InfoBule_WipeDisk= 
+        $InfoBule_WipeDisk=
                         _T('Specifies whether to erase all partitions on the hard disk before adding additional configurations to the disk','imaging').
-                        "\n".   
+                        "\n".
                         _T('true','imaging').
                         " : ".
                         _T('Specifies that the disk is erased','imaging').
@@ -1659,9 +1659,9 @@ function update() {
                         " : ".
                         _T('Formats the partition for the File Allocation Table (FAT) file system','imaging');
 
-        $InfoBule_DriveLetter=  
+        $InfoBule_DriveLetter=
                         _T('Specifies the drive letter to apply to a partition. Drive_letter is an uppercase letter, C through Z','imaging');
- 
+
         $InfoBule_PartitionOrder=
                         _T('Specifies the order in which the ModifyPartition command is to be run at first logon','imaging').
                         "\n".
@@ -1669,7 +1669,7 @@ function update() {
                         "\n".
                         _T('Synchronous commands are always run before asynchronous commands in the same configuration pass','imaging');
 
-        $InfoBule_Administrators_Account= 
+        $InfoBule_Administrators_Account=
                         _T("Configure Administrators Account", "imaging");
 
         $InfoBule_PasswordAdmin=
@@ -1681,13 +1681,13 @@ function update() {
         $InfoBule_Description=
                         _T('Specifies a LocalAccount','imaging');
 
-        $InfoBule_Password= 
+        $InfoBule_Password=
                         _T('Specifies the password for a LocalAccount and whether the password is hidden in the unattended installation answer file','imaging');
 
         $InfoBule_FullName=
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
 
-        $InfoBule_EnableUAC= 
+        $InfoBule_EnableUAC=
                         _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
                         "\n".
                         _T('true','imaging').
@@ -1700,11 +1700,11 @@ function update() {
                         "\n\n".
                         _T('To provide better protection for computers connected to any kind of network (such as the Internet, a home network, or an organization network), the Windows operating system enables Windows Firewall on all network connections by default','imaging');
 
-        $InfoBule_EnableFirewall= 
+        $InfoBule_EnableFirewall=
                         _T('Windows Firewall is a stateful host firewall that discards unsolicited incoming traffic, providing a level of protection for computers against malicious users or programs','imaging').
                         "\n".
                         _T('To provide better protection for computers connected to any kind of network (such as the Internet, a home network, or an organization network), the Windows operating system enables Windows Firewall on all network connections by default','imaging').
-                        "\n".   
+                        "\n".
                         _T('true','imaging').
                         " : ".
                         _T('Enables Windows Firewall for Windows PE','imaging').
@@ -1724,7 +1724,7 @@ function update() {
                         _T('Set CopyProfile to true in the Unattend.xml file that you will use with Sysprep in the next step','imaging').
                         "\n".
                         _T('Run sysprep /generalize /unattend:unattend.xml to copy the customized user profile settings over the default user profile','imaging').
-                        "\n".   
+                        "\n".
                         _T('true','imaging').
                         " : ".
                         _T('Changes the default user profile with customizations made . You must set this value to true only if you have made customizations to the logged-on user profile that you need to apply to all new users','imaging').
@@ -1733,11 +1733,11 @@ function update() {
                         " : ".
                         _T('Does not change the default user profile','imaging');
 
-        $InfoBule_ShowWindowsLive= 
+        $InfoBule_ShowWindowsLive=
                         _T('ShowWindowsLive specifies whether to display a link to Windows Live on the Start menu','imaging').
-                        "\n".  
+                        "\n".
                         _T('If the Windows Live shortcut has been removed from the Start menu, this setting cannot be used to put it back on the Start menu','imaging').
-                        "\n".   
+                        "\n".
                         _T('true','imaging').
                         " : ".
                         _T('Specifies that a link to Windows Live is displayed on the Start menu','imaging').
