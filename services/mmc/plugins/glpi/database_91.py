@@ -716,7 +716,7 @@ class Glpi91(DyngroupDatabaseHelper):
                     query = query.filter(
                         and_(
                             FusionAntivirus.is_active == 1,
-                            FusionAntivirus.uptodate == 1,
+                            FusionAntivirus.is_uptodate == 1,
                             OS.name.ilike('%windows%'),
                             not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
                         )
@@ -728,7 +728,7 @@ class Glpi91(DyngroupDatabaseHelper):
                             not_(
                                 and_(
                                     FusionAntivirus.is_active == 1,
-                                    FusionAntivirus.uptodate == 1,
+                                    FusionAntivirus.is_uptodate == 1,
                                 ),
                             ),
                             not_(FusionAntivirus.name.in_(self.config.av_false_positive)),
@@ -740,7 +740,7 @@ class Glpi91(DyngroupDatabaseHelper):
                             OS.name.ilike('%windows%'),
                             or_(
                                 FusionAntivirus.is_active == None,
-                                FusionAntivirus.uptodate == None,
+                                FusionAntivirus.is_uptodate == None,
                                 and_(
                                     FusionAntivirus.name.in_(self.config.av_false_positive),
                                     not_(FusionAntivirus.computers_id.in_(
@@ -1878,7 +1878,7 @@ class Glpi91(DyngroupDatabaseHelper):
                     l = [
                         ['Name', __getAntivirusName(manufacturerName, antivirus.name)],
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
-                        ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
+                        ['Up-to-date', antivirus.is_uptodate == 1 and 'Yes' or 'No'],
                     ]
                     if antivirus.version:
                         l.insert(1, ['Version', antivirus.version])
