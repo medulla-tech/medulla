@@ -867,7 +867,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def timeout(self, data):
         log.warm("%s"%data['timeout'])
 
-
     def jidInRoom1(self, room, jid):
         for nick in self.plugin['xep_0045'].rooms[room]:
             entry = self.plugin['xep_0045'].rooms[room][nick]

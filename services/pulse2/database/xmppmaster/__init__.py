@@ -589,6 +589,17 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._session
+    def listmachines(self, session):
+        sql = """SELECT 
+                    jid
+                FROM
+                    xmppmaster.machines;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
     def clearMachine(self, session):
         session.execute('TRUNCATE TABLE xmppmaster.machines;')
         session.execute('TRUNCATE TABLE xmppmaster.network;')

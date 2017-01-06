@@ -78,6 +78,12 @@ CREATE TABLE `machines` (
   UNIQUE KEY `jid_UNIQUE` (`jid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
 
+-- add  colum time
+-- ALTER TABLE `xmppmaster`.`machines` 
+-- ADD COLUMN `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `urlguacamole`;
+
+
+
 --
 -- Table structure for table `network`
 --

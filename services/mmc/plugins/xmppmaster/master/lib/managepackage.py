@@ -12,7 +12,7 @@ class managepackage:
         if sys.platform.startswith('linux'):
             return os.path.join("/", "var" ,"lib","pulse2","packages")
         elif sys.platform.startswith('win'):
-            return os.path.join(os.environ["ProgramFiles"], "Pulse", "packages")
+            return os.path.join(os.environ["ProgramFiles"], "Pulse","var","tmp","packages")
         elif sys.platform.startswith('darwin'):
             return os.path.join("/", "Library", "Application Support", "Pulse", "packages")
         else:
