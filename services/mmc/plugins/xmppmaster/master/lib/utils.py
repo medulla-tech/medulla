@@ -224,6 +224,18 @@ def name_jid():
     return dd[cc[0]]
 
 
+def getIPAdressList():
+    ip_list = []
+    for interface in netifaces.interfaces():
+        try:
+            for link in netifaces.ifaddresses(interface)[netifaces.AF_INET]:
+                if link['addr'] != '127.0.0.1':
+                    ip_list.append(link['addr'])
+        except:
+            pass
+    return ip_list
+
+
 def shorten_mac(mac):
     mac=mac.lower()
     mac = mac.replace(":","")
