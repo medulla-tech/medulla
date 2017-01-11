@@ -1,0 +1,8 @@
+usr/sbin/pulse2-package-server
+usr/sbin/pulse2-package-server-register-imaging
+usr/lib/python2.?/*-packages/pulse2/package_server
+etc/mmc/pulse2/package-server
+etc/mmc/pulse2/atftpd/pcre.conf
+var/lib/pulse2/imaging
+usr/share/man/man1/pulse2-package-server.1
+usr/share/man/man1/pulse2-package-server-register-imaging.1

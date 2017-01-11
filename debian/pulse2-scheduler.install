@@ -1,0 +1,7 @@
+usr/sbin/pulse2-scheduler
+usr/sbin/pulse2-scheduler-manager
+usr/sbin/pulse2-scheduler-proxy
+usr/lib/python2.?/*-packages/pulse2/scheduler
+etc/mmc/pulse2/scheduler
+usr/share/man/man1/pulse2-scheduler-manager.1
+usr/share/man/man1/pulse2-scheduler.1

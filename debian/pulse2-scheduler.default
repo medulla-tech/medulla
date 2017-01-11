@@ -1,0 +1,9 @@
+# Defaults for pulse2-scheduler initscript
+# sourced by /etc/init.d/pulse2-scheduler
+# installed at /etc/default/pulse2-scheduler by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+ENABLE=no

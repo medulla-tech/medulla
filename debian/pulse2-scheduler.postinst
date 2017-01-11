@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+if [ -x "`which invoke-rc.d 2>/dev/null`" ]; then
+        invoke-rc.d pulse2-scheduler stop || true
+else
+        /etc/init.d/pulse2-scheduler stop || true
+fi
+
+#DEBHELPER#
+
+exit 0
