@@ -1,0 +1,4 @@
+# Something changed in MMC's modules...
+interest /usr/share/pyshared/mmc
+# Or Pulse2 stuff (imported by Pulse2 MMC's modules)
+interest /usr/share/pyshared/pulse2
