@@ -1,0 +1,4 @@
+usr/lib/python2.?/*-packages/mmc/plugins/ppolicy
+etc/mmc/plugins/ppolicy.ini
+usr/share/doc/mmc/contrib/ppolicy
+usr/share/doc/mmc/contrib/scripts/mmc-check-expired-passwords-example

@@ -1,0 +1,98 @@
+mmc-core (1:3.1.1-3) unstable; urgency=low
+
+  * Implement reloading in init script.
+  * Install empty /var/lib/mmc directory. 
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 23 Apr 2014 14:21:01 +0200
+
+mmc-core (1:3.1.1-1) unstable; urgency=low
+
+  * New python-mmc-database package containing common files to use
+    SQL databases.
+  * New python-mmc-report and mmc-web-report packages.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 18 Feb 2014 09:45:39 +0100
+
+mmc-core (1:3.1.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * New python-gobject dependency on mmc-agent.
+  * New modules:
+    - dashboard: a simple dashboard page withserver health metrics,
+    - services: to handle system services through systemd.
+  * Re-organize documentation paths.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 13 Jun 2013 09:47:22 +0200
+
+mmc-core (3.0.5.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * python-mmc-core: use triggers to restart mmc-agent after a changed file
+    in /usr/share/pyshared/{mmc,pulse2} directories.
+  * python-mmc-base: pre-depends on python-mmc-core to be sure to install
+    triggers before any other package.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 09 Oct 2012 11:45:48 +0200
+
+mmc-core (3.0.5-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add python-mmc-base's postinst script to fix base.ini because of
+    the use of python-configobj in Pulse2.
+  * Add ldap-utils dependency to mmc-agent (for mmc-add-schema helper).
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 07 Sep 2012 11:50:04 +0200
+
+mmc-core (3.0.4-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 06 Jun 2012 15:20:08 +0200
+
+mmc-core (3.0.3.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 02 Apr 2012 15:03:24 +0200
+
+mmc-core (3.0.3.1+git20111215-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 15 Dec 2011 12:19:18 +0100
+
+mmc-core (3.0.3.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 28 Oct 2011 10:04:04 +0200
+
+mmc-core (3.0.3-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 26 Sep 2011 17:02:48 +0200
+
+mmc-core (3.0.2.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 26 Aug 2011 11:36:00 +0200
+
+mmc-core (3.0.2-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 12 Jul 2011 13:47:52 +0200
+
+mmc-core (3.0.1-1) unstable; urgency=low
+
+  * New release.
+
+ -- Cédric Delfosse <cdelfosse@mandriva.com>  Thu, 02 Sep 2010 10:48:34 +0200
+
+mmc-core (3.0.0-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 19 Apr 2010 09:44:29 +0200
