@@ -1,0 +1,757 @@
+pulse2 (3.5-22) unstable; urgency=low
+
+ * Fix options for pxe registration ( 50de3b38215f198af11c13f63451fdb3db83e485 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-21) unstable; urgency=low
+
+ * pulse2-register-pxe: Improve detection of disks and partitions as well as hardware configs ( e2c37b421d6ab891e95a9c62a1af1ab0a5de511a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-20) unstable; urgency=low
+
+ * Include schema-016.sql in Makefile ( 7a0435333c1c095dbdc9259b075670165556a250 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-19) unstable; urgency=low
+
+ * add parameter for pulse-register-pxe ( 2ce047e9f8a31980a8e9684eb04b2a5e4e8b0a79 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-18) unstable; urgency=low
+
+ * Fix imaging database version ( 99b8d1ca1084402547c647f65db6d283cd788a06 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-17) unstable; urgency=low
+
+ *  Define Clonezilla options from Pulse to be used in imaging ( d1e9e937cb49b35fe0b631176cb99af34e326b4e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-16) unstable; urgency=low
+
+ *  Add sql in makefile ( 916cd03cad14172b92ef0f4e45708c69ed649e26 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-15) unstable; urgency=low
+
+ *  Updates for sql structures. ( 42514a199b680bb52f3156ee645f0db7156d93cc )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-14) unstable; urgency=low
+
+ *  define options for davos ( patch from spo) ( 0384a279eec7037dd94762cef9ab321332ba9a75 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-13) unstable; urgency=low
+
+ *  Add schema number set ( 2f7298ca6bb66d19855dbfe99f4498a602159a06 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-12) unstable; urgency=low
+
+ *  Revert "Revert "fix function getAllLocation"" ( d92b617aeb598272168be24c29b760dc9273c8d7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-11) unstable; urgency=low
+
+  * add parameter timereboot for pxe inventory ( 8b111cd6e441a5922d16cc69d7a1d45a6cfa6a42 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-10) unstable; urgency=low
+
+  * Fix self.hostname value ( 8b93252129d3de1499dbce1405d3b1ef1683b57f )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-9) unstable; urgency=low
+
+  * Removal of restore options (nfs, mtftp, ...) ( cb7dfc69f5d1afd89fc11ffc1d3880acd8752a30 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-8) unstable; urgency=low
+
+  * Move on top delete button ( 49f0946f2aa08153087693ec2968b495b6ca8e4c )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-6) unstable; urgency=low
+
+  * Fix PXE menu generation: Set TOTALTIMEOUT to make sure the machine boots in any case ( 1cde102031e36b64cc3bfde0d3fd097c379fb92d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-5) unstable; urgency=low
+
+  * fix function getAllLocation ( eacb22a4b0b8625623abc468626aafe21549aef1 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-4) unstable; urgency=low
+
+  * delete menu in all location ( e698ac0b965737f42df2b46625a3c2197a5d24c5 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-3) unstable; urgency=low
+
+  * add hostname in menu ( ac0e779a4601b4ef02ccd02e5eb5205d1f356977 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-2) unstable; urgency=low
+
+  * fix menu generation ( 7b3c2aef82bb959d4ebb6fe0d1df8dda2d73fb3e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-1) unstable; urgency=low
+
+  * pulse: bump version to 3.5 ( 0ab066947d177160878dac1a256e4866eb798411 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-136) unstable; urgency=low
+
+  * fix syntax error imaging/function.py ( 85e1540d9f397ae2a4d8a39a1acb24d76acc6b56 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-135) unstable; urgency=low
+
+  * Revert Mutable dict list as default argument ( 668efa1f749a22f715292a52901d6b21f5bd73e8 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-134) unstable; urgency=low
+
+  * Complete revert
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-133) unstable; urgency=low
+
+  *     Revert "Mutable dict or list used as default argument to a method or function"
+    
+    This reverts commit 1e32829839b290bbb293ca07b7bc4be4041e08c9.
+
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+pulse2 (3.4-132) unstable; urgency=low
+
+  * fix error algo default if machine is not registred ( c65b17e5df0ce99c383cb7fe707a6153b6a63d7a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-131) unstable; urgency=low
+
+  * add function xmlrpc_imagingServermenuMulticast for delete menu ( 659c53eed3e4a8874b5a2d9d72cef30505f9ede6 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-130) unstable; urgency=low
+
+  * delete boot menu machine unregistered from imaging server ( fdba1f247007590fd8ee3498f32f19c9dbe6bdc7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-129) unstable; urgency=low
+
+  * addition information log for algo multi_site ( a15f3e5d469695640316be0e02bd30d6557fe208 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-128) unstable; urgency=low
+
+  * Add multi_site to makefile ( 2fe6ba590d0e85e63b1141d6b7207dcdd2464797 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-127) unstable; urgency=low
+
+  * Add dump patch to HDT ( 166a96cf1722a1be5e6ed6af864cd881a9bb0baf )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-126) unstable; urgency=low
+
+  * Remove pulse2-register-pxe deps
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-125) unstable; urgency=low
+
+  * Update Fusioninventory agent ( aa0eeb7743f2d12c87bc687af8cc915fb0269c33 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-124) unstable; urgency=low
+
+  * Fix deps
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-123) unstable; urgency=low
+
+  * Add schema-011.sql to the Makefile ( 89ee6672cbb70551ec063d5fb86686197039bccb )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-122) unstable; urgency=low
+
+  * Fix path in service
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-121) unstable; urgency=low
+
+  * Initial import of multi_site assign_algo for package server ( 661d02162e8d3f2fae943a7716c8de00202e3235 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-120) unstable; urgency=low
+
+  * Fix typo in makefile ( 92b325c76feb6f88e72e800fb97906d9c6636f45 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-119) unstable; urgency=low
+
+  * Install template file ( ba8694b45ec61f8aad960795d0c6799afbcee11c )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-118) unstable; urgency=low
+
+  * Master + Revert commit 5c288bf12df48a3baa17a6f6dce187838e9d8936.
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-117) unstable; urgency=low
+
+  * Revert to commit a111521712a8417f3b93d3a37326e052dc97ae45
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-116) unstable; urgency=low
+
+  * Revert to commit 418bf365c448661d4569aefac8200dece35b1be0
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-115) unstable; urgency=low
+
+  * Revert to commit a2b65ae5abee9dcf78f4982d4980f18a9c3c4bfc
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-114) unstable; urgency=low
+
+  * Revert to commit 5c288bf12df48a3baa17a6f6dce187838e9d8936
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+
+pulse2 (3.4-113) unstable; urgency=low
+
+  * Revert to commit 1e32829839b290bbb293ca07b7bc4be4041e08c9
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-112) unstable; urgency=low
+
+  * Revert to commit 4e7a1196f81345beb523fe4f83447f9115956a34
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-11) unstable; urgency=low
+
+  * Revert to commit 5793dce744dddfa4df782b94279007e3fd3ce355
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-10) unstable; urgency=low
+
+  * Revert to commit a27e824a9b1d282edd598ef1609171ee2b294004
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-9) unstable; urgency=low
+
+  * Fix mutable default argument ( 557333d728e0d788fc52d9d35be68a1f2d3ebf3c )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-8) unstable; urgency=low
+
+  * fix Mutable list as default argument to a method or function ( 068267465018638614b05b43d2a70546d0c8fdef )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-7) unstable; urgency=low
+
+  * Fix cleaning errors ( 4e7a1196f81345beb523fe4f83447f9115956a34 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-6) unstable; urgency=low
+
+  * Add pulse2-register-pxe service ( 918f747c073be9a43367ece1667de58de5f08e70 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-5) unstable; urgency=low
+
+  * Fix deps to python-pyinotify 
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+
+pulse2 (3.4-4) unstable; urgency=low
+
+  * Fix to PXE password generation
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-3) unstable; urgency=low
+
+  * Addition of tools in imaging and reorganising memtest and dban ( 889a2b1697542db81fd43a0d8005d1efc2df8e4f ) 
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-2) unstable; urgency=low
+  * add inventory pxelinux
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.4-1) unstable; urgency=low
+  *  Fix for Register pulse client PXE menu item: Make use of inventories folder ( ad73f0c7c6fb3275cfa3bb58888bb12b5fb959cb )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Thu, 19 Mai 2016 22:00:11 +0100
+
+pulse2 (3.3-9) unstable; urgency=low
+  * Fix to paths for davos and bootsplash. Paths are now relative to pxelinux.0 ( second try )  ( cbb1c50d37c96b7553f7130f4c8e84a05fc50e26 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Thu, 19 Mai 2016 22:00:11 +0100
+
+pulse2 (3.3-8) unstable; urgency=low
+  * Fix to paths for davos and bootsplash. Paths are now relative to pxelinux.0
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Thu, 19 Mai 2016 22:00:11 +0100
+
+pulse2 (3.3-7) unstable; urgency=low
+
+  * Use new pxelinux
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 18 Mai 2016 22:00:11 +0100
+
+pulse2 (3.3-2) unstable; urgency=low
+
+  * Several fixes in sync master
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 05 Apr 2016 22:00:11 +0100
+
+pulse2 (3.3-1) unstable; urgency=low
+
+  * New version : 3.3
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 14 Mar 2016 22:00:11 +0100
+
+pulse2 (3.0.2-18) unstable; urgency=low
+
+  * Various fixes ( 111f9d19d0a40a6b144fc620390bab2f75669c4e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 08 Mar 2016 09:00:11 +0100
+
+pulse2 (3.0.2-17) unstable; urgency=low
+  * Various fixes ( 3ff96f0ac00e38e46e477a6b0ab9a9cad49ce608 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sun, 21 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-16) unstable; urgency=low
+  * Install pulse2-synch-masters binary ( 9154822ae8063b08f37f474a59105d5330ef89fb )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sun, 21 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-15) unstable; urgency=low
+  * pulse2-synch-masters agent Fixes ( 72eba8686cdb938e1d8c3094846c8ca4082e2c28 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Sun, 21 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-14) unstable; urgency=low
+  * Add pulse2-synch-masters agent ( e6782d8cfc130dbfe59dc5243fce8f721f9a5cde )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Tue, 19 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-13) unstable; urgency=low
+  * Fix pulse2-cm removal ( f71ea4a6b0f6aeece809f767ec8a5d6b65fe9102 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Tue, 16 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-12) unstable; urgency=low
+  * Completly remove pulse2-cm  ( 506b6ef5c7f743d5b09d2305927807fc02c842b5 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 15 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-11) unstable; urgency=low
+  * Bugfixes  ( 9fddc697e3b7b5207d853afe0711eda83b1436a7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 15 Jan 2016 09:00:11 +0100
+
+pulse2 (3.0.2-10) unstable; urgency=low
+  * Bugfixes ( multicast, menus, ... ) ( 8d8908e1f4555d751b15db1f561e620514f11b3d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-9) unstable; urgency=low
+  * Bugfixes ( multicast, menus, ... ) ( 8d8908e1f4555d751b15db1f561e620514f11b3d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-8) unstable; urgency=low
+  * Bugfixes ( multicast, menus, ... )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-7) unstable; urgency=low
+  * Fix several menu bugs
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-6) unstable; urgency=low
+  * Fix sysinit choice.
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-5) unstable; urgency=low
+  * Fix postinst scripts 
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-4) unstable; urgency=low
+  * Fix pulse2-cm initscript
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-3) unstable; urgency=low
+  * Fix support with newer sqlalchemy
+  * Fix support with newer python-twisted
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-2) unstable; urgency=low
+  * Multicast fixes
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 13 Jan 2016 17:00:11 +0100
+
+pulse2 (3.0.2-1) unstable; urgency=low
+  * Add Support for multicast
+
+ -- root <root@zoidberg.mandriva.com>  Mon, 02 Mar 2015 17:00:11 +0100
+
+pulse2 (3.0-6) unstable; urgency=low
+  * Fix support URL
+
+ -- root <root@zoidberg.mandriva.com>  Mon, 02 Mar 2015 17:00:11 +0100
+
+pulse2 (3.0-5) unstable; urgency=low
+  * New Snaphot
+  * Fix URL
+  * Fix icons
+  * Fix logo
+
+ -- root <root@zoidberg.mandriva.com>  Mon, 02 Mar 2015 17:00:11 +0100
+
+pulse2 (3.0-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- root <root@zoidberg.mandriva.com>  Mon, 02 Mar 2015 17:00:11 +0100
+
+pulse2 (2.2-1) unstable; urgency=medium
+
+  * Add Appstream
+  * Add cool backuppc features
+  * Bundles save
+  * Update on groups
+  * and much more bug fixing
+
+ -- Jean-Christophe VASSORT <jcvassort@mandriva.com>  Wed, 04 Feb 2015 18:25:08 +0100
+
+pulse2 (2.1.1-1) unstable; urgency=low
+
+  * New upstream release
+
+ -- Jean-Christophe VASSORT <jcvassort@mandriva.com>  Wed, 29 Oct 2014 09:02:44 +0200
+
+pulse2 (2.0.13.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Jean-Christophe VASSORT <jcvassort@mandriva.com>  Tue, 01 Aug 2014 09:02:44 +0200
+
+pulse2 (2.0.12.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 02 Jul 2014 16:12:44 +0200
+
+pulse2 (2.0.10-1) unstable; urgency=low
+
+  * Improve inventory backend.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 07 May 2014 15:28:44 +0200
+
+pulse2 (2.0.9-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 06 May 2014 16:09:51 +0200
+
+pulse2 (2.0.8-2) unstable; urgency=medium
+
+  * New upstream release.
+  * Create /etc/mmc/plugins/support directory for reverse ssh.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 29 Apr 2014 11:03:43 +0200
+
+pulse2 (2.0.7-1) unstable; urgency=medium
+
+  * New upstream release.
+  * New "support" plugin to provide remote server access.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 25 Apr 2014 10:09:27 +0200
+
+pulse2 (2.0.6-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 20 Mar 2014 11:08:11 +0100
+
+pulse2 (2.0.5-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 17 Mar 2014 15:08:36 +0100
+
+pulse2 (2.0.4-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 11 Mar 2014 17:19:54 +0100
+
+pulse2 (2.0.3-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 07 Mar 2014 10:28:15 +0100
+
+pulse2 (2.0.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 28 Feb 2014 09:49:36 +0100
+
+pulse2 (2.0.1.2-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 21 Feb 2014 10:52:05 +0100
+
+pulse2 (2.0.1.1-1) unstable; urgency=low
+
+  * New upstream release:
+    - Bump minimal mmc-core dependency to 3.1.1-1.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 18 Feb 2014 10:19:40 +0100
+
+pulse2 (2.0.1-1) unstable; urgency=medium
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 06 Feb 2014 11:44:48 +0100
+
+pulse2 (2.0-1) unstable; urgency=medium
+
+  * New upstream release.
+  * New update and report modules.
+  * Strip out common database files (moved to core).
+  * New package "pulse2-dlp-server" for pull mode.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 27 Jan 2014 12:31:12 +0100
+
+pulse2 (1.5.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Install pulse2-debug binary.
+  * Install pulse2-dbupdate binary.
+  * Pulse2-imaging-server is now an empty transitional package,
+    its features have been merged into pulse2-package-server.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 14 Oct 2013 21:41:24 +0200
+
+pulse2 (1.5.0-1) unstable; urgency=low
+
+  * New BackupPC module.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 25 Jun 2013 17:14:58 +0200
+
+pulse2 (1.4.1-1) unstable; urgency=low
+
+  * New upstream release.
+  * Install new pulse2-scheduler-proxy binary.
+  * Add new binutils-multiarch | binutils dependency on package-server.
+  * Metapackage pulse2 should depend on either inventory or glpi backend.
+  * Add new tool and ini file required for GLPI history.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 26 Mar 2013 15:56:51 -0300
+
+pulse2 (1.4.0-2) unstable; urgency=low
+
+  * Add missing xsltproc, docbook-xsl and docbook-xml build dependency
+    to re-generate documentation.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 11 Feb 2013 12:03:28 +0100
+
+pulse2 (1.4.0-1) unstable; urgency=low
+
+  * New upstream release.
+  * New post-imaging scripts.
+  * Ability to convert post-imaging scripts into boot services.
+  * New DBAN boot service (disk wipe).
+  * Tones of bugs fixed.
+  * New post-imaging script to deploy Pulse2 agents automatically.
+  * Fix GLPI backend.
+  * FusionInventory agent is now used on Windows.
+  * Inventory server can now fix the incoming XML using Python scripts.
+  * New package creation page with uploading directly from the interface.
+  * Add genisoimage dependency on package-server.
+  * New pie chart with last inventory date on dashboard page.
+  * New pie chart with deployement percentage for each command.
+  * New sheduler algorithm to improve handling of unavaible computers:
+    No more number of tries and time between differents tries, everything
+    is handled by the scheduler itself which will avoid trying again and
+    again a computer that failed once instead of trying another one.
+    It will also requeue a command when the inventory-server says "I just
+    received an inventory" which means the computer has just been powered up.
+    Scheduler will stop queuing new action a few minutes before the end time
+    to avoid killing commands that have just been started.
+  * Inventory-server is now able to act as proxy for GLPI server.
+  * It's now possible to register a computer in GLPI from PXE.
+  * Switch to dpkg-source 3.0 (quilt) format.
+  * Remove obsolete quilt patch system.
+  * Remove dh_autoreconf.
+  * Remove obsolete nsis build-dep.
+  * Fix debian/rules (CPPFLAGS) to build with hardening.
+  * Fix a couple of lintian warnings.
+  * Fix compatibility with never Python Twisted (>= 11.1) and
+    newer SQLAlchemy.
+  * Launchers have been protected against over memory usage.
+  * Computers can be registered through PXE with GLPI backend.
+  * Dynamic groups against GLPI entity fixed.
+  * Add missing python-psutil (>= 0.6.1) dependency on pulse2-common.
+
+ -- Adam Cécile <acecile@mandriva.com>  Fri, 08 Feb 2013 15:12:16 +0100
+
+pulse2 (1.3.2-3) unstable; urgency=low
+
+  * New upstream release.
+  * Rename pulse-launcher package to pulse2-launchers to match upstream.
+  * Drop useless patch "pulse2-setup_debian_specific.diff".
+  * Add curl, dnsutils and nsis dependencies to pulse2-common (required to
+    build the agents pack).
+  * Install pulse2-load-defaults in pulse2-common package.
+  * New pulse2 package depending on all what's needed.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 10 Sep 2012 19:23:12 +0200
+
+pulse2 (1.3.1.1+git20120628-1) unstable; urgency=low
+
+  * New upstream release.
+  * Add python-configobj as a dependency of pulse2-common.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 28 Jun 2012 13:30:09 +0200
+
+pulse2 (1.3.1.1+git20120620-2) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 20 Jun 2012 15:42:57 +0200
+
+pulse2 (1.3.1.1+git20120620-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 20 Jun 2012 11:45:31 +0200
+
+pulse2 (1.3.1.1+git20120619-2) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 19 Jun 2012 14:51:26 +0200
+
+pulse2 (1.3.1.1+git20120611-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 11 Jun 2012 17:54:30 +0200
+
+pulse2 (1.3.1.1+git20120411-2) unstable; urgency=low
+
+  * Fix initscripts to use should-start instead of required.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 12 Apr 2012 11:40:56 +0200
+
+pulse2 (1.3.1.1+git20120411-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Wed, 11 Apr 2012 15:53:20 +0200
+
+pulse2 (1.3.1.1+git20120403-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 03 Apr 2012 09:56:42 +0200
+
+pulse2 (1.3.1.1+git20120116-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 16 Jan 2012 11:12:30 +0100
+
+pulse2 (1.3.1.1+git20120112-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 12 Jan 2012 15:22:54 +0100
+
+pulse2 (1.3.1.1+git20111220-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Thu, 15 Dec 2011 14:30:22 +0100
+
+pulse2 (1.3.1.1-1) unstable; urgency=low
+
+  * New upstream release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Tue, 13 Dec 2011 17:33:44 +0100
+
+pulse2 (1.3.0-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Adam Cécile <acecile@mandriva.com>  Mon, 14 Jun 2010 10:21:27 +0200

@@ -1,0 +1,9 @@
+# Defaults for pulse2-package-server initscript
+# sourced by /etc/init.d/pulse2-package-server
+# installed at /etc/default/pulse2-package-server by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+ENABLE=no

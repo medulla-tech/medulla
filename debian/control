@@ -1,0 +1,421 @@
+Source: pulse2
+Section: admin
+Priority: extra
+Maintainer: Adam Cécile <acecile@mandriva.com>
+Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.6), python-support (>= 0.5.3), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
+Standards-Version: 3.9.3
+Homepage: http://projects.mandriva.org/projects/mmc/
+X-Python-Version: >= 2.6
+
+Package: pulse2
+Architecture: all
+Depends: ${misc:Depends},
+         mmc-agent, mmc-web-base, python-mmc-base,
+         mmc-web-dyngroup, python-mmc-dyngroup,
+         mmc-web-imaging, python-mmc-imaging,
+         mmc-web-inventory | mmc-web-glpi,
+         python-mmc-inventory | python-mmc-glpi,
+         mmc-web-msc, python-mmc-msc,
+         mmc-web-pkgs, python-mmc-pkgs,
+         mmc-web-pulse2, python-mmc-pulse2,
+         pulse2-common,
+         pulse2-imaging-client | pulse2-davos-client,
+         pulse2-inventory-server,
+         pulse2-launchers,
+         pulse2-package-server,
+         pulse2-scheduler,
+         pulse2-homepage
+Description: Pulse 2 metapackage
+ This empty package depends on all Pulse2/MMC required packages.
+
+Package: pulse2-common
+Architecture: all
+Section: python
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Description: Pulse 2 common files (doc)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common files like documentation.
+
+Package: python-pulse2-common-database-dyngroup
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
+Description: Pulse 2 common dynamic groups database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common dynamic groups database files.
+
+Package: python-pulse2-common-database-inventory
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-dyngroup (= ${binary:Version})
+Description: Pulse 2 common inventory database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common inventory database files.
+
+Package: python-pulse2-common-database-msc
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
+Description: Pulse 2 common MSC database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common MSC database files.
+
+Package: python-pulse2-common-database-imaging
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
+Description: Pulse 2 common imaging database files.
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common imaging database files.
+
+Package: python-pulse2-common-database-backuppc
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database (= ${binary:Version})
+Description: Pulse 2 / MBS common backuppc database files.
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common BackupPC database files.
+
+Package: python-pulse2-common-database
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-mmc-database (>= 3.1.1-1)
+Description: Pulse 2 common database files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common database files.
+
+Package: python-pulse2-common
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-twisted-web (>= 2.4.0)
+Description: Pulse 2 common files
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common files.
+
+Package: pulse2-inventory-server
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-pulse2-common-database-inventory (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-openssl, python-pyinotify
+Description: Pulse 2 inventory server
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 inventory server. It collects computers
+ inventories and insert them into the database.
+
+Package: pulse2-launchers
+Replaces: pulse2-launcher
+Architecture: any
+Pre-Depends: python-psutil (>= 0.7.0), python-openssl
+Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}, pulse2-common (= ${source:Version}), python-pulse2-common (= ${source:Version}), perl-modules, libsys-syslog-perl, openssh-client, iputils-ping, python-mmc-base (>= 3.1.1-1)
+Recommends: rsync
+Description: Pulse 2 software deployment handling service
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
+ service asks the launcher to connect to a set of target computers and start
+ a deployment. Multiple launchers can be instantiated at the same time for
+ scalability.
+
+Package: python-mmc-pulse2
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
+Recommends: python-mmc-imaging
+Description: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.
+
+Package: python-mmc-msc
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-pulse2-common-database-msc (= ${binary:Version})
+Description: Pulse 2 MSC plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the MSC (Mandriva Secure Control) plugin for the MMC
+ agent. It allows one to control and manage the entire software deployment
+ process.
+
+Package: python-mmc-inventory
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-pulse2-common-database-inventory (= ${binary:Version})
+Description: Pulse 2 inventory plugin for MMC agent
+ Pulse 2 provides application and update deployment mechanisms for large
+ organizations.
+ .
+ This package contains the inventory plugin for the MMC agent.
+
+Package: python-mmc-glpi
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-sqlalchemy (>= 0.4), python-mysqldb (>= 1.2.1), python-pulse2-common (= ${binary:Version})
+Description: Pulse 2 GLPI plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the GLPI plugin for the MMC agent. It connects to a
+ GLPI database to get a company inventory. This package contains the
+ inventory plugin for the MMC agent.
+
+Package: python-mmc-dyngroup
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-dyngroup (= ${binary:Version}), python-ipaddr (>= 2.1.10)
+Description: Pulse 2 dyngroup plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the dynamic computer group plugin for the MMC agent. It
+ stores into a database static and dynamic group of computers to ease massive
+ software deployment.
+
+Package: python-mmc-pkgs
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-msc (= ${binary:Version}), python-requests (>= 0.12.1)
+Description: Pulse 2 pkgs plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the pkgs plugin for the MMC agent.
+
+Package: python-mmc-imaging
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-imaging (= ${binary:Version}), python-ipaddr (>= 2.1.10)
+Description: Pulse 2 imaging plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the imaging plugin for MMC agent.
+
+Package: python-mmc-backuppc
+Architecture: all
+Section: python
+Pre-Depends: backuppc
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-backuppc (= ${binary:Version}), python-pyquery
+Description: Pulse 2 / MBS BackupPC plugin for MMC agent
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the BackupPC plugin for MMC agent.
+
+Package: python-mmc-update
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the update plugin to handle security updates
+ (Windows Updates, Linux packages) within Pulse.
+
+Package: python-mmc-support
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), autossh (>=1.4)
+Description: Pulse 2 support plugin (provide remote access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: pulse2-package-server
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common (= ${binary:Version}), genisoimage, python-mmc-base (>= 3.1.1-1), python-openssl, binutils | binutils-multiarch
+Description: Pulse 2 package server
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Pulse 2 package server. The package server manages
+ the packages and the images repository.
+
+Package: pulse2-scheduler
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-pulse2-common-database-msc (= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-openssl
+Description: Pulse 2 software deployment scheduling service
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Pulse 2 scheduler service. It connects to the MSC
+ (Mandriva Secure Control) database and tell to Pulse 2 launchers to start
+ new deployment jobs when needed.
+
+Package: pulse2-cm
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-openssl
+Description: Pulse 2 Connection Manager
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Pulse 2 Connection Manager. This service
+ provides incoming connections from pulse2 clients which controls
+ initial agent installs and updates the target table by correct IP.  
+
+Package: pulse2-imaging-server
+Architecture: all
+Depends: ${misc:Depends}, pulse2-imaging-server (>> 1.5.0+git20130712)
+Description: transitional dummy package
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This is a transitional dummy package. It can safely be removed.
+ .
+ Imaging server features have been merged into pulse2-package-server.
+
+Package: mmc-web-dyngroup
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 dynamic computer group plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the dynamic computer group plugin for the MMC web
+ interface. It allows one to build static and dynamic group of computers to
+ ease massive software deployment.
+
+Package: mmc-web-glpi
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 GLPI computer group plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the GLPI plugin for the MMC web interface. It
+ allows one to query a GLPI database to display computer inventory.
+
+Package: mmc-web-inventory
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 inventory plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the inventory plugin for the MMC web interface.
+
+Package: mmc-web-msc
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 MSC plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the MSC (Mandriva Secure Control) plugin for the
+ MMC web interface. It allows one to control and manage the entire software
+ deployment process.
+
+Package: mmc-web-pkgs
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 package management plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the package management plugin for the MMC web
+ interface.
+
+Package: mmc-web-pulse2
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 base plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the base plugin for the MMC web interface.
+
+Package: mmc-web-imaging
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 imaging plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the imaging plugin for the MMC web interface.
+
+Package: mmc-web-backuppc
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 / MBS BackupPC plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the BackupPC plugin for the MMC web interface.
+
+Package: mmc-web-monitoring
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 / MBS monitoring plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the monitoring plugin for the MMC web interface.
+
+Package: mmc-web-update
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the update plugin to handle security updates
+ (Windows Updates, Linux packages) within Pulse.
+
+Package: mmc-web-support
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 support plugin (provide remote access)
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the support plugin to provide remote access
+ to the Pulse server for support purpose.
+
+Package: pulse2-uuid-resolver
+Architecture: all 
+Depends: ${misc:Depends}, ${python:Depends}, python-twisted-web (>= 2.4.0) 
+Description: Pulse 2 UUID resolver
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains a helper to resolve Pulse's UUID into IP address.
+
+Package: pulse2-dlp-server
+Architecture: all 
+Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version})
+Description: Pulse 2 Download provider service
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains a WSGI daemon to provide "pull mode" interface
+ for clients outside the corporate LAN.
+
+Package: pulse2-register-pxe
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-cherrypy3, python-pulse2-common (= ${binary:Version}), python-pyinotify
+Description: Pulse 2 Register PXE Service
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+

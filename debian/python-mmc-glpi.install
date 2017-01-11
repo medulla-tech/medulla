@@ -1,0 +1,4 @@
+usr/lib/python2.?/*-packages/mmc/plugins/glpi
+usr/sbin/pulse2-extract-glpi-search-options
+etc/mmc/plugins/glpi.ini
+etc/mmc/plugins/glpi_search_options.ini

@@ -1,0 +1,17 @@
+usr/share/doc/pulse2/* usr/share/doc/pulse2-common
+usr/share/doc/mmc
+usr/sbin/pulse2-setup
+usr/sbin/pulse2-create-group
+usr/sbin/pulse2-load-defaults
+usr/sbin/pulse2-create-group
+var/lib/pulse2/clients/win32
+var/lib/pulse2/clients/templates/
+var/lib/pulse2/clients/create-repos.sh
+var/lib/pulse2/clients/generate-agents
+var/lib/pulse2/clients/installer.sh.in
+var/lib/pulse2/clients/agents.conf
+var/lib/pulse2/clients/vpn
+var/lib/pulse2/clients/agent
+usr/sbin/pulse2-debug
+usr/sbin/pulse2-dbupdate
+/usr/sbin/pulse2-collect-info
