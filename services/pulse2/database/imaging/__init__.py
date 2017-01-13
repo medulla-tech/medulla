@@ -3394,6 +3394,15 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                 .join(self.entity, self.target.c.fk_entity == self.entity.c.id)).filter(and_(Menu.custom_menu == 1, self.entity.c.uuid == location))
         return ret.scalar()
 
+    def getCustomMenubylocation(self, location):
+        session = create_session()
+        ##SELECT name, uuid FROM imaging.Target where `Target`.`fk_entity` = 3 and `Target`.`is_registered_in_package_server` = 1;
+        #print  fromUUID(location)
+        ret = session.query(Target.name, Target.uuid).filter(and_(self.target.c.fk_entity == fromUUID(location), self.target.c.is_registered_in_package_server == 1,self.target.c.type == 1 ))
+        q=ret.all()
+        q1 =  [[z.uuid, z.name] for z in q]
+        return q1
+
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)
         q = q.select_from(self.synchro_state.join(self.menu).join(self.target, self.menu.c.id == self.target.c.fk_menu))

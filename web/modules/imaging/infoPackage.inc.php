@@ -85,6 +85,11 @@ $page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("creategroupcustonmenu", _T("Create static group from menu set", "imaging"));
+$page->setFile("modules/imaging/imaging/creategroupcustonmenu.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $page = new Page("index", _T("Server status", "imaging"));
 $submod->addPage($page);
 
