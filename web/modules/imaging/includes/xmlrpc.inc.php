@@ -206,6 +206,14 @@ function xmlrpc_getCustomMenuCount($location) {
     return xmlCall("imaging.getCustomMenuCount", array($location));
 }
 
+function xmlrpc_getCustomMenuCountdashboard($location) {
+    return xmlCall("imaging.getCustomMenuCountdashboard", array($location));
+}
+
+function xmlrpc_getCustomMenubylocation($location) {
+    return xmlCall("imaging.getCustomMenubylocation", array($location));
+}
+
 function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1) {
     return xmlCall("imaging.getTargetsByCustomMenuInEntity", array($location, $custom_menu));
 }

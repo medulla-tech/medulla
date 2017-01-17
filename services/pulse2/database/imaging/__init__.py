@@ -3390,17 +3390,23 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getCustomMenuCount(self, location):
         session = create_session()
         ret = session.query(func.count(Menu.id)).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id) \
-                #self.entity.c.id == self.imaging_server.c.fk_entity
                 .join(self.entity, self.target.c.fk_entity == self.entity.c.id)).filter(and_(Menu.custom_menu == 1, self.entity.c.uuid == location))
+        return ret.scalar()
+
+    def getCustomMenuCountdashboard(self, location):
+        session = create_session()
+        ret = session.query(func.count(distinct(self.target.c.uuid))).filter(and_(self.target.c.fk_entity == fromUUID(location),
+                                                                                  self.target.c.is_registered_in_package_server == 1,
+                                                                                  self.target.c.type.in_([1,3])))
         return ret.scalar()
 
     def getCustomMenubylocation(self, location):
         session = create_session()
-        ##SELECT name, uuid FROM imaging.Target where `Target`.`fk_entity` = 3 and `Target`.`is_registered_in_package_server` = 1;
-        #print  fromUUID(location)
-        ret = session.query(Target.name, Target.uuid).filter(and_(self.target.c.fk_entity == fromUUID(location), self.target.c.is_registered_in_package_server == 1,self.target.c.type == 1 ))
-        q=ret.all()
-        q1 =  [[z.uuid, z.name] for z in q]
+        ret = session.query(self.target.c.uuid,self.target.c.name,self.target.c.nic_uuid ).filter(and_(self.target.c.fk_entity == fromUUID(location),
+                                                                                  self.target.c.is_registered_in_package_server == 1,
+                                                                                  self.target.c.type.in_([1])))
+        q=ret.distinct().all()
+        q1 =  [[z.uuid, z.name,z.nic_uuid] for z in q]
         return q1
 
     def __getSynchroStates(self, uuids, target_type, session):
