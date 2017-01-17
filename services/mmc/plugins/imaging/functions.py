@@ -1997,6 +1997,9 @@ class ImagingRpcProxy(RpcProxyI):
     def getCustomMenuCount(self, location):
         return ImagingDatabase().getCustomMenuCount(location)
 
+    def getCustomMenuCountdashboard(self, location):
+        return ImagingDatabase().getCustomMenuCountdashboard(location)
+
     def getCustomMenubylocation(self, location):
         return ImagingDatabase().getCustomMenubylocation(location)
 

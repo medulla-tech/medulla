@@ -68,7 +68,6 @@ $page->setFile("modules/imaging/manage/ajaxgenereAWFGxml.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-//jfk4
 $page = new Page("ajaxcheckprogressbar");
 $page->setFile("modules/imaging/manage/ajaxcheckprogressbar.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
@@ -79,9 +78,13 @@ $page->setFile("modules/imaging/manage/multicastaction.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-
 $page = new Page("ajaxcheckstatusmulticast");
 $page->setFile("modules/imaging/manage/ajaxcheckstatusmulticast.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("creategroupcustonmenuimaging", _T("Create static group from menu set", "imaging"));
+$page->setFile("modules/imaging/imaging/creategroupcustonmenuimaging.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 

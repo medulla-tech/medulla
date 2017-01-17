@@ -29,12 +29,45 @@ $t->display();
 
 $customMenu_count = xmlrpc_getCustomMenuCount($location);
 
+$gg = xmlrpc_getCustomMenubylocation($location);
+
+$namelocation = xmlrpc_getLocationName(getCurrentLocation());
+
 $global_status = xmlrpc_getGlobalStatus($location);
 if (!empty($global_status)) {
     $disk_info = format_disk_info($global_status['disk_info']);
     $health = format_health($global_status['uptime'], $global_status['mem_info']);
     $short_status = $global_status['short_status'];
     ?>
+<style>
+a.info{
+position:relative;
+z-index:24;
+color:#000;
+text-decoration:none
+}
+ 
+a.info:hover{
+z-index:25;
+background-color:#FFF
+}
+ 
+a.info span{
+display: none
+}
+ 
+a.info:hover span{
+display:block;
+position:absolute;
+top:2em; left:2em; width:50em;
+border:1px solid #000;
+background-color:#E0FFFF;
+color:#000;
+text-align: justify;
+font-weight:none;
+padding:5px;
+}
+</style>
 
     <div class="status">
         <div class="status_block">
@@ -59,27 +92,55 @@ if (!empty($global_status)) {
         </div>-->
         <div class="status_block">
             <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
-            <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo xmlrpc_getLocationName(getCurrentLocation()); ?>  </h3>
+            <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?>  </h3>
+        
             <p class="stat">
-             <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
-                <? print_r( $urlRedirect);echo "</br>";  ?>
-
+            <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
+            <? $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
+           
+            
                 <img src="img/machines/icn_machinesList.gif" /> <strong>
                 <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
+                <?php 
+                    if (intval($customMenu_count) > 0){
+                        echo "(".$customMenu_count; 
+                        echo' <a class="info" href="#">';
+                        echo _T("with custom menu", "imaging");
+                        echo '
+                        <span>Computer list with custom menu for entity '. $namelocation.'<br>';
+                            $i=0;
+                            foreach ($gg as $entry){
+                                echo $entry[1];
+                                if ($i == 5){
+                                    echo "<br>";
+                                    $i=0;
+                                }
+                                else {
+                                    echo " ";
+                                }
+                                $i++;
+                            }
+                            echo '
+                        </span>
+                    </a>';
 
-                (<?php echo $customMenu_count; ?>  <?php echo _T("with custom menu", "imaging") ?>)
-                <? echo '<a href="'. $urlRedirect .'">'; ?> 
-                <img src="img/machines/icn_machinesList.gif" title="create group" />
-                <? echo '</a>'; ?>
-            </p>
-
+                    echo '<a  href="'. $urlRedirect .'">'; 
+                    echo '<img src="img/machines/icn_machinesList.gif" title="create group "/>';
+                    echo '</a>';
+                    echo '<a href="'. $urlRedirectgroupimaging .'">';
+                    echo '<img src="img/machines/icn_machinesList.gif" title="create group imaging" />';
+                    echo '</a>)';
+                echo '</p>';
+            }
+            ?>
             <p class="stat">
                 <img src="img/machines/icn_machinesList.gif" />
                 <strong> <?php echo $short_status['rescue']; ?>
                 </strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>
-                <p class="stat"><img src="img/common/cd.png" />
-                <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
-                    <strong>
+                    <p class="stat"><img src="img/common/cd.png" />
+                    <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
+                <strong>
+
                     <?php echo $short_status['master']." "; ?></strong><?php echo _T("masters are available", "imaging").'</a>'; ?>
             </p>
         </div>
