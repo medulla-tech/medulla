@@ -3406,7 +3406,17 @@ class ImagingDatabase(DyngroupDatabaseHelper):
                                                                                   self.target.c.is_registered_in_package_server == 1,
                                                                                   self.target.c.type.in_([1])))
         q=ret.distinct().all()
-        q1 =  [[z.uuid, z.name,z.nic_uuid] for z in q]
+        q1=[]
+        for z in q:
+            a=[]
+            a.append(z.uuid)
+            a.append(z.name)
+            if z.nic_uuid == None:
+                a.append("")
+            else:
+                a.append(z.nic_uuid)
+            q1.append(a)
+        #q1 =  [[z.uuid, z.name,z.nic_uuid] for z in q]
         return q1
 
     def __getSynchroStates(self, uuids, target_type, session):
