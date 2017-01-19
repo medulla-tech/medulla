@@ -290,6 +290,10 @@ function xmlrpc_getLocationMastersByUUID($location_id, $masters_uuid) {
     return xmlCall("imaging.getLocationMastersByUUID", array($location_id, $masters_uuid));
 }
 
+function xmlrpc_getComputersWithImageInEntity($location_uuid) {
+    return xmlCall("imaging.getComputersWithImageInEntity", array($location_uuid));
+}
+
 function xmlrpc_areImagesUsed($images) {
     return xmlCall("imaging.areImagesUsed", array($images));
 }
