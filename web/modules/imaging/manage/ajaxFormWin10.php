@@ -33,7 +33,6 @@
 </style> 
 <script type="text/javascript">
 var template = [
-
 '<? echo $strin; ?>xml version="1.0" encoding="utf-8"<? echo $strou; ?>',
 '<unattend xmlns="urn:schemas-microsoft-com:unattend">',
 '<!--',
@@ -202,23 +201,10 @@ var template = [
 '</settings>',
 //UAC
 '<settings pass="offlineServicing">',
-'<component name="Microsoft-Windows-LUA-Settings" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<EnableLUA><? echo $strin; ?>EnableUAC<? echo $strou; ?></EnableLUA>',
-'</component>',
-'</settings>',
-//UAC
-'<settings pass="offlineServicing">',
 '<component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<EnableLUA><? echo $strin; ?>EnableUAC<? echo $strou; ?></EnableLUA>',
 '</component>',
 '</settings>',
-//Skip rearm
-'<settings pass="generalize">',
-'<component name="Microsoft-Windows-Security-SPP" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<SkipRearm>1</SkipRearm>',
-'</component>',
-'</settings>',
-//Skip rearm
 '<settings pass="generalize">',
 '<component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<SkipRearm>1</SkipRearm>',
@@ -226,23 +212,12 @@ var template = [
 '</settings>',
 //Specialize pass
 '<settings pass="specialize">',
-'<component name="Microsoft-Windows-International-Core" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<InputLocale><? echo $strin; ?>InputLocale<? echo $strou; ?></InputLocale>',
-'<SystemLocale><? echo $strin; ?>UILanguage<? echo $strou; ?></SystemLocale>',
-'<UILanguage><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguage>',
-'<UILanguageFallback><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguageFallback>',
-'<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
-'</component>',
 '<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<InputLocale><? echo $strin; ?>InputLocale<? echo $strou; ?></InputLocale>',
 '<SystemLocale><? echo $strin; ?>UILanguage<? echo $strou; ?></SystemLocale>',
 '<UILanguage><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguage>',
 '<UILanguageFallback><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguageFallback>',
 '<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
-'</component>',
-//Skip auto activation
-'<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<SkipAutoActivation><? echo $strin; ?>SkipAutoActivation<? echo $strou; ?></SkipAutoActivation>',
 '</component>',
 //Skip auto activation
 '<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
@@ -266,21 +241,25 @@ var template = [
 '<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
 '<ProductKey><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></ProductKey>',
 '</component>',
+'<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<RunSynchronous>',
+'<RunSynchronousCommand wcm:action="add">',
+'<Path>net user Administrator /active:yes</Path>',
+'<Order>1</Order>',
+'</RunSynchronousCommand>',
+'</RunSynchronous>',
+'</component>',
+'<component name="Microsoft-Windows-Deployment" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<RunSynchronous>',
+'<RunSynchronousCommand wcm:action="add">',
+'<Path>net user Administrator /active:yes</Path>',
+'<Order>1</Order>',
+'</RunSynchronousCommand>',
+'</RunSynchronous>',
+'</component>',
 '</settings>',
-//OOBE
 '<settings pass="oobeSystem">',
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-//Auto logon
-'<AutoLogon>',
-'<Password>',
-//Password
-'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
-'<PlainText>true</PlainText>',
-'</Password>',
-'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
-'<Username><? echo $strin; ?>FullName<? echo $strou; ?></Username>',
-'</AutoLogon>',
-//OOBE settings
 '<OOBE>',
 //Hide EULA page
 '<HideEULAPage><? echo $strin; ?>HideEULA<? echo $strou; ?></HideEULAPage>',
@@ -317,6 +296,10 @@ var template = [
 '<Name><? echo $strin; ?>FullName<? echo $strou; ?></Name>',
 '</LocalAccount>',
 '</LocalAccounts>',
+'<AdministratorPassword>',
+'<Value><? echo $strin;?>PasswordAdmin<? echo $strou;?></Value>',
+'<PlainText>true</PlainText>',
+'</AdministratorPassword>',
 '</UserAccounts>',
 //Registered Organization
 '<RegisteredOrganization><? echo $strin; ?>OrginazationName<? echo $strou; ?></RegisteredOrganization>',
@@ -328,30 +311,20 @@ var template = [
 '<SynchronousCommand wcm:action="add">',
 '<Description>Control Panel View</Description>',
 '<Order>1</Order>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
 '<RequiresUserInput>true</RequiresUserInput>',
 '</SynchronousCommand>',
 '<SynchronousCommand wcm:action="add">',
 '<Order>2</Order>',
 '<Description>Control Panel Icon Size</Description>',
 '<RequiresUserInput>false</RequiresUserInput>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
 '</SynchronousCommand>',
 '<\/FirstLogonCommands>',
 //Timezone settings
 '<TimeZone><? echo $strin; ?>TimeZone<? echo $strou; ?><\/TimeZone>',
 '</component>',
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-//Auto logon
-'<AutoLogon>',
-'<Password>',
-//Password
-'<Value><? echo $strin; ?>Password<? echo $strou; ?></Value>',
-'<PlainText>true</PlainText>',
-'</Password>',
-'<Enabled><? echo $strin; ?>Autologon<? echo $strou; ?></Enabled>',
-'<Username><? echo $strin; ?>FullName<? echo $strou; ?></Username>',
-'</AutoLogon>',
 //OOBE settings
 '<OOBE>',
 //Hide EULA page
@@ -389,6 +362,10 @@ var template = [
 '<Name><? echo $strin; ?>FullName<? echo $strou; ?></Name>',
 '</LocalAccount>',
 '</LocalAccounts>',
+'<AdministratorPassword>',
+'<Value><? echo $strin;?>PasswordAdmin<? echo $strou;?></Value>',
+'<PlainText>true</PlainText>',
+'</AdministratorPassword>',
 '</UserAccounts>',
 //Registered Organization
 '<RegisteredOrganization><? echo $strin; ?>OrginazationName<? echo $strou; ?></RegisteredOrganization>',
@@ -400,20 +377,21 @@ var template = [
 '<SynchronousCommand wcm:action="add">',
 '<Description>Control Panel View</Description>',
 '<Order>1</Order>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v StartupPage /t REG_DWORD /d 1<? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
 '<RequiresUserInput>true</RequiresUserInput>',
 '</SynchronousCommand>',
 '<SynchronousCommand wcm:action="add">',
 '<Order>2</Order>',
 '<Description>Control Panel Icon Size</Description>',
 '<RequiresUserInput>false</RequiresUserInput>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
 '</SynchronousCommand>',
 '<\/FirstLogonCommands>',
 //Timezone settings
 '<TimeZone><? echo $strin; ?>TimeZone<? echo $strou; ?><\/TimeZone>',
 '</component>',
 '</settings>',
+'<cpi:offlineImage cpi:source="wim:c:/users/1781181/desktop/install.wim#Windows 10 Pro" xmlns:cpi="urn:schemas-microsoft-com:cpi" />',
 '</unattend>',
 ].join('\r\n');
 
@@ -600,6 +578,20 @@ $f->push(new Table());
 $f->pop();
 $f->add(new SepTpl());
 
+//==== NEW SECTION ====
+// Administrators Accounts
+//=====================
+$f->add(new TitleElement(_T("Administrator Account", "imaging")));
+$f->push(new Table());
+
+	//_____________
+    $f->add(
+        new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
+        array(  "required" => True,
+                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
+    );
+$f->pop();
+$f->add( new SepTpl());
 
 //==== NEW SECTION ====
 // User Account
@@ -640,14 +632,6 @@ $f->push(new Table());
     $f->add(
         new TrFormElement(_T('Password: (Optional)','imaging'), new InputTplTitle('Password',$InfoBule_Password)),
         array("value" => (isset($parameters)) ? $parameters['Password'] : ""));
-    //_____________
-    $Autologon = new SelectItemtitle("Autologon",$InfoBule_Autologon);
-    $Autologon->setElements($yes_no);
-    $Autologon->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Auto Logon','imaging').":", $Autologon),
-        array("value" => (isset($parameters)) ? $parameters['Autologon'] : "true","required" => True)
-    );
     //_____________
     $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
     $EnableUAC->setElements($EnableDisabled);
