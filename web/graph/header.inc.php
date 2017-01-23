@@ -32,7 +32,6 @@ $root = $conf["global"]["root"];
         <meta name="Description" content="" />
         <meta name="Keywords" content="" />
         <link rel="icon" href="img/common/favicon.ico" />
-        <script src="jsframework/deployJava.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery.cookie.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery-ui-1.10.3.custom.min.js"></script>
