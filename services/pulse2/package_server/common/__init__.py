@@ -389,6 +389,10 @@ class Common(pulse2.utils.Singleton):
         ret = []
         rem = []
         for x in self.dontgivepkgs:
+            e = [l for l in self.dontgivepkgs[x] if l !=""]
+            if len(e) == 0:
+                rem.append(x)
+                continue
             if not x in self.packages or not self.packages[x]:
                 rem.append(x)
             else:
