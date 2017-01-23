@@ -238,7 +238,7 @@ padding:5px;
                             $text = _T("client(s) have rescue image(s)", "imaging");
                             echo '<a  class="info" href="#" id="boutoninformation" class="lienstylebouton">'.$text;
                             echo '<span>';
-                            echo '<strong>ddd</strong><br>';
+                            echo '<strong>Clients with rescue images:</strong><br>';
                             foreach ( $dede as $val){
                                 if ( intval($val[3]) == 0){
                                     echo 'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."<br>";
