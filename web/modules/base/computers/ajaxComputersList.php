@@ -124,18 +124,5 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
         jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
         pushSearch();
     });
-
-// Detecting Java Runtime version for VNC Applet
-
-    function JavaVersion()
-    {
-
-        if (deployJava.versionCheck("1.6.0+"))
-            return deployJava.versionCheck("1.6.0+");
-        return null;
-    }
-
-// Setting a cookie for Java Version
-    document.cookie = "javaenabled=" + JavaVersion();
-
+    
 </script>
