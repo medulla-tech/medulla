@@ -3811,7 +3811,6 @@ class Glpi91(DyngroupDatabaseHelper):
                 return False
         else:
             self.logger.debug("Error session  %s"%( stdout))
-            
             return False
 
 
