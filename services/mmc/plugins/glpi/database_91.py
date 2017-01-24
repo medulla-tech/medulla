@@ -43,6 +43,9 @@ except ImportError:
     from sqlalchemy.sql.operators import ColumnOperators
 from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from sqlalchemy.exc import OperationalError
+from mmc.support.mmctools import  shlaunch
+import base64
+import json
 
 from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
@@ -3772,6 +3775,64 @@ class Glpi91(DyngroupDatabaseHelper):
 
         return False
 
+    #def delMachine(self, uuid):
+        #"""
+        #Deleting a machine in GLPI (only the flag 'is_deleted' updated)
+
+        #@param uuid: UUID of machine
+        #@type uuid: str
+
+        #@return: True if the machine successfully deleted
+        #@rtype: bool
+        #"""
+        #session = create_session()
+        #id = fromUUID(uuid)
+
+        #machine = session.query(Machine).filter(self.machine.c.id == id).first()
+
+        #if machine:
+            #webservice_ok = True
+            #try:
+                #self._get_webservices_client()
+            #except ProtocolError, e:
+                #webservice_ok = False
+            #except Exception, e:
+                #webservice_ok = False
+
+            #if self.config.webservices['purge_machine']:
+                #if webservice_ok:
+                    #return self.purgeMachine(machine.id)
+                #else:
+                    #self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
+
+            #connection = self.getDbConnection()
+            #trans = connection.begin()
+            #try:
+                #machine.is_deleted = True
+            #except Exception, e :
+                #self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
+                #session.flush()
+                #session.close()
+                #trans.rollback()
+
+                #return False
+
+            #session.flush()
+            #session.close()
+            #trans.commit()
+            #self.logger.debug("Machine (uuid=%s) successfully deleted" % uuid)
+
+            #return True
+
+        #else:
+            #return False
+
+
+    def _killsession(self,sessionwebservice):
+        command = "curl -X GET -H 'Content-Type: application/json' -H 'Session-Token: "+ sessionwebservice+"' '"+ GlpiConfig.webservices['glpi_base_url']+"killSession'"
+        self.logger.debug("Kill session : %s"%command)
+        exitcode, stdout, stderr = shlaunch(command)
+
     def delMachine(self, uuid):
         """
         Deleting a machine in GLPI (only the flag 'is_deleted' updated)
@@ -3782,47 +3843,33 @@ class Glpi91(DyngroupDatabaseHelper):
         @return: True if the machine successfully deleted
         @rtype: bool
         """
-        session = create_session()
-        id = fromUUID(uuid)
 
-        machine = session.query(Machine).filter(self.machine.c.id == id).first()
-
-        if machine:
-            webservice_ok = True
-            try:
-                self._get_webservices_client()
-            except ProtocolError, e:
-                webservice_ok = False
-            except Exception, e:
-                webservice_ok = False
-
-            if self.config.webservices['purge_machine']:
-                if webservice_ok:
-                    return self.purgeMachine(machine.id)
-                else:
-                    self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
-
-            connection = self.getDbConnection()
-            trans = connection.begin()
-            try:
-                machine.is_deleted = True
-            except Exception, e :
-                self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
-                session.flush()
-                session.close()
-                trans.rollback()
-
+        authtoken =  base64.b64encode(GlpiConfig.webservices['glpi_username']+":"+GlpiConfig.webservices['glpi_password'])
+        command = "curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic " + authtoken + "' '"+ GlpiConfig.webservices['glpi_base_url']+"initSession'"
+        #self.logger.debug("Auth token : %s"%authtoken)
+        self.logger.debug("Creation session : %s"%command)
+        exitcode, stdout, stderr = shlaunch(command)
+        if exitcode == 0:
+            sessionwebservice =  str(json.loads(stdout[0])['session_token'])
+            self.logger.debug("Session-Token : %s"%(sessionwebservice))
+            command = "curl -X DELETE -H 'Content-Type: application/json' -H 'Session-Token: " + sessionwebservice + "' '" + GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid)) +"?force_purge=true'"
+            self.logger.debug("Delete computer %s : %s"%(str(fromUUID(uuid)), command))
+            exitcode, stdout, stderr = shlaunch(command)
+            if exitcode == 0:
+                self._killsession(sessionwebservice)
+                return True
+            else:
+                self.logger.debug("Error del Delete computer %s : %s"%(str(fromUUID(uuid)), stdout))
+                self._killsession(sessionwebservice)
                 return False
-
-            session.flush()
-            session.close()
-            trans.commit()
-            self.logger.debug("Machine (uuid=%s) successfully deleted" % uuid)
-
-            return True
-
         else:
+            self.logger.debug("Error session  %s"%( stdout))
+            
             return False
+
+
+
+
 
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights=None):
