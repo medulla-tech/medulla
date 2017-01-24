@@ -3776,7 +3776,14 @@ class Glpi91(DyngroupDatabaseHelper):
         return False
 
     def _killsession(self,sessionwebservice):
-        command = "curl -X GET -H 'Content-Type: application/json' -H 'Session-Token: "+ sessionwebservice+"' '"+ GlpiConfig.webservices['glpi_base_url']+"killSession'"
+        """
+        Destroy a session identified by a session token.
+
+        @param sessionwebservice: session var provided by initSession endpoint.
+        @type sessionwebservice: str
+
+        """
+        command = "curl -X GET -H 'Content-Type: application/json' -H 'Session-Token: "+ sessionwebservice +"' '"+ GlpiConfig.webservices['glpi_base_url']+"killSession'"
         self.logger.debug("Kill session : %s"%command)
         exitcode, stdout, stderr = shlaunch(command)
 
