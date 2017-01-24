@@ -3775,59 +3775,6 @@ class Glpi91(DyngroupDatabaseHelper):
 
         return False
 
-    #def delMachine(self, uuid):
-        #"""
-        #Deleting a machine in GLPI (only the flag 'is_deleted' updated)
-
-        #@param uuid: UUID of machine
-        #@type uuid: str
-
-        #@return: True if the machine successfully deleted
-        #@rtype: bool
-        #"""
-        #session = create_session()
-        #id = fromUUID(uuid)
-
-        #machine = session.query(Machine).filter(self.machine.c.id == id).first()
-
-        #if machine:
-            #webservice_ok = True
-            #try:
-                #self._get_webservices_client()
-            #except ProtocolError, e:
-                #webservice_ok = False
-            #except Exception, e:
-                #webservice_ok = False
-
-            #if self.config.webservices['purge_machine']:
-                #if webservice_ok:
-                    #return self.purgeMachine(machine.id)
-                #else:
-                    #self.logger.warn("Unable to purge machine (uuid=%s) because GLPI webservice is disabled" % uuid)
-
-            #connection = self.getDbConnection()
-            #trans = connection.begin()
-            #try:
-                #machine.is_deleted = True
-            #except Exception, e :
-                #self.logger.warn("Unable to delete machine (uuid=%s): %s" % (uuid, str(e)))
-                #session.flush()
-                #session.close()
-                #trans.rollback()
-
-                #return False
-
-            #session.flush()
-            #session.close()
-            #trans.commit()
-            #self.logger.debug("Machine (uuid=%s) successfully deleted" % uuid)
-
-            #return True
-
-        #else:
-            #return False
-
-
     def _killsession(self,sessionwebservice):
         command = "curl -X GET -H 'Content-Type: application/json' -H 'Session-Token: "+ sessionwebservice+"' '"+ GlpiConfig.webservices['glpi_base_url']+"killSession'"
         self.logger.debug("Kill session : %s"%command)
