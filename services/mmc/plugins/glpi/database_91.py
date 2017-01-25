@@ -3806,7 +3806,7 @@ class Glpi91(DyngroupDatabaseHelper):
         if exitcode == 0:
             sessionwebservice =  str(json.loads(stdout[0])['session_token'])
             self.logger.debug("Session-Token : %s"%(sessionwebservice))
-            command = "curl -X DELETE -H 'Content-Type: application/json' -H 'Session-Token: " + sessionwebservice + "' '" + GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid)) +"?force_purge=true'"
+            command = "curl -X DELETE -H 'Content-Type: application/json' -H 'Session-Token: " + sessionwebservice + "' '" + GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid)) +"?force_purge=1'"
             self.logger.debug("Delete computer %s : %s"%(str(fromUUID(uuid)), command))
             exitcode, stdout, stderr = shlaunch(command)
             if exitcode == 0:
