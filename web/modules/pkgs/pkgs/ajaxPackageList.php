@@ -26,6 +26,7 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
 
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -46,9 +47,14 @@ $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 $count = $packages[0];
 $packages = $packages[1];
 
-$desc = $params = $names = $versions = $licenses = $size = array();
-$err = array();
 
+$params = array();
+$names = array();
+$versions = array();
+$licenses = array();
+$size = array();
+$err = array();
+$desc = array();
 foreach ($packages as $p) {
     $p = $p[0];
     if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
@@ -60,10 +66,25 @@ foreach ($packages as $p) {
         // #### begin licenses ####
         $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && ! empty($p['licenses'])) {
-            $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion']);
-            $tmp_licenses = $licensescount . '/' . $p['licenses'];
+            $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
+            //lien vers creation groupe des machine avec licence.
+         $param  = array();
+            $param['vendor']=$p['Qvendor'];
+            $param['software']= $p['Qsoftware'];
+            $param['version']=$p['Qversion'];
+            $param['count']=$licensescount;
+            $param['licencemax']=$p['licenses'];
+            $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence",$param);
+            $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">'.
+                                '<a href="'.
+                                $urlRedirect.'" title="Create group">'.
+                                $licensescount .
+                                '/' .
+                                $p['licenses'].
+                                '</a></span>';
+
             if ($licensescount > $p['licenses']) { // highlights the exceeded license count 
-                $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
+                $tmp_licenses = '<font color="FF0000">' . $tmp_licenses .'</font>';
             }
         }
         $licenses[] = $tmp_licenses;

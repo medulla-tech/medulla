@@ -116,7 +116,11 @@ class RpcProxy(RpcProxyI):
                                                                 hostname,
                                                                 macs))
 
-def getLicensesCount(vendor, software, version):
+
+def getLicensesComputer(vendor, software, version):
+    return getLicensesCount(vendor, software, version,3)
+
+def getLicensesCount(vendor, software, version, valcount=1):
     ctx = SecurityContext()
     ctx.userid = "root"
 
@@ -135,11 +139,12 @@ def getLicensesCount(vendor, software, version):
     version = check_param(version)
     if software is None:
         software = '%'
-    return xmlrpcCleanup(Glpi().getAllSoftwaresImproved(ctx,
-                                                     software,
-                                                     vendor=vendor,
-                                                     version=version,
-                                                     count=1))
+    rr =xmlrpcCleanup(Glpi().getAllSoftwaresImproved(ctx,
+                                                        software,
+                                                        vendor=vendor,
+                                                        version=version,
+                                                        count=valcount))
+    return rr
 
 
 def getLastMachineInventoryFull(uuid):
