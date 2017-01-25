@@ -41,11 +41,11 @@ class os_repartitionPanel extends Panel {
 	    'other',
 	    'Mageia 5',
 	    'Mageia 6',
-            'Microsoft%Windows 10',
-            'Microsoft%Windows 8',
-	    'Microsoft%Windows 7',
-	    'Microsoft%Windows Vista',
-            'Microsoft%Windows XP',
+            'Windows 10',
+            'Windows 8',
+	    'Windows 7',
+	    'Windows Vista',
+            'Windows XP',
             'otherw'
         );
 
@@ -70,11 +70,11 @@ class os_repartitionPanel extends Panel {
 	    "$urlRedirect&os=other", // Static group links
 	    "$urlRedirect&os=Mageia 5",
 	    "$urlRedirect&os=Mageia 6",
-            "$urlRedirect&os=Microsoft Windows 10",
-            "$urlRedirect&os=Microsoft Windows 8",
-	    "$urlRedirect&os=Microsoft Windows 7",
-	    "$urlRedirect&os=Microsoft Windows Vista",
-            "$urlRedirect&os=Microsoft Windows XP",
+            "$urlRedirect&os=Windows 10",
+            "$urlRedirect&os=Windows 8",
+	    "$urlRedirect&os=Windows 7",
+	    "$urlRedirect&os=Windows Vista",
+            "$urlRedirect&os=Windows XP",
             "$urlRedirect&os=otherw"
         );
 

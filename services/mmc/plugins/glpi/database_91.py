@@ -1505,16 +1505,6 @@ class Glpi91(DyngroupDatabaseHelper):
         session.close()
         return ret
 
-    #def getMachinesLocations(self, machine_uuids):
-        #self.logger.info("***********getMachinesLocations");
-        #session = create_session()
-        #q = session.query(Entities).add_column(self.machine.c.id).select_from(self.entities.join(self.machine)).filter(self.machine.c.id.in_(map(fromUUID, machine_uuids))).all()
-        #session.close()
-        #ret = {}
-        #for loc, mid in q:
-            #ret[toUUID(mid)] = loc.toH()
-        #return ret
-
     def getUsersInSameLocations(self, userid, locations = None):
         """
         Returns all users name that share the same locations with the given
@@ -2628,13 +2618,13 @@ class Glpi91(DyngroupDatabaseHelper):
             query = query.filter(
                 or_(
 			and_(
-				not_(OS.name.like('%Microsoft%Windows%')), not_(OS.name.like('%Mageia%')),
+				not_(OS.name.like('%Windows%')), not_(OS.name.like('%Mageia%')),
                 ), Machine.operatingsystems_id == 0,
             ))
         elif osnames == ["otherw"]:
-            query = query.filter(and_(not_(OS.name.like('%Microsoft%Windows%10%')), not_(OS.name.like('%Microsoft%Windows%8%')),\
-			    not_(OS.name.like('%Microsoft%Windows%7%')), not_(OS.name.like('%Microsoft%Windows%Vista%')),\
-                not_(OS.name.like('%Microsoft%Windows%XP%')), OS.name.like('%Microsoft%Windows%')))
+            query = query.filter(and_(not_(OS.name.like('%Windows%10%')), not_(OS.name.like('%Windows%8%')),\
+			    not_(OS.name.like('%Windows%7%')), not_(OS.name.like('%Windows%Vista%')),\
+                not_(OS.name.like('%Windows%XP%')), OS.name.like('%Windows%')))
         # if osnames == ['%'], we want all machines, including machines without OS (used for reporting, per example...)
         elif osnames != ['%']:
             os_filter = [OS.name.like('%' + osname + '%') for osname in osnames]
@@ -2858,7 +2848,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = query.all()
         return ret
 
-    @DatabaseHelper._session
+   @DatabaseHelper._session
     def getAllSoftwaresImproved(self,
                              session,
                              ctx,
@@ -2883,6 +2873,7 @@ class Glpi91(DyngroupDatabaseHelper):
                 if param is not None:
                     return False
             return True
+
         def check_list(param):
             if not isinstance(param, list):
                 return [param]
@@ -2899,13 +2890,23 @@ class Glpi91(DyngroupDatabaseHelper):
 
         if int(count) == 1:
             query = session.query(func.count(self.software.c.name))
-        else:
+        elif int(count) == 2:
             query = session.query(self.software.c.name)
+        else:
+            query = session.query(self.machine.c.id.label('computers_id'), self.machine.c.name.label('computers_name'),self.machine.c.entities_id.label('entity_id'))
 
-        query = query.select_from(self.software
-                                  .join(self.softwareversions)
-                                  .join(self.inst_software)
-                                  .outerjoin(self.manufacturers))
+        if int(count) >= 3:
+            query = query.select_from(self.software
+                                    .join(self.softwareversions)
+                                    .join(self.inst_software)
+                                    .join(self.machine)
+                                    .outerjoin(self.manufacturers))
+        else:
+            query = query.select_from(self.software
+                                    .join(self.softwareversions)
+                                    .join(self.inst_software)
+                                    .outerjoin(self.manufacturers))
+
 
         name_filter = [Software.name.like(n) for n in name]
         query = query.filter(or_(*name_filter))
@@ -2922,10 +2923,12 @@ class Glpi91(DyngroupDatabaseHelper):
             query = query.filter(Software.entities_id.in_(ctx.locationsid))
 
         if int(count) == 1:
-            ret = int(query.scalar())
+            return {'count' : int(query.scalar())}
+        elif int(count) == 2:
+            return query.all()
         else:
-            ret = query.all()
-        return ret
+            ret =query.all()
+            return [{'computer':a[0],'name':a[1],'entityid':a[2]}  for a in ret ]
 
     def getMachineBySoftwareAndVersion(self, ctx, swname, count=0):
         # FIXME: the way the web interface process dynamic group sub-query
