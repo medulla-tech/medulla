@@ -2848,7 +2848,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = query.all()
         return ret
 
-   @DatabaseHelper._session
+    @DatabaseHelper._session
     def getAllSoftwaresImproved(self,
                              session,
                              ctx,
