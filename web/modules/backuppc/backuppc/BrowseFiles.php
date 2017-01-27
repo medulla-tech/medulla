@@ -36,7 +36,7 @@ $p->display();
 require_once("modules/backuppc/includes/xmlrpc.php");
 
 if(!isset($_SESSION['backup_hosts']))
-	$_SESSION['backup_hosts'] = array_combine($_GET['host'],'default');
+    $_SESSION['backup_hosts'] = array_combine([$_GET['host']], [$_GET['cn']]);
 
 $params = array('host' => $_GET['host'], 'sharename' => $_GET['sharename'], 'backupnum' => $_GET['backupnum']);
 

@@ -1742,6 +1742,33 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getPossibleMasters(self, target_uuid, target_type, start, end, filt):
         return self.getPossibleImagesOrMaster(target_uuid, target_type, P2IIK.IS_MASTER_ONLY, start, end, filt)
 
+    def getComputerWithImageInEntity(self, uuidimagingServer):
+        session = create_session()
+        q = session.query(self.target.c.uuid.label('Computer'),
+                          self.target.c.name.label('ComputerName'),
+                          self.image.c.name.label('Nameimage'),
+                          self.image.c.is_master.label('masterimage'),
+                          self.imaging_server.c.name.label('nameimagingserver'),
+                          self.entity.c.uuid.label('uuidentity')
+                          )
+        q = q.select_from(
+            self.image.\
+            join(self.image_state, self.image_state.c.id == self.image.c.fk_state ).\
+            join(self.image_on_imaging_server, self.image_on_imaging_server.c.fk_image == self.image.c.id ).\
+            join(self.imaging_server,self.imaging_server.c.id == self.image_on_imaging_server.c.fk_imaging_server).\
+            join(self.entity,  self.entity.c.id == self.imaging_server.c.fk_entity ).\
+            join(self.target, self.target.c.fk_entity == self.entity.c.id).\
+            join(self.mastered_on, self.mastered_on.c.fk_image == self.image.c.id).\
+            join(self.imaging_log, self.imaging_log.c.id == self.mastered_on.c.fk_imaging_log)
+        )
+        q = q.filter(and_(self.entity.c.uuid == uuidimagingServer,
+                          self.target.c.id == self.imaging_log.c.fk_target))
+        q = q.order_by(self.image.c.is_master)
+        print q
+        q=q.all()
+        q1 =  [[z.Computer, z.ComputerName,z.Nameimage,z.masterimage,z.nameimagingserver,z.uuidentity] for z in q]
+        return q1
+
     def getEntityMasters(self, loc_id, start, end, filt):
         session = create_session()
         menu = self.getEntityDefaultMenu(loc_id)
@@ -3390,9 +3417,34 @@ class ImagingDatabase(DyngroupDatabaseHelper):
     def getCustomMenuCount(self, location):
         session = create_session()
         ret = session.query(func.count(Menu.id)).select_from(self.menu.join(self.target, self.target.c.fk_menu == self.menu.c.id) \
-                #self.entity.c.id == self.imaging_server.c.fk_entity
                 .join(self.entity, self.target.c.fk_entity == self.entity.c.id)).filter(and_(Menu.custom_menu == 1, self.entity.c.uuid == location))
         return ret.scalar()
+
+    def getCustomMenuCountdashboard(self, location):
+        session = create_session()
+        ret = session.query(func.count(distinct(self.target.c.uuid))).filter(and_(self.target.c.fk_entity == fromUUID(location),
+                                                                                  self.target.c.is_registered_in_package_server == 1,
+                                                                                  self.target.c.type.in_([1,3])))
+        return ret.scalar()
+
+    def getCustomMenubylocation(self, location):
+        session = create_session()
+        ret = session.query(self.target.c.uuid,self.target.c.name,self.target.c.nic_uuid ).filter(and_(self.target.c.fk_entity == fromUUID(location),
+                                                                                  self.target.c.is_registered_in_package_server == 1,
+                                                                                  self.target.c.type.in_([1])))
+        q=ret.distinct().all()
+        q1=[]
+        for z in q:
+            a=[]
+            a.append(z.uuid)
+            a.append(z.name)
+            if z.nic_uuid == None:
+                a.append("")
+            else:
+                a.append(z.nic_uuid)
+            q1.append(a)
+        #q1 =  [[z.uuid, z.name,z.nic_uuid] for z in q]
+        return q1
 
     def __getSynchroStates(self, uuids, target_type, session):
         q = session.query(SynchroState).add_entity(Menu)

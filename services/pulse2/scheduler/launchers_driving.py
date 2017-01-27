@@ -134,9 +134,9 @@ class LauncherCallingProvider(type):
         @rtype: Deferred
         """
         if launcher :
-            logging.getLogger().debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
             logging.getLogger().debug("Launcher: method %s(%s)" % (method, str(args)))
             uri = self.launchers[launcher]
+            logging.getLogger().debug("Calling on launcher %s uri [%s]: method %s" % (launcher, uri, method))
             proxy = getProxy(uri)
             d = proxy.callRemote(method, *args)
             d.addErrback(self._call_error, launcher, method)

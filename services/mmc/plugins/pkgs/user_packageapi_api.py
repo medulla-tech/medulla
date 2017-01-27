@@ -61,6 +61,6 @@ class UserPackageApiApi(Singleton):
 
         for method in ('getUserPackageApi', ):
             setattr(self, method, getattr(self.internal, method))
-                    
+
         self.initialized = True
 

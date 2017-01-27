@@ -85,6 +85,12 @@ function getLicensesCount($vendor, $software, $version) {
     return XmlCall($module . ".getLicensesCount", array($vendor, $software, $version));
 }
 
+function getLicensesComputer($vendor, $software, $version) {
+    #warning only for glpi module [no implement in inventory yet ]
+    $module = (in_array('inventory', $_SESSION['modulesList'])) ? 'inventory' : 'glpi';
+    return XmlCall($module . ".getLicensesComputer", array($vendor, $software, $version));
+}
+
 function updateAppstreamPackages(){
     return xmlCall("pkgs.updateAppstreamPackages", array());
 }

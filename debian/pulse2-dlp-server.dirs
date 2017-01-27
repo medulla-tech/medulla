@@ -1,0 +1,3 @@
+var/lib/pulse2/dlp_packages/
+var/lib/pulse2/dlp_sessions/
+var/log/mmc/

@@ -1,0 +1,3 @@
+usr/bin/pulse2-uuid-resolver
+usr/bin/pulse2-backup-handler
+etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini

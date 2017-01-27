@@ -1,0 +1,145 @@
+#!/usr/bin/make -f
+#
+# Copyright (C) 2010-2012 Mandriva, http://www.mandriva.com
+#
+# $Id: rules 7790 2010-12-02 14:21:28Z cdelfosse $
+#
+# This file is part of Pulse 2.
+#
+# Pulse 2 is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# Pulse 2 is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with Pulse 2.  If not, see <http://www.gnu.org/licenses/>.
+
+# We'll symlink /usr/share/doc/<package> to the pulse2-common one
+# So we need a list of available packages
+PKG_LIST = $(shell cat debian/control  | grep Package | awk '{ print $$2 }' | grep -v '^pulse2-common$$' | grep -v '^pulse2$$' | grep -v '^pulse2-uuid-resolver$$' | grep -v '^pulse2-imaging-server$$' | grep -v '^pulse2-dlp-server$$' | tr "\n" " ")
+
+PACKAGE=pulse2
+DESTDIR=$(CURDIR)/debian/tmp
+
+# Define *FLAGS
+CFLAGS:=$(shell dpkg-buildflags --get CFLAGS)
+CPPFLAGS:=$(shell dpkg-buildflags --get CPPFLAGS)
+LDFLAGS:=$(shell dpkg-buildflags --get LDFLAGS)
+
+CPPFLAGS += -Wno-error=unused-result
+
+clean: clean-real
+clean-real:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp Aq INSTALL
+	-[ ! -f Makefile ] || $(MAKE) distclean
+	dh_clean
+
+configure:
+
+config.status: configure
+	dh_testdir
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+	./configure --host=$(DEB_HOST_GNU_TYPE) \
+		    --build=$(DEB_BUILD_GNU_TYPE) \
+		    --prefix=/usr \
+		    --sysconfdir=/etc \
+		    --localstatedir=/var \
+		    --disable-python-check \
+		    --disable-silent-rules \
+		    --disable-wol \
+		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
+		    LDFLAGS="$(LDFLAGS)"
+	$(MAKE) -C services/3rd_party wol-src
+	cd services/3rd_party/wol-src/; \
+	./configure --host=$(DEB_HOST_GNU_TYPE) \
+		    --build=$(DEB_BUILD_GNU_TYPE) \
+		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
+		    LDFLAGS="$(LDFLAGS)"
+
+build-arch:
+build-indep:
+build: build-stamp
+build-stamp: config.status
+	dh_testdir
+	$(MAKE) 
+	$(MAKE) -C services/3rd_party pulse2-wol
+	touch build-stamp
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k
+	dh_installdirs
+	$(MAKE) install DESTDIR=$(DESTDIR)
+	install -m 755 services/3rd_party/pulse2-wol $(DESTDIR)/usr/sbin/pulse2-wol	
+	# Already provided by MMC packages
+	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
+	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
+	# Install initscript using debhelper
+	rm -rf $(DESTDIR)/etc/init.d
+	# Autotools won't listen to me...
+	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
+	# Useless files
+	rm -f $(DESTDIR)/usr/share/doc/pulse2/README.win32
+	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
+
+binary-indep: build install
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installdirs
+	# Must be readable by backuppc
+	chmod 0644 $(DESTDIR)/etc/mmc/pulse2/uuid-resolver/uuid-resolver.ini
+	# Must be writable by web-server 
+	chown www-data:root debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \
+			    debian/pulse2-dlp-server/var/lib/pulse2/dlp_sessions/
+	chmod 750 debian/pulse2-dlp-server/var/lib/pulse2/dlp_packages/ \
+		  debian/pulse2-dlp-server/var/lib/pulse2/dlp_sessions/
+	# Create www-data writable log file for pulse2-dlp
+	touch debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
+	chown www-data:root debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
+	chmod 750 debian/pulse2-dlp-server/var/log/mmc/pulse2-dlp-server.log
+	dh_install --sourcedir=$(DESTDIR) --fail-missing
+	# Enable logging for pulse2-dlp standalone
+	sed -i 's!^#[[:space:]]log.error_file[[:space:]]=!log.error_file =!' debian/pulse2-dlp-server/etc/mmc/pulse2/dlp-server/dlp-server.ini
+	# This directory must be writable for www-data (first run)
+	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
+	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
+	dh_pysupport
+	dh_fixperms -Xetc/mmc \
+                    -Xusr/share/doc/pulse2-common/contrib/ \
+                    -Xvar/lib/pulse2/dlp_packages \
+                    -Xvar/lib/pulse2/dlp_sessions \
+		    -Xvar/log/mmc
+	dh_installchangelogs -Npulse2 ChangeLog
+	dh_installdocs -Npulse2
+	find debian/pulse2-common/usr/share/doc/pulse2-common/contrib/ -path '*/imaging/lrsgznbd/*' -prune -o -name 'Makefile*' -exec rm {} \;
+	find debian/pulse2-common/usr/share/doc/pulse2-common/contrib/package-server/some_examples -name '*.bat' -exec chmod 644 {} \;
+	for PKG in $(PKG_LIST); do \
+		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
+		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
+	done
+	dh_installinit
+	dh_shlibdeps
+	dh_strip
+	dh_link
+	dh_compress -X/sql/ -X.pdf
+	dh_installdeb
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install

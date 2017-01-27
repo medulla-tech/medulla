@@ -206,6 +206,14 @@ function xmlrpc_getCustomMenuCount($location) {
     return xmlCall("imaging.getCustomMenuCount", array($location));
 }
 
+function xmlrpc_getCustomMenuCountdashboard($location) {
+    return xmlCall("imaging.getCustomMenuCountdashboard", array($location));
+}
+
+function xmlrpc_getCustomMenubylocation($location) {
+    return xmlCall("imaging.getCustomMenubylocation", array($location));
+}
+
 function xmlrpc_getTargetsByCustomMenuInEntity($location, $custom_menu = 1) {
     return xmlCall("imaging.getTargetsByCustomMenuInEntity", array($location, $custom_menu));
 }
@@ -280,6 +288,10 @@ function xmlrpc_getLocationImages($location_id, $start = 0, $end = -1, $filter =
 
 function xmlrpc_getLocationMastersByUUID($location_id, $masters_uuid) {
     return xmlCall("imaging.getLocationMastersByUUID", array($location_id, $masters_uuid));
+}
+
+function xmlrpc_getComputersWithImageInEntity($location_uuid) {
+    return xmlCall("imaging.getComputersWithImageInEntity", array($location_uuid));
 }
 
 function xmlrpc_areImagesUsed($images) {
@@ -526,6 +538,11 @@ function xmlrpc_selectWindowsAnswerFile($title)
 function xmlrpc_getWindowsAnswerFileParameters($title)
 {
 	return xmlCall("imaging.getWindowsAnswerFileParameters",array($title));
+}
+
+function xmlrpc_editWindowsAnswerFile($xmlWAFG, $title)
+{
+	return xmlCall('imaging.editWindowsAnswerFile',array($xmlWAFG, $title));
 }
 
 function xmlrpc_getClonezillaParamsForTarget($target_uuid) {

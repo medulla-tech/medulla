@@ -40,11 +40,12 @@ class DyngroupDatabaseHelper(DatabaseHelper):
         self.filters = {}
 
     def filter(self, ctx, join_query, filt, query, grpby, filters = None):
+        filters = [t for t in filters if t is not None]
         if filters != None:
             self.filters[ctx.userid] = and_(*filters)
         query_filter = None
 
-        try:            
+        try:
             #if not 'query' in filt:
             if not filt.has_key('query'):
                 return (join_query, query_filter)

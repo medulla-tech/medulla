@@ -59,6 +59,11 @@ $submod->addPage($page);
 $page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
 $submod->addPage($page);
 
+$page = new Page("createGroupLicence", _T("Create licence static group", "glpi"));
+$page->setFile("modules/pkgs/pkgs/createGroupLicence.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $submod->addPage($page);
 $page = new Page("pending", _T('See pending packages', 'pkgs'));
 $submod->addPage($page);

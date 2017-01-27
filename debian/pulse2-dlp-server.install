@@ -1,0 +1,3 @@
+usr/bin/pulse2-dlp-server
+etc/mmc/pulse2/dlp-server
+usr/lib/python2.?/*-packages/pulse2/dlp

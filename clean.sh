@@ -27,3 +27,5 @@ echo "Clean autogen generated files"
 for file in $AUTOGEN_FILES; do
     ( cd $(dirname $0) && rm -rf $file )
 done
+
+rm -rf pulse*tar.*

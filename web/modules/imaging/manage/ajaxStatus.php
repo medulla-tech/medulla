@@ -24,16 +24,94 @@
 /* common ajax includes */
 require("../includes/ajaxcommon.inc.php");
 
+if (in_array("glpi", $_SESSION['supportModList'])) {
+    require_once("../../glpi/includes/xmlrpc.php");
+}
+
+
+
 $t = new TitleElement(_T("Status", "imaging"), 3);
 $t->display();
 
 $customMenu_count = xmlrpc_getCustomMenuCount($location);
+//$customMenu_count = xmlrpc_getCustomMenuCountdashboard($location);
+
+$namelocation = xmlrpc_getLocationName(getCurrentLocation());
+$gg = xmlrpc_getCustomMenubylocation($location);
+
+if (in_array("glpi", $_SESSION['supportModList'])) {
+    foreach ($gg as &$entry){
+        $computersummary=getLastMachineGlpiPart($entry[0], 'Summary');
+        foreach ($computersummary[0] as $val){
+            switch($val[0]){
+                case "Computer Name":
+                    $entry['realname']=$val[1][2];
+                    break;
+                case "Entity (Location)":
+                        $entry['newlocation']=$val[1];
+                        break;
+                case "os image":
+                        $entry['OS'] = $val[1];
+                        break;
+                case "Domain":
+                    $entry['Domain']  = $val[1];
+                    break;
+                    
+                case " Service Pack":
+                    $entry['ServicePack']  = $val[1];
+                    break;
+                case "Model / Type":
+                    $part = explode("/",$val[1] );
+                    $entry['Model']  = $part[0];
+                    $entry['type']  = $part[0];
+                    break;
+            }
+            $entry['creationEntity'] =  $namelocation;
+        }
+    }
+}
+
+
+$dede= xmlrpc_getComputersWithImageInEntity(getCurrentLocation());
+//smm = xmlrpc_getMyMenuProfile(58);
+
+//$ffffff = xmlrpc_getMyMenuProfile(58);
+//imaging.getMyMenuProfile('58',)
 $global_status = xmlrpc_getGlobalStatus($location);
 if (!empty($global_status)) {
     $disk_info = format_disk_info($global_status['disk_info']);
     $health = format_health($global_status['uptime'], $global_status['mem_info']);
     $short_status = $global_status['short_status'];
     ?>
+<style>
+a.info{
+position:relative;
+z-index:24;
+color:#000;
+text-decoration:none
+}
+ 
+a.info:hover{
+z-index:25;
+background-color:#FFF
+}
+ 
+a.info span{
+display: none
+}
+ 
+a.info:hover span{
+display:block;
+position:absolute;
+top:2em; left:2em; width:50em;
+border:1px solid #000;
+background-color:#E0FFFF;
+color:#000;
+text-align: justify;
+font-weight:none;
+padding:5px;
+}
+</style>
 
     <div class="status">
         <div class="status_block">
@@ -54,22 +132,289 @@ if (!empty($global_status)) {
         $led->display();
         echo "&nbsp;" . _T("Up-to-date", "imaging");
         ?>
+
         </div>-->
         <div class="status_block">
             <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
-            <h3><?php echo _T('Stats', 'imaging') ?></h3>
+            <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?>  </h3>
+        
             <p class="stat">
-            <img src="img/machines/icn_machinesList.gif" /> <strong>
-            <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?> (<?php echo $customMenu_count; ?> <?php echo _T("with custom menu", "imaging") ?>)</p>
-            <p class="stat"><img src="img/machines/icn_machinesList.gif" /> <strong><?php echo $short_status['rescue']; ?></strong>/<?php echo $short_status['total']; ?> <?php echo _T("client(s) have rescue image(s)", "imaging") ?></p>
-            <p class="stat"><img src="img/common/cd.png" />
-            <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?> 
-            
-                <strong>
-                <?php echo $short_status['master']." "; ?></strong><?php echo _T("masters are available", "imaging").'</a>'; ?>
+            <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
+            <? $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
+                <img src="img/machines/icn_machinesList.gif" /> <strong>
+                <?php echo $short_status['total']; ?></strong> <?php echo _T("client(s) registered", "imaging") ?>
+                <?php
+                    if (intval($customMenu_count) > 0){
+                        echo "(".$customMenu_count; 
+                        echo' <a class="info" href="#" id="boutoninformation1" class="lienstylebouton">';
+                        echo _T("with custom menu", "imaging");
+                        echo '
+                        <span>Computer list with custom menu for entity '. $namelocation.'<br>';
+                            $i=0;
+                            foreach ($gg as $entry){
+                                if (in_array("glpi", $_SESSION['supportModList'])) {
+                                    if ($entry[1] != $entry['realname']){
+                                        echo "[ ". $entry[1]."(".$entry['realname'].") ]";
+                                    }
+                                    else{
+                                        echo "[". $entry[1]."]";
+                                    }
+                                }
+                                else{
+                                    echo "[". $entry[1]."]";
+                                }
+                                    if ($i == 5){
+                                            echo "<br>";
+                                            $i=0;
+                                        }
+                                        else {
+                                            echo " ";
+                                        }
+                                        $i++;
+                            }
+                            echo '
+                        </span>
+                    </a>';
+                    echo '<a  href="'. $urlRedirect .'">'; 
+                    echo '<img src="img/machines/icn_machinesList.gif" title="create group "/>';
+                    echo '</a>';
+                    echo '<a href="'. $urlRedirectgroupimaging .'"  class="lienstylebouton boutoncreation">';
+                    echo '<img src="img/machines/icn_machinesList.gif" title="create group imaging" />';
+                    echo '</a>)';
+
+                    echo '<div id="popupinformation1" title="Custom Menu">';
+                    echo '<p>';
+                            foreach ($gg as $entry){
+                                if (in_array("glpi", $_SESSION['supportModList'])) {
+                                    $param  = array();
+                                    $param['tab']='tabbootmenu';
+                                    $param['hostname']=$entry['realname'];
+                                    $param['uuid']=$entry[0];
+                                    $param['type']='';
+                                    $param['target_uuid']=$entry[0];
+                                    $param['target_name']=$entry['realname'];
+                                    
+                                    $urlRedirect = urlStrRedirect("base/computers/imgtabs",$param);
+                                    if ( $entry['newlocation'] == $entry['creationEntity']){
+                                        echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
+                                    }
+                                    else
+                                    {
+                                    echo  '<a href="'.$urlRedirect.'">'.'Warning Name ('. $entry['1'].' to '.$entry['realname'].') and entity ('.$entry['creationEntity'].' to '.$entry['newlocation'].')'.'</a>';
+                                    }
+                                }
+                                else
+                                {
+                                    $param  = array();
+                                    $param['tab']='tabbootmenu';
+                                    $param['hostname']=$entry[1];
+                                    $param['uuid']=$entry[0];
+                                    $param['type']='';
+                                    $param['target_uuid']=$entry[0];
+                                    $param['target_name']=$entry[1];
+                                    $urlRedirect = urlStrRedirect("base/computers/imgtabs",$param);
+                                    echo '<a href="'.$urlRedirect.'">'.'Boot menu '.$entry['realname'].'</a>';
+                                }
+                        }
+                    echo '</p>';
+                    echo '</div>';
+                    echo '<div id="popupconfirmationgroup" title="Attention !">
+                        <p>The creation of an imaging group will reset the boot menus of all the machines in the group?</p>
+                    </div>  ';
+                echo '</p>';
+            }
+            ?>
+            <p class="stat">
+                <img src="img/machines/icn_machinesList.gif" />
+                <strong> 
+                    <?php echo $short_status['rescue']; ?>
+                </strong>/<?php echo $short_status['total']; ?>
+                    <?php
+                        if (intval($short_status['rescue']) <= 0){
+                            $text = _T("client have rescue image", "imaging");
+                            echo $text;
+                        }
+                        else{
+                            $text = _T("client(s) have rescue image(s)", "imaging");
+                            echo '<a  class="info" href="#" id="boutoninformation" class="lienstylebouton">'.$text;
+                            echo '<span>';
+                            echo '<strong>Clients with rescue images:</strong><br>';
+                            foreach ( $dede as $val){
+                                if ( intval($val[3]) == 0){
+                                    echo 'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."<br>";
+                                }
+                            } 
+                            echo '</span>';
+                            echo '</a>';
+                        }
+                    ?>
+            </p>
+            <p class="stat">
+                <img src="img/common/cd.png" />
+                <? echo '<a href="'.'main.php?module=imaging&submod=manage&action=master'.'"'; ?>
+                <strong><?php echo $short_status['master']." "; ?></strong>
+                <?php echo _T("masters are available", "imaging").'</a>'; ?>
+                <!--
+                    <a id="kkk" href="#" >fffff</a>
+                
+                <a href="#" id="boutoninformation" class="lienstylebouton">Information</a>-->
+                <!--
+                    <div id="a_masquer" style="display:none">
+                        Contenu de la div en question.
+                    </div>
+                -->
+                <div id="popupinformation" title="client(s) have rescue image(s)">
+                <p>
+
+                <? 
+                    foreach ( $dede as $val){
+                        if ( intval($val[3]) == 0){
+                            $parm=array();
+                            $parm['tab'] = 'tabimages';
+                            $parm['hostname'] = $val[1];
+                            $parm['uuid'] = $val[0];
+                            $parm['type'] = "";
+                            $parm['target_uuid'] = $val[0];
+                            $parm['target_name'] = $val[1];
+                            $parm['namee'] = "llllllllll";
+                            $urlRedirect = urlStrRedirect("base/computers/imgtabs",$parm);
+                            echo '<a href="'.$urlRedirect.'">'.'Client : ['.$val[1]."] has rescue Image : [". $val[2].'] '."</a><br>";
+                        }
+                    } 
+                ?>
                 </p>
+                </div>
+            </p>
         </div>
     </div>
+    
+    <script type="text/javascript">
+
+    jQuery(function () {
+
+        // définition de la boîte de dialogue
+
+        // la méthode jQuery dialog() permet de transformer un div en boîte de dialogue et de définir ses boutons
+
+        jQuery( "#popupinformation" ).dialog({
+            autoOpen: false,
+            width: 400,
+            buttons: [
+                {
+                    text: "OK",
+                    click: function() {
+                        jQuery( this ).dialog( "close" );
+                    }
+                }
+            ]
+        });
+
+        // comportement du bouton devant ouvrir la boîte de dialogue
+
+        jQuery( "#boutoninformation" ).click(function( event ) {
+            // cette ligne est très importante pour empêcher les liens ou les boutons de rediriger
+            // vers une autre page avant que l'usager ait cliqué dans le popup
+            event.preventDefault();
+            // affichage du popup
+            jQuery( "#popupinformation" ).dialog( "open" );
+        });
+        
+        jQuery( "#popupinformation1" ).dialog({
+            autoOpen: false,
+            width: 400,
+            buttons: [
+                {
+                    text: "OK",
+                    click: function() {
+                        jQuery( this ).dialog( "close" );
+                    }
+                }
+            ]
+        });
+
+        // comportement du bouton devant ouvrir la boîte de dialogue
+
+        jQuery( "#boutoninformation1" ).click(function( event ) {
+            // cette ligne est très importante pour empêcher les liens ou les boutons de rediriger
+            // vers une autre page avant que l'usager ait cliqué dans le popup
+            event.preventDefault();
+            // affichage du popup
+            jQuery( "#popupinformation1" ).dialog( "open" );
+        });
+        
+  
+        // définition de la boîte de dialogue
+
+        // la méthode jQuery dialog() permet de transformer un div en boîte de dialogue et de définir ses boutons
+
+        jQuery("#popupconfirmationgroup").dialog( {
+
+            autoOpen: false,
+
+            width: 400
+
+        });
+        jQuery(".boutoncreation").click(function(event) {
+
+        // cette ligne est très importante pour empêcher les liens ou les boutons de rediriger
+
+        // vers une autre page avant que l'usager ait cliqué dans le popup
+
+        event.preventDefault();
+
+        // retrouve l'attribut href du lien sur lequel on a cliqué
+
+        var targetUrl = jQuery(this).attr("href");
+
+        // on définit les boutons ici plutôt que plus haut puisqu'on a besoin de connaître l'URL de la page, qui n'était pas encore disponible sur le document.ready.
+
+        jQuery("#popupconfirmationgroup").dialog({
+
+            buttons: [
+
+                {  
+
+                    text: "Create Group",    
+
+                    click: function () {
+
+                        window.location.href = targetUrl;
+
+                    }
+
+                },
+
+                {
+
+                    text: "Cancel",
+
+                    click: function () {
+
+                        jQuery(this).dialog("close");
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+ 
+
+        // affichage du popup
+
+        jQuery("#popupconfirmationgroup").dialog("open");
+
+    });
+ 
+
+});
+    </script>
+
+
+
+
  <!--// regles de gestions affichage.
  // fichier /tmp/multicast.sh n'existe pas "ne pas afficher cadre Multicast Current Location"
  

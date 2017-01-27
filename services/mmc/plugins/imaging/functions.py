@@ -874,6 +874,13 @@ class ImagingRpcProxy(RpcProxyI):
         ret = db.getEntityMastersByUUID(loc_id, uuids)
         return xmlrpcCleanup(ret)
 
+    #jfk
+    def getComputersWithImageInEntity(self, uuidimagingServer):
+        db = ImagingDatabase()
+        ret = db.getComputerWithImageInEntity(uuidimagingServer)
+        return xmlrpcCleanup(ret)
+
+
     # EDITION
     def addImageToTarget(self, item_uuid, target_uuid, params, target_type):
         """
@@ -1997,6 +2004,12 @@ class ImagingRpcProxy(RpcProxyI):
     def getCustomMenuCount(self, location):
         return ImagingDatabase().getCustomMenuCount(location)
 
+    def getCustomMenuCountdashboard(self, location):
+        return ImagingDatabase().getCustomMenuCountdashboard(location)
+
+    def getCustomMenubylocation(self, location):
+        return ImagingDatabase().getCustomMenubylocation(location)
+
     def getComputerSynchroState(self, uuid):
         """ see getTargetSynchroState """
         if self.isTargetRegister(uuid, P2IT.COMPUTER):
@@ -2609,6 +2622,20 @@ class ImagingRpcProxy(RpcProxyI):
             else:
                 f.close()
                 return True
+
+    def editWindowsAnswerFile(self, xmlWAFG, title):
+        filexml="/var/lib/pulse2/imaging/postinst/sysprep/"
+
+        #test if file already exists
+        if path.isfile(filexml+title) :
+            try :
+                f = open(filexml+title, 'w')
+                f.write(xmlWAFG)
+            except Exception, e:
+                logging.getLogger().exception(e)
+                return False
+            else:
+                f.close()
 
     def getWindowsAnswerFileParameters(self, filename):
         """

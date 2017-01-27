@@ -1,0 +1,4 @@
+usr/sbin/pulse2-inventory-server
+usr/share/man/man1/pulse2-inventory-server.1
+usr/lib/python2.?/*-packages/pulse2/inventoryserver
+etc/mmc/pulse2/inventory-server
