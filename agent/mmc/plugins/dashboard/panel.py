@@ -108,3 +108,15 @@ class SpacePanel(Panel):
         return {
             'partitions': partitions,
         }
+
+class ProcessPanel(Panel):
+    def serialize(self):
+        exitcode, stdout, stderr = shlaunch("ps aux | grep 'pulse\|mmc' | grep -v 'defunct' | grep -v 'grep' | awk '{ if ($11 == \"/usr/bin/python\" || $11 == \"python\" || $11 == \"/bin/sh\") print $12; else print $11 }'")
+        if exitcode == 0:
+            return {
+                'process': stdout,
+            }
+        else:
+            return {
+                'process': stderr,
+            }
