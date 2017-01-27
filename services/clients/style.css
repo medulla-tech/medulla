@@ -1,0 +1,23 @@
+address {display: none}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+td, th {
+    padding: 10px 25px 10px 10px;
+    border-color: #CCCCCC;
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    vertical-align: center;
+}
+tr {
+    background-color: #F1F1F1;
+    font-size: 14px;
+}
+th {
+    background: #E6E6E6;
+    font-size: 13px;
+    font-weight:bold;
+    color: #333;
+    text-align: left;
+}
