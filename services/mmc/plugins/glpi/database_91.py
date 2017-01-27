@@ -46,7 +46,7 @@ from sqlalchemy.exc import OperationalError
 from mmc.support.mmctools import  shlaunch
 import base64
 import json
-
+import requests
 from mmc.site import mmcconfdir
 from mmc.database.database_helper import DatabaseHelper
 # TODO rename location into entity (and locations in location)
@@ -3746,38 +3746,6 @@ class Glpi91(DyngroupDatabaseHelper):
     def isComputerNameAvailable(self, ctx, locationUUID, name):
         raise Exception("need to be implemented when we would be able to add computers")
 
-    def _get_webservices_client(self):
-        client = XMLRPCClient(baseurl=self.config.webservices['glpi_base_url'])
-        client.connect(
-            self.config.webservices['glpi_username'],
-            self.config.webservices['glpi_password']
-        )
-
-        return client
-
-    def purgeMachine(self, id):
-        to_delete = {
-            'Computer':  {
-                'id': {'id': str(id)}
-            }
-        }
-
-        self.logger.debug('machine ID %s will be purged from GLPI' % (id))
-        webservices_client = self._get_webservices_client()
-        result = webservices_client.deleteObjects(fields=to_delete)
-        if isinstance(result, dict):
-            delete_result = False
-            try:
-                delete_result = result['Computer'][0]
-            except KeyError, e:
-                self.logger.error('Failed to delete machine ID %s: %s' % (id, e))
-            return delete_result
-
-        if isinstance(result, list) and not result[0]:
-            self.logger.error('Failed to delete machine ID %s: %s' % (id, result[1]))
-
-        return False
-
     def _killsession(self,sessionwebservice):
         """
         Destroy a session identified by a session token.
@@ -3786,9 +3754,13 @@ class Glpi91(DyngroupDatabaseHelper):
         @type sessionwebservice: str
 
         """
-        command = "curl -X GET -H 'Content-Type: application/json' -H 'Session-Token: "+ sessionwebservice +"' '"+ GlpiConfig.webservices['glpi_base_url']+"killSession'"
-        self.logger.debug("Kill session : %s"%command)
-        exitcode, stdout, stderr = shlaunch(command)
+        headers = {'content-type': 'application/json',
+                   'Session-Token': sessionwebservice
+                   }
+        url = GlpiConfig.webservices['glpi_base_url'] + "killSession"
+        r = requests.get(url, headers=headers)
+        if r.status_code == 200 :
+            self.logger.debug("Kill session REST: %s"%sessionwebservice)
 
     def delMachine(self, uuid):
         """
@@ -3800,32 +3772,28 @@ class Glpi91(DyngroupDatabaseHelper):
         @return: True if the machine successfully deleted
         @rtype: bool
         """
-
         authtoken =  base64.b64encode(GlpiConfig.webservices['glpi_username']+":"+GlpiConfig.webservices['glpi_password'])
-        command = "curl -X GET -H 'Content-Type: application/json' -H 'Authorization: Basic " + authtoken + "' '"+ GlpiConfig.webservices['glpi_base_url']+"initSession'"
-        #self.logger.debug("Auth token : %s"%authtoken)
-        self.logger.debug("Creation session : %s"%command)
-        exitcode, stdout, stderr = shlaunch(command)
-        if exitcode == 0:
-            sessionwebservice =  str(json.loads(stdout[0])['session_token'])
-            self.logger.debug("Session-Token : %s"%(sessionwebservice))
-            command = "curl -X DELETE -H 'Content-Type: application/json' -H 'Session-Token: " + sessionwebservice + "' '" + GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid)) +"?force_purge=1'"
-            self.logger.debug("Delete computer %s : %s"%(str(fromUUID(uuid)), command))
-            exitcode, stdout, stderr = shlaunch(command)
-            if exitcode == 0:
+        headers = {'content-type': 'application/json',
+                   'Authorization': "Basic " + authtoken
+                   }
+        url = GlpiConfig.webservices['glpi_base_url'] + "initSession"
+        self.logger.debug("Create session REST")
+        r = requests.get(url, headers=headers)
+        if r.status_code == 200 :
+            sessionwebservice =  str(json.loads(r.text)['session_token'])
+            self.logger.debug("session %s"%sessionwebservice)
+            url = GlpiConfig.webservices['glpi_base_url'] + "Computer/" + str(fromUUID(uuid))
+            headers = {'content-type': 'application/json',
+                        'Session-Token': sessionwebservice
+            }
+            parameters = {'force_purge': '1'}
+            r = requests.delete(url, headers=headers, params=parameters)
+            if r.status_code == 200 :
+                self.logger.debug("Machine %s deleted"%str(fromUUID(uuid)))
                 self._killsession(sessionwebservice)
                 return True
-            else:
-                self.logger.debug("Error del Delete computer %s : %s"%(str(fromUUID(uuid)), stdout))
-                self._killsession(sessionwebservice)
-                return False
-        else:
-            self.logger.debug("Error session  %s"%( stdout))
-            return False
-
-
-
-
+        self._killsession(sessionwebservice)
+        return False
 
     @DatabaseHelper._session
     def addUser(self, session, username, password, entity_rights=None):
