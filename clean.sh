@@ -25,7 +25,7 @@ AUTOGEN_FILES="aclocal.m4 autom4te.cache configure config.guess config.log confi
 
 echo "Clean autogen generated files"
 for file in $AUTOGEN_FILES; do
-    ( cd $(dirname $0) && rm -rf $file )
+    ( cd $(dirname $0) && rm -rfv $file )
 done
 
-rm -rf pulse*tar.*
+rm -fv pulse*tar.*
