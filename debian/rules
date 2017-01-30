@@ -94,6 +94,8 @@ install: build
 	# Useless files
 	rm -f $(DESTDIR)/usr/share/doc/pulse2/README.win32
 	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
+	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
+	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
 
 binary-indep: build install
 binary-arch: build install

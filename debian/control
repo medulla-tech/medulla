@@ -419,3 +419,24 @@ Description: Pulse 2 Register PXE Service
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
 
+Package: python-mmc-xmppmaster
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4), python-sleekxmpp, python-geoip, python-dnspython, geoip-database-contrib
+Description: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.
+
+Package: python-mmc-guacamole
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1), python-mmc-msc (= ${binary:Version}), python-mmc-inventory (= ${binary:Version}) | python-mmc-glpi (= ${binary:Version}), python-mmc-dyngroup (= ${binary:Version}), python-mmc-pkgs (= ${binary:Version}), python-pulse2-common (= ${binary:Version}), python-sqlalchemy (>= 0.4)
+Description: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.
+
+

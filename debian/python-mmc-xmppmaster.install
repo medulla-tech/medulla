@@ -1,0 +1,3 @@
+etc/mmc/plugins/xmppmaster.ini
+usr/lib/python2.?/*-packages/mmc/plugins/xmppmaster
+usr/lib/python2.?/*-packages/pulse2/database/xmppmaster

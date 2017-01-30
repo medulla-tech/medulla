@@ -1,3 +1,309 @@
+pulse2 (3.6.0-22) unstable; urgency=low
+
+ * fix clean script
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-21) unstable; urgency=low
+
+ * supp msg debug in Create computer list licensed #18 ( 1b916ce83fa6add664f9106122f3df32939891c6 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-20) unstable; urgency=low
+
+ * Use 1 instead of true to enable force_purge ( f7b12c5dc18bfb07b71a4f70c4fd145bccb0f34f )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-19) unstable; urgency=low
+
+ * Add some documentation ( f2d2201db0446067516c6529021da1e4820253e1 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-18) unstable; urgency=low
+
+ * Fix tooltip title ( c6498cad7da0bbb76b95bcbdc7151f32fd235a84 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-17) unstable; urgency=low
+
+ * Update sysprep templates for Windows 8, 8.1 and 10. ( 831502745132a3723b3d30ff531a643baf0442d5 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-16) unstable; urgency=low
+
+ * List computers to group for custom menu #40 (1) ( 9bfd9e1ef446d81f1f140766133f7cc72665736a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 16 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-15) unstable; urgency=low
+
+ * Group php class used in sysprep template ( 2c35865ab67903c50d01298cc32db3a827084e56 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 9 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-14) unstable; urgency=low
+
+ * Add backup profiles for Windows 8 / 8.1 and 10. ( 4fbd1fe1d1fb334a01a6625b500ac84c99d943a1 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 9 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-13) unstable; urgency=low
+
+ * Update FusionAntivirus.uptodate to FusionAntivirus.is_uptodate ( edf8160f84d0a20125bc2f61df58bf9d49520196 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 2 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-12) unstable; urgency=low
+
+ * Enable glpi 9.1 support ( 873f74ca21751de71a2e522cf619b054d8b210b2 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 2 Jan 2017 22:00:11 +0100
+
+pulse2 (3.6.0-11) unstable; urgency=low
+
+ * Remove passwords encryption in sysprep ( 2ff8342aa953f09774a36e586b8e9dd542303e3e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-10) unstable; urgency=low
+
+ * add log for deploy ( 680acae3baf2ae42b52aeb826d647e15d31d5ab7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-9) unstable; urgency=low
+
+ * add log for deploy ( 680acae3baf2ae42b52aeb826d647e15d31d5ab7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-8) unstable; urgency=low
+
+ * Add colors for generated xml sysprep answer file. ( 8eb00bc02f0213503c740381f3edaff1de5087df )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-7) unstable; urgency=low
+
+ * Translation fixes ( 563dd6e5bbd5fd0ff948e9132d2976229c916d7b )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-6) unstable; urgency=low
+
+ * Fix xmppmaster.ini after translation changes ( 38538d84fdd464e2b6ed69b420559d4a391b5d1d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-5) unstable; urgency=low
+
+ * Define 1s for pxe_timesenddata ( b9bac512c2e59ce492ff6acedc3e217cc0565744 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-4) unstable; urgency=low
+
+ * Fix remote control ( 5289283b2c5b664ccf32b4fa8a2fc3dd3995964e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-3) unstable; urgency=low
+
+ * Fix default inventory url setting ( 805f5d589915c4dcbd37b7f4ead5eabb8940cd6d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-2) unstable; urgency=low
+
+ * Addition of parameters for inventory plugin ( 3c63520ee1e7cc354c210560b97b998fbdbcb541 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.6.0-1) unstable; urgency=low
+
+ * removing comments and unnecessary print ( 0d4e05db2cbbdcb5ba0e559eacf2e38f250a7067 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-51) unstable; urgency=low
+
+ * Add edit function to Sysprep Answer File Manager. ( 07fc69565991ad4029306447cb071d7b5731cd49 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-50) unstable; urgency=low
+
+ *  add table has_gguacamole ( b66d4679c91b54a413963b3ee6ddffac3221116a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-49) unstable; urgency=low
+
+ *  pep8 plugins ( 82c977aa23632c29ed3f5390ab4ad0a66f7efc8e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-48) unstable; urgency=low
+
+ *  add plugin master ( 9d7722ffba536373e7f4f40b109fc7231a8f3758 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-47) unstable; urgency=low
+
+ *  add option max-time-to-wait for clonezilla ( b79a34a46c8df3486f42788a9c8558e611cf61b9 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-46) unstable; urgency=low
+
+ *  add wakeonlan from xmpp master ( 7e8040ef66732f26f5d12163ee926e523a920c5d )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-45) unstable; urgency=low
+
+ *  fix syntax error ( bb0c5ffb15256d9c1bd1c067f3f318bbc6f9d215 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-44) unstable; urgency=low
+
+ * Optimization of the computer list query ( 56ff6ac20b5a0e638d6cca428cab8a604a61a967 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-43) unstable; urgency=low
+
+ * Do not install in /var/lib ( c1a2d8e486c018936745c6c68065461cc31e6f57 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-42) unstable; urgency=low
+
+ * Remove plugins ( 4031a2114678691a5013c5d9ae3fef2556f729b4 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-41) unstable; urgency=low
+
+ * Remove serverrelais from file list ( fd60ea7ab2a17c2dca8debf9485cb11da258fa22 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-40) unstable; urgency=low
+
+ * add side menu for xmpp console ( 4792e601cf118691b800299631dfe0cc472e9749 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-39) unstable; urgency=low
+
+ * add traceback message on error ( 3e8fc244999a5676c4484e486cc8ffbc70e608d0 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-38) unstable; urgency=low
+
+ * add plugin resultrelayserver ( 8d2047de0439cab916f6e01ed667cd9c16460cb7 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-37) unstable; urgency=low
+
+ * fix result shellcommand from xmpp ( 4240c799b5907b8966709feb91f88419c63bf6af )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-36) unstable; urgency=low
+
+ * add slell xmpp from interface pulse ( bb1c3906fb5f98bd7e5fd477f78b0b13a1ec8ab4 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-35) unstable; urgency=low
+
+ * add plugin deploy ( b060512bc832c8fce69f457b05ddabf34ead2157 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-34) unstable; urgency=low
+
+ * add plugin write configuration guacamole on serverralay ( 377151eef2a91d88b1b1767f32500fe9facd536e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-33) unstable; urgency=low
+
+ * add console xmpp ( da135cb9ccb4db8c61edc737aa92306543ecd1c8 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-32) unstable; urgency=low
+
+ * Revert to using GeoLiteCity.dat ( b2d4f2506082b01224d900773578a75bea9a7d34 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-31) unstable; urgency=low
+
+ * Start to package xmpp_baseplugin ( c8f9366e060c8c14a158c56a03db54d0ebb2acba )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-30) unstable; urgency=low
+
+ * Install more stuffs ( 1f620d76891d8d22438dbffc0246de40acd55351 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-29) unstable; urgency=low
+
+ * Add database.xmppmaster ( e4bb855b0560d780768a6daa9bac849adae479ad )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-28) unstable; urgency=low
+
+ * Add xmppmaster/sql/schema-001.sql  ( 1381e066c7654801cd594ef54fa536411d17ae87 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-27) unstable; urgency=low
+
+ * glpi: Fix logic ( 4eae7e39c09e6208626c3e08b59aecc57c4f19ba )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-26) unstable; urgency=low
+
+ * Fix typo in query ( 017779d8292659eaa43b5a27acd4ec4b73af0986 )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-25) unstable; urgency=low
+
+ * PXE registration: Fix loading of json files containing non printable characters ( 0976b436fee8301347c5202b3cf6b53247a6d58a )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-24) unstable; urgency=low
+
+ * Create tables in INNODB format instead of MYISAM for restore purposes ( acf4e8b0dd803745bdb21f9de44badefa145e99b )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
+pulse2 (3.5-23) unstable; urgency=low
+
+ * Fix database auto increment ( d753dd6f49480df46f019be863178a48961dda0e )
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Wed, 25 Mai 2016 22:00:11 +0100
+
 pulse2 (3.5-22) unstable; urgency=low
 
  * Fix options for pxe registration ( 50de3b38215f198af11c13f63451fdb3db83e485 )
