@@ -26,6 +26,7 @@ SUBDIRS = win32
 posixclientdir = $(localstatedir)/lib/pulse2/clients
 
 posixclientscripts = generate-agents create-repos.sh installer.sh.in \
+		     style.css HEADER.html \
                    templates/mac/package/Contents/Resources/postflight.in \
                    templates/deb/package/DEBIAN/postinst \
                    templates/deb/package/etc/init.d/linuxvnc \
