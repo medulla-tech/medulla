@@ -2857,6 +2857,7 @@ class Glpi91(DyngroupDatabaseHelper):
                              version=None,
                              count=0):
         """
+        if count == 1
         This method is used for reporting and license count
         it's inspired from getMachineBySoftware method, but instead of count
         number of machines who have this soft, this method count number of
@@ -2867,6 +2868,9 @@ class Glpi91(DyngroupDatabaseHelper):
             this method: return 5
 
         I should use getAllSoftwares method, but deadline is yesterday....
+        if count = 3
+        return: all machines that have this software and the entity
+
         """
         def all_elem_are_none(params):
             for param in params:
@@ -2896,17 +2900,16 @@ class Glpi91(DyngroupDatabaseHelper):
             query = session.query(self.machine.c.id.label('computers_id'), self.machine.c.name.label('computers_name'),self.machine.c.entities_id.label('entity_id'))
 
         if int(count) >= 3:
-            query = query.select_from(self.software
-                                    .join(self.softwareversions)
-                                    .join(self.inst_software)
-                                    .join(self.machine)
-                                    .outerjoin(self.manufacturers))
+            query = query.select_from(self.machine
+                                  .join(self.inst_software)
+                                  .join(self.softwareversions)
+                                  .join(self.software)
+                                  .outerjoin(self.manufacturers))
         else:
             query = query.select_from(self.software
                                     .join(self.softwareversions)
                                     .join(self.inst_software)
                                     .outerjoin(self.manufacturers))
-
 
         name_filter = [Software.name.like(n) for n in name]
         query = query.filter(or_(*name_filter))
@@ -2921,12 +2924,17 @@ class Glpi91(DyngroupDatabaseHelper):
 
         if hasattr(ctx, 'locationsid'):
             query = query.filter(Software.entities_id.in_(ctx.locationsid))
+        if int(count) >= 3:
+            query = query.filter(Machine.is_deleted == 0)
+            query = query.filter(Machine.is_template == 0)
+
 
         if int(count) == 1:
             return {'count' : int(query.scalar())}
         elif int(count) == 2:
             return query.all()
         else:
+            print query
             ret =query.all()
             return [{'computer':a[0],'name':a[1],'entityid':a[2]}  for a in ret ]
 
