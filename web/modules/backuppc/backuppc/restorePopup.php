@@ -27,7 +27,7 @@
 	<?php
 		foreach($_SESSION['backup_hosts'] as $host=>$cn)
 		{
-			echo '<option id="'.strtoupper($host).'" value="'.$host.'">'.$cn.'</option>';
+			echo '<option id="'.strtoupper($host).'" value="'.strtolower($host).'">'.$cn.'</option>';
 		}
 	?>
 </select>
