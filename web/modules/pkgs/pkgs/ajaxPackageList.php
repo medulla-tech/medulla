@@ -22,11 +22,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+
+
 require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
-
-
+?>
+<style>
+    a.info{
+    position:relative;
+    z-index:24;
+    color:#000;
+    text-decoration:none
+}
+ 
+a.info:hover{
+    z-index:25;
+    background-color:#FFF
+}
+ 
+a.info span{
+    display: none
+}
+ 
+a.info:hover span{
+    display:block;
+    position:absolute;
+    top:2em; left:2em; width:25em;
+    border:1px solid #000;
+    background-color:#E0FFFF;
+    color:#000;
+    text-align: justify;
+    font-weight:none;
+    padding:5px;
+}
+</style>
+<?
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -67,6 +98,8 @@ foreach ($packages as $p) {
         $tmp_licenses = '';
         if ($p['associateinventory'] == 1 && isset($p['licenses']) && ! empty($p['licenses'])) {
             $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
+            $machines = getLicensesComputer($p['Qvendor'], $p['Qsoftware'], $p['Qversion']);
+
             //lien vers creation groupe des machine avec licence.
          $param  = array();
             $param['vendor']=$p['Qvendor'];
@@ -76,11 +109,20 @@ foreach ($packages as $p) {
             $param['licencemax']=$p['licenses'];
             $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence",$param);
             $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">'.
-                                '<a href="'.
-                                $urlRedirect.'" title="Create group">'.
+                                '<a class="info" href="'.
+                                $urlRedirect.'">'.
                                 $licensescount .
                                 '/' .
                                 $p['licenses'].
+                                '<span>Create group<br>';
+                                $ind = 0;
+                                $limitmax_machineafficher=50;
+                                foreach($machines as $machine){
+                                    $tmp_licenses.= "Computer name : ". $machine['name']." Entity : ". xmlrpc_getLocationName($machine['entityid'])."<br>";
+                                    $ind++;
+                                    if ($ind == $limitmax_machineafficher) break;
+                                };
+                               $tmp_licenses.='</span>'.
                                 '</a></span>';
 
             if ($licensescount > $p['licenses']) { // highlights the exceeded license count 
