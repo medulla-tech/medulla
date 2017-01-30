@@ -2930,7 +2930,6 @@ class Glpi91(DyngroupDatabaseHelper):
 
 
         if int(count) == 1:
-            print query
             return {'count' : int(query.scalar())}
         elif int(count) == 2:
             return query.all()
