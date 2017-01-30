@@ -23,8 +23,7 @@ Depends: ${misc:Depends},
          pulse2-inventory-server,
          pulse2-launchers,
          pulse2-package-server,
-         pulse2-scheduler,
-         pulse2-homepage
+         pulse2-scheduler
 Description: Pulse 2 metapackage
  This empty package depends on all Pulse2/MMC required packages.
 
