@@ -102,18 +102,76 @@ function addQuerySection($Form, $p) {
 }
 ?>
 <script type="text/javascript">
+
+function hideconfirm(){
+    alert ("Warning! When associating a inventory query to a package, it needs one of three minimum<br>[ Inventory Vendor , Inventory Software, Inventory Version ]<br>Input are highlighted in red");
+    jQuery("input[name='bconfirm']").hide();
+    jQuery("#Qvendor").css("border-color", 'red');
+    jQuery("#Qsoftware").css("border-color", 'red');
+    jQuery("#Qversion").css("border-color",'red');
+}
+
+function showconfirm(){
+    jQuery("input[name='bconfirm']").show();
+    jQuery("#Qvendor").css("border-color", '#808080');
+    jQuery("#Qsoftware").css("border-color", '#808080');
+    jQuery("#Qversion").css("border-color", '#808080');
+}
+
+
+
+jQuery("#Qvendor").css("backgroundColor", "#ff123f");
+//     jQuery("#Qsoftware").css("backgroundColor", "#ff123f");
+//     jQuery("#Qversion").css("backgroundColor", "#ff123f");
+
+
+
     jQuery(function() { // load this piece of code when page is loaded
         // Set easySuggest on software field with the new ajax url
         jQuery('#associateinventory').change(function() {
             if (jQuery(this).is(":checked")) {
                 jQuery('.associateinventory').show();
                 console.log("here");
+                if ( jQuery("#Qvendor").val() != '' || jQuery("#Qsoftware").val() != ''  ||  jQuery("#Qversion").val() != ''){
+                        showconfirm()
+                    }
+                    else{
+                    hideconfirm();
+                    }
+                // si case cocher alors et une des
+                jQuery('#Qvendor').change(function() {
+                    if ( jQuery("#Qvendor").val() != '' || jQuery("#Qsoftware").val() != ''  ||  jQuery("#Qversion").val() != ''){
+                        showconfirm();
+                    }
+                    else{
+                    hideconfirm();
+                    }
+                });
+                jQuery('#Qsoftware').change(function() {
+                    if ( jQuery("#Qvendor").val() != '' || jQuery("#Qsoftware").val() != ''  ||  jQuery("#Qversion").val() != ''){
+                        showconfirm();
+                    }
+                    else{
+                    hideconfirm();
+                    }
+                });
+                jQuery('#Qversion').change(function() {
+                    if ( jQuery("#Qvendor").val() != '' || jQuery("#Qsoftware").val() != ''  ||  jQuery("#Qversion").val() != ''){
+                        showconfirm();
+                    }
+                    else{
+                    hideconfirm();
+                    }
+                });
             }
             else {
+//                 jQuery("#Qvendor").val('');
+//                 jQuery("#Qsoftware").val('');
+//                 jQuery("#Qversion").val('');
+                
+                showconfirm()
                 jQuery('.associateinventory').hide();
             }
         });
-        jQuery('#associateinventory').change();
     });
 </script>
-
