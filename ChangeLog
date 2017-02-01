@@ -16,11 +16,13 @@ Pulse 2 3.6.0
  * [BUGFIX]  Enable registration of assembled machines
  * [BUGFIX]  Fix detection of netmask
  * [FEATURE] Add sysprep answer file generator
- * [BUGFIX] Clean the sysprep code
- * [BUGFIX] Modify sysprep interface and form organization.
- * [BUGFIX] show notification when a sysprep answer file is created
- * [BUGFIX] add colors to sysprep xml file when displayed
- * [BUGFIX] Fix support for new SqlAlchemy
+ * [BUGFIX]  Clean the sysprep code
+ * [BUGFIX]  Modify sysprep interface and form organization.
+ * [BUGFIX]  Show notification when a sysprep answer file is created
+ * [BUGFIX]  Add colors to sysprep xml file when displayed
+ * [BUGFIX]  Fix support for new SqlAlchemy
+ * [BUGFIX]  Fix download webpage ( issue #86 )
+
 
 Pulse 2 3.3.0 
 ============= 
