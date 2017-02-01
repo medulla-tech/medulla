@@ -27,7 +27,7 @@ Pulse 2 3.6.0
  * [FEATURE] Add windows 8 and 10 backup templates ( issue #24 )
  * [FEATURE] Add Glpi 9.1.x support ( issue #26, #84, #90 )
  * [FEATURE] Migrate to GLPI API Rest ( issue #89 )
- * [BUGFIX]  Fix sysprep support ( issue #27, #30, #31 )
+ * [BUGFIX]  Fix sysprep support ( issue #27, #30, #31, #70 )
  * [BUGFIX]  Fix registering computers if the hostname contains spaces
              ( issue #2 )
  * [FEATURE] Display available licences on the inventory ( issue #18 )
@@ -35,6 +35,7 @@ Pulse 2 3.6.0
  * [FEATURE] List computers with image or custom menu ( issue #40 )
  * [BUGFIX]  Fix Siveo logo on main page ( issue #67 )
  * [BUGFIX]  Fix selecting the good entity in backup and imaging module ( issue #33 )
+ * [BUGFIX]  Fix mmc webpage layout ( issue#5 )
 
 Pulse 2 3.3.0 
 ============= 
