@@ -22,7 +22,11 @@ Pulse 2 3.6.0
  * [BUGFIX]  Add colors to sysprep xml file when displayed
  * [BUGFIX]  Fix support for new SqlAlchemy
  * [BUGFIX]  Fix download webpage ( issue #86 )
-
+ * [BUGFIX]  Fix Backup restore failed ( issue #88 )
+ * [BUGFIX]  Fix Group panel for non standart windows versions ( issue 32 )
+ * [FEATURE] Add windows 8 and 10 backup templates
+ * [FEATURE] Add Glpi 9.1.x support ( issue #26 )
+ * [BUGFIX]  Fix sysprep support ( issue #27 )
 
 Pulse 2 3.3.0 
 ============= 
