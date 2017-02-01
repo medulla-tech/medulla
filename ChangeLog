@@ -26,6 +26,7 @@ Pulse 2 3.6.0
  * [BUGFIX]  Fix Group panel for non standart windows versions ( issue 32 )
  * [FEATURE] Add windows 8 and 10 backup templates
  * [FEATURE] Add Glpi 9.1.x support ( issue #26 )
+ * [FEATURE] Migrate to GLPI API Rest ( issue #89 )
  * [BUGFIX]  Fix sysprep support ( issue #27 )
 
 Pulse 2 3.3.0 
