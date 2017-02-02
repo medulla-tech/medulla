@@ -35,7 +35,7 @@ Pulse 2 3.6.0
  * [FEATURE] List computers with image or custom menu ( issue #40 )
  * [BUGFIX]  Fix Siveo logo on main page ( issue #67 )
  * [BUGFIX]  Fix selecting the good entity in backup and imaging module ( issue #33 )
- * [BUGFIX]  Fix mmc webpage layout ( issue#5 )
+ * [BUGFIX]  Fix mmc webpage layout ( issue #5 )
 
 Pulse 2 3.3.0 
 ============= 
