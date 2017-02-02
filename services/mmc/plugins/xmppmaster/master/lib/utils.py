@@ -244,6 +244,26 @@ def shorten_mac(mac):
     #mac = mac.replace("/","")
     return mac
 
+
+
+# 3 functions used for subnet network
+def ipV4toDecimal(ipv4):
+    d = ipv4.split('.')
+    return (int(d[0])*256*256*256) + (int(d[1])*256*256) + (int(d[2])*256) +int(d[3])
+
+def decimaltoIpV4(ipdecimal):
+    a=float(ipdecimal)/(256*256*256)
+    b = (a - int(a))*256
+    c = (b - int(b))*256
+    d = (c - int(c))*256
+    return "%s.%s.%s.%s"%(int(a),int(b),int(c),int(d))
+
+def subnetnetwork(adressmachine, mask):
+    adressmachine = adressmachine.split(":")[0]
+    reseaumachine = ipV4toDecimal(adressmachine) &  ipV4toDecimal(mask)
+    return decimaltoIpV4(reseaumachine)
+
+
 def is_valid_ipv4(ip):
     """Validates IPv4 addresses.
     """
