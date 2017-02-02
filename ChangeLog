@@ -1,11 +1,3 @@
-Pulse 2 3.6.1
-=============
- * [BUGFIX] Clean the sysprep code
- * [BUGFIX] Modify sysprep interface and form organization.
- * [BUGFIX] show notification when a sysprep answer file is created
- * [BUGFIX] add colors to sysprep xml file when displayed
- * [BUGFIX] Fix support for new SqlAlchemy
-
 Pulse 2 3.6.0
 =============
  * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
@@ -24,6 +16,26 @@ Pulse 2 3.6.0
  * [BUGFIX]  Enable registration of assembled machines
  * [BUGFIX]  Fix detection of netmask
  * [FEATURE] Add sysprep answer file generator
+ * [BUGFIX]  Clean the sysprep code
+ * [BUGFIX]  Modify sysprep interface and form organization.
+ * [BUGFIX]  Show notification when a sysprep answer file is created
+ * [BUGFIX]  Add colors to sysprep xml file when displayed
+ * [BUGFIX]  Fix support for new SqlAlchemy
+ * [BUGFIX]  Fix download webpage ( issue #86 )
+ * [BUGFIX]  Fix Backup restore failed ( issue #88 )
+ * [BUGFIX]  Fix Group panel for non standart windows versions ( issue #32 )
+ * [FEATURE] Add windows 8 and 10 backup templates ( issue #24 )
+ * [FEATURE] Add Glpi 9.1.x support ( issue #26, #84, #90 )
+ * [FEATURE] Migrate to GLPI API Rest ( issue #89 )
+ * [BUGFIX]  Fix sysprep support ( issue #27, #30, #31, #70 )
+ * [BUGFIX]  Fix registering computers if the hostname contains spaces
+             ( issue #2 )
+ * [FEATURE] Display available licences on the inventory ( issue #18 )
+ * [BUGFIX]  Remove the need of java in mmc ( issue #38 )
+ * [FEATURE] List computers with image or custom menu ( issue #40 )
+ * [BUGFIX]  Fix Siveo logo on main page ( issue #67 )
+ * [BUGFIX]  Fix selecting the good entity in backup and imaging module ( issue #33 )
+ * [BUGFIX]  Fix mmc webpage layout ( issue #5 )
 
 Pulse 2 3.3.0 
 ============= 
