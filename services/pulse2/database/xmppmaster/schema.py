@@ -104,7 +104,7 @@ class RelayServer(Base, XmppMasterDBObj):
     # ====== Fields =============================
     # Here we define columns for the table network.
     # Notice that each column is also a normal Python instance attribute.
-    urlguacamole =Column(String(80))
+    urlguacamole =Column(String(200))
     subnet = Column(String(45))
     nameserver = Column(String(45))
     groupdeploy = Column(String(45))
