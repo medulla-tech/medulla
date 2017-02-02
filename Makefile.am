@@ -23,7 +23,7 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup --disable-python-check
 
-SUBDIRS = web services doc
+SUBDIRS = web services doc debian
 
 backupext = .$(shell date +%Y-%m-%d+%H:%M:%S)
 
