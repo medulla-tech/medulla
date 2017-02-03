@@ -253,8 +253,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             # If a room password is needed, use:
                                             password=passwordchatroom,
                                             wait=True)
-        self.logtopulse('Start Mastertext',type='info',sessionname = '',priority = 0, who =  self.boundjid.bare)
+        self.logtopulse('Start agent Master', type="MASTER", who =  self.boundjid.bare)
 
+
+    def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
+        msgbody = {
+                    'text' : text,
+                    'type':type,
+                    'session':sessionname,
+                    'priority':priority,
+                    'who':who
+                    }
+        self.send_message(mto=jid.JID("log@pulse"),
+                                mbody=json.dumps(msgbody),
+                                mtype='chat')
 
     def changed_status(self,mmm):
         if mmm['from'].resource == 'MASTER':
@@ -414,18 +426,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break;
         self.plugindata = plugindataseach
         self.plugintype = plugintype
-
-    def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who = ''):
-        msgbody = {
-                    'text' : text,
-                    'type':'noset',
-                    'session':sessionname,
-                    'priority':priority,
-                    'who':who
-                    }
-        self.send_message(mto=jid.JID("log@localhost"),
-                                mbody=json.dumps(msgbody),
-                                mtype='chat')
 
     def signalpresence(self, jid):
         self.sendPresence(pto=jid, ptype='probe')
