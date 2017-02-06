@@ -487,12 +487,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         except:
             traceback.print_exc(file=sys.stdout)
 
-    def callinventory(self, torelayserver, data):
+    def callinventory(self, tomachine, data):
         try:
             body = {'action' : 'inventory',
                     'sessionid': name_random(5, "inventory"),
                     'data' : data }
-            self.send_message(  mto = torelayserver,
+            self.send_message(  mto = tomachine,
                                 mbody = json.dumps(body),
                                 mtype = 'chat')
         except:
