@@ -76,7 +76,7 @@ def ObjectXmpp():
 def getXmppConfiguration():
     return str(xmppMasterConfig())
 
-def callXmppFunction(functionname, *args, **kwargs ):
+def callXmppFunction(functionname, *args, **kwargs):
     print "**call function %s %s %s"%(functionname, args, kwargs)
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
