@@ -80,9 +80,9 @@ def callXmppFunction(functionname, *args, **kwargs ):
     print "**call function %s %s %s"%(functionname, args, kwargs)
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
-def callXmppPlugin(plugin, data ):
+def callXmppPlugin(plugin, data):
     print "**call plugin %s"%(data)
-    ObjectXmpp().callpluginmasterfrommmc(plugin,  data )
+    ObjectXmpp().callpluginmasterfrommmc(plugin,  data)
 
 class XmppCommandDiffered:
     """
@@ -663,7 +663,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if data['sessionid'].startswith("mcc"):
                 sessionmsg = self.session.sessionevent(data['sessionid'])
                 if sessionmsg is not None:
-                    sessionmsg.setdatasession(  data )
+                    sessionmsg.setdatasession(  data)
                     sessionmsg.callend()
                     return True
                 else:
@@ -913,7 +913,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         pass
 
 
-    def callpluginmasterfrommmc(self, plugin, data ):
+    def callpluginmasterfrommmc(self, plugin, data):
         msg={}
         msg['from'] = self.boundjid.bare
         msg['body'] = json.dumps({
