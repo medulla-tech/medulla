@@ -36,6 +36,7 @@ Pulse 2 3.6.0
  * [BUGFIX]  Fix Siveo logo on main page ( issue #67 )
  * [BUGFIX]  Fix selecting the good entity in backup and imaging module ( issue #33 )
  * [BUGFIX]  Fix mmc webpage layout ( issue #5 )
+ * [BUGFIX]  Associate inventory to a package ( issue #92 )
 
 Pulse 2 3.3.0 
 ============= 
