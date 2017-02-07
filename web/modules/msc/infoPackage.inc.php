@@ -197,16 +197,18 @@ if (!empty($submod)) {
     $submod->addPage($page);
 
     /* Launch a command */
-    $page = new Page("start_command", _T("Launch a command", "msc"));
-    $page->setFile("modules/msc/msc/start_command.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
-    $submod->addPage($page);
+    if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+        $page = new Page("start_command", _T("Launch a command", "msc"));
+        $page->setFile("modules/msc/msc/start_command.php");
+        $page->setOptions(array("visible" => False, "noHeader" => True));
+        $submod->addPage($page);
 
-    /* Launch a command in advanced mode */
-    $page = new Page("start_adv_command", _T("Launch a advanced command", "msc"));
-    $page->setFile("modules/msc/msc/start_adv_command.php");
-    $page->setOptions(array("visible" => False, "noHeader" => True));
-    $submod->addPage($page);
+        /* Launch a command in advanced mode */
+        $page = new Page("start_adv_command", _T("Launch a advanced command", "msc"));
+        $page->setFile("modules/msc/msc/start_adv_command.php");
+        $page->setOptions(array("visible" => False, "noHeader" => True));
+        $submod->addPage($page);
+    }
 
     /* Software convergence configuration for a group */
     $page = new Page("convergence", _T("Software convergence configuration", "msc"));
