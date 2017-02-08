@@ -54,16 +54,25 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
     $logAction = new ActionItem(_("Read log"),"msctabs","logfile","computer", "base", "computers", "tablogs");
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
+    
+    // action item for xmpp
+    $xmpplogAction = new ActionItem(_("Read log xmpp"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+    $xmpplogNoAction = new EmptyActionItem1(_("Read log xmpp"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
+    $xmppAction = new ActionItem(_("Software deployment xmpp"),"msctabs","install","computer", "base", "computers");
+    $xmppNoAction = new EmptyActionItem1(_("Software deployment xmpp"),"msctabs","installg","computer", "base", "computers");
+
     $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
     $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
-    $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers"); 
-    //jfk
+    $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
+
+    // with check presence xmpp
     $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "vncclientg", "computer", "base", "computers");
+
     $actionInventory = array();
-    $actionLogs = array();
-    $actionMsc = array();
+    $action_logs_msc_or_xmpp = array();
+    $action_Msc_or_xmpp = array();
     $actionImaging = array();
     $actionDownload = array();
     $actionVncClient = array();
@@ -81,15 +90,30 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     function getUUID($machine) { return $machine['objectUUID']; }
     
     $uuids = array_map("getUUID", $names);
-    /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
-        $profiles = xmlrpc_getmachinesprofiles($uuids);
-        $h_profiles = array();
-        $i = 0;
-        foreach ($uuids as $uuid) {
-            $h_profiles[$uuid] = $profiles[$i++];
-        }
-    }*/
+
+    $countmachine=0;
     foreach($names as $value) {
+        if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+        // determine presence machine xmpp 
+            print $uuids[$countmachine];
+            if(isset($uuids[$countmachine])){
+                $presencemachinexmpp = False;
+                $pp = xmlrpc_getPresenceuuid( $uuids[$countmachine]);
+                if ($pp == 1) {
+                    $presencemachinexmpp = True;
+                }
+                $countmachine++;
+            }
+            else{
+                $presencemachinexmpp = False;
+            }
+        }
+        else {
+            $presencemachinexmpp = False;
+        }
+
+        $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
+
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -102,24 +126,36 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         }
         if (isset($filter['gid']))
 	        $value['gid'] = $filter['gid'];
-		
+
 
         if (in_array("inventory", $_SESSION["supportModList"])) {
             $actionInventory[] = $inventAction;
         } else {
             $actionInventory[] = $glpiAction;
         }
-        if (in_array("msc", $_SESSION["supportModList"])) {
-            $actionMsc[] = $mscAction;
-            $actionLogs[] = $logAction;
+
+        if ( !in_array("xmppmaster", $_SESSION["supportModList"])  ) {
+            $action_Msc_or_xmpp[]       = $mscAction;
+            $action_logs_msc_or_xmpp[]  = $logAction;
         }
+        else{
+            if ( $presencemachinexmpp ){
+                $action_Msc_or_xmpp[] = $xmppAction;
+                $action_logs_msc_or_xmpp[] = $xmpplogAction;
+            }
+            else{
+                $action_Msc_or_xmpp[] = $xmppNoAction;
+                $action_logs_msc_or_xmpp[] = $xmpplogNoAction;
+            }
+        }
+
         if (in_array("imaging", $_SESSION["supportModList"])) {
             $actionImaging[] = $imgAction;
-	}
+        }
 	
-	if (in_array("extticket", $_SESSION["supportModList"])) {
-	    $actionExtTicket[] = $extticketAction;
-	}
+        if (in_array("extticket", $_SESSION["supportModList"])) {
+            $actionExtTicket[] = $extticketAction;
+        }
 		
         /*
         if (in_array("dyngroup", $_SESSION["modulesList"])) {
@@ -136,17 +172,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         if ($msc_can_download_file) {
             $actionDownload[] = $downloadFileAction;
         }
-        
-               if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
 
-            $indicetab = count($actionVncClient);
-            if(isset($uuids[$indicetab])){
-                $presence = xmlrpc_getPresenceuuid( $uuids[$indicetab]);
-            }
-            else{
-                $presence = False;
-            }
-            if ($presence){
+        if (in_array("guacamole", $_SESSION["supportModList"]) && in_array("xmppmaster", $_SESSION["supportModList"])) {
+            if ($presencemachinexmpp){
                 $actionVncClient[] = $vncClientAction;
             }else
             {//show icone vnc griser jfk
@@ -159,9 +187,9 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
         $params[] = $value;
     }
 
+  
     foreach($params as &$element ){
     //jfk
-//     print_r($_SESSION["supportModList"]);
         if (in_array("guacamole", $_SESSION["supportModList"])) {
             $element['vnctype'] = "guacamole";
         }
@@ -174,20 +202,10 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
             }
         }
     }
-
-//     echo "<pre>";
-//         print_r( $params);//getPresenceuuid
-//     echo "</pre>";
-        
-//         if ($msc_vnc_show_icon) {
-//             $actionVncClient[] = $vncClientAction;
-//         }
-//         $params[] = $value;
-//     }
-
     if (isset($filter['location'])) {
         $filter = $filter['hostname'] . '##'. $filter['location'];
-    } else {
+    } 
+    else {
         $filter = $filter['hostname'] . '##';
     }
 
@@ -246,9 +264,10 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
     /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $n->addActionItemArray($actionProfile);
     }*/
+    
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $n->addActionItemArray($actionLogs);
-        $n->addActionItemArray($actionMsc);
+        $n->addActionItemArray($action_logs_msc_or_xmpp);
+        $n->addActionItemArray($action_Msc_or_xmpp);
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {
         $n->addActionItemArray($actionImaging);
