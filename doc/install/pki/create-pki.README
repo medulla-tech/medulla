@@ -1,0 +1,55 @@
+
+Instructions for generating a PKI for Pulse:
+1. Edit create-pki.sh and define the following settings:
+      PASSPHRASE          : The passphrase to be used for the private keys
+      CRL_SERVER_ADDRESS  : The address of the server that will host the revocation list (http://@@CRL_SERVER_ADDRESS@@/crl.pem)
+   Also change PKI_ORGANIZATION if needs be
+2. Run the script named create-pki.sh
+
+
+
+Instructions for revocating a certificate:
+1. Run the following command:
+      openssl ca -config /var/lib/pulse2/pki/conf/pulse.cnf \
+        -revoke /var/lib/pulse2/pki/<certificate.pem>
+   You will be asked to provide the passphrase protecting the CA key (cakey.pem)
+2. Generate the revocation list:
+      openssl ca -config /var/lib/pulse2/pki/conf/pulse.cnf \
+        -name CA_Intermediate -gencrl -out /var/lib/pulse2/pki/crl.pem
+3. Check that the list is correct:
+      openssl crl -in /var/lib/pulse2/pki/crl.pem -noout -text
+4. Copy the file /var/lib/pulse2/pki/crl.pem to the server defined in CRL_SERVER_ADDRESS
+
+### Please note that the crl has a validity period of 30 days. ###
+### The file needs to be regenerated every 30 days (steps 2-4) ###
+
+
+
+Instructions for generating a new certificate:
+1. Generate the key and sign request:
+      openssl req -config /var/lib/pulse2/pki/conf/pulse.cnf \
+        -subj "/countryName=FR/organizationName=SIVEO/commonName=<FQDN_OF_SERVER>" \
+        -batch -extensions server_cert -new \
+        -keyout /var/lib/pulse2/pki/private/<FQDN_OF_SERVER>.key.pem \
+        -out /var/lib/pulse2/pki/req/<FQDN_OF_SERVER>.req.pem
+2. Sign the certificate with the PKI:
+      openssl ca -config /var/lib/pulse2/pki/conf/pulse.cnf \
+        -name CA_Intermediate -batch -extensions server_cert \
+        -keyfile /var/lib/pulse2/pki/private/cakey.pem \
+        -out /var/lib/pulse2/pki/newcerts/<FQDN_OF_SERVER>.cert.pem \
+        -infiles /var/lib/pulse2/pki/req/<FQDN_OF_SERVER>.req.pem
+   You will be asked to provide the passphrase protecting the CA key (cakey.pem)
+3. Generate the final certificate:
+      openssl rsa -in /var/lib/pulse2/pki/private/<FQDN_OF_SERVER>.key.pem \
+        -out /var/lib/pulse2/pki/<FQDN_OF_SERVER>.pem
+      cat /var/lib/pulse2/pki/newcerts/<FQDN_OF_SERVER>.cert.pem \
+        >> /var/lib/pulse2/pki/<FQDN_OF_SERVER>.pem
+4. Set the proper permissions on the generated files:
+      chmod 400 /var/lib/pulse2/pki/private/<FQDN_OF_SERVER>.key.pem
+      chmod 444 /var/lib/pulse2/pki/newcerts/<FQDN_OF_SERVER>.cert.pem
+      chmod 444 /var/lib/pulse2/pki/<FQDN_OF_SERVER>.pem
+5. Do some cleanup:
+      rm /var/lib/pulse2/pki/req/<FQDN_OF_SERVER>.req.pem
+
+The certificate to be used is /var/lib/pulse2/pki/<FQDN_OF_SERVER>.pem
+The ca certificate to be used is /var/lib/pulse2/pki/ca-chain.cert.pem
