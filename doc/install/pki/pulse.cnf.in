@@ -1,0 +1,89 @@
+[ ca ]
+default_ca              = CA_Intermediate
+
+[ CA_Root ]
+dir                     = /var/lib/pulse2/pki
+crl_dir                 = $dir/crl
+database                = $dir/index.txt
+new_certs_dir           = $dir/newcerts
+certificate             = $dir/rootca.cert.pem
+serial                  = $dir/serial
+crlnumber               = $dir/crlnumber
+crl                     = $dir/crl.pem
+private_key             = $dir/private/rootca.key.pem
+RANDFILE                = $dir/private/.rand
+default_days            = 3650
+default_crl_days        = 30
+default_md              = sha256
+policy                  = policy_strict
+name_opt                = ca_default
+cert_opt                = ca_default
+copy_extensions         = none
+
+[ CA_Intermediate ]
+dir                     = /var/lib/pulse2/pki
+crl_dir                 = $dir/crl
+database                = $dir/index.txt
+new_certs_dir           = $dir/newcerts
+certificate             = $dir/cacert.pem
+serial                  = $dir/serial
+crlnumber               = $dir/crlnumber
+crl                     = $dir/crl.pem
+private_key             = $dir/private/cakey.pem
+RANDFILE                = $dir/private/.rand
+default_days            = 365
+default_crl_days        = 30
+default_md              = sha256
+policy                  = policy_loose
+name_opt                = ca_default
+cert_opt                = ca_default
+copy_extensions         = none
+
+# For the CA policy
+[ policy_strict ]
+countryName             = match
+organizationName        = match
+commonName              = supplied
+
+[ policy_loose ]
+countryName             = optional
+organizationName        = optional
+commonName              = supplied
+
+[ v3_ca ]
+subjectKeyIdentifier    = hash
+authorityKeyIdentifier  = keyid:always,issuer
+basicConstraints        = critical, CA:true
+keyUsage                = cRLSign, keyCertSign
+
+[ v3_intermediate_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true, pathlen:0
+keyUsage = cRLSign, keyCertSign
+
+[ req ]
+default_bits            = 2048
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+attributes              = req_attributes
+default_md              = sha256
+x509_extensions         = v3_ca
+string_mask             = nombstr
+
+[ req_distinguished_name ]
+
+[ req_attributes ]
+
+[ server_cert ]
+basicConstraints = CA:FALSE
+nsCertType = server
+nsComment = "OpenSSL Generated Server Certificate"
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = nonRepudiation, digitalSignature, keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+crlDistributionPoints = URI:http://@@CRL_SERVER_ADDRESS@@/crl.pem
+
+[ crl_ext ]
+authorityKeyIdentifier=keyid:always

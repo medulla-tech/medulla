@@ -962,7 +962,7 @@ groupuuid=%s
 waitting=%s
 locationuuid=%s
 maxtimetowait=%s
-drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s  --max-time-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
+drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s  --max-time-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
                                         self.menu['description'] ,
                                         self.menu['path'] ,
                                         self.menu['master'] ,
@@ -988,7 +988,7 @@ mastersize=%s
 groupuuid=%s
 waitting=%s
 locationuuid=%s
-drbl-ocs -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
+drbl-ocs -sc0 -b -g auto -e1 auto -e2 -x -j2 --clients-to-wait %s -l en_US.UTF-8 -h "127.0.0.1" %s multicast_restore %s %s &>> /tmp/%s.log"""%(
                                         self.menu['description'] ,
                                         self.menu['path'] ,
                                         self.menu['master'] ,
