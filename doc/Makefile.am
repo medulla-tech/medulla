@@ -32,7 +32,10 @@ docsrc = \
 	dev/dyngroup/en/database_documentation.xml \
 	user/msc/en/pulse2_client_check_explained.xml \
 	user/msc/en/pulse2_deployment_error_codes_explained.xml \
-	user/msc/fr/pulse2_deployment_error_codes_explained.xml
+	user/msc/fr/pulse2_deployment_error_codes_explained.xmli \
+	install/pki/create-pki.README \
+	install/pki/create-pki.sh \
+	install/pki/pulse.cnf.in
 
 
 docpng = \
