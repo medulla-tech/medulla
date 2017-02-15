@@ -211,7 +211,7 @@ def read_logs(logfiles, start_date, stop_date):
                     runnings[launcher][stamp] = int(dump['global']['running'])
                 else:
                     runnings[launcher][stamp] += int(dump['global']['running'])
-                if not  in zombies:
+                if not launcher in zombies:
                     zombies[launcher] = {}
                 if not stamp in zombies[launcher]:
                     zombies[launcher][stamp] = int(dump['global']['zombie'])
