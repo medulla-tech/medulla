@@ -85,33 +85,31 @@ class getCommand(object):
         return d
 
     def getAdobeCommand(self):
-        return './"%s" /sAll' % basename(self.file)
+        return '"%s" /sAll' % basename(self.file)
 
     def getInnoCommand(self):
-        return './"%s" /SP /VERYSILENT /NORESTART' % basename(self.file)
+        return '"%s" /SP /VERYSILENT /NORESTART' % basename(self.file)
 
     def getNSISCommand(self):
-        return './"%s" /S' % basename(self.file)
+        return '"%s" /S' % basename(self.file)
 
     def getNSISUpdateCommand(self):
-        return './"%s" /S /UPDATE' % basename(self.file)
+        return '"%s" /S /UPDATE' % basename(self.file)
 
     def getMozillaCommand(self):
-        return './"%s" -ms' % basename(self.file)
+        return '"%s" -ms' % basename(self.file)
 
     def getMSI32Command(self):
         return """msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
 
-msi_ret=$?
-
-if [ ! $msi_ret -eq 0 ]; then
-  cat install.log
-  echo "MSI INSTALLER FAILED WITH CODE $msi_ret. SEE LOG ABOVE." 
-  exit $msi_ret
-else
-  rm -f install.log
+if errorlevel 1 (
+  type install.log
+  echo "MSI INSTALLER FAILED WITH CODE %%errorlevel%%. SEE LOG ABOVE."
+  exit /b %%errorlevel%%
+) else (
+  del /F install.log
   exit 0
-fi""" % basename(self.file)
+)""" % basename(self.file)
 
     def getMSI32UpdateCommand(self):
         """
@@ -120,24 +118,22 @@ fi""" % basename(self.file)
         return 'msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getMSI64Command(self):
-        return """$(cygpath -W)/sysnative/msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
+        return """%%windir%%\sysnative\msiexec /qn /i "%s" ALLUSERS=1 CREATEDESKTOPLINK=0 ISCHECKFORPRODUCTUPDATES=0 /L install.log
 
-msi_ret=$?
-
-if [ ! $msi_ret -eq 0 ]; then
-  cat install.log
-  echo "MSI INSTALLER FAILED WITH CODE $msi_ret. SEE LOG ABOVE." 
-  exit $msi_ret
-else
-  rm -f install.log
+if errorlevel 1 (
+  type install.log
+  echo "MSI INSTALLER FAILED WITH CODE %%errorlevel%%. SEE LOG ABOVE."
+  exit /b %%errorlevel%%
+) else (
+  del /F install.log
   exit 0
-fi""" % basename(self.file)
+)""" % basename(self.file)
 
     def getMSI64UpdateCommand(self):
         """
         Command for *.msp files (MSI update packages 64-bits)
         """
-        return '$(cygpath -W)/sysnative/msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
+        return '%%windir%%\sysnative\msiexec /p "%s" /qb REINSTALLMODE="ecmus" REINSTALL="ALL"' % basename(self.file)
 
     def getRegCommand(self):
         return 'regedit /s "%s"' % basename(self.file)

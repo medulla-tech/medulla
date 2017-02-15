@@ -51,6 +51,9 @@ class PackageParser:
     def concat(self, package):
         return self.parser.to_json(package)
 
+    def concat_xmppdeploy(self, package):
+        return self.parser.to_json_xmppdeploy(package)
+
 
 class PackageParserXML:
     def parse_str(self, file):
@@ -334,7 +337,11 @@ class PackageParserJSON:
                 desc = data['description']
                 cmds = data['commands']
                 reboot = data['reboot'] or 0
-                
+                try:
+                    targetos = data['targetos']
+                except KeyError:
+                    targetos = 'win'
+
                 try:
                     sub_packages = data['sub_packages']
                 except KeyError:
@@ -366,6 +373,7 @@ class PackageParserJSON:
                 cmds['postCommandSuccess'],
                 cmds['postCommandFailure'],
                 reboot,
+                targetos,
                 entity_id,
                 queries['Qvendor'],
                 queries['Qsoftware'],
@@ -393,10 +401,11 @@ class PackageParserJSON:
         data['version'] = str(package.version)
         data['description'] = package.description
         data['reboot'] = package.reboot
-        
+        data['targetos'] = package.targetos
+
         # Sub packages if exists
         data['sub_packages'] = package.sub_packages
- 
+
         # Entity info if exist
         data['entity_id'] = package.entity_id
 
@@ -417,5 +426,67 @@ class PackageParserJSON:
         data['commands']['command'] = {'name':package.cmd.name, 'command':package.cmd.command}
         data['commands']['postCommandSuccess'] = {'name':package.postcmd_ok.name, 'command':package.postcmd_ok.command}
         data['commands']['postCommandFailure'] = {'name':package.postcmd_ko.name, 'command':package.postcmd_ko.command}
-        
+
+        return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+
+    def to_json_xmppdeploy(self, package):
+        """
+        create JSON xmppdeploy descriptor
+        """
+
+        data = {}
+
+        data['info'] = {}
+        data['info']['name'] = str(package.label+' '+package.version+' ('+package.id+')')
+        data['info']['software'] = package.label
+        data['info']['version'] = str(package.version)
+        data['info']['description'] = package.description
+        data['info']['transferfile'] = 'true'
+
+        data[package.targetos] = {}
+        data[package.targetos]['sequence'] = []
+        seq_count = 0
+
+        sequence = {}
+        sequence['step'] = str(seq_count)
+        sequence['action'] = 'action_pwd_package'
+        data[package.targetos]['sequence'].append(sequence)
+        seq_count += 1
+
+        sequence = {}
+        sequence['step'] = str(seq_count)
+        sequence['action'] = 'actionprocessscript'
+        if package.targetos == 'win':
+            sequence['command'] = 'xmppdeploy.bat'
+        else:
+            sequence['command'] = 'xmppdeploy.sh'
+        sequence['codereturn'] = ''
+        sequence['success'] = str(seq_count+1)
+        if package.reboot:
+            sequence['error'] = str(seq_count+3)
+        else:
+            sequence['error'] = str(seq_count+2)
+        sequence['@resultcommand'] = ''
+        sequence['timeout'] = '100'
+        data[package.targetos]['sequence'].append(sequence)
+        seq_count += 1
+
+        if package.reboot:
+            sequence = {}
+            sequence['step'] = str(seq_count)
+            sequence['action'] = 'actionrestart'
+            data[package.targetos]['sequence'].append(sequence)
+            seq_count += 1
+
+        sequence = {}
+        sequence['step'] = str(seq_count)
+        sequence['action'] = 'actionsuccescompletedend'
+        data[package.targetos]['sequence'].append(sequence)
+        seq_count += 1
+
+        sequence = {}
+        sequence['step'] = str(seq_count)
+        sequence['action'] = 'actionerrorcompletedend'
+        data[package.targetos]['sequence'].append(sequence)
+
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))

@@ -97,9 +97,9 @@ class Package:
         self.specifiedFiles = []
 
     def init(self, id, label, version, size, description, cmd, initcmd='',
-             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, entity_id=None, Qvendor='',
-             Qsoftware='', Qversion='', boolcnd='', licenses='', sub_packages=None,
-             associateinventory=0):
+             precmd='', postcmd_ok='', postcmd_ko='', reboot=0, targetos='win',
+             entity_id=None, Qvendor='', Qsoftware='', Qversion='', boolcnd='',
+             licenses='', sub_packages=None, associateinventory=0):
         # Mutable list sub_packages used as default argument to a method or function
         sub_packages = sub_packages or []
         self.label = label
@@ -114,6 +114,7 @@ class Package:
         self.postcmd_ok = getCommandFromH(postcmd_ok)
         self.postcmd_ko = getCommandFromH(postcmd_ko)
         self.reboot = reboot
+        self.targetos = targetos
         self.id = id
         self.root = ''
         self.Qvendor = Qvendor
@@ -150,6 +151,7 @@ class Package:
             'postCommandSuccess':self.postcmd_ok.toH(),
             'postCommandFailure':self.postcmd_ko.toH(),
             'reboot':self.reboot,
+            'targetos':self.targetos,
             'files':self.files.toH(),
             'Qvendor':self.Qvendor,
             'Qsoftware':self.Qsoftware,
@@ -211,6 +213,9 @@ class Package:
         self.reboot = 0
         if 'reboot' in h:
             self.reboot = h['reboot']
+        self.targetos = 'win'
+        if 'targetos' in h:
+            self.targetos = h['targetos']
         self.root = ''
         if 'basepath' in h:
             self.root = h['basepath']
@@ -283,7 +288,7 @@ class File:
             if not 'file_access_path' in access:
                 access['file_access_path'] = ''
             self.where = "%s://%s:%s%s" % (access['proto'], access['file_access_uri'], str(access['file_access_port']), access['file_access_path'])
-        
+
         self.name = name
         self.path = path
         self.checksum = checksum
@@ -377,5 +382,3 @@ class User:
 
     def equal(self, a):
         return (self.name == a.name and self.uuid == a.uuid)
-
-

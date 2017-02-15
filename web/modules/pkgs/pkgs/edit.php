@@ -54,8 +54,8 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         $need_assign = True;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion', 
-            'boolcnd', 'licenses') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
+            'boolcnd', 'licenses', 'targetos') as $post) {
         $package[$post] = $_POST[$post];
     }
 
@@ -64,7 +64,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
     // Package command
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
-    
+
     // Simple package: not a bundle
     $package['sub_packages'] = array();
 
@@ -219,6 +219,11 @@ $options = array(
     array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
+$os = array(
+    array('win', 'linux', 'mac'),
+    array(_T('Windows'), _T('Linux'), _T('Mac OS'))
+);
+
 foreach ($fields as $p) {
     $f->add(
             new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => $package[$p[0]]), $p[2])
@@ -231,6 +236,13 @@ foreach ($options as $p) {
             new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => ($op ? 'checked' : ''))
     );
 }
+
+$oslist = new SelectItem('targetos');
+$oslist->setElements($os[1]);
+$oslist->setElementsVal($os[0]);
+$f->add(
+        new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
+);
 
 foreach ($cmds as $p) {
     $f->add(
@@ -262,7 +274,7 @@ elseif ($papi_details['mountpoint'] == '/appstream')
 $pserver_base_url = $papi_details['protocol'] . '://' . $papi_details['server'] . ':' . $papi_details['port'] . '/' . $mirror . "_files/$pid/";
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS")
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json" || $file['name'] == "xmppdeploy.bat" || $file['name'] == "xmppdeploy.sh")
         continue;
     $names[] = sprintf('<a href="%s">%s</a>', $pserver_base_url . $file['name'] , $file['name']);
     $params[] = array(
