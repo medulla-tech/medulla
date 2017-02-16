@@ -54,6 +54,14 @@ function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
 }
 
+function xmlrpc_getdeploylog($uuid,$nbline) {
+    return xmlCall("xmppmaster.deploylog", array($uuid, $nbline));
+}
+
+function xmlrpc_addlogincommand($login, $commandid) {
+    return xmlCall("xmppmaster.addlogincommand", array($login, $commandid));
+}
+
 function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
