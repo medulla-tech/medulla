@@ -26,6 +26,9 @@ require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
+}
 
 $from = $_GET['from'];
 $path = explode('|', $from);
@@ -110,6 +113,9 @@ $cible = array($uuid);
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
 $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+    xmlrpc_addlogincommand($_SESSION['login'], $id_command);
+}
 
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     if (!isXMLRPCError()) {
@@ -124,7 +130,14 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 else{
 
-header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab,
+                                                                             'uuid' => $uuid,
+                                                                             'hostname' => $hostname,
+                                                                             'gid' => $gid,
+                                                                             'cmd_id' => $id_command,
+                                                                             "login"=>$_SESSION['login'])));
+//header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+
 }
 
 

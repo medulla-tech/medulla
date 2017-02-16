@@ -25,13 +25,13 @@ xmppmaster database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func
+from sqlalchemy import create_engine, MetaData, select, func, and_
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog, Deploy,Has_login_command
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog, Deploy,Has_login_command,Logs
 # Imported last
 import logging
 
@@ -198,6 +198,56 @@ class XmppMasterDatabase(DatabaseHelper):
             print str(e)
             logging.getLogger().error(str(e))
         return new_deploy.id
+
+    @DatabaseHelper._session
+    def getdeployfromcommandid(self, session, command_id):
+        relayserver = session.query(Deploy).filter(Deploy.command == command_id).all()
+        session.commit()
+        session.flush()
+        ret={}
+        ret['len']= len(relayserver)
+        arraylist=[]
+        for t in relayserver:
+            obj={}
+            obj['pathpackage']=t.pathpackage
+            obj['jid_relay']=t.jid_relay
+            obj['inventoryuuid']=t.inventoryuuid
+            obj['jidmachine']=t.jidmachine
+            obj['state']=t.state
+            obj['sessionid']=t.sessionid
+            obj['start']=t.start
+            if t.result is None:
+                obj['result']=""
+            else:
+                obj['result']=t.result
+            obj['host']=t.host
+            obj['user']=t.user
+            obj['deploycol']=t.deploycol
+            obj['login']=str(t.login)
+            obj['command']=t.command
+            arraylist.append(obj)
+        ret['objectdeploy']= arraylist
+        return ret
+
+    @DatabaseHelper._session
+    def getlinelogssession(self, session, sessionnamexmpp):
+        log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == 'deploy')).order_by(Logs.id).all()
+        session.commit()
+        session.flush()
+        ret={}
+        ret['len']= len(log)
+        arraylist=[]
+        for t in log:
+            obj={}
+            obj['type']=t.type
+            obj['date']=t.date
+            obj['text']=t.text
+            obj['sessionname']=t.sessionname
+            obj['priority']=t.priority
+            obj['who']=t.who
+            arraylist.append(obj)
+        ret['log']= arraylist
+        return ret
 
     @DatabaseHelper._session
     def addlogincommand(self, session, login, commandid):
@@ -840,15 +890,7 @@ class XmppMasterDatabase(DatabaseHelper):
         print ret[0]
         return ret[0]
 
-    @DatabaseHelper._session
-    def getGuacamoleidforUuid(self, session, uuid):
-        ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
-        session.commit()
-        session.flush()
-        if ret:
-            return [(m[1],m[0]) for m in ret]
-        else:
-            return []
+    
 
     @DatabaseHelper._session
     def getPresencejid(self, session, jid):

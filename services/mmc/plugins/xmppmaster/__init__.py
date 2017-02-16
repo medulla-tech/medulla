@@ -93,14 +93,21 @@ def getGuacamoleidforUuid(uuid):
 def getListPresenceAgent():
     return json.dumps(ObjectXmpp().presencedeployment, encoding='latin1')
 
+def getListPresenceMachine():
+    return XmppMasterDatabase().getListPresenceMachine()
+
 def deploylog(uuidinventory, nblastline):
     return XmppMasterDatabase().deploylog(uuidinventory, nblastline)
 
 def addlogincommand(login, commandid):
     return XmppMasterDatabase().addlogincommand(login, commandid)
 
-def getListPresenceMachine():
-    return XmppMasterDatabase().getListPresenceMachine()
+def getdeployfromcommandid(command_id) :
+    return XmppMasterDatabase().getdeployfromcommandid(command_id)
+
+def getlinelogssession(sessionxmpp) :
+    return XmppMasterDatabase().getlinelogssession(sessionxmpp)
+
 
 def getshowmachinegrouprelayserver():
     def Nonevalue(x):
