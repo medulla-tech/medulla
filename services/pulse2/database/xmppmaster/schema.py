@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime,Text, LargeBinary 
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -41,6 +41,7 @@ class Logs(Base, XmppMasterDBObj):
     # Here we define columns for the table machines.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
+    # Warning, if you modify the wrapper, you also have to change it in log.py
     type = Column(String(6), nullable=False,default = "noset")
     date = Column(DateTime, default=datetime.datetime.utcnow)
     text = Column(String(255), nullable=False)
@@ -104,7 +105,7 @@ class RelayServer(Base, XmppMasterDBObj):
     # ====== Fields =============================
     # Here we define columns for the table network.
     # Notice that each column is also a normal Python instance attribute.
-    urlguacamole =Column(String(200))
+    urlguacamole =Column(String(255))
     subnet = Column(String(45))
     nameserver = Column(String(45))
     groupdeploy = Column(String(45))
@@ -180,3 +181,38 @@ class Version(Base, XmppMasterDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     active = Column(TINYINT(1), nullable=False, default=1)
+    
+    
+class Deploy(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'deploy'
+    # ====== Fields =============================
+    # Here we define columns for the table deploy.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+     # Warning, if you modify the wrapper, you also have to change it in log.py
+    inventoryuuid = Column(String(11), nullable=False)
+    pathpackage = Column(String(100), nullable=False)
+    jid_relay = Column(String(45), nullable=False)
+    jidmachine = Column(String(45), nullable=False)
+    state = Column(String(45), nullable=False)
+    sessionid = Column(String(45), nullable=False)
+    start = Column(DateTime, default=datetime.datetime.utcnow)
+    result = Column(Text ),
+    host = Column(String(45), nullable=False)
+    user = Column(String(45), nullable=False,default = "")
+    deploycol = Column(String(45), nullable=False,default = "")
+    login = Column(String(45), nullable=False)
+    command = Column(Integer)
+
+class Has_login_command(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'has_login_command'
+    # ====== Fields =============================
+    # Here we define columns for the table deploy.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    login = Column(String(45), nullable=False)
+    command = Column(Integer)
+    
+

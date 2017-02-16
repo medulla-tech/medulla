@@ -1,5 +1,4 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
@@ -111,14 +110,24 @@ $cible = array($uuid);
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
 $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-if (!isXMLRPCError()) {
-    scheduler_start_these_commands('', array($id_command));
-    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
-    exit;
-} else {
-    ## Return to the launch tab, the backtrace will be displayed
-    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
-    exit;
+
+if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+    if (!isXMLRPCError()) {
+        scheduler_start_these_commands('', array($id_command));
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+        exit;
+    } else {
+        ## Return to the launch tab, the backtrace will be displayed
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+        exit;
+    }
 }
+else{
+
+header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+}
+
+
+
 ?>
 

@@ -323,8 +323,45 @@ class MscDatabase(DatabaseHelper):
             session.close()
             return False
 
+    def deployxmpp(self):
+        session = create_session()
+        try:
+            join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
+            q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
+            q = q.select_from(join)
+            q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready' ))
+            #print q. column_descriptions
+            #print q
+            q = q.all()
+            session.close()
+        except Exception, exc:
+            session.close()
+            return ""
 
-
+        d = list(q)
+        tabmachine = []
+        updatemachine = []
+        listemachine = []
+        machine_do_deploy = {}
+        for x in d:
+            if not x.Target.target_uuid in tabmachine:
+                tabmachine.append(x.Target.target_uuid)
+                print "deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id)
+                machine_do_deploy[x.Target.target_uuid]=x.Commands.package_id
+                updatemachine.append(x)
+                session = create_session()
+                session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
+                    update({CommandsOnHost.current_state: "done",
+                            CommandsOnHost.stage : "ended"
+                            })
+                session.flush()
+                session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).\
+                    update({ CommandsOnHostPhase.state : "done" })
+                session.flush()
+            else:
+                self.logger.warn("Cancel deploy in process\n Deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
+                listemachine.append(x)
+        return updatemachine,machine_do_deploy
 
     def deleteCommand(self, cmd_id):
         """

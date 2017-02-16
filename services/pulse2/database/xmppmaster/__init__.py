@@ -31,7 +31,7 @@ from sqlalchemy.exc import DBAPIError
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog, Deploy,Has_login_command
 # Imported last
 import logging
 
@@ -76,7 +76,6 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         # No mapping is needed, all is done on schema file
         return
-
 
     def getDbConnection(self):
         NB_DB_CONN_TRY = 2
@@ -156,6 +155,89 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return -1
         return new_machine.id
+    
+    @DatabaseHelper._session
+    def loginbycommand(self, session,idcommand):
+        sql = """SELECT 
+                    login
+                FROM
+                    xmppmaster.has_login_command
+                WHERE
+                    command = %s
+                    LIMIT 1 ;"""%idcommand
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = [x for x in result][0]
+        print result
+        return result
+
+    @DatabaseHelper._session
+    def adddeploy(self, session, idcommand,  jidmachine, jidrelay,  host, inventoryuuid,
+                           uuidpackage, state, sessionid, user="", deploycol=""):
+        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, platform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil)
+        #recupere login command
+        login = self.loginbycommand(idcommand)
+        try:
+            new_deploy = Deploy()
+            new_deploy.jidmachine = jidmachine
+            new_deploy.jid_relay = jidrelay
+            new_deploy.host = host
+            new_deploy.inventoryuuid = inventoryuuid
+            new_deploy.pathpackage =uuidpackage
+            new_deploy.state = state
+            new_deploy.sessionid = sessionid
+            new_deploy.user = user
+            new_deploy.deploycol = deploycol
+            new_deploy.command = idcommand
+            new_deploy.login = login
+            session.add(new_deploy)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            print str(e)
+            logging.getLogger().error(str(e))
+        return new_deploy.id
+
+    @DatabaseHelper._session
+    def addlogincommand(self, session, login, commandid):
+        try:
+            new_logincommand = Has_login_command()
+            new_logincommand.login = login
+            new_logincommand.command = commandid
+            session.add(new_logincommand)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            print str(e)
+            logging.getLogger().error(str(e))
+        return new_logincommand.id
+
+    @DatabaseHelper._session
+    def deploylog(self,session,nblastline):
+        """ return les machines en fonction du RS """
+        sql = """SELECT 
+                    *
+                FROM
+                    xmppmaster.deploy
+                ORDER BY id DESC
+                LIMIT %s;"""%nblastline
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._session
+    def updatedeploystate(self, session, sessionid, state):
+        try:
+            session.query(Deploy).filter(Deploy.sessionid == sessionid).\
+                    update({Deploy.state: state})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
 
     @DatabaseHelper._session
     def addPresenceNetwork(self, session, macaddress, ipaddress, broadcast, gateway, mask, mac, id_machine):

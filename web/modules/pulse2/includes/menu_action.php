@@ -20,6 +20,10 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
+}
+
 
 if (isset($_GET['cn'])) $_SESSION['cn'] = $_GET['cn'];
 if (isset($_GET['objectUUID']))
@@ -35,11 +39,26 @@ $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","
 $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 $backupAction = new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
 $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
-$logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
-$mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
 
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+    $pp = xmlrpc_getPresenceuuid( $_SESSION['objectUUID']);
+    if ($pp != 1) {
+        $logAction = new EmptyActionItem1(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+        $mscAction = new EmptyActionItem1(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
+    }
+    else{
+        $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+        $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
+    }
+}
+else{
+    $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+    $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
+}
 $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+
 
 /*
  * This function return True if action param is in enabled pulse modules
@@ -56,6 +75,7 @@ function modIsActive($action) {
         "msc" => "msc",
         "hos" => "backuppc",
         "cre" => "extticket",
+        "xmpp" =>"xmppmaster"
     );
     $modList = $_SESSION['supportModList'];
     if (in_array('glpi', $modList)) $modList[] = 'inventory';
@@ -78,6 +98,7 @@ function modIsActive($action) {
     return False;
 }
 
+
 echo "<ul class='action'>";
 foreach ($actions as $action){
         if (is_array($paramArray)) {
@@ -87,8 +108,15 @@ foreach ($actions as $action){
             }
         }
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-        if (is_array($paramArray) & !empty($paramArray)) $urlChunk = $action->buildUrlChunk($paramArray);
-        else $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
+
+        if (is_array($paramArray) & !empty($paramArray)){
+            $urlChunk = $action->buildUrlChunk($paramArray);
+
+        }
+        else{ 
+            $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
+
+        }
         if (modIsActive($action->action)) {
             if ($action->action == "vnc_client") {
                 echo "<a title=\"".$action->desc."\" onclick=\"window.open('" . urlStr($action->path) . $urlChunk . "','mywin','left=20,top=20,width=300,height=150,toolbar=1,resizable=0');\">&nbsp;</a>";

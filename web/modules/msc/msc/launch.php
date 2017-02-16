@@ -123,7 +123,7 @@ function start_a_command($proxy = array()) {
             $params[$param] = $post[$param];
         }
     }
-
+    // jfk scheduler_start_these_commands
     $pid = $post['pid'];
     $mode = $post['copy_mode'];
 
@@ -572,19 +572,23 @@ if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction']
         $msc_host->ajaxDisplay();
     } else { // nothing set : do not probe
         if (!isset($_POST["bprobe"])) {
-            $fprobe = new ValidatingForm();
-            $fprobe->addButton("bprobe", _T("Probe status", "msc"));
-            $fprobe->display();
+            if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $fprobe = new ValidatingForm();
+                $fprobe->addButton("bprobe", _T("Probe status", "msc"));
+                $fprobe->display();
+            }
             print "<br/>";
         } else {
-            $msc_host = new RenderedMSCHost($machine, web_probe_order_on_demand());
-            $msc_host->ajaxDisplay();
+            if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $msc_host = new RenderedMSCHost($machine, web_probe_order_on_demand());
+                $msc_host->ajaxDisplay();
+            }
         }
     }
-
-    $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid' => $_GET['uuid']));
-    $msc_actions->display();
-
+    if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $machine->hostname, array('uuid' => $_GET['uuid']));
+        $msc_actions->display();
+    }
     $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("uuid" => $machine->uuid, "hostname" => $machine->hostname));
     $ajax->display();
     $ajax->displayDivToUpdate();

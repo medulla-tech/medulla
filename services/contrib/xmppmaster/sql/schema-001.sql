@@ -30,6 +30,56 @@ CREATE DATABASE  IF NOT EXISTS `xmppmaster` /*!40100 DEFAULT CHARACTER SET latin
 USE `xmppmaster`;
 
 --
+-- Table structure for table `deploy`
+--
+
+DROP TABLE IF EXISTS `deploy`;
+CREATE TABLE `deploy` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pathpackage` varchar(100) NOT NULL,
+  `jid_relay` varchar(45) NOT NULL,
+  `jidmachine` varchar(45) NOT NULL,
+  `state` varchar(45) NOT NULL,
+  `sessionid` varchar(45) NOT NULL,
+  `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `result` text,
+  `inventoryuuid` varchar(11) NOT NULL,
+  `host` varchar(45) DEFAULT NULL,
+  `user` varchar(45) DEFAULT NULL,
+  `deploycol` varchar(45) DEFAULT NULL,
+  `command` int(11) DEFAULT NULL,
+  `login` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sessionid_UNIQUE` (`sessionid`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+
+--
+-- Table structure for table `has_guacamole`
+--
+
+DROP TABLE IF EXISTS `has_guacamole`;
+CREATE TABLE `has_guacamole` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `idguacamole` int(11) NOT NULL,
+  `idinventory` int(11) NOT NULL,
+  `protocol` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`,`idguacamole`,`idinventory`)
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `has_login_command`
+--
+
+DROP TABLE IF EXISTS `has_login_command`;
+CREATE TABLE `has_login_command` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(45) NOT NULL,
+  `command` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `has_machinesusers`
 --
 
@@ -39,6 +89,7 @@ CREATE TABLE `has_machinesusers` (
   `machines_id` int(11) NOT NULL,
   PRIMARY KEY (`users_id`,`machines_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `has_relayserverrules`
@@ -55,10 +106,28 @@ CREATE TABLE `has_relayserverrules` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Table structure for table `logs`
+--
+
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE `logs` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `type` varchar(6) NOT NULL DEFAULT 'noset',
+  `text` varchar(255) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `sessionname` varchar(20) DEFAULT '',
+  `priority` int(11) DEFAULT '0',
+  `who` varchar(45) DEFAULT '""',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=latin1;
+
+--
 -- Table structure for table `machines`
 --
 
 DROP TABLE IF EXISTS `machines`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `machines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jid` varchar(45) NOT NULL,
@@ -71,24 +140,19 @@ CREATE TABLE `machines` (
   `subnetxmpp` varchar(45) DEFAULT NULL,
   `agenttype` varchar(20) CHARACTER SET big5 DEFAULT NULL,
   `classutil` varchar(10) NOT NULL DEFAULT 'private',
-  `groupdeploy` VARCHAR(80) DEFAULT NULL,
-  `urlguacamole` VARCHAR(255) DEFAULT NULL,
+  `groupdeploy` varchar(80) DEFAULT NULL,
+  `urlguacamole` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `jid_UNIQUE` (`jid`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
-
--- add  colum time
--- ALTER TABLE `xmppmaster`.`machines` 
--- ADD COLUMN `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `urlguacamole`;
-
-
-
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
 --
 -- Table structure for table `network`
 --
 
 DROP TABLE IF EXISTS `network`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `network` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `macaddress` varchar(45) DEFAULT NULL,
@@ -100,33 +164,7 @@ CREATE TABLE `network` (
   `machines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `rules`
---
-
-DROP TABLE IF EXISTS `rules`;
-CREATE TABLE `rules` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) NOT NULL,
-  `description` varchar(45) DEFAULT NULL,
-  `level` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `rules`
---
-
-LOCK TABLES `rules` WRITE;
-INSERT INTO `rules` VALUES (1,'user','Associate relay server based on user',1),
-(2,'hostname','Associate relay server based on hostname',2),
-(3,'geoposition','Select relay server based on best location',3),
-(4,'subnet','Select relay server in same subnet',4),
-(5,'default','Use default relay server',5);
-UNLOCK TABLES;
-
+) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `relayserver`
@@ -151,7 +189,22 @@ CREATE TABLE `relayserver` (
   `groupdeploy` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `rules`
+--
+
+DROP TABLE IF EXISTS `rules`;
+CREATE TABLE `rules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `description` varchar(45) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `userlog`
@@ -164,27 +217,8 @@ CREATE TABLE `userlog` (
   `type` varchar(45) NOT NULL DEFAULT 'info',
   `datelog` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-
---
--- Table structure for table `logs`
---
-
-DROP TABLE IF EXISTS `logs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `logs` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `type` varchar(6) NOT NULL DEFAULT 'noset',
-  `text` varchar(255) NOT NULL,
-  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sessionname` varchar(20) DEFAULT '',
-  `priority` int(11) DEFAULT '0',
-  `who` varchar(45) DEFAULT '""',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
+) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `users`
@@ -204,29 +238,26 @@ CREATE TABLE `users` (
   `country_code` varchar(45) DEFAULT '',
   `country_name` varchar(45) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `has_guacamole`
---
-
-DROP TABLE IF EXISTS `has_guacamole`;
-CREATE TABLE `has_guacamole` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `idguacamole` int(11) NOT NULL,
-  `idinventory` int(11) NOT NULL,
-  `protocol` varchar(10) NOT NULL,
-  PRIMARY KEY (`id`,`idguacamole`,`idinventory`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `version`
 --
 
 DROP TABLE IF EXISTS `version`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `rules` WRITE;
+INSERT INTO `rules` VALUES (1,'user','Associate relay server based on user',1),
+(2,'hostname','Associate relay server based on hostname',2),
+(3,'geoposition','Select relay server based on best location',4),
+(4,'subnet','Select relay server in same subnet',3),
+(5,'default','Use default relay server',5);
+UNLOCK TABLES;
 
 
 LOCK TABLES `version` WRITE;
