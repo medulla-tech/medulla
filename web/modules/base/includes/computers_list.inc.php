@@ -110,7 +110,7 @@ function list_computers($names, $filter, $count = 0, $delete_computer = false, $
 
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
-        echo $presencemachinexmpp;
+        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {

@@ -62,6 +62,14 @@ function xmlrpc_addlogincommand($login, $commandid) {
     return xmlCall("xmppmaster.addlogincommand", array($login, $commandid));
 }
 
+function xmlrpc_getdeployfromcommandid($command_id) {
+    return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id));
+}
+
+function xmlrpc_getlinelogssession($sessionxmpp){
+    return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
+}
+
 function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
