@@ -26,7 +26,7 @@
 
 
 
-CREATE DATABASE  IF NOT EXISTS `xmppmaster` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE  IF NOT EXISTS `xmppmaster` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `xmppmaster`;
 
 --
@@ -51,7 +51,7 @@ CREATE TABLE `deploy` (
   `login` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sessionid_UNIQUE` (`sessionid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 
 --
@@ -65,7 +65,7 @@ CREATE TABLE `has_guacamole` (
   `idinventory` int(11) NOT NULL,
   `protocol` varchar(10) NOT NULL,
   PRIMARY KEY (`id`,`idguacamole`,`idinventory`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `has_login_command`
@@ -77,7 +77,7 @@ CREATE TABLE `has_login_command` (
   `login` varchar(45) NOT NULL,
   `command` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `has_machinesusers`
@@ -89,7 +89,6 @@ CREATE TABLE `has_machinesusers` (
   `machines_id` int(11) NOT NULL,
   PRIMARY KEY (`users_id`,`machines_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `has_relayserverrules`
@@ -103,7 +102,7 @@ CREATE TABLE `has_relayserverrules` (
   `relayserver_id` int(11) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `logs`
@@ -119,15 +118,13 @@ CREATE TABLE `logs` (
   `priority` int(11) DEFAULT '0',
   `who` varchar(45) DEFAULT '""',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `machines`
 --
 
 DROP TABLE IF EXISTS `machines`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `machines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jid` varchar(45) NOT NULL,
@@ -151,8 +148,6 @@ CREATE TABLE `machines` (
 --
 
 DROP TABLE IF EXISTS `network`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `network` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `macaddress` varchar(45) DEFAULT NULL,
@@ -190,7 +185,6 @@ CREATE TABLE `relayserver` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `rules`
@@ -203,8 +197,7 @@ CREATE TABLE `rules` (
   `description` varchar(45) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `userlog`
@@ -217,8 +210,7 @@ CREATE TABLE `userlog` (
   `type` varchar(45) NOT NULL DEFAULT 'info',
   `datelog` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `users`
@@ -245,8 +237,6 @@ CREATE TABLE `users` (
 --
 
 DROP TABLE IF EXISTS `version`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `version` (
   `Number` tinyint(4) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
