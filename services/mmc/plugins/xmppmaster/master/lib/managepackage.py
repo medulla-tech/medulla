@@ -68,3 +68,12 @@ class managepackage:
                 or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
                 return t
         return None
+    
+    
+    @staticmethod
+    def getnamepackagefromuuidpackage(uuidpackage):
+        pathpackage = os.path.join(managepackage.packagedir(),uuidpackage,"xmppdeploy.json")
+        if os.path.isfile(pathpackage):
+            jr = managepackage.loadjsonfile(pathpackage)
+            return jr['info']['name']
+        return None
