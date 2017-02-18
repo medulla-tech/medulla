@@ -890,6 +890,15 @@ class XmppMasterDatabase(DatabaseHelper):
         print ret[0]
         return ret[0]
 
+    @DatabaseHelper._session
+    def getGuacamoleidforUuid(self, session, uuid):
+        ret=session.query(Has_guacamole.idguacamole,Has_guacamole.protocol).filter(Has_guacamole.idinventory == uuid.replace('UUID','')).all()
+        session.commit()
+        session.flush()
+        if ret:
+            return [(m[1],m[0]) for m in ret]
+        else:
+            return []
     
 
     @DatabaseHelper._session
