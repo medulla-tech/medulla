@@ -25,9 +25,9 @@ $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
 );
 
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("XMPP Deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
-);
+// $sidemenu->addSideMenuItem(
+//     new SideMenuItem(_T("XMPP Deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
+// );
 
 $sidemenu->addSideMenuItem(
     new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
