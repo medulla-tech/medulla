@@ -182,7 +182,6 @@ else{
 if ($group != null) {
     $n->addActionItem($a_convergence_action);
 }
-//$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
 ?>

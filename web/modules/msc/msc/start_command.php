@@ -136,7 +136,7 @@ header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('ta
                                                                              'gid' => $gid,
                                                                              'cmd_id' => $id_command,
                                                                              "login"=>$_SESSION['login'])));
-//header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+
 
 }
 
