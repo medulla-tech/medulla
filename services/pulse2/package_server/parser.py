@@ -448,44 +448,44 @@ class PackageParserJSON:
         seq_count = 0
 
         sequence = {}
-        sequence['step'] = str(seq_count)
+        sequence['step'] = seq_count
         sequence['action'] = 'action_pwd_package'
         data[package.targetos]['sequence'].append(sequence)
         seq_count += 1
 
         sequence = {}
-        sequence['step'] = str(seq_count)
+        sequence['step'] = seq_count
         sequence['action'] = 'actionprocessscript'
         if package.targetos == 'win':
             sequence['command'] = 'xmppdeploy.bat'
         else:
             sequence['command'] = 'xmppdeploy.sh'
         sequence['codereturn'] = ''
-        sequence['success'] = str(seq_count+1)
+        sequence['success'] = seq_count+1
         if package.reboot:
-            sequence['error'] = str(seq_count+3)
+            sequence['error'] = seq_count+3
         else:
-            sequence['error'] = str(seq_count+2)
+            sequence['error'] = seq_count+2
         sequence['@resultcommand'] = ''
-        sequence['timeout'] = '100'
+        sequence['timeout'] = 100
         data[package.targetos]['sequence'].append(sequence)
         seq_count += 1
 
         if package.reboot:
             sequence = {}
-            sequence['step'] = str(seq_count)
+            sequence['step'] = seq_count
             sequence['action'] = 'actionrestart'
             data[package.targetos]['sequence'].append(sequence)
             seq_count += 1
 
         sequence = {}
-        sequence['step'] = str(seq_count)
+        sequence['step'] = seq_count
         sequence['action'] = 'actionsuccescompletedend'
         data[package.targetos]['sequence'].append(sequence)
         seq_count += 1
 
         sequence = {}
-        sequence['step'] = str(seq_count)
+        sequence['step'] = seq_count
         sequence['action'] = 'actionerrorcompletedend'
         data[package.targetos]['sequence'].append(sequence)
 
