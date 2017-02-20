@@ -330,15 +330,12 @@ class MscDatabase(DatabaseHelper):
             q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
             q = q.select_from(join)
             q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready' ))
-            #print q. column_descriptions
-            #print q
             q = q.all()
-            session.close()
+            session.flush()
         except Exception, exc:
+            self.logger.error(str(exc))
             session.close()
             return ""
-
-        d = list(q)
         tabmachine = []
         updatemachine = []
         listemachine = []
@@ -349,7 +346,6 @@ class MscDatabase(DatabaseHelper):
                 print "deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id)
                 machine_do_deploy[x.Target.target_uuid]=x.Commands.package_id
                 updatemachine.append(x)
-                session = create_session()
                 session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
                     update({CommandsOnHost.current_state: "done",
                             CommandsOnHost.stage : "ended"
@@ -361,6 +357,7 @@ class MscDatabase(DatabaseHelper):
             else:
                 self.logger.warn("Cancel deploy in process\n Deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
                 listemachine.append(x)
+        session.close()
         return updatemachine,machine_do_deploy
 
     def deleteCommand(self, cmd_id):
