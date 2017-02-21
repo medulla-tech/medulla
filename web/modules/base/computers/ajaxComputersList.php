@@ -91,14 +91,14 @@ $count = getRestrictedComputersListLen($filter);
 
 $msc_can_download_file = False;
 $msc_vnc_show_icon = False;
-//jfkjfk
+
 if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once("modules/msc/includes/scheduler_xmlrpc.php");
     require_once("modules/msc/includes/mscoptions_xmlrpc.php");
     $msc_can_download_file = msc_can_download_file();
     $msc_vnc_show_icon = web_vnc_show_icon();
 }
-//jfkjfk
+
 if ($_GET["cmd_id"]){
     list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon,$_GET["cmd_id"],$_GET["login"]);
 }

@@ -47,7 +47,7 @@ class EmptyActionItem1 extends ActionItem {
         echo '$this->desc';
     }
 }
-//jfkjfk 
+
 function list_computers($names,
                         $filter, 
                         $count = 0, 
@@ -305,5 +305,5 @@ function list_computers($names,
     }
     $n->display();
 }
-//jfkjfk
+
 ?>
