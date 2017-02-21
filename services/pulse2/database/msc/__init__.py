@@ -340,7 +340,7 @@ class MscDatabase(DatabaseHelper):
         updatemachine = []
         listemachine = []
         machine_do_deploy = {}
-        for x in d:
+        for x in q:
             if not x.Target.target_uuid in tabmachine:
                 tabmachine.append(x.Target.target_uuid)
                 print "deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id)
