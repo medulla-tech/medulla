@@ -3,6 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -25,6 +26,8 @@
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
+
+
 $param = array();
 if (isset($_GET['gid'])) {
     $param['gid'] = urlencode($_GET['gid']);
@@ -41,6 +44,12 @@ if (isset($_GET['equ_bool'])) {
 }
 if (isset($_GET['imaging_server'])) {
     $param['imaging_server'] = urlencode($_GET['imaging_server']);
+}
+
+
+if( in_array("xmppmaster", $_SESSION["supportModList"]) && isset($_GET['cmd_id']) && isset($_GET['login'])){
+    $param['cmd_id'] = urlencode($_GET['cmd_id']);
+    $param['login'] = urlencode($_GET['login']);
 }
 
 if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {

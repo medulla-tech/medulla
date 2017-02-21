@@ -57,7 +57,13 @@ else{
     $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
     $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
 }
-$actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+if (in_array("xmppmaster", $_SESSION["supportModList"]) && isset($_GET['cmd_id']) ) {
+//deploy pas de menu group general
+    $actions = array();
+}
+else{
+    $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
+}
 
 
 /*
