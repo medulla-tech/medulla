@@ -506,6 +506,15 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._session
+    def getUuidFromJid(self, session, jid):
+        """ return machine uuid for JID """
+        uuid_inventorymachine = session.query(Machines).filter_by(jid=jid).first().uuid_inventorymachine
+        if uuid_inventorymachine:
+            return uuid_inventorymachine.strip('UUID')
+        else:
+            return False
+
+    @DatabaseHelper._session
     def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
         #-- type user rules_id` = 1
         #select `relayserver`.`id` from `relayserver` inner join `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 

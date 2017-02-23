@@ -454,6 +454,18 @@ class Glpi91(DyngroupDatabaseHelper):
         self.group = Table("glpi_groups", self.metadata, autoload = True)
         mapper(Group, self.group)
 
+        # collects
+        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata, autoload = True)
+        mapper(Collects, self.collects)
+
+        # registries
+        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata, autoload = True)
+        mapper(Registries, self.registries)
+
+        # registries contents
+        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata, autoload = True)
+        mapper(RegContents, self.regcontents)
+
     ##################### internal query generators
     def __filter_on(self, query):
         """
@@ -3857,7 +3869,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
- 
+
     @DatabaseHelper._session
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Entities).filter_by(id=id).one()
@@ -3913,7 +3925,7 @@ class Glpi91(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-    
+
     @DatabaseHelper._session
     def editLocation(self, session, id, name, parent_id, comment):
         location = session.query(Locations).filter_by(id=id).one()
@@ -3923,7 +3935,7 @@ class Glpi91(DyngroupDatabaseHelper):
         location.level = parent_id
 
         location = self.updateLocationCompleteName(location)
-        
+
         session.commit()
         session.flush()
         return True
@@ -3934,13 +3946,13 @@ class Glpi91(DyngroupDatabaseHelper):
         parent_location = session.query(Locations).filter_by(id=location.locations_id).one()
         completename = parent_location.completename + ' > ' + location.name
         location.completename = completename
-        
+
         # Update all children complete names
         children = session.query(Locations).filter_by(locations_id=location.id).all()
-        
+
         for item in children:
             self.updateLocationCompleteName(item)
-        
+
         return location
 
     @DatabaseHelper._listinfo
@@ -4221,6 +4233,102 @@ class Glpi91(DyngroupDatabaseHelper):
         session.flush()
         return True
 
+    @DatabaseHelper._session
+    def getRegistryCollect(self, session, full_key):
+        """
+        Get the registry id where the collect is the defined key
+
+        @param full_key: the registry key in the form hive/path/key
+        @type full_key: str
+
+        @return: id of the registry collect
+        @rtype: int
+        """
+
+        # Split into hive / path / key
+        hive = full_key.split('\\')[0]
+        key = full_key.split('\\')[-1]
+        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
+        path = '/'+path+'/'
+        # Get registry_id
+        registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
+        if registry_id:
+            return registry_id
+        else:
+            return False
+
+    @DatabaseHelper._session
+    def addRegistryCollect(self, session, full_key):
+        """
+        Add the registry collect for the defined key
+
+        @param full_key: the registry key in the form hive/path/key
+        @type full_key: str
+
+        @return: success of the operation
+        @rtype: bool
+        """
+
+        # Split into hive / path / key
+        hive = full_key.split('\\')[0]
+        key = full_key.split('\\')[-1]
+        path = full_key.replace(hive+'\\','').replace('\\'+key,'')
+        path = '/'+path+'/'
+        # Insert in database
+        registry = Registries()
+        registry.name = key
+        # Get collects_id
+        collects_id = session.query(Collects).filter_by(id='PulseRegistryCollects').first().id
+        registry.plugin_fusioninventory_collects_id = collects_id
+        registry.hive = hive
+        registry.path = path
+        registry.key = key
+        session.add(registry)
+        session.commit()
+        session.flush()
+        return True
+
+    @DatabaseHelper._session
+    def addRegistryCollectContent(self, session, computers_id, registry_id, key, value):
+        """
+        Add registry collect content
+
+        @param computers_id: the computer_id from glpi_computers
+        @type computers_id: str
+
+        @param registry_id: the registry_id from plugin_fusioninventory_collects_registries
+        @type registry_id: str
+
+        @param key: the registry key name
+        @type key: str
+
+        @param value: the key value
+        @type value:
+
+        @return: success of the operation
+        @rtype: bool
+        """
+
+        # Check if already present
+        try:
+            contents_id = session.query(RegContents).filter_by(computers_id=computers_id,plugin_fusioninventory_collects_registries_id=registry_id,key=key).first().id
+            if contents_id:
+                # Update database
+                session.query(RegContents).filter(id == contents_id).update({'value': str(value)})
+                return True
+        except AttributeError:
+            # Insert in database
+            regcontents = RegContents()
+            regcontents.computers_id = int(computers_id)
+            regcontents.plugin_fusioninventory_collects_registries_id = int(registry_id)
+            regcontents.key = str(key)
+            regcontents.value = str(value)
+            session.add(regcontents)
+            session.commit()
+            session.flush()
+            return True
+
+
 # Class for SQLalchemy mapping
 class Machine(object):
     __tablename__ = 'glpi_computers'
@@ -4381,6 +4489,15 @@ class NetworkNames(object):
     pass
 
 class IPAddresses_IPNetworks(object):
+    pass
+
+class Collects(object):
+    pass
+
+class Registries(object):
+    pass
+
+class RegContents(object):
     pass
 
 class Rule(DbTOA):
