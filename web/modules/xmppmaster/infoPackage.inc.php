@@ -33,9 +33,20 @@ $mod->setDescription(_T("xmppmaster", "xmppmaster"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(800);
 
+
+
+$submod = new SubModule("xmppmaster");
+$submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
+$submod->setDescription(_T("Audit", "xmppmaster"));
+$submod->setDefaultPage("xmppmaster/xmppmaster/index");
+$page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
+$submod->addPage($page);
+
+/*
+
 $submod = new SubModule("xmppmaster");
 $submod->setDescription(_T("XMPP Master", "xmppmaster"));
-$submod->setVisibility(False);
+$submod->setVisibility(False);*/
 
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);

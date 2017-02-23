@@ -1,6 +1,6 @@
-<?php
-/**
- * (c) 2015-2016 Siveo, http://www.siveo.net
+<?
+/*
+ *  (c) 2016 siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -20,13 +20,10 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/*require("graph/navbar.inc.php")*/;
-require("graph/navbar.inc.php");
-require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 
-$p = new PageGenerator(_T("xmppm status", 'xmppmaster'));
-$p->setSideMenu($sidemenu);
-$p->display();
+$sidemenu= new SideMenu();
+$sidemenu->setClass("xmppmaster");
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Status", 'xmppmaster'), "xmppmaster", "xmppmaster", "index"));
+
 ?>
