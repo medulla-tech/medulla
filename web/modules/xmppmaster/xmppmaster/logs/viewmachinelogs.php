@@ -1,6 +1,7 @@
 <?php
 /**
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -20,11 +21,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
-// require("modules/base/computers/localSidebar.php");
-// require("graph/navbar.inc.php");
-// require_once("modules/xmppmaster/includes/xmlrpc.php");
-// extract($_GET);
+
 $p = new PageGenerator(_T("View log deploy"." ".$hostname, 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -44,7 +41,7 @@ $p->display();
 
 <?
   //recupere information deploie. for cmn_id
-    $info = xmlrpc_getdeployfromcommandid($cmd_id);
+    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
     if ($info['len'] == 0){
         echo _T("Wait for the deployment",'xmppmaster'). " "  . $cmd_id;
          //reload page
@@ -60,9 +57,6 @@ $p->display();
     else{
         $sessionxmpp=$info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
-// echo "<pre>";
-//         print_r($info);
-// echo "</pre>";
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
         $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
@@ -227,9 +221,7 @@ $p->display();
         ';
     }
 }
-// http://192.168.56.2/mmc/main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&tab=grouptablogs&uuid=&hostname=&gid=5&cmd_id=23&login=root
 ?>
-<!--http://192.168.56.2/mmc/main.php?module=xmppmaster&submod=xmppmaster&action=viewlogs&displayName=&cn=machienepulse&type=VirtualBox&owner_realname=&objectUUID=UUID5&entity=HQ&owner=root&user=root&owner_firstname=&os=Debian+GNU%2FLinux+8.7+%28jessie%29&gid=5&gr_cmd_id=23&gr_login=root&vnctype=guacamole&mod=-->
 <form id="formpage" action="<? echo $_SERVER['PHP_SELF']; ?>" METHODE="GET" >
     <input type="hidden" name="tab" value ="<? echo $tab; ?>" >
     <input type="hidden" name="module" value ="<? echo $module; ?>" >
@@ -242,9 +234,7 @@ $p->display();
     <input type="hidden" name="login" value ="<? echo $login; ?>" >
     <input type="hidden" name="mach" value ="1" >
 </form>
-
 <script type="text/javascript">
-
       jQuery( "h3" ).click(function() {
         jQuery(this).css('background-color','white')
         jQuery(this).next('div').toggle();

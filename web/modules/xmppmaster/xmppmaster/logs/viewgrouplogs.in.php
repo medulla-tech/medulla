@@ -1,6 +1,7 @@
 <?php
 /**
- * (c) 2017 Siveo, http://http://www.siveo.net
+ * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+ * (c) 2007 Mandriva, http://www.mandriva.com/
  *
  * $Id$
  *
@@ -20,20 +21,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
-// require("modules/base/computers/localSidebar.php");
-// require("graph/navbar.inc.php");
-// require_once("modules/xmppmaster/includes/xmlrpc.php");
-// extract($_GET);
+
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
-// recup name group
-//dyngroup.get_group('5', False, False)
-// if ($gid) {
-//     $group = new Group($_GET['gid'], true);
-//     $namegroup = $group->getName();
-// }
-
 ?> 
 <?
 require_once("modules/dyngroup/includes/includes.php");
@@ -43,9 +33,6 @@ $p = new PageGenerator(_T("View log deploy group",'xmppmaster')." ". $group->get
 $p->setSideMenu($sidemenu);
 $p->display();
 $info = xmlrpc_getdeployfromcommandid($cmd_id);
-// echo "<pre>";
-// print_r($info);
-// echo "</pre>";
 
 if ($info['len'] != 0){
     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
@@ -58,7 +45,7 @@ if ($info['len'] != 0){
         $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
         $datestart =  date("Y-m-d H:i:s", $start);
-        echo "Start deployment :".$datestart;
+        echo "Start deployment :".$datestart;// [".$infodeploy['len'] ." steps] " 
 
 
        if (isset($resultatdeploy['descriptor']['info'])){
@@ -105,7 +92,7 @@ if ($info['len'] != 0){
 else{
 echo '
     <form id="formgroup" action="'.$_SERVER['PHP_SELF'].'" METHODE="GET" >
-        <input type="text" name="tab" value ="'.$tab.'" >
+        <input type="hidden" name="tab" value ="'.$tab.'" >
         <input type="hidden" name="gid" value ="'.$gid.'" >
         <input type="hidden" name="cmd_id" value ="'.$cmd_id.'" >
         <input type="hidden" name="login" value ="'.$login.'" >
