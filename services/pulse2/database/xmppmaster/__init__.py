@@ -200,8 +200,13 @@ class XmppMasterDatabase(DatabaseHelper):
         return new_deploy.id
 
     @DatabaseHelper._session
-    def getdeployfromcommandid(self, session, command_id):
-        relayserver = session.query(Deploy).filter(Deploy.command == command_id).all()
+    def getdeployfromcommandid(self, session, command_id, uuid):
+        if (uuid == "UUID_NONE"):
+            relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id,Deploy.result.isnot(None)))
+        else:
+            relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid ,Deploy.command == command_id, Deploy.result.isnot(None)))
+        print relayserver 
+        relayserver = relayserver.all()
         session.commit()
         session.flush()
         ret={}

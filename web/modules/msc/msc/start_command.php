@@ -113,6 +113,7 @@ $cible = array($uuid);
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
 $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
+
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     xmlrpc_addlogincommand($_SESSION['login'], $id_command);
 }
@@ -130,17 +131,13 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
 }
 else{
 
-header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab,
-                                                                             'uuid' => $uuid,
-                                                                             'hostname' => $hostname,
-                                                                             'gid' => $gid,
-                                                                             'cmd_id' => $id_command,
-                                                                             "login"=>$_SESSION['login'])));
-
-
+    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab,
+                                                                                'uuid' => $uuid,
+                                                                                'hostname' => $hostname,
+                                                                                'gid' => $gid,
+                                                                                'cmd_id' => $id_command,
+                                                                                "login"=>$_SESSION['login'])));
+    exit;
 }
-
-
-
 ?>
 

@@ -102,8 +102,8 @@ def deploylog(uuidinventory, nblastline):
 def addlogincommand(login, commandid):
     return XmppMasterDatabase().addlogincommand(login, commandid)
 
-def getdeployfromcommandid(command_id) :
-    return XmppMasterDatabase().getdeployfromcommandid(command_id)
+def getdeployfromcommandid(command_id, uuid) :
+    return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
 def getlinelogssession(sessionxmpp) :
     return XmppMasterDatabase().getlinelogssession(sessionxmpp)
