@@ -36,52 +36,56 @@ $submod = & $base->getSubmod('computers');
 
 /* Set up MSC pages only when the computers module is available */
 if (!empty($submod)) {
-    $mod = new Module("msc");
-    $mod->setVersion(VERSION);
-    $mod->setRevision(REVISION);
-    $mod->setDescription(_T("Secure Control", "msc"));
-    $mod->setAPIVersion("0:0:0");
-    $mod->setPriority(700);
+    if (! in_array("xmppmaster", $_SESSION["supportModList"])) 
+    {
+        $mod = new Module("msc");
+        $mod->setVersion(VERSION);
+        $mod->setRevision(REVISION);
+        $mod->setDescription(_T("Secure Control", "msc"));
+        $mod->setAPIVersion("0:0:0");
+        $mod->setPriority(700);
 
-    $submodmsc = new SubModule("logs", _T("Audit", "msc"));
-    $submodmsc->setImg('modules/msc/img/navbar/msc');
-    $submodmsc->setDefaultPage("msc/logs/consult");
+        $submodmsc = new SubModule("logs", _T("Audit", "msc"));
+        $submodmsc->setImg('modules/msc/img/navbar/msc');
+        $submodmsc->setDefaultPage("msc/logs/consult");
 
-    $page = new Page("consult", _T('My commands', 'msc'));
-    $submodmsc->addPage($page);
+        $page = new Page("consult", _T('My commands', 'msc'));
+        $submodmsc->addPage($page);
 
-    $page = new Page("consultAll", _T('All user commands', 'msc'));
-    $submodmsc->addPage($page);
+        $page = new Page("consultAll", _T('All user commands', 'msc'));
+        $submodmsc->addPage($page);
 
-    $page = new Page("viewLogs", _T('Commands logs', 'msc'));
-    $submodmsc->addPage($page);
+        $page = new Page("viewLogs", _T('Commands logs', 'msc'));
+        $submodmsc->addPage($page);
 
-    $page = new Page("all", _T('Show all logs', 'msc'));
-    $submodmsc->addPage($page);
-    $page = new Page("pending", _T('Show pending task\'s logs', 'msc'));
-    $submodmsc->addPage($page);
-    $page = new Page("running", _T('Show running task\'s logs', 'msc'));
-    $submodmsc->addPage($page);
-    $page = new Page("finished", _T('Show finished task\'s logs', 'msc'));
-    $submodmsc->addPage($page);
+        $page = new Page("all", _T('Show all logs', 'msc'));
+        $submodmsc->addPage($page);
+        $page = new Page("pending", _T('Show pending task\'s logs', 'msc'));
+        $submodmsc->addPage($page);
+        $page = new Page("running", _T('Show running task\'s logs', 'msc'));
+        $submodmsc->addPage($page);
+        $page = new Page("finished", _T('Show finished task\'s logs', 'msc'));
+        $submodmsc->addPage($page);
 
-    $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
-    $submodmsc->addPage($page);
+        $page = new Page("custom", _T('Show custom state task\'s logs', 'msc'));
+        $submodmsc->addPage($page);
 
-    $page = new Page("ajaxLogsFilter", _T('logs list', 'msc'));
-    $page->setOptions(array("visible" => False, "AJAX" => True));
-    $submodmsc->addPage($page);
-    $page = new Page("ajaxConsultLogsFilter", _T('consolidated logs list', 'msc'));
-    $page->setOptions(array("visible" => False, "AJAX" => True));
-    $submodmsc->addPage($page);
-    $page = new Page("state_list", _T("the state list", "msc"));
-    $page->setOptions(array("visible" => False, "AJAX" => True));
-    $submodmsc->addPage($page);
+        $page = new Page("ajaxLogsFilter", _T('logs list', 'msc'));
+        $page->setOptions(array("visible" => False, "AJAX" => True));
+        $submodmsc->addPage($page);
+        $page = new Page("ajaxConsultLogsFilter", _T('consolidated logs list', 'msc'));
+        $page->setOptions(array("visible" => False, "AJAX" => True));
+        $submodmsc->addPage($page);
+        $page = new Page("state_list", _T("the state list", "msc"));
+        $page->setOptions(array("visible" => False, "AJAX" => True));
+        $submodmsc->addPage($page);
 
-    $mod->addSubmod($submodmsc);
+        $mod->addSubmod($submodmsc);
 
-    $MMCApp->addModule($mod);
+        $MMCApp->addModule($mod);
+    }
 
+    
     /* put in base/computers */
     $page = new Page("remove_from_pull", _T('Remove machine from pull mode', 'msc'));
     $page->setFile("modules/msc/msc/remove_from_pull.php");
