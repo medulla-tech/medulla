@@ -24,7 +24,7 @@
 
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
-?> 
+?>
 <?
 require_once("modules/dyngroup/includes/includes.php");
 
@@ -32,7 +32,7 @@ $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("View log deploy group",'xmppmaster')." ". $group->getName());
 $p->setSideMenu($sidemenu);
 $p->display();
-$info = xmlrpc_getdeployfromcommandid($cmd_id);
+$info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 if ($info['len'] != 0){
     $uuid=$info['objectdeploy'][0]['inventoryuuid'];
@@ -45,7 +45,7 @@ if ($info['len'] != 0){
         $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
         $datestart =  date("Y-m-d H:i:s", $start);
-        echo "Start deployment :".$datestart;// [".$infodeploy['len'] ." steps] " 
+        echo "Start deployment :".$datestart;// [".$infodeploy['len'] ." steps] "
 
 
        if (isset($resultatdeploy['descriptor']['info'])){
