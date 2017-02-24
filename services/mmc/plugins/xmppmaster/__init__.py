@@ -30,6 +30,8 @@ from pulse2.version import getVersion, getRevision # pyflakes.ignore
 import json
 # Database
 from pulse2.database.xmppmaster import XmppMasterDatabase
+from mmc.plugins.msc.database import MscDatabase
+
 from master.lib.utils import name_random
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,callXmppFunction, ObjectXmpp, callXmppPlugin
@@ -68,6 +70,8 @@ def activate():
 # #############################################################
 # xmppmaster MAIN FUNCTIONS [HTTP INTERFACE]
 # #############################################################
+def getlinelogssession(sessionxmpp) :
+    return XmppMasterDatabase().getlinelogssession(sessionxmpp)
 
 def getListPackages():
     resultnamepackage = []
@@ -105,9 +109,20 @@ def addlogincommand(login, commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
-def getlinelogssession(sessionxmpp) :
-    return XmppMasterDatabase().getlinelogssession(sessionxmpp)
+def getdeploybyuserlen(login):
+    if not login:
+        login = None
+    return XmppMasterDatabase().getdeploybyuserlen( login)
 
+def getdeploybyuserrecent(  login , state, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)
+
+def getdeploybyuser( login, numrow, offset):
+    if not numrow:
+        numrow = None
+    if not offset:
+        offset = None
+    return XmppMasterDatabase().getdeploybyuser( login, numrow, offset)
 
 def getshowmachinegrouprelayserver():
     def Nonevalue(x):
