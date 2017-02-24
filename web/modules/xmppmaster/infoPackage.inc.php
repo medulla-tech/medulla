@@ -42,6 +42,12 @@ $submod->setDefaultPage("xmppmaster/xmppmaster/index");
 $page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
 $submod->addPage($page);
 
+
+
+$page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
+$submod->addPage($page);
+
+
 /*
 
 $submod = new SubModule("xmppmaster");

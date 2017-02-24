@@ -25,5 +25,5 @@
 $sidemenu= new SideMenu();
 $sidemenu->setClass("xmppmaster");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Status", 'xmppmaster'), "xmppmaster", "xmppmaster", "index"));
-
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All computers", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
 ?>

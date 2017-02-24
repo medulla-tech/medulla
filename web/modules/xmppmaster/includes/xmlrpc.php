@@ -70,6 +70,18 @@ function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
 }
 
+function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
+}
+
+function xmlrpc_getdeploybyuserlen($login) {
+    return xmlCall("xmppmaster.getdeploybyuserlen", array($login));
+}
+
+function xmlrpc_getdeploybyuser($login, $numrow, $offset) {
+    return xmlCall("xmppmaster.getdeploybyuser", array($login, $numrow, $offset));
+}
+
 function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
