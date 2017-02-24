@@ -409,7 +409,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #sessionid = self.send_session_command( jidrelay, "applicationdeploymentjson" , data, datasession = None, encodebase64 = False)
         self.eventmanage.show_eventloop()
         XmppMasterDatabase().adddeploy(idcommand, jidmachine, jidrelay,  jidmachine, uuidmachine,
-                           path, "STARDEPLOY", sessionid, user="", deploycol="")
+                           descript['info']['name'], "STARDEPLOY", sessionid, user="", deploycol="")
 
         return sessionid
 
