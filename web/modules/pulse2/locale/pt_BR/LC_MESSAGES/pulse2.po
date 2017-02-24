@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -28,7 +28,7 @@ msgstr ""
 msgid "All my entities"
 msgstr "Todas as minhas entidades"
 
-#: modules/pulse2/includes/menu_action.php:36
+#: modules/pulse2/includes/menu_action.php:41
 msgid "Backup status"
 msgstr "Status do backup"
 
@@ -36,7 +36,7 @@ msgstr "Status do backup"
 msgid "Computers list"
 msgstr "Lista de computadores"
 
-#: modules/pulse2/includes/menu_group_action.php:99
+#: modules/pulse2/includes/menu_group_action.php:92
 msgid "Csv export"
 msgstr "Exportar em CSV"
 
@@ -52,32 +52,28 @@ msgstr "Remover este perfil"
 msgid "Display this group's content"
 msgstr "Exibir o conteúdo deste grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:76
+#: modules/pulse2/includes/menu_group_action.php:69
 msgid "Display this imaging group's content"
 msgstr "Mostrar o conteúdo desse grupo de imagem"
 
-#: modules/pulse2/includes/menu_group_action.php:61
+#: modules/pulse2/includes/menu_group_action.php:54
 msgid "Edit this group"
 msgstr "Editar este grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:78
+#: modules/pulse2/includes/menu_group_action.php:71
 msgid "Edit this imaging group"
 msgstr "Editar esse grupo de imagem"
 
-#: modules/pulse2/includes/menu_action.php:40
-#: modules/pulse2/includes/menu_group_action.php:86
+#: modules/pulse2/includes/menu_group_action.php:79
+#: modules/pulse2/includes/menu_action.php:43
 msgid "Imaging management"
 msgstr "Gerenciamento de imagens"
 
-#: modules/pulse2/includes/menu_action.php:34
+#: modules/pulse2/includes/menu_action.php:39
 msgid "Inventory"
 msgstr "Inventário"
 
-#: modules/pulse2/includes/menu_group_action.php:56
-msgid "Inventory on this group"
-msgstr "Inventário neste grupo"
-
-#: modules/pulse2/includes/menu_group_action.php:72
+#: modules/pulse2/includes/menu_group_action.php:65
 msgid "Inventory on this profile"
 msgstr "Inventário neste perfil"
 
@@ -85,21 +81,19 @@ msgstr "Inventário neste perfil"
 msgid "Location selection in computer edit"
 msgstr "Seleção de localização em um computador"
 
-#: modules/pulse2/includes/menu_action.php:41
-msgid "Monitoring"
-msgstr "Monitoramento"
-
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: modules/pulse2/includes/menu_action.php:38
-#: modules/pulse2/includes/menu_group_action.php:64
-#: modules/pulse2/includes/menu_group_action.php:81
+#: modules/pulse2/includes/menu_group_action.php:57
+#: modules/pulse2/includes/menu_group_action.php:74
+#: modules/pulse2/includes/menu_action.php:49
+#: modules/pulse2/includes/menu_action.php:53
+#: modules/pulse2/includes/menu_action.php:58
 msgid "Read log"
 msgstr "Ler Log"
 
-#: modules/pulse2/includes/menu_action.php:37
+#: modules/pulse2/includes/menu_action.php:42
 msgid "Remote control"
 msgstr "Controle Remoto"
 
@@ -107,30 +101,38 @@ msgstr "Controle Remoto"
 msgid "Root entity"
 msgstr "Entidade root"
 
-#: modules/pulse2/includes/menu_group_action.php:62
+#: modules/pulse2/includes/menu_group_action.php:55
 msgid "Share this group"
 msgstr "Compartilhar este grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:79
+#: modules/pulse2/includes/menu_group_action.php:72
 msgid "Share this imaging group"
 msgstr "Compartilhar esse grupo de imagem"
 
-#: modules/pulse2/includes/menu_action.php:39
+#: modules/pulse2/includes/menu_action.php:50
+#: modules/pulse2/includes/menu_action.php:54
+#: modules/pulse2/includes/menu_action.php:59
 msgid "Software deployment"
 msgstr "Implantação de Software"
 
-#: modules/pulse2/includes/menu_group_action.php:65
+#: modules/pulse2/includes/menu_group_action.php:58
 msgid "Software deployment on this group"
 msgstr "Implatanção de Software neste grupo"
 
-#: modules/pulse2/includes/menu_group_action.php:82
+#: modules/pulse2/includes/menu_group_action.php:75
 msgid "Software deployment on this imaging group"
 msgstr "Implantação de software nesse grupo de imagens"
 
-#: modules/pulse2/includes/menu_group_action.php:68
+#: modules/pulse2/includes/menu_group_action.php:61
 msgid "Update on this group"
 msgstr "Atualização neste grupo"
 
-#: modules/pulse2/includes/menu_action.php:35
+#: modules/pulse2/includes/menu_action.php:40
 msgid "extTicket issue"
 msgstr "questão extTicket"
+
+#~ msgid "Inventory on this group"
+#~ msgstr "Inventário neste grupo"
+
+#~ msgid "Monitoring"
+#~ msgstr "Monitoramento"

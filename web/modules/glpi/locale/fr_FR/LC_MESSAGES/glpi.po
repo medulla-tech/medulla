@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 01:00+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -27,7 +27,7 @@ msgstr ""
 msgid " (Not an antivirus)"
 msgstr "(N'est pas un antivirus)"
 
-#: modules/glpi/glpi/tabs.php:76
+#: modules/glpi/glpi/tabs.php:72
 #, php-format
 msgid "%s's inventory %s"
 msgstr "Inventaire de %s %s"
@@ -48,20 +48,12 @@ msgstr "Action"
 msgid "Active"
 msgstr "Active"
 
-#: modules/glpi/glpi/localSidebar.php:29
-msgid "Add a location"
-msgstr "Ajouter un lieu"
-
-#: modules/glpi/glpi/localSidebar.php:27
-msgid "Add an entity"
-msgstr "Ajouter une entité"
-
 #: modules/glpi/glpi/addEntityRule.php:155
 msgid "Add criterion"
 msgstr "Ajouter un critère"
 
-#: modules/glpi/glpi/addEntity.php:43 modules/glpi/infoPackage.inc.php:79
-#: modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/infoPackage.inc.php:79 modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr "Ajouter une entité"
 
@@ -69,8 +61,7 @@ msgstr "Ajouter une entité"
 msgid "Add entity right"
 msgstr "Ajouter un droit d'entité"
 
-#: modules/glpi/glpi/addEntityRule.php:59
-#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
+#: modules/glpi/infoPackage.inc.php:105 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr "Ajouter une règle d'entité"
 
@@ -78,7 +69,7 @@ msgstr "Ajouter une règle d'entité"
 msgid "Add location"
 msgstr "Ajouter un lieu"
 
-#: modules/glpi/glpi/tabs.php:87
+#: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
 msgstr "Administratif"
 
@@ -106,7 +97,7 @@ msgstr "Tous les lieux"
 msgid "All rules"
 msgstr "Toutes les règles"
 
-#: modules/glpi/glpi/tabs.php:89
+#: modules/glpi/glpi/tabs.php:85
 #: modules/glpi/includes/panels/antivirus.inc.php:30
 msgid "Antivirus"
 msgstr "Antivirus"
@@ -145,9 +136,9 @@ msgstr "Modifier l'ordre des règles d'entités (haut)"
 msgid "Click here to see this computer on manufacturer website"
 msgstr "Cliquez ici pour voir cet ordinateur sur le site du constructeur"
 
-#: modules/glpi/glpi/ajaxEntityList.php:68
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
 msgstr "Commentaire"
 
@@ -180,7 +171,7 @@ msgstr "Contrôleurs"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
+#: modules/glpi/includes/panels/os_repartition.inc.php:106
 msgid "Create a group"
 msgstr "Créer un groupe"
 
@@ -223,9 +214,9 @@ msgstr "Supprimer la règle"
 msgid "Delete this rule?"
 msgstr "Supprimer cette règle ?"
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Description"
 msgstr "Description"
 
@@ -251,12 +242,12 @@ msgstr "Domaine"
 msgid "Drives"
 msgstr "Lecteurs"
 
-#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
 msgid "Edit entity"
 msgstr "Editer l'entité"
 
-#: modules/glpi/glpi/addLocation.php:52
 #: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
 msgid "Edit location"
 msgstr "Editer un lieu"
 
@@ -268,7 +259,7 @@ msgstr "Editer la règle"
 msgid "Enabled"
 msgstr "Activé"
 
-#: modules/glpi/glpi/localSidebar.php:26 modules/glpi/infoPackage.inc.php:70
+#: modules/glpi/infoPackage.inc.php:70
 msgid "Entities"
 msgstr "Entités"
 
@@ -300,8 +291,7 @@ msgstr "Nom de l'entité"
 msgid "Entity right"
 msgstr "Droit d'entité"
 
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/glpi/localSidebar.php:30
-#: modules/glpi/infoPackage.inc.php:96
+#: modules/glpi/infoPackage.inc.php:96 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr "Règles d'entité"
 
@@ -329,7 +319,7 @@ msgstr "Inventaire GLPI"
 msgid "Gateway"
 msgstr "Passerelle"
 
-#: modules/glpi/glpi/tabs.php:103
+#: modules/glpi/glpi/tabs.php:99
 msgid "Get XLS Report"
 msgstr "Obtenir un rapport XLS"
 
@@ -349,7 +339,7 @@ msgstr "Cartes Videos"
 msgid "Hard Drives"
 msgstr "Disques Durs"
 
-#: modules/glpi/glpi/tabs.php:83
+#: modules/glpi/glpi/tabs.php:79
 msgid "Hardware"
 msgstr "Matériel"
 
@@ -361,7 +351,7 @@ msgstr "Onglet matériel (GLPI)"
 msgid "Hide Windows Updates"
 msgstr "Masquer les MAJ Windows Update"
 
-#: modules/glpi/glpi/tabs.php:88
+#: modules/glpi/glpi/tabs.php:84
 msgid "History"
 msgstr "Historique"
 
@@ -435,7 +425,7 @@ msgstr "Dernier inventaire de moins de %s jours au %s"
 msgid "Latest inventory is more than %s days at %s"
 msgstr "Dernier inventaire de plus de %s jours au %s"
 
-#: modules/glpi/glpi/tabs.php:66
+#: modules/glpi/glpi/tabs.php:62
 msgid "Leave pull mode"
 msgstr "Quitter le mode pull"
 
@@ -451,7 +441,7 @@ msgstr "Liste des lieux"
 msgid "Location name"
 msgstr "Nom du lieu"
 
-#: modules/glpi/glpi/localSidebar.php:28 modules/glpi/infoPackage.inc.php:83
+#: modules/glpi/infoPackage.inc.php:83
 msgid "Locations"
 msgstr "Lieux"
 
@@ -493,9 +483,10 @@ msgstr "Déplacer la règle vers le bas"
 msgid "Move rule up"
 msgstr "Déplacer la règle vers le haut"
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
 msgstr "Nom"
 
@@ -503,7 +494,7 @@ msgstr "Nom"
 msgid "Netmask"
 msgstr "Masque"
 
-#: modules/glpi/glpi/tabs.php:85
+#: modules/glpi/glpi/tabs.php:81
 msgid "Network"
 msgstr "Réseau"
 
@@ -532,9 +523,9 @@ msgstr "Pas d'antivirus au %s"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "Pas d'antivirus détecté: %percent% (%d)"
 
+#: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxLocationList.php:51
 msgid "No entry found"
 msgstr "Aucune entrée trouvée"
 
@@ -566,11 +557,11 @@ msgstr "Système d'exploitation"
 msgid "Operating systems"
 msgstr "Systèmes d'exploitation"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:48
+#: modules/glpi/includes/panels/os_repartition.inc.php:53
 msgid "Other"
 msgstr "Autres"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:51
+#: modules/glpi/includes/panels/os_repartition.inc.php:61
 msgid "Other Windows"
 msgstr "Autres Windows"
 
@@ -624,7 +615,7 @@ msgstr "Service Pack"
 msgid "Size"
 msgstr "Taille"
 
-#: modules/glpi/glpi/tabs.php:86
+#: modules/glpi/glpi/tabs.php:82
 msgid "Software"
 msgstr "Logiciels"
 
@@ -640,7 +631,7 @@ msgstr "Cartes Sons"
 msgid "State"
 msgstr "Statut:"
 
-#: modules/glpi/glpi/tabs.php:84
+#: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
 msgstr "Stockage"
 
@@ -652,7 +643,7 @@ msgstr "Onglet stockage (GLPI)"
 msgid "Subnet"
 msgstr "Sous-réseau"
 
-#: modules/glpi/glpi/tabs.php:82
+#: modules/glpi/glpi/tabs.php:78
 msgid "Summary"
 msgstr "Résumé"
 
@@ -700,7 +691,7 @@ msgstr "Le lieu a été ajouté avec succès"
 msgid "The location has been edited successfully."
 msgstr "Le lieu a été édité avec succès"
 
-#: modules/glpi/glpi/tabs.php:64 modules/glpi/glpi/tabs.php:72
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
 msgstr "Ce client a été enregistré en mode pull"
 
@@ -796,3 +787,9 @@ msgstr "est égal à (regex)"
 #: modules/glpi/glpi/addEntityRule.php:117
 msgid "starts with"
 msgstr "commence par"
+
+#~ msgid "Add a location"
+#~ msgstr "Ajouter un lieu"
+
+#~ msgid "Add an entity"
+#~ msgstr "Ajouter une entité"

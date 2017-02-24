@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 01:00+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -24,7 +24,7 @@ msgstr ""
 msgid " (Not an antivirus)"
 msgstr "（不是一个防病毒程式）"
 
-#: modules/glpi/glpi/tabs.php:76
+#: modules/glpi/glpi/tabs.php:72
 #, php-format
 msgid "%s's inventory %s"
 msgstr ""
@@ -45,20 +45,12 @@ msgstr "动作"
 msgid "Active"
 msgstr ""
 
-#: modules/glpi/glpi/localSidebar.php:29
-msgid "Add a location"
-msgstr ""
-
-#: modules/glpi/glpi/localSidebar.php:27
-msgid "Add an entity"
-msgstr ""
-
 #: modules/glpi/glpi/addEntityRule.php:155
 msgid "Add criterion"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:43 modules/glpi/infoPackage.inc.php:79
-#: modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/infoPackage.inc.php:79 modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr ""
 
@@ -66,8 +58,7 @@ msgstr ""
 msgid "Add entity right"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:59
-#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
+#: modules/glpi/infoPackage.inc.php:105 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr ""
 
@@ -75,7 +66,7 @@ msgstr ""
 msgid "Add location"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:87
+#: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
 msgstr "管理"
 
@@ -103,7 +94,7 @@ msgstr ""
 msgid "All rules"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:89
+#: modules/glpi/glpi/tabs.php:85
 #: modules/glpi/includes/panels/antivirus.inc.php:30
 msgid "Antivirus"
 msgstr "防病毒程式"
@@ -142,9 +133,9 @@ msgstr ""
 msgid "Click here to see this computer on manufacturer website"
 msgstr "请按此处在制造商网站上查看此电脑"
 
-#: modules/glpi/glpi/ajaxEntityList.php:68
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
 msgstr "注解"
 
@@ -177,7 +168,7 @@ msgstr "控制器"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
+#: modules/glpi/includes/panels/os_repartition.inc.php:106
 msgid "Create a group"
 msgstr "建立一个群组"
 
@@ -217,9 +208,9 @@ msgstr ""
 msgid "Delete this rule?"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Description"
 msgstr "说明"
 
@@ -245,12 +236,12 @@ msgstr "网域"
 msgid "Drives"
 msgstr "磁碟机"
 
-#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
 msgid "Edit entity"
 msgstr ""
 
-#: modules/glpi/glpi/addLocation.php:52
 #: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
 msgid "Edit location"
 msgstr ""
 
@@ -262,7 +253,7 @@ msgstr ""
 msgid "Enabled"
 msgstr "已启用"
 
-#: modules/glpi/glpi/localSidebar.php:26 modules/glpi/infoPackage.inc.php:70
+#: modules/glpi/infoPackage.inc.php:70
 msgid "Entities"
 msgstr ""
 
@@ -294,8 +285,7 @@ msgstr ""
 msgid "Entity right"
 msgstr ""
 
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/glpi/localSidebar.php:30
-#: modules/glpi/infoPackage.inc.php:96
+#: modules/glpi/infoPackage.inc.php:96 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr ""
 
@@ -323,7 +313,7 @@ msgstr "GLPI 清查"
 msgid "Gateway"
 msgstr "闸道"
 
-#: modules/glpi/glpi/tabs.php:103
+#: modules/glpi/glpi/tabs.php:99
 msgid "Get XLS Report"
 msgstr ""
 
@@ -343,7 +333,7 @@ msgstr "图形卡"
 msgid "Hard Drives"
 msgstr "硬碟机"
 
-#: modules/glpi/glpi/tabs.php:83
+#: modules/glpi/glpi/tabs.php:79
 msgid "Hardware"
 msgstr "硬体"
 
@@ -355,7 +345,7 @@ msgstr "硬体标签 (GLPI)"
 msgid "Hide Windows Updates"
 msgstr "隐藏 Windows 更新"
 
-#: modules/glpi/glpi/tabs.php:88
+#: modules/glpi/glpi/tabs.php:84
 msgid "History"
 msgstr "历史记录"
 
@@ -429,7 +419,7 @@ msgstr "在 %s 上的最新清查少於 %s 天"
 msgid "Latest inventory is more than %s days at %s"
 msgstr "在 %s 上的最新清查大于 %s 天"
 
-#: modules/glpi/glpi/tabs.php:66
+#: modules/glpi/glpi/tabs.php:62
 msgid "Leave pull mode"
 msgstr "退出 pull 模式"
 
@@ -445,7 +435,7 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/glpi/glpi/localSidebar.php:28 modules/glpi/infoPackage.inc.php:83
+#: modules/glpi/infoPackage.inc.php:83
 msgid "Locations"
 msgstr ""
 
@@ -487,9 +477,10 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
 msgstr "名称"
 
@@ -497,7 +488,7 @@ msgstr "名称"
 msgid "Netmask"
 msgstr "网路遮罩"
 
-#: modules/glpi/glpi/tabs.php:85
+#: modules/glpi/glpi/tabs.php:81
 msgid "Network"
 msgstr "网路"
 
@@ -526,9 +517,9 @@ msgstr "在 %s 找不到防病毒程式"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "找不到防病毒程式：%percent% (%d)"
 
+#: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxLocationList.php:51
 msgid "No entry found"
 msgstr ""
 
@@ -560,11 +551,11 @@ msgstr "作业系统"
 msgid "Operating systems"
 msgstr "作业系统"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:48
+#: modules/glpi/includes/panels/os_repartition.inc.php:53
 msgid "Other"
 msgstr "其它"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:51
+#: modules/glpi/includes/panels/os_repartition.inc.php:61
 msgid "Other Windows"
 msgstr "其它 Windows"
 
@@ -618,7 +609,7 @@ msgstr "Service Pack"
 msgid "Size"
 msgstr "大小"
 
-#: modules/glpi/glpi/tabs.php:86
+#: modules/glpi/glpi/tabs.php:82
 msgid "Software"
 msgstr ""
 
@@ -634,7 +625,7 @@ msgstr "音效卡"
 msgid "State"
 msgstr "状态"
 
-#: modules/glpi/glpi/tabs.php:84
+#: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
 msgstr "储存空间"
 
@@ -646,7 +637,7 @@ msgstr "储存区标签 (GLPI)"
 msgid "Subnet"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:82
+#: modules/glpi/glpi/tabs.php:78
 msgid "Summary"
 msgstr "概要"
 
@@ -694,7 +685,7 @@ msgstr ""
 msgid "The location has been edited successfully."
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:64 modules/glpi/glpi/tabs.php:72
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
 msgstr "已在 pull 模式下注册此用户端"
 

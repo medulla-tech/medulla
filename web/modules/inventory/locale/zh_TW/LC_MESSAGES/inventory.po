@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 01:00+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -164,8 +164,8 @@ msgid "Bandwidth"
 msgstr "頻寬"
 
 #: modules/inventory/infoPackage.inc.php:42
-#: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/inventory/i18n_labels.php:28
 msgid "Bios"
 msgstr "Bios"
 
@@ -278,9 +278,9 @@ msgstr "註解"
 msgid "Company"
 msgstr "公司"
 
+#: modules/inventory/inventory/i18n_labels.php:96
 #: modules/inventory/inventory/csv.php:67
 #: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr "電腦"
 
@@ -314,8 +314,8 @@ msgid "Contains or NoContains"
 msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:48
-#: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/inventory/i18n_labels.php:47
 msgid "Controller"
 msgstr "控制器"
 
@@ -441,8 +441,8 @@ msgid "Domain"
 msgstr "網域"
 
 #: modules/inventory/infoPackage.inc.php:53
-#: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/inventory/i18n_labels.php:64
 msgid "Drive"
 msgstr "磁碟機"
 
@@ -617,8 +617,8 @@ msgid "Graphic Cards"
 msgstr "圖形卡"
 
 #: modules/inventory/infoPackage.inc.php:44
-#: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/inventory/i18n_labels.php:82
 msgid "Hardware"
 msgstr "硬體"
 
@@ -677,14 +677,14 @@ msgid "Incoming Inventories"
 msgstr "傳入的清查"
 
 #: modules/inventory/infoPackage.inc.php:80
-#: modules/inventory/inventory/ajaxIncoming.php:85
 #: modules/inventory/inventory/ajaxViewPart.php:541
+#: modules/inventory/inventory/ajaxIncoming.php:85
 msgid "Information"
 msgstr "資訊"
 
 #: modules/inventory/infoPackage.inc.php:55
-#: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/inventory/i18n_labels.php:87
 msgid "Input"
 msgstr "輸入"
 
@@ -839,8 +839,8 @@ msgstr "媒體"
 #: modules/inventory/infoPackage.inc.php:57
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:607
-#: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/i18n_labels.php:100
 msgid "Memory"
 msgstr "記憶體"
 
@@ -870,8 +870,8 @@ msgid "Modem"
 msgstr "數據機"
 
 #: modules/inventory/infoPackage.inc.php:59
-#: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/inventory/i18n_labels.php:105
 msgid "Monitor"
 msgstr "監視器"
 
@@ -895,12 +895,12 @@ msgstr ""
 msgid "NONE rule TRUE select entitie"
 msgstr ""
 
-#: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/addEntity.php:50
 #: modules/inventory/inventory/ajaxViewPart.php:571
 #: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/deleteEntity.php:64
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/addEntity.php:50
 #: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/deleteEntity.php:64
 msgid "Name"
 msgstr "名稱"
 
@@ -909,8 +909,8 @@ msgid "Netmask"
 msgstr "網路遮罩"
 
 #: modules/inventory/infoPackage.inc.php:46
-#: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/inventory/i18n_labels.php:107
 msgid "Network"
 msgstr "網路"
 
@@ -1005,8 +1005,8 @@ msgstr "其它"
 msgid "Parent entity"
 msgstr ""
 
-#: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
 msgid "Pci"
 msgstr "PCI"
 
@@ -1031,8 +1031,8 @@ msgid "Point Type"
 msgstr "點類型"
 
 #: modules/inventory/infoPackage.inc.php:61
-#: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/inventory/i18n_labels.php:118
 msgid "Port"
 msgstr "連接埠"
 
@@ -1045,8 +1045,8 @@ msgid "Port list"
 msgstr "連接埠清單"
 
 #: modules/inventory/infoPackage.inc.php:63
-#: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/inventory/i18n_labels.php:120
 msgid "Printer"
 msgstr "印表機"
 
@@ -1197,8 +1197,8 @@ msgid "Smb Version"
 msgstr "Smb 版本"
 
 #: modules/inventory/infoPackage.inc.php:71
-#: modules/inventory/inventory/i18n_labels.php:141
 #: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/inventory/i18n_labels.php:141
 msgid "Software"
 msgstr "軟體"
 
@@ -1219,8 +1219,8 @@ msgid "Software tab for a group"
 msgstr "一個群組的軟體標籤"
 
 #: modules/inventory/infoPackage.inc.php:65
-#: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/inventory/i18n_labels.php:142
 msgid "Sound"
 msgstr "聲音"
 
@@ -1259,8 +1259,8 @@ msgstr "狀態"
 
 #: modules/inventory/infoPackage.inc.php:67
 #: modules/inventory/inventory/ajaxViewPart.php:228
-#: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/i18n_labels.php:148
 msgid "Storage"
 msgstr "儲存空間"
 
@@ -1381,10 +1381,10 @@ msgid "VRAM Size"
 msgstr "VRAM 容量"
 
 #: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
 #: modules/inventory/inventory/inventory_diff.php:76
 #: modules/inventory/inventory/inventory_diff.php:101
 #: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/i18n_labels.php:161
 msgid "Value"
 msgstr "值"
 
@@ -1408,8 +1408,8 @@ msgid "VideoCard"
 msgstr "視訊卡"
 
 #: modules/inventory/infoPackage.inc.php:76
-#: modules/inventory/inventory/ajaxIncoming.php:84
 #: modules/inventory/inventory/ajaxViewPart.php:540
+#: modules/inventory/inventory/ajaxIncoming.php:84
 msgid "View"
 msgstr "檢視"
 

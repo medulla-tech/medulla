@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 01:00+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -163,8 +163,8 @@ msgid "Bandwidth"
 msgstr "Bandbreite"
 
 #: modules/inventory/infoPackage.inc.php:42
-#: modules/inventory/inventory/i18n_labels.php:28
 #: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/inventory/i18n_labels.php:28
 msgid "Bios"
 msgstr "Bios"
 
@@ -278,9 +278,9 @@ msgstr "Kommentare"
 msgid "Company"
 msgstr "Firma"
 
+#: modules/inventory/inventory/i18n_labels.php:96
 #: modules/inventory/inventory/csv.php:67
 #: modules/inventory/inventory/csv.php:107
-#: modules/inventory/inventory/i18n_labels.php:96
 msgid "Computer"
 msgstr "Computer"
 
@@ -314,8 +314,8 @@ msgid "Contains or NoContains"
 msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:48
-#: modules/inventory/inventory/i18n_labels.php:47
 #: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/inventory/i18n_labels.php:47
 msgid "Controller"
 msgstr "Controller"
 
@@ -441,8 +441,8 @@ msgid "Domain"
 msgstr "Domain"
 
 #: modules/inventory/infoPackage.inc.php:53
-#: modules/inventory/inventory/i18n_labels.php:64
 #: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/inventory/i18n_labels.php:64
 msgid "Drive"
 msgstr "Laufwerk"
 
@@ -617,8 +617,8 @@ msgid "Graphic Cards"
 msgstr "Grafikkarten"
 
 #: modules/inventory/infoPackage.inc.php:44
-#: modules/inventory/inventory/i18n_labels.php:82
 #: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/inventory/i18n_labels.php:82
 msgid "Hardware"
 msgstr "Hardware"
 
@@ -677,14 +677,14 @@ msgid "Incoming Inventories"
 msgstr "Eintreffende Inventare"
 
 #: modules/inventory/infoPackage.inc.php:80
-#: modules/inventory/inventory/ajaxIncoming.php:85
 #: modules/inventory/inventory/ajaxViewPart.php:541
+#: modules/inventory/inventory/ajaxIncoming.php:85
 msgid "Information"
 msgstr "Information"
 
 #: modules/inventory/infoPackage.inc.php:55
-#: modules/inventory/inventory/i18n_labels.php:87
 #: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/inventory/i18n_labels.php:87
 msgid "Input"
 msgstr "Input"
 
@@ -839,8 +839,8 @@ msgstr "Media"
 #: modules/inventory/infoPackage.inc.php:57
 #: modules/inventory/inventory/ajaxViewPart.php:227
 #: modules/inventory/inventory/ajaxViewPart.php:607
-#: modules/inventory/inventory/i18n_labels.php:100
 #: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/i18n_labels.php:100
 msgid "Memory"
 msgstr "Memory"
 
@@ -870,8 +870,8 @@ msgid "Modem"
 msgstr "Modem"
 
 #: modules/inventory/infoPackage.inc.php:59
-#: modules/inventory/inventory/i18n_labels.php:105
 #: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/inventory/i18n_labels.php:105
 msgid "Monitor"
 msgstr "Monitor"
 
@@ -895,12 +895,12 @@ msgstr ""
 msgid "NONE rule TRUE select entitie"
 msgstr ""
 
-#: modules/inventory/inventory/EditEntity.php:55
-#: modules/inventory/inventory/addEntity.php:50
 #: modules/inventory/inventory/ajaxViewPart.php:571
 #: modules/inventory/inventory/ajaxViewPart.php:587
-#: modules/inventory/inventory/deleteEntity.php:64
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/addEntity.php:50
 #: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/deleteEntity.php:64
 msgid "Name"
 msgstr "Name"
 
@@ -909,8 +909,8 @@ msgid "Netmask"
 msgstr "Netzmaske"
 
 #: modules/inventory/infoPackage.inc.php:46
-#: modules/inventory/inventory/i18n_labels.php:107
 #: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/inventory/i18n_labels.php:107
 msgid "Network"
 msgstr "Network"
 
@@ -1005,8 +1005,8 @@ msgstr "Weitere"
 msgid "Parent entity"
 msgstr ""
 
-#: modules/inventory/inventory/i18n_labels.php:115
 #: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
 msgid "Pci"
 msgstr "Pci"
 
@@ -1031,8 +1031,8 @@ msgid "Point Type"
 msgstr "Eingabezeigegerät-Art"
 
 #: modules/inventory/infoPackage.inc.php:61
-#: modules/inventory/inventory/i18n_labels.php:118
 #: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/inventory/i18n_labels.php:118
 msgid "Port"
 msgstr "Port"
 
@@ -1045,8 +1045,8 @@ msgid "Port list"
 msgstr "Portliste"
 
 #: modules/inventory/infoPackage.inc.php:63
-#: modules/inventory/inventory/i18n_labels.php:120
 #: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/inventory/i18n_labels.php:120
 msgid "Printer"
 msgstr "Printer"
 
@@ -1197,8 +1197,8 @@ msgid "Smb Version"
 msgstr "Smb-Version"
 
 #: modules/inventory/infoPackage.inc.php:71
-#: modules/inventory/inventory/i18n_labels.php:141
 #: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/inventory/i18n_labels.php:141
 msgid "Software"
 msgstr "Software"
 
@@ -1219,8 +1219,8 @@ msgid "Software tab for a group"
 msgstr "Software-Tab für eine Gruppe"
 
 #: modules/inventory/infoPackage.inc.php:65
-#: modules/inventory/inventory/i18n_labels.php:142
 #: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/inventory/i18n_labels.php:142
 msgid "Sound"
 msgstr "Klang"
 
@@ -1259,8 +1259,8 @@ msgstr "Zustand"
 
 #: modules/inventory/infoPackage.inc.php:67
 #: modules/inventory/inventory/ajaxViewPart.php:228
-#: modules/inventory/inventory/i18n_labels.php:148
 #: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/i18n_labels.php:148
 msgid "Storage"
 msgstr "Storage"
 
@@ -1381,10 +1381,10 @@ msgid "VRAM Size"
 msgstr "VRAM Größe"
 
 #: modules/inventory/inventory/ajaxViewPart.php:122
-#: modules/inventory/inventory/i18n_labels.php:161
 #: modules/inventory/inventory/inventory_diff.php:76
 #: modules/inventory/inventory/inventory_diff.php:101
 #: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/i18n_labels.php:161
 msgid "Value"
 msgstr "Wert"
 
@@ -1408,8 +1408,8 @@ msgid "VideoCard"
 msgstr "VideoCard"
 
 #: modules/inventory/infoPackage.inc.php:76
-#: modules/inventory/inventory/ajaxIncoming.php:84
 #: modules/inventory/inventory/ajaxViewPart.php:540
+#: modules/inventory/inventory/ajaxIncoming.php:84
 msgid "View"
 msgstr "Ansicht"
 

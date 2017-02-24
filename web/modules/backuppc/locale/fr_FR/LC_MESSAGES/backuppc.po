@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -22,14 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/hostSummary.php:142
 #: modules/backuppc/backuppc/viewFileVersions.php:47
+#: modules/backuppc/backuppc/BrowseBackups.php:56
+#: modules/backuppc/backuppc/hostSummary.php:142
 msgid "%A, %B %e %Y"
 msgstr "%A, %e %B %Y"
 
-#: modules/backuppc/backuppc/hostStatus.php:158
+#: modules/backuppc/backuppc/hostStatus.php:159
 #, php-format
 msgid "%s's backup status"
 msgstr "Statut de la sauvegarde de %s"
@@ -60,13 +60,13 @@ msgstr "Ajouter un jeu de fichiers"
 msgid "Add folder"
 msgstr "Ajouter dossier"
 
+#: modules/backuppc/backuppc/localSidebar.php:30
 #: modules/backuppc/backuppc/EditPeriodProfile.php:79
 #: modules/backuppc/backuppc/edit.php:232
-#: modules/backuppc/backuppc/localSidebar.php:30
 msgid "Add schedule"
 msgstr "Ajouter un planning"
 
-#: modules/backuppc/backuppc/hostStatus.php:166
+#: modules/backuppc/backuppc/hostStatus.php:167
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr "Scripts avancés"
@@ -125,8 +125,8 @@ msgstr "Heure de la sauvegarde"
 msgid "Backup up to date"
 msgstr "Sauvegarde à jour"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:59
 #: modules/backuppc/backuppc/fileSearch.php:95
+#: modules/backuppc/backuppc/BrowseBackups.php:59
 msgid "Backup#"
 msgstr "N° de sauvegarde"
 
@@ -173,12 +173,12 @@ msgstr ""
 "pouvez désormais configurer les jeux de fichiers à sauvegarder ainsi que sa "
 "planification de sauvegardes."
 
-#: modules/backuppc/backuppc/hostStatus.php:165
+#: modules/backuppc/backuppc/hostStatus.php:166
 msgid "Configuration"
 msgstr "Configuration"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:144
+#: modules/backuppc/backuppc/hostStatus.php:145
 msgid "Configuration saved"
 msgstr "Configuration enregistrée"
 
@@ -198,8 +198,7 @@ msgstr "Etat courant"
 msgid "Current state: "
 msgstr "Etat courant: "
 
-#: modules/backuppc/backuppc/edit.php:73
-#: modules/backuppc/backuppc/edit.php:158
+#: modules/backuppc/backuppc/edit.php:73 modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
 msgstr "Personnalisé"
 
@@ -325,7 +324,7 @@ msgstr "Nb de fichiers (nouveaux)"
 msgid "File name"
 msgstr "Nom de fichier"
 
-#: modules/backuppc/backuppc/hostStatus.php:167
+#: modules/backuppc/backuppc/hostStatus.php:168
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "Recherche de fichiers"
@@ -334,8 +333,8 @@ msgstr "Recherche de fichiers"
 msgid "File size"
 msgstr "Taille du fichier"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:68
 #: modules/backuppc/backuppc/edit.php:81
+#: modules/backuppc/backuppc/ViewProfiles.php:68
 msgid "Fileset"
 msgstr "Jeu de fichier"
 
@@ -343,10 +342,10 @@ msgstr "Jeu de fichier"
 msgid "Filesets"
 msgstr "Jeux de fichiers"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
-#: modules/backuppc/backuppc/EditBackupProfile.php:148
-#: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/fileSearch.php:127
+#: modules/backuppc/backuppc/EditBackupProfile.php:148
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/edit.php:142
 msgid "Folder"
 msgstr "Dossier"
 
@@ -384,8 +383,8 @@ msgstr "Sauvegarde de l'hôte non définie."
 msgid "Host backup status"
 msgstr "Statut de la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 msgid "Host name"
 msgstr "Nom de la machine"
 
@@ -464,7 +463,7 @@ msgstr "La nuit"
 msgid "No entry found."
 msgstr "Aucune entrée trouvée"
 
-#: modules/backuppc/backuppc/restoreToHost.php:47
+#: modules/backuppc/backuppc/restoreToHost.php:49
 msgid "No file selected."
 msgstr "Aucun fichier sélectionné."
 
@@ -555,8 +554,8 @@ msgstr "Lancer sauvegarde incrémentale"
 msgid "Saturday"
 msgstr "Samedi"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:118
 #: modules/backuppc/backuppc/edit.php:166
+#: modules/backuppc/backuppc/ViewProfiles.php:118
 msgid "Schedule"
 msgstr "Planning"
 
@@ -598,8 +597,8 @@ msgstr "Lancer sauvegarde complète"
 msgid "Start backup"
 msgstr "Démarrer la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 #: modules/backuppc/backuppc/localSidebar.php:27
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 msgid "Status"
 msgstr "Statut"
 
@@ -611,7 +610,7 @@ msgstr "Arrêter la sauvegarde"
 msgid "Stop backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:162
 msgid "Summary"
 msgstr "Résumé"
 
@@ -628,7 +627,7 @@ msgstr "L'ordinateur a été supprimé du système de sauvegarde."
 msgid "The profile has been deleted successfully."
 msgstr "Le profil a été supprimé avec succès"
 
-#: modules/backuppc/backuppc/restoreToHost.php:54
+#: modules/backuppc/backuppc/restoreToHost.php:56
 msgid "The selected files are going to be restored to"
 msgstr "Les fichiers sélectionnés vont être restaurés vers"
 
@@ -650,11 +649,11 @@ msgstr "Cette machine n'a jamais été sauvegardée"
 msgid "Thursday"
 msgstr "Jeudi"
 
-#: modules/backuppc/backuppc/restorePopup.php:27
+#: modules/backuppc/backuppc/restorePopup.php:35
 msgid "To alternate folder"
 msgstr "Vers un autre dossier "
 
-#: modules/backuppc/backuppc/restorePopup.php:26
+#: modules/backuppc/backuppc/restorePopup.php:34
 msgid "To original folder (overwrite)"
 msgstr "Vers le dossier d'origine (écrasement)"
 
@@ -671,8 +670,8 @@ msgstr "Type"
 msgid "Unset backup"
 msgstr "Désactiver la sauvegarde"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:68
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
+#: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
 msgstr "Afficher"
 
@@ -814,8 +813,8 @@ msgstr "Nb incrémentales"
 msgid "on"
 msgstr "le"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "à"

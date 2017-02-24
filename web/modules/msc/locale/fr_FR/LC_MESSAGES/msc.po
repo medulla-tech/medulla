@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -74,12 +74,12 @@ msgstr "%s sur %s %s"
 msgid "%s status"
 msgstr "Statut de %s"
 
-#: modules/msc/msc/tabs.php:49 modules/msc/msc/tabs.php:58
+#: modules/msc/msc/tabs.php:48 modules/msc/msc/tabs.php:57
 #, php-format
 msgid "%s's computer secure control"
 msgstr "Contrôle sécurisé du client %s"
 
-#: modules/msc/msc/tabs.php:73
+#: modules/msc/msc/tabs.php:74
 #, php-format
 msgid "%s's group secure control"
 msgstr "Contrôle sécurisé du groupe %s"
@@ -308,7 +308,7 @@ msgstr "Un fichier est déjà en cours de téléchargement."
 msgid "Actions in bundle"
 msgstr "Actions du groupe de logiciels"
 
-#: modules/msc/msc/ajaxPackageFilter.php:74
+#: modules/msc/msc/ajaxPackageFilter.php:77
 msgid "Active"
 msgstr "Activé"
 
@@ -316,7 +316,7 @@ msgstr "Activé"
 msgid "Advanced"
 msgstr "Avancé"
 
-#: modules/msc/msc/ajaxPackageFilter.php:170
+#: modules/msc/msc/ajaxPackageFilter.php:175
 msgid "Advanced launch"
 msgstr "Lancer l'action (avancé)"
 
@@ -390,7 +390,7 @@ msgstr "Dès que possible"
 msgid "Audit"
 msgstr "Audit"
 
-#: modules/msc/msc/ajaxPackageFilter.php:72
+#: modules/msc/msc/ajaxPackageFilter.php:75
 msgid "Available"
 msgstr "Disponible"
 
@@ -410,8 +410,8 @@ msgstr "Menu de démarrage (pré)"
 msgid "Beginning of validity"
 msgstr "Début de validité"
 
-#: modules/msc/includes/command_history.php:142
 #: modules/msc/logs/ajaxConsultLogsFilter.php:138
+#: modules/msc/includes/command_history.php:142
 msgid "Bundle"
 msgstr "Groupe de logiciels"
 
@@ -516,8 +516,7 @@ msgstr "Client"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:221
 #: modules/msc/logs/ajaxLogsFilter.php:134
 #: modules/msc/msc/ajaxLogsFilter.php:246
-#: modules/msc/msc/ajaxLogsFilter.php:395
-#: modules/msc/msc/package_detail.php:36
+#: modules/msc/msc/ajaxLogsFilter.php:395 modules/msc/msc/package_detail.php:36
 msgid "Command"
 msgstr "Commande"
 
@@ -540,8 +539,8 @@ msgstr "État de la commande '%s' sur <b>une</b> machines"
 msgid "Command expiry date"
 msgstr "Date d'expiration de la commande"
 
-#: modules/msc/includes/command_history.php:34
-#: modules/msc/includes/command_history.php:180 modules/msc/msc/launch.php:424
+#: modules/msc/msc/launch.php:424 modules/msc/includes/command_history.php:34
+#: modules/msc/includes/command_history.php:180
 msgid "Command name"
 msgstr "Nom de la commande"
 
@@ -573,12 +572,12 @@ msgstr "Connecté"
 msgid "Connecting ..."
 msgstr "Connexion en cours ..."
 
-#: modules/msc/msc/vnc_client_java.php:46
+#: modules/msc/msc/vnc_client_java.php:45
 #: modules/msc/msc/vnc_client_no_vnc.php:57
 msgid "Connection Failed !"
 msgstr "Erreur de connexion !"
 
-#: modules/msc/msc/vnc_client_java.php:72
+#: modules/msc/msc/vnc_client_java.php:71
 msgid "Connection Succeeded !"
 msgstr "La connexion a réussi !"
 
@@ -597,13 +596,13 @@ msgid ""
 "Connection was refused by the other side while trying to probe the machine"
 msgstr "La connexion a été refusée lors de la tentative de probe de la machine"
 
-#: modules/msc/msc/vnc_client_java.php:48
+#: modules/msc/msc/vnc_client_java.php:47
 #: modules/msc/msc/vnc_client_no_vnc.php:59
 msgid "Connection was refused by the other side."
 msgstr "La connexion a été refusée"
 
-#: modules/msc/msc/ajaxPackageFilter.php:89
-#: modules/msc/msc/ajaxPackageFilter.php:159
+#: modules/msc/msc/ajaxPackageFilter.php:91
+#: modules/msc/msc/ajaxPackageFilter.php:163
 msgid "Convergence"
 msgstr "Convergence"
 
@@ -615,7 +614,7 @@ msgstr "Convergence activée"
 msgid "Convergence on "
 msgstr "Convergence sur"
 
-#: modules/msc/includes/bundle_widgets.php:373 modules/msc/msc/launch.php:547
+#: modules/msc/msc/launch.php:547 modules/msc/includes/bundle_widgets.php:373
 msgid "Copy Mode"
 msgstr "Mode de transfert"
 
@@ -627,12 +626,12 @@ msgstr "Créer un groupe"
 msgid "Creator"
 msgstr "Créateur"
 
-#: modules/msc/infoPackage.inc.php:258
+#: modules/msc/infoPackage.inc.php:259
 msgid "Csv's export"
 msgstr "Export csv"
 
-#: modules/msc/includes/command_history.php:39
 #: modules/msc/msc/msctabssinglestatus.php:38
+#: modules/msc/includes/command_history.php:39
 msgid "Current State"
 msgstr "État actuel"
 
@@ -694,7 +693,7 @@ msgstr "Échec de la suppression"
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: modules/msc/includes/bundle_widgets.php:352 modules/msc/msc/launch.php:448
+#: modules/msc/msc/launch.php:448 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
 msgstr "Supprimer les fichiers après une commande réussie"
 
@@ -723,18 +722,17 @@ msgstr ""
 "Le sous-groupe de déploiement a été créé avec succès. <br/><a href=\"%s\" "
 "target=\"_blank\">Voir le groupe</a>"
 
-#: modules/msc/includes/bundle_widgets.php:378 modules/msc/msc/launch.php:552
+#: modules/msc/msc/launch.php:552 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
 msgstr "Déploiement par proxy local"
 
-#: modules/msc/includes/bundle_widgets.php:363
-#: modules/msc/includes/command_history.php:38
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/msc/launch.php:530
+#: modules/msc/msc/launch.php:530 modules/msc/includes/command_history.php:38
+#: modules/msc/includes/bundle_widgets.php:363
 msgid "Deployment interval"
 msgstr "Intervalle de déploiement"
 
-#: modules/msc/msc/ajaxPackageFilter.php:155
+#: modules/msc/msc/ajaxPackageFilter.php:159
 msgid "Description"
 msgstr "Description"
 
@@ -746,7 +744,8 @@ msgstr "Description"
 msgid "Details"
 msgstr "Détails"
 
-#: modules/msc/msc/ajaxPackageFilter.php:171
+#: modules/msc/msc/ajaxPackageFilter.php:176
+#: modules/msc/msc/ajaxPackageFilter.php:179
 msgid "Direct launch"
 msgstr "Lancer l'action"
 
@@ -754,10 +753,9 @@ msgstr "Lancer l'action"
 msgid "Do an inventory after a successful execution"
 msgstr "Faire un inventaire après une commande réussie"
 
-#: modules/msc/includes/functions.php:48 modules/msc/includes/functions.php:58
-#: modules/msc/includes/functions.php:334
+#: modules/msc/msc/ajaxLogsFilter.php:429 modules/msc/includes/functions.php:48
+#: modules/msc/includes/functions.php:58 modules/msc/includes/functions.php:334
 #: modules/msc/includes/widgets.inc.php:389
-#: modules/msc/msc/ajaxLogsFilter.php:429
 msgid "Done"
 msgstr "Fait"
 
@@ -769,7 +767,7 @@ msgstr "Télécharger le fichier"
 msgid "Download file from a computer"
 msgstr "Téléchargement de fichier depuis un ordinateur"
 
-#: modules/msc/infoPackage.inc.php:253 modules/msc/msc/download_file.php:32
+#: modules/msc/infoPackage.inc.php:254 modules/msc/msc/download_file.php:32
 msgid "Download file page"
 msgstr "Téléchargement de fichiers"
 
@@ -777,13 +775,13 @@ msgstr "Téléchargement de fichiers"
 msgid "Downloading"
 msgstr "Téléchargement en cours"
 
-#: modules/msc/includes/command_history.php:37
-#: modules/msc/includes/command_history.php:144
-#: modules/msc/includes/command_history.php:183
 #: modules/msc/logs/ajaxConsultLogsFilter.php:225
 #: modules/msc/logs/ajaxLogsFilter.php:129
 #: modules/msc/msc/ajaxLogsFilter.php:249
 #: modules/msc/msc/ajaxLogsFilter.php:388
+#: modules/msc/includes/command_history.php:37
+#: modules/msc/includes/command_history.php:144
+#: modules/msc/includes/command_history.php:183
 msgid "End date"
 msgstr "Date de fin"
 
@@ -858,10 +856,9 @@ msgstr "Code de retour : %s"
 msgid "Expired tasks"
 msgstr "Tâches expirés"
 
-#: modules/msc/includes/functions.php:54 modules/msc/includes/functions.php:59
-#: modules/msc/includes/functions.php:333
+#: modules/msc/msc/ajaxLogsFilter.php:430 modules/msc/includes/functions.php:54
+#: modules/msc/includes/functions.php:59 modules/msc/includes/functions.php:333
 #: modules/msc/includes/widgets.inc.php:391
-#: modules/msc/msc/ajaxLogsFilter.php:430
 msgid "Failed"
 msgstr "Échec"
 
@@ -947,7 +944,7 @@ msgstr "Hôte"
 msgid "Host rejected connection"
 msgstr "L'hôte distant a rejeté la connexion"
 
-#: modules/msc/infoPackage.inc.php:248
+#: modules/msc/infoPackage.inc.php:249
 msgid "IP Addr."
 msgstr "Adresse IP"
 
@@ -967,7 +964,7 @@ msgstr "En cours: %percent% (%d machines)"
 msgid "In progress: %percent% (%d packages)"
 msgstr "En cours: %percent% (%d packages)"
 
-#: modules/msc/msc/ajaxPackageFilter.php:76
+#: modules/msc/msc/ajaxPackageFilter.php:79
 msgid "Inactive"
 msgstr "Inactive"
 
@@ -995,7 +992,7 @@ msgstr "Échec de l'inventaire"
 msgid "Inventory in progress"
 msgstr "Inventaire en cours"
 
-#: modules/msc/msc/vnc_client_java.php:169
+#: modules/msc/msc/vnc_client_java.php:168
 msgid ""
 "Java Plugin is not installed on <u>your own computer</u>. Please download it "
 "from <a href='http://www.java.com/download/'>http://www.java.com/download/</"
@@ -1013,7 +1010,7 @@ msgstr ""
 msgid "Label"
 msgstr "Libellé"
 
-#: modules/msc/includes/bundle_widgets.php:218 modules/msc/msc/packages.php:43
+#: modules/msc/msc/packages.php:43 modules/msc/includes/bundle_widgets.php:218
 msgid "Launch"
 msgstr "Lancer"
 
@@ -1021,23 +1018,23 @@ msgstr "Lancer"
 msgid "Launch (advanced)"
 msgstr "Lancer (avancé)"
 
-#: modules/msc/msc/tabs.php:59 modules/msc/msc/tabs.php:75
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:76
 msgid "Launch Actions"
 msgstr "Lancer une action"
 
-#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:76
+#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:77
 msgid "Launch Bundle"
 msgstr "Lancer un groupe de logiciels"
 
-#: modules/msc/infoPackage.inc.php:206
+#: modules/msc/infoPackage.inc.php:207
 msgid "Launch a advanced command"
 msgstr "Lancer une action (avancé)"
 
-#: modules/msc/infoPackage.inc.php:200
+#: modules/msc/infoPackage.inc.php:201
 msgid "Launch a command"
 msgstr "Lancer une action"
 
-#: modules/msc/infoPackage.inc.php:218
+#: modules/msc/infoPackage.inc.php:219
 msgid "Launch a quick action command"
 msgstr "Lancer une action rapide"
 
@@ -1057,17 +1054,17 @@ msgstr "Proxys locaux"
 msgid "Local proxies selection"
 msgstr "Sélection des proxys locaux"
 
-#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:78
+#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:79
 msgid "Logs"
 msgstr "Journaux"
 
-#: modules/msc/infoPackage.inc.php:243
+#: modules/msc/infoPackage.inc.php:244
 msgid "MAC Addr."
 msgstr "Adresse MAC"
 
+#: modules/msc/msc/ajaxPackageFilter.php:127
 #: modules/msc/includes/bundle_widgets.php:170
 #: modules/msc/includes/bundle_widgets.php:199
-#: modules/msc/msc/ajaxPackageFilter.php:124
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "La MMC a échoué à contacter le serveur de package %s."
@@ -1102,7 +1099,7 @@ msgstr "Onglet des journaux pour une machine"
 msgid "Machine"
 msgstr "Ordinateur"
 
-#: modules/msc/includes/bundle_widgets.php:364 modules/msc/msc/launch.php:536
+#: modules/msc/msc/launch.php:536 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
 msgstr "Débit maximum (kbits/s)"
 
@@ -1114,8 +1111,8 @@ msgstr "Nombre maximal de connexions simultanées sur un proxy"
 msgid "Mode"
 msgstr "Mode"
 
-#: modules/msc/includes/command_history.php:347
 #: modules/msc/msc/local_proxy.php:208
+#: modules/msc/includes/command_history.php:347
 msgid "Multiple"
 msgstr "Multiple"
 
@@ -1128,15 +1125,15 @@ msgstr "Multiple, mode client%s"
 msgid "Multiple, server mode"
 msgstr "Multiple, mode serveur"
 
+#: modules/msc/infoPackage.inc.php:50 modules/msc/logs/localSidebar.php:28
 #: modules/msc/includes/widgets.inc.php:345
-#: modules/msc/includes/widgets.inc.php:517 modules/msc/infoPackage.inc.php:50
-#: modules/msc/logs/localSidebar.php:28
+#: modules/msc/includes/widgets.inc.php:517
 msgid "My commands"
 msgstr "Mes commandes"
 
+#: modules/msc/msc/package_detail.php:39
 #: modules/msc/includes/command_history.php:53
 #: modules/msc/includes/command_history.php:205
-#: modules/msc/msc/package_detail.php:39
 msgid "Name"
 msgstr "Nom"
 
@@ -1166,11 +1163,11 @@ msgstr "Aucun (Client de Proxy Local)"
 msgid "Normal"
 msgstr "Normal"
 
-#: modules/msc/msc/ajaxPackageFilter.php:79
+#: modules/msc/msc/ajaxPackageFilter.php:82
 msgid "Not available"
 msgstr "Non disponible"
 
-#: modules/msc/msc/tabs.php:85
+#: modules/msc/msc/tabs.php:86
 msgid "Not enough information"
 msgstr "Il manque des informations"
 
@@ -1198,14 +1195,14 @@ msgstr "Délai dépassé: %percent% (%d machines)"
 msgid "Over-timed: %percent% (%d packages)"
 msgstr "Délai dépassé: %percent% (%d packages)"
 
-#: modules/msc/includes/widgets.inc.php:395
 #: modules/msc/msc/ajaxLogsFilter.php:432
+#: modules/msc/includes/widgets.inc.php:395
 msgid "Overtime"
 msgstr "Délai dépassé"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
-#: modules/msc/msc/ajaxPackageFilter.php:154 modules/msc/msc/packages.php:40
+#: modules/msc/msc/ajaxPackageFilter.php:158 modules/msc/msc/packages.php:40
 msgid "Package"
 msgstr "Package"
 
@@ -1223,11 +1220,11 @@ msgstr ""
 msgid "Package '%s' is available on primary mirror %s"
 msgstr "Le package '%s' est accessible sur le miroir principal %s"
 
-#: modules/msc/msc/ajaxPackageFilter.php:157
+#: modules/msc/msc/ajaxPackageFilter.php:161
 msgid "Package size"
 msgstr "Taille du package"
 
-#: modules/msc/infoPackage.inc.php:223 modules/msc/msc/packages.php:29
+#: modules/msc/infoPackage.inc.php:224 modules/msc/msc/packages.php:29
 msgid "Packages"
 msgstr "Packages"
 
@@ -1266,11 +1263,11 @@ msgstr "En pause: %percent% (%d machines)"
 msgid "Paused: %percent% (%d packages)"
 msgstr "En pause: %percent% (%d packages)"
 
-#: modules/msc/infoPackage.inc.php:233
+#: modules/msc/infoPackage.inc.php:234
 msgid "Ping"
 msgstr "Ping"
 
-#: modules/msc/infoPackage.inc.php:228
+#: modules/msc/infoPackage.inc.php:229
 msgid "Ping and probe"
 msgstr "Ping et Probe"
 
@@ -1286,7 +1283,7 @@ msgstr "Réussite du ping"
 msgid "Ping succeeded, SSH connection failed"
 msgstr "Réussite du ping, échec de la connexion SSH"
 
-#: modules/msc/infoPackage.inc.php:238
+#: modules/msc/infoPackage.inc.php:239
 msgid "Platform"
 msgstr "Système d'exploitation"
 
@@ -1294,7 +1291,7 @@ msgstr "Système d'exploitation"
 msgid "Play a command"
 msgstr "Jouer une commande"
 
-#: modules/msc/msc/vnc_client_java.php:76
+#: modules/msc/msc/vnc_client_java.php:75
 msgid "Please close this windows when you are done."
 msgstr "Please close this windows when you are done."
 
@@ -1306,8 +1303,8 @@ msgstr "Veuillez confirmer la suppression du fichier"
 msgid "Please confirm you really want to perform this action"
 msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
+#: modules/msc/msc/ajaxPackageFilter.php:154
 #: modules/msc/includes/bundle_widgets.php:150
-#: modules/msc/msc/ajaxPackageFilter.php:151
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
@@ -1316,7 +1313,7 @@ msgstr "Veuillez contacter votre administrateur."
 msgid "Possible actions"
 msgstr "Actions possibles"
 
-#: modules/msc/msc/launch.php:576
+#: modules/msc/msc/launch.php:577
 msgid "Probe status"
 msgstr "Vérifier l'état"
 
@@ -1350,9 +1347,8 @@ msgstr "Le répertoire des actions rapides %s n'existe pas"
 msgid "Random (indicate number of proxies) : "
 msgstr "Choix aléatoire (indiquez le nombre de proxys) : "
 
-#: modules/msc/includes/functions.php:47
-#: modules/msc/includes/functions.php:331
 #: modules/msc/msc/ajaxDownloadFile.php:77
+#: modules/msc/includes/functions.php:47 modules/msc/includes/functions.php:331
 msgid "Ready"
 msgstr "Prêt"
 
@@ -1420,9 +1416,9 @@ msgstr "Bande passante réservée"
 msgid "Restart"
 msgstr "Redémarrage"
 
-#: modules/msc/includes/functions.php:332
 #: modules/msc/msc/ajaxLogsFilter.php:356
 #: modules/msc/msc/ajaxLogsFilter.php:428
+#: modules/msc/includes/functions.php:332
 msgid "Running"
 msgstr "En cours"
 
@@ -1523,8 +1519,8 @@ msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 msgid "Single command status"
 msgstr "Statut de la commande"
 
-#: modules/msc/includes/command_history.php:349
 #: modules/msc/msc/local_proxy.php:208
+#: modules/msc/includes/command_history.php:349
 msgid "Single with fallback"
 msgstr "Simple avec redondance"
 
@@ -1542,7 +1538,7 @@ msgstr "Simple, mode serveur"
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "Convergence logicielle: commande \"%s\" sur \"%s\""
 
-#: modules/msc/infoPackage.inc.php:212
+#: modules/msc/infoPackage.inc.php:213
 msgid "Software convergence configuration"
 msgstr "Configuration de la convergence logicielle"
 
@@ -1552,16 +1548,16 @@ msgstr ""
 "Il s'est passé quelque chose d'inattendu lors de la vérification de "
 "l'identité du poste client."
 
-#: modules/msc/includes/command_history.php:91
-#: modules/msc/includes/command_history.php:147
-#: modules/msc/includes/command_history.php:244
 #: modules/msc/logs/ajaxConsultLogsFilter.php:55
 #: modules/msc/logs/ajaxLogsFilter.php:58
 #: modules/msc/msc/ajaxLogsFilter.php:103
+#: modules/msc/includes/command_history.php:91
+#: modules/msc/includes/command_history.php:147
+#: modules/msc/includes/command_history.php:244
 msgid "Start"
 msgstr "Démarrer"
 
-#: modules/msc/includes/command_history.php:189 modules/msc/msc/launch.php:436
+#: modules/msc/msc/launch.php:436 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
@@ -1575,13 +1571,13 @@ msgstr "Lancer %s %s sur la machine %s"
 msgid "Start %s %s on this group"
 msgstr "Lancer %s %s sur ce groupe"
 
-#: modules/msc/includes/command_history.php:36
-#: modules/msc/includes/command_history.php:143
-#: modules/msc/includes/command_history.php:182
 #: modules/msc/logs/ajaxConsultLogsFilter.php:224
 #: modules/msc/logs/ajaxLogsFilter.php:131
 #: modules/msc/msc/ajaxLogsFilter.php:248
 #: modules/msc/msc/ajaxLogsFilter.php:390 modules/msc/msc/reschedule.php:43
+#: modules/msc/includes/command_history.php:36
+#: modules/msc/includes/command_history.php:143
+#: modules/msc/includes/command_history.php:182
 msgid "Start date"
 msgstr "Date de démarrage"
 
@@ -1616,8 +1612,8 @@ msgstr "État du filtre"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:59
 #: modules/msc/logs/ajaxConsultLogsFilter.php:60
-#: modules/msc/msc/ajaxDownloadFile.php:90
 #: modules/msc/msc/ajaxLogsFilter.php:107
+#: modules/msc/msc/ajaxDownloadFile.php:90
 msgid "Status"
 msgstr "Statut"
 
@@ -1629,12 +1625,12 @@ msgstr "Etape"
 msgid "Step log"
 msgstr "Log de l'étape"
 
-#: modules/msc/includes/command_history.php:93
-#: modules/msc/includes/command_history.php:148
-#: modules/msc/includes/command_history.php:245
 #: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/logs/ajaxLogsFilter.php:60
 #: modules/msc/msc/ajaxLogsFilter.php:106
+#: modules/msc/includes/command_history.php:93
+#: modules/msc/includes/command_history.php:148
+#: modules/msc/includes/command_history.php:245
 msgid "Stop"
 msgstr "Arrêter"
 
@@ -1652,9 +1648,9 @@ msgstr "Arrêt %s %s sur ce groupe"
 msgid "Stop a command"
 msgstr "Stopper une commande"
 
-#: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
+#: modules/msc/msc/ajaxLogsFilter.php:431 modules/msc/includes/functions.php:50
+#: modules/msc/includes/functions.php:51
 #: modules/msc/includes/widgets.inc.php:397
-#: modules/msc/msc/ajaxLogsFilter.php:431
 msgid "Stopped"
 msgstr "Arrêté"
 
@@ -1683,7 +1679,7 @@ msgstr "Terminé: %percent% (%d packages)"
 msgid "Take control of a computer"
 msgstr "Prendre le contrôle d'un ordinateur"
 
-#: modules/msc/msc/vnc_client_java.php:173
+#: modules/msc/msc/vnc_client_java.php:172
 #: modules/msc/msc/vnc_client_no_vnc.php:355
 msgid "Take control of this computer"
 msgstr "Prendre le contrôle de cet ordinateur"
@@ -1728,8 +1724,8 @@ msgid ""
 msgstr ""
 "Le nom de l'ordinateur ne correspond pas à celui présent dans l'inventaire."
 
-#: modules/msc/msc/download_file.php:44
 #: modules/msc/msc/download_file_get.php:28
+#: modules/msc/msc/download_file.php:44
 msgid "The download has failed."
 msgstr "Le téléchargement a échoué"
 
@@ -1759,17 +1755,17 @@ msgstr "Le script a été annulé par Pulse 2 (durée trop longue ?)."
 msgid "The script was terminated by Pulse 2."
 msgstr "Le script a été terminé par Pulse 2."
 
-#: modules/msc/msc/ajaxPackageFilter.php:43
+#: modules/msc/msc/ajaxPackageFilter.php:44
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 
-#: modules/msc/msc/ajaxPackageFilter.php:45
+#: modules/msc/msc/ajaxPackageFilter.php:46
 #, php-format
 msgid "These packages can be installed on group \"%s\""
 msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
-#: modules/msc/msc/vnc_client_java.php:74
+#: modules/msc/msc/vnc_client_java.php:73
 msgid "This connection will be automatically shut down in 60 minutes."
 msgstr "La connexion sera automatiquement interrompue dans 60 minutes."
 
@@ -1829,14 +1825,14 @@ msgstr "Envoi en cours"
 msgid "User command creator"
 msgstr "Créateur de la commande"
 
+#: modules/msc/msc/package_detail.php:40
 #: modules/msc/includes/command_history.php:55
 #: modules/msc/includes/command_history.php:207
-#: modules/msc/msc/package_detail.php:40
 msgid "Value"
 msgstr "Valeur"
 
-#: modules/msc/msc/ajaxPackageFilter.php:156
-#: modules/msc/msc/package_detail.php:36 modules/msc/msc/packages.php:41
+#: modules/msc/msc/ajaxPackageFilter.php:160 modules/msc/msc/packages.php:41
+#: modules/msc/msc/package_detail.php:36
 msgid "Version"
 msgstr "Version"
 
@@ -1882,8 +1878,8 @@ msgstr ""
 "Vos dates de début et de fin ne sont pas cohérentes, veuillez les vérifier."
 "<br/>"
 
-#: modules/msc/msc/msctabspause.php:119 modules/msc/msc/msctabsplay.php:120
-#: modules/msc/msc/msctabsstop.php:119
+#: modules/msc/msc/msctabsplay.php:120 modules/msc/msc/msctabsstop.php:119
+#: modules/msc/msc/msctabspause.php:119
 msgid "action"
 msgstr "de l'action"
 
@@ -1899,8 +1895,8 @@ msgstr "réveil"
 msgid "bit/s"
 msgstr "bit/s"
 
-#: modules/msc/msc/msctabspause.php:121 modules/msc/msc/msctabsplay.php:122
-#: modules/msc/msc/msctabsstop.php:121
+#: modules/msc/msc/msctabsplay.php:122 modules/msc/msc/msctabsstop.php:121
+#: modules/msc/msc/msctabspause.php:121
 msgid "bundle"
 msgstr "groupe de logiciels"
 
@@ -2042,8 +2038,8 @@ msgstr "Inventaire en cours"
 msgid "is"
 msgstr "est"
 
-#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:263
-#: modules/msc/infoPackage.inc.php:268
+#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:264
+#: modules/msc/infoPackage.inc.php:269
 msgid "logs list"
 msgstr "liste des logs"
 
@@ -2072,11 +2068,11 @@ msgstr "en dehors de l'intervalle de déploiement"
 msgid "over_time"
 msgstr "délai dépassé"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:544
+#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
 msgstr "push"
 
-#: modules/msc/includes/bundle_widgets.php:370 modules/msc/msc/launch.php:544
+#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
 msgid "push / pull"
 msgstr "push / pull"
 

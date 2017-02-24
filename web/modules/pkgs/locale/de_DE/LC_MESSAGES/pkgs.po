@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -24,7 +24,7 @@ msgstr ""
 msgid "<fill_package_name>"
 msgstr "<paketname_eintragen>"
 
-#: modules/pkgs/infoPackage.inc.php:92
+#: modules/pkgs/infoPackage.inc.php:97
 msgid "Activate Appstream Stream"
 msgstr ""
 
@@ -36,7 +36,7 @@ msgstr ""
 msgid "Activate this Appstream stream?"
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:208
+#: modules/pkgs/pkgs/add.php:221
 msgid "Add"
 msgstr "Hinzufügen"
 
@@ -68,11 +68,11 @@ msgstr "Bereits auf den Server hochgeladen"
 msgid "Appstream"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:131
+#: modules/pkgs/infoPackage.inc.php:136
 msgid "Appstream Updates list"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:65
+#: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/appstreamSettings.php:34
 #: modules/pkgs/pkgs/localSidebar.php:32
 msgid "Appstream settings"
@@ -86,11 +86,11 @@ msgstr ""
 msgid "Appstream updates"
 msgstr ""
 
-#: modules/pkgs/pkgs/edit.php:290
+#: modules/pkgs/pkgs/edit.php:302
 msgid "Are you sure you want to delete this file?"
 msgstr "Sind Sie sicher, dass Sie die Datei löschen möchten?"
 
-#: modules/pkgs/includes/query.php:78 modules/pkgs/pkgs/editBundle.php:200
+#: modules/pkgs/pkgs/editBundle.php:200 modules/pkgs/includes/query.php:78
 msgid "Associate inventory"
 msgstr "Assoziierung des Inventars"
 
@@ -102,7 +102,7 @@ msgstr "Paket Assoziieren"
 msgid "Bool"
 msgstr "Bool"
 
-#: modules/pkgs/pkgs/bundleList.php:29 modules/pkgs/pkgs/localSidebar.php:29
+#: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/bundleList.php:29
 msgid "Bundle list"
 msgstr ""
 
@@ -114,8 +114,7 @@ msgstr ""
 msgid "Bundle title"
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:60
-#: modules/pkgs/includes/html.inc.php:141
+#: modules/pkgs/includes/html.inc.php:60 modules/pkgs/includes/html.inc.php:141
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -123,7 +122,7 @@ msgstr "Abbrechen"
 msgid "Cannot set My Credentials."
 msgstr ""
 
-#: modules/pkgs/pkgs/add.php:322
+#: modules/pkgs/pkgs/add.php:335
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 msgid ""
 "Change post_max_size and upload_max_filesize directives in php.ini file to "
@@ -136,9 +135,8 @@ msgstr ""
 msgid "Choose package source"
 msgstr "Paketquelle wählen"
 
-#: modules/pkgs/includes/html.inc.php:59
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:33
-#: modules/pkgs/pkgs/edit.php:306
+#: modules/pkgs/pkgs/edit.php:318 modules/pkgs/includes/html.inc.php:59
 msgid "Click here to select files"
 msgstr "Klicken Sie hier um Dateien zu wählen"
 
@@ -154,17 +152,26 @@ msgstr "Command Name:"
 msgid "Command:"
 msgstr "Befehl:"
 
-#: modules/pkgs/infoPackage.inc.php:88
+#: modules/pkgs/pkgs/createGroupLicence.php:60
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:62
+msgid "Create licence static group"
+msgstr ""
+
+#: modules/pkgs/infoPackage.inc.php:93
 msgid "Delete a bundle"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:84 modules/pkgs/pkgs/ajaxBundleList.php:93
-#: modules/pkgs/pkgs/ajaxPackageList.php:93
+#: modules/pkgs/infoPackage.inc.php:89 modules/pkgs/pkgs/ajaxBundleList.php:93
+#: modules/pkgs/pkgs/ajaxPackageList.php:157
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:79
 msgid "Delete a package"
 msgstr "Paket löschen"
 
-#: modules/pkgs/pkgs/edit.php:290
+#: modules/pkgs/pkgs/edit.php:302
 msgid "Delete file"
 msgstr "Datei löschen"
 
@@ -173,9 +180,9 @@ msgid "Delete this package"
 msgstr "dieses Paket löschen"
 
 #: modules/pkgs/pkgs/add.php:156 modules/pkgs/pkgs/ajaxBundleList.php:82
-#: modules/pkgs/pkgs/ajaxPackageList.php:82
+#: modules/pkgs/pkgs/ajaxPackageList.php:146 modules/pkgs/pkgs/edit.php:207
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:69
-#: modules/pkgs/pkgs/edit.php:207 modules/pkgs/pkgs/editBundle.php:189
+#: modules/pkgs/pkgs/editBundle.php:189
 msgid "Description"
 msgstr "Beschreibung"
 
@@ -192,7 +199,7 @@ msgid "Edit a bundle"
 msgstr ""
 
 #: modules/pkgs/infoPackage.inc.php:53
-#: modules/pkgs/pkgs/ajaxPackageList.php:92 modules/pkgs/pkgs/edit.php:157
+#: modules/pkgs/pkgs/ajaxPackageList.php:156 modules/pkgs/pkgs/edit.php:157
 msgid "Edit a package"
 msgstr "Edit einem Paket"
 
@@ -232,7 +239,7 @@ msgstr "Fehler beim Löschen der Dateien"
 msgid "Failed to delete files%s"
 msgstr "Fehler beim Löschen von Dateien%s"
 
-#: modules/pkgs/pkgs/edit.php:281
+#: modules/pkgs/pkgs/edit.php:293
 msgid "File"
 msgstr "Datei"
 
@@ -240,7 +247,7 @@ msgstr "Datei"
 msgid "File successfully deleted."
 msgstr "Datei wurde erfolgreich gelöscht."
 
-#: modules/pkgs/pkgs/add.php:145 modules/pkgs/pkgs/add.php:300
+#: modules/pkgs/pkgs/add.php:145 modules/pkgs/pkgs/add.php:313
 msgid "Files directory"
 msgstr "Dateien-Verzeichnis"
 
@@ -254,7 +261,7 @@ msgstr "Dateien erfolgreich zum Paket  <b>%s (%s)</b> hinzugefügt"
 msgid "Files successfully associated with package <b>%s (%s)</b>%s"
 msgstr "Dateien erfolgreich Verbinden mit Paket <b>t%s (%s)</b> %s"
 
-#: modules/pkgs/pkgs/add.php:322
+#: modules/pkgs/pkgs/add.php:335
 #: modules/pkgs/pkgs/ajaxRefreshPackageTempDir.php:129
 #, php-format
 msgid "Files upload (<b><u title='%s'>%sM max</u></b>)"
@@ -265,16 +272,24 @@ msgid "Invalid My Credentials, please verify your username/password."
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxBundleList.php:84
-#: modules/pkgs/pkgs/ajaxPackageList.php:84
+#: modules/pkgs/pkgs/ajaxPackageList.php:148
 msgid "Licenses"
 msgstr "Lizenzen"
 
+#: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
+msgid "Linux"
+msgstr ""
+
 #: modules/pkgs/pkgs/ajaxBundleList.php:55
-#: modules/pkgs/pkgs/ajaxPackageList.php:55
-#: modules/pkgs/pkgs/bundleList.php:45 modules/pkgs/pkgs/index.php:45
+#: modules/pkgs/pkgs/ajaxPackageList.php:92 modules/pkgs/pkgs/index.php:45
+#: modules/pkgs/pkgs/bundleList.php:45
 #, php-format
 msgid "MMC failed to contact package server %s."
 msgstr "MMC konnte sich nicht mit dem Paket-Server %s verbinden"
+
+#: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
+msgid "Mac OS"
+msgstr ""
 
 #: modules/pkgs/pkgs/add.php:135
 msgid "Make an empty package"
@@ -308,6 +323,10 @@ msgstr ""
 msgid "Number of licenses"
 msgstr "Anzahl an Lizenzen"
 
+#: modules/pkgs/pkgs/add.php:199 modules/pkgs/pkgs/edit.php:244
+msgid "Operating System"
+msgstr ""
+
 #: modules/pkgs/pkgs/editBundle.php:235
 msgid "Package"
 msgstr ""
@@ -332,11 +351,11 @@ msgstr "Paket speicher fehlgeschlagen"
 msgid "Package label"
 msgstr "Paket Beschriftung"
 
-#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
-#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 #: modules/pkgs/pkgs/ajaxBundleList.php:79
-#: modules/pkgs/pkgs/ajaxPackageList.php:79
+#: modules/pkgs/pkgs/ajaxPackageList.php:143
+#: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:63
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:66
+#: modules/pkgs/pkgs/ajaxAppstreamAvailablePackageList.php:52
 msgid "Package name"
 msgstr "Paketname"
 
@@ -345,7 +364,7 @@ msgid "Package respository"
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxBundleList.php:85
-#: modules/pkgs/pkgs/ajaxPackageList.php:85
+#: modules/pkgs/pkgs/ajaxPackageList.php:149
 msgid "Package size"
 msgstr "Paket Größe"
 
@@ -365,7 +384,7 @@ msgstr "Paket Version"
 msgid "Packages"
 msgstr "Pakete"
 
-#: modules/pkgs/pkgs/index.php:29 modules/pkgs/pkgs/localSidebar.php:27
+#: modules/pkgs/pkgs/localSidebar.php:27 modules/pkgs/pkgs/index.php:29
 msgid "Packages list"
 msgstr "Pakete Liste"
 
@@ -373,7 +392,7 @@ msgstr "Pakete Liste"
 msgid "Password"
 msgstr ""
 
-#: modules/pkgs/pkgs/localSidebar.php:31 modules/pkgs/pkgs/pending.php:29
+#: modules/pkgs/pkgs/pending.php:29 modules/pkgs/pkgs/localSidebar.php:31
 msgid "Pending packages list"
 msgstr "noch nicht erledigt Pakete Liste"
 
@@ -383,8 +402,8 @@ msgid "Please access the %s to manage your Appstream subscriptions."
 msgstr ""
 
 #: modules/pkgs/pkgs/ajaxBundleList.php:76
-#: modules/pkgs/pkgs/ajaxPackageList.php:76
-#: modules/pkgs/pkgs/bundleList.php:53 modules/pkgs/pkgs/index.php:53
+#: modules/pkgs/pkgs/ajaxPackageList.php:140 modules/pkgs/pkgs/index.php:53
+#: modules/pkgs/pkgs/bundleList.php:53
 msgid "Please contact your administrator."
 msgstr "Bitte wenden Sie sich an Ihren Administrator."
 
@@ -436,7 +455,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: modules/pkgs/infoPackage.inc.php:63
+#: modules/pkgs/infoPackage.inc.php:68
 msgid "See pending packages"
 msgstr "noch nicht erledigt Pakete anzeigen"
 
@@ -452,7 +471,7 @@ msgstr ""
 msgid "Show all packages"
 msgstr "Alle Pakete anzeigen"
 
-#: modules/pkgs/infoPackage.inc.php:80
+#: modules/pkgs/infoPackage.inc.php:85
 msgid "Show mirror status"
 msgstr "Spiegel-Status anzeigen"
 
@@ -487,9 +506,8 @@ msgstr ""
 msgid "Unable to add stream."
 msgstr ""
 
-#: modules/pkgs/includes/html.inc.php:42
 #: modules/pkgs/pkgs/ajaxDisplayUploadForm.php:34
-#: modules/pkgs/pkgs/edit.php:307
+#: modules/pkgs/pkgs/edit.php:319 modules/pkgs/includes/html.inc.php:42
 msgid "Upload Queued Files"
 msgstr "Eingereihte Dateien hochladen"
 
@@ -513,16 +531,19 @@ msgstr ""
 msgid "Vendor"
 msgstr "Hersteller"
 
-#: modules/pkgs/includes/query.php:88 modules/pkgs/pkgs/add.php:155
-#: modules/pkgs/pkgs/ajaxBundleList.php:83
-#: modules/pkgs/pkgs/ajaxPackageList.php:83
+#: modules/pkgs/pkgs/add.php:155 modules/pkgs/pkgs/ajaxBundleList.php:83
+#: modules/pkgs/pkgs/ajaxPackageList.php:147
 #: modules/pkgs/pkgs/ajaxPendingPackageList.php:70
-#: modules/pkgs/pkgs/editBundle.php:183
+#: modules/pkgs/pkgs/editBundle.php:183 modules/pkgs/includes/query.php:88
 msgid "Version"
 msgstr "Version"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:47
 msgid "Waiting..."
+msgstr ""
+
+#: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
+msgid "Windows"
 msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:75
