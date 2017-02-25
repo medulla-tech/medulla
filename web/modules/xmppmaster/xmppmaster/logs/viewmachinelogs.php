@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$p = new PageGenerator(_T("View log deploy"." ".$hostname, 'xmppmaster'));
+$p = new PageGenerator(_T("Deployment logs for machine "." ".$hostname, 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -108,10 +108,10 @@ $p->display();
                 echo "</tbody>";
             echo "</table>";
             echo '<br>';
-      
+
       }
         echo "<br>";
-        echo "<h2>Deploy phases</h2>";
+        echo "<h2>Deployment phases</h2>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
             echo "<thead>";
                 echo "<tr>";
@@ -152,23 +152,23 @@ $p->display();
 
     if (isset($resultatdeploy['descriptor']['sequence'] )){
         echo "<br>";
-        echo "<h2>Deploy result</h2>";
+        echo "<h2>Deployment result</h2>";
         foreach($resultatdeploy['descriptor']['sequence'] as $step){
-            if($step['action'] == "action_pwd_packagecompleted"  ) 
-                $actions = "Directory package is directory current";
+            if($step['action'] == "action_pwd_packagecompleted"  )
+                $actions = "Current directory is package directory";
             elseif ($step['action'] == "actionprocessscript"  )
                 $actions = "Script Running in process";
             elseif ($step['action'] == "action_command_natif_shell"  )
                 $actions = "Script Running in thread";
             elseif ($step['action'] == "actionerrorcompletedend"  )
-                $actions =  "Termined the deploy on an error and clean packages";
+                $actions =  "Deployment terminated on an error. Clean packages";
             elseif ($step['action'] == "actionsuccescompletedend"  )
-                $actions = "Termined the deploy on an succes and clean package";
+                $actions = "Deployment terminated successfully. Clean package";
             elseif ($step['action'] == "actioncleaning"  )
-                $actions = "clean package download";
+                $actions = "Clean downloaded package";
             elseif ($step['action'] == "actionrestartbot"  )
-                $actions = "Restart agent xmpp";
-            else 
+                $actions = "Restart agent";
+            else
                 $actions = ltrim(str_replace("_"," ",substr($step['action'],6)));
             echo "<br>";
             if (isset($step['completed'])){

@@ -36,7 +36,7 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 $elt_afficher=array();
-$p = new PageGenerator(_T("Deploy", 'xmppmaster'));
+$p = new PageGenerator(_T("Deployment", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $oo = json_decode(xmlrpc_getListPresenceAgent(), true);
