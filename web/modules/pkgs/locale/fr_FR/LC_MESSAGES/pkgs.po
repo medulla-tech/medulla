@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-24 11:16+0100\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"PO-Revision-Date: 2017-02-27 16:17+0100\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
 "pulse2/team/fr_FR/)\n"
 "Language: fr_FR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: modules/pkgs/pkgs/add.php:154
 msgid "<fill_package_name>"
@@ -46,7 +46,7 @@ msgstr "Ajouter"
 
 #: modules/pkgs/infoPackage.inc.php:56 modules/pkgs/pkgs/localSidebar.php:30
 msgid "Add a bundle"
-msgstr ""
+msgstr "Ajouter un bundle"
 
 #: modules/pkgs/infoPackage.inc.php:50 modules/pkgs/pkgs/localSidebar.php:28
 msgid "Add a package"
@@ -54,7 +54,7 @@ msgstr "Ajouter un package"
 
 #: modules/pkgs/pkgs/editBundle.php:95 modules/pkgs/pkgs/editBundle.php:242
 msgid "Add bundle"
-msgstr ""
+msgstr "Ajouter un bundle"
 
 #: modules/pkgs/includes/html.inc.php:140
 msgid "Add files"
@@ -108,15 +108,15 @@ msgstr "Booléen"
 
 #: modules/pkgs/pkgs/localSidebar.php:29 modules/pkgs/pkgs/bundleList.php:29
 msgid "Bundle list"
-msgstr ""
+msgstr "Liste des bundle"
 
 #: modules/pkgs/pkgs/editBundle.php:83
 msgid "Bundle successfully edited"
-msgstr ""
+msgstr "Bundle édité avec succès"
 
 #: modules/pkgs/pkgs/editBundle.php:177
 msgid "Bundle title"
-msgstr ""
+msgstr "Nom du bundle"
 
 #: modules/pkgs/includes/html.inc.php:60 modules/pkgs/includes/html.inc.php:141
 msgid "Cancel"
@@ -159,15 +159,15 @@ msgstr "Commande:"
 #: modules/pkgs/pkgs/createGroupLicence.php:60
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "La liste des ordinateurs a été tronquée à %d ordinateurs"
 
 #: modules/pkgs/infoPackage.inc.php:62
 msgid "Create licence static group"
-msgstr ""
+msgstr "Créer un groupe statique pour les licences"
 
 #: modules/pkgs/infoPackage.inc.php:93
 msgid "Delete a bundle"
-msgstr ""
+msgstr "Supprimer un bundle"
 
 #: modules/pkgs/infoPackage.inc.php:89 modules/pkgs/pkgs/ajaxBundleList.php:93
 #: modules/pkgs/pkgs/ajaxPackageList.php:157
@@ -196,11 +196,11 @@ msgstr "Téléchargement"
 
 #: modules/pkgs/pkgs/editBundle.php:313
 msgid "Duplicate package detected."
-msgstr ""
+msgstr "Paquetage en double détecté"
 
 #: modules/pkgs/infoPackage.inc.php:59 modules/pkgs/pkgs/ajaxBundleList.php:92
 msgid "Edit a bundle"
-msgstr ""
+msgstr "Éditer un bundle"
 
 #: modules/pkgs/infoPackage.inc.php:53
 #: modules/pkgs/pkgs/ajaxPackageList.php:156 modules/pkgs/pkgs/edit.php:157
@@ -209,7 +209,7 @@ msgstr "Éditer un package"
 
 #: modules/pkgs/pkgs/editBundle.php:93
 msgid "Edit bundle"
-msgstr ""
+msgstr "Éditer un bundle"
 
 #: modules/pkgs/pkgs/edit.php:37
 msgid "Edit package"
@@ -217,7 +217,7 @@ msgstr "Modifier le package"
 
 #: modules/pkgs/pkgs/editBundle.php:291
 msgid "Error, at least two packages are required to create a bundle."
-msgstr ""
+msgstr "Erreur, il faut au moins deux fichiers pour créer un bundle."
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:66
 msgid "Expiration date"
@@ -285,7 +285,7 @@ msgstr "Licences"
 
 #: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
 msgid "Linux"
-msgstr ""
+msgstr "Linux"
 
 #: modules/pkgs/pkgs/ajaxBundleList.php:55
 #: modules/pkgs/pkgs/ajaxPackageList.php:92 modules/pkgs/pkgs/index.php:45
@@ -296,7 +296,7 @@ msgstr "Le MMC a échoué à contacter le package serveur %s."
 
 #: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
 msgid "Mac OS"
-msgstr ""
+msgstr "Mac OS"
 
 #: modules/pkgs/pkgs/add.php:135
 msgid "Make an empty package"
@@ -316,7 +316,7 @@ msgstr "Nom"
 
 #: modules/pkgs/pkgs/editBundle.php:195
 msgid "Need a reboot"
-msgstr ""
+msgstr "Redémarrage necessaire"
 
 #: modules/pkgs/pkgs/add.php:175 modules/pkgs/pkgs/edit.php:219
 msgid "Need a reboot ?"
@@ -332,11 +332,11 @@ msgstr "Nombre de licences"
 
 #: modules/pkgs/pkgs/add.php:199 modules/pkgs/pkgs/edit.php:244
 msgid "Operating System"
-msgstr ""
+msgstr "Systeme d'exploitation"
 
 #: modules/pkgs/pkgs/editBundle.php:235
 msgid "Package"
-msgstr ""
+msgstr "Paquetage"
 
 #: modules/pkgs/pkgs/add.php:141 modules/pkgs/pkgs/edit.php:187
 msgid "Package API"
@@ -368,7 +368,7 @@ msgstr "Nom du package"
 
 #: modules/pkgs/pkgs/editBundle.php:153
 msgid "Package respository"
-msgstr ""
+msgstr "Dépot des paquetages"
 
 #: modules/pkgs/pkgs/ajaxBundleList.php:85
 #: modules/pkgs/pkgs/ajaxPackageList.php:149
@@ -464,7 +464,7 @@ msgstr "Prêt à être utilisé"
 
 #: modules/pkgs/pkgs/editBundle.php:225
 msgid "Remove"
-msgstr ""
+msgstr "Supprimer"
 
 #: modules/pkgs/infoPackage.inc.php:68
 msgid "See pending packages"
@@ -472,11 +472,11 @@ msgstr "Montrer les packages en attente"
 
 #: modules/pkgs/pkgs/editBundle.php:390
 msgid "Select a package"
-msgstr ""
+msgstr "Sélectionner un paquet"
 
 #: modules/pkgs/infoPackage.inc.php:47
 msgid "Show all bundles"
-msgstr ""
+msgstr "Montrer tout les bundle"
 
 #: modules/pkgs/infoPackage.inc.php:44
 msgid "Show all packages"
@@ -557,7 +557,7 @@ msgstr "En attente..."
 
 #: modules/pkgs/pkgs/add.php:180 modules/pkgs/pkgs/edit.php:224
 msgid "Windows"
-msgstr ""
+msgstr "Windows"
 
 #: modules/pkgs/pkgs/appstreamSettings.php:75
 msgid "Your Account credentials are active"

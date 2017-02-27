@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-24 11:16+0100\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
+"PO-Revision-Date: 2017-02-27 14:47+0100\n"
 "Last-Translator: Jean-Christophe Vassort <jcvassort@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
 "pulse2/team/fr_FR/)\n"
@@ -20,12 +20,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: modules/update/update/viewGroupUpdates.php:50
-#, fuzzy, php-format
+#, php-format
 msgid "%s's group update manager"
-msgstr "Gestionnaire de mises à jour"
+msgstr "Gestionnaire de mises à jour pour le groupe %s"
 
 #: modules/update/infoPackage.inc.php:41 modules/update/update/sidebar.php:39
 #: modules/update/update/viewGroupUpdates.php:51
@@ -47,18 +47,17 @@ msgid "Available updates"
 msgstr "Maj disponibles"
 
 #: modules/update/includes/panels/clients_updates.inc.php:30
-#, fuzzy
 msgid "Clients Update"
-msgstr "Voir les mises à jour"
+msgstr "Mise à jour client"
 
 #: modules/update/update/createUpdateStaticGroup.php:50
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "La liste des ordinateurs à été tronquée à %d ordinateurs"
 
 #: modules/update/includes/panels/clients_updates.inc.php:92
 msgid "Create a group"
-msgstr ""
+msgstr "Créer un groupe"
 
 #: modules/update/update/ajaxUpdates.php:100
 msgid "Disable"
@@ -123,7 +122,7 @@ msgstr "Installation des mises à jour..."
 #: modules/update/update/createUpdateStaticGroup.php:34
 #, php-format
 msgid "Machine %s at %s"
-msgstr ""
+msgstr "Machine %s à %s"
 
 #: modules/update/update/ajaxUpdates.php:60
 msgid "No entry found"
@@ -136,20 +135,19 @@ msgstr "Aucune maj disponible."
 
 #: modules/update/includes/panels/clients_updates.inc.php:69
 msgid "Not Supported"
-msgstr ""
+msgstr "Non supporté"
 
 #: modules/update/update/viewGroupUpdates.php:64
 msgid "Not enough information"
-msgstr ""
+msgstr "Il manque des informations"
 
 #: modules/update/includes/panels/clients_updates.inc.php:68
 msgid "Not registered"
-msgstr ""
+msgstr "Non enregistré"
 
 #: modules/update/includes/panels/clients_updates.inc.php:67
-#, fuzzy
 msgid "OS Update disabled"
-msgstr "Nom de la mise à jour"
+msgstr "Mises à jour du système désactivées"
 
 #: modules/update/infoPackage.inc.php:69
 msgid "Product Updates installation"
@@ -169,7 +167,7 @@ msgstr "Paramètres"
 
 #: modules/update/update/viewGroupUpdates.php:47
 msgid "This group doesn't exist"
-msgstr ""
+msgstr "Ce groupe n'existe pas"
 
 #: modules/update/update/ajaxUpdates.php:96
 msgid "Type"
@@ -180,9 +178,8 @@ msgid "UUID"
 msgstr "UUID"
 
 #: modules/update/includes/panels/clients_updates.inc.php:64
-#, fuzzy
 msgid "Up-to-date"
-msgstr "Mises à jour"
+msgstr "A jour"
 
 #: modules/update/includes/panels/product_updates.inc.php:30
 #: modules/update/update/viewProductUpdates.php:38
@@ -211,9 +208,8 @@ msgid "Updates"
 msgstr "Mises à jour"
 
 #: modules/update/includes/panels/clients_updates.inc.php:66
-#, fuzzy
 msgid "Updates availables"
-msgstr "mise(s) à jour disponible(s)"
+msgstr "mises à jour disponibles"
 
 #: modules/update/update/settings.php:77
 msgid "Updates deployment"
@@ -224,9 +220,8 @@ msgid "Updates list"
 msgstr "Liste de mises à jour"
 
 #: modules/update/includes/panels/clients_updates.inc.php:65
-#, fuzzy
 msgid "Updates planned"
-msgstr "Gestionnaire de mises à jour"
+msgstr "Mises à jour planifiées"
 
 #: modules/update/includes/panels/clients_updates.inc.php:45
 #: modules/update/includes/panels/product_updates.inc.php:47

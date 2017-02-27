@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-24 11:16+0100\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
+"PO-Revision-Date: 2017-02-28 00:54+0100\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
 "pulse2/team/fr_FR/)\n"
 "Language: fr_FR\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -84,7 +84,7 @@ msgstr "Le script <strong>%s</strong> n'a pas été supprimé"
 #: modules/imaging/manage/ajaxFormWin10.php:487
 #: modules/imaging/manage/ajaxFormWin81.php:585
 msgid "Accept EULA"
-msgstr ""
+msgstr "Accepter l'EULA"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:54
 #, php-format
@@ -145,11 +145,11 @@ msgstr "Ajouter l'image <b>%s</b> à <b>%s</b>"
 #: modules/imaging/manage/ajaxFormWin10.php:584
 #: modules/imaging/manage/ajaxFormWin81.php:927
 msgid "Administrator Account"
-msgstr ""
+msgstr "Compte Administrateur"
 
 #: modules/imaging/manage/sysprepList.php:65
 msgid "All Windows Answer Files"
-msgstr ""
+msgstr "Tout les fichiers de réponse de windows"
 
 #: modules/imaging/manage/service_remove.php:64
 #, php-format
@@ -182,9 +182,8 @@ msgid "Are you sure you want to remove <b>%s</b> master ?"
 msgstr "Etes-vous sûr de vouloir supprimer le master <b>%s</b> ?"
 
 #: modules/imaging/manage/sysprepList.php:79
-#, fuzzy
 msgid "Are you sure you want to unset this sysrep answer file?"
-msgstr "Êtes-vous sûr de vouloir supprimer le master <b>%s</b> ?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce fichier de réponse sysprep ?"
 
 #: modules/imaging/includes/includes.php:224
 #: modules/imaging/includes/includes.php:230
@@ -197,7 +196,7 @@ msgstr "Associer une entité à un serveur d'imaging"
 
 #: modules/imaging/manage/ajaxFormWin81.php:736
 msgid "Auto Logon"
-msgstr ""
+msgstr "Connexion automatique"
 
 #: modules/imaging/infoPackage.inc.php:179
 msgid "Available Imaging Server"
@@ -385,7 +384,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
-msgstr ""
+msgstr "Choisir le paquetage source"
 
 #: modules/imaging/imaging/configure.php:428
 #: modules/imaging/imaging/configure.php:567
@@ -404,7 +403,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:580
 msgid "Clear multicast deploy"
-msgstr ""
+msgstr "Nettoyer le déploiement multicast"
 
 #: modules/imaging/imaging/header.php:43
 #: modules/imaging/includes/ajaxcommon.inc.php:146
@@ -422,16 +421,15 @@ msgstr "Éditer le master : "
 
 #: modules/imaging/manage/ajaxConfiguration.php:82
 msgid "Clonezilla parameters for restoring images"
-msgstr ""
+msgstr "Paramètres de Clonezilla pour restaurer les images"
 
 #: modules/imaging/manage/ajaxConfiguration.php:79
 msgid "Clonezilla parameters for saving images"
-msgstr ""
+msgstr "Paramètres de Clonezilla pour sauvegarder les images"
 
 #: modules/imaging/manage/synchromaster.php:119
-#, fuzzy
 msgid "Complete"
-msgstr "Ordinateur"
+msgstr "Terminé"
 
 #: modules/imaging/imaging/showtarget.php:157
 #: modules/imaging/imaging/configure.php:39
@@ -444,7 +442,7 @@ msgstr "Ordinateur"
 #: modules/imaging/manage/ajaxFormWin10.php:519
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
-msgstr ""
+msgstr "Nom de machine"
 
 #: modules/imaging/includes/logs.inc.php:84
 msgid "Computer UUID Request"
@@ -492,7 +490,7 @@ msgstr "Éditeur de sous-requête du profile"
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "La liste des machines a été tronquée à %d ordinateurs"
 
 #: modules/imaging/manage/ajaxFormWin7.php:357
 #: modules/imaging/manage/ajaxFormWin8.php:665
@@ -527,26 +525,23 @@ msgstr "Valider et convertir en master"
 #: modules/imaging/manage/ajaxFormWin8.php:647
 #: modules/imaging/manage/ajaxFormWin81.php:778
 msgid "Copy Profile"
-msgstr ""
+msgstr "Copier le profile"
 
 #: modules/imaging/manage/synchromaster.php:66
-#, fuzzy
 msgid "Copy of master"
-msgstr "Éditer le master"
+msgstr "Copie du master"
 
 #: modules/imaging/manage/synchromaster.php:139
-#, fuzzy
 msgid "Copy of master In progress"
-msgstr "Restauration en cours"
+msgstr "Copie du master en cours"
 
 #: modules/imaging/manage/synchromaster.php:60
-#, fuzzy
 msgid "Copy of master Not Started"
-msgstr "La suppression du master a échoué"
+msgstr "La copie du master n'a pas démarré"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
-msgstr ""
+msgstr "Copie du master terminée"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:51
 msgid "Create Boot Service"
@@ -561,7 +556,7 @@ msgstr "Créer une image ISO depuis le master"
 #: modules/imaging/manage/ajaxFormWin10.php:788
 #: modules/imaging/manage/ajaxFormWin81.php:938
 msgid "Create Xml Windows Answer File Generator"
-msgstr ""
+msgstr "Créer un fichier de Xml réponse Windows"
 
 #: modules/imaging/infoPackage.inc.php:345
 msgid "Create a static group containing computers with custom imaging menu"
@@ -594,9 +589,8 @@ msgstr "Créer une image iso"
 
 #: modules/imaging/infoPackage.inc.php:86
 #: modules/imaging/infoPackage.inc.php:91
-#, fuzzy
 msgid "Create static group from menu set"
-msgstr "Créer une iso depuis le master"
+msgstr "Créer un groupe statique du menu"
 
 #: modules/imaging/imaging/ajaxImages.php:172
 #: modules/imaging/manage/ajaxMasterLevel2.php:98
@@ -622,7 +616,7 @@ msgstr "Menu de démarrage actuel"
 #: modules/imaging/manage/ajaxFormWin10.php:609
 #: modules/imaging/manage/ajaxFormWin81.php:690
 msgid "Customer Experience Improvement Program (CEIP)"
-msgstr ""
+msgstr "Programme d’amélioration de Windows (CEIP)"
 
 #: modules/imaging/manage/ajaxBootmenu.php:99
 msgid "Default"
@@ -695,9 +689,8 @@ msgid "Delete service"
 msgstr "Supprimer le service"
 
 #: modules/imaging/manage/sysprepList.php:79
-#, fuzzy
 msgid "Delete sysprep file"
-msgstr "Supprimer le service"
+msgstr "Supprimer le fichier sysprep"
 
 #: modules/imaging/imaging/ajaxImages.php:83
 msgid "Delete the image"
@@ -739,7 +732,7 @@ msgstr "Afficher le contenu d'un groupe de machines"
 
 #: modules/imaging/manage/sysprepList.php:77
 msgid "Display sysprep file"
-msgstr ""
+msgstr "Afficher le fichier sysprep"
 
 #: modules/imaging/imaging/bootmenu.php:167
 #: modules/imaging/imaging/bootmenu.php:352
@@ -782,16 +775,15 @@ msgstr "Est-ce que vous voulez sauvegarder cet ordinateur ?"
 
 #: modules/imaging/manage/ajaxFormWin7.php:329
 msgid "Domain"
-msgstr ""
+msgstr "Domaine"
 
 #: modules/imaging/manage/ajaxFormWin7.php:337
-#, fuzzy
 msgid "Domain Password"
-msgstr "Mot de passe PXE"
+msgstr "Mot de passe du domaine"
 
 #: modules/imaging/manage/ajaxFormWin7.php:333
 msgid "Domain User"
-msgstr ""
+msgstr "Utilisateur du domaine"
 
 #: modules/imaging/infoPackage.inc.php:148
 #: modules/imaging/infoPackage.inc.php:151
@@ -852,9 +844,8 @@ msgid "Edit service : "
 msgstr "Éditer le service : "
 
 #: modules/imaging/manage/sysprepList.php:78
-#, fuzzy
 msgid "Edit sysprep file"
-msgstr "Éditer le service"
+msgstr "Éditer le fichier sysprep"
 
 #: modules/imaging/imaging/images.php:93
 msgid "Edition of image"
@@ -872,7 +863,7 @@ msgstr "Éditer le master"
 #: modules/imaging/manage/ajaxFormWin10.php:648
 #: modules/imaging/manage/ajaxFormWin81.php:752
 msgid "Enable Firewall"
-msgstr ""
+msgstr "Activer le Pare feu "
 
 #: modules/imaging/includes/logs.inc.php:62
 msgid "End of Backup Failure"
@@ -888,7 +879,7 @@ msgstr "Succès de fin de sauvegarde"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr ""
+msgstr "Entité"
 
 #: modules/imaging/manage/ajaxLogs.php:57
 #: modules/imaging/includes/logs.inc.php:31
@@ -903,7 +894,7 @@ msgstr "Une erreur est survenue lors de la création du service de démarrage"
 #: modules/imaging/manage/ajaxFormWin8.php:639
 #: modules/imaging/manage/ajaxFormWin81.php:770
 msgid "Extend OS Partition"
-msgstr ""
+msgstr "Étendre la partition de l'OS"
 
 #: modules/imaging/imaging/configure.php:289
 #, php-format
@@ -967,15 +958,15 @@ msgstr "Impossible de désinscrire l'ordinateur %s"
 
 #: modules/imaging/manage/sysprepList.php:70
 msgid "File name"
-msgstr ""
+msgstr "Nom de fichier"
 
 #: modules/imaging/manage/ajaxFormWin8.php:582
 msgid "For Windows 8"
-msgstr ""
+msgstr "Pour Windows 8"
 
 #: modules/imaging/manage/ajaxFormWin8.php:584
 msgid "For Windows 8.1"
-msgstr ""
+msgstr "Pour Windows 8.1"
 
 #: modules/imaging/imaging/header.php:46
 #: modules/imaging/includes/ajaxcommon.inc.php:152
@@ -1005,7 +996,7 @@ msgstr "Accès à la ligne de commande GRUB"
 #: modules/imaging/manage/ajaxFormWin10.php:442
 #: modules/imaging/manage/ajaxFormWin81.php:541
 msgid "General Settings"
-msgstr ""
+msgstr "Paramètres généraux"
 
 #: modules/imaging/imaging/images_iso.php:78
 #, php-format
@@ -1029,7 +1020,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:623
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
-msgstr ""
+msgstr "Groupe"
 
 #: modules/imaging/imaging/configure.php:496
 #, php-format
@@ -1061,7 +1052,7 @@ msgstr "Inventaire matériel mis à jour"
 #: modules/imaging/manage/ajaxFormWin10.php:736
 #: modules/imaging/manage/ajaxFormWin81.php:870
 msgid "Hide EULA page"
-msgstr ""
+msgstr "Cacher la page de l'EULA"
 
 #: modules/imaging/manage/ajaxConfiguration.php:105
 msgid "Hide menu"
@@ -1186,7 +1177,6 @@ msgid "Imaging Log"
 msgstr "Journaux de l'imaging"
 
 #: modules/imaging/manage/master_clone.php:104
-#, fuzzy
 msgid "Imaging Server"
 msgstr "Serveur d'imaging"
 
@@ -1277,22 +1267,21 @@ msgid "In default bootmenu"
 msgstr "Dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/synchromaster.php:122
-#, fuzzy
 msgid "In progress"
-msgstr "Sauvegarde en cours"
+msgstr "En cours"
 
 #: modules/imaging/manage/ajaxFormWin8.php:519
 #: modules/imaging/manage/ajaxFormWin10.php:546
 #: modules/imaging/manage/ajaxFormWin81.php:643
 msgid "Install to disk"
-msgstr ""
+msgstr "Installer sur le disque"
 
 #: modules/imaging/manage/ajaxFormWin7.php:220
 #: modules/imaging/manage/ajaxFormWin8.php:407
 #: modules/imaging/manage/ajaxFormWin10.php:422
 #: modules/imaging/manage/ajaxFormWin81.php:524
 msgid "Installation Notes"
-msgstr ""
+msgstr "Notes d'installation"
 
 #: modules/imaging/manage/ajaxLogs.php:59
 #: modules/imaging/includes/logs.inc.php:26
@@ -1308,7 +1297,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:341
 msgid "Join Domain"
-msgstr ""
+msgstr "Joindre le domaine"
 
 #: modules/imaging/imaging/configure.php:127
 msgid "Kernel parameters"
@@ -1319,7 +1308,7 @@ msgstr "Paramètres du noyau"
 #: modules/imaging/manage/ajaxFormWin10.php:668
 #: modules/imaging/manage/ajaxFormWin81.php:804
 msgid "Keyboard or input method"
-msgstr ""
+msgstr "Clavier ou méthode de saisie"
 
 #: modules/imaging/imaging/bootmenu.php:347
 #: modules/imaging/imaging/images.php:104
@@ -1398,19 +1387,19 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:345
 msgid "MachineObjectOU"
-msgstr ""
+msgstr "MachineObjectOU"
 
 #: modules/imaging/manage/ajaxFormWin8.php:535
 #: modules/imaging/manage/ajaxFormWin10.php:562
 #: modules/imaging/manage/ajaxFormWin81.php:659
 msgid "Main Partition Format"
-msgstr ""
+msgstr "Format de la partition principale"
 
 #: modules/imaging/manage/ajaxFormWin8.php:548
 #: modules/imaging/manage/ajaxFormWin10.php:575
 #: modules/imaging/manage/ajaxFormWin81.php:672
 msgid "Main Partition Letter"
-msgstr ""
+msgstr "Lettre de la partition principale"
 
 #: modules/imaging/manage/localSidebar.php:34
 #: modules/imaging/infoPackage.inc.php:125
@@ -1427,9 +1416,8 @@ msgid "Manage services"
 msgstr "Gérer les services"
 
 #: modules/imaging/manage/master_clone.php:94
-#, fuzzy
 msgid "Master"
-msgstr "Masters"
+msgstr "Master"
 
 #: modules/imaging/manage/master_edit.php:94
 #, php-format
@@ -1444,7 +1432,7 @@ msgstr "Masters"
 #: modules/imaging/manage/synchromaster.php:47
 #, php-format
 msgid "Master copy: %s ( %s )"
-msgstr ""
+msgstr "Copie du master: %s ( %s )"
 
 #: modules/imaging/imaging/tabs.php:290
 msgid "Masters"
@@ -1501,35 +1489,35 @@ msgstr "Descendre"
 #: modules/imaging/manage/ajaxStatus.php:538
 #: modules/imaging/manage/ajaxStatus.php:558
 msgid "Multicast Current Location"
-msgstr ""
+msgstr "Emplacement du multicast actuel"
 
 #: modules/imaging/imaging/ajaxImages.php:200
 msgid "Multicast init"
 msgstr ""
 
 #: modules/imaging/imaging/multicast.php:189
-#, fuzzy
 msgid "Multicast menu has been successfully created."
-msgstr "Le menu par défaut a été restauré avec succès."
+msgstr "Le menu du Multicast a été créé avec succès."
 
 #: modules/imaging/imaging/multicast.php:150
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
-msgstr ""
+msgstr "Le muticast n'a pas été créé : --max-time-to-wait < 60"
 
 #: modules/imaging/imaging/multicast.php:143
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
-msgstr ""
+msgstr "Le muticast n'a pas été créé : --max-time-to-wait missing"
 
 #: modules/imaging/imaging/multicast.php:195
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
 msgstr ""
+"Le muticast n'a pas été créé  : vérifiez que le serveur d'imaging est démarré"
 
 #: modules/imaging/imaging/multicast.php:54
 #: modules/imaging/imaging/multicast.php:64
 msgid "Multicast menu has not been created : number of computers missing"
-msgstr ""
+msgstr "Le muticast n'a pas été créé  : nombre d'ordinateurs manquant"
 
 #: modules/imaging/imaging/multicast.php:70
 #: modules/imaging/imaging/multicast.php:76
@@ -1539,17 +1527,22 @@ msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
 "computers and you have entered %d"
 msgstr ""
+"Le muticast n'a pas été créé  : le groupe imaging contient %d ordinateurs et "
+"vous en avez saisi %d"
 
 #: modules/imaging/imaging/multicast.php:165
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
+"Le muticast n'a pas été créé  : le master sélectionné est manquant sur le "
+"disque"
 
 #: modules/imaging/imaging/multicast.php:47
 #: modules/imaging/imaging/multicast.php:159
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
+"Le muticast n'a pas été créé  : il n'y a pas d'ordinateurs dans le groupe"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
@@ -1594,7 +1587,7 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:73
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/imaging/includes/post_install_script.php:66
 msgid "Order"
@@ -1605,7 +1598,7 @@ msgstr "Ordre"
 #: modules/imaging/manage/ajaxFormWin10.php:479
 #: modules/imaging/manage/ajaxFormWin81.php:577
 msgid "Organization Name"
-msgstr ""
+msgstr "Nom de l'organisation"
 
 #: modules/imaging/manage/ajaxFormWin7.php:397
 #: modules/imaging/manage/ajaxFormWin8.php:707
@@ -1622,13 +1615,13 @@ msgstr "Mot de passe PXE"
 #: modules/imaging/manage/ajaxFormWin10.php:554
 #: modules/imaging/manage/ajaxFormWin81.php:651
 msgid "Partition Order"
-msgstr ""
+msgstr "Ordre des partitions"
 
 #: modules/imaging/manage/ajaxFormWin8.php:502
 #: modules/imaging/manage/ajaxFormWin10.php:529
 #: modules/imaging/manage/ajaxFormWin81.php:626
 msgid "Partition Settings"
-msgstr ""
+msgstr "Configuration des partitions"
 
 #: modules/imaging/imaging/configure.php:520
 #, php-format
@@ -1640,14 +1633,14 @@ msgstr "Partition numéro: %d"
 #: modules/imaging/manage/ajaxFormWin10.php:589
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "Mot de passe"
 
 #: modules/imaging/manage/ajaxFormWin7.php:478
 #: modules/imaging/manage/ajaxFormWin8.php:606
 #: modules/imaging/manage/ajaxFormWin10.php:633
 #: modules/imaging/manage/ajaxFormWin81.php:729
 msgid "Password: (Optional)"
-msgstr ""
+msgstr "Mot de passe: (Optionnel)"
 
 #: modules/imaging/imaging/tabs.php:156
 #, php-format
@@ -1721,11 +1714,11 @@ msgstr "Choix pre-séléctionné pour le WOL"
 #: modules/imaging/manage/ajaxFormWin10.php:474
 #: modules/imaging/manage/ajaxFormWin81.php:572
 msgid "Product Key"
-msgstr ""
+msgstr "Clef du produit"
 
 #: modules/imaging/manage/ajaxFormWin8.php:458
 msgid "Product Key:"
-msgstr ""
+msgstr "Clef du produit:"
 
 #: modules/imaging/imaging/configure.php:39
 msgid "Profile"
@@ -1754,7 +1747,7 @@ msgstr "Onglet de création de profile à partir de la liste des machines"
 #: modules/imaging/manage/ajaxFormWin10.php:719
 #: modules/imaging/manage/ajaxFormWin81.php:854
 msgid "Protect Your Computer"
-msgstr ""
+msgstr "Protéger Votre Ordinateur"
 
 #: modules/imaging/manage/ajaxStatus.php:617
 msgid "Recent activity"
@@ -1769,7 +1762,7 @@ msgstr "Être redirigé vers la page des services de démarrage"
 #: modules/imaging/manage/ajaxFormWin10.php:659
 #: modules/imaging/manage/ajaxFormWin81.php:795
 msgid "Regional Settings"
-msgstr ""
+msgstr "Paramètres régionaux"
 
 #: modules/imaging/infoPackage.inc.php:340
 msgid "Register a computer in the imaging module"
@@ -1971,7 +1964,7 @@ msgstr "Le service <strong>%s</strong> a été supprimé avec succès"
 #: modules/imaging/manage/ajaxFormWin10.php:514
 #: modules/imaging/manage/ajaxFormWin81.php:612
 msgid "Setup Language"
-msgstr ""
+msgstr "Configurer la langue"
 
 #: modules/imaging/infoPackage.inc.php:301
 msgid "Share a group of computers"
@@ -2042,7 +2035,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:781
 #: modules/imaging/manage/ajaxFormWin81.php:915
 msgid "Small"
-msgstr ""
+msgstr "Petit"
 
 #: modules/imaging/manage/ajaxStatus.php:118
 msgid "Space available on server"
@@ -2061,7 +2054,7 @@ msgstr "Démarrer la génération de l'image ISO"
 #: modules/imaging/imaging/multicast.php:262
 #: modules/imaging/manage/ajaxStatus.php:568
 msgid "Start multicast deploy"
-msgstr ""
+msgstr "Démarrer le déploiement multicast"
 
 #: modules/imaging/imaging/ajaxLogs.php:96
 msgid "State"
@@ -2086,7 +2079,7 @@ msgstr "Statut inconnu"
 
 #: modules/imaging/manage/ajaxStatus.php:551
 msgid "Stop multicast deploy"
-msgstr ""
+msgstr "Arrêter le déploiement multicast"
 
 #: modules/imaging/includes/includes.php:209
 msgid "Swap"
@@ -2097,13 +2090,12 @@ msgid "Synchronization state"
 msgstr "État de la synchronisation"
 
 #: modules/imaging/manage/systemImageManager.php:38
-#, fuzzy
 msgid "Sysprep generator"
-msgstr "Forcer la génération"
+msgstr "Générateur de Sysprep"
 
 #: modules/imaging/manage/systemImageManager.php:39
 msgid "Sysprep list"
-msgstr ""
+msgstr "List des Sysprep"
 
 #: modules/imaging/manage/ajaxFormWin8.php:573
 #: modules/imaging/manage/ajaxFormWin81.php:698
@@ -2216,9 +2208,8 @@ msgid "The registering in the imaging server has failed."
 msgstr "L'enregistrement dans le serveur d'imaging a échoué."
 
 #: modules/imaging/manage/sysprepList.php:37
-#, fuzzy
 msgid "The sysprep answer file has been removed from the imaging system."
-msgstr "Ce profil ne peut pas être enregistré dans le module d'imaging."
+msgstr "le fichier de réponse sysprep a été supprimé du système d'imaging"
 
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
@@ -2355,7 +2346,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:640
 #: modules/imaging/manage/ajaxFormWin81.php:744
 msgid "UAC"
-msgstr ""
+msgstr "UAC"
 
 #: modules/imaging/manage/ajaxFormWin7.php:388
 #: modules/imaging/manage/ajaxFormWin8.php:698
@@ -2412,7 +2403,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:615
 #: modules/imaging/manage/ajaxFormWin81.php:711
 msgid "User Name"
-msgstr ""
+msgstr "Nom d'utilisateur"
 
 #: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/postinstall_edit.php:126
@@ -2430,7 +2421,7 @@ msgstr "Valider"
 
 #: modules/imaging/manage/sysprepView.php:33
 msgid "View "
-msgstr ""
+msgstr "Affichage"
 
 #: modules/imaging/imaging/ajaxImages.php:91
 msgid "View image log"
@@ -2447,7 +2438,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:89
 msgid "Windows Answer File Generator"
-msgstr ""
+msgstr "Générateur de fichier réponse pour Windows"
 
 #: modules/imaging/manage/localSidebar.php:46
 msgid "Windows System Image Manager"
@@ -2457,14 +2448,14 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:538
 #: modules/imaging/manage/ajaxFormWin81.php:635
 msgid "Wipe Disk"
-msgstr ""
+msgstr "Effacer le disque"
 
 #: modules/imaging/manage/ajaxFormWin7.php:491
 #: modules/imaging/manage/ajaxFormWin8.php:819
 #: modules/imaging/manage/ajaxFormWin10.php:796
 #: modules/imaging/manage/ajaxFormWin81.php:946
 msgid "Xml Windows Answer File Generator"
-msgstr ""
+msgstr "Générateur de fichier de réponse Windows Xml"
 
 #: modules/imaging/imaging/configure.php:306
 msgid ""
@@ -2521,9 +2512,8 @@ msgid "boot service from profile"
 msgstr "service de démarrage venant du profil"
 
 #: modules/imaging/manage/ajaxStatus.php:234
-#, fuzzy
 msgid "client have rescue image"
-msgstr "ordinateur(s) dispose(nt) d'image(s) de secours"
+msgstr "le client dispose d'une image de secours"
 
 #: modules/imaging/manage/ajaxStatus.php:238
 msgid "client(s) have rescue image(s)"
@@ -2538,9 +2528,8 @@ msgid "computers have a [IPV6] interfaces address exclusively in the group"
 msgstr ""
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:113
-#, fuzzy
 msgid "copy master In progress"
-msgstr "Restauration en cours"
+msgstr "Copie du master en cours"
 
 #: modules/imaging/includes/includes.php:197
 msgid "day"
@@ -2557,11 +2546,11 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:104
 msgid "error create file"
-msgstr ""
+msgstr "Erreur lors de la création du fichier"
 
 #: modules/imaging/manage/unattended.php:76
 msgid "form not found"
-msgstr ""
+msgstr "Formulaire introuvable"
 
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
@@ -2569,7 +2558,7 @@ msgstr "heure"
 
 #: modules/imaging/manage/master_clone.php:74
 msgid "il n'y a pas de server d'imaging pour cloner le master "
-msgstr ""
+msgstr "il n'y a pas de server d'imaging pour cloner le master"
 
 #: modules/imaging/infoPackage.inc.php:445
 msgid "init multicast"

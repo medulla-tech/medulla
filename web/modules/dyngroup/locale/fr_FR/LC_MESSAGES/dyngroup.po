@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-24 11:16+0100\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
+"PO-Revision-Date: 2017-02-27 10:40+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
 "pulse2/team/fr_FR/)\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: modules/dyngroup/dyngroup/details.php:30
 #, php-format
@@ -737,11 +737,15 @@ msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
 msgstr ""
+"Le menu de démarrage ne peut pas être généré car un déploiement en multicast "
+"est en cours."
 
 #: modules/dyngroup/dyngroup/delete_group.php:57
 msgid ""
 "The group cannot be deleted as a multicast deployment is currently running."
 msgstr ""
+"Ce groupe ne peut pas être supprimé car un déploiement en multicast est en "
+"cours."
 
 #: modules/dyngroup/dyngroup/creator.php:299
 msgid "The request is : "
@@ -782,7 +786,7 @@ msgstr "Mise à jour du cache des noms d'ordinateurs dans dyngroup"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:123
 msgid "Update on this group"
-msgstr ""
+msgstr "Mettre à jour dans ce groupe"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:54
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:82
