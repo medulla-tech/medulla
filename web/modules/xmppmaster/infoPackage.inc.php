@@ -33,27 +33,30 @@ $mod->setDescription(_T("xmppmaster", "xmppmaster"));
 $mod->setAPIVersion("0:0:0");
 $mod->setPriority(800);
 
-
-
 $submod = new SubModule("xmppmaster");
 $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("Audit", "xmppmaster"));
+
+
 $submod->setDefaultPage("xmppmaster/xmppmaster/index");
+
 $page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
 $submod->addPage($page);
 
 
 
+//$submod->setVisibility(False);
+
+//  $submod->setDefaultPage("xmppmaster/xmppmaster/consult");
+// 
+//  $page = new Page("consult", _T('My commands', 'xmppmaster'));
+//  $submodmsc->addPage($page);
+
+
 $page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
 $submod->addPage($page);
 
-
-/*
-
-$submod = new SubModule("xmppmaster");
-$submod->setDescription(_T("XMPP Master", "xmppmaster"));
-$submod->setVisibility(False);*/
-
+// affichage in computer
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -73,13 +76,16 @@ $page = new Page("viewlogs");
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
 //$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-
-
+ $page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"));
+    $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
+    $page->setOptions(array("visible"=>False, "AJAX" =>True));
+    $submod->addPage($page);
 
 $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
+
 
 ?>
 
