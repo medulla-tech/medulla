@@ -117,7 +117,6 @@ function list_computers($names,
 
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
-        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -139,24 +138,17 @@ function list_computers($names,
         }
 
         if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) { 
-
-//             if ($_GET['gid'] && $_GET['cmd_id'])
-//             {
-//                     $action_deploy_msc[] = $mscAction;
-//                     $action_logs_msc[]   = $logAction;
-//             }else{
-//                 $action_logs_msc[]   = $logNoAction;
-//             }
-//
+            if ($groupinfodeploy == -1  ){
                 $action_logs_msc[]   = $logNoAction;
-
-             if ( $presencemachinexmpp ){
-                    $action_deploy_msc[] = $mscAction;
-                    //$action_logs_msc[]   = $logAction;
-                }
-                else{
-                    $action_deploy_msc[] = $mscNoAction;
-                }
+            }else{
+                $action_logs_msc[]   = $logAction;
+            }
+            if ( $presencemachinexmpp ){
+                $action_deploy_msc[] = $mscAction;
+            }
+            else{
+                $action_deploy_msc[] = $mscNoAction;
+            }
         }
         else{
             if ( in_array("msc", $_SESSION["supportModList"])  ) {
@@ -278,7 +270,7 @@ function list_computers($names,
     /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $n->addActionItemArray($actionProfile);
     }*/
-
+   
     if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($action_deploy_msc);
@@ -286,7 +278,7 @@ function list_computers($names,
             $n->addActionItemArray($action_logs_msc);
         }
     }
-    
+
     if (in_array("imaging", $_SESSION["supportModList"])) {
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($actionImaging);
