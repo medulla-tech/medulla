@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- *
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -25,10 +25,12 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("includes/xmlrpc.inc.php");
 
 class EmptyActionItem1 extends ActionItem {
+
     function EmptyActionItem() {
         //$this->classCss='empty';
         $this->desc='';
     }
+
     function display($param = null, $extraParams = Array()) {
         echo "<li class=\"" . $this->classCss . "\">";
         echo "<a title=\"" . $this->desc . "\" href=\"#\" ";
@@ -45,6 +47,7 @@ class EmptyActionItem1 extends ActionItem {
         echo '$this->desc';
     }
 }
+
 function list_computers($names,
                         $filter, 
                         $count = 0, 
@@ -57,6 +60,7 @@ function list_computers($names,
                         $login = "") {
     /* $pull_list is an array with UUIDs of pull machines */
     $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
+
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
@@ -71,8 +75,10 @@ function list_computers($names,
     $extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
+
     // with check presence xmpp
     $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "vncclientg", "computer", "base", "computers");
+
     $actionInventory = array();
     $action_logs_msc = array();
     $action_deploy_msc = array();
@@ -81,8 +87,10 @@ function list_computers($names,
     $actionVncClient = array();
     $actionExtTicket = array();
     $actionProfile = array();
+
     $params = array();
     $cssClasses = array();
+
     $headers = getComputersListHeaders();
     $columns = array();
     foreach ($headers as $header) {
@@ -90,9 +98,13 @@ function list_computers($names,
     }
 
     function getUUID($machine) { return $machine['objectUUID']; }
+    
     $uuids = array_map("getUUID", $names);
+
     $countmachine=0;
     $presencemachinexmpp = False;
+
+
     foreach($names as $value) {
         $presencemachinexmpp = True;
         if (in_array("xmppmaster", $_SESSION["supportModList"])) {
@@ -102,8 +114,10 @@ function list_computers($names,
                 $countmachine++;
             }
         }
+
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
+        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -124,14 +138,24 @@ function list_computers($names,
             $actionInventory[] = $glpiAction;
         }
 
-        if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) {
+        if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) { 
+
+//             if ($_GET['gid'] && $_GET['cmd_id'])
+//             {
+//                     $action_deploy_msc[] = $mscAction;
+//                     $action_logs_msc[]   = $logAction;
+//             }else{
+//                 $action_logs_msc[]   = $logNoAction;
+//             }
+//
+                $action_logs_msc[]   = $logNoAction;
+
              if ( $presencemachinexmpp ){
                     $action_deploy_msc[] = $mscAction;
-                    $action_logs_msc[]   = $logAction;
+                    //$action_logs_msc[]   = $logAction;
                 }
                 else{
                     $action_deploy_msc[] = $mscNoAction;
-                    $action_logs_msc[]   = $logNoAction;
                 }
         }
         else{
@@ -140,6 +164,7 @@ function list_computers($names,
                 $action_logs_msc[]   = $logAction;
             }
          }
+
 
         if (in_array("imaging", $_SESSION["supportModList"])) {
             $actionImaging[] = $imgAction;
@@ -225,12 +250,17 @@ function list_computers($names,
         }
         $n->setNavBar(new AjaxNavBar(count($columns[$headers[0][0]]), $filter));
     }
+    
+    
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
-
-    $n->addActionItemArray($actionInventory);
+    
+    if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
+        $n->addActionItemArray($actionInventory);
+    }
+    
     if ($msc_can_download_file) {
         $n->addActionItemArray($actionDownload);
     };
@@ -250,11 +280,13 @@ function list_computers($names,
     }*/
 
     if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {
-        $n->addActionItemArray($action_logs_msc);
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($action_deploy_msc);
+        }else{
+            $n->addActionItemArray($action_logs_msc);
         }
     }
+    
     if (in_array("imaging", $_SESSION["supportModList"])) {
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($actionImaging);
