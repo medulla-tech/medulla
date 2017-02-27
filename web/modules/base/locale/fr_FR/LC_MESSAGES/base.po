@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Mandriva Directory Server\n"
 "Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
 "POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
+"PO-Revision-Date: 2017-02-27 10:39+0100\n"
 "Last-Translator: Tekmans <tekmans@no-log.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/mds/"
 "team/fr_FR/)\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: forgotpassword.php:24
 msgid "A password reset link has been sent."
@@ -1156,7 +1156,7 @@ msgstr "Téléchargement de fichiers"
 #: modules/base/includes/computers_list.inc.php:36
 #: modules/base/users/ajaxFilter.php:85
 msgid "extTicket issue"
-msgstr ""
+msgstr "Question extTicket"
 
 #: modules/base/includes/computers_list.inc.php:37
 msgid "Remote control"
@@ -1366,8 +1366,7 @@ msgstr "Tous les groupes"
 msgid "Secondary groups"
 msgstr "Groupes secondaires"
 
-#: modules/base/includes/publicFunc.php:456
-#: modules/base/views/index.tpl.php:87
+#: modules/base/includes/publicFunc.php:456 modules/base/views/index.tpl.php:87
 msgid "Home directory"
 msgstr "Répertoire de l'utilisateur"
 
