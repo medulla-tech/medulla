@@ -37,31 +37,16 @@ $submod = new SubModule("xmppmaster");
 $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("Audit", "xmppmaster"));
 
-
 $submod->setDefaultPage("xmppmaster/xmppmaster/index");
 
 $page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
 $submod->addPage($page);
 
-
-
-//$submod->setVisibility(False);
-
-//  $submod->setDefaultPage("xmppmaster/xmppmaster/consult");
-// 
-//  $page = new Page("consult", _T('My commands', 'xmppmaster'));
-//  $submodmsc->addPage($page);
-
-
 $page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
 $submod->addPage($page);
 
-// affichage in computer
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
-
-// $page = new Page("deployxmpp", _T('XMPP Deploy', 'xmppmaster'));
-// $submod->addPage($page);
 
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
