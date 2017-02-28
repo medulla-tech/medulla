@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 11:16+0100\n"
+"POT-Creation-Date: 2017-02-28 01:20+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -19,6 +19,26 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.6.10\n"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1526
+msgid "   - Hide the Microsoft Software License Terms page in Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1530
+msgid "   - Skip Welcome Center, also known as Per User OOBE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1528
+msgid "   - Skip Windows Welcome, also known as Machine OOBE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1534
+msgid "   - The network type"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
+msgid "   - What type of computer protection is in place"
+msgstr ""
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -81,6 +101,10 @@ msgstr "<strong>%s</strong> 指令码未删除"
 msgid "Accept EULA"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1356
+msgid "Account Operators"
+msgstr ""
+
 #: modules/imaging/manage/postinstall_create_boot_service.php:54
 #, php-format
 msgid "Add <b>%s</b> to available Boot Services ?"
@@ -139,6 +163,10 @@ msgstr "新增映像 <b>%s</b> 至 <b>%s</b>"
 #: modules/imaging/manage/ajaxFormWin10.php:584
 #: modules/imaging/manage/ajaxFormWin81.php:927
 msgid "Administrator Account"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1357
+msgid "Administrators"
 msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:65
@@ -227,6 +255,11 @@ msgstr "备份"
 #: modules/imaging/includes/logs.inc.php:74
 msgid "Backup Finished"
 msgstr "备份已完成"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1358
+#, fuzzy
+msgid "Backup Operators"
+msgstr "正在进行备份"
 
 #: modules/imaging/includes/logs.inc.php:73
 msgid "Backup Started"
@@ -343,6 +376,12 @@ msgstr "开机服务"
 msgid "Booted"
 msgstr "已开机"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1423
+msgid ""
+"CEIPEnabled indicates whether the Windows Customer Experience Improvement "
+"Program (CEIP) is enabled"
+msgstr ""
+
 #: modules/imaging/manage/ajaxStatus.php:626
 msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr "无法与关联至所选实体的映像伺服器连线。"
@@ -369,6 +408,17 @@ msgstr "取消"
 #: modules/imaging/manage/ajaxFormWin10.php:773
 #: modules/imaging/manage/ajaxFormWin81.php:907
 msgid "Category View"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1730
+msgid ""
+"Changes the default user profile with customizations made . You must set "
+"this value to true only if you have made customizations to the logged-on "
+"user profile that you need to apply to all new users"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1391
+msgid "Check for updates but choose to download and install"
 msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
@@ -412,6 +462,18 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxConfiguration.php:79
 msgid "Clonezilla parameters for saving images"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1519
+msgid "CommandLine reg"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
+msgid "CommandLine reg ControlPanel AllItemsIconView"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1626
+msgid "CommandLine reg Set the Control Panel View to Small Icons"
 msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:119
@@ -480,6 +542,15 @@ msgstr "电脑设定档子请求编辑器"
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
+msgid "Configure Administrators Account"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1450
+#, fuzzy
+msgid "Configure General Settings"
+msgstr "强制执行产生"
+
 #: modules/imaging/manage/ajaxFormWin7.php:357
 #: modules/imaging/manage/ajaxFormWin8.php:665
 #: modules/imaging/manage/ajaxFormWin10.php:660
@@ -487,10 +558,18 @@ msgstr ""
 msgid "Configure International Settings in Windows"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1510
+msgid "Configure Partition Settings"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:301
 #: modules/imaging/manage/ajaxFormWin8.php:631
 #: modules/imaging/manage/ajaxFormWin81.php:762
 msgid "Configure Specialize Settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1516
+msgid "Configure User Account"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin8.php:789
@@ -591,6 +670,10 @@ msgstr "已建立"
 msgid "Critical error"
 msgstr "严重错误"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1359
+msgid "Crypto Operators"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:372
 #: modules/imaging/manage/ajaxFormWin8.php:681
 #: modules/imaging/manage/ajaxFormWin10.php:676
@@ -606,6 +689,14 @@ msgstr "目前的开机功能表"
 #: modules/imaging/manage/ajaxFormWin10.php:609
 #: modules/imaging/manage/ajaxFormWin81.php:690
 msgid "Customer Experience Improvement Program (CEIP)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1722
+msgid "Customize the desired user profile settings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1360
+msgid "DCOM Users"
 msgstr ""
 
 #: modules/imaging/manage/ajaxBootmenu.php:99
@@ -713,6 +804,19 @@ msgstr "说明"
 msgid "Disable auto daylight timeset"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1419
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
+msgid "Disabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
+msgid "Disables Windows Firewall for Windows PE"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1649
+msgid "Disk_ID is an integer"
+msgstr ""
+
 #: modules/imaging/imaging/configure.php:159
 msgid "Diskless Linux command line access"
 msgstr "无磁碟 Linux 命令列存取"
@@ -751,6 +855,10 @@ msgstr "在 WOL 上显示"
 msgid "Do not check hard disk size"
 msgstr "不要检查硬碟大小"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1398
+msgid "Do not install selective updates"
+msgstr ""
+
 #: modules/imaging/manage/imaging_server_link.php:93
 #, php-format
 msgid ""
@@ -761,6 +869,14 @@ msgstr "是否确定要将映像伺服器 '<b>%s</b>' 关联至实体 '<b>%s</b>
 #: modules/imaging/imaging/configure.php:311
 msgid "Do you want a backup to be done ?"
 msgstr "您要进行备份吗？"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1734
+msgid "Does not change the default user profile"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1597
+msgid "Does not hide the Join Wireless Network screen during Windows Welcome"
+msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:329
 msgid "Domain"
@@ -775,10 +891,25 @@ msgstr "PXE 密码"
 msgid "Domain User"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1761
+msgid ""
+"Domain specifies the name of the domain used for an account authentication. "
+"Domain is used to authenticate an account before the computer can be joined "
+"to a domain during Windows Setup."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1767
+msgid "Domain to join"
+msgstr ""
+
 #: modules/imaging/infoPackage.inc.php:148
 #: modules/imaging/infoPackage.inc.php:151
 msgid "Down service"
 msgstr "向下服务"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1392
+msgid "Download updates but choose when to install"
+msgstr ""
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:95
 msgid "Duplicate"
@@ -850,10 +981,18 @@ msgstr "项目版本"
 msgid "Edition of master"
 msgstr "母片版本"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1418
+msgid "Enable"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin8.php:621
 #: modules/imaging/manage/ajaxFormWin10.php:648
 #: modules/imaging/manage/ajaxFormWin81.php:752
 msgid "Enable Firewall"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1710
+msgid "Enables Windows Firewall for Windows PE"
 msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:62
@@ -867,6 +1006,12 @@ msgstr "备份结束请求"
 #: modules/imaging/includes/logs.inc.php:63
 msgid "End of Backup Success"
 msgstr "备份结束成功"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
+msgid ""
+"Entering an invalid product key in the answer file will cause Windows Setup "
+"to fail"
+msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
@@ -885,6 +1030,10 @@ msgstr "建立开机服务时发生错误"
 #: modules/imaging/manage/ajaxFormWin8.php:639
 #: modules/imaging/manage/ajaxFormWin81.php:770
 msgid "Extend OS Partition"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1658
+msgid "FAT32"
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:289
@@ -941,6 +1090,10 @@ msgstr "无法召唤映像 UUID"
 msgid "Failed to unregister the computer %s"
 msgstr "无法取消登录电脑 %s"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
+msgid "File"
+msgstr ""
+
 #: modules/imaging/manage/sysprepList.php:70
 msgid "File name"
 msgstr ""
@@ -953,6 +1106,11 @@ msgstr ""
 msgid "For Windows 8.1"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1473
+msgid ""
+"For automatic activation to complete, a valid Windows product key is required"
+msgstr ""
+
 #: modules/imaging/imaging/header.php:46
 #: modules/imaging/includes/ajaxcommon.inc.php:152
 msgid "Force Generation"
@@ -961,6 +1119,14 @@ msgstr "强制执行产生"
 #: modules/imaging/imaging/configure.php:136
 msgid "Force raw backup mode"
 msgstr "强制执行原始备份模式"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1660
+msgid "Formats the partition for the File Allocation Table (FAT) file system"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1656
+msgid "Formats the partition for the NTFS file system"
+msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:176
 #: modules/imaging/imaging/ajaxServices.php:102
@@ -1003,6 +1169,10 @@ msgstr "正在产生开机功能表... 请稍候或重新载入页面 %shere%s�
 #: modules/imaging/manage/ajaxFormWin10.php:623
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1361
+msgid "Guests"
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:496
@@ -1051,6 +1221,14 @@ msgstr "隐藏功能表（显示内容的捷径：Shift - Alt - Shift）"
 msgid "Hide wireless setup in OOBE"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1593
+msgid "Hides the Join Wireless Network screen during Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1541
+msgid "Home"
+msgstr ""
+
 #: modules/imaging/includes/logs.inc.php:79
 msgid "Hostname Request"
 msgstr "主机名称请求"
@@ -1058,6 +1236,14 @@ msgstr "主机名称请求"
 #: modules/imaging/includes/logs.inc.php:81
 msgid "Hostname sent"
 msgstr "主机名称已传送"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1455
+msgid "IMPORTANT"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1362
+msgid "IUsers"
+msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:54
 msgid "Identification Failure"
@@ -1075,6 +1261,18 @@ msgstr "识别成功"
 msgid "Identifier"
 msgstr "识别码"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1425
+msgid ""
+"If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
+"data to Microsoft about Windows usage"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1739
+msgid ""
+"If the Windows Live shortcut has been removed from the Start menu, this "
+"setting cannot be used to put it back on the Start menu"
+msgstr ""
+
 #: modules/imaging/imaging/bootmenu.php:343
 #: modules/imaging/imaging/bootmenu.php:345
 msgid ""
@@ -1087,6 +1285,17 @@ msgid ""
 "If the processing exceeds 5 minutes, please reset the synchro state of this "
 "computer."
 msgstr "如果处理超过 5 分钟，请重设此电脑的同步处理状态。"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1647
+msgid ""
+"If you are installing to a computer with a single disk, you must specify 0"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1612
+msgid ""
+"If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and "
+"NetworkLocation in your answer file are ignored"
+msgstr ""
 
 #: modules/imaging/manage/service_show_used.php:139
 msgid ""
@@ -1222,6 +1431,22 @@ msgstr "映像伺服器"
 msgid "Imaging sysprepView"
 msgstr "映像建立服务"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1753
+msgid ""
+"In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as "
+"shown in the following image, which represents the index of the color scheme "
+"as viewed in the SystemSettings"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1756
+msgid ""
+"In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 "
+"which represents the index of the color scheme as viewed in the out-of-box "
+"experience (OOBE) phase. The colors are indexed in the same manner as "
+"Windows 8 colors, from left to right. Samples of the color choices are shown "
+"in the following image"
+msgstr ""
+
 #: modules/imaging/imaging/ajaxImages.php:174
 #: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
@@ -1244,10 +1469,18 @@ msgstr "在预设开机功能表中"
 msgid "In progress"
 msgstr "正在进行备份"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1397
+msgid "Install selective updates"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin8.php:519
 #: modules/imaging/manage/ajaxFormWin10.php:546
 #: modules/imaging/manage/ajaxFormWin81.php:643
 msgid "Install to disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1393
+msgid "Install updates automatically"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:220
@@ -1266,6 +1499,10 @@ msgstr "清查"
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
 msgstr "已在背景中启动母片 <strong>%s</strong> 的 Iso。"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1532
+msgid "It also specifies the following"
+msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:341
 msgid "Join Domain"
@@ -1334,6 +1571,12 @@ msgstr "列出全部电脑设定档"
 msgid "Load on server"
 msgstr "伺服器负载"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1720
+msgid ""
+"Log on as a user whose profile you can customize (for example, the built-in-"
+"administrator account)"
+msgstr ""
+
 #: modules/imaging/infoPackage.inc.php:314
 msgid "MSC bundle tab for a group"
 msgstr "一个群组的 MSC 套件组合标签"
@@ -1360,11 +1603,25 @@ msgstr ""
 msgid "MachineObjectOU"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1769
+msgid ""
+"MachineObjectOU is an optional setting. It specifies the Lightweight "
+"Directory Access Protocol (LDAP) X 500-distinguished name of the "
+"organizational unit (OU) in which the computer account is created. This "
+"account is in Active Directory on a domain controller in the domain to which "
+"the computer is being joined."
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin8.php:535
 #: modules/imaging/manage/ajaxFormWin10.php:562
 #: modules/imaging/manage/ajaxFormWin81.php:659
 msgid "Main Partition Format"
 msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1513
+#, fuzzy
+msgid "Main Partition Label"
+msgstr "磁碟分割编号：%d"
 
 #: modules/imaging/manage/ajaxFormWin8.php:548
 #: modules/imaging/manage/ajaxFormWin10.php:575
@@ -1448,6 +1705,10 @@ msgstr "讯息"
 msgid "Message displayed during backup/restoration"
 msgstr "在备份／还原期间显示的讯息"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1447
+msgid "Meta Information xml"
+msgstr ""
+
 #: modules/imaging/imaging/bootmenu.php:254
 #: modules/imaging/manage/ajaxBootmenu.php:29
 msgid "Move Up"
@@ -1511,11 +1772,19 @@ msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1654
+msgid "NTFS"
+msgstr ""
+
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 #: modules/imaging/includes/post_install_script.php:63
 msgid "Name"
 msgstr "名称"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1363
+msgid "Network Configuration Operators"
+msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:422
 #: modules/imaging/manage/ajaxFormWin8.php:716
@@ -1524,9 +1793,23 @@ msgstr "名称"
 msgid "Network Location"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
+msgid "Network discovery is disabled by default on this network type"
+msgstr ""
+
 #: modules/imaging/includes/includes.php:221
 msgid "Never"
 msgstr "永不"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1390
+msgid "Never check for updates"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1403
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1466
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1490
+msgid "No"
+msgstr ""
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:40
 msgid "No imaging server available for association."
@@ -1552,6 +1835,10 @@ msgstr "未选取"
 msgid "Number of machines to wait for"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1522
+msgid "OOBE specifies the out-of-box experience for the end user"
+msgstr ""
+
 #: modules/imaging/manage/sysprepList.php:73
 msgid "OS"
 msgstr ""
@@ -1567,6 +1854,14 @@ msgstr "顺序"
 msgid "Organization Name"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:130
+msgid "Organization Name missing"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
+msgid "Other"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:397
 #: modules/imaging/manage/ajaxFormWin8.php:707
 #: modules/imaging/manage/ajaxFormWin10.php:703
@@ -1577,6 +1872,12 @@ msgstr ""
 #: modules/imaging/manage/ajaxConfiguration.php:62
 msgid "PXE Password"
 msgstr "PXE 密码"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1427
+msgid ""
+"Participation in this program is voluntary, and the results are recorded to "
+"implement improvements for future releases"
+msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin8.php:527
 #: modules/imaging/manage/ajaxFormWin10.php:554
@@ -1602,11 +1903,26 @@ msgstr "磁碟分割编号：%d"
 msgid "Password"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1763
+msgid ""
+"Password specifies the password of the user account used for authentication "
+"of an account to the domain before the computer can be joined to a domain "
+"during Windows Setup."
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:478
 #: modules/imaging/manage/ajaxFormWin8.php:606
 #: modules/imaging/manage/ajaxFormWin10.php:633
 #: modules/imaging/manage/ajaxFormWin81.php:729
 msgid "Password: (Optional)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1364
+msgid "Perf Logging Users"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1365
+msgid "Perf Monitoring Users"
 msgstr ""
 
 #: modules/imaging/imaging/tabs.php:156
@@ -1652,6 +1968,10 @@ msgstr "安装后服务已完成"
 msgid "Postinstall Started"
 msgstr "安装后服务已启动"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1366
+msgid "Power Users"
+msgstr ""
+
 #: modules/imaging/includes/logs.inc.php:67
 msgid "Preselected Menu Entry Change Failure"
 msgstr "预先选择功能表项目变更失败"
@@ -1672,14 +1992,15 @@ msgstr "预先选择的选项"
 msgid "Preselected choice on WOL"
 msgstr "WOL 上预先选择的选项"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1367
+msgid "Print Operators"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:272
+#: modules/imaging/manage/ajaxFormWin8.php:458
 #: modules/imaging/manage/ajaxFormWin10.php:474
 #: modules/imaging/manage/ajaxFormWin81.php:572
 msgid "Product Key"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin8.php:458
-msgid "Product Key:"
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:39
@@ -1704,6 +2025,12 @@ msgstr "来自档案汇入的设定档建立标签"
 msgid "Profile creation's tab from machine list"
 msgstr "来自电脑清单的设定档建立标签"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1468
+msgid ""
+"Prompts the user to accept the license terms before proceeding with Windows "
+"Setup"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:406
 #: modules/imaging/manage/ajaxFormWin8.php:724
 #: modules/imaging/manage/ajaxFormWin10.php:719
@@ -1714,6 +2041,10 @@ msgstr ""
 #: modules/imaging/manage/ajaxStatus.php:617
 msgid "Recent activity"
 msgstr "最近活动"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1396
+msgid "Recommended settings"
+msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:166
 msgid "Redirect to Boot Services page"
@@ -1738,6 +2069,11 @@ msgstr "在映像模组中登录设定档"
 #, php-format
 msgid "Register computer '%s'"
 msgstr "登录电脑 '%s'"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1368
+#, fuzzy
+msgid "Remote Desktop Users"
+msgstr "移除母片"
 
 #: modules/imaging/manage/service_show_used.php:65
 #: modules/imaging/manage/service_show_used.php:77
@@ -1809,6 +2145,11 @@ msgstr "从电脑 %s 移除此母片"
 msgid "Remove this master from imaging server %s"
 msgstr "从映像伺服器 %s 移除此母片"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1369
+#, fuzzy
+msgid "Replicator"
+msgstr "复制"
+
 #: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
 msgid "Reset Synchro state"
 msgstr "重设同步处理状态"
@@ -1845,6 +2186,12 @@ msgstr "还原失败"
 #: modules/imaging/includes/logs.inc.php:35
 msgid "Restore in progress"
 msgstr "正在进行还原"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1726
+msgid ""
+"Run sysprep /generalize /unattend:unattend.xml to copy the customized user "
+"profile settings over the default user profile"
+msgstr ""
 
 #: modules/imaging/imaging/images.php:124
 #: modules/imaging/imaging/images.php:151
@@ -1918,11 +2265,23 @@ msgstr "服务 <strong>%s</strong> 已从预设开机功能表移除"
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr "已成功移除服务 <strong>%s</strong>"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1724
+msgid ""
+"Set CopyProfile to true in the Unattend.xml file that you will use with "
+"Sysprep in the next step"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:286
 #: modules/imaging/manage/ajaxFormWin8.php:488
 #: modules/imaging/manage/ajaxFormWin10.php:514
 #: modules/imaging/manage/ajaxFormWin81.php:612
 msgid "Setup Language"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1495
+msgid ""
+"SetupUILanguage defines the language to use in Windows Setup and Windows "
+"Deployment Services"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:301
@@ -1939,6 +2298,10 @@ msgstr ""
 #: modules/imaging/manage/service_show_used.php:108
 msgid "Show all targets that use that image in their boot menu"
 msgstr "显示在其开机功能表中使用该映像的所有目标"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1759
+msgid "Show file XML AWFG"
+msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:374
 msgid "Show sync status"
@@ -1960,6 +2323,12 @@ msgstr "显示已使用的服务"
 #: modules/imaging/manage/ajaxServiceLevel2.php:52
 msgid "Show where service is used"
 msgstr "显示服务的使用位置"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1737
+msgid ""
+"ShowWindowsLive specifies whether to display a link to Windows Live on the "
+"Start menu"
+msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:173
 #: modules/imaging/manage/ajaxMasterLevel2.php:99
@@ -2005,6 +2374,278 @@ msgstr "伺服器上的可用空间"
 msgid "Specialize Settings"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1682
+msgid "Specifies a LocalAccount"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1543
+msgid "Specifies a private home network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1547
+msgid "Specifies a private office network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
+msgid "Specifies neither a home or work network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1623
+msgid "Specifies that Welcome Center is shown"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1619
+msgid "Specifies that Welcome Center is skipped"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
+msgid "Specifies that Windows CEIP is enabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1431
+msgid "Specifies that Windows CEIP is not enabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1608
+msgid "Specifies that Windows Welcome is shown"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1604
+msgid "Specifies that Windows Welcome is skipped"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1481
+msgid "Specifies that Windows attempts to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1477
+msgid "Specifies that Windows does not attempt to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1743
+msgid "Specifies that a link to Windows Live is displayed on the Start menu"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1747
+msgid ""
+"Specifies that a link to Windows Live is not displayed on the Start menu"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1564
+msgid "Specifies that automatic protection is disabled"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1562
+msgid "Specifies that only updates are installed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1575
+msgid ""
+"Specifies that the Microsoft Software License Terms page of Windows Welcome "
+"is displayed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1571
+msgid ""
+"Specifies that the Microsoft Software License Terms page of Windows Welcome "
+"is not displayed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1488
+msgid ""
+"Specifies that the computer is not rearmed and the computer will not be "
+"restored to its original, out-of-box state. All activation-related licensing "
+"and registry data will remain and will not be reset. Similarly, any grace "
+"period timers is not reset."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1492
+msgid ""
+"Specifies that the computer is rearmed, restoring the computer to the "
+"original, out-of-box state. All activation-related licensing and registry "
+"data is removed or reset, and any grace period timers are also reset."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
+msgid "Specifies that the disk is erased"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1640
+msgid "Specifies that the disk is not erased"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1464
+msgid ""
+"Specifies that the license terms are automatically accepted without being "
+"displayed to the end user"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1582
+msgid ""
+"Specifies that the time on the computer is not reset to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1586
+msgid ""
+"Specifies that the time on the computer is reset to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1676
+msgid ""
+"Specifies the administrator password of the computer and whether it is "
+"hidden in the unattended installation answer file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
+msgid ""
+"Specifies the computer name used to access the computer from the network"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1441
+msgid ""
+"Specifies the default system language to display user interface (UI) items "
+"(such as menus, dialog boxes, and help files)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1643
+msgid "Specifies the disk ID of the disk to which the image is to be installed"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1663
+msgid ""
+"Specifies the drive letter to apply to a partition. Drive_letter is an "
+"uppercase letter, C through Z"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1507
+msgid ""
+"Specifies the input language and keyboard layout for a Windows installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1453
+msgid "Specifies the key used to activate Windows"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1539
+msgid ""
+"Specifies the location of the network if the computer is connected to a "
+"network when a user first logs on"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1679
+msgid ""
+"Specifies the name of an existing local security group to which a new "
+"LocalAccount will be added during installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1688
+msgid ""
+"Specifies the name of the end user. User_name is a string with a maximum "
+"length of 63 characters"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1501
+msgid "Specifies the name of the organization that owns the computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1666
+msgid ""
+"Specifies the order in which the ModifyPartition command is to be run at "
+"first logon"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1685
+msgid ""
+"Specifies the password for a LocalAccount and whether the password is hidden "
+"in the unattended installation answer file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1504
+msgid ""
+"Specifies the per-user settings used for formatting dates, times, currency, "
+"and numbers in a Windows installation"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1560
+msgid "Specifies the recommended level of protection for your computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1444
+msgid ""
+"Specifies the time zone of the computer. The time zones that are specified "
+"in Windows System Image Manager are not localized"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1691
+msgid ""
+"Specifies whether Windows User Account Controls (UAC) notifies the user when "
+"programs try to make changes to the computer. UAC was formerly known as "
+"Limited User Account (LUA)"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1471
+msgid "Specifies whether Windows attempts to automatically activate"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1578
+msgid ""
+"Specifies whether the time on the computer is set to daylight saving time"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1460
+msgid ""
+"Specifies whether to automatically accept the Microsoft Software License "
+"Terms"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1556
+msgid ""
+"Specifies whether to display the Help protect your computer automatically "
+"page of Windows Welcome to the user"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1632
+msgid ""
+"Specifies whether to erase all partitions on the hard disk before adding "
+"additional configurations to the disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1652
+msgid ""
+"Specifies whether to erase the partition, and which file system to apply to "
+"the partition"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1750
+msgid "Specifies whether to extend the partition to fill the entire hard disk"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1589
+msgid ""
+"Specifies whether to hide the Join Wireless Network screen that appears "
+"during Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1567
+msgid ""
+"Specifies whether to hide the Microsoft Software License Terms page of "
+"Windows Welcome"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1484
+msgid "Specifies whether to run the Windows Software Licensing Rearm program"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1615
+msgid ""
+"Specifies whether to skip Welcome Center. This can be used only for testing "
+"prior to shipment"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1600
+msgid "Specifies whether to skip Windows Welcome"
+msgstr ""
+
 #: modules/imaging/imaging/images_iso.php:99
 msgid "Start ISO generation"
 msgstr "开始 ISO 产生作业"
@@ -2047,6 +2688,19 @@ msgstr "切换"
 msgid "Synchronization state"
 msgstr "同步处理状态"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1670
+msgid ""
+"Synchronous commands are always run before asynchronous commands in the same "
+"configuration pass"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1668
+msgid ""
+"Synchronous commands start in the order specified in the unattended "
+"installation answer file, and each command must finish before the next "
+"command starts"
+msgstr ""
+
 #: modules/imaging/manage/systemImageManager.php:38
 #, fuzzy
 msgid "Sysprep generator"
@@ -2065,11 +2719,22 @@ msgstr ""
 msgid "System Image Manager"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1370
+#, fuzzy
+msgid "System Operators"
+msgstr "强制执行产生"
+
 #: modules/imaging/manage/ajaxFormWin7.php:414
 #: modules/imaging/manage/ajaxFormWin8.php:733
 #: modules/imaging/manage/ajaxFormWin10.php:728
 #: modules/imaging/manage/ajaxFormWin81.php:862
 msgid "System Updates"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1438
+msgid ""
+"SystemDefaultBackgroundColor specifies the system default Windows background "
+"color scheme appearing on first boot, and on LogonUI if no user is selected"
 msgstr ""
 
 #: modules/imaging/imaging/ajaxLogs.php:94
@@ -2159,9 +2824,19 @@ msgstr "映像伺服器的登录已失败。"
 msgid "The sysprep answer file has been removed from the imaging system."
 msgstr "无法将设定档登录至映像模组。"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1558
+msgid ""
+"There is no default value. If a value is not set, the page opens during "
+"Windows Welcome"
+msgstr ""
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "发生错误（这是预设讯息）。"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1524
+msgid "These settings specify whether to do the following"
+msgstr ""
 
 #: modules/imaging/includes/includes.php:43
 msgid "This computer already exists."
@@ -2220,6 +2895,10 @@ msgstr "此作业将依据母片的资料量而持续。"
 msgid "This operation will last according to the master size."
 msgstr "此作业将根据母片大小持续。"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1645
+msgid "This sequence starts with 0"
+msgstr ""
+
 #: modules/imaging/includes/includes.php:40
 msgid "This target has no menu."
 msgstr "此目标没有功能表。"
@@ -2263,6 +2942,15 @@ msgstr ""
 "若要定义母片，请浏览至电脑模组，对您要从其建立母片的电脑按一下映像建立图示，"
 "然后选择&quot;映像和母片&quot;，并在备份映像上按一下编辑按钮以将其转换为母"
 "片。"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1701
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1706
+msgid ""
+"To provide better protection for computers connected to any kind of network "
+"(such as the Internet, a home network, or an organization network), the "
+"Windows operating system enables Windows Firewall on all network connections "
+"by default"
+msgstr ""
 
 #: modules/imaging/imaging/configure.php:384
 msgid ""
@@ -2322,6 +3010,11 @@ msgid ""
 "default boot entry."
 msgstr "使用 \"预先选择的选项\" 或 \"WOL 上预先选择的选项\" 定义预设开机项目。"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1717
+msgid ""
+"Use the following steps to use CopyProfile to set customized user profiles"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:454
 #: modules/imaging/manage/ajaxFormWin8.php:557
 #: modules/imaging/manage/ajaxFormWin10.php:600
@@ -2334,6 +3027,16 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:615
 #: modules/imaging/manage/ajaxFormWin81.php:711
 msgid "User Name"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1765
+msgid ""
+"Username specifies the name of the user account with permission to add the "
+"computer to a domain during Windows Setup."
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
+msgid "Users"
 msgstr ""
 
 #: modules/imaging/imaging/bootmenu.php:182
@@ -2370,8 +3073,26 @@ msgstr ""
 msgid "Windows Answer File Generator"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1704
+msgid ""
+"Windows Firewall is a stateful host firewall that discards unsolicited "
+"incoming traffic, providing a level of protection for computers against "
+"malicious users or programs"
+msgstr ""
+
 #: modules/imaging/manage/localSidebar.php:46
 msgid "Windows System Image Manager"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1699
+msgid ""
+"Windows does not notify the user when programs try to install software or "
+"make changes to the computer"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1695
+msgid ""
+"Windows notifies the user when programs try to make changes to the computer"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin8.php:511
@@ -2380,11 +3101,21 @@ msgstr ""
 msgid "Wipe Disk"
 msgstr ""
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1545
+msgid "Work"
+msgstr ""
+
 #: modules/imaging/manage/ajaxFormWin7.php:491
 #: modules/imaging/manage/ajaxFormWin8.php:819
 #: modules/imaging/manage/ajaxFormWin10.php:796
 #: modules/imaging/manage/ajaxFormWin81.php:946
 msgid "Xml Windows Answer File Generator"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1402
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1462
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1486
+msgid "Yes"
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:306
@@ -2424,6 +3155,11 @@ msgid ""
 "You need to register this computer's imaging server to be able to use "
 "imaging."
 msgstr "您需要登录此电脑的映像伺服器才能建立映像。"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
+#, fuzzy
+msgid "available"
+msgstr "无可用记录档。"
 
 #: modules/imaging/imaging/bootmenu.php:300
 msgid "boot service"
@@ -2467,8 +3203,26 @@ msgid ""
 msgstr ""
 "映像伺服器 <strong>%s</strong> 与实体 <strong>%s</strong> 之间的关联已成功。"
 
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
+msgid "enabled "
+msgstr ""
+
 #: modules/imaging/manage/unattended.php:104
 msgid "error create file"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1479
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1573
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1584
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1595
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1606
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1621
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1638
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1697
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1712
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1745
+msgid "false"
 msgstr ""
 
 #: modules/imaging/manage/unattended.php:76
@@ -2526,6 +3280,28 @@ msgstr ""
 #: modules/imaging/includes/ajaxcommon.inc.php:103
 msgid "the entity itself"
 msgstr "实体本身"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:134
+msgid "title missing ex : sysprep.xml"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1475
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1569
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1580
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1591
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1602
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1617
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1634
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1693
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1708
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1728
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1741
+msgid "true"
+msgstr ""
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1610
+msgid "warning"
+msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:150
 msgid "with custom menu"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 11:16+0100\n"
+"POT-Creation-Date: 2017-02-28 01:18+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
@@ -318,7 +318,7 @@ msgstr "高度な起動"
 msgid "After bootmenu actions"
 msgstr "ブートメニューアクション後"
 
-#: modules/msc/infoPackage.inc.php:53 modules/msc/logs/localSidebar.php:29
+#: modules/msc/infoPackage.inc.php:55 modules/msc/logs/localSidebar.php:29
 msgid "All user commands"
 msgstr "全ユーザーコマンド"
 
@@ -380,7 +380,7 @@ msgstr ""
 msgid "As soon as possible"
 msgstr "できる限り早く"
 
-#: modules/msc/infoPackage.inc.php:46
+#: modules/msc/infoPackage.inc.php:48
 msgid "Audit"
 msgstr "監査"
 
@@ -543,11 +543,11 @@ msgstr "コマンドパラメータ"
 msgid "Command start date"
 msgstr "コマンド開始日"
 
-#: modules/msc/infoPackage.inc.php:170
+#: modules/msc/infoPackage.inc.php:174
 msgid "Command status"
 msgstr "コマンドステータス"
 
-#: modules/msc/infoPackage.inc.php:56
+#: modules/msc/infoPackage.inc.php:58
 msgid "Commands logs"
 msgstr "コマンドログ"
 
@@ -617,7 +617,7 @@ msgstr ""
 msgid "Creator"
 msgstr "クリエイター"
 
-#: modules/msc/infoPackage.inc.php:259
+#: modules/msc/infoPackage.inc.php:263
 msgid "Csv's export"
 msgstr "CSV エクスポート"
 
@@ -668,7 +668,7 @@ msgstr "削除失敗: %percent% (%d コンピューター)"
 msgid "Delete Failed: %percent% (%d packages)"
 msgstr "削除失敗: %percent% (%d パッケージ)"
 
-#: modules/msc/infoPackage.inc.php:182
+#: modules/msc/infoPackage.inc.php:186
 msgid "Delete a command"
 msgstr ""
 
@@ -696,7 +696,7 @@ msgstr "削除中です"
 msgid "Delete this command"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:92
+#: modules/msc/infoPackage.inc.php:96
 msgid "Deploy specific package"
 msgstr ""
 
@@ -752,11 +752,11 @@ msgstr "完了"
 msgid "Download file"
 msgstr "ファイルのダウンロード"
 
-#: modules/msc/infoPackage.inc.php:127
+#: modules/msc/infoPackage.inc.php:131
 msgid "Download file from a computer"
 msgstr "コンピューターからのダウンロードファイル"
 
-#: modules/msc/infoPackage.inc.php:254 modules/msc/msc/download_file.php:32
+#: modules/msc/infoPackage.inc.php:258 modules/msc/msc/download_file.php:32
 msgid "Download file page"
 msgstr "ファイルダウンロードページ"
 
@@ -879,7 +879,7 @@ msgstr "終了"
 msgid "From computer"
 msgstr "コンピューターから"
 
-#: modules/msc/infoPackage.inc.php:139
+#: modules/msc/infoPackage.inc.php:143
 msgid "Get a downloaded file"
 msgstr "ダウンロードファイルを取得"
 
@@ -933,7 +933,7 @@ msgstr "ホスト"
 msgid "Host rejected connection"
 msgstr "ホストは接続を拒絶しました"
 
-#: modules/msc/infoPackage.inc.php:249
+#: modules/msc/infoPackage.inc.php:253
 msgid "IP Addr."
 msgstr "IP アドレス"
 
@@ -1015,15 +1015,15 @@ msgstr "起動アクション"
 msgid "Launch Bundle"
 msgstr "起動バンドル"
 
-#: modules/msc/infoPackage.inc.php:207
+#: modules/msc/infoPackage.inc.php:211
 msgid "Launch a advanced command"
 msgstr "高度なコマンドの起動"
 
-#: modules/msc/infoPackage.inc.php:201
+#: modules/msc/infoPackage.inc.php:205
 msgid "Launch a command"
 msgstr "コマンドの起動"
 
-#: modules/msc/infoPackage.inc.php:219
+#: modules/msc/infoPackage.inc.php:223
 msgid "Launch a quick action command"
 msgstr "クイックアクションコマンドの起動 "
 
@@ -1047,7 +1047,7 @@ msgstr "ローカルプロキシ選択"
 msgid "Logs"
 msgstr "ログ"
 
-#: modules/msc/infoPackage.inc.php:244
+#: modules/msc/infoPackage.inc.php:248
 msgid "MAC Addr."
 msgstr "MAC アドレス"
 
@@ -1058,27 +1058,27 @@ msgstr "MAC アドレス"
 msgid "MMC failed to contact package server %s."
 msgstr "MMC はパッケージサーバー %s とのコンタクトに失敗しました。"
 
-#: modules/msc/infoPackage.inc.php:104
+#: modules/msc/infoPackage.inc.php:108
 msgid "MSC bundle tab for a group"
 msgstr "グループの MSC バンドルタブ"
 
-#: modules/msc/infoPackage.inc.php:119
+#: modules/msc/infoPackage.inc.php:123
 msgid "MSC bundle tab for a machine"
 msgstr "マシンの MSC バンドルタブ"
 
-#: modules/msc/infoPackage.inc.php:101
+#: modules/msc/infoPackage.inc.php:105
 msgid "MSC launch tab for a group"
 msgstr "グループの MSC 起動タブ"
 
-#: modules/msc/infoPackage.inc.php:116
+#: modules/msc/infoPackage.inc.php:120
 msgid "MSC launch tab for a machine"
 msgstr "マシンの MSC 起動タブ "
 
-#: modules/msc/infoPackage.inc.php:107
+#: modules/msc/infoPackage.inc.php:111
 msgid "MSC logs tab for a group"
 msgstr "グループの MSC ログタブ"
 
-#: modules/msc/infoPackage.inc.php:122
+#: modules/msc/infoPackage.inc.php:126
 msgid "MSC logs tab for a machine"
 msgstr "マシンの MSC ログタブ"
 
@@ -1114,7 +1114,7 @@ msgstr "複数, %sクライアントモード"
 msgid "Multiple, server mode"
 msgstr "複数, サーバーモード"
 
-#: modules/msc/infoPackage.inc.php:50 modules/msc/logs/localSidebar.php:28
+#: modules/msc/infoPackage.inc.php:52 modules/msc/logs/localSidebar.php:28
 #: modules/msc/includes/widgets.inc.php:345
 #: modules/msc/includes/widgets.inc.php:517
 msgid "My commands"
@@ -1213,7 +1213,7 @@ msgstr "パッケージ '%s' はプライマリミラー %s で使用できま�
 msgid "Package size"
 msgstr "パッケージサイズ"
 
-#: modules/msc/infoPackage.inc.php:224 modules/msc/msc/packages.php:29
+#: modules/msc/infoPackage.inc.php:228 modules/msc/msc/packages.php:29
 msgid "Packages"
 msgstr "パッケージ"
 
@@ -1236,7 +1236,7 @@ msgstr "ホスト %s の %s%s を一時停止"
 msgid "Pause %s %s on this group"
 msgstr "このグループの %s%s を一時停止"
 
-#: modules/msc/infoPackage.inc.php:158
+#: modules/msc/infoPackage.inc.php:162
 msgid "Pause a command"
 msgstr "コマンドを一時停止"
 
@@ -1252,11 +1252,11 @@ msgstr "一時停止: %paused% (%d コンピューター)"
 msgid "Paused: %percent% (%d packages)"
 msgstr "一時停止: %percent% (%d パッケージ)"
 
-#: modules/msc/infoPackage.inc.php:234
+#: modules/msc/infoPackage.inc.php:238
 msgid "Ping"
 msgstr "Ping"
 
-#: modules/msc/infoPackage.inc.php:229
+#: modules/msc/infoPackage.inc.php:233
 msgid "Ping and probe"
 msgstr "Ping プローブ"
 
@@ -1272,11 +1272,11 @@ msgstr "Ping が成功しました"
 msgid "Ping succeeded, SSH connection failed"
 msgstr "Ping は成功しましたが、SSH 接続が失敗しました"
 
-#: modules/msc/infoPackage.inc.php:239
+#: modules/msc/infoPackage.inc.php:243
 msgid "Platform"
 msgstr "プラットフォーム"
 
-#: modules/msc/infoPackage.inc.php:152
+#: modules/msc/infoPackage.inc.php:156
 msgid "Play a command"
 msgstr "コマンドを実行"
 
@@ -1369,11 +1369,11 @@ msgstr "再起動中です"
 msgid "Remote control of :"
 msgstr "リモートコントロール対象 :"
 
-#: modules/msc/infoPackage.inc.php:133
+#: modules/msc/infoPackage.inc.php:137
 msgid "Remove a downloaded file"
 msgstr "ダウンロードファイルを削除"
 
-#: modules/msc/infoPackage.inc.php:86
+#: modules/msc/infoPackage.inc.php:90
 msgid "Remove machine from pull mode"
 msgstr "プルモードからマシンを削除"
 
@@ -1385,7 +1385,7 @@ msgstr "リポジトリ"
 msgid "Reschedule"
 msgstr "再スケジュール"
 
-#: modules/msc/infoPackage.inc.php:176
+#: modules/msc/infoPackage.inc.php:180
 msgid "Reschedule a command"
 msgstr "コマンドの再スケジュール"
 
@@ -1427,15 +1427,15 @@ msgstr "スケジューラー"
 msgid "Script parameters"
 msgstr "スクリプトパラメータ"
 
-#: modules/msc/infoPackage.inc.php:42
+#: modules/msc/infoPackage.inc.php:44
 msgid "Secure Control"
 msgstr "セキュアコントロール"
 
-#: modules/msc/infoPackage.inc.php:97
+#: modules/msc/infoPackage.inc.php:101
 msgid "Secure control on a group of computers"
 msgstr "コンピューターグループのセキュアコントロール"
 
-#: modules/msc/infoPackage.inc.php:112
+#: modules/msc/infoPackage.inc.php:116
 msgid "Secure control on computer"
 msgstr "コンピューターのセキュアコントロール"
 
@@ -1451,7 +1451,7 @@ msgstr "順序設定"
 msgid "Show all finished task's logs"
 msgstr "完了した全タスクログを表示"
 
-#: modules/msc/infoPackage.inc.php:59
+#: modules/msc/infoPackage.inc.php:61
 msgid "Show all logs"
 msgstr "すべてのログを表示"
 
@@ -1467,7 +1467,7 @@ msgstr "実行中の全タスクログを表示"
 msgid "Show all task logs"
 msgstr "全タスクログを表示"
 
-#: modules/msc/infoPackage.inc.php:68
+#: modules/msc/infoPackage.inc.php:70
 msgid "Show custom state task's logs"
 msgstr "カスタマイズした状態のタスクのログを表示"
 
@@ -1475,7 +1475,7 @@ msgstr "カスタマイズした状態のタスクのログを表示"
 msgid "Show custom status task's logs"
 msgstr "カスタムステータス のタスクログを表示"
 
-#: modules/msc/infoPackage.inc.php:65
+#: modules/msc/infoPackage.inc.php:67
 msgid "Show finished task's logs"
 msgstr "完了したタスクのログを表示"
 
@@ -1483,15 +1483,15 @@ msgstr "完了したタスクのログを表示"
 msgid "Show log"
 msgstr "ログを表示"
 
-#: modules/msc/infoPackage.inc.php:194
+#: modules/msc/infoPackage.inc.php:198
 msgid "Show package's details"
 msgstr "パッケージ詳細の表示"
 
-#: modules/msc/infoPackage.inc.php:61
+#: modules/msc/infoPackage.inc.php:63
 msgid "Show pending task's logs"
 msgstr "保留中のタスクのログを表示"
 
-#: modules/msc/infoPackage.inc.php:63
+#: modules/msc/infoPackage.inc.php:65
 msgid "Show running task's logs"
 msgstr "実行中のタスクのログを表示"
 
@@ -1504,7 +1504,7 @@ msgstr "シャットダウン"
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "高度なシングル起動 : アクション \"%s\" (\"%s\")"
 
-#: modules/msc/infoPackage.inc.php:189
+#: modules/msc/infoPackage.inc.php:193
 msgid "Single command status"
 msgstr "シングルコマンドステータス"
 
@@ -1527,7 +1527,7 @@ msgstr "シングル, サーバーモード"
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "ソフトウェアコンバージェンス: アクション \"%s\" (\"%s\")"
 
-#: modules/msc/infoPackage.inc.php:213
+#: modules/msc/infoPackage.inc.php:217
 msgid "Software convergence configuration"
 msgstr "ソフトウェアコンバージェンス設定"
 
@@ -1631,7 +1631,7 @@ msgstr "ホスト %s について %s %s を停止 "
 msgid "Stop %s %s on this group"
 msgstr "このグループについて %s%s を停止"
 
-#: modules/msc/infoPackage.inc.php:164
+#: modules/msc/infoPackage.inc.php:168
 msgid "Stop a command"
 msgstr "コマンドを停止"
 
@@ -1662,7 +1662,7 @@ msgstr "成功: %percent% (%d コンピューター)"
 msgid "Success: %percent% (%d packages)"
 msgstr "成功: %percent% (%d パッケージ)"
 
-#: modules/msc/infoPackage.inc.php:145
+#: modules/msc/infoPackage.inc.php:149
 msgid "Take control of a computer"
 msgstr "コンピューターのコントロールを取得"
 
@@ -1909,7 +1909,7 @@ msgstr "コンピューターが停止しました"
 msgid "computers successfully deployed"
 msgstr "コンピューターがデプロイされました"
 
-#: modules/msc/infoPackage.inc.php:74
+#: modules/msc/infoPackage.inc.php:76
 msgid "consolidated logs list"
 msgstr "総合ログ一覧"
 
@@ -2022,8 +2022,8 @@ msgstr "棚卸中"
 msgid "is"
 msgstr "です"
 
-#: modules/msc/infoPackage.inc.php:71 modules/msc/infoPackage.inc.php:264
-#: modules/msc/infoPackage.inc.php:269
+#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:268
+#: modules/msc/infoPackage.inc.php:273
 msgid "logs list"
 msgstr "ログ一覧"
 
@@ -2084,7 +2084,7 @@ msgstr "開始日"
 msgid "suppressing"
 msgstr "圧縮中"
 
-#: modules/msc/infoPackage.inc.php:77
+#: modules/msc/infoPackage.inc.php:79
 msgid "the state list"
 msgstr "状態一覧"
 
