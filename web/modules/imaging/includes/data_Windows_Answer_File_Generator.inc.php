@@ -1564,7 +1564,7 @@ function update() {
                         _T('Specifies that automatic protection is disabled','imaging');
 
         $InfoBule_HideEULA=
-                        _T('Specifies whether to hide the Microsoft® Software License Terms page of Windows® Welcome','imaging').
+                        _T('Specifies whether to hide the Microsoft Software License Terms page of Windows Welcome','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1586,7 +1586,7 @@ function update() {
                         _T('Specifies that the time on the computer is reset to daylight saving time','imaging');
 
         $Infobule_HideWireless=
-                        _T('Specifies whether to hide the Join Wireless Network screen that appears during Windows® Welcome','imaging').
+                        _T('Specifies whether to hide the Join Wireless Network screen that appears during Windows Welcome','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1688,7 +1688,7 @@ function update() {
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
 
         $InfoBule_EnableUAC=
-                        _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
+                        _T('Specifies whether Windows User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1766,5 +1766,5 @@ function update() {
 
 		$InfoBule_JoinDomain = _T("Domain to join","imaging");
 
-		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory® on a domain controller in the domain to which the computer is being joined.","imaging");
+		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory on a domain controller in the domain to which the computer is being joined.","imaging");
 ?>
