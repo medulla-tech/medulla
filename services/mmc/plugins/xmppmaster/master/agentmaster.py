@@ -320,8 +320,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         for clearobjectwanonlan in suppobjectwanonlan:
             del self.machineWakeOnLan[clearobjectwanonlan]
-            logging.debug("wakeonlan on machine %s error: to abort after 4 attempts"%clearobjectwanonlan)
-            self.logtopulse("wake on lan on machine %s [to ABORT after 4 attempts]"%clearobjectwanonlan,type='Wol', sessionname = taballobjectwanonlan['commandid'], priority = -1 , who= suppobjectwanonlan[clearobjectwanonlan])
+            logging.warn("wakeonlan on machine %s error: to abort after 4 attempts"%clearobjectwanonlan)
+            self.logtopulse("wake on lan on machine %s [to ABORT after 4 attempts]"%clearobjectwanonlan,
+                            type='Wol',
+                            sessionname = taballobjectwanonlan['commandid'],
+                            priority = -1 ,
+                            who= clearobjectwanonlan)
         suppobjmachineDeploy = []
         for deploy in self.machineDeploy:
             deployobject = self.machineDeploy[deploy].pop(0)
