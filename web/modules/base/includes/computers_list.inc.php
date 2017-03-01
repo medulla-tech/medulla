@@ -64,7 +64,7 @@ function list_computers($names,
     $emptyAction = new EmptyActionItem();
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
-    $logAction =new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+    $logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
     $mscAction = new ActionItem(_("Software deployment"),"msctabs","install","computer", "base", "computers");
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
@@ -87,7 +87,7 @@ function list_computers($names,
     $actionVncClient = array();
     $actionExtTicket = array();
     $actionProfile = array();
-
+    
     $params = array();
     $cssClasses = array();
 
@@ -96,7 +96,9 @@ function list_computers($names,
     foreach ($headers as $header) {
         $columns[$header[0]] = array();
     }
-
+  
+    
+    
     function getUUID($machine) { return $machine['objectUUID']; }
     
     $uuids = array_map("getUUID", $names);
@@ -117,6 +119,7 @@ function list_computers($names,
 
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
+        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -137,12 +140,14 @@ function list_computers($names,
             $actionInventory[] = $glpiAction;
         }
 
-        if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) { 
+        if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) {
             if ($groupinfodeploy == -1  ){
                 $action_logs_msc[]   = $logNoAction;
-            }else{
+            }
+            else{
                 $action_logs_msc[]   = $logAction;
             }
+            
             if ( $presencemachinexmpp ){
                 $action_deploy_msc[] = $mscAction;
             }
@@ -270,7 +275,7 @@ function list_computers($names,
     /*if (in_array("dyngroup", $_SESSION["modulesList"])) {
         $n->addActionItemArray($actionProfile);
     }*/
-   
+
     if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SESSION["supportModList"]) ) {
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($action_deploy_msc);

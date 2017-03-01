@@ -1,7 +1,6 @@
 <?php
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -42,6 +41,45 @@ $p->display();
 <?
   //recupere information deploie. for cmn_id
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+    $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
+
+   if ($datawol['len'] != 0){
+        echo "<br>";
+            echo "<h2>Wan on Lan</h2>";
+            echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+                echo "<thead>";
+                    echo "<tr>";
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">START</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">STEP</span>';
+                        echo '</td>';
+                        echo '<td style="width: ;">';
+                            echo '<span style=" padding-left: 32px;">DESCRIPTION</span>';
+                        echo '</td>';
+                    echo "</tr>";
+                echo "</thead>";
+                    echo "<tbody>";
+            foreach($datawol['log'] as $line){
+                //print_r($line);
+                $startsteparray= get_object_vars( $line['date']);
+                $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
+                echo '<tr class="alternate">';
+                    echo "<td>";
+                        echo $datestartstep;
+                    echo "</td>";
+                    echo "<td>";
+                        echo $line['priority'];
+                    echo "</td>";
+                    echo "<td>";
+                        echo $line['text'];
+                    echo "</td>";
+                echo "</tr>";
+            }
+        echo "</tbody>";
+        echo "</table>";
+    }
     if ($info['len'] == 0){
         echo _T("Wait for the deployment",'xmppmaster'). " "  . $cmd_id;
          //reload page
@@ -68,8 +106,6 @@ $p->display();
 
         $datestart =  date("Y-m-d H:i:s", $start);
         echo "Start deployment : [".$infodeploy['len'] ." steps] " .$datestart;
-
-
        if (isset($resultatdeploy['descriptor']['info'])){
         echo "<br>";
         echo "<h2>Package</h2>";
@@ -145,11 +181,6 @@ $p->display();
         }
      echo "</tbody>";
     echo "</table>";
-
-//echo "<pre>";
-            //print_r($step);//$step['action'] $bodytag = str_replace("%body%", "black", "<body text='%body%'>");
-            //echo "<pre>";
-
     if (isset($resultatdeploy['descriptor']['sequence'] )){
         echo "<br>";
         echo "<h2>Deployment result</h2>";
@@ -241,7 +272,7 @@ $p->display();
         });
 </script>
 <?
-if ($gr_cmd_id){
+if ($gr_cmd_id || $datawol['len'] != 0){
     echo '
     <form id="formgroup" action="'.$_SERVER['PHP_SELF'].'" METHODE="GET" >
         <input type="hidden" name="tab" value ="'.$tab.'" >

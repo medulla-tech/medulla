@@ -66,6 +66,10 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_getlinelogswolcmd($command_id, $uuid) {
+    return xmlCall("xmppmaster.getlinelogswolcmd", array($command_id, $uuid));
+}
+
 function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
 }

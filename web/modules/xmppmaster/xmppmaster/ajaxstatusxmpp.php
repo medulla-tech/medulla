@@ -1,7 +1,6 @@
 <?
 /**
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com/
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -32,8 +31,9 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $etat="";
 $LastdeployINsecond = 3600*72;
-echo $_GET['login'];
+echo "<h2>".$_GET['login']."</h2>";
 $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$etat, $LastdeployINsecond, $start, "", $filter) ;
+
 $params = array();
 $logs   = array();
 $startdeploy = array();
