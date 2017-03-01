@@ -109,6 +109,9 @@ def addlogincommand(login, commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getlinelogswolcmd(idcommand, uuid):
+    return XmppMasterDatabase().getlinelogswolcmd(idcommand, uuid)
+
 def getdeploybyuserlen(login):
     if not login:
         login = None

@@ -125,9 +125,20 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
 
     @DatabaseHelper._session
-    def addPresenceMachine(self, session, jid, platform, hostname, archi,
-                           uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil='private', urlguacamole ="", groupdeploy =""):
-        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, platform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil)
+    def addPresenceMachine(self,
+                           session,
+                           jid,
+                           platform,
+                           hostname,
+                           archi,
+                           uuid_inventorymachine,
+                           ip_xmpp,
+                           subnetxmpp,
+                           macaddress,
+                           agenttype,
+                           classutil='private',
+                           urlguacamole ="",
+                           groupdeploy =""):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -155,9 +166,9 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return -1
         return new_machine.id
-    
+
     @DatabaseHelper._session
-    def loginbycommand(self, session,idcommand):
+    def loginbycommand(self, session, idcommand):
         sql = """SELECT 
                     login
                 FROM
@@ -165,17 +176,20 @@ class XmppMasterDatabase(DatabaseHelper):
                 WHERE
                     command = %s
                     LIMIT 1 ;"""%idcommand
-        result = session.execute(sql)
-        session.commit()
-        session.flush()
-        result = [x for x in result][0]
-        print result
-        return result
-
+        try:
+            result = session.execute(sql)
+            session.commit()
+            session.flush()
+            result = [x for x in result][0]
+            return result
+        except Exception, e:
+            #logging.getLogger().error("addPresenceMachine %s" % jid)
+            logging.getLogger().error(str(e))
+            return ""
+            
     @DatabaseHelper._session
     def adddeploy(self, session, idcommand,  jidmachine, jidrelay,  host, inventoryuuid,
                            uuidpackage, state, sessionid, user="", deploycol=""):
-        #print "%s %s %s %s %s %s %s %s %s %s"%(jid, platform, hostname, archi, uuid_inventorymachine, ip_xmpp, subnetxmpp, macaddress, agenttype, classutil)
         #recupere login command
         login = self.loginbycommand(idcommand)
         try:
@@ -199,13 +213,35 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return new_deploy.id
 
+
+    @DatabaseHelper._session
+    def getlinelogswolcmd(self, session, idcommand, uuid):
+        log = session.query(Logs).filter(and_( Logs.sessionname == str(idcommand) , Logs.type == 'wol', Logs.who == uuid)).order_by(Logs.id)
+        log = log.all()
+        session.commit()
+        session.flush()
+        ret={}
+        ret['len']= len(log)
+        arraylist=[]
+        for t in log:
+            obj={}
+            obj['type']=t.type
+            obj['date']=t.date
+            obj['text']=t.text
+            obj['sessionname']=t.sessionname
+            obj['priority']=t.priority
+            obj['who']=t.who
+            arraylist.append(obj)
+        ret['log']= arraylist
+        return ret
+
     @DatabaseHelper._session
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):
             relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id,Deploy.result .isnot(None)))
         else:
-            relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid ,Deploy.command == command_id,Deploy.result .isnot(None)))
-        print relayserver 
+            relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id, Deploy.result .isnot(None)))
+        #print relayserver 
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -235,12 +271,9 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
 
-
-
     @DatabaseHelper._session
     def getlinelogssession(self, session, sessionnamexmpp):
         log = session.query(Logs).filter(and_( Logs.sessionname == sessionnamexmpp, Logs.type == 'deploy')).order_by(Logs.id)
-        print log
         log = log.all()
         session.commit()
         session.flush()
@@ -434,9 +467,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
         return -1
 
-
-
-
     def get_count(self, q):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
@@ -469,7 +499,7 @@ class XmppMasterDatabase(DatabaseHelper):
         lentaillerequette = self.get_count(deploylog)
         if min and max:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
-        #get_count
+        # get number result
         deploylog = deploylog.all()
         session.commit()
         session.flush()
@@ -744,15 +774,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-
-    #@DatabaseHelper._session
-    #def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
-        #pass
-
-    #@DatabaseHelper._session
-    #def algorulegeo(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
-        #pass
-
     @DatabaseHelper._session
     def Orderrules(self, session):
         sql = """SELECT 
@@ -988,7 +1009,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         ret=[m for m in relayserver]
-        print ret[0]
         return ret[0]
 
     @DatabaseHelper._session

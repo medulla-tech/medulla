@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
- *
+ * (c) 2015-2016 Siveo, http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -92,6 +92,7 @@ function start_a_command($proxy = array()) {
     }
     // Vars seeding
     $post = $_POST;
+  
     $from = $post['from'];
     $path = explode('|', $from);
     $module = $path[0];
@@ -134,15 +135,31 @@ function start_a_command($proxy = array()) {
         $tab = 'tablogs';
         /* record new command */
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
-        if (!isXMLRPCError()) {
-            scheduler_start_these_commands('', array($id));
-            /* then redirect to the logs page */
-            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'cmd_id' => $id)));
+        if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+            //jfk
+            xmlrpc_addlogincommand($_SESSION['login'], $id);
+
+            header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
+                                                                                'uuid' => $uuid,
+                                                                                'hostname' => $hostname,
+                                                                                'gid' => $gid,
+                                                                                'cmd_id' => $id,
+                                                                                "login"=>$_SESSION['login'])));
             exit;
-        } else {
-            /* Return to the launch tab, the backtrace will be displayed */
-            header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
-            exit;
+        }
+        else{
+                //jfk
+            if (!isXMLRPCError()) {
+                scheduler_start_these_commands('', array($id));
+                /* then redirect to the logs page */
+                header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'cmd_id' => $id)));
+                exit;
+            } else {
+                /* Return to the launch tab, the backtrace will be displayed */
+
+                header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname)));
+                exit;
+            }
         }
     } else { # command on a whole group
         $gid = $post['gid'];
@@ -179,6 +196,11 @@ function start_a_command($proxy = array()) {
                 /* Create new command */
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                    //jfk
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id);
+                }
+
                 if (!$active) {
                     // If this convergence is not active, expire this command
                     $start_date = _get_command_start_date($command_id);
@@ -205,6 +227,11 @@ function start_a_command($proxy = array()) {
 
                 // Add command on sub-group
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
+                if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                    //jfk
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id);
+                }
+
                 if (!$active) {
                     // If this convergence is not active, expire this command
                     $start_date = _get_command_start_date($command_id);
@@ -219,10 +246,24 @@ function start_a_command($proxy = array()) {
         }
         else {
             $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
-            scheduler_start_these_commands('', array($id));
+            if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+                //jfk
+                xmlrpc_addlogincommand($_SESSION['login'], $id);
+                header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
+                                                                                    'uuid' => $uuid,
+                                                                                    'hostname' => $hostname,
+                                                                                    'gid' => $gid,
+                                                                                    'cmd_id' => $id,
+                                                                                    "login"=>$_SESSION['login'])));
+                exit;
+            }
+            else{
+                scheduler_start_these_commands('', array($id));
+
             // then redirect to the logs page
             header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab'=>$tab, 'gid'=>$gid, 'cmd_id'=>$id, 'proxy' => $proxy)));
             exit;
+            }
         }
     }
 }
@@ -304,14 +345,18 @@ if (isset($_POST['bback'])) {
     $submod = $path[1];
     $page = $path[2];
     if (isset($_POST["gid"])) {
-        header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
-        exit;
+        echo "$module/$submod/$page";
+        echo $_POST["gid"];
+        
+            header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
+            exit;
     }
     if (isset($_POST["uuid"])) {
         header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "msctabs", 'uuid' => $_POST["uuid"])));
         exit;
     }
 }
+
 
 /* local proxy selection handling */
 if (isset($_POST['local_proxy'])) {
@@ -419,53 +464,65 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $f->add(new HiddenTpl('maxbw'), array("value" => $max_bw, "hide" => True));
     }
     else {
-        $f->add(
-            new TrFormElement(
-                _T('Command name', 'msc'), new InputTpl('ltitle')
-            ), array("value" => $name)
-        );
+    if(! in_array("xmppmaster", $_SESSION["modulesList"])) {
+            $f->add(
+                new TrFormElement(
+                    _T('Command name', 'msc'), new InputTpl('ltitle')
+                ), array("value" => $name)
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Script parameters', 'msc'), new InputTpl('parameters')
-            ), array("value" => quick_get('parameters'))
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Script parameters', 'msc'), new InputTpl('parameters')
+                ), array("value" => quick_get('parameters'))
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl('do_wol')
-            ), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Start "Wake On Lan" query if connection fails', 'msc'), new CheckboxTpl('do_wol')
+                ), array("value" => quick_get('do_wol', True) == 'on' ? 'checked' : '')
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Start script', 'msc'), new CheckboxTpl('start_script')
-            ), array("value" => $start_script == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Start script', 'msc'), new CheckboxTpl('start_script')
+                ), array("value" => $start_script == 'on' ? 'checked' : '')
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Delete files after a successful execution', 'msc'), new CheckboxTpl('clean_on_success')
-            ), array("value" => $clean_on_success == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Delete files after a successful execution', 'msc'), new CheckboxTpl('clean_on_success')
+                ), array("value" => $clean_on_success == 'on' ? 'checked' : '')
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Do an inventory after a successful execution', 'msc'), new CheckboxTpl('do_inventory')
-            ), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Do an inventory after a successful execution', 'msc'), new CheckboxTpl('do_inventory')
+                ), array("value" => quick_get('do_inventory', True) == 'on' ? 'checked' : '')
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Reboot client', 'msc'), new CheckboxTpl('do_reboot')
-            ), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Reboot client', 'msc'), new CheckboxTpl('do_reboot')
+                ), array("value" => quick_get('do_reboot', True) == 'on' ? 'checked' : '')
+            );
 
-        $f->add(
-            new TrFormElement(
-                _T('Halt client', 'msc'), new CheckboxTpl('issue_halt_to_done')
-            ), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '')
-        );
+            $f->add(
+                new TrFormElement(
+                    _T('Halt client', 'msc'), new CheckboxTpl('issue_halt_to_done')
+                ), array("value" => quick_get('issue_halt_to_done', True) == 'on' ? 'checked' : '')
+            );
+        }
+        else{
+            $f->add(
+                new TrFormElement(
+                    _T('Command name', 'xmppmaster'), new InputTpl('ltitle')
+                ), array("value" => $name)
+            );
+
+           $f->add(new HiddenTpl('start_script'), array("value" => 'on' , "hide" => True));
+           $f->add(new HiddenTpl('old_start_script'), array("value" => 'on' , "hide" => True));
+        }
 
         /*
          * If convergence set, hide start and end date
@@ -515,42 +572,47 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
         }
 
-        $deployment_fields = array(
-            new InputTpl('deployment_intervals'),
-            new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
-        );
-        $deployment_values = array(
-            "value" => array(
-                quick_get('deployment_intervals'),
-                '',
-            ),
-        );
-        $f->add(
-            new TrFormElement(
-                _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
-            ), $deployment_values
-        );
+            $deployment_fields = array(
+                new InputTpl('deployment_intervals'),
+                new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
+            );
+            $deployment_values = array(
+                "value" => array(
+                    quick_get('deployment_intervals'),
+                    '',
+                ),
+            );
+            $f->add(
+                new TrFormElement(
+                    _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
+                ), $deployment_values
+            );
+           if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $f->add(
+                    new TrFormElement(
+                        _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
+                    ), array("value" => $max_bw, "required" => true)
+                );
+            }
+            else{
+                $f->add(new HiddenTpl('maxbw'), array("value" => 0, "hide" => True));
+            }
+            if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+                if (web_force_mode()) {
+                    $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
+                } else {
+                    $rb = new RadioTpl("copy_mode");
+                    $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+                    $rb->setvalues(array('push', 'push_pull'));
+                    $rb->setSelected($_GET['copy_mode']);
+                    $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
+                }
 
-        $f->add(
-            new TrFormElement(
-                _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
-            ), array("value" => $max_bw, "required" => true)
-        );
-
-        if (web_force_mode()) {
-            $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
-        } else {
-            $rb = new RadioTpl("copy_mode");
-            $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-            $rb->setvalues(array('push', 'push_pull'));
-            $rb->setSelected($_GET['copy_mode']);
-            $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-        }
-
-        /* Only display local proxy button on a group and if allowed */
-        if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
-            $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
-        }
+                /* Only display local proxy button on a group and if allowed */
+                if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+                    $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
+                }
+            }
     }
 
     $f->pop();
@@ -599,8 +661,10 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     $group = new Group($_GET['gid'], true);
     if ($group->exists != False) {
         // Display the actions list
-        $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
-        $msc_actions->display();
+        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {//jfk
+            $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
+            $msc_actions->display();
+        }
 
         $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("gid" => $_GET['gid']));
         $ajax->display();

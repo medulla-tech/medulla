@@ -3,7 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2010 Mandriva, http://www.mandriva.com
- *
+ * (c) 2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -85,7 +85,6 @@ if (!empty($submod)) {
         $MMCApp->addModule($mod);
     }
 
-    
     /* put in base/computers */
     $page = new Page("remove_from_pull", _T('Remove machine from pull mode', 'msc'));
     $page->setFile("modules/msc/msc/remove_from_pull.php");

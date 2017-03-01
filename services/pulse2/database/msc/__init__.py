@@ -35,7 +35,7 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
 from sqlalchemy.orm.exc import NoResultFound
-
+import datetime
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
@@ -329,7 +329,9 @@ class MscDatabase(DatabaseHelper):
             join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
             q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
             q = q.select_from(join)
-            q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready' ))
+            q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready',
+                              self.commands.c.start_date < datetime.datetime.utcnow()))
+                              #self.commands.start_date + timedelta(seconds=400) > datetime.utcnow()))
             q = q.all()
             session.flush()
         except Exception, exc:
@@ -340,10 +342,12 @@ class MscDatabase(DatabaseHelper):
         updatemachine = []
         listemachine = []
         machine_do_deploy = {}
+
         for x in q:
             if not x.Target.target_uuid in tabmachine:
                 tabmachine.append(x.Target.target_uuid)
-                print "deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id)
+                #recherche machine existe pour xmpp
+                self.logger.info("deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
                 machine_do_deploy[x.Target.target_uuid]=x.Commands.package_id
                 updatemachine.append(x)
                 session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
@@ -491,14 +495,6 @@ class MscDatabase(DatabaseHelper):
 
         return True
 
-
-
-
-
-
-
-
-
     def extendCommand(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.
@@ -553,8 +549,6 @@ class MscDatabase(DatabaseHelper):
             coh.current_state = "scheduled"
             session.add(coh)
             session.flush()
-
-
 
 
     def _createPhases(self,

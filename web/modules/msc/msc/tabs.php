@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
- *
+ * (c) 2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -73,10 +73,16 @@ if ($_GET['uuid']) {
     } else {
         $p->addTop(sprintf(_T("%s's group secure control", 'msc'), $group->getName()), "modules/msc/msc/header.php");
         if (!$group->all_params['ro']) {
-            $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
-            $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
+
+                $p->addTab("grouptablaunch", _T("Launch Actions", 'msc'), "", "modules/msc/msc/launch.php", array('gid' => $_GET['gid']));
+            if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+                $p->addTab("grouptabbundle", _T("Launch Bundle", 'msc'), "", "modules/msc/msc/launch_bundle.php", array('gid' => $_GET['gid']));
+            }
         }
-        $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
+        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+            $p->addTab("grouptablogs", _T("Logs", 'msc'), "", "modules/msc/msc/logs.php", array('gid' => $_GET['gid']));
+        }
+
     }
     $p->display();
 } else {

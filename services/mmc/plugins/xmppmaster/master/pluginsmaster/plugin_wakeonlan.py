@@ -12,7 +12,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
         listserverrelay = XmppMasterDatabase().listserverrelay()
         senddataplugin = {'action' : 'wakeonLan',
                         'sessionid': name_random(5, "wakeonLan"),
-                        'data' : {'macaddress': data['macaddress'] }}
+                        'data' : {'macaddress': data['macadress'] }}
         for serverrelay in listserverrelay:
             xmppobject.send_message(  mto = serverrelay[0],
                                 mbody = json.dumps(senddataplugin, encoding='latin1'),
