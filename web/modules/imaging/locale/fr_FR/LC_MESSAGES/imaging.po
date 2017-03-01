@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-02-28 01:20+0100\n"
-"PO-Revision-Date: 2017-02-28 00:54+0100\n"
+"PO-Revision-Date: 2017-03-01 16:29+0100\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
 "pulse2/team/fr_FR/)\n"
@@ -43,7 +43,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
 msgid "   - What type of computer protection is in place"
-msgstr ""
+msgstr " - Quelle type de protection est déjà existante"
 
 #: modules/imaging/imaging/configure.php:39
 #, php-format
@@ -172,9 +172,8 @@ msgid "Administrator Account"
 msgstr "Compte Administrateur"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1357
-#, fuzzy
 msgid "Administrators"
-msgstr "Compte Administrateur"
+msgstr "Administrateurs"
 
 #: modules/imaging/manage/sysprepList.php:65
 msgid "All Windows Answer Files"
@@ -451,7 +450,7 @@ msgstr "Entrée de menu choisie"
 #: modules/imaging/manage/ajaxFormWin10.php:773
 #: modules/imaging/manage/ajaxFormWin81.php:907
 msgid "Classic View"
-msgstr ""
+msgstr "Affichage classique"
 
 #: modules/imaging/manage/ajaxStatus.php:580
 msgid "Clear multicast deploy"
@@ -586,7 +585,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1516
 msgid "Configure User Account"
-msgstr ""
+msgstr "Configurer le compte utilisateur"
 
 #: modules/imaging/manage/ajaxFormWin8.php:789
 #: modules/imaging/manage/ajaxFormWin10.php:784
@@ -820,7 +819,7 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1419
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
 msgid "Disabled"
-msgstr ""
+msgstr "Désactivé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
 msgid "Disables Windows Firewall for Windows PE"
@@ -913,9 +912,8 @@ msgid ""
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1767
-#, fuzzy
 msgid "Domain to join"
-msgstr "Domaine"
+msgstr "Domaine à joindre"
 
 #: modules/imaging/infoPackage.inc.php:148
 #: modules/imaging/infoPackage.inc.php:151
@@ -997,7 +995,7 @@ msgstr "Éditer le master"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1418
 msgid "Enable"
-msgstr ""
+msgstr "Activer"
 
 #: modules/imaging/manage/ajaxFormWin8.php:621
 #: modules/imaging/manage/ajaxFormWin10.php:648
@@ -1048,7 +1046,7 @@ msgstr "Étendre la partition de l'OS"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1658
 msgid "FAT32"
-msgstr ""
+msgstr "FAT32"
 
 #: modules/imaging/imaging/configure.php:289
 #, php-format
@@ -1111,9 +1109,8 @@ msgid "Failed to unregister the computer %s"
 msgstr "Impossible de désinscrire l'ordinateur %s"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
-#, fuzzy
 msgid "File"
-msgstr "Nom de fichier"
+msgstr "Fichier"
 
 #: modules/imaging/manage/sysprepList.php:70
 msgid "File name"
@@ -1196,7 +1193,7 @@ msgstr "Groupe"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1361
 msgid "Guests"
-msgstr ""
+msgstr "Invités"
 
 #: modules/imaging/imaging/configure.php:496
 #, php-format
@@ -1262,7 +1259,7 @@ msgstr "Nom d'hôte envoyé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1455
 msgid "IMPORTANT"
-msgstr ""
+msgstr "IMPORTANT"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1362
 msgid "IUsers"
@@ -1514,7 +1511,7 @@ msgstr "Installer sur le disque"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1393
 msgid "Install updates automatically"
-msgstr ""
+msgstr "Installer les mises à jour automatiquement"
 
 #: modules/imaging/manage/ajaxFormWin7.php:220
 #: modules/imaging/manage/ajaxFormWin8.php:407
@@ -1655,9 +1652,8 @@ msgid "Main Partition Format"
 msgstr "Format de la partition principale"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1513
-#, fuzzy
 msgid "Main Partition Label"
-msgstr "Lettre de la partition principale"
+msgstr "Nom de la partition principale"
 
 #: modules/imaging/manage/ajaxFormWin8.php:548
 #: modules/imaging/manage/ajaxFormWin10.php:575
@@ -1814,7 +1810,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1654
 msgid "NTFS"
-msgstr ""
+msgstr "NTFS"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
@@ -1849,7 +1845,7 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1466
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1490
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:40
 msgid "No imaging server available for association."
@@ -1895,13 +1891,12 @@ msgid "Organization Name"
 msgstr "Nom de l'organisation"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:130
-#, fuzzy
 msgid "Organization Name missing"
-msgstr "Nom de l'organisation"
+msgstr "Le nom de l'organisation est manquant"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
 msgid "Other"
-msgstr ""
+msgstr "Autre"
 
 #: modules/imaging/manage/ajaxFormWin7.php:397
 #: modules/imaging/manage/ajaxFormWin8.php:707
@@ -2779,7 +2774,7 @@ msgstr "Générateur de Sysprep"
 #: modules/imaging/manage/ajaxFormWin10.php:728
 #: modules/imaging/manage/ajaxFormWin81.php:862
 msgid "System Updates"
-msgstr ""
+msgstr "Mises à jour système"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1438
 msgid ""
@@ -3195,7 +3190,7 @@ msgstr "Générateur de fichier de réponse Windows Xml"
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1462
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1486
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: modules/imaging/imaging/configure.php:306
 msgid ""
@@ -3244,9 +3239,8 @@ msgstr ""
 "utiliser l'imaging."
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
-#, fuzzy
 msgid "available"
-msgstr "Pas de journal disponible."
+msgstr "disponible"
 
 #: modules/imaging/imaging/bootmenu.php:300
 msgid "boot service"
@@ -3309,7 +3303,7 @@ msgstr "Erreur lors de la création du fichier"
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1745
 msgid "false"
-msgstr ""
+msgstr "faux"
 
 #: modules/imaging/manage/unattended.php:76
 msgid "form not found"
@@ -3383,7 +3377,7 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1728
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1741
 msgid "true"
-msgstr ""
+msgstr "vrai"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1610
 msgid "warning"
