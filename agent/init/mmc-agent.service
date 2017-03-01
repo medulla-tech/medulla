@@ -4,6 +4,8 @@ After=samba.service slapd.service
 
 [Service]
 PIDFile=/var/run/mmc-agent.pid
+User=pulse
+Group=pulse
 Type=forking
 ExecStart=/usr/sbin/mmc-agent
 Restart=always
