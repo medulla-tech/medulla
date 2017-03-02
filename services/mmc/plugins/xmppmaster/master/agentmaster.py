@@ -129,7 +129,7 @@ class XmppCommandDiffered:
                                                         self.data,
                                                         datasession=None,
                                                         encodebase64=False,
-                                                        time = self.t,
+                                                        time=self.t,
                                                         eventthread=self.e)
 
         # Post-command running after XMPP Command
@@ -157,15 +157,15 @@ class XmppSimpleCommand:
     def __init__(self, to, data, timeout):
         self.xmpp = ObjectXmpp()
         #self.xmpp = PluginManager().getEnabledPlugins()['xmppmaster'].xmppMasterthread().xmpp
-        self.e =  threading.Event()
+        self.e = threading.Event()
         self.result = {}
         self.data = data
         self.t = timeout
         self.sessionid = data['sessionid']
-        self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'],{}, self.t, self.e)
-        self.xmpp.send_message( mto = to,
-                                mbody = json.dumps(data),
-                                mtype = 'chat')
+        self.session = self.xmpp.session.createsessiondatainfo(data['sessionid'], {}, self.t, self.e)
+        self.xmpp.send_message(mto=to,
+                                mbody=json.dumps(data),
+                                mtype='chat')
         self.t2 = threading.Thread(name='command',
                       target=self.resultsession)
         self.t2.start()
@@ -181,7 +181,7 @@ class XmppSimpleCommand:
                 self.result = {u'action': u'resultshellcommand',
                                u'sessionid': self.sessionid,
                                u'base64': False,
-                               u'data': {u'msg': "ERROR command\n timeout %s"%self.t },
+                               u'data': {u'msg': "ERROR command\n timeout %s"%self.t},
                                u'ret': 125}
                 break;
         self.xmpp.session.clearnoevent(self.sessionid)
@@ -203,12 +203,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.plugintype = {}
         self.plugindata = {}
         self.loadPluginList()
-        sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
+        sleekxmpp.ClientXMPP.__init__(self, conf.jidagent, conf.passwordconnection)
         
         
         # dictionary used for deploy
-        self.machineWakeOnLan={}
-        self.machineDeploy={}
+        self.machineWakeOnLan = {}
+        self.machineDeploy = {}
         
         
         
@@ -218,17 +218,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.idm = ""
         self.presencedeployment = {}
         self.updateguacamoleconfig = {}
-        self.xmpppresence={}
+        self.xmpppresence = {}
 
 
         # schedule deployement
-        self.schedule('schedule deploy', 30 , self.scheduledeploy, repeat=True)
+        self.schedule('schedule deploy', 30, self.scheduledeploy, repeat=True)
 
         # Decrement session time
-        self.schedule('manage session', 15 , self.handlemanagesession, repeat=True)
+        self.schedule('manage session', 15, self.handlemanagesession, repeat=True)
 
         # Reload plugins list every 15 minutes
-        self.schedule('update plugin', 900 , self.loadPluginList, repeat=True)
+        self.schedule('update plugin', 900, self.loadPluginList, repeat=True)
 
         self.add_event_handler("session_start", self.start)
         """ New presence in Conf chatroom """
@@ -250,7 +250,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("groupchat_message", self.muc_message)
         self.add_event_handler("pluginaction", self.pluginaction)
 
-        self.add_event_handler ( 'changed_status', self.changed_status)
+        self.add_event_handler('changed_status', self.changed_status)
 
 
     def scheduledeploy(self):
@@ -265,7 +265,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deploy in resultdeploymachine:
             UUID = str(deploy.Target.target_uuid)
 
-            deployobject = {'pakkageid' : str(deploy.Commands.package_id), 'commandid' :  deploy.Commands.id , 'mac' : deploy.Target.target_macaddr,'count' : 0}
+            deployobject = {'pakkageid' : str(deploy.Commands.package_id), 'commandid' :  deploy.Commands.id, 'mac' : deploy.Target.target_macaddr, 'count' : 0}
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 try:
                     self.machineDeploy[UUID].append(deployobject)
@@ -276,7 +276,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 try:
                     self.machineWakeOnLan[UUID].append(deployobject)
                 except:
-                    self.machineWakeOnLan[UUID]=[]
+                    self.machineWakeOnLan[UUID] = []
                     self.machineWakeOnLan[UUID].append(deployobject)
 
         #print json.dumps(self.machineWakeOnLan, indent=4, sort_keys=True)
@@ -284,16 +284,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for uuidmachine in self.machineWakeOnLan:
             for taballobjectwanonlan in self.machineWakeOnLan[uuidmachine]:
                 #print "taballobjectwanonlan",taballobjectwanonlan
-                if taballobjectwanonlan['count'] <  4:
-                    listmacadress = taballobjectwanonlan['mac'].split("||");
-                    taballobjectwanonlan['count']=taballobjectwanonlan['count'] + 1
+                if taballobjectwanonlan['count'] < 4:
+                    listmacadress = taballobjectwanonlan['mac'].split("||")
+                    taballobjectwanonlan['count'] = taballobjectwanonlan['count'] + 1
                     for macadress in listmacadress:
                         if macadress != "":
                             logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
-                            self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress }  )
-                            self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol', sessionname = taballobjectwanonlan['commandid'], priority = -1 ,who= uuidmachine)
+                            self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress})
+                            self.logtopulse("wake on lan on macadress %s"%macadress, type='Wol', sessionname=taballobjectwanonlan['commandid'], priority=-1, who=uuidmachine)
                 else:
-                     self.machineWakeOnLan[uuidmachine].remove(taballobjectwanonlan)
+                    self.machineWakeOnLan[uuidmachine].remove(taballobjectwanonlan)
             if len(self.machineWakeOnLan[uuidmachine]) == 0:
                 suppobjectwanonlan.append(uuidmachine)
 
@@ -302,9 +302,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logging.warn("wakeonlan on machine %s error: to abort after 4 attempts"%clearobjectwanonlan)
             self.logtopulse("wake on lan on machine %s [to ABORT after 4 attempts]"%clearobjectwanonlan,
                             type='Wol',
-                            sessionname = taballobjectwanonlan['commandid'],
-                            priority = -1 ,
-                            who= clearobjectwanonlan)
+                            sessionname=taballobjectwanonlan['commandid'],
+                            priority=-1,
+                            who=clearobjectwanonlan)
         suppobjmachineDeploy = []
         for deploy in self.machineDeploy:
             deployobject = self.machineDeploy[deploy].pop(0)
@@ -312,7 +312,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 deployobject['pakkageid'],
                                                                 deployobject['commandid'],
                                                                 30)
-            if len (self.machineDeploy[deploy]) == 0 :
+            if len(self.machineDeploy[deploy]) == 0:
                 suppobjmachineDeploy.append(deploy)
         for suppmachineuuid in suppobjmachineDeploy:
             del self.machineDeploy[suppmachineuuid]
@@ -321,7 +321,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def start(self, event):
         self.get_roster()
         self.send_presence()
-        #chatroomjoin=[self.config.jidchatroommaster,self.config.jidchatroomlog,self.config.confjidchatroom]
         chatroomjoin=[self.config.confjidchatroom]
         for chatroom in chatroomjoin:
             if chatroom == self.config.confjidchatroom:
