@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 01:18+0100\n"
+"POT-Creation-Date: 2017-03-02 12:07+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (China) (http://transifex.mandriva.com/projects/p/"
@@ -308,6 +308,7 @@ msgid "Advanced"
 msgstr "进阶"
 
 #: modules/msc/msc/ajaxPackageFilter.php:175
+#: modules/msc/msc/ajaxPackageFilter.php:180
 msgid "Advanced launch"
 msgstr "进阶启动"
 
@@ -507,7 +508,8 @@ msgstr "命令 '%s' 状态有关<b>一</b>台电脑"
 msgid "Command expiry date"
 msgstr "命令过期日期"
 
-#: modules/msc/msc/launch.php:424 modules/msc/includes/command_history.php:34
+#: modules/msc/msc/launch.php:470 modules/msc/msc/launch.php:519
+#: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180
 msgid "Command name"
 msgstr "命令名称"
@@ -520,7 +522,7 @@ msgstr "命令参数"
 msgid "Command start date"
 msgstr "命令开始日期"
 
-#: modules/msc/infoPackage.inc.php:174
+#: modules/msc/infoPackage.inc.php:173
 msgid "Command status"
 msgstr "命令状态"
 
@@ -574,7 +576,7 @@ msgstr "连线被对方拒绝。"
 msgid "Convergence"
 msgstr "聚合"
 
-#: modules/msc/msc/launch.php:481
+#: modules/msc/msc/launch.php:538
 msgid "Convergence is active"
 msgstr "聚合在作用中"
 
@@ -582,7 +584,7 @@ msgstr "聚合在作用中"
 msgid "Convergence on "
 msgstr ""
 
-#: modules/msc/msc/launch.php:547 modules/msc/includes/bundle_widgets.php:373
+#: modules/msc/msc/launch.php:608 modules/msc/includes/bundle_widgets.php:373
 msgid "Copy Mode"
 msgstr "复制模式"
 
@@ -594,7 +596,7 @@ msgstr ""
 msgid "Creator"
 msgstr "建立者"
 
-#: modules/msc/infoPackage.inc.php:263
+#: modules/msc/infoPackage.inc.php:262
 msgid "Csv's export"
 msgstr "Csv 格式的汇出"
 
@@ -645,7 +647,7 @@ msgstr "删除失败：%percent%（%d 台电脑）"
 msgid "Delete Failed: %percent% (%d packages)"
 msgstr "删除失败：%percent%（%d 个封装）"
 
-#: modules/msc/infoPackage.inc.php:186
+#: modules/msc/infoPackage.inc.php:185
 msgid "Delete a command"
 msgstr ""
 
@@ -661,7 +663,7 @@ msgstr "删除失败"
 msgid "Delete file"
 msgstr "删除档案"
 
-#: modules/msc/msc/launch.php:448 modules/msc/includes/bundle_widgets.php:352
+#: modules/msc/msc/launch.php:494 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
 msgstr "成功执行后删除档案"
 
@@ -673,7 +675,7 @@ msgstr "正在删除"
 msgid "Delete this command"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:96
+#: modules/msc/infoPackage.inc.php:95
 msgid "Deploy specific package"
 msgstr ""
 
@@ -688,12 +690,12 @@ msgid ""
 "\">View group</a>"
 msgstr ""
 
-#: modules/msc/msc/launch.php:552 modules/msc/includes/bundle_widgets.php:378
+#: modules/msc/msc/launch.php:613 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
 msgstr "使用本机 proxy 部署"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/msc/launch.php:530 modules/msc/includes/command_history.php:38
+#: modules/msc/msc/launch.php:587 modules/msc/includes/command_history.php:38
 #: modules/msc/includes/bundle_widgets.php:363
 msgid "Deployment interval"
 msgstr "部署间隔"
@@ -711,11 +713,11 @@ msgid "Details"
 msgstr "详情"
 
 #: modules/msc/msc/ajaxPackageFilter.php:176
-#: modules/msc/msc/ajaxPackageFilter.php:179
+#: modules/msc/msc/ajaxPackageFilter.php:182
 msgid "Direct launch"
 msgstr "直接启动"
 
-#: modules/msc/msc/launch.php:454
+#: modules/msc/msc/launch.php:500
 msgid "Do an inventory after a successful execution"
 msgstr "在成功执行后进行清查"
 
@@ -729,11 +731,11 @@ msgstr "完成"
 msgid "Download file"
 msgstr "下载档案"
 
-#: modules/msc/infoPackage.inc.php:131
+#: modules/msc/infoPackage.inc.php:130
 msgid "Download file from a computer"
 msgstr "从一台电脑下载档案"
 
-#: modules/msc/infoPackage.inc.php:258 modules/msc/msc/download_file.php:32
+#: modules/msc/infoPackage.inc.php:257 modules/msc/msc/download_file.php:32
 msgid "Download file page"
 msgstr "下载档案页面"
 
@@ -772,7 +774,7 @@ msgstr ""
 "连线至此主机上的安全代理程式时候发生错误。请检查网路连线，以及此主机上已安装"
 "安全代理程式。"
 
-#: modules/msc/msc/launch.php:520
+#: modules/msc/msc/launch.php:577
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr "午餐和夜晚的範例（24 小时制）：12-14,20-8"
 
@@ -855,7 +857,7 @@ msgstr "完成"
 msgid "From computer"
 msgstr "从电脑"
 
-#: modules/msc/infoPackage.inc.php:143
+#: modules/msc/infoPackage.inc.php:142
 msgid "Get a downloaded file"
 msgstr "取得一个已下载的档案"
 
@@ -868,7 +870,7 @@ msgstr "全域状态"
 msgid "Group"
 msgstr "群组"
 
-#: modules/msc/msc/launch.php:361
+#: modules/msc/msc/launch.php:406
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr "群组进阶启动：动作 \"%s\" 在 \"%s\""
@@ -881,7 +883,7 @@ msgstr "终止失败：%percent%（%d 台电脑）"
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr "终止失败：%percent%（%d 个封装）"
 
-#: modules/msc/msc/launch.php:466
+#: modules/msc/msc/launch.php:512
 msgid "Halt client"
 msgstr "终止用户端"
 
@@ -909,7 +911,7 @@ msgstr "主机"
 msgid "Host rejected connection"
 msgstr "主机拒绝的连线"
 
-#: modules/msc/infoPackage.inc.php:253
+#: modules/msc/infoPackage.inc.php:252
 msgid "IP Addr."
 msgstr "IP 位址"
 
@@ -982,23 +984,23 @@ msgstr "启动"
 msgid "Launch (advanced)"
 msgstr "启动（进阶）"
 
-#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:76
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:77
 msgid "Launch Actions"
 msgstr "启动动作"
 
-#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:77
+#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:79
 msgid "Launch Bundle"
 msgstr "启动套件组合"
 
-#: modules/msc/infoPackage.inc.php:211
+#: modules/msc/infoPackage.inc.php:210
 msgid "Launch a advanced command"
 msgstr "启动进阶命令"
 
-#: modules/msc/infoPackage.inc.php:205
+#: modules/msc/infoPackage.inc.php:204
 msgid "Launch a command"
 msgstr "启动命令"
 
-#: modules/msc/infoPackage.inc.php:223
+#: modules/msc/infoPackage.inc.php:222
 msgid "Launch a quick action command"
 msgstr "启动快速动作命令"
 
@@ -1018,11 +1020,11 @@ msgstr "本机 proxy"
 msgid "Local proxies selection"
 msgstr "本机 proxy 选择"
 
-#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:79
+#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:83
 msgid "Logs"
 msgstr "记录档"
 
-#: modules/msc/infoPackage.inc.php:248
+#: modules/msc/infoPackage.inc.php:247
 msgid "MAC Addr."
 msgstr "MAC 位址"
 
@@ -1033,27 +1035,27 @@ msgstr "MAC 位址"
 msgid "MMC failed to contact package server %s."
 msgstr "MMC 无法连络封装伺服器 %s。"
 
-#: modules/msc/infoPackage.inc.php:108
+#: modules/msc/infoPackage.inc.php:107
 msgid "MSC bundle tab for a group"
 msgstr "一个群组的 MSC 套件组合标签"
 
-#: modules/msc/infoPackage.inc.php:123
+#: modules/msc/infoPackage.inc.php:122
 msgid "MSC bundle tab for a machine"
 msgstr "一台电脑的 MSC 套件组合标签"
 
-#: modules/msc/infoPackage.inc.php:105
+#: modules/msc/infoPackage.inc.php:104
 msgid "MSC launch tab for a group"
 msgstr "一个群组的 MSC 启动标签"
 
-#: modules/msc/infoPackage.inc.php:120
+#: modules/msc/infoPackage.inc.php:119
 msgid "MSC launch tab for a machine"
 msgstr "一台电脑的 MSC 启动标签"
 
-#: modules/msc/infoPackage.inc.php:111
+#: modules/msc/infoPackage.inc.php:110
 msgid "MSC logs tab for a group"
 msgstr "一个群组的 MSC 记录档标签"
 
-#: modules/msc/infoPackage.inc.php:126
+#: modules/msc/infoPackage.inc.php:125
 msgid "MSC logs tab for a machine"
 msgstr "一台电脑的 MSC 记录档标签"
 
@@ -1063,7 +1065,7 @@ msgstr "一台电脑的 MSC 记录档标签"
 msgid "Machine"
 msgstr "电脑"
 
-#: modules/msc/msc/launch.php:536 modules/msc/includes/bundle_widgets.php:364
+#: modules/msc/msc/launch.php:593 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
 msgstr "最大频宽 (kbits/s)"
 
@@ -1131,7 +1133,7 @@ msgstr "正常"
 msgid "Not available"
 msgstr "不可用"
 
-#: modules/msc/msc/tabs.php:86
+#: modules/msc/msc/tabs.php:92
 msgid "Not enough information"
 msgstr "资讯不足"
 
@@ -1188,7 +1190,7 @@ msgstr "封装 '%s' 在主要镜像 %s 上可用"
 msgid "Package size"
 msgstr "封装大小"
 
-#: modules/msc/infoPackage.inc.php:228 modules/msc/msc/packages.php:29
+#: modules/msc/infoPackage.inc.php:227 modules/msc/msc/packages.php:29
 msgid "Packages"
 msgstr "封装"
 
@@ -1211,7 +1213,7 @@ msgstr "暂停主机 %s 上的 %s %s"
 msgid "Pause %s %s on this group"
 msgstr "暂停此群组上的 %s %s"
 
-#: modules/msc/infoPackage.inc.php:162
+#: modules/msc/infoPackage.inc.php:161
 msgid "Pause a command"
 msgstr "暂停命令"
 
@@ -1227,11 +1229,11 @@ msgstr "已暂停：%percent%（%d 台电脑）"
 msgid "Paused: %percent% (%d packages)"
 msgstr "已暂停：%percent%（%d 个封装）"
 
-#: modules/msc/infoPackage.inc.php:238
+#: modules/msc/infoPackage.inc.php:237
 msgid "Ping"
 msgstr "Ping"
 
-#: modules/msc/infoPackage.inc.php:233
+#: modules/msc/infoPackage.inc.php:232
 msgid "Ping and probe"
 msgstr "Ping 和探查"
 
@@ -1247,11 +1249,11 @@ msgstr "Ping 成功"
 msgid "Ping succeeded, SSH connection failed"
 msgstr "Ping 成功，SSH 连线失败"
 
-#: modules/msc/infoPackage.inc.php:243
+#: modules/msc/infoPackage.inc.php:242
 msgid "Platform"
 msgstr "平台"
 
-#: modules/msc/infoPackage.inc.php:156
+#: modules/msc/infoPackage.inc.php:155
 msgid "Play a command"
 msgstr "播放命令"
 
@@ -1277,7 +1279,7 @@ msgstr "请连络您的管理员。"
 msgid "Possible actions"
 msgstr "可能的动作"
 
-#: modules/msc/msc/launch.php:577
+#: modules/msc/msc/launch.php:639
 msgid "Probe status"
 msgstr "探查状态"
 
@@ -1324,7 +1326,7 @@ msgstr "重新开机失败：%percent%（%d 台电脑）"
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr "重新开机失败：%percent%（%d 个封装）"
 
-#: modules/msc/msc/launch.php:460
+#: modules/msc/msc/launch.php:506
 msgid "Reboot client"
 msgstr "重新开机用户端"
 
@@ -1344,11 +1346,11 @@ msgstr "正在重新开机"
 msgid "Remote control of :"
 msgstr "远端控制："
 
-#: modules/msc/infoPackage.inc.php:137
+#: modules/msc/infoPackage.inc.php:136
 msgid "Remove a downloaded file"
 msgstr "移除一个已下载的档案"
 
-#: modules/msc/infoPackage.inc.php:90
+#: modules/msc/infoPackage.inc.php:89
 msgid "Remove machine from pull mode"
 msgstr "从提取模式移除电脑"
 
@@ -1360,7 +1362,7 @@ msgstr "存放库"
 msgid "Reschedule"
 msgstr "重新排程"
 
-#: modules/msc/infoPackage.inc.php:180
+#: modules/msc/infoPackage.inc.php:179
 msgid "Reschedule a command"
 msgstr "重新排程命令"
 
@@ -1398,7 +1400,7 @@ msgstr "已排程"
 msgid "Scheduler"
 msgstr "排程器"
 
-#: modules/msc/msc/launch.php:430
+#: modules/msc/msc/launch.php:476
 msgid "Script parameters"
 msgstr "指令码参数"
 
@@ -1406,11 +1408,11 @@ msgstr "指令码参数"
 msgid "Secure Control"
 msgstr "安全控制"
 
-#: modules/msc/infoPackage.inc.php:101
+#: modules/msc/infoPackage.inc.php:100
 msgid "Secure control on a group of computers"
 msgstr "一组电脑上的安全控制"
 
-#: modules/msc/infoPackage.inc.php:116
+#: modules/msc/infoPackage.inc.php:115
 msgid "Secure control on computer"
 msgstr "电脑上的安全控制"
 
@@ -1458,7 +1460,7 @@ msgstr "显示已完成工作的记录档"
 msgid "Show log"
 msgstr "显示记录档"
 
-#: modules/msc/infoPackage.inc.php:198
+#: modules/msc/infoPackage.inc.php:197
 msgid "Show package's details"
 msgstr "显示封装的详情"
 
@@ -1474,12 +1476,12 @@ msgstr "显示执行中工作的记录档"
 msgid "Shutdown"
 msgstr "关机"
 
-#: modules/msc/msc/launch.php:348
+#: modules/msc/msc/launch.php:393
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr "单次进阶启动：动作 \"%s\" 在 \"%s\""
 
-#: modules/msc/infoPackage.inc.php:193
+#: modules/msc/infoPackage.inc.php:192
 msgid "Single command status"
 msgstr "单个命令状态"
 
@@ -1497,12 +1499,12 @@ msgstr "单个，用户端模式%s"
 msgid "Single, server mode"
 msgstr "单个，伺服器模式"
 
-#: modules/msc/msc/launch.php:358
+#: modules/msc/msc/launch.php:403
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr "软体聚合：动作\"%s\" 在 \"%s\""
 
-#: modules/msc/infoPackage.inc.php:217
+#: modules/msc/infoPackage.inc.php:216
 msgid "Software convergence configuration"
 msgstr "软体聚合设定"
 
@@ -1519,7 +1521,7 @@ msgstr "检查用户端身分时发生错误。"
 msgid "Start"
 msgstr "开始"
 
-#: modules/msc/msc/launch.php:436 modules/msc/includes/command_history.php:189
+#: modules/msc/msc/launch.php:482 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr "如果连线失败则启动\"网路唤醒\"查询"
 
@@ -1560,7 +1562,7 @@ msgstr "开始清查"
 msgid "Start inventory agent"
 msgstr "启动清查代理程式"
 
-#: modules/msc/msc/launch.php:442
+#: modules/msc/msc/launch.php:488
 msgid "Start script"
 msgstr "启动指令码"
 
@@ -1606,7 +1608,7 @@ msgstr "停止主机 %s 上的 %s %s"
 msgid "Stop %s %s on this group"
 msgstr "停止此群组上的 %s %s"
 
-#: modules/msc/infoPackage.inc.php:168
+#: modules/msc/infoPackage.inc.php:167
 msgid "Stop a command"
 msgstr "停止命令"
 
@@ -1637,7 +1639,7 @@ msgstr "成功：%percent%（%d 台电脑）"
 msgid "Success: %percent% (%d packages)"
 msgstr "成功：%percent%（%d 个封装）"
 
-#: modules/msc/infoPackage.inc.php:149
+#: modules/msc/infoPackage.inc.php:148
 msgid "Take control of a computer"
 msgstr "控制一台电脑"
 
@@ -1655,11 +1657,11 @@ msgstr "目标"
 msgid "Target platform is %s"
 msgstr "目标平台是 %s"
 
-#: modules/msc/msc/launch.php:396 modules/msc/msc/launch.php:495
+#: modules/msc/msc/launch.php:441 modules/msc/msc/launch.php:552
 msgid "The command must start after"
 msgstr "命令必须在以下时间后启动"
 
-#: modules/msc/msc/launch.php:405 modules/msc/msc/launch.php:504
+#: modules/msc/msc/launch.php:450 modules/msc/msc/launch.php:561
 msgid "The command must stop before"
 msgstr "命令必须在以下时间前停止"
 
@@ -1990,12 +1992,12 @@ msgstr "正在清查"
 msgid "is"
 msgstr "是"
 
-#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:268
-#: modules/msc/infoPackage.inc.php:273
+#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
+#: modules/msc/infoPackage.inc.php:272
 msgid "logs list"
 msgstr "记录档清单"
 
-#: modules/msc/msc/launch.php:120 modules/msc/msc/launch.php:246
+#: modules/msc/msc/launch.php:121 modules/msc/msc/launch.php:287
 msgid "never"
 msgstr "永不"
 
@@ -2004,7 +2006,7 @@ msgstr "永不"
 msgid "next attempt"
 msgstr "下次尝试"
 
-#: modules/msc/msc/launch.php:118 modules/msc/msc/launch.php:243
+#: modules/msc/msc/launch.php:119 modules/msc/msc/launch.php:284
 msgid "now"
 msgstr "现在"
 
@@ -2020,11 +2022,11 @@ msgstr "out_of_interval"
 msgid "over_time"
 msgstr "over_time"
 
-#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:605 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
 msgstr "推入"
 
-#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:605 modules/msc/includes/bundle_widgets.php:370
 msgid "push / pull"
 msgstr "推入／提取"
 

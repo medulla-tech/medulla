@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 01:18+0100\n"
+"POT-Creation-Date: 2017-03-02 12:07+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -306,6 +306,7 @@ msgid "Advanced"
 msgstr ""
 
 #: modules/msc/msc/ajaxPackageFilter.php:175
+#: modules/msc/msc/ajaxPackageFilter.php:180
 msgid "Advanced launch"
 msgstr ""
 
@@ -499,7 +500,8 @@ msgstr ""
 msgid "Command expiry date"
 msgstr ""
 
-#: modules/msc/msc/launch.php:424 modules/msc/includes/command_history.php:34
+#: modules/msc/msc/launch.php:470 modules/msc/msc/launch.php:519
+#: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180
 msgid "Command name"
 msgstr ""
@@ -512,7 +514,7 @@ msgstr ""
 msgid "Command start date"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:174
+#: modules/msc/infoPackage.inc.php:173
 msgid "Command status"
 msgstr ""
 
@@ -566,7 +568,7 @@ msgstr ""
 msgid "Convergence"
 msgstr ""
 
-#: modules/msc/msc/launch.php:481
+#: modules/msc/msc/launch.php:538
 msgid "Convergence is active"
 msgstr ""
 
@@ -574,7 +576,7 @@ msgstr ""
 msgid "Convergence on "
 msgstr ""
 
-#: modules/msc/msc/launch.php:547 modules/msc/includes/bundle_widgets.php:373
+#: modules/msc/msc/launch.php:608 modules/msc/includes/bundle_widgets.php:373
 msgid "Copy Mode"
 msgstr ""
 
@@ -586,7 +588,7 @@ msgstr ""
 msgid "Creator"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:263
+#: modules/msc/infoPackage.inc.php:262
 msgid "Csv's export"
 msgstr ""
 
@@ -637,7 +639,7 @@ msgstr ""
 msgid "Delete Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:186
+#: modules/msc/infoPackage.inc.php:185
 msgid "Delete a command"
 msgstr ""
 
@@ -653,7 +655,7 @@ msgstr ""
 msgid "Delete file"
 msgstr ""
 
-#: modules/msc/msc/launch.php:448 modules/msc/includes/bundle_widgets.php:352
+#: modules/msc/msc/launch.php:494 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
 msgstr ""
 
@@ -665,7 +667,7 @@ msgstr ""
 msgid "Delete this command"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:96
+#: modules/msc/infoPackage.inc.php:95
 msgid "Deploy specific package"
 msgstr ""
 
@@ -680,12 +682,12 @@ msgid ""
 "\">View group</a>"
 msgstr ""
 
-#: modules/msc/msc/launch.php:552 modules/msc/includes/bundle_widgets.php:378
+#: modules/msc/msc/launch.php:613 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
 msgstr ""
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/msc/launch.php:530 modules/msc/includes/command_history.php:38
+#: modules/msc/msc/launch.php:587 modules/msc/includes/command_history.php:38
 #: modules/msc/includes/bundle_widgets.php:363
 msgid "Deployment interval"
 msgstr ""
@@ -703,11 +705,11 @@ msgid "Details"
 msgstr ""
 
 #: modules/msc/msc/ajaxPackageFilter.php:176
-#: modules/msc/msc/ajaxPackageFilter.php:179
+#: modules/msc/msc/ajaxPackageFilter.php:182
 msgid "Direct launch"
 msgstr ""
 
-#: modules/msc/msc/launch.php:454
+#: modules/msc/msc/launch.php:500
 msgid "Do an inventory after a successful execution"
 msgstr ""
 
@@ -721,11 +723,11 @@ msgstr ""
 msgid "Download file"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:131
+#: modules/msc/infoPackage.inc.php:130
 msgid "Download file from a computer"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:258 modules/msc/msc/download_file.php:32
+#: modules/msc/infoPackage.inc.php:257 modules/msc/msc/download_file.php:32
 msgid "Download file page"
 msgstr ""
 
@@ -762,7 +764,7 @@ msgid ""
 "connectivity, and that the secure agent is installed on this host."
 msgstr ""
 
-#: modules/msc/msc/launch.php:520
+#: modules/msc/msc/launch.php:577
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr ""
 
@@ -845,7 +847,7 @@ msgstr ""
 msgid "From computer"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:143
+#: modules/msc/infoPackage.inc.php:142
 msgid "Get a downloaded file"
 msgstr ""
 
@@ -858,7 +860,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: modules/msc/msc/launch.php:361
+#: modules/msc/msc/launch.php:406
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr ""
@@ -871,7 +873,7 @@ msgstr ""
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:466
+#: modules/msc/msc/launch.php:512
 msgid "Halt client"
 msgstr ""
 
@@ -899,7 +901,7 @@ msgstr ""
 msgid "Host rejected connection"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:253
+#: modules/msc/infoPackage.inc.php:252
 msgid "IP Addr."
 msgstr ""
 
@@ -968,23 +970,23 @@ msgstr ""
 msgid "Launch (advanced)"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:76
+#: modules/msc/msc/tabs.php:58 modules/msc/msc/tabs.php:77
 msgid "Launch Actions"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:77
+#: modules/msc/msc/tabs.php:60 modules/msc/msc/tabs.php:79
 msgid "Launch Bundle"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:211
+#: modules/msc/infoPackage.inc.php:210
 msgid "Launch a advanced command"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:205
+#: modules/msc/infoPackage.inc.php:204
 msgid "Launch a command"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:223
+#: modules/msc/infoPackage.inc.php:222
 msgid "Launch a quick action command"
 msgstr ""
 
@@ -1004,11 +1006,11 @@ msgstr ""
 msgid "Local proxies selection"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:79
+#: modules/msc/msc/tabs.php:61 modules/msc/msc/tabs.php:83
 msgid "Logs"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:248
+#: modules/msc/infoPackage.inc.php:247
 msgid "MAC Addr."
 msgstr ""
 
@@ -1019,27 +1021,27 @@ msgstr ""
 msgid "MMC failed to contact package server %s."
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:108
+#: modules/msc/infoPackage.inc.php:107
 msgid "MSC bundle tab for a group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:123
+#: modules/msc/infoPackage.inc.php:122
 msgid "MSC bundle tab for a machine"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:105
+#: modules/msc/infoPackage.inc.php:104
 msgid "MSC launch tab for a group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:120
+#: modules/msc/infoPackage.inc.php:119
 msgid "MSC launch tab for a machine"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:111
+#: modules/msc/infoPackage.inc.php:110
 msgid "MSC logs tab for a group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:126
+#: modules/msc/infoPackage.inc.php:125
 msgid "MSC logs tab for a machine"
 msgstr ""
 
@@ -1049,7 +1051,7 @@ msgstr ""
 msgid "Machine"
 msgstr ""
 
-#: modules/msc/msc/launch.php:536 modules/msc/includes/bundle_widgets.php:364
+#: modules/msc/msc/launch.php:593 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
 msgstr ""
 
@@ -1117,7 +1119,7 @@ msgstr ""
 msgid "Not available"
 msgstr ""
 
-#: modules/msc/msc/tabs.php:86
+#: modules/msc/msc/tabs.php:92
 msgid "Not enough information"
 msgstr ""
 
@@ -1172,7 +1174,7 @@ msgstr ""
 msgid "Package size"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:228 modules/msc/msc/packages.php:29
+#: modules/msc/infoPackage.inc.php:227 modules/msc/msc/packages.php:29
 msgid "Packages"
 msgstr ""
 
@@ -1195,7 +1197,7 @@ msgstr ""
 msgid "Pause %s %s on this group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:162
+#: modules/msc/infoPackage.inc.php:161
 msgid "Pause a command"
 msgstr ""
 
@@ -1211,11 +1213,11 @@ msgstr ""
 msgid "Paused: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:238
+#: modules/msc/infoPackage.inc.php:237
 msgid "Ping"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:233
+#: modules/msc/infoPackage.inc.php:232
 msgid "Ping and probe"
 msgstr ""
 
@@ -1231,11 +1233,11 @@ msgstr ""
 msgid "Ping succeeded, SSH connection failed"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:243
+#: modules/msc/infoPackage.inc.php:242
 msgid "Platform"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:156
+#: modules/msc/infoPackage.inc.php:155
 msgid "Play a command"
 msgstr ""
 
@@ -1261,7 +1263,7 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
-#: modules/msc/msc/launch.php:577
+#: modules/msc/msc/launch.php:639
 msgid "Probe status"
 msgstr ""
 
@@ -1308,7 +1310,7 @@ msgstr ""
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:460
+#: modules/msc/msc/launch.php:506
 msgid "Reboot client"
 msgstr ""
 
@@ -1328,11 +1330,11 @@ msgstr ""
 msgid "Remote control of :"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:137
+#: modules/msc/infoPackage.inc.php:136
 msgid "Remove a downloaded file"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:90
+#: modules/msc/infoPackage.inc.php:89
 msgid "Remove machine from pull mode"
 msgstr ""
 
@@ -1344,7 +1346,7 @@ msgstr ""
 msgid "Reschedule"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:180
+#: modules/msc/infoPackage.inc.php:179
 msgid "Reschedule a command"
 msgstr ""
 
@@ -1382,7 +1384,7 @@ msgstr ""
 msgid "Scheduler"
 msgstr ""
 
-#: modules/msc/msc/launch.php:430
+#: modules/msc/msc/launch.php:476
 msgid "Script parameters"
 msgstr ""
 
@@ -1390,11 +1392,11 @@ msgstr ""
 msgid "Secure Control"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:101
+#: modules/msc/infoPackage.inc.php:100
 msgid "Secure control on a group of computers"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:116
+#: modules/msc/infoPackage.inc.php:115
 msgid "Secure control on computer"
 msgstr ""
 
@@ -1442,7 +1444,7 @@ msgstr ""
 msgid "Show log"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:198
+#: modules/msc/infoPackage.inc.php:197
 msgid "Show package's details"
 msgstr ""
 
@@ -1458,12 +1460,12 @@ msgstr ""
 msgid "Shutdown"
 msgstr ""
 
-#: modules/msc/msc/launch.php:348
+#: modules/msc/msc/launch.php:393
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:193
+#: modules/msc/infoPackage.inc.php:192
 msgid "Single command status"
 msgstr ""
 
@@ -1481,12 +1483,12 @@ msgstr ""
 msgid "Single, server mode"
 msgstr ""
 
-#: modules/msc/msc/launch.php:358
+#: modules/msc/msc/launch.php:403
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:217
+#: modules/msc/infoPackage.inc.php:216
 msgid "Software convergence configuration"
 msgstr ""
 
@@ -1503,7 +1505,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: modules/msc/msc/launch.php:436 modules/msc/includes/command_history.php:189
+#: modules/msc/msc/launch.php:482 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 
@@ -1544,7 +1546,7 @@ msgstr ""
 msgid "Start inventory agent"
 msgstr ""
 
-#: modules/msc/msc/launch.php:442
+#: modules/msc/msc/launch.php:488
 msgid "Start script"
 msgstr ""
 
@@ -1590,7 +1592,7 @@ msgstr ""
 msgid "Stop %s %s on this group"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:168
+#: modules/msc/infoPackage.inc.php:167
 msgid "Stop a command"
 msgstr ""
 
@@ -1621,7 +1623,7 @@ msgstr ""
 msgid "Success: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:149
+#: modules/msc/infoPackage.inc.php:148
 msgid "Take control of a computer"
 msgstr ""
 
@@ -1639,11 +1641,11 @@ msgstr ""
 msgid "Target platform is %s"
 msgstr ""
 
-#: modules/msc/msc/launch.php:396 modules/msc/msc/launch.php:495
+#: modules/msc/msc/launch.php:441 modules/msc/msc/launch.php:552
 msgid "The command must start after"
 msgstr ""
 
-#: modules/msc/msc/launch.php:405 modules/msc/msc/launch.php:504
+#: modules/msc/msc/launch.php:450 modules/msc/msc/launch.php:561
 msgid "The command must stop before"
 msgstr ""
 
@@ -1974,12 +1976,12 @@ msgstr ""
 msgid "is"
 msgstr ""
 
-#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:268
-#: modules/msc/infoPackage.inc.php:273
+#: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
+#: modules/msc/infoPackage.inc.php:272
 msgid "logs list"
 msgstr ""
 
-#: modules/msc/msc/launch.php:120 modules/msc/msc/launch.php:246
+#: modules/msc/msc/launch.php:121 modules/msc/msc/launch.php:287
 msgid "never"
 msgstr ""
 
@@ -1988,7 +1990,7 @@ msgstr ""
 msgid "next attempt"
 msgstr ""
 
-#: modules/msc/msc/launch.php:118 modules/msc/msc/launch.php:243
+#: modules/msc/msc/launch.php:119 modules/msc/msc/launch.php:284
 msgid "now"
 msgstr ""
 
@@ -2004,11 +2006,11 @@ msgstr ""
 msgid "over_time"
 msgstr ""
 
-#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:605 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
 msgstr ""
 
-#: modules/msc/msc/launch.php:544 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:605 modules/msc/includes/bundle_widgets.php:370
 msgid "push / pull"
 msgstr ""
 
