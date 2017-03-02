@@ -71,8 +71,8 @@ if (count($process) > 0){
 }
 else{
     if(count($list) == 0){
-        $msg = sprintf (_T("il n'y a pas de server d'imaging pour cloner le master ")."%s",$label );
-        new NotifyWidgetWarning($msg);
+	$msg = sprintf (_T("There is no imaging server available to clone the master")."%s",$label );
+	new NotifyWidgetWarning($msg);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;
     }else
