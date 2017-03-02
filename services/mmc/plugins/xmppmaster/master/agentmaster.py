@@ -79,12 +79,12 @@ def getXmppConfiguration():
 
 def callXmppFunction(functionname, *args, **kwargs):
     logging.getLogger().debug("**call function %s %s %s"%(functionname, args, kwargs))
-    return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
+    return getattr(ObjectXmpp(), functionname)(*args, **kwargs)
 
-def callXmppPlugin(plugin, data ):
+def callXmppPlugin(plugin, data):
     #logging.getLogger().debug("**call plugin %s %s"%(plugin, data))
     logging.getLogger().debug("**call plugin %s"%(plugin))
-    ObjectXmpp().callpluginmasterfrommmc(plugin,  data )
+    ObjectXmpp().callpluginmasterfrommmc(plugin, data)
 
 class XmppCommandDiffered:
     """
@@ -97,14 +97,14 @@ class XmppCommandDiffered:
         self.xmpp = ObjectXmpp()
         if self.xmpp != None:
             self.namethread = name_random(5, "thread")
-            self.e =  threading.Event()
+            self.e = threading.Event()
             self.t = timeout
             self.to = to
             self.action = action
             self.data = data
             self.precommand = precommand
             self.postcommand = postcommand
-            self.t2 = threading.Thread( name = self.namethread, target=self.differed)
+            self.t2 = threading.Thread(name=self.namethread, target=self.differed)
             self.t2.start()
         else:
             print "XmppCommandDiffered error XMPP not initialized"
@@ -124,13 +124,13 @@ class XmppCommandDiffered:
             print a['result']
         # Executes XMPP command
         # XMPP command with session creation
-        self.sessionid = self.xmpp.send_session_command( self.to,
-                                                        self.action ,
+        self.sessionid = self.xmpp.send_session_command(self.to,
+                                                        self.action,
                                                         self.data,
-                                                        datasession = None,
-                                                        encodebase64 = False,
+                                                        datasession=None,
+                                                        encodebase64=False,
                                                         time = self.t,
-                                                        eventthread = self.e )
+                                                        eventthread=self.e)
 
         # Post-command running after XMPP Command
         if self.postcommand != None:
@@ -147,7 +147,7 @@ class XmppCommandDiffered:
                     if not self.xmpp.session.isexist(self.sessionid):
                         print 'Action session %s timed out'%self.action
                         print "Timeout error"
-                        break;
+                        break
 
 class XmppSimpleCommand:
     """ Run XMPP command with session and timeout
