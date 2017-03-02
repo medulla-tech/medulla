@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8; -*-
 #
-# (c) 2016 siveo, http://www.siveo.net
+# (c) 2016-2017 siveo, http://www.siveo.net
 #
 # This file is part of Pulse 2, http://www.siveo.net
 #
@@ -20,27 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-
-
-#<spo> [registry]
-#<spo> key_01 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|codePDV"
-#<spo> key_02 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|hardwareSerial"
-#<spo> key_03 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|appVersion"
-#<spo> key_04 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|eipdvVersion"
-#<spo> key_05 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|environment"
-#<spo> key_06 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|licence"
-#<spo> key_07 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|orientation"
-#<spo> key_08 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|imageVersion"
-#<spo> key_09 = "HKEY_LOCAL_MACHINE|SOFTWARE\PMU\EIPDV|agence"
-#<spo> key_10 = "HKEY_LOCAL_MACHINE|SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System|EnableLUA"
-#<spo> inventoryconf
-#<spo>  /etc/pulse-xmpp-agent/inventoryconf.ini
-#<spo>  /usr/lib/pymodules/python2.7/mmc/plugins/xmppmaster/master/pluginsmaster/plugin_inventoryconf.py
-#<spo> INSERT INTO glpi_plugin_fusioninventory_collects VALUES (1,'Registry',0,1,'registry',1,'Registry values inventories');
-#<spo> INSERT INTO glpi_plugin_fusioninventory_collects_registries VALUES (1,'EnableLUA',1,'HKEY_LOCAL_MACHINE','/SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System/',EnableLUA');
-                                                                          
-                                                                          
-                                                                          
 import sys, os
 
 import ConfigParser
@@ -98,7 +77,7 @@ def ObjectXmpp():
 def getXmppConfiguration():
     return str(xmppMasterConfig())
 
-def callXmppFunction(functionname, *args, **kwargs ):
+def callXmppFunction(functionname, *args, **kwargs):
     logging.getLogger().debug("**call function %s %s %s"%(functionname, args, kwargs))
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
 
