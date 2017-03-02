@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 01:20+0100\n"
+"POT-Creation-Date: 2017-03-02 12:11+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2797,6 +2797,10 @@ msgid ""
 "Windows Welcome"
 msgstr ""
 
+#: modules/imaging/manage/master_clone.php:74
+msgid "There is no imaging server available to clone the master"
+msgstr ""
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr ""
@@ -3180,10 +3184,6 @@ msgstr ""
 
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
-msgstr ""
-
-#: modules/imaging/manage/master_clone.php:74
-msgid "il n'y a pas de server d'imaging pour cloner le master "
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:445

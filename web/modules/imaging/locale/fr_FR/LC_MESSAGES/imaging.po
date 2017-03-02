@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 01:20+0100\n"
+"POT-Creation-Date: 2017-03-02 12:11+0100\n"
 "PO-Revision-Date: 2017-03-01 16:29+0100\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -2886,6 +2886,11 @@ msgid ""
 "Windows Welcome"
 msgstr ""
 
+#: modules/imaging/manage/master_clone.php:74
+#, fuzzy
+msgid "There is no imaging server available to clone the master"
+msgstr "Pas de serveur d'imaging disponible pour l'association."
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "Une erreur est arrivée (ceci est un message par défaut)."
@@ -3313,10 +3318,6 @@ msgstr "Formulaire introuvable"
 msgid "hour"
 msgstr "heure"
 
-#: modules/imaging/manage/master_clone.php:74
-msgid "il n'y a pas de server d'imaging pour cloner le master "
-msgstr "il n'y a pas de server d'imaging pour cloner le master"
-
 #: modules/imaging/infoPackage.inc.php:445
 msgid "init multicast"
 msgstr ""
@@ -3401,6 +3402,9 @@ msgstr "avec menu personnalisé"
 
 #~ msgid "Restoration: MTFTP maximum waiting (in sec)"
 #~ msgstr "Restauration: Attente maximum en TFTP (en secondes)"
+
+#~ msgid "il n'y a pas de server d'imaging pour cloner le master "
+#~ msgstr "il n'y a pas de server d'imaging pour cloner le master"
 
 #~ msgid "mtftp"
 #~ msgstr "mtftp"

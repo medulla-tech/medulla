@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-28 01:20+0100\n"
+"POT-Creation-Date: 2017-03-02 12:11+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -2831,6 +2831,11 @@ msgid ""
 "Windows Welcome"
 msgstr ""
 
+#: modules/imaging/manage/master_clone.php:74
+#, fuzzy
+msgid "There is no imaging server available to clone the master"
+msgstr "沒有可供關聯的映像伺服器。"
+
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
 msgstr "發生錯誤（這是預設訊息）。"
@@ -3233,10 +3238,6 @@ msgstr ""
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
 msgstr "時"
-
-#: modules/imaging/manage/master_clone.php:74
-msgid "il n'y a pas de server d'imaging pour cloner le master "
-msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:445
 msgid "init multicast"
