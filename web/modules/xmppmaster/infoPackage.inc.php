@@ -48,6 +48,9 @@ $submod->addPage($page);
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
 $submod->addPage($page);
 // ajax procedure read and send result from log

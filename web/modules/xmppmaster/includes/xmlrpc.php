@@ -54,6 +54,14 @@ function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
 }
 
+function xmlrpc_getListPresenceRelay() {
+    return xmlCall("xmppmaster.getListPresenceRelay", array());
+}
+
+function xmlrpc_getjidMachinefromuuid($uuid) {
+    return xmlCall("xmppmaster.getjidMachinefromuuid", array($uuid));
+}
+
 function xmlrpc_getdeploylog($uuid,$nbline) {
     return xmlCall("xmppmaster.deploylog", array($uuid, $nbline));
 }

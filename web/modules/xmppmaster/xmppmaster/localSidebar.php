@@ -21,16 +21,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
-);
-
-// $sidemenu->addSideMenuItem(
-//     new SideMenuItem(_T("XMPP Deploy","xmppmaster"), "xmppmaster", "xmppmaster", "deployxmpp")
-// );
-
-$sidemenu->addSideMenuItem(
-    new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
-);
-
+if (isExpertMode()){
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
+    );
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+    );
+}
 ?>

@@ -62,6 +62,7 @@ function list_computers($names,
     $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
 
     $emptyAction = new EmptyActionItem();
+
     $inventAction = new ActionItem(_("Inventory"),"invtabs","inventory","inventory", "base", "computers");
     $glpiAction = new ActionItem(_("GLPI Inventory"),"glpitabs","inventory","inventory", "base", "computers");
     $logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
@@ -69,6 +70,10 @@ function list_computers($names,
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
+//jfkjfk
+        $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","install","computers", "xmppmaster", "xmppmaster");
+        $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","installg","computers","xmppmaster", "xmppmaster");
+        $actionConsole = array();
     }
     $imgAction = new ActionItem(_("Imaging management"),"imgtabs","imaging","computer", "base", "computers");
     $downloadFileAction = new ActionItem(_("Download file"), "download_file", "download", "computer", "base", "computers");
@@ -87,7 +92,7 @@ function list_computers($names,
     $actionVncClient = array();
     $actionExtTicket = array();
     $actionProfile = array();
-    
+
     $params = array();
     $cssClasses = array();
 
@@ -96,9 +101,7 @@ function list_computers($names,
     foreach ($headers as $header) {
         $columns[$header[0]] = array();
     }
-  
-    
-    
+
     function getUUID($machine) { return $machine['objectUUID']; }
     
     $uuids = array_map("getUUID", $names);
@@ -119,7 +122,6 @@ function list_computers($names,
 
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
-        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -132,7 +134,6 @@ function list_computers($names,
         }
         if (isset($filter['gid']))
 	        $value['gid'] = $filter['gid'];
-
 
         if (in_array("inventory", $_SESSION["supportModList"])) {
             $actionInventory[] = $inventAction;
@@ -147,12 +148,13 @@ function list_computers($names,
             else{
                 $action_logs_msc[]   = $logAction;
             }
-            
             if ( $presencemachinexmpp ){
                 $action_deploy_msc[] = $mscAction;
+                $actionConsole[] = $inventconsole;
             }
             else{
                 $action_deploy_msc[] = $mscNoAction;
+                $actionConsole[] = $emptyAction; //$inventnoconsole;
             }
         }
         else{
@@ -247,13 +249,16 @@ function list_computers($names,
         }
         $n->setNavBar(new AjaxNavBar(count($columns[$headers[0][0]]), $filter));
     }
-    
-    
+
     $n->setName(_("Computers list"));
     $n->setParamInfo($params);
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
-    
+    if (isExpertMode()){
+        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+            $n->addActionItemArray($actionConsole);
+        }
+    }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
         $n->addActionItemArray($actionInventory);
     }

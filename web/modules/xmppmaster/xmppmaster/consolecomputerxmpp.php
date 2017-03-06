@@ -22,11 +22,11 @@
  */
 ?>
 <style type='text/css'>
-textarea        {
-width:50% ;
-height:150px;
-margin:auto; /* exemple pour centrer */
-display:block;/* pour effectivement centrer ! */
+textarea {
+    width:50% ;
+    height:150px;
+    margin:auto;   /* exemple pour centrer */
+    display:block; /* pour effectivement centrer ! */
 }
 </style>
 
@@ -35,10 +35,15 @@ display:block;/* pour effectivement centrer ! */
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 
-$p = new PageGenerator(_T("Console", 'xmppmaster'));
+$tab = explode("/",$machine);
+
+$p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
 $p->setSideMenu($sidemenu);
 $p->display();
+
 
  if (   isset($_POST['bvalid']) &&
         isset($_POST['command']) &&
@@ -52,25 +57,13 @@ $p->display();
  {
     $result="";
  }
-
+ 
+if ( $uuid != ""){
+  
         $f = new ValidatingForm();
         $f->push(new Table());
-        //$imss = xmlrpc_getListPresenceMachine();
-        $imss = xmlrpc_getListPresenceRelay();
-        
-        $elt = array();
-        $elt_values = array();
-        foreach (range(0, count($imss)-1) as $i) {
-           $elt_values[$i] =$imss[$i]['jid'];
-          $elt[$i]  =$imss[$i]['type']." : ".$imss[$i]['hostname'];
-        }
-        $imss = new SelectItem("Machine");
-        $imss->setElements($elt);
-        $imss->setElementsVal($elt_values);
 
-        $f->add(
-            new TrFormElement(_T("Select a machine", "xmppmaster"), $imss)
-        );
+        $f->add(new HiddenTpl('Machine'), array("value" => $machine, "hide" => True));
 
         $e=new InputTpl('command');
         $f->add(
@@ -119,4 +112,5 @@ $p->display();
                 $f->addValidateButton("bvalid");
         $f->pop();
         $f->display();
+    }
 ?>
