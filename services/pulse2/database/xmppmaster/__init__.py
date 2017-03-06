@@ -186,7 +186,7 @@ class XmppMasterDatabase(DatabaseHelper):
             #logging.getLogger().error("addPresenceMachine %s" % jid)
             logging.getLogger().error(str(e))
             return ""
-            
+
     @DatabaseHelper._session
     def adddeploy(self, session, idcommand,  jidmachine, jidrelay,  host, inventoryuuid,
                            uuidpackage, state, sessionid, user="", deploycol=""):
@@ -466,6 +466,9 @@ class XmppMasterDatabase(DatabaseHelper):
             except Exception, e:
                 logging.getLogger().error(str(e))
         return -1
+
+
+
 
     def get_count(self, q):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
@@ -774,6 +777,15 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
+
+    #@DatabaseHelper._session
+    #def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+        #pass
+
+    #@DatabaseHelper._session
+    #def algorulegeo(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
+        #pass
+
     @DatabaseHelper._session
     def Orderrules(self, session):
         sql = """SELECT 
@@ -882,6 +894,28 @@ class XmppMasterDatabase(DatabaseHelper):
         #logging.getLogger().info(" result %s"%result[0])
         return result
 
+
+    @DatabaseHelper._session
+    def getjidMachinefromuuid(self, session, uuid):
+        try:
+            sql = """SELECT 
+                        jid
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        uuid_inventorymachine = '%s'
+                        LIMIT 1;"""%uuid
+            jidmachine = session.execute(sql)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return ""
+        #print jidmachine.jid
+        result=[x for x in jidmachine][0]
+        return result[0]
+
+
     @DatabaseHelper._session
     def updateMachineidinventory(self, session, id_machineinventory, idmachine):
         try:
@@ -926,8 +960,6 @@ class XmppMasterDatabase(DatabaseHelper):
             type = 'deploy'
                 AND sessionname = '%s'
         ORDER BY id;"""%(sessiondeploy)
-       
-    
         step = session.execute(sql)
         session.commit()
         session.flush()
@@ -960,6 +992,29 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
+
+    @DatabaseHelper._session
+    def getListPresenceRelay(self, session):
+        sql = """SELECT 
+                        jid, agenttype, hostname
+                    FROM
+                        xmppmaster.machines
+                    WHERE
+                        `machines`.`agenttype` = 'relayserver';"""
+        presencelist = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a=[]
+            for t in presencelist:
+                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
+                logging.getLogger().debug("t %s"%t)
+            #a = {"jid": x, for x, y ,z in presencelist}
+            logging.getLogger().debug("a %s"%a)
+            return a
+        except:
+            return -1
+
 
     @DatabaseHelper._session
     def delPresenceMachine(self, session, jid):
