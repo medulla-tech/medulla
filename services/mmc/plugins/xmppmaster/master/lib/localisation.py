@@ -47,7 +47,7 @@ class Point:
 
 class Localisation:
     def __init__(self):
-        self.gi = GeoIP.open("/usr/share/GeoIP/GeoLiteCity.dat", GeoIP.GEOIP_STANDARD)
+        self.gi = GeoIP.open("/usr/share/GeoIP/GeoIPCity.dat", GeoIP.GEOIP_STANDARD)
     def geodataip(self,ip):
         return self.gi.record_by_addr(ip)
 
