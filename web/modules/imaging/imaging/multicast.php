@@ -167,7 +167,8 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/list_profiles"));
         exit;
     }
-   
+
+    $locationparameter = getCurrentLocation();
     $list =  xmlrpc_imagingServermenuMulticast($objval);
     if($list[0] == 1){
         $Paramsmulticast=array(
@@ -179,15 +180,20 @@ if ($_POST) {
             "itemlabel"=>$itemlabel,
             "target_uuid"=>$target_uuid,
             "target_name"=>$target_name,
+            "location" => $locationparameter,
         );
-        $_SESSION['PARAMMULTICAST']=$Paramsmulticast;
-//      echo "<pre>";
-//     print_r ($objval);
-//     //print_r ($_SESSION['PARAMMULTICAST']);
-//     echo "</pre>";
-//     exit;
+
+        //jfkjfk
+        xmlrpc_SetMulticastMultiSessionParameters($Paramsmulticast);
+//         echo "<pre>";
+//             print_r ($Paramsmulticast);
+//         //     print_r ($objval);
+//         //     print_r ($_SESSION['PARAMMULTICAST']);
+//         echo "</pre>";
+
         $msg = _T("Multicast menu has been successfully created.", "imaging");
         new NotifyWidgetSuccess($msg);
+
         header("Location: " . urlStrRedirect("imaging/manage/index"));
         exit;
     }

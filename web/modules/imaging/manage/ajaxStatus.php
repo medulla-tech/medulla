@@ -137,7 +137,7 @@ padding:5px;
         <div class="status_block">
             <?php //<a href=" echo urlStrRedirect("imaging/imaging/createCustomMenuStaticGroup"); &location=UUID1">ZZZ</a> ?>
             <h3><?php echo _T('Stats', 'imaging') ?> <?php echo _T('Entity', 'imaging') ?> <?php echo $namelocation; ?>  </h3>
-        
+
             <p class="stat">
             <? $urlRedirect = urlStrRedirect("imaging/manage/creategroupcustonmenu")."&location=".$location; ?>
             <? $urlRedirectgroupimaging = urlStrRedirect("imaging/manage/creategroupcustonmenuimaging")."&location=".$location; ?>
@@ -433,7 +433,7 @@ padding:5px;
  
  // action bouton marche
  // 1) start /tmp/multicast.sh
- 
+
  // progress bar script ajaxcheckstatusmulticast appel toutes les 5 secondes xmlrpc_check_process_multicast_finish
  -->
  <?php
@@ -445,7 +445,8 @@ $objprocess['location']=$_GET['location'];
 
 $objprocess['process'] = $path.$scriptmulticast;
 $objprocess['process'] = $scriptmulticast;
-if (!isset($_SESSION['PARAMMULTICAST'])){
+$informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($_GET['location']);
+if (count($informationsparameters) == 0){
     $objprocess['process'] = $scriptmulticast;
     $objprocess['process'] = $scriptmulticast;
     xmlrpc_stop_process_multicast ($objprocess);
@@ -454,9 +455,9 @@ if (!isset($_SESSION['PARAMMULTICAST'])){
 }
 else{
     $tailleimagedisk=array();
-    $objprocess['gid'] = $_SESSION['PARAMMULTICAST']['gid'];
-    $objprocess['uuidmaster'] = $_SESSION['PARAMMULTICAST']['uuidmaster'];
-    $objprocess['itemlabel'] = $_SESSION['PARAMMULTICAST']['itemlabel'];
+    $objprocess['gid'] = $informationsparameters['gid'];
+    $objprocess['uuidmaster'] = $informationsparameters['uuidmaster'];
+    $objprocess['itemlabel'] = $informationsparameters['itemlabel'];
     $objprocess['path'] = $path;
     $objprocess['scriptmulticast'] = $scriptmulticast;
     $resultdisplay = get_object_vars(json_decode(xmlrpc_check_process_multicast_finish($objprocess)));
@@ -479,9 +480,9 @@ $objprocess['process'] = $path.$scriptmulticast;
 if (xmlrpc_muticast_script_exist($objprocess)){
 echo '<script type="text/javascript">';
 echo 'var locations = "'.$_GET['location'].'";';
-echo 'var uuidmaster = "'.$_SESSION['PARAMMULTICAST']['uuidmaster'].'";';
-echo 'var itemlabel = "'.$_SESSION['PARAMMULTICAST']['itemlabel'].'";';
-echo 'var gid = "'.$_SESSION['PARAMMULTICAST']['gid'].'";';
+echo 'var uuidmaster = "'.$informationsparameters['uuidmaster'].'";';
+echo 'var itemlabel = "'.$informationsparameters['itemlabel'].'";';
+echo 'var gid = "'.$informationsparameters['gid'].'";';
 echo 'var path = "'.$path.'";';
 echo 'var scriptmulticast = "'.$scriptmulticast.'";';
 echo 'var transfertbloctaille = 1024;';
@@ -522,7 +523,7 @@ function barprogress() {
 echo 'barprogress();';
 
 echo'
-var interval = setInterval(barprogress,2000);
+var interval = setInterval(barprogress,6000);
  </script>';
     $charvaleur = array("+");//liste de caracteres remplacés dans le nom du  master
     echo '
@@ -534,7 +535,7 @@ var interval = setInterval(barprogress,2000);
         // "affichage bouton arrêt"
         // voir apres pour bar de progression
         $nom_master = str_replace($charvaleur, " ", $objprocess['itemlabel']);
-          
+
         echo'<h3>'._T('Multicast Current Location', 'imaging').'</h3>';
         echo  "Master : ".$nom_master."<br>";
         echo '<form action="'; 
@@ -589,7 +590,6 @@ var interval = setInterval(barprogress,2000);
                 echo '<strong>'.$resultdisplay1[$partition][0].'</strong>'.
                 " Size [".$taillediskfMo." MB] ".
                 " Type [".$resultdisplay1[$partition][2] ."] ";
-              
                 if (strcmp($resultdisplay1[$partition][3], "yes") == 1) echo "Bootable";
                 echo " Space in use [".round ($tailleimagedisk[$index] /(1024*1024),2)." MB]";
                 // Tranfer [";

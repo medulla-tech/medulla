@@ -48,6 +48,8 @@ from pulse2.utils import isMACAddress, splitComputerPath, macToNode, isUUID, rfc
 from pulse2.apis import makeURL
 from pulse2.imaging.image import Pulse2Image
 import json
+import ConfigParser
+
 
 class Imaging(object):
     __metaclass__ = SingletonN
@@ -1011,16 +1013,20 @@ class Imaging(object):
         return [ret]
 
     def _checkProcessDrblClonezilla(self):
-        """ check server dbrl running"""
-        s = subprocess.Popen("ps cax | grep drbl-ocs",
+        s = subprocess.Popen("ps ax | grep drbl-ocs | grep /usr/sbin/drbl-ocs | grep -v grep| grep -v stop",
                              shell=True,
-                             stdout=subprocess.PIPE
-                           )
+                             stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE)
+        output, err  = s.communicate()
         returnprocess = False
-        for x in s.stdout:
-            if re.search("drbl-ocs", x):
+        logging.getLogger()
+        if re.search("/usr/sbin/drbl-ocs", output):
                 returnprocess = True
         s.stdout.close()
+        if returnprocess:
+            logging.getLogger().debug("drbl-ocs running")
+        else:
+            logging.getLogger().debug("drbl-ocs stoped")
         return returnprocess
 
     ## Imaging server configuration
@@ -1072,6 +1078,52 @@ class Imaging(object):
     def muticast_script_exist(self, objprocess):
         # controle script existance script multicast
         return os.path.exists(objprocess['process'])
+
+    def SetMulticastMultiSessionParameters(self, parameters):
+        try:
+            Config = ConfigParser.ConfigParser()
+            cfgfile = open("/tmp/MultiSessionParameters.ini",'w')
+            Config.add_section('sessionparameters')
+            Config.set('sessionparameters','gid',parameters['gid'])
+            Config.set('sessionparameters','from',parameters['from'])
+            Config.set('sessionparameters','is_master',parameters['is_master'])
+            Config.set('sessionparameters','uuidmaster',parameters['uuidmaster'])
+            Config.set('sessionparameters','itemid',parameters['itemid'])
+            Config.set('sessionparameters','itemlabel',parameters['itemlabel'])
+            Config.set('sessionparameters','target_uuid',parameters['target_uuid'])
+            Config.set('sessionparameters','target_name',parameters['target_name'])
+            Config.set('sessionparameters','location',parameters['location'])
+            Config.write(cfgfile)
+            cfgfile.close()
+            return True
+        except:
+            return False
+
+    def GetMulticastMultiSessionParameters(self, location):
+        parameters= {}
+        try:
+            Config = ConfigParser.ConfigParser()
+            Config.read("/tmp/MultiSessionParameters.ini")
+            parameters['gid']           = Config.get('sessionparameters', 'gid')
+            parameters['from']          = Config.get('sessionparameters', 'from')
+            parameters['is_master']     = Config.get('sessionparameters', 'is_master')
+            parameters['uuidmaster']    = Config.get('sessionparameters', 'uuidmaster')
+            parameters['itemid']        = Config.get('sessionparameters', 'itemid')
+            parameters['itemlabel']     = Config.get('sessionparameters', 'itemlabel')
+            parameters['target_uuid']   = Config.get('sessionparameters', 'target_uuid')
+            parameters['target_name']   = Config.get('sessionparameters', 'target_name')
+            parameters['location']      = Config.get('sessionparameters', 'location')
+            return parameters
+        except:
+            return parameters
+
+    def ClearMulticastMultiSessionParameters(self, location):
+        try:
+            if os.path.exists("/tmp/MultiSessionParameters.ini") :
+                os.remove("/tmp/MultiSessionParameters.ini")
+            return True
+        except:
+            return False
 
     def clear_script_multicast(self, objprocess):
         ## suppression commande multicast 
@@ -1181,7 +1233,7 @@ class Imaging(object):
                         datapart[data1[2]]=datadesc
                         patitiondisk.append(datapart)
                         fe.write("%s %s %s %s\n"%(data1[2], data[5].strip(', \t\n\r'), data[6].strip('type=, \t\n\r'), bootable))
-        fe.close()  
+        fe.close()
         return patitiondisk
 
     def checkDeploymentUDPSender(self, objprocess):
