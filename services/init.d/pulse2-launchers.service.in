@@ -4,8 +4,8 @@ After=samba.service slapd.service
 
 [Service]
 PIDFile=/var/run/pulse2-launchers-manager.pid
-User=pulse
-Group=pulse
+#User=pulse
+#Group=pulse
 Type=simple
 ExecStart=@sbindir@/pulse2-launchers-manager
 Restart=always

@@ -396,6 +396,28 @@ class Imaging(Pulse2Api):
         d.addErrback(self.onErrorRaise, "Imaging:clear_script_multicast", objprocess)
         return d
 
+#jfkjfk
+    def SetMulticastMultiSessionParameters(self, parameters):
+        # controle parametre session
+        d = self.callRemote("SetMulticastMultiSessionParameters", parameters)
+        d.addErrback(self.onErrorRaise, "Imaging:SetMulticastMultiSessionParameters", parameters)
+        return d
+
+    def GetMulticastMultiSessionParameters(self, location):
+        # controle parametre session
+        d = self.callRemote("GetMulticastMultiSessionParameters", location)
+        d.addErrback(self.onErrorRaise, "Imaging:GetMulticastMultiSessionParameters", location)
+        return d
+
+    def ClearMulticastMultiSessionParameters(self, location):
+        # controle parametre session
+        d = self.callRemote("ClearMulticastMultiSessionParameters", location)
+        d.addErrback(self.onErrorRaise, "Imaging:ClearMulticastMultiSessionParameters", location)
+        return d
+
+
+
+
     def stop_process_multicast(self, objprocess):
         # controle execution process multicast
         d = self.callRemote("stop_process_multicast", objprocess)
