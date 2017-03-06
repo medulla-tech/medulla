@@ -73,6 +73,18 @@ function xmlrpc_checkProcessCloneMasterToLocation ($nameprog){
     return xmlCall("imaging.checkProcessCloneMasterToLocation", array($nameprog));
 }
 
+function xmlrpc_SetMulticastMultiSessionParameters($Paramsmulticast){
+    return xmlCall("imaging.SetMulticastMultiSessionParameters", array($Paramsmulticast));
+}
+
+function xmlrpc_GetMulticastMultiSessionParameters($location){
+    return xmlCall("imaging.GetMulticastMultiSessionParameters", array($location));
+}
+
+function xmlrpc_ClearMulticastMultiSessionParameters($location){
+    return xmlCall("imaging.ClearMulticastMultiSessionParameters", array($location));
+}
+
 function xmlrpc_startProcessClone ($objetclone ){
     return xmlCall("imaging.startProcessClone", array($objetclone));
 }
@@ -101,8 +113,6 @@ function xmlrpc_isProfileRegistered($profile_uuid) {
 function xmlrpc_getProfileLocation($target_uuid) {
     return xmlCall("imaging.getProfileLocation", array($target_uuid));
 }
-
-
 
 
 function xmlrpc_getMyMenuProfile($target_uuid) {

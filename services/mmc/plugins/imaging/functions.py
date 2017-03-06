@@ -519,9 +519,40 @@ class ImagingRpcProxy(RpcProxyI):
             deferred = []
         return deferred
 
+
+    def SetMulticastMultiSessionParameters(self, parameters):
+        imaging_server = ImagingDatabase().getEntityUrl(parameters['location'])
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.SetMulticastMultiSessionParameters(parameters)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
+    def GetMulticastMultiSessionParameters(self, location):
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.GetMulticastMultiSessionParameters(location)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
+    def ClearMulticastMultiSessionParameters(self, location):
+        imaging_server = ImagingDatabase().getEntityUrl(location)
+        i = ImagingApi(imaging_server.encode('utf8'))
+        if i != None:
+            deferred = i.ClearMulticastMultiSessionParameters(location)
+            deferred.addCallback(lambda x: x)
+        else:
+            deferred = []
+        return deferred
+
     def clear_script_multicast(self, process):
         #check if the script is installed multicast.sh
-        try:    
+        try:
             if ImagingRpcProxy.checkThread[process['location']]==True:
                 ImagingRpcProxy.checkThread[process['location']] = False
         except KeyError:        

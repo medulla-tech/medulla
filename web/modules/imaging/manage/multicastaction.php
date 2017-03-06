@@ -55,13 +55,15 @@ if (    isset($multicast) &&
         $process !=""){
 
     $objprocess['location']=$location;
- 
+
+    $informationsparameters = xmlrpc_GetMulticastMultiSessionParameters($location);
+
     switch ($multicast) {
         case "start":
-            $objprocess['group']=$_SESSION['PARAMMULTICAST']['gid'];
-            $objprocess['description']=$_SESSION['PARAMMULTICAST']['itemlabel'];
-            $objprocess['master']=$_SESSION['PARAMMULTICAST']['uuidmaster'];
-            $objprocess['path']="/var/lib/pulse2/imaging/masters/".$_SESSION['PARAMMULTICAST']['uuidmaster'];
+            $objprocess['group']=$informationsparameters['gid'];
+            $objprocess['description']=$informationsparameters['itemlabel'];
+            $objprocess['master']=$informationsparameters['uuidmaster'];
+            $objprocess['path']="/var/lib/pulse2/imaging/masters/".$informationsparameters['uuidmaster'];
             $objprocess['process'] = $path.$process;
             xmlrpc_start_process_multicast($objprocess);
             break;
@@ -70,13 +72,16 @@ if (    isset($multicast) &&
             xmlrpc_stop_process_multicast($objprocess);
             $objprocess['process'] = $path.$process;
             $gr = xmlrpc_clear_script_multicast($objprocess);
+            xmlrpc_ClearMulticastMultiSessionParameters($location);
             if ($gr != -1) xmlrpc_synchroProfile($gr);
             break;
         case "clear":
             $objprocess['process'] = $path.$process;
             $gr = xmlrpc_clear_script_multicast($objprocess);
             if ($gr != -1) xmlrpc_synchroProfile($gr);
-            unset($_SESSION['PARAMMULTICAST']);
+            //unset($_SESSION['PARAMMULTICAST']);
+            //jfkjfk
+            xmlrpc_ClearMulticastMultiSessionParameters($location);
             break;
     }
 }
