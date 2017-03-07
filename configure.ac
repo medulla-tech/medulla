@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [pulse2])
-AC_INIT(project, [3.6.0], [http://www.siveo.org])
+AC_INIT(project, [3.7.0], [http://www.siveo.org])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
