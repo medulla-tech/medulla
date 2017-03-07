@@ -7,7 +7,7 @@ PIDFile=/var/run/pulse2-scheduler-manager.pid
 #User=pulse
 #Group=pulse
 Type=simple
-ExecStart=@sbindir@/pulse2-scheduler-manager
+ExecStart=/usr/sbin/pulse2-scheduler-manager
 Restart=always
 RestartSec=1
 

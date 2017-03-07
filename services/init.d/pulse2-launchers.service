@@ -7,7 +7,7 @@ PIDFile=/var/run/pulse2-launchers-manager.pid
 #User=pulse
 #Group=pulse
 Type=simple
-ExecStart=@sbindir@/pulse2-launchers-manager
+ExecStart=/usr/sbin/pulse2-launchers-manager
 Restart=always
 RestartSec=1
 

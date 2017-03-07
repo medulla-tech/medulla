@@ -7,7 +7,7 @@ PIDFile=/var/run/pulse2-cm.pid
 #User=pulse
 #Group=pulse
 Type=simple
-ExecStart=@sbindir@/pulse2-cm
+ExecStart=/usr/sbin/pulse2-cm
 Restart=always
 RestartSec=1
 
