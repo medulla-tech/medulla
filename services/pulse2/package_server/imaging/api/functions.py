@@ -1012,20 +1012,15 @@ class Imaging(object):
 
     def _checkProcessDrblClonezilla(self):
         """ check server dbrl running"""
-        s = subprocess.Popen("ps ax | grep drbl-ocs | grep /usr/sbin/drbl-ocs | grep -v grep| grep -v stop",
+        s = subprocess.Popen("ps cax | grep drbl-ocs",
                              shell=True,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE)
-        output, err  = s.communicate()
+                             stdout=subprocess.PIPE
+                           )
         returnprocess = False
-        logging.getLogger()
-        if re.search("/usr/sbin/drbl-ocs", output):
-            returnprocess = True
+        for x in s.stdout:
+            if re.search("drbl-ocs", x):
+                returnprocess = True
         s.stdout.close()
-        if returnprocess:
-            logging.getLogger().debug("drbl-ocs running")
-        else:
-            logging.getLogger().debug("drbl-ocs stoped")
         return returnprocess
 
     ## Imaging server configuration
