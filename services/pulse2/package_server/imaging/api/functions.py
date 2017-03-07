@@ -1025,7 +1025,7 @@ class Imaging(object):
         if returnprocess:
             logging.getLogger().debug("drbl-ocs running")
         else:
-            logging.getLogger().debug("drbl-ocs stopped")
+            logging.getLogger().debug("drbl-ocs stoped")
         return returnprocess
 
     ## Imaging server configuration
