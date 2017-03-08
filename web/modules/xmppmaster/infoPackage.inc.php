@@ -64,10 +64,16 @@ $page = new Page("viewlogs");
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
 //$page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
- $page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"));
-    $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
-    $page->setOptions(array("visible"=>False, "AJAX" =>True));
-    $submod->addPage($page);
+
+$page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("ajaxstatusxmppscheduler",_T("List computer deploy","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 
