@@ -95,6 +95,10 @@ function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
 }
 
+function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
+    return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
+}
+
 function get_targets_for_coh($coh_ids) {
     return xmlCall('msc.get_targets_for_coh', array($coh_ids));
 }
@@ -265,5 +269,4 @@ function delete_command($id) {
 function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }
-
 ?>

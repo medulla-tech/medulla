@@ -323,6 +323,64 @@ class MscDatabase(DatabaseHelper):
             session.close()
             return False
 
+    def deployxmppscheduler(self, login, min , max, filt):
+        result={}
+        session = create_session()
+        try:
+            join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
+            q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
+            q = q.select_from(join)
+ 
+            if (login):
+                q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',
+                              self.commands_on_host_phase.c.state == 'ready',
+                              self.commands.c.creator == login))
+            else:
+                q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',
+                                self.commands_on_host_phase.c.state == 'ready'))
+
+            if filt:
+                q = q.filter(  or_(self.commands.c.title.like('%%%s%%'%(filt)),
+                                        self.commands.c.creator.like('%%%s%%'%(filt)),
+                                        self.commands.c.start_date.like('%%%s%%'%(filt)),
+                                        self.bundle.c.title.like('%%%s%%'%(filt))))
+            result['lentotal'] = self.get_count(q)
+            result['min'] = int(min)
+            result['nb']  = (int(max)-int(min))
+            result['tabdeploy'] = {}
+            if min and max:
+                q = q.offset(int(min)).limit(int(max)-int(min))
+            q = q.all()
+            inventoryuuid =[]
+            host =[]
+            command =[]
+            pathpackage =[]
+            start=[]
+            tabdeploy={}
+            creator = []
+            session.flush()
+            tabmachine = []
+            for x in q:
+                print x.Target.target_uuid #
+                host.append(x.CommandsOnHost.host)
+                inventoryuuid.append(x.Target.target_uuid)
+                command.append(x.CommandsOnHost.fk_commands)
+                pathpackage.append(x.Commands.title)
+                start.append(x.CommandsOnHost.start_date)
+                creator.append(x.Commands.creator)
+            result['tabdeploy']['host']=host
+            result['tabdeploy']['inventoryuuid']=inventoryuuid
+            result['tabdeploy']['command']=command
+            result['tabdeploy']['pathpackage']=pathpackage
+            result['tabdeploy']['start']=start
+            result['tabdeploy']['creator']=creator
+            return result
+        except Exception, exc:
+            self.logger.error(str(exc))
+            session.close()
+            result['lentotal'] = 0
+            return result
+
     def deployxmpp(self):
         session = create_session()
         try:

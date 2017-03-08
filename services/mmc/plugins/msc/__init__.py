@@ -420,6 +420,10 @@ class RpcProxy(RpcProxyI):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getIdCommandOnHost(ctx, id_command))
 
+    def get_deployxmppscheduler(self,login,  nin, max, filt):
+        # ctx = self.currentContext
+        return xmlrpcCleanup(MscDatabase().deployxmppscheduler(login, nin, max, filt))
+
     def expire_all_package_commands(self, pid):
         """
         Expires all commands of a given package

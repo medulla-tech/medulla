@@ -176,7 +176,6 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 else{
-    #jfkjfk
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
 
     $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));

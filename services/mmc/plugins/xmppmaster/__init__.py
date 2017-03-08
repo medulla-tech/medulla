@@ -100,7 +100,6 @@ def getListPresenceAgent():
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
 
-#jfkjfk
 def getjidMachinefromuuid(uuid):
     return XmppMasterDatabase().getjidMachinefromuuid(uuid)
 
@@ -113,10 +112,12 @@ def deploylog(uuidinventory, nblastline):
 def addlogincommand(login, commandid):
     return XmppMasterDatabase().addlogincommand(login, commandid)
 
+def loginbycommand(commandid):
+    return XmppMasterDatabase().loginbycommand(commandid)
+
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
-##jfkjfk
 def getlinelogswolcmd(idcommand, uuid):
     return XmppMasterDatabase().getlinelogswolcmd(idcommand, uuid)
 
