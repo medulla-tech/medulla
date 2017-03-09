@@ -60,9 +60,12 @@ echo
 
 
 if [ -e ${ssh_pub_key} ]; then
+    if ![ -d /var/root/.ssh/ ]; then
+        mkdir -p /var/root/.ssh/
+    fi
     sudo tee -a /var/root/.ssh/authorized_keys < ${ssh_pub_key}
     sudo systemsetup -setremotelogin on
-fi	
+fi
 
 
 
