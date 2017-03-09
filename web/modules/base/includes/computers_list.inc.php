@@ -70,7 +70,7 @@ function list_computers($names,
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
-
+//jfkjfk
         $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","install","computers", "xmppmaster", "xmppmaster");
         $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","installg","computers","xmppmaster", "xmppmaster");
         $actionConsole = array();
@@ -122,6 +122,7 @@ function list_computers($names,
 
         //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
+        
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -154,7 +155,8 @@ function list_computers($names,
             }
             else{
                 $action_deploy_msc[] = $mscNoAction;
-                $actionConsole[] = $emptyAction; //$inventnoconsole;
+                //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
+                $actionConsole[] = $inventnoconsole;
             }
         }
         else{
@@ -254,11 +256,7 @@ function list_computers($names,
     $n->setParamInfo($params);
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
-    if (isExpertMode()){
-        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
-            $n->addActionItemArray($actionConsole);
-        }
-    }
+    
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
         $n->addActionItemArray($actionInventory);
     }
@@ -292,6 +290,11 @@ function list_computers($names,
     if (in_array("imaging", $_SESSION["supportModList"])) {
         if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
             $n->addActionItemArray($actionImaging);
+        }
+    }
+    if (isExpertMode()){
+        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+            $n->addActionItemArray($actionConsole);
         }
     }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
