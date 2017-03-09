@@ -34,10 +34,18 @@ require_once("modules/pulse2/includes/utilities.php");
 $p = new PageGenerator(_T("Current tasks all logins", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => '') );
+
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => ''), 'formRunning' );
+$ajax->setRefresh(10000);
 $ajax->display();
 
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
+
+$ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => ''), 'formRunning1' );
+$ajax1->setRefresh(10000);
+$ajax1->display();
+print "<br/><br/><br/>";
+$ajax1->displayDivToUpdate();
 
 ?>

@@ -45,7 +45,6 @@ foreach( $arraydeploy['tabdeploy']['command'] as $ss){
    $login[]=xmlrpc_loginbycommand($ss);
 }
 
-
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 $n = new OptimizedListInfos( $arraydeploy['tabdeploy']['host'], _T("Host name", "xmppmaster"));
 $n->addExtraInfo( $startdeploy, _T("start", "xmppmaster"));
