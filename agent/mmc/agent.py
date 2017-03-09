@@ -2,7 +2,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2010 Mandriva, http://www.mandriva.com
-#
+# (c) 2016-2017 Mandriva, http://www.siveo.net
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -462,7 +462,9 @@ class MMCApp(object):
         self.config = readConfig(config)
         self.conffile = options.inifile
         self.daemon = options.daemonize
-
+        self.daemonlog = options.daemonizenolog
+        if not self.daemonlog:
+            self.daemon = False
         # Shared return state, so that father can know if children goes wrong
         if self.daemon:
             self._shared_state = mp.Value('i', 0)
@@ -633,9 +635,10 @@ class MMCApp(object):
 
         # In foreground mode, log to stderr
         if not self.daemon:
-            hdlr2 = logging.StreamHandler()
-            hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
-            logger.addHandler(hdlr2)
+            if self.daemonlog:
+                hdlr2 = logging.StreamHandler()
+                hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+                logger.addHandler(hdlr2)
 
         # Create log dir if it doesn't exist
         try:

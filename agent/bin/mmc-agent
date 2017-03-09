@@ -3,7 +3,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2011 Mandriva, http://www.mandriva.com
-#
+# (c) 2016-2017 Mandriva, http://www.siveo.net
 # $Id$
 #
 # This file is part of Mandriva Management Console (MMC).
@@ -44,6 +44,8 @@ if __name__ == "__main__":
     # Declare options
     parser.add_option("-d", "--no-daemon", dest="daemonize", default=True, action="store_false",
                       help="Do not daemonize")
+    parser.add_option("-s", "--no-daemonlog", dest="daemonizenolog", default=True, action="store_false",
+                      help="Do not daemonize and not log debug")
     parser.add_option("-f", "--inifile", dest="inifile", default=dft_inifile,
                       help="Path to configuration file", metavar="INIFILE")
     parser.add_option("-k", "--kill", dest="kill", default=False, action="store_true",
