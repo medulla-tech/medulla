@@ -2,6 +2,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2008-2010 Mandriva, http://www.mandriva.com/
+# (c) 2016-2017 Mandriva, http://www.siveo.net
 #
 # $Id$
 #
@@ -43,7 +44,7 @@ from pulse2.inventoryserver.config import Pulse2OcsserverConfigParser
 _shared_state = mp.Value('i', 0)
 _lock = mp.Lock()
 
-def running(daemonize, inifile):
+def running(daemonize, inifile, noconsoledebug = True):
     config = Pulse2OcsserverConfigParser()
     config.setup(inifile)
 
@@ -67,9 +68,10 @@ def running(daemonize, inifile):
     logger = logging.getLogger()
     # Log to stderr when not in daemon mode
     if not daemonize:
-        hdlr2 = logging.StreamHandler()
-        hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
-        logger.addHandler(hdlr2)
+        if noconsoledebug:
+            hdlr2 = logging.StreamHandler()
+            hdlr2.setFormatter(ColoredFormatter("%(levelname)-18s %(message)s"))
+            logger.addHandler(hdlr2)
 
     logger.info("Inventory server version('%s') build('%s')" % (str(getVersion()), str(getRevision())))
 
@@ -163,7 +165,7 @@ def daemon(config, inifile):
 if __name__ == "__main__":
     inifile = mmcconfdir + "/pulse2/inventory-server/inventory-server.ini"
     try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:ds")
     except getopt.GetoptError:
         print "Error while trying to get options."
         sys.exit(2)
@@ -173,12 +175,15 @@ if __name__ == "__main__":
             inifile = argument
         elif option == "-d":
             daemonize = False
+        elif option == "-s":
+            daemonize = False
+            debugtoconsole = False
 
     if not os.path.exists(inifile):
         print "File '%s' does not exist." % inifile
         sys.exit(3)
 
     # Start the daemon main loop
-    sys.exit(running(daemonize, inifile))
+    sys.exit(running(daemonize, inifile,debugtoconsole))
 
 
