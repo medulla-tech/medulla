@@ -188,10 +188,22 @@ class XmppMasterDatabase(DatabaseHelper):
             return ""
 
     @DatabaseHelper._session
-    def adddeploy(self, session, idcommand,  jidmachine, jidrelay,  host, inventoryuuid,
-                           uuidpackage, state, sessionid, user="", deploycol=""):
+    def adddeploy(self,
+                  session,
+                  idcommand,
+                  jidmachine,
+                  jidrelay,
+                  host,
+                  inventoryuuid,
+                  uuidpackage,
+                  state,
+                  sessionid,
+                  user="",
+                  login="",
+                  deploycol=""):
         #recupere login command
-        login = self.loginbycommand(idcommand)
+        #if login == "":
+            #login = self.loginbycommand(idcommand)[0]
         try:
             new_deploy = Deploy()
             new_deploy.jidmachine = jidmachine
@@ -204,7 +216,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.user = user
             new_deploy.deploycol = deploycol
             new_deploy.command = idcommand
-            new_deploy.login = login[0]
+            new_deploy.login = login
             session.add(new_deploy)
             session.commit()
             session.flush()
@@ -213,10 +225,11 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return new_deploy.id
 
-
     @DatabaseHelper._session
     def getlinelogswolcmd(self, session, idcommand, uuid):
-        log = session.query(Logs).filter(and_( Logs.sessionname == str(idcommand) , Logs.type == 'wol', Logs.who == uuid)).order_by(Logs.id)
+        log = session.query(Logs).filter(and_(Logs.sessionname == str(idcommand) ,
+                                              Logs.type == 'wol',
+                                              Logs.who == uuid)).order_by(Logs.id)
         log = log.all()
         session.commit()
         session.flush()
@@ -554,9 +567,9 @@ class XmppMasterDatabase(DatabaseHelper):
         """ return les machines en fonction du RS """
         sql = """SELECT 
                 `jid`, `agenttype`, `platform`, `groupdeploy`, `hostname`, `uuid_inventorymachine`, `ip_xmpp`, `subnetxmpp`
-            FROM
-                xmppmaster.machines
-            order BY `groupdeploy` ASC, `agenttype` DESC;"""
+                FROM
+                    xmppmaster.machines
+                order BY `groupdeploy` ASC, `agenttype` DESC;"""
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -1015,7 +1028,6 @@ class XmppMasterDatabase(DatabaseHelper):
         except:
             return -1
 
-
     @DatabaseHelper._session
     def delPresenceMachine(self, session, jid):
         result = ['-1']
@@ -1080,10 +1092,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def getPresencejid(self, session, jid):
         sql = """SELECT COUNT(jid) AS nb
-            FROM
-                 xmppmaster.machines
-             WHERE
-              jid LIKE ('%s%%');"""%(jid)
+                FROM
+                    xmppmaster.machines
+                WHERE
+                jid LIKE ('%s%%');"""%(jid)
         presencejid = session.execute(sql)
         session.commit()
         session.flush()
