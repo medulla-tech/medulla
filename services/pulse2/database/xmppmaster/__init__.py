@@ -124,6 +124,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
 
+    ################################
     @DatabaseHelper._session
     def addPresenceMachine(self,
                            session,
@@ -138,7 +139,8 @@ class XmppMasterDatabase(DatabaseHelper):
                            agenttype,
                            classutil='private',
                            urlguacamole ="",
-                           groupdeploy =""):
+                           groupdeploy ="",
+                           objkeypublic = None):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -153,6 +155,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.classutil = classutil
             new_machine.urlguacamole = urlguacamole
             new_machine.groupdeploy = groupdeploy
+            new_machine.picklekeypublic = objkeypublic
             session.add(new_machine)
             session.commit()
             session.flush()
@@ -180,30 +183,30 @@ class XmppMasterDatabase(DatabaseHelper):
             result = session.execute(sql)
             session.commit()
             session.flush()
-            result = [x for x in result][0]
-            return result
+            l = [x[0] for x in result][0]
+            return l
         except Exception, e:
             #logging.getLogger().error("addPresenceMachine %s" % jid)
             logging.getLogger().error(str(e))
             return ""
 
     @DatabaseHelper._session
-    def adddeploy(self,
-                  session,
-                  idcommand,
-                  jidmachine,
-                  jidrelay,
-                  host,
+    def adddeploy(self, 
+                  session, 
+                  idcommand,  
+                  jidmachine, 
+                  jidrelay,  
+                  host, 
                   inventoryuuid,
-                  uuidpackage,
-                  state,
-                  sessionid,
+                  uuidpackage, 
+                  state, 
+                  sessionid, 
                   user="",
                   login="",
                   deploycol=""):
         #recupere login command
-        #if login == "":
-            #login = self.loginbycommand(idcommand)[0]
+        if login == "":
+            login = self.loginbycommand(idcommand)[0]
         try:
             new_deploy = Deploy()
             new_deploy.jidmachine = jidmachine
@@ -225,11 +228,10 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return new_deploy.id
 
+
     @DatabaseHelper._session
     def getlinelogswolcmd(self, session, idcommand, uuid):
-        log = session.query(Logs).filter(and_(Logs.sessionname == str(idcommand) ,
-                                              Logs.type == 'wol',
-                                              Logs.who == uuid)).order_by(Logs.id)
+        log = session.query(Logs).filter(and_( Logs.sessionname == str(idcommand) , Logs.type == 'wol', Logs.who == uuid)).order_by(Logs.id)
         log = log.all()
         session.commit()
         session.flush()
@@ -254,7 +256,6 @@ class XmppMasterDatabase(DatabaseHelper):
             relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id,Deploy.result .isnot(None)))
         else:
             relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id, Deploy.result .isnot(None)))
-        #print relayserver 
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -318,6 +319,28 @@ class XmppMasterDatabase(DatabaseHelper):
             print str(e)
             logging.getLogger().error(str(e))
         return new_logincommand.id
+
+    @DatabaseHelper._session
+    def getListPresenceRelay(self, session):
+        sql = """SELECT 
+                    jid, agenttype, hostname
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    `machines`.`agenttype` = 'relayserver';"""
+        presencelist = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a=[]
+            for t in presencelist:
+                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
+                logging.getLogger().debug("t %s"%t)
+            #a = {"jid": x, for x, y ,z in presencelist}
+            logging.getLogger().debug("a %s"%a)
+            return a
+        except:
+            return -1
 
     @DatabaseHelper._session
     def deploylog(self,session,nblastline):
@@ -480,9 +503,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
         return -1
 
-
-
-
     def get_count(self, q):
         count_q = q.statement.with_only_columns([func.count()]).order_by(None)
         count = q.session.execute(count_q).scalar()
@@ -532,7 +552,6 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
 
-
     @DatabaseHelper._session
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
         if login is not None:
@@ -567,9 +586,9 @@ class XmppMasterDatabase(DatabaseHelper):
         """ return les machines en fonction du RS """
         sql = """SELECT 
                 `jid`, `agenttype`, `platform`, `groupdeploy`, `hostname`, `uuid_inventorymachine`, `ip_xmpp`, `subnetxmpp`
-                FROM
-                    xmppmaster.machines
-                order BY `groupdeploy` ASC, `agenttype` DESC;"""
+            FROM
+                xmppmaster.machines
+            order BY `groupdeploy` ASC, `agenttype` DESC;"""
         result = session.execute(sql)
         session.commit()
         session.flush()
@@ -646,6 +665,18 @@ class XmppMasterDatabase(DatabaseHelper):
             return uuid_inventorymachine.strip('UUID')
         else:
             return False
+
+
+    #@DatabaseHelper._session
+    #def getkeypublicFromJid(self, session, jid):
+        #""" return machine uuid for JID """
+        picklekeypublic = session.query(Machines).filter_by(jid=jid).first().picklekeypublic
+        #if picklekeypublic:
+            #return picklekeypublic.strip('UUID')
+        #else:
+            #return False
+
+
 
     @DatabaseHelper._session
     def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
@@ -907,7 +938,6 @@ class XmppMasterDatabase(DatabaseHelper):
         #logging.getLogger().info(" result %s"%result[0])
         return result
 
-
     @DatabaseHelper._session
     def getjidMachinefromuuid(self, session, uuid):
         try:
@@ -924,7 +954,6 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return ""
-        #print jidmachine.jid
         result=[x for x in jidmachine][0]
         return result[0]
 
@@ -973,6 +1002,8 @@ class XmppMasterDatabase(DatabaseHelper):
             type = 'deploy'
                 AND sessionname = '%s'
         ORDER BY id;"""%(sessiondeploy)
+       
+    
         step = session.execute(sql)
         session.commit()
         session.flush()
@@ -992,28 +1023,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     jid, agenttype, hostname
                  FROM
                     xmppmaster.machines;"""
-        presencelist = session.execute(sql)
-        session.commit()
-        session.flush()
-        try:
-            a=[]
-            for t in presencelist:
-                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
-                logging.getLogger().debug("t %s"%t)
-            #a = {"jid": x, for x, y ,z in presencelist}
-            logging.getLogger().debug("a %s"%a)
-            return a
-        except:
-            return -1
-
-    @DatabaseHelper._session
-    def getListPresenceRelay(self, session):
-        sql = """SELECT 
-                        jid, agenttype, hostname
-                    FROM
-                        xmppmaster.machines
-                    WHERE
-                        `machines`.`agenttype` = 'relayserver';"""
         presencelist = session.execute(sql)
         session.commit()
         session.flush()
@@ -1092,10 +1101,10 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def getPresencejid(self, session, jid):
         sql = """SELECT COUNT(jid) AS nb
-                FROM
-                    xmppmaster.machines
-                WHERE
-                jid LIKE ('%s%%');"""%(jid)
+            FROM
+                 xmppmaster.machines
+             WHERE
+              jid LIKE ('%s%%');"""%(jid)
         presencejid = session.execute(sql)
         session.commit()
         session.flush()

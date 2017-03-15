@@ -60,6 +60,7 @@ class UserLog(Base, XmppMasterDBObj):
     datelog =  Column(DateTime, default=datetime.datetime.utcnow)
     type =  Column(String(10), nullable=False,default = "info")
 
+################################
 class Machines(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'machines'
@@ -79,7 +80,7 @@ class Machines(Base, XmppMasterDBObj):
     classutil = Column(String(20))
     urlguacamole =Column(String(255))
     groupdeploy = Column(String(80))
-
+    picklekeypublic = Column(String(550))
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================

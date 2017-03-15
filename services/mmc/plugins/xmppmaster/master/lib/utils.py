@@ -44,6 +44,35 @@ if sys.platform.startswith('win'):
     import win32netcon
     import socket
 
+def file_get_contents(filename, use_include_path = 0, context = None, offset = -1, maxlen = -1):
+    """
+        load content file or simple url
+    """
+    if (filename.find('://') > 0):
+        ret = urllib2.urlopen(filename).read()
+        if (offset > 0):
+            ret = ret[offset:]
+        if (maxlen > 0):
+            ret = ret[:maxlen]
+        return ret
+    else:
+        fp = open(filename,'rb')
+        try:
+            if (offset > 0):
+                fp.seek(offset)
+            ret = fp.read(maxlen)
+            return ret
+        finally:
+            fp.close( )
+
+def file_put_contents(filename,  data):
+    """ 
+    write content "data" to file "filename"
+    """
+    f = open(filename, 'w')
+    f.write(data)
+    f.close()
+
 def displayDataJson(jsondata):
     pp = pprint.PrettyPrinter(indent=4)
     pp.pprint(jsondata)
@@ -244,8 +273,6 @@ def shorten_mac(mac):
     #mac = mac.replace("/","")
     return mac
 
-
-
 # 3 functions used for subnet network
 def ipV4toDecimal(ipv4):
     d = ipv4.split('.')
@@ -262,7 +289,6 @@ def subnetnetwork(adressmachine, mask):
     adressmachine = adressmachine.split(":")[0]
     reseaumachine = ipV4toDecimal(adressmachine) &  ipV4toDecimal(mask)
     return decimaltoIpV4(reseaumachine)
-
 
 def is_valid_ipv4(ip):
     """Validates IPv4 addresses.
@@ -333,8 +359,6 @@ def is_valid_ipv6(ip):
         $
     """, re.VERBOSE | re.IGNORECASE | re.DOTALL)
     return pattern.match(ip) is not None
-
-
 
 #linux systemd or init
 def typelinux():

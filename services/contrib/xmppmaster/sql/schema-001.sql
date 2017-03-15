@@ -125,6 +125,8 @@ CREATE TABLE `logs` (
 --
 
 DROP TABLE IF EXISTS `machines`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `machines` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `jid` varchar(45) NOT NULL,
@@ -139,10 +141,16 @@ CREATE TABLE `machines` (
   `classutil` varchar(10) NOT NULL DEFAULT 'private',
   `groupdeploy` varchar(80) DEFAULT NULL,
   `urlguacamole` varchar(255) DEFAULT NULL,
+  `picklekeypublic` varchar(550) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `jid_UNIQUE` (`jid`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
+
+
+-- ALTER TABLE `xmppmaster`.`machines` ADD COLUMN `picklekeypublic` VARCHAR(550) NULL DEFAULT NULL AFTER `urlguacamole`;
+
+
 --
 -- Table structure for table `network`
 --
