@@ -39,28 +39,28 @@ $submod->setDescription(_T("Imaging", "manage"));
 $submod->setImg("modules/imaging/img/imaging");
 $submod->setDefaultPage("imaging/manage/index");
 
-$page = new Page("unattended", _T("Imaging Unattended", "imaging"));
-$page->setFile("modules/imaging/manage/unattended.php");
-$submod->addPage($page);
+//Add systemImageManager.php to the module
+$page = new Page("systemImageManager", _T("System Image Manager", "imaging"));
+$page->setFile("modules/imaging/manage/systemImageManager.php");
+$page->setOptions(array("visible" => True));
 
-//Add sysprepList.php to the module
-$page = new Page("sysprepList", _T("Imaging sysprepList", "imaging"));
-$page->setFile("modules/imaging/manage/sysprepList.php");
+//Add tab page unattended
+$tab = new Tab("unattended", _T("Imaging Unattended", 'imaging'));
+$page->addTab($tab);
+//Add tab page sysprepList
+$tab = new Tab("sysprepList", _T("Sysprep List", 'imaging'));
+$page->addTab($tab);
 $submod->addPage($page);
 
 //Add sysprepView.php to the module
 $page = new Page("sysprepView", _T("Imaging sysprepView", "imaging"));
 $page->setFile("modules/imaging/manage/sysprepView.php");
+
 $submod->addPage($page);
 
 $page = new Page("ajaxConvertHexaBase64");
 $page->setFile("modules/imaging/manage/ajaxConvertHexaBase64.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
-$submod->addPage($page);
-
-//Add systemImageManager.php to the module
-$page = new Page("systemImageManager", _T("System Image Manager", "imaging"));
-$page->setFile("modules/imaging/manage/systemImageManager.php");
 $submod->addPage($page);
 
 $page = new Page("ajaxgenereAWFGxml");
