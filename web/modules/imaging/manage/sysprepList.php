@@ -75,8 +75,8 @@ $table->addExtraInfo($list['description'], _T("Description", "imaging"));
 
 //Add actions on each row
 $table->addActionItem(new ActionItem(_T("Display sysprep file","imaging"), "sysprepView", "display", "display", "imaging", "manage"));
-$table->addActionItem(new ActionItem(_T("Edit sysprep file","imaging"), "unattended", "edit", "edit", "imaging", "manage"));
-$table->addActionItem(new ActionConfirmItem(_T("Delete sysprep file", 'imaging'), "sysprepList", "delete", "deleteFile", "imaging", "manage", _T('Are you sure you want to unset this sysrep answer file?', 'imaging')));
+$table->addActionItem(new ActionItem(_T("Edit sysprep file","imaging"), "systemImageManager", "edit", "tab=unattended&edit", "imaging", "manage"));
+$table->addActionItem(new ActionConfirmItem(_T("Delete sysprep file", 'imaging'), "systemImageManager", "delete", "tab=sysprepList&deleteFile", "imaging", "manage", _T('Are you sure you want to unset this sysrep answer file?', 'imaging')));
 
 // Display the list
 $table->display();

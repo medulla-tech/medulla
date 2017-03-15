@@ -37,7 +37,7 @@ from mmc.site import mmcconfdir
 from pulse2.package_server import ThreadLauncher, init_logger_debug, getVersion, getRevision
 from pulse2.package_server.config import P2PServerCP
 
-def running(inifile, daemonize):
+def running(inifile, daemonize, noconsoledebug = True):
     config = P2PServerCP()
     config.pre_setup(inifile)
 
@@ -74,9 +74,10 @@ def running(inifile, daemonize):
     # As there is a lot of log possible during the init of pserver, we no
     # longer log to stderr if we daemonize later
     if not daemonize:
-        hdlr2 = logging.StreamHandler()
-        logger.addHandler(hdlr2)
-        logging.getLogger('imaging').addHandler(hdlr2)
+        if noconsoledebug:
+            hdlr2 = logging.StreamHandler()
+            logger.addHandler(hdlr2)
+            logging.getLogger('imaging').addHandler(hdlr2)
 
     try:
         ThreadLauncher().initialize(config)
@@ -155,21 +156,25 @@ def daemon(config):
 if __name__ == "__main__":
     inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
     try:
-        opts, suivarg = getopt.getopt(sys.argv[1:], "f:d")
+        opts, suivarg = getopt.getopt(sys.argv[1:], "f:ds")
     except getopt.GetoptError:
         sys.exit(2)
     daemonize = True
+    debugtoconsole = True
     for option, argument in opts:
         if option == "-f":
             inifile = argument
         elif option == "-d":
             daemonize = False
+        elif option == "-s":
+            daemonize = False
+            debugtoconsole = False
 
     if not os.path.exists(inifile):
         print "File '%s' does not exist." % inifile
         sys.exit(3)
 
     # Start the daemon main loop
-    sys.exit(running(inifile, daemonize))
+    sys.exit(running(inifile, daemonize, debugtoconsole))
 
 

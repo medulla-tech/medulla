@@ -160,3 +160,27 @@ operates.
 
 `--disable-wol'
     Do not build and install wake-on-lan tool.
+
+Quick installation : devel branch
+============================
+In tools repository, 'install-pulse-git' allow a quick setup.
+./install-pulse-git \
+	--pulse-repo-url=<pulse repo url> \
+	--root-password=<root password> \
+	--org-name=<organization name> \
+	--interface-to-clients=<interface> \
+	--enable-pulse-main=[g]lpi[d]hcp|[p]xe | --enable-multisite=[d]hcp|[p]xe|[b]ackuppc \
+	--create-entity \
+	--entity=<entity name> \
+	--dhcp-dns-server=<dns server for DHCP clients> \
+	--dhcp-gateway-address=<gateway address for DHCP clients> \
+	--interface-to-main-pulse=<interface> \
+	--main-pulse-ip=<IP address> \
+	--glpi-url=<GLPI URL> \
+	--glpi-dbhost=<IP address> \
+	--glpi-dbname=<database name> \
+	--glpi-dbuser=<database username> \
+	--glpi-dbpasswd=<database user password> \
+	--glpi-dbrootpasswd=<mysql root password> 
+   
+Repository for devel branch http://git.siveo.net/
