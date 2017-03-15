@@ -70,7 +70,6 @@ function list_computers($names,
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
-//jfkjfk
         $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","install","computers", "xmppmaster", "xmppmaster");
         $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","installg","computers","xmppmaster", "xmppmaster");
         $actionConsole = array();
