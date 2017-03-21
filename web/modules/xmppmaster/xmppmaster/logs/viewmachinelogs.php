@@ -20,7 +20,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+ require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 $p = new PageGenerator(_T("Deployment logs for machine "." ".$hostname, 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
