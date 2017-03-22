@@ -454,7 +454,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                       encodebase64 = False,
                                                       uuidmachine=uuidmachine)
             else:
-                logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
+                logger.error("deploy jjjjjj %s error uuid machine %s" %(name, uuidmachine))
                 return False
         except:
             logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
