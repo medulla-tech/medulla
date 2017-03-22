@@ -467,7 +467,7 @@ class PackageParserJSON:
         else:
             sequence['error'] = seq_count+2
         sequence['@resultcommand'] = ''
-        sequence['timeout'] = 100
+        sequence['timeout'] = 900
         data[package.targetos]['sequence'].append(sequence)
         seq_count += 1
 
