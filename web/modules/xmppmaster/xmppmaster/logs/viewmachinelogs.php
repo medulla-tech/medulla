@@ -205,9 +205,10 @@ $p->display();
             if (isset($step['completed'])){
                 echo '<h3 style="color:green;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". "  </h3>";
             }
-            else{
-                echo '<h3 style="color:red;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". '</h3>'; 
-            }
+            // display step not used in red
+//             else{
+//                 echo '<h3 style="color:red;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". '</h3>'; 
+//             }
             if (isset($step['completed'])){
                 echo '<div class="shadow" 
                             style="  color:green;
