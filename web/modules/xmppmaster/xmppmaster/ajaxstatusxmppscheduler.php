@@ -33,8 +33,8 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 $arraydeploy= xmlrpc_get_deployxmppscheduler( $_GET['login'] , $start, $end, $filter);
 $etat="";
 $LastdeployINsecond = 3600 * 72;
-echo "<h2>".$_GET['login']."</h2>";
-
+//echo "<h2>".$_GET['login']."</h2>";
+echo "<h2>Planned tasks</h2>";
 $login   = array();
 $startdeploy = array();
 

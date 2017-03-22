@@ -31,7 +31,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 
-$p = new PageGenerator(_T("Current tasks", 'xmppmaster'));
+$p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login']), 'formRunning'  );

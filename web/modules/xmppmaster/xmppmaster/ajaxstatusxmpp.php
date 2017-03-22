@@ -31,7 +31,8 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $etat="";
 $LastdeployINsecond = 3600*72;
-echo "<h2>".$_GET['login']."</h2>";
+echo "<h2>Current and past tasks";
+//echo "<h2>".$_GET['login']."</h2>";
 $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$etat, $LastdeployINsecond, $start, "", $filter) ;
 
 $params = array();

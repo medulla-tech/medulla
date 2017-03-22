@@ -31,7 +31,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 
-$p = new PageGenerator(_T("Current tasks all logins", 'xmppmaster'));
+$p = new PageGenerator(_T("all users", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
