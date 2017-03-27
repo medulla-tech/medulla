@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2017 siveo, http://www.siveo.net/
  *
  * $Id$
  *
@@ -20,7 +20,9 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
  require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
+ 
 $p = new PageGenerator(_T("Deployment logs for machine "." ".$hostname, 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -42,6 +44,11 @@ $p->display();
   //recupere information deploie. for cmn_id
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
     $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
+    if (! isset($info['objectdeploy'][0]['result']) ||
+        $info['objectdeploy'][0]['result'] == "" &&
+        isset($info['objectdeploy'][0]['pathpackage'])){
+        echo "PACKAGE ". $info['objectdeploy'][0]['pathpackage']."<br>";
+    }
 
    if ($datawol['len'] != 0){
         echo "<br>";
@@ -81,16 +88,23 @@ $p->display();
         echo "</table>";
     }
     if ($info['len'] == 0){
-        echo _T("Wait for the deployment",'xmppmaster'). " "  . $cmd_id;
-         //reload page
-         echo'
-            <script type="text/javascript">
-            setTimeout(refresh, 10000);
-            function  refresh(){
-                jQuery( "#formpage" ).submit();
-            }
-        </script>
-        ';
+        echo "<p>";
+        echo _T("Wait",'xmppmaster');
+        echo " ".'<span id="decompt">'.'60 seconds'.'</span>';
+        echo _T("for the deployment",'xmppmaster'). " "  . $cmd_id;
+        echo "</p>";
+        echo    '<script type="text/javascript">
+                var auto_refresh = setInterval(
+                    function ()
+                    {
+                        valeurcompte =  parseInt(jQuery("#decompt").text())
+                        valeurcompte --
+                        if(valeurcompte < 0){
+                            clearInterval(auto_refresh);
+                        }
+                        jQuery("#decompt").text(valeurcompte + " seconds")
+                    }, 1000); 
+                </script>';
     }
     else{
         $sessionxmpp=$info['objectdeploy'][0]['sessionid'];
@@ -106,7 +120,7 @@ $p->display();
 
         $datestart =  date("Y-m-d H:i:s", $start);
         echo "Start deployment : [".$infodeploy['len'] ." steps] " .$datestart;
-       if (isset($resultatdeploy['descriptor']['info'])){
+        if (isset($resultatdeploy['descriptor']['info'])){
         echo "<br>";
         echo "<h2>Package</h2>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
@@ -147,7 +161,7 @@ $p->display();
 
       }
         echo "<br>";
-        echo "<h2>Deployment phases</h2>";
+        echo "<h3>Deployment phases</h3>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
             echo "<thead>";
                 echo "<tr>";
@@ -181,6 +195,7 @@ $p->display();
         }
      echo "</tbody>";
     echo "</table>";
+    
     if (isset($resultatdeploy['descriptor']['sequence'] )){
         echo "<br>";
         echo "<h2>Deployment result</h2>";
@@ -199,19 +214,23 @@ $p->display();
                 $actions = "Clean downloaded package";
             elseif ($step['action'] == "actionrestartbot"  )
                 $actions = "Restart agent";
+            elseif ($step['action'] == "ERROR"  ){
+                $actions = "ERROR";}
             else
                 $actions = ltrim(str_replace("_"," ",substr($step['action'],6)));
             echo "<br>";
-            if (isset($step['completed'])){
+            if (isset($step['completed']) && $actions != "ERROR"){
                 echo '<h3 style="color:green;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". "  </h3>";
+                $color="green";
             }
-            // display step not used in red
-//             else{
-//                 echo '<h3 style="color:red;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". '</h3>'; 
-//             }
+            if( $actions == "ERROR"){
+                echo '<h3 style="color:red;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". '</h3>'; 
+                $color="red";
+            }
+
             if (isset($step['completed'])){
                 echo '<div class="shadow" 
-                            style="  color:green;
+                            style="  color:'.$color.';
                                        display: none;
                                         padding:0 10px;">';
                 foreach($step as $keystep => $infostep){
@@ -241,18 +260,23 @@ $p->display();
                 echo "</div>";
         }
     }
-    else{
-    //reload page
+}
+
+
+if (! isset($info['objectdeploy'][0]['result']) ||
+        $info['objectdeploy'][0]['result'] == ""){
+        echo "Waitting result";
+        echo '<img src="modules/xmppmaster/img/waitting.gif">';
     echo'
             <script type="text/javascript">
-            setTimeout(refresh, 10000);
+            setTimeout(refresh, 5000);
             function  refresh(){
-               // jQuery( "#formpage" ).submit();
+                jQuery( "#formpage" ).submit();
             }
         </script>
         ';
-    }
 }
+
 ?>
 <form id="formpage" action="<? echo $_SERVER['PHP_SELF']; ?>" METHODE="GET" >
     <input type="hidden" name="tab" value ="<? echo $tab; ?>" >

@@ -70,6 +70,7 @@ function list_computers($names,
     if (in_array("xmppmaster", $_SESSION["supportModList"])) {
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
+
         $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","install","computers", "xmppmaster", "xmppmaster");
         $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","installg","computers","xmppmaster", "xmppmaster");
         $actionConsole = array();
@@ -80,6 +81,8 @@ function list_computers($names,
     $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
     $profileAction = new ActionItem(_("Show Profile"), "computersgroupedit", "logfile","computer", "base", "computers");
 
+    $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "vncclient", "computer", "xmppmaster", "xmppmaster");
+    $DeployQuickxmpp->setWidth(600);
     // with check presence xmpp
     $vncClientActiongriser = new EmptyActionItem1(_("Remote control"), "vnc_client", "vncclientg", "computer", "base", "computers");
 
@@ -91,7 +94,7 @@ function list_computers($names,
     $actionVncClient = array();
     $actionExtTicket = array();
     $actionProfile = array();
-
+    $actionxmppquickdeoloy = array();
     $params = array();
     $cssClasses = array();
 
@@ -119,9 +122,9 @@ function list_computers($names,
             }
         }
 
-        //$presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
+        $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
-        
+        $value['presencemachinexmpp'] = $presencemachinexmpp;
         $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
 
         foreach ($headers as $header) {
@@ -181,15 +184,28 @@ function list_computers($names,
             if ($presencemachinexmpp){
                 $actionVncClient[] = $vncClientAction;
             }else
-            {//show icone vnc griser jfk
+            {//show icone vnc griser 
                 $actionVncClient[] = $vncClientActiongriser;
             }
         }else
         if ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
         }
+        
+        if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+            $actionxmppquickdeoloy[]=$DeployQuickxmpp;
+        }
+        
+        
         $params[] = $value;
     }
+    
+    
+    
+    //
+    //$actionxmppquickdeoloy
+    
+    
     foreach($params as &$element ){
 
     if ( $groupinfodeploy != -1){
@@ -294,6 +310,7 @@ function list_computers($names,
     if (isExpertMode()){
         if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
             $n->addActionItemArray($actionConsole);
+            $n->addActionItemArray($actionxmppquickdeoloy);
         }
     }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){

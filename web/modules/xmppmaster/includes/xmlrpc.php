@@ -124,7 +124,24 @@ function xmlrpc_runXmppWol($pluginname, $macadress){
     return xmlCall("xmppmaster.CallXmppPlugin", array($pluginname, array("macadress"=>$macadress)));
 }
 
+function xmlrpc_runXmppWolforuuid($uuid){
+    return xmlCall("xmppmaster.CallXmppPlugin", array("wakeonlan", array("UUID"=>$uuid)));
+}
+ 
+function xmlrpc_callInventoryinterface($uuid){
+    return xmlCall("xmppmaster.callInventoryinterface", array($uuid));
+}
+
+function xmlrpc_callrestart($uuid){
+    return xmlCall("xmppmaster.callrestart", array($uuid));
+}
+
+function xmlrpc_callshutdown($uuid){
+    return xmlCall("xmppmaster.callshutdown", array($uuid));
+}
+
 function xmlrpc_getstepdeployinsession($session){
     return xmlCall("xmppmaster.getstepdeployinsession", array($session));
 }
+
 ?>

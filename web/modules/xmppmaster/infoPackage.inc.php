@@ -48,6 +48,8 @@ $submod->addPage($page);
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+
+
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -58,6 +60,41 @@ $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
+
+
+
+
+$page = new Page("deployquick", _T("action deploy quick", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/deployquick.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+$page = new Page("actionwakeonlan");
+$page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+    
+$page = new Page("actioninventory");
+$page->setFile("modules/xmppmaster/xmppmaster/actioninventory.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+
+$page = new Page("actionrestart");
+$page->setFile("modules/xmppmaster/xmppmaster/actionrestart.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+
+$page = new Page("actionshutdown");
+$page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+
+
+
+
 
 // ajax procedure read and send result from log
 $page = new Page("viewlogs");
