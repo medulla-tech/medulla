@@ -34,7 +34,10 @@ from mmc.plugins.msc.database import MscDatabase
 
 from master.lib.utils import name_random
 from  xmppmaster import *
-from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,callXmppFunction, ObjectXmpp, callXmppPlugin
+from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
+                                                      callXmppFunction, ObjectXmpp, callXmppPlugin,\
+                                                      callInventory, callrestartbymaster,\
+                                                      callshutdownbymaster
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -162,6 +165,30 @@ def runXmppApplicationDeployment(*args, **kwargs ):
 
 def CallXmppPlugin(*args, **kwargs ):
     return callXmppPlugin(*args, **kwargs )
+
+def callInventoryinterface(uuid):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        return callInventory(jid)
+    else:
+        logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
+        return False
+
+def callrestart(uuid):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        return callrestartbymaster(jid)
+    else:
+        logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing"%uuid )
+        return False
+
+def callshutdown(uuid):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        return callshutdownbymaster(jid)
+    else:
+        logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
+        return False
 
 def runXmppCommand(cmd,machine):
     data = {

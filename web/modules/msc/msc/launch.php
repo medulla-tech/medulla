@@ -124,7 +124,7 @@ function start_a_command($proxy = array()) {
             $params[$param] = $post[$param];
         }
     }
-    // jfk scheduler_start_these_commands
+    // scheduler_start_these_commands
     $pid = $post['pid'];
     $mode = $post['copy_mode'];
 
@@ -136,7 +136,6 @@ function start_a_command($proxy = array()) {
         /* record new command */
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-            //jfk
             xmlrpc_addlogincommand($_SESSION['login'], $id);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
@@ -148,7 +147,6 @@ function start_a_command($proxy = array()) {
             exit;
         }
         else{
-                //jfk
             if (!isXMLRPCError()) {
                 scheduler_start_these_commands('', array($id));
                 /* then redirect to the logs page */
@@ -197,7 +195,6 @@ function start_a_command($proxy = array()) {
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    //jfk
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id);
                 }
 
@@ -228,7 +225,6 @@ function start_a_command($proxy = array()) {
                 // Add command on sub-group
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    //jfk
                     xmlrpc_addlogincommand($_SESSION['login'], $command_id);
                 }
 
@@ -247,7 +243,6 @@ function start_a_command($proxy = array()) {
         else {
             $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                //jfk
                 xmlrpc_addlogincommand($_SESSION['login'], $id);
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -661,7 +656,7 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     $group = new Group($_GET['gid'], true);
     if ($group->exists != False) {
         // Display the actions list
-        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {//jfk
+        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
             $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
             $msc_actions->display();
         }

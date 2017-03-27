@@ -2,7 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
- * (c) 2017 Siveo, http://http://www.siveo.net
+ *
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -153,7 +153,6 @@ foreach ($packages as $c_package) {
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "msc")))));
 }
-
 
 $n = new OptimizedListInfos($a_packages, _T("Package", "msc"));
 $n->addExtraInfo($a_description, _T("Description", "msc"));

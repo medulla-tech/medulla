@@ -183,6 +183,8 @@ class XmppMasterDatabase(DatabaseHelper):
             result = session.execute(sql)
             session.commit()
             session.flush()
+            #result = [x for x in result]
+            ##print result.__dict__
             l = [x[0] for x in result][0]
             return l
         except Exception, e:
@@ -253,9 +255,12 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._session
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):
-            relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id,Deploy.result .isnot(None)))
+            relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id))
+            #,Deploy.result .isnot(None)
         else:
-            relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id, Deploy.result .isnot(None)))
+            relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id))
+            #, Deploy.result .isnot(None)
+        print relayserver 
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -551,6 +556,8 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['start'].append(linedeploy.start)
             ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
         return ret
+#SELECT login FROM xmppmaster.has_login_command where  command ='17'
+#;
 
     @DatabaseHelper._session
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
@@ -665,18 +672,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return uuid_inventorymachine.strip('UUID')
         else:
             return False
-
-
-    #@DatabaseHelper._session
-    #def getkeypublicFromJid(self, session, jid):
-        #""" return machine uuid for JID """
-        picklekeypublic = session.query(Machines).filter_by(jid=jid).first().picklekeypublic
-        #if picklekeypublic:
-            #return picklekeypublic.strip('UUID')
-        #else:
-            #return False
-
-
 
     @DatabaseHelper._session
     def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
@@ -821,7 +816,6 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
         return [x for x in result]
 
-
     #@DatabaseHelper._session
     #def algoruledefault(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
         #pass
@@ -954,9 +948,11 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e))
             return ""
-        result=[x for x in jidmachine][0]
+        try : 
+            result=[x for x in jidmachine][0]
+        except:
+            return ""
         return result[0]
-
 
     @DatabaseHelper._session
     def updateMachineidinventory(self, session, id_machineinventory, idmachine):
@@ -1002,8 +998,6 @@ class XmppMasterDatabase(DatabaseHelper):
             type = 'deploy'
                 AND sessionname = '%s'
         ORDER BY id;"""%(sessiondeploy)
-       
-    
         step = session.execute(sql)
         session.commit()
         session.flush()
@@ -1096,7 +1090,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return [(m[1],m[0]) for m in ret]
         else:
             return []
-    
 
     @DatabaseHelper._session
     def getPresencejid(self, session, jid):

@@ -21,41 +21,13 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-// echo "<pre>";
-//  print_r($_GET['vnctype'] );
-//  print_r($_GET);
-//  
-//  print_r($_POST);
-//  
-//  print_r($_SESSION);
-//   
-//  
-// //   extract(
-// //   
-// //   [vnctype] => guacamole
-// echo "</pre>";
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
-//#jfk
+
  if (isset($_GET['vnctype']) && $_GET['vnctype'] == "guacamole"){
     require_once('modules/xmppmaster/includes/xmlrpc.php');
     include dirname(__FILE__) . '/vnc_guacamole.php';
-//     echo '<table>
-//     <tr>
-//     
-//     <td>
-//     </td>
-//     
-//     <td>
-//     </td>
-//     </table>
-//     ';
-    
-//     echo "<pre>";
-//     $request_url=$_SERVER['REQUEST_URI'];
-//     $link = str_replace("vnc_client", "vnc_guacamole", $request_url);
-//      echo "</pre>";
-//      header('Location: '.$link);   
+
  }else
  {
     if (web_def_use_no_vnc() == 1)

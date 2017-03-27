@@ -670,6 +670,28 @@ class MUCBot(sleekxmpp.ClientXMPP):
         except:
             traceback.print_exc(file=sys.stdout)
 
+    def callrestartbymaster(self, to):
+        restartmachine = {
+            'action' : "restarfrommaster",
+            'sessionid' : name_random(5, "restart"),
+            'data' : [],
+            'ret': 255
+            }
+        self.send_message(mto=to,
+                        mbody=json.dumps(restartmachine),
+                        mtype='chat')
+
+    def callshutdownbymaster(self, to):
+        shutdownmachine = {
+            'action' : "shutdownfrommaster",
+            'sessionid' : name_random(5, "shutdown"),
+            'data' : [],
+            'ret': 255
+            }
+        self.send_message(mto=to,
+                        mbody=json.dumps(shutdownmachine),
+                        mtype='chat')
+
     def callinventory(self, torelayserver, data):
         try:
             body = {'action' : 'inventory',

@@ -183,7 +183,6 @@ if ($_POST) {
             "location" => $locationparameter,
         );
 
-        //jfkjfk
         xmlrpc_SetMulticastMultiSessionParameters($Paramsmulticast);
 //         echo "<pre>";
 //             print_r ($Paramsmulticast);
