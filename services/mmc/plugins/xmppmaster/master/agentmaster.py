@@ -91,6 +91,16 @@ def callXmppPlugin(plugin, data ):
     logging.getLogger().debug("**call plugin %s"%(plugin))
     ObjectXmpp().callpluginmasterfrommmc(plugin,  data )
 
+def callInventory(to):
+    ObjectXmpp().callinventory( to)
+
+def callrestartbymaster(to):
+    ObjectXmpp().callrestartbymaster( to)
+
+
+def callshutdownbymaster(to):
+   ObjectXmpp().callshutdownbymaster( to)
+
 class XmppCommandDiffered:
     """
     Thread in charge of running precommand
@@ -221,7 +231,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.machineDeploy = {}
 
         # Clear machine table
-        # XmppMasterDatabase().clearMachine()
+        XmppMasterDatabase().clearMachine()
 
         self.idm = ""
         self.presencedeployment = {}
@@ -341,6 +351,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for suppmachineuuid in suppobjmachineDeploy:
             del self.machineDeploy[suppmachineuuid]
 
+ 
+
     def start(self, event):
         self.get_roster()
         self.send_presence()
@@ -439,12 +451,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                   time,
                                   encodebase64 = False,
                                   uuidpackage=""):
+
         try:
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
+
             jidrelay = objmachine.groupdeploy
             jidmachine = objmachine.jid
             ### print "jidrelay %s\njidmachine %s"%(jidrelay,jidmachine)
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "" :
+
                 return self.applicationdeploymentjson(jidrelay,
                                                       jidmachine,
                                                       idcommand,
@@ -454,9 +469,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                       encodebase64 = False,
                                                       uuidmachine=uuidmachine)
             else:
-                logger.error("deploy jjjjjj %s error uuid machine %s" %(name, uuidmachine))
+                logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
                 return False
         except:
+            traceback.print_exc(file=sys.stdout)
             logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
             return False
 
@@ -481,6 +497,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         1st action: synchronize the previous package name
         The package is already on the machine and also in server relay.
         """
+        
+        
+        
         if not managepackage.getversionpackagename(name):
             logger.error("deploy %s error package name" %(name))
             return False
@@ -681,6 +700,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(restartmachine),
                         mtype='chat')
 
+
     def callshutdownbymaster(self, to):
         shutdownmachine = {
             'action' : "shutdownfrommaster",
@@ -692,12 +712,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(shutdownmachine),
                         mtype='chat')
 
-    def callinventory(self, torelayserver, data):
+    def callinventory(self, to):
         try:
             body = {'action' : 'inventory',
                     'sessionid': name_random(5, "inventory"),
-                    'data' : data }
-            self.send_message(  mto = torelayserver,
+                    'data' : {} }
+            self.send_message(  mto = to,
                                 mbody = json.dumps(body),
                                 mtype = 'chat')
         except:
