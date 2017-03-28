@@ -550,8 +550,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                        "STARDEPLOY",
                                        sessionid,
                                        user="",
-                                       login=login,
-                                       deploycol="")
+                                       login=login)
         return sessionid
 
     def pluginaction(self,rep):

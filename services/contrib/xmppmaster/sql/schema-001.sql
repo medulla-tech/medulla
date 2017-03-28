@@ -32,26 +32,28 @@ USE `xmppmaster`;
 --
 -- Table structure for table `deploy`
 --
-
-DROP TABLE IF EXISTS `deploy`;
 CREATE TABLE `deploy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pathpackage` varchar(100) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `sessionid` varchar(45) NOT NULL,
+  `host` varchar(45) DEFAULT NULL,
   `jid_relay` varchar(45) NOT NULL,
   `jidmachine` varchar(45) NOT NULL,
   `state` varchar(45) NOT NULL,
-  `sessionid` varchar(45) NOT NULL,
   `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `result` text,
+  `startcmd` timestamp NULL DEFAULT NULL,
+  `endcmd` timestamp NULL DEFAULT NULL,
   `inventoryuuid` varchar(11) NOT NULL,
-  `host` varchar(45) DEFAULT NULL,
+  `group_uuid` varchar(11) DEFAULT NULL,
   `user` varchar(45) DEFAULT NULL,
-  `deploycol` varchar(45) DEFAULT NULL,
   `command` int(11) DEFAULT NULL,
   `login` varchar(45) DEFAULT NULL,
+  `pathpackage` varchar(100) NOT NULL,
+  `macadress` varchar(255) DEFAULT NULL,
+  `result` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sessionid_UNIQUE` (`sessionid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 
 --

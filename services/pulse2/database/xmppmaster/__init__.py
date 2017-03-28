@@ -194,23 +194,29 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def adddeploy(self, 
-                  session, 
-                  idcommand,  
-                  jidmachine, 
-                  jidrelay,  
+                  session,
+                  idcommand,
+                  jidmachine,
+                  jidrelay,
                   host, 
                   inventoryuuid,
                   uuidpackage, 
                   state, 
-                  sessionid, 
+                  sessionid,
                   user="",
                   login="",
-                  deploycol=""):
+                  title="",
+                  group_uuid = None,
+                  startcmd = None,
+                  endcmd = None,
+                  macadress = None
+                  ):
         #recupere login command
         if login == "":
             login = self.loginbycommand(idcommand)[0]
         try:
             new_deploy = Deploy()
+            new_deploy.group_uuid = group_uuid
             new_deploy.jidmachine = jidmachine
             new_deploy.jid_relay = jidrelay
             new_deploy.host = host
@@ -219,9 +225,12 @@ class XmppMasterDatabase(DatabaseHelper):
             new_deploy.state = state
             new_deploy.sessionid = sessionid
             new_deploy.user = user
-            new_deploy.deploycol = deploycol
             new_deploy.command = idcommand
             new_deploy.login = login
+            new_deploy.startcmd =startcmd
+            new_deploy.endcmd = endcmd
+            new_deploy.macadress = macadress
+            new_deploy.title = title
             session.add(new_deploy)
             session.commit()
             session.flush()
@@ -229,6 +238,7 @@ class XmppMasterDatabase(DatabaseHelper):
             print str(e)
             logging.getLogger().error(str(e))
         return new_deploy.id
+
 
 
     @DatabaseHelper._session
@@ -254,6 +264,7 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getdeployfromcommandid(self, session, command_id, uuid):
+        
         if (uuid == "UUID_NONE"):
             relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id))
             #,Deploy.result .isnot(None)
@@ -282,7 +293,6 @@ class XmppMasterDatabase(DatabaseHelper):
                 obj['result']=t.result
             obj['host']=t.host
             obj['user']=t.user
-            obj['deploycol']=t.deploycol
             obj['login']=str(t.login)
             obj['command']=t.command
             arraylist.append(obj)

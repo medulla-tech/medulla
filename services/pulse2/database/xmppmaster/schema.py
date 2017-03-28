@@ -182,8 +182,7 @@ class Version(Base, XmppMasterDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     active = Column(TINYINT(1), nullable=False, default=1)
-    
-    
+
 class Deploy(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'deploy'
@@ -192,19 +191,24 @@ class Deploy(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
      # Warning, if you modify the wrapper, you also have to change it in log.py
+    title=Column(String(255))
     inventoryuuid = Column(String(11), nullable=False)
+    group_uuid = Column(String(11))
     pathpackage = Column(String(100), nullable=False)
     jid_relay = Column(String(45), nullable=False)
     jidmachine = Column(String(45), nullable=False)
     state = Column(String(45), nullable=False)
     sessionid = Column(String(45), nullable=False)
     start = Column(DateTime, default=datetime.datetime.utcnow)
+    startcmd = Column(DateTime, default=None)
+    endcmd = Column(DateTime, default=None)
     result = Column(Text )
     host = Column(String(45), nullable=False)
-    user = Column(String(45), nullable=False,default = "")
-    deploycol = Column(String(45), nullable=False,default = "")
+    user = Column(String(45), nullable=False, default = "")
     login = Column(String(45), nullable=False)
     command = Column(Integer)
+    macadress=Column(String(255))
+
 
 class Has_login_command(Base, XmppMasterDBObj):
     # ====== Table name =========================
