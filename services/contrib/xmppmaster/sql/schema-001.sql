@@ -32,6 +32,8 @@ USE `xmppmaster`;
 --
 -- Table structure for table `deploy`
 --
+
+DROP TABLE IF EXISTS `deploy`;
 CREATE TABLE `deploy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
