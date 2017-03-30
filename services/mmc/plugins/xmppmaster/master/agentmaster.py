@@ -1067,7 +1067,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 pass
                         else:
                             # Register machine in inventory
-                            self.callinventory(data['from'], {})
+                            self.callinventory(data['from'])
                 # Show plugins information logs
                 if self.config.showplugins:
                     logger.info("___________________________")
