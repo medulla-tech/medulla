@@ -1,7 +1,7 @@
-Mandriva Management Console
+Management Console
 ---------------------------
 
-The MMC (Mandriva Management Console) is made of two parts:
+The MMC (Management Console) is made of two parts:
 
 * An agent running on the machine to manage. We call it « MMC agent ». 
   The agent exports to the network several plugins that allow to manage 
