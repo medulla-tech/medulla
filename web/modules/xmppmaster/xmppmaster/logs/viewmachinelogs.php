@@ -26,8 +26,12 @@
 $p = new PageGenerator(_T("Deployment logs for machine "." ".$hostname, 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
+//print_r($_GET);
 
-
+// if (isset($_GET['uuid'] && isset($_GET['gid']&&isset($_GET['cmd_id']){
+// //verification si deploy exist
+// 
+// }
 ?> 
 
 <style>
@@ -43,6 +47,9 @@ $p->display();
 <?
   //recupere information deploie. for cmn_id
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+    echo "lll";
+    print_r($info);
+    echo "llll";
     $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
     if (! isset($info['objectdeploy'][0]['result']) ||
         $info['objectdeploy'][0]['result'] == "" &&
@@ -88,23 +95,14 @@ $p->display();
         echo "</table>";
     }
     if ($info['len'] == 0){
-        echo "<p>";
-        echo _T("Wait",'xmppmaster');
-        echo " ".'<span id="decompt">'.'60 seconds'.'</span>';
-        echo _T("for the deployment",'xmppmaster'). " "  . $cmd_id;
-        echo "</p>";
-        echo    '<script type="text/javascript">
-                var auto_refresh = setInterval(
-                    function ()
-                    {
-                        valeurcompte =  parseInt(jQuery("#decompt").text())
-                        valeurcompte --
-                        if(valeurcompte < 0){
-                            clearInterval(auto_refresh);
-                        }
-                        jQuery("#decompt").text(valeurcompte + " seconds")
-                    }, 1000); 
-                </script>';
+        echo'
+            <script type="text/javascript">
+            setTimeout(refresh, 1000);
+            function  refresh(){
+                jQuery( "#formpage" ).submit();
+            }
+        </script>
+        ';
     }
     else{
         $sessionxmpp=$info['objectdeploy'][0]['sessionid'];
@@ -178,7 +176,6 @@ $p->display();
             echo "</thead>";
                 echo "<tbody>";
         foreach($infodeploy['log'] as $line){
-            //print_r($line);
             $startsteparray= get_object_vars( $line['date']);
             $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
             echo '<tr class="alternate">';
@@ -195,7 +192,7 @@ $p->display();
         }
      echo "</tbody>";
     echo "</table>";
-    
+
     if (isset($resultatdeploy['descriptor']['sequence'] )){
         echo "<br>";
         echo "<h2>Deployment result</h2>";
@@ -260,21 +257,6 @@ $p->display();
                 echo "</div>";
         }
     }
-}
-
-
-if (! isset($info['objectdeploy'][0]['result']) ||
-        $info['objectdeploy'][0]['result'] == ""){
-        echo "Waitting result";
-        echo '<img src="modules/xmppmaster/img/waitting.gif">';
-    echo'
-            <script type="text/javascript">
-            setTimeout(refresh, 5000);
-            function  refresh(){
-                jQuery( "#formpage" ).submit();
-            }
-        </script>
-        ';
 }
 
 ?>

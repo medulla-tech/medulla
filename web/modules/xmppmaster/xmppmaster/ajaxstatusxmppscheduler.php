@@ -26,11 +26,11 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
-
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 $arraydeploy= xmlrpc_get_deployxmppscheduler( $_GET['login'] , $start, $end, $filter);
+
 $etat="";
 $LastdeployINsecond = 3600 * 72;
 //echo "<h2>".$_GET['login']."</h2>";
@@ -45,8 +45,40 @@ foreach( $arraydeploy['tabdeploy']['command'] as $ss){
    $login[]=xmlrpc_loginbycommand($ss);
 }
 
+$deletecommand = new ActionItem(_("Delete deploy"), "index", "delete", "audit", "xmppmaster", "xmppmaster");
+// delete_command
+$arraytitlename=array();
+$delete=array();
+$params=array();
+$index = 0;
+foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
+    $param=array();
+    $param['uuid']= $arraydeploy['tabdeploy']['inventoryuuid'][$index];
+    $param['hostname']=$arraydeploy['tabdeploy']['host'][$index];
+    $param['groupid']=$groupid;
+    $param['cmd_id']=$arraydeploy['tabdeploy']['command'][$index];
+    $param['login']=$arraydeploy['tabdeploy']['login'][$index];
+    $param['nbmachine']=$arraydeploy['tabdeploy']['nbmachine'][$index];
+    $param['macadress']=$arraydeploy['tabdeploy']['macadress'][$index];
+    $param['pathpackage']=$arraydeploy['tabdeploy']['pathpackage'][$index];
+    $param['title']=$arraydeploy['tabdeploy']['title'][$index];
+    $param['creator']=$arraydeploy['tabdeploy']['creator'][$index];
+    $param['titledeploy']=$arraydeploy['tabdeploy']['titledeploy'][$index];
+    $param['postaction']="delete";
+    $params[] = $param;
+    $delete[] = $deletecommand;
+    if($groupid){
+        $arraytitlename[] = "<span style='color : blue;'>GRP(".$arraydeploy['tabdeploy']['nbmachine'][$index] .") ".$arraydeploy['tabdeploy']['title'][$index]."</span>" ;
+    }
+    else{
+        $arraytitlename[] = "<span style='color : green;'>Mach ".$arraydeploy['tabdeploy']['nbmachine'][$index] .$arraydeploy['tabdeploy']['title'][$index]."</span>" ;
+    }
+    $index++;
+}
+
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
-$n = new OptimizedListInfos( $arraydeploy['tabdeploy']['host'], _T("Host name", "xmppmaster"));
+$n = new OptimizedListInfos($arraytitlename, _T("deploy", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['host'], _T("Name", "xmppmaster"));
 $n->addExtraInfo( $startdeploy, _T("start", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'], _T("package", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['creator'], _T("login", "xmppmaster"));
@@ -54,7 +86,10 @@ $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
 $n->setCssClass("machineName");
+$n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
+
+$n->setParamInfo($params);
 $n->start = $start;
 $n->end = $end;
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter));
