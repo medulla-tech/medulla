@@ -25,13 +25,13 @@ xmppmaster database handler
 """
 
 # SqlAlchemy
-from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_
+from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules,Has_guacamole, Base, UserLog, Deploy,Has_login_command,Logs
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs
 # Imported last
 import logging
 
@@ -264,7 +264,6 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getdeployfromcommandid(self, session, command_id, uuid):
-        
         if (uuid == "UUID_NONE"):
             relayserver = session.query(Deploy).filter(and_(Deploy.command == command_id))
             #,Deploy.result .isnot(None)
@@ -523,6 +522,9 @@ class XmppMasterDatabase(DatabaseHelper):
         count = q.session.execute(count_q).scalar()
         return count
 
+    def get_count1(self, q):
+        return q.with_entities(func.count()).scalar()
+
     @DatabaseHelper._session
     def getdeploybyuserlen(self, session, login = None):
         if login is not None:
@@ -533,41 +535,74 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._session
     def getdeploybyuserrecent(self, session, login , state, duree, min , max, filt):
+
         deploylog = session.query(Deploy)
         if login:
             deploylog = deploylog.filter( Deploy.login == login)
         if state:
             deploylog = deploylog.filter( Deploy.state == state)
+
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+
         if filt:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
                                                 Deploy.login.like('%%%s%%'%(filt)),
                                                 Deploy.host.like('%%%s%%'%(filt))))
+
+        lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+        print lentaillerequette
+        deploylog = deploylog.group_by(Deploy.title)
+
         deploylog = deploylog.order_by(desc(Deploy.id))
-        lentaillerequette = self.get_count(deploylog)
+        
+        deploylog = deploylog.add_column(func.count(Deploy.title))
         if min and max:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
-        # get number result
-        deploylog = deploylog.all()
+
+        result = deploylog.all()
         session.commit()
         session.flush()
-        ret ={'lentotal': lentaillerequette, 'tabdeploy' : {'state' : [],'pathpackage' : [], 'sessionid' : [],'start' : [], 'inventoryuuid' : [], 'command' : [], 'start' : [], 'login' : [],  'host' : [] }}
-        for linedeploy in deploylog:
-            ret['tabdeploy']['state'].append(linedeploy.state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
-            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
-            ret['tabdeploy']['start'].append(str(linedeploy.start))
-            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
-            ret['tabdeploy']['command'].append(linedeploy.command)
-            ret['tabdeploy']['login'].append(linedeploy.login)
-            ret['tabdeploy']['start'].append(linedeploy.start)
-            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+        ret ={'lentotal' : 0,
+              'tabdeploy' : {   'len' : [],
+                                'state' : [],
+                                'pathpackage' : [],
+                                'sessionid' : [],
+                                'start' : [],
+                                'inventoryuuid' : [],
+                                'command' : [],
+                                'start' : [],
+                                'login' : [],
+                                'host' : [],
+                                'macadress' : [],
+                                'group_uuid' : [],
+                                'startcmd' : [],
+                                'endcmd' : [],
+                                'jidmachine' : [],
+                                'jid_relay' : [],
+                                'title' : []}}
+
+        for linedeploy in result:
+            ret['lentotal'] = lentaillerequette[0]
+            ret['tabdeploy']['len'].append(linedeploy[1])
+            ret['tabdeploy']['state'].append(linedeploy[0].state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy[0].pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy[0].sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy[0].start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy[0].inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy[0].command)
+            ret['tabdeploy']['login'].append(linedeploy[0].login)
+            ret['tabdeploy']['host'].append(linedeploy[0].host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy[0].macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy[0].group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy[0].startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy[0].endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy[0].jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy[0].title)
         return ret
-#SELECT login FROM xmppmaster.has_login_command where  command ='17'
-#;
 
     @DatabaseHelper._session
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):
