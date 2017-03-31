@@ -298,7 +298,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         for deploy in resultdeploymachine:
             UUID = str(deploy.Target.target_uuid)
-            deployobject = {'pakkageid' : str(deploy.Commands.package_id), 'commandid' :  deploy.Commands.id , 'mac' : deploy.Target.target_macaddr,'count' : 0,'login' : deploy.Commands.creator }
+            deployobject = {'pakkageid' : str(deploy.Commands.package_id),
+                            'commandid' :  deploy.Commands.id ,
+                            'mac' : deploy.Target.target_macaddr,
+                            'count' : 0,
+                            'login' : deploy.Commands.creator,
+                            'start_date' : deploy.Commands.start_date,
+                            'end_date' : deploy.Commands.end_date,
+                            'title' : deploy.Commands.title,
+                            'UUID' : deploy.Target.target_uuid,
+                            'GUID' : deploy.Target.id_group }
             if XmppMasterDatabase().getPresenceuuid(UUID):
                 try:
                     self.machineDeploy[UUID].append(deployobject)
@@ -339,19 +348,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             priority = -1 ,
                             who= clearobjectwanonlan)
         suppobjmachineDeploy = []
-        for deploy in self.machineDeploy:
-            deployobject = self.machineDeploy[deploy].pop(0)
-            self.applicationdeployjsonUuidMachineAndUuidPackage(deploy,
+        for deployuuid in self.machineDeploy:
+            deployobject = self.machineDeploy[deployuuid].pop(0)
+            self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                 deployobject['pakkageid'],
                                                                 deployobject['commandid'],
                                                                 deployobject['login'],
-                                                                30)
-            if len (self.machineDeploy[deploy]) == 0 :
-                suppobjmachineDeploy.append(deploy)
+                                                                30,
+                                                                encodebase64 = False,
+                                                                start_date = deployobject['start_date'],
+                                                                end_date = deployobject['end_date'],
+                                                                title = deployobject['title'],
+                                                                macadress = deployobject['mac'],
+                                                                GUID = deployobject['GUID'])
+            
+            if len (self.machineDeploy[deployuuid]) == 0 :
+                suppobjmachineDeploy.append(deployuuid)
         for suppmachineuuid in suppobjmachineDeploy:
             del self.machineDeploy[suppmachineuuid]
-
- 
 
     def start(self, event):
         self.get_roster()
@@ -435,23 +449,42 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        idcommand,
                                                        login,
                                                        time,
-                                                       encodebase64 = False):
+                                                       encodebase64 = False,
+                                                       start_date = None,
+                                                       end_date = None,
+                                                       macadress = None,
+                                                       GUID = None,
+                                                       title = None):
         name = managepackage.getnamepackagefromuuidpackage(uuidpackage)
         if name is not None:
-            return self.applicationdeployjsonuuid(str(uuidmachine), str(name), idcommand, login, time)
+            return self.applicationdeployjsonuuid(  str(uuidmachine), 
+                                                    str(name), 
+                                                    idcommand, 
+                                                    login, 
+                                                    time,
+                                                    start_date = start_date,
+                                                    end_date = end_date,
+                                                    macadress = macadress,
+                                                    GUID = GUID,
+                                                    title = title)
         else:
             logger.warn('%s package is not an xmpp package : (The json xmpp descriptor is missing)')
             return False
 
-    def applicationdeployjsonuuid(self,
-                                  uuidmachine,
-                                  name,
-                                  idcommand,
-                                  login,
-                                  time,
-                                  encodebase64 = False,
-                                  uuidpackage=""):
-
+    def applicationdeployjsonuuid(  self,
+                                    uuidmachine,
+                                    name,
+                                    idcommand,
+                                    login,
+                                    time,
+                                    encodebase64 = False,
+                                    uuidpackage= "",
+                                    start_date = None,
+                                    end_date = None,
+                                    title = None,
+                                    macadress = None,
+                                    GUID = None):
+        
         try:
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
 
@@ -460,14 +493,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
             ### print "jidrelay %s\njidmachine %s"%(jidrelay,jidmachine)
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "" :
 
-                return self.applicationdeploymentjson(jidrelay,
-                                                      jidmachine,
-                                                      idcommand,
-                                                      login, 
-                                                      name, 
-                                                      time,
-                                                      encodebase64 = False,
-                                                      uuidmachine=uuidmachine)
+                return self.applicationdeploymentjson(  jidrelay,
+                                                        jidmachine,
+                                                        idcommand,
+                                                        login, 
+                                                        name, 
+                                                        time,
+                                                        encodebase64 = False,
+                                                        uuidmachine=uuidmachine,
+                                                        start_date = start_date,
+                                                        end_date = end_date,
+                                                        title = title,
+                                                        macadress = macadress,
+                                                        GUID = GUID)
             else:
                 logger.error("deploy %s error uuid machine %s" %(name, uuidmachine))
                 return False
@@ -484,22 +522,24 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         file_put_contents(path,  datastr)
 
-    def applicationdeploymentjson(self,
-                                  jidrelay,
-                                  jidmachine,
-                                  idcommand,
-                                  login,
-                                  name,
-                                  time,
-                                  encodebase64 = False,
-                                  uuidmachine = ""):
+    def applicationdeploymentjson(  self,
+                                    jidrelay,
+                                    jidmachine,
+                                    idcommand,
+                                    login,
+                                    name,
+                                    time,
+                                    encodebase64 = False,
+                                    uuidmachine = "",
+                                    start_date = None,
+                                    end_date = None,
+                                    title = None,
+                                    macadress = None,
+                                    GUID = None):
         """ For a deployment
         1st action: synchronize the previous package name
         The package is already on the machine and also in server relay.
         """
-        
-        
-        
         if not managepackage.getversionpackagename(name):
             logger.error("deploy %s error package name" %(name))
             return False
@@ -541,16 +581,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         priority = -1,
                         who = "MASTER")
         self.eventmanage.show_eventloop()
-        XmppMasterDatabase().adddeploy(idcommand,
-                                       jidmachine,
-                                       jidrelay,
-                                       jidmachine,
-                                       uuidmachine,
-                                       descript['info']['name'],
-                                       "STARDEPLOY",
-                                       sessionid,
-                                       user="",
-                                       login=login)
+        XmppMasterDatabase().adddeploy( idcommand,
+                                        jidmachine,
+                                        jidrelay,
+                                        jidmachine,
+                                        uuidmachine,
+                                        descript['info']['name'],
+                                        "STARDEPLOY",
+                                        sessionid,
+                                        user = "",
+                                        login = login,
+                                        title = title,
+                                        group_uuid = GUID,
+                                        startcmd = start_date,
+                                        endcmd = end_date,
+                                        macadress = macadress
+                                        )
         return sessionid
 
     def pluginaction(self,rep):
