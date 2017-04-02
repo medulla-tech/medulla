@@ -1,0 +1,3 @@
+update: all
+branch: xmppmaster
+schedule: "every day"
