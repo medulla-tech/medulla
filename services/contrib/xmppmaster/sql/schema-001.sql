@@ -25,7 +25,7 @@
 -- ----------------------------------------------------------------------
 
 
-
+  
 CREATE DATABASE  IF NOT EXISTS `xmppmaster` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `xmppmaster`;
 
@@ -36,26 +36,22 @@ USE `xmppmaster`;
 DROP TABLE IF EXISTS `deploy`;
 CREATE TABLE `deploy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `sessionid` varchar(45) NOT NULL,
-  `host` varchar(45) DEFAULT NULL,
+  `pathpackage` varchar(100) NOT NULL,
   `jid_relay` varchar(45) NOT NULL,
   `jidmachine` varchar(45) NOT NULL,
   `state` varchar(45) NOT NULL,
+  `sessionid` varchar(45) NOT NULL,
   `start` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `startcmd` timestamp NULL DEFAULT NULL,
-  `endcmd` timestamp NULL DEFAULT NULL,
+  `result` text,
   `inventoryuuid` varchar(11) NOT NULL,
-  `group_uuid` varchar(11) DEFAULT NULL,
+  `host` varchar(45) DEFAULT NULL,
   `user` varchar(45) DEFAULT NULL,
+  `deploycol` varchar(45) DEFAULT NULL,
   `command` int(11) DEFAULT NULL,
   `login` varchar(45) DEFAULT NULL,
-  `pathpackage` varchar(100) NOT NULL,
-  `macadress` varchar(255) DEFAULT NULL,
-  `result` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `sessionid_UNIQUE` (`sessionid`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --
@@ -69,7 +65,7 @@ CREATE TABLE `has_guacamole` (
   `idinventory` int(11) NOT NULL,
   `protocol` varchar(10) NOT NULL,
   PRIMARY KEY (`id`,`idguacamole`,`idinventory`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `has_login_command`
@@ -81,7 +77,7 @@ CREATE TABLE `has_login_command` (
   `login` varchar(45) NOT NULL,
   `command` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `has_machinesusers`
@@ -122,7 +118,7 @@ CREATE TABLE `logs` (
   `priority` int(11) DEFAULT '0',
   `who` varchar(45) DEFAULT '""',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=453 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `machines`
@@ -149,11 +145,7 @@ CREATE TABLE `machines` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `jid_UNIQUE` (`jid`)
-) ENGINE=InnoDB AUTO_INCREMENT=71 DEFAULT CHARSET=utf8;
-
-
--- ALTER TABLE `xmppmaster`.`machines` ADD COLUMN `picklekeypublic` VARCHAR(550) NULL DEFAULT NULL AFTER `urlguacamole`;
-
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `network`
@@ -171,7 +163,7 @@ CREATE TABLE `network` (
   `machines_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=232 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `relayserver`
@@ -196,7 +188,7 @@ CREATE TABLE `relayserver` (
   `groupdeploy` varchar(80) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `rules`
@@ -209,7 +201,7 @@ CREATE TABLE `rules` (
   `description` varchar(45) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `userlog`
@@ -222,7 +214,7 @@ CREATE TABLE `userlog` (
   `type` varchar(45) NOT NULL DEFAULT 'info',
   `datelog` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=246 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `users`
@@ -242,7 +234,7 @@ CREATE TABLE `users` (
   `country_code` varchar(45) DEFAULT '',
   `country_name` varchar(45) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `version`
