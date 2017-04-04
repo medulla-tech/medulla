@@ -46,14 +46,6 @@ RELEASE=`lsb_release -r -s`
 
 PKGS=
 
-ARCH=
-if [ $DISTRIBUTION == "MandrivaLinux" ]; then
-    if [ `arch` == "x86_64" ];
-    then
-	ARCH=64
-    fi
-fi
-
 function packages_to_install () {
     if [ $DISTRIBUTION == "MandrivaLinux" ]; then
         # MySQL
