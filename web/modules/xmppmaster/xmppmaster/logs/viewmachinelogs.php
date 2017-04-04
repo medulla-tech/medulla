@@ -47,9 +47,6 @@ $p->display();
 <?
   //recupere information deploie. for cmn_id
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-    echo "lll";
-    print_r($info);
-    echo "llll";
     $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
     if (! isset($info['objectdeploy'][0]['result']) ||
         $info['objectdeploy'][0]['result'] == "" &&
