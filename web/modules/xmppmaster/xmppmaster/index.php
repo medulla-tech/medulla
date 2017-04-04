@@ -26,23 +26,27 @@ require("graph/navbar.inc.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
+$delete = isset($_GET['postaction'])?true:false;
 
+if ($delete) {
+    delete_command($_GET['cmd_id']);
+}
 
 $p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login']), 'formRunning'  );
+$ajax->setRefresh(15000);
 $ajax->display();
 
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 
-
 $ajax1 = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmppscheduler"), "container1", array('login' => $_SESSION['login']), 'formRunning1' );
-$ajax1->setRefresh(10000);
+$ajax1->setRefresh(20000);
 $ajax1->display();
 print "<br/><br/><br/>";
 $ajax1->displayDivToUpdate();
