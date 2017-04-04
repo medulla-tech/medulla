@@ -19,7 +19,6 @@
 
 PWD=$( pwd )
 PREFIX_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-USR_PASSWORD="linbox"
 fqdn=$( hostname )
 # VPN global variables
 . $PREFIX_DIR/vpn-variables
