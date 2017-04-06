@@ -989,7 +989,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     data['localisationifo'] = {}
                 data['information'] = info
-                
+
                 ###################################
                 #check is agent machine or agent Relayserver has public key of master
                 publickeybase64 =  info['publickey']
