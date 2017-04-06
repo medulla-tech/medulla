@@ -540,6 +540,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         1st action: synchronize the previous package name
         The package is already on the machine and also in server relay.
         """
+        print "mmmmmmmmmmmmmmmmmmm"
+        print "mmmmmmmmmmmmmmmmmmm"
+        print start_date, end_date, title, macadress, GUID
+        
         if not managepackage.getversionpackagename(name):
             logger.error("deploy %s error package name" %(name))
             return False
@@ -608,7 +612,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 mtype='chat')
         logger.info("Log action plugin %s!" % rep)
 
-    def displayData(self,data):
+    def displayData(self, data):
         if self.config.showinfomaster:
             logger.info("__________________________")
             logger.info("MACHINE INFORMATION")
@@ -643,7 +647,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("ippublic : %s"%data['ippublic'])
 
             logger.info("------------LOCALISATION-----------")
-            logger.info("localisationifo : %s"%self.localisationifo)
+            logger.info("localisationifo : %s"%data['localisationifo'])
             logger.info("-----------------------------------")
 
             logger.info("DETAILED INFORMATION")
@@ -824,10 +828,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 """ Check machine information from agent """
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
-                if data['ippublic'] != None:
-                    self.localisationifo = Localisation().geodataip(data['ippublic'])
+                if data['ippublic'] is not None and data['ippublic'] != "":
+                    data['localisationifo'] = Localisation().geodataip(data['ippublic'])
                 else:
-                    self.localisationifo = {}
+                    data['localisationifo'] = {}
                 self.displayData(data)
             else:
                 return
@@ -837,8 +841,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.sendErrorConnectionConf(msg)
             return
         #logger.info("%s"% json.dumps(data, indent=4, sort_keys=True))
-        logger.debug("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
-        XmppMasterDatabase().log("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],self.localisationifo))
+        logger.debug("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
+        XmppMasterDatabase().log("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
         # Defining relay server for connection
         # Order of rules to be applied
         ordre =  XmppMasterDatabase().Orderrules()
@@ -868,7 +872,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 distance = 40000000000
                 listeserver=[]
                 relayserver = -1
-                if self.localisationifo != None and self.localisationifo['longitude']!="" and self.localisationifo['latitude']!="":
+                if data['localisationifo'] is not None and data['localisationifo']['longitude'] != "" and data['localisationifo']['latitude'] != "":
                     result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                     a=0
                     for x in result1:
@@ -984,11 +988,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
                 """ Check machine information from agent """
                 info = json.loads(base64.b64decode(data['completedatamachine']))
-                if data['ippublic'] != None:
-                    self.localisationifo = Localisation().geodataip(data['ippublic'])
+                if data['ippublic'] is not None and data['ippublic'] != "":
+                    data['localisationifo']= Localisation().geodataip(data['ippublic'])
                 else:
-                    self.localisationifo = {}
+                    data['localisationifo'] = {}
                 data['information'] = info
+                
                 ###################################
                 #check is agent machine or agent Relayserver has public key of master
                 publickeybase64 =  info['publickey']
@@ -1018,15 +1023,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 postal_code = ""
                 country_code = ""
                 country_name = ""
-                if self.localisationifo != None:
-                    longitude = str(self.localisationifo['longitude'])
-                    latitude  = str(self.localisationifo['latitude'])
-                    region_name = str(self.localisationifo['region_name'])
-                    time_zone = str(self.localisationifo['time_zone'])
-                    postal_code = str(self.localisationifo['postal_code'])
-                    country_code = str(self.localisationifo['country_code'])
-                    country_name = str(self.localisationifo['country_name'])
-                    city = str(self.localisationifo['city'])
+                if data['localisationifo'] is not None and len(data['localisationifo']) > 0:
+                    longitude = str(data['localisationifo']['longitude'])
+                    latitude  = str(data['localisationifo']['latitude'])
+                    region_name = str(data['localisationifo']['region_name'])
+                    time_zone = str(data['localisationifo']['time_zone'])
+                    postal_code = str(data['localisationifo']['postal_code'])
+                    country_code = str(data['localisationifo']['country_code'])
+                    country_name = str(data['localisationifo']['country_name'])
+                    city = str(data['localisationifo']['city'])
 
                 logger.info("add user : %s for machine : %s country_name : %s"%(data['information']['users'][0],
                                                                                 data['information']['info']['hostname'],
