@@ -540,10 +540,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         1st action: synchronize the previous package name
         The package is already on the machine and also in server relay.
         """
-        print "mmmmmmmmmmmmmmmmmmm"
-        print "mmmmmmmmmmmmmmmmmmm"
-        print start_date, end_date, title, macadress, GUID
-        
         if not managepackage.getversionpackagename(name):
             logger.error("deploy %s error package name" %(name))
             return False

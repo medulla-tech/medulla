@@ -31,6 +31,6 @@ ALTER TABLE  `deploy` ADD `group_uuid` varchar(11) DEFAULT NULL;
 ALTER TABLE  `deploy` ADD `macadress` varchar(255) DEFAULT NULL;
 ALTER TABLE  `deploy` DROP `deploycol`;
 
-UPDATE version SET Number = 28;
+UPDATE version SET Number = 2;
 
 COMMIT;
