@@ -90,13 +90,12 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $index++;
 }
 
-$n = new OptimizedListInfos( $arraytitlename, _T("deploy", "xmppmaster"));
+$n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
 $n->addExtraInfo( $arrayname, _T("Name", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("start", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start", "xmppmaster"));
 $n->addExtraInfo( $arraystate, _T("State", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'],"package");
-$n->addExtraInfo( $arraydeploy['tabdeploy']['login'],"login");
-
+$n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'],_T("Package", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
