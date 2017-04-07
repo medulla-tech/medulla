@@ -130,8 +130,10 @@ if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     }
 }
 else{
-
-    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $prefix . $tab,
+    if(!isset($uuid) || $uuid=""){
+        if($gid) $uuid = "ND";
+    }
+    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array(
                                                                                 'uuid' => $uuid,
                                                                                 'hostname' => $hostname,
                                                                                 'gid' => $gid,
