@@ -36,13 +36,6 @@
         echo "<h2>Entity : ".$_GET['entity']."</h2>";
         //objectUUID
         ?>
-        <?
-//         echo "<pre>";
-//         print_r($_GET);
-//         
-//         
-//         echo "</pre>";
-        ?>
             <table style="width : 500px;">
                 <tr> 
                 <?

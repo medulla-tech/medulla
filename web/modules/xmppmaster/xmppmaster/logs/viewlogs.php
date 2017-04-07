@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
  
-require("modules/base/computers/localSidebar.php");
+require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 extract($_GET);

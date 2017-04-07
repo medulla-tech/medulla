@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
+
 $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]");
 $p->setSideMenu($sidemenu);
 $p->display();
@@ -65,7 +65,6 @@ $p->display();
                 echo "</thead>";
                     echo "<tbody>";
             foreach($datawol['log'] as $line){
-                //print_r($line);
                 $startsteparray= get_object_vars( $line['date']);
                 $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
                 echo '<tr class="alternate">';
@@ -153,7 +152,7 @@ $p->display();
                 echo '<br>';
         }
         echo "<br>";
-        echo "<h3>Deployment phases</h3>";
+        echo "<h2>Deployment phases</h2>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
             echo "<thead>";
                 echo "<tr>";

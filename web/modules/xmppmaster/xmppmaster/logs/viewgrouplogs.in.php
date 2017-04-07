@@ -22,8 +22,6 @@
 
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
-?>
-<?
 require_once("modules/dyngroup/includes/includes.php");
 
 $group = getPGobject($gid, true);
@@ -33,7 +31,7 @@ $p->display();
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 if ($info['len'] != 0){
-    $uuid=$info['objectdeploy'][0]['inventoryuuid'];
+        $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
         $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
         $result=$info['objectdeploy'][0]['result'];
@@ -90,13 +88,13 @@ if ($info['len'] != 0){
 else{
 echo '
     <form id="formgroup" action="'.$_SERVER['PHP_SELF'].'" METHODE="GET" >
-        <input type="hidden" name="tab" value ="'.$tab.'" >
         <input type="hidden" name="gid" value ="'.$gid.'" >
         <input type="hidden" name="cmd_id" value ="'.$cmd_id.'" >
         <input type="hidden" name="login" value ="'.$login.'" >
         <input type="hidden" name="action" value ="viewlogs" >
         <input type="hidden" name="module" value ="xmppmaster" >
         <input type="hidden" name="submod" value ="xmppmaster" >
+        <input type="hidden" name="uuid" value ="'.$gid.'" >
     </form>';
 
 echo'
@@ -108,6 +106,7 @@ echo'
         </script>
         ';
 }
+
 $group->prettyDisplay();
 
 ?>
