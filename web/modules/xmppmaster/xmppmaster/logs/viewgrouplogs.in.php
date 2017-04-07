@@ -25,7 +25,7 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
 
 $group = getPGobject($gid, true);
-$p = new PageGenerator(_T("Deployment logs for group",'xmppmaster')." ". $group->getName());
+$p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
 $p->setSideMenu($sidemenu);
 $p->display();
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
