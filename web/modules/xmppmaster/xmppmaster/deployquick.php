@@ -40,12 +40,12 @@
                 <tr> 
                 <?
                     if ($_GET['presencemachinexmpp']){
-                        echo '<td align="center">ICI Icone</td>';
-                        echo '<td align="center">ICI Icone</td>';
-                        echo '<td align="center">ICI Icone</td>';
+                        echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+                        echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
+                        echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
                     }
                     else{
-                        echo '<td align="center">ICI Icone</td>';
+                        echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
                     }
                  ?>
                 </tr>
@@ -94,6 +94,35 @@
                 alert( "shutdown : " + uuid['cn'] + " in " + uuid['entity'] )
             })
     })
+
+    jQuery('#wol0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
+            .done(function( data ) {
+                alert( "wakeonlan to machine : " + uuid['cn'] + " in " + uuid['entity'] )
+            })
+    })
+
+    jQuery('#inventory0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
+            .done(function( data ) {
+                alert( "inventory : " + uuid['cn'] + " in " + uuid['entity'] )
+            })
+    })
+
+    jQuery('#reboot0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
+            .done(function( data ) {
+                alert( "reboot : " + uuid['cn'] + " in " + uuid['entity'] )
+            })
+    })
+
+    jQuery('#shutdown0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
+            .done(function( data ) {
+                alert( "shutdown : " + uuid['cn'] + " in " + uuid['entity'] )
+            })
+    })
+
 </script>
 
 
