@@ -258,7 +258,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("muc::%s::got_online" % conf.confjidchatroom,
                                self.muc_onlineConf)
         # Called for all messages
-        self.add_event_handler('message', self.message)
+        self.add_event_handler('message', self.message)#, threaded=True
         # The groupchat_message event is triggered every time a message
         # Strophe is received from any chat room. If you too
         # Save a handler for the 'message' event, MUC messages
@@ -361,7 +361,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 title = deployobject['title'],
                                                                 macadress = deployobject['mac'],
                                                                 GUID = deployobject['GUID'])
-            
+
             if len (self.machineDeploy[deployuuid]) == 0 :
                 suppobjmachineDeploy.append(deployuuid)
         for suppmachineuuid in suppobjmachineDeploy:
@@ -387,19 +387,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #ty = "MASTER"
         #self.logtopulse("Start agent Master",type= ty, who =  self.boundjid.bare) 
 
-    def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
+    def logtopulse(self, text, type = 'noset', sessionname = '', priority = 0, who = ''):
         msgbody = {
                     'text' : text,
-                    'type':type,
-                    'session':sessionname,
-                    'priority':priority,
-                    'who':who
+                    'type' : type,
+                    'session' : sessionname,
+                    'priority' : priority,
+                    'who' : who
                     }
         self.send_message(mto=jid.JID("log@pulse"),
                                 mbody=json.dumps(msgbody),
                                 mtype='chat')
 
-    def changed_status(self,msg_changed_status):
+    def changed_status(self, msg_changed_status):
         if msg_changed_status['from'].resource == 'MASTER':
             return
         logger.debug( "%s %s"%(msg_changed_status['from'], msg_changed_status['type']))
@@ -540,6 +540,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         1st action: synchronize the previous package name
         The package is already on the machine and also in server relay.
         """
+
         if not managepackage.getversionpackagename(name):
             logger.error("deploy %s error package name" %(name))
             return False
@@ -641,7 +642,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("classutil : %s"%data['classutil'])
             if 'ippublic' in data:
                 logger.info("ippublic : %s"%data['ippublic'])
-
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%data['localisationifo'])
             logger.info("-----------------------------------")
@@ -699,7 +699,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if self.config.showplugins:
             logger.info("Restart agent on %s"%(to))
         self.send_message(mto=to,
-            mbody=json.dumps({'action':'restartbot','data':''}),
+            mbody=json.dumps({'action' : 'restartbot', 'data' : ''}),
             mtype='chat')
 
     def deployPlugin(self, msg, plugin):
@@ -779,16 +779,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         except:
             traceback.print_exc(file=sys.stdout)
 
-    def sendErrorConnectionConf(self,msg):
+    def sendErrorConnectionConf(self, msg):
         reponse = {
             'action' : 'resultconnectionconf',
             'sessionid' : data['sessionid'],
             'data' : [],
             'ret': 255
             }
-        self.send_message(mto=msg['from'],
-                        mbody=json.dumps(reponse),
-                        mtype='chat')
+        self.send_message(mto = msg['from'],
+                        mbody = json.dumps(reponse),
+                        mtype = 'chat')
 
     def sendrsconnectiondeploychatroom(self, to, data):
         connection = {
@@ -797,9 +797,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             'data' : [],
             'ret': 255
             }
-        self.send_message(mto=to,
-                        mbody=json.dumps(connection),
-                        mtype='chat')
+        self.send_message(mto =to,
+                          mbody = json.dumps(connection),
+                          mtype = 'chat')
 
     def MessagesAgentFromChatroomlog(self, msg, data):
         """
