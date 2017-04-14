@@ -21,12 +21,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-
+//require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 $p = new PageGenerator(_T("Deployment [machine ", 'xmppmaster')." ".$hostname."]");
 $p->setSideMenu($sidemenu);
 $p->display();
-?> 
-
+?>
 <style>
 .shadow
 {
@@ -36,16 +35,36 @@ $p->display();
 }
 </style>
 
-
 <?
-    //Retrieve information deploie. For cmn_id
+    // Retrieve information deploy. For cmn_id
+    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+    $boolterminate = false;
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 
-    $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
-
-    if ( ! isset($info['objectdeploy'][0]['result']) && isset($info['objectdeploy'][0]['pathpackage'])){
-        echo "PACKAGE ". $info['objectdeploy'][0]['pathpackage']."<br>";
+    if(isset($info['objectdeploy'][0]['sessionid'])){
+        $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
+        $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
+        $uuid = $info['objectdeploy'][0]['inventoryuuid'];
+        foreach($infodeploy['log'] as $line){
+            if ($line['text'] == "DEPLOYMENT TERMINATE"){
+                $boolterminate = true;
+            }
+        }
     }
+    $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
+    //$resultinfo=(isset($info['objectdeploy'][0]['result'])?json_decode($info['objectdeploy'][0]['result']):Null);
+    $resultinfo = json_decode($info['objectdeploy'][0]['result']);
+    unset($info['objectdeploy'][0]['result']);
+    $infoslist = $resultinfo->infoslist;
+    unset($resultinfo->infoslist);
+    $descriptorslist = $resultinfo->descriptorslist;
+    unset($resultinfo->descriptorslist);
+    $infosautre = $resultinfo->infosautre;
+    unset($resultinfo->infosautre);
+    if ( isset($resultinfo->title)){
+        echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
+    }
+
    if ($datawol['len'] != 0){
         echo "<br>";
             echo "<h2>Wan on Lan</h2>";
@@ -65,6 +84,7 @@ $p->display();
                 echo "</thead>";
                     echo "<tbody>";
             foreach($datawol['log'] as $line){
+                //print_r($line);
                 $startsteparray= get_object_vars( $line['date']);
                 $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
                 echo '<tr class="alternate">';
@@ -83,10 +103,11 @@ $p->display();
         echo "</table>";
     }
 
-    if ( $info['len'] == 0 || (isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] == "STARDEPLOY" )){
+    if ( $info['len'] == 0 || $boolterminate==false){
+
         echo'
             <script type="text/javascript">
-            setTimeout(refresh, 1000);
+            setTimeout(refresh, 5000);
             function  refresh(){
                 jQuery( "#formpage" ).submit();
             }
@@ -96,29 +117,23 @@ $p->display();
         echo "<img src='modules/xmppmaster/img/waitting.gif'>";
         echo "<br>";
     }
-
     if ( $info['len'] != 0)
     {
-        $sessionxmpp=$info['objectdeploy'][0]['sessionid'];
-        $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
-        $uuid=$info['objectdeploy'][0]['inventoryuuid'];
-        $state=$info['objectdeploy'][0]['state'];
-        $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
-        $result=$info['objectdeploy'][0]['result'];
-        $resultatdeploy =json_decode($result, true);
-        $host=$info['objectdeploy'][0]['host'];
-        $jidmachine=$info['objectdeploy'][0]['jidmachine'];
-        $jid_relay=$info['objectdeploy'][0]['jid_relay'];
-
+        $state = $info['objectdeploy'][0]['state'];
+        $start = get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
+        $host = $info['objectdeploy'][0]['host'];
+        $jidmachine = $info['objectdeploy'][0]['jidmachine'];
+        $jid_relay = $info['objectdeploy'][0]['jid_relay'];
         $datestart =  date("Y-m-d H:i:s", $start);
-        echo "Start deployment :" .$datestart;// [".$infodeploy['len'] ." steps] 
-        if (isset($resultatdeploy['descriptor']['info'])){
+        echo "Start deployment :" .$datestart;
+        if (isset($infoslist)){
             echo "<br>";
-            echo "<h2>Package</h2>";
-                echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+            echo "<h2 class='replytab' >Hide Package and Dependency</h2>";
+            echo "<div>";
+                echo '<table class="listinfos" cellspacing="0" cellpadding="5">';
                     echo "<thead>";
                         echo "<tr>";
-                            echo '<td style="width: ;">';
+                            echo '<td style="width: 210px;">';
                                 echo '<span style=" padding-left: 32px;">Name</span>';
                             echo '</td>';
                             echo '<td style="width: ;">';
@@ -132,35 +147,41 @@ $p->display();
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
-                    echo "<tbody>";
-                        echo "<tr>";
-                            echo "<td>";
-                                echo $resultatdeploy['descriptor']['info']['description'];
-                            echo "</td>";
-                            echo "<td>";
-                                echo $resultatdeploy['descriptor']['info']['name'];
-                            echo "</td>";
-                            echo "<td>";
-                                echo $resultatdeploy['descriptor']['info']['software'];
-                            echo "</td>";
-                            echo "<td>";
-                                echo $resultatdeploy['descriptor']['info']['version'];
-                            echo "</td>";
-                        echo "</tr>";
-                    echo "</tbody>";
-                echo "</table>";
-                echo '<br>';
+
+            foreach (range( 0, count($infoslist)-1) as $index){
+                $inf=$infoslist[$index];
+                echo "<tbody>";
+                    echo "<tr>";
+                        echo "<td>";
+                        echo $inf->name;
+                        echo "</td>";
+                        echo "<td>";
+                        echo $inf->software;
+                        echo "</td>";
+                        echo "<td>";
+                            echo $inf->version;
+                        echo "</td>";
+                        echo "<td>";
+                            echo $inf->description;
+                        echo "</td>";
+                    echo "</tr>";
+                echo "</tbody>";
+            }
+            echo "</table>";
+            echo "</div>";
+            echo '<br>';
         }
         echo "<br>";
-        echo "<h2>Deployment phases</h2>";
-        echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
+        echo "<h2 class='replytab'>Hide Deployment phases</h2>";
+        echo "<div>";
+        echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
             echo "<thead>";
                 echo "<tr>";
-                    echo '<td style="width: ;">';
+                    echo '<td  style="width : 120px;">';
                         echo '<span style=" padding-left: 32px;">START</span>';
                     echo '</td>';
-                    echo '<td style="width: ;">';
-                        echo '<span style=" padding-left: 32px;">STEP</span>';
+                    echo '<td>';
+                        echo '<span style=" padding-left:0px;">STEP</span>';
                     echo '</td>';
                     echo '<td style="width: ;">';
                         echo '<span style=" padding-left: 32px;">DESCRIPTION</span>';
@@ -176,7 +197,9 @@ $p->display();
                     echo $datestartstep;
                 echo "</td>";
                 echo "<td>";
+                echo '<span  style="padding-left:10px;">';
                     echo $line['priority'];
+                echo "</span>";
                 echo "</td>";
                 echo "<td>";
                     echo $line['text'];
@@ -185,40 +208,132 @@ $p->display();
         }
         echo "</tbody>";
         echo "</table>";
-
-        if (isset($resultatdeploy['descriptor']['sequence'] )){
+        echo "</div>";
+        $actionsname = array(
+                              "action_pwd_packagecompleted" =>  "Current directory is package directory",
+                              "action_pwd_package" =>  "Current directory is package directory",
+                              "actionprocessscript" => "Script Running in process",
+                              "action_command_natif_shell" => "Script Running in thread",
+                              "actionerrorcompletedend" => "<span style='color:red;'>Deployment terminated on an error. Clean packages</span>",
+                              "actionsuccescompletedend" =>"Deployment terminated successfully. Clean package",
+                              "actioncleaning"  =>"Clean downloaded package",
+                              "actionrestartbot" => "Restart agent"
+        );
+    if ( $info['len'] != 0){
+        $jidmachine = $info['objectdeploy'][0]['jidmachine'];
+        $jid_relay = $info['objectdeploy'][0]['jid_relay'];
             echo "<br>";
-            echo "<h2>Deployment result</h2>";
-            foreach($resultatdeploy['descriptor']['sequence'] as $step){
-                if($step['action'] == "action_pwd_packagecompleted"  )
-                    $actions = "Current directory is package directory";
-                elseif ($step['action'] == "actionprocessscript"  )
-                    $actions = "Script Running in process";
-                elseif ($step['action'] == "action_command_natif_shell"  )
-                    $actions = "Script Running in thread";
-                elseif ($step['action'] == "actionerrorcompletedend"  )
-                    $actions =  "Deployment terminated on an error. Clean packages";
-                elseif ($step['action'] == "actionsuccescompletedend"  )
-                    $actions = "Deployment terminated successfully. Clean package";
-                elseif ($step['action'] == "actioncleaning"  )
-                    $actions = "Clean downloaded package";
-                elseif ($step['action'] == "actionrestartbot"  )
-                    $actions = "Restart agent";
-                elseif ($step['action'] == "ERROR"  ){
-                    $actions = "ERROR";}
-                else
-                    $actions = ltrim(str_replace("_"," ",substr($step['action'],6)));
+            echo "<h2 class='replytab'>Hide xmpp information</h2>";
+            echo "<div>";
+            echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+            echo "<thead>";
+                echo "<tr>";
+                    echo '<td  style="width : 120px;">';
+                        echo '<span style=" padding-left: 32px;">jid machine</span>';
+                    echo '</td>';
+                    echo '<td>';
+                        echo '<span style=" padding-left:0px;">jid Relay server</span>';
+                    echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">ip machine</span>';
+                    echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">ip relayserver</span>';
+                    echo '</td>';
+                echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+                echo "<td>";
+                    echo $jidmachine;
+                echo "</td>";
+                echo "<td>";
+                echo '<span  style="padding-left:10px;">';
+                    echo $jid_relay;
+                echo "</span>";
+                echo "</td>";
+                echo "<td>";
+                echo '<span  style="padding-left:10px;">';
+                    echo $jid_relay;
+                echo "</span>";
+                echo "</td>";
+                echo "<td>";
+                echo '<span  style="padding-left:10px;">';
+                    echo $jid_relay;
+                echo "</span>";
+                echo "</td>";
+            echo "</tr>";
+        echo "</tbody>";
+        echo "</table>";
+        echo "</div>";
+    }
+
+    if ( $info['len'] != 0){
+        echo "<br>";
+        echo "<h2 class='replytab'>Hide Environnement</h2>";
+        echo "<div>";
+        echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
+        echo "<thead>";
+            echo "<tr>";
+                echo '<td  style="width : 120px;">';
+                    echo '<span style=" padding-left: 32px;">key</span>';
+                echo '</td>';
+                echo '<td>';
+                    echo '<span style=" padding-left:0px;">value</span>';
+                echo '</td>';
+            echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+        $gg = explode ( "," , trim($infosautre[$index]->environ, "{}"));
+        foreach ($gg as $ll){
+                $ff =  explode ( ":" , $ll);
+                echo "<tr>";
+                echo "<td>";
+                echo $ff[0];
+                echo "</td>";
+                echo "<td>";
+                echo '<span  style="padding-left:10px;">';
+                echo $ff[1];
+                echo "</span>";
+                echo "</td>";
+            echo "</tr>";
+            }
+        echo "</tbody>";
+        echo "</table>";
+        echo "</div>";
+    }
+    if (isset($descriptorslist)){
+        echo "<br>";
+        echo "<h2 class='replytab'>Hide Deployment result</h2>
+        <div>";
+        echo "<pre style='  box-shadow: 6px 6px 0px black;
+                            border-radius: 20px / 10px;
+                            border-left: 2px solid black;
+                            border-right: 2px solid black;
+                            border-top: 2px solid black;
+                            padding: 10px 10px 5px 10px;'>";
+
+        foreach (range( 0, count($descriptorslist)-1) as $index1){
+            $arraylist= $descriptorslist[$index1];
+            echo "<div>";
+            echo "<span class='replytab' style='color : blue; font: italic bold 12px/30px Georgia, serif;'>Hide Result " . $infoslist[$index1]->name."</span>";
+            echo "<div>";
+            foreach (range( 0, count($arraylist)-1) as $index){
+                $step=$arraylist[$index];
+                if (array_key_exists($step->action, $actionsname)) {
+                    $actions = $actionsname[$step->action];
+                }
+                else{
+                    $actions = ltrim(str_replace("_"," ",substr($step->action,6)));
+                    echo $step->action;
+                }
+                $color="red";
                 echo "<br>";
-                if (isset($step['completed']) && $actions != "ERROR"){
-                    echo '<h3 style="color:green;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". "  </h3>";
+                if (isset($step->completed) && $actions != "ERROR"){
+                    echo '<h3 style="color:green;">STEP'." <strong>".$step->step. " [". $actions. "]</strong>" ."". "  </h3>";
                     $color="green";
                 }
-                if( $actions == "ERROR"){
-                    echo '<h3 style="color:red;">STEP'." <strong>". $step['step'] . " [". $actions. "]</strong>" ."". '</h3>'; 
-                    $color="red";
-                }
 
-                if (isset($step['completed'])){
+                if (isset($step->completed)){
                     echo '<div class="shadow" 
                                 style="  color:'.$color.';
                                         display: none;
@@ -248,10 +363,16 @@ $p->display();
                         }
                 }
                     echo "</div>";
-            }
-        }
-    }
 
+            }
+            echo"</div>";
+        }
+            echo "</pre>";
+            echo"</div>";
+    }
+        echo"</div>";
+}
+    $tab="";
 ?>
 <form id="formpage" action="<? echo $_SERVER['PHP_SELF']; ?>" METHODE="GET" >
     <input type="hidden" name="tab" value ="<? echo $tab; ?>" >
@@ -270,6 +391,17 @@ $p->display();
         jQuery(this).css('background-color','white')
         jQuery(this).next('div').toggle();
         });
+        jQuery( ".replytab" ).click(function() {
+            a = jQuery(this).text();
+            if (a.search( 'Show' ) != -1){
+                a = a.replace("Show ", "Hide ");
+            }
+            else{
+                a = a.replace("Hide ", "Show ");
+            }
+            jQuery(this).text(a);
+            jQuery(this).next('div').toggle();
+        });
 </script>
 <?
 if (isset($_GET['gr_cmd_id'] )  || $datawol['len'] != 0){
@@ -287,5 +419,4 @@ if (isset($_GET['gr_cmd_id'] )  || $datawol['len'] != 0){
     </form>';
 }
 
-
-
+?>
