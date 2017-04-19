@@ -64,7 +64,6 @@ $p->display();
     if ( isset($resultinfo->title)){
         echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
     }
-
    if ($datawol['len'] != 0){
         echo "<br>";
             echo "<h2>Wan on Lan</h2>";
@@ -102,7 +101,6 @@ $p->display();
         echo "</tbody>";
         echo "</table>";
     }
-
     if ( $info['len'] == 0 || $boolterminate==false){
 
         echo'
@@ -147,7 +145,6 @@ $p->display();
                             echo '</td>';
                         echo "</tr>";
                     echo "</thead>";
-
             foreach (range( 0, count($infoslist)-1) as $index){
                 $inf=$infoslist[$index];
                 echo "<tbody>";
@@ -217,7 +214,8 @@ $p->display();
                               "actionerrorcompletedend" => "<span style='color:red;'>Deployment terminated on an error. Clean packages</span>",
                               "actionsuccescompletedend" =>"Deployment terminated successfully. Clean package",
                               "actioncleaning"  =>"Clean downloaded package",
-                              "actionrestartbot" => "Restart agent"
+                              "actionrestartbot" => "Restart agent",
+                              "actionrestart" => "Restart Machine"
         );
     if ( $info['len'] != 0){
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
@@ -266,8 +264,17 @@ $p->display();
         echo "</table>";
         echo "</div>";
     }
-
     if ( $info['len'] != 0){
+        $res = str_replace ( "{'", "'" ,$infosautre[$index]->environ);
+        $res = str_replace ( "'}", "'" ,$res);
+        $res = str_replace ( "  ", " " ,$res);
+        $res = str_replace ( "  ", " " ,$res);
+        $res = str_replace ( "  ", " " ,$res);
+        $res = str_replace ( "': '", "' : '" ,$res);
+        $res = str_replace ( "', '", "' , '" ,$res);
+        $res = str_replace ( "\\\\", "\\" ,$res);
+        $res = str_replace ( "C:\\", "C:\\\\" ,$res);
+        $res = explode ( "' , '" , $res);
         echo "<br>";
         echo "<h2 class='replytab'>Hide Environnement</h2>";
         echo "<div>";
@@ -283,16 +290,15 @@ $p->display();
             echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
-        $gg = explode ( "," , trim($infosautre[$index]->environ, "{}"));
-        foreach ($gg as $ll){
-                $ff =  explode ( ":" , $ll);
+        foreach ($res as $ll){
+                $ff =  explode ( "' : '" , $ll);
                 echo "<tr>";
                 echo "<td>";
-                echo $ff[0];
+                echo trim($ff[0],"'");
                 echo "</td>";
                 echo "<td>";
                 echo '<span  style="padding-left:10px;">';
-                echo $ff[1];
+                echo trim($ff[1],"'");
                 echo "</span>";
                 echo "</td>";
             echo "</tr>";
@@ -311,7 +317,6 @@ $p->display();
                             border-right: 2px solid black;
                             border-top: 2px solid black;
                             padding: 10px 10px 5px 10px;'>";
-
         foreach (range( 0, count($descriptorslist)-1) as $index1){
             $arraylist= $descriptorslist[$index1];
             echo "<div>";
