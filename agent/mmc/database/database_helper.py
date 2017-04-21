@@ -38,6 +38,8 @@ try:
 except ImportError:
     from sqlalchemy.orm.base import _entity_descriptor
 
+from sqlalchemy.orm import scoped_session
+
 Session = sessionmaker()
 logger = logging.getLogger()
 NB_DB_CONN_TRY = 2
@@ -191,6 +193,18 @@ class DatabaseHelper(Singleton):
                 self.session = None
             return result
         return __session
+
+ # Session decorator to create and close session automatically
+    @classmethod
+    def _sessionm(self, func):
+        @functools.wraps(func)
+        def __sessionm(self, *args, **kw):
+            session_factory  = sessionmaker(bind=self.db)
+            sessionmultithread = scoped_session(session_factory)
+            result = func(self,sessionmultithread , *args, **kw)
+            sessionmultithread.remove()
+            return result
+        return __sessionm
 
 
     # listinfo decorator to handle offsets, limits and output serialization
