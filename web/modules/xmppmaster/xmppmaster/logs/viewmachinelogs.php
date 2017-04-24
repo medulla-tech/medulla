@@ -40,7 +40,7 @@ $p->display();
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
     $boolterminate = false;
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-
+  
     if(isset($info['objectdeploy'][0]['sessionid'])){
         $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
@@ -60,6 +60,9 @@ $p->display();
     $descriptorslist = $resultinfo->descriptorslist;
     unset($resultinfo->descriptorslist);
     $infosautre = $resultinfo->infosautre;
+    $ipmaster = $infosautre[0]->ipmaster;
+    $iprelay =  $infosautre[0]->iprelay;
+    $ipmachine = $infosautre[0]->ipmachine;
     unset($resultinfo->infosautre);
     if ( isset($resultinfo->title)){
         echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
@@ -83,7 +86,6 @@ $p->display();
                 echo "</thead>";
                     echo "<tbody>";
             foreach($datawol['log'] as $line){
-                //print_r($line);
                 $startsteparray= get_object_vars( $line['date']);
                 $datestartstep = date("Y-m-d H:i:s", $startsteparray['timestamp']);
                 echo '<tr class="alternate">';
@@ -215,7 +217,10 @@ $p->display();
                               "actionsuccescompletedend" =>"Deployment terminated successfully. Clean package",
                               "actioncleaning"  =>"Clean downloaded package",
                               "actionrestartbot" => "Restart agent",
-                              "actionrestart" => "Restart Machine"
+                              "actionrestart" => "Restart Machine",
+                              "action_unzip_file" => "unzip file",
+                              "action_set_environ" => "Initializes environment variables",
+                              "action_no_operation" => "no action",
         );
     if ( $info['len'] != 0){
         $jidmachine = $info['objectdeploy'][0]['jidmachine'];
@@ -238,6 +243,9 @@ $p->display();
                     echo '<td style="width: ;">';
                         echo '<span style=" padding-left: 32px;">ip relayserver</span>';
                     echo '</td>';
+                    echo '<td style="width: ;">';
+                        echo '<span style=" padding-left: 32px;">ip master</span>';
+                    echo '</td>';
                 echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
@@ -251,12 +259,17 @@ $p->display();
                 echo "</td>";
                 echo "<td>";
                 echo '<span  style="padding-left:10px;">';
-                    echo $jid_relay;
+                    echo $ipmachine;
                 echo "</span>";
                 echo "</td>";
                 echo "<td>";
                 echo '<span  style="padding-left:10px;">';
-                    echo $jid_relay;
+                    echo $iprelay;
+                echo "</span>";
+                echo "</td>";
+                echo "<td>";
+                echo '<span  style="padding-left:10px;">';
+                    echo $ipmaster;
                 echo "</span>";
                 echo "</td>";
             echo "</tr>";
@@ -352,7 +365,20 @@ $p->display();
                             echo "</pre>";
                             }
                             else{
-                                echo $keystep." :".$infostep."<br>";
+                                if (is_object ($infostep)) {
+
+                                    echo $keystep;
+                                    echo "<br>";
+                                    echo "<ul>";
+                                    foreach(get_object_vars ($infostep) as $key0 => $valu0){
+                                        if ($key0 =='') break;
+                                        echo'<li>'.$key0.'=>'.$valu0 .'</li>';
+                                    }
+                                    echo "</ul>";
+                                }
+                                else{
+                                    echo $keystep." :".$infostep."<br>";
+                                }
                             }
                         }
                     }
@@ -368,7 +394,6 @@ $p->display();
                         }
                 }
                     echo "</div>";
-
             }
             echo"</div>";
         }
