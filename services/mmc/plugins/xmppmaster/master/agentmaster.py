@@ -868,43 +868,46 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 distance = 40000000000
                 listeserver=[]
                 relayserver = -1
-                if data['localisationifo'] is not None and data['localisationifo']['longitude'] != "" and data['localisationifo']['latitude'] != "":
-                    result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
-                    a=0
-                    for x in result1:
-                        a=a+1
-                        if x[1]!="" and x[2]!="":
-                            distancecalculated = Localisation().determinationbylongitudeandip(float(x[2]),float( x[1]) , data['ippublic'])
-                            #print distancecalculated
-                            if distancecalculated <= distance:
-                                distance = distancecalculated
-                                relayserver = x[0]
-                                listeserver.append(x[0])
-                    nbserver = len(listeserver)
-                    if nbserver > 1 :
-                        from random import randint
-                        index = randint(0 , nbserver-1)
-                        #print "random %s"%index
-                        logger.warn("geoposition rule returned %d relay servers for machine"\
-                            "%s user %s \nPossible relay servers : id list %s "%(nbserver, data['information']['info']['hostname'],
-                             data['information']['users'][0],listeserver))
-                        logger.warn("Continues for other rules. Random choice only if no other findings ")
-                        indetermine =  XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
+                try:
+                    if data['localisationifo'] is not None and data['localisationifo']['longitude'] != "" and data['localisationifo']['latitude'] != "":
+                        result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
+                        a=0
+                        for x in result1:
+                            a=a+1
+                            if x[1]!="" and x[2]!="":
+                                distancecalculated = Localisation().determinationbylongitudeandip(float(x[2]),float( x[1]) , data['ippublic'])
+                                #print distancecalculated
+                                if distancecalculated <= distance:
+                                    distance = distancecalculated
+                                    relayserver = x[0]
+                                    listeserver.append(x[0])
+                        nbserver = len(listeserver)
+                        if nbserver > 1 :
+                            from random import randint
+                            index = randint(0 , nbserver-1)
+                            #print "random %s"%index
+                            logger.warn("geoposition rule returned %d relay servers for machine"\
+                                "%s user %s \nPossible relay servers : id list %s "%(nbserver, data['information']['info']['hostname'],
+                                data['information']['users'][0],listeserver))
+                            logger.warn("Continues for other rules. Random choice only if no other findings ")
+                            indetermine =  XmppMasterDatabase().IpAndPortConnectionFromServerRelay(listeserver[index])
+                        else:
+                            if relayserver != -1:
+                                result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(relayserver)
+                                logger.debug("geoposition rule selects relayserver for machine %s user %s \n %s "%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                                break
+                    if len(result)!=0:
+                        result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,result2[0],self.config.defaultrelayserverbaseurlguacamole]
+                        ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
+                        logger.debug("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     else:
-                        if relayserver != -1:
-                            result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(relayserver)
-                            logger.debug("geoposition rule selects relayserver for machine %s user %s \n %s "%(data['information']['info']['hostname'],data['information']['users'][0],result))
-                            break
-                if len(result)!=0:
-                    result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,result2[0],self.config.defaultrelayserverbaseurlguacamole]
-                    ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
-                    logger.debug("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
-                else:
-                    result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,"self.domaindefault",self.config.defaultrelayserverbaseurlguacamole]
-                    ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
-                    logger.warn("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
-                    logger.warn("Check parameter [defaultconnection] in xmppmaster.ini....")
-                break
+                        result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,"self.domaindefault",self.config.defaultrelayserverbaseurlguacamole]
+                        ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
+                        logger.warn("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                        logger.warn("Check parameter [defaultconnection] in xmppmaster.ini....")
+                    break
+                except KeyError:
+                    break
             elif x[0] == 4:
                 logger.debug("analysis  rule 4")
                 logger.debug("rule subnet : Test if network are identical")
