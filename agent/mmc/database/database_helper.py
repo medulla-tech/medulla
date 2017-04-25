@@ -194,7 +194,7 @@ class DatabaseHelper(Singleton):
             return result
         return __session
 
- # Session decorator to create and close session automatically
+    # Session decorator to create and close session automatically
     @classmethod
     def _sessionm(self, func):
         @functools.wraps(func)
