@@ -1120,11 +1120,14 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineUuid(self, session, uuid):
-        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid)
+        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
         session.commit()
         session.flush()
-        ret=[m for m in relayserver]
-        return ret[0]
+        try:
+            result = {"jid" : relayserver.jid, "groupdeploy" : relayserver.groupdeploy }
+        except Exception:
+            result = {}
+        return result
 
     @DatabaseHelper._sessionm
     def getGuacamoleidforUuid(self, session, uuid):
