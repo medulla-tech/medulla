@@ -488,8 +488,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         try:
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
 
-            jidrelay = objmachine.groupdeploy
-            jidmachine = objmachine.jid
+            jidrelay = objmachine['groupdeploy']
+            jidmachine = objmachine['jid']
             ### print "jidrelay %s\njidmachine %s"%(jidrelay,jidmachine)
             if jidmachine != None and jidmachine != "" and jidrelay != None and jidrelay != "" :
 
