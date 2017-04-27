@@ -976,7 +976,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             data = json.loads(msg['body'])
             # Check msg from chatroom master for subscription
             if 'action' in data and data['action'] == 'loginfos':
-                # Process loginformation
+                # Process loginfotomaster
                 self.MessagesAgentFromChatroomlog(msg,data)
                 return True
 
