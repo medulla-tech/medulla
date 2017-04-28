@@ -50,10 +50,10 @@ sfx_file=7zsd.sfx
 # https://www.dropbox.com/sh/qdrpsttj8tqsn2q/AAC4AN0h_TKtfkRocQawQQMHa
 
 # Compute downloads url
-ssh_url=https://pulse-repo.siveo.net/repo-pulse/client/win/${ssh_file}
-vnc_url=https://pulse-repo.siveo.net/repo-pulse/client/win/${vnc_file}
-inv_url=https://pulse-repo.siveo.net/repo-pulse/client/win/${inv_file}
-sfx_url=https://pulse-repo.siveo.net/repo-pulse/client/win/${sfx_file}
+ssh_url=http://agents.siveo.net/win/${ssh_file}
+vnc_url=http://agents.siveo.net/win/${vnc_file}
+inv_url=http://agents.siveo.net/win/${inv_file}
+sfx_url=http://agents.siveo.net/win/${sfx_file}
 
 
 # Unfortunately, MSI agent service is no more alive :-(
