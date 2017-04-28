@@ -1124,9 +1124,38 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         try:
-            result = {"jid" : relayserver.jid, "groupdeploy" : relayserver.groupdeploy }
+            result = {
+                        "uuid" : uuid,
+                        "jid" : relayserver.jid,
+                        "groupdeploy" : relayserver.groupdeploy,
+                        "urlguacamole" : relayserver.urlguacamole,
+                        "subnetxmpp" : relayserver.subnetxmpp,
+                        "hostname" : relayserver.hostname,
+                        "platform" : relayserver.platform,
+                        "macaddress" : relayserver.macaddress,
+                        "archi" : relayserver.archi,
+                        "uuid_inventorymachine" : relayserver.uuid_inventorymachine,
+                        "ip_xmpp" : relayserver.ip_xmpp,
+                        "agenttype" : relayserver.agenttype
+                        }
+            for i in result:
+                if result[i] == None:
+                    result[i] = ""
         except Exception:
-            result = {}
+            result = {
+                        "uuid" : uuid,
+                        "jid" : "",
+                        "groupdeploy" : "",
+                        "urlguacamole" : "",
+                        "subnetxmpp" : "",
+                        "hostname" : "",
+                        "platform" : "",
+                        "macaddress" : "",
+                        "archi" : "",
+                        "uuid_inventorymachine" : "",
+                        "ip_xmpp" : "",
+                        "agenttype" : ""
+                    }
         return result
 
     @DatabaseHelper._sessionm
