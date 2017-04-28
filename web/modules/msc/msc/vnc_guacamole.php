@@ -23,13 +23,11 @@
 if(isset($_GET['objectUUID'])){
     $dd = xmlrpc_getGuacamoleRelayServerMachineUuid($_GET['objectUUID']);
 }
-$url=array();
-
+$url = array();
 $ee = xmlrpc_getGuacamoleidforUuid($_GET['objectUUID']);
 foreach ($ee as $k){
-    $url[$k[0]]=$dd['urlguacamole'].$k[1];
+    $url[$k[0]] = $dd['urlguacamole'].$k[1];
 }
-
  ?>
     <HTML>
         <head>
@@ -51,7 +49,7 @@ foreach ($ee as $k){
                             </a>
                             <br>
                             <h1>SSH</h1>
-                        </td>';                            
+                        </td>';
                         }
                     if ($clef == "RDP"){
                         echo '<td align="center">
@@ -62,7 +60,7 @@ foreach ($ee as $k){
                             </a>
                             <br>
                             <h1>RDP</h1>
-                        </td>';                            
+                        </td>';
                         }
                     if ($clef == "VNC"){
                         echo '<td align="center">
@@ -74,7 +72,6 @@ foreach ($ee as $k){
                             <br>
                             <h1>VNC</h1>
                         </td>';
-                            
                         }
                 }
                 ?>
@@ -87,16 +84,13 @@ if ($dd['agenttype'] == "relayserver")
     printf("COMPUTER");
     echo "<hr>";
     echo "<br>";
-    printf("Hostname : %s<br> Platform : %s",$dd['hostname'],$dd['platform']);
-    printf("<br>IP : %s/%s<br> Macadress : %s",$dd['ip_xmpp'],$dd['subnetxmpp'],$dd['macadress']);
+    printf("Hostname : %s<br> Platform : %s<br>archi : %s<br>", $dd['hostname'], $dd['platform'], $dd['archi']);
+    printf("<br>IP : %s/%s<br> Macadress : %s", $dd['ip_xmpp'], $dd['subnetxmpp'], $dd['macaddress']);
 ?>
 
 </BODY>
   </HTML>
 <?
- echo "<pre>";
- print_r($_GET['objectUUID']);
- echo "</pre>";
  echo "           </BODY>
             </HTML>
 ";
