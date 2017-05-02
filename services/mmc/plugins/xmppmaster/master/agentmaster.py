@@ -236,12 +236,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.idm = ""
         self.presencedeployment = {}
         self.updateguacamoleconfig = {}
-        self.xmpppresence={}
+        self.xmpppresence = {}
+        # Scheduler cycle before wanonlan delivery
+        self.CYCLESCHEDULER = 4
+        self.TIMESCHEDULER = 30
+        
+        # Scheduled deployment
+        self.schedule('schedule deploy', self.TIMESCHEDULER , self.scheduledeploy, repeat=True)
 
-        # schedule deployement
-        self.schedule('schedule deploy', 30 , self.scheduledeploy, repeat=True)
-
-        # Decrement session time
+        # Decrements session time
         self.schedule('manage session', 15 , self.handlemanagesession, repeat=True)
 
         # Reload plugins list every 15 minutes
@@ -293,56 +296,66 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deploy in self.machineWakeOnLan:
             # verify presense machine deploy ou wake in lan
             if XmppMasterDatabase().getPresenceuuid(deploy):
+                #machine presente supprime wakeonlan de la liste des machines a reveiller.
                 self.machineDeploy[deploy].extend(self.machineWakeOnLan[deploy])
                 del self.machineWakeOnLan[deploy]
 
         for deploy in resultdeploymachine:
+            # creation deploiement
             UUID = str(deploy.Target.target_uuid)
             deployobject = {'pakkageid' : str(deploy.Commands.package_id),
                             'commandid' :  deploy.Commands.id ,
                             'mac' : deploy.Target.target_macaddr,
                             'count' : 0,
+                            'cycle' : self.CYCLESCHEDULER - 1,
                             'login' : deploy.Commands.creator,
                             'start_date' : deploy.Commands.start_date,
                             'end_date' : deploy.Commands.end_date,
                             'title' : deploy.Commands.title,
                             'UUID' : deploy.Target.target_uuid,
                             'GUID' : deploy.Target.id_group }
+
             if XmppMasterDatabase().getPresenceuuid(UUID):
+                #If machine present add deployment in deploy list to manage.
                 try:
                     self.machineDeploy[UUID].append(deployobject)
                 except:
                     self.machineDeploy[UUID] = []
                     self.machineDeploy[UUID].append(deployobject)
             else:
+                #If machine not present add deployment in wankonlan list.
                 try:
                     self.machineWakeOnLan[UUID].append(deployobject)
                 except:
                     self.machineWakeOnLan[UUID]=[]
                     self.machineWakeOnLan[UUID].append(deployobject)
+
         suppobjectwanonlan = []
         for uuidmachine in self.machineWakeOnLan:
+            #Deploy on machine missing.
             for taballobjectwanonlan in self.machineWakeOnLan[uuidmachine]:
-                if taballobjectwanonlan['count'] <  4:
-                    listmacadress = taballobjectwanonlan['mac'].split("||");
-                    taballobjectwanonlan['count']=taballobjectwanonlan['count'] + 1
-                    for macadress in listmacadress:
-                        if macadress != "":
-                            logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
-                            self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress }  )
-                            self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
-                                            sessionname = taballobjectwanonlan['commandid'],
-                                            priority = -1 ,
-                                            who= uuidmachine)
-                else:
-                     self.machineWakeOnLan[uuidmachine].remove(taballobjectwanonlan)
+                taballobjectwanonlan['cycle'] = taballobjectwanonlan['cycle'] + 1
+                if (taballobjectwanonlan['cycle'] % self.CYCLESCHEDULER) == 0:
+                    if taballobjectwanonlan['count'] <  4:
+                        listmacadress = taballobjectwanonlan['mac'].split("||");
+                        taballobjectwanonlan['count'] = taballobjectwanonlan['count'] + 1
+                        for macadress in listmacadress:
+                            if macadress != "":
+                                logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
+                                self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress }  )
+                                self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
+                                                sessionname = taballobjectwanonlan['commandid'],
+                                                priority = -1 ,
+                                                who= uuidmachine)
+                    else:
+                        self.machineWakeOnLan[uuidmachine].remove(taballobjectwanonlan)
             if len(self.machineWakeOnLan[uuidmachine]) == 0:
                 suppobjectwanonlan.append(uuidmachine)
 
         for clearobjectwanonlan in suppobjectwanonlan:
             del self.machineWakeOnLan[clearobjectwanonlan]
             logging.warn("wakeonlan on machine %s error: to abort after 4 attempts"%clearobjectwanonlan)
-            self.logtopulse("wake on lan on machine %s [to ABORT after 4 attempts]"%clearobjectwanonlan,
+            self.logtopulse("<span style ='color: red;' >wake on lan on machine %s [to ABORT after 4 attempts]</span>"%clearobjectwanonlan,
                             type='Wol',
                             sessionname = taballobjectwanonlan['commandid'],
                             priority = -1 ,
@@ -361,7 +374,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 title = deployobject['title'],
                                                                 macadress = deployobject['mac'],
                                                                 GUID = deployobject['GUID'])
-            
+
             if len (self.machineDeploy[deployuuid]) == 0 :
                 suppobjmachineDeploy.append(deployuuid)
         for suppmachineuuid in suppobjmachineDeploy:
