@@ -1,13 +1,26 @@
-Management Console
----------------------------
+# What is MMC CORE?
 
-The MMC (Management Console) is made of two parts:
+MMC CORE is a framework to provide web console to manage MDS (Management of users, groups and network infrastructure) or / and PULSE IT automation and lifecycle workstation management tool.
 
-* An agent running on the machine to manage. We call it « MMC agent ». 
-  The agent exports to the network several plugins that allow to manage 
-  the machine. Of course, there can be multiple agents running on the 
-  network. The agent and its plugins are written in Python.
+MMC CORE relies on open source technologies like python, php, xmlrpc, scriptaculous framework to feature an ajax experience, and even more.
 
-* A web interface, that talks to the agent(s) using XML-RPC. The interface 
-  is written in PHP, and use the scriptaculous framework to feature an
-  AJAX experience.
+# Get help
+
+* Website : <http://www.siveo.net>
+* Nighty Builds : <http://git.siveo.net>
+* IRC : <irc://irc.freenode.net/#pulse-en > <irc://irc.freenode.net/#pulse-fr >
+* Sources : <https://github.com/pulse-project/mmc-core>
+* Bugtracker : <https://github.com/pulse-project/mmc-core/issues>
+* Forum : <http://forum.pulse2.fr/>
+
+
+# Installation
+
+The complete installation procedure can be found at <https://github.com/pulse-project/mmc-core/blob/xmppmaster/INSTALL>.
+If you find some errors, please feel free to contribute.
+
+Thanks
+
+# License
+
+MMC CORE is distributed under GPL v2. 
