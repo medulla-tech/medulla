@@ -120,3 +120,10 @@ class ProcessPanel(Panel):
             return {
                 'process': stderr,
             }
+
+class PluginsPanel(Panel):
+    def serialize(self):
+        ls = shlaunch("ls /etc/mmc/plugins/*.ini")
+        return {
+            'list':ls,
+        }

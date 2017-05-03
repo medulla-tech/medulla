@@ -26,7 +26,7 @@ import logging
 
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
-from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel
+from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, PluginsPanel
 
 VERSION = "3.1.90"
 APIVERSION = "0:1:0"
@@ -48,6 +48,7 @@ def activate():
     DM.register_panel(SpacePanel("space"))
     DM.register_panel(ShortcutsPanel("shortcuts"))
     DM.register_panel(ProcessPanel("process"))
+    DM.register_panel(PluginsPanel("plugins"))
     return True
 
 # XML-RPC methods
