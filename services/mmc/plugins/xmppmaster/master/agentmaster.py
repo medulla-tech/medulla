@@ -899,8 +899,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     distance = distancecalculated
                                     relayserver = x[0]
                                     listeserver.append(x[0])
-                        print "ékkkkkkkkkkkkkkkkkkkké"
-                        print listeserver
                         nbserver = len(listeserver)
                         if nbserver > 1 :
                             from random import randint
@@ -929,11 +927,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 except KeyError:
                     break
             elif x[0] == 4:
-                
-                
-                continue
-                
-                
                 logger.debug("analysis  rule 4")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False
