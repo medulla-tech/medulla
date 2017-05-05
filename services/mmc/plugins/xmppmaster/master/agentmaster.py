@@ -923,12 +923,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,result2[0],self.config.defaultrelayserverbaseurlguacamole]
                         ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
                         logger.debug("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
-                    else:
-                        result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,"self.domaindefault",self.config.defaultrelayserverbaseurlguacamole]
-                        ##self.defaultrelayserverjid = self.get('defaultconnection', 'jid')
-                        logger.warn("default rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
-                        logger.warn("Check parameter [defaultconnection] in xmppmaster.ini....")
-                    break
+                        break
+                    
                 except KeyError:
                     logger.error("Error algo rule 3")
                     traceback.print_exc(file=sys.stdout)
@@ -958,7 +954,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
             except Exception:
                 logger.error("impossible configuration of Relay server : missing")
-                return
+                result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,self.domaindefault,self.config.defaultrelayserverbaseurlguacamole]
         try:
             reponse = {
                 'action' : 'resultconnectionconf',
