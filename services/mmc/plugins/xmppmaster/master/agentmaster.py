@@ -41,12 +41,12 @@ from lib.utils import *
 from lib.managepackage import managepackage
 from lib.manage_event import manage_event
 from lib.manage_process import mannageprocess
+from lib.manage_scheduler import manage_scheduler
 from lib.manageRSAsigned import MsgsignedRSA
 from lib.localisation import Localisation
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 from mmc.plugins.base import getModList
 from mmc.plugins.base.computers import ComputerManager
-
 from pulse2.database.xmppmaster import XmppMasterDatabase
 import traceback
 import pprint
@@ -62,8 +62,8 @@ from mmc.agent import PluginManager
 #ALTER TABLE `xmppmaster`.`machines` 
 #ADD COLUMN `picklekeypublic` VARCHAR(550) NULL DEFAULT NULL AFTER `urlguacamole`;
 from mmc.plugins.msc.database import MscDatabase
-
-
+import schedule
+import time
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
 
@@ -225,7 +225,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.plugindata = {}
         self.loadPluginList()
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
-
+        self.manage_scheduler  = manage_scheduler(self)
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
@@ -240,7 +240,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # Scheduler cycle before wanonlan delivery
         self.CYCLESCHEDULER = 4
         self.TIMESCHEDULER = 30
-        
+
+        self.schedule('schedulerfunction', 60 , self.schedulerfunction, repeat=True)
         # Scheduled deployment
         self.schedule('schedule deploy', self.TIMESCHEDULER , self.scheduledeploy, repeat=True)
 
@@ -271,6 +272,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         self.add_event_handler ( 'changed_status', self.changed_status)
         self.RSA = MsgsignedRSA("master")
+        schedule.every(1).minutes.do(self.job)
+
+    def schedulerfunction(self):
+        self.manage_scheduler.process_on_event()
 
     def scheduledeploy(self):
         resultdeploymachine, e = MscDatabase().deployxmpp();
