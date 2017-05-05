@@ -939,27 +939,32 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break
                 if subnetexist: break;
             elif x[0] == 5:
-                logger.debug("analysis  rule 5")
-                if len(indetermine) > 0:
-                    logger.debug("analysis  rule 4")
-                    result = indetermine
-                    logger.warn("server address is compared to that of relay servers (geoPosition rule)")
-                    break;
-                else:
-                    result2 = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+                    logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
+                    result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
 
-        logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))
-        XmppMasterDatabase().log("[user %s hostanme %s] : Relay server for connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
+        try:
+            logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))
+            XmppMasterDatabase().log("[user %s hostanme %s] : Relay server for connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
+        except Exception:
+            logger.warning("Warning attribution rs by default")
+            try:
+                result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+            except Exception:
+                logger.error("impossible configuration of Relay server : missing")
+                return
+        try:
+            reponse = {
+                'action' : 'resultconnectionconf',
+                'sessionid' : data['sessionid'],
+                'data' : [result[0],result[1],result[2],result[3]],
+                'ret': 0
+                }
+            self.send_message(mto=msg['from'],
+                            mbody=json.dumps(reponse),
+                            mtype='chat')
+        except Exception:
+            logger.error("impossible configuration of Relay server : missing")
 
-        reponse = {
-            'action' : 'resultconnectionconf',
-            'sessionid' : data['sessionid'],
-            'data' : [result[0],result[1],result[2],result[3]],
-            'ret': 0
-            }
-        self.send_message(mto=msg['from'],
-                        mbody=json.dumps(reponse),
-                        mtype='chat')
 
     def messagereturnsession(self, msg):
         data = json.loads(msg['body'])
