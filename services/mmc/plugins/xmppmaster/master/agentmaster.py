@@ -62,7 +62,7 @@ from mmc.agent import PluginManager
 #ALTER TABLE `xmppmaster`.`machines` 
 #ADD COLUMN `picklekeypublic` VARCHAR(550) NULL DEFAULT NULL AFTER `urlguacamole`;
 from mmc.plugins.msc.database import MscDatabase
-import schedule
+
 import time
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster"))
@@ -899,6 +899,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     distance = distancecalculated
                                     relayserver = x[0]
                                     listeserver.append(x[0])
+                        print "ékkkkkkkkkkkkkkkkkkkké"
+                        print listeserver
                         nbserver = len(listeserver)
                         if nbserver > 1 :
                             from random import randint
@@ -927,6 +929,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 except KeyError:
                     break
             elif x[0] == 4:
+                
+                
+                continue
+                
+                
                 logger.debug("analysis  rule 4")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False
