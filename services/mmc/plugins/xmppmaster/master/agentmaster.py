@@ -272,7 +272,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
         self.add_event_handler ( 'changed_status', self.changed_status)
         self.RSA = MsgsignedRSA("master")
-        schedule.every(1).minutes.do(self.job)
 
     def schedulerfunction(self):
         self.manage_scheduler.process_on_event()
