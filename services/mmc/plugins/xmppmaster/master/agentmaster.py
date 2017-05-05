@@ -885,8 +885,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 distance = 40000000000
                 listeserver=[]
                 relayserver = -1
+                result=[]
                 try:
-                    if data['localisationifo'] is not None and data['localisationifo']['longitude'] != "" and data['localisationifo']['latitude'] != "":
+                    if 'localisationifo' in data \
+                        and data['localisationifo'] is not None \
+                        and 'longitude' in data['localisationifo'] \
+                        and 'latitude' in data['localisationifo'] \
+                        and data['localisationifo']['longitude'] != "" \
+                        and data['localisationifo']['latitude'] != "":
                         result1 = XmppMasterDatabase().IdlonglatServerRelay(data['classutil'])
                         a=0
                         for x in result1:
@@ -924,7 +930,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         logger.warn("Check parameter [defaultconnection] in xmppmaster.ini....")
                     break
                 except KeyError:
-                    break
+                    logger.error("Error algo rule 3")
+                    traceback.print_exc(file=sys.stdout)
+                    continue
             elif x[0] == 4:
                 logger.debug("analysis  rule 4")
                 logger.debug("rule subnet : Test if network are identical")
