@@ -966,7 +966,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             mbody=json.dumps(reponse),
                             mtype='chat')
         except Exception:
-            logger.error("impossible configuration of Relay server : missing")
+            logger.error("The configuration of Relay server is impossible : missing")
 
 
     def messagereturnsession(self, msg):
