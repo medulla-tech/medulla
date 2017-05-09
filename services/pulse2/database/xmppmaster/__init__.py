@@ -823,7 +823,7 @@ class XmppMasterDatabase(DatabaseHelper):
     def jidrelayserverforip(self, session, ip ):
         """ return jid server relay for connection"""
         sql ="""SELECT 
-                    jid
+                    ipconnection, port, jid, urlguacamole
                 FROM
                     xmppmaster.relayserver
                 WHERE
@@ -836,7 +836,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-
 
     @DatabaseHelper._sessionm
     def IdlonglatServerRelay(self, session, classutilMachine = "private",  enabled=1):
