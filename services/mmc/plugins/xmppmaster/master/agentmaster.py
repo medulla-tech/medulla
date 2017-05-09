@@ -953,7 +953,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             try:
                 result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
             except Exception:
-                logger.warn("impossible configuration of Relay server : missing")
+                logger.warn("The configuration of Relay server is impossible : missing")
                 result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,self.domaindefault,self.config.defaultrelayserverbaseurlguacamole]
         try:
             reponse = {
