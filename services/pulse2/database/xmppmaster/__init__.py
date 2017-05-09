@@ -1113,6 +1113,8 @@ class XmppMasterDatabase(DatabaseHelper):
             supp3 = session.execute(sql3)
             session.commit()
             session.flush()
+        except IndexError:
+            logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
         except Exception, e:
             logging.getLogger().error(str(e))
         return result
