@@ -837,6 +837,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
             traceback.print_exc(file=sys.stdout)
             return False
 
+    def Showlogmessage(self, msg):
+        try:
+            data = json.loads(msg['body'])
+            if data['action'] == 'infolog' :
+               logger.error(data['msg'])
+               return True
+            else:
+                return False
+        except:
+            return False
+
+
     def MessagesAgentFromChatroomConfig(self, msg):
         logger.debug("MessagesAgentFromChatroomConfig")
         ### Message from chatroom master
@@ -1214,6 +1226,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return False
         if self.jidInRoom1( self.config.confjidchatroom, msg['from']):
             self.MessagesAgentFromChatroomConfig( msg)
+            return
+        if self.Showlogmessage(msg):
             return
         if  msg['type'] == 'groupchat':
             return
