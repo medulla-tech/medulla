@@ -428,25 +428,26 @@ class MUCBot(sleekxmpp.ClientXMPP):
             self.showListClient()
 
     def showListClient(self):
-        self.presencedeployment={}
-        listrs = XmppMasterDatabase().listjidRSdeploy()
-        if len(listrs) != 0:
-            for i in listrs:
-                li = XmppMasterDatabase().listmachinesfromdeploy(i[0])
-                logger.info("RS [%s] for deploy on %s Machine"%(i[0],len(li)-1))
-                logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
-                                                                      "uuid",
-                                                                      "Machine",
-                                                                      "jid",
-                                                                      "platform"))
-                for j in li:
-                    if j[9] == 'relayserver':
-                        TY = 'RSer'
-                    else:
-                        TY = "Mach"
-                    logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
-        else:
-            logger.info("Aucune Machine repertorié")
+        if self.config.showinfomaster:
+            self.presencedeployment={}
+            listrs = XmppMasterDatabase().listjidRSdeploy()
+            if len(listrs) != 0:
+                for i in listrs:
+                    li = XmppMasterDatabase().listmachinesfromdeploy(i[0])
+                    logger.info("RS [%s] for deploy on %s Machine"%(i[0],len(li)-1))
+                    logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
+                                                                        "uuid",
+                                                                        "Machine",
+                                                                        "jid",
+                                                                        "platform"))
+                    for j in li:
+                        if j[9] == 'relayserver':
+                            TY = 'RSer'
+                        else:
+                            TY = "Mach"
+                        logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
+            else:
+                logger.info("Aucune Machine repertorié")
 
     def presence(self, message):
         pass
@@ -628,6 +629,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def displayData(self, data):
         if self.config.showinfomaster:
+            logger.info("--------------------------")
+            if 'action' in data and data['action'] == 'connectionconf' :
+                logger.info("INFORMATION FROM CONFIGURATION AGENT FOR %s"%data['agenttype'].upper())
+            else:
+                logger.info("INFORMATION FROM AGENT %s"%data['agenttype'].upper())
             logger.info("__________________________")
             logger.info("MACHINE INFORMATION")
             logger.info("Deployment name : %s"%data['deployment'])
@@ -1115,7 +1121,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         except:
                             broadcast=''
                         XmppMasterDatabase().addPresenceNetwork( i['macaddress'],i['ipaddress'], broadcast, i['gateway'], i['mask'],i['macnotshortened'], idmachine)
-                        logging.debug("add Presence Network [Machine : %d]"%idmachine)
+                        #logging.debug("add Presence Network [Machine : %d]"%idmachine)
                     if data['agenttype'] != "relayserver":
                         # Update uuid machine : for consistency with inventory
                         # call Guacamole config

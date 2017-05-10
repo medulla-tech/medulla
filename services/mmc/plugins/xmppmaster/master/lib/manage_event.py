@@ -11,11 +11,10 @@ from  sleekxmpp import jid
 
 class manage_event:
     def __init__(self, queue_in, objectxmpp):
-        self.event=[]
+        self.event = []
         self.queue_in = queue_in
         self.namethread =  name_random(5, "threadevent")
         self.objectxmpp = objectxmpp
-        print "****manage_event"
         self.threadevent = threading.Thread( name = self.namethread, target = self.manage_event_command)
         self.threadevent.start()
 
@@ -92,13 +91,10 @@ class manage_event:
             while True:
                 try:
                     # Reads event
-                    print "Waiting for event"
                     event = self.queue_in.get(5)
-                    print "Message queue %s"%event
                     if event=="quit":
                         break
                     self.show_eventloop()
-                    print "Event received %s"%event
                     if 'sessionid' in event and '_eventype' in event:
                         if 'result' in event['data'] and \
                             'command' in event['data']['result'] and \
@@ -129,7 +125,7 @@ class manage_event:
                                         'Devent': event['data']['Devent']
                                     }
                             }
-                        print "Send message %s"%msg
+                        #print "Send message %s"%msg
                         self.objectxmpp.send_message( mto = event['to'],
                                             mbody=json.dumps(msg),
                                             mtype='chat')
