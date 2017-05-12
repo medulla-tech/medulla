@@ -316,6 +316,11 @@ function list_computers($names,
             $n->addActionItemArray($actionxmppquickdeoloy);
         }
     }
+    else{
+        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+            $n->addActionItemArray($actionxmppquickdeoloy);
+        }
+    }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
         if ($delete_computer && canDelComputer()) {
             // set popup window to 400px width
