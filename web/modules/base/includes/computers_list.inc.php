@@ -108,7 +108,7 @@ function list_computers($names,
     }
 
     function getUUID($machine) { return $machine['objectUUID']; }
-    
+
     $uuids = array_map("getUUID", $names);
 
     $countmachine=0;
@@ -148,6 +148,7 @@ function list_computers($names,
         }
 
         if ( in_array("xmppmaster", $_SESSION["supportModList"])  ) {
+            $action_deploy_msc[] = $mscAction;
             if ($groupinfodeploy == -1  ){
                 $action_logs_msc[]   = $logNoAction;
             }
@@ -155,11 +156,11 @@ function list_computers($names,
                 $action_logs_msc[]   = $logAction;
             }
             if ( $presencemachinexmpp ){
-                $action_deploy_msc[] = $mscAction;
+                //$action_deploy_msc[] = $mscAction;
                 $actionConsole[] = $inventconsole;
             }
             else{
-                $action_deploy_msc[] = $mscNoAction;
+                //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
                 $actionConsole[] = $inventnoconsole;
             }
@@ -194,21 +195,15 @@ function list_computers($names,
         if ($msc_vnc_show_icon) {
             $actionVncClient[] = $vncClientAction;
         }
-        
+
         if (in_array("xmppmaster", $_SESSION["supportModList"])) {
             $actionxmppquickdeoloy[]=$DeployQuickxmpp;
         }
-        
-        
+
+
         $params[] = $value;
     }
-    
-    
-    
-    //
-    //$actionxmppquickdeoloy
-    
-    
+
     foreach($params as &$element ){
 
     if ( $groupinfodeploy != -1){
@@ -274,11 +269,11 @@ function list_computers($names,
     $n->setParamInfo($params);
     //$n->setCssClass("machineName");
     $n->setMainActionClasses($cssClasses);
-    
+
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
         $n->addActionItemArray($actionInventory);
     }
-    
+
     if ($msc_can_download_file) {
         $n->addActionItemArray($actionDownload);
     };
