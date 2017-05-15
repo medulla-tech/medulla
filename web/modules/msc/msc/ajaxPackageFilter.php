@@ -27,6 +27,7 @@ require_once('modules/msc/includes/mirror_api.php');
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
+require_once("includes/xmlrpc.inc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -169,15 +170,15 @@ $n->setTableHeaderPadding(1);
 $n->disableFirstColumnActionLink();
 $n->start = 0;
 $n->end = $count;
-
+$presencemachinexmpp = xmlrpc_getPresenceuuid( $_GET['uuid']);
 if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
     $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 else{
     $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
-
-    $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+    if ( $presencemachinexmpp )
+        $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 }
 
 if ($group != null) {
