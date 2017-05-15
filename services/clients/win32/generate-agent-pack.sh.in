@@ -50,10 +50,10 @@ sfx_file=7zsd.sfx
 # https://www.dropbox.com/sh/qdrpsttj8tqsn2q/AAC4AN0h_TKtfkRocQawQQMHa
 
 # Compute downloads url
-ssh_url=http://agents.siveo.net/win/${ssh_file}
-vnc_url=http://agents.siveo.net/win/${vnc_file}
-inv_url=http://agents.siveo.net/win/${inv_file}
-sfx_url=http://agents.siveo.net/win/${sfx_file}
+ssh_url=https://agents.siveo.net/win/${ssh_file}
+vnc_url=https://agents.siveo.net/win/${vnc_file}
+inv_url=https://agents.siveo.net/win/${inv_file}
+sfx_url=https://agents.siveo.net/win/${sfx_file}
 
 
 # Unfortunately, MSI agent service is no more alive :-(
