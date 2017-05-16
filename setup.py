@@ -44,7 +44,7 @@ setup(
 
     keywords='pulse2',
     name='pulse2', 
-    version='3.9.90',
+    version='3.9.91',
     description = 'pulse2',
     url='https://www.siveo.net/',
     packages=['pulse2'],
