@@ -36,7 +36,7 @@ setup(
 
     keywords='mmc-core',
     name='mmc-core', 
-    version='3.9.90',
+    version='3.9.91',
     description = 'mmc-core',
     url='https://www.siveo.net/',
     packages=['mmc-core'],
