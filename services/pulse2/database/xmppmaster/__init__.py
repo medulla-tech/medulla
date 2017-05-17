@@ -783,6 +783,25 @@ class XmppMasterDatabase(DatabaseHelper):
         return [x for x in result]
 
     @DatabaseHelper._sessionm
+    def algoruleloadbalancer(self, session):
+        sql = """
+            SELECT 
+                COUNT(*) AS nb, `machines`.`groupdeploy`, `relayserver`.`id`
+            FROM
+                xmppmaster.machines
+            INNER JOIN
+                xmppmaster.`relayserver` ON `relayserver`.`groupdeploy` = `machines`.`groupdeploy`
+            WHERE
+                agenttype = 'machine'
+            GROUP BY `machines`.`groupdeploy`
+            ORDER BY nb DESC
+            LIMIT 1;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._sessionm
     def algorulesubnet(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
         """recherche server relay avec meme reseau"""
         if classutilMachine == "private":

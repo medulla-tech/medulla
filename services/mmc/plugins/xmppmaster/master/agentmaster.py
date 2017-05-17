@@ -962,7 +962,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
             elif x[0] == 5:
                     logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
                     result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
-
+            elif x[0] == 6:
+                result1 = XmppMasterDatabase().algoruleloadbalancer()
+                if len(result1) > 0 :
+                    logger.debug("applied rule 6")
+                    result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                    logger.debug("load balancer rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                    break
         try:
             logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))
             XmppMasterDatabase().log("[user %s hostanme %s] : Relay server for connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
