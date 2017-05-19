@@ -716,6 +716,63 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
+    ###modif jfk ici
+    @DatabaseHelper._sessionm
+    def ippackageserver(self, session, jid):
+        """ return ip xmpp for JID """
+        sql = """SELECT 
+                    package_server_ip
+                FROM
+                    xmppmaster.relayserver
+                WHERE
+                    jid LIKE ('%s%%')
+                                LIMIT 1;"""%jid
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
+
+    @DatabaseHelper._sessionm
+    def portpackageserver(self, session, jid):
+        """ return ip xmpp for JID """
+        sql = """SELECT 
+                    package_server_port
+                FROM
+                    xmppmaster.relayserver
+                WHERE
+                    jid LIKE ('%s%%')
+                                LIMIT 1;"""%jid
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
+
+    @DatabaseHelper._sessionm
+    def ipserverARS(self, session, jid):
+        """ return ip xmpp for JID """
+        sql = """SELECT 
+                    ipserver
+                FROM
+                    xmppmaster.relayserver
+                WHERE
+                    jid LIKE ('%s%%')
+                                LIMIT 1;"""%jid
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
 
     @DatabaseHelper._sessionm
     def getUuidFromJid(self, session, jid):
