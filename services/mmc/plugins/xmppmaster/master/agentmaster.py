@@ -657,6 +657,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppgateway : %s"%data['xmppgateway'])
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
+            logger.info("package server : %s"%data['pakageserver'])
 
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
@@ -962,6 +963,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             elif x[0] == 5:
                     logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
                     result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+                    break
             elif x[0] == 6:
                 result1 = XmppMasterDatabase().algoruleloadbalancer()
                 if len(result1) > 0 :
@@ -1031,7 +1033,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 self.MessagesAgentFromChatroomlog(msg, data)
                 return True
             #------------------------------------------------
-
             if 'action' in data and data['action'] == 'infomachine' :
                 logger.debug("** Processing machine %s that sends this information (nini inventory)"%msg['from'].bare)
                 # verify si machine Enregistrer
@@ -1047,7 +1048,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     data['localisationifo'] = {}
                 data['information'] = info
-
                 ###################################
                 #check is agent machine or agent Relayserver has public key of master
                 publickeybase64 =  info['publickey']
@@ -1121,7 +1121,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 if data['agenttype'] == "relayserver":
                     XmppMasterDatabase().addServerRelay(data['baseurlguacamole'],
                                                             data['subnetxmpp'],
-                                                            data['information']['info']['hostname'],#data['machine'][:-3],
+                                                            data['information']['info']['hostname'],
                                                             data['deployment'],
                                                             data['xmppip'],
                                                             data['ipconnection'],
@@ -1132,7 +1132,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             longitude,
                                                             latitude,
                                                             True,
-                                                            data['classutil'])
+                                                            data['classutil'],
+                                                            data['pakageserver']['public_ip'],
+                                                            data['pakageserver']['port']
+                                                            )
                 logger.debug("** Add machine in base")
                 # Add machine
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],

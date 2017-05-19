@@ -31,10 +31,10 @@ from sqlalchemy.exc import DBAPIError
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs
+from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
+    Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy
 # Imported last
 import logging
-
 
 
 class XmppMasterDatabase(DatabaseHelper):
@@ -239,8 +239,6 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return new_deploy.id
 
-
-
     @DatabaseHelper._sessionm
     def getlinelogswolcmd(self, session, idcommand, uuid):
         log = session.query(Logs).filter(and_( Logs.sessionname == str(idcommand) , Logs.type == 'wol', Logs.who == uuid)).order_by(Logs.id)
@@ -410,7 +408,15 @@ class XmppMasterDatabase(DatabaseHelper):
                         ipserver,
                         ipconnection,
                         portconnection,
-                        port, mask, jid, longitude="", latitude="", enabled=False, classutil="private"):
+                        port,
+                        mask,
+                        jid,
+                        longitude="",
+                        latitude="",
+                        enabled = False,
+                        classutil="private",
+                        packageserverip ="",
+                        packageserverport = ""):
         sql = "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';"%nameserver
         nb = session.execute(sql)
         session.commit()
@@ -433,6 +439,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.latitude = latitude
                 new_relayserver.enabled = enabled
                 new_relayserver.classutil = classutil
+                new_relayserver.package_server_ip = packageserverip
+                new_relayserver.package_server_port = packageserverport
                 session.add(new_relayserver)
                 session.commit()
                 session.flush()

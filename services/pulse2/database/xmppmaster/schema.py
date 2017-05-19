@@ -26,13 +26,13 @@ from mmc.database.database_helper import DBObj
 from sqlalchemy.orm import relationship
 import datetime
 
-
 Base = declarative_base()
 
 
 class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
+
 
 class Logs(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -49,6 +49,7 @@ class Logs(Base, XmppMasterDBObj):
     priority = Column(Integer, default = 0)
     who = Column(String(20), nullable=False, default = "")
 
+
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'userlog'
@@ -59,6 +60,7 @@ class UserLog(Base, XmppMasterDBObj):
     msg = Column(String(255), nullable=False)
     datelog =  Column(DateTime, default=datetime.datetime.utcnow)
     type =  Column(String(10), nullable=False,default = "info")
+
 
 ################################
 class Machines(Base, XmppMasterDBObj):
@@ -81,6 +83,7 @@ class Machines(Base, XmppMasterDBObj):
     urlguacamole =Column(String(255))
     groupdeploy = Column(String(80))
     picklekeypublic = Column(String(550))
+
 
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -110,6 +113,8 @@ class RelayServer(Base, XmppMasterDBObj):
     subnet = Column(String(45))
     nameserver = Column(String(45))
     groupdeploy = Column(String(45))
+    package_server_ip = Column(String(45))
+    package_server_port = Column(Integer)
     ipserver = Column(String(45))
     port = Column(Integer)
     ipconnection = Column(String(45))
@@ -121,6 +126,7 @@ class RelayServer(Base, XmppMasterDBObj):
     enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
 
+
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'rules'
@@ -130,6 +136,7 @@ class Regles(Base, XmppMasterDBObj):
     name =Column(String(45))
     description = Column(String(45))
     level = Column(Integer)
+
 
 class Users(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -148,6 +155,7 @@ class Users(Base, XmppMasterDBObj):
     country_code = Column(String(45))
     country_name = Column(String(45))
 
+
 class Has_machinesusers(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_machinesusers'
@@ -156,6 +164,7 @@ class Has_machinesusers(Base, XmppMasterDBObj):
     users_id = Column(Integer, ForeignKey('users.id'))
     machines = relationship(Machines)
     users = relationship(Users)
+
 
 class Has_relayserverrules(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -167,6 +176,7 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
     order = Column(String(45))
     rules = relationship(Regles)
 
+
 class Has_guacamole(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_guacamole'
@@ -175,6 +185,7 @@ class Has_guacamole(Base, XmppMasterDBObj):
     idinventory = Column(Integer)
     protocol   = Column(String(10))
 
+
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'version'
@@ -182,6 +193,7 @@ class Version(Base, XmppMasterDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     active = Column(TINYINT(1), nullable=False, default=1)
+
 
 class Deploy(Base, XmppMasterDBObj):
     # ====== Table name =========================
