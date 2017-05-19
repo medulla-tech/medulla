@@ -503,7 +503,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     title = None,
                                     macadress = None,
                                     GUID = None):
-        
+
         try:
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
 

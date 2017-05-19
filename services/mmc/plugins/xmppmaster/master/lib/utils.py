@@ -635,3 +635,76 @@ def searchippublic(site = 1):
         page = urllib.urlopen("http://www.monip.org/").read()
         ip = page.split("IP : ")[1].split("<br>")[0]
         return ip
+
+class shellcommandtimeout(object):
+    def __init__(self, cmd, timeout=15):
+        self.process = None
+        self.obj = {}
+        self.obj['timeout'] = timeout
+        self.obj['cmd'] = cmd
+
+    def run(self):
+        def target():
+            #print 'Thread started'
+            self.process = subprocess.Popen(self.obj['cmd'], 
+                                            shell=True,
+                                            stdout=subprocess.PIPE,
+                                            stderr=subprocess.STDOUT)
+            self.obj['result'] = self.process.stdout.readlines()
+            self.process.communicate()
+            #print 'Thread finished'
+        thread = threading.Thread(target=target)
+        thread.start()
+
+        thread.join(self.obj['timeout'])
+        if thread.is_alive():
+            print 'Terminating process'
+            print "timeout %s"%self.obj['timeout']
+            #self.codereturn = -255
+            #self.result = "error tineour"
+            self.process.terminate()
+            thread.join()
+
+        #self.result = self.process.stdout.readlines()
+        self.obj['codereturn'] = self.process.returncode
+
+        if self.obj['codereturn']==-15:
+                self.result = "error tineout"
+
+        return self.obj
+
+def ipfromdns(ipdata):
+    """ This function converts a dns to ipv4
+        If not find return ""
+        function tester on OS:
+        MAcOs, linux (debian, redhat, ubuntu), windows
+        eg : print ip("sfr.fr")
+        80.125.163.172
+    """
+    def strnslookup(str):
+        adress = False
+        for t in str:
+            if "Name" in t:
+                adress = True
+            if adress == True and "Address" in t:
+                return t.split(":")[1].strip()
+        return ""
+
+    def searchipfromdns(ip):
+        re = shellcommandtimeout("nslookup %s"%ip, 10).run()
+        result  = [x.strip() for x in re['result'] if x !='']
+        if sys.platform.startswith('linux'):
+            return strnslookup(result)
+        elif sys.platform.startswith('win'):
+            return strnslookup(result)
+        elif sys.platform.startswith('darwin'):
+            return strnslookup(result)
+
+    if ipdata != "" and ipdata != None:
+        if ipdata.lower() == "localhost":
+            return "127.0.0.1"
+        if is_valid_ipv4(ipdata):
+            return ipdata
+        else:
+            return searchipfromdns(ipdata)
+    return ""

@@ -24,6 +24,8 @@ from pulse2.database.xmppmaster.config import XmppMasterDatabaseConfig
 import platform
 from mmc.plugins.xmppmaster.master.lib import utils
 import logging
+from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
+
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
     def __init__(self, name = 'xmppmaster', conffile = None):
@@ -58,7 +60,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.tempdir = self.get("main", "tempdir")
 
         self.Port= self.get('connection', 'port')
-        self.Server= self.get('connection', 'server')
+        self.Server= ipfromdns(self.get('connection', 'server'))
         self.passwordconnection=self.get('connection', 'password')
         self.debugmode = self.get('global', 'log_level')
         #########chatroom############
@@ -86,7 +88,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.showplugins = self.getboolean('master', 'showplugins')
         #################default connection ###################
         ### Connection server parameters if no relay server is available ####
-        self.defaultrelayserverip = self.get('defaultconnection', 'serverip')
+        self.defaultrelayserverip = ipfromdns(self.get('defaultconnection', 'serverip'))
         if self.defaultrelayserverip == "localhost":
             logging.getLogger().error('parameter section "defaultconnection" serverip must not be localhost')
         if self.defaultrelayserverip == "127.0.0.1":
