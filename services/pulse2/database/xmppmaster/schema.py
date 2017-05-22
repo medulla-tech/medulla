@@ -26,13 +26,13 @@ from mmc.database.database_helper import DBObj
 from sqlalchemy.orm import relationship
 import datetime
 
+
 Base = declarative_base()
 
 
 class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
-
 
 class Logs(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -49,7 +49,6 @@ class Logs(Base, XmppMasterDBObj):
     priority = Column(Integer, default = 0)
     who = Column(String(20), nullable=False, default = "")
 
-
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'userlog'
@@ -60,7 +59,6 @@ class UserLog(Base, XmppMasterDBObj):
     msg = Column(String(255), nullable=False)
     datelog =  Column(DateTime, default=datetime.datetime.utcnow)
     type =  Column(String(10), nullable=False,default = "info")
-
 
 ################################
 class Machines(Base, XmppMasterDBObj):
@@ -84,7 +82,6 @@ class Machines(Base, XmppMasterDBObj):
     groupdeploy = Column(String(80))
     picklekeypublic = Column(String(550))
 
-
 class Network(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'network'
@@ -101,7 +98,6 @@ class Network(Base, XmppMasterDBObj):
     #machines_id = Column(Integer, nullable=False)
     machines_id = Column(Integer, ForeignKey('machines.id'))
     machines = relationship(Machines)
-
 
 class RelayServer(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -126,7 +122,6 @@ class RelayServer(Base, XmppMasterDBObj):
     enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
 
-
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'rules'
@@ -136,7 +131,6 @@ class Regles(Base, XmppMasterDBObj):
     name =Column(String(45))
     description = Column(String(45))
     level = Column(Integer)
-
 
 class Users(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -155,7 +149,6 @@ class Users(Base, XmppMasterDBObj):
     country_code = Column(String(45))
     country_name = Column(String(45))
 
-
 class Has_machinesusers(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_machinesusers'
@@ -164,7 +157,6 @@ class Has_machinesusers(Base, XmppMasterDBObj):
     users_id = Column(Integer, ForeignKey('users.id'))
     machines = relationship(Machines)
     users = relationship(Users)
-
 
 class Has_relayserverrules(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -176,7 +168,6 @@ class Has_relayserverrules(Base, XmppMasterDBObj):
     order = Column(String(45))
     rules = relationship(Regles)
 
-
 class Has_guacamole(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'has_guacamole'
@@ -185,7 +176,6 @@ class Has_guacamole(Base, XmppMasterDBObj):
     idinventory = Column(Integer)
     protocol   = Column(String(10))
 
-
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'version'
@@ -193,7 +183,6 @@ class Version(Base, XmppMasterDBObj):
     # Here we define columns for the table version.
     # Notice that each column is also a normal Python instance attribute.
     active = Column(TINYINT(1), nullable=False, default=1)
-
 
 class Deploy(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -221,6 +210,16 @@ class Deploy(Base, XmppMasterDBObj):
     command = Column(Integer)
     macadress=Column(String(255))
 
+class ParametersDeploy(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'parameters_deploy'
+    # ====== Fields =============================
+    command = Column(Integer)
+    dictionary_data = Column(Text)
+    data1 = Column(String(45))
+    data2 = Column(String(45))
+    data3 = Column(String(45))
+    id_machine = Column(Integer)
 
 class Has_login_command(Base, XmppMasterDBObj):
     # ====== Table name =========================
