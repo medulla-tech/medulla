@@ -36,6 +36,8 @@ $p->display();
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
 
+if(!isExpertMode())
+{
 if (isset($_POST['bconfirm'])) {
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
@@ -220,6 +222,12 @@ You may also ask Google for the silent installation switches. If you\'re feeling
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
     $f->display();
+}
+}
+
+else
+{
+    include('addXMPP.php');
 }
 ?>
 
