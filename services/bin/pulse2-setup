@@ -197,7 +197,7 @@ class DebianHandler(DistroHandler):
     ldap_schemas_dir = "/etc/ldap/schema/"
     ldap_config = True
     apache_service = "apache2"
-    apache_dir = "/etc/apache2/conf.d/"
+    apache_dir = "/etc/apache2/conf-available/"
 
     def __init__(self):
         DistroHandler.__init__(self)
