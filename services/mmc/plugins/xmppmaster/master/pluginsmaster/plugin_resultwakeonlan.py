@@ -2,6 +2,7 @@
 import base64, json, os
 
 #plugin_resultwakeonLan
+
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     print "plugin_resultwakeonLan"
     try:

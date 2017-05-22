@@ -8,6 +8,8 @@ import json
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
+
+
 def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {"Pragma": "no-cache",
               "User-Agent": "Proxy:FusionInventory/Pulse2/GLPI",
