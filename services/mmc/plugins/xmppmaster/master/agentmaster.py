@@ -659,8 +659,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppgateway : %s"%data['xmppgateway'])
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
-            logger.info("package server : %s"%data['pakageserver'])
-
+            if data['agenttype'] == "relayserver" and not 'pakageserver' in data :
+                logger.warn("check package server connexion for relay server %s %s"%(data['machine'],data['from']))
+            if 'pakageserver' in data :
+                logger.info("package server : %s"%data['pakageserver'])
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
