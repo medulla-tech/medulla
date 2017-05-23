@@ -8,14 +8,12 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: MMC agent
-# Description:       Mandriva Management Console : mmc-agent
+# Description:       Management Console : mmc-agent
 ### END INIT INFO
-
-# Author: Mandriva S.A.
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-DESC="Mandriva Management Console XML-RPC Agent"
+DESC="Management Console XML-RPC Agent"
 NAME=mmc-agent
 DAEMON=/usr/sbin/$NAME
 PIDFILE=/var/run/$NAME.pid

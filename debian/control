@@ -1,10 +1,10 @@
 Source: mmc-core
 Section: admin
 Priority: extra
-Maintainer: Adam Cécile <acecile@mandriva.com>
+Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
 Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.5), python-support (>= 0.5.3), gettext, autotools-dev
 Standards-Version: 3.9.3
-Homepage: http://mds.mandriva.org
+Homepage: http://www.siveo.net/
 
 Package: python-mmc-core
 Architecture: all
@@ -95,3 +95,11 @@ Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
 Description: Generate reports within MMC framework
  Module to generate reports for other modules.
+
+Package: mmc-web-xmppmaster
+Architecture: all
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Description: Xmpp mmc module
+
+
+
