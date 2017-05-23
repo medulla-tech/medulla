@@ -482,7 +482,7 @@ def listservice():
         print dev.Caption
         print dev.DisplayName
 
-def joint_compteAD():
+def joint_compteAD(domain,password,login,group):
     ##https://msdn.microsoft.com/en-us/library/windows/desktop/aa392154%28v=vs.85%29.aspx
     pythoncom.CoInitialize ()
     try:
