@@ -33,7 +33,7 @@ import hashlib
 from functools import wraps
 import base64
 from importlib import import_module
-
+import threading
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
