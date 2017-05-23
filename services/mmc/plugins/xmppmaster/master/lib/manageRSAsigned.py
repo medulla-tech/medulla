@@ -131,7 +131,7 @@ class MsgsignedRSA:
         """
         Function obj public key to string
         """
-        return pickle.dumps(master.publickey)
+        return pickle.dumps(self.publickey)
 
     def strtokeypublic(self,str):
         """
