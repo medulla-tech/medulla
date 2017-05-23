@@ -23,9 +23,9 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util import randpool
 import pickle
-import sys, os
+import os
 import base64
-from utils import file_get_contents, file_put_contents
+from utils import file_get_contents
 
 class MsgsignedRSA:
     """
