@@ -180,6 +180,7 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	update/sql/schema-006.sql \
 	xmppmaster/sql/schema-001.sql \
 	xmppmaster/sql/schema-002.sql \
+	xmppmaster/sql/schema-003.sql \
 	monit/pulse2 \
 	samba/smb.conf \
 	test-xmlrpc.php \
