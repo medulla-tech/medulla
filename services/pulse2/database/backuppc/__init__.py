@@ -30,6 +30,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
 
+from random import randint
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -236,6 +237,7 @@ class BackuppcDatabase(DatabaseHelper):
         # Setting host fields
         host.backup_profile = 0
         host.period_profile = 0
+        host.reverse_port = randint(49152, 65535)
         session.add(host)
         session.flush()
         return host.toDict()
