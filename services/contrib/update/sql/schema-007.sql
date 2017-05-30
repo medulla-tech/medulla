@@ -1,5 +1,5 @@
 --
--- (c) 2010 Mandriva, http://www.mandriva.com/
+-- (c) 2017 Siveo, http://www.siveo.net/
 --
 -- $Id$
 --
