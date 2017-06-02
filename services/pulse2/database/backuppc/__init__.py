@@ -232,12 +232,12 @@ class BackuppcDatabase(DatabaseHelper):
     # =====================================================================
 
     @DatabaseHelper._session
-    def add_host(self, session, uuid):
+    def add_host(self, session, uuid, port = None):
         host = Hosts(uuid = uuid)
         # Setting host fields
         host.backup_profile = 0
         host.period_profile = 0
-        host.reverse_port = randint(49152, 65535)
+        host.reverse_port = port
         session.add(host)
         session.flush()
         return host.toDict()

@@ -617,20 +617,30 @@ def set_backup_for_host(uuid):
     # Setting nmblookup cmds and Rsync cmds in conf
     # TODO : read NmbLookupCmd from ini file
     config = {}
+ 
+    port = randint(49152, 65535)
+    config['RsyncClientCmd'] =     "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
+    config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
+    config['DumpPreUserCmd'] = "/usr/sbin/connectmachinebackuppc.py %s"%uuid;
+    config['DumpPostUserCmd'] = "/usr/sbin/undconnectmachinebackuppc.py %s"%uuid;
+    config['RestorePreUserCmd'] = "/usr/sbin/connectmachinebackuppc.py %s"%uuid;
+    config['RestorePostUserCmd'] = "/usr/sbin/undconnectmachinebackuppc.py %s"%uuid;
+    config['ClientNameAlias'] = "localhost";
     config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host'
     config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host'
     config['XferMethod'] = 'rsync'
-    config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
-    config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     config['RsyncRestoreArgs'] = "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(' ')
     config['PingCmd'] = '/bin/true'
+    print "***",config,"****"
     set_host_config(uuid,config)
     # Adding host to the DB
     try:
-        BackuppcDatabase().add_host(uuid)
+        BackuppcDatabase().add_host(uuid, port)
     except:
         logger.error("Unable to add host to database")
         return {'err':23,'errtext':'Unable to add host to database'}
+
+
 
 
 
