@@ -21,6 +21,7 @@
  *
  */
 
+
 /**
  *
  * INITIALIZE WORKFLOWS
@@ -28,7 +29,8 @@
  *
  */
 wfList[osSelected] = new Workflow(osSelected);
-wfList[osSelected].display('#workflow-selected-list');
+wfList[osSelected].display('#workflow-selected-list', toggleAction);
+updateList();
 
 
 /**
@@ -50,21 +52,6 @@ $(function(){
     });
 });
 
-/**
- * Called when a Os tab is clicked. It initialize new workflow with os name specified
- * @param os
- *
- */
-function updateOs(os)
-{
-    osSelected = os;
-    if(wfList[os] == null)
-    {
-        wfList[os] = new Workflow(os);
-    }
-    jQuery('#workflow-selected-list').html('');
-    wfList[os].display('#workflow-selected-list');
-}
 
 /**
  *
@@ -72,7 +59,7 @@ function updateOs(os)
  *
  */
 jQuery( function() {
-    jQuery('.accordion').accordion({collapsible: true}).sortable({revert:true});
+    jQuery(".accordion").accordion({collapsible: true}).sortable({revert : true, stop : function(event,ui){updateList(); }});
     jQuery( "#workflow-selected-list" ).disableSelection();
 } );
 
@@ -92,10 +79,11 @@ jQuery(function(){
         {
             jQuery('.action-manager').css('display','flex');
         }
-        //jQuery('#workflow-selected-list').after();
+
         jQuery('#workflow-selected-list .action-manager').show();
     });
 });
+
 
 /**
  *
@@ -110,21 +98,20 @@ jQuery("#label").on('change',function(){
     //Remove special characters from label
     label = label.replace(/[^a-zA-Z0-9]/g, '_');
 
+    jQuery("#label").val(label);
 
     if(label == '' || labelExists(label))
     {
-        jQuery("#label-message").html("The label must be specified or already exists");
+        jQuery("#error-message").html("The label must be specified or already exists");
         jQuery('#select-action').hide();
         jQuery("#options").hide();
         jQuery("#aviable-options").hide();
     }
 
     else {
+        jQuery("#error-message").html("");
         //Add label and os into actionToCreate
         actionToCreate['label'] = label;
-        actionToCreate['os'] = osSelected
-
-        jQuery("input[name='os']").val(osSelected);
 
         jQuery('#select-action').show();
         jQuery("#options").show();
@@ -136,6 +123,7 @@ jQuery("#label").on('change',function(){
     }
 });
 
+
 /**
  *
  * DISPLAY OPTIONS FOR THE SELECTED ACTION
@@ -145,20 +133,60 @@ jQuery('select[name="action"]').on('change',function(){
     action = jQuery('select[name="action"]').val();
     actionToCreate['action'] = action;
 
-    loadOptions(action);
+    var firstCallbacks = jQuery.Callbacks()
+        .add(loadOptions).fire(action);
 });
 
 
 /**
- * DRAG & DROP FOR EXTRA-OPTIONS
+ *
+ * WHEN A NEW ACTION IS CREATED
+ *
  */
+jQuery("#firstStep").on('click',function(){
+    var getdatas = jQuery("#new-action").serializeArray();
+    var datas = [];
+    var action = Object.create(actionToCreate);
 
-jQuery(function(){
-    jQuery('#options-added').droppable({
-        accept: "#aviable-options ul li",
+    jQuery.each(getdatas,function(key, value){
+        action[value['name']] = value['value'];
     });
-    jQuery('#options-added').sortable();
+
+    //Add action to workflow
+    wfList[osSelected].sequence.push(action);
+
+    //Reset action form
+    jQuery('#new-action')[0].reset();
+    jQuery("#firstStep").prop('disabled',true);
+    jQuery('#workflow-selected-list').html('');
+    wfList[osSelected].display('#workflow-selected-list',toggleAction);
+    updateList();
 });
+
+
+//*******************
+//List of functions
+//*******************
+
+
+/**
+ * Called when a Os tab is clicked. It initialize new workflow with os name specified
+ * @param os
+ *
+ */
+function updateOs(os)
+{
+    var selector = '#workflow-selected-list';
+    osSelected = os;
+
+    if(wfList[os] == null)
+    {
+        wfList[os] = new Workflow();
+    }
+
+    wfList[os].display(selector,toggleAction);
+}
+
 
 /**
  * Check if the specified label is already existing.
@@ -169,7 +197,7 @@ function labelExists(label)
 {
     var flag = false;
     //If label is into selected list : return true
-    jQuery.each(jQuery('#workflow-'+osSelected+'-list li'),function(key,value){
+    jQuery.each(jQuery('#workflow-selected-list li'),function(key,value){
         if(label == jQuery(value).attr('data-name'))
             flag = true;
     });
@@ -177,6 +205,7 @@ function labelExists(label)
     //else return false
     return flag;
 }
+
 
 /**
  * Load extras options for the specified action
@@ -191,13 +220,10 @@ function loadOptions(actionName)
     jQuery("#aviable-options ul").html('');
 
     jQuery.each(optionsForAction[actionName],function(key,value){
-
         template = value +'-' + optionsList[key]['type'];
-
 
         if (value == 'critic' || value == 'mandatory')
         {
-
             jQuery("#mandatories-options").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key},optionCallback));
         }
 
@@ -207,6 +233,7 @@ function loadOptions(actionName)
         }
     });
 }
+
 
 /**
  *
@@ -219,7 +246,6 @@ function optionCallback(){
 
         jQuery('#options-added').append(element);
         jQuery('#aviable-options ul').remove(element);
-        testOptions();
     });
 
     jQuery('.remove').on('click',function(){
@@ -227,27 +253,98 @@ function optionCallback(){
 
         jQuery('#aviable-options ul').append(element);
         jQuery('#options-added').remove(element);
-        testOptions();
     });
-
     testOptions();
 }
 
+
 /**
- * TODO
- * Test if the options values are good.
- * Called when action or option are changed
+ *
+ * test all the fields of action form
+ *
  */
-function testOptions()
+function testOptions() {
+    var datas = {};
+    var name ="";
+    var value = "";
+    var message="";
+
+    jQuery("#new-action").on("mousedown change",function(){
+        datas = jQuery("#new-action").serializeArray();
+        message = "";
+        jQuery("#firstStep").prop("disabled",false);
+
+        jQuery.each(datas, function (key, parameter) {
+                name = parameter['name'];
+                value = parameter['value'];
+
+
+                if((name != "codereturn" && name != "step" && name != "label") && (value == "" || value == null))
+                {
+                    message += "The "+ name+" value is null<br />";
+                    jQuery("#firstStep").prop("disabled",true);
+                }
+            });
+            jQuery("#error-message").html(message);
+    });
+}
+
+
+/**
+ *
+ * get the list of labels for the selected os and update the sequence of action in wfList
+ *
+ */
+function updateList()
 {
-    var parameters = [];
-    var test = false;
-    var container = jQuery("#options [class*='critic'], #options [class*='mandatory'], #options [class*='extra']").each(function(key,value){
-        parameters.push(jQuery(value)[0]);
-    });
-    jQuery.each(parameters,function(key,value){
-        console.log(jQuery(value).html());
-
+    //Get the list of action ordered
+    var orderedList = [];
+    jQuery('#workflow-selected-list li h3').each(function(key,value){
+        orderedList.push(jQuery(value).html());
     });
 
+    //Reorder the ation list in the sequence
+    wfList[osSelected].sort(orderedList);
+
+    getJSON();
+}
+
+
+/**
+ *
+ * SHOW/HIDE details of added actions
+ *
+ */
+function toggleAction() {
+    jQuery("#workflow-selected-list li h3").on('click', function () {
+        jQuery(this).parent('div').next('span').toggle();
+    });
+
+    jQuery(".delete").on('click', function () {
+        jQuery(this).parent().remove();
+        updateList();
+    });
+}
+
+/**
+ *
+ * return the workflows as JSON
+ *
+ */
+function getJSON()
+{
+
+    var tmp = {};
+    var tmpAction = {};
+
+    jQuery("#saveList").val('');
+
+    jQuery.each(wfList,function(key,datas){
+        tmp['info'] = datas['info'];
+        tmp[key] = {'sequence':[]};
+        jQuery.each(datas['sequence'], function(key2, action){
+            tmp[key]['sequence'].push(action);
+        });
+    });
+    jQuery("#saveList").val(JSON.stringify(tmp));
 }

@@ -54,107 +54,107 @@ var action = jQuery('select[name="action"]').val();
  */
 var optionsForAction = {
     'action_pwd_package':
-        {
-            'step': 'critic',
-            'packageuuid':'extra'
-        },
+    {
+        'step': 'critic',
+        'packageuuid':'extra'
+    },
 
     'action_set_environ':
-        {
-            'step':'critic',
-            'codereturn':'critic',
-            'command':'mandatory',
-            'succes':'mandatory',
-            'error':'mandatory',
-            'resultcommand':'mandatory',
-            'lastlines':'mandatory',
-            'firstlines':'mandatory',
-            'timeout':'mandatory'
-        },
+    {
+        'step':'critic',
+        'codereturn':'critic',
+        'command':'mandatory',
+        'succes':'mandatory',
+        'error':'mandatory',
+        'resultcommand':'mandatory',
+        'lastlines':'mandatory',
+        'firstlines':'mandatory',
+        'timeout':'mandatory'
+    },
 
     'action_command_natif_shell':
-        {
-            'step':'critic',
-            'codereturn':'critic',
-            'command':'mandatory',
-            'succes':'mandatory',
-            'error':'mandatory',
-            'resultcommand':'mandatory',
-            'lastlines':'mandatory',
-            'firstlines':'mandatory',
-            'timeout':'mandatory'
-        },
+    {
+        'step':'critic',
+        'codereturn':'critic',
+        'command':'mandatory',
+        'succes':'mandatory',
+        'error':'mandatory',
+        'resultcommand':'mandatory',
+        'lastlines':'mandatory',
+        'firstlines':'mandatory',
+        'timeout':'mandatory'
+    },
 
     'actionrestartbot':
-        {
-            'step':'critic',
-        },
+    {
+        'step':'critic',
+    },
 
     'actionprocessscript':
-        {
-            'step':'critic',
-            'command':'mandatory',
-            'succes':'extra',
-            'resultcommand':'extra',
-            'timeout':'extra'
-        },
+    {
+        'step':'critic',
+        'command':'mandatory',
+        'succes':'extra',
+        'resultcommand':'extra',
+        'timeout':'extra'
+    },
 
     'actionconfirm':
-        {
-            'step':'critic',
-            'title':'mandatory',
-            'query':'mandatory',
-            'icon':'mandatory',
-            'boutontype':'mandatory',
-            'goto':'extra'
-        },
+    {
+        'step':'critic',
+        'title':'mandatory',
+        'query':'mandatory',
+        'icon':'mandatory',
+        'boutontype':'mandatory',
+        'goto':'extra'
+    },
 
     'actionwaitandgoto':
-        {
-            'step' : 'critic',
-            'waiting':'mandatory',
-            'goto':'mandatory'
-        },
+    {
+        'step' : 'critic',
+        'waiting':'mandatory',
+        'goto':'mandatory'
+    },
 
     'actionrestart':
-        {
-            'step':'critic',
-        },
+    {
+        'step':'critic',
+    },
 
     'actioncleaning':
-        {
-            'step':'critic',
-        },
+    {
+        'step':'critic',
+    },
 
     'actionerrorcompletedend':
-        {
-            'step':'critic',
-            'clear':'extra'
-        },
+    {
+        'step':'critic',
+        'clear':'extra'
+    },
 
     'actionsuccescompletedend':
-        {
-            'step':'critic',
-            'clear':'extra'
-        },
+    {
+        'step':'critic',
+        'clear':'extra'
+    },
 
     'action_unzip_file':
-        {
-            'step':'critic',
-            'filename':'mandatory',
-            'pathdirectorytounzip':'mandatory',
-            'resultcommand':'extra',
-            'lastlines':'extra',
-            'firstlines':'extra',
-            'succes':'extra',
-            'error':'extra',
-            'goto':'extra'
-        },
+    {
+        'step':'critic',
+        'filename':'mandatory',
+        'pathdirectorytounzip':'mandatory',
+        'resultcommand':'extra',
+        'lastlines':'extra',
+        'firstlines':'extra',
+        'succes':'extra',
+        'error':'extra',
+        'goto':'extra'
+    },
 
     'action_no_operation':
-        {
-            'step':'critic'
-        }
+    {
+        'step':'critic'
+    }
 };
 
 /**
@@ -273,10 +273,10 @@ var optionsList = {
     },
 
     'environ': {
-        'type': 'text', //Variable environnement sous forme {var:value}
+        'type': 'text',
     },
     'packageuuid':{
-        'type':'text',
+      'type':'text',
     },
 };
 
@@ -284,21 +284,18 @@ var optionsList = {
  * ActionToCreate is used to describe the action designed by client. This JSON contains all the information needed create, add edit the action
  */
 var actionToCreate =
-    {
-        'label':'',
-        'action':'',
-        'os':'',
-        'options': {},
-    }
+{
+    'label':'',
+    'action':'',
+}
 
 
 /**
  *
  * class Workflow create new workflow for the specified os
  *
- *  @var string os
  */
-function Workflow(os)
+function Workflow()
 {
     //info attribute is designed to contain workflow information (describe, files, etc.)
     //TODO
@@ -312,46 +309,74 @@ function Workflow(os)
     var success = Object.create(actionToCreate);
     success['label'] = 'SuccessEnd';
     success['action'] = 'actionsuccescompletedend';
-    success['os'] = osSelected;
-    success['options'] = [{'step':null}];
+
+    //the step values are calculated after, when function updateList() is called
+    //@see controller.js
+    success['step'] = 0;
 
     var error = Object.create(actionToCreate);
     error['label'] = 'ErrorEnd';
     error['action'] = 'actionerrorcompletedend';
-    error['os'] = osSelected;
-    error['options'] = [{'step':null}];
+    error['step'] = 0;
 
     //For all new workflows, create success and error actions
     if(this.sequence.length == 0)
     {
-        //Can't use this.addAction because this method is not already initialized
         this.sequence.push(success);
         this.sequence.push(error);
     }
 
     /*
-     *
-     * display attribute display the workflow into the specified selector
-     * @var string selector
-     *
-     */
-    this.display = function(selector) {
+    *
+    * display attribute display the workflow into the specified selector
+    * @var string selector
+    * @var function callback
+    *
+    */
+    this.display = function(selector, callback=null) {
         jQuery(selector).html('');
 
         jQuery.each(this.sequence, function(key,action){
-            container = [];
-            //Create container to get all the elements
-            for(var i = 0; i<action['options'].length; i++) {
-                jQuery.each(action['options'][i], function (optionName, value) {
 
-                    var template = optionsForAction[action['action']][optionName]+'-'+ optionsList[optionName]['type'];
-                    container.push(jQuery(document.createElement('div')).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':optionName,'value':value},optionCallback));
-                });
-            }
+            //add variable is used to add the delete button if the label is not 'successError' or 'errorEnd'
+            var add = '';
+            if(action['label'] != 'SuccessEnd' && action['label']!= 'ErrorEnd')
+                add = '<img class="delete" src="modules/pkgs/graph/img/delete.png"/>';
 
-            console.log(action['action'])
-            jQuery(selector).append('<li><h3>'+action['label']+' : '+ action['action']+'</h3></li>');
+            //add the the html to display
+            jQuery(selector).append('<li data-name="'+action['label']+'" >'+
+                '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3>'+'</div>'+
+                '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active">'+action['action']+'</span>'+
+                '</li>');
         });
+
+        //after displaying the actions, add the callback to a callback list and run it.
+        var call = jQuery.Callbacks().add(callback).fire();
     }
 
+    /**
+     *
+     * @var array<string>labelsList
+     */
+    this.sort = function(labelsList){
+        var tmp = [];
+
+        //create a local copy of the sequence
+        var sequence = this.sequence;
+
+        //foreach label in list :
+        jQuery.each(labelsList,function(key,label){
+
+            for(var i=0; i < sequence.length;i++)
+            {
+                if(sequence[i]['label'] == label)
+                {
+                    sequence[i]['step'] = key;
+                    tmp.push(sequence[i]);
+                }
+            }
+        });
+
+        this.sequence = tmp;
+    }
 }

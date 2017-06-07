@@ -21,8 +21,12 @@
  * MA 02110-1301, USA.
  *
  */
-?>
 
+if(isset($_POST['saveList']))
+{
+    echo $_POST['saveList'];
+}
+?>
 <style type="text/css">
     @import url(modules/pkgs/graph/pkgs/package.css);
 </style>
@@ -30,41 +34,15 @@
 <script src="modules/pkgs/graph/js/jQuery.js"></script>
 <script src="modules/pkgs/graph/js/jQuery-ui.js"></script>
 
-<?php
-//Add dependencies
-include 'modules/pkgs/includes/class.php';
-
-//Create new workflow which contains all the information.
-$_SESSION['flow'] = new Flow();
-
-//Create by default A success and failure step
-$success = new Step(['label'=>'SuccessEnd', 'os'=>['mac','linux','windows'], 'action'=>'actionsuccescompletedend', 'step'=>null]);
-$failure = new Step(['label'=>'ErrorEnd', 'os'=>['mac','linux','windows'], 'action'=>'actionerrorcompletedend', 'step'=>null]);
-
-//Add success and failure steps into workflow
-$_SESSION['flow']->add($success);
-$_SESSION['flow']->add($failure);
-
-//If a new step is sent, add it
-if(isset($_POST['firstStep'])) {
-    $parameters = arraycleaner($_POST);
-
-    $newStep = new Step($parameters);
-    $_SESSION['flow']->add($newStep);
-}
-
-?>
-
-<!-- View of workflow constructor -->
+    <!-- View of workflow constructor -->
 <div style="width:100%;">
-    <h1>workflow</h1><h1><a href="#" class="actions">New action</a></h1>
+    <h1><a href="#" class="actions">New action</a></h1>
     <div class="action-manager" style="width:100%;">
-        <form action ="./main.php?module=pkgs&submod=pkgs&action=add" method="post">
+        <form id="new-action" action="#" method="post" onsubmit="addAction()">
             <h2>Action Creator</h2>
 
-            <p id="label-message" style="color:red;"></p>
+            <p id="error-message" style="color:red;"></p>
             <label for="label">Label : </label><input id="label" type="text" name="label" placeholder="Label" /><br/>
-            <input type="hidden" name="os" value="updateOs(os)"/>
 
             <div id="select-action" style="display:none">
                 <h3>Action</h3>
@@ -83,10 +61,12 @@ if(isset($_POST['firstStep'])) {
                     <h2>Options</h2>
                     <ul id="mandatories-options"></ul>
                     <ul id="options-added" onchange="testOptions()"></ul>
-                    <input type="submit" id="firstStep" name="firstStep" value="Add action">
+                    <input type="button" id="firstStep" name="firstStep" value="Add action">
+                    <p id="success-message"></p>
                 </div>
             </div>
         </form>
+
         <div id="aviable-options">
             <h2>Options aviable</h2>
             <ul></ul>
@@ -97,16 +77,18 @@ if(isset($_POST['firstStep'])) {
         <ul ng-controller="workflowCtrl">
             <li><a href="#workflow-selected" onclick="updateOs('mac')">Mac</a></li>
             <li><a href="#workflow-selected" onclick="updateOs('linux')">Linux</a></li>
-            <li><a href="#workflow-selected" onclick="updateOs('windows')">Windows</a></li>
+            <li><a href="#workflow-selected" onclick="updateOs('win')">Windows</a></li>
         </ul>
 
         <div id="workflow-selected">
-            <ul id="workflow-selected-list" class="accordion">
-                <script></script>
+            <ul id="workflow-selected-list" class="accordion" >
             </ul>
         </div>
 
-        <input type="hidden" id="saveList" name="saveList">
+        <form action="main.php?module=pkgs&submod=pkgs&action=add#" method="post" onsubmit="updateList()">
+            <input type="hidden" id="saveList" name="saveList" value="">
+            <input type="submit" />
+        </form>
     </div>
 </div>
 <a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
