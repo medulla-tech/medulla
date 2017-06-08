@@ -38,15 +38,39 @@ if(isset($_POST['saveList']))
 <div style="width:100%;">
     <h1><a href="#" class="actions">New action</a></h1>
     <div class="action-manager" style="width:100%;">
+
+        <div id="infos-package">
+            <h2>Infos package</h2>
+            <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
+            <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
+            <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
+            <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
+            <label for="quitonerror-package">Quit on error</label>
+            <select name="quitonerror-package" id="quitonerror-package">
+                <option value="false">False</option>
+                <option value="true">True</option>
+            </select>
+            <label for="transferfile-package">Transfer file</label>
+            <select name="transferfile-package" id="transferfile-package">
+                <option value="false">False</option>
+                <option value="true">True</option>
+            </select>
+
+            <label for="methodtransfert-package">Method transfert</label>
+            <select name="methodtransfert-package" id="methodtransfert-package">
+                <option value="curl">curl</option>
+            </select>
+        </div>
+
         <form id="new-action" action="#" method="post" onsubmit="addAction()">
             <h2>Action Creator</h2>
 
             <p id="error-message" style="color:red;"></p>
-            <label for="label">Label : </label><input id="label" type="text" name="label" placeholder="Label" /><br/>
+            <label for="label">Label : </label><input id="label" type="text" name="label" placeholder="Label" required/><br/>
 
             <div id="select-action" style="display:none">
                 <h3>Action</h3>
-                <select name="action">
+                <select name="action" required>
                     <option value="action_pwd_package">pwd package</option>
                     <option value="action_command_natif_shell">Shell command</option>
                     <option value="actionrestartbot">Restart</option>
@@ -64,6 +88,7 @@ if(isset($_POST['saveList']))
                     <input type="button" id="firstStep" name="firstStep" value="Add action">
                     <p id="success-message"></p>
                 </div>
+
             </div>
         </form>
 
@@ -91,10 +116,8 @@ if(isset($_POST['saveList']))
         </form>
     </div>
 </div>
-<a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
+    <a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
 
 
 <script src="modules/pkgs/graph/js/class.js"></script>
 <script src="modules/pkgs/graph/js/controller.js"></script>
-
-

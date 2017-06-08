@@ -27,11 +27,25 @@ var osSelected = "mac";
 //wfList is an array which contains the Os workflow i.e.: wfList['mac'] will contains the mac sequence
 wfList = {};
 
-//Not used
-descriptor = {};
+//infosPackage collects all the info about workflow information
+var infoPackage = {};
 
 //label is a shortcut to the label value.
 var label = jQuery("#label").val();
+
+//Define options which are associated with a label ...
+//A trick is used with step : even if step-label don't exists, it is added to the optionsToHide array
+var optionsLabelled = ['goto-label','succes-label','error-label','step-label'];
+
+//And the ones which are not displayed; calculed from optionsLabelled
+var optionsToHide = [];
+jQuery.each(optionsLabelled, function(id,option){
+    option = option.split('-');
+    optionsToHide.push(option[0]);
+});
+
+//labelList is used to update step values and the select-label options
+var labelList = [];
 
 //action is a shortcut to the action value.
 var action = jQuery('select[name="action"]').val();
@@ -340,13 +354,23 @@ function Workflow()
 
             //add variable is used to add the delete button if the label is not 'successError' or 'errorEnd'
             var add = '';
+            var options = '';
+
+            //For each action displayed, shows the options saved
+            jQuery.each(action,function(key,value){
+
+                //Mask step value, show only labels
+                if(jQuery.inArray(key,optionsToHide) == -1)
+                    options += '<li>'+key+' : '+value+'</li>';
+            });
+
             if(action['label'] != 'SuccessEnd' && action['label']!= 'ErrorEnd')
                 add = '<img class="delete" src="modules/pkgs/graph/img/delete.png"/>';
 
             //add the the html to display
             jQuery(selector).append('<li data-name="'+action['label']+'" >'+
-                '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3>'+'</div>'+
-                '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active">'+action['action']+'</span>'+
+                '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3></div>'+
+                '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active"><ul>'+options+'</ul></span>'+
                 '</li>');
         });
 
@@ -356,19 +380,23 @@ function Workflow()
 
     /**
      *
-     * @var array<string>labelsList
+     * Calculate the steps and goto value for each action
+     *
      */
-    this.sort = function(labelsList){
+    this.sort = function(){
+        var optionsLabelled = ['goto-label','succes-label','error-label']
         var tmp = [];
 
         //create a local copy of the sequence
-        var sequence = this.sequence;
+        var sequence = this.sequence;//get the actual sequence
+
+        this.sequence = tmp;
 
         //foreach label in list :
-        jQuery.each(labelsList,function(key,label){
-
+        jQuery.each(labelList,function(key,label){
             for(var i=0; i < sequence.length;i++)
             {
+                //Push key value in action['step'] and push the action in the sequence
                 if(sequence[i]['label'] == label)
                 {
                     sequence[i]['step'] = key;
@@ -376,6 +404,53 @@ function Workflow()
                 }
             }
         });
+        this.sequence = tmp;
+
+        sequence = this.sequence;
+        tmp = [];
+
+        //For each action
+        jQuery.each(sequence, function(idAction, action){
+
+            //Check each option from actual action
+            jQuery.each(action, function(option,optionValue){
+                //if <option-label> is in the action's options list
+                if(jQuery.inArray(option,optionsLabelled) != -1)
+                {
+                    //Copy the name of the option found
+                    var copy = option;
+                    //split. I.e. : error-label => ['error','label']
+                    copy = copy.split('-');
+                    copy = copy[0];
+
+                    //Get the position of the label send in <option-label>
+                    var position = jQuery.inArray(optionValue, labelList);
+                    //Get the position of this actual action
+                    var actualPosition = action['step'];
+
+                    //if no position found (there is only one possibiliy which is when <option-label> = 'NEXT'
+                    if(position == -1 ) {
+                        //If no action in the next position, the position is set to the actual position
+                        if(typeof(sequence[actualPosition+1]) == "undefined")
+                        {
+                            position = actualPosition;
+                        }
+                        //Else the position is incremented
+                        else
+                        {
+                            position = actualPosition+1;
+                        }
+                    }
+                    action[copy] = position;
+
+                    console.log(action);
+                }
+            });//End each action as option=>value
+
+            //To finish the option is set to the calculated position
+
+            tmp.push(action);
+        });//End each sequence as id=>action
 
         this.sequence = tmp;
     }

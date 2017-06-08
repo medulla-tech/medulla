@@ -28,6 +28,8 @@
  * @see pkgs/graph/js/class.js
  *
  */
+
+
 wfList[osSelected] = new Workflow(osSelected);
 wfList[osSelected].display('#workflow-selected-list', toggleAction);
 updateList();
@@ -90,7 +92,7 @@ jQuery(function(){
  * ACTIONS CONTROLLER
  *
  */
-jQuery("#label").on('change',function(){
+jQuery("#label").on('change click',function(){
 
     label = jQuery("#label").val();
     //Uppercase the first letter
@@ -122,6 +124,16 @@ jQuery("#label").on('change',function(){
         loadOptions(action);
     }
 });
+jQuery("#infos-package").on('change',function(){
+    infoPackage = {
+        'name':jQuery('#name-package').val(),
+        'description':jQuery('#description-package').val(),
+        'version':jQuery('#version-package').val(),
+        'quitonerror':jQuery('#quitonerror-package').val(),
+        'transferfile':jQuery('#transferfile-package').val(),
+        'methodtransfert':jQuery('#methodtransfert-package').val(),
+    };
+});
 
 
 /**
@@ -132,6 +144,7 @@ jQuery("#label").on('change',function(){
 jQuery('select[name="action"]').on('change',function(){
     action = jQuery('select[name="action"]').val();
     actionToCreate['action'] = action;
+
 
     var firstCallbacks = jQuery.Callbacks()
         .add(loadOptions).fire(action);
@@ -144,11 +157,25 @@ jQuery('select[name="action"]').on('change',function(){
  *
  */
 jQuery("#firstStep").on('click',function(){
+
+    //Disable add button
+    jQuery("#firstStep").prop('disabled',true);
+
+    //Test the values
+    testOptions();
+
     var getdatas = jQuery("#new-action").serializeArray();
     var datas = [];
+
     var action = Object.create(actionToCreate);
+    var optionToRename = ['resultcommand','firstlines','lastlines'];
 
     jQuery.each(getdatas,function(key, value){
+        //Replace some option name by meta-name, i.e. : resultcommand is replaced by @resultcommand
+        if(jQuery.inArray(value['name'], optionToRename) != -1)
+        {
+            value['name'] = '@'+value['name'];
+        }
         action[value['name']] = value['value'];
     });
 
@@ -156,8 +183,8 @@ jQuery("#firstStep").on('click',function(){
     wfList[osSelected].sequence.push(action);
 
     //Reset action form
-    jQuery('#new-action')[0].reset();
-    jQuery("#firstStep").prop('disabled',true);
+    loadOptions(action);
+
     jQuery('#workflow-selected-list').html('');
     wfList[osSelected].display('#workflow-selected-list',toggleAction);
     updateList();
@@ -197,8 +224,8 @@ function labelExists(label)
 {
     var flag = false;
     //If label is into selected list : return true
-    jQuery.each(jQuery('#workflow-selected-list li'),function(key,value){
-        if(label == jQuery(value).attr('data-name'))
+    jQuery.each(labelList,function(key,value){
+        if(label == value)
             flag = true;
     });
 
@@ -224,12 +251,12 @@ function loadOptions(actionName)
 
         if (value == 'critic' || value == 'mandatory')
         {
-            jQuery("#mandatories-options").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key},optionCallback));
+            jQuery("#mandatories-options").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
         }
 
         else
         {
-            jQuery("#aviable-options ul").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key},optionCallback));
+            jQuery("#aviable-options ul").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
         }
     });
 }
@@ -278,8 +305,7 @@ function testOptions() {
                 name = parameter['name'];
                 value = parameter['value'];
 
-
-                if((name != "codereturn" && name != "step" && name != "label") && (value == "" || value == null))
+                if((name != "resultcommand" && name != "codereturn" && name != "step" && name != "label") && (value == "" || value == null))
                 {
                     message += "The "+ name+" value is null<br />";
                     jQuery("#firstStep").prop("disabled",true);
@@ -293,18 +319,18 @@ function testOptions() {
 /**
  *
  * get the list of labels for the selected os and update the sequence of action in wfList
- *
+ * @see class.js/labelList
  */
 function updateList()
 {
+    labelList = [];
     //Get the list of action ordered
-    var orderedList = [];
     jQuery('#workflow-selected-list li h3').each(function(key,value){
-        orderedList.push(jQuery(value).html());
+        labelList.push(jQuery(value).html());
     });
 
     //Reorder the ation list in the sequence
-    wfList[osSelected].sort(orderedList);
+    wfList[osSelected].sort();
 
     getJSON();
 }
@@ -326,6 +352,7 @@ function toggleAction() {
     });
 }
 
+
 /**
  *
  * return the workflows as JSON
@@ -340,7 +367,7 @@ function getJSON()
     jQuery("#saveList").val('');
 
     jQuery.each(wfList,function(key,datas){
-        tmp['info'] = datas['info'];
+        tmp['info'] = infoPackage;
         tmp[key] = {'sequence':[]};
         jQuery.each(datas['sequence'], function(key2, action){
             tmp[key]['sequence'].push(action);

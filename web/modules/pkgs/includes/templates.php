@@ -23,6 +23,7 @@
  */
 ?>
 
+
 <div class="critic-hidden">
     <input type="hidden" name="<?php echo $_POST['option'];?>" value="<?php if(isset($_POST['value'])) echo $_POST['value'];?>"/>
 </div>
@@ -52,5 +53,35 @@
 
     <a href="#" class="add"><img src="/mmc/modules/pkgs/graph/img/add.png" width="24px" alt="Add to action"/></a>
     <input type="text" name="<?php echo $_POST['option'];?>" onchange="testOptions()" value="<?php if(isset($_POST['value'])) echo $_POST['value'];?>" placeholder="<?php echo $_POST['option'];?>"/>
+    <a href="#" class="remove"><img src="/mmc/modules/pkgs/graph/img/remove.png" width="24px" alt="-remove option"/></a>
+</div>
+
+<div class="mandatory-select-label">
+    <h4><?php echo $_POST['option'];?></h4>
+    <select name="<?php echo $_POST['option'].'-label';?>">
+        echo "<option value='NEXT'>NEXT</option>";
+        <?php
+        foreach($_POST['labels'] as $id=>$label)
+        {
+            echo "<option value='$label'>$label</option>";
+        }
+        ?>
+    </select>
+    <input type="hidden" name="<?php echo $_POST['option'];?>" value=" " />
+</div>
+
+<div class="extra-select-label">
+    <h4><?php echo $_POST['option'];?></h4>
+    <a href="#" class="add"><img src="/mmc/modules/pkgs/graph/img/add.png" width="24px" alt="Add to action"/></a>
+    <select name="<?php echo $_POST['option'].'-label';?>">
+        echo "<option value='NEXT'>NEXT</option>";
+        <?php
+        foreach($_POST['labels'] as $id=>$label)
+        {
+            echo "<option value='$label'>$label</option>";
+        }
+        ?>
+    </select>
+    <input type="hidden" name="<?php echo $_POST['option'];?>" value=" " />
     <a href="#" class="remove"><img src="/mmc/modules/pkgs/graph/img/remove.png" width="24px" alt="-remove option"/></a>
 </div>
