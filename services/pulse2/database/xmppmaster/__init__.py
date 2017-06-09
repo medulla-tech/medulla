@@ -716,7 +716,7 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-    ###modif jfk ici
+
     @DatabaseHelper._sessionm
     def ippackageserver(self, session, jid):
         """ return ip xmpp for JID """

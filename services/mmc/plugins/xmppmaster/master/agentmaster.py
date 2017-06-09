@@ -19,7 +19,8 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
+#
+# file plugins/xmppmaster/master/agentmaster.py
 
 import sys, os
 import re
@@ -95,7 +96,6 @@ def callInventory(to):
 
 def callrestartbymaster(to):
     ObjectXmpp().callrestartbymaster( to)
-
 
 def callshutdownbymaster(to):
    ObjectXmpp().callshutdownbymaster( to)
@@ -659,10 +659,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppgateway : %s"%data['xmppgateway'])
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
-            if data['agenttype'] == "relayserver" and not 'pakageserver' in data :
-                logger.warn("check package server connexion for relay server %s %s"%(data['machine'],data['from']))
-            if 'pakageserver' in data :
+            if data['agenttype'] == "relayserver":
                 logger.info("package server : %s"%data['pakageserver'])
+
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
@@ -965,9 +964,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break
                 if subnetexist: break;
             elif x[0] == 5:
-                    logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
-                    result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
-                    break
+                logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
+                result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+                break
             elif x[0] == 6:
                 result1 = XmppMasterDatabase().algoruleloadbalancer()
                 if len(result1) > 0 :
@@ -1019,6 +1018,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         resp=self.plugin['xep_0045'].setAffiliation(room, jid, affiliation='none', reason=reason)
         return resp
 
+    def info_xmppmachinebyuuid(self, uuid):
+        return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid("UUID%s"%uuid)
+
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
@@ -1030,6 +1032,69 @@ class MUCBot(sleekxmpp.ClientXMPP):
         restartAgent = False
         try:
             data = json.loads(msg['body'])
+            if 'action' in data and data['action'] == 'askinfo' :
+                #renvoi information machine
+                print json.dumps(data, indent=4)
+                if not "data" in data:
+                    return
+                if "fromplugin" in data['data']:
+                    #si item exist, redirection plugin send message action is plugin
+                    data['action'] = data['data']['fromplugin']
+                    logger.debug("action reponse calling plugin %s"%data['action'])
+                else:
+                    logger.warn("Warning item 'fromplugin' is not exist, action reponse calling plugin %s"%data['action'])
+                if not "typeinfo" in data['data']:
+                    logger.error("sorry no 'type info (item typeinfo)' dans message from %s plugin %s"%(msg['from'].bare, data['action']))
+                    logger.error("######\n%s\n#####"%(json.dumps(data, indent=4)))
+
+                #########################ASK INFORMATION table machin of base xmppmaster########################
+                if data['data']['typeinfo'] == "info_xmppmachinebyuuid":
+                    if not 'host' in data['data']:
+                        logger.error("host missing for info_xmppmachinebyuuid")
+                        return True
+                    data['data']['host'] = data['data']['host'].upper()
+                    data['data']['host'] = data['data']['host'].replace('UUID','')
+                    try:
+                        integerid = int(data['data']['host'])
+                    except ValueError:
+                        logger.error("uuid inventory missing for info_xmppmachinebyuuid")
+                        return True
+
+                    ######WORKING info_xmppmachinebyuuid######
+                    func = getattr(self, "info_xmppmachinebyuuid")
+                    result = func(str(integerid))
+                    data['data']['infos'] = result
+
+                    if "sendother" in data['data'] and data['data']['sendother'] != "":
+                        searchjid = data['data']['sendother'].split('@')
+                        sendermachine = data['data']['sendother']
+                        jidmachine = dict(data)
+                        for t in range(len(searchjid)):
+                            try:
+                                jidmachine = jidmachine[searchjid[t]]
+                            except KeyError:
+                                logger.error("jid point item sendother in data false.\n"\
+                                    "Path in the dictionary described by the keys does not exist.\n"\
+                                            " example {....sendother : \"autre@infos\"} jid is databpointer by data['autre']['infos']\n"\
+                                                " data is %s"%(json.dumps(data, indent=4)))
+                                break
+                        print jidmachine
+                        jidmachine = str(jidmachine)
+                        if jidmachine != "":
+                            self.send_message( mto = jidmachine,
+                                               mbody = json.dumps(data),
+                                               mtype = 'chat')
+                            print "envoi %s"%json.dumps(data)
+                    if not "sendemettor" in data['data']:
+                        data['data']['sendemettor'] = True
+                    if data['data']['sendemettor'] == True:
+                        self.send_message(  mto = msg['from'],
+                                            mbody = json.dumps(data),
+                                            mtype = 'chat')
+                #########################ASK INFORMATION other#############################
+                #elsif information type other
+                return True
+
             # Check msg from chatroom master for subscription
             if 'action' in data and data['action'] == 'loginfos':
                 # Process loginfotomaster
@@ -1039,6 +1104,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #------------------------------------------------
             if 'action' in data and data['action'] == 'infomachine' :
                 logger.debug("** Processing machine %s that sends this information (nini inventory)"%msg['from'].bare)
+
+                #print "llllllllllllllllllllllllllll"
+                #print json.dumps(data, indent=4)
+                #print "llllllllllllllllllllllllllll"
+
                 # verify si machine Enregistrer
                 if XmppMasterDatabase().getPresencejid(msg['from'].bare):
                     logger.debug("Machine %s already exists in base"%msg['from'].bare )
@@ -1262,6 +1332,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return False
 
     def message(self, msg):
+        print "*******MESSAGE %s" %msg['from']
+        print msg['body']
+        logger.debug("message")
         if  msg['body'] == "This room is not anonymous":
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:

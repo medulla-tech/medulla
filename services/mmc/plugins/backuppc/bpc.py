@@ -9,7 +9,7 @@ import time
 import subprocess
 from shutil import rmtree
 import fnmatch
-
+from random import randint
 # Twisted
 from twisted.python import threadable; threadable.init(1)
 from twisted.internet.threads import deferToThread
@@ -617,14 +617,13 @@ def set_backup_for_host(uuid):
     # Setting nmblookup cmds and Rsync cmds in conf
     # TODO : read NmbLookupCmd from ini file
     config = {}
- 
     port = randint(49152, 65535)
     config['RsyncClientCmd'] =     "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
     config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
-    config['DumpPreUserCmd'] = "/usr/sbin/connectmachinebackuppc.py %s"%uuid;
-    config['DumpPostUserCmd'] = "/usr/sbin/undconnectmachinebackuppc.py %s"%uuid;
-    config['RestorePreUserCmd'] = "/usr/sbin/connectmachinebackuppc.py %s"%uuid;
-    config['RestorePostUserCmd'] = "/usr/sbin/undconnectmachinebackuppc.py %s"%uuid;
+    config['DumpPreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['DumpPostUserCmd'] = "/usr/sbin/pulse2-und-connect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['RestorePreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['RestorePostUserCmd'] = "/usr/sbin/pulse2-und-connect-machine-backuppc -m %s -p %s"%(uuid, port);
     config['ClientNameAlias'] = "localhost";
     config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host'
     config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host'
@@ -639,10 +638,6 @@ def set_backup_for_host(uuid):
     except:
         logger.error("Unable to add host to database")
         return {'err':23,'errtext':'Unable to add host to database'}
-
-
-
-
 
 def unset_backup_for_host(uuid):
     if not host_exists(uuid):
@@ -677,7 +672,6 @@ def unset_backup_for_host(uuid):
     except:
         logger.error("Unable to remove host from database")
         return {'err':23,'errtext':'Unable to remove host from database'}
-
 
 # ==========================================================================
 # SERVER, HOST INFO AND BACKUP LOGS

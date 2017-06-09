@@ -36,7 +36,7 @@ $uuid = $_GET['objectUUID'];
 // Receiving request to set backup for host
 // ==========================================================
 
-if (isset($_POST['setBackup'],$_POST['host'])) {        
+if (isset($_POST['setBackup'],$_POST['host'])) {
     $response = set_backup_for_host($_POST['host']);
     // Checking reponse
     if (isset($response)) {
@@ -48,7 +48,6 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
             $_GET['tab'] = 'tab2';
         }
     }
-
     // Setting default profile to nightly
     set_host_period_profile($_POST['host'], 1);
 
@@ -85,6 +84,9 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
 // ==========================================================
 
 if (isset($_POST['bconfirm'],$_POST['host'])){
+
+    $backup_port_reverse_ssh = get_host_backup_reverce_port($_POST['host']);
+
     // Setting host profiles
     set_host_backup_profile($_POST['host'], $_POST['backup_profile']);
     set_host_period_profile($_POST['host'], $_POST['period_profile']);
@@ -123,24 +125,26 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
             'weekDays'  => $daystring
                 );
     }
-    
     // Rsync and NmbLookup command lines
+
+    $backup_manager_cmd  = "/usr/sbin/pulse2-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
+    $backup_manager_cmd1 = "/usr/sbin/pulse2-und-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
+    $cfg['DumpPreUserCmd']  = $cfg['RestorePreUserCmd']  = $backup_manager_cmd;
+    $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
+    $cfg['ClientNameAlias'] = "localhost";
+    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
     $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';
     $cfg['XferMethod'] = 'rsync';
-    $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
-    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+';
+    $cfg['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
     $cfg['RsyncRestoreArgs'] = explode(" ", "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super");
     $cfg['PingCmd'] = '/bin/true';
-    $backup_manager_cmd = '/usr/bin/pulse2-backup-handler $host $hostIP $type $cmdType';
-    $cfg['DumpPreUserCmd'] = $cfg['DumpPostUserCmd'] = $backup_manager_cmd;
-    $cfg['RestorePreUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd;
+
     $cfg['UserCmdCheckStatus'] = 1;
-    
-    
+
     // Enable or disable backup
     $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
-    
+
     set_host_config($_POST['host'], $cfg);
     new NotifyWidgetSuccess(_T('Configuration saved', 'backuppc'));
 }

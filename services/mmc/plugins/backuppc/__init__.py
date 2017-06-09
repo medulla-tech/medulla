@@ -127,6 +127,9 @@ def edit_backup_profile(id,override):
 def get_host_backup_profile(uuid):
     return BackuppcDatabase().get_host_backup_profile(uuid)
 
+def get_host_backup_reverce_port(uuid):
+    return BackuppcDatabase().get_host_backup_reverce_port(uuid)
+
 def set_host_backup_profile(uuid,newprofile):
     return bpc.set_host_backup_profile(uuid,newprofile)
 
