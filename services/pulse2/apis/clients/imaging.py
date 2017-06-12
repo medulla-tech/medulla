@@ -367,61 +367,61 @@ class Imaging(Pulse2Api):
         return d
 
     def check_process_multicast(self,objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("check_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast", objprocess)
         return d
 
     def start_process_multicast(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("start_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:start_process_multicast", objprocess)
         return d
 
     def checkDeploymentUDPSender(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("checkDeploymentUDPSender", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:checkDeploymentUDPSender", objprocess)
         return d
 
     def muticast_script_exist(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("muticast_script_exist", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:muticast_script_exist", objprocess)
         return d
 
     def clear_script_multicast(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("clear_script_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:clear_script_multicast", objprocess)
         return d
 
     def SetMulticastMultiSessionParameters(self, parameters):
-        # controle parametre session
+        # control parametre session
         d = self.callRemote("SetMulticastMultiSessionParameters", parameters)
         d.addErrback(self.onErrorRaise, "Imaging:SetMulticastMultiSessionParameters", parameters)
         return d
 
     def GetMulticastMultiSessionParameters(self, location):
-        # controle parametre session
+        # control parametre session
         d = self.callRemote("GetMulticastMultiSessionParameters", location)
         d.addErrback(self.onErrorRaise, "Imaging:GetMulticastMultiSessionParameters", location)
         return d
 
     def ClearMulticastMultiSessionParameters(self, location):
-        # controle parametre session
+        # control parametre session
         d = self.callRemote("ClearMulticastMultiSessionParameters", location)
         d.addErrback(self.onErrorRaise, "Imaging:ClearMulticastMultiSessionParameters", location)
         return d
 
     def stop_process_multicast(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("stop_process_multicast", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:stop_process_multicast", objprocess)
         return d
 
     def check_process_multicast_finish(self, objprocess):
-        # controle execution process multicast
+        # control execution process multicast
         d = self.callRemote("check_process_multicast_finish", objprocess)
         d.addErrback(self.onErrorRaise, "Imaging:check_process_multicast_finish", objprocess)
         return d
