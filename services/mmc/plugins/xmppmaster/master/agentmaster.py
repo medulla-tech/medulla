@@ -1047,7 +1047,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.error("sorry no 'type info (item typeinfo)' dans message from %s plugin %s"%(msg['from'].bare, data['action']))
                     logger.error("######\n%s\n#####"%(json.dumps(data, indent=4)))
 
-                #########################ASK INFORMATION table machin of base xmppmaster########################
                 if data['data']['typeinfo'] == "info_xmppmachinebyuuid":
                     if not 'host' in data['data']:
                         logger.error("host missing for info_xmppmachinebyuuid")
