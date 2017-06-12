@@ -4,15 +4,18 @@
 #dans git ./pulse/pulse2/services/bin/pulse2-scheduler
 
 from multiprocessing.managers import SyncManager
-import sys, os, platform, ConfigParser, logging
+import sys
+import os
+import ConfigParser
 from optparse import OptionParser
 import time
+
 TYPEMACHINE = "relayserver" ## or machine
 
 class QueueManager(SyncManager):
     pass
 
-def conffilename( type ):
+def conffilename(type):
     """
         Function defining where the configuration file is located.
         configuration file for the type of machine and the Operating System
@@ -22,7 +25,7 @@ def conffilename( type ):
     else:
         conffilenameparamter = "relayconf.ini"
     if sys.platform.startswith('linux'):
-        fileconf = os.path.join("/", "etc" ,"pulse-xmpp-agent", conffilenameparamter)
+        fileconf = os.path.join("/", "etc", "pulse-xmpp-agent", conffilenameparamter)
     elif sys.platform.startswith('win'):
         fileconf = os.path.join(os.environ["ProgramFiles"], "Pulse", "etc", conffilenameparamter)
     elif sys.platform.startswith('darwin'):
@@ -30,7 +33,7 @@ def conffilename( type ):
     else:
         fileconf = conffilenameparamter
 
-    if os.path.isfile(fileconf): 
+    if os.path.isfile(fileconf):
         return fileconf
     else:
         return conffilenameparamter
@@ -55,11 +58,11 @@ def loadconf(type):
 if __name__ == "__main__":
     optp = OptionParser()
     optp.add_option("-p", "--port",
-                dest="portreverse", default=False,
-                help="Port used for reverse ssh")
+                    dest="portreverse", default=False,
+                    help="Port used for reverse ssh")
     optp.add_option("-m", "--machinehost",
-                dest="hostreserve", default=False,
-                help="host used for reverse ssh")
+                    dest="hostreserve", default=False,
+                    help="host used for reverse ssh")
 
     opts, args = optp.parse_args()
 
@@ -77,10 +80,9 @@ if __name__ == "__main__":
         QueueManager.register('json_from_AM')
         QueueManager.register('size_nb_msg_AM')
 
-    managerQueue = QueueManager(("", param['port']),authkey = param['passwordconnection'])
-    managerQueue.connect() # This starts the connected client
+    managerQueue = QueueManager(("", param['port']), authkey = param['passwordconnection'])
+    managerQueue.connect()
 
-    #traitement com avec ARS
     ee = """{ "action" : "reverse_ssh_on",
         "data" : {
                 "request" : "askinfo",
@@ -89,8 +91,6 @@ if __name__ == "__main__":
                 "options" : "stopreversessh"
         }
     }"""%(int(opts.portreverse), opts.hostreserve)
-    #call plugin reverse ssh for backuppc
-    #send json to ARS
     managerQueue.json_to_ARS(ee)
     print managerQueue.json_from_ARS(5)
     time.sleep(5)
