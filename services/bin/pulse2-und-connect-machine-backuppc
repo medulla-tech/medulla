@@ -80,7 +80,7 @@ if __name__ == "__main__":
         QueueManager.register('json_from_AM')
         QueueManager.register('size_nb_msg_AM')
 
-    managerQueue = QueueManager(("", param['port']), authkey = param['passwordconnection'])
+    managerQueue = QueueManager(("", param['port']), authkey=param['passwordconnection'])
     managerQueue.connect()
 
     ee = """{ "action" : "reverse_ssh_on",
