@@ -129,11 +129,6 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.Architecture=platform.architecture()
         self.information['archi']=self.Architecture
 
-        #par convention :
-                #la liste des plugins definie dans la section plugin avec la clef pluginlist
-                # donne les fichiers .ini a chargé.
-                #les fichiers ini des plugins doivent comporter une session parameters.
-                ## les clef representeront aussi par convention le nom des variables utilisable dans le plugins.
         if self.has_option("plugins", "pluginlist"):
             pluginlist = self.get('plugins', 'pluginlist').split(",")
             pluginlist = [x.strip() for x in pluginlist ]
