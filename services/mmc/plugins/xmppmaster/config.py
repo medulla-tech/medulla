@@ -25,6 +25,9 @@ import platform
 from mmc.plugins.xmppmaster.master.lib import utils
 import logging
 from mmc.plugins.xmppmaster.master.lib.utils import ipfromdns
+import os  
+import ConfigParser
+
 
 class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
 
@@ -33,6 +36,11 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
             PluginConfig.__init__(self, name, conffile)
             XmppMasterDatabaseConfig.__init__(self)
             self.initdone = True
+
+    def loadparametersplugins(self, namefile):
+        Config = ConfigParser.ConfigParser()
+        Config.read(namefile)
+        return Config.items("parameters")
 
     def setDefault(self):
         """
@@ -120,6 +128,26 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.information['processor']=self.ProcessorIdentifier
         self.Architecture=platform.architecture()
         self.information['archi']=self.Architecture
+
+        #par convention :
+                #la liste des plugins definie dans la section plugin avec la clef pluginlist
+                # donne les fichiers .ini a chargé.
+                #les fichiers ini des plugins doivent comporter une session parameters.
+                ## les clef representeront aussi par convention le nom des variables utilisable dans le plugins.
+        if self.has_option("plugins", "pluginlist"):
+            pluginlist = self.get('plugins', 'pluginlist').split(",")
+            pluginlist = [x.strip() for x in pluginlist ]
+
+            for z in pluginlist:
+                namefile = "%s.ini"%os.path.join("/","etc","mmc","plugins",z)
+                logging.getLogger().debug('load parameter File plugin %s'%namefile)
+                if os.path.isfile(namefile):
+                    liststuple = self.loadparametersplugins(namefile)
+                    for keyparameter, valueparameter in liststuple:
+                        setattr(self, keyparameter,valueparameter)
+                else:
+                    logging.getLogger().error("Parameter File Plugin %s : missing"%namefile)
+
 
     def check(self):
         """
