@@ -4251,10 +4251,11 @@ class Glpi91(DyngroupDatabaseHelper):
         path = full_key.replace(hive+'\\','').replace('\\'+key,'')
         path = '/'+path+'/'
         # Get registry_id
-        registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
-        if registry_id:
-            return registry_id
-        else:
+        try:
+            registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
+            if registry_id:
+                return registry_id
+        except:
             return False
 
     @DatabaseHelper._session
@@ -4278,7 +4279,10 @@ class Glpi91(DyngroupDatabaseHelper):
         registry = Registries()
         registry.name = key
         # Get collects_id
-        collects_id = session.query(Collects).filter_by(id='PulseRegistryCollects').first().id
+        try:
+            collects_id = session.query(Collects).filter_by(name='PulseRegistryCollects').first().id
+        except:
+            return False
         registry.plugin_fusioninventory_collects_id = collects_id
         registry.hive = hive
         registry.path = path
