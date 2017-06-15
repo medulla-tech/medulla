@@ -32,9 +32,9 @@ setup(
     ],
 
     keywords='mmc-core',
-    name='mmc-core', 
+    name='mmc-core',
     version='3.9.92',
-    description = 'mmc-core',
+    description='mmc-core',
     url='https://www.siveo.net/',
     packages=['mmc-core'],
     test_suite='',
