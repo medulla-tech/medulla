@@ -20,9 +20,6 @@
 
 from setuptools import setup
 
-import os
-import sys
-
 setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
