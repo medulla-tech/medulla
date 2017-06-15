@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='3.9.90'
+VERSION='3.9.92'
 
 rm -f mmc-core-*.tar.gz mmc-core-*.tar.gz.md5
 git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck
