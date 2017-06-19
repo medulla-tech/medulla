@@ -671,7 +671,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
             if data['agenttype'] == "relayserver":
-                logger.info("package server : %s"%data['pakageserver'])
+                logger.info("package server : %s"%data['packageserver'])
 
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
@@ -1217,8 +1217,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             latitude,
                                                             True,
                                                             data['classutil'],
-                                                            data['pakageserver']['public_ip'],
-                                                            data['pakageserver']['port']
+                                                            data['packageserver']['public_ip'],
+                                                            data['packageserver']['port']
                                                             )
                 logger.debug("** Add machine in base")
                 # Add machine
