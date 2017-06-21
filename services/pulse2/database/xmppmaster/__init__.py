@@ -32,7 +32,8 @@ from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
-    Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy
+    Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
+        Organization, Packages_list
 # Imported last
 import logging
 
@@ -123,6 +124,174 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except Exception, e:
             logging.getLogger().error(str(e))
+
+    #
+    @DatabaseHelper._sessionm
+    def getlistpackagefromorganization( self,
+                                        session,
+                                        organization_name = None,
+                                        organization_id   = None):
+        """
+            return list package an organization
+            eg call function example: 
+            XmppMasterDatabase().getlistpackagefromorganization( organization_id = 1)
+            or
+            XmppMasterDatabase().getlistpackagefromorganization( organization_name = "name")
+        """
+         # recupere id organization
+        idorganization = -1
+        try:
+            if organization_id != None:
+                try:
+                    result_organization = session.query(Organization).filter(Organization.id == organization_id)
+                    result_organization = result_organization.one()
+                    session.commit()
+                    session.flush()
+                    idorganization = result_organization.id
+
+                except Exception, e:
+                    logging.getLogger().debug("organization id : %s is not exist"%organization_id)
+                    return -1
+            elif organization_name != None:
+                
+                idorganization = self.getIdOrganization(organization_name)
+                if idorganization == -1:
+                    return {"nb" : 0, "packageslist" : []}
+            else:
+                return {"nb" : 0, "packageslist" : []}
+            result = session.query(Packages_list.id.label("id"),
+                                Packages_list.packageuuid.label("packageuuid"),
+                                Packages_list.organization_id.label("idorganization"),
+                                Organization.name.label("name")).join(Organization,
+                                                                        Packages_list.organization_id == Organization.id).\
+                                                                filter(Organization.id == idorganization)
+            nb = self.get_count(result) 
+            result = result.all()
+
+            list_result = [{"id" : x.id , 
+                            "packageuuid" : x.packageuuid,
+                            "idorganization" : x.idorganization,
+                            "name" :  x.name }  for x in result]
+            return {"nb" : nb, "packageslist" : list_result}
+        except Exception, e:
+            logging.getLogger().debug("load packages for organization id : %s is error : %s"%(organization_id,str(e)))
+            return {"nb" : 0, "packageslist" : []}
+
+    #
+    @DatabaseHelper._sessionm
+    def getIdOrganization(  self,
+                            session,
+                            name_organization):
+        """
+            return id organization suivant le Name
+            On error return -1
+        """
+        try:
+            result_organization = session.query(Organization).filter(Organization.name == name_organization)
+            result_organization=result_organization.one()
+            session.commit()
+            session.flush()
+            return result_organization.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().debug("organization name : %s is not exist"%name_organization)
+            return -1
+
+    #
+    @DatabaseHelper._sessionm
+    def addOrganization( self,
+                          session,
+                          name_organization):
+        """
+            creation d'une organization
+        """
+        id = self.getIdOrganization(name_organization)
+        if id == -1:
+            organization = Organization()
+            organization.name = name_organization
+            session.add(organization)
+            session.commit()
+            session.flush()
+            return organization.id
+        else :
+            return id
+
+    #
+    @DatabaseHelper._sessionm
+    def delOrganization( self,
+                          session,
+                          name_organization):
+        """
+            creation d'une organization
+        """
+        idorganization = self.getIdOrganization(name_organization)
+        if idorganization != -1:
+            session.query(Organization).filter(Organization.name == name_organization).delete()
+            session.commit()
+            session.flush()
+            q = session.query(Packages_list).filter(Packages_list.organization_id == idorganization)
+            q.delete()
+            session.commit()
+            session.flush()
+
+    @DatabaseHelper._sessionm
+    def addPackageByOrganization( self,
+                                  session,
+                                  packageuuid,
+                                  organization_name = None,
+                                  organization_id   = None
+                                  ):
+        """ 
+        addition reference package in packages table for organization id 
+            the organization input parameter is either organization name or either organization id
+            return -1 if not created
+        """
+        # recupere id organization
+        idorganization = -1
+        idorganization = -1
+        try:
+            if organization_id != None:
+                try:
+                    result_organization = session.query(Organization).filter(Organization.id == organization_id)
+                    result_organization = result_organization.one()
+                    session.commit()
+                    session.flush()
+                    idorganization = result_organization.id
+                except Exception, e:
+                    logging.getLogger().debug("organization id : %s is not exist"%organization_id)
+                    return -1
+            elif organization_name != None:
+                idorganization = self.getIdOrganization(organization_name)
+                if idorganization == -1:
+                    rreturn -1
+            else:
+                return -1
+            print "###############addition package organization ",idorganization
+
+            # addition reference package in listpackages for attribut organization id.
+            packageslist = Packages_list()
+            packageslist.organization_id = idorganization
+            packageslist.packageuuid = packageuuid
+            session.add(packageslist)
+            session.commit()
+            session.flush()
+            return packageslist.id
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().debug("add Package [%s] for Organization : %s%s is not exist"%( packageuuid,
+                                                                                                self.__returntextisNone__(organization_name),
+                                                                                                self.__returntextisNone__(organization_id)))
+            return -1
+
+    def __returntextisNone__(para, text = ""):
+        if para == None:
+            return text
+        else:
+            return para
+
+
+    ##########gestion packages###############
+
 
     ################################
     @DatabaseHelper._sessionm
@@ -268,7 +437,7 @@ class XmppMasterDatabase(DatabaseHelper):
         else:
             relayserver = session.query(Deploy).filter(and_( Deploy.inventoryuuid == uuid, Deploy.command == command_id))
             #, Deploy.result .isnot(None)
-        print relayserver 
+        #print relayserver 
         relayserver = relayserver.all()
         session.commit()
         session.flush()
@@ -561,11 +730,10 @@ class XmppMasterDatabase(DatabaseHelper):
                                                 Deploy.host.like('%%%s%%'%(filt))))
 
         lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
-        print lentaillerequette
         deploylog = deploylog.group_by(Deploy.title)
 
         deploylog = deploylog.order_by(desc(Deploy.id))
-        
+
         deploylog = deploylog.add_column(func.count(Deploy.title))
         if min and max:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
@@ -854,7 +1022,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 COUNT(*) AS nb, `machines`.`groupdeploy`, `relayserver`.`id`
             FROM
                 xmppmaster.machines
-            INNER JOIN
+                    INNER JOIN
                 xmppmaster.`relayserver` ON `relayserver`.`groupdeploy` = `machines`.`groupdeploy`
             WHERE
                 agenttype = 'machine'

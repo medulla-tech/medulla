@@ -231,4 +231,22 @@ class Has_login_command(Base, XmppMasterDBObj):
     login = Column(String(45), nullable=False)
     command = Column(Integer)
 
-
+class Organization(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'organization'
+    # ====== Fields =============================
+    # Here we define columns for the table organization.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    name = Column(String(45), nullable=False)
+  
+class Packages_list(Base, XmppMasterDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'packageslist'
+    # ====== Fields =============================
+    # Here we define columns for the table packageslist.
+    # Notice that each column is also a normal Python instance attribute.
+    #id = Column(Integer, primary_key=True)
+    organization_id= Column(Integer, nullable=False)
+    packageuuid = Column(String(45), nullable=False)
+    
