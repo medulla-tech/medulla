@@ -4,6 +4,9 @@
 import sys,os,platform
 import os.path
 import json
+import logging
+
+logger = logging.getLogger()
 
 
 class managepackage:
@@ -31,42 +34,48 @@ class managepackage:
                 jr= json.loads(dd.decode('utf-8', 'ignore'))
                 return jr
             except:
-                print "Decoding error"
-                pass
+                logger.error("filename %s error decodage"%filename)
         return None
 
     @staticmethod
     def getdescriptorpackagename(packagename):
-        for t in managepackage.listpackages():
-            print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and ('software' in jr['info'] and 'version'  in jr['info']) \
-                and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
-                return jr
+        for package in managepackage.listpackages():
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and ('software' in jr['info'] and 'version'  in jr['info']) \
+                    and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
+                    return jr
+            Except Exception:
+                logger.error("package %s verify format descripttor"%package)
         return None
 
     @staticmethod
     def getversionpackagename(packagename):
-        for t in managepackage.listpackages():
+        for package in managepackage.listpackages():
             print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and ('software' in jr['info'] and 'version'  in jr['info']) \
-                and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
-                return jr['info']['version']
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and ('software' in jr['info'] and 'version'  in jr['info']) \
+                    and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
+                    return jr['info']['version']
+            except Exception:
+                logger.error("package %s verify format descriptor xmppdeploy.json"%package)
         return None
 
     @staticmethod
     def getpathpackagename(packagename):
-        for t in managepackage.listpackages():
-            print t
-            print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and (('software' in jr['info'] and jr['info']['software'] == packagename )\
-                or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
-                return t
+        for package in managepackage.listpackages():
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and (('software' in jr['info'] and jr['info']['software'] == packagename )\
+                    or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
+                    return package
+            except :
+                 logger.error("package %s missing"%package)
+                return None
         return None
     
     
@@ -77,3 +86,22 @@ class managepackage:
             jr = managepackage.loadjsonfile(pathpackage)
             return jr['info']['name']
         return None
+
+
+#class managepackagefile:
+    #def __init__():
+        #pass
+    
+    #def organisation_list():
+        #return listorganisation
+    
+    #def list_package_for_organisation(organisation):    
+        #pass
+    
+    ######################
+    #def add_package_organisation(idpackage, organisation):
+    
+    #def create_xmpp_descriptor_organisation()
+    
+    
+    
