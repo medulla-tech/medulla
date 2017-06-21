@@ -33,8 +33,8 @@ class managepackage:
             try:
                 jr= json.loads(dd.decode('utf-8', 'ignore'))
                 return jr
-            except:
-                logger.error("filename %s error decodage"%filename)
+            except Exception as e:
+                logger.error("filename %s error decodage [%s]"%(filename ,str(e)))
         return None
 
     @staticmethod
@@ -46,8 +46,8 @@ class managepackage:
                     and ('software' in jr['info'] and 'version'  in jr['info']) \
                     and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
                     return jr
-            Except Exception:
-                logger.error("package %s verify format descripttor"%package)
+            except Exception as e:
+                logger.error("package %s verify format descripttor [%s]"%(package,str(e)))
         return None
 
     @staticmethod
@@ -60,8 +60,8 @@ class managepackage:
                     and ('software' in jr['info'] and 'version'  in jr['info']) \
                     and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
                     return jr['info']['version']
-            except Exception:
-                logger.error("package %s verify format descriptor xmppdeploy.json"%package)
+            except Exception as e:
+                logger.error("package %s verify format descriptor xmppdeploy.json [%s]"%(package,str(e)))
         return None
 
     @staticmethod
@@ -73,9 +73,8 @@ class managepackage:
                     and (('software' in jr['info'] and jr['info']['software'] == packagename )\
                     or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
                     return package
-            except :
-                 logger.error("package %s missing"%package)
-                return None
+            except Exception as e:
+                logger.error("package %s missing [%s]"%(package,str(e)))
         return None
     
     
