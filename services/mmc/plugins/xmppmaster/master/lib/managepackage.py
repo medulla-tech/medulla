@@ -53,7 +53,7 @@ class managepackage:
     @staticmethod
     def getversionpackagename(packagename):
         for package in managepackage.listpackages():
-            print os.path.join(t,"xmppdeploy.json")
+            print os.path.join(package,"xmppdeploy.json")
             try:
                 jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
                 if 'info' in jr \
