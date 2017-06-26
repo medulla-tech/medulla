@@ -1890,6 +1890,23 @@ class Glpi91(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
+    def getLastMachineRegistryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        #Mutable dict options used as default argument to a method or function
+        query = session.query(RegContents).filter(self.regcontents.c.computers_id == int(str(uuid).replace("UUID", ""))).all()
+
+        ret = []
+        if count:
+            ret = len(query)
+        else:
+            for row in query:
+                if row.key is not None:
+                    l = [
+                        ['Registry key', row.key],
+                        ['Value', row.value],
+                    ]
+                    ret.append(l)
+        return ret
+
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
         hide_win_updates = False
