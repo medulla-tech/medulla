@@ -567,8 +567,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     macadress = None,
                                     GUID = None):
         """ For a deployment
-        1st action: synchronize the previous package name
-        The package is already on the machine and also in server relay.
+            1st action: synchronize the previous package name
+            The package is already on the machine and also in server relay.
         """
 
         if not managepackage.getversionpackagename(name):
@@ -586,7 +586,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         data =  {
                 "name" : name,
                 "login" : login,
-                'methodetransfert' : 'curl',
+                "transfert" : True,
+                'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),
                 "jidrelay" : jidrelay,
@@ -600,10 +601,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "Dtypequery" : "TQ",
                 "Devent" : "STARDEPLOY",
                 "uuid" : uuidmachine,
-                "descriptor" : descript,
-                "transfert" : True
+                "descriptor" : descript
         }
-        sessionid = self.send_session_command(jidmachine,
+        #Submits deployment to ARS
+        sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson" ,
                                               data,
                                               datasession = None,
