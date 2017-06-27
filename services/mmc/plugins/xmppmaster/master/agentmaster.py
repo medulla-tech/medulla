@@ -401,7 +401,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             password=passwordchatroom,
                                             wait=True)
         self.logtopulse('Start agent Master', type = "MASTER", who = self.boundjid.bare)
-        
+        # Load all plugins starting with plugin_auto
+        listplugins = [re.sub('plugin_','','.'.join(f.split('.')[:-1])) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")) if f.startswith("plugin_auto") and f.endswith(".py")]
+        for plugin in listplugins:
+            # Load the plugin and start action
+            try:
+                logging.debug("Calling plugin %s " % plugin )
+                call_plugin(plugin, self)
+            except TypeError:
+                logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
+                traceback.print_exc(file=sys.stdout)
+            except Exception as e:
+                logging.error("Executing plugin %s %s" % (plugin, str(e)))
+                traceback.print_exc(file=sys.stdout)
 
     def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
         msgbody = {
