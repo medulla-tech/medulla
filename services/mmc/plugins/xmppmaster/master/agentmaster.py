@@ -400,20 +400,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             # If a room password is needed, use:
                                             password=passwordchatroom,
                                             wait=True)
-        self.logtopulse('Start agent Master', type="MASTER", who =  self.boundjid.bare)
-        # Load all plugins starting with plugin_auto
-        listplugins = [re.sub('plugin_','','.'.join(f.split('.')[:-1])) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")) if f.startswith("plugin_auto") and f.endswith(".py")]
-        for plugin in listplugins:
-            # Load the plugin and start action
-            try:
-                logging.debug("Calling plugin %s " % plugin )
-                call_plugin(plugin, self)
-            except TypeError:
-                logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
-                traceback.print_exc(file=sys.stdout)
-            except Exception as e:
-                logging.error("Executing plugin %s %s" % (plugin, str(e)))
-                traceback.print_exc(file=sys.stdout)
+        self.logtopulse('Start agent Master', type = "MASTER", who = self.boundjid.bare)
+        
 
     def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
         msgbody = {
@@ -424,8 +412,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     'who':who
                     }
         self.send_message(mto=jid.JID("log@pulse"),
-                                mbody=json.dumps(msgbody),
-                                mtype='chat')
+                            mbody = json.dumps(msgbody),
+                            mtype = 'chat')
 
     def changed_status(self,msg_changed_status):
         if msg_changed_status['from'].resource == 'MASTER':
@@ -516,6 +504,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     GUID = None):
 
         try:
+            #search group deploye et jid machine
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
 
             jidrelay = objmachine['groupdeploy']
@@ -567,8 +556,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     macadress = None,
                                     GUID = None):
         """ For a deployment
-            1st action: synchronize the previous package name
-            The package is already on the machine and also in server relay.
+        1st action: synchronize the previous package name
+        The package is already on the machine and also in server relay.
         """
 
         if not managepackage.getversionpackagename(name):
@@ -603,12 +592,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "uuid" : uuidmachine,
                 "descriptor" : descript
         }
-        #Submits deployment to ARS
         sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson" ,
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
+
         self.logtopulse("Start deploy on machine %s"%jidmachine,
                         type = 'deploy',
                         sessionname = sessionid,
@@ -1059,6 +1048,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.error("sorry no 'type info (item typeinfo)' dans message from %s plugin %s"%(msg['from'].bare, data['action']))
                     logger.error("######\n%s\n#####"%(json.dumps(data, indent=4)))
 
+                #########################ASK INFORMATION table machin of base xmppmaster########################
                 if data['data']['typeinfo'] == "info_xmppmachinebyuuid":
                     if not 'host' in data['data']:
                         logger.error("host missing for info_xmppmachinebyuuid")
@@ -1115,10 +1105,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #------------------------------------------------
             if 'action' in data and data['action'] == 'infomachine' :
                 logger.debug("** Processing machine %s that sends this information (nini inventory)"%msg['from'].bare)
-
-                #print "llllllllllllllllllllllllllll"
-                #print json.dumps(data, indent=4)
-                #print "llllllllllllllllllllllllllll"
 
                 # verify si machine Enregistrer
                 if XmppMasterDatabase().getPresencejid(msg['from'].bare):
