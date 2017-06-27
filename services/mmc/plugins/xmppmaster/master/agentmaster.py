@@ -575,7 +575,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         data =  {
                 "name" : name,
                 "login" : login,
-                "transfert" : True,
                 'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),
@@ -590,7 +589,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "Dtypequery" : "TQ",
                 "Devent" : "STARDEPLOY",
                 "uuid" : uuidmachine,
-                "descriptor" : descript
+                "descriptor" : descript,
+                "transfert" : True
         }
         sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson" ,
@@ -1158,11 +1158,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_code = str(data['localisationifo']['country_code'])
                     country_name = str(data['localisationifo']['country_name'])
                     city = str(data['localisationifo']['city'])
-
-                #print "llllllllllllllllllllllllllll"
-                #print json.dumps(data, indent=4)
-                #print "llllllllllllllllllllllllllll"
-
                 try:
                     if 'users' in data['information'] and len (data['information']['users']) > 0:
                         logger.debug("** addition user %s in base"%data['information']['users'][0])

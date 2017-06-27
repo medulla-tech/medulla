@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger()
 
+
 class managepackage:
     @staticmethod
     def packagedir():
@@ -35,16 +36,6 @@ class managepackage:
             except Exception as e:
                 logger.error("filename %s error decodage [%s]"%(filename ,str(e)))
         return None
-
-    @staticmethod
-    def getdescriptorpackageuuid(packageuuid):
-        file = os.path.join(managepackage.packagedir(),packageuuid,"xmppdeploy.json")
-        if os.path.isfile(file):
-            try:
-                jr = managepackage.loadjsonfile(file)
-                return jr
-            except Exception:
-                return None
 
     @staticmethod
     def getdescriptorpackagename(packagename):
@@ -85,7 +76,8 @@ class managepackage:
             except Exception as e:
                 logger.error("package %s missing [%s]"%(package,str(e)))
         return None
-
+    
+    
     @staticmethod
     def getnamepackagefromuuidpackage(uuidpackage):
         pathpackage = os.path.join(managepackage.packagedir(),uuidpackage,"xmppdeploy.json")
@@ -94,33 +86,21 @@ class managepackage:
             return jr['info']['name']
         return None
 
-class search_list_of_deployment_packages:
-    """
-    recurcivement search toutes les dependences pour ce package
-    """
-    def __init__(self, packageuuid):
-        self.list_of_deployment_packages = set()
-        self.packageuuid = packageuuid
 
-    def search(self):
-        self.__recursif__(self.packageuuid )
-        return self.list_of_deployment_packages
-
-    def __recursif__(self, packageuuid ):
-        self.list_of_deployment_packages.add(packageuuid)
-        objdescriptor = managepackage.getdescriptorpackageuuid(packageuuid)
-        if objdescriptor is not None:
-            ll = self.__list_dependence__(objdescriptor)
-            #print ll
-            for y in ll:
-                if y not in  self.list_of_deployment_packages:
-                    self.__recursif__(y)
-
-    def __list_dependence__(self, objdescriptor):
-        if objdescriptor is not None and \
-            'info' in objdescriptor and \
-                'Dependency' in objdescriptor['info']:
-            return objdescriptor['info']['Dependency']
-        else:
-            return []
-
+#class managepackagefile:
+    #def __init__():
+        #pass
+    
+    #def organisation_list():
+        #return listorganisation
+    
+    #def list_package_for_organisation(organisation):    
+        #pass
+    
+    ######################
+    #def add_package_organisation(idpackage, organisation):
+    
+    #def create_xmpp_descriptor_organisation()
+    
+    
+    
