@@ -1,3 +1,4 @@
 etc/mmc/plugins/xmppmaster.ini
+etc/mmc/plugins/resultinventory.ini
 usr/lib/python2.?/*-packages/mmc/plugins/xmppmaster
 usr/lib/python2.?/*-packages/pulse2/database/xmppmaster
