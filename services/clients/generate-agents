@@ -615,22 +615,17 @@ install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xm
         """
         origin_dir = self.dir_current
         destination = os.path.join(self.dir_destination, *self.resources_path_list)
-        # cd rpm/package_name/SOURCES
 
         os.chdir(destination)
         r_files = os.listdir(destination)
 
-        #name_version = "%s-%s" % (self.config.rpm.package_name, self.version)
         name_version = "%s-%s" % (self.package_name, self.version)
 
-        # mkdir rpm/package_name/SORCES/package_name-0.1
         dir_util.mkpath(name_version)
 
-        # mv * name_version/
         for r_file in r_files:
             file_util.move_file(r_file, name_version)
 
-        # tar package_name-0.1.tar package_name-0.1
         archive_util.make_archive(name_version,
                                   "tar",
                                   None,
