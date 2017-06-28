@@ -2,6 +2,7 @@
 # -*- coding: utf-8; -*-
 #
 # (c) 2014 Mandriva, http://www.mandriva.com/
+# (c) 2017 Siveo,  http://www.siveo.net/
 #
 # This file is part of Pulse 2
 #
@@ -446,22 +447,6 @@ class MacCreator(AbsCreator):
 
     def build(self):
 
-#        cmd = ["genisoimage",
-#                "-V",
-#                self.config.mac.package_name,
-#                "-D",
-#                "-R",
-#                "-apple",
-#                "-no-pad",
-#                "-o",
-#                "%s.dmg" % self.config.mac.package_name,
-#                self.platform_directory,
-#                ]
-#        p = Popen(cmd, stdout=PIPE, stderr=PIPE)
-#        out, err = p.communicate()
-#        if err:
-#            print "ERROR: %s" % err
-#        print "os x dmg create: %s" % out
         self._declare_vnc_password()
 
         postflight = os.path.join(self.dir_current, self.postflight_file)
