@@ -589,9 +589,11 @@ Requires: %{requires}
 
 %install
 install -d $RPM_BUILD_ROOT/%{opt_dir}/%{name}
-install id_rsa.pub $RPM_BUILD_ROOT/%{opt_dir}/%{name}/id_rsa.pub
+install /root/.ssh/id_rsa.pub $RPM_BUILD_ROOT/%{opt_dir}/%{name}/id_rsa.pub
+install /var/lib/pulse2/clients/config/agentconf.ini %buildroot%_prefix/pulse-xmpp-agent/
 
 %files
+%_prefix/pulse-xmpp-agent/agentconf.ini
 /%{opt_dir}/%{name}/id_rsa.pub
 
         """
