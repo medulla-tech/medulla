@@ -34,11 +34,12 @@ var infoPackage = {};
 var label = jQuery("#label").val();
 
 //Define options which are associated with a label ...
-//A trick is used with step : even if step-label don't exists, it is added to the optionsToHide array
-var optionsLabelled = ['goto-label','succes-label','error-label','step-label'];
+var optionsLabelled = ['goto-label','succes-label','error-label'];
+
+var optionsMeta = ['resultcommand','firstlines','lastlines'];
 
 //And the ones which are not displayed; calculed from optionsLabelled
-var optionsToHide = [];
+var optionsToHide = ['step'];
 jQuery.each(optionsLabelled, function(id,option){
     option = option.split('-');
     optionsToHide.push(option[0]);
@@ -354,29 +355,76 @@ function Workflow()
 
             //add variable is used to add the delete button if the label is not 'successError' or 'errorEnd'
             var add = '';
-            var options = '';
-
-            //For each action displayed, shows the options saved
-            jQuery.each(action,function(key,value){
-
-                //Mask step value, show only labels
-                if(jQuery.inArray(key,optionsToHide) == -1)
-                    options += '<li>'+key+' : '+value+'</li>';
-            });
+            var form = '';
+            var template ="";
+            var optionsUniqList = [];
 
             if(action['label'] != 'SuccessEnd' && action['label']!= 'ErrorEnd')
+            {
                 add = '<img class="delete" src="modules/pkgs/graph/img/delete.png"/>';
+                form ='<form><ul></ul><input type="hidden" name="label" value="'+action['label']+'"><input type="button" value="save" class="editAction"/></form>';
+            }
 
             //add the the html to display
-            jQuery(selector).append('<li data-name="'+action['label']+'" >'+
-                '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3></div>'+
-                '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active"><ul>'+options+'</ul></span>'+
+            jQuery(selector).append('<li id="'+action['label']+'" data-name="'+action['label']+'" >'+
+                '<div class="ui-accordion-header ui-state-default" >'+add+'<h3 class="label">'+action['label']+'</h3></div>'+
+                '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active">'+form+'</span>'+
                 '</li>');
+
+            //For each action displayed, shows the options saved
+            jQuery.each(action,function(option,value){
+                var tmp;
+
+
+                //The option mustn't be already displayed
+                if(jQuery.inArray(option, optionsUniqList) == -1) {
+                    //If option exists and can be shown
+                    if (typeof(optionsList[option]) != "undefined" && jQuery.inArray(option, optionsToHide) == -1) {
+                        tmp = option;
+
+                        //Need to know the name of the template
+                        template = optionsForAction[action['action']][tmp] + '-' + optionsList[tmp]['type'];
+
+                        optionsUniqList.push(tmp);
+                    }
+                    else {
+
+                        //if it is option-label
+                        if (jQuery.inArray(option, optionsLabelled) >= 0) {
+                            tmp = option.split('-');
+                            tmp = tmp[0];
+                            optionsUniqList.push(tmp);
+                            template = optionsForAction[action['action']][tmp] + '-' + optionsList[tmp]['type'];
+                        }
+                        //if it is an @option
+                        else if (option[0] == '@') {
+                            tmp = option.substring(1);
+                            optionsUniqList.push(tmp);
+                            template = optionsForAction[action['action']][tmp] + '-' + optionsList[tmp]['type'];
+                        }
+                    }
+
+
+                    if (template != "") {
+                        //Add new item to the list and add the template loaded inside
+                        jQuery("#" + action['label'] + ' span ul').append('<li></li>');
+                        jQuery("#" + action['label'] + ' span ul').children('li').last().load("/mmc/modules/pkgs/includes/templates.php ." + template, {
+                            'option': tmp,
+                            'labels': labelList,
+                            'value': value,
+                            'name': action['label'],
+                        });
+                    }
+                }
+            });
         });
 
         //after displaying the actions, add the callback to a callback list and run it.
-        var call = jQuery.Callbacks().add(callback).fire();
+        var call = jQuery.Callbacks()
+            .add(callback).fire();
+
     }
+
 
     /**
      *
@@ -442,8 +490,6 @@ function Workflow()
                         }
                     }
                     action[copy] = position;
-
-                    console.log(action);
                 }
             });//End each action as option=>value
 

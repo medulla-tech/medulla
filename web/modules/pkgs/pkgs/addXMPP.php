@@ -24,7 +24,25 @@
 
 if(isset($_POST['saveList']))
 {
-    echo $_POST['saveList'];
+    $_SESSION['workflow'] = $_POST['saveList'];
+
+    //print_r($_SESSION['workflow']);
+
+    $_SESSION['workflow'] = str_replace("\"[","[",$_SESSION['workflow']);
+    $_SESSION['workflow'] = str_replace("]\"","]",$_SESSION['workflow']);
+    $_SESSION['workflow'] = str_replace("\"{","{",$_SESSION['workflow']);
+    $_SESSION['workflow'] = str_replace("}\"","}",$_SESSION['workflow']);
+
+    //$_SESSION['workflow'] =json_decode($_SESSION['workflow'],true,10);
+    echo '<pre>';
+    $_SESSION['workflow']= stripslashes($_SESSION['workflow']);
+    print_r($_POST['saveList']);
+
+    print_r(json_decode($_SESSION['workflow'],true));
+
+
+    echo '</pre>';
+
 }
 ?>
 <style type="text/css">
@@ -34,33 +52,39 @@ if(isset($_POST['saveList']))
 <script src="modules/pkgs/graph/js/jQuery.js"></script>
 <script src="modules/pkgs/graph/js/jQuery-ui.js"></script>
 
+<h2>Infos package</h2>
+<div id="infos-package" style="display:flex;width=100%;margin-bottom:10px;">
+    <div style="width:50%">
+        <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
+        <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
+        <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
+        <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
+    </div>
+    <div>
+        <label for="quitonerror-package">Quit on error</label>
+        <select name="quitonerror-package" id="quitonerror-package">
+            <option value="false">false</option>
+            <option value="true">true</option>
+        </select>
+        <label for="transferfile-package">Transfer file</label>
+        <select name="transferfile-package" id="transferfile-package">
+            <option value="false">false</option>
+            <option value="true">true</option>
+        </select>
+
+        <label for="methodtransfert-package">Method transfert</label>
+        <select name="methodtransfert-package" id="methodtransfert-package">
+            <option value="curl">curl</option>
+        </select>
+    </div>
+</div>
+
     <!-- View of workflow constructor -->
 <div style="width:100%;">
     <h1><a href="#" class="actions">New action</a></h1>
     <div class="action-manager" style="width:100%;">
 
-        <div id="infos-package">
-            <h2>Infos package</h2>
-            <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
-            <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
-            <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
-            <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
-            <label for="quitonerror-package">Quit on error</label>
-            <select name="quitonerror-package" id="quitonerror-package">
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
-            <label for="transferfile-package">Transfer file</label>
-            <select name="transferfile-package" id="transferfile-package">
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
 
-            <label for="methodtransfert-package">Method transfert</label>
-            <select name="methodtransfert-package" id="methodtransfert-package">
-                <option value="curl">curl</option>
-            </select>
-        </div>
 
         <form id="new-action" action="#" method="post" onsubmit="addAction()">
             <h2>Action Creator</h2>
@@ -98,6 +122,7 @@ if(isset($_POST['saveList']))
         </div>
     </div>
 
+
     <div id="workflow">
         <ul ng-controller="workflowCtrl">
             <li><a href="#workflow-selected" onclick="updateOs('mac')">Mac</a></li>
@@ -116,7 +141,7 @@ if(isset($_POST['saveList']))
         </form>
     </div>
 </div>
-    <a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
+<a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
 
 
 <script src="modules/pkgs/graph/js/class.js"></script>

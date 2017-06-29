@@ -28,8 +28,6 @@
  * @see pkgs/graph/js/class.js
  *
  */
-
-
 wfList[osSelected] = new Workflow(osSelected);
 wfList[osSelected].display('#workflow-selected-list', toggleAction);
 updateList();
@@ -124,6 +122,12 @@ jQuery("#label").on('change click',function(){
         loadOptions(action);
     }
 });
+
+/**
+ *
+ * UPDATE THE INFORMATION SECTION INTO THE JSON
+ *
+ */
 jQuery("#infos-package").on('change',function(){
     infoPackage = {
         'name':jQuery('#name-package').val(),
@@ -146,8 +150,7 @@ jQuery('select[name="action"]').on('change',function(){
     actionToCreate['action'] = action;
 
 
-    var firstCallbacks = jQuery.Callbacks()
-        .add(loadOptions).fire(action);
+    loadOptions(action,"options");
 });
 
 
@@ -161,6 +164,7 @@ jQuery("#firstStep").on('click',function(){
     //Disable add button
     jQuery("#firstStep").prop('disabled',true);
 
+    var newAction = jQuery("#new-action").html();
     //Test the values
     testOptions();
 
@@ -168,11 +172,11 @@ jQuery("#firstStep").on('click',function(){
     var datas = [];
 
     var action = Object.create(actionToCreate);
-    var optionToRename = ['resultcommand','firstlines','lastlines'];
+
 
     jQuery.each(getdatas,function(key, value){
         //Replace some option name by meta-name, i.e. : resultcommand is replaced by @resultcommand
-        if(jQuery.inArray(value['name'], optionToRename) != -1)
+        if(jQuery.inArray(value['name'], optionsMeta) != -1)
         {
             value['name'] = '@'+value['name'];
         }
@@ -237,26 +241,26 @@ function labelExists(label)
 /**
  * Load extras options for the specified action
  * @var string actionName
- *
+ * @var string selectorName (without '#')
  */
-function loadOptions(actionName)
+function loadOptions(actionName,selectorName="options")
 {
     var template = "";
 
-    jQuery("#options ul").html('');
-    jQuery("#aviable-options ul").html('');
+    jQuery("#"+selectorName+" ul").html('');
+    jQuery("#aviable-"+selectorName+" ul").html('');
 
     jQuery.each(optionsForAction[actionName],function(key,value){
         template = value +'-' + optionsList[key]['type'];
 
         if (value == 'critic' || value == 'mandatory')
         {
-            jQuery("#mandatories-options").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
+            jQuery("#mandatories-"+selectorName).append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
         }
 
         else
         {
-            jQuery("#aviable-options ul").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
+            jQuery("#aviable-"+selectorName+" ul").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
         }
     });
 }
@@ -344,6 +348,45 @@ function updateList()
 function toggleAction() {
     jQuery("#workflow-selected-list li h3").on('click', function () {
         jQuery(this).parent('div').next('span').toggle();
+
+        //Remove "add" and "remove" button from options in workflow list
+        jQuery("#workflow-selected-list .add,.remove").hide();
+    });
+
+    //Action to execute when an action is edited
+    jQuery(".editAction").on("click",function(){
+
+        var options = {};
+
+        jQuery.each(jQuery(this).parent('form').serializeArray(), function(id, option){
+            //The options are represented as options[name] = value instead of {'name': name,'value':value}
+            options[option['name']] = option['value'];
+        });
+
+
+        for(var i=0; i < wfList[osSelected]['sequence'].length;i++)
+        {
+            //Push key value in action['step'] and push the action in the sequence
+            if(wfList[osSelected]['sequence'][i]['label'] == options['label'])
+            {
+                jQuery.each(options,function(name,value)
+                {
+                    if(jQuery.inArray(value['name'], optionsMeta) != -1) {
+                        wfList[osSelected]['sequence'][i]['@'+name] = value;
+                    }
+                    else
+                    wfList[osSelected]['sequence'][i][name] = value;
+                });
+            }
+        }
+
+
+        //Need to update the right action in the sequence with those options
+        console.log(wfList[osSelected]['sequence']);
+
+
+        updateList();
+
     });
 
     jQuery(".delete").on('click', function () {
@@ -360,7 +403,6 @@ function toggleAction() {
  */
 function getJSON()
 {
-
     var tmp = {};
     var tmpAction = {};
 
@@ -371,7 +413,21 @@ function getJSON()
         tmp[key] = {'sequence':[]};
         jQuery.each(datas['sequence'], function(key2, action){
             tmp[key]['sequence'].push(action);
+
         });
     });
     jQuery("#saveList").val(JSON.stringify(tmp));
+}
+
+/**
+ *
+ * apply the the modification to the saved action
+ * @var string label is the label name edited
+ *
+ */
+function editAction(label)
+{
+
+    console.log(jQuery('#'+label+ ' form'));
+
 }

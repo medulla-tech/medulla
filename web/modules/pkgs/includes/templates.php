@@ -33,6 +33,7 @@
 </div>
 
 <div class="mandatory-text">
+    <h4><?php echo $_POST['option'];?></h4>
     <input type="text" name="<?php echo $_POST['option'];?>" onchange="testOptions()" placeholder="<?php echo $_POST['option'];?>"  value="<?php if(isset($_POST['value'])) echo $_POST['value'];?>"/>
 </div>
 
@@ -45,6 +46,7 @@
 </div>
 
 <div class="mandatory-number">
+    <h4><?php echo $_POST['option'];?></h4>
     <input type="number" name="<?php echo $_POST['option'];?>" onchange="testOptions()" placeholder="<?php echo $_POST['option'];?>"  value="<?php if(isset($_POST['value'])) echo $_POST['value'];?>"/>
 </div>
 
@@ -57,13 +59,22 @@
 </div>
 
 <div class="mandatory-select-label">
+
     <h4><?php echo $_POST['option'];?></h4>
-    <select name="<?php echo $_POST['option'].'-label';?>">
-        echo "<option value='NEXT'>NEXT</option>";
-        <?php
+    <select name="<?php echo $_POST['option'].'-label';?>" >
+        <?php if(isset($_POST['value']) && $_POST['value'] == "NEXT")
+            echo '<option value="NEXT" selected>NEXT</option>';
+
+        else
+            echo '<option value="NEXT">NEXT</option>';
+
         foreach($_POST['labels'] as $id=>$label)
         {
-            echo "<option value='$label'>$label</option>";
+            if(isset($_POST['value']) && $_POST['value'] == $label)
+                echo '<option value="'.$label.'" selected>'.$_POST['value'].'</option>';
+
+            else
+                echo "<option value='$label' >$label</option>";
         }
         ?>
     </select>
@@ -72,13 +83,23 @@
 
 <div class="extra-select-label">
     <h4><?php echo $_POST['option'];?></h4>
-    <a href="#" class="add"><img src="/mmc/modules/pkgs/graph/img/add.png" width="24px" alt="Add to action"/></a>
-    <select name="<?php echo $_POST['option'].'-label';?>">
-        echo "<option value='NEXT'>NEXT</option>";
-        <?php
+
+    <select name="<?php echo $_POST['option'].'-label';?>" >
+        <?php if(isset($_POST['value']) && $_POST['value'] == "NEXT")
+        {
+            echo '<option value="NEXT" selected>NEXT</option>';
+        }
+        else
+            echo '<option value="NEXT">NEXT</option>';
+
         foreach($_POST['labels'] as $id=>$label)
         {
-            echo "<option value='$label'>$label</option>";
+            if(isset($_POST['value']) && $_POST['value'] == $label)
+            {
+                echo '<option value="'.$label.'" selected>'.$_POST['value'].'>'.$label.'</option>';
+            }
+            else
+                echo "<option value='$label' >$label</option>";
         }
         ?>
     </select>
