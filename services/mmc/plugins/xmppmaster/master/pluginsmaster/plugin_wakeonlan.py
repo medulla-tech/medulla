@@ -13,8 +13,8 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     try:
         listserverrelay = XmppMasterDatabase().listserverrelay()
         if 'macadress' in data:
-            senddataplugin = {'action' : 'wakeonLan',
-                            'sessionid': name_random(5, "wakeonLan"),
+            senddataplugin = {'action' : 'wakeonlan',
+                            'sessionid': name_random(5, "wakeonlan"),
                             'data' : {'macaddress': data['macadress'] }}
             for serverrelay in listserverrelay:
                 xmppobject.send_message(  mto = serverrelay[0],
@@ -25,8 +25,8 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             for macadress in listadressmacs:
                 if macadress == '00:00:00:00:00:00':
                     continue
-                senddataplugin = {'action' : 'wakeonLan',
-                                  'sessionid': name_random(5, "wakeonLan"),
+                senddataplugin = {'action' : 'wakeonlan',
+                                  'sessionid': name_random(5, "wakeonlan"),
                                   'data' : {'macaddress': macadress }}
                 for serverrelay in listserverrelay:
                     xmppobject.send_message( mto = serverrelay[0],

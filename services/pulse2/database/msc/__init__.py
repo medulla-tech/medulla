@@ -470,7 +470,7 @@ class MscDatabase(DatabaseHelper):
             q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
             q = q.select_from(join)
             q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready',
-                              self.commands.c.start_date < datetime.datetime.utcnow()))
+                              self.commands.c.start_date < datetime.datetime.now()))
                               #self.commands.start_date + timedelta(seconds=400) > datetime.utcnow()))
             q = q.all()
             session.flush()

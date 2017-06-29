@@ -1,11 +1,12 @@
 #!/bin/bash
 
-VERSION='3.9.90'
+VERSION='3.9.92'
 
 rm -f pulse2-*.tar.gz pulse2-*.tar.gz.md5
 git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck
 tar xzvf pulse2-$VERSION.tar.gz
 cp setup.py pulse2-$VERSION
+cp -frv debian pulse2-$VERSION
 tar czvf pulse2-$VERSION.tar.gz pulse2-$VERSION
 mv pulse2-$VERSION.tar.gz pulse2_$VERSION.orig.tar.gz
 rm -fr pulse2-$VERSION/

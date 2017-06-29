@@ -33,7 +33,7 @@ import hashlib
 from functools import wraps
 import base64
 from importlib import import_module
-
+import threading
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
@@ -482,7 +482,7 @@ def listservice():
         print dev.Caption
         print dev.DisplayName
 
-def joint_compteAD():
+def joint_compteAD(domain,password,login,group):
     ##https://msdn.microsoft.com/en-us/library/windows/desktop/aa392154%28v=vs.85%29.aspx
     pythoncom.CoInitialize ()
     try:

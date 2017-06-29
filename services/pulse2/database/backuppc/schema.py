@@ -72,3 +72,4 @@ class Hosts(Base, BackupPCDBObj):
     post_backup_script = Column(Text, default='')
     pre_restore_script = Column(Text, default='')
     post_restore_script = Column(Text, default='')
+    reverse_port = Column(Integer)

@@ -12,50 +12,31 @@ Configuration
 ~~~~~~~~~~~~~
 
 Pulse2 is designed in a very distributed way, involving several agents
-running together on the same machine or not. Each agent having its own 
-configuration file, you can use the `pulse2-setup' to setup major 
-configuration options automatically.
+running together on the same machine or not. See Installation
 
-This tool is also responsible for provisioning databases and checking
-mmc-core LDAP setup.
+Installation
+~~~~~~~~~~~~~
+Installation process had been simplified to easily install all differents components from one command line.
 
-To use it, simply type `pulse2-setup` and answer the questions.
+Check here :
 
-The following options can be used:
-`--help`
-`-h`
-    Print a summary of all the options, and exit.
-
-`--debug`
-`-d`
-    Print debug messages.
-
-`--batch`
-`-b`
-    Do not ask any questions. Defaults values are taken from:
-    - existing configuration files, if any
-    - if not, working default values
-
-`--reset`
-`-R`
-    Reset all Pulse2 configuration and start from default values.
-
-`--pkgdatadir=DIR`
-    Look into DIR for sql snippets and so on. Default to /usr/share/pulse2
-
-`--confdir=DIR`
-   Path to configuration directory. Default to /etc/mmc
+https://github.com/pulse-project/tools/tree/master/install
 
 Pulse2 clients
 ~~~~~~~~~~~~~~
 
 * Win32:
+
   A complete win32 client agent pack can be built with the script 
+  
   /var/lib/pulse2/clients/win32/generate-agent-pack.sh
 
-  It takes as only argument path to the ssh public key to include into the pack.
+* Linux and Mac
 
-Pulse2 misc documentation
-~~~~~~~~~~~~~~~~~~~~~~~~~
+  A script is available to build it automatically
+  
+  /var/lib/pulse2/clients/generate-agent.sh
 
-For some documentations, scripts, how-to and more, `click here <https://www.dropbox.com/sh/wgn4yckax8083tg/AACb7sfP2jnft8prhSrafumNa>`_.
+All agents will be available for downloads from http://ippulseserver/downloads/
+
+

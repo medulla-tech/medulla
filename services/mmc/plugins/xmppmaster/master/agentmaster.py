@@ -19,7 +19,8 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
-
+#
+# file plugins/xmppmaster/master/agentmaster.py
 
 import sys, os
 import re
@@ -95,7 +96,6 @@ def callInventory(to):
 
 def callrestartbymaster(to):
     ObjectXmpp().callrestartbymaster( to)
-
 
 def callshutdownbymaster(to):
    ObjectXmpp().callshutdownbymaster( to)
@@ -400,9 +400,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             # If a room password is needed, use:
                                             password=passwordchatroom,
                                             wait=True)
-        self.logtopulse('Start agent Master', type="MASTER", who =  self.boundjid.bare)
-        #ty = "MASTER"
-        #self.logtopulse("Start agent Master",type= ty, who =  self.boundjid.bare) 
+        self.logtopulse('Start agent Master', type = "MASTER", who = self.boundjid.bare)
+        # Load all plugins starting with plugin_auto
+        listplugins = [re.sub('plugin_','','.'.join(f.split('.')[:-1])) for f in os.listdir(os.path.join(os.path.dirname(os.path.realpath(__file__)), "pluginsmaster")) if f.startswith("plugin_auto") and f.endswith(".py")]
+        for plugin in listplugins:
+            # Load the plugin and start action
+            try:
+                logging.debug("Calling plugin %s " % plugin )
+                call_plugin(plugin, self)
+            except TypeError:
+                logging.error("TypeError: executing plugin %s %s" % (plugin, sys.exc_info()[0]))
+                traceback.print_exc(file=sys.stdout)
+            except Exception as e:
+                logging.error("Executing plugin %s %s" % (plugin, str(e)))
+                traceback.print_exc(file=sys.stdout)
 
     def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
         msgbody = {
@@ -413,8 +424,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     'who':who
                     }
         self.send_message(mto=jid.JID("log@pulse"),
-                                mbody=json.dumps(msgbody),
-                                mtype='chat')
+                            mbody = json.dumps(msgbody),
+                            mtype = 'chat')
 
     def changed_status(self,msg_changed_status):
         if msg_changed_status['from'].resource == 'MASTER':
@@ -505,6 +516,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                     GUID = None):
 
         try:
+            #search group deploye et jid machine
             objmachine = XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuidmachine)
 
             jidrelay = objmachine['groupdeploy']
@@ -575,7 +587,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         data =  {
                 "name" : name,
                 "login" : login,
-                'methodetransfert' : 'curl',
+                'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),
                 "jidrelay" : jidrelay,
@@ -592,11 +604,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "descriptor" : descript,
                 "transfert" : True
         }
-        sessionid = self.send_session_command(jidmachine,
+        sessionid = self.send_session_command(jidrelay,
                                               "applicationdeploymentjson" ,
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
+
         self.logtopulse("Start deploy on machine %s"%jidmachine,
                         type = 'deploy',
                         sessionname = sessionid,
@@ -659,7 +672,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppgateway : %s"%data['xmppgateway'])
             logger.info("xmppmacaddress : %s"%data['xmppmacaddress'])
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
-            logger.info("package server : %s"%data['pakageserver'])
+            if data['agenttype'] == "relayserver":
+                logger.info("package server : %s"%data['packageserver'])
 
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
@@ -963,9 +977,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         break
                 if subnetexist: break;
             elif x[0] == 5:
-                    logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
-                    result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
-                    break
+                logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
+                result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
+                break
             elif x[0] == 6:
                 result1 = XmppMasterDatabase().algoruleloadbalancer()
                 if len(result1) > 0 :
@@ -1017,6 +1031,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         resp=self.plugin['xep_0045'].setAffiliation(room, jid, affiliation='none', reason=reason)
         return resp
 
+    def info_xmppmachinebyuuid(self, uuid):
+        return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid("UUID%s"%uuid)
+
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
@@ -1028,6 +1045,69 @@ class MUCBot(sleekxmpp.ClientXMPP):
         restartAgent = False
         try:
             data = json.loads(msg['body'])
+            if 'action' in data and data['action'] == 'askinfo' :
+                #renvoi information machine
+                print json.dumps(data, indent=4)
+                if not "data" in data:
+                    return
+                if "fromplugin" in data['data']:
+                    #si item exist, redirection plugin send message action is plugin
+                    data['action'] = data['data']['fromplugin']
+                    logger.debug("action reponse calling plugin %s"%data['action'])
+                else:
+                    logger.warn("Warning item 'fromplugin' is not exist, action reponse calling plugin %s"%data['action'])
+                if not "typeinfo" in data['data']:
+                    logger.error("sorry no 'type info (item typeinfo)' dans message from %s plugin %s"%(msg['from'].bare, data['action']))
+                    logger.error("######\n%s\n#####"%(json.dumps(data, indent=4)))
+
+                #########################ASK INFORMATION table machin of base xmppmaster########################
+                if data['data']['typeinfo'] == "info_xmppmachinebyuuid":
+                    if not 'host' in data['data']:
+                        logger.error("host missing for info_xmppmachinebyuuid")
+                        return True
+                    data['data']['host'] = data['data']['host'].upper()
+                    data['data']['host'] = data['data']['host'].replace('UUID','')
+                    try:
+                        integerid = int(data['data']['host'])
+                    except ValueError:
+                        logger.error("uuid inventory missing for info_xmppmachinebyuuid")
+                        return True
+
+                    ######WORKING info_xmppmachinebyuuid######
+                    func = getattr(self, "info_xmppmachinebyuuid")
+                    result = func(str(integerid))
+                    data['data']['infos'] = result
+
+                    if "sendother" in data['data'] and data['data']['sendother'] != "":
+                        searchjid = data['data']['sendother'].split('@')
+                        sendermachine = data['data']['sendother']
+                        jidmachine = dict(data)
+                        for t in range(len(searchjid)):
+                            try:
+                                jidmachine = jidmachine[searchjid[t]]
+                            except KeyError:
+                                logger.error("jid point item sendother in data false.\n"\
+                                    "Path in the dictionary described by the keys does not exist.\n"\
+                                            " example {....sendother : \"autre@infos\"} jid is databpointer by data['autre']['infos']\n"\
+                                                " data is %s"%(json.dumps(data, indent=4)))
+                                break
+                        print jidmachine
+                        jidmachine = str(jidmachine)
+                        if jidmachine != "":
+                            self.send_message( mto = jidmachine,
+                                               mbody = json.dumps(data),
+                                               mtype = 'chat')
+                            print "envoi %s"%json.dumps(data)
+                    if not "sendemettor" in data['data']:
+                        data['data']['sendemettor'] = True
+                    if data['data']['sendemettor'] == True:
+                        self.send_message(  mto = msg['from'],
+                                            mbody = json.dumps(data),
+                                            mtype = 'chat')
+                #########################ASK INFORMATION other#############################
+                #elsif information type other
+                return True
+
             # Check msg from chatroom master for subscription
             if 'action' in data and data['action'] == 'loginfos':
                 # Process loginfotomaster
@@ -1037,6 +1117,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #------------------------------------------------
             if 'action' in data and data['action'] == 'infomachine' :
                 logger.debug("** Processing machine %s that sends this information (nini inventory)"%msg['from'].bare)
+
                 # verify si machine Enregistrer
                 if XmppMasterDatabase().getPresencejid(msg['from'].bare):
                     logger.debug("Machine %s already exists in base"%msg['from'].bare )
@@ -1089,11 +1170,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_code = str(data['localisationifo']['country_code'])
                     country_name = str(data['localisationifo']['country_name'])
                     city = str(data['localisationifo']['city'])
-
-                #print "llllllllllllllllllllllllllll"
-                #print json.dumps(data, indent=4)
-                #print "llllllllllllllllllllllllllll"
-
                 try:
                     if 'users' in data['information'] and len (data['information']['users']) > 0:
                         logger.debug("** addition user %s in base"%data['information']['users'][0])
@@ -1135,8 +1211,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             latitude,
                                                             True,
                                                             data['classutil'],
-                                                            data['pakageserver']['public_ip'],
-                                                            data['pakageserver']['port']
+                                                            data['packageserver']['public_ip'],
+                                                            data['packageserver']['port']
                                                             )
                 logger.debug("** Add machine in base")
                 # Add machine
@@ -1260,6 +1336,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return False
 
     def message(self, msg):
+        print "*******MESSAGE %s" %msg['from']
+        print msg['body']
+        logger.debug("message")
         if  msg['body'] == "This room is not anonymous":
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:

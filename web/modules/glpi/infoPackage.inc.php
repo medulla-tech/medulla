@@ -166,6 +166,9 @@ $page->addTab($tab);
 $tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
+$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
@@ -194,6 +197,9 @@ $tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);

@@ -4,6 +4,9 @@
 import sys,os,platform
 import os.path
 import json
+import logging
+
+logger = logging.getLogger()
 
 
 class managepackage:
@@ -30,46 +33,60 @@ class managepackage:
             try:
                 jr= json.loads(dd.decode('utf-8', 'ignore'))
                 return jr
-            except:
-                print "Decoding error"
-                pass
+            except Exception as e:
+                logger.error("filename %s error decodage [%s]"%(filename ,str(e)))
         return None
 
     @staticmethod
-    def getdescriptorpackagename(packagename):
-        for t in managepackage.listpackages():
-            print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and ('software' in jr['info'] and 'version'  in jr['info']) \
-                and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
+    def getdescriptorpackageuuid(packageuuid):
+        file = os.path.join(managepackage.packagedir(),packageuuid,"xmppdeploy.json")
+        if os.path.isfile(file):
+            try:
+                jr = managepackage.loadjsonfile(file)
                 return jr
+            except Exception:
+                return None
+
+    @staticmethod
+    def getdescriptorpackagename(packagename):
+        for package in managepackage.listpackages():
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and ('software' in jr['info'] and 'version'  in jr['info']) \
+                    and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
+                    return jr
+            except Exception as e:
+                logger.error("package %s verify format descripttor [%s]"%(package,str(e)))
         return None
 
     @staticmethod
     def getversionpackagename(packagename):
-        for t in managepackage.listpackages():
-            print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and ('software' in jr['info'] and 'version'  in jr['info']) \
-                and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
-                return jr['info']['version']
+        for package in managepackage.listpackages():
+            print os.path.join(package,"xmppdeploy.json")
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and ('software' in jr['info'] and 'version'  in jr['info']) \
+                    and (jr['info']['software'] == packagename or jr['info']['name'] == packagename):
+                    return jr['info']['version']
+            except Exception as e:
+                logger.error("package %s verify format descriptor xmppdeploy.json [%s]"%(package,str(e)))
         return None
 
     @staticmethod
     def getpathpackagename(packagename):
-        for t in managepackage.listpackages():
-            print t
-            print os.path.join(t,"xmppdeploy.json")
-            jr = managepackage.loadjsonfile(os.path.join(t,"xmppdeploy.json"))
-            if 'info' in jr \
-                and (('software' in jr['info'] and jr['info']['software'] == packagename )\
-                or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
-                return t
+        for package in managepackage.listpackages():
+            try:
+                jr = managepackage.loadjsonfile(os.path.join(package,"xmppdeploy.json"))
+                if 'info' in jr \
+                    and (('software' in jr['info'] and jr['info']['software'] == packagename )\
+                    or ( 'name'  in jr['info'] and  jr['info']['name'] == packagename)):
+                    return package
+            except Exception as e:
+                logger.error("package %s missing [%s]"%(package,str(e)))
         return None
-    
-    
+
     @staticmethod
     def getnamepackagefromuuidpackage(uuidpackage):
         pathpackage = os.path.join(managepackage.packagedir(),uuidpackage,"xmppdeploy.json")
@@ -77,3 +94,36 @@ class managepackage:
             jr = managepackage.loadjsonfile(pathpackage)
             return jr['info']['name']
         return None
+
+
+
+class search_list_of_deployment_packages:
+    """
+    recurcivement search toutes les dependences pour ce package
+    """
+    def __init__(self, packageuuid):
+        self.list_of_deployment_packages = set()
+        self.packageuuid = packageuuid
+
+    def search(self):
+        self.__recursif__(self.packageuuid )
+        return self.list_of_deployment_packages
+
+    def __recursif__(self, packageuuid ):
+        self.list_of_deployment_packages.add(packageuuid)
+        objdescriptor = managepackage.getdescriptorpackageuuid(packageuuid)
+        if objdescriptor is not None:
+            ll = self.__list_dependence__(objdescriptor)
+            #print ll
+            for y in ll:
+                if y not in  self.list_of_deployment_packages:
+                    self.__recursif__(y)
+
+    def __list_dependence__(self, objdescriptor):
+        if objdescriptor is not None and \
+            'info' in objdescriptor and \
+                'Dependency' in objdescriptor['info']:
+            return objdescriptor['info']['Dependency']
+        else:
+            return []
+

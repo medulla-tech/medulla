@@ -1,0 +1,97 @@
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+
+#dans git ./pulse/pulse2/services/bin/pulse2-scheduler
+
+from multiprocessing.managers import SyncManager
+import sys
+import os
+import ConfigParser
+from optparse import OptionParser
+import time
+
+TYPEMACHINE = "relayserver" ## or machine
+
+class QueueManager(SyncManager):
+    pass
+
+def conffilename(type):
+    """
+        Function defining where the configuration file is located.
+        configuration file for the type of machine and the Operating System
+    """
+    if type in ["machine"]:
+        conffilenameparamter = "agentconf.ini"
+    else:
+        conffilenameparamter = "relayconf.ini"
+    if sys.platform.startswith('linux'):
+        fileconf = os.path.join("/", "etc", "pulse-xmpp-agent", conffilenameparamter)
+    elif sys.platform.startswith('win'):
+        fileconf = os.path.join(os.environ["ProgramFiles"], "Pulse", "etc", conffilenameparamter)
+    elif sys.platform.startswith('darwin'):
+        fileconf = os.path.join("/", "Library", "Application Support", "Pulse", "etc", conffilenameparamter)
+    else:
+        fileconf = conffilenameparamter
+
+    if os.path.isfile(fileconf):
+        return fileconf
+    else:
+        return conffilenameparamter
+
+def loadconf(type):
+    params = {}
+    Config = ConfigParser.ConfigParser()
+    Config.read(conffilename(type))
+    params['passwordconnection'] = Config.get('connection', 'password')
+    if type in ["relayserver"]:
+        if Config.has_option("connection", "portARSscript"):
+            params['port'] = Config.get('connection', 'portARSscript')
+        else:
+            params['port'] = 5001
+    else:
+        if Config.has_option("connection", "portAMscript"):
+            params['port'] = Config.get('connection', 'portAMscript')
+        else:
+            params['port'] = 5000
+    return params
+
+if __name__ == "__main__":
+    optp = OptionParser()
+    optp.add_option("-p", "--port",
+                    dest="portreverse", default=False,
+                    help="Port used for reverse ssh")
+    optp.add_option("-m", "--machinehost",
+                    dest="hostreserve", default=False,
+                    help="host used for reverse ssh")
+
+    opts, args = optp.parse_args()
+
+    param = loadconf(TYPEMACHINE)
+    if TYPEMACHINE in ["relayserver"]:
+        #functions if ARS
+        print "register for ARS"
+        QueueManager.register('json_to_ARS')
+        QueueManager.register('json_from_ARS')
+        QueueManager.register('size_nb_msg_ARS')
+    else:
+        #functions if AM
+        print "register for AM"
+        QueueManager.register('json_to_AM')
+        QueueManager.register('json_from_AM')
+        QueueManager.register('size_nb_msg_AM')
+
+    managerQueue = QueueManager(("", param['port']), authkey=param['passwordconnection'])
+    managerQueue.connect()
+
+    commandaction = """{ "action" : "reverse_ssh_on",
+        "data" : {
+                "request" : "askinfo",
+                "port" : %d,
+                "host" : "%s",
+                "options" : "stopreversessh"
+        }
+    }"""%(int(opts.portreverse), opts.hostreserve)
+    managerQueue.json_to_ARS(commandaction)
+    print managerQueue.json_from_ARS(5)
+    time.sleep(5)
+    sys.exit(0)

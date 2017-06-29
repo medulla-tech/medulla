@@ -29,7 +29,7 @@ BackupPC database handler
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
-
+from random import randint
 
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
@@ -185,6 +185,15 @@ class BackuppcDatabase(DatabaseHelper):
             return host.backup_profile
 
     @DatabaseHelper._session
+    def get_host_backup_reverce_port(self, session, uuid):
+        host = session.query(Hosts).filter_by(uuid = uuid).one()
+        if not host:
+            logger.warning("Can't find configured host with uuid = %s" % uuid)
+            return -1
+        else:
+            return host.reverse_port
+
+    @DatabaseHelper._session
     def set_host_backup_profile(self, session, uuid, newprofile):
         host = session.query(Hosts).filter_by(uuid = uuid).one()
         if host:
@@ -231,11 +240,12 @@ class BackuppcDatabase(DatabaseHelper):
     # =====================================================================
 
     @DatabaseHelper._session
-    def add_host(self, session, uuid):
+    def add_host(self, session, uuid, port = None):
         host = Hosts(uuid = uuid)
         # Setting host fields
         host.backup_profile = 0
         host.period_profile = 0
+        host.reverse_port = port
         session.add(host)
         session.flush()
         return host.toDict()

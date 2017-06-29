@@ -1890,6 +1890,23 @@ class Glpi91(DyngroupDatabaseHelper):
                     ret.append(l)
         return ret
 
+    def getLastMachineRegistryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
+        #Mutable dict options used as default argument to a method or function
+        query = session.query(RegContents).filter(self.regcontents.c.computers_id == int(str(uuid).replace("UUID", ""))).all()
+
+        ret = []
+        if count:
+            ret = len(query)
+        else:
+            for row in query:
+                if row.key is not None:
+                    l = [
+                        ['Registry key', row.key],
+                        ['Value', row.value],
+                    ]
+                    ret.append(l)
+        return ret
+
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
         hide_win_updates = False
@@ -4251,10 +4268,11 @@ class Glpi91(DyngroupDatabaseHelper):
         path = full_key.replace(hive+'\\','').replace('\\'+key,'')
         path = '/'+path+'/'
         # Get registry_id
-        registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
-        if registry_id:
-            return registry_id
-        else:
+        try:
+            registry_id = session.query(Registries).filter_by(hive=hive,path=path,key=key).first().id
+            if registry_id:
+                return registry_id
+        except:
             return False
 
     @DatabaseHelper._session
@@ -4278,7 +4296,10 @@ class Glpi91(DyngroupDatabaseHelper):
         registry = Registries()
         registry.name = key
         # Get collects_id
-        collects_id = session.query(Collects).filter_by(id='PulseRegistryCollects').first().id
+        try:
+            collects_id = session.query(Collects).filter_by(name='PulseRegistryCollects').first().id
+        except:
+            return False
         registry.plugin_fusioninventory_collects_id = collects_id
         registry.hive = hive
         registry.path = path
