@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys,os,platform
+import sys, os
 import os.path
 import json
 import logging
@@ -36,16 +36,6 @@ class managepackage:
             except Exception as e:
                 logger.error("filename %s error decodage [%s]"%(filename ,str(e)))
         return None
-
-    @staticmethod
-    def getdescriptorpackageuuid(packageuuid):
-        file = os.path.join(managepackage.packagedir(),packageuuid,"xmppdeploy.json")
-        if os.path.isfile(file):
-            try:
-                jr = managepackage.loadjsonfile(file)
-                return jr
-            except Exception:
-                return None
 
     @staticmethod
     def getdescriptorpackagename(packagename):
@@ -95,11 +85,24 @@ class managepackage:
             return jr['info']['name']
         return None
 
+    @staticmethod
+    def getdescriptorpackageuuid(packageuuid):
+        file = os.path.join(managepackage.packagedir(),packageuuid,"xmppdeploy.json")
+        if os.path.isfile(file):
+            try:
+                jr = managepackage.loadjsonfile(file)
+                return jr
+            except Exception:
+                return None
+
+    @staticmethod
+    def getpathpackage(uuidpackage):
+        return os.path.join(managepackage.packagedir(), uuidpackage)
 
 
 class search_list_of_deployment_packages:
     """
-    recurcivement search toutes les dependences pour ce package
+        Recursively search for all dependencies for this package
     """
     def __init__(self, packageuuid):
         self.list_of_deployment_packages = set()
@@ -126,4 +129,5 @@ class search_list_of_deployment_packages:
             return objdescriptor['info']['Dependency']
         else:
             return []
+
 
