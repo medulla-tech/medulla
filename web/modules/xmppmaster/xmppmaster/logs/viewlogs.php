@@ -21,25 +21,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
  
+require("modules/base/computers/localSidebar.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+
 extract($_GET);
 
-if (isset ($objectUUID)){
-        $uuid = $objectUUID;
-}
-if (isset ($gr_cmd_id)){
-        $cmd_id = $gr_cmd_id;
-        $mach = 1;
-}
-if(isset($cn)){
-        $hostname = $cn;
-}
-if  (!$gid || $mach){
-    require_once ("modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php");
-}
-else{
-    require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+if ( isset ($_POST['bStop'])) {
+    $_MYREQUEST = array_merge($_GET, $_POST);
+    //xmlrpc_stopdeployfromcommandid($cmd_id, $uuid);
+    
+
+    if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){
+        $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid']);
+    }
+    else{
+        $info = xmlrpc_get_machine_stop_deploy( $_MYREQUEST['cmd_id'], $_MYREQUEST['uuid']);
+    }
 }
 
+    if (isset ($objectUUID)){
+        $uuid = $objectUUID;
+    }
+    if (isset ($gr_cmd_id)){
+        $cmd_id = $gr_cmd_id;
+        $mach = 1;
+    }
+    if(isset($cn)){
+        $hostname = $cn;
+    }
+    if  (!$gid || $mach){
+        require_once ("modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php");
+    }
+    else{
+        require_once ("modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php");
+    }
+
+?>

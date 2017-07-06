@@ -31,6 +31,10 @@ $p->display();
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 if ($info['len'] != 0){
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+        $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
+        $f->display();
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
         $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];

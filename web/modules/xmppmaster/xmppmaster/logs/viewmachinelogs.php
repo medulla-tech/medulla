@@ -39,14 +39,12 @@ $p->display();
     // Retrieve information deploy. For cmn_id
     $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
     $boolterminate = false;
-    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
-  
     if(isset($info['objectdeploy'][0]['sessionid'])){
         $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
         $uuid = $info['objectdeploy'][0]['inventoryuuid'];
         foreach($infodeploy['log'] as $line){
-            if ($line['text'] == "DEPLOYMENT TERMINATE"){
+            if ($line['text'] == "DEPLOYMENT TERMINATE" || strpos($line['text'], "DEPLOYMENT ABORT") !== false){
                 $boolterminate = true;
             }
         }
@@ -103,7 +101,7 @@ $p->display();
         echo "</tbody>";
         echo "</table>";
     }
-    if ( $info['len'] == 0 || $boolterminate==false){
+    if ( $info['len'] == 0 || $boolterminate == false){
 
         echo'
             <script type="text/javascript">
@@ -119,6 +117,12 @@ $p->display();
     }
     if ( $info['len'] != 0)
     {
+        if ( !$boolterminate){
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+            $f->addButton("bStop","Stop Deploy");
+            $f->display();
+        }
         $state = $info['objectdeploy'][0]['state'];
         $start = get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
         $host = $info['objectdeploy'][0]['host'];
