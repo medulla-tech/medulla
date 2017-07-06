@@ -429,6 +429,65 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['log']= arraylist
         return ret
 
+    #jfkjf
+    @DatabaseHelper._sessionm
+    def get_machine_stop_deploy(self, session, cmdid , inventoryuuid):
+        """
+            this function return the machines list for  1 command_id and 1 uuid
+        """
+        query = session.query(Deploy).filter(and_( Deploy.inventoryuuid == inventoryuuid, Deploy.command == cmdid))
+        query = query.one()
+        session.commit()
+        session.flush()
+        obj={}
+        obj['len'] = 0
+        try :
+            obj['len'] = 1
+            obj['pathpackage'] = query.pathpackage
+            obj['jid_relay'] = query.jid_relay
+            obj['inventoryuuid'] = query.inventoryuuid
+            obj['jidmachine'] = query.jidmachine
+            obj['state']= query.state
+            obj['sessionid'] = query.sessionid
+            obj['start'] = query.start
+            obj['host'] = query.host
+            obj['user'] = query.user
+            obj['login'] = str(query.login)
+            obj['command'] = query.command
+        except Exception as e:
+            logging.getLogger().error(str(e))
+        return obj
+
+    #jfkjfk
+    @DatabaseHelper._sessionm
+    def get_group_stop_deploy(self, session, grpid):
+        """
+            this function return the machines list for 1 group id 
+        """
+        relayserver = session.query(Deploy).filter(Deploy.group_uuid == grpid)
+        relayserver = relayserver.all()
+        session.commit()
+        session.flush()
+        ret={}
+        ret['len']= len(relayserver)
+        arraylist = []
+        for t in relayserver:
+            obj={}
+            obj['pathpackage'] = t.pathpackage
+            obj['jid_relay'] = t.jid_relay
+            obj['inventoryuuid'] = t.inventoryuuid
+            obj['jidmachine'] = t.jidmachine
+            obj['state'] = t.state
+            obj['sessionid']=t.sessionid
+            obj['start'] = t.start
+            obj['host'] = t.host
+            obj['user'] = t.user
+            obj['login'] = str(t.login)
+            obj['command'] = t.command
+            arraylist.append(obj)
+        ret['objectdeploy'] = arraylist
+        return ret
+
     @DatabaseHelper._sessionm
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):

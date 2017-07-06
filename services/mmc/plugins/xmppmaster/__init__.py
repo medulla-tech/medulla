@@ -121,6 +121,34 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+
+def get_machine_stop_deploy(cmdid, uuid) :
+    result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
+    msg_stop_deploy= {
+        "action" : "enddeploy",
+        "sessionid" : result['sessionid'],
+        'data' : {"typerequest" : "bansessionid"},
+        "ret" : 0,
+        'base64' : False 
+        }
+    send_message_json(result['jid_relay'], msg_stop_deploy ) 
+    send_message_json(result['jidmachine'], msg_stop_deploy )
+    return True
+
+def get_group_stop_deploy(grpid) :
+    result = XmppMasterDatabase().get_group_stop_deploy( grpid )
+    msg_stop_deploy= {
+        "action" : "enddeploy",
+        "sessionid" : "",
+        'data' : {"typerequest" : "bansessionid"},
+        "ret" : 0,
+        'base64' : False}
+    for machine in result['objectdeploy']:
+        msg_stop_deploy['sessionid'] = machine['sessionid']
+        send_message_json(machine['jid_relay'], msg_stop_deploy ) 
+        send_message_json(machine['jidmachine'], msg_stop_deploy )
+    return True
+
 def getlinelogswolcmd(idcommand, uuid):
     return XmppMasterDatabase().getlinelogswolcmd(idcommand, uuid)
 
