@@ -82,6 +82,12 @@ def ObjectXmpp():
 def getXmppConfiguration():
     return str(xmppMasterConfig())
 
+def send_message_json(to, jsonstring ):
+    xmppob = ObjectXmpp()
+    xmppob.send_message( mto = to,
+                                mbody = json.dumps(jsonstring),
+                                mtype = 'chat')
+
 def callXmppFunction(functionname, *args, **kwargs ):
     logging.getLogger().debug("**call function %s %s %s"%(functionname, args, kwargs))
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
