@@ -57,11 +57,11 @@ $p->display();
     unset($resultinfo->infoslist);
     $descriptorslist = $resultinfo->descriptorslist;
     unset($resultinfo->descriptorslist);
-    $infosautre = $resultinfo->infosautre;
-    $ipmaster = $infosautre[0]->ipmaster;
-    $iprelay =  $infosautre[0]->iprelay;
-    $ipmachine = $infosautre[0]->ipmachine;
-    unset($resultinfo->infosautre);
+    $otherinfos = $resultinfo->otherinfos;
+    $ipmaster = $otherinfos[0]->ipmaster;
+    $iprelay =  $otherinfos[0]->iprelay;
+    $ipmachine = $otherinfos[0]->ipmachine;
+    unset($resultinfo->otherinfos);
     if ( isset($resultinfo->title)){
         echo "User : $resultinfo->user "."PACKAGE ". $resultinfo->title."<br>";
     }
@@ -282,7 +282,7 @@ $p->display();
         echo "</div>";
     }
     if ( $info['len'] != 0){
-        $res = str_replace ( "{'", "'" ,$infosautre[$index]->environ);
+        $res = str_replace ( "{'", "'" ,$otherinfos[$index]->environ);
         $res = str_replace ( "'}", "'" ,$res);
         $res = str_replace ( "  ", " " ,$res);
         $res = str_replace ( "  ", " " ,$res);
