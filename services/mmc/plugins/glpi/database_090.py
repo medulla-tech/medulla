@@ -1883,12 +1883,9 @@ class Glpi090(DyngroupDatabaseHelper):
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
                     ]
-                    try:
-                        if antivirus.version:
-                            l.insert(1, ['Version', antivirus.version])
-                        ret.append(l)
-                    except Exception, e:
-                        self.logger.warn(e)
+                    if antivirus.version:
+                        l.insert(1, ['Version', antivirus.version])
+                    ret.append(l)
         return ret
 
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
@@ -3884,7 +3881,7 @@ class Glpi090(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-
+ 
     @DatabaseHelper._session
     def editEntity(self, session, id, entity_name, parent_id, comment):
         entity = session.query(Entities).filter_by(id=id).one()
@@ -3940,7 +3937,7 @@ class Glpi090(DyngroupDatabaseHelper):
         session.commit()
         session.flush()
         return True
-
+    
     @DatabaseHelper._session
     def editLocation(self, session, id, name, parent_id, comment):
         location = session.query(Locations).filter_by(id=id).one()
@@ -3950,7 +3947,7 @@ class Glpi090(DyngroupDatabaseHelper):
         location.level = parent_id
 
         location = self.updateLocationCompleteName(location)
-
+        
         session.commit()
         session.flush()
         return True
@@ -3961,13 +3958,13 @@ class Glpi090(DyngroupDatabaseHelper):
         parent_location = session.query(Locations).filter_by(id=location.locations_id).one()
         completename = parent_location.completename + ' > ' + location.name
         location.completename = completename
-
+        
         # Update all children complete names
         children = session.query(Locations).filter_by(locations_id=location.id).all()
-
+        
         for item in children:
             self.updateLocationCompleteName(item)
-
+        
         return location
 
     @DatabaseHelper._listinfo

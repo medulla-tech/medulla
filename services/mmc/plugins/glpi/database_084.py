@@ -1868,12 +1868,9 @@ class Glpi084(DyngroupDatabaseHelper):
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
                     ]
-                    try:
-                        if antivirus.version:
-                            l.insert(1, ['Version', antivirus.version])
-                        ret.append(l)
-                    except Exception, e:
-                        self.logger.warn(e)
+                    if antivirus.version:
+                        l.insert(1, ['Version', antivirus.version])
+                    ret.append(l)
         return ret
 
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
@@ -3490,7 +3487,7 @@ class Glpi084(DyngroupDatabaseHelper):
         Get a machine mac addresses
         """
         return self.getMachinesMac(uuid)[uuid]
-
+    
     def orderIpAdresses(self, uuid, hostname, netiface, empty_macs=False):
         ret_ifmac = []
         ret_ifaddr = []
