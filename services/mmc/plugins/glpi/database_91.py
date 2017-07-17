@@ -1885,9 +1885,12 @@ class Glpi91(DyngroupDatabaseHelper):
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.is_uptodate == 1 and 'Yes' or 'No'],
                     ]
-                    if antivirus.version:
-                        l.insert(1, ['Version', antivirus.version])
-                    ret.append(l)
+                    try:
+                        if antivirus.version:
+                            l.insert(1, ['Version', antivirus.version])
+                        ret.append(l)
+                    except Exception, e:
+                        self.logger.warn(e)
         return ret
 
     def getLastMachineRegistryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):

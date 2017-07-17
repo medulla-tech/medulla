@@ -1783,9 +1783,12 @@ class Glpi08(DyngroupDatabaseHelper):
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.uptodate == 1 and 'Yes' or 'No'],
                     ]
-                    if antivirus.version:
-                        l.insert(1, ['Version', antivirus.version])
-                    ret.append(l)
+                    try:
+                        if antivirus.version:
+                            l.insert(1, ['Version', antivirus.version])
+                        ret.append(l)
+                    except Exception, e:
+                        self.logger.warn(e)
         return ret
 
     def getLastMachineSoftwaresPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = None, count = False):
