@@ -37,7 +37,7 @@ from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
-                                                      callshutdownbymaster
+                                                      callshutdownbymaster, send_message_json
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
