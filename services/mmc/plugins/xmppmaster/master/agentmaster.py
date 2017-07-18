@@ -434,8 +434,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             mtype = 'chat')
 
     def changed_status(self,msg_changed_status):
-        if msg_changed_status['from'].resource == 'MASTER':
-            return
+        try:
+            if msg_changed_status['from'].resource == 'MASTER':
+                return
+        except Exception:
+            pass
         logger.debug( "%s %s"%(msg_changed_status['from'], msg_changed_status['type']))
         if msg_changed_status['type'] == 'unavailable':
             try:
