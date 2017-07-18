@@ -9,5 +9,5 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     try:
         logging.getLogger().debug("EVENT %s on Machine %s"%( data['event'], data['machine']))
     except Exception as e:
-        logging.getLogger().error("Pulgin %s %version\nerreur %s"%(plugin,str(e)))
+        logging.getLogger().error("Plugin %s %version\nerror %s"%(plugin,str(e)))
 
