@@ -1873,8 +1873,8 @@ class Glpi91(DyngroupDatabaseHelper):
                         ['Enabled', antivirus.is_active == 1 and 'Yes' or 'No'],
                         ['Up-to-date', antivirus.is_uptodate == 1 and 'Yes' or 'No'],
                     ]
-                    if antivirus.version:
-                        l.insert(1, ['Version', antivirus.version])
+                    if antivirus.antivirus.version:
+                        l.insert(1, ['Version', antivirus.antivirus.version])
                     ret.append(l)
         return ret
 
