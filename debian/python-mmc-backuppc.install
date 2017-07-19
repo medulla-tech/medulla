@@ -1,5 +1,5 @@
 usr/lib/python2.?/*-packages/mmc/plugins/backuppc
 etc/mmc/plugins/backuppc.ini
 usr/sbin/pulse2-backup-servers
-usr/sbin/pulse2-und-connect-machine-backuppc
+usr/sbin/pulse2-disconnect-machine-backuppc
 usr/sbin/pulse2-connect-machine-backuppc
