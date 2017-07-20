@@ -22,24 +22,23 @@
 */
 
 ?>
-
+<style type="text/css">
+.popup{
+    width : 500px
+}
+</style>
 <?
-    if ($_GET['type'] !== 0) $grouptype = "(Imaging)";else $grouptype = "";
+    if ($_GET['type'] !== 0) $grouptype = "";else $grouptype = "(Imaging)";
      $id  = $_GET['id'];
      $gid = $_GET['gid'];
-     echo json_encode($_GET);
+     //echo json_encode($_GET);
 ?>
-
-    <HTML>
-        <head>
-            <title>Siveo Pulse</title>
-            <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-        </head>
-        <BODY style='background-color: #FFFFFF;'>
+        <div style="width : 600px;">
         <? 
         echo "<h1>Quick Actions group</h1>";
         echo "<h2>groupName ".$grouptype." : ".$_GET['groupname']."</h2>";
         ?>
+
             <table style="width : 500px;">
                 <tr> 
                 <?
@@ -58,7 +57,7 @@
                  ?>
                 </tr>
             </table>
-
+        </div>
 <script type="text/javascript">
 
 
@@ -193,8 +192,3 @@
             })
     })
 </script>
-
-
-</BODY>
-</HTML>
-

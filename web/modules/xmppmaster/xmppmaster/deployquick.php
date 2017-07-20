@@ -22,48 +22,47 @@
 */
 
 ?>
+<style type="text/css">
+    .popup{
+        width : 500px
+    }
+</style>
 
-    <HTML>
-        <head>
-            <title>Siveo Pulse</title>
-            <link href='/mmc/graph/master.css' rel='stylesheet' media='screen' type='text/css' />
-        </head>
-        <BODY style='background-color: #FFFFFF;'>
+    <div style="width : 600px;">
         <? 
         echo "<h1>Quick Actions</h1>";
         echo "<h2>Machinec :".$_GET['cn']."</h2>";
         echo "<h2>Os : ".$_GET['os']."</h2>";
         echo "<h2>Entity : ".$_GET['entity']."</h2>";
-        //objectUUID
         ?>
-            <table style="width : 500px;">
-                <tr> 
-                <?
-                    if ($_GET['presencemachinexmpp']){
-                        echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
-                        echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
-                        echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
-                    }
-                    else{
-                        echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
-                    }
-                 ?>
-                </tr>
-                 <tr>
-                 <?
-                 if ($_GET['presencemachinexmpp']){
-                    echo '<td id="shutdown" align="center">Shutdown</td>';
-                    echo '<td id="reboot" align="center">Reboot</td>';
-                    echo '<td id="inventory" align="center">Run inventory</td>';
-                 }
-                 else{
-                    echo '<td id="wol" align="center">Wake on LAN</td>';
+        <table style="width : 500px;">
+            <tr> 
+            <?
+                if ($_GET['presencemachinexmpp']){
+                    echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
+                    echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
+                    echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
                 }
-                 ?>
+                else{
+                    echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
+                }
+                ?>
+            </tr>
+                <tr>
+                <?
+                if ($_GET['presencemachinexmpp']){
+                echo '<td id="shutdown" align="center">Shutdown</td>';
+                echo '<td id="reboot" align="center">Reboot</td>';
+                echo '<td id="inventory" align="center">Run inventory</td>';
+                }
+                else{
+                echo '<td id="wol" align="center">Wake on LAN</td>';
+            }
+                ?>
 
-                </tr>
-            </table>
-
+            </tr>
+        </table>
+    </div>
 <script type="text/javascript">
    var uuid = <? echo json_encode($_GET); ?>
 
@@ -124,13 +123,3 @@
     })
 
 </script>
-
-
-</BODY>
-  </HTML>
-
-<?
- echo "<pre>";
-// jQuery.get( "actionwakeonlan.php", uuid );
- echo "</pre>";
-?>
