@@ -62,18 +62,25 @@ $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 
-
+// --------------QUICK ACTION--------------------
 
 $page = new Page("deployquick", _T("action deploy quick", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/deployquick.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
+//jfkjfk
+$page = new Page("deployquickgroup", _T("action deploy quick group", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+
 $page = new Page("actionwakeonlan");
 $page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-    
+
 $page = new Page("actioninventory");
 $page->setFile("modules/xmppmaster/xmppmaster/actioninventory.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
@@ -85,16 +92,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/actionrestart.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-
 $page = new Page("actionshutdown");
 $page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
-
-
-
-
-
+// --------------END QUICK ACTION--------------------
 
 // ajax procedure read and send result from log
 $page = new Page("viewlogs");
