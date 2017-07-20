@@ -88,13 +88,14 @@
         machine_already_present = data[3];
         machine_not_present = data[4];
 
+        
         if (machine_already_present.length == 0){
             alert("All machines are off\nInventory only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_not_present[i] + ", ";
+                    text = text +  machine_already_present[i] + ", ";
                 }
             alert("Inventory on the following machines in progress\n"+text)
         }
@@ -112,29 +113,30 @@
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_not_present[i] + ", ";
+                    text = text +  machine_already_present[i] + ", ";
                 }
             alert("Reboot on the following machines in progress\n"+text)
         }
     }
 
-    function shutdown(){
+    function shutdownfunction(data){
         uuid = data[0];
         cn = data[1];
         presence = data[2];
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("No machines are running\nShutdown only on running machine")
+            alert("All machines are off\nshutdown only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_not_present[i] + ", ";
+                    text = text +  machine_already_present[i] + ", ";
                 }
-            alert("on the following machines in progress\n"+text)
+            alert("shutdown sur les machines suivante en cours\n"+text)
         }
     }
+
 
     jQuery('#wol').unbind().on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
@@ -181,14 +183,14 @@
     jQuery('#shutdown').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
             .done(function( data ) {
-                shutdown(data)
+                shutdownfunction(data)
             })
     })
 
     jQuery('#shutdown0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
             .done(function( data ) {
-                shutdown(data)
+                shutdownfunction(data)
             })
     })
 </script>
