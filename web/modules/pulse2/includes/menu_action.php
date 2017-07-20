@@ -142,10 +142,8 @@ function modIsActive($action) {
             return True;
         }
     }
-
     return False;
 }
-
 echo "<ul class='action'>";
 foreach ($actions as $action){
         if (is_array($paramArray)) {
@@ -195,8 +193,6 @@ foreach ($actions as $action){
                     break;
             }
         }
-
-        //deployquick
         echo "</li>";
 }
 echo "</ul>";
