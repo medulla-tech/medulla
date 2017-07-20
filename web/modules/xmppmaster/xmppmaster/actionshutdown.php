@@ -61,7 +61,7 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callshutdown($key)
+                xmlrpc_callshutdown($key);
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }

@@ -51,13 +51,13 @@
                 <tr>
                 <?
                 if ($_GET['presencemachinexmpp']){
-                echo '<td id="shutdown" align="center">Shutdown</td>';
-                echo '<td id="reboot" align="center">Reboot</td>';
-                echo '<td id="inventory" align="center">Run inventory</td>';
+                    echo '<td id="shutdown" align="center">Shutdown</td>';
+                    echo '<td id="reboot" align="center">Reboot</td>';
+                    echo '<td id="inventory" align="center">Run inventory</td>';
                 }
                 else{
-                echo '<td id="wol" align="center">Wake on LAN</td>';
-            }
+                    echo '<td id="wol" align="center">Wake on LAN</td>';
+                }
                 ?>
 
             </tr>
@@ -69,56 +69,56 @@
     jQuery('#wol').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
-                alert( "wakeonlan to machine : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#inventory').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
             .done(function( data ) {
-                alert( "inventory : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#reboot').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
             .done(function( data ) {
-                alert( "reboot : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#shutdown').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
-                alert( "shutdown : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#wol0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
-                alert( "wakeonlan to machine : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#inventory0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
             .done(function( data ) {
-                alert( "inventory : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
     jQuery('#reboot0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
             .done(function( data ) {
-                alert( "reboot : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]")
             })
     })
 
     jQuery('#shutdown0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
-                alert( "shutdown : " + uuid['cn'] + " in " + uuid['entity'] )
+                alert( "shutdown : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
             })
     })
 
