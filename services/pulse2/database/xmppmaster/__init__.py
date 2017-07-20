@@ -458,7 +458,6 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
         return obj
 
-    #jfkjfk
     @DatabaseHelper._sessionm
     def get_group_stop_deploy(self, session, grpid):
         """
