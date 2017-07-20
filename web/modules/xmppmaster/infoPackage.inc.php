@@ -69,7 +69,6 @@ $page->setFile("modules/xmppmaster/xmppmaster/deployquick.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
-//jfkjfk
 $page = new Page("deployquickgroup", _T("action deploy quick group", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
