@@ -32,9 +32,9 @@ UPDATE version SET Number = 5;
 ALTER TABLE `xmppmaster`.`logs` 
 ADD COLUMN `how` VARCHAR(255) NULL DEFAULT '""' AFTER `who`,
 ADD COLUMN `why` VARCHAR(255) NULL DEFAULT '""' AFTER `how`,
-ADD COLUMN `module` VARCHAR(45) NULL DEFAULT 'xmpp' AFTER `why`,
-ADD COLUMN `from` VARCHAR(45) NULL DEFAULT '""' AFTER `module`,
-ADD COLUMN `to` VARCHAR(45) NULL DEFAULT '""' AFTER `from`,
+ADD COLUMN `module` VARCHAR(45) NULL DEFAULT '""' AFTER `why`,
+ADD COLUMN `fromuser` VARCHAR(45) NULL DEFAULT '""' AFTER `module`,
+ADD COLUMN `touser` VARCHAR(45) NULL DEFAULT '""' AFTER `from`,
 ADD COLUMN `action` VARCHAR(45) NULL DEFAULT '""' AFTER `to`;
 
 - -----------------------------------------------------
@@ -42,9 +42,12 @@ ADD COLUMN `action` VARCHAR(45) NULL DEFAULT '""' AFTER `to`;
 -- -----------------------------------------------------
 ALTER TABLE `xmppmaster`.`logs` 
 CHANGE COLUMN `date` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`,
-CHANGE COLUMN `from` `from` VARCHAR(45) NULL DEFAULT NULL AFTER `date`,
-CHANGE COLUMN `to` `to` VARCHAR(45) NULL DEFAULT NULL AFTER `from`,
+CHANGE COLUMN `fromuser` `from` VARCHAR(45) NULL DEFAULT NULL AFTER `date`,
+CHANGE COLUMN `touser` `to` VARCHAR(45) NULL DEFAULT NULL AFTER `from`,
 CHANGE COLUMN `action` `action` VARCHAR(45) NULL DEFAULT NULL AFTER `to`,
-CHANGE COLUMN `module` `module` VARCHAR(45) NULL DEFAULT 'xmpp' AFTER `type`,
+CHANGE COLUMN `module` `module` VARCHAR(45) NULL DEFAULT '' AFTER `type`,
 CHANGE COLUMN `how` `how` VARCHAR(255) NULL DEFAULT '""' AFTER `sessionname`,
 CHANGE COLUMN `priority` `priority` INT(11) NULL DEFAULT '0' AFTER `why`;
+
+
+
