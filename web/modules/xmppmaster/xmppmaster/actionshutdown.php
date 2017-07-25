@@ -61,13 +61,11 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callshutdown($key);
+                xmlrpc_callshutdown($key,  $_GET['time'], $_GET['msg']);
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
         echo json_encode($result);
     break;
 }
-
-
 ?>

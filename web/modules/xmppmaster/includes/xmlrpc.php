@@ -144,8 +144,8 @@ function xmlrpc_callrestart($uuid){
     return xmlCall("xmppmaster.callrestart", array($uuid));
 }
 
-function xmlrpc_callshutdown($uuid){
-    return xmlCall("xmppmaster.callshutdown", array($uuid));
+function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
+    return xmlCall("xmppmaster.callshutdown", array($uuid, $time, $msg));
 }
 
 function xmlrpc_getstepdeployinsession($session){
