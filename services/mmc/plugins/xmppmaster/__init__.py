@@ -210,10 +210,10 @@ def callrestart(uuid):
         logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing"%uuid )
         return False
 
-def callshutdown(uuid):
+def callshutdown(uuid, time, msg):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callshutdownbymaster(jid)
+        return callshutdownbymaster(jid, time, msg)
     else:
         logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
         return False

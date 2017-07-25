@@ -103,8 +103,8 @@ def callInventory(to):
 def callrestartbymaster(to):
     return ObjectXmpp().callrestartbymaster( to)
 
-def callshutdownbymaster(to):
-   return ObjectXmpp().callshutdownbymaster( to)
+def callshutdownbymaster(to, time, msg):
+   return ObjectXmpp().callshutdownbymaster( to, time, msg)
 
 class XmppCommandDiffered:
     """
@@ -796,13 +796,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mtype='chat')
         return True
 
-
-    def callshutdownbymaster(self, to):
+    def callshutdownbymaster(self, to, time = 0, msg = ""):
         shutdownmachine = {
             'action' : "shutdownfrommaster",
             'sessionid' : name_random(5, "shutdown"),
-            'data' : [],
-            'ret': 255
+            'data' : {'time' : time, 'msg' : msg},
+            'ret': 0
             }
         self.send_message(mto=to,
                         mbody=json.dumps(shutdownmachine),
