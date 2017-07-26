@@ -34,9 +34,26 @@ class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
 
+#class Logs(Base, XmppMasterDBObj):
+    ## ====== Table name =========================
+    #__tablename__ = 'logs'
+    ## ====== Fields =============================
+    ## Here we define columns for the table machines.
+    ## Notice that each column is also a normal Python instance attribute.
+    ##id = Column(Integer, primary_key=True)
+    ## Warning, if you modify the wrapper, you also have to change it in log.py
+    #type = Column(String(6), nullable=False,default = "noset")
+    #date = Column(DateTime, default=datetime.datetime.utcnow)
+    #text = Column(String(255), nullable=False)
+    #sessionname = Column(String(20), nullable=False, default = "")
+    #priority = Column(Integer, default = 0)
+    #who = Column(String(20), nullable=False, default = "")
+
+
 class Logs(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'logs'
+    # ====== Fields =============================
     # ====== Fields =============================
     # Here we define columns for the table machines.
     # Notice that each column is also a normal Python instance attribute.
@@ -47,7 +64,14 @@ class Logs(Base, XmppMasterDBObj):
     text = Column(String(255), nullable=False)
     sessionname = Column(String(20), nullable=False, default = "")
     priority = Column(Integer, default = 0)
-    who = Column(String(20), nullable=False, default = "")
+    who = Column(String(45), nullable=False, default = "")
+    how = Column(String(255), nullable=False, default = "")
+    why = Column(String(255), nullable=False, default = "")
+    module = Column(String(45), nullable=False, default = "")
+    action = Column(String(45), nullable=False, default = "")
+    touser = Column(String(45), nullable=False, default = "")
+    fromuser = Column(String(45), nullable=False, default = "")
+    
 
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
