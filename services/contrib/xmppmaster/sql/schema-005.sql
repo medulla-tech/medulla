@@ -34,17 +34,17 @@ ADD COLUMN `how` VARCHAR(255) NULL DEFAULT '""' AFTER `who`,
 ADD COLUMN `why` VARCHAR(255) NULL DEFAULT '""' AFTER `how`,
 ADD COLUMN `module` VARCHAR(45) NULL DEFAULT '""' AFTER `why`,
 ADD COLUMN `fromuser` VARCHAR(45) NULL DEFAULT '""' AFTER `module`,
-ADD COLUMN `touser` VARCHAR(45) NULL DEFAULT '""' AFTER `from`,
-ADD COLUMN `action` VARCHAR(45) NULL DEFAULT '""' AFTER `to`;
+ADD COLUMN `touser` VARCHAR(45) NULL DEFAULT '""' AFTER `fromuser`,
+ADD COLUMN `action` VARCHAR(45) NULL DEFAULT '""' AFTER `touser`;
 
 - -----------------------------------------------------
 -- Table `logs modify position champ`
 -- -----------------------------------------------------
 ALTER TABLE `xmppmaster`.`logs` 
 CHANGE COLUMN `date` `date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`,
-CHANGE COLUMN `fromuser` `from` VARCHAR(45) NULL DEFAULT NULL AFTER `date`,
-CHANGE COLUMN `touser` `to` VARCHAR(45) NULL DEFAULT NULL AFTER `from`,
-CHANGE COLUMN `action` `action` VARCHAR(45) NULL DEFAULT NULL AFTER `to`,
+CHANGE COLUMN `fromuser` `fromuser` VARCHAR(45) NULL DEFAULT NULL AFTER `date`,
+CHANGE COLUMN `touser` `touser` VARCHAR(45) NULL DEFAULT NULL AFTER `fromuser`,
+CHANGE COLUMN `action` `action` VARCHAR(45) NULL DEFAULT NULL AFTER `touser`,
 CHANGE COLUMN `module` `module` VARCHAR(45) NULL DEFAULT '' AFTER `type`,
 CHANGE COLUMN `how` `how` VARCHAR(255) NULL DEFAULT '""' AFTER `sessionname`,
 CHANGE COLUMN `priority` `priority` INT(11) NULL DEFAULT '0' AFTER `why`;

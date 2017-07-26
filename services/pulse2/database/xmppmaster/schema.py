@@ -71,7 +71,7 @@ class Logs(Base, XmppMasterDBObj):
     action = Column(String(45), nullable=False, default = "")
     touser = Column(String(45), nullable=False, default = "")
     fromuser = Column(String(45), nullable=False, default = "")
-    
+
 
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
