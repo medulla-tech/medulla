@@ -118,9 +118,9 @@ input[type="text"] {
                         echo '<td><span id="shutdown0">Shutdown</span>
                                 <form name = "infosshutdown">
                                     <label>
-                                        options <input type="checkbox" name="checkboxshutdown" id = "checkboxshutdown" checked="">
+                                        options <input type="checkbox" name="checkboxshutdown" id = "checkboxshutdown">
                                     </label>
-                                    <div id="shutdowninfo">
+                                    <div id="shutdowninfo" style="display : none">
                                         time before Shutdown
                                         <input type="number" id="mytimeshutdown"  value ="60" name="quantity" min="0" max="120" size="2" >
                                         Message shutdown<br>
