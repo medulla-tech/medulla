@@ -85,6 +85,16 @@ def getListPackages():
             resultnamepackage.append(session['info']['name'])
     return resultnamepackage
 
+def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who ):
+    return XmppMasterDatabase().logtext(textinfo,
+                                        sessionname = sessionxmppmessage,
+                                        type = typelog,
+                                        priority = priority,
+                                        who =  who)
+
+def updatedeploystate(sessionxmppmessage, status):
+    return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
+
 def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
@@ -121,7 +131,6 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
-
 def get_machine_stop_deploy(cmdid, uuid) :
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
     msg_stop_deploy= {
@@ -130,7 +139,8 @@ def get_machine_stop_deploy(cmdid, uuid) :
         'data' : {"typerequest" : "bansessionid"},
         "ret" : 0,
         'base64' : False 
-        }
+    }
+    updatedeploystate(result['sessionid'],'DEPLOYMENT ABORT')
     send_message_json(result['jid_relay'], msg_stop_deploy ) 
     send_message_json(result['jidmachine'], msg_stop_deploy )
     return True
@@ -145,6 +155,7 @@ def get_group_stop_deploy(grpid) :
         'base64' : False}
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
+        updatedeploystate(machine['sessionid'],'DEPLOYMENT ABORT')
         send_message_json(machine['jid_relay'], msg_stop_deploy ) 
         send_message_json(machine['jidmachine'], msg_stop_deploy )
     return True
