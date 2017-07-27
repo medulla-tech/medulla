@@ -78,6 +78,14 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
+function xmlrpc_set_simple_log($textinfo, $sessionxmppmessage, $typelog, $priority, $who ){
+    return xmlCall("xmppmaster.set_simple_log", array($textinfo, $sessionxmppmessage, $typelog, $priority, $who ));
+}
+
+function xmlrpc_updatedeploystate($sessionid, $state){
+    return xmlCall("xmppmaster.updatedeploystate", array($sessionid, $state ));
+}
+
 function xmlrpc_get_machine_stop_deploy($cmdid, $uuid) {
     return xmlCall("xmppmaster.get_machine_stop_deploy", array($cmdid, $uuid));
 }

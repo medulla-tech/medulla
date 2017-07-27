@@ -48,6 +48,18 @@ $p->display();
                 $boolterminate = true;
             }
         }
+        if (!$boolterminate){
+            if (isset($_POST['bStop'])){
+                // if stop deploy message direct in les log 
+                // session for session id
+                $_SESSION[ $info['objectdeploy'][0]['sessionid']] = "end";
+                xmlrpc_set_simple_log('<span style="color : Orange, font-style : bold">WARNING !!! </span><span  style="color : Orange ">Request for a stop of deployment</span>',
+                                    $info['objectdeploy'][0]['sessionid'], "deploy",
+                                    "-1",
+                                    "pulse_mmc" );
+                //xmlrpc_updatedeploystate($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
+            }
+        }
     }
     $datawol = xmlrpc_getlinelogswolcmd($cmd_id,$uuid );
     //$resultinfo=(isset($info['objectdeploy'][0]['result'])?json_decode($info['objectdeploy'][0]['result']):Null);
@@ -117,11 +129,13 @@ $p->display();
     }
     if ( $info['len'] != 0)
     {
-        if ( !$boolterminate){
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-            $f->addButton("bStop","Stop Deploy");
-            $f->display();
+        if ( !$boolterminate && !isset($_POST['bStop'])){
+            if !isset($_SESSION[$info['objectdeploy'][0]['sessionid']]){
+                $f = new ValidatingForm();
+                $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+                $f->addButton("bStop","Stop Deploy");
+                $f->display();
+            }
         }
         $state = $info['objectdeploy'][0]['state'];
         $start = get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
