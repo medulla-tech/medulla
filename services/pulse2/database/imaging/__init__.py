@@ -298,7 +298,7 @@ class ImagingDatabase(DyngroupDatabaseHelper):
         )
 
         self.partition = Table(
-            "Partition",
+            "Partitions",
             self.metadata,
             Column('fk_image', Integer, ForeignKey('Image.id')),
             useexisting=True,
