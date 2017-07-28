@@ -2,7 +2,7 @@ Source: pulse2
 Section: admin
 Priority: extra
 Maintainer: Adam Cécile <acecile@mandriva.com>
-Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.6), python-support (>= 0.5.3), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
+Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.6), gettext, autotools-dev, xsltproc, docbook-xsl, docbook-xml
 Standards-Version: 3.9.3
 Homepage: http://projects.mandriva.org/projects/mmc/
 X-Python-Version: >= 2.6
