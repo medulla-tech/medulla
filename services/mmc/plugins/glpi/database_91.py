@@ -147,8 +147,8 @@ class Glpi91(DyngroupDatabaseHelper):
         self.klass = {}
 
         # simply declare some tables (that dont need and FK relations, or anything special to declare)
-        for i in ('glpi_operatingsystemversions', 'glpi_computertypes', 'glpi_operatingsystems', 'glpi_operatingsystemservicepacks', 'glpi_domains', \
-                'glpi_computermodels', 'glpi_networks'):
+        for i in ('glpi_operatingsystemversions', 'glpi_computertypes', 'glpi_operatingsystems', 'glpi_operatingsystemservicepacks', 'glpi_operatingsystemarchitectures', \
+                'glpi_domains', 'glpi_computermodels', 'glpi_networks'):
             setattr(self, i, Table(i, self.metadata, autoload = True))
             j = self.getTableName(i)
             exec "class %s(DbTOA): pass" % j
@@ -238,6 +238,9 @@ class Glpi91(DyngroupDatabaseHelper):
 
         self.os_sp = Table("glpi_operatingsystemservicepacks", self.metadata, autoload = True)
         mapper(OsSp, self.os_sp)
+
+        self.os_arch = Table("glpi_operatingsystemarchitectures", self.metadata, autoload = True)
+        mapper(OsArch, self.os_arch)
 
         # domain
         self.domain = Table('glpi_domains', self.metadata, autoload = True)
@@ -357,6 +360,7 @@ class Glpi91(DyngroupDatabaseHelper):
             Column('operatingsystems_id', Integer, ForeignKey('glpi_operatingsystems.id')),
             Column('operatingsystemversions_id', Integer, ForeignKey('glpi_operatingsystemversions.id')),
             Column('operatingsystemservicepacks_id', Integer, ForeignKey('glpi_operatingsystemservicepacks.id')),
+            Column('operatingsystemarchitectures_id', Integer, ForeignKey('glpi_operatingsystemarchitectures.id')),
             Column('locations_id', Integer, ForeignKey('glpi_locations.id')),
             Column('domains_id', Integer, ForeignKey('glpi_domains.id')),
             Column('networks_id', Integer, ForeignKey('glpi_networks.id')),
@@ -838,6 +842,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.os]
         elif query[2] == 'Service Pack':
             return base + [self.os_sp]
+        elif query[2] == 'Architecture':
+            return base + [self.os_arch]
         elif query[2] == 'Group':
             return base + [self.group]
         elif query[2] == 'Network':
@@ -947,6 +953,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.locations.c.completename, query[3]]]
         elif query[2] == 'Service Pack':
             return [[self.os_sp.c.name, query[3]]]
+        elif query[2] == 'Architecture':
+            return [[self.os_arch.c.name, query[3]]]
         elif query[2] == 'Group': # TODO double join on Entity
             return [[self.group.c.name, query[3]]]
         elif query[2] == 'Network':
@@ -1649,13 +1657,14 @@ class Glpi91(DyngroupDatabaseHelper):
                 .add_column(self.glpi_computertypes.c.name) \
                 .add_column(self.glpi_networks.c.name) \
                 .add_column(self.entities.c.completename) \
+                .add_column(self.glpi_operatingsystemarchitectures.c.name) \
                 .select_from( \
-                        self.machine.outerjoin(self.glpi_operatingsystems).outerjoin(self.glpi_operatingsystemservicepacks).outerjoin(self.glpi_operatingsystemversions).outerjoin(self.glpi_computertypes) \
-                        .outerjoin(self.glpi_domains).outerjoin(self.locations).outerjoin(self.glpi_computermodels).outerjoin(self.glpi_networks) \
+                        self.machine.outerjoin(self.glpi_operatingsystems).outerjoin(self.glpi_operatingsystemservicepacks).outerjoin(self.glpi_operatingsystemversions).outerjoin(self.glpi_operatingsystemarchitectures) \
+                        .outerjoin(self.glpi_computertypes).outerjoin(self.glpi_domains).outerjoin(self.locations).outerjoin(self.glpi_computermodels).outerjoin(self.glpi_networks) \
                         .join(self.entities)
                 ), uuid).all()
         ret = []
-        ind = {'os':1, 'os_sp':2, 'os_version':3, 'type':7, 'domain':4, 'location':5, 'model':6, 'network':8, 'entity':9} # 'entreprise':9
+        ind = {'os':1, 'os_sp':2, 'os_version':3, 'type':7, 'domain':4, 'location':5, 'model':6, 'network':8, 'entity':9, 'os_arch':10} # 'entreprise':9
         for m in query:
             ma1 = m[0].to_a()
             ma2 = []
@@ -2044,6 +2053,7 @@ class Glpi91(DyngroupDatabaseHelper):
             .add_column(self.glpi_computertypes.c.name) \
             .add_column(self.glpi_computermodels.c.name) \
             .add_column(self.glpi_operatingsystemservicepacks.c.name) \
+            .add_column(self.glpi_operatingsystemarchitectures.c.name) \
             .add_column(self.glpi_domains.c.name) \
             .add_column(self.state.c.name) \
             .add_column(self.fusionagents.c.last_contact) \
@@ -2056,6 +2066,7 @@ class Glpi91(DyngroupDatabaseHelper):
                 .outerjoin(self.glpi_computertypes) \
                 .outerjoin(self.glpi_computermodels) \
                 .outerjoin(self.glpi_operatingsystemservicepacks) \
+                .outerjoin(self.glpi_operatingsystemarchitectures) \
                 .outerjoin(self.state) \
                 .outerjoin(self.fusionagents) \
                 .outerjoin(self.glpi_domains)
@@ -2065,7 +2076,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = query.count()
         else:
             ret = []
-            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, domain, state, last_contact in query:
+            for machine, infocoms, entity, location, os, manufacturer, type, model, servicepack, architecture, domain, state, last_contact in query:
                 endDate = ''
                 if infocoms is not None:
                     endDate = self.getWarrantyEndDate(infocoms)
@@ -2125,6 +2136,7 @@ class Glpi91(DyngroupDatabaseHelper):
                     ['Owner Realname', owner_realname],
                     ['OS', os],
                     ['Service Pack', servicepack],
+                    ['Architecture', architecture],
                     ['Windows Key', machine.os_license_number],
                     ['Model / Type', modelType],
                     ['Manufacturer', manufacturer],
@@ -4486,6 +4498,9 @@ class Group(object):
     pass
 
 class OsSp(object):
+    pass
+
+class OsArch(object):
     pass
 
 class Model(object):
