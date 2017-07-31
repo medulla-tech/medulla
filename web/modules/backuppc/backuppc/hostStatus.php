@@ -128,10 +128,11 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     // Rsync and NmbLookup command lines
 
     $backup_manager_cmd  = "/usr/sbin/pulse2-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
-    $backup_manager_cmd1 = "/usr/sbin/pulse2-und-connect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
+    $backup_manager_cmd1 = "/usr/sbin/pulse2-disconnect-machine-backuppc -m ".$_POST['host']." -p ".$backup_port_reverse_ssh;
     $cfg['DumpPreUserCmd']  = $cfg['RestorePreUserCmd']  = $backup_manager_cmd;
     $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
     $cfg['ClientNameAlias'] = "localhost";
+    $cfg['RsyncClientPath'] = 'rsync';
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
     $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';

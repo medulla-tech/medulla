@@ -82,6 +82,12 @@ def ObjectXmpp():
 def getXmppConfiguration():
     return str(xmppMasterConfig())
 
+def send_message_json(to, jsonstring ):
+    xmppob = ObjectXmpp()
+    xmppob.send_message( mto = to,
+                                mbody = json.dumps(jsonstring),
+                                mtype = 'chat')
+
 def callXmppFunction(functionname, *args, **kwargs ):
     logging.getLogger().debug("**call function %s %s %s"%(functionname, args, kwargs))
     return getattr(ObjectXmpp(),functionname)( *args, **kwargs)
@@ -95,10 +101,10 @@ def callInventory(to):
     ObjectXmpp().callinventory( to)
 
 def callrestartbymaster(to):
-    ObjectXmpp().callrestartbymaster( to)
+    return ObjectXmpp().callrestartbymaster( to)
 
-def callshutdownbymaster(to):
-   ObjectXmpp().callshutdownbymaster( to)
+def callshutdownbymaster(to, time, msg):
+   return ObjectXmpp().callshutdownbymaster( to, time, msg)
 
 class XmppCommandDiffered:
     """
@@ -428,8 +434,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             mtype = 'chat')
 
     def changed_status(self,msg_changed_status):
-        if msg_changed_status['from'].resource == 'MASTER':
-            return
+        try:
+            if msg_changed_status['from'].resource == 'MASTER':
+                return
+        except Exception:
+            pass
         logger.debug( "%s %s"%(msg_changed_status['from'], msg_changed_status['type']))
         if msg_changed_status['type'] == 'unavailable':
             try:
@@ -785,18 +794,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.send_message(mto=to,
                         mbody=json.dumps(restartmachine),
                         mtype='chat')
+        return True
 
-
-    def callshutdownbymaster(self, to):
+    def callshutdownbymaster(self, to, time = 0, msg = ""):
         shutdownmachine = {
             'action' : "shutdownfrommaster",
             'sessionid' : name_random(5, "shutdown"),
-            'data' : [],
-            'ret': 255
+            'data' : {'time' : time, 'msg' : msg},
+            'ret': 0
             }
         self.send_message(mto=to,
                         mbody=json.dumps(shutdownmachine),
                         mtype='chat')
+        return True
 
     def callinventory(self, to):
         try:

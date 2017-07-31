@@ -48,7 +48,7 @@ if ($is_gp != 1) {
 } else {
     $delete = new ActionPopupItem(_T("Delete this profile", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
 }
-
+//jfkjfk   jfk
 if ($is_gp != 1) { // Simple group
     $actions['displayGroup'] = new ActionItem(_T("Display this group's content", 'dyngroup'), "display", "display", "id", "base", "computers");
     $actions['edit'] = new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers");
@@ -80,6 +80,13 @@ if ($is_gp != 1) { // Simple group
         }
     }
 }
+//jfkjfk
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+       $DeployQuickxmpp = new ActionPopupItem(_("Group Quick action"), "deployquickgroup", "quick", "computer", "xmppmaster", "xmppmaster");
+       $DeployQuickxmpp->setWidth(600);
+       $actions['quick']=$DeployQuickxmpp;
+    }
 
 foreach ($list as $group) {
     if ($group->id == $paramArray['id']) {
@@ -92,7 +99,7 @@ foreach ($list as $group) {
 $actions['csv'] = new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers");
 
 echo "<ul class='action'>";
-foreach ($actions as $action){
+    foreach ($actions as $action){
         if (is_array($paramArray)) {
             $paramArray['mod'] = $action->mod;
         }

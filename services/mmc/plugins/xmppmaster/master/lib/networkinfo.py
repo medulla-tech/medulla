@@ -352,39 +352,6 @@ class  networkagentinfo:
         return dns
 
 
-"""
-cads ubuntu
-l’activation par défaut du paquet resolvconf. Ce paquet permet de gérer le contenu du fichier resolv.conf de façon plus précise. Tout ce passe dans le dossier /etc/resolvconf/resolv.conf.d/. Il contient trois fichiers : base, head, original, qui ont chacun un rôle plus ou moins important dans le contenu du resolv.conf.
-
-"""
-###
-class updatedns:
-    def __init__(self, sessionid, action ='resultupdatednsinfo',param=[]):
-        self.sessionid = sessionid
-        self.action = action
-        self.messagejson = {}
-        self.messagejson['sessionid']=sessionid
-        self.messagejson['ret']=0
-        self.messagejson['base64']=False
-        self.messagejson['data']={}
-        if len(param) == 0 :
-            self.messagejson['ret']=255
-            self.messagejson['data']['msg']="Error: DNS list empty"
-            return
-        if sys.platform.startswith('linux'):
-            mon_fichier = open("/etc/resolv.conf", "wb")
-            for t in param:
-                #if is_valid_ipv4(param):
-                mon_fichier.write("nameserver\t%s"%param)
-            print windowsservice('networking','restart')
-        elif sys.platform.startswith('win'):
-            pass
-        elif sys.platform.startswith('darwin'):
-            pass
-        else:
-            self.messagejson['data']['msg']="Error: command on OS not managed"
-            self.messagejson['ret']=254
-
 def interfacename(mac):
     for i in netifaces.interfaces():
         if isInterfaceToMacadress(i,mac):
