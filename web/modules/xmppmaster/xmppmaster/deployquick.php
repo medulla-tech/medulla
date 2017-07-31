@@ -51,7 +51,19 @@
                 <tr>
                 <?
                 if ($_GET['presencemachinexmpp']){
-                    echo '<td id="shutdown" align="center">Shutdown</td>';
+                    //echo '<td id="shutdown" align="center">Shutdown</td>';
+                    echo '<td><span id="shutdown">Shutdown</span>
+                                <form name = "infosshutdown">
+                                    <label>
+                                        options <input type="checkbox" name="checkboxshutdown" id = "checkboxshutdown">
+                                    </label>
+                                    <div id="shutdowninfo" style="display : none">
+                                        time before Shutdown
+                                        <input type="number" id="mytimeshutdown"  value ="60" name="quantity" min="0" max="120" size="2" >
+                                        Message shutdown<br>
+                                        <input type="text" id="msgshutdown"  value="Shutdown from admin">
+                                    </div>
+                                </form></td>';
                     echo '<td id="reboot" align="center">Reboot</td>';
                     echo '<td id="inventory" align="center">Run inventory</td>';
                 }
@@ -65,6 +77,10 @@
     </div>
 <script type="text/javascript">
    var uuid = <? echo json_encode($_GET); ?>
+
+    jQuery('#checkboxshutdown').click(function() {
+        jQuery("#shutdowninfo").toggle();
+    })
 
     jQuery('#wol').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
@@ -88,6 +104,8 @@
     })
 
     jQuery('#shutdown').on('click', function(){
+        uuid['time'] = jQuery('#mytimeshutdown').val()
+        uuid['msg']  = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
                 alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
@@ -116,6 +134,8 @@
     })
 
     jQuery('#shutdown0').on('click', function(){
+        uuid['time'] = jQuery('#mytimeshutdown').val()
+        uuid['msg']  = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
                 alert( "shutdown : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )

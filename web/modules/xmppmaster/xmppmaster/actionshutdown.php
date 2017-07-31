@@ -38,11 +38,13 @@ require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 switch($_GET['action']){
     case "deployquick":
-        //work for one machine
-        echo xmlrpc_callshutdown($_GET['objectUUID']);
+        // work for one machine
+        echo xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
+        $result = $_GET;
+        echo json_encode($result);
         break;
     case "deployquickgroup":
-        //work for all machines on group
+        // work for all machines on group
         header('Content-type: application/json');
         $uuid = array();
         $cn = array();
