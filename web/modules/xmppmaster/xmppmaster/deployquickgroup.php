@@ -123,7 +123,6 @@ input[type="text"] {
                                     <div id="shutdowninfo" style="display : none">
                                         time before Shutdown
                                         <input type="number" id="mytimeshutdown"  value ="60" name="quantity" min="0" max="120" size="2" >
-                                        <br>
                                         Message shutdown<br>
                                         <input type="text" id="msgshutdown"  value="Shutdown from admin">
                                     </div>
@@ -132,26 +131,28 @@ input[type="text"] {
                         echo '<td id="inventory0" align="center">Run inventory</td>';
                     }
                     if ($nbr_absent != 0){
-                        echo '<td id="wol0">Wake on LAN</td>';
+                        echo '<td><span id="wol0">Wake on LAN</span>
+                            <form name = "infoswolimaging">
+                                    <label>
+                                        Imaging <input type="checkbox" name="checkboxwol" id = "checkboxwol">
+                                    </label>
+                                </form></td>';
                     }
                  ?>
                 </tr>
             </table>
         </div>
 
+        <script type="text/javascript">
+        // todo add graoh pie
+        </script>
 <script type="text/javascript">
    var groupinfo = <? echo json_encode($_GET); ?>
 
 
-jQuery('#checkboxshutdown').click(function() {
-    jQuery("#shutdowninfo").toggle();
-})
-//     if( jQuery('input[name=checkboxshutdown]').is(':checked') ){
-//         jQuery("#wolinfo").hide(500);
-//     }
-//     else{
-//         jQuery("#wolinfo").show(500);
-//     }
+    jQuery('#checkboxshutdown').click(function() {
+        jQuery("#shutdowninfo").toggle();
+    })
 
     function wol(data){
         uuid = data[0];
@@ -227,6 +228,7 @@ jQuery('#checkboxshutdown').click(function() {
     }
 
     jQuery('#wol').unbind().on('click', function(){
+        groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
             .done(function( data ) {
                wol(data)
@@ -234,6 +236,7 @@ jQuery('#checkboxshutdown').click(function() {
     })
 
     jQuery('#wol0').unbind().on('click', function(){
+        groupinfo['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
             .done(function( data ) {
                 wol(data)

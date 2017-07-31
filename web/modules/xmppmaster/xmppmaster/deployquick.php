@@ -68,7 +68,12 @@
                     echo '<td id="inventory" align="center">Run inventory</td>';
                 }
                 else{
-                    echo '<td id="wol" align="center">Wake on LAN</td>';
+                    echo '<td align="center"><span id="wol">Wake on LAN</span>
+                            <form name = "infoswolimaging">
+                                    <label>
+                                        Imaging <input type="checkbox" name="checkboxwol" id = "checkboxwol">
+                                    </label>
+                                </form></td>';
                 }
                 ?>
 
@@ -83,6 +88,7 @@
     })
 
     jQuery('#wol').on('click', function(){
+        uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
                 alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
@@ -113,6 +119,7 @@
     })
 
     jQuery('#wol0').on('click', function(){
+        uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
                 alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )

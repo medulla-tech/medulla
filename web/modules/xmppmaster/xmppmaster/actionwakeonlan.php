@@ -23,6 +23,7 @@ session_start();
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once("../../imaging/includes/xmlrpc.inc.php");
 require_once("../../base/includes/computers.inc.php");
 require_once("../../../includes/config.inc.php");
 require_once("../../../includes/i18n.inc.php");
@@ -35,8 +36,14 @@ require_once('../includes/xmlrpc.php');
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 switch($_GET['action']){
     case "deployquick":
-        //work for one machine
-        echo xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
+            // work for one machine
+            if ($_GET['wol']){
+                xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+            }
+            else{
+                xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+            }
+            xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
         break;
     case "deployquickgroup":
         //work for all machines on group
@@ -54,6 +61,12 @@ switch($_GET['action']){
             if( xmlrpc_getPresenceuuid($key) == 0 ){
                 $presence[] = 0;
                 $machine_not_present[] = $value[1]['cn'][0];
+                if ($_GET['wol']){
+                    xmlrpc_synchroComputer($key, true,  false);
+                }
+                else{
+                    xmlrpc_synchroComputer($key, false,  false);
+                }
                 xmlrpc_runXmppWolforuuid( $key );
             }
             else{
