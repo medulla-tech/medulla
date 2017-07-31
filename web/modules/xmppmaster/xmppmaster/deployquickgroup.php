@@ -123,6 +123,7 @@ input[type="text"] {
                                     <div id="shutdowninfo" style="display : none">
                                         time before Shutdown
                                         <input type="number" id="mytimeshutdown"  value ="60" name="quantity" min="0" max="120" size="2" >
+                                        <br>
                                         Message shutdown<br>
                                         <input type="text" id="msgshutdown"  value="Shutdown from admin">
                                     </div>
