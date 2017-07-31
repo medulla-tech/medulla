@@ -1,3 +1,9 @@
+pulse2 (3.9.92-2) unstable; urgency=low
+ 
+ * New snapshot
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 31 Jul 2017 22:00:11 +0100
+
 pulse2 (3.9.92-1) unstable; urgency=low
   
  * New snapshot
