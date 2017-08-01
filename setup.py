@@ -45,7 +45,7 @@ setup(
     keywords='pulse2',
     name='pulse2', 
     version='3.9.92',
-    debian_distro="jessie",
+    debian_distro='jessie',
     description = 'pulse2',
     url='https://www.siveo.net/',
     packages=['pulse2'],
