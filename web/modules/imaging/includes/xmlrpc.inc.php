@@ -240,8 +240,8 @@ function xmlrpc_getLocationSynchroState($id) {
     return xmlCall("imaging.getLocationSynchroState", array($id));
 }
 
-function xmlrpc_synchroComputer($id) {
-    return xmlCall("imaging.synchroComputer", array($id));
+function xmlrpc_synchroComputer($id,  $menuimagingbool = false, $macbool = false) {
+    return xmlCall("imaging.synchroComputer", array($id, $macbool, $menuimagingbool));
 }
 
 function xmlrpc_synchroProfile($id) {
@@ -558,5 +558,27 @@ function xmlrpc_editWindowsAnswerFile($xmlWAFG, $title)
 function xmlrpc_getClonezillaParamsForTarget($target_uuid) {
     return xmlCall("imaging.getClonezillaParamsForTarget", array($target_uuid));
 }
-
+function xmlrpc_setimaginglogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'imaging'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}                                                    
 ?>

@@ -223,5 +223,27 @@ function set_host_pre_restore_script($uuid, $script) {
 function set_host_post_restore_script($uuid, $script) {
     return xmlCall("backuppc.set_host_post_restore_script", array($uuid, $script));
 }
-
+function xmlrpc_setfrombackuppclogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'backuppc'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}                                                    
 ?>

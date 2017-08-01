@@ -98,6 +98,42 @@ class XmppMasterDatabase(DatabaseHelper):
     # =====================================================================
 
     @DatabaseHelper._sessionm
+    def setlogxmpp( self,
+                    session,
+                    text,
+                    type = "noset",
+                    sessionname = '' ,
+                    priority = 0,
+                    who = '',
+                    how = '',
+                    why = '',
+                    module = '',
+                    action = '',
+                    touser =  '',
+                    fromuser = ''):
+        """
+            this functions addition a log line in table log xmpp.
+        """
+        try:
+            new_log = Logs()
+            new_log.text = text
+            new_log.type = type
+            new_log.sessionname = sessionname
+            new_log.priority = priority
+            new_log.who = who
+            new_log.how = how
+            new_log.why = why
+            new_log.module = module
+            new_log.action = action
+            new_log.touser = touser
+            new_log.fromuser = fromuser
+            session.add(new_log)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            logging.getLogger().error(str(e))
+
+    @DatabaseHelper._sessionm
     def logtext(self, session, text, sessionname='' , type = "noset",priority = 0, who = ''):
         try:
             new_log = Logs()

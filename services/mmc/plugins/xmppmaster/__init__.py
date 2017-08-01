@@ -98,6 +98,29 @@ def updatedeploystate(sessionxmppmessage, status):
 def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
+def setlogxmpp( text,
+                type ,
+                sessionname,
+                priority,
+                who,
+                how,
+                why,
+                module,
+                action,
+                touser,
+                fromuser):
+    return XmppMasterDatabase().setlogxmpp( text,
+                                            type ,
+                                            sessionname,
+                                            priority,
+                                            who,
+                                            how,
+                                            why,
+                                            module,
+                                            action,
+                                            touser,
+                                            fromuser)
+
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 

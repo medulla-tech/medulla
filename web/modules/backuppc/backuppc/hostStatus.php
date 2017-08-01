@@ -45,6 +45,16 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
         }
         else {
             new NotifyWidgetSuccess(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name));
+            xmlrpc_setfrombackuppclogxmpp(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name),
+                                                $type = "USER",
+                                                $sessionname = '' ,
+                                                $priority = 0,
+                                                $who = 'AMR',
+                                                $how = 'xmpp',
+                                                $why = '',
+                                                $action = 'hostStatus',
+                                                $touser =  'group '.$_GET['groupname'] ,
+                                                $fromuser = $_SESSION['login']);
             $_GET['tab'] = 'tab2';
         }
     }
