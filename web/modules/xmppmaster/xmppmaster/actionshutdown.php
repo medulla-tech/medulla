@@ -40,6 +40,16 @@ switch($_GET['action']){
     case "deployquick":
         // work for one machine
         echo xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
+        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'].'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction shutdown on machine',
+                                            $touser =  $_GET['cn'],
+                                            $fromuser = $_SESSION['login']);
         $result = $_GET;
         echo json_encode($result);
         break;
@@ -53,6 +63,16 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction shutdown on group',
+                                            $touser =  'group '.$_GET['groupname'] ,
+                                            $fromuser = $_SESSION['login']);
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;

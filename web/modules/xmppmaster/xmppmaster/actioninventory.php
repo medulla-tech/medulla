@@ -37,10 +37,19 @@ require_once('../includes/xmlrpc.php');
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 
-
 switch($_GET['action']){
     case "deployquick":
         //work for one machine
+        xmlrpc_setfromxmppmasterlogxmpp(    'inventory from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'] .']',
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction inventory on machine',
+                                            $touser =  $_GET['cn'],
+                                            $fromuser = $_SESSION['login']);
         echo xmlrpc_callInventoryinterface($_GET['objectUUID']);
         break;
     case "deployquickgroup":
@@ -53,6 +62,16 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp(    'inventory from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .']',
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction inventory on group',
+                                            $touser =  'group '.$_GET['groupname'] ,
+                                            $fromuser = $_SESSION['login']);
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
