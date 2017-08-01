@@ -104,6 +104,10 @@ function set_host_backup_profile($uuid, $newprofile) {
     return xmlCall("backuppc.set_host_backup_profile", array($uuid, $newprofile));
 }
 
+function get_host_rsync_path($uuid) {
+    return xmlCall("backuppc.get_host_rsync_path", array($uuid));
+}
+
 // Period profiles
 
 function get_period_profiles() {

@@ -4386,6 +4386,7 @@ class Machine(object):
             ['os',self.operatingsystems_id],
             ['os_version',self.operatingsystemversions_id],
             ['os_sp',self.operatingsystemservicepacks_id],
+            ['os_arch',self.operatingsystemarchitectures_id],
             ['os_license_number',self.os_license_number],
             ['os_license_id',self.os_licenseid],
             ['location',self.locations_id],
