@@ -30,7 +30,6 @@ elif sys.platform.startswith('win'):
 elif sys.platform.startswith('darwin'):
     fileconf = os.path.join("/", "Library", "Application Support", "Pulse", "etc")
 
-
 setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
