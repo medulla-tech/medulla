@@ -2,7 +2,7 @@ Source: mmc-core
 Section: admin
 Priority: extra
 Maintainer: Nicolas Lécureuil <nicolas.lecureuil@siveo.net>
-Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.5), python-support (>= 0.5.3), gettext, autotools-dev
+Build-Depends: debhelper (>= 5.0.37.2), lsb-release, python-all (>= 2.5), gettext, autotools-dev
 Standards-Version: 3.9.3
 Homepage: http://www.siveo.net/
 
