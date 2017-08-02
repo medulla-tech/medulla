@@ -22,6 +22,8 @@ session_start();
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ * file : actionwakeonlan.php
  */
 require_once("../../imaging/includes/xmlrpc.inc.php");
 require_once("../../base/includes/computers.inc.php");
