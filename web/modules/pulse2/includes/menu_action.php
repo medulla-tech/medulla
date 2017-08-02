@@ -33,12 +33,9 @@ else if (isset($_GET['uuid']))
     $_SESSION['objectUUID'] = $_GET['uuid'];
 if (isset($_GET['action']))
     $_SESSION['action'] = $_GET['action'];
-    
-    
-    $presencemachinexmpp = xmlrpc_getPresenceuuid( $_GET['objectUUID']);
-    
-    
-    
+
+    $presencemachinexmpp = xmlrpc_getPresenceuuid( $_SESSION['objectUUID']);
+
     if (in_array("guacamole", $_SESSION["supportModList"])) {
         $element = "guacamole";
     }
