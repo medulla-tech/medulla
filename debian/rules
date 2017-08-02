@@ -119,7 +119,7 @@ binary-arch: build install
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
-	dh_pysupport2
+	dh_python2
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2-common/contrib/ \
                     -Xvar/lib/pulse2/dlp_packages \
