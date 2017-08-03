@@ -34,6 +34,7 @@ from functools import wraps
 import base64
 from importlib import import_module
 import threading
+import socket
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
@@ -42,7 +43,6 @@ if sys.platform.startswith('win'):
     import _winreg as wr
     import win32net
     import win32netcon
-    import socket
 
 def file_get_contents(filename, use_include_path = 0, context = None, offset = -1, maxlen = -1):
     """
@@ -673,38 +673,35 @@ class shellcommandtimeout(object):
 
         return self.obj
 
-def ipfromdns(ipdata):
+def ipfromdns(name_domaine_or_ip):
     """ This function converts a dns to ipv4
         If not find return ""
         function tester on OS:
         MAcOs, linux (debian, redhat, ubuntu), windows
-        eg : print ip("sfr.fr")
+        eg : print ipfromdns("sfr.fr")
         80.125.163.172
     """
-    def strnslookup(str):
-        adress = False
-        for t in str:
-            if "Name" in t:
-                adress = True
-            if adress == True and "Address" in t:
-                return t.split(":")[1].strip()
-        return ""
-
-    def searchipfromdns(ip):
-        re = shellcommandtimeout("nslookup %s"%ip, 10).run()
-        result  = [x.strip() for x in re['result'] if x !='']
-        if sys.platform.startswith('linux'):
-            return strnslookup(result)
-        elif sys.platform.startswith('win'):
-            return strnslookup(result)
-        elif sys.platform.startswith('darwin'):
-            return strnslookup(result)
-
-    if ipdata != "" and ipdata != None:
-        if ipdata.lower() == "localhost":
-            return "127.0.0.1"
-        if is_valid_ipv4(ipdata):
-            return ipdata
-        else:
-            return searchipfromdns(ipdata)
+    if name_domaine_or_ip != "" and name_domaine_or_ip != None:
+        if is_valid_ipv4(name_domaine_or_ip):
+            return name_domaine_or_ip
+        try:
+            return socket.gethostbyname(name_domaine_or_ip)
+        except socket.gaierror:
+            return ""
+        except Exception:
+            return ""
     return ""
+
+def check_exist_ip_port(name_domaine_or_ip, port):
+    """ This function check if socket valid for connection
+        return True or False
+    """
+    ip = ipfromdns(name_domaine_or_ip)
+    try:
+        socket.getaddrinfo(ip, port)
+        return True
+    except socket.gaierror:
+        return False
+    except Exception:
+        return False
+    
