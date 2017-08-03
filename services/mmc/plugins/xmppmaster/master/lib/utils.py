@@ -79,9 +79,9 @@ def displayDataJson(jsondata):
 
 
 def load_plugin(name):
-    print "Import plugin_%s" % name
+    #print "Import plugin_%s" % name
     mod = __import__("plugin_%s" % name)
-    print mod
+    #print mod
     return mod
 
 def call_plugin(name, *args, **kwargs):
@@ -201,7 +201,7 @@ def isWinUserAdmin():
             return ctypes.windll.shell32.IsUserAnAdmin()
         except:
             traceback.print_exc()
-            print "Admin check failed, assuming not an admin."
+            #print "Admin check failed, assuming not an admin."
             return False
     elif os.name == 'posix':
         # Check for root on Posix
@@ -381,9 +381,9 @@ def isprogramme(name):
     result = p.stdout.readlines()
     obj['code']=p.wait()
     obj['result']=result
-    print obj['code']
-    print obj['result']
-    print obj
+    #print obj['code']
+    #print obj['result']
+    #print obj
     if obj['result'] != "":
         return True
     else:
@@ -552,9 +552,6 @@ def file_put_content(filename, contents,mode="w"):
     #for user in group.associators("Win32_GroupUser"):
         #print "  ", user.Caption
 
-
-
-
 # decorator to simplify the plugins
 def pluginprocess(func):
     def wrapper( xmppobject, action, sessionid, data, message, dataerreur):
@@ -571,7 +568,7 @@ def pluginprocess(func):
         try:
             response = func( xmppobject, action, sessionid, data, message, dataerreur, result)
             #encode  result['data'] if needed
-            print result
+            #print result
             if result['base64'] == True:
                 result['data'] = base64.b64encode(json.dumps(result['data']))
             xmppobject.send_message( mto=message['from'],
