@@ -33,16 +33,14 @@ if(isset($_POST['saveList']))
     $_SESSION['workflow'] = str_replace("\"{","{",$_SESSION['workflow']);
     $_SESSION['workflow'] = str_replace("}\"","}",$_SESSION['workflow']);
 
-    //$_SESSION['workflow'] =json_decode($_SESSION['workflow'],true,10);
-    echo '<pre>';
     $_SESSION['workflow']= stripslashes($_SESSION['workflow']);
-    print_r($_POST['saveList']);
 
-    print_r(json_decode($_SESSION['workflow'],true));
+    $result = save_xmpp_json($_SESSION['workflow']);
 
-
-    echo '</pre>';
-
+    if($result)
+        echo '<p>The package has been created.</p>';
+    else
+        echo '<p>Write error : the package can\'t be created.</p>';
 }
 ?>
 <style type="text/css">
@@ -59,6 +57,7 @@ if(isset($_POST['saveList']))
         <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
         <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
         <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
+        <label for="software-package">Package id</label><input type="text" name="uuid-package" id="uuid-package" value="<?php echo uniqid();?>" required/><br />
     </div>
     <div>
         <label for="quitonerror-package">Quit on error</label>
@@ -72,9 +71,11 @@ if(isset($_POST['saveList']))
             <option value="true">true</option>
         </select>
 
-        <label for="methodtransfert-package">Method transfert</label>
-        <select name="methodtransfert-package" id="methodtransfert-package">
-            <option value="curl">curl</option>
+        <label for="methodtransfert-package">Transfert method</label>
+        <select name="methodtransfert-package" id="methodtransfert-package" disabled>
+            <option value="pushscp">scp</option>
+            <option value="pushrsync">rsync</option>
+            <option value="pullcurl">curl</option>
         </select>
     </div>
 </div>

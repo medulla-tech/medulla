@@ -38,7 +38,7 @@ updateList();
  * CREATE TABS
  *
  */
-$(function(){
+jQuery(function(){
 
     var tabs = jQuery("#workflow").tabs();
 
@@ -128,15 +128,30 @@ jQuery("#label").on('change click',function(){
  * UPDATE THE INFORMATION SECTION INTO THE JSON
  *
  */
-jQuery("#infos-package").on('change',function(){
+jQuery("#infos-package").on('click change',function(){
+
     infoPackage = {
         'name':jQuery('#name-package').val(),
         'description':jQuery('#description-package').val(),
         'version':jQuery('#version-package').val(),
         'quitonerror':jQuery('#quitonerror-package').val(),
         'transferfile':jQuery('#transferfile-package').val(),
-        'methodtransfert':jQuery('#methodtransfert-package').val(),
+        'id':jQuery("#uuid-package").val()
     };
+
+    if(jQuery("#transferfile-package").val() == 'true')
+    {
+        jQuery("#methodtransfert-package").prop('disabled',false);
+        infoPackage['methodtransfert'] = jQuery('#methodtransfert-package').val();
+    }
+    else
+    {
+        if(typeof(infoPackage['methodtransfert']) != 'undefined')
+        {
+            delete(infoPackage.methodtransfert);
+        }
+        jQuery("#methodtransfert-package").prop('disabled',true);
+    }
 });
 
 

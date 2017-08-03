@@ -571,10 +571,78 @@ def _cb_updateAppstreamPackages(reason):
 
 def _eb_updateAppstreamPackages(failure):
     """
-    This methode is the error Back of updateAppstreamPackages
+    This method is the error Back of updateAppstreamPackages
     """
     logger = logging.getLogger()
     logger.warning("Update of appstream packages failed : %s " % repr(failure))
 
 def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
+
+
+def save_xmpp_json(json_content):
+    """
+    Save the xmpp json package into new package
+    :param package_name:
+    :param json_content:
+    :return bool:
+    """
+
+    path="/var/lib/pulse2/packages"
+
+    # 1 - Test the json, if it's ok, then next step
+    try:
+        content = json.loads(json_content)
+    except ValueError:
+        return False
+
+    # if the server uses xmpp step 2 and 4 are useless
+
+    # 2 - Extracts the informations for the conf.json file
+    infos = content['info']
+    uuid = infos['id']
+    name = infos['name']
+    description = infos['description']
+    version = infos['version']
+
+    # 3 - Create the path/uuid directory if not exists
+    if not os.path.exists(path+'/'+uuid):
+        os.mkdir(path+'/'+uuid)
+
+    # 4 - Create the conf.json file
+    infos = {
+        "commands":
+            {
+                "postCommandSuccess": {"command": "", "name": ""},
+                "installInit": {"command": "", "name": ""},
+                "postCommandFailure": {"command": "", "name": ""},
+                "command": {"command": "", "name": ""},
+                "preCommand": {"command": "", "name": ""}},
+        "description": description,
+        "sub_packages": [],
+        "entity_id": "0",
+        "reboot": 0,
+        "version": version,
+        "inventory": {
+            "associateinventory": "0",
+            "licenses": "",
+            "queries": {
+                "Qversion": "",
+                "Qvendor": "",
+                "boolcnd": "",
+                "Qsoftware": ""}
+        },
+        "id": uuid,
+        "name": name
+    }
+
+    conf = open(path+'/'+uuid+'/conf.json', 'w')
+    json.dump(infos,conf)
+    conf.close()
+
+    # 5 - Create the xmppdeploy.json file
+    xmppdeploy = open(path+'/'+uuid+'/xmppdeploy.json','w')
+    json.dump(content,xmppdeploy)
+    xmppdeploy.close()
+
+    return True
