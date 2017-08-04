@@ -4347,7 +4347,7 @@ class Glpi91(DyngroupDatabaseHelper):
             contents_id = session.query(RegContents).filter_by(computers_id=computers_id,plugin_fusioninventory_collects_registries_id=registry_id,key=key).first().id
             if contents_id:
                 # Update database
-                session.query(RegContents).filter(id == contents_id).update({'value': str(value)})
+                session.query(RegContents).filter_by(id=contents_id).update({'value': str(value)})
                 return True
         except AttributeError:
             # Insert in database
