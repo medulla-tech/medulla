@@ -182,13 +182,16 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'])) {
     printf('<input type="hidden" name="host" value="%s" />', $_GET['host']);
     printf('<input type="hidden" name="backupnum" value="%s" />', $_GET['backupnum']);
     printf('<input type="hidden" name="sharename" value="%s" />', $_GET['sharename']);
-    printf('<input type="hidden" name="dir" value="%s" />', $folder);
+    printf('<input type="hidden" name="sharedest" id="sharedest" value="%s" />', $_GET['sharename']);
+    printf('<input type="hidden" name="dir" id="dir" value="%s" />', $folder);
     print('<input type="hidden"  name="restoredir" id="restoredir" value=""  />');
     $n->display();
 }
 ?>
 <input id="btnRestoreZip" type="button" value="<?php print _T('Download selected (ZIP)', 'backuppc'); ?>" class="btnPrimary" />
-<input type="button" value="<?php print _T('Restore to host', 'backuppc'); ?>" class="btnPrimary" onclick="showPopup(event, 'main.php?module=backuppc&submod=backuppc&action=restorePopup');
+<input id="btnRestoreDirect1" type="button" value="<?php print _T('Restore to host (overwrite)', 'backuppc'); ?>" class="btnPrimary" />
+<input id="btnRestoreDirect2" type="button" value="<?php print _T('Restore to host (subfolder)', 'backuppc'); ?>" class="btnPrimary" />
+<input type="button" value="<?php print _T('Advanced restore', 'backuppc'); ?>" class="btnPrimary" onclick="showPopup(event, 'main.php?module=backuppc&submod=backuppc&action=restorePopup&sharename=<?php echo $_GET['sharename'] ?>');
         return false;" />
 </form>
 
@@ -215,6 +218,54 @@ if (isset($_GET['host'], $_GET['sharename'], $_GET['backupnum'])) {
             });
             return false;
 
+        });
+
+        jQuery('input#btnRestoreDirect1').click(function(){
+            jQuery('#restoredir').val('/');
+            form = jQuery('#restorefiles').serialize();
+
+            // Test if no checkbox is checked
+            if (jQuery('input[type=checkbox]:checked').length == 0)
+                {
+                    alert('You must select at least on file.');
+                    return;
+                }
+
+            jQuery.ajax({
+                type: "POST",
+                url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
+                data: form,
+
+                success: function(data){
+                    jQuery('html').append(data);
+                    setTimeout("refresh();",3000);
+            }
+            });
+            return false;
+        });
+
+        jQuery('input#btnRestoreDirect2').click(function(){
+            jQuery('#restoredir').val('/Restore_<?php print(date('Y-m-d')); ?>');
+            form = jQuery('#restorefiles').serialize();
+
+            // Test if no checkbox is checked
+            if (jQuery('input[type=checkbox]:checked').length == 0)
+                {
+                    alert('You must select at least on file.');
+                    return;
+                }
+
+            jQuery.ajax({
+                type: "POST",
+                url: "<?php  echo 'main.php?module=backuppc&submod=backuppc&action=restoreToHost'; ?>",
+                data: form,
+
+                success: function(data){
+                    jQuery('html').append(data);
+                    setTimeout("refresh();",3000);
+            }
+            });
+            return false;
         });
     });
 

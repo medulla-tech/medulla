@@ -434,10 +434,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
         params['hostDest'] = hostDest.encode('utf8','ignore')
     else:
         params['hostDest'] = host.lower()
-    if shareDest:
-        params['shareDest'] = shareDest.encode('utf8','ignore')
-    else :
-        params['shareDest'] = share_name
+    params['shareDest'] = shareDest.encode('utf8','ignore')
     params['pathHdr'] = pathHdr.encode('utf8','ignore')
     # Files list
     params['fcbMax']=len(files)+1
