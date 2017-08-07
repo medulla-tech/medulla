@@ -26,11 +26,15 @@ import urllib
 import re
 
 from twisted.internet import reactor, defer
+from twisted.web.client import HTTPClientFactory, getPage
 try:
-    from twisted.web.client import HTTPClientFactory, _parse, getPage
+    from twisted.web.client import _parse
     parseAvailable = True
 except ImportError:
-    from twisted.web.client import HTTPClientFactory, _URI, getPage
+    try:
+        from twisted.web.client import _URI as URI
+    except ImportError:
+        from twisted.web.client import URI
     parseAvailable = False
 
 from mmc.plugins.base.auth import AuthenticatorConfig, AuthenticatorI
@@ -125,7 +129,7 @@ def getPageWithHeader(url, contextFactory=None, *args, **kwargs):
     if parseAvailable:
         scheme, host, port, path = _parse(url)
     else:
-        uri = _URI.fromBytes(url)
+        uri = URI.fromBytes(url)
         scheme = uri.scheme
         host = uri.host
         port = uri.port
