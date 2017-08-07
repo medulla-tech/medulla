@@ -87,8 +87,9 @@ install: build
 	# Already provided by MMC packages
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
-	# Install initscript using debhelper
 	rm -rf $(DESTDIR)/etc/init.d
+	mkdir -p $(DESTDIR)/usr/lib/systemd/system
+	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
 	# Autotools won't listen to me...
 	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 	# Useless files
@@ -133,7 +134,6 @@ binary-arch: build install
 		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
 		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
 	done
-	dh_installinit
 	dh_shlibdeps
 	dh_strip
 	dh_link
