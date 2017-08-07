@@ -91,6 +91,7 @@ install: build
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
 	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
+	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-launchers.service
 	# Autotools won't listen to me...
 	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 	# Useless files
