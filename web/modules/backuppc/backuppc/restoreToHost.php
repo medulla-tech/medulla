@@ -31,6 +31,7 @@ $sharename = $_POST['sharename'];
 $restoredir = $_POST['restoredir'];
 $dir = $_POST['dir'];
 $hostdest = $_POST['hostdest'];
+$sharedest = $_POST['sharedest'];
 
 $_GET = array_merge($_GET,$_POST);
 
@@ -41,6 +42,7 @@ unset($_POST['sharename']);
 unset($_POST['restoredir']);
 unset($_POST['dir']);
 unset($_POST['hostdest']);
+unset($_POST['sharedest']);
 
 $files = array_values($_POST);
 
