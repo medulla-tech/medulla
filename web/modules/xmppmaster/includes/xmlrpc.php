@@ -102,6 +102,14 @@ function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
 }
 
+function xmlrpc_getdeploybymachinerecent($uuidinventory, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybymachinerecent", array($uuidinventory, $state, $duree, $min , $max, $filt));
+}
+
+function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybymachinegrprecent", array($gid, $state, $duree, $min , $max, $filt));
+}
+
 function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
 }
@@ -160,4 +168,27 @@ function xmlrpc_getstepdeployinsession($session){
     return xmlCall("xmppmaster.getstepdeployinsession", array($session));
 }
 
+function xmlrpc_setfromxmppmasterlogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'xmppmaster'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}
 ?>

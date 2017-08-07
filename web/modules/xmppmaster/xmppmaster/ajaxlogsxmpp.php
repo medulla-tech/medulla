@@ -19,8 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * file ajaxstatusxmpp.php
  */
 require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
@@ -33,8 +31,10 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $etat="";
 $LastdeployINsecond = 3600*72;
-echo "<h2>Current and past tasks";
-$arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$etat, $LastdeployINsecond, $start, "", $filter) ;
+//print_r($_GET);
+echo "<h2>deploy log machine";
+$arraydeploy = xmlrpc_getdeploybymachinerecent( $_GET['uuid'] ,"", $LastdeployINsecond, $start, $end, $filter);
+print_r($arraydeploy);
 $arrayname = array();
 $arraytitlename = array();
 $arraystate = array();
@@ -97,7 +97,7 @@ $n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'],_T("Package", "xmppma
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
-$n->setItemCount($arraydeploy['lentotal']);
+$n->setItemCount($arraydeploy['lenquery']);
 
 $n->addActionItemArray($logs);
 $n->setCssClass("machineName");
@@ -106,7 +106,7 @@ $n->setTableHeaderPadding(0);
 $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $end;
-$n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter));
+$n->setNavBar(new AjaxNavBar($arraydeploy['lenquery'], $filter));
 
 print "<br/><br/>";
 

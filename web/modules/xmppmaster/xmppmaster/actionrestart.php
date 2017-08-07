@@ -38,6 +38,16 @@ switch($_GET['action']){
     case "deployquick":
         //work for one machine
         echo  xmlrpc_callrestart($_GET['objectUUID']);
+        xmlrpc_setfromxmppmasterlogxmpp(    'restart from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'] .']',
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction restart on machine',
+                                            $touser =  $_GET['cn'],
+                                            $fromuser = $_SESSION['login']);
         break;
     case "deployquickgroup":
         //work for all machines on group
@@ -49,6 +59,16 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp(    'restart from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .']',
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction restart on group',
+                                            $touser =  'group '.$_GET['groupname'] ,
+                                            $fromuser = $_SESSION['login']);
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;

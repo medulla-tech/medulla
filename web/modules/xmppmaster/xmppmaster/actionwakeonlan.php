@@ -22,7 +22,10 @@ session_start();
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ 
+ * file : actionwakeonlan.php
  */
+require_once("../../imaging/includes/xmlrpc.inc.php");
 require_once("../../base/includes/computers.inc.php");
 require_once("../../../includes/config.inc.php");
 require_once("../../../includes/i18n.inc.php");
@@ -33,10 +36,32 @@ require_once("../../../includes/PageGenerator.php");
 require_once('../includes/xmlrpc.php');
 
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
+
+$typewol = "";
+if (isset($_GET['wol']) && $_GET['wol']){
+    $typewol = "imaging";
+}
+
 switch($_GET['action']){
     case "deployquick":
-        //work for one machine
-        echo xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
+            // work for one machine
+            if ($_GET['wol']){
+                xmlrpc_synchroComputer($_GET['objectUUID'], true,  false);
+            }
+            else{
+                xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
+            }
+            xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
+            xmlrpc_setfromxmppmasterlogxmpp( 'wol '.$typewol.' from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'].'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction shutdown on machine',
+                                            $touser =  $_GET['cn'],
+                                            $fromuser = $_SESSION['login']);
         break;
     case "deployquickgroup":
         //work for all machines on group
@@ -48,12 +73,28 @@ switch($_GET['action']){
         $machine_not_present      = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp( 'wol '.$typewol.' from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                        $type = "USER",
+                                        $sessionname = '' ,
+                                        $priority = 0,
+                                        $who = 'AMR',
+                                        $how = 'xmpp',
+                                        $why = '',
+                                        $action = 'quickaction wol on group',
+                                        $touser =  'group '.$_GET['groupname'] ,
+                                        $fromuser = $_SESSION['login']);
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
             if( xmlrpc_getPresenceuuid($key) == 0 ){
                 $presence[] = 0;
                 $machine_not_present[] = $value[1]['cn'][0];
+                if ($_GET['wol']){
+                    xmlrpc_synchroComputer($key, true,  false);
+                }
+                else{
+                    xmlrpc_synchroComputer($key, false,  false);
+                }
                 xmlrpc_runXmppWolforuuid( $key );
             }
             else{
@@ -65,5 +106,4 @@ switch($_GET['action']){
         echo json_encode($result);
     break;
 }
-
 ?>
