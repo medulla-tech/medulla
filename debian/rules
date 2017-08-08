@@ -92,9 +92,6 @@ install: build
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
 	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
 	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-launchers.service
-	# Set the path for python services
-	sed -i 's,site-packages,dist-packages,g' -i $(DESTDIR)/usr/lib/systemd/system/pulse-xmpp-agent-relay.service
-	sed -i 's,site-packages,dist-packages,g' -i $(DESTDIR)/usr/lib/systemd/system/pulse-xmpp-agent-log.service
 	# Autotools won't listen to me...
 	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 	# Useless files
