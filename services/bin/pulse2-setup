@@ -302,8 +302,7 @@ def get_distro_handler():
 class Service(object):
     name = None
     clsnames = ['SrvMmcAgent',
-                'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
-                'SrvScheduler' ]
+                'SrvInventoryserver', 'SrvPkgServer']
 
     def __init__(self, handler, config):
         self.config = config
@@ -372,19 +371,11 @@ class SrvInventoryserver(Service):
         return self.config['inventory.service.enable']
 
 
-class SrvLauncher(Service):
-    name = 'pulse2-launchers'
-
-
 class SrvPkgServer(Service):
     name = 'pulse2-package-server'
 
     def is_enable(self):
         return self.config['package.service.enable']
-
-
-class SrvScheduler(Service):
-    name = 'pulse2-scheduler'
 
 
 def apply_conf_diff(origin, current, only_override=False):
