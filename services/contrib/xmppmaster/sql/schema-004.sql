@@ -28,7 +28,7 @@
 -- -----------------------------------------------------
 -- Table `organization`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS 'organization' ;
+DROP TABLE IF EXISTS `organization` ;
 
 CREATE TABLE IF NOT EXISTS `organization` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
