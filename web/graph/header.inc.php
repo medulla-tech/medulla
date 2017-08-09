@@ -32,9 +32,23 @@ $root = $conf["global"]["root"];
         <meta name="Description" content="" />
         <meta name="Keywords" content="" />
         <link rel="icon" href="img/common/favicon.ico" />
-        <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+        <script src="jsframework/lib/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery.cookie.js" type="text/javascript"></script>
-        <script src="jsframework/lib/jquery-ui-1.10.3.custom.min.js"></script>
+
+        <script src="jsframework/lib/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.structure.min.css" />
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.theme.min.css" />
+
+        <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
+        <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
+
+        <script src="jsframework/lib/jquery.mousewheel.min.js" type="text/javascript"></script>
+
+        <script src="jsframework/lib/plugin.jquery-ui/datatable/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="jsframework/lib/plugin.jquery-ui/datatable/css/jquery.dataTables.min.css" />
+
         <script type="text/javascript">
             // Avoid prototype <> jQuery conflicts
             jQuery.noConflict();
@@ -42,10 +56,7 @@ $root = $conf["global"]["root"];
         <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
         <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
         <script src="jsframework/common.js" type="text/javascript"></script>
-        <link rel="stylesheet" href="jsframework/lib/jquery.ui.css" />
-        <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
-        <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
-        <script src="jsframework/lib/jquery.mousewheel-3.0.6.pack.js" type="text/javascript"></script>
+
         <?php
         unset($css);
         ?>
