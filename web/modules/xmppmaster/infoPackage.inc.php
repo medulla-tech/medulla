@@ -135,7 +135,12 @@ $page = new Page("ajaxstatusxmpp",_T("List all groups of computers","xmppmaster"
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
-//##jfkjfk
+
+$page = new Page("ajaxviewgrpdeploy",_T("ajax view grp deploy","xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
 $page = new Page("ajaxlogsxmpp",_T("List computers deploy","xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
@@ -155,7 +160,5 @@ $mod->addSubmod($submod);
 
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
-
-
 ?>
 

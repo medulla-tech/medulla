@@ -18,8 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * file viewgrouplogs.in.php
  */
-
+//jfkjfk
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
@@ -30,23 +32,48 @@ $p->setSideMenu($sidemenu);
 $p->display();
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
+
+if (isset($_GET['gid'])){
+    $countmachine = getRestrictedComputersListLen( array('gid' => $_GET['gid']));
+    $_GET['nbgrp']=$countmachine;
+}
+$nbsuccess = 0;
+foreach ($info['objectdeploy'] as $val)
+{
+   $_GET['id']  .= $val['inventoryuuid']."@@";
+   $_GET['ses'] .= $val['sessionid']."@@";
+   $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
+   $_GET['sta'] .=  $val['state']."@@";
+   if ($val['state'] == "END SUCESS"){
+   $nbsuccess ++;
+   }
+}
+
 if ($info['len'] != 0){
-        $f = new ValidatingForm();
-        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-        $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
-        $f->display();
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
         $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
         $result=$info['objectdeploy'][0]['result'];
+
         $resultatdeploy =json_decode($result, true);
         $host=$info['objectdeploy'][0]['host'];
         $jidmachine=$info['objectdeploy'][0]['jidmachine'];
         $jid_relay=$info['objectdeploy'][0]['jid_relay'];
 
         $datestart =  date("Y-m-d H:i:s", $start);
+        $timestampstart = strtotime($datestart);
+        $timestampnow = time();
+        $nbsecond = $timestampnow - $timestampstart;
+        if ($nbsecond < 3600 ){
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+            $f->addButton("bStop", _T("Stop Deploy1", 'xmppmaster'));
+            $f->display();
+        }
         echo "Start deployment :".$datestart;// [".$infodeploy['len'] ." steps] "
-
+        if ($nbsecond > 3600 ){
+            echo "<h2>Deployement done</h2>";
+        }
 
        if (isset($resultatdeploy['descriptor']['info'])){
         echo "<br>";
@@ -86,26 +113,14 @@ if ($info['len'] != 0){
                 echo "</tbody>";
             echo "</table>";
             echo '<br>';
-
       }
 }
 else{
-echo '
-    <form id="formgroup" action="'.$_SERVER['PHP_SELF'].'" METHODE="GET" >
-        <input type="hidden" name="gid" value ="'.$gid.'" >
-        <input type="hidden" name="cmd_id" value ="'.$cmd_id.'" >
-        <input type="hidden" name="login" value ="'.$login.'" >
-        <input type="hidden" name="action" value ="viewlogs" >
-        <input type="hidden" name="module" value ="xmppmaster" >
-        <input type="hidden" name="submod" value ="xmppmaster" >
-        <input type="hidden" name="uuid" value ="'.$gid.'" >
-    </form>';
-
 echo'
-            <script type="text/javascript">
+        <script type="text/javascript">
             setTimeout(refresh, 10000);
             function  refresh(){
-               jQuery( "#formgroup" ).submit();
+               location.reload();
             }
         </script>
         ';
@@ -113,6 +128,43 @@ echo'
 
 $group->prettyDisplay();
 
+if (isset($countmachine)){
+        echo "Number of machines in the group. : ".$countmachine;
+        echo "<br>";
+        echo "Number of machines being deployed : ". $info['len'];
+        echo "<br>";
+        echo "Number of deployments that succeeded : ". $nbsuccess;
+        echo "<br>";
+        $sucessdeploy = $nbsuccess / $countmachine * 100;
+        $machinedeploy = $info['len'] / $countmachine;
+        $machinewokonlan = (1 - $machinedeploy) * 100;
+        $machinedeploy = $machinedeploy * 100;
+        echo " Succes : ".$sucessdeploy."%";
+        echo "<br>";
+        echo " Machine deploy in group : ".$machinedeploy."%";
+        echo "<br>";
+        echo " Machine or we tried an WOL: ".$machinewokonlan."%";
+        echo "<br>";
+        if ($nbsecond < 3600 ){
+        echo '
+        <script type="text/javascript">
+            function refresh1(time){
+                setTimeout(function () {
+                    jQuery.get( "modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php", {"sta" : "'.$_GET['sta'].'", "cmd": "'.$cmd_id.'" ,"id" : "'.$_GET['id'].'"} )
+                        .done(function( data ) {
+                            if(data == "0"){
+                                refresh1(20);
+                            }
+                            else{
+                                location.reload(); 
+                            }
+                        });
+                }, time*1000);
+            }
+            refresh1(5);
+        </script>';
+        }
+}
 ?>
 
 <style>

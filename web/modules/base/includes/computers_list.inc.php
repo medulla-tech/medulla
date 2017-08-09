@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * File : computers_list.inc.php
  */
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("includes/xmlrpc.inc.php");
@@ -48,6 +50,7 @@ class EmptyActionItem1 extends ActionItem {
     }
 }
 
+// $name data  tab
 function list_computers($names,
                         $filter, 
                         $count = 0, 
@@ -57,7 +60,38 @@ function list_computers($names,
                         $msc_can_download_file = false, 
                         $msc_vnc_show_icon = false,
                         $groupinfodeploy = -1,
-                        $login = "") {
+                        $login = "",
+                        $listidmachinedeploy = "",
+                        $listhostmachinedeploy = "",
+                        $listsessionmachinedeploy = "",
+                        $liststatemachinedeploy = "") {
+    if ($listidmachinedeploy != ""){
+        $array_id_machine_deploy = explode("@@",$listidmachinedeploy );
+        array_pop ($array_id_machine_deploy );
+
+        $array_host_machinedeploy = explode("@@",$listhostmachinedeploy );
+        array_pop ($array_host_machinedeploy );
+
+        $array_session_machine_deploy = explode("@@",$listsessionmachinedeploy );
+        array_pop ($array_session_machine_deploy );
+
+        $array_state_machine_deploy = explode("@@",$liststatemachinedeploy );
+        array_pop ($array_state_machine_deploy );
+
+        $indexarray = array_flip ($array_host_machinedeploy );
+
+        foreach ( $names as &$dd){
+            foreach($array_id_machine_deploy as $key=>$val){
+                if ($val == $dd[objectUUID]){
+                    $dd['status'] = $array_state_machine_deploy[$key];
+                }
+            }
+            if (!isset($dd['status'])){
+                $dd['status'] = "Wol";
+            }
+        }
+    }
+
     /* $pull_list is an array with UUIDs of pull machines */
     $pull_list = (in_array("pulse2", $_SESSION["modulesList"])) ? get_pull_targets() : array();
 
@@ -102,6 +136,20 @@ function list_computers($names,
     $cssClasses = array();
 
     $headers = getComputersListHeaders();
+
+    if ($listidmachinedeploy != ""){
+        $headers1 = array();
+        $i = 0;
+        foreach ($headers as $header) {
+            if( $i == 3){
+            $headers1[] = array('status','status');
+            }
+            $headers1[] = $header;
+            $i++;
+        }
+        $headers = $headers1;
+    }
+
     $columns = array();
     foreach ($headers as $header) {
         $columns[$header[0]] = array();
@@ -233,7 +281,9 @@ function list_computers($names,
 
     $n = null;
     if ($count) {
+   // print_r( $headers);
         foreach ($headers as $header) {
+        
             if ($n == null) {
                 if (in_array("glpi", $_SESSION["modulesList"])) {
                     $n = new OptimizedListInfos($columns[$header[0]], _T($header[1], 'glpi'));
@@ -256,6 +306,7 @@ function list_computers($names,
         $n->end = $count - 1;
     } else {
         foreach ($headers as $header) {
+        
             if ($n == null) {
                 $n = new ListInfos($columns[$header[0]], _($header[1]));
             } else {
@@ -327,5 +378,4 @@ function list_computers($names,
     }
     $n->display();
 }
-
 ?>
