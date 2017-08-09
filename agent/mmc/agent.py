@@ -131,8 +131,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
         return ret
 
     def render_OPTIONS(self, request):
-
-        request.setHeader("Access-Control-Allow-Origin", request.requestHeaders["origin"])
+        request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
@@ -151,8 +150,8 @@ class MmcServer(xmlrpc.XMLRPC, object):
         @return: interpreted request
         """
 
-        if "origin" in request.requestHeaders:
-            request.setHeader("Access-Control-Allow-Origin", request.requestHeaders["origin"])
+        if request.requestHeaders.hasHeader("Origin"):
+            request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
