@@ -76,7 +76,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
 }
 
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
-$n->addExtraInfo( $arrayname, _T("GRP", "xmppmaster"));
+$n->addExtraInfo( $arrayname, _T("Computer Name", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start", "xmppmaster"));
 $n->addExtraInfo( $arraystate, _T("State", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'],_T("Package", "xmppmaster"));

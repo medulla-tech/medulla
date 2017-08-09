@@ -20,6 +20,8 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * file: ajaxComputersList.php
  */
 require_once("modules/base/includes/computers.inc.php");
 require_once("modules/base/includes/computers_list.inc.php");
@@ -78,6 +80,7 @@ function my_cmp($a, $b) {
     return strcmp(strtolower($a), strtolower($b));
 }
 
+
 uksort($cl1, "my_cmp");
 foreach ($cl1 as $k1 => $k) {
     $names[] = join_value($cl[$k]);
@@ -99,12 +102,31 @@ if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SES
     $msc_vnc_show_icon = web_vnc_show_icon();
 }
 
-if (isset($_GET["cmd_id"])){
-    list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon,$_GET["cmd_id"],$_GET["login"]);
+if (isset($_GET["id"])){
+    $result=list_computers( $names, 
+                    $filter, 
+                    $count, 
+                    $canbedeleted, 
+                    $canbedeletedfromgroup, 
+                    $is_group, 
+                    $msc_can_download_file, 
+                    $msc_vnc_show_icon,
+                    $_GET["cmd_id"],
+                    $_GET["login"],
+                    $_GET["id"],
+                    $_GET["hos"],
+                    $_GET["ses"],
+                    $_GET["sta"]);
+
+}else{
+    if (isset($_GET["cmd_id"])){
+        list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon,$_GET["cmd_id"],$_GET["login"]);
+    }
+    else{
+        list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon);
+    }
 }
-else{
-    list_computers($names, $filter, $count, $canbedeleted, $canbedeletedfromgroup, $is_group, $msc_can_download_file, $msc_vnc_show_icon);
-}
+
 function join_value($n) {
     $ret = array();
     foreach ($n[1] as $k => $v) {
@@ -132,5 +154,4 @@ if (in_array("dyngroup", $_SESSION["modulesList"]) and isset($_GET['gid'])) {
         jQuery('#param').val(jQuery(this).text().replace(/&nbsp;/g, ' '));
         pushSearch();
     });
-    
 </script>
