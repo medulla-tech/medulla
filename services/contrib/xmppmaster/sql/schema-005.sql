@@ -42,3 +42,5 @@ CHANGE COLUMN `priority` `priority` INT(11) NULL DEFAULT '0' AFTER `why`;
 -- Database version
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 5;
+
+COMMIT;

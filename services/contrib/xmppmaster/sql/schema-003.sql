@@ -20,10 +20,6 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
-
 --
 -- Table structure for table `parameters_deploy`
 --
@@ -46,6 +42,10 @@ TRUNCATE `xmppmaster`.`relayserver`;
 ALTER TABLE `xmppmaster`.`relayserver` 
 ADD COLUMN `package_server_ip` VARCHAR(45) NOT NULL AFTER `groupdeploy`,
 ADD COLUMN `package_server_port` VARCHAR(45) NOT NULL AFTER `package_server_ip`;
+
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
 
 UPDATE version SET Number = 3;
 
