@@ -191,6 +191,12 @@ def getdeploybyuserlen(login):
         login = None
     return XmppMasterDatabase().getdeploybyuserlen( login)
 
+def getdeploybymachinerecent(uuidinventory, state, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybymachinerecent(uuidinventory, state, duree, min , max, filt)
+
+def getdeploybymachinegrprecent(gid, state, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybymachinegrprecent(gid, state, duree, min , max, filt)
+
 def getdeploybyuserrecent(  login , state, duree, min , max, filt):
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)
 

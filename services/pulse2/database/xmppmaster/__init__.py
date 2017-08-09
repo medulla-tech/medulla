@@ -189,7 +189,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     logging.getLogger().debug("organization id : %s is not exist"%organization_id)
                     return -1
             elif organization_name != None:
-                
                 idorganization = self.getIdOrganization(organization_name)
                 if idorganization == -1:
                     return {"nb" : 0, "packageslist" : []}
@@ -803,6 +802,152 @@ class XmppMasterDatabase(DatabaseHelper):
             #lentotal = session.query(func.count(Deploy.id)).filter(Deploy.login == login).scalar()
         else:
             return self.get_count(session.query(Deploy))
+
+    @DatabaseHelper._sessionm
+    def getdeploybymachinegrprecent(self, session, group_uuid, state, duree, min , max, filt):
+        deploylog = session.query(Deploy)
+        if group_uuid:
+            deploylog = deploylog.filter( Deploy.group_uuid == group_uuid)
+        if duree:
+            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+        if state:
+            deploylog = deploylog.filter( Deploy.state == state)
+
+        #todo filter 
+        #if filt:
+            #deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
+                                                #Deploy.pathpackage.like('%%%s%%'%(filt)),
+                                                #Deploy.start.like('%%%s%%'%(filt)),
+                                                #Deploy.login.like('%%%s%%'%(filt)),
+                                                #Deploy.host.like('%%%s%%'%(filt))))
+        nb = self.get_count(deploylog)
+        lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+        ##deploylog = deploylog.group_by(Deploy.title)
+        deploylog = deploylog.order_by(desc(Deploy.id))
+
+        nb = self.get_count(deploylog)
+        if min and max:
+            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
+        print deploylog
+        result = deploylog.all()
+        session.commit()
+        session.flush()
+        ret = { 'lentotal' : 0,
+               'lenquery' : 0,
+                'tabdeploy' : { 'len' : [],
+                                'state' : [],
+                                'pathpackage' : [],
+                                'sessionid' : [],
+                                'start' : [],
+                                'inventoryuuid' : [],
+                                'command' : [],
+                                'start' : [],
+                                'login' : [],
+                                'host' : [],
+                                'macadress' : [],
+                                'group_uuid' : [],
+                                'startcmd' : [],
+                                'endcmd' : [],
+                                'jidmachine' : [],
+                                'jid_relay' : [],
+                                'title' : []
+                }
+        }
+        ret['lentotal'] = lentaillerequette[0]
+        ret['lenquery'] = nb
+        for linedeploy in result:
+            #ret['tabdeploy']['len'].append(linedeploy[1])
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
+        return ret
+
+    @DatabaseHelper._sessionm
+    def getdeploybymachinerecent(self, session, uuidinventory, state, duree, min , max, filt):
+        deploylog = session.query(Deploy)
+        if uuidinventory:
+            deploylog = deploylog.filter( Deploy.inventoryuuid == uuidinventory)
+        if duree:
+            deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
+        if state:
+            deploylog = deploylog.filter( Deploy.state == state)
+        #else:
+            #deploylog = deploylog.filter( Deploy.state == "STARDEPLOY")
+
+        #if filt:
+    #deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
+                                        #Deploy.pathpackage.like('%%%s%%'%(filt)),
+                                        #Deploy.start.like('%%%s%%'%(filt)),
+                                        #Deploy.login.like('%%%s%%'%(filt)),
+                                        #Deploy.host.like('%%%s%%'%(filt))))
+                                            
+        nb = self.get_count(deploylog)
+                                            
+        lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+        ##deploylog = deploylog.group_by(Deploy.title)
+        #deploylog = deploylog.add_column(func.count(Deploy.title))
+        deploylog = deploylog.order_by(desc(Deploy.id))
+
+        nb = self.get_count(deploylog)
+        if min and max:
+            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
+        result = deploylog.all()
+        session.commit()
+        session.flush()
+        ret = { 'lentotal' : 0,
+               'lenquery' : 0,
+                'tabdeploy' : { 'len' : [],
+                                'state' : [],
+                                'pathpackage' : [],
+                                'sessionid' : [],
+                                'start' : [],
+                                'inventoryuuid' : [],
+                                'command' : [],
+                                'start' : [],
+                                'login' : [],
+                                'host' : [],
+                                'macadress' : [],
+                                'group_uuid' : [],
+                                'startcmd' : [],
+                                'endcmd' : [],
+                                'jidmachine' : [],
+                                'jid_relay' : [],
+                                'title' : []
+                }
+        }
+        ret['lentotal'] = lentaillerequette[0]
+        ret['lenquery'] = nb
+        for linedeploy in result:
+            #ret['tabdeploy']['len'].append(linedeploy[1])
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
+        return ret
+
 
     @DatabaseHelper._sessionm
     def getdeploybyuserrecent(self, session, login , state, duree, min , max, filt):
