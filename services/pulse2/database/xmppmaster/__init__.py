@@ -804,6 +804,68 @@ class XmppMasterDatabase(DatabaseHelper):
             return self.get_count(session.query(Deploy))
 
     @DatabaseHelper._sessionm
+    def getLogxmpp( self,
+                    session,
+                    start_date,
+                    end_date,
+                    typelog,
+                    action,
+                    module,
+                    user,
+                    how,
+                    who,
+                    why):
+        logs = session.query(Logs)
+        if start_date != "":
+            logs = logs.filter( Logs.date > start_date)
+            print "date\n"
+        if end_date != "":
+            logs = logs.filter( Logs.date < end_date)
+            print "date\n"
+        if typelog != "None":
+            logs = logs.filter( Logs.type == typelog)
+            print "typelog\n"
+        if action != "None":
+            logs = logs.filter( Logs.action == action)
+            print "action\n"
+        if module != "None":
+            logs = logs.filter( Logs.module == module)
+            print "module\n"
+        if user != "":
+            logs = logs.filter( Logs.fromuser == user)
+        if how != "":
+            logs = logs.filter( Logs.how == how)
+        if who != "":
+            logs = logs.filter( Logs.who == who)
+        if why != "":
+            logs = logs.filter( Logs.why == why)
+        print logs
+        result = logs.all()
+        session.commit()
+        session.flush()
+        ret = {"data" : []}
+        index = 0
+        for linelogs in result:
+            listchamp = []
+            #listchamp.append(index)
+            listchamp.append(str(linelogs.date))
+            listchamp.append(linelogs.fromuser)
+            #listchamp.append(linelogs.type)
+            #listchamp.append(linelogs.action)
+            #listchamp.append(linelogs.module)
+            #listchamp.append(linelogs.how)
+            listchamp.append(linelogs.who)
+            #listchamp.append(linelogs.why)
+            #listchamp.append(linelogs.priority)
+            #listchamp.append(linelogs.touser)
+            #listchamp.append(linelogs.sessionname)
+            listchamp.append(linelogs.text)
+            ret['data'].append(listchamp)
+            #index = index + 1
+        print ret
+        return ret
+
+    @DatabaseHelper._sessionm
     def getdeploybymachinegrprecent(self, session, group_uuid, state, duree, min , max, filt):
         deploylog = session.query(Deploy)
         if group_uuid:
