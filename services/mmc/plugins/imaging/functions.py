@@ -2087,7 +2087,6 @@ class ImagingRpcProxy(RpcProxyI):
             ret = ret.toH()
         return xmlrpcCleanup(ret)
 
-#jfkjfk
     def __generateDefaultSuscribeMenu(self, logger, db, imaging_server_uuid):
         location = db.getImagingServerEntity(imaging_server_uuid)
         if location == None:
