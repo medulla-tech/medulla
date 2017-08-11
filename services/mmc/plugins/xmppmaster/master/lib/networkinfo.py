@@ -145,23 +145,6 @@ class  networkagentinfo:
             self.messagejson['msg']= "system %s : not managed yet"%sys.platform
             return self.messagejson
 
-    def routeinterface(self):
-        """ Returns the list of ip gateways for linux interfaces """
-        p = subprocess.Popen('LANG=C route -n | grep \'UG[ \t]\' | awk \'{ print $8"="$2}\'',
-                                                shell=True,
-                                                stdout=subprocess.PIPE,
-                                                stderr=subprocess.STDOUT)
-        result = p.stdout.readlines()
-        code_result= p.wait()
-        dataroute=[]
-        obj1={}
-        for i in range(len(result)):
-            #print result[i].rstrip('\n')
-            result[i]=result[i].rstrip('\n')
-            d = result[i].split("=")
-            obj1[d[0]]=d[1]
-        return obj1
-
     def validIP(self, address):
         parts = address.split(".")
         if len(parts) != 4:
@@ -298,10 +281,16 @@ class  networkagentinfo:
         return self.messagejson
 
     def getLocalIipAddress(self):
-        #renvoi objet reseaux linux.
-        dataroute = self.routeinterface()
+        # renvoi objet reseaux linux.
         dhcpserver = self.IpDhcp()
         ip_addresses = []
+        defaultgateway = {}
+        try:
+            gws = netifaces.gateways()
+            intergw = gws['default'][netifaces.AF_INET]
+            defaultgateway[intergw[1]] = intergw[0]
+        except Exception:
+            pass
         interfaces = netifaces.interfaces()
         for i in interfaces:
             if i == 'lo': continue
@@ -317,11 +306,11 @@ class  networkagentinfo:
                         except:
                             obj['broadcast']   = "0.0.0.0"
                         try:
-                            if dataroute[str(i)] != None:
-                                obj['gateway'] = dataroute[str(i)]
+                            if str(i) in defaultgateway:
+                                obj['gateway'] = defaultgateway[str(i)]
                             else:
                                 obj['gateway'] = "0.0.0.0"
-                        except:
+                        except Exception:
                             obj['gateway'] = "0.0.0.0"
 
                         obj['macaddress'] = self.MacAdressToIp(j['addr'])
@@ -337,6 +326,7 @@ class  networkagentinfo:
                             obj['dhcpserver'] = "0.0.0.0"
                         ip_addresses.append(obj)
         return ip_addresses
+
 
     def listdnslinux(self):
         dns=[]
