@@ -48,6 +48,7 @@ mkdir $PKI_PATH
 echo 00 > $PKI_PATH/serial
 echo 00 > $PKI_PATH/crlnumber
 touch $PKI_PATH/index.txt
+touch $PKI_PATH/index.txt.attr
 mkdir $PKI_PATH/conf
 mkdir $PKI_KEYS_PATH
 mkdir $PKI_CERTS_PATH
