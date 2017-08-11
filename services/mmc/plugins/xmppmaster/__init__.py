@@ -120,7 +120,6 @@ def setlogxmpp( text,
                                             action,
                                             touser,
                                             fromuser)
-##jfkjfk 
 def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why):
     if typelog == "None" and action ==  "None"  and module == "None" and start_date == "" :
         return []
