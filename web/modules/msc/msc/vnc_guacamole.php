@@ -26,7 +26,9 @@ if(isset($_GET['objectUUID'])){
 $url = array();
 $ee = xmlrpc_getGuacamoleidforUuid($_GET['objectUUID']);
 foreach ($ee as $k){
-    $url[$k[0]] = $dd['urlguacamole'].$k[1];
+    $cux_id_hex = bin2hex($k[1]).'00'.bin2hex('c').'00'.bin2hex('mysql');
+    $cux_id=base64_encode(hex2bin($cux_id_hex));
+    $url[$k[0]] = str_replace('@@CUX_ID@@',$cux_id,$dd['urlguacamole']);
 }
  ?>
     <HTML>
