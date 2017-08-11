@@ -30,6 +30,11 @@ function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
+//jfkjfk
+function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why=""){
+    return xmlCall("xmppmaster.getLogxmpp", array($start_date, $end_date, $type, $action, $module, $user, $how, $who, $why));
+}
+
 function xmlrpc_getXmppConfiguration() {
     return xmlCall("xmppmaster.getXmppConfiguration", array());
 }
