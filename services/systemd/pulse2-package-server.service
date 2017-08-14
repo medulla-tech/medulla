@@ -1,6 +1,6 @@
 [Unit]
 Description=Pulse2 Package Server : pulse2-package-server
-After=samba.service slapd.service
+After=samba.service slapd.service mmc-agent.service
 
 [Service]
 PIDFile=/var/run/pulse2-package-server.pid
