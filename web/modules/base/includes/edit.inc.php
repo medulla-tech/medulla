@@ -33,7 +33,7 @@ function createAclArray($aclString) {
     if (strpos($aclString, '/') === False) {
         $acl = $aclString;
     } else {
-        list($acl, $aclattr) = split('/', $aclString);
+        list($acl, $aclattr) = preg_split('/', $aclString);
     }
 
     $retacl = array();
@@ -44,20 +44,20 @@ function createAclArray($aclString) {
     $arrayMod = preg_split('/:/', $acl);
     foreach($arrayMod as $items) {
         if (substr_count($items, "#") == 2) {
-            list($mod, $submod, $action) = split('#', $items);
+            list($mod, $submod, $action) = preg_split('#', $items);
             $retacl[$mod][$submod][$action]["right"] = "on";
         } else if (substr_count($items, "#") == 3) {
-            list($mod, $submod, $action, $tab) = split('#', $items);
+            list($mod, $submod, $action, $tab) = preg_split('#', $items);
             $retacltab[$mod][$submod][$action][$tab]["right"] = "on";
         }
     }
 
     /* get attribute ACL */
     if (strlen($aclattr)) {
-        $arrayAttr=split(':',$aclattr);
+        $arrayAttr=preg_split(':',$aclattr);
         foreach($arrayAttr as $items) {
             if (!empty($items)) {
-                list($attrName,$value) = split('=',$items);
+                list($attrName,$value) = preg_split('=',$items);
                 $retaclattr[$attrName]=$value;
             }
         }
