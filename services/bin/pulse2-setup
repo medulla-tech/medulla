@@ -1238,6 +1238,10 @@ class SetupApp(object):
         return False
 
     def post_restart(self):
+
+        is_service_started(mmc-agent)
+        is_service_started(pulse2-package-server)
+
         # Register imaging server, if necessary
         if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
