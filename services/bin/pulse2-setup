@@ -1224,17 +1224,17 @@ class SetupApp(object):
             :return: return True is the service exist and is started, False otherwise
             :rtype: boolean
         """
-        log.debug('Looking if service %s is started') % service
+        log.debug('Looking if service %s is started' % service )
         try:
             status = check_output(["systemctl", "is-active", service])
             if status.strip('\n') == 'active':
-                log.debug('The service %s is started') % service
+                log.debug('The service %s is started' % service)
                 return True
         except CalledProcessError:
-                log.debug('The service %s does not exist') % service
+                log.debug('The service %s does not exist' % service)
                 return False
 
-        log.debug('The service %s is not started') % service
+        log.debug('The service %s is not started' % service)
         return False
 
     def post_restart(self):
