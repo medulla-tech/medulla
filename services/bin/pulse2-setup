@@ -48,6 +48,7 @@ from pulse2.site import examplesdir
 from mmc.database.ddl import DBControl
 from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
+from subprocess import check_output, CalledProcessError
 
 log = logging.getLogger('pulse2-setup')
 
@@ -472,7 +473,7 @@ class Pulse2ConfigFile(object):
         # Use current configuration
         if current:
             dir_path = mmcconfdir
-        # Use example configuration
+        # Use example configuration
         else:
             dir_path = examplesdir
 
@@ -1213,6 +1214,25 @@ class SetupApp(object):
         for srv in self.services:
             if srv.is_enable:
                 srv.restart()
+
+    def is_service_started(service):
+
+        """
+            Check if a service is started.
+
+            :param service: This is the name of the service
+            :return: return True is the service exist and is started, False otherwise
+            :rtype: boolean
+        """
+
+        try:
+            status = check_output(["systemctl", "is-active", service])
+            if status.strip('\n') == 'active':
+                return True
+        except CalledProcessError:
+            return False
+
+        return False
 
     def post_restart(self):
         # Register imaging server, if necessary
