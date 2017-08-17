@@ -1232,7 +1232,7 @@ class SetupApp(object):
                 return True
         except CalledProcessError:
                 log.debug('The service %s does not exist') % service
-            return False
+                return False
 
         log.debug('The service %s is not started') % service
         return False
