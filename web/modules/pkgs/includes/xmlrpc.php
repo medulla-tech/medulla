@@ -126,4 +126,8 @@ function getAppstreamNotifications(){
 function save_xmpp_json($json){
     return xmlCall("pkgs.save_xmpp_json", array($json));
 }
+
+function xmpp_packages_list(){
+    return xmlCall("pkgs.xmpp_packages_list", array());
+}
 ?>

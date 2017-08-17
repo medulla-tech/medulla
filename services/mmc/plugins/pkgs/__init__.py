@@ -596,53 +596,43 @@ def save_xmpp_json(json_content):
     except ValueError:
         return False
 
-    # if the server uses xmpp step 2 and 4 are useless
-
-    # 2 - Extracts the informations for the conf.json file
+    # 2 - Extracts the uuid used to name the package directory
     infos = content['info']
     uuid = infos['id']
-    name = infos['name']
-    description = infos['description']
-    version = infos['version']
 
     # 3 - Create the path/uuid directory if not exists
     if not os.path.exists(path+'/'+uuid):
         os.mkdir(path+'/'+uuid)
 
-    # 4 - Create the conf.json file
-    infos = {
-        "commands":
-            {
-                "postCommandSuccess": {"command": "", "name": ""},
-                "installInit": {"command": "", "name": ""},
-                "postCommandFailure": {"command": "", "name": ""},
-                "command": {"command": "", "name": ""},
-                "preCommand": {"command": "", "name": ""}},
-        "description": description,
-        "sub_packages": [],
-        "entity_id": "0",
-        "reboot": 0,
-        "version": version,
-        "inventory": {
-            "associateinventory": "0",
-            "licenses": "",
-            "queries": {
-                "Qversion": "",
-                "Qvendor": "",
-                "boolcnd": "",
-                "Qsoftware": ""}
-        },
-        "id": uuid,
-        "name": name
-    }
-
-    conf = open(path+'/'+uuid+'/conf.json', 'w')
-    json.dump(infos,conf)
-    conf.close()
-
-    # 5 - Create the xmppdeploy.json file
+    # 4 - Create the xmppdeploy.json file
     xmppdeploy = open(path+'/'+uuid+'/xmppdeploy.json','w')
     json.dump(content,xmppdeploy)
     xmppdeploy.close()
 
+
     return True
+
+
+def xmpp_packages_list():
+    """
+    Create a list of xmpp packages and return the list and the information for each of them
+    :return: list of packages
+    """
+
+    path = "/var/lib/pulse2/packages"
+
+    # 1 - list the packages directories
+    list_all = os.listdir(path)
+    xmpp_list = []
+
+    for dirname in list_all:
+
+        # 2 - if the directory contains xmppdeploy.json
+        if os.path.isfile(path+'/'+dirname+'/xmppdeploy.json') is True:
+            # 3 - Extracts the package information and add it to the package list
+            json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
+            xmpp_list.append(json_content['info'])
+
+    print xmpp_list
+    return xmpp_list
+
