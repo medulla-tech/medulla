@@ -45,6 +45,16 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
         }
         else {
             new NotifyWidgetSuccess(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name));
+            xmlrpc_setfrombackuppclogxmpp(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name),
+                                                $type = "USER",
+                                                $sessionname = '' ,
+                                                $priority = 0,
+                                                $who = 'AMR',
+                                                $how = 'xmpp',
+                                                $why = '',
+                                                $action = 'hostStatus',
+                                                $touser =  'group '.$_GET['groupname'] ,
+                                                $fromuser = $_SESSION['login']);
             $_GET['tab'] = 'tab2';
         }
     }
@@ -86,6 +96,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
 if (isset($_POST['bconfirm'],$_POST['host'])){
 
     $backup_port_reverse_ssh = get_host_backup_reverce_port($_POST['host']);
+    $rsync_path = get_host_rsync_path($_POST['host']);
 
     // Setting host profiles
     set_host_backup_profile($_POST['host'], $_POST['backup_profile']);
@@ -132,7 +143,7 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['DumpPreUserCmd']  = $cfg['RestorePreUserCmd']  = $backup_manager_cmd;
     $cfg['DumpPostUserCmd'] = $cfg['RestorePostUserCmd'] = $backup_manager_cmd1;
     $cfg['ClientNameAlias'] = "localhost";
-    $cfg['RsyncClientPath'] = 'rsync';
+    $cfg['RsyncClientPath'] = $rsync_path;
     $cfg['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p '.$backup_port_reverse_ssh.' localhost $rsyncPath $argList+';
     $cfg['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host';
     $cfg['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host';

@@ -130,4 +130,29 @@ function save_xmpp_json($json){
 function xmpp_packages_list(){
     return xmlCall("pkgs.xmpp_packages_list", array());
 }
+
+function xmlrpc_setfrompkgslogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'pulse2'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}                                                    
+
 ?>

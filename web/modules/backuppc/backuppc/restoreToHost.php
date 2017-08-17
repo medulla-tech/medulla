@@ -31,6 +31,7 @@ $sharename = $_POST['sharename'];
 $restoredir = $_POST['restoredir'];
 $dir = $_POST['dir'];
 $hostdest = $_POST['hostdest'];
+$sharedest = $_POST['sharedest'];
 
 $_GET = array_merge($_GET,$_POST);
 
@@ -41,6 +42,7 @@ unset($_POST['sharename']);
 unset($_POST['restoredir']);
 unset($_POST['dir']);
 unset($_POST['hostdest']);
+unset($_POST['sharedest']);
 
 $files = array_values($_POST);
 
@@ -50,10 +52,10 @@ if (count($files) == 0)
     die('');
 }
 
-$response = restore_files_to_host($host,$backupnum,$sharename,$files,$hostdest,'',$dir.$restoredir); //
+$response = restore_files_to_host($host,$backupnum,$sharename,$files,$hostdest,$sharedest,$dir.$restoredir); //
 
 if (!$response['err'])
-    new NotifyWidgetSuccess(_T('The selected files are going to be restored to','backuppc').' '.$sharename.$dir.$restoredir);
+    new NotifyWidgetSuccess(_T('The selected files are going to be restored to','backuppc').' '.$sharedest.$dir.$restoredir);
 else
     new NotifyWidgetFailure(nl2br($response['errtext']));
 

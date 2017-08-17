@@ -98,6 +98,47 @@ def updatedeploystate(sessionxmppmessage, status):
 def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
+def setlogxmpp( text,
+                type ,
+                sessionname,
+                priority,
+                who,
+                how,
+                why,
+                module,
+                action,
+                touser,
+                fromuser):
+    return XmppMasterDatabase().setlogxmpp( text,
+                                            type ,
+                                            sessionname,
+                                            priority,
+                                            who,
+                                            how,
+                                            why,
+                                            module,
+                                            action,
+                                            touser,
+                                            fromuser)
+def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why):
+    if typelog == "None" and action ==  "None"  and module == "None" and start_date == "" :
+        return []
+    if typelog == "None":
+        typelog == ""
+    if module == "None":
+        module == ""
+    if action == "None":
+        action == ""
+    return XmppMasterDatabase().getLogxmpp(start_date,
+                                           end_date,
+                                           typelog,
+                                           action,
+                                           module,
+                                           user,
+                                           how,
+                                           who,
+                                           why)
+
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
@@ -167,6 +208,12 @@ def getdeploybyuserlen(login):
     if not login:
         login = None
     return XmppMasterDatabase().getdeploybyuserlen( login)
+
+def getdeploybymachinerecent(uuidinventory, state, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybymachinerecent(uuidinventory, state, duree, min , max, filt)
+
+def getdeploybymachinegrprecent(gid, state, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybymachinegrprecent(gid, state, duree, min , max, filt)
 
 def getdeploybyuserrecent(  login , state, duree, min , max, filt):
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)

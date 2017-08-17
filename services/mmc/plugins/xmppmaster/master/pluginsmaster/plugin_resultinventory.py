@@ -5,6 +5,7 @@ import os,sys
 import urllib2
 import time
 import json
+import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
@@ -16,8 +17,8 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
               "Content-Type": "application/x-compress",
              }
     try:
+        logging.getLogger().debug("plugin_resultinventory")
         print os.environ
-        print "plugin_resultinventory : %s"%data
         print message['from']
         # send inventory to inventory server
         try:
@@ -35,20 +36,25 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
             reginventory = False
         if reginventory:
             computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
-            print "computers_id: %s" % computers_id
+            logging.getLogger().debug("Computers ID: %s" % computers_id)
             nb_iter = int(reginventory['info']['max_key_index']) + 1
             for num in range(1,nb_iter):
                 reg_key_num = 'reg_key_'+str(num)
-                reg_key = reginventory[reg_key_num]['key'].strip('"')
-                reg_key_value = reginventory[reg_key_num]['value'].strip('"')
-                key_name = reg_key.split('\\')[-1]
-                print "reg_key_num: %s" % reg_key_num
-                print "reg_key: %s" % reg_key
-                print "reg_key_value: %s" % reg_key_value
-                print "key_name: %s" % key_name
-                registry_id = Glpi().getRegistryCollect(reg_key)
-                print "registry_id: %s" % registry_id
-                Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
+                try:
+                    reg_key = reginventory[reg_key_num]['key'].strip('"')
+                    reg_key_value = reginventory[reg_key_num]['value'].strip('"')
+                    key_name = reg_key.split('\\')[-1]
+                    logging.getLogger().debug("Registry information:")
+                    logging.getLogger().debug("  reg_key_num: %s" % reg_key_num)
+                    logging.getLogger().debug("  reg_key: %s" % reg_key)
+                    logging.getLogger().debug("  reg_key_value: %s" % reg_key_value)
+                    logging.getLogger().debug("  key_name: %s" % key_name)
+                    registry_id = Glpi().getRegistryCollect(reg_key)
+                    logging.getLogger().debug("  registry_id: %s" % registry_id)
+                    Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
+                except Exception, e:
+                    logging.getLogger().debug("Error getting key: %s" % reg_key)
+                    pass
         # restart agent
         xmppobject.restartAgent(message['from'])
     except Exception, e:

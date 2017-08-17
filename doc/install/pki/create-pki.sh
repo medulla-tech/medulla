@@ -48,6 +48,7 @@ mkdir $PKI_PATH
 echo 00 > $PKI_PATH/serial
 echo 00 > $PKI_PATH/crlnumber
 touch $PKI_PATH/index.txt
+touch $PKI_PATH/index.txt.attr
 mkdir $PKI_PATH/conf
 mkdir $PKI_KEYS_PATH
 mkdir $PKI_CERTS_PATH
@@ -58,7 +59,7 @@ chmod 700 $PKI_PATH/conf
 
 # Prepare configuration file
 cd "`dirname $0`"
-sed "s/@@CRL_SERVER_ADDRESS@@/$CRL_SERVER_ADDRESS/" pulse.cnf.in > $PKI_CNF
+sed "s/@@CRL_SERVER_ADDRESS@@/$CRL_SERVER_ADDRESS/" /usr/share/doc/pulse2-common/install/pki/pulse.cnf.in > $PKI_CNF
 chmod 400 $PKI_CNF
 
 # initialise PKI

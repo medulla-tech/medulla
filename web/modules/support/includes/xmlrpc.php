@@ -56,5 +56,27 @@ function delete_archive() {
 function get_license_info() {
     return xmlCall("support.get_license_info");
 }
-
+function xmlrpc_setfromsupportlogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'support'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}
 ?>

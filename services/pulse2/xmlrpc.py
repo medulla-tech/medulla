@@ -123,7 +123,7 @@ class Pulse2XMLRPCProxy(Proxy):
     def _version_reminder(self):
         """
         Content of method callRemote was changed since 10.1.
-        (last check for 13.2)
+        (last check for 17.5)
 
         Check please its content for each release of twisted and validate it
         increasing number version bellow...
@@ -132,9 +132,9 @@ class Pulse2XMLRPCProxy(Proxy):
             logging.getLogger().warn("Uncompatible Twisted version, must be greater than 10.1")
             return False
 
-        if twisted.version.major >= 13 and twisted.version.minor > 2:
+        if twisted.version.major >= 17 and twisted.version.minor > 5:
 
-            logging.getLogger().warn("Uncompatible Twisted version, must be less than than 13.2")
+            logging.getLogger().warn("Uncompatible Twisted version, must be less than than 17.5")
             return False
 
         return True

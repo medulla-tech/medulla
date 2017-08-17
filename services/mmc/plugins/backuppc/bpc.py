@@ -20,6 +20,9 @@ from pulse2.database.backuppc import BackuppcDatabase
 # BackupPC Config
 from mmc.plugins.backuppc.config import BackuppcConfig
 
+# Machine info
+from mmc.plugins.glpi.database import Glpi
+
 logger = logging.getLogger()
 
 # Error consts
@@ -431,10 +434,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
         params['hostDest'] = hostDest.encode('utf8','ignore')
     else:
         params['hostDest'] = host.lower()
-    if shareDest:
-        params['shareDest'] = shareDest.encode('utf8','ignore')
-    else :
-        params['shareDest'] = share_name
+    params['shareDest'] = shareDest.encode('utf8','ignore')
     params['pathHdr'] = pathHdr.encode('utf8','ignore')
     # Files list
     params['fcbMax']=len(files)+1
@@ -593,7 +593,19 @@ def set_host_period_profile(uuid,newprofile):
 def host_exists(uuid):
     return BackuppcDatabase().host_exists(uuid)
 
+def get_host_rsync_path(uuid):
+    machine_info = Glpi().getLastMachineInventoryFull(uuid)
+    machine = dict((key, value) for (key, value) in machine_info)
+    if 'Windows'.lower() in machine['os'].lower():
+        if '64' in machine['os_arch']:
+            return 'C:\\Windows\\SysWOW64\\rsync.exe'
+        else:
+            return 'C:\\Windows\\System32\\rsync.exe'
+    else:
+        return '/usr/bin/rsync'
+
 def set_backup_for_host(uuid):
+    rsync_path = get_host_rsync_path(uuid)
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
@@ -618,6 +630,7 @@ def set_backup_for_host(uuid):
     # TODO : read NmbLookupCmd from ini file
     config = {}
     port = randint(49152, 65535)
+    config['RsyncClientPath'] = "%s"%rsync_path;
     config['RsyncClientCmd'] =     "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
     config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
     config['DumpPreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);

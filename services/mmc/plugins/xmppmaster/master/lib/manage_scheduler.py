@@ -29,7 +29,7 @@ import time
 from datetime import datetime
 import croniter
 
-print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
+#print os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler"))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", "descriptorscheduler")))
 logger = logging.getLogger()
 
@@ -63,9 +63,9 @@ class manage_scheduler:
         if not os.path.exists(self.directoryschedule):
             logging.getLogger().debug("create directory scheduler %s"%self.directoryschedule)
             os.makedirs(self.directoryschedule, 0700 )
-        print self.directoryschedule
+        #print self.directoryschedule
         namefile = os.path.join(self.directoryschedule,"__init__.py")
-        print namefile
+        #print namefile
         if not os.path.exists(namefile):
             fichier = open(namefile, "w")
             fichier.write("###WARNING : never delete this file")

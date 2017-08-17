@@ -20,19 +20,15 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
--- ----------------------------------------------------------------------
--- Database version
--- ----------------------------------------------------------------------
 
-UPDATE version SET Number = 4;
 --
 -- Table structure for table `organization` and table `packageslist`
 --
 
-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Table `organization`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS 'organization' ;
+DROP TABLE IF EXISTS `organization` ;
 
 CREATE TABLE IF NOT EXISTS `organization` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
@@ -55,4 +51,11 @@ CREATE TABLE IF NOT EXISTS `packageslist` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
+
+-- ----------------------------------------------------------------------
+-- Database version
+-- ----------------------------------------------------------------------
+
+UPDATE version SET Number = 4;
+
 COMMIT;

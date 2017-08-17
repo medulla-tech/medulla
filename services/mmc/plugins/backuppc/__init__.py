@@ -133,6 +133,9 @@ def get_host_backup_reverce_port(uuid):
 def set_host_backup_profile(uuid,newprofile):
     return bpc.set_host_backup_profile(uuid,newprofile)
 
+def get_host_rsync_path(uuid):
+    return bpc.get_host_rsync_path(uuid)
+
 
 # PERIOD PROFILES
 
