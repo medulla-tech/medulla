@@ -635,4 +635,20 @@ def xmpp_packages_list():
 
     print xmpp_list
     return xmpp_list
+    
 
+def remove_xmpp_package(package_uuid):
+    """
+    Remove the specified xmpp package. If it is ok, return true, else return false
+    :param packageUuid:
+    :return: success | failure
+    """
+
+    path = "/var/lib/pulse2/packages"
+
+    # If the
+    if os.path.exists(path + '/' + package_uuid):
+        shutil.rmtree(path + '/' + package_uuid)
+        return True
+    else :
+        return False
