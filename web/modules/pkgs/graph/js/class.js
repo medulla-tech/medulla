@@ -169,7 +169,14 @@ var optionsForAction = {
     'action_no_operation':
     {
         'step':'critic'
-    }
+    },
+
+
+    'action_set_environ' :
+        {
+            'step':'critic',
+            'environ':'mandatory'
+        }
 };
 
 /**
@@ -253,6 +260,76 @@ var optionsList = {
         'help': 'Go to step (non conditionnal jump)',
     },
 
+    'gotoyes' : {
+      'type':'select-label',
+      'help': 'Goto the selected label if yes event is launch'
+    },
+
+    'gotono' : {
+        'type':'select-label',
+        'help': 'Goto the selected label if no event is launch'
+    },
+
+    'gotoopen' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotosave' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotocancel' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotoclose' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotodiscard' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotoapply' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+    'gotoapply' : {
+        'type':'select-label',
+        'help': ''
+    },
+
+        'gotoreset' : {
+    'type':'select-label',
+        'help': ''
+},
+
+    'gotorestoreDefaults' : {
+        'type':'select-label',
+            'help': ''
+    },
+
+    'gotoabort' : {
+        'type':'select-label',
+            'help': ''
+    },
+
+    'gotoretry' : {
+        'type':'select-label',
+            'help': ''
+    },
+
+    'gotoignore' : {
+        'type':'select-label',
+            'help': ''
+    },
+
     'resultcommand': {
         'type': 'text',
         'help': 'Commande à lancer',
@@ -288,7 +365,7 @@ var optionsList = {
     },
 
     'environ': {
-        'type': 'text',
+        'type': 'textarea',
     },
     'packageuuid':{
       'type':'text',

@@ -51,13 +51,13 @@ if(isset($_POST['saveList']))
 <script src="modules/pkgs/graph/js/jQuery-ui.js"></script>
 
 <h2>Infos package</h2>
-<div id="infos-package" style="display:flex;width=100%;margin-bottom:10px;">
-    <div style="width:50%">
+<div id="infos-package" style="display:flex;margin-bottom:10px;">
+    <div>
         <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
         <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
         <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
         <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
-        <label for="software-package">Package id</label><input type="text" name="uuid-package" id="uuid-package" value="<?php echo uniqid();?>" required/><br />
+        <input type="hidden" name="uuid-package" id="uuid-package" value="<?php echo uniqid();?>" required/><br />
     </div>
     <div>
         <label for="quitonerror-package">Quit on error</label>
@@ -77,6 +77,18 @@ if(isset($_POST['saveList']))
             <option value="pushrsync">rsync</option>
             <option value="pullcurl">curl</option>
         </select>
+    </div>
+    <div>
+        <label for="associateinventory-package">Associate inventory</label>
+        <input type="checkbox" name="associateinventory-package" id="associateinventory-package" />
+        <label for="Qvendor-package">Vendor</label>
+        <input type="text" name="Qvendor-package" id="Qvendor-package" disabled />
+        <label for="Qsoftare-package">Software</label>
+        <input type="text" name="Qsoftware-package" id="Qsoftware-package" disabled />
+        <label for="Qversion-package">Version</label>
+        <input type="text" name="Qversion-package" id="Qversion-package" disabled />
+        <label for="Qlicence-package">Licence</label>
+        <input type="text" name="Qlicence-package" id ="Qlicence-package" disabled />
     </div>
 </div>
 
@@ -105,6 +117,9 @@ if(isset($_POST['saveList']))
                     <option value="actionsuccescompletedend">End with success</option>
                     <option value="actionwaitandgoto">Wait and go</option>
                     <option value="actioncleaning">Clean</option>
+                    <option value="action_no_operation">No operation</option>
+                    <option value="action_set_environ">Set environment variable</option>
+
                 </select>
                 <div id="options" style="width:100%;">
                     <h2>Options</h2>

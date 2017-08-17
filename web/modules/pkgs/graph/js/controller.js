@@ -139,6 +139,7 @@ jQuery("#infos-package").on('click change',function(){
         'id':jQuery("#uuid-package").val()
     };
 
+    // Manage the transfert file
     if(jQuery("#transferfile-package").val() == 'true')
     {
         jQuery("#methodtransfert-package").prop('disabled',false);
@@ -151,6 +152,33 @@ jQuery("#infos-package").on('click change',function(){
             delete(infoPackage.methodtransfert);
         }
         jQuery("#methodtransfert-package").prop('disabled',true);
+    }
+
+    // Manage query information
+    if(jQuery("#associateinventory-package").is(':checked')){
+        jQuery('#Qvendor-package').prop('disabled',false);
+        jQuery('#Qsoftware-package').prop('disabled',false);
+        jQuery('#Qversion-package').prop('disabled',false);
+        jQuery('#Qlicence-package').prop('disabled',false);
+
+        infoPackage['Qvendor'] = jQuery('#Qvendor-package').val();
+        infoPackage['Qsoftware'] = jQuery('#Qsoftware-package').val();
+        infoPackage['Qversion'] = jQuery('#Qversion-package').val();
+        infoPackage['Qlicence'] = jQuery('#Qlicence-package').val();
+    }
+    else
+    {
+        if(typeof(infoPackage['Qvendor']) != 'undefined' && typeof(infoPackage['Qsoftware']) != 'undefined' && typeof(infoPackage['Qversion']) != 'undefined' && typeof(infoPackage['Qlicence']) != 'undefined')
+        {
+            delete(infoPackage.Qvendor);
+            delete(infoPackage.Qsoftware);
+            delete(infoPackage.Qversion);
+            delete(infoPackage.Qlicence);
+        }
+        jQuery("#Qvendor-package").prop('disabled',true);
+        jQuery("#Qsoftware-package").prop('disabled',true);
+        jQuery("#Qversion-package").prop('disabled',true);
+        jQuery("#Qlicence-package").prop('disabled',true);
     }
 });
 
