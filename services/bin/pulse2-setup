@@ -1215,7 +1215,7 @@ class SetupApp(object):
             if srv.is_enable:
                 srv.restart()
 
-    def is_service_started(service):
+    def is_service_started(self, service):
 
         """
             Check if a service is started.
