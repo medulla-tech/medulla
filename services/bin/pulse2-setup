@@ -1239,8 +1239,8 @@ class SetupApp(object):
 
     def post_restart(self):
 
-        is_service_started(mmc-agent)
-        is_service_started(pulse2-package-server)
+        self.is_service_started('mmc-agent')
+        self.is_service_started('pulse2-package-server')
 
         # Register imaging server, if necessary
         if self.config['package.service.enable']:
