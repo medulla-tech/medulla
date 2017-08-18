@@ -44,9 +44,9 @@ foreach ($ee as $k){
                 foreach ($url as $clef=>$val){
                     if ($clef == "SSH"){
                         echo '<td align="center">
-                            <a href="'.$url['SSH'].'" target="blank">
-                            <img src="modules/xmppmaster/graph/img/SSHguacamole.png" 
-                            alt="remote ssh View" 
+                            <a href="'.$url['SSH'].'" target="blank" id="ssh">
+                            <img src="modules/xmppmaster/graph/img/SSHguacamole.png"
+                            alt="remote ssh View"
                             style="width:104px;height:104px;">
                             </a>
                             <br>
@@ -55,9 +55,9 @@ foreach ($ee as $k){
                         }
                     if ($clef == "RDP"){
                         echo '<td align="center">
-                            <a href="'.$url['RDP'].'" target="blank">
-                            <img src="modules/xmppmaster/graph/img/RDPguacamole.png" 
-                            alt="remote rdp View" 
+                            <a href="'.$url['RDP'].'" target="blank" id="rdp">
+                            <img src="modules/xmppmaster/graph/img/RDPguacamole.png"
+                            alt="remote rdp View"
                             style="width:104px;height:104px;">
                             </a>
                             <br>
@@ -66,9 +66,9 @@ foreach ($ee as $k){
                         }
                     if ($clef == "VNC"){
                         echo '<td align="center">
-                            <a href="'.$url['VNC'].'" target="blank">
-                            <img src="modules/xmppmaster/graph/img/VNCguacamole.png" 
-                            alt="remote rdp View" 
+                            <a href="'.$url['VNC'].'" target="blank" id="vnc">
+                            <img src="modules/xmppmaster/graph/img/VNCguacamole.png"
+                            alt="remote rdp View"
                             style="width:104px;height:104px;">
                             </a>
                             <br>
@@ -97,3 +97,19 @@ if ($dd['agenttype'] == "relayserver")
             </HTML>
 ";
 ?>
+
+<script type="text/javascript">
+
+jQuery('#ssh').on('click', function(){
+    alert( "The SSH control session opens in a new window" )
+})
+
+jQuery('#rdp').on('click', function(){
+    alert( "The RDP control session opens in a new window" )
+})
+
+jQuery('#vnc').on('click', function(){
+    alert( "The VNC control session opens in a new window" )
+})
+
+</script>
