@@ -29,22 +29,22 @@ require_once("modules/msc/includes/package_api.php");
 require_once("modules/msc/includes/utilities.php");
 ?>
 <style>
-    a.info{
+a.info{
     position:relative;
     z-index:24;
     color:#000;
     text-decoration:none
 }
- 
+
 a.info:hover{
     z-index:25;
     background-color:#FFF
 }
- 
+
 a.info span{
     display: none
 }
- 
+
 a.info:hover span{
     display:block;
     position:absolute;
@@ -57,6 +57,7 @@ a.info:hover span{
     padding:5px;
 }
 </style>
+
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
@@ -151,6 +152,7 @@ else
 {
     // 1 - Get the list of xmpp packages
     $packages = xmpp_packages_list();
+    $count = count($packages);
     // 2 - For each package, extract information
     foreach($packages as $package)
     {
@@ -187,12 +189,8 @@ $n->start = 0;
 $n->end = $count;
 
 $n->addActionItem(new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs"));
-if(!isExpertMode())
-    $n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs"));
 
-else
-    $n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "id"));
-
+$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 
