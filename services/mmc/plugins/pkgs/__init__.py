@@ -598,18 +598,19 @@ def save_xmpp_json(json_content):
 
     # 2 - Extracts the uuid used to name the package directory
     infos = content['info']
+    # :todo: 3 - Add the label package to the name
+    name = infos['name']
     uuid = infos['id']
 
-    # 3 - Create the path/uuid directory if not exists
-    if not os.path.exists(path+'/'+uuid):
-        os.mkdir(path+'/'+uuid)
+    # 4 - Create the path/uuid directory if not exists
+    package_name = name+'-'+uuid
+    if not os.path.exists(path+'/'+package_name):
+        os.mkdir(path+'/'+package_name)
 
-    # 4 - Create the xmppdeploy.json file
-    xmppdeploy = open(path+'/'+uuid+'/xmppdeploy.json','w')
+    # 5 - Create the xmppdeploy.json file
+    xmppdeploy = open(path+'/'+package_name+'/xmppdeploy.json','w')
     json.dump(content,xmppdeploy)
     xmppdeploy.close()
-
-
     return True
 
 

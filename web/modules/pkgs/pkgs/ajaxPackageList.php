@@ -166,7 +166,8 @@ else
         $err = false;
 
         // This array contains the URI parameters for each entry
-        $params[] = array('packageUuid' => $package['id'], 'packageName' =>$package['name']);
+        $package_name = $package['name'].'-'.$package['id'];
+        $params[] = array('packageUuid' => $package_name);
     }
 }
 echo "<br>";
