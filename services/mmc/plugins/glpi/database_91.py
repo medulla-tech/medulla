@@ -820,6 +820,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Computer name':
             return base
+        elif query[2] == 'Last Logged User':
+            return base
+        elif query[2] == 'Owner of the machine':
+            return base + [self.user]
         elif query[2] == 'Contact':
             return base
         elif query[2] == 'Contact number':
@@ -937,6 +941,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.machine.c.contact, query[3]]]
         elif query[2] == 'Last Logged User':
             return [[self.machine.c.contact, query[3]]]
+        elif query[2] == 'Owner of the machine':
+            return [[self.user.c.name, query[3]]]
         elif query[2] == 'Contact number':
             return [[self.machine.c.contact_num, query[3]]]
         elif query[2] == 'Description':

@@ -86,7 +86,7 @@ def queryGroups():
                  ['System manufacturer', 'Dell, HP, Apple ...'],
                  ['System model',
                   'Latitude E6420, ProLiant DL120, MacBookAir5,2 ...']]])
-                 
+
     ret.append(['user',
                 [['Owner of the machine', 'user name ...'],
                  ['Last Logged User', 'Last user of the machine']]])
