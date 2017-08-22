@@ -820,6 +820,10 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.licenses, self.software]
         elif query[2] == 'Computer name':
             return base
+        elif query[2] == 'Last Logged User':
+            return base
+        elif query[2] == 'Owner of the machine':
+            return base + [self.user]
         elif query[2] == 'Contact':
             return base
         elif query[2] == 'Contact number':
@@ -937,6 +941,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.machine.c.contact, query[3]]]
         elif query[2] == 'Last Logged User':
             return [[self.machine.c.contact, query[3]]]
+        elif query[2] == 'Owner of the machine':
+            return [[self.user.c.name, query[3]]]
         elif query[2] == 'Contact number':
             return [[self.machine.c.contact_num, query[3]]]
         elif query[2] == 'Description':
@@ -3215,7 +3221,6 @@ class Glpi91(DyngroupDatabaseHelper):
     def getAllLoggedUser(self, ctx, filt = ''):
         """
             @return: all LoggedUser defined in the GLPI database
-            eg: glpi_computer.contact
         """
         session = create_session()
         query = session.query(Machine)
@@ -3224,7 +3229,7 @@ class Glpi91(DyngroupDatabaseHelper):
         query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.machine.c.contact.like('%'+filt+'%'))
-        ret = query.all()
+        ret = query.group_by(self.machine.c.contact).all()
         session.close()
         return ret
 
