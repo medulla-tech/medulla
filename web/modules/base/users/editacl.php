@@ -97,7 +97,7 @@ class TrAclFormElement extends FormElement{
 
 class AclRadioTpl extends RadioTpl {
 
-    function display($arrParam = array()) {
+    function display($arrParam) {
         if (!isset($this->choiceVal)) {
             $this->choiceVal = $this->choices;
         }
