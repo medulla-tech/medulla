@@ -781,7 +781,7 @@ class MembersTpl extends AbstractTpl {
         echo '
     <table class="membersTpl">
     <tr>
-        
+
         <td class="membersTplAvailable">
             <h4>' . $this->titleRight . '</h4>
             <select multiple size="15" class="list" name="available_' . $this->name . '[]" id="available_' . $this->name . '">';
@@ -790,7 +790,7 @@ class MembersTpl extends AbstractTpl {
         echo '
             </select>
         </td>
-        
+
         <td class="membersTplSwitchs">
             <a href="#" onclick="switch_' . $this->name . '(\'available_' . $this->name . '\', \'' . $this->name . '\'); event.returnValue=false; return false;">
                 <img style="padding: 5px;" src="img/common/icn_arrowright.gif" value="<--" />
@@ -800,7 +800,7 @@ class MembersTpl extends AbstractTpl {
                 <img style="padding: 5px;" src="img/common/icn_arrowleft.gif" value = "-->" />
             </a>
         </td>
-        
+
         <td class="membersTplMembers">
             <h4>' . $this->titleLeft . '</h4>';
         if ($this->member) {
@@ -928,7 +928,7 @@ class SelectItem extends AbstractTpl {
         return $ret;
     }
 
-    function display($paramArray = null) {
+    function display($paramArray = array()) {
         print $this->to_string($paramArray);
     }
 

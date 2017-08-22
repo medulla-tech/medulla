@@ -5,14 +5,14 @@ class DisabledInputTpl extends AbstractTpl{
      *  display input Element
      *  $arrParam accept ["value"] to corresponding value
      */
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if ($arrParam=='') {
             $arrParam = $_POST[$this->name];
         }
-        
+
         $required_attr = isset($arrParam["required"])?' rel="required"':'';
         $regexp_attr = isset($this->regexp)?' regexp="'.$this->regexp.'"':'';
-        
+
         print '<span id="container_input_'.$this->name.'"><input name="'.$this->name.'" id="'.$this->name.'" type="" value="'.$arrParam["value"].'" disabled="'.$arrParam["disabled"].$required_attr.$regexp_attr.'" /></span>';
 
         if (isset($arrParam["onchange"])) {
@@ -24,11 +24,11 @@ class DisabledInputTpl extends AbstractTpl{
 }
 
 class LinkTrFormElement extends TrFormElement{
-        
+
         function display($arrParam = array()) {
-                
+
             if (empty($arrParam)) $arrParam = $this->options;
-            
+
             if (!isset($this->cssErrorName)) $this->cssErrorName = $this->template->name;
 
             print '<tr><td width="40%" ';
@@ -66,32 +66,32 @@ class AjaxLogNavBar extends SimpleNavBar {
     function AjaxLogNavBar($itemcount, $filter, $maxperpage, $jsfunc = "updateSearchParam",$extra="" ) {
         global $conf;
         $this->itemcount = $itemcount;
-        $this->extra = $extra;        
+        $this->extra = $extra;
         $this->max = $maxperpage;
         if (isset($_GET["start"])) {
             $this->curstart = $_GET["start"];
             $this->curend = $_GET["end"];
         } else {
-            $this->curstart = 0;            
+            $this->curstart = 0;
             if ($this->itemcount > 0)
                 $this->curend = $this->max - 1;
-            else 
+            else
                 $this->curend = 0;
         }
         $this->SimpleNavBar($this->curstart, $this->curend, $this->itemcount, null, $this->max);
         $this->filter = $filter;
         $this->jsfunc = $jsfunc;
     }
-    
-    function display() {
+
+    function display($arrParam = array()) {
         echo '<form method="post">';
         echo "<ul class=\"navList\">\n";
-        
+
         // show goto page field
         if ($this->nbpages > 20) {
             $this->displayGotoPageField();
         }
-        
+
         if ($this->curstart == 0)
             echo "<li class=\"previousListInactive\">" . _("Previous") . "</li>\n";
         else {
@@ -110,11 +110,11 @@ class AjaxLogNavBar extends SimpleNavBar {
             $end = $this->curend + $this->max;
             echo "<li class=\"nextList\"><a href=\"#\" onClick=\"" . $this->jsfunc . "('" . $this->filter . "','$start','$end'); return false;\">" . _("Next") . "</a></li>\n";
         }
-        
+
         // Display a border at the left of the "Next" link
         if ($this->nbpages > 1) {
             $this->displayNextListBorder();
-        }        
+        }
 
         echo "</ul>\n";
     }
@@ -130,8 +130,8 @@ class LogDynamicDateTpl extends InputTpl {
         $this->name = $name;
         $this->value = $defaultvalue;
     }
-    
-    function display($arrParam) {
+
+    function display($arrParam = array()) {
         $e = new InputTpl($this->name);
         if (!isset($GLOBALS["__JSCALENDAR_SOURCED__"])) { // to avoid double-sourcing
             $GLOBALS["__JSCALENDAR_SOURCED__"] = 1;
@@ -141,11 +141,11 @@ class LogDynamicDateTpl extends InputTpl {
             <style type="text/css">@import url("graph/jscalendar/css/calendar-blue.css");</style>
             <script type="text/javascript" src="graph/jscalendar/lang/calendar-en.js" charset="utf-8"></script>
             <script type="text/javascript">
-                function ValidDates(){   
+                function ValidDates(){
                     pushSearch();
                 }
             </script>
-            ';            
+            ';
             if (isset($_REQUEST["lang"])) { // EN calendar always read, as the next one may not exists
                 $extention = substr($_REQUEST["lang"], 0, 2); // transpose LANG, f.ex. fr_FR => fr
                 print '<script type="text/javascript" src="graph/jscalendar/lang/calendar-'.$extention.'.js" charset="utf-8"></script>';
@@ -172,7 +172,7 @@ class LogDynamicDateTpl extends InputTpl {
             print _("or <a href='#'");
             print " onclick='javascript:document.getElementById(\"".$this->name."\").";
             print _("value=\"never\";'>never</a>");
-        }    
+        }
         print '
             </span>';
         print '
@@ -187,13 +187,13 @@ class LogDynamicDateTpl extends InputTpl {
  * A modified version of Listinfos for Log table
  */
 class LogListInfos extends OptimizedListInfos {
-    
+
     function addCommitInfo($arrString, $description= "") {
         $this->arrCommit = $arrString;
         $this->commit[] = $description;
     }
-    
-    function initVar() {        
+
+    function initVar() {
         $this->name="Elements";
         global $conf;
         if (!isset($_GET["start"])) {
@@ -201,7 +201,7 @@ class LogListInfos extends OptimizedListInfos {
                $this->start = 0;
                if (count($this->arrInfo) > 0) {
                    $this->end = $conf["global"]["maxperpage"] - 1;
-               } 
+               }
                else {
                    $this->end = 0;
                }
@@ -211,13 +211,13 @@ class LogListInfos extends OptimizedListInfos {
             $this->start = $_GET["start"];
             $this->end = $_GET["end"];
         }
-        
+
         $this->maxperpage = $conf["global"]["maxperpage"];
         $this->setItemCount(count($this->arrInfo));
         $this->startreal = $this->start;
-        $this->endreal = $this->end;     
+        $this->endreal = $this->end;
     }
-    
+
     function drawTable($navbar = 1) {
         echo "<table border=\"1\" cellspacing=\"0\" cellpadding=\"5\" class=\"listinfos\">\n";
         echo "<thead><tr>";
@@ -248,7 +248,7 @@ class LogListInfos extends OptimizedListInfos {
         echo "</tr></thead>";
 
         for ($idx = $this->start; ($idx < count($this->arrInfo)) && ($idx <= $this->end); $idx++) {
-                        
+
             if (($this->start - $idx) % 2) {
                 echo '<tr class="';
             } else {
@@ -334,10 +334,10 @@ class AjaxFilterLog extends AjaxFilter {
     function setsearchbar($url){
         $this->urlsearch=$url;
     }
-    
-    function display(){
-        
-        
+
+    function display($arrParam = array()){
+
+
 ?>
 <form name="Form" id="Form" class="ajaxfilterlog" action="#" onsubmit="return false;">
     <div id="loader"><img id="loadimg" src="img/common/loader.gif" alt="loader" class="loader"/></div>
@@ -352,34 +352,34 @@ class AjaxFilterLog extends AjaxFilter {
 ?>
         <span class="searchtools">
             <select name="filtertype" onChange="searchbar()">
-    
+
 <?php
 
     foreach ($this->types as $key => $item){
         print "\t<option value=\"".$key."\">"._($item)."</option>\n";
     }
-    
+
 ?>
-            </select>    
+            </select>
             <span id="searchfilter">
-            </span>    
+            </span>
             <img src="img/common/reload.png" style="vertical-align: middle; margin-left: 2px; margin-right: 10px;" onclick="pushSearch(); return false;" title="<?php echo _("Refresh") ?>" />
         </span>
     </span>&nbsp;
     </div>
     <script type="text/javascript">
-    
+
         jQuery(document).ready(function(){
             searchbar();
         });
-        
+
         /**
         * update div with user
         */
         function searchbar() {
             jQuery('#searchfilter').load('<?php echo $this->urlsearch ?>&filtertype='+document.Form.filtertype.value,pushSearch);
         }
-                
+
         function updateSearch() {
             launch--;
             if (launch==0) {
@@ -410,12 +410,12 @@ class AjaxFilterLog extends AjaxFilter {
             launch++;
             setTimeout("updateSearch()",500);
         }
-         
+
         pushSearch();
-        
+
     </script>
 
 </form>
-<?php        
+<?php
           }
 }
