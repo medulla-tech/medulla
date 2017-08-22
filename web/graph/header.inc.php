@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
- *
+ * (c) 2016 siveo, http://www.siveo.net
  * This file is part of Mandriva Management Console (MMC).
  *
  * MMC is free software; you can redistribute it and/or modify
@@ -19,12 +19,16 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
+ * file header.inc.php
  */
 $root = $conf["global"]["root"];
 ?>
 <!DOCTYPE html>
 <html>
-    <head>
+
+
+
+ <head>
         <title>SIVEO Console</title>
         <link href="graph/master.css" rel="stylesheet" media="screen" type="text/css" />
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -32,9 +36,29 @@ $root = $conf["global"]["root"];
         <meta name="Description" content="" />
         <meta name="Keywords" content="" />
         <link rel="icon" href="img/common/favicon.ico" />
-        <script src="jsframework/lib/jquery-1.10.2.min.js" type="text/javascript"></script>
+
+        <script src="jsframework/lib/jquery-3.2.1.min.js" type="text/javascript"></script>
         <script src="jsframework/lib/jquery.cookie.js" type="text/javascript"></script>
-        <script src="jsframework/lib/jquery-ui-1.10.3.custom.min.js"></script>
+
+        <script src="jsframework/lib/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.structure.min.css" />
+        <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.theme.min.css" />
+
+ 
+        <link rel="stylesheet" media="all" type="text/css" href="jsframework/lib/plugin.jquery-ui/jquery-ui-timepicker-addon.min.css" />
+
+        <script src="jsframework/lib/plugin.jquery-ui/jquery-ui-timepicker-addon.min.js"></script>
+
+
+        <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
+        <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
+
+        <script src="jsframework/lib/jquery.mousewheel.min.js" type="text/javascript"></script>
+
+        <script src="jsframework/lib/plugin.jquery-ui/datatable/js/jquery.dataTables.min.js"></script>
+        <link rel="stylesheet" href="jsframework/lib/plugin.jquery-ui/datatable/css/jquery.dataTables.min.css" />
+
         <script type="text/javascript">
             // Avoid prototype <> jQuery conflicts
             jQuery.noConflict();
@@ -42,10 +66,6 @@ $root = $conf["global"]["root"];
         <script src="jsframework/lib/prototype.js" type="text/javascript"></script>
         <script src="jsframework/src/scriptaculous.js" type="text/javascript"></script>
         <script src="jsframework/common.js" type="text/javascript"></script>
-        <link rel="stylesheet" href="jsframework/lib/jquery.ui.css" />
-        <script src="jsframework/lib/jquery.loadmask.js" type="text/javascript"></script>
-        <link href='jsframework/lib/jquery.loadmask.css' rel='stylesheet' type='text/css'>
-        <script src="jsframework/lib/jquery.mousewheel-3.0.6.pack.js" type="text/javascript"></script>
         <?php
         unset($css);
         ?>

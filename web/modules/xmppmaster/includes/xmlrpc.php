@@ -78,12 +78,18 @@ function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
 
-#jfkjfk
+function xmlrpc_set_simple_log($textinfo, $sessionxmppmessage, $typelog, $priority, $who ){
+    return xmlCall("xmppmaster.set_simple_log", array($textinfo, $sessionxmppmessage, $typelog, $priority, $who ));
+}
+
+function xmlrpc_updatedeploystate($sessionid, $state){
+    return xmlCall("xmppmaster.updatedeploystate", array($sessionid, $state ));
+}
+
 function xmlrpc_get_machine_stop_deploy($cmdid, $uuid) {
     return xmlCall("xmppmaster.get_machine_stop_deploy", array($cmdid, $uuid));
 }
 
-#jfkjfk
 function xmlrpc_get_group_stop_deploy($grpid) {
     return xmlCall("xmppmaster.get_group_stop_deploy", array($grpid));
 }
@@ -94,6 +100,14 @@ function xmlrpc_getlinelogswolcmd($command_id, $uuid) {
 
 function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
+}
+
+function xmlrpc_getdeploybymachinerecent($uuidinventory, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybymachinerecent", array($uuidinventory, $state, $duree, $min , $max, $filt));
+}
+
+function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybymachinegrprecent", array($gid, $state, $duree, $min , $max, $filt));
 }
 
 function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
@@ -146,12 +160,35 @@ function xmlrpc_callrestart($uuid){
     return xmlCall("xmppmaster.callrestart", array($uuid));
 }
 
-function xmlrpc_callshutdown($uuid){
-    return xmlCall("xmppmaster.callshutdown", array($uuid));
+function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
+    return xmlCall("xmppmaster.callshutdown", array($uuid, $time, $msg));
 }
 
 function xmlrpc_getstepdeployinsession($session){
     return xmlCall("xmppmaster.getstepdeployinsession", array($session));
 }
 
+function xmlrpc_setfromxmppmasterlogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'xmppmaster'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}
 ?>
