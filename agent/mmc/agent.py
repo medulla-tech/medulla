@@ -131,8 +131,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
         return ret
 
     def render_OPTIONS(self, request):
-
-        request.setHeader("Access-Control-Allow-Origin", request.received_headers["origin"])
+        request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type, authorization")
@@ -151,8 +150,8 @@ class MmcServer(xmlrpc.XMLRPC, object):
         @return: interpreted request
         """
 
-        if "origin" in request.received_headers:
-            request.setHeader("Access-Control-Allow-Origin", request.received_headers["origin"])
+        if request.requestHeaders.hasHeader("Origin"):
+            request.setHeader("Access-Control-Allow-Origin", request.requestHeaders.getRawHeaders("Origin"))
         request.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS")
         request.setHeader("Access-Control-Allow-Credentials", "true")
         request.setHeader("Access-Control-Allow-Headers", "content-type,authorization")
@@ -185,7 +184,7 @@ class MmcServer(xmlrpc.XMLRPC, object):
             logger.debug("RPC method call from unauthenticated user: %s" % functionPath + str(args))
             # Save the first sent HTTP headers, as they contain some
             # informations
-            s.http_headers = request.received_headers.copy()
+            s.http_headers = request.requestHeaders.copy()
         else:
             logger.debug("RPC method call from user %s: %s" % (s.userid, functionPath + str(args)))
         try:

@@ -26,6 +26,7 @@ $options = array(
     "id" => "process",
     "refresh" => 30,
     "title" => _T("Pulse processes", "dashboard"),
+    "enable" => false,
 );
 
 class ProcessPanel extends Panel {
