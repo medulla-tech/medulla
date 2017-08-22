@@ -3221,7 +3221,6 @@ class Glpi91(DyngroupDatabaseHelper):
     def getAllLoggedUser(self, ctx, filt = ''):
         """
             @return: all LoggedUser defined in the GLPI database
-            eg: glpi_computer.contact
         """
         session = create_session()
         query = session.query(Machine)
@@ -3230,7 +3229,7 @@ class Glpi91(DyngroupDatabaseHelper):
         query = self.__filter_on_entity(query, ctx)
         if filter != '':
             query = query.filter(self.machine.c.contact.like('%'+filt+'%'))
-        ret = query.all()
+        ret = query.group_by(self.machine.c.contact).all()
         session.close()
         return ret
 
