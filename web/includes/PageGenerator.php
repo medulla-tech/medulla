@@ -1381,7 +1381,7 @@ class multifieldTpl extends AbstractTpl {
         $this->fields = $fields;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         if (!isset($this->fields)) return;
         $separator = isset($arrParam['separator'])?$arrParam['separator']:' &nbsp;&nbsp; ';
 
@@ -1401,7 +1401,7 @@ class textTpl extends AbstractTpl {
         $this->text = $text;
     }
 
-    function display($arrParam) {
+    function display($arrParam = array()) {
         echo $this->text;
     }
 }
