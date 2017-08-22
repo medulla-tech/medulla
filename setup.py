@@ -34,7 +34,7 @@ setup(
     keywords='mmc-core',
     name='mmc-core',
     version='3.9.92',
-    debian_distro='jessie'
+    debian_distro='stretch'
     description='mmc-core',
     url='https://www.siveo.net/',
     packages=['mmc-core'],
