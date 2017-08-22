@@ -267,3 +267,11 @@ def getAllSoftwareVendors(ctx, value=''):
 def getAllSoftwareVersions(ctx, value='', software=None):
     res = Glpi().getAllSoftwareVersions(ctx, filt=value, software=software)
     return unique([x.name for x in res])
+
+def getAllOwnerMachine(ctx, value=''):
+    res = Glpi().getAllOwnerMachine(ctx, filt=value)
+    return unique([x.name for x in res])
+
+def getAllLoggedUser(ctx, value=''):
+    res = Glpi().getAllLoggedUser(ctx, filt=value)
+    return unique([x.name for x in res])
