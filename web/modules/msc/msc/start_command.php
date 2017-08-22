@@ -56,7 +56,12 @@ if (!empty($_GET['gid'])) {
 
 $pid = $_GET['pid'];
 $p_api = new ServerAPI();
-$p_api->fromURI($_GET["papi"]);
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+    $p_api->fromURI("https://127.0.0.1:9990/package_api_get1");
+}
+else {
+    $p_api->fromURI($_GET["papi"]);
+}
 
 
 $cible = $hostname;
@@ -142,4 +147,3 @@ else{
     exit;
 }
 ?>
-
