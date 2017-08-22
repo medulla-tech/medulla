@@ -23,6 +23,7 @@ session_start();
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
+require_once("../../base/includes/computers.inc.php");
 require_once("../../../includes/config.inc.php");
 require_once("../../../includes/i18n.inc.php");
 require_once("../../../includes/acl.inc.php");
@@ -33,5 +34,60 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
-echo xmlrpc_callshutdown($_GET['objectUUID']);
+
+
+switch($_GET['action']){
+    case "deployquick":
+        // work for one machine
+        echo xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
+        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'].'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction shutdown on machine',
+                                            $touser =  $_GET['cn'],
+                                            $fromuser = $_SESSION['login']);
+        $result = $_GET;
+        echo json_encode($result);
+        break;
+    case "deployquickgroup":
+        // work for all machines on group
+        header('Content-type: application/json');
+        $uuid = array();
+        $cn = array();
+        $presence = array();
+        $machine_already_present = array();
+        $machine_not_present     = array();
+        $result = array();
+        $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
+                                            $type = "USER",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = 'AMR',
+                                            $how = 'xmpp',
+                                            $why = '',
+                                            $action = 'quickaction shutdown on group',
+                                            $touser =  'group '.$_GET['groupname'] ,
+                                            $fromuser = $_SESSION['login']);
+        foreach($list as $key =>$value){
+            $cn[] = $value[1]['cn'][0];
+            $uuid[] = $key;
+            if( xmlrpc_getPresenceuuid($key) == 0 ){
+                $presence[] = 0;
+                $machine_not_present[] = $value[1]['cn'][0];
+            }
+            else{
+                $presence[] = 1;
+                $machine_already_present[] =  $value[1]['cn'][0];
+                xmlrpc_callshutdown($key,  $_GET['time'], $_GET['msg']);
+            };
+            $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
+        }
+        echo json_encode($result);
+    break;
+}
 ?>

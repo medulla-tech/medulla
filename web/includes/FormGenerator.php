@@ -3,6 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2016 siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -21,6 +22,8 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * File : FormGenerator.php
  */
 /* * *********************************************************************
  *  Form generator class
@@ -626,7 +629,7 @@ class DateTimeTpl extends AbstractTpl {
             'dayNamesMin' => $days_short,
             'firstDay' => 1,
             'timeFormat' => "HH:mm:ss",
-            'dateFormat' => "yy-mm-dd",
+            'dateFormat' => "yy-mm-dd"
         ));
 
         // Dirty workaround (PHP gettext issue ?)
@@ -646,7 +649,6 @@ class DateTimeTpl extends AbstractTpl {
                 });
             </script>';
     }
-
 }
 
 class MultipleInputTpl extends AbstractTpl {

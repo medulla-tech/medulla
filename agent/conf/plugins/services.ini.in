@@ -1,6 +1,6 @@
 [main]
-disable = 1
-journalctl_path = /bin/systemd-journalctl
+disable = 0
+journalctl_path = /bin/journalctl
 blacklist = slapd,ldap
 
 [plugins]

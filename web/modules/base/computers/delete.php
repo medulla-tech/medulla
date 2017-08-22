@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -20,12 +21,18 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * file delete.php
  */
 
 require_once("modules/base/includes/computers.inc.php");
 if (in_array("imaging", $_SESSION["modulesList"])) {
         require_once('modules/imaging/includes/xmlrpc.inc.php');
-    }
+}
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])){
+    require_once('modules/xmppmaster/includes/xmlrpc.php');
+}
 if (isset($_POST["bconfirm"])) {
     // if checkbox is not checked, don't delete computer
     if (!isset($_POST["imageWarning"])) {
@@ -40,7 +47,13 @@ if (isset($_POST["bconfirm"])) {
             //$dede = xmlrpc_imagingClearMenuFromUuid($uuid);
             $dede = xmlrpc_imagingClearMenuFromUuidAllLocation($uuid);
         }
+
         delComputer($uuid, $backup);
+
+        if (in_array("xmppmaster", $_SESSION["supportModList"])){
+            // send message agent machine pour quel se réinscrive.
+            xmlrpc_callInventoryinterface($uuid);
+        }
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
         exit;
@@ -67,6 +80,4 @@ if (isset($_POST["bconfirm"])) {
     $f->addCancelButton("bback");
     $f->display();
 }
-
-
 ?>

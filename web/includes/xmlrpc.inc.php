@@ -66,7 +66,7 @@ function openSocket($proto, $conf) {
         $context = stream_context_create();
         stream_context_set_option($context, "ssl", "allow_self_signed", true);
         stream_context_set_option($context, "ssl", "verify_peer", false);
-        stream_context_set_option($context, "ssl", "peer_name", "cert");
+        stream_context_set_option($context, "ssl", "peer_name", $_SESSION["XMLRPC_agent"]["host"]);
         $sock = stream_socket_client('tls://'.$_SESSION["XMLRPC_agent"]["host"].":".$_SESSION["XMLRPC_agent"]["port"], $errNo, $errString, ini_get("default_socket_timeout"), STREAM_CLIENT_CONNECT, $context);
         $ret = array($sock, $errNo, $errString);
     } else {
@@ -230,7 +230,7 @@ function xmlCall($method, $params = null) {
         else
             $_SESSION["AUTH_METHOD"] = "login";
         /* The RPC server must send us a session cookie */
-        if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
+        if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0 || preg_match("/(TWISTED_SECURE_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
             $_SESSION["RPCSESSION"] = $match[1];
         } else {
             /* Can't get a session from the Twisted XML-RPC server */

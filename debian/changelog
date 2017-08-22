@@ -1,3 +1,9 @@
+mmc-core (1:3.9.92-1) unstable; urgency=low
+
+ * New test deb
+
+ -- Nicolas Lécureuil <nicolas.lecureuil@siveo.net>  Mon, 24 Apr 2017 15:21:01 +0200
+
 mmc-core (1:3.9.90-10) unstable; urgency=low
 
  * Rename README.rst to README.md ( ed96c282e348dc11e3302bc9816ca89d13021394 )
