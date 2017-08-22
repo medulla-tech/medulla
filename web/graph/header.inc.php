@@ -45,7 +45,7 @@ $root = $conf["global"]["root"];
         <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.structure.min.css" />
         <link rel="stylesheet" href="jsframework/lib/jquery-ui-1.12.1/jquery-ui.theme.min.css" />
 
-
+ 
         <link rel="stylesheet" media="all" type="text/css" href="jsframework/lib/plugin.jquery-ui/jquery-ui-timepicker-addon.min.css" />
 
         <script src="jsframework/lib/plugin.jquery-ui/jquery-ui-timepicker-addon.min.js"></script>
