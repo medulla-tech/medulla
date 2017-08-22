@@ -26,7 +26,7 @@ $options = array(
     "class" => "PluginsPanel",
     "id" => "plugins",
     "title" => _T("Plugins loaded", "dashboard"),
-    "enable" => false,
+    "enable" => true,
 );
 
 class PluginsPanel extends Panel {
