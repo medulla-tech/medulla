@@ -40,6 +40,8 @@ def activate():
 
 def queryPossibilities():
     ret = {}
+    ret['Owner of the machine'] = ['list', getAllOwnerMachine]
+    ret['Last Logged User'] = ['list', getAllContacts]
     ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
     ret['Contact number'] = ['list', getAllContactNums]
@@ -84,6 +86,10 @@ def queryGroups():
                  ['System manufacturer', 'Dell, HP, Apple ...'],
                  ['System model',
                   'Latitude E6420, ProLiant DL120, MacBookAir5,2 ...']]])
+                 
+    ret.append(['user',
+                [['Owner of the machine', 'user name ...'],
+                 ['Last Logged User', 'Last user of the machine']]])
     # Contact
     #ret['Contact'] =        [ \
     #                            ['Contact',''], \

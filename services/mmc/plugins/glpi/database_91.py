@@ -935,6 +935,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.machine.c.name, query[3]]]
         elif query[2] == 'Contact':
             return [[self.machine.c.contact, query[3]]]
+        elif query[2] == 'Last Logged User':
+            return [[self.machine.c.contact, query[3]]]
         elif query[2] == 'Contact number':
             return [[self.machine.c.contact_num, query[3]]]
         elif query[2] == 'Description':
@@ -3193,6 +3195,35 @@ class Glpi91(DyngroupDatabaseHelper):
         query = self.__filter_on(query)
         query = self.__filter_on_entity(query, ctx)
         query = query.filter(self.model.c.name == filt)
+        ret = query.all()
+        session.close()
+        return ret
+
+    def getAllOwnerMachine(self, ctx, filt = ''):
+        """ @return: all owner defined in the GLPI database """
+        session = create_session()
+        query = session.query(User).select_from(self.manufacturers.join(self.machine))
+        query = self.__filter_on(query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0))
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.user.c.name.like('%'+filt+'%'))
+        ret = query.group_by(self.user.c.name).all()
+        session.close()
+        return ret
+
+
+    def getAllLoggedUser(self, ctx, filt = ''):
+        """
+            @return: all LoggedUser defined in the GLPI database
+            eg: glpi_computer.contact
+        """
+        session = create_session()
+        query = session.query(Machine)
+        query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+        query = self.__filter_on(query)
+        query = self.__filter_on_entity(query, ctx)
+        if filter != '':
+            query = query.filter(self.machine.c.contact.like('%'+filt+'%'))
         ret = query.all()
         session.close()
         return ret
