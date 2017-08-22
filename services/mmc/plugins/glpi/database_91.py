@@ -935,6 +935,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.machine.c.name, query[3]]]
         elif query[2] == 'Contact':
             return [[self.machine.c.contact, query[3]]]
+        elif query[2] == 'Last Logged User':
+            return [[self.machine.c.contact, query[3]]]
         elif query[2] == 'Contact number':
             return [[self.machine.c.contact_num, query[3]]]
         elif query[2] == 'Description':

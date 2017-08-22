@@ -41,7 +41,7 @@ def activate():
 def queryPossibilities():
     ret = {}
     ret['Owner of the machine'] = ['list', getAllOwnerMachine]
-    ret['Last Logged User'] = ['list', getAllLoggedUser]
+    ret['Last Logged User'] = ['list', getAllContacts]
     ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
     ret['Contact number'] = ['list', getAllContactNums]
