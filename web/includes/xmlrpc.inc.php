@@ -230,7 +230,7 @@ function xmlCall($method, $params = null) {
         else
             $_SESSION["AUTH_METHOD"] = "login";
         /* The RPC server must send us a session cookie */
-        if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
+	if (preg_match("/(TWISTED_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0 || preg_match("/(TWISTED_SECURE_SESSION=[0-9a-f]+);/", $httpHeader, $match) > 0) {
             $_SESSION["RPCSESSION"] = $match[1];
         } else {
             /* Can't get a session from the Twisted XML-RPC server */
