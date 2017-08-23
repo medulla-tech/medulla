@@ -273,5 +273,4 @@ def getAllOwnerMachine(ctx, value=''):
     return unique([x.name for x in res])
 
 def getAllLoggedUser(ctx, value=''):
-    res = Glpi().getAllLoggedUser(ctx, filt=value)
-    return unique([x.name for x in res])
+    return unique([x.contact for x in Glpi().getAllContacts(ctx, value)])
