@@ -1024,12 +1024,26 @@ class LdapUserGroupControl:
         gidNumber = maxgid + 1;
 
         # creating group skel
-        group_info = {'cn':cn,
-                    'gidnumber':str(gidNumber),
-                    'objectclass':('posixGroup','top')
-                     }
+        group_info = {}
+
+        # RFC2307bis posixGroup: add groupOfUniqueNames objectclass
+        # this allow to use memberOf ldap overlay
+        if self.posixGroupIsRFC2307bis():
+            group_info = {'cn':cn,
+                        'gidnumber':str(gidNumber),
+                        'objectclass':('groupOfUniqueNames', 'posixGroup','top'),
+                        'uniqueMember': ''
+                         }
+        # regular posixGroup
+        else:
+            group_info = {'cn':cn,
+                        'gidnumber':str(gidNumber),
+                        'objectclass':('posixGroup','top'),
+                         }
+
         attributes = [ (k,v) for k,v in group_info.items() ]
         self.l.add_s(entry, attributes)
+
         r.commit()
         return self.getGroupEntry(cn)
 
@@ -1072,8 +1086,13 @@ class LdapUserGroupControl:
         groupdn = 'cn=' + cngroup + ',' + self.baseGroupsDN
         userdn = self.searchUserDN(uiduser)
         r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER_FROM_GROUP, [(groupdn, AT.GROUP), (userdn, AT.USER)])
+
+        operations = [(ldap.MOD_DELETE, 'memberUid', uiduser)]
+        if self.posixGroupIsRFC2307bis():
+            operations.append((ldap.MOD_DELETE, 'uniqueMember', userdn))
+
         try:
-            self.l.modify_s(groupdn, [(ldap.MOD_DELETE, 'memberUid', uiduser)])
+            self.l.modify_s(groupdn, operations)
         except ldap.NO_SUCH_ATTRIBUTE:
             # There are no member in this group
             pass
@@ -1183,8 +1202,13 @@ class LdapUserGroupControl:
         groupdn = 'cn=' + cngroup + ',' + base
         userdn = self.searchUserDN(uid)
         r = AF().log(PLUGIN_NAME, AA.BASE_ADD_USER_TO_GROUP, [(groupdn, AT.GROUP), (userdn, AT.USER)])
+
+        operations = [(ldap.MOD_ADD, 'memberUid', uid)]
+        if self.posixGroupIsRFC2307bis():
+            operations.append((ldap.MOD_ADD, 'uniqueMember', userdn))
+
         try:
-            self.l.modify_s(groupdn, [(ldap.MOD_ADD, 'memberUid', uid)])
+            self.l.modify_s(groupdn, operations)
         except ldap.TYPE_OR_VALUE_EXISTS:
             # Try to add a the user to one of his/her group
             # Can be safely ignored
@@ -1926,6 +1950,20 @@ class LdapUserGroupControl:
             return ( Set(schemaAttrObj.must) | Set(schemaAttrObj.may) )
         else:
             return Set()
+
+    def posixGroupIsRFC2307bis(self):
+        """
+        Test if posixGroup is from RFC2307bis schema
+
+        @return: True if posixGroup is from RFC2307bis schema False otherwise
+        @type boolean
+        """
+        subschemasubentry_dn, schema = ldap.schema.urlfetch(self.config.ldapurl)
+        schemaAttrObj = schema.get_obj(ldap.schema.ObjectClass,"posixGroup")
+        if not schemaAttrObj is None:
+            return schemaAttrObj.kind == 2 # posixGroup kind == AUXILIARY
+        else:
+            return False;
 
     def maxGID(self):
         """
