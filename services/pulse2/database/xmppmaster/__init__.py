@@ -1253,14 +1253,86 @@ class XmppMasterDatabase(DatabaseHelper):
             return False
 
     @DatabaseHelper._sessionm
+    def algoruleadorganisedbyusers(self, session, userou, classutilMachine = "private", rule = 8, enabled=1):
+        """
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 8 by organization users
+            Field "subject" is used to define the organisation by user OU eg Computers/HeadQuarter/Locations
+            Field "relayserver_id" is used to define the Relayserver associe a ce name user
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+        """
+
+        if classutilMachine == "private":
+            sql = """select `relayserver`.`id` 
+            from `relayserver` 
+                inner join 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
+            where
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+                    AND `relayserver`.`classutil` = '%s' 
+            limit 1;"""%(rule, username, enabled, classutilMachine)
+        else:
+            sql = """select `relayserver`.`id` 
+            from `relayserver` 
+                inner join 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
+            where
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+            limit 1;"""%(rule, userou, enabled)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def algoruleadorganisedbymachines(self, session, machineou, classutilMachine = "private", rule = 7, enabled=1):
+        """
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 7 by organization machine
+            Field "subject" is used to define the organisation by machine OU eg Computers/HeadQuarter/Locations
+            Field "relayserver_id" is used to define the Relayserver associe a this organization
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+        """
+        if classutilMachine == "private":
+            sql = """select `relayserver`.`id` 
+            from `relayserver` 
+                inner join 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
+            where
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+                    AND `relayserver`.`classutil` = '%s' 
+            limit 1;"""%(rule, username, enabled, classutilMachine)
+        else:
+            sql = """select `relayserver`.`id` 
+            from `relayserver` 
+                inner join 
+                    `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
+            where
+                `has_relayserverrules`.`rules_id` = %d 
+                    AND `has_relayserverrules`.`subject` = '%s' 
+                    AND `relayserver`.`enabled` = %d 
+            limit 1;"""%(rule, machineou, enabled)
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
+
+    @DatabaseHelper._sessionm
     def algoruleuser(self, session, username, classutilMachine = "private", rule = 1, enabled=1):
-        #-- type user rules_id` = 1
-        #select `relayserver`.`id` from `relayserver` inner join `has_relayserverrules` ON  `relayserver`.`id` = `has_relayserverrules`.`relayserver_id` 
-        #where
-        #`has_relayserverrules`.`rules_id` = 1 and -- type user rules_id` = 1
-        #`has_relayserverrules`.`subject` = users_machine and -- user de la machine
-        #`relayserver`.`enabled` = 1 and
-        #`relayserver`.`classutil` = classutildela machine; -- seulement si classutil dela machine est private
+        """
+            Field "rule_id" : This information allows you to apply the search only to the rule pointed. rule_id = 1 for user name
+            Field "subject" is used to define the name of the user in this rule
+            Field "relayserver_id" is used to define the Relayserver associe a ce name user
+            enabled = 1 Only on active relayserver.
+            If classutilMachine is deprived then the choice of relayserver will be in the relayserver reserve to a use of the private machine.
+        """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver` 
@@ -1289,7 +1361,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def algorulehostname(self, session, hostname, classutilMachine = "private", rule = 2, enabled=1):
-        """Recherche server relay impose pour un hostname"""
+        """
+            Search server relay imposes for a hostname
+        """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver` 
@@ -1337,7 +1411,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def algorulesubnet(self, session, subnetmachine, classutilMachine = "private",  enabled=1):
-        """recherche server relay avec meme reseau"""
+        """
+            To associate relay server that is on me networks...
+        """
         if classutilMachine == "private":
             sql = """select `relayserver`.`id` 
             from `relayserver`
