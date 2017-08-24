@@ -42,6 +42,7 @@ from lib.networkinfo import networkagentinfo
 from lib.managesession import sessiondatainfo, session
 from lib.utils import *
 from lib.managepackage import managepackage
+from lib.manageADorganization import manage_fqdn_window_activedirectory
 from lib.manage_event import manage_event
 from lib.manage_process import mannageprocess
 from lib.manageRSAsigned import MsgsignedRSA
@@ -683,7 +684,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
             if data['agenttype'] == "relayserver":
                 logger.info("package server : %s"%data['packageserver'])
-
+            
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
@@ -694,6 +695,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("ippublic : %s"%data['ippublic'])
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%data['localisationifo'])
+            if data['platform'].lower().startswith("win"):
+                if 'adorgbymachine' in data and data['adorgbymachine']:
+                    logger.info("localisation AD par MAchine : %s"%data['adorgbymachine'])
+                else:
+                    logger.info("PAS De localisation AD par MAchine")
+                if 'adorgbyuser' in data and data['adorgbyuser']:
+                    logger.info("localisation AD par User : %s"%data['adorgbyuser'])
+                else:
+                    logger.info("PAS De localisation AD par User")
             logger.info("-----------------------------------")
 
             logger.info("DETAILED INFORMATION")
@@ -901,6 +911,16 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #logger.info("%s"% json.dumps(data, indent=4, sort_keys=True))
         logger.debug("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
         XmppMasterDatabase().log("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
+
+        adorgbymachinebool = False
+        if 'adorgbymachine' in data and data['adorgbymachine'] != "":
+            manage_fqdn_window_activedirectory.organizationADmachinetofile(data['adorgbymachine'])
+            adorgbymachinebool = True
+        adorgbyuserbool = False
+        if 'adorgbyuser' in data and data['adorgbyuser'] != "":
+            manage_fqdn_window_activedirectory.organizationADusertofile(data['adorgbyuser'])
+            adorgbyuserbool = True
+
         # Defining relay server for connection
         # Order of rules to be applied
         ordre =  XmppMasterDatabase().Orderrules()
@@ -913,7 +933,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.debug("analyse rule 1")
                 result1= XmppMasterDatabase().algoruleuser(data['information']['users'][0])
                 if len(result1) > 0 :
-                    logger.debug("applied rule 1")
+                    logger.debug("applied Associate relay server based on user")
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("user rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
@@ -921,7 +941,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.debug("analyse rule 2")
                 result1= XmppMasterDatabase().algorulehostname(data['information']['info']['hostname'])
                 if len(result1) > 0 :
-                    logger.debug("applied rule 2")
+                    logger.debug("applied rule Associate relay server based on hostname")
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("hostname rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
@@ -975,28 +995,49 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     continue
             elif x[0] == 4:
                 continue 
-                logger.debug("analysis  rule 4")
+                logger.debug("analysis  rule Select relay server in same subnet")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False
                 for z in data['information']['listipinfo']:
                     result1 = XmppMasterDatabase().algorulesubnet(subnetnetwork(z['ipaddress'],z['mask']),data['classutil'])
                     if len(result1) > 0 :
+                        logger.debug("applied rule Select relay server in same subnet")
                         subnetexist = True
                         result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                         logger.debug("subnet rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                         break
                 if subnetexist: break;
             elif x[0] == 5:
-                logger.debug("analysis  rule 5 %s"%self.config.defaultrelayserverip)
+                logger.debug("analysis  rule Use default relay server %s"%self.config.defaultrelayserverip)
                 result = XmppMasterDatabase().jidrelayserverforip(self.config.defaultrelayserverip)
                 break
             elif x[0] == 6:
                 result1 = XmppMasterDatabase().algoruleloadbalancer()
                 if len(result1) > 0 :
-                    logger.debug("applied rule 6")
+                    logger.debug("applied rule Chosen ARS the least requested.")
                     result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
                     logger.debug("load balancer rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
                     break
+            elif x[0] == 7:
+                #"AD organised by machines "
+                logger.debug("analysis rule AD organised by machines")
+                if adorgbymachinebool:
+                    result1= XmppMasterDatabase().algoruleadorganisedbymachines(manage_fqdn_window_activedirectory.getOrganizationADmachineOU(data['adorgbymachine']))
+                    if len(result1) > 0 :
+                        logger.debug("applied rule AD organised by machines")
+                        result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                        logger.debug("user rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                        break
+            elif x[0] == 8:
+                #"AD organised by users"
+                logger.debug("analysis rule AD organised by users")
+                if adorgbyuserbool:
+                    result1= XmppMasterDatabase().algoruleadorganisedbyusers(manage_fqdn_window_activedirectory.getOrganizationADuserOU(data['adorgbyuser']))
+                    if len(result1) > 0 :
+                        logger.debug("applied rule AD organised by users")
+                        result= XmppMasterDatabase().IpAndPortConnectionFromServerRelay(result1[0].id)
+                        logger.debug("user rule selects relayserver for machine %s user %s \n %s"%(data['information']['info']['hostname'],data['information']['users'][0],result))
+                        break
         try:
             logger.debug(" user %s and hostname %s [connection ip %s port : %s]"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1]))
             XmppMasterDatabase().log("[user %s hostanme %s] : Relay server for connection ip %s port %s"%(data['information']['users'][0],data['information']['info']['hostname'],result[0],result[1] ))
