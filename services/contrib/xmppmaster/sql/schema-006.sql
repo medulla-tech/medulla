@@ -20,10 +20,12 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+START TRANSACTION;
+
 -- -----------------------------------------------------
 -- Table `rules` truncate
 -- -----------------------------------------------------
-truncate `xmppmaster`.`rules`
+truncate `xmppmaster`.`rules`;
 
 
 -- -----------------------------------------------------
@@ -33,7 +35,14 @@ truncate `xmppmaster`.`rules`
 
 LOCK TABLES `rules` WRITE;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
-INSERT INTO `rules` VALUES (1,'user','Associate relay server based on user',3),(2,'hostname','Associate relay server based on hostname',4),(3,'geoposition','Select relay server based on best location',6),(4,'subnet','Select relay server in same subnet',5),(5,'default','Use default relay server',7),(6,'load balancer','choisi ARS le moin solicité.',8),(7,'orgADmach','AD organised by machines ',1),(8,'orgADuser','AD organised by users',2);
+INSERT INTO `rules` VALUES (1,'user','Associate relay server based on user',3),
+(2,'hostname','Associate relay server based on hostname',4),
+(3,'geoposition','Select relay server based on best location',6),
+(4,'subnet','Select relay server in same subnet',5),
+(5,'default','Use default relay server',7),
+(6,'load balancer','Choses the least used ARS',8),
+(7,'orgADmach','Choses ARS based on AD OUs organised by machines ',1),
+(8,'orgADuser','Choses ARS based on AD OUs organised by users',2);
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
 UNLOCK TABLES;
 
