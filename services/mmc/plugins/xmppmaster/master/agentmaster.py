@@ -684,7 +684,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
             if data['agenttype'] == "relayserver":
                 logger.info("package server : %s"%data['packageserver'])
-
+            
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
@@ -695,6 +695,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.info("ippublic : %s"%data['ippublic'])
             logger.info("------------LOCALISATION-----------")
             logger.info("localisationifo : %s"%data['localisationifo'])
+            if data['platform'].lower().startswith("win"):
+                if 'adorgbymachine' in data and data['adorgbymachine']:
+                    logger.info("localisation AD par MAchine : %s"%data['adorgbymachine'])
+                else:
+                    logger.info("PAS De localisation AD par MAchine")
+                if 'adorgbyuser' in data and data['adorgbyuser']:
+                    logger.info("localisation AD par User : %s"%data['adorgbyuser'])
+                else:
+                    logger.info("PAS De localisation AD par User")
             logger.info("-----------------------------------")
 
             logger.info("DETAILED INFORMATION")
