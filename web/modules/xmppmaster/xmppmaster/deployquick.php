@@ -91,21 +91,37 @@
         uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
-                alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "wakeonlan to machine : " + uuid['cn'] )
+                }
             })
     })
 
     jQuery('#inventory').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
             .done(function( data ) {
-                alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+            if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "inventory : " + uuid['cn'] )
+                }
+
             })
     })
 
     jQuery('#reboot').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
             .done(function( data ) {
-                alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "reboot : " + uuid['cn'] )
+                }
             })
     })
 
@@ -114,7 +130,12 @@
         uuid['msg']  = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
-                alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "shutdown : to machine" + uuid['cn'] )
+                }
             })
     })
 
@@ -122,21 +143,36 @@
         uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
-                alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "wakeonlan to machine : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "wakeonlan to machine : " + uuid['cn'] )
+                }
             })
     })
 
     jQuery('#inventory0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actioninventory.php", uuid )
             .done(function( data ) {
-                alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "inventory : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "inventory : " + uuid['cn'] )
+                }
             })
     })
 
     jQuery('#reboot0').on('click', function(){
         jQuery.get( "modules/xmppmaster/xmppmaster/actionrestart.php", uuid )
             .done(function( data ) {
-                alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]")
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "reboot : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "reboot : " + uuid['cn'] )
+                }
             })
     })
 
@@ -145,7 +181,12 @@
         uuid['msg']  = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", uuid )
             .done(function( data ) {
-                alert( "shutdown : " + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "shutdown : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "shutdown : to machine" + uuid['cn'] )
+                }
             })
     })
 
