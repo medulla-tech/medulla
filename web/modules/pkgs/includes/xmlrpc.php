@@ -141,7 +141,7 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
                                             $action = '',
                                             $touser =  '',
                                             $fromuser = "",
-                                            $module = 'pulse2'){
+                                            $module = 'pkgs'){
     return xmlCall("xmppmaster.setlogxmpp", array(  $text,
                                                     $type ,
                                                     $sessionname,
