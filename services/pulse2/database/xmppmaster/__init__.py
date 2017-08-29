@@ -1307,7 +1307,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     AND `has_relayserverrules`.`subject` = '%s' 
                     AND `relayserver`.`enabled` = %d 
                     AND `relayserver`.`classutil` = '%s' 
-            limit 1;"""%(rule, username, enabled, classutilMachine)
+            limit 1;"""%(rule, machineou, enabled, classutilMachine)
         else:
             sql = """select `relayserver`.`id` 
             from `relayserver` 
