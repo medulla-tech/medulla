@@ -44,6 +44,8 @@ install: build
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(DESTDIR)
 	rm -f $(DESTDIR)/etc/init.d/mmc-agent
+	mkdir $(DESTDIR)/usr/lib/systemd/system/
+	cp agent/init/mmc-agent.service $(DESTDIR)/usr/lib/systemd/system/
 	rm -f $(DESTDIR)/usr/share/mmc/jsframework/MIT-LICENSE
 	find $(DESTDIR) -type f -name '*.pyc' -delete
 	find $(DESTDIR) -type f -name '*.pyo' -delete
