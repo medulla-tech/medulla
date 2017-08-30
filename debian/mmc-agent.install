@@ -4,3 +4,4 @@ usr/bin
 etc/mmc/agent
 usr/share/man/man1
 usr/share/doc/mmc/contrib/monit/mmc-agent
+usr/lib/systemd/system
