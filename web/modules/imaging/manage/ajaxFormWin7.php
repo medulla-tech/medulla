@@ -495,10 +495,8 @@ $f->push(new Table());
                                 )
         )
     );
-    $f->display();
-
-echo "<div id='sysprepCreated'></div>";
-echo "<div title= 'jffffffffffffffffffffffffffffffffffffffffffffjjj'>";
-    echo "<pre  id='codeTocopy2' style='width:100%;'></pre>";
-echo "</div>";
+    $f->pop();
+$f->pop(); // End of User Accounts table
+$f->display();
+echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
 ?>
