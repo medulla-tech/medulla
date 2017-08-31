@@ -219,6 +219,18 @@ var template = [
 '<UILanguageFallback><? echo $strin; ?>UILanguage<? echo $strou; ?></UILanguageFallback>',
 '<UserLocale><? echo $strin; ?>UserLocale<? echo $strou; ?></UserLocale>',
 '</component>',
+//Join domain
+'<component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<Identification>',
+'<Credentials>',
+'<Domain><? echo $strin; ?>Domain<? echo $strou; ?></Domain>',
+'<Password><? echo $strin; ?>DomainPassword<? echo $strou; ?></Password>',
+'<Username><? echo $strin; ?>DomainUser<? echo $strou; ?></Username>',
+'</Credentials>',
+'<JoinDomain><? echo $strin; ?>JoinDomain<? echo $strou; ?></JoinDomain>',
+'<MachineObjectOU><? echo $strin; ?>MachineObjectOU<? echo $strou; ?></MachineObjectOU>',
+'</Identification>',
+'</component>',
 //Skip auto activation
 '<component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<SkipAutoActivation><? echo $strin; ?>SkipAutoActivation<? echo $strou; ?></SkipAutoActivation>',
@@ -523,6 +535,34 @@ $f->pop();
 $f->add(new SepTpl());
 
 //==== NEW SECTION ====
+// Specialize Settings
+//=====================
+$f->add(new TitleElement(_T("Specialize Settings","imaging")));
+$f->push(new Table());
+	 $f->add(
+        new TrFormElement(_T('Domain','imaging').":", new InputTplTitle('Domain',$InfoBule_Domain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain User','imaging').":", new InputTplTitle('DomainUser',$InfoBule_DomainUser)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain Password','imaging').":", new InputTplTitle('DomainPassword',$InfoBule_DomainPassword)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Join Domain','imaging').":", new InputTplTitle('JoinDomain',$InfoBule_JoinDomain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('MachineObjectOU','imaging').":", new InputTplTitle('MachineObjectOU',$InfoBule_MachineObjectOU)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
+    );
+$f->pop();
+$f->add( new SepTpl());
+
+//==== NEW SECTION ====
 // Partition Settings
 //=====================
 //Add section title
@@ -799,8 +839,9 @@ $f->push(new Table());
                                 )
         )
     );
-    $f->display();
+    $f->pop();
+$f->pop(); // End of OOBE table
+$f->display();
 
-    echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
-    //_____________
+echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
 ?>

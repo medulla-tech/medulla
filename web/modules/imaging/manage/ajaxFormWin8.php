@@ -196,6 +196,18 @@ var template = [
 '</component>',
 '</settings>',
 '<settings pass="specialize">',
+//Join domain
+'<component name="Microsoft-Windows-UnattendedJoin" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<Identification>',
+'<Credentials>',
+'<Domain><? echo $strin; ?>Domain<? echo $strou; ?></Domain>',
+'<Password><? echo $strin; ?>DomainPassword<? echo $strou; ?></Password>',
+'<Username><? echo $strin; ?>DomainUser<? echo $strou; ?></Username>',
+'</Credentials>',
+'<JoinDomain><? echo $strin; ?>JoinDomain<? echo $strou; ?></JoinDomain>',
+'<MachineObjectOU><? echo $strin; ?>MachineObjectOU<? echo $strou; ?></MachineObjectOU>',
+'</Identification>',
+'</component>',
 '<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ExtendOSPartition>',
 '<Extend><? echo $strin;?>ExtendOSPartition<? echo $strou;?></Extend>',
@@ -631,6 +643,26 @@ $f->add(new TitleElement(_T("Specialize Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Specialize_Settings',_T("Configure Specialize Settings", "imaging"))));
 $f->push(new Table());
 
+	$f->add(
+        new TrFormElement(_T('Domain','imaging').":", new InputTplTitle('Domain',$InfoBule_Domain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain User','imaging').":", new InputTplTitle('DomainUser',$InfoBule_DomainUser)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain Password','imaging').":", new InputTplTitle('DomainPassword',$InfoBule_DomainPassword)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Join Domain','imaging').":", new InputTplTitle('JoinDomain',$InfoBule_JoinDomain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('MachineObjectOU','imaging').":", new InputTplTitle('MachineObjectOU',$InfoBule_MachineObjectOU)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
+    );
     //_____________
     $ExtendOSPartition = new SelectItemtitle("ExtendOSPartition",$InfoBule_ExtendOSPartition);
     $ExtendOSPartition->setElements($yes_no);
@@ -804,8 +836,6 @@ $f->push(new Table());
         array(  "required" => True,
                 "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
     );
-$f->pop();
-$f->add( new SepTpl());
 
     
     $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Xml Windows Answer File Generator", "imaging"));
@@ -822,7 +852,10 @@ $f->add( new SepTpl());
                                 )
         )
     );
-    $f->display();
+    $f->pop();
 
-    echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
+$f->pop(); // End of Administrators Accounts table
+$f->display();
+
+echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
 ?>
