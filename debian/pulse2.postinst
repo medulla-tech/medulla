@@ -20,7 +20,9 @@ set -e
 
 case "$1" in
     configure)
-	for service in $(ls /etc/init.d/mmc-agent; ls /usr/lib/systemd/system/pulse2-*); do $service restart; done
+	pushd /usr/lib/systemd/system/
+	
+	for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
 
     ;;
 
