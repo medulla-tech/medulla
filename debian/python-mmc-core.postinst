@@ -24,8 +24,8 @@ case "$1" in
 
     triggered)
         # Some package changed a file in /usr/share/pyshared/{mmc,pulse2}
-        if [ -x "/etc/init.d/mmc-agent" ]; then
-            invoke-rc.d mmc-agent restart || exit $?
+        if [ -x "/usr/lib/systemd/system/mmc-agent.service" ]; then
+            service mmc-agent restart || exit $?
         fi
     ;;
 
