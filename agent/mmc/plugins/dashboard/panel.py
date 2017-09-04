@@ -127,3 +127,10 @@ class PluginsPanel(Panel):
         return {
             'list':ls,
         }
+
+
+class ComputersOnlinePanel(Panel):
+    """This class is called by the ComputerOnline widget from the dashboard"""
+    def serialize(self):
+        """This method does nothing but needs to be implemented"""
+        pass
