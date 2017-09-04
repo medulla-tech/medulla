@@ -48,6 +48,7 @@ from pulse2.site import examplesdir
 from mmc.database.ddl import DBControl
 from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
+from subprocess import check_output, CalledProcessError
 
 log = logging.getLogger('pulse2-setup')
 
@@ -291,7 +292,7 @@ class SystemctlHandler(object):
 
 
 def get_distro_handler():
-    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') == "/usr/lib/systemd/systemd":
+    if os.path.exists('/bin/systemctl') and ( os.path.realpath('/sbin/init') == "/usr/lib/systemd/systemd" or os.path.realpath('/sbin/init') == "/lib/systemd/systemd" ):
         return SystemctlHandler()
     elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -472,7 +473,7 @@ class Pulse2ConfigFile(object):
         # Use current configuration
         if current:
             dir_path = mmcconfdir
-        # Use example configuration
+        # Use example configuration
         else:
             dir_path = examplesdir
 
@@ -1214,7 +1215,33 @@ class SetupApp(object):
             if srv.is_enable:
                 srv.restart()
 
+    def is_service_started(self, service):
+
+        """
+            Check if a service is started.
+
+            :param service: This is the name of the service
+            :return: return True is the service exist and is started, False otherwise
+            :rtype: boolean
+        """
+        log.debug('Looking if service %s is started' % service )
+        try:
+            status = check_output(["systemctl", "is-active", service])
+            if status.strip('\n') == 'active':
+                log.debug('The service %s is started' % service)
+                return True
+        except CalledProcessError:
+                log.debug('The service %s does not exist' % service)
+                return False
+
+        log.debug('The service %s is not started' % service)
+        return False
+
     def post_restart(self):
+
+        self.is_service_started('mmc-agent')
+        self.is_service_started('pulse2-package-server')
+
         # Register imaging server, if necessary
         if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')
