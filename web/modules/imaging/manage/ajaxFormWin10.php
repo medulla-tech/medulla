@@ -94,7 +94,7 @@ var template = [
 //Settings for system reserved partition
 '<ModifyPartition wcm:action="add">',
 '<Active>true</Active>',
-'<Format>NTFS</Format>',
+'<Format><? echo $strin; ?>Format<? echo $strou; ?></Format>',
 '<Label>System Reserved</Label>',
 '<Order>1</Order>',
 '<PartitionID>1</PartitionID>',
@@ -207,7 +207,7 @@ var template = [
 '</settings>',
 '<settings pass="generalize">',
 '<component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
-'<SkipRearm>1</SkipRearm>',
+'<SkipRearm><? echo $strin; ?>SkipRearm<? echo $strou; ?></SkipRearm>',
 '</component>',
 '</settings>',
 //Specialize pass
@@ -247,13 +247,18 @@ var template = [
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
 '<ProductKey><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></ProductKey>',
+'<CopyProfile><? echo $strin;?>CopyProfile<? echo $strou;?></CopyProfile>',
 '</component>',
 //Computer name
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
 '<ProductKey><? echo $strin; ?>ProductKey1<? echo $strou; ?>-<? echo $strin; ?>ProductKey2<? echo $strou; ?>-<? echo $strin; ?>ProductKey3<? echo $strou; ?>-<? echo $strin; ?>ProductKey4<? echo $strou; ?>-<? echo $strin; ?>ProductKey5<? echo $strou; ?></ProductKey>',
+'<CopyProfile><? echo $strin;?>CopyProfile<? echo $strou;?></CopyProfile>',
 '</component>',
 '<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<ExtendOSPartition>',
+'<Extend><? echo $strin;?>ExtendOSPartition<? echo $strou;?></Extend>',
+'</ExtendOSPartition>',
 '<RunSynchronous>',
 '<RunSynchronousCommand wcm:action="add">',
 '<Path>net user Administrator /active:yes</Path>',
@@ -262,6 +267,9 @@ var template = [
 '</RunSynchronous>',
 '</component>',
 '<component name="Microsoft-Windows-Deployment" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
+'<ExtendOSPartition>',
+'<Extend><? echo $strin;?>ExtendOSPartition<? echo $strou;?></Extend>',
+'</ExtendOSPartition>',
 '<RunSynchronous>',
 '<RunSynchronousCommand wcm:action="add">',
 '<Path>net user Administrator /active:yes</Path>',
@@ -281,12 +289,6 @@ var template = [
 '<HideOnlineAccountScreens>true</HideOnlineAccountScreens>',
 //Hide wireless setup
 '<HideWirelessSetupInOOBE><? echo $strin; ?>HideWireless<? echo $strou; ?></HideWirelessSetupInOOBE>',
-//Network location
-'<NetworkLocation><? echo $strin; ?>NetworkLocation<? echo $strou; ?></NetworkLocation>',
-//Skip User OOBE
-'<SkipUserOOBE><? echo $strin; ?>UserOOBE<? echo $strou; ?></SkipUserOOBE>',
-//Skip Machine OOBE
-'<SkipMachineOOBE><? echo $strin; ?>MachineOOBE<? echo $strou; ?></SkipMachineOOBE>',
 '<ProtectYourPC><? echo $strin; ?>ProtectComputer<? echo $strou; ?></ProtectYourPC>',
 '</OOBE>',
 //User accounts
@@ -323,7 +325,7 @@ var template = [
 '<SynchronousCommand wcm:action="add">',
 '<Description>Control Panel View</Description>',
 '<Order>1</Order>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v StartupPage /t REG_DWORD /d <? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
 '<RequiresUserInput>true</RequiresUserInput>',
 '</SynchronousCommand>',
 '<SynchronousCommand wcm:action="add">',
@@ -347,12 +349,6 @@ var template = [
 '<HideOnlineAccountScreens>true</HideOnlineAccountScreens>',
 //Hide wireless setup
 '<HideWirelessSetupInOOBE><? echo $strin; ?>HideWireless<? echo $strou; ?></HideWirelessSetupInOOBE>',
-//Network location
-'<NetworkLocation><? echo $strin; ?>NetworkLocation<? echo $strou; ?></NetworkLocation>',
-//Skip User OOBE
-'<SkipUserOOBE><? echo $strin; ?>UserOOBE<? echo $strou; ?></SkipUserOOBE>',
-//Skip Machine OOBE
-'<SkipMachineOOBE><? echo $strin; ?>MachineOOBE<? echo $strou; ?></SkipMachineOOBE>',
 '<ProtectYourPC><? echo $strin; ?>ProtectComputer<? echo $strou; ?></ProtectYourPC>',
 '</OOBE>',
 //User accounts
@@ -389,14 +385,14 @@ var template = [
 '<SynchronousCommand wcm:action="add">',
 '<Description>Control Panel View</Description>',
 '<Order>1</Order>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v StartupPage /t REG_DWORD /d 1<? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v StartupPage /t REG_DWORD /d 1<? echo $strin; ?>ControlPanelView<? echo $strou; ?> /f</CommandLine>',
 '<RequiresUserInput>true</RequiresUserInput>',
 '</SynchronousCommand>',
 '<SynchronousCommand wcm:action="add">',
 '<Order>2</Order>',
 '<Description>Control Panel Icon Size</Description>',
 '<RequiresUserInput>false</RequiresUserInput>',
-'<CommandLine>reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
+'<CommandLine>reg add "HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ControlPanel" /v AllItemsIconView /t REG_DWORD /d <? echo $strin; ?>ControlPanelIconSize<? echo $strou; ?> /f</CommandLine>',
 '</SynchronousCommand>',
 '<\/FirstLogonCommands>',
 //Timezone settings
@@ -426,32 +422,25 @@ if(isset($_SESSION['parameters']))
     $f = new ValidatingForm();
     $f->add(new HiddenTpl("codeToCopy"), array("value" => "", "hide" => True));
 
+
 //==== NEW SECTION ====
 // Installation Notes
 //=====================
-
-//Add section title
 $f->add(new TitleElement(_T("Installation Notes", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Installation_Notes',$InfoBule_Installation_Notes)));
 $f->push(new Table());
 
-    //_____________
-    $f->add(
-        new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
-        array("required" => True,'value'=>(isset($parameters)) ? $parameters['NetworkLocation'] : '')
-    );
     //_____________     
     $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : 'Enter your comments here...'))));
+
 $f->pop();
 $f->add(new SepTpl());
 
 
 //==== NEW SECTION ====
-// General Settings
+// Os Settings
 //=====================
-
-//Add section title
-$f->add(new TitleElement(_T("General Settings", "imaging")));
+$f->add(new TitleElement(_T("Os Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('General_Settings',$InfoBule_General_Settings)));
 $f->push(new Table());
 
@@ -467,20 +456,19 @@ $f->push(new Table());
     $key5 = new InputTplTitle('ProductKey5',$InfoBule_ProductKey);
     $key5->setSize(5);
     $fields =   array(
-                        $key1,new SpanElement("-"),
-                        $key2,new SpanElement("-"),
-                        $key3,new SpanElement("-"),
-                        $key4,new SpanElement("-"),
-                        $key5
-                );
+        $key1,new SpanElement("-"),
+        $key2,new SpanElement("-"),
+        $key3,new SpanElement("-"),
+        $key4,new SpanElement("-"),
+        $key5
+    );
     $values = array(
-            (isset($parameters)) ? $parameters['ProductKey1'] : "W269N","",
-            (isset($parameters)) ? $parameters['ProductKey2'] : "WFGWX","",
-            (isset($parameters)) ? $parameters['ProductKey3'] : "YVC9B","",
-            (isset($parameters)) ? $parameters['ProductKey4'] : "4J6C9","",
-            (isset($parameters)) ? $parameters['ProductKey5'] : "T83GX"
-        );    
-   
+        (isset($parameters)) ? $parameters['ProductKey1'] : "W269N","",
+        (isset($parameters)) ? $parameters['ProductKey2'] : "WFGWX","",
+        (isset($parameters)) ? $parameters['ProductKey3'] : "YVC9B","",
+        (isset($parameters)) ? $parameters['ProductKey4'] : "4J6C9","",
+        (isset($parameters)) ? $parameters['ProductKey5'] : "T83GX"
+    );
     //_____________
     $f->add(
         new TrFormElement(_T('Product Key','imaging').":", new multifieldTpl($fields)),
@@ -499,7 +487,7 @@ $f->push(new Table());
         new TrFormElement(_T('Accept EULA','imaging').":", $EULA),
         array("value" => (isset($parameters)) ? $parameters['AcceptEULA'] : "true","required" => True)
     );
-   //_____________
+    //_____________
     $Skipactivation = new SelectItemtitle("SkipAutoActivation",$InfoBule_SkipAutoActivation);
     $Skipactivation->setElements($yes_no);
     $Skipactivation->setElementsVal(array('true', 'false'));
@@ -517,8 +505,6 @@ $f->push(new Table());
     );
     //_____________
     $SetupUILanguage = new SelectItemtitle("SetupUILanguage",$InfoBule_SetupUILanguage);
-//     $SetupUILanguage->setElements(array('English'));
-//     $SetupUILanguage->setElementsVal(array('en-US'));
     $SetupUILanguage->setElements($eleUILanguage);
     $SetupUILanguage->setElementsVal($valUILanguage);
      //_____________
@@ -531,41 +517,46 @@ $f->push(new Table());
         new TrFormElement(_T('Computer Name','imaging').":", new InputTplTitle('ComputerName',$Infobule_ComputerName)),
         array("required" => True,"value" =>(isset($parameters)) ? $parameters['ComputerName'] :'-PC')
     );
+    //_____________
+    $InputLocale = new SelectItemtitle("InputLocale",$Infobule_InputLocale);
+    $InputLocale->setElements($elementInputarray);
+    $InputLocale->setElementsVal($valeurInputarray);
+    $f->add(
+        new TrFormElement(_T('Keyboard or input method','imaging').":", $InputLocale),
+        array("value" => (isset($parameters)) ? $parameters['InputLocale'] :'1036:0000040c',"required" => True)
+    );
+    //_____________
+    $UserLocale = new SelectItemtitle("UserLocale",$InfoBule_UserLocale);
+    $UserLocale->setElements($eleUILanguage);
+    $UserLocale->setElementsVal($valUILanguage);
+    $f->add(
+        new TrFormElement(_T('Currency and Date format','imaging').":", $UserLocale),
+        array("value" =>(isset($parameters)) ? $parameters['UserLocale'] :"fr-FR","required" => True)
+    );
+    //_____________
+    $TimeZone = new SelectItemtitle("TimeZone",$InfoBule_TimeZone);
+    $TimeZone->setElements($element_timezone);
+    $TimeZone->setElementsVal($val_timezone);
+    $f->add(
+        new TrFormElement(_T('Time Zone','imaging').":", $TimeZone),
+        array("value" =>  (isset($parameters)) ? $parameters['TimeZone'] :"Romance Standard Time","required" => True)
+    );
+    //_____________
+    $UILanguage = new SelectItemtitle("UILanguage",$InfoBule_UILanguage);
+    $UILanguage->setElements($eleUILanguage);
+    $UILanguage->setElementsVal($valUILanguage);
+    $f->add(
+        new TrFormElement(_T('UI Language','imaging').":", $UILanguage),
+        array("value" => (isset($parameters)) ? $parameters['UILanguage'] :'fr-FR' ,"required" => True)
+    );
+
 $f->pop();
 $f->add(new SepTpl());
 
-//==== NEW SECTION ====
-// Specialize Settings
-//=====================
-$f->add(new TitleElement(_T("Specialize Settings","imaging")));
-$f->push(new Table());
-	 $f->add(
-        new TrFormElement(_T('Domain','imaging').":", new InputTplTitle('Domain',$InfoBule_Domain)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
-    );
-	$f->add(
-        new TrFormElement(_T('Domain User','imaging').":", new InputTplTitle('DomainUser',$InfoBule_DomainUser)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
-    );
-	$f->add(
-        new TrFormElement(_T('Domain Password','imaging').":", new InputTplTitle('DomainPassword',$InfoBule_DomainPassword)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
-    );
-	$f->add(
-        new TrFormElement(_T('Join Domain','imaging').":", new InputTplTitle('JoinDomain',$InfoBule_JoinDomain)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
-    );
-	$f->add(
-        new TrFormElement(_T('MachineObjectOU','imaging').":", new InputTplTitle('MachineObjectOU',$InfoBule_MachineObjectOU)),
-        array("required" => True,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
-    );
-$f->pop();
-$f->add( new SepTpl());
 
 //==== NEW SECTION ====
 // Partition Settings
 //=====================
-//Add section title
 $f->add(new TitleElement(_T("Partition Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Partition_Settings',$Infobule_Partition_Settings)));
 $f->push(new Table());
@@ -595,6 +586,14 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['PartitionOrder'] : "2","required" => True)
     );
     //_____________
+    $ExtendOSPartition = new SelectItemtitle("ExtendOSPartition",$InfoBule_ExtendOSPartition);
+    $ExtendOSPartition->setElements($yes_no);
+    $ExtendOSPartition->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('Extend OS Partition','imaging').":", $ExtendOSPartition),
+        array("value" => (isset($parameters)) ? $parameters['ExtendOSPartition'] : "true","required" => True)
+    );
+    //_____________
     $Format = new SelectItemtitle("Format",$InfoBule_Format);
     $Format->setElements(array('NTFS','FAT32'));
     $Format->setElementsVal(array('NTFS','FAT32'));
@@ -615,142 +614,18 @@ $f->push(new Table());
         new TrFormElement(_T('Main Partition Letter','imaging').":", $DriveLetter),
         array("value" => (isset($parameters)) ? $parameters['DriveLetter'] : "C","required" => True)
     );
-$f->pop();
-$f->add(new SepTpl());
 
-//==== NEW SECTION ====
-// Administrators Accounts
-//=====================
-$f->add(new TitleElement(_T("Administrator Account", "imaging")));
-$f->push(new Table());
-
-	//_____________
-    $f->add(
-        new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
-        array(  "required" => True,
-                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
-    );
-$f->pop();
-$f->add( new SepTpl());
-
-//==== NEW SECTION ====
-// User Account
-//=====================
-//Add section title
-$f->add(new TitleElement(_T("User Account", "imaging")));
-$f->add(new TrFormElement("", new Iconereply('User_Account', $InfoBule_User_Account )));
-$f->push(new Table());
-
-    //_____________
-    $CEIPEnabled = new SelectItemtitle("CEIPEnabled",$InfoBule_CEIPEnabled);
-    $CEIPEnabled->setElements($EnableDisabled);
-    $CEIPEnabled->setElementsVal(array('1','0'));
-    $f->add(
-        new TrFormElement(_T('Customer Experience Improvement Program (CEIP)','imaging').":", $CEIPEnabled),
-            array("value" => (isset($parameters)) ? $parameters['CEIPEnabled'] : "0","required" => True)
-    );
-
-    //_____________
-    $f->add(
-        new TrFormElement(_T('User Name','imaging'), new InputTplTitle('FullName',$InfoBule_FullName)),
-        array("value" => (isset($parameters)) ? $parameters['FullName'] : "Temp","required" => True)
-    );
-    //_____________
-    $Group = new SelectItemtitle("Group",$InfoBule_Group);
-    $Group->setElements($GroupTabElement);
-    $Group->setElementsVal($GroupTabValue);
-    $f->add(
-        new TrFormElement(_T('Group','imaging').":", $Group),
-        array("value" => (isset($parameters)) ? $parameters['Group'] : "Users","required" => True)
-    );
-   //_____________
-    $f->add(
-        new TrFormElement(_T('Description','imaging'), new InputTplTitle('Description',$InfoBule_Description)),
-        array("value" => (isset($parameters)) ? $parameters['Description'] : "Temp","required" => True)
-    );
-    //_____________
-    $f->add(
-        new TrFormElement(_T('Password: (Optional)','imaging'), new InputTplTitle('Password',$InfoBule_Password)),
-        array("value" => (isset($parameters)) ? $parameters['Password'] : ""));
-    //_____________
-    $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
-    $EnableUAC->setElements($EnableDisabled);
-    $EnableUAC->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('UAC','imaging').":", $EnableUAC),
-            array("value" => (isset($parameters)) ? $parameters['EnableUAC'] : "false","required" => True)
-    );
-    //_____________
-    $EnableFirewall = new SelectItemtitle("EnableFirewall",$InfoBule_EnableFirewall);
-    $EnableFirewall->setElements($EnableDisabled);
-    $EnableFirewall->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Enable Firewall','imaging').":", $EnableFirewall),
-            array("value" => (isset($parameters)) ? $parameters['EnableFirewall'] : "true","required" => True)
-    );
-$f->pop();
-$f->add(new Septpl());
-
-
-//==== NEW SECTION ====
-// Regional Settings
-//=====================
-//Add section title
-$f->add(new TitleElement(_T("Regional Settings", "imaging")));
-$f->add(new TrFormElement("", new Iconereply('Regional_Settings',_T("Configure International Settings in Windows", "imaging"))));
-$f->push(new Table());
-
-    //_____________
-    $InputLocale = new SelectItemtitle("InputLocale",$Infobule_InputLocale);
-    $InputLocale->setElements($elementInputarray);
-    $InputLocale->setElementsVal($valeurInputarray);
-    $f->add(
-        new TrFormElement(_T('Keyboard or input method','imaging').":", $InputLocale),
-        array("value" => (isset($parameters)) ? $parameters['InputLocale'] :'1036:0000040c',"required" => True)
-    );
-     //_____________
-    $UserLocale = new SelectItemtitle("UserLocale",$InfoBule_UserLocale);
-    $UserLocale->setElements($eleUILanguage);
-    $UserLocale->setElementsVal($valUILanguage);
-    $f->add(
-        new TrFormElement(_T('Currency and Date format','imaging').":", $UserLocale),
-        array("value" =>(isset($parameters)) ? $parameters['UserLocale'] :"fr-FR","required" => True)
-    );
-    //_____________
-    $TimeZone = new SelectItemtitle("TimeZone",$InfoBule_TimeZone);
-    $TimeZone->setElements($element_timezone);
-    $TimeZone->setElementsVal($val_timezone);
-    $f->add(
-        new TrFormElement(_T('Time Zone','imaging').":", $TimeZone),
-        array("value" =>  (isset($parameters)) ? $parameters['TimeZone'] :"Romance Standard Time","required" => True)
-    );
-    //_____________
-    $UILanguage = new SelectItemtitle("UILanguage",$InfoBule_UILanguage);
-    $UILanguage->setElements($eleUILanguage);
-    $UILanguage->setElementsVal($valUILanguage);
-    $f->add(
-        new TrFormElement(_T('UI Language','imaging').":", $UILanguage),
-        array("value" => (isset($parameters)) ? $parameters['UILanguage'] :'fr-FR' ,"required" => True)
-    );
 $f->pop();
 $f->add(new SepTpl());
 
 
 //==== NEW SECTION ====
-// OOBE
+// Security Settings
 //=====================
-//Add section title
-$f->add(new TitleElement(_T("Out Of Box Experience", "imaging")));
+$f->add(new TitleElement(_T("Security Settings", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Out_Of_Box_Experience',$InfoBule_Out_Of_Box_Experience)));
 $f->push(new Table());
-     //_____________
-    $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
-    $NetworkLocation->setElements(array('Home','Work','Other'));
-    $NetworkLocation->setElementsVal(array('Home','Work','Other'));
-    $f->add(
-        new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
-        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] :"Work","required" => True)
-    );
+
     //_____________
     $ProtectComputer = new SelectItemtitle("ProtectComputer",$InfoBule_ProtectComputer);
     $ProtectComputer->setElements($ProtectComputerTabElement);
@@ -759,8 +634,7 @@ $f->push(new Table());
         new TrFormElement(_T('Protect Your Computer','imaging').":", $ProtectComputer),
         array("value" => (isset($parameters)) ? $parameters['ProtectComputer'] : "1","required" => True)
     );
-    //_____________    
- 
+    //_____________
     $Updates = new SelectItemtitle("Updates",$InfoBule_Updates);
     $Updates->setElements($UpdatesTabElement);
     $Updates->setElementsVal(array('1','2','3','4'));
@@ -769,7 +643,15 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['Updates'] : "3","required" => True)
     );
     //_____________
-    $HideEULA = new SelectItemtitle("HideEULA",$InfoBule_HideEULA); 
+    $NetworkLocation = new SelectItemtitle("NetworkLocation",$InfoBule_NetworkLocation );
+    $NetworkLocation->setElements(array('Home','Work','Other'));
+    $NetworkLocation->setElementsVal(array('Home','Work','Other'));
+    $f->add(
+        new TrFormElement(_T('Network Location','imaging').":", $NetworkLocation),
+        array("value" => (isset($parameters)) ? $parameters['NetworkLocation'] :"Work","required" => True)
+    );
+    //_____________
+    $HideEULA = new SelectItemtitle("HideEULA",$InfoBule_HideEULA);
     $HideEULA->setElements($yes_no);
     $HideEULA->setElementsVal($truefalse);
     $f->add(
@@ -777,7 +659,15 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['HideEULA'] : "true","required" => True)
     );
     //_____________
-    $DaylightSettings = new SelectItemtitle("DaylightSettings",$InfoBule_DaylightSettings); 
+    $EnableFirewall = new SelectItemtitle("EnableFirewall",$InfoBule_EnableFirewall);
+    $EnableFirewall->setElements($EnableDisabled);
+    $EnableFirewall->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('Enable Firewall','imaging').":", $EnableFirewall),
+        array("value" => (isset($parameters)) ? $parameters['EnableFirewall'] : "true","required" => True)
+    );
+    //_____________
+    $DaylightSettings = new SelectItemtitle("DaylightSettings",$InfoBule_DaylightSettings);
     $DaylightSettings->setElements($yes_no);
     $DaylightSettings->setElementsVal($truefalse);
     $f->add(
@@ -785,28 +675,12 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['DaylightSettings'] : "true","required" => True)
     );
     //_____________
-    $HideWireless = new SelectItemtitle("HideWireless",$Infobule_HideWireless); 
+    $HideWireless = new SelectItemtitle("HideWireless",$Infobule_HideWireless);
     $HideWireless->setElements($yes_no);
     $HideWireless->setElementsVal($truefalse);
     $f->add(
         new TrFormElement(_T('Hide wireless setup in OOBE','imaging').":", $HideWireless),
         array("value" => (isset($parameters)) ? $parameters['HideWireless'] : "true","required" => True)
-    );
-    //_____________
-    $MachineOOBE = new SelectItemtitle("MachineOOBE",$InfoBule_MachineOOBE);
-    $MachineOOBE->setElements($yes_no);
-    $MachineOOBE->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Skip machine OOBE','imaging').":", $MachineOOBE),
-        array("value" => (isset($parameters)) ? $parameters['MachineOOBE'] : "true","required" => True)
-    );
-    //_____________
-    $UserOOBE = new SelectItemtitle("UserOOBE",$InfoBule_UserOOBE);
-    $UserOOBE->setElements($yes_no);
-    $UserOOBE->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Skip user OOBE','imaging').":", $UserOOBE),
-        array("value" => (isset($parameters)) ? $parameters['UserOOBE'] : "true","required" => True)
     );
     //_____________
     $ControlPanelView = new SelectItemtitle("ControlPanelView",$InfoBule_ControlPanelView);
@@ -825,6 +699,112 @@ $f->push(new Table());
         array("value" => (isset($parameters)) ? $parameters['ControlPanelIconSize'] : "0","required" => True)
     );
 
+$f->pop();
+$f->add( new SepTpl());
+
+//==== NEW SECTION ====
+// Domain Settings
+//=====================
+$f->add(new TitleElement(_T("Domain Settings","imaging")));
+$f->push(new Table());
+
+	 $f->add(
+        new TrFormElement(_T('Domain','imaging').":", new InputTplTitle('Domain',$InfoBule_Domain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['Domain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain User','imaging').":", new InputTplTitle('DomainUser',$InfoBule_DomainUser)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainUser'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Domain Password','imaging').":", new InputTplTitle('DomainPassword',$InfoBule_DomainPassword)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['DomainPassword'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('Join Domain','imaging').":", new InputTplTitle('JoinDomain',$InfoBule_JoinDomain)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['JoinDomain'] : '')
+    );
+	$f->add(
+        new TrFormElement(_T('MachineObjectOU','imaging').":", new InputTplTitle('MachineObjectOU',$InfoBule_MachineObjectOU)),
+        array("required" => True,"value" =>(isset($parameters)) ? $parameters['MachineObjectOU'] : '')
+    );
+
+$f->pop();
+$f->add( new SepTpl());
+
+
+//==== NEW SECTION ====
+// Administrators Accounts
+//=====================
+$f->add(new TitleElement(_T("Administrator Account", "imaging")));
+$f->push(new Table());
+
+	//_____________
+    $f->add(
+        new TrFormElement(_T('Password','imaging'), new InputTplTitle('PasswordAdmin',$InfoBule_PasswordAdmin)),
+        array(  "required" => True,
+                "value" => (isset($parameters)) ? $parameters['PasswordAdmin'] : "")
+    );
+
+$f->pop();
+$f->add( new SepTpl());
+
+
+//==== NEW SECTION ====
+// User Account
+//=====================
+$f->add(new TitleElement(_T("User Account", "imaging")));
+$f->add(new TrFormElement("", new Iconereply('User_Account', $InfoBule_User_Account )));
+$f->push(new Table());
+
+    //_____________
+    $CEIPEnabled = new SelectItemtitle("CEIPEnabled",$InfoBule_CEIPEnabled);
+    $CEIPEnabled->setElements($EnableDisabled);
+    $CEIPEnabled->setElementsVal(array('1','0'));
+    $f->add(
+        new TrFormElement(_T('Customer Experience Improvement Program (CEIP)','imaging').":", $CEIPEnabled),
+            array("value" => (isset($parameters)) ? $parameters['CEIPEnabled'] : "0","required" => True)
+    );
+    //_____________
+    $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
+    $CopyProfile->setElements($yes_no);
+    $CopyProfile->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
+        array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
+    );
+    //_____________
+    $f->add(
+        new TrFormElement(_T('User Name','imaging'), new InputTplTitle('FullName',$InfoBule_FullName)),
+        array("value" => (isset($parameters)) ? $parameters['FullName'] : "Temp","required" => True)
+    );
+    //_____________
+    $Group = new SelectItemtitle("Group",$InfoBule_Group);
+    $Group->setElements($GroupTabElement);
+    $Group->setElementsVal($GroupTabValue);
+    $f->add(
+        new TrFormElement(_T('Group','imaging').":", $Group),
+        array("value" => (isset($parameters)) ? $parameters['Group'] : "Users","required" => True)
+    );
+    //_____________
+    $f->add(
+        new TrFormElement(_T('Description','imaging'), new InputTplTitle('Description',$InfoBule_Description)),
+        array("value" => (isset($parameters)) ? $parameters['Description'] : "Temp","required" => True)
+    );
+    //_____________
+    $f->add(
+        new TrFormElement(_T('Password: (Optional)','imaging'), new InputTplTitle('Password',$InfoBule_Password)),
+        array("value" => (isset($parameters)) ? $parameters['Password'] : ""));
+    //_____________
+    $EnableUAC = new SelectItemtitle("EnableUAC",$InfoBule_EnableUAC);
+    $EnableUAC->setElements($EnableDisabled);
+    $EnableUAC->setElementsVal($truefalse);
+    $f->add(
+        new TrFormElement(_T('UAC','imaging').":", $EnableUAC),
+            array("value" => (isset($parameters)) ? $parameters['EnableUAC'] : "false","required" => True)
+    );
+
+    //=============
     $bo = new buttonTpl('bvalid', _T("Validate",'imaging'),'btnPrimary',_T("Create Xml Windows Answer File Generator", "imaging"));
     $rr = new TrFormElementcollapse($bo);
     $rr->setstyle("text-align: center;");
@@ -833,14 +813,15 @@ $f->push(new Table());
     );
     $f->add(
         new TrFormElement("",   new multifieldTpl(
-                                                array(  new SpanElementtitle(_T("Xml Windows Answer File Generator", "imaging"),Null, $InfoBule_showxml),
-                                                        new Iconereply('awfg_show',$InfoBule_showxml)
-                                                )
-                                )
+                array(  new SpanElementtitle(_T("Xml Windows Answer File Generator", "imaging"),Null, $InfoBule_showxml),
+                    new Iconereply('awfg_show',$InfoBule_showxml)
+                )
+            )
         )
     );
     $f->pop();
-$f->pop(); // End of OOBE table
+
+$f->pop();
 $f->display();
 
 echo "<pre id='codeTocopy2' style='width:100%;'></pre>";
