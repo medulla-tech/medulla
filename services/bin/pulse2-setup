@@ -33,6 +33,7 @@ import shutil
 import netifaces
 import netaddr
 import hashlib
+import time
 from copy import deepcopy
 from random import choice
 from subprocess import call
@@ -287,7 +288,7 @@ class SystemctlHandler(object):
         return ret==0
 
     def reload_srv(self, name):
-        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True) 
+        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True)
         return ret==0
 
 
@@ -1241,6 +1242,7 @@ class SetupApp(object):
 
         self.is_service_started('mmc-agent')
         self.is_service_started('pulse2-package-server')
+        time.sleep(10)
 
         # Register imaging server, if necessary
         if self.config['package.service.enable']:
