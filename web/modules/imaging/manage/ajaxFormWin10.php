@@ -430,6 +430,11 @@ $f->add(new TitleElement(_T("Installation Notes", "imaging")));
 $f->add(new TrFormElement("", new Iconereply('Installation_Notes',$InfoBule_Installation_Notes)));
 $f->push(new Table());
 
+	//_____________
+    $f->add(
+        new TrFormElement(_T('Title','imaging'), new InputTplTitle('Location',"name file xml")),
+        array("required" => True,'value'=>(isset($parameters)) ? $parameters['Title'] : '')
+    );
     //_____________     
     $f->add(new TrFormElement("Notes".":", new OptTextareaTpl(array('name'=>'Comments','value'=>(isset($parameters)) ? $parameters['Notes'] : 'Enter your comments here...'))));
 
