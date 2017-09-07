@@ -232,12 +232,13 @@ function update() {
         }
     };
     fn_General_Settings=function(){
-        var list_id_masque=[//'SkipProductKey',
-//                             'AcceptEULA',
-                            'ComputerName',
+        var list_id_masque=['ComputerName',
                             'SetupUILanguage',
-//                             'SkipRearm',
-                            /*'SkipAutoActivation'*/];
+                            "ShowWindowsLive",
+                            "InputLocale",
+                            "UserLocale",
+                            "TimeZone",
+                            "UILanguage"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -249,10 +250,7 @@ function update() {
         }
     };
     fn_Regional_Settings=function(){
-        var list_id_masque=["InputLocale",
-                            "UserLocale",
-                            "TimeZone",
-                            "UILanguage"];
+        var list_id_masque=[];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -271,7 +269,8 @@ function update() {
                             "MachineOOBE",
                             "UserOOBE",
                             "ControlPanelView",
-                            "ControlPanelIconSize"];
+                            "ControlPanelIconSize",
+                            "EnableFirewall"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -297,26 +296,12 @@ function update() {
             jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
-//     fn_Administrators_Account=function(){
-//         var list_id_masque=["PasswordAdmin"];
-//         jQuery.each(list_id_masque, function( index,value) {
-//             jQuery('#'+value).parents("tr").toggle();
-//         });
-//         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-//             jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
-//         }
-//         else{
-//             jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
-//         }
-//     };
     fn_User_Account=function(){
         var list_id_masque=["FullName",
                             "Group",
                             "Description",
                             "Password",
-                            "EnableUAC",
-//                            "Autologon",
-                            "EnableFirewall"];
+                            "EnableUAC"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
 
@@ -342,9 +327,7 @@ function update() {
     };
 
     fn_Specialize_Settings=function(){
-        var list_id_masque=[/*"CopyProfile",*/
-                            "ShowWindowsLive",
-                            "ExtendOSPartition"];
+        var list_id_masque=[];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -362,7 +345,6 @@ function update() {
     fn_Regional_Settings()
     fn_Out_Of_Box_Experience()
     fn_Partition_Settings()
-//     fn_Administrators_Account()
     fn_Installation_Notes()
     fn_awfg_show()
 </script>
