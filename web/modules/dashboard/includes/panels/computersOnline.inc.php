@@ -19,7 +19,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-include_once("modules/dashboard/includes/panel.class.php");
+require_once("modules/dashboard/includes/panel.class.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once("modules/base/includes/computers.inc.php");
 
@@ -33,21 +33,24 @@ $options = array(
 class ComputersOnlinePanel extends Panel {
 
     function display_content() {
-    	$machines_list = xmlrpc_getListPresenceMachine();
+        $machines_list = xmlrpc_getListPresenceMachine();
+        $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
         $total_machines = count(getComputersList());
 
         $machines_online = 0;
-    	foreach($machines_list as $id_machine=>$machine)
+        foreach($machines_list as $machine)
         {
             if($machine['type'] != 'relayserver')
                 $machines_online++;
             else
                 continue;
         }
+
         $machines_offline = $total_machines - $machines_online;
         echo 'Total machines : '.$total_machines.'<br/>';
-        echo '<span style="color:green">Machines online : '.$machines_online.'</span><br/>';
-        echo '<span style="color:red">Machines offline : '.$machines_offline.'</span><br/>';
+        echo '<span style="color:green">Machines online : '.$machines_online.'</span><a href="'.$urlRedirect.'&machines=online"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo '<span style="color:red">Machines offline : '.$machines_offline.'</span><a href="'.$urlRedirect.'&machines=offline"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+
     }
 }
 ?>
