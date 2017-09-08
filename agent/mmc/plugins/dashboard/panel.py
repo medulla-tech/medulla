@@ -109,6 +109,7 @@ class SpacePanel(Panel):
             'partitions': partitions,
         }
 
+
 class ProcessPanel(Panel):
     def serialize(self):
         exitcode, stdout, stderr = shlaunch("ps aux | grep 'pulse\|mmc' | grep -v 'defunct' | grep -v 'grep' | awk '{ if ($11 == \"/usr/bin/python\" || $11 == \"python\" || $11 == \"/bin/sh\") print $12; else print $11 }'")
@@ -121,6 +122,7 @@ class ProcessPanel(Panel):
                 'process': stderr,
             }
 
+
 class PluginsPanel(Panel):
     def serialize(self):
         ls = shlaunch("ls /etc/mmc/plugins/*.ini")
@@ -131,6 +133,13 @@ class PluginsPanel(Panel):
 
 class ComputersOnlinePanel(Panel):
     """This class is called by the ComputerOnline widget from the dashboard"""
+    def serialize(self):
+        """This method does nothing but needs to be implemented"""
+        pass
+
+
+class BackupPanel(Panel):
+    """This class is called by the Backup widget from the dashboard"""
     def serialize(self):
         """This method does nothing but needs to be implemented"""
         pass

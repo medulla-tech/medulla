@@ -27,7 +27,7 @@ import logging
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.config import DashboardConfig
 from mmc.plugins.dashboard.panel import GeneralPanel, SpacePanel, ShortcutsPanel, ProcessPanel, PluginsPanel,\
-                                        ComputersOnlinePanel
+                                        ComputersOnlinePanel, BackupPanel
 
 VERSION = "3.9.92"
 APIVERSION = "0:1:0"
@@ -51,6 +51,7 @@ def activate():
     DM.register_panel(ProcessPanel("process"))
     DM.register_panel(PluginsPanel("plugins"))
     DM.register_panel(PluginsPanel("computersOnline"))
+    DM.register_panel(PluginsPanel("backup"))
     return True
 
 # XML-RPC methods
