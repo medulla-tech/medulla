@@ -76,6 +76,10 @@ function test00() {
 //======================================================================
 // Bacukp Profiles
 
+function get_all_hosts(){
+    return xmlCall("backuppc.get_all_hosts", array());
+}
+
 function get_backup_profiles() {
     return xmlCall("backuppc.get_backup_profiles", array());
 }

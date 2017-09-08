@@ -72,6 +72,11 @@ $page->setFile("modules/glpi/glpi/createMachinesStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("createBackupStaticGroup", _T("Create static group from machines in backup widget (GLPI)", "glpi"));
+$page->setFile("modules/glpi/glpi/createBackupStaticGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("entityList", _T('Entities', 'glpi'));
 $page->setFile("modules/glpi/glpi/entityList.php");
 $submod->addPage($page);
