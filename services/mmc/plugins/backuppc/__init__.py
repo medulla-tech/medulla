@@ -137,6 +137,11 @@ def get_host_rsync_path(uuid):
     return bpc.get_host_rsync_path(uuid)
 
 
+def get_all_hosts():
+    """Return all the machines which are hosted in backuppc"""
+    return BackuppcDatabase().get_all_hosts()
+
+
 # PERIOD PROFILES
 
 def get_period_profiles():
