@@ -17,13 +17,16 @@ set -e
 # for details, see http://www.debian.org/doc/debian-policy/ or
 # the debian-policy package
 
+ISCONFIGURED=`grep baseDN /etc/mmc/plugins/base.ini | grep mandriva`
 
 case "$1" in
     configure)
 
-        cd /usr/lib/systemd/system/
+	if [ "x$ISCONFIGURED" = "x" ]; then
+        	cd /usr/lib/systemd/system/
 
-        for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
+        		for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
+	fi
 
     ;;
 
