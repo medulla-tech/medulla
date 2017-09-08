@@ -1,5 +1,5 @@
 [Unit]
-Description=Mandriva Management Console
+Description=Machines Management Console
 After=samba.service slapd.service
 
 [Service]
