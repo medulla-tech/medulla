@@ -20,19 +20,19 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
+
 require("modules/base/computers/localSidebar.php");
 require("modules/xmppmaster/xmppmaster/localSidebarxmpp.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
 extract($_GET);
 
 if ( isset ($_POST['bStop'])) {
     $_MYREQUEST = array_merge($_GET, $_POST);
     //xmlrpc_stopdeployfromcommandid($cmd_id, $uuid);
-    
+
 
     if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){
         $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid']);
