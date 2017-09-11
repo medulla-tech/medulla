@@ -145,6 +145,6 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
 
 ?>
