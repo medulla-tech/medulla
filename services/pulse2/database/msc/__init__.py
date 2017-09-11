@@ -1653,6 +1653,12 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda c:c.id, ret)
 
+    def getFirstCommandsOncmd_id(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).first()
+        session.close()
+        return ret
+
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
         session = create_session()
         query = session.query(CommandsOnHost).add_column(self.target.c.target_uuid).select_from(self.commands_on_host.join(self.commands).join(self.target)).filter(self.commands.c.id == cmd_id).order_by(self.commands_on_host.c.host)
