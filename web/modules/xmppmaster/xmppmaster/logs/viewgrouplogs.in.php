@@ -30,8 +30,36 @@ $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
 $p->setSideMenu($sidemenu);
 $p->display();
+
+
+$ddd = get_first_commands_on_cmd_id($cmd_id);
+
+$start_date = mktime( $ddd['start_date'][3],  $ddd['start_date'][4], $ddd['start_date'][5], $ddd['start_date'][1], $ddd['start_date'][2], $ddd['start_date'][0]);
+$end_date = mktime( $ddd['end_date'][3],  $ddd['end_date'][4], $ddd['end_date'][5], $ddd['end_date'][1], $ddd['end_date'][2], $ddd['end_date'][0]);
+$timestampnow = time();
+echo "<br>";
+
+$start_deploy = 0;
+$end_deploy   = 0;
+if ($timestampnow > $start_date){
+    $start_deploy = 1;
+}
+if ($timestampnow > ($end_date + 900)){
+    $end_deploy = 1;
+};
+
+
+$terminate = 0;
+$deployinprogress = 0;
+echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
+echo "<br>";
+
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
+#jfk
+if (!isset($_GET['refresh'])){
+    $_GET['refresh'] = 1;
+}
 
 if (isset($_GET['gid'])){
     $countmachine = getRestrictedComputersListLen( array('gid' => $_GET['gid']));
@@ -45,10 +73,37 @@ foreach ($info['objectdeploy'] as $val)
    $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
    $_GET['sta'] .=  $val['state']."@@";
    if ($val['state'] == "END SUCESS"){
-   $nbsuccess ++;
+    $nbsuccess ++;
    }
 }
+if (isset($countmachine) && ($nbsuccess == $countmachine)){
+    $terminate = 1;
+    $deployinprogress = 0;
+}
 
+if ( $start_deploy){
+    echo "START DEPLOY From <span>".($timestampnow - $start_date)."</span> s";
+    echo "<br>";
+    if ($end_deploy || $terminate == 1){
+        echo "DEPLOY TERMINATE";
+        $terminate = 1;
+        $deployinprogress = 0;
+        echo "<br>";
+    }else{
+        echo "DEPLOY  in Progress";
+        $deployinprogress = 1;
+    }
+}
+else{
+    echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
+}
+
+if ($deployinprogress ){
+            $f = new ValidatingForm();
+            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+            $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
+            $f->display();
+        }
 if ($info['len'] != 0){
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
@@ -64,16 +119,6 @@ if ($info['len'] != 0){
         $timestampstart = strtotime($datestart);
         $timestampnow = time();
         $nbsecond = $timestampnow - $timestampstart;
-        if ($nbsecond < 3600 ){
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-            $f->addButton("bStop", _T("Stop Deploy1", 'xmppmaster'));
-            $f->display();
-        }
-        echo "Start deployment :".$datestart;// [".$infodeploy['len'] ." steps] "
-        if ($nbsecond > 3600 ){
-            echo "<h2>Deployement done</h2>";
-        }
 
        if (isset($resultatdeploy['descriptor']['info'])){
         echo "<br>";
@@ -116,14 +161,17 @@ if ($info['len'] != 0){
       }
 }
 else{
-echo'
-        <script type="text/javascript">
-            setTimeout(refresh, 10000);
-            function  refresh(){
-               location.reload();
-            }
-        </script>
-        ';
+//     $_GET['refresh'] = $_GET['refresh'] + 1;
+    if ($terminate == 0){
+        echo'
+            <script type="text/javascript">
+                setTimeout(refresh, 10000);
+                function  refresh(){
+                        location.reload()
+                }
+            </script>
+            ';
+   }
 }
 
 $group->prettyDisplay();
@@ -145,25 +193,6 @@ if (isset($countmachine)){
         echo "<br>";
         echo " Machine or we tried an WOL: ".$machinewokonlan."%";
         echo "<br>";
-        if ($nbsecond < 3600 ){
-        echo '
-        <script type="text/javascript">
-            function refresh1(time){
-                setTimeout(function () {
-                    jQuery.get( "modules/xmppmaster/xmppmaster/logs/ajaxviewgrpdeploy.php", {"sta" : "'.$_GET['sta'].'", "cmd": "'.$cmd_id.'" ,"id" : "'.$_GET['id'].'"} )
-                        .done(function( data ) {
-                            if(data == "0"){
-                                refresh1(20);
-                            }
-                            else{
-                                location.reload(); 
-                            }
-                        });
-                }, time*1000);
-            }
-            refresh1(5);
-        </script>';
-        }
 }
 ?>
 
