@@ -153,7 +153,7 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
 
 
 function remove_xmpp_package($packageUuid){
