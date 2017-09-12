@@ -67,12 +67,12 @@ print_r($machines_not_backup);
 echo '</pre>';
 
 if($_GET['backup'] == 'yes'){
-    $groupname = sprintf (_T("Machines in backup at %s", "glpi"), date("Y-m-d H:i:s"));
+    $groupname = sprintf (_T("Machines backup configured at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_in_backup;
 }
 
 else {
-    $groupname = sprintf (_T("Machines not in backup at %s", "glpi"), date("Y-m-d H:i:s"));
+    $groupname = sprintf (_T("Machines backup not configured at %s", "glpi"), date("Y-m-d H:i:s"));
     $groupmembers = $machines_not_backup;
 }
 
