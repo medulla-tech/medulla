@@ -1,6 +1,7 @@
 [Unit]
 Description=Machines Management Console
 After=samba.service slapd.service
+ConditionPathExists=/etc/mmc/plugins/base.ini.local
 
 [Service]
 PIDFile=/var/run/mmc-agent.pid
