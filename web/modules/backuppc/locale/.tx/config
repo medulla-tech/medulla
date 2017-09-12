@@ -1,8 +1,9 @@
 [main]
 host = https://www.transifex.com
 
-[siveo.pulse-1]
+[pulse-1.backuppc]
 file_filter = <lang>/LC_MESSAGES/backuppc.po
 source_file = backuppc.pot
 source_lang = en
 type = PO
+
