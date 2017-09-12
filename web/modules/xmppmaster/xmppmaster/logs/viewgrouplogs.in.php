@@ -21,11 +21,16 @@
  *
  * file viewgrouplogs.in.php
  */
-//jfkjfk
+
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
-
+echo '<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
+<script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>';
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
 $p->setSideMenu($sidemenu);
@@ -44,10 +49,10 @@ $end_deploy   = 0;
 if ($timestampnow > $start_date){
     $start_deploy = 1;
 }
-if ($timestampnow > ($end_date + 900)){
+
+if ($timestampnow < ($end_date+900)){
     $end_deploy = 1;
 };
-
 
 $terminate = 0;
 $deployinprogress = 0;
@@ -56,7 +61,7 @@ echo "<br>";
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
-#jfk
+
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
@@ -191,8 +196,22 @@ if (isset($countmachine)){
         echo "<br>";
         echo " Machine deploy in group : ".$machinedeploy."%";
         echo "<br>";
-        echo " Machine or we tried an WOL: ".$machinewokonlan."%";
+        echo " Machine where we tried an WOL: ".$machinewokonlan."%";
         echo "<br>";
+        echo '<div id="pie"></div>
+                <script>
+                    var paper = Raphael("pie");
+                    paper.piechart(
+                        100, // pie center x coordinate
+                        100, // pie center y coordinate
+                        90,  // pie radius
+                            ['.$machinedeploy.', '.$machinewokonlan.'], // values
+                            {
+                            legend: ["Machine deploy in group", "Machine where we tried an WOL"],
+                            colors: ["#2EFE2E", "#2E64FE"]
+                            }
+                    );
+                </script>';
 }
 ?>
 

@@ -71,7 +71,15 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     }
 
     if($groupid){
-        $arraytitlename[] = "<span style='color : blue;'>(GRP  : ".$arraydeploy['tabdeploy']['len'][$index] . ") ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+        if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
+            $countmachine = getRestrictedComputersListLen( array('gid' => $arraydeploy['tabdeploy']['group_uuid'][$index]));
+            $namegrp = getPGobject($arraydeploy['tabdeploy']['group_uuid'][$index], true)->getName();
+        }
+        else{
+            $countmachine = "";
+            $namegrp = "";
+        }
+        $arraytitlename[] = "<span style='color : blue;'>(GRP[".$namegrp."] ".$arraydeploy['tabdeploy']['len'][$index] . "/".$countmachine."mach) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
         $arraystate[]="";
         $group = new Group($groupid, true, true);
         if ($group->exists == False) {
