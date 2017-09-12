@@ -76,7 +76,7 @@ foreach ($info['objectdeploy'] as $val)
     $nbsuccess ++;
    }
 }
-if (isset($countmachine) && ($nbsuccess == $countmachine)){
+if (isset($countmachine) && ($info['len'] == $countmachine)){
     $terminate = 1;
     $deployinprogress = 0;
 }
