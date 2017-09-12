@@ -25,7 +25,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 $options = array(
     "class" => "BackupPanel",
     "id" => "backup",
-    "title" => _T("Machines in backup", "dashboard"),
+    "title" => _T("Machines backup", "dashboard"),
     "enable" => true,
 );
 
@@ -37,8 +37,8 @@ class BackupPanel extends Panel {
         $machines_backup = count(get_all_hosts());
         $machines_not_backup = $total_machines - $machines_backup;
         echo 'Total machines : '.$total_machines.'<br/>';
-        echo '<span style="color:green">Machines in backup : '.$machines_backup.'</span><a href="'.$urlRedirect.'&backup=yes"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-        echo '<span style="color:red">Machines not in backup : ' .$machines_not_backup.'</span><a href="'.$urlRedirect.'&backup=no"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo '<span style="color:green">Backup configured : '.$machines_backup.'</span><a href="'.$urlRedirect.'&backup=yes"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo '<span style="color:red">Backup not configured : ' .$machines_not_backup.'</span><a href="'.$urlRedirect.'&backup=no"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
     }
 }
 ?>
