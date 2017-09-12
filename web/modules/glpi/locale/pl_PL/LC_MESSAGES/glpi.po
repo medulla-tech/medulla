@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 11:16+0100\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Add criterion"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:79 modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
 #: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr ""
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Add entity right"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:105 modules/glpi/glpi/addEntityRule.php:59
+#: modules/glpi/infoPackage.inc.php:115 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr ""
 
@@ -69,7 +69,7 @@ msgstr ""
 msgid "Administrative"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:160 modules/glpi/infoPackage.inc.php:190
+#: modules/glpi/infoPackage.inc.php:170 modules/glpi/infoPackage.inc.php:203
 msgid "Administrative tab (GLPI)"
 msgstr ""
 
@@ -108,8 +108,12 @@ msgstr ""
 msgid "Antivirus status is OK at %s"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:166 modules/glpi/infoPackage.inc.php:196
+#: modules/glpi/infoPackage.inc.php:176 modules/glpi/infoPackage.inc.php:209
 msgid "Antivirus tab (GLPI)"
+msgstr ""
+
+#: modules/glpi/glpi/ajaxViewPart.php:260
+msgid "Architecture"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
@@ -120,11 +124,11 @@ msgstr ""
 msgid "Category"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:119
+#: modules/glpi/infoPackage.inc.php:129
 msgid "Change entity rule order (down)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:114
+#: modules/glpi/infoPackage.inc.php:124
 msgid "Change entity rule order (up)"
 msgstr ""
 
@@ -155,8 +159,10 @@ msgid "Computers"
 msgstr ""
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createMachinesStaticGroup.php:81
 #: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createBackupStaticGroup.php:85
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
@@ -183,6 +189,14 @@ msgstr ""
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr ""
 
+#: modules/glpi/infoPackage.inc.php:75
+msgid "Create static group from machines backup widget (GLPI)"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:70
+msgid "Create static group from machines dashboard widget (GLPI)"
+msgstr ""
+
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
 msgstr ""
@@ -195,7 +209,7 @@ msgstr ""
 msgid "Date Of Purchase"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:109
+#: modules/glpi/infoPackage.inc.php:119
 msgid "Delete entity rule"
 msgstr ""
 
@@ -217,7 +231,7 @@ msgstr ""
 msgid "Device"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:126
+#: modules/glpi/infoPackage.inc.php:136
 msgid "Display locations"
 msgstr ""
 
@@ -227,7 +241,7 @@ msgid "Do not assign"
 msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "Domain"
 msgstr ""
 
@@ -248,15 +262,15 @@ msgstr ""
 msgid "Edit rule"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:266
+#: modules/glpi/glpi/ajaxViewPart.php:267
 msgid "Enabled"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:70
+#: modules/glpi/infoPackage.inc.php:80
 msgid "Entities"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:74 modules/glpi/infoPackage.inc.php:87
+#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:97
 msgid "Entities (ajax)"
 msgstr ""
 
@@ -284,11 +298,11 @@ msgstr ""
 msgid "Entity right"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:96 modules/glpi/glpi/entityRules.php:28
+#: modules/glpi/infoPackage.inc.php:106 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:100
+#: modules/glpi/infoPackage.inc.php:110
 msgid "Entity rules (ajax)"
 msgstr ""
 
@@ -312,7 +326,7 @@ msgstr ""
 msgid "Gateway"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:99
+#: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
 msgstr ""
 
@@ -336,7 +350,7 @@ msgstr ""
 msgid "Hardware"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:148 modules/glpi/infoPackage.inc.php:178
+#: modules/glpi/infoPackage.inc.php:158 modules/glpi/infoPackage.inc.php:191
 msgid "Hardware tab (GLPI)"
 msgstr ""
 
@@ -348,7 +362,7 @@ msgstr ""
 msgid "History"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:163 modules/glpi/infoPackage.inc.php:193
+#: modules/glpi/infoPackage.inc.php:173 modules/glpi/infoPackage.inc.php:206
 msgid "History tab (GLPI)"
 msgstr ""
 
@@ -364,19 +378,19 @@ msgstr ""
 msgid "IP Address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:300
+#: modules/glpi/glpi/ajaxViewPart.php:301
 msgid "Invalid hostname"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:141
+#: modules/glpi/infoPackage.inc.php:151
 msgid "Inventory (GLPI) on a group of machines"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:171
+#: modules/glpi/infoPackage.inc.php:184
 msgid "Inventory (GLPI) on machine"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:264
+#: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "Inventory Number"
 msgstr ""
 
@@ -434,7 +448,7 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:83
+#: modules/glpi/infoPackage.inc.php:93
 msgid "Locations"
 msgstr ""
 
@@ -445,6 +459,26 @@ msgstr ""
 #: modules/glpi/glpi/createOSStaticGroup.php:34
 #, php-format
 msgid "Machine with %s installed at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createBackupStaticGroup.php:70
+#, php-format
+msgid "Machines backup configured at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createBackupStaticGroup.php:75
+#, php-format
+msgid "Machines backup not configured at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:72
+#, php-format
+msgid "Machines offline at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#, php-format
+msgid "Machines online at %s"
 msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:242
@@ -499,7 +533,7 @@ msgstr ""
 msgid "Network Type"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:154 modules/glpi/infoPackage.inc.php:184
+#: modules/glpi/infoPackage.inc.php:164 modules/glpi/infoPackage.inc.php:197
 msgid "Network tab (GLPI)"
 msgstr ""
 
@@ -584,6 +618,14 @@ msgstr ""
 msgid "Properties"
 msgstr ""
 
+#: modules/glpi/glpi/tabs.php:86
+msgid "Registry"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:179 modules/glpi/infoPackage.inc.php:212
+msgid "Registry tab (GLPI)"
+msgstr ""
+
 #: modules/glpi/glpi/addEntityRule.php:138
 #: modules/glpi/includes/publicFunc.php:142
 msgid "Remove"
@@ -610,7 +652,7 @@ msgstr ""
 msgid "Software"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:157 modules/glpi/infoPackage.inc.php:187
+#: modules/glpi/infoPackage.inc.php:167 modules/glpi/infoPackage.inc.php:200
 msgid "Softwares tab (GLPI)"
 msgstr ""
 
@@ -618,7 +660,7 @@ msgstr ""
 msgid "Sound Cards"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:262
+#: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "State"
 msgstr ""
 
@@ -626,7 +668,7 @@ msgstr ""
 msgid "Storage"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:151 modules/glpi/infoPackage.inc.php:181
+#: modules/glpi/infoPackage.inc.php:161 modules/glpi/infoPackage.inc.php:194
 msgid "Storage tab (GLPI)"
 msgstr ""
 
@@ -638,7 +680,7 @@ msgstr ""
 msgid "Summary"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:145 modules/glpi/infoPackage.inc.php:175
+#: modules/glpi/infoPackage.inc.php:155 modules/glpi/infoPackage.inc.php:188
 msgid "Summary tab (GLPI)"
 msgstr ""
 
@@ -698,11 +740,11 @@ msgstr ""
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:263
+#: modules/glpi/glpi/ajaxViewPart.php:264
 msgid "Unknown"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:267
+#: modules/glpi/glpi/ajaxViewPart.php:268
 msgid "Up-to-date"
 msgstr ""
 
@@ -726,7 +768,7 @@ msgstr ""
 msgid "Warranty End Date"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:260
+#: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Windows Key"
 msgstr ""
 

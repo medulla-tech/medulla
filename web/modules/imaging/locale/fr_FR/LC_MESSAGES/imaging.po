@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-02 12:11+0100\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2017-03-01 16:29+0100\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -25,23 +25,23 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 1.8.12\n"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1526
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1508
 msgid "   - Hide the Microsoft Software License Terms page in Windows Welcome"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1530
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1512
 msgid "   - Skip Welcome Center, also known as Per User OOBE"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1528
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1510
 msgid "   - Skip Windows Welcome, also known as Machine OOBE"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1534
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1516
 msgid "   - The network type"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1518
 msgid "   - What type of computer protection is in place"
 msgstr " - Quelle type de protection est déjà existante"
 
@@ -100,13 +100,14 @@ msgstr "<strong>%s</strong> script n'a pas été %s"
 msgid "<strong>%s</strong> script wasn't deleted"
 msgstr "Le script <strong>%s</strong> n'a pas été supprimé"
 
-#: modules/imaging/manage/ajaxFormWin8.php:471
-#: modules/imaging/manage/ajaxFormWin10.php:487
+#: modules/imaging/manage/ajaxFormWin7.php:411
+#: modules/imaging/manage/ajaxFormWin8.php:475
+#: modules/imaging/manage/ajaxFormWin10.php:492
 #: modules/imaging/manage/ajaxFormWin81.php:585
 msgid "Accept EULA"
 msgstr "Accepter l'EULA"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1356
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1338
 msgid "Account Operators"
 msgstr ""
 
@@ -164,14 +165,14 @@ msgstr ""
 msgid "Add the image <b>%s</b> to <b>%s</b>"
 msgstr "Ajouter l'image <b>%s</b> à <b>%s</b>"
 
-#: modules/imaging/manage/ajaxFormWin7.php:439
-#: modules/imaging/manage/ajaxFormWin8.php:798
-#: modules/imaging/manage/ajaxFormWin10.php:584
+#: modules/imaging/manage/ajaxFormWin7.php:676
+#: modules/imaging/manage/ajaxFormWin8.php:740
+#: modules/imaging/manage/ajaxFormWin10.php:744
 #: modules/imaging/manage/ajaxFormWin81.php:927
 msgid "Administrator Account"
 msgstr "Compte Administrateur"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1357
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1339
 msgid "Administrators"
 msgstr "Administrateurs"
 
@@ -261,7 +262,7 @@ msgstr "Sauvegarde"
 msgid "Backup Finished"
 msgstr "Sauvegarde terminée"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1358
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1340
 #, fuzzy
 msgid "Backup Operators"
 msgstr "Sauvegarde en cours"
@@ -383,7 +384,7 @@ msgstr "Services de démarrage"
 msgid "Booted"
 msgstr "Démarré"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1423
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1405
 #, fuzzy
 msgid ""
 "CEIPEnabled indicates whether the Windows Customer Experience Improvement "
@@ -406,7 +407,7 @@ msgstr ""
 #: modules/imaging/imaging/showtarget.php:131
 #: modules/imaging/imaging/images_delete.php:60
 #: modules/imaging/imaging/configure.php:319
-#: modules/imaging/imaging/multicast.php:263
+#: modules/imaging/imaging/multicast.php:268
 #: modules/imaging/imaging/bootmenu_remove.php:114
 #: modules/imaging/manage/master_remove.php:70
 #: modules/imaging/manage/master_iso.php:86
@@ -416,20 +417,21 @@ msgstr ""
 msgid "Cancel"
 msgstr "Annuler"
 
-#: modules/imaging/manage/ajaxFormWin8.php:778
-#: modules/imaging/manage/ajaxFormWin10.php:773
+#: modules/imaging/manage/ajaxFormWin7.php:619
+#: modules/imaging/manage/ajaxFormWin8.php:683
+#: modules/imaging/manage/ajaxFormWin10.php:692
 #: modules/imaging/manage/ajaxFormWin81.php:907
 msgid "Category View"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1730
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1712
 msgid ""
 "Changes the default user profile with customizations made . You must set "
 "this value to true only if you have made customizations to the logged-on "
 "user profile that you need to apply to all new users"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1391
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1373
 msgid "Check for updates but choose to download and install"
 msgstr ""
 
@@ -446,13 +448,14 @@ msgstr "Veuillez choisir l'adresse MAC que vous désirez utiliser"
 msgid "Choosen Menu Entry"
 msgstr "Entrée de menu choisie"
 
-#: modules/imaging/manage/ajaxFormWin8.php:778
-#: modules/imaging/manage/ajaxFormWin10.php:773
+#: modules/imaging/manage/ajaxFormWin7.php:619
+#: modules/imaging/manage/ajaxFormWin8.php:683
+#: modules/imaging/manage/ajaxFormWin10.php:692
 #: modules/imaging/manage/ajaxFormWin81.php:907
 msgid "Classic View"
 msgstr "Affichage classique"
 
-#: modules/imaging/manage/ajaxStatus.php:580
+#: modules/imaging/manage/ajaxStatus.php:581
 msgid "Clear multicast deploy"
 msgstr "Nettoyer le déploiement multicast"
 
@@ -478,15 +481,15 @@ msgstr "Paramètres de Clonezilla pour restaurer les images"
 msgid "Clonezilla parameters for saving images"
 msgstr "Paramètres de Clonezilla pour sauvegarder les images"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1519
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1501
 msgid "CommandLine reg"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1611
 msgid "CommandLine reg ControlPanel AllItemsIconView"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1626
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1608
 msgid "CommandLine reg Set the Control Panel View to Small Icons"
 msgstr ""
 
@@ -500,9 +503,9 @@ msgstr "Terminé"
 msgid "Computer"
 msgstr "Ordinateur"
 
-#: modules/imaging/manage/ajaxFormWin7.php:291
-#: modules/imaging/manage/ajaxFormWin8.php:493
-#: modules/imaging/manage/ajaxFormWin10.php:519
+#: modules/imaging/manage/ajaxFormWin7.php:441
+#: modules/imaging/manage/ajaxFormWin8.php:505
+#: modules/imaging/manage/ajaxFormWin10.php:522
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
 msgstr "Nom de machine"
@@ -555,46 +558,43 @@ msgstr "Éditeur de sous-requête du profile"
 msgid "Computers list has been truncated at %d computers"
 msgstr "La liste des machines a été tronquée à %d ordinateurs"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1655
 #, fuzzy
 msgid "Configure Administrators Account"
 msgstr "Compte Administrateur"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1450
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1432
 #, fuzzy
 msgid "Configure General Settings"
 msgstr "Paramètres généraux"
 
-#: modules/imaging/manage/ajaxFormWin7.php:357
-#: modules/imaging/manage/ajaxFormWin8.php:665
-#: modules/imaging/manage/ajaxFormWin10.php:660
 #: modules/imaging/manage/ajaxFormWin81.php:796
 msgid "Configure International Settings in Windows"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1510
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1492
 #, fuzzy
 msgid "Configure Partition Settings"
 msgstr "Configuration des partitions"
 
-#: modules/imaging/manage/ajaxFormWin7.php:301
-#: modules/imaging/manage/ajaxFormWin8.php:631
 #: modules/imaging/manage/ajaxFormWin81.php:762
 msgid "Configure Specialize Settings"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1516
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
 msgid "Configure User Account"
 msgstr "Configurer le compte utilisateur"
 
-#: modules/imaging/manage/ajaxFormWin8.php:789
-#: modules/imaging/manage/ajaxFormWin10.php:784
+#: modules/imaging/manage/ajaxFormWin7.php:630
+#: modules/imaging/manage/ajaxFormWin8.php:694
+#: modules/imaging/manage/ajaxFormWin10.php:703
 #: modules/imaging/manage/ajaxFormWin81.php:918
 msgid "Control Panel Icon Size"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:781
-#: modules/imaging/manage/ajaxFormWin10.php:776
+#: modules/imaging/manage/ajaxFormWin7.php:622
+#: modules/imaging/manage/ajaxFormWin8.php:686
+#: modules/imaging/manage/ajaxFormWin10.php:695
 #: modules/imaging/manage/ajaxFormWin81.php:910
 msgid "Control Panel View"
 msgstr ""
@@ -603,8 +603,9 @@ msgstr ""
 msgid "Convert to master"
 msgstr "Valider et convertir en master"
 
-#: modules/imaging/manage/ajaxFormWin7.php:309
-#: modules/imaging/manage/ajaxFormWin8.php:647
+#: modules/imaging/manage/ajaxFormWin7.php:710
+#: modules/imaging/manage/ajaxFormWin8.php:774
+#: modules/imaging/manage/ajaxFormWin10.php:778
 #: modules/imaging/manage/ajaxFormWin81.php:778
 msgid "Copy Profile"
 msgstr "Copier le profile"
@@ -633,9 +634,9 @@ msgstr "Créer un service de démarrage"
 msgid "Create ISO image from master"
 msgstr "Créer une image ISO depuis le master"
 
-#: modules/imaging/manage/ajaxFormWin7.php:481
-#: modules/imaging/manage/ajaxFormWin8.php:811
-#: modules/imaging/manage/ajaxFormWin10.php:788
+#: modules/imaging/manage/ajaxFormWin7.php:737
+#: modules/imaging/manage/ajaxFormWin8.php:823
+#: modules/imaging/manage/ajaxFormWin10.php:813
 #: modules/imaging/manage/ajaxFormWin81.php:938
 msgid "Create Xml Windows Answer File Generator"
 msgstr "Créer un fichier de Xml réponse Windows"
@@ -683,13 +684,13 @@ msgstr "Créé"
 msgid "Critical error"
 msgstr "Erreur critique"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1359
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1341
 msgid "Crypto Operators"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:372
-#: modules/imaging/manage/ajaxFormWin8.php:681
-#: modules/imaging/manage/ajaxFormWin10.php:676
+#: modules/imaging/manage/ajaxFormWin7.php:465
+#: modules/imaging/manage/ajaxFormWin8.php:529
+#: modules/imaging/manage/ajaxFormWin10.php:538
 #: modules/imaging/manage/ajaxFormWin81.php:812
 msgid "Currency and Date format"
 msgstr ""
@@ -698,17 +699,18 @@ msgstr ""
 msgid "Current boot menu"
 msgstr "Menu de démarrage actuel"
 
-#: modules/imaging/manage/ajaxFormWin8.php:565
-#: modules/imaging/manage/ajaxFormWin10.php:609
+#: modules/imaging/manage/ajaxFormWin7.php:702
+#: modules/imaging/manage/ajaxFormWin8.php:766
+#: modules/imaging/manage/ajaxFormWin10.php:770
 #: modules/imaging/manage/ajaxFormWin81.php:690
 msgid "Customer Experience Improvement Program (CEIP)"
 msgstr "Programme d’amélioration de Windows (CEIP)"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1722
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1704
 msgid "Customize the desired user profile settings"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1360
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1342
 msgid "DCOM Users"
 msgstr ""
 
@@ -796,12 +798,12 @@ msgstr "Supprimer l'image"
 #: modules/imaging/imaging/ajaxServices.php:99
 #: modules/imaging/manage/ajaxBootmenu.php:98
 #: modules/imaging/manage/sysprepList.php:74
-#: modules/imaging/manage/ajaxFormWin7.php:473
+#: modules/imaging/manage/ajaxFormWin7.php:728
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxFormWin8.php:601
+#: modules/imaging/manage/ajaxFormWin8.php:806
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
 #: modules/imaging/manage/ajaxMasterLevel2.php:97
-#: modules/imaging/manage/ajaxFormWin10.php:628
+#: modules/imaging/manage/ajaxFormWin10.php:796
 #: modules/imaging/manage/master_edit.php:57
 #: modules/imaging/manage/service_edit.php:59
 #: modules/imaging/manage/ajaxServiceLevel2.php:93
@@ -810,22 +812,23 @@ msgstr "Supprimer l'image"
 msgid "Description"
 msgstr "Description"
 
-#: modules/imaging/manage/ajaxFormWin8.php:749
-#: modules/imaging/manage/ajaxFormWin10.php:744
+#: modules/imaging/manage/ajaxFormWin7.php:606
+#: modules/imaging/manage/ajaxFormWin8.php:670
+#: modules/imaging/manage/ajaxFormWin10.php:679
 #: modules/imaging/manage/ajaxFormWin81.php:878
 msgid "Disable auto daylight timeset"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1419
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1401
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1415
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1696
 msgid "Disables Windows Firewall for Windows PE"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1649
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1631
 msgid "Disk_ID is an integer"
 msgstr ""
 
@@ -867,7 +870,7 @@ msgstr "Affiché sur WOL"
 msgid "Do not check hard disk size"
 msgstr "Ne pas vérifier la taille du disque dur"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1398
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1380
 msgid "Do not install selective updates"
 msgstr ""
 
@@ -884,34 +887,47 @@ msgstr ""
 msgid "Do you want a backup to be done ?"
 msgstr "Est-ce que vous voulez sauvegarder cet ordinateur ?"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1734
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1716
 msgid "Does not change the default user profile"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1597
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1579
 msgid "Does not hide the Join Wireless Network screen during Windows Welcome"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:329
+#: modules/imaging/manage/ajaxFormWin7.php:645
+#: modules/imaging/manage/ajaxFormWin8.php:709
+#: modules/imaging/manage/ajaxFormWin10.php:717
 msgid "Domain"
 msgstr "Domaine"
 
-#: modules/imaging/manage/ajaxFormWin7.php:337
+#: modules/imaging/manage/ajaxFormWin7.php:655
+#: modules/imaging/manage/ajaxFormWin8.php:719
+#: modules/imaging/manage/ajaxFormWin10.php:725
 msgid "Domain Password"
 msgstr "Mot de passe du domaine"
 
-#: modules/imaging/manage/ajaxFormWin7.php:333
+#: modules/imaging/manage/ajaxFormWin7.php:641
+#: modules/imaging/manage/ajaxFormWin8.php:705
+#: modules/imaging/manage/ajaxFormWin10.php:713
+#, fuzzy
+msgid "Domain Settings"
+msgstr "Configuration des partitions"
+
+#: modules/imaging/manage/ajaxFormWin7.php:650
+#: modules/imaging/manage/ajaxFormWin8.php:714
+#: modules/imaging/manage/ajaxFormWin10.php:721
 msgid "Domain User"
 msgstr "Utilisateur du domaine"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1761
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1743
 msgid ""
 "Domain specifies the name of the domain used for an account authentication. "
 "Domain is used to authenticate an account before the computer can be joined "
 "to a domain during Windows Setup."
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1767
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1749
 msgid "Domain to join"
 msgstr "Domaine à joindre"
 
@@ -920,7 +936,7 @@ msgstr "Domaine à joindre"
 msgid "Down service"
 msgstr "Descendre le service"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1392
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1374
 msgid "Download updates but choose when to install"
 msgstr ""
 
@@ -993,17 +1009,18 @@ msgstr "Éditer l'élément"
 msgid "Edition of master"
 msgstr "Éditer le master"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1418
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Enable"
 msgstr "Activer"
 
-#: modules/imaging/manage/ajaxFormWin8.php:621
-#: modules/imaging/manage/ajaxFormWin10.php:648
+#: modules/imaging/manage/ajaxFormWin7.php:598
+#: modules/imaging/manage/ajaxFormWin8.php:662
+#: modules/imaging/manage/ajaxFormWin10.php:671
 #: modules/imaging/manage/ajaxFormWin81.php:752
 msgid "Enable Firewall"
 msgstr "Activer le Pare feu "
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1710
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1692
 msgid "Enables Windows Firewall for Windows PE"
 msgstr ""
 
@@ -1019,7 +1036,7 @@ msgstr "Requête de fin de sauvegarde"
 msgid "End of Backup Success"
 msgstr "Succès de fin de sauvegarde"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1439
 msgid ""
 "Entering an invalid product key in the answer file will cause Windows Setup "
 "to fail"
@@ -1038,13 +1055,14 @@ msgstr "Erreur"
 msgid "Error while creating Boot Service"
 msgstr "Une erreur est survenue lors de la création du service de démarrage"
 
-#: modules/imaging/manage/ajaxFormWin7.php:317
-#: modules/imaging/manage/ajaxFormWin8.php:639
+#: modules/imaging/manage/ajaxFormWin7.php:525
+#: modules/imaging/manage/ajaxFormWin8.php:589
+#: modules/imaging/manage/ajaxFormWin10.php:598
 #: modules/imaging/manage/ajaxFormWin81.php:770
 msgid "Extend OS Partition"
 msgstr "Étendre la partition de l'OS"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1658
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1640
 msgid "FAT32"
 msgstr "FAT32"
 
@@ -1116,15 +1134,15 @@ msgstr "Fichier"
 msgid "File name"
 msgstr "Nom de fichier"
 
-#: modules/imaging/manage/ajaxFormWin8.php:582
+#: modules/imaging/manage/ajaxFormWin8.php:789
 msgid "For Windows 8"
 msgstr "Pour Windows 8"
 
-#: modules/imaging/manage/ajaxFormWin8.php:584
+#: modules/imaging/manage/ajaxFormWin8.php:790
 msgid "For Windows 8.1"
 msgstr "Pour Windows 8.1"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1473
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1455
 msgid ""
 "For automatic activation to complete, a valid Windows product key is required"
 msgstr ""
@@ -1138,11 +1156,11 @@ msgstr "Forcer la génération"
 msgid "Force raw backup mode"
 msgstr "Forcer le backup en mode raw"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1660
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1642
 msgid "Formats the partition for the File Allocation Table (FAT) file system"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1656
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1638
 msgid "Formats the partition for the NTFS file system"
 msgstr ""
 
@@ -1160,9 +1178,6 @@ msgstr "Chemin complet vers le fichier XPM affiché au démarrage"
 msgid "GRUB command line access"
 msgstr "Accès à la ligne de commande GRUB"
 
-#: modules/imaging/manage/ajaxFormWin7.php:240
-#: modules/imaging/manage/ajaxFormWin8.php:426
-#: modules/imaging/manage/ajaxFormWin10.php:442
 #: modules/imaging/manage/ajaxFormWin81.php:541
 msgid "General Settings"
 msgstr "Paramètres généraux"
@@ -1184,14 +1199,14 @@ msgstr ""
 "Menu de démarrage en cours de génération... Merci de patienter ou de "
 "rafraîchir le page %sici%s.<br/>"
 
-#: modules/imaging/manage/ajaxFormWin7.php:468
-#: modules/imaging/manage/ajaxFormWin8.php:596
-#: modules/imaging/manage/ajaxFormWin10.php:623
+#: modules/imaging/manage/ajaxFormWin7.php:723
+#: modules/imaging/manage/ajaxFormWin8.php:801
+#: modules/imaging/manage/ajaxFormWin10.php:791
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
 msgstr "Groupe"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1361
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1343
 msgid "Guests"
 msgstr "Invités"
 
@@ -1220,9 +1235,9 @@ msgstr "Succès de la mise à jour de l'Inventaire Matériel"
 msgid "Hardware Inventory updated"
 msgstr "Inventaire matériel mis à jour"
 
-#: modules/imaging/manage/ajaxFormWin7.php:430
-#: modules/imaging/manage/ajaxFormWin8.php:741
-#: modules/imaging/manage/ajaxFormWin10.php:736
+#: modules/imaging/manage/ajaxFormWin7.php:590
+#: modules/imaging/manage/ajaxFormWin8.php:654
+#: modules/imaging/manage/ajaxFormWin10.php:663
 #: modules/imaging/manage/ajaxFormWin81.php:870
 msgid "Hide EULA page"
 msgstr "Cacher la page de l'EULA"
@@ -1235,17 +1250,18 @@ msgstr "Masquer le menu"
 msgid "Hide menu (shortcut to show it : Shift - Alt - Shift)"
 msgstr "Cacher le menu de démarrage (pour l'afficher : Shift - Alt - Shift)"
 
-#: modules/imaging/manage/ajaxFormWin8.php:757
-#: modules/imaging/manage/ajaxFormWin10.php:752
+#: modules/imaging/manage/ajaxFormWin7.php:614
+#: modules/imaging/manage/ajaxFormWin8.php:678
+#: modules/imaging/manage/ajaxFormWin10.php:687
 #: modules/imaging/manage/ajaxFormWin81.php:886
 msgid "Hide wireless setup in OOBE"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1593
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1575
 msgid "Hides the Join Wireless Network screen during Windows Welcome"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1541
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1523
 msgid "Home"
 msgstr ""
 
@@ -1257,11 +1273,11 @@ msgstr "Demande de hostname"
 msgid "Hostname sent"
 msgstr "Nom d'hôte envoyé"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1455
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1437
 msgid "IMPORTANT"
 msgstr "IMPORTANT"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1362
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1344
 msgid "IUsers"
 msgstr ""
 
@@ -1281,13 +1297,13 @@ msgstr "Réussite de l'identification"
 msgid "Identifier"
 msgstr "Identifiant"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1425
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1407
 msgid ""
 "If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
 "data to Microsoft about Windows usage"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1739
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1721
 msgid ""
 "If the Windows Live shortcut has been removed from the Start menu, this "
 "setting cannot be used to put it back on the Start menu"
@@ -1310,12 +1326,12 @@ msgstr ""
 "Si l'opération dépasse 5 minutes, merci de remettre à zéro l'état de "
 "synchronisation de cette machine."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1647
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
 msgid ""
 "If you are installing to a computer with a single disk, you must specify 0"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1612
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1594
 msgid ""
 "If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and "
 "NetworkLocation in your answer file are ignored"
@@ -1392,7 +1408,7 @@ msgstr "Journaux de l'imaging"
 msgid "Imaging Server"
 msgstr "Serveur d'imaging"
 
-#: modules/imaging/infoPackage.inc.php:42
+#: modules/imaging/infoPackage.inc.php:48
 msgid "Imaging Unattended"
 msgstr ""
 
@@ -1451,24 +1467,19 @@ msgstr "Statut du serveur d'imaging"
 msgid "Imaging service"
 msgstr "Service d'imaging"
 
-#: modules/imaging/infoPackage.inc.php:47
-#, fuzzy
-msgid "Imaging sysprepList"
-msgstr "Serveur d'imaging"
-
-#: modules/imaging/infoPackage.inc.php:52
+#: modules/imaging/infoPackage.inc.php:56
 #, fuzzy
 msgid "Imaging sysprepView"
 msgstr "Service d'imaging"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1753
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1735
 msgid ""
 "In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as "
 "shown in the following image, which represents the index of the color scheme "
 "as viewed in the SystemSettings"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1756
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1738
 msgid ""
 "In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 "
 "which represents the index of the color scheme as viewed in the out-of-box "
@@ -1498,24 +1509,25 @@ msgstr "Dans le menu de démarrage par défaut"
 msgid "In progress"
 msgstr "En cours"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1397
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1379
 #, fuzzy
 msgid "Install selective updates"
 msgstr "Notes d'installation"
 
-#: modules/imaging/manage/ajaxFormWin8.php:519
-#: modules/imaging/manage/ajaxFormWin10.php:546
+#: modules/imaging/manage/ajaxFormWin7.php:509
+#: modules/imaging/manage/ajaxFormWin8.php:573
+#: modules/imaging/manage/ajaxFormWin10.php:582
 #: modules/imaging/manage/ajaxFormWin81.php:643
 msgid "Install to disk"
 msgstr "Installer sur le disque"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1393
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1375
 msgid "Install updates automatically"
 msgstr "Installer les mises à jour automatiquement"
 
-#: modules/imaging/manage/ajaxFormWin7.php:220
-#: modules/imaging/manage/ajaxFormWin8.php:407
-#: modules/imaging/manage/ajaxFormWin10.php:422
+#: modules/imaging/manage/ajaxFormWin7.php:348
+#: modules/imaging/manage/ajaxFormWin8.php:412
+#: modules/imaging/manage/ajaxFormWin10.php:429
 #: modules/imaging/manage/ajaxFormWin81.php:524
 msgid "Installation Notes"
 msgstr "Notes d'installation"
@@ -1532,11 +1544,13 @@ msgstr ""
 "La création de l'iso du master <strong>%s</strong> a été lancée en tâche de "
 "fond."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1532
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1514
 msgid "It also specifies the following"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:341
+#: modules/imaging/manage/ajaxFormWin7.php:660
+#: modules/imaging/manage/ajaxFormWin8.php:724
+#: modules/imaging/manage/ajaxFormWin10.php:729
 msgid "Join Domain"
 msgstr "Joindre le domaine"
 
@@ -1544,9 +1558,9 @@ msgstr "Joindre le domaine"
 msgid "Kernel parameters"
 msgstr "Paramètres du noyau"
 
-#: modules/imaging/manage/ajaxFormWin7.php:364
-#: modules/imaging/manage/ajaxFormWin8.php:673
-#: modules/imaging/manage/ajaxFormWin10.php:668
+#: modules/imaging/manage/ajaxFormWin7.php:457
+#: modules/imaging/manage/ajaxFormWin8.php:521
+#: modules/imaging/manage/ajaxFormWin10.php:530
 #: modules/imaging/manage/ajaxFormWin81.php:804
 msgid "Keyboard or input method"
 msgstr "Clavier ou méthode de saisie"
@@ -1563,8 +1577,9 @@ msgstr "Clavier ou méthode de saisie"
 msgid "Label"
 msgstr "Libellé"
 
-#: modules/imaging/manage/ajaxFormWin8.php:786
-#: modules/imaging/manage/ajaxFormWin10.php:781
+#: modules/imaging/manage/ajaxFormWin7.php:627
+#: modules/imaging/manage/ajaxFormWin8.php:691
+#: modules/imaging/manage/ajaxFormWin10.php:700
 #: modules/imaging/manage/ajaxFormWin81.php:915
 msgid "Large"
 msgstr ""
@@ -1604,7 +1619,7 @@ msgstr "Afficher tous les profiles de machines"
 msgid "Load on server"
 msgstr "Charge du serveur"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1720
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1702
 msgid ""
 "Log on as a user whose profile you can customize (for example, the built-in-"
 "administrator account)"
@@ -1632,11 +1647,13 @@ msgstr "Onglet MSC logs sur un groupe"
 msgid "Machine with custom menu on entity [%s] at %s"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:345
+#: modules/imaging/manage/ajaxFormWin7.php:665
+#: modules/imaging/manage/ajaxFormWin8.php:729
+#: modules/imaging/manage/ajaxFormWin10.php:733
 msgid "MachineObjectOU"
 msgstr "MachineObjectOU"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1769
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1751
 msgid ""
 "MachineObjectOU is an optional setting. It specifies the Lightweight "
 "Directory Access Protocol (LDAP) X 500-distinguished name of the "
@@ -1645,18 +1662,20 @@ msgid ""
 "the computer is being joined."
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:535
-#: modules/imaging/manage/ajaxFormWin10.php:562
+#: modules/imaging/manage/ajaxFormWin7.php:533
+#: modules/imaging/manage/ajaxFormWin8.php:597
+#: modules/imaging/manage/ajaxFormWin10.php:606
 #: modules/imaging/manage/ajaxFormWin81.php:659
 msgid "Main Partition Format"
 msgstr "Format de la partition principale"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1513
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1495
 msgid "Main Partition Label"
 msgstr "Nom de la partition principale"
 
-#: modules/imaging/manage/ajaxFormWin8.php:548
-#: modules/imaging/manage/ajaxFormWin10.php:575
+#: modules/imaging/manage/ajaxFormWin7.php:546
+#: modules/imaging/manage/ajaxFormWin8.php:610
+#: modules/imaging/manage/ajaxFormWin10.php:619
 #: modules/imaging/manage/ajaxFormWin81.php:672
 msgid "Main Partition Letter"
 msgstr "Lettre de la partition principale"
@@ -1736,7 +1755,7 @@ msgstr "Message"
 msgid "Message displayed during backup/restoration"
 msgstr "Message affiché pendant les opérations de sauvegarde/restauration"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1447
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
 msgid "Meta Information xml"
 msgstr ""
 
@@ -1750,8 +1769,8 @@ msgstr "Monter"
 msgid "Move down"
 msgstr "Descendre"
 
-#: modules/imaging/manage/ajaxStatus.php:538
-#: modules/imaging/manage/ajaxStatus.php:558
+#: modules/imaging/manage/ajaxStatus.php:539
+#: modules/imaging/manage/ajaxStatus.php:559
 msgid "Multicast Current Location"
 msgstr "Emplacement du multicast actuel"
 
@@ -1759,7 +1778,7 @@ msgstr "Emplacement du multicast actuel"
 msgid "Multicast init"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:189
+#: modules/imaging/imaging/multicast.php:193
 msgid "Multicast menu has been successfully created."
 msgstr "Le menu du Multicast a été créé avec succès."
 
@@ -1771,7 +1790,7 @@ msgstr "Le muticast n'a pas été créé : --max-time-to-wait < 60"
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
 msgstr "Le muticast n'a pas été créé : --max-time-to-wait missing"
 
-#: modules/imaging/imaging/multicast.php:195
+#: modules/imaging/imaging/multicast.php:200
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
@@ -1808,7 +1827,7 @@ msgid ""
 msgstr ""
 "Le muticast n'a pas été créé  : il n'y a pas d'ordinateurs dans le groupe"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1654
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
 msgid "NTFS"
 msgstr "NTFS"
 
@@ -1818,18 +1837,18 @@ msgstr "NTFS"
 msgid "Name"
 msgstr "Nom"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1363
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1345
 msgid "Network Configuration Operators"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:422
-#: modules/imaging/manage/ajaxFormWin8.php:716
-#: modules/imaging/manage/ajaxFormWin10.php:711
+#: modules/imaging/manage/ajaxFormWin7.php:582
+#: modules/imaging/manage/ajaxFormWin8.php:646
+#: modules/imaging/manage/ajaxFormWin10.php:655
 #: modules/imaging/manage/ajaxFormWin81.php:846
 msgid "Network Location"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1535
 msgid "Network discovery is disabled by default on this network type"
 msgstr ""
 
@@ -1837,13 +1856,13 @@ msgstr ""
 msgid "Never"
 msgstr "Jamais"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1390
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1372
 msgid "Never check for updates"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1403
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1466
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1490
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1385
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1448
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
 msgid "No"
 msgstr "Non"
 
@@ -1867,11 +1886,11 @@ msgstr "Pas assez d'informations"
 msgid "Not selected"
 msgstr "Non sélectionné"
 
-#: modules/imaging/imaging/multicast.php:228
+#: modules/imaging/imaging/multicast.php:233
 msgid "Number of machines to wait for"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1522
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1504
 msgid "OOBE specifies the out-of-box experience for the end user"
 msgstr ""
 
@@ -1883,9 +1902,9 @@ msgstr "OS"
 msgid "Order"
 msgstr "Ordre"
 
-#: modules/imaging/manage/ajaxFormWin7.php:277
-#: modules/imaging/manage/ajaxFormWin8.php:463
-#: modules/imaging/manage/ajaxFormWin10.php:479
+#: modules/imaging/manage/ajaxFormWin7.php:403
+#: modules/imaging/manage/ajaxFormWin8.php:467
+#: modules/imaging/manage/ajaxFormWin10.php:484
 #: modules/imaging/manage/ajaxFormWin81.php:577
 msgid "Organization Name"
 msgstr "Nom de l'organisation"
@@ -1894,13 +1913,17 @@ msgstr "Nom de l'organisation"
 msgid "Organization Name missing"
 msgstr "Le nom de l'organisation est manquant"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
+#: modules/imaging/manage/ajaxFormWin7.php:367
+#: modules/imaging/manage/ajaxFormWin8.php:431
+#: modules/imaging/manage/ajaxFormWin10.php:448
+#, fuzzy
+msgid "Os Settings"
+msgstr "Paramètres généraux"
+
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1531
 msgid "Other"
 msgstr "Autre"
 
-#: modules/imaging/manage/ajaxFormWin7.php:397
-#: modules/imaging/manage/ajaxFormWin8.php:707
-#: modules/imaging/manage/ajaxFormWin10.php:703
 #: modules/imaging/manage/ajaxFormWin81.php:837
 msgid "Out Of Box Experience"
 msgstr ""
@@ -1909,20 +1932,22 @@ msgstr ""
 msgid "PXE Password"
 msgstr "Mot de passe PXE"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1427
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1409
 msgid ""
 "Participation in this program is voluntary, and the results are recorded to "
 "implement improvements for future releases"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:527
-#: modules/imaging/manage/ajaxFormWin10.php:554
+#: modules/imaging/manage/ajaxFormWin7.php:517
+#: modules/imaging/manage/ajaxFormWin8.php:581
+#: modules/imaging/manage/ajaxFormWin10.php:590
 #: modules/imaging/manage/ajaxFormWin81.php:651
 msgid "Partition Order"
 msgstr "Ordre des partitions"
 
-#: modules/imaging/manage/ajaxFormWin8.php:502
-#: modules/imaging/manage/ajaxFormWin10.php:529
+#: modules/imaging/manage/ajaxFormWin7.php:492
+#: modules/imaging/manage/ajaxFormWin8.php:556
+#: modules/imaging/manage/ajaxFormWin10.php:565
 #: modules/imaging/manage/ajaxFormWin81.php:626
 msgid "Partition Settings"
 msgstr "Configuration des partitions"
@@ -1932,32 +1957,32 @@ msgstr "Configuration des partitions"
 msgid "Partition number: %d"
 msgstr "Partition numéro: %d"
 
-#: modules/imaging/manage/ajaxFormWin7.php:444
-#: modules/imaging/manage/ajaxFormWin8.php:803
-#: modules/imaging/manage/ajaxFormWin10.php:589
+#: modules/imaging/manage/ajaxFormWin7.php:681
+#: modules/imaging/manage/ajaxFormWin8.php:745
+#: modules/imaging/manage/ajaxFormWin10.php:749
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
 msgstr "Mot de passe"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1763
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1745
 msgid ""
 "Password specifies the password of the user account used for authentication "
 "of an account to the domain before the computer can be joined to a domain "
 "during Windows Setup."
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:478
-#: modules/imaging/manage/ajaxFormWin8.php:606
-#: modules/imaging/manage/ajaxFormWin10.php:633
+#: modules/imaging/manage/ajaxFormWin7.php:733
+#: modules/imaging/manage/ajaxFormWin8.php:811
+#: modules/imaging/manage/ajaxFormWin10.php:801
 #: modules/imaging/manage/ajaxFormWin81.php:729
 msgid "Password: (Optional)"
 msgstr "Mot de passe: (Optionnel)"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1364
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1346
 msgid "Perf Logging Users"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1365
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1347
 msgid "Perf Monitoring Users"
 msgstr ""
 
@@ -2009,7 +2034,7 @@ msgstr "Post-installation terminée"
 msgid "Postinstall Started"
 msgstr "Post-installation commencée"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1366
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1348
 msgid "Power Users"
 msgstr ""
 
@@ -2033,13 +2058,13 @@ msgstr "Choix pre-séléctionné"
 msgid "Preselected choice on WOL"
 msgstr "Choix pre-séléctionné pour le WOL"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1367
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1349
 msgid "Print Operators"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:272
-#: modules/imaging/manage/ajaxFormWin8.php:458
-#: modules/imaging/manage/ajaxFormWin10.php:474
+#: modules/imaging/manage/ajaxFormWin7.php:398
+#: modules/imaging/manage/ajaxFormWin8.php:462
+#: modules/imaging/manage/ajaxFormWin10.php:479
 #: modules/imaging/manage/ajaxFormWin81.php:572
 msgid "Product Key"
 msgstr "Clef du produit"
@@ -2066,15 +2091,15 @@ msgstr "Onglet de création de profile depuis un import de fichier"
 msgid "Profile creation's tab from machine list"
 msgstr "Onglet de création de profile à partir de la liste des machines"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1468
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1450
 msgid ""
 "Prompts the user to accept the license terms before proceeding with Windows "
 "Setup"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:406
-#: modules/imaging/manage/ajaxFormWin8.php:724
-#: modules/imaging/manage/ajaxFormWin10.php:719
+#: modules/imaging/manage/ajaxFormWin7.php:566
+#: modules/imaging/manage/ajaxFormWin8.php:630
+#: modules/imaging/manage/ajaxFormWin10.php:639
 #: modules/imaging/manage/ajaxFormWin81.php:854
 msgid "Protect Your Computer"
 msgstr "Protéger Votre Ordinateur"
@@ -2083,7 +2108,7 @@ msgstr "Protéger Votre Ordinateur"
 msgid "Recent activity"
 msgstr "Activité récente"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1396
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1378
 #, fuzzy
 msgid "Recommended settings"
 msgstr "Paramètres régionaux"
@@ -2092,9 +2117,6 @@ msgstr "Paramètres régionaux"
 msgid "Redirect to Boot Services page"
 msgstr "Être redirigé vers la page des services de démarrage"
 
-#: modules/imaging/manage/ajaxFormWin7.php:355
-#: modules/imaging/manage/ajaxFormWin8.php:664
-#: modules/imaging/manage/ajaxFormWin10.php:659
 #: modules/imaging/manage/ajaxFormWin81.php:795
 msgid "Regional Settings"
 msgstr "Paramètres régionaux"
@@ -2112,7 +2134,7 @@ msgstr "Enregistrer un profil dans le module d'imaging"
 msgid "Register computer '%s'"
 msgstr "Enregistrement de l'ordinateur '%s'."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1368
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1350
 #, fuzzy
 msgid "Remote Desktop Users"
 msgstr "Supprimer le master"
@@ -2187,7 +2209,7 @@ msgstr "Supprimer ce master de l'ordinateur %s"
 msgid "Remove this master from imaging server %s"
 msgstr "Supprimer ce master du serveur d'imaging %s"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1369
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1351
 #, fuzzy
 msgid "Replicator"
 msgstr "Dupliquer"
@@ -2230,7 +2252,7 @@ msgstr "Échec de la restauration"
 msgid "Restore in progress"
 msgstr "Restauration en cours"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1726
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1708
 msgid ""
 "Run sysprep /generalize /unattend:unattend.xml to copy the customized user "
 "profile settings over the default user profile"
@@ -2256,6 +2278,13 @@ msgstr "Valeur du script"
 #: modules/imaging/infoPackage.inc.php:307
 msgid "Secure control on a group of computers"
 msgstr "Déploiement sur un groupe de machines"
+
+#: modules/imaging/manage/ajaxFormWin7.php:557
+#: modules/imaging/manage/ajaxFormWin8.php:621
+#: modules/imaging/manage/ajaxFormWin10.php:630
+#, fuzzy
+msgid "Security Settings"
+msgstr "Configuration des partitions"
 
 #: modules/imaging/imaging/showtarget.php:127
 #: modules/imaging/manage/service_show_used.php:141
@@ -2310,20 +2339,20 @@ msgstr ""
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr "Le service <strong>%s</strong> a été supprimé avec succès"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1724
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1706
 msgid ""
 "Set CopyProfile to true in the Unattend.xml file that you will use with "
 "Sysprep in the next step"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:286
-#: modules/imaging/manage/ajaxFormWin8.php:488
-#: modules/imaging/manage/ajaxFormWin10.php:514
+#: modules/imaging/manage/ajaxFormWin7.php:436
+#: modules/imaging/manage/ajaxFormWin8.php:500
+#: modules/imaging/manage/ajaxFormWin10.php:517
 #: modules/imaging/manage/ajaxFormWin81.php:612
 msgid "Setup Language"
 msgstr "Configurer la langue"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1495
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1477
 msgid ""
 "SetupUILanguage defines the language to use in Windows Setup and Windows "
 "Deployment Services"
@@ -2333,8 +2362,8 @@ msgstr ""
 msgid "Share a group of computers"
 msgstr "Partager un groupe de machines"
 
-#: modules/imaging/manage/ajaxFormWin7.php:325
-#: modules/imaging/manage/ajaxFormWin8.php:655
+#: modules/imaging/manage/ajaxFormWin7.php:449
+#: modules/imaging/manage/ajaxFormWin8.php:513
 #: modules/imaging/manage/ajaxFormWin81.php:786
 msgid "Show Windows Live"
 msgstr ""
@@ -2345,7 +2374,7 @@ msgid "Show all targets that use that image in their boot menu"
 msgstr ""
 "Afficher tous les postes qui ont cette image dans leur menu de démarrage"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1759
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1741
 msgid "Show file XML AWFG"
 msgstr ""
 
@@ -2370,7 +2399,7 @@ msgstr "Afficher les services utilisés"
 msgid "Show where service is used"
 msgstr "Afficher qui utilise ce service"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1737
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1719
 msgid ""
 "ShowWindowsLive specifies whether to display a link to Windows Live on the "
 "Start menu"
@@ -2381,31 +2410,31 @@ msgstr ""
 msgid "Size (compressed)"
 msgstr "Taille (compressée)"
 
-#: modules/imaging/manage/ajaxFormWin10.php:503
+#: modules/imaging/manage/ajaxFormWin7.php:427
+#: modules/imaging/manage/ajaxFormWin8.php:491
+#: modules/imaging/manage/ajaxFormWin10.php:508
 #: modules/imaging/manage/ajaxFormWin81.php:601
 msgid "Skip License Rearm"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:479
-#: modules/imaging/manage/ajaxFormWin10.php:495
+#: modules/imaging/manage/ajaxFormWin7.php:419
+#: modules/imaging/manage/ajaxFormWin8.php:483
+#: modules/imaging/manage/ajaxFormWin10.php:500
 #: modules/imaging/manage/ajaxFormWin81.php:593
 msgid "Skip automatic activation"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:765
-#: modules/imaging/manage/ajaxFormWin10.php:760
 #: modules/imaging/manage/ajaxFormWin81.php:894
 msgid "Skip machine OOBE"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:773
-#: modules/imaging/manage/ajaxFormWin10.php:768
 #: modules/imaging/manage/ajaxFormWin81.php:902
 msgid "Skip user OOBE"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:786
-#: modules/imaging/manage/ajaxFormWin10.php:781
+#: modules/imaging/manage/ajaxFormWin7.php:627
+#: modules/imaging/manage/ajaxFormWin8.php:691
+#: modules/imaging/manage/ajaxFormWin10.php:700
 #: modules/imaging/manage/ajaxFormWin81.php:915
 msgid "Small"
 msgstr "Petit"
@@ -2414,90 +2443,88 @@ msgstr "Petit"
 msgid "Space available on server"
 msgstr "Espace disque disponible sur le serveur"
 
-#: modules/imaging/manage/ajaxFormWin7.php:300
-#: modules/imaging/manage/ajaxFormWin8.php:630
 #: modules/imaging/manage/ajaxFormWin81.php:761
 msgid "Specialize Settings"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1682
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1664
 msgid "Specifies a LocalAccount"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1543
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1525
 msgid "Specifies a private home network"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1547
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1529
 msgid "Specifies a private office network"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1533
 msgid "Specifies neither a home or work network"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1623
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1605
 msgid "Specifies that Welcome Center is shown"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1619
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1601
 msgid "Specifies that Welcome Center is skipped"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1417
 msgid "Specifies that Windows CEIP is enabled"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1431
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 msgid "Specifies that Windows CEIP is not enabled"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1608
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1590
 msgid "Specifies that Windows Welcome is shown"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1604
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1586
 msgid "Specifies that Windows Welcome is skipped"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1481
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1463
 msgid "Specifies that Windows attempts to automatically activate"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1477
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1459
 msgid "Specifies that Windows does not attempt to automatically activate"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1743
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1725
 msgid "Specifies that a link to Windows Live is displayed on the Start menu"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1747
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1729
 msgid ""
 "Specifies that a link to Windows Live is not displayed on the Start menu"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1564
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1546
 msgid "Specifies that automatic protection is disabled"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1562
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1544
 msgid "Specifies that only updates are installed"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1575
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1557
 msgid ""
 "Specifies that the Microsoft Software License Terms page of Windows Welcome "
 "is displayed"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1571
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid ""
 "Specifies that the Microsoft Software License Terms page of Windows Welcome "
 "is not displayed"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1488
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1470
 msgid ""
 "Specifies that the computer is not rearmed and the computer will not be "
 "restored to its original, out-of-box state. All activation-related licensing "
@@ -2505,190 +2532,190 @@ msgid ""
 "period timers is not reset."
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1492
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1474
 msgid ""
 "Specifies that the computer is rearmed, restoring the computer to the "
 "original, out-of-box state. All activation-related licensing and registry "
 "data is removed or reset, and any grace period timers are also reset."
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1618
 msgid "Specifies that the disk is erased"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1640
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1622
 msgid "Specifies that the disk is not erased"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1464
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1446
 msgid ""
 "Specifies that the license terms are automatically accepted without being "
 "displayed to the end user"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1582
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1564
 msgid ""
 "Specifies that the time on the computer is not reset to daylight saving time"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1586
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1568
 msgid ""
 "Specifies that the time on the computer is reset to daylight saving time"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1676
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1658
 msgid ""
 "Specifies the administrator password of the computer and whether it is "
 "hidden in the unattended installation answer file"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1480
 msgid ""
 "Specifies the computer name used to access the computer from the network"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1441
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1423
 msgid ""
 "Specifies the default system language to display user interface (UI) items "
 "(such as menus, dialog boxes, and help files)"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1643
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1625
 msgid "Specifies the disk ID of the disk to which the image is to be installed"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1663
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1645
 msgid ""
 "Specifies the drive letter to apply to a partition. Drive_letter is an "
 "uppercase letter, C through Z"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1507
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1489
 msgid ""
 "Specifies the input language and keyboard layout for a Windows installation"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1453
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
 msgid "Specifies the key used to activate Windows"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1539
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1521
 msgid ""
 "Specifies the location of the network if the computer is connected to a "
 "network when a user first logs on"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1679
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1661
 msgid ""
 "Specifies the name of an existing local security group to which a new "
 "LocalAccount will be added during installation"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1688
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1670
 msgid ""
 "Specifies the name of the end user. User_name is a string with a maximum "
 "length of 63 characters"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1501
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1483
 msgid "Specifies the name of the organization that owns the computer"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1666
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1648
 msgid ""
 "Specifies the order in which the ModifyPartition command is to be run at "
 "first logon"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1685
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1667
 msgid ""
 "Specifies the password for a LocalAccount and whether the password is hidden "
 "in the unattended installation answer file"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1504
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1486
 msgid ""
 "Specifies the per-user settings used for formatting dates, times, currency, "
 "and numbers in a Windows installation"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1560
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1542
 msgid "Specifies the recommended level of protection for your computer"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1444
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1426
 msgid ""
 "Specifies the time zone of the computer. The time zones that are specified "
 "in Windows System Image Manager are not localized"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1691
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
 msgid ""
 "Specifies whether Windows User Account Controls (UAC) notifies the user when "
 "programs try to make changes to the computer. UAC was formerly known as "
 "Limited User Account (LUA)"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1471
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1453
 msgid "Specifies whether Windows attempts to automatically activate"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1578
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1560
 msgid ""
 "Specifies whether the time on the computer is set to daylight saving time"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1460
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1442
 msgid ""
 "Specifies whether to automatically accept the Microsoft Software License "
 "Terms"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1556
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1538
 msgid ""
 "Specifies whether to display the Help protect your computer automatically "
 "page of Windows Welcome to the user"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1632
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1614
 msgid ""
 "Specifies whether to erase all partitions on the hard disk before adding "
 "additional configurations to the disk"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1652
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1634
 msgid ""
 "Specifies whether to erase the partition, and which file system to apply to "
 "the partition"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1750
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
 msgid "Specifies whether to extend the partition to fill the entire hard disk"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1589
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1571
 msgid ""
 "Specifies whether to hide the Join Wireless Network screen that appears "
 "during Windows Welcome"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1567
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
 msgid ""
 "Specifies whether to hide the Microsoft Software License Terms page of "
 "Windows Welcome"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1484
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1466
 msgid "Specifies whether to run the Windows Software Licensing Rearm program"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1615
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1597
 msgid ""
 "Specifies whether to skip Welcome Center. This can be used only for testing "
 "prior to shipment"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1600
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1582
 msgid "Specifies whether to skip Windows Welcome"
 msgstr ""
 
@@ -2696,8 +2723,8 @@ msgstr ""
 msgid "Start ISO generation"
 msgstr "Démarrer la génération de l'image ISO"
 
-#: modules/imaging/imaging/multicast.php:262
-#: modules/imaging/manage/ajaxStatus.php:568
+#: modules/imaging/imaging/multicast.php:267
+#: modules/imaging/manage/ajaxStatus.php:569
 msgid "Start multicast deploy"
 msgstr "Démarrer le déploiement multicast"
 
@@ -2722,7 +2749,7 @@ msgstr "Statut inconnu"
 msgid "Status unknown"
 msgstr "Statut inconnu"
 
-#: modules/imaging/manage/ajaxStatus.php:551
+#: modules/imaging/manage/ajaxStatus.php:552
 msgid "Stop multicast deploy"
 msgstr "Arrêter le déploiement multicast"
 
@@ -2734,18 +2761,23 @@ msgstr "Partition d'échange (swap)"
 msgid "Synchronization state"
 msgstr "État de la synchronisation"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1670
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1652
 msgid ""
 "Synchronous commands are always run before asynchronous commands in the same "
 "configuration pass"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1668
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1650
 msgid ""
 "Synchronous commands start in the order specified in the unattended "
 "installation answer file, and each command must finish before the next "
 "command starts"
 msgstr ""
+
+#: modules/imaging/infoPackage.inc.php:51
+#, fuzzy
+msgid "Sysprep List"
+msgstr "List des Sysprep"
 
 #: modules/imaging/manage/systemImageManager.php:38
 msgid "Sysprep generator"
@@ -2755,28 +2787,28 @@ msgstr "Générateur de Sysprep"
 msgid "Sysprep list"
 msgstr "List des Sysprep"
 
-#: modules/imaging/manage/ajaxFormWin8.php:573
+#: modules/imaging/manage/ajaxFormWin8.php:782
 #: modules/imaging/manage/ajaxFormWin81.php:698
 msgid "System Background Colour"
 msgstr ""
 
-#: modules/imaging/infoPackage.inc.php:62
+#: modules/imaging/infoPackage.inc.php:43
 msgid "System Image Manager"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1370
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1352
 #, fuzzy
 msgid "System Operators"
 msgstr "Générateur de Sysprep"
 
-#: modules/imaging/manage/ajaxFormWin7.php:414
-#: modules/imaging/manage/ajaxFormWin8.php:733
-#: modules/imaging/manage/ajaxFormWin10.php:728
+#: modules/imaging/manage/ajaxFormWin7.php:574
+#: modules/imaging/manage/ajaxFormWin8.php:638
+#: modules/imaging/manage/ajaxFormWin10.php:647
 #: modules/imaging/manage/ajaxFormWin81.php:862
 msgid "System Updates"
 msgstr "Mises à jour système"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1438
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1420
 msgid ""
 "SystemDefaultBackgroundColor specifies the system default Windows background "
 "color scheme appearing on first boot, and on LogonUI if no user is selected"
@@ -2880,7 +2912,7 @@ msgstr "L'enregistrement dans le serveur d'imaging a échoué."
 msgid "The sysprep answer file has been removed from the imaging system."
 msgstr "le fichier de réponse sysprep a été supprimé du système d'imaging"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1558
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1540
 msgid ""
 "There is no default value. If a value is not set, the page opens during "
 "Windows Welcome"
@@ -2895,7 +2927,7 @@ msgstr "Pas de serveur d'imaging disponible pour l'association."
 msgid "There was an error (this is a default message)."
 msgstr "Une erreur est arrivée (ceci est un message par défaut)."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1524
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1506
 msgid "These settings specify whether to do the following"
 msgstr ""
 
@@ -2964,7 +2996,7 @@ msgstr ""
 "La durée de cette opération dépend du volume de données contenues dans le "
 "master."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1645
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1627
 msgid "This sequence starts with 0"
 msgstr ""
 
@@ -2980,9 +3012,9 @@ msgstr "Le menu de démarrage de cette cible est à jour."
 msgid "This value is already used."
 msgstr "Cette valeur est déjà utilisée."
 
-#: modules/imaging/manage/ajaxFormWin7.php:380
-#: modules/imaging/manage/ajaxFormWin8.php:690
-#: modules/imaging/manage/ajaxFormWin10.php:684
+#: modules/imaging/manage/ajaxFormWin7.php:473
+#: modules/imaging/manage/ajaxFormWin8.php:537
+#: modules/imaging/manage/ajaxFormWin10.php:546
 #: modules/imaging/manage/ajaxFormWin81.php:820
 msgid "Time Zone"
 msgstr ""
@@ -2993,10 +3025,10 @@ msgid "Timestamp"
 msgstr "Horodatage"
 
 #: modules/imaging/imaging/images_iso.php:81
-#: modules/imaging/manage/ajaxFormWin7.php:226
-#: modules/imaging/manage/ajaxFormWin8.php:413
+#: modules/imaging/manage/ajaxFormWin7.php:354
+#: modules/imaging/manage/ajaxFormWin8.php:418
 #: modules/imaging/manage/master_iso.php:67
-#: modules/imaging/manage/ajaxFormWin10.php:428
+#: modules/imaging/manage/ajaxFormWin10.php:435
 #: modules/imaging/manage/ajaxFormWin81.php:530
 msgid "Title"
 msgstr "Titre"
@@ -3013,8 +3045,8 @@ msgstr ""
 "cliquer sur « Images et masters », puis cliquer sur le bouton d'édition de "
 "l'image de secours à convertir en master."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1701
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1706
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1683
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1688
 msgid ""
 "To provide better protection for computers connected to any kind of network "
 "(such as the Internet, a home network, or an organization network), the "
@@ -3039,15 +3071,15 @@ msgstr ""
 "Avant de pouvoir faire l'enregistrement, un menu par défaut doit d'abord "
 "être positionné sur le serveur d'imaging qui gère l'entité de cet ordinateur."
 
-#: modules/imaging/manage/ajaxFormWin8.php:613
-#: modules/imaging/manage/ajaxFormWin10.php:640
+#: modules/imaging/manage/ajaxFormWin8.php:818
+#: modules/imaging/manage/ajaxFormWin10.php:808
 #: modules/imaging/manage/ajaxFormWin81.php:744
 msgid "UAC"
 msgstr "UAC"
 
-#: modules/imaging/manage/ajaxFormWin7.php:388
-#: modules/imaging/manage/ajaxFormWin8.php:698
-#: modules/imaging/manage/ajaxFormWin10.php:692
+#: modules/imaging/manage/ajaxFormWin7.php:481
+#: modules/imaging/manage/ajaxFormWin8.php:545
+#: modules/imaging/manage/ajaxFormWin10.php:554
 #: modules/imaging/manage/ajaxFormWin81.php:828
 msgid "UI Language"
 msgstr ""
@@ -3088,42 +3120,42 @@ msgstr ""
 "Utilisez les options \"Choix pre-séléctionné\" ou \"Choix pre-séléctionné "
 "pour le WOL\" pour définir l'entrée de démarrage par défaut."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1717
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1699
 msgid ""
 "Use the following steps to use CopyProfile to set customized user profiles"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:454
-#: modules/imaging/manage/ajaxFormWin8.php:557
-#: modules/imaging/manage/ajaxFormWin10.php:600
+#: modules/imaging/manage/ajaxFormWin7.php:693
+#: modules/imaging/manage/ajaxFormWin8.php:757
+#: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:681
 msgid "User Account"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:460
-#: modules/imaging/manage/ajaxFormWin8.php:588
-#: modules/imaging/manage/ajaxFormWin10.php:615
+#: modules/imaging/manage/ajaxFormWin7.php:715
+#: modules/imaging/manage/ajaxFormWin8.php:793
+#: modules/imaging/manage/ajaxFormWin10.php:783
 #: modules/imaging/manage/ajaxFormWin81.php:711
 msgid "User Name"
 msgstr "Nom d'utilisateur"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1765
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1747
 msgid ""
 "Username specifies the name of the user account with permission to add the "
 "computer to a domain during Windows Setup."
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1353
 msgid "Users"
 msgstr ""
 
 #: modules/imaging/imaging/bootmenu.php:182
 #: modules/imaging/manage/postinstall_edit.php:126
-#: modules/imaging/manage/ajaxFormWin7.php:481
-#: modules/imaging/manage/ajaxFormWin8.php:811
+#: modules/imaging/manage/ajaxFormWin7.php:737
+#: modules/imaging/manage/ajaxFormWin8.php:823
 #: modules/imaging/manage/ajaxConfiguration.php:123
 #: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/ajaxFormWin10.php:788
+#: modules/imaging/manage/ajaxFormWin10.php:813
 #: modules/imaging/manage/master_edit.php:70
 #: modules/imaging/manage/service_edit.php:69
 #: modules/imaging/manage/master_clone.php:109
@@ -3152,7 +3184,7 @@ msgstr ""
 msgid "Windows Answer File Generator"
 msgstr "Générateur de fichier réponse pour Windows"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1704
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1686
 msgid ""
 "Windows Firewall is a stateful host firewall that discards unsolicited "
 "incoming traffic, providing a level of protection for computers against "
@@ -3163,37 +3195,38 @@ msgstr ""
 msgid "Windows System Image Manager"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1699
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1681
 msgid ""
 "Windows does not notify the user when programs try to install software or "
 "make changes to the computer"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1695
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1677
 msgid ""
 "Windows notifies the user when programs try to make changes to the computer"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin8.php:511
-#: modules/imaging/manage/ajaxFormWin10.php:538
+#: modules/imaging/manage/ajaxFormWin7.php:501
+#: modules/imaging/manage/ajaxFormWin8.php:565
+#: modules/imaging/manage/ajaxFormWin10.php:574
 #: modules/imaging/manage/ajaxFormWin81.php:635
 msgid "Wipe Disk"
 msgstr "Effacer le disque"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1545
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1527
 msgid "Work"
 msgstr ""
 
-#: modules/imaging/manage/ajaxFormWin7.php:491
-#: modules/imaging/manage/ajaxFormWin8.php:819
-#: modules/imaging/manage/ajaxFormWin10.php:796
+#: modules/imaging/manage/ajaxFormWin7.php:745
+#: modules/imaging/manage/ajaxFormWin8.php:831
+#: modules/imaging/manage/ajaxFormWin10.php:821
 #: modules/imaging/manage/ajaxFormWin81.php:946
 msgid "Xml Windows Answer File Generator"
 msgstr "Générateur de fichier de réponse Windows Xml"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1402
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1462
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1486
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1384
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1444
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1468
 msgid "Yes"
 msgstr "Oui"
 
@@ -3279,7 +3312,7 @@ msgstr "Copie du master en cours"
 msgid "day"
 msgstr "jour"
 
-#: modules/imaging/imaging/multicast.php:221
+#: modules/imaging/imaging/multicast.php:226
 #, fuzzy, php-format
 msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
@@ -3288,7 +3321,7 @@ msgstr ""
 "L'association entre le serveur d'imaging <strong>%s</strong> et l'entité "
 "<strong>%s</strong> a été effectuée avec succès."
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1411
 msgid "enabled "
 msgstr ""
 
@@ -3296,17 +3329,17 @@ msgstr ""
 msgid "error create file"
 msgstr "Erreur lors de la création du fichier"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1479
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1573
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1584
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1595
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1606
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1621
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1638
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1697
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1712
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1745
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1461
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1555
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1566
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1577
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1588
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1603
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1620
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1679
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1694
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1727
 msgid "false"
 msgstr "faux"
 
@@ -3353,7 +3386,7 @@ msgstr "minute"
 msgid "root"
 msgstr "root"
 
-#: modules/imaging/imaging/multicast.php:244
+#: modules/imaging/imaging/multicast.php:249
 msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""
@@ -3366,21 +3399,21 @@ msgstr "l'entité elle-même"
 msgid "title missing ex : sysprep.xml"
 msgstr ""
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1475
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1569
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1580
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1591
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1602
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1617
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1634
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1693
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1708
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1728
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1741
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1562
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1573
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1584
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1599
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1616
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1675
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1690
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1710
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1723
 msgid "true"
 msgstr "vrai"
 
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1610
+#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1592
 msgid "warning"
 msgstr ""
 
@@ -3390,6 +3423,10 @@ msgstr "avec menu personnalisé"
 
 #~ msgid "(default)"
 #~ msgstr "(défaut)"
+
+#, fuzzy
+#~ msgid "Imaging sysprepList"
+#~ msgstr "Serveur d'imaging"
 
 #~ msgid "Product Key:"
 #~ msgstr "Clef du produit:"
