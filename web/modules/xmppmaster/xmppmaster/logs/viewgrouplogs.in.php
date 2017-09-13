@@ -50,7 +50,7 @@ if ($timestampnow > $start_date){
     $start_deploy = 1;
 }
 
-if ($timestampnow < ($end_date+900)){
+if ($timestampnow > (end_date+90)){
     $end_deploy = 1;
 };
 
