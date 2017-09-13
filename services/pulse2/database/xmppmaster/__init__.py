@@ -1687,16 +1687,19 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):
         sql = """SELECT 
-                    jid, agenttype, hostname
+                    jid, agenttype, hostname, uuid_inventorymachine
                  FROM
-                    xmppmaster.machines;"""
+                    xmppmaster.machines
+                 WHERE
+                    agenttype='machine';"""
+
         presencelist = session.execute(sql)
         session.commit()
         session.flush()
         try:
             a=[]
             for t in presencelist:
-                a.append({'jid':t[0],'type': t[1], 'hostname':t[2]})
+                a.append({'jid':t[0],'type': t[1], 'hostname':t[2], 'uuid_inventorymachine':t[3]})
                 logging.getLogger().debug("t %s"%t)
             #a = {"jid": x, for x, y ,z in presencelist}
             logging.getLogger().debug("a %s"%a)
