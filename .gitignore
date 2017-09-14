@@ -3,7 +3,6 @@
 *.mo
 *.o
 *.exe
-*.pot
 Makefile.in
 aclocal.m4
 Makefile

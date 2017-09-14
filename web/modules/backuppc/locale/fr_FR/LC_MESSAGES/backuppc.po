@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 11:16+0100\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2017-02-27 10:31+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "%A, %B %e %Y"
 msgstr "%A, %e %B %Y"
 
-#: modules/backuppc/backuppc/hostStatus.php:159
+#: modules/backuppc/backuppc/hostStatus.php:175
 #, php-format
 msgid "%s's backup status"
 msgstr "Statut de la sauvegarde de %s"
@@ -66,7 +66,12 @@ msgstr "Ajouter dossier"
 msgid "Add schedule"
 msgstr "Ajouter un planning"
 
-#: modules/backuppc/backuppc/hostStatus.php:167
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
+#, fuzzy
+msgid "Advanced restore"
+msgstr "Scripts avancés"
+
+#: modules/backuppc/backuppc/hostStatus.php:183
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr "Scripts avancés"
@@ -164,6 +169,7 @@ msgid "Client encoding"
 msgstr "Encodage du client"
 
 #: modules/backuppc/backuppc/hostStatus.php:47
+#: modules/backuppc/backuppc/hostStatus.php:48
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
@@ -173,12 +179,12 @@ msgstr ""
 "pouvez désormais configurer les jeux de fichiers à sauvegarder ainsi que sa "
 "planification de sauvegardes."
 
-#: modules/backuppc/backuppc/hostStatus.php:166
+#: modules/backuppc/backuppc/hostStatus.php:182
 msgid "Configuration"
 msgstr "Configuration"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:145
+#: modules/backuppc/backuppc/hostStatus.php:161
 msgid "Configuration saved"
 msgstr "Configuration enregistrée"
 
@@ -233,6 +239,11 @@ msgstr "Supprimer ce profil"
 msgid "Destination"
 msgstr "Destination"
 
+#: modules/backuppc/backuppc/restorePopup.php:35
+#, fuzzy
+msgid "Destination Folder"
+msgstr "Destination"
+
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
 msgid "Do not backup from"
@@ -246,7 +257,7 @@ msgstr "Télécharger"
 msgid "Download files/ZIP from backup"
 msgstr "Télécharger les fichiers/ZIP depuis la sauvegarde"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:190
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
 msgstr "Télécharger les items sélectionnés (ZIP)"
 
@@ -324,7 +335,7 @@ msgstr "Nb de fichiers (nouveaux)"
 msgid "File name"
 msgstr "Nom de fichier"
 
-#: modules/backuppc/backuppc/hostStatus.php:168
+#: modules/backuppc/backuppc/hostStatus.php:184
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "Recherche de fichiers"
@@ -374,6 +385,11 @@ msgstr "Go"
 #: modules/backuppc/backuppc/fileSearch.php:153
 msgid "Greater than 100 Mb"
 msgstr "Plus de 100 Mo"
+
+#: modules/backuppc/backuppc/restorePopup.php:26
+#, fuzzy
+msgid "Host"
+msgstr "Nom de la machine"
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
@@ -463,7 +479,7 @@ msgstr "La nuit"
 msgid "No entry found."
 msgstr "Aucune entrée trouvée"
 
-#: modules/backuppc/backuppc/restoreToHost.php:49
+#: modules/backuppc/backuppc/restoreToHost.php:51
 msgid "No file selected."
 msgstr "Aucun fichier sélectionné."
 
@@ -515,6 +531,11 @@ msgstr "Supprimer"
 msgid "Requested restores"
 msgstr "Restaurations"
 
+#: modules/backuppc/backuppc/restorePopup.php:37
+#, fuzzy
+msgid "Restore"
+msgstr "Restauration effectuée"
+
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
 #: modules/backuppc/backuppc/hostSummary.php:88
 msgid "Restore done"
@@ -541,8 +562,14 @@ msgstr "Points de restauration"
 msgid "Restore time"
 msgstr "Date de restauration"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
-msgid "Restore to host"
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
+#, fuzzy
+msgid "Restore to host (overwrite)"
+msgstr "Restaurer vers la machine"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
+#, fuzzy
+msgid "Restore to host (subfolder)"
 msgstr "Restaurer vers la machine"
 
 #: modules/backuppc/backuppc/hostSummary.php:112
@@ -610,7 +637,7 @@ msgstr "Arrêter la sauvegarde"
 msgid "Stop backup"
 msgstr "Arrêter la sauvegarde"
 
-#: modules/backuppc/backuppc/hostStatus.php:162
+#: modules/backuppc/backuppc/hostStatus.php:178
 msgid "Summary"
 msgstr "Résumé"
 
@@ -627,7 +654,7 @@ msgstr "L'ordinateur a été supprimé du système de sauvegarde."
 msgid "The profile has been deleted successfully."
 msgstr "Le profil a été supprimé avec succès"
 
-#: modules/backuppc/backuppc/restoreToHost.php:56
+#: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
 msgstr "Les fichiers sélectionnés vont être restaurés vers"
 
@@ -648,14 +675,6 @@ msgstr "Cette machine n'a jamais été sauvegardée"
 #: modules/backuppc/backuppc/edit.php:185
 msgid "Thursday"
 msgstr "Jeudi"
-
-#: modules/backuppc/backuppc/restorePopup.php:35
-msgid "To alternate folder"
-msgstr "Vers un autre dossier "
-
-#: modules/backuppc/backuppc/restorePopup.php:34
-msgid "To original folder (overwrite)"
-msgstr "Vers le dossier d'origine (écrasement)"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:115
 #: modules/backuppc/backuppc/edit.php:183
@@ -818,3 +837,9 @@ msgstr "le"
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "à"
+
+#~ msgid "To alternate folder"
+#~ msgstr "Vers un autre dossier "
+
+#~ msgid "To original folder (overwrite)"
+#~ msgstr "Vers le dossier d'origine (écrasement)"

@@ -1316,7 +1316,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
                                 self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                             'machine_ip' : data['xmppip'],
-                                                                            'uuid' : str(computer.id) })
+                                                                            'uuid' : str(computer.id),
+                                                                            'remoteservice' : data['remoteservice'] })
                                 break
                             else:
                                 logging.getLogger().debug("computer is None")
