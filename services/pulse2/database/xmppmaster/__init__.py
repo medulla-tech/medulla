@@ -283,7 +283,6 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         # recupere id organization
         idorganization = -1
-        idorganization = -1
         try:
             if organization_id != None:
                 try:
