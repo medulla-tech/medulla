@@ -1739,10 +1739,10 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `enabled` = '0'
                             WHERE
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
-                supp2 = session.execute(sql2)
-            supp  = session.execute(sql)
-            supp1 = session.execute(sql1)
-            supp3 = session.execute(sql3)
+                session.execute(sql2)
+            session.execute(sql)
+            session.execute(sql1)
+            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
