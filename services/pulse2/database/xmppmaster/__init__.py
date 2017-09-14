@@ -1536,7 +1536,7 @@ class XmppMasterDatabase(DatabaseHelper):
         sql  = """DELETE FROM `xmppmaster`.`has_guacamole`
                     WHERE
                         `xmppmaster`.`has_guacamole`.`idinventory` = '%s';"""%idinventory
-        result = session.execute(sql)
+        session.execute(sql)
         session.commit()
         session.flush()
 
