@@ -283,7 +283,6 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         # recupere id organization
         idorganization = -1
-        idorganization = -1
         try:
             if organization_id != None:
                 try:
@@ -298,7 +297,7 @@ class XmppMasterDatabase(DatabaseHelper):
             elif organization_name != None:
                 idorganization = self.getIdOrganization(organization_name)
                 if idorganization == -1:
-                    rreturn -1
+                    return -1
             else:
                 return -1
             print "###############addition package organization ",idorganization
@@ -1739,10 +1738,10 @@ class XmppMasterDatabase(DatabaseHelper):
                                 `enabled` = '0'
                             WHERE
                                 `xmppmaster`.`relayserver`.`nameserver` = '%s';"""%result[1]
-                supp2 = session.execute(sql2)
-            supp  = session.execute(sql)
-            supp1 = session.execute(sql1)
-            supp3 = session.execute(sql3)
+                session.execute(sql2)
+            session.execute(sql)
+            session.execute(sql1)
+            session.execute(sql3)
             session.commit()
             session.flush()
         except IndexError:
