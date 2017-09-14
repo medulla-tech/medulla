@@ -297,7 +297,7 @@ class XmppMasterDatabase(DatabaseHelper):
             elif organization_name != None:
                 idorganization = self.getIdOrganization(organization_name)
                 if idorganization == -1:
-                    rreturn -1
+                    return -1
             else:
                 return -1
             print "###############addition package organization ",idorganization
