@@ -474,7 +474,7 @@ class MscDatabase(DatabaseHelper):
             q = q.select_from(join)
             q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready',
                               self.commands.c.start_date < datetime.datetime.now(),
-                              self.commands.c.end_date + datetime.timedelta(seconds=800)  > datetime.datetime.now()))
+                              self.commands.c.end_date  > (datetime.datetime.now() - datetime.timedelta(seconds=800))))
             q = q.all()
             session.flush()
         except Exception, exc:

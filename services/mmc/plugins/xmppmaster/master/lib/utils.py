@@ -142,26 +142,6 @@ def get_connection_name_from_guid(iface_guids):
             pass
     return iface_names
 
-def CreateWinUser(login,Password,Groups=['Users']):
-    # Check if the user exists
-    try:
-        d = win32net.NetUserGetInfo(None,login, 1)
-        return
-    except:
-        pass
-    d = {}
-    d['name'] = Login
-    d['password'] = Password
-    d['comment'] = ''
-    d['flags'] = win32netcon.UF_NORMAL_ACCOUNT | win32netcon.UF_SCRIPT | win32netcon.UF_PASSWD_CANT_CHANGE | win32netcon.UF_DONT_EXPIRE_PASSWD
-    d['priv'] = win32netcon.USER_PRIV_USER
-    win32net.NetUserAdd(None, 1, d)
-    domain = win32api.GetDomainName()
-    d = [{"domainandname" : domain+"\\"+login}]
-    for gr in Groups:
-        win32net.NetLocalGroupAddMembers(None, gr, 3, d)
-
-
 def create_Win_user(username, password, full_name=None, comment=None):
     """
     Create a system user account for Rattail.
