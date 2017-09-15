@@ -146,7 +146,7 @@ class  networkagentinfo:
             return self.messagejson
 
 # FIXME: Remove and use socket.inet_aton(ip_string) instead
-    def validIP(self, address):
+    def isIPValid(self, address):
         parts = address.split(".")
         if len(parts) != 4:
             return False
@@ -198,7 +198,7 @@ class  networkagentinfo:
                     ipdhcp = colonne[-1:][0]
                 elif "bound to" in i:
                     for z in colonne:
-                        if self.validIP(z):
+                        if self.isIPValid(z):
                             ipadress = z
                             if  ipdhcp != "":
                                 obj1[ipadress] = ipdhcp
