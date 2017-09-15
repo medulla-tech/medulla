@@ -41,7 +41,7 @@ def activate():
 def queryPossibilities():
     ret = {}
     ret['Owner of the machine'] = ['list', getAllOwnerMachine]
-    ret['Owners of the machines are in location xxxx'] = ['list', getAllLocations1]
+    ret['User location'] = ['list', getAllLocations1]
     ret['Last Logged User'] = ['list', getAllContacts]
     ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
@@ -91,7 +91,7 @@ def queryGroups():
     ret.append(['user',
                 [['Owner of the machine', 'user name ...'],
                  ['Last Logged User', 'Last user of the machine'],
-                 ['Owners of the machines are in location xxxx', 'location users']]])
+                 ['User location', 'Computer belonging to the user']]])
     # Contact
     #ret['Contact'] =        [ \
     #                            ['Contact',''], \

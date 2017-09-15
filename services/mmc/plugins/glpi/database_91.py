@@ -859,7 +859,7 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
-        elif query[2] == 'Owners of the machines are in location xxxx':
+        elif query[2] == 'User location':
             return base + [self.user, self.locations]
         return []
 
@@ -940,7 +940,7 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Computer name':
             return [[self.machine.c.name, query[3]]]
-        elif query[2] == 'Owners of the machines are in location xxxx':
+        elif query[2] == 'User location':
             return [[self.locations.c.completename, query[3]]]
         elif query[2] == 'Contact':
             return [[self.machine.c.contact, query[3]]]
