@@ -284,7 +284,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler.process_on_event()
 
     def scheduledeploy(self):
-        resultdeploymachine, e = MscDatabase().deployxmpp();
+        print len(self.machineWakeOnLan)
+        resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp();
         #logging.debug( "scheduledeploy")
         #for deploy in resultdeploymachine:
             #logging.debug( "CommandsOnHost info")
@@ -304,12 +305,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             #for t in a:
                 #logging.debug( "%s : %s"%(t, a[t]))
 
-        for deploy in self.machineWakeOnLan:
+        for uuiddeploy in self.machineWakeOnLan:
             # verify presense machine deploy ou wake in lan
-            if XmppMasterDatabase().getPresenceuuid(deploy):
-                #If machine present add deployment in deploy list to manage.
-                self.machineDeploy[deploy].extend(self.machineWakeOnLan[deploy])
-                del self.machineWakeOnLan[deploy]
+            if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
+                del self.machineWakeOnLan[uuiddeploy]
 
         for deploy in resultdeploymachine:
             # creation deploiement
@@ -318,7 +317,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             'commandid' :  deploy.Commands.id ,
                             'mac' : deploy.Target.target_macaddr,
                             'count' : 0,
-                            'cycle' : self.CYCLESCHEDULER - 1,
+                            'cycle' : 0,
                             'login' : deploy.Commands.creator,
                             'start_date' : deploy.Commands.start_date,
                             'end_date' : deploy.Commands.end_date,
@@ -333,63 +332,56 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 except:
                     self.machineDeploy[UUID] = []
                     self.machineDeploy[UUID].append(deployobject)
+
+        for deploy in wolupdatemachine:
+            # wol 
+            UUID = str(deploy.Target.target_uuid)
+
+            if UUID in self.machineWakeOnLan:
+                if 'count' in self.machineWakeOnLan[UUID]:
+                    self.machineWakeOnLan[UUID]['count'] = self.machineWakeOnLan[UUID]['count'] + 1
+                else:
+                    self.machineWakeOnLan[UUID] = {}
+                    self.machineWakeOnLan[UUID]['count'] = 0
+                if not 'mac' in self.machineWakeOnLan[UUID]:
+                    self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
+                if not 'commanid' in self.machineWakeOnLan[UUID]:
+                    self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
             else:
-                 #If machine not present add deployment in wankonlan list.
-                try:
-                    self.machineWakeOnLan[UUID].append(deployobject)
-                except:
-                    self.machineWakeOnLan[UUID]=[]
-                    self.machineWakeOnLan[UUID].append(deployobject)
+                self.machineWakeOnLan[UUID] = {}
+                self.machineWakeOnLan[UUID]['count'] = 0
+                self.machineWakeOnLan[UUID]['commanid'] = deploy.Commands.id
+                self.machineWakeOnLan[UUID]['mac'] = deploy.Target.target_macaddr
 
-        suppobjectwanonlan = []
         for uuidmachine in self.machineWakeOnLan:
-            #Deploy on machine missing.
-            for taballobjectwanonlan in self.machineWakeOnLan[uuidmachine]:
-                taballobjectwanonlan['cycle'] = taballobjectwanonlan['cycle'] + 1
-                if (taballobjectwanonlan['cycle'] % self.CYCLESCHEDULER) == 0:
-                    if taballobjectwanonlan['count'] <  4:
-                        listmacadress = taballobjectwanonlan['mac'].split("||");
-                        taballobjectwanonlan['count'] = taballobjectwanonlan['count'] + 1
-                        for macadress in listmacadress:
-                            if macadress != "":
-                                logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
-                                self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress }  )
-                                self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
-                                                sessionname = taballobjectwanonlan['commandid'],
-                                                priority = -1 ,
-                                                who= uuidmachine)
-                    else:
-                        self.machineWakeOnLan[uuidmachine].remove(taballobjectwanonlan)
-            if len(self.machineWakeOnLan[uuidmachine]) == 0:
-                suppobjectwanonlan.append(uuidmachine)
+            print self.machineWakeOnLan[uuidmachine]['count']
+            if self.machineWakeOnLan[uuidmachine]['count'] < self.CYCLESCHEDULER:
+                listmacadress = self.machineWakeOnLan[uuidmachine]['mac'].split("||");
+                for macadress in listmacadress:
+                    if macadress != "":
+                        logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
+                        self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress } )
+                        self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
+                                        sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
+                                        priority = -1 ,
+                                        who = uuidmachine)
 
-        for clearobjectwanonlan in suppobjectwanonlan:
-            del self.machineWakeOnLan[clearobjectwanonlan]
-            logging.warn("wakeonlan on machine %s error: to abort after 4 attempts"%clearobjectwanonlan)
-            self.logtopulse("<span style ='color: red;' >wake on lan on machine %s [to ABORT after 4 attempts]</span>"%clearobjectwanonlan,
-                            type='Wol',
-                            sessionname = taballobjectwanonlan['commandid'],
-                            priority = -1 ,
-                            who= clearobjectwanonlan)
-        suppobjmachineDeploy = []
         for deployuuid in self.machineDeploy:
-            deployobject = self.machineDeploy[deployuuid].pop(0)
-            self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
-                                                                deployobject['pakkageid'],
-                                                                deployobject['commandid'],
-                                                                deployobject['login'],
-                                                                30,
-                                                                encodebase64 = False,
-                                                                start_date = deployobject['start_date'],
-                                                                end_date = deployobject['end_date'],
-                                                                title = deployobject['title'],
-                                                                macadress = deployobject['mac'],
-                                                                GUID = deployobject['GUID'])
-
-            if len (self.machineDeploy[deployuuid]) == 0 :
-                suppobjmachineDeploy.append(deployuuid)
-        for suppmachineuuid in suppobjmachineDeploy:
-            del self.machineDeploy[suppmachineuuid]
+            try:
+                deployobject = self.machineDeploy[deployuuid].pop(0)
+                self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
+                                                                    deployobject['pakkageid'],
+                                                                    deployobject['commandid'],
+                                                                    deployobject['login'],
+                                                                    30,
+                                                                    encodebase64 = False,
+                                                                    start_date = deployobject['start_date'],
+                                                                    end_date = deployobject['end_date'],
+                                                                    title = deployobject['title'],
+                                                                    macadress = deployobject['mac'],
+                                                                    GUID = deployobject['GUID'])
+            except Exception:
+                del self.machineDeploy[deployuuid]
 
     def start(self, event):
         self.get_roster()

@@ -215,7 +215,7 @@ class Deploy(Base, XmppMasterDBObj):
     # Here we define columns for the table deploy.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
-     # Warning, if you modify the wrapper, you also have to change it in log.py
+    # Warning, if you modify the wrapper, you also have to change it in log.py
     title=Column(String(255))
     inventoryuuid = Column(String(11), nullable=False)
     group_uuid = Column(String(11))

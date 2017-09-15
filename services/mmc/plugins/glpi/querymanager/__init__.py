@@ -41,6 +41,7 @@ def activate():
 def queryPossibilities():
     ret = {}
     ret['Owner of the machine'] = ['list', getAllOwnerMachine]
+    ret['User location'] = ['list', getAllLocations1]
     ret['Last Logged User'] = ['list', getAllContacts]
     ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
@@ -89,7 +90,8 @@ def queryGroups():
 
     ret.append(['user',
                 [['Owner of the machine', 'user name ...'],
-                 ['Last Logged User', 'Last user of the machine']]])
+                 ['Last Logged User', 'Last user of the machine'],
+                 ['User location', 'Computer belonging to the user']]])
     # Contact
     #ret['Contact'] =        [ \
     #                            ['Contact',''], \
@@ -246,6 +248,8 @@ def getAllStates(ctx, value=''):
 def getAllLocations(ctx, value=''):
     return unique([x.completename for x in Glpi().getAllLocations(ctx, value)])
 
+def getAllLocations1(ctx, value=''):
+    return unique([x.completename for x in Glpi().getAllLocations1(ctx, value)])
 
 def getAllOsSps(ctx, value=''):
     return unique([x.name for x in Glpi().getAllOsSps(ctx, value)])

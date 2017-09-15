@@ -402,6 +402,7 @@ class Glpi91(DyngroupDatabaseHelper):
         # user
         self.user = Table("glpi_users", self.metadata,
             Column('id', Integer, primary_key=True),
+            Column('locations_id', Integer, ForeignKey('glpi_locations.id')),
             Column('name', String(255), nullable=False),
             Column('password', String(40), nullable=False),
             Column('firstname', String(255), nullable=False),
@@ -858,6 +859,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return base + [self.inst_software, self.softwareversions, self.software]
         elif query[2] == 'Installed software (specific vendor and version)': # hidden internal dyngroup
             return base + [self.inst_software, self.softwareversions, self.software, self.manufacturers]
+        elif query[2] == 'User location':
+            return base + [self.user, self.locations]
         return []
 
     def mapping(self, ctx, query, invert = False):
@@ -937,6 +940,8 @@ class Glpi91(DyngroupDatabaseHelper):
             return [[self.software.c.name, query[3]]]
         elif query[2] == 'Computer name':
             return [[self.machine.c.name, query[3]]]
+        elif query[2] == 'User location':
+            return [[self.locations.c.completename, query[3]]]
         elif query[2] == 'Contact':
             return [[self.machine.c.contact, query[3]]]
         elif query[2] == 'Last Logged User':
@@ -3316,6 +3321,20 @@ class Glpi91(DyngroupDatabaseHelper):
         ret = query.group_by(self.locations.c.completename).all()
         session.close()
         return ret
+
+    def getAllLocations1(self, ctx, filt = ''):
+        """ @return: all hostnames defined in the GLPI database """
+        if not hasattr(ctx, 'locationsid'):
+            complete_ctx(ctx)
+        session = create_session()
+        query = session.query(Locations)
+        if filter != '':
+            query = query.filter(self.locations.c.completename.like('%'+filt+'%'))
+        ret = query.group_by(self.locations.c.completename)
+        ret=ret.all()
+        session.close()
+        return ret
+
     def getMachineByLocation(self, ctx, filt):
         """ @return: all machines that have this contact number """
         session = create_session()
