@@ -145,6 +145,7 @@ class  networkagentinfo:
             self.messagejson['msg']= "system %s : not managed yet"%sys.platform
             return self.messagejson
 
+# FIXME: Remove and use socket.inet_aton(ip_string) instead
     def validIP(self, address):
         parts = address.split(".")
         if len(parts) != 4:
