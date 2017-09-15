@@ -21,11 +21,12 @@
  *
  * file viewgrouplogs.in.php
  */
-
+//jfkjfk
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
-echo '<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
+echo '
+<script type="text/javascript" src="jsframework/lib/raphael/raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.raphael-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.pie-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
@@ -38,7 +39,6 @@ $p->display();
 
 
 $ddd = get_first_commands_on_cmd_id($cmd_id);
-
 $start_date = mktime( $ddd['start_date'][3],  $ddd['start_date'][4], $ddd['start_date'][5], $ddd['start_date'][1], $ddd['start_date'][2], $ddd['start_date'][0]);
 $end_date = mktime( $ddd['end_date'][3],  $ddd['end_date'][4], $ddd['end_date'][5], $ddd['end_date'][1], $ddd['end_date'][2], $ddd['end_date'][0]);
 $timestampnow = time();
@@ -50,7 +50,7 @@ if ($timestampnow > $start_date){
     $start_deploy = 1;
 }
 
-if ($timestampnow > (end_date+90)){
+if ($timestampnow > ($end_date)){
     $end_deploy = 1;
 };
 
@@ -61,7 +61,7 @@ echo "<br>";
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
-
+#jfk
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
@@ -78,7 +78,7 @@ foreach ($info['objectdeploy'] as $val)
    $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
    $_GET['sta'] .=  $val['state']."@@";
    if ($val['state'] == "END SUCESS"){
-    $nbsuccess ++;
+        $nbsuccess ++;
    }
 }
 if (isset($countmachine) && ($info['len'] == $countmachine)){
@@ -87,15 +87,17 @@ if (isset($countmachine) && ($info['len'] == $countmachine)){
 }
 
 if ( $start_deploy){
-    echo "START DEPLOY From <span>".($timestampnow - $start_date)."</span> s";
+    
     echo "<br>";
     if ($end_deploy || $terminate == 1){
-        echo "DEPLOY TERMINATE";
+        echo "<h2>Deployment to complete</h2>";
+
         $terminate = 1;
         $deployinprogress = 0;
         echo "<br>";
     }else{
-        echo "DEPLOY  in Progress";
+        echo "<h2>Deployment   in progress</h2>";
+        echo "START DEPLOY From <span>".($timestampnow - $start_date)."</span> s";
         $deployinprogress = 1;
     }
 }
@@ -103,13 +105,15 @@ else{
     echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
 }
 
-if ($deployinprogress ){
-            $f = new ValidatingForm();
-            $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-            $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
-            $f->display();
-        }
-if ($info['len'] != 0){
+
+    if ($deployinprogress ){
+        $f = new ValidatingForm();
+        $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+        $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
+        $f->display();
+    }
+
+    if ($info['len'] != 0){
         $uuid=$info['objectdeploy'][0]['inventoryuuid'];
         $state=$info['objectdeploy'][0]['state'];
         $start=get_object_vars($info['objectdeploy'][0]['start'])['timestamp'];
@@ -166,22 +170,32 @@ if ($info['len'] != 0){
       }
 }
 else{
-//     $_GET['refresh'] = $_GET['refresh'] + 1;
-    if ($terminate == 0){
+
+   // if ($terminate != 0){
         echo'
             <script type="text/javascript">
+            console.log("hello");
                 setTimeout(refresh, 10000);
                 function  refresh(){
                         location.reload()
                 }
             </script>
             ';
-   }
+    //}
 }
 
 $group->prettyDisplay();
+?>
 
-if (isset($countmachine)){
+
+<?
+        if (isset($countmachine)){
+            if ($info['len'] > $countmachine){
+                $info['len'] = $countmachine;
+        }
+        if ($nbsuccess > $countmachine){
+                $nbsuccess = $countmachine;
+        }
         echo "Number of machines in the group. : ".$countmachine;
         echo "<br>";
         echo "Number of machines being deployed : ". $info['len'];
@@ -198,24 +212,85 @@ if (isset($countmachine)){
         echo "<br>";
         echo " Machine where we tried an WOL: ".$machinewokonlan."%";
         echo "<br>";
-        echo '<div id="pie"></div>
-                <script>
-                    var paper = Raphael("pie");
-                    paper.piechart(
-                        100, // pie center x coordinate
-                        100, // pie center y coordinate
-                        90,  // pie radius
-                            ['.$machinedeploy.', '.$machinewokonlan.'], // values
-                            {
-                            legend: ["Machine deploy in group", "Machine where we tried an WOL"],
-                            colors: ["#2EFE2E", "#2E64FE"]
-                            }
-                    );
-                </script>';
-}
-?>
+        $nbdeploy = $info['len'];
+        $nberror = $nbdeploy - $nbsuccess;
+    }
 
-<style>
+    ?>
+    <div>
+        <div style="float:left;" id="pie1"></div>
+        <div style="float:left;" id="pie2"></div>
+    </div>
+    <?
+    if( isset($machinewokonlan) && 
+        isset($machinedeploy)){
+        if ($machinewokonlan != 0 || $machinedeploy != 0){
+            echo'<script type="text/javascript">
+                var paper = Raphael("pie1");';
+            if ($machinewokonlan == 0){
+                echo 'var datadeploy = ['.$machinewokonlan.'];
+                var couleur = ["#2EFE2E"];
+                var legend = ["Machine deploy in group"];';
+            }
+            else if($machinedeploy == 0){
+                echo 'var datadeploy = ['.$machinedeploy.'];
+                var couleur = ["#2E64FE"];
+                var legend = ["Machine where we tried an WOL"];';
+            }else
+            {
+                echo 'var datadeploy = ['.$machinedeploy.','.$machinewokonlan.'];
+                var couleur = ["#2EFE2E", "#2E64FE"];
+                var legend = ["Machine deploy in group", "Machine where we tried an WOL"];';
+            }
+
+            echo'
+                paper.piechart(
+                100,
+                100,
+                90,
+                datadeploy,
+                {
+                legend: legend,
+                colors: couleur
+                });
+            </script>
+            ';
+        }
+    }
+
+    if(isset($nbsuccess) && isset($nberror) && $nbdeploy != 0 ){
+    echo'<script type="text/javascript">
+        var paper1 = Raphael("pie2");';
+        if ($nberror == 0){
+            echo 'var datadeploy = ['.$nbsuccess.'];
+            var couleur = ["#2EFE2E"];
+            var legend = ["Machine success deploy"];';
+        }
+        else if($nbsuccess == 0){
+            echo 'var datadeploy = ['.$nberror.'];
+            var couleur = ["#2E64FE"];
+            var legend = ["Machine error deploy"];';
+        }else
+        {
+            echo 'var datadeploy = ['.$nbsuccess.','.$nberror.'];
+            var couleur = ["#2EFE2E", "#2E64FE"];
+            var legend = ["Machine success deploy", ""Machine error deploy"];';
+        }
+        echo'
+            paper1.piechart(
+            100,
+            100,
+            90,
+            datadeploy,
+            {
+            legend: legend,
+            colors: couleur
+            });
+        </script>
+        ';
+        }
+?>
+<style> 
 li.remove_machine a {
         padding: 1px 3px 5px 20px;
         margin: 0 0px 0 0px;
