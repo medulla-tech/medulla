@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.dyngroup]
+file_filter = <lang>/LC_MESSAGES/dyngroup.po
+source_file = dyngroup.pot
+source_lang = en
+type = PO
+
