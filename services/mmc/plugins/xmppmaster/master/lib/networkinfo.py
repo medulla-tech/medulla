@@ -26,6 +26,7 @@ import subprocess
 import sys
 import platform
 import utils
+import socket
 
 if sys.platform.startswith('win'):
     import wmi
@@ -145,15 +146,21 @@ class  networkagentinfo:
             self.messagejson['msg']= "system %s : not managed yet"%sys.platform
             return self.messagejson
 
-# FIXME: Remove and use socket.inet_aton(ip_string) instead
-    def isIPValid(self, address):
-        parts = address.split(".")
-        if len(parts) != 4:
+    def isIPValid(self, ipaddress):
+        """
+        This function tests the provided IP Address to see
+        if it is a valid IP or not.
+        Only IPv4 is supported.
+
+        @param ipaddress: The ip address to test
+
+        @rtype: Boolean. True if the ip adress is valid, False otherwise
+        """
+        try:
+            socket.inet_aton(ipaddress)
+            return True
+        except socket.error:
             return False
-        for item in parts:
-            if not 0 <= int(item) <= 255:
-                return False
-        return True
 
     def IpDhcp(self):
         obj1={}
