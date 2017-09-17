@@ -28,7 +28,9 @@ from pulse2.utils import grepv
 import exceptions
 import logging
 
-def encode_utf8(self, s): return s
+def encode_utf8(self, s):
+    return s
+
 def encode_latin1(self, s):
     try:
         return s.decode('utf8')
@@ -40,7 +42,9 @@ def encode_latin1(self, s):
         # so just return the string
         return s
 
-def decode_utf8(self, s): return s
+def decode_utf8(self, s):
+    return s
+
 def decode_latin1(self, s):
     try:
         return s.decode('latin-1')
