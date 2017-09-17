@@ -22,7 +22,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 """
-Plugin to manage the interface with xmppmastr
+Plugin to manage the interface with xmppmaster
 """
 import logging
 import os,sys
