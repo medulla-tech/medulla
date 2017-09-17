@@ -60,8 +60,8 @@ class DbTOA(object):
 def fromUUID(uuid):
     return int(uuid.replace('UUID', ''))
 
-def toUUID(id):
-    return "UUID%s" % (str(id))
+def toUUID(uuid):
+    return "UUID%s" % (str(uuid))
 
 def setUUID(obj):
     if hasattr(obj, 'id'):
