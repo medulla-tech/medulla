@@ -22,7 +22,8 @@
 #
 # file plugins/xmppmaster/master/agentmaster.py
 
-import sys, os
+import sys
+import os
 import re
 
 import ConfigParser
