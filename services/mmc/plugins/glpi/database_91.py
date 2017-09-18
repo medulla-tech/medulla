@@ -2137,33 +2137,34 @@ class Glpi91(DyngroupDatabaseHelper):
 
                 owner_login, owner_firstname, owner_realname = self.getMachineOwner(machine)
 
-        # Last inventory date
-        date_mod = machine.date_mod
-        if self.fusionagents is not None and last_contact is not None:
-            date_mod = last_contact
+                # Last inventory date
+                date_mod = machine.date_mod
+                
+                if self.fusionagents is not None and last_contact is not None:
+                    date_mod = last_contact
 
-            l = [
-                   ['Computer Name', ['computer_name', 'text', machine.name]],
-                   ['Description', ['description', 'text', machine.comment]],
-                   ['Entity (Location)', '%s' % entityValue],
-                   ['Domain', domain],
-                   ['Last Logged User', machine.contact],
-                   ['Owner', owner_login],
-                   ['Owner Firstname', owner_firstname],
-                   ['Owner Realname', owner_realname],
-                   ['OS', os],
-                   ['Service Pack', servicepack],
-                   ['Architecture', architecture],
-                   ['Windows Key', machine.os_license_number],
-                   ['Model / Type', modelType],
-                   ['Manufacturer', manufacturer],
-                   ['Serial Number', serialNumber],
-                   ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
-                   ['State', state],
-                   ['Warranty End Date', endDate],
-                   ['Last Inventory Date', date_mod.strftime("%Y-%m-%d %H:%M:%S")],
-                ]
-            ret.append(l)
+                l = [
+                    ['Computer Name', ['computer_name', 'text', machine.name]],
+                    ['Description', ['description', 'text', machine.comment]],
+                    ['Entity (Location)', '%s' % entityValue],
+                    ['Domain', domain],
+                    ['Last Logged User', machine.contact],
+                    ['Owner', owner_login],
+                    ['Owner Firstname', owner_firstname],
+                    ['Owner Realname', owner_realname],
+                    ['OS', os],
+                    ['Service Pack', servicepack],
+                    ['Architecture', architecture],
+                    ['Windows Key', machine.os_license_number],
+                    ['Model / Type', modelType],
+                    ['Manufacturer', manufacturer],
+                    ['Serial Number', serialNumber],
+                    ['Inventory Number', ['inventory_number', 'text', machine.otherserial]],
+                    ['State', state],
+                    ['Warranty End Date', endDate],
+                    ['Last Inventory Date', date_mod.strftime("%Y-%m-%d %H:%M:%S")],
+                    ]
+                ret.append(l)
         return ret
 
     def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
