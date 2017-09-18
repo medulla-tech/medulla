@@ -29,12 +29,12 @@ class debianUpdateHandler(linuxUpdateHandler):
     def showUpdateInfo(self, uuid, online=True):
         # uuid is pkgname/version
         pkg_name = uuid.split('/')[0]
-        out, err, ec = self.runInShell("apt-cache show %s" % pkg_name)
+        out, err, ec = self.runinshell("apt-cache show %s" % pkg_name)
         print out
    
     def getCandidateVersion(self, pkg):
         cmd = "LANG=C apt-cache policy %s|awk '/Candidate/ { print $2 }'" % pkg
-        version, err, ec = self.runInShell(cmd)
+        version, err, ec = self.runinshell(cmd)
         return version
         
     def getAvaiableUpdates(self, online=True, returnResultList=False):
@@ -57,12 +57,12 @@ class debianUpdateHandler(linuxUpdateHandler):
     
         # ===============================================================================
         # Running apt-get update
-        self.runInShell("apt-get update")
+        self.runinshell("apt-get update")
         # ===============================================================================
         
         # Running Update searching command
         cmd = "LANG=C apt-get -s dist-upgrade | awk '/^Inst/ { print $2 }'"
-        out, err, ec = self.runInShell(cmd)
+        out, err, ec = self.runinshell(cmd)
         
         if out:
             new_packages = out.strip().split('\n')
@@ -94,7 +94,7 @@ class debianUpdateHandler(linuxUpdateHandler):
     
             # Title
             cmd = "apt-cache show %s|awk '/^Description/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'" % pkg
-            title, err, ec = self.runInShell(cmd, False, pkg)
+            title, err, ec = self.runinshell(cmd, False, pkg)
             _item_verbose.append('%s (update %s)' % (title.split('\n')[0], version)) #.encode('utf-8').decode('ascii', 'ignore')
     
             # Description
@@ -121,7 +121,7 @@ class debianUpdateHandler(linuxUpdateHandler):
             # Info URL
             #_item.append(fetchW32ComArray(update.MoreInfoUrls)[0])
             cmd = "apt-cache show %s|awk '/^Homepage/ {first = $1; $1 = \"\"; print $0;}' | sed 's/^[[:space:]]*//'" % pkg
-            url, err, ec = self.runInShell(cmd, False, "")
+            url, err, ec = self.runinshell(cmd, False, "")
             _item_verbose.append(url.split('\n')[0])
     
             # Is_installed
@@ -160,7 +160,7 @@ class debianUpdateHandler(linuxUpdateHandler):
         # Running apt-get install
         install_cmd = "DEBIAN_FRONTEND=noninteractive UCF_FORCE_CONFFOLD=yes apt-get -y --force-yes -o Dpkg::Options::=\"--force-confdef\" -o Dpkg::Options::=\"--force-confold\" install %s" % ' '.join(packages_to_install)
         print install_cmd
-        out, err, ec = self.runInShell(install_cmd)
+        out, err, ec = self.runinshell(install_cmd)
         print out
     
         return 0
