@@ -284,7 +284,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler.process_on_event()
 
     def scheduledeploy(self):
-        print len(self.machineWakeOnLan)
+        listobjsupp = []
         resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp();
         #logging.debug( "scheduledeploy")
         #for deploy in resultdeploymachine:
@@ -306,9 +306,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 #logging.debug( "%s : %s"%(t, a[t]))
 
         for uuiddeploy in self.machineWakeOnLan:
-            # verify presense machine deploy ou wake in lan
+            # not SEND WOL on presense machine
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
-                del self.machineWakeOnLan[uuiddeploy]
+                listobjsupp.append(uuiddeploy)
+        for objsupp in listobjsupp:
+            del self.machineWakeOnLan[uuiddeploy]
 
         for deploy in resultdeploymachine:
             # creation deploiement
@@ -369,6 +371,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
+                logging.debug("send deploy on machine %s package %s"%(deployuuid, deployobject['pakkageid']))
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                     deployobject['pakkageid'],
                                                                     deployobject['commandid'],
@@ -381,7 +384,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     macadress = deployobject['mac'],
                                                                     GUID = deployobject['GUID'])
             except Exception:
-                del self.machineDeploy[deployuuid]
+                listobjsupp.append(deployuuid)
+
+        for objsupp in listobjsupp:
+            del self.machineDeploy[objsupp]
 
     def start(self, event):
         self.get_roster()
