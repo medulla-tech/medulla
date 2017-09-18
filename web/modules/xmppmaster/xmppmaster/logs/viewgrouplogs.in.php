@@ -32,6 +32,8 @@ echo '
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>';
+
+$nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
 $p->setSideMenu($sidemenu);
@@ -59,6 +61,16 @@ $deployinprogress = 0;
 echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
 echo "<br>";
 
+
+
+function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddeploy_id ){
+    $urlRedirect1 = urlStrRedirect("base/computers/createMachinesStaticGroupdeploy&gid=".$g_id."&login=".$login_deploy."&cmd_id=".$cmddeploy_id."&type=".$typegroup);
+    return $urlRedirect1;
+}
+/*
+    function urlredirect_group_for_deploy(){
+    return $urlRedirect1;
+}*/
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
 #jfk
@@ -105,6 +117,8 @@ else{
     echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
 }
 
+
+//echo '//<div style="float:left;" id="holder"></div>';
 
     if ($deployinprogress ){
         $f = new ValidatingForm();
@@ -196,99 +210,146 @@ $group->prettyDisplay();
         if ($nbsuccess > $countmachine){
                 $nbsuccess = $countmachine;
         }
-        echo "Number of machines in the group. : ".$countmachine;
-        echo "<br>";
-        echo "Number of machines being deployed : ". $info['len'];
-        echo "<br>";
-        echo "Number of deployments that succeeded : ". $nbsuccess;
-        echo "<br>";
-        $sucessdeploy = $nbsuccess / $countmachine * 100;
-        $machinedeploy = $info['len'] / $countmachine;
-        $machinewokonlan = (1 - $machinedeploy) * 100;
-        $machinedeploy = $machinedeploy * 100;
-        echo " Succes : ".$sucessdeploy."%";
-        echo "<br>";
-        echo " Machine deploy in group : ".$machinedeploy."%";
-        echo "<br>";
-        echo " Machine where we tried an WOL: ".$machinewokonlan."%";
-        echo "<br>";
-        $nbdeploy = $info['len'];
-        $nberror = $nbdeploy - $nbsuccess;
+        echo ' <div>';
+        echo'<div style="float:left;" id="holder"></div>';
+        echo '<div style="float:left;">';
+                echo "<br>";
+                echo "Number of machines in the group. : ".$countmachine;
+                echo "<br>";
+                echo "Number of machines being deployed : ". $info['len'];
+                echo "<br>";
+                echo "Number of deployments that succeeded : ". $nbsuccess;
+                echo "<br>";
+                $sucessdeploy = $nbsuccess / $countmachine * 100;
+                $machinedeploy = $info['len'] / $countmachine;
+                $machinewokonlan = (1 - $machinedeploy) * 100;
+                $machinedeploy = $machinedeploy * 100;
+                echo " Succes : ".$sucessdeploy."%";
+                echo "<br>";
+                echo " Machine deploy in group : ".$machinedeploy."%";
+                echo "<br>";
+                echo " Machine where we tried an WOL: ".$machinewokonlan."%";
+                echo "<br>";
+                $nbdeploy = $info['len'];
+                $nberror = $nbdeploy - $nbsuccess;
+            echo "</div>";
+         echo ' </div>';
     }
 
     ?>
-    <div>
-        <div style="float:left;" id="pie1"></div>
-        <div style="float:left;" id="pie2"></div>
-    </div>
+   
     <?
-    if( isset($machinewokonlan) && 
-        isset($machinedeploy)){
-        if ($machinewokonlan != 0 || $machinedeploy != 0){
-            echo'<script type="text/javascript">
-                var paper = Raphael("pie1");';
-            if ($machinewokonlan == 0){
-                echo 'var datadeploy = ['.$machinewokonlan.'];
-                var couleur = ["#2EFE2E"];
-                var legend = ["Machine deploy in group"];';
-            }
-            else if($machinedeploy == 0){
-                echo 'var datadeploy = ['.$machinedeploy.'];
-                var couleur = ["#2E64FE"];
-                var legend = ["Machine where we tried an WOL"];';
-            }else
-            {
-                echo 'var datadeploy = ['.$machinedeploy.','.$machinewokonlan.'];
-                var couleur = ["#2EFE2E", "#2E64FE"];
-                var legend = ["Machine deploy in group", "Machine where we tried an WOL"];';
-            }
+if ($info['len'] != 0){
+    $gr   = getRestrictedComputersList(0,-1, array('gid' =>$gid));
+    $uuidgr = array();
+    $uuidsuccess = array();
+    $uuiderror = array();
+    $uuidprocess = array();
+    $uuiddefault = array();
+    $uuidall = array();
+    $uuidwol = array();
 
-            echo'
-                paper.piechart(
-                100,
-                100,
-                90,
-                datadeploy,
-                {
-                legend: legend,
-                colors: couleur
-                });
-            </script>
-            ';
-        }
+    foreach ($gr as $key => $val){
+        $uuidgr[] =  $key;
     }
 
-    if(isset($nbsuccess) && isset($nberror) && $nbdeploy != 0 ){
-    echo'<script type="text/javascript">
-        var paper1 = Raphael("pie2");';
-        if ($nberror == 0){
-            echo 'var datadeploy = ['.$nbsuccess.'];
-            var couleur = ["#2EFE2E"];
-            var legend = ["Machine success deploy"];';
+    foreach ($info['objectdeploy'] as  $val){
+        switch($val['state']){
+            case "END SUCESS":
+                $uuidsuccess[] = $val['inventoryuuid'];
+                break;
+            case "END ERROR":
+                $uuiderror[] = $val['inventoryuuid'];
+                break;
+            case "STARDEPLOY":
+                $uuidprocess[] = $val['inventoryuuid'];
+                break;
+            default:
+                $uuiddefault[] = $val['inventoryuuid'];
         }
-        else if($nbsuccess == 0){
-            echo 'var datadeploy = ['.$nberror.'];
-            var couleur = ["#2E64FE"];
-            var legend = ["Machine error deploy"];';
-        }else
-        {
-            echo 'var datadeploy = ['.$nbsuccess.','.$nberror.'];
-            var couleur = ["#2EFE2E", "#2E64FE"];
-            var legend = ["Machine success deploy", ""Machine error deploy"];';
-        }
-        echo'
-            paper1.piechart(
-            100,
-            100,
-            90,
-            datadeploy,
-            {
-            legend: legend,
-            colors: couleur
-            });
-        </script>
-        ';
-        }
+        $uuidall[] = $val['inventoryuuid'];
+    }
+
+    $machinesucess    = count ( $uuidsuccess );
+    $machineerror     = count ( $uuiderror );
+    $machineinprocess = count ( $uuidprocess );
+    $machinewol       = count ( $uuidwol );
+
+        echo '
+        <script>
+            var u = "";
+            var r = "";
+            window.onload = function () {
+                var datadeploy = new Array();
+                var legend = new Array();
+                var href = new Array();
+                var color = new Array();                ';
+
+                if ($machinesucess > 0){
+                    echo 'datadeploy.push('.$machinesucess.');';
+                    echo 'legend.push("%%.%% - Machine deploy in sucess");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#2EFE2E");';
+                }
+                if ($machineerror > 0){
+                    echo 'datadeploy.push('.$machineerror.');';
+                    echo 'legend.push("%%.%% - Machine deploy in error");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#FE2E64");';
+                }
+                if ($machineinprocess > 0){
+                    echo 'datadeploy.push('.$machineinprocess.');';
+                    echo 'legend.push("%%.%% - Machine deploy in process");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#2E9AFE");';
+                }
+                if ($machinewol > 0){
+                    echo 'datadeploy.push('.$machinewol.');';
+                    echo 'legend.push("%%.%% - Machine deploy in wol");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#DBA901");';
+                }
+
+
+                echo'
+                r = Raphael("holder"),
+                    pie = r.piechart(100, 60, 50, datadeploy, 
+                        {   legend: legend,
+                            legendpos: "est", 
+                            href: href,
+                            colors: color
+                        }
+                    );
+
+                r.text(210, 50, "Deploy Machines").attr({ font: "20px sans-serif" });
+
+                pie.hover(function () {
+                    u = this;                 // My Code   
+                    u.onclick = clickEvent;   //  hook to the function 
+                this.sector.stop();
+                    this.sector.scale(1.1, 1.1, this.cx, this.cy);  // Scale slice 
+
+                    if (this.label) {                               // Scale button and bolden text 
+                        this.label[0].stop();
+                        this.label[0].attr({ r: 7.5 });
+                        this.label[1].attr({ "font-weight": 800 });
+                    }
+                }, function () {
+                    this.sector.animate({ transform: \'s1 1 \' + this.cx + \' \' + this.cy }, 500, "bounce");
+
+
+                    if (this.label) {
+                        this.label[0].animate({ r: 5 }, 1500, "bounce");
+                        this.label[1].attr({ "font-weight": 400 });
+                    }
+                });
+
+            };
+            function clickEvent(){
+                console.log("Clicked!")
+            }
+        </script>';
+    }
 ?>
 <style> 
 li.remove_machine a {
