@@ -286,24 +286,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def scheduledeploy(self):
         listobjsupp = []
         resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp();
-        #logging.debug( "scheduledeploy")
-        #for deploy in resultdeploymachine:
-            #logging.debug( "CommandsOnHost info")
-            #a = deploy.CommandsOnHost.__dict__
-            #for t in a:
-                #logging.debug("%s : %s"%(t, a[t]))
-            #logging.debug( "Commands info")
-            #a = deploy.Commands.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
-            #logging.debug( "Target info")
-            #a = deploy.Target.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
-            #logging.debug( "CommandsOnHostPhase info")
-            #a = deploy.CommandsOnHostPhase.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
 
         for uuiddeploy in self.machineWakeOnLan:
             # not SEND WOL on presense machine
