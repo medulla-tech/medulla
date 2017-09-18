@@ -60,6 +60,7 @@ class ServiceManager(object):
     def list_plugins_services(self):
         """
         Returns list of services ordered by MMC plugins
+        They are shown in the 'Core services' tab
         """
         list = {}
         plugins = PluginManager().getEnabledPluginNames()
@@ -87,6 +88,7 @@ class ServiceManager(object):
     def list_others_services(self, filter=None):
         """
         Returns list of services not managed by MMC plugins
+        They are shown in the 'Other services' tab
         """
         list = []
         for unit in self.list():
