@@ -24,6 +24,13 @@
 from mmc.support.mmctools import shLaunchDeferred
 
 def sysPing(ip, port = 22):
+    """
+    This function all to ping machines. Default port is 22
+
+    :param ip: IP of the machine to ping
+    :param port: Port to ping ( default 22 )
+
+    """
     def cb(shprocess):
         return shprocess.exitCode == 0
 
