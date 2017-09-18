@@ -2163,7 +2163,7 @@ class Glpi91(DyngroupDatabaseHelper):
                    ['Warranty End Date', endDate],
                    ['Last Inventory Date', date_mod.strftime("%Y-%m-%d %H:%M:%S")],
                 ]
-                ret.append(l)
+            ret.append(l)
         return ret
 
     def getLastMachineProcessorsPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
