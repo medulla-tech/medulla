@@ -102,7 +102,7 @@ if (in_array("msc", $_SESSION["supportModList"]) || in_array("xmppmaster", $_SES
     $msc_vnc_show_icon = web_vnc_show_icon();
 }
 
-if (isset($_GET["id"])){
+if (isset($_GET["id"]) && isset($_GET["cmd_id"])){
     $result=list_computers( $names, 
                     $filter, 
                     $count, 
