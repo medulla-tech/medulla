@@ -24,6 +24,30 @@
  */
 require("modules/dyngroup/includes/includes.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+?>
+<style>
+progress {
+  width: 100px;
+  height: 9px;
+  margin:-5px;
+  background-color: #ffffff;   /* Couleur de fond */
+  border-style: solid;   /* Style de la bordure  */
+  border-width: 1px;   /* Epaisseur de la bordure  */
+  border-color: #dddddd;   /* Couleur de la bordure  */
+  padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
+}
+ 
+progress::-webkit-progress-bar {
+    background: #f3f3f3 ;
+}
+
+progress::-webkit-progress-value {
+     Background: #ef9ea9;
+}
+
+</style>
+<?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 
@@ -33,7 +57,7 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
 $etat="";
 $LastdeployINsecond = 3600*72;
-echo "<h2>Current and past tasks";
+echo "<h2>Current and past tasks</h2>";
 $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$etat, $LastdeployINsecond, $start, "", $filter) ;
 $arrayname = array();
 $arraytitlename = array();
@@ -47,7 +71,7 @@ foreach( $arraydeploy['tabdeploy']['start'] as $ss){
     }
 }
 
-$logAction =new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
+$logAction = new ActionItem(_("detaildeploy"),"viewlogs","logfile","computer", "xmppmaster", "xmppmaster");
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
 
@@ -71,6 +95,7 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     }
 
     if($groupid){
+        
         if (isset($arraydeploy['tabdeploy']['group_uuid'][$index])){
             $countmachine = getRestrictedComputersListLen( array('gid' => $arraydeploy['tabdeploy']['group_uuid'][$index]));
             $namegrp = getPGobject($arraydeploy['tabdeploy']['group_uuid'][$index], true)->getName();
@@ -80,11 +105,13 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             $namegrp = "";
         }
         $arraytitlename[] = "<span style='color : blue;'>(GRP[".$namegrp."] ".$arraydeploy['tabdeploy']['len'][$index] . "/".$countmachine."mach) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
-        $arraystate[]="";
+
+        $stat = xmlrpc_getstatbycmd($arraydeploy['tabdeploy']['command'][$index]);
+        $arraystate[]='<progress max="'.$stat['nbmachine'].'" value="'.$stat['nbdeploydone'].'" form="form-id"></progress>';
         $group = new Group($groupid, true, true);
         if ($group->exists == False) {
             $arrayname[] ="This group doesn't exist";
-        } 
+        }
         else {
             $arrayname[] = $group->getName();
         }
