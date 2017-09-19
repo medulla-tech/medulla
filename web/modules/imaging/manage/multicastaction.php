@@ -80,7 +80,6 @@ if (    isset($multicast) &&
             $gr = xmlrpc_clear_script_multicast($objprocess);
             if ($gr != -1) xmlrpc_synchroProfile($gr);
             //unset($_SESSION['PARAMMULTICAST']);
-            //jfkjfk
             xmlrpc_ClearMulticastMultiSessionParameters($location);
             break;
     }

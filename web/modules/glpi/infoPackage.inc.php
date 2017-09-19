@@ -67,6 +67,21 @@ $page->setFile("modules/glpi/glpi/createOSStaticGroup.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));
 $submod->addPage($page);
 
+$page = new Page("createMachinesStaticGroup", _T("Create static group from machines dashboard widget (GLPI)", "glpi"));
+$page->setFile("modules/glpi/glpi/createMachinesStaticGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("createMachinesStaticGroupdeploy", _T("Create static group from machines dashboard widget (GLPI)", "glpi"));
+$page->setFile("modules/glpi/glpi/createMachinesStaticGroupdeploy.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
+$page = new Page("createBackupStaticGroup", _T("Create static group from machines backup widget (GLPI)", "glpi"));
+$page->setFile("modules/glpi/glpi/createBackupStaticGroup.php");
+$page->setOptions(array("visible"=>False, "noHeader"=>True));
+$submod->addPage($page);
+
 $page = new Page("entityList", _T('Entities', 'glpi'));
 $page->setFile("modules/glpi/glpi/entityList.php");
 $submod->addPage($page);
@@ -166,6 +181,9 @@ $page->addTab($tab);
 $tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
+$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
 $submod->addPage($page);
 
 $page = new Page("glpitabs", _T("Inventory (GLPI) on machine", "glpi"));
@@ -194,6 +212,9 @@ $tab = new Tab("tab6", _T("History tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $tab = new Tab("tab7", _T("Antivirus tab (GLPI)", 'glpi'));
+$page->addTab($tab);
+
+$tab = new Tab("tab8", _T("Registry tab (GLPI)", 'glpi'));
 $page->addTab($tab);
 
 $submod->addPage($page);

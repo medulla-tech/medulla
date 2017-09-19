@@ -170,6 +170,7 @@ if __name__ == "__main__":
         print "Error while trying to get options."
         sys.exit(2)
     daemonize = True
+    debugtoconsole = True
     for option, argument in opts:
         if option == "-f":
             inifile = argument

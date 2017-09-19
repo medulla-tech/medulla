@@ -186,7 +186,7 @@ $f->display();
 
 ?>
 
-<script src="modules/backuppc/lib/jquery.maskedinput-1.3.min.js"></script>
+<script src="modules/backuppc/lib/jquery.maskedinput.min.js"></script>
 <script src="modules/backuppc/lib/jquery.multiselect.js"></script>
 <script type="text/javascript">
 jQuery(function(){

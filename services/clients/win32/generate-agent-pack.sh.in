@@ -135,6 +135,7 @@ if [ ${clean} -eq 1 ]; then
   # Clean agents and pack
   rm -f pulse2-secure-agent-*.exe \
         pulse2-rda-agent-*.exe \
+        pulse2-rda-agent-*.msi \
         inventory-agent-*.exe \
         7zsd.sfx
 

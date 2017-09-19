@@ -21,7 +21,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
  * MA 02110-1301, USA
  */
- 
+
 function getAllPackages($p_api) {
         $ret = xmlCall("msc.pa_getAllPackages", array($p_api));
         return array_map('to_package', $ret);
@@ -97,7 +97,7 @@ class ServerAPI {
     }
     function fromURI($uri) {
         $uri = base64_decode($uri);
-        $uri = split('##', $uri);
+        $uri = explode('##', $uri);
         $this->server = $uri[0];
         $this->port = $uri[1];
         $this->mountpoint = $uri[2];

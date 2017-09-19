@@ -87,13 +87,18 @@ install: build
 	# Already provided by MMC packages
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
-	# Install initscript using debhelper
 	rm -rf $(DESTDIR)/etc/init.d
+	mkdir -p $(DESTDIR)/usr/lib/systemd/system
+	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
+	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
+	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-launchers.service
 	# Autotools won't listen to me...
 	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 	# Useless files
 	rm -f $(DESTDIR)/usr/share/doc/pulse2/README.win32
 	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
+	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
+	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
 
 binary-indep: build install
 binary-arch: build install
@@ -117,7 +122,7 @@ binary-arch: build install
 	# This directory must be writable for www-data (first run)
 	chown www-data:root debian/python-mmc-support/etc/mmc/plugins/support
 	chmod 750 debian/python-mmc-support/etc/mmc/plugins/support
-	dh_pysupport
+	dh_python2
 	dh_fixperms -Xetc/mmc \
                     -Xusr/share/doc/pulse2-common/contrib/ \
                     -Xvar/lib/pulse2/dlp_packages \
@@ -131,7 +136,6 @@ binary-arch: build install
 		rm -r debian/$$PKG/usr/share/doc/$$PKG; \
 		ln -sf pulse2-common debian/$$PKG/usr/share/doc/$$PKG; \
 	done
-	dh_installinit
 	dh_shlibdeps
 	dh_strip
 	dh_link

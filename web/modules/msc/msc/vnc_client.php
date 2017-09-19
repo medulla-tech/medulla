@@ -24,9 +24,15 @@
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
-if (web_def_use_no_vnc() == 1)
-    include dirname(__FILE__) . '/vnc_client_no_vnc.php';
-else
-    include dirname(__FILE__) . '/vnc_client_java.php';
+ if (isset($_GET['vnctype']) && $_GET['vnctype'] == "guacamole"){
+    require_once('modules/xmppmaster/includes/xmlrpc.php');
+    include dirname(__FILE__) . '/vnc_guacamole.php';
 
+ }else
+ {
+    if (web_def_use_no_vnc() == 1)
+        include dirname(__FILE__) . '/vnc_client_no_vnc.php';
+    else
+        include dirname(__FILE__) . '/vnc_client_java.php';
+}
 ?>

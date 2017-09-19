@@ -147,7 +147,7 @@ class RpcProxy(RpcProxyI):
 
     updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
 
-    def runInShell(self, cmd):
+    def runinshell(self, cmd):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
         return out.strip(), err.strip(), process.returncode
@@ -157,7 +157,7 @@ class RpcProxy(RpcProxyI):
         @deferred
         def _getProductUpdates():
             global last_update_check_ts, available_updates
-            o, e, ec = self.runInShell('%s -l --json' % self.updMgrPath)
+            o, e, ec = self.runinshell('%s -l --json' % self.updMgrPath)
 
             # Check json part existence
             if not '===JSON_BEGIN===' in o or not '===JSON_END===' in o:

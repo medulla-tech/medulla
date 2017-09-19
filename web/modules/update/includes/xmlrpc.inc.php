@@ -62,5 +62,27 @@ function getProductUpdates(){
 function installProductUpdates(){
     return xmlCall("update.installProductUpdates", array());
 }
-
+function xmlrpc_setfromupdatelogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'update'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}                                                    
 ?>

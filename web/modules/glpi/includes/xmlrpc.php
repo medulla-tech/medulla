@@ -148,5 +148,27 @@ function moveEntityRuleDown($id){
 function getReport($uuid,$lang){
     return xmlCall("glpi.getReport", array($uuid,$lang));
 }
-
+function xmlrpc_setfromglpilogxmpp(   $text,
+                                            $type = "infouser",
+                                            $sessionname = '' ,
+                                            $priority = 0,
+                                            $who = '',
+                                            $how = '',
+                                            $why = '',
+                                            $action = '',
+                                            $touser =  '',
+                                            $fromuser = "",
+                                            $module = 'glpi'){
+    return xmlCall("xmppmaster.setlogxmpp", array(  $text,
+                                                    $type ,
+                                                    $sessionname,
+                                                    $priority,
+                                                    $who,
+                                                    $how,
+                                                    $why,
+                                                    $module,
+                                                    $action,
+                                                    $touser,
+                                                    $fromuser));
+}                                                    
 ?>

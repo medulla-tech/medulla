@@ -97,7 +97,7 @@ $logMessages = array(
  */
 function translate_details($str) {
     global $logMessages;
-    $tmp_splitted_result = split(":",  $str, 2);
+    $tmp_splitted_result = explode(":",  $str, 2);
     if (count($tmp_splitted_result) == 1) {
         if (array_key_exists($tmp_splitted_result[0], $logMessages)) {
             $details = $logMessages[$tmp_splitted_result[0]];

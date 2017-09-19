@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
@@ -21,14 +21,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/hostSummary.php:142
 #: modules/backuppc/backuppc/viewFileVersions.php:47
+#: modules/backuppc/backuppc/BrowseBackups.php:56
+#: modules/backuppc/backuppc/hostSummary.php:142
 msgid "%A, %B %e %Y"
 msgstr "%A, %B %e %Y"
 
-#: modules/backuppc/backuppc/hostStatus.php:158
+#: modules/backuppc/backuppc/hostStatus.php:175
 #, php-format
 msgid "%s's backup status"
 msgstr "%s 的備份狀態"
@@ -59,13 +59,17 @@ msgstr "新增檔案集"
 msgid "Add folder"
 msgstr "新增資料夾"
 
+#: modules/backuppc/backuppc/localSidebar.php:30
 #: modules/backuppc/backuppc/EditPeriodProfile.php:79
 #: modules/backuppc/backuppc/edit.php:232
-#: modules/backuppc/backuppc/localSidebar.php:30
 msgid "Add schedule"
 msgstr "新增排除"
 
-#: modules/backuppc/backuppc/hostStatus.php:166
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
+msgid "Advanced restore"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:183
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
@@ -124,8 +128,8 @@ msgstr "備份時間"
 msgid "Backup up to date"
 msgstr "最新備份"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:59
 #: modules/backuppc/backuppc/fileSearch.php:95
+#: modules/backuppc/backuppc/BrowseBackups.php:59
 msgid "Backup#"
 msgstr "備份號"
 
@@ -163,18 +167,19 @@ msgid "Client encoding"
 msgstr "用戶端編碼"
 
 #: modules/backuppc/backuppc/hostStatus.php:47
+#: modules/backuppc/backuppc/hostStatus.php:48
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr "電腦 %s 已成功新增至備份系統。.<br />您現在可設定其檔案集與排程。"
 
-#: modules/backuppc/backuppc/hostStatus.php:165
+#: modules/backuppc/backuppc/hostStatus.php:182
 msgid "Configuration"
 msgstr "設定"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:144
+#: modules/backuppc/backuppc/hostStatus.php:161
 msgid "Configuration saved"
 msgstr "已儲存設定"
 
@@ -194,8 +199,7 @@ msgstr "目前狀態"
 msgid "Current state: "
 msgstr "目前狀態："
 
-#: modules/backuppc/backuppc/edit.php:73
-#: modules/backuppc/backuppc/edit.php:158
+#: modules/backuppc/backuppc/edit.php:73 modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
 msgstr "自訂"
 
@@ -228,6 +232,11 @@ msgstr "刪除此設定檔"
 msgid "Destination"
 msgstr "目的地"
 
+#: modules/backuppc/backuppc/restorePopup.php:35
+#, fuzzy
+msgid "Destination Folder"
+msgstr "目的地"
+
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
 msgid "Do not backup from"
@@ -241,7 +250,7 @@ msgstr "下載"
 msgid "Download files/ZIP from backup"
 msgstr "從備份中下載檔案/ZIP"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:190
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
 msgstr "下載選取項 (ZIP)"
 
@@ -319,7 +328,7 @@ msgstr "檔案數（新）"
 msgid "File name"
 msgstr "檔案名稱"
 
-#: modules/backuppc/backuppc/hostStatus.php:167
+#: modules/backuppc/backuppc/hostStatus.php:184
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "檔案搜尋"
@@ -328,8 +337,8 @@ msgstr "檔案搜尋"
 msgid "File size"
 msgstr "檔案大小"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:68
 #: modules/backuppc/backuppc/edit.php:81
+#: modules/backuppc/backuppc/ViewProfiles.php:68
 msgid "Fileset"
 msgstr "檔案集"
 
@@ -337,10 +346,10 @@ msgstr "檔案集"
 msgid "Filesets"
 msgstr "檔案集"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
-#: modules/backuppc/backuppc/EditBackupProfile.php:148
-#: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/fileSearch.php:127
+#: modules/backuppc/backuppc/EditBackupProfile.php:148
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/edit.php:142
 msgid "Folder"
 msgstr "資料夾"
 
@@ -370,6 +379,11 @@ msgstr "GB"
 msgid "Greater than 100 Mb"
 msgstr "大於 100 Mb"
 
+#: modules/backuppc/backuppc/restorePopup.php:26
+#, fuzzy
+msgid "Host"
+msgstr "主機名稱"
+
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
 msgstr "未設定主機備份。"
@@ -378,8 +392,8 @@ msgstr "未設定主機備份。"
 msgid "Host backup status"
 msgstr "主機備份狀態"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 msgid "Host name"
 msgstr "主機名稱"
 
@@ -458,7 +472,7 @@ msgstr "每晚"
 msgid "No entry found."
 msgstr "找不到任何項目。"
 
-#: modules/backuppc/backuppc/restoreToHost.php:47
+#: modules/backuppc/backuppc/restoreToHost.php:51
 msgid "No file selected."
 msgstr "未選擇檔案。"
 
@@ -510,6 +524,11 @@ msgstr "移除"
 msgid "Requested restores"
 msgstr "請求的還原"
 
+#: modules/backuppc/backuppc/restorePopup.php:37
+#, fuzzy
+msgid "Restore"
+msgstr "還原已完成"
+
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
 #: modules/backuppc/backuppc/hostSummary.php:88
 msgid "Restore done"
@@ -536,8 +555,14 @@ msgstr "還原點"
 msgid "Restore time"
 msgstr "還原時間"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
-msgid "Restore to host"
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
+#, fuzzy
+msgid "Restore to host (overwrite)"
+msgstr "還原到主機"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
+#, fuzzy
+msgid "Restore to host (subfolder)"
 msgstr "還原到主機"
 
 #: modules/backuppc/backuppc/hostSummary.php:112
@@ -549,8 +574,8 @@ msgstr "開始增量備份"
 msgid "Saturday"
 msgstr "星期六"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:118
 #: modules/backuppc/backuppc/edit.php:166
+#: modules/backuppc/backuppc/ViewProfiles.php:118
 msgid "Schedule"
 msgstr "排程"
 
@@ -592,8 +617,8 @@ msgstr "開始完整備份"
 msgid "Start backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 #: modules/backuppc/backuppc/localSidebar.php:27
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 msgid "Status"
 msgstr "狀態"
 
@@ -605,7 +630,7 @@ msgstr "停止備份"
 msgid "Stop backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:178
 msgid "Summary"
 msgstr "概要"
 
@@ -622,7 +647,7 @@ msgstr "已從備份系統中移除該電腦。"
 msgid "The profile has been deleted successfully."
 msgstr "已成功刪除設定檔。"
 
-#: modules/backuppc/backuppc/restoreToHost.php:54
+#: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
 msgstr "選擇的檔案將還原至"
 
@@ -644,14 +669,6 @@ msgstr "此電腦從未備份"
 msgid "Thursday"
 msgstr "星期四"
 
-#: modules/backuppc/backuppc/restorePopup.php:27
-msgid "To alternate folder"
-msgstr "至其他資料夾"
-
-#: modules/backuppc/backuppc/restorePopup.php:26
-msgid "To original folder (overwrite)"
-msgstr "至原始資料夾（覆寫）"
-
 #: modules/backuppc/backuppc/EditPeriodProfile.php:115
 #: modules/backuppc/backuppc/edit.php:183
 msgid "Tuesday"
@@ -665,8 +682,8 @@ msgstr "類型"
 msgid "Unset backup"
 msgstr "取消設定備份"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:68
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
+#: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
 msgstr "檢視"
 
@@ -808,8 +825,14 @@ msgstr "增量編號"
 msgid "on"
 msgstr "在"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "至"
+
+#~ msgid "To alternate folder"
+#~ msgstr "至其他資料夾"
+
+#~ msgid "To original folder (overwrite)"
+#~ msgstr "至原始資料夾（覆寫）"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-02-24 11:16+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: modules/support/includes/panels/license.inc.php:131
+#: modules/support/includes/panels/license.inc.php:132
 msgid "Activate again / Use another subscription"
 msgstr ""
 
@@ -28,7 +28,7 @@ msgstr ""
 msgid "Collect"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:90
+#: modules/support/includes/panels/license.inc.php:91
 msgid "Computers"
 msgstr "Rechner"
 
@@ -36,11 +36,6 @@ msgstr "Rechner"
 msgid "Connect"
 msgstr "Verbinden"
 
-#: modules/support/includes/panels/remotesupport.inc.php:47
-msgid "Connect to support"
-msgstr "Mit Support verbinden"
-
-#: modules/support/includes/panels/remotesupport.inc.php:44
 #: modules/support/infoPackage.inc.php:44
 msgid "Disconnect"
 msgstr "Trennen"
@@ -49,35 +44,38 @@ msgstr "Trennen"
 msgid "Download an archive including logs and config files"
 msgstr ""
 
-#: modules/support/includes/panels/remotesupport.inc.php:54
+#: modules/support/includes/panels/remotesupport.inc.php:56
 msgid "Download archive"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:60
+#: modules/support/includes/panels/license.inc.php:61
 msgid "Email"
 msgstr "Email"
 
-#: modules/support/includes/panels/license.inc.php:105
+#: modules/support/includes/panels/license.inc.php:106
 msgid "End"
 msgstr "Ende"
 
-#: modules/support/includes/panels/remotesupport.inc.php:57
+#: modules/support/includes/panels/remotesupport.inc.php:59
 msgid "Extract log and config files"
 msgstr ""
 
-#: modules/support/includes/panels/license.inc.php:64
+#: modules/support/includes/panels/remotesupport.inc.php:30
+msgid "Extract logs"
+msgstr ""
+
+#: modules/support/includes/panels/license.inc.php:65
 msgid "Hours"
 msgstr "Stunden"
 
-#: modules/support/includes/panels/license.inc.php:117
+#: modules/support/includes/panels/license.inc.php:118
 msgid "Links"
 msgstr "Links"
 
-#: modules/support/includes/panels/license.inc.php:56
+#: modules/support/includes/panels/license.inc.php:57
 msgid "Phone"
 msgstr "Telefon"
 
-#: modules/support/includes/panels/remotesupport.inc.php:30
 #: modules/support/infoPackage.inc.php:35
 msgid "Remote support"
 msgstr "Fernunterstützung"
@@ -86,11 +84,14 @@ msgstr "Fernunterstützung"
 msgid "Subscription info"
 msgstr "Abonnementinformation"
 
-#: modules/support/includes/panels/license.inc.php:53
 #: modules/support/infoPackage.inc.php:31
+#: modules/support/includes/panels/license.inc.php:54
 msgid "Support"
 msgstr "Support"
 
-#: modules/support/includes/panels/license.inc.php:74
+#: modules/support/includes/panels/license.inc.php:75
 msgid "Your subscription"
 msgstr "Ihr Abonnement"
+
+#~ msgid "Connect to support"
+#~ msgstr "Mit Support verbinden"

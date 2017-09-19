@@ -1,9 +1,8 @@
 <?php
-
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
- *
+ * (c) 2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -27,6 +26,9 @@ require('modules/msc/includes/commands_xmlrpc.inc.php');
 require('modules/msc/includes/package_api.php');
 require('modules/msc/includes/scheduler_xmlrpc.php');
 require('modules/msc/includes/mscoptions_xmlrpc.php');
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
+}
 
 $from = $_GET['from'];
 $path = explode('|', $from);
@@ -111,13 +113,32 @@ $cible = array($uuid);
 // TODO: activate this  : msc_command_set_pause($cmd_id);
 
 $id_command = add_command_api($pid, $cible, $params, $p_api, $mode, $gid);
-if (!isXMLRPCError()) {
-    scheduler_start_these_commands('', array($id_command));
-    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
-    exit;
-} else {
-    ## Return to the launch tab, the backtrace will be displayed
-    header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+    xmlrpc_addlogincommand($_SESSION['login'], $id_command);
+}
+
+if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+    if (!isXMLRPCError()) {
+        scheduler_start_these_commands('', array($id_command));
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . $tab, 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+        exit;
+    } else {
+        ## Return to the launch tab, the backtrace will be displayed
+        header("Location: " . urlStrRedirect("msc/logs/viewLogs", array('tab' => $prefix . 'tablaunch', 'uuid' => $uuid, 'hostname' => $hostname, 'gid' => $gid, 'cmd_id' => $id_command)));
+        exit;
+    }
+}
+else{
+    //if(!isset($uuid) || $uuid=""){
+        if($gid) $uuid = "ND";
+    //}
+    header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array(
+                                                                                'uuid' => $uuid,
+                                                                                'hostname' => $hostname,
+                                                                                'gid' => $gid,
+                                                                                'cmd_id' => $id_command,
+                                                                                "login"=>$_SESSION['login'])));
     exit;
 }
 ?>

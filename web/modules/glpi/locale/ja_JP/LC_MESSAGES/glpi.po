@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-25 01:00+0200\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Japanese (Japan) (http://transifex.mandriva.com/projects/p/"
@@ -24,7 +24,7 @@ msgstr ""
 msgid " (Not an antivirus)"
 msgstr " (アンチウィルスではない)"
 
-#: modules/glpi/glpi/tabs.php:76
+#: modules/glpi/glpi/tabs.php:72
 #, php-format
 msgid "%s's inventory %s"
 msgstr ""
@@ -45,20 +45,12 @@ msgstr "アクション"
 msgid "Active"
 msgstr ""
 
-#: modules/glpi/glpi/localSidebar.php:29
-msgid "Add a location"
-msgstr ""
-
-#: modules/glpi/glpi/localSidebar.php:27
-msgid "Add an entity"
-msgstr ""
-
 #: modules/glpi/glpi/addEntityRule.php:155
 msgid "Add criterion"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:43 modules/glpi/infoPackage.inc.php:79
-#: modules/glpi/infoPackage.inc.php:92
+#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
+#: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
 msgstr ""
 
@@ -66,8 +58,7 @@ msgstr ""
 msgid "Add entity right"
 msgstr ""
 
-#: modules/glpi/glpi/addEntityRule.php:59
-#: modules/glpi/glpi/localSidebar.php:31 modules/glpi/infoPackage.inc.php:105
+#: modules/glpi/infoPackage.inc.php:115 modules/glpi/glpi/addEntityRule.php:59
 msgid "Add entity rule"
 msgstr ""
 
@@ -75,11 +66,11 @@ msgstr ""
 msgid "Add location"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:87
+#: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
 msgstr "管理"
 
-#: modules/glpi/infoPackage.inc.php:160 modules/glpi/infoPackage.inc.php:190
+#: modules/glpi/infoPackage.inc.php:170 modules/glpi/infoPackage.inc.php:203
 msgid "Administrative tab (GLPI)"
 msgstr "管理タブ (GLPI)"
 
@@ -103,7 +94,7 @@ msgstr ""
 msgid "All rules"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:89
+#: modules/glpi/glpi/tabs.php:85
 #: modules/glpi/includes/panels/antivirus.inc.php:30
 msgid "Antivirus"
 msgstr "アンチウィルス"
@@ -118,9 +109,13 @@ msgstr "%s のアンチウィルスは実行されていない、あるいは最
 msgid "Antivirus status is OK at %s"
 msgstr "%s のアンチウィルスステータスは OK です %s"
 
-#: modules/glpi/infoPackage.inc.php:166 modules/glpi/infoPackage.inc.php:196
+#: modules/glpi/infoPackage.inc.php:176 modules/glpi/infoPackage.inc.php:209
 msgid "Antivirus tab (GLPI)"
 msgstr "アンチウィルスタブ (GLPI)"
+
+#: modules/glpi/glpi/ajaxViewPart.php:260
+msgid "Architecture"
+msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Bandwidth"
@@ -130,11 +125,11 @@ msgstr "帯域幅"
 msgid "Category"
 msgstr "カテゴリー"
 
-#: modules/glpi/infoPackage.inc.php:119
+#: modules/glpi/infoPackage.inc.php:129
 msgid "Change entity rule order (down)"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:114
+#: modules/glpi/infoPackage.inc.php:124
 msgid "Change entity rule order (up)"
 msgstr ""
 
@@ -144,9 +139,9 @@ msgstr ""
 "ここをクリックすると、メーカーウェブサイト上でこのコンピューターを確認するこ"
 "とができます"
 
-#: modules/glpi/glpi/ajaxEntityList.php:68
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxViewPart.php:250
+#: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
 msgstr "コメント"
 
@@ -167,8 +162,10 @@ msgid "Computers"
 msgstr "コンピューター"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:46
+#: modules/glpi/glpi/createMachinesStaticGroup.php:81
 #: modules/glpi/glpi/createOSStaticGroup.php:52
 #: modules/glpi/glpi/createStaticGroup.php:43
+#: modules/glpi/glpi/createBackupStaticGroup.php:85
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr "%d 台のコンピューターで、コンピューター一覧がトランケートされました"
@@ -179,7 +176,7 @@ msgstr "コントローラー"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:40
 #: modules/glpi/includes/panels/inventory.inc.php:43
-#: modules/glpi/includes/panels/os_repartition.inc.php:91
+#: modules/glpi/includes/panels/os_repartition.inc.php:106
 msgid "Create a group"
 msgstr "グループを作成"
 
@@ -195,6 +192,16 @@ msgstr "アンチウィルスダッシュボードウィジェットから静的
 msgid "Create static group from dashboard widgets (GLPI)"
 msgstr "ダッシュボードウィジェットから静的グループを作成 (GLPI)"
 
+#: modules/glpi/infoPackage.inc.php:75
+#, fuzzy
+msgid "Create static group from machines backup widget (GLPI)"
+msgstr "ダッシュボードウィジェットから静的グループを作成 (GLPI)"
+
+#: modules/glpi/infoPackage.inc.php:70
+#, fuzzy
+msgid "Create static group from machines dashboard widget (GLPI)"
+msgstr "ダッシュボードウィジェットから静的グループを作成 (GLPI)"
+
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
 msgstr ""
@@ -207,7 +214,7 @@ msgstr "日付"
 msgid "Date Of Purchase"
 msgstr "購入日"
 
-#: modules/glpi/infoPackage.inc.php:109
+#: modules/glpi/infoPackage.inc.php:119
 msgid "Delete entity rule"
 msgstr ""
 
@@ -219,9 +226,9 @@ msgstr ""
 msgid "Delete this rule?"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:100 modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/addEntityRule.php:77
+#: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
-#: modules/glpi/glpi/ajaxViewPart.php:232
 msgid "Description"
 msgstr "内容"
 
@@ -229,7 +236,7 @@ msgstr "内容"
 msgid "Device"
 msgstr "デバイス"
 
-#: modules/glpi/infoPackage.inc.php:126
+#: modules/glpi/infoPackage.inc.php:136
 msgid "Display locations"
 msgstr "場所を表示"
 
@@ -239,7 +246,7 @@ msgid "Do not assign"
 msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:100
-#: modules/glpi/glpi/ajaxViewPart.php:261
+#: modules/glpi/glpi/ajaxViewPart.php:262
 msgid "Domain"
 msgstr "ドメイン"
 
@@ -247,12 +254,12 @@ msgstr "ドメイン"
 msgid "Drives"
 msgstr "ドライブ"
 
-#: modules/glpi/glpi/addEntity.php:52 modules/glpi/glpi/ajaxEntityList.php:70
+#: modules/glpi/glpi/ajaxEntityList.php:70 modules/glpi/glpi/addEntity.php:52
 msgid "Edit entity"
 msgstr ""
 
-#: modules/glpi/glpi/addLocation.php:52
 #: modules/glpi/glpi/ajaxLocationList.php:70
+#: modules/glpi/glpi/addLocation.php:52
 msgid "Edit location"
 msgstr ""
 
@@ -260,15 +267,15 @@ msgstr ""
 msgid "Edit rule"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:266
+#: modules/glpi/glpi/ajaxViewPart.php:267
 msgid "Enabled"
 msgstr "有効"
 
-#: modules/glpi/glpi/localSidebar.php:26 modules/glpi/infoPackage.inc.php:70
+#: modules/glpi/infoPackage.inc.php:80
 msgid "Entities"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:74 modules/glpi/infoPackage.inc.php:87
+#: modules/glpi/infoPackage.inc.php:84 modules/glpi/infoPackage.inc.php:97
 msgid "Entities (ajax)"
 msgstr ""
 
@@ -296,12 +303,11 @@ msgstr ""
 msgid "Entity right"
 msgstr ""
 
-#: modules/glpi/glpi/entityRules.php:28 modules/glpi/glpi/localSidebar.php:30
-#: modules/glpi/infoPackage.inc.php:96
+#: modules/glpi/infoPackage.inc.php:106 modules/glpi/glpi/entityRules.php:28
 msgid "Entity rules"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:100
+#: modules/glpi/infoPackage.inc.php:110
 msgid "Entity rules (ajax)"
 msgstr ""
 
@@ -325,7 +331,7 @@ msgstr "GLPI 在庫"
 msgid "Gateway"
 msgstr "ゲートウェイ"
 
-#: modules/glpi/glpi/tabs.php:103
+#: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
 msgstr ""
 
@@ -345,11 +351,11 @@ msgstr "グラフィックカード"
 msgid "Hard Drives"
 msgstr "ハードドライブ"
 
-#: modules/glpi/glpi/tabs.php:83
+#: modules/glpi/glpi/tabs.php:79
 msgid "Hardware"
 msgstr "ハードウェア"
 
-#: modules/glpi/infoPackage.inc.php:148 modules/glpi/infoPackage.inc.php:178
+#: modules/glpi/infoPackage.inc.php:158 modules/glpi/infoPackage.inc.php:191
 msgid "Hardware tab (GLPI)"
 msgstr "ハードウェアタブ (GLPI)"
 
@@ -357,11 +363,11 @@ msgstr "ハードウェアタブ (GLPI)"
 msgid "Hide Windows Updates"
 msgstr "Windows Update を非表示"
 
-#: modules/glpi/glpi/tabs.php:88
+#: modules/glpi/glpi/tabs.php:84
 msgid "History"
 msgstr "履歴"
 
-#: modules/glpi/infoPackage.inc.php:163 modules/glpi/infoPackage.inc.php:193
+#: modules/glpi/infoPackage.inc.php:173 modules/glpi/infoPackage.inc.php:206
 msgid "History tab (GLPI)"
 msgstr "履歴タブ (GLPI)"
 
@@ -377,19 +383,19 @@ msgstr "IP"
 msgid "IP Address"
 msgstr ""
 
-#: modules/glpi/glpi/ajaxViewPart.php:300
+#: modules/glpi/glpi/ajaxViewPart.php:301
 msgid "Invalid hostname"
 msgstr "不正なホスト名です"
 
-#: modules/glpi/infoPackage.inc.php:141
+#: modules/glpi/infoPackage.inc.php:151
 msgid "Inventory (GLPI) on a group of machines"
 msgstr "マシングループ上の在庫 (GLPI)"
 
-#: modules/glpi/infoPackage.inc.php:171
+#: modules/glpi/infoPackage.inc.php:184
 msgid "Inventory (GLPI) on machine"
 msgstr "マシン上の在庫 (GLPI)"
 
-#: modules/glpi/glpi/ajaxViewPart.php:264
+#: modules/glpi/glpi/ajaxViewPart.php:265
 msgid "Inventory Number"
 msgstr "在庫番号"
 
@@ -431,7 +437,7 @@ msgstr "最新の在庫は、%s で %s 日未満です"
 msgid "Latest inventory is more than %s days at %s"
 msgstr "最新の在庫は、%s で %s 日以上です"
 
-#: modules/glpi/glpi/tabs.php:66
+#: modules/glpi/glpi/tabs.php:62
 msgid "Leave pull mode"
 msgstr "プルモードを離脱"
 
@@ -447,7 +453,7 @@ msgstr ""
 msgid "Location name"
 msgstr ""
 
-#: modules/glpi/glpi/localSidebar.php:28 modules/glpi/infoPackage.inc.php:83
+#: modules/glpi/infoPackage.inc.php:93
 msgid "Locations"
 msgstr ""
 
@@ -458,6 +464,26 @@ msgstr "MAC アドレス"
 #: modules/glpi/glpi/createOSStaticGroup.php:34
 #, php-format
 msgid "Machine with %s installed at %s"
+msgstr "%s が %s にインストールされたマシン "
+
+#: modules/glpi/glpi/createBackupStaticGroup.php:70
+#, php-format
+msgid "Machines backup configured at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createBackupStaticGroup.php:75
+#, php-format
+msgid "Machines backup not configured at %s"
+msgstr ""
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:72
+#, fuzzy, php-format
+msgid "Machines offline at %s"
+msgstr "%s が %s にインストールされたマシン "
+
+#: modules/glpi/glpi/createMachinesStaticGroup.php:66
+#, fuzzy, php-format
+msgid "Machines online at %s"
 msgstr "%s が %s にインストールされたマシン "
 
 #: modules/glpi/glpi/ajaxViewPart.php:242
@@ -489,9 +515,10 @@ msgstr ""
 msgid "Move rule up"
 msgstr ""
 
-#: modules/glpi/glpi/addEntity.php:78 modules/glpi/glpi/addEntityRule.php:72
-#: modules/glpi/glpi/addLocation.php:77 modules/glpi/glpi/ajaxViewPart.php:212
-#: modules/glpi/glpi/ajaxViewPart.php:229
+#: modules/glpi/glpi/addEntityRule.php:72
+#: modules/glpi/glpi/ajaxViewPart.php:212
+#: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
+#: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
 msgstr "名前"
 
@@ -499,7 +526,7 @@ msgstr "名前"
 msgid "Netmask"
 msgstr "ネットマスク"
 
-#: modules/glpi/glpi/tabs.php:85
+#: modules/glpi/glpi/tabs.php:81
 msgid "Network"
 msgstr "ネットワーク"
 
@@ -511,7 +538,7 @@ msgstr "ネットワークカード"
 msgid "Network Type"
 msgstr "ネットワークタイプ"
 
-#: modules/glpi/infoPackage.inc.php:154 modules/glpi/infoPackage.inc.php:184
+#: modules/glpi/infoPackage.inc.php:164 modules/glpi/infoPackage.inc.php:197
 msgid "Network tab (GLPI)"
 msgstr "ネットワークタブ (GLPI)"
 
@@ -528,9 +555,9 @@ msgstr "%s にアンチウィルスが見つかりませんでした"
 msgid "No antivirus found: %percent% (%d)"
 msgstr "アンチウィルスが見つかりませんでした: %percent% (%d)"
 
+#: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
-#: modules/glpi/glpi/ajaxLocationList.php:51
 msgid "No entry found"
 msgstr ""
 
@@ -562,11 +589,11 @@ msgstr "オペレーティングシステム"
 msgid "Operating systems"
 msgstr "オペレーティングシステム"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:48
+#: modules/glpi/includes/panels/os_repartition.inc.php:53
 msgid "Other"
 msgstr "その他"
 
-#: modules/glpi/includes/panels/os_repartition.inc.php:51
+#: modules/glpi/includes/panels/os_repartition.inc.php:61
 msgid "Other Windows"
 msgstr "その他の Windows"
 
@@ -598,6 +625,15 @@ msgstr "プロセッサ"
 msgid "Properties"
 msgstr "プロパティ"
 
+#: modules/glpi/glpi/tabs.php:86
+msgid "Registry"
+msgstr ""
+
+#: modules/glpi/infoPackage.inc.php:179 modules/glpi/infoPackage.inc.php:212
+#, fuzzy
+msgid "Registry tab (GLPI)"
+msgstr "履歴タブ (GLPI)"
+
 #: modules/glpi/glpi/addEntityRule.php:138
 #: modules/glpi/includes/publicFunc.php:142
 msgid "Remove"
@@ -620,11 +656,11 @@ msgstr "サービスパック"
 msgid "Size"
 msgstr "サイズ"
 
-#: modules/glpi/glpi/tabs.php:86
+#: modules/glpi/glpi/tabs.php:82
 msgid "Software"
 msgstr ""
 
-#: modules/glpi/infoPackage.inc.php:157 modules/glpi/infoPackage.inc.php:187
+#: modules/glpi/infoPackage.inc.php:167 modules/glpi/infoPackage.inc.php:200
 msgid "Softwares tab (GLPI)"
 msgstr "ソフトウェアタブ (GLPI)"
 
@@ -632,15 +668,15 @@ msgstr "ソフトウェアタブ (GLPI)"
 msgid "Sound Cards"
 msgstr "サウンドカード"
 
-#: modules/glpi/glpi/ajaxViewPart.php:262
+#: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "State"
 msgstr "状態"
 
-#: modules/glpi/glpi/tabs.php:84
+#: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
 msgstr "ストレージ"
 
-#: modules/glpi/infoPackage.inc.php:151 modules/glpi/infoPackage.inc.php:181
+#: modules/glpi/infoPackage.inc.php:161 modules/glpi/infoPackage.inc.php:194
 msgid "Storage tab (GLPI)"
 msgstr "ストレージタブ (GLPI)"
 
@@ -648,11 +684,11 @@ msgstr "ストレージタブ (GLPI)"
 msgid "Subnet"
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:82
+#: modules/glpi/glpi/tabs.php:78
 msgid "Summary"
 msgstr "サマリー"
 
-#: modules/glpi/infoPackage.inc.php:145 modules/glpi/infoPackage.inc.php:175
+#: modules/glpi/infoPackage.inc.php:155 modules/glpi/infoPackage.inc.php:188
 msgid "Summary tab (GLPI)"
 msgstr "サマリータブ (GLPI)"
 
@@ -696,7 +732,7 @@ msgstr ""
 msgid "The location has been edited successfully."
 msgstr ""
 
-#: modules/glpi/glpi/tabs.php:64 modules/glpi/glpi/tabs.php:72
+#: modules/glpi/glpi/tabs.php:60 modules/glpi/glpi/tabs.php:68
 msgid "This client has been registered in pull mode"
 msgstr "このクライアントは、プルモードに登録されました"
 
@@ -712,11 +748,11 @@ msgstr "タイプ"
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr "このマシン上でアンチウィルスソフトウェアを検出できません。"
 
-#: modules/glpi/glpi/ajaxViewPart.php:263
+#: modules/glpi/glpi/ajaxViewPart.php:264
 msgid "Unknown"
 msgstr "不明"
 
-#: modules/glpi/glpi/ajaxViewPart.php:267
+#: modules/glpi/glpi/ajaxViewPart.php:268
 msgid "Up-to-date"
 msgstr "最新"
 
@@ -740,7 +776,7 @@ msgstr "バージョン"
 msgid "Warranty End Date"
 msgstr "保証終了日"
 
-#: modules/glpi/glpi/ajaxViewPart.php:260
+#: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Windows Key"
 msgstr "Windows キー"
 

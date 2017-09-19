@@ -387,9 +387,9 @@ class CommandHistory {
             $history = date("Y-m-d H:i:s", $hist['date']);
             /* Split lines in stdout and stderr */
             if (gettype($hist["stdout"]) != 'array')
-                $hist["stdout"] = split("\n", $hist["stdout"]);
+                $hist["stdout"] = preg_split("\n", $hist["stdout"]);
             if (gettype($hist["stderr"]) != 'array')
-                $hist["stderr"] = split("\n", $hist["stderr"]);
+                $hist["stderr"] = preg_split("\n", $hist["stderr"]);
             if (count($hist["stdout"]) > 0 &&
                     !(count($hist["stdout"]) == 1 && $hist["stdout"][0] == '')
             ) {
@@ -597,12 +597,12 @@ function _colorise($line) {
         } elseif ($matches[2][0] == "C") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=navy face=sans-serif>';
-            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= join(preg_split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "T") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=purple face=sans-serif>';
-            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= join(preg_split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "O") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
@@ -612,12 +612,12 @@ function _colorise($line) {
         } elseif ($matches[2][0] == "P") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=teal face=sans-serif>';
-            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= join(preg_split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "W") {
             $out .= '<font color=grey>' . $date . '</font>&nbsp;';
             $out .= '<font color=orange face=sans-serif>';
-            $out .= join(split('·', $matches[3][0]), ' ');
+            $out .= join(preg_split('·', $matches[3][0]), ' ');
             $out .= '</font><br/>';
         } elseif ($matches[2][0] == "X") {
             $out .= '<font color=black face=sans-serif>' . sprintf(_T("Exit code : %s", "msc"), $matches[3][0]) . '</font>';

@@ -30,7 +30,7 @@ class linuxUpdateHandler(object):
     def __init__(self, platform):
         self.platform = platform
     
-    def runInShell(self, cmd, fatal=True, out_when_error=None):
+    def runinshell(self, cmd, fatal=True, out_when_error=None):
         process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
         out, err = process.communicate()
         

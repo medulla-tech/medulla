@@ -232,12 +232,13 @@ function update() {
         }
     };
     fn_General_Settings=function(){
-        var list_id_masque=[//'SkipProductKey',
-//                             'AcceptEULA',
-                            'ComputerName',
+        var list_id_masque=['ComputerName',
                             'SetupUILanguage',
-//                             'SkipRearm',
-                            /*'SkipAutoActivation'*/];
+                            "ShowWindowsLive",
+                            "InputLocale",
+                            "UserLocale",
+                            "TimeZone",
+                            "UILanguage"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -249,10 +250,7 @@ function update() {
         }
     };
     fn_Regional_Settings=function(){
-        var list_id_masque=["InputLocale",
-                            "UserLocale",
-                            "TimeZone",
-                            "UILanguage"];
+        var list_id_masque=[];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -271,7 +269,8 @@ function update() {
                             "MachineOOBE",
                             "UserOOBE",
                             "ControlPanelView",
-                            "ControlPanelIconSize"];
+                            "ControlPanelIconSize",
+                            "EnableFirewall"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -297,26 +296,12 @@ function update() {
             jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
-//     fn_Administrators_Account=function(){
-//         var list_id_masque=["PasswordAdmin"];
-//         jQuery.each(list_id_masque, function( index,value) {
-//             jQuery('#'+value).parents("tr").toggle();
-//         });
-//         if (jQuery('#'+list_id_masque[0]).is(":visible")){
-//             jQuery('#Administrators_Account').css( 'cursor', 'n-resize' ).attr('src', 'modules/imaging/graph/images/imaging-del.png');
-//         }
-//         else{
-//             jQuery('#Administrators_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
-//         }
-//     };
     fn_User_Account=function(){
         var list_id_masque=["FullName",
                             "Group",
                             "Description",
                             "Password",
-                            "EnableUAC",
-//                            "Autologon",
-                            "EnableFirewall"];
+                            "EnableUAC"];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
 
@@ -342,9 +327,7 @@ function update() {
     };
 
     fn_Specialize_Settings=function(){
-        var list_id_masque=[/*"CopyProfile",*/
-                            "ShowWindowsLive",
-                            "ExtendOSPartition"];
+        var list_id_masque=[];
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -362,7 +345,6 @@ function update() {
     fn_Regional_Settings()
     fn_Out_Of_Box_Experience()
     fn_Partition_Settings()
-//     fn_Administrators_Account()
     fn_Installation_Notes()
     fn_awfg_show()
 </script>
@@ -1564,7 +1546,7 @@ function update() {
                         _T('Specifies that automatic protection is disabled','imaging');
 
         $InfoBule_HideEULA=
-                        _T('Specifies whether to hide the Microsoft® Software License Terms page of Windows® Welcome','imaging').
+                        _T('Specifies whether to hide the Microsoft Software License Terms page of Windows Welcome','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1586,7 +1568,7 @@ function update() {
                         _T('Specifies that the time on the computer is reset to daylight saving time','imaging');
 
         $Infobule_HideWireless=
-                        _T('Specifies whether to hide the Join Wireless Network screen that appears during Windows® Welcome','imaging').
+                        _T('Specifies whether to hide the Join Wireless Network screen that appears during Windows Welcome','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1688,7 +1670,7 @@ function update() {
                         _T('Specifies the name of the end user. User_name is a string with a maximum length of 63 characters','imaging');
 
         $InfoBule_EnableUAC=
-                        _T('Specifies whether Windows® User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
+                        _T('Specifies whether Windows User Account Controls (UAC) notifies the user when programs try to make changes to the computer. UAC was formerly known as Limited User Account (LUA)','imaging').
                         "\n".
                         _T('true','imaging').
                         " : ".
@@ -1766,5 +1748,5 @@ function update() {
 
 		$InfoBule_JoinDomain = _T("Domain to join","imaging");
 
-		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory® on a domain controller in the domain to which the computer is being joined.","imaging");
+		$InfoBule_MachineObjectOU = _T("MachineObjectOU is an optional setting. It specifies the Lightweight Directory Access Protocol (LDAP) X 500-distinguished name of the organizational unit (OU) in which the computer account is created. This account is in Active Directory on a domain controller in the domain to which the computer is being joined.","imaging");
 ?>

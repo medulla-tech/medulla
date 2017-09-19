@@ -50,6 +50,7 @@ class Common(pulse2.utils.Singleton):
 
     MD5SUMS = "MD5SUMS"
     CONFFILE = "conf.json"
+    DESCRIPTORFILE = "xmppdeploy.json"
 
     SMART_DETECT_NOTPLUGGED = 0
     SMART_DETECT_NOCHANGES  = 1
@@ -162,7 +163,7 @@ class Common(pulse2.utils.Singleton):
                     )
                 except Exception, e:
                     mp = mirror_params['mount_point']
-                    if mp in self.mp2src: 
+                    if mp in self.mp2src:
                         del self.mp2src[mp]
                     self.logger.error("_detectPackages failed for mirrors")
                     self.logger.error(str(e))
@@ -512,6 +513,11 @@ class Common(pulse2.utils.Singleton):
         confdir = os.path.join(path, pid)
         self.packages[pid].setRoot(confdir)
         conf_file = os.path.join(confdir, self.CONFFILE)
+        descriptor_file = os.path.join(confdir, self.DESCRIPTORFILE)
+        if self.packages[pid].targetos == 'win':
+            deployment_script = os.path.join(confdir, 'xmppdeploy.bat')
+        else:
+            deployment_script = os.path.join(confdir, 'xmppdeploy.sh')
         conf_filetmp = conf_file + '.tmp'
         if not os.path.exists(confdir):
             os.mkdir(confdir)
@@ -583,6 +589,16 @@ class Common(pulse2.utils.Singleton):
         try:
             # Exporting conf data
             conf_data = self.parser.concat(self.packages[pid])
+
+            # Create xmppdeploy descriptor
+            conf_data_xmppdeploy = self.parser.concat_xmppdeploy(self.packages[pid])
+            f = open(descriptor_file, 'w+')
+            f.write(conf_data_xmppdeploy)
+            f.close()
+            # Create xmpp deployment script
+            f = open(deployment_script, 'w+')
+            f.write(self.packages[pid].cmd.command)
+            f.close()
 
             # Try Reading old conf for merge
             try:
@@ -887,7 +903,7 @@ class Common(pulse2.utils.Singleton):
             md5sums = []
             for root, dirs, files in os.walk(dirname):
                 for name in files:
-                    if name != self.CONFFILE:
+                    if name != self.CONFFILE and name != self.DESCRIPTORFILE :
                         try:
                             filepath = os.path.join(root, name)
                             f = file(filepath, "rb")

@@ -35,7 +35,9 @@ from sqlalchemy import and_, create_engine, MetaData, Table, Column, String, \
 from sqlalchemy.orm import create_session, mapper, relation
 from sqlalchemy.exc import NoSuchTableError, TimeoutError
 from sqlalchemy.orm.exc import NoResultFound
-
+#from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
+##from sqlalchemy.orm import sessionmaker
+import datetime
 # ORM mappings
 from pulse2.database.msc.orm.commands import Commands
 from pulse2.database.msc.orm.commands_on_host import CommandsOnHost
@@ -45,10 +47,9 @@ from pulse2.database.msc.orm.target import Target
 from pulse2.database.msc.orm.pull_targets import PullTargets
 from pulse2.database.msc.orm.bundle import Bundle
 from mmc.database.database_helper import DatabaseHelper
-
+from pulse2.database.xmppmaster import XmppMasterDatabase
 # Pulse 2 stuff
 from pulse2.managers.location import ComputerLocationManager
-
 # Imported last
 import logging
 
@@ -323,7 +324,202 @@ class MscDatabase(DatabaseHelper):
             session.close()
             return False
 
+    def get_count(self,q):
+        return q.with_entities(func.count()).scalar()
 
+
+    def deployxmppscheduler(self, login, min , max, filt):
+        sqlselect="""
+            SELECT
+                COUNT(*) as nbmachine,
+                target.id_group AS GRP,
+                CONCAT('',
+                        IF(target.id_group != NULL
+                                OR target.id_group = '',
+                            CONCAT('computer', commands.title),
+                            CONCAT('GRP ', commands.title))) AS titledeploy,
+                CONCAT(commands.title, target.id_group) AS commands_title1,
+                commands_on_host.fk_commands AS commands_on_host_fk_commands,
+                commands_on_host.host AS commands_on_host_host,
+                commands.start_date AS commands_start_date,
+                commands.end_date AS commands_end_date,
+                commands.creator AS commands_creator,
+                commands.title AS commands_title,
+                commands.package_id AS commands_package_id,
+                target.target_uuid AS target_target_uuid,
+                target.target_macaddr AS target_target_macaddr,
+                phase.name AS phase_name,
+                phase.state AS phase_state
+            FROM
+                commands_on_host
+                    INNER JOIN
+                commands ON commands.id = commands_on_host.fk_commands
+                    INNER JOIN
+                target ON target.id = commands_on_host.fk_target
+                    INNER JOIN
+                phase ON commands_on_host.id = phase.fk_commands_on_host
+            WHERE
+            """
+        sqlfilter = """
+            phase.name = 'execute'
+                AND
+                    phase.state = 'ready'"""
+
+        if login:
+            sqlfilter = sqlfilter + """
+            AND
+                commands.creator = '%s'"""%login
+
+        if filt:
+            sqlfilter = sqlfilter + """
+            AND 
+            (commands.title like %%%s%% 
+            OR 
+            commands.creator like %%%s%% 
+            OR
+            commands.start_date like %%%s%%)"""%(filt,filt,filt)
+
+        reqsql = sqlselect + sqlfilter
+
+        sqllimit=""
+        if min and max:
+            sqllimit = """
+                LIMIT %d 
+                OFFSET %d"""%(int(max)-int(min), int(min))
+            reqsql = reqsql + sqllimit
+            
+        sqlgroupby = """
+            GROUP BY titledeploy"""
+
+        reqsql = reqsql + sqlgroupby+";"
+
+        ###### print reqsql
+
+        sqlselect="""
+            Select COUNT(nb) AS TotalRecords from(
+                SELECT 
+                    COUNT(*) AS nb,
+                    CONCAT('',
+                            IF(target.id_group != NULL
+                                    OR target.id_group = '',
+                                CONCAT('computer', commands.title),
+                                CONCAT('GRP ', commands.title))) AS titledeploy 
+                FROM
+                    commands_on_host
+                        INNER JOIN
+                    commands ON commands.id = commands_on_host.fk_commands
+                        INNER JOIN
+                    target ON target.id = commands_on_host.fk_target
+                        INNER JOIN
+                    phase ON commands_on_host.id = phase.fk_commands_on_host
+                WHERE
+                    """
+        reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
+        result={}
+        resulta = self.db.execute(reqsql)
+        resultb = self.db.execute(reqsql1)
+        sizereq = [x for x in resultb][0][0]
+        result['lentotal'] = sizereq
+        result['min'] = int(min)
+        result['nb']  = (int(max)-int(min))
+        result['tabdeploy'] = {}
+        inventoryuuid = []
+        host = []
+        command = []
+        pathpackage = []
+        start = []
+        end = []
+        tabdeploy = {}
+        creator = []
+        title = []
+        groupid = []
+        macadress = []
+        nbmachine = []
+        titledeploy = []
+        for x in resulta:
+            nbmachine.append(x.nbmachine)
+            host.append(x.commands_on_host_host)
+            inventoryuuid.append(x.target_target_uuid)
+            command.append(x.commands_on_host_fk_commands)
+            pathpackage.append(x.commands_package_id)
+            start.append(x.commands_start_date)
+            end.append(x.commands_end_date)
+            creator.append(x.commands_creator)
+            title.append(x.commands_title)
+            titledeploy.append(x.titledeploy)
+            groupid.append(x.GRP)
+            macadress.append(x.target_target_macaddr)
+        result['tabdeploy']['nbmachine']=nbmachine
+        result['tabdeploy']['host']=host
+        result['tabdeploy']['inventoryuuid']=inventoryuuid
+        result['tabdeploy']['command']=command
+        result['tabdeploy']['pathpackage']=pathpackage
+        result['tabdeploy']['start']=start
+        result['tabdeploy']['end'] = end
+        result['tabdeploy']['creator']=creator
+        result['tabdeploy']['title'] = title
+        result['tabdeploy']['macadress'] = macadress
+        result['tabdeploy']['groupid'] = groupid
+        result['tabdeploy']['titledeploy'] = titledeploy
+        return result
+
+    def deployxmpp(self):
+        """ 
+            select deploy machine
+        """
+        session = create_session()
+        try:
+            join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
+            q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
+            q = q.select_from(join)
+            q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute',self.commands_on_host_phase.c.state == 'ready',
+                              self.commands.c.start_date < datetime.datetime.now(),
+                              self.commands.c.end_date  > (datetime.datetime.now() - datetime.timedelta(seconds=800))))
+            q = q.all()
+            session.flush()
+        except Exception, exc:
+            self.logger.error(str(exc))
+            session.close()
+            return ""
+
+        tabmachine = []
+        updatemachine = []
+        listemachine = []
+        machine_do_deploy = {}
+        wolupdatemachine = []
+        self.logger.debug("select deploy machine")
+        for x in q:
+            presence = XmppMasterDatabase().getPresenceuuid(x.Target.target_uuid)
+            if presence:
+                self.logger.debug("machine %s presente for deploy %s"%(x.Target.target_uuid, x.Commands.package_id))
+            else:
+                self.logger.debug("machine %s missing for deploy %s"%(x.Target.target_uuid, x.Commands.package_id))
+
+            if presence:
+                if not x.Target.target_uuid in tabmachine:
+                    tabmachine.append(x.Target.target_uuid)
+                    #recherche machine existe pour xmpp
+                    self.logger.info("deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
+                    machine_do_deploy[x.Target.target_uuid] = x.Commands.package_id
+                    updatemachine.append(x)
+
+                    session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
+                        update({CommandsOnHost.current_state: "done",
+                                CommandsOnHost.stage : "ended"
+                                })
+                    session.flush()
+                    session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).\
+                        update({ CommandsOnHostPhase.state : "done" })
+                    session.flush()
+
+                else:
+                    self.logger.warn("Cancel deploy in process\n Deploy on machine %s -> %s"%(x.Target.target_uuid,x.Commands.package_id))
+                    listemachine.append(x)
+            else:
+                wolupdatemachine.append(x)
+
+        session.close()
+        return updatemachine, machine_do_deploy, wolupdatemachine
 
 
     def deleteCommand(self, cmd_id):
@@ -457,14 +653,6 @@ class MscDatabase(DatabaseHelper):
 
         return True
 
-
-
-
-
-
-
-
-
     def extendCommand(self, cmd_id, start_date, end_date):
         """
         Custom command re-scheduling.
@@ -519,8 +707,6 @@ class MscDatabase(DatabaseHelper):
             coh.current_state = "scheduled"
             session.add(coh)
             session.flush()
-
-
 
 
     def _createPhases(self,
@@ -1484,6 +1670,12 @@ class MscDatabase(DatabaseHelper):
         ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).all()
         session.close()
         return map(lambda c:c.id, ret)
+
+    def getFirstCommandsOncmd_id(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).first()
+        session.close()
+        return ret
 
     def getCommandOnGroupByState(self, ctx, cmd_id, state, min = 0, max = -1):
         session = create_session()

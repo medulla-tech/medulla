@@ -132,7 +132,7 @@ function image_edit($target_uuid, $type, $item_uuid) {
     } else {
         $p_order = array();
         foreach ($_POST as $post_key => $post_value) {
-            if (ereg('order_', $post_key)) {
+            if (preg_match('/order_/', $post_key)) {
                 $post_key = str_replace("order_", "", $post_key);
                 $p_order[$post_key] = $post_value;
             }
@@ -199,5 +199,3 @@ function image_logs($itemid) {
 
 <!-- inject styles -->
 <link rel="stylesheet" href="modules/imaging/graph/css/imaging.css" type="text/css" media="screen" />
-
-

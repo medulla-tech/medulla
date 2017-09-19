@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-04 01:02+0200\n"
+"POT-Creation-Date: 2017-09-12 14:16+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
@@ -20,14 +20,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 1.6.10\n"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:56
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/hostSummary.php:142
 #: modules/backuppc/backuppc/viewFileVersions.php:47
+#: modules/backuppc/backuppc/BrowseBackups.php:56
+#: modules/backuppc/backuppc/hostSummary.php:142
 msgid "%A, %B %e %Y"
 msgstr "%A, %B %e %Y"
 
-#: modules/backuppc/backuppc/hostStatus.php:158
+#: modules/backuppc/backuppc/hostStatus.php:175
 #, php-format
 msgid "%s's backup status"
 msgstr "%s's Sicherungsstatus"
@@ -58,13 +58,17 @@ msgstr "Fileset hinzufügen"
 msgid "Add folder"
 msgstr "Ordner hinzufügen"
 
+#: modules/backuppc/backuppc/localSidebar.php:30
 #: modules/backuppc/backuppc/EditPeriodProfile.php:79
 #: modules/backuppc/backuppc/edit.php:232
-#: modules/backuppc/backuppc/localSidebar.php:30
 msgid "Add schedule"
 msgstr "Zeitplan hinzufügen"
 
-#: modules/backuppc/backuppc/hostStatus.php:166
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
+msgid "Advanced restore"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:183
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
@@ -124,8 +128,8 @@ msgstr "Sicherungszeit"
 msgid "Backup up to date"
 msgstr "Backup aktuell"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:59
 #: modules/backuppc/backuppc/fileSearch.php:95
+#: modules/backuppc/backuppc/BrowseBackups.php:59
 msgid "Backup#"
 msgstr "Backup#"
 
@@ -163,6 +167,7 @@ msgid "Client encoding"
 msgstr "Client-Encoding"
 
 #: modules/backuppc/backuppc/hostStatus.php:47
+#: modules/backuppc/backuppc/hostStatus.php:48
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
@@ -171,12 +176,12 @@ msgstr ""
 "Rechner %s wurde erfolgreich dem Backupsystem hinzugefügt.<br />Sie können "
 "nun seine Dateisets und Zeitpläne konfigurieren."
 
-#: modules/backuppc/backuppc/hostStatus.php:165
+#: modules/backuppc/backuppc/hostStatus.php:182
 msgid "Configuration"
 msgstr "Konfiguration"
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:144
+#: modules/backuppc/backuppc/hostStatus.php:161
 msgid "Configuration saved"
 msgstr "Konfiguration gesichert."
 
@@ -196,8 +201,7 @@ msgstr "Aktueller Status"
 msgid "Current state: "
 msgstr "Aktueller Status:"
 
-#: modules/backuppc/backuppc/edit.php:73
-#: modules/backuppc/backuppc/edit.php:158
+#: modules/backuppc/backuppc/edit.php:73 modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
 msgstr "Eigene"
 
@@ -232,6 +236,11 @@ msgstr "Dieses Profil löschen"
 msgid "Destination"
 msgstr "Ziel"
 
+#: modules/backuppc/backuppc/restorePopup.php:35
+#, fuzzy
+msgid "Destination Folder"
+msgstr "Ziel"
+
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
 msgid "Do not backup from"
@@ -245,7 +254,7 @@ msgstr "Download"
 msgid "Download files/ZIP from backup"
 msgstr "Herunterladen von Dateien/ZIP aus Backup"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:190
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
 msgstr "Ausgewählte herunterladen (ZIP)"
 
@@ -323,7 +332,7 @@ msgstr "Dateianzahl (neu)"
 msgid "File name"
 msgstr "Dateiname"
 
-#: modules/backuppc/backuppc/hostStatus.php:167
+#: modules/backuppc/backuppc/hostStatus.php:184
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "Dateisuche"
@@ -332,8 +341,8 @@ msgstr "Dateisuche"
 msgid "File size"
 msgstr "Dateigröße"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:68
 #: modules/backuppc/backuppc/edit.php:81
+#: modules/backuppc/backuppc/ViewProfiles.php:68
 msgid "Fileset"
 msgstr "Fileset"
 
@@ -341,10 +350,10 @@ msgstr "Fileset"
 msgid "Filesets"
 msgstr "Filesets"
 
-#: modules/backuppc/backuppc/BrowseShareNames.php:60
-#: modules/backuppc/backuppc/EditBackupProfile.php:148
-#: modules/backuppc/backuppc/edit.php:142
 #: modules/backuppc/backuppc/fileSearch.php:127
+#: modules/backuppc/backuppc/EditBackupProfile.php:148
+#: modules/backuppc/backuppc/BrowseShareNames.php:60
+#: modules/backuppc/backuppc/edit.php:142
 msgid "Folder"
 msgstr "Ordner"
 
@@ -374,6 +383,11 @@ msgstr "GB"
 msgid "Greater than 100 Mb"
 msgstr "Mehr als 100 Mb"
 
+#: modules/backuppc/backuppc/restorePopup.php:26
+#, fuzzy
+msgid "Host"
+msgstr "Hostname"
+
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
 msgstr "Host Backup ist nicht gesetzt."
@@ -382,8 +396,8 @@ msgstr "Host Backup ist nicht gesetzt."
 msgid "Host backup status"
 msgstr "Host Backup Status"
 
-#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 #: modules/backuppc/backuppc/ajaxHostsList.php:57
+#: modules/backuppc/backuppc/ajaxBackupStatus.php:91
 msgid "Host name"
 msgstr "Hostname"
 
@@ -462,7 +476,7 @@ msgstr "Nächtlich"
 msgid "No entry found."
 msgstr "Kein Eintrag gefunden."
 
-#: modules/backuppc/backuppc/restoreToHost.php:47
+#: modules/backuppc/backuppc/restoreToHost.php:51
 msgid "No file selected."
 msgstr "Keine Datei ausgewählt."
 
@@ -514,6 +528,11 @@ msgstr "Entfernen"
 msgid "Requested restores"
 msgstr "Angeforderte Wiederherstellungen"
 
+#: modules/backuppc/backuppc/restorePopup.php:37
+#, fuzzy
+msgid "Restore"
+msgstr "Wiederherstellung ist erfolgt"
+
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
 #: modules/backuppc/backuppc/hostSummary.php:88
 msgid "Restore done"
@@ -540,8 +559,14 @@ msgstr "Wiederherstellungspunkte "
 msgid "Restore time"
 msgstr "Wiederherstellungszeit"
 
-#: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
-msgid "Restore to host"
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
+#, fuzzy
+msgid "Restore to host (overwrite)"
+msgstr "Auf Host wiederherstellen"
+
+#: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
+#, fuzzy
+msgid "Restore to host (subfolder)"
 msgstr "Auf Host wiederherstellen"
 
 #: modules/backuppc/backuppc/hostSummary.php:112
@@ -553,8 +578,8 @@ msgstr "Start inkrementelles Backup"
 msgid "Saturday"
 msgstr "Samstag"
 
-#: modules/backuppc/backuppc/ViewProfiles.php:118
 #: modules/backuppc/backuppc/edit.php:166
+#: modules/backuppc/backuppc/ViewProfiles.php:118
 msgid "Schedule"
 msgstr "Zeitplan"
 
@@ -596,8 +621,8 @@ msgstr "Vollständiges Backup starten"
 msgid "Start backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 #: modules/backuppc/backuppc/localSidebar.php:27
+#: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 msgid "Status"
 msgstr "Status"
 
@@ -609,7 +634,7 @@ msgstr "Backup stoppen"
 msgid "Stop backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:178
 msgid "Summary"
 msgstr "Zusammenfassung"
 
@@ -626,7 +651,7 @@ msgstr "Der Rechner wurde von dem Backupsystem entfernt."
 msgid "The profile has been deleted successfully."
 msgstr "Das Profil wurde erfolgreich entfernt."
 
-#: modules/backuppc/backuppc/restoreToHost.php:54
+#: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
 msgstr "Die ausgewählten Dateien werden wiederhergestellt in"
 
@@ -648,14 +673,6 @@ msgstr "Dieser Rechner wurde noch nie gesichert"
 msgid "Thursday"
 msgstr "Donnerstag"
 
-#: modules/backuppc/backuppc/restorePopup.php:27
-msgid "To alternate folder"
-msgstr "In alternativen Ordner"
-
-#: modules/backuppc/backuppc/restorePopup.php:26
-msgid "To original folder (overwrite)"
-msgstr "Auf den ursprünglichen Ordner (überschreiben)"
-
 #: modules/backuppc/backuppc/EditPeriodProfile.php:115
 #: modules/backuppc/backuppc/edit.php:183
 msgid "Tuesday"
@@ -669,8 +686,8 @@ msgstr "Typ"
 msgid "Unset backup"
 msgstr "Backup abwählen"
 
-#: modules/backuppc/backuppc/BrowseBackups.php:68
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
+#: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
 msgstr "Ansicht"
 
@@ -812,8 +829,14 @@ msgstr "incr. Nummer"
 msgid "on"
 msgstr "auf"
 
-#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
+#: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "bis"
+
+#~ msgid "To alternate folder"
+#~ msgstr "In alternativen Ordner"
+
+#~ msgid "To original folder (overwrite)"
+#~ msgstr "Auf den ursprünglichen Ordner (überschreiben)"

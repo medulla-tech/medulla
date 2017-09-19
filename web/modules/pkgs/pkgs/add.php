@@ -46,8 +46,8 @@ if (isset($_POST['bconfirm'])) {
         $level = 1;
     }
 
-    foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware', 
-            'Qversion', 'boolcnd', 'licenses') as $post) {
+    foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
+            'Qversion', 'boolcnd', 'licenses', 'targetos') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot', 'associateinventory') as $post) {
@@ -55,7 +55,7 @@ if (isset($_POST['bconfirm'])) {
     }
     // Package command
     $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
-    
+
     // Simple package: not a bundle
     $package['sub_packages'] = array();
 
@@ -175,6 +175,11 @@ You may also ask Google for the silent installation switches. If you\'re feeling
         array('reboot', _T('Need a reboot ?', 'pkgs'))
     );
 
+    $os = array(
+        array('win', 'linux', 'mac'),
+        array(_T('Windows'), _T('Linux'), _T('Mac OS'))
+    );
+
     foreach ($fields as $p) {
         $f->add(
                 new TrFormElement($p[1], new InputTpl($p[0])), array_merge(array("value" => ''), $p[2])
@@ -186,6 +191,14 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 new TrFormElement($p[1], new CheckboxTpl($p[0])), array("value" => '')
         );
     }
+
+    $oslist = new SelectItem('targetos');
+    $oslist->setElements($os[1]);
+    $oslist->setElementsVal($os[0]);
+    $f->add(
+            new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
+    );
+
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)

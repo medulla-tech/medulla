@@ -57,12 +57,19 @@ $ids  = array();
 $name = array();
 $type = array();
 $show = array();
+$actionxmppquickdeploy = array();
 $action_delete = array();
 if ($is_gp != 1) { // Simple Group
     $delete = new ActionPopupItem(_T("Delete this group", 'dyngroup'), "delete_group", "delete", "id", "base", "computers");
 } else { // Imaging group
     $delete = new ActionPopupItem(_T("Delete this imaging group", 'dyngroup'), "delete_group", "delete", "id", "imaging", "manage");
 }
+
+if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+       $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquickgroup", "quick", "computer", "xmppmaster", "xmppmaster");
+        $DeployQuickxmpp->setWidth(600);
+    }
+
 $empty = new EmptyActionItem();
 
 foreach ($list as $group) {
@@ -72,7 +79,7 @@ foreach ($list as $group) {
     }else{
         $ids[]=  array("id"=>$group->id, "gid"=>$group->id, "groupname"=> $group->name, 'type'=>$is_gp);
     }
-    
+
     $name[]= $group->getName();
     if ($group->isDyn()) {
         $type[]= (!$group->isRequest() ? sprintf(_T('result (%s)', 'dyngroup'), $group->countResult()) : _T('query', 'dyngroup'));
@@ -84,6 +91,9 @@ foreach ($list as $group) {
         $action_delete[]= $delete;
     } else {
         $action_delete[]= $empty;
+    }
+    if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+        $actionxmppquickdeploy[]=$DeployQuickxmpp;
     }
 }
 
@@ -115,8 +125,11 @@ if ($is_gp != 1) { // Simple group
     }
     $n->addActionItem(new ActionItem(_T("Edit this group", 'dyngroup'), "computersgroupedit", "edit", "id", "base", "computers"));
     $n->addActionItem(new ActionItem(_T("Share this group", 'dyngroup'), "edit_share", "groupshare", "id", "base", "computers"));
+
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
+        if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "base", "computers", "grouptablogs"));
+        }
         $n->addActionItem(new ActionItem(_T("Software deployment on this group", "dyngroup"),"groupmsctabs","install","computer", "base", "computers"));
     }
     if (in_array("update", $_SESSION["supportModList"])) {
@@ -133,7 +146,9 @@ if ($is_gp != 1) { // Simple group
     $n->addActionItem(new ActionItem(_T("Edit this imaging group", 'dyngroup'), "computersgroupedit", "edit", "id", "imaging", "manage"));
     $n->addActionItem(new ActionItem(_T("Share this imaging group", 'dyngroup'), "edit_share", "groupshare", "id", "imaging", "manage"));
     if (in_array("msc", $_SESSION["supportModList"])) {
-        $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "imaging", "manage", "grouptablogs"));
+        if (!in_array("xmppmaster", $_SESSION["supportModList"])) {
+            $n->addActionItem(new ActionItem(_T("Read log", "dyngroup"),"groupmsctabs","logfile","computer", "imaging", "manage", "grouptablogs"));
+        }
         $n->addActionItem(new ActionItem(_T("Software deployment on this imaging group", "dyngroup"),"groupmsctabs","install","computer", "imaging", "manage"));
     }
     if (in_array("imaging", $_SESSION["supportModList"])) {
@@ -142,10 +157,15 @@ if ($is_gp != 1) { // Simple group
         }
     }
 }
+ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
+        // quick action for group with xmppmodule
+        $n->addActionItemArray($actionxmppquickdeploy);
+    }
+
 $n->addActionItemArray($action_delete);
+
 $n->addActionItem(new ActionItem(_T("Csv export", "dyngroup"),"csv","csv","computer", "base", "computers"));
 //$n->disableFirstColumnActionLink();
 
 $n->display();
 ?>
-

@@ -3,7 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com
- *
+ * (c) 2017 siveo, http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -93,6 +93,10 @@ function add_command_quick_with_id($idcmd, $hosts, $lang, $gid = null) {
 
 function get_id_command_on_host($id) {
     return xmlCall('msc.get_id_command_on_host', array($id));
+}
+
+function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
+    return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
 }
 
 function get_targets_for_coh($coh_ids) {
@@ -226,6 +230,10 @@ function get_command_on_host_in_commands($cmd_id) {
     return xmlCall('msc.get_command_on_host_in_commands', array($cmd_id));
 }
 
+function get_first_commands_on_cmd_id($cmd_id) {
+    return xmlCall('msc.get_first_commands_on_cmd_id', array($cmd_id));
+}
+
 function get_def_package_label($label, $version) {
     return xmlCall('msc.get_def_package_label', array($label, $version));
 }
@@ -265,5 +273,4 @@ function delete_command($id) {
 function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }
-
 ?>

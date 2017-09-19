@@ -3,6 +3,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007 Mandriva, http://www.mandriva.com/
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -21,9 +22,14 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * File : computers_list.php
  */
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
+
+
+
 
 $param = array();
 if (isset($_GET['gid'])) {
@@ -42,6 +48,36 @@ if (isset($_GET['equ_bool'])) {
 if (isset($_GET['imaging_server'])) {
     $param['imaging_server'] = urlencode($_GET['imaging_server']);
 }
+
+if( in_array("xmppmaster", $_SESSION["supportModList"])){
+    if (isset($_GET['cmd_id'])){
+        $param['cmd_id'] = urlencode($_GET['cmd_id']);
+    }
+    if( isset($_GET['login'])){
+        $param['login'] = urlencode($_GET['login']);
+    }
+
+    if( isset($_GET['id'])){
+        $param['id'] = urlencode($_GET['id']);
+    }
+
+    if( isset($_GET['ses'])){
+        $param['ses'] = urlencode($_GET['ses']);
+    }
+
+    if( isset($_GET['hos'])){
+        $param['hos'] = urlencode($_GET['hos']);
+    }
+
+    if( isset($_GET['sta'])){
+        $param['sta'] = urlencode($_GET['sta']);
+    }
+
+    if( isset($_GET['action'])){
+        $param['logview'] = urlencode($_GET['action']);
+    }
+}
+
 
 if (displayLocalisationBar() && (isset($_GET['imaging_server']) && $_GET['imaging_server'] == '' || !isset($_GET['imaging_server']))) {
     $ajax = new AjaxFilterLocation(urlStrRedirect("base/computers/ajaxComputersList"), "container", 'location', $param);

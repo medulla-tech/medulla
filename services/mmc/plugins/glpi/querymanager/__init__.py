@@ -40,6 +40,9 @@ def activate():
 
 def queryPossibilities():
     ret = {}
+    ret['Owner of the machine'] = ['list', getAllOwnerMachine]
+    ret['User location'] = ['list', getAllLocations1]
+    ret['Last Logged User'] = ['list', getAllContacts]
     ret['Computer name'] = ['list', getAllHostnames]
     ret['Contact'] = ['list', getAllContacts]
     ret['Contact number'] = ['list', getAllContactNums]
@@ -84,6 +87,11 @@ def queryGroups():
                  ['System manufacturer', 'Dell, HP, Apple ...'],
                  ['System model',
                   'Latitude E6420, ProLiant DL120, MacBookAir5,2 ...']]])
+
+    ret.append(['user',
+                [['Owner of the machine', 'user name ...'],
+                 ['Last Logged User', 'Last user of the machine'],
+                 ['User location', 'Computer belonging to the user']]])
     # Contact
     #ret['Contact'] =        [ \
     #                            ['Contact',''], \
@@ -240,6 +248,8 @@ def getAllStates(ctx, value=''):
 def getAllLocations(ctx, value=''):
     return unique([x.completename for x in Glpi().getAllLocations(ctx, value)])
 
+def getAllLocations1(ctx, value=''):
+    return unique([x.completename for x in Glpi().getAllLocations1(ctx, value)])
 
 def getAllOsSps(ctx, value=''):
     return unique([x.name for x in Glpi().getAllOsSps(ctx, value)])
@@ -261,3 +271,10 @@ def getAllSoftwareVendors(ctx, value=''):
 def getAllSoftwareVersions(ctx, value='', software=None):
     res = Glpi().getAllSoftwareVersions(ctx, filt=value, software=software)
     return unique([x.name for x in res])
+
+def getAllOwnerMachine(ctx, value=''):
+    res = Glpi().getAllOwnerMachine(ctx, filt=value)
+    return unique([x.name for x in res])
+
+def getAllLoggedUser(ctx, value=''):
+    return unique([x.contact for x in Glpi().getAllContacts(ctx, value)])

@@ -33,6 +33,7 @@ import shutil
 import netifaces
 import netaddr
 import hashlib
+import time
 from copy import deepcopy
 from random import choice
 from subprocess import call
@@ -48,6 +49,7 @@ from pulse2.site import examplesdir
 from mmc.database.ddl import DBControl
 from mmc.site import sysconfdir, mmcconfdir, prefix
 from mmc.core.log import ColoredFormatter
+from subprocess import check_output, CalledProcessError
 
 log = logging.getLogger('pulse2-setup')
 
@@ -197,7 +199,7 @@ class DebianHandler(DistroHandler):
     ldap_schemas_dir = "/etc/ldap/schema/"
     ldap_config = True
     apache_service = "apache2"
-    apache_dir = "/etc/apache2/conf.d/"
+    apache_dir = "/etc/apache2/conf-available/"
 
     def __init__(self):
         DistroHandler.__init__(self)
@@ -286,12 +288,12 @@ class SystemctlHandler(object):
         return ret==0
 
     def reload_srv(self, name):
-        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True) 
+        ret = call("/bin/systemctl reload %(name)s.service" % {'name': name}, shell=True)
         return ret==0
 
 
 def get_distro_handler():
-    if os.path.exists('/bin/systemctl') and os.path.realpath('/sbin/init') == "/lib/systemd/systemd":
+    if os.path.exists('/bin/systemctl') and ( os.path.realpath('/sbin/init') == "/usr/lib/systemd/systemd" or os.path.realpath('/sbin/init') == "/lib/systemd/systemd" ):
         return SystemctlHandler()
     elif os.path.exists('/usr/sbin/update-rc.d'):
         return DebianHandler()
@@ -302,8 +304,7 @@ def get_distro_handler():
 class Service(object):
     name = None
     clsnames = ['SrvMmcAgent',
-                'SrvInventoryserver', 'SrvLauncher', 'SrvPkgServer',
-                'SrvScheduler' ]
+                'SrvInventoryserver', 'SrvPkgServer']
 
     def __init__(self, handler, config):
         self.config = config
@@ -372,19 +373,11 @@ class SrvInventoryserver(Service):
         return self.config['inventory.service.enable']
 
 
-class SrvLauncher(Service):
-    name = 'pulse2-launchers'
-
-
 class SrvPkgServer(Service):
     name = 'pulse2-package-server'
 
     def is_enable(self):
         return self.config['package.service.enable']
-
-
-class SrvScheduler(Service):
-    name = 'pulse2-scheduler'
 
 
 def apply_conf_diff(origin, current, only_override=False):
@@ -454,8 +447,8 @@ class Pulse2ConfigFile(object):
     clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
-                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig', 
-                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsReportConfig', 'PluginsUpdateConfig']
+                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -481,7 +474,7 @@ class Pulse2ConfigFile(object):
         # Use current configuration
         if current:
             dir_path = mmcconfdir
-        # Use example configuration
+        # Use example configuration
         else:
             dir_path = examplesdir
 
@@ -639,10 +632,6 @@ class PluginsDyngroupConfig(Pulse2ConfigFile):
     path = 'plugins/dyngroup.ini'
 
 
-class PluginsReportConfig(Pulse2ConfigFile):
-    path = 'plugins/report.ini'
-
-
 class PluginsUpdateConfig(Pulse2ConfigFile):
     path = 'plugins/update.ini'
 
@@ -711,7 +700,7 @@ class SetupApp(object):
                 sys.exit(0)
 
         # Get db modules list
-        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'report', 'update']
+        self.dbmodules = ['dyngroup', 'imaging', 'inventory', 'msc', 'pulse2', 'backuppc', 'update']
 
         # Load conf files, if existing
         # self.confs will contain path->ConfigParser objects dictionary
@@ -1039,11 +1028,6 @@ class SetupApp(object):
         self.confs['plugins/dyngroup.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/dyngroup.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
-        # report db
-        self.confs['plugins/report.ini'].set('database', 'dbhost', self.config['dbhost'])
-        self.confs['plugins/report.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/report.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
-
         # update db
         self.confs['plugins/update.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
@@ -1150,7 +1134,6 @@ class SetupApp(object):
             self.confs['plugins/glpi.ini'].set('main', 'disable', 0)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 1)
             self.confs['plugins/base.ini'].set('computers', 'method', 'glpi')
-            self.confs['plugins/report.ini'].set('data', 'indicators', 'indicators.xml')
             if self.defaults['package.service.enable']:
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
                 pkg_conf.set("imaging_api", "glpi_mode", True)
@@ -1163,7 +1146,6 @@ class SetupApp(object):
             self.confs['plugins/glpi.ini'].set('main', 'disable', 1)
             self.confs['plugins/inventory.ini'].set('main', 'disable', 0)
             self.confs['plugins/base.ini'].set('computers', 'method', 'inventory')
-            self.confs['plugins/report.ini'].set('data', 'indicators', 'indicators_inventory.xml')
 
             if self.defaults['package.service.enable'] :
                 pkg_conf = self.confs["pulse2/package-server/package-server.ini"]
@@ -1234,7 +1216,34 @@ class SetupApp(object):
             if srv.is_enable:
                 srv.restart()
 
+    def is_service_started(self, service):
+
+        """
+            Check if a service is started.
+
+            :param service: This is the name of the service
+            :return: return True is the service exist and is started, False otherwise
+            :rtype: boolean
+        """
+        log.debug('Looking if service %s is started' % service )
+        try:
+            status = check_output(["systemctl", "is-active", service])
+            if status.strip('\n') == 'active':
+                log.debug('The service %s is started' % service)
+                return True
+        except CalledProcessError:
+                log.debug('The service %s does not exist' % service)
+                return False
+
+        log.debug('The service %s is not started' % service)
+        return False
+
     def post_restart(self):
+
+        self.is_service_started('mmc-agent')
+        self.is_service_started('pulse2-package-server')
+        time.sleep(10)
+
         # Register imaging server, if necessary
         if self.config['package.service.enable']:
             binpath = path_lookup('pulse2-package-server-register-imaging')

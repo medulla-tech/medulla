@@ -216,7 +216,7 @@ CREATE TABLE ImageOnImagingServer (
 );
 
 -- Partition
-CREATE TABLE Partition (
+CREATE TABLE Partitions (
   id INT NOT NULL AUTO_INCREMENT,
   name Text NOT NULL,
   filesystem Text NOT NULL,
@@ -346,7 +346,7 @@ ALTER TABLE PostInstallScriptOnImagingServer ADD FOREIGN KEY(fk_imaging_server) 
 ALTER TABLE ImageOnImagingServer ADD FOREIGN KEY(fk_image)          REFERENCES Image(id);
 ALTER TABLE ImageOnImagingServer ADD FOREIGN KEY(fk_imaging_server) REFERENCES ImagingServer(id);
 
-ALTER TABLE Partition ADD FOREIGN KEY(fk_image) REFERENCES Image(id);
+ALTER TABLE Partitions ADD FOREIGN KEY(fk_image) REFERENCES Image(id);
 
 ALTER TABLE Internationalization ADD FOREIGN KEY(fk_language) REFERENCES Language(id);
 
@@ -403,7 +403,7 @@ CREATE INDEX fk_post_install_script_on_imaging_server_imaging_server_idx        
 CREATE INDEX fk_image_on_imaging_server_image_idx           ON ImageOnImagingServer(fk_image);
 CREATE INDEX fk_image_on_imaging_server_imaging_server_idx  ON ImageOnImagingServer(fk_imaging_server);
 
-CREATE INDEX fk_partition_image_idx ON Partition(fk_image);
+CREATE INDEX fk_partition_image_idx ON Partitions(fk_image);
 
 CREATE INDEX fk_menu_item_menu_idx ON MenuItem(fk_menu);
 

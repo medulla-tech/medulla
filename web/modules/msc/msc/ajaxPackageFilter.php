@@ -27,6 +27,7 @@ require_once('modules/msc/includes/mirror_api.php');
 require_once('modules/msc/includes/machines.inc.php');
 require_once('modules/msc/includes/widgets.inc.php');
 require_once('modules/msc/includes/utilities.php');
+require_once("includes/xmlrpc.inc.php");
 
 $group = null;
 if (!empty($_GET['gid'])) {
@@ -39,12 +40,14 @@ if (!empty($_GET['gid'])) {
 }
 
 require_once("modules/msc/includes/package_api.php");
-if ($_GET['uuid']) {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
-} else {
-    $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
+if (! in_array("xmppmaster", $_SESSION["supportModList"])) {
+    if ($_GET['uuid']) {
+        $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on computer "%s"', 'msc'), $_GET['hostname']));
+    } else {
+        $label = new RenderedLabel(3, sprintf(_T('These packages can be installed on group "%s"', 'msc'), $group->getName()));
+    }
+    $label->display();
 }
-$label->display();
 echo "<br><br>";
 function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $associateinventory) {
     $return = 0;
@@ -66,6 +69,7 @@ function getConvergenceStatus($mountpoint, $pid, $group_convergence_status, $ass
     return $return;
 }
 
+
 function prettyConvergenceStatusDisplay($status) {
     switch ($status) {
         case 0:
@@ -84,7 +88,6 @@ if ($group != null) {
     $group_convergence_status = xmlrpc_getConvergenceStatus($group->id);
     $a_convergence_status = array();
 }
-
 $emptyAction = new EmptyActionItem();
 $convergenceAction = new ActionItem(_T("Convergence", "msc"), "convergence", "convergence", "msc", "base", "computers");
 $a_convergence_action = array();
@@ -114,6 +117,7 @@ if (!empty($_GET['uuid'])) {
 
 # TODO : decide what we want to do with groups : do we only get the first machine local packages
 list($count, $packages) = advGetAllPackages($filter, $start, $start + $maxperpage);
+
 $err = array();
 foreach ($packages as $c_package) {
     $package = to_package($c_package[0]);
@@ -166,13 +170,20 @@ $n->setTableHeaderPadding(1);
 $n->disableFirstColumnActionLink();
 $n->start = 0;
 $n->end = $count;
+$presencemachinexmpp = xmlrpc_getPresenceuuid( $_GET['uuid']);
+if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+    $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
+    $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+}
+else{
+    $n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
+    if ( $presencemachinexmpp )
+        $n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
+}
 
-$n->addActionItem(new ActionItem(_T("Advanced launch", "msc"), "start_adv_command", "advanced", "msc", "base", "computers"));
-$n->addActionItem(new ActionItem(_T("Direct launch", "msc"), "start_command", "start", "msc", "base", "computers"));
 if ($group != null) {
     $n->addActionItem($a_convergence_action);
 }
-//$n->addActionItem(new ActionPopupItem(_T("Details", "msc"), "package_detail", "detail", "msc", "base", "computers"));
 
 $n->display();
 ?>

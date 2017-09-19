@@ -6,3 +6,4 @@ etc/mmc/pulse2/atftpd/pcre.conf
 var/lib/pulse2/imaging
 usr/share/man/man1/pulse2-package-server.1
 usr/share/man/man1/pulse2-package-server-register-imaging.1
+usr/lib/systemd/system/pulse2-package-server.service

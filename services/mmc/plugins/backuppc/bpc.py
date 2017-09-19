@@ -1,3 +1,26 @@
+# -*- coding: utf-8; -*-
+#
+# (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
+# (c) 2007 Mandriva, http://www.mandriva.com/
+#
+# $Id$
+#
+# This file is part of Mandriva Management Console (MMC).
+#
+# MMC is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# MMC is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with MMC; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 import os.path
 import os
 from pyquery import PyQuery as pq
@@ -9,7 +32,7 @@ import time
 import subprocess
 from shutil import rmtree
 import fnmatch
-
+from random import randint
 # Twisted
 from twisted.python import threadable; threadable.init(1)
 from twisted.internet.threads import deferToThread
@@ -19,6 +42,9 @@ deferred = deferToThread.__get__ #Create an alias for deferred functions
 from pulse2.database.backuppc import BackuppcDatabase
 # BackupPC Config
 from mmc.plugins.backuppc.config import BackuppcConfig
+
+# Machine info
+from mmc.plugins.glpi.database import Glpi
 
 logger = logging.getLogger()
 
@@ -431,10 +457,7 @@ def restore_files_to_host(host,backup_num,share_name,files,hostDest='',shareDest
         params['hostDest'] = hostDest.encode('utf8','ignore')
     else:
         params['hostDest'] = host.lower()
-    if shareDest:
-        params['shareDest'] = shareDest.encode('utf8','ignore')
-    else :
-        params['shareDest'] = share_name
+    params['shareDest'] = shareDest.encode('utf8','ignore')
     params['pathHdr'] = pathHdr.encode('utf8','ignore')
     # Files list
     params['fcbMax']=len(files)+1
@@ -593,7 +616,19 @@ def set_host_period_profile(uuid,newprofile):
 def host_exists(uuid):
     return BackuppcDatabase().host_exists(uuid)
 
+def get_host_rsync_path(uuid):
+    machine_info = Glpi().getLastMachineInventoryFull(uuid)
+    machine = dict((key, value) for (key, value) in machine_info)
+    if 'Windows'.lower() in machine['os'].lower():
+        if '64' in machine['os_arch']:
+            return 'C:\\Windows\\SysWOW64\\rsync.exe'
+        else:
+            return 'C:\\Windows\\System32\\rsync.exe'
+    else:
+        return '/usr/bin/rsync'
+
 def set_backup_for_host(uuid):
+    rsync_path = get_host_rsync_path(uuid)
     server_url = getBackupServerByUUID(uuid)
     if not server_url: return
     config = get_host_config('',server_url)['general_config']
@@ -617,22 +652,28 @@ def set_backup_for_host(uuid):
     # Setting nmblookup cmds and Rsync cmds in conf
     # TODO : read NmbLookupCmd from ini file
     config = {}
+    port = randint(49152, 65535)
+    config['RsyncClientPath'] = "%s"%rsync_path;
+    config['RsyncClientCmd'] =     "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s $rsyncPath $argList+"%port;
+    config['RsyncClientRestoreCmd'] = "$sshPath -q -x -o StrictHostKeyChecking=no -l pulse -p %s localhost $rsyncPath $argList+"%port;
+    config['DumpPreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['DumpPostUserCmd'] = "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['RestorePreUserCmd'] = "/usr/sbin/pulse2-connect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['RestorePostUserCmd'] = "/usr/sbin/pulse2-disconnect-machine-backuppc -m %s -p %s"%(uuid, port);
+    config['ClientNameAlias'] = "localhost";
     config['NmbLookupCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver -A $host'
     config['NmbLookupFindHostCmd'] = '/usr/bin/python /usr/bin/pulse2-uuid-resolver $host'
     config['XferMethod'] = 'rsync'
-    config['RsyncClientCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
-    config['RsyncClientRestoreCmd'] = '$sshPath -q -x -o StrictHostKeyChecking=no -l root $hostIP $rsyncPath $argList+'
     config['RsyncRestoreArgs'] = "--numeric-ids --perms --owner --group -D --links --hard-links --times --block-size=2048 --relative --ignore-times --recursive --super".split(' ')
     config['PingCmd'] = '/bin/true'
+    print "***",config,"****"
     set_host_config(uuid,config)
     # Adding host to the DB
     try:
-        BackuppcDatabase().add_host(uuid)
+        BackuppcDatabase().add_host(uuid, port)
     except:
         logger.error("Unable to add host to database")
         return {'err':23,'errtext':'Unable to add host to database'}
-
-
 
 def unset_backup_for_host(uuid):
     if not host_exists(uuid):
@@ -667,7 +708,6 @@ def unset_backup_for_host(uuid):
     except:
         logger.error("Unable to remove host from database")
         return {'err':23,'errtext':'Unable to remove host from database'}
-
 
 # ==========================================================================
 # SERVER, HOST INFO AND BACKUP LOGS

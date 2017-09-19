@@ -111,6 +111,11 @@ class windowsUpdateHandler(object):
             result_verbose['os_class'] = 2
         elif 'windows-7' in self.platform:
             result_verbose['os_class'] = 3
+        elif 'windows-8' in self.platform:
+            result_verbose['os_class'] = 4
+        elif 'windows-10' in self.platform:
+            result_verbose['os_class'] = 5
+
     
         # Searching not available and not installed updates
         # Search criterions : http://msdn.microsoft.com/en-us/library/windows/desktop/aa386526(v=vs.85).aspx

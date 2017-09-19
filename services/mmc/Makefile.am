@@ -20,13 +20,20 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
+
+xmpp_baseplugindir = $(localstatedir)/lib/pulse2/xmpp_baseplugin
+
+
 pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
-	plugins.glpi plugins.glpi.querymanager plugins.glpi.report plugins.imaging \
+	plugins.glpi plugins.glpi.querymanager plugins.glpi.report plugins.guacamole plugins.imaging \
 	plugins.inventory plugins.inventory.report plugins.inventory.provisioning_plugins \
 	plugins.inventory.provisioning_plugins.network_to_entity \
 	plugins.inventory.querymanager plugins.msc plugins.msc.client \
 	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.pulse2 \
-	plugins.update plugins.update.report plugins.support
+	plugins.update plugins.update.report plugins.support \
+	plugins.xmppmaster plugins.xmppmaster.master plugins.xmppmaster.master.lib \
+	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
+	plugins.xmppmaster.master.script.perl
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))

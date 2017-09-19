@@ -1,7 +1,7 @@
 Installation Instructions
 *************************
 
-Copyright (C) 2011 Mandriva, http://www.mandriva.com
+Copyright (C) 2011 Siveo, http://www.siveo.net
 
    Copying and distribution of this file, with or without modification,
 are permitted in any medium without royalty provided the copyright
@@ -9,7 +9,7 @@ notice and this notice are preserved.  This file is offered as-is,
 without warranty of any kind.
 
 Pre-requisites
-==============
+============
 
 The following tools are needed in order for Pulse2 to install and run
 properly:
