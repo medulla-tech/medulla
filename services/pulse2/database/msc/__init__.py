@@ -1671,6 +1671,16 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda c:c.id, ret)
 
+    def getstatbycmd(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(func.count(self.commands_on_host.c.current_state), CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
+        nbmachinegroupe = int(ret)
+        ret = session.query(func.count(self.commands_on_host.c.current_state),
+                            CommandsOnHost).filter(and_(self.commands_on_host.c.fk_commands == cmd_id,self.commands_on_host.c.current_state == "done")).scalar()
+        nbdeploydone = int(ret)
+        session.close()
+        return { "nbmachine" : nbmachinegroupe, "nbdeploydone" : nbdeploydone  }
+
     def getFirstCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
         ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).first()
