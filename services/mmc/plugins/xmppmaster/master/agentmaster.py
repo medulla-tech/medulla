@@ -293,8 +293,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
                 listobjsupp.append(uuiddeploy)
         for objsupp in listobjsupp:
-            del self.machineWakeOnLan[uuiddeploy]
-
+            try:
+                del self.machineWakeOnLan[uuiddeploy]
+            except Exception:
+                pass
         for deploy in resultdeploymachine:
             # creation deploiement
             UUID = str(deploy.Target.target_uuid)
@@ -350,7 +352,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
                                         priority = -1 ,
                                         who = uuidmachine)
-
+        listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
@@ -368,9 +370,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     GUID = deployobject['GUID'])
             except Exception:
                 listobjsupp.append(deployuuid)
-
         for objsupp in listobjsupp:
-            del self.machineDeploy[objsupp]
+            try:
+                del self.machineDeploy[objsupp]
+            except Exception:
+                pass
+
 
     def start(self, event):
         self.get_roster()
