@@ -12,6 +12,7 @@ var searchData=
   ['cleanup',['cleanUp',['../classmmc_1_1agent_1_1MMCApp.html#aaee127abf6a3b6433c087733bcbb948e',1,'mmc::agent::MMCApp']]],
   ['clear',['clear',['../classmmc_1_1support_1_1cache_1_1BaseCache.html#ad149341d7d849ff957baee565b19c123',1,'mmc::support::cache::BaseCache']]],
   ['commit',['commit',['../classmmc_1_1core_1_1audit_1_1record_1_1AuditRecordDB.html#a4a469816e51870a4c4ed918152d7f940',1,'mmc::core::audit::record::AuditRecordDB']]],
+  ['computersonlinepanel',['ComputersOnlinePanel',['../classmmc_1_1plugins_1_1dashboard_1_1panel_1_1ComputersOnlinePanel.html',1,'mmc::plugins::dashboard::panel']]],
   ['configexception',['ConfigException',['../classmmc_1_1support_1_1config_1_1ConfigException.html',1,'mmc::support::config']]],
   ['configurationoption',['ConfigurationOption',['../classConfigurationOption.html',1,'']]],
   ['configurationpage',['ConfigurationPage',['../classConfigurationPage.html',1,'']]],

@@ -2,6 +2,7 @@ var searchData=
 [
   ['cacheableobject',['CacheableObject',['../classmmc_1_1support_1_1cache_1_1CacheableObject.html',1,'mmc::support::cache']]],
   ['checkboxtpl',['CheckboxTpl',['../classCheckboxTpl.html',1,'']]],
+  ['computersonlinepanel',['ComputersOnlinePanel',['../classmmc_1_1plugins_1_1dashboard_1_1panel_1_1ComputersOnlinePanel.html',1,'mmc::plugins::dashboard::panel']]],
   ['configexception',['ConfigException',['../classmmc_1_1support_1_1config_1_1ConfigException.html',1,'mmc::support::config']]],
   ['configurationoption',['ConfigurationOption',['../classConfigurationOption.html',1,'']]],
   ['configurationpage',['ConfigurationPage',['../classConfigurationPage.html',1,'']]],

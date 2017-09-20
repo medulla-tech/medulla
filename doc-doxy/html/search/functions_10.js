@@ -13,6 +13,7 @@ var searchData=
   ['send_5fcookie_5fauth',['send_cookie_auth',['../classmmc_1_1client_1_1sync_1_1MMCBaseTransport.html#a90ec9505d0ff7ccfcc9ffbdb200a3339',1,'mmc::client::sync::MMCBaseTransport']]],
   ['send_5fhost',['send_host',['../classmmc_1_1client_1_1sync_1_1MMCBaseTransport.html#ad297e4276e41fabc698d61aed57fc762',1,'mmc::client::sync::MMCBaseTransport']]],
   ['send_5frobust',['send_robust',['../classmmc_1_1core_1_1signals_1_1dispatcher_1_1Signal.html#a5f8dc0aefd0b5cd80589bbe270fe056e',1,'mmc::core::signals::dispatcher::Signal']]],
+  ['serialize',['serialize',['../classmmc_1_1plugins_1_1dashboard_1_1panel_1_1ComputersOnlinePanel.html#aad2fd8b7bbd35cf90e442b27a20e78a2',1,'mmc.plugins.dashboard.panel.ComputersOnlinePanel.serialize()'],['../classmmc_1_1plugins_1_1dashboard_1_1panel_1_1BackupPanel.html#aad2fd8b7bbd35cf90e442b27a20e78a2',1,'mmc.plugins.dashboard.panel.BackupPanel.serialize()']]],
   ['set',['set',['../classmmc_1_1support_1_1cache_1_1BaseCache.html#ad1f4cb7832676319eaee6b40115ee40b',1,'mmc::support::cache::BaseCache']]],
   ['set_5fmany',['set_many',['../classmmc_1_1support_1_1cache_1_1BaseCache.html#a09cf60984f2699f1f6eeedd9de13f189',1,'mmc::support::cache::BaseCache']]],
   ['setapiversion',['setAPIVersion',['../classModule.html#a1a085fd9b4ba5c937654fdbf931fb28b',1,'Module']]],
