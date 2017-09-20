@@ -82,6 +82,10 @@ function xmlrpc_loginbycommand($commandid){
 function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
+//jfk
+function xmlrpc_getstatdeployfromcommandidstartdate($command_id, $date) {
+    return xmlCall("xmppmaster.getstatdeployfromcommandidstartdate", array($command_id, $date));
+}
 
 function xmlrpc_set_simple_log($textinfo, $sessionxmppmessage, $typelog, $priority, $who ){
     return xmlCall("xmppmaster.set_simple_log", array($textinfo, $sessionxmppmessage, $typelog, $priority, $who ));
