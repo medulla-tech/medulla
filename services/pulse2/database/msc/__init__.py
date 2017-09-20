@@ -1571,6 +1571,13 @@ class MscDatabase(DatabaseHelper):
         return [ret, cmds]
 
     @DatabaseHelper._session
+    def isCommandsCconvergenceType(self, session, ctx, cmd_id):
+        if cmd_id == None or cmd_id == '':
+            return False
+        result = session.query(Commands).filter_by(id=cmd_id).one()
+        return result.type
+
+    @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == None or cmd_id == '':
             return False
@@ -1684,6 +1691,12 @@ class MscDatabase(DatabaseHelper):
     def getFirstCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
         ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).first()
+        session.close()
+        return ret
+
+    def getLastCommandsOncmd_id(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
         return ret
 

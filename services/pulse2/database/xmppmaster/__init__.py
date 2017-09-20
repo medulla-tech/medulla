@@ -521,6 +521,26 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['objectdeploy'] = arraylist
         return ret
 
+
+    @DatabaseHelper._sessionm
+    def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
+        machinedeploy = session.query(Deploy).filter(and_( Deploy.command == command_id,
+                                                           Deploy.startcmd == datestart
+                                                     )
+                                              )
+        totalmachinedeploy =  self.get_count(machinedeploy)
+        #count success deploy
+        machinesuccessdeploy = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END SUCESS')))
+        #count error deploy
+        machineerrordeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END ERROR')))
+        #count process deploy
+        machineprocessdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'STARDEPLOY')))
+        return { 'totalmachinedeploy' : totalmachinedeploy,
+                 'machinesuccessdeploy' : machinesuccessdeploy,
+                 'machineerrordeploy' : machineerrordeploy,
+                 'machineprocessdeploy' : machineprocessdeploy }
+
+
     @DatabaseHelper._sessionm
     def getdeployfromcommandid(self, session, command_id, uuid):
         if (uuid == "UUID_NONE"):

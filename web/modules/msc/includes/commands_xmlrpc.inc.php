@@ -75,6 +75,10 @@ function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
 }
 
+function is_commands_convergence_type($cmd_id) {
+    return xmlCall('msc.is_commands_convergence_type', array($cmd_id));
+}
+
 function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy, $cmd_type));
 }
@@ -237,6 +241,10 @@ function xmlrpc_getstatbycmd($cmd_id){
 
 function get_first_commands_on_cmd_id($cmd_id) {
     return xmlCall('msc.get_first_commands_on_cmd_id', array($cmd_id));
+}
+
+function get_last_commands_on_cmd_id($cmd_id) {
+    return xmlCall('msc.get_last_commands_on_cmd_id', array($cmd_id));
 }
 
 function get_def_package_label($label, $version) {

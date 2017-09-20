@@ -172,6 +172,9 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getstatdeployfromcommandidstartdate(command_id, datestart) :
+    return XmppMasterDatabase().getstatdeployfromcommandidstartdate(command_id, datestart)
+
 def get_machine_stop_deploy(cmdid, uuid) :
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
     msg_stop_deploy= {
