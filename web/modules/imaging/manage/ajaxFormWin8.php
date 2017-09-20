@@ -255,14 +255,12 @@ var template = [
 '<TimeZone><? echo $strin;?>TimeZone<? echo $strou;?></TimeZone>',
 '<RegisteredOwner><? echo $strin;?>TimeZone<? echo $strou;?></RegisteredOwner>',
 '<RegisteredOrganization><? echo $strin;?>OrginazationName<? echo $strou;?></RegisteredOrganization>',
-'<CopyProfile><? echo $strin;?>CopyProfile<? echo $strou;?></CopyProfile>',
 '</component>',
 '<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="x86" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
 '<ComputerName><? echo $strin; ?>ComputerName<? echo $strou; ?></ComputerName>',
 '<TimeZone><? echo $strin;?>TimeZone<? echo $strou;?></TimeZone>',
 '<RegisteredOwner><? echo $strin;?>TimeZone<? echo $strou;?></RegisteredOwner>',
 '<RegisteredOrganization><? echo $strin;?>OrginazationName<? echo $strou;?></RegisteredOrganization>',
-'<CopyProfile><? echo $strin;?>CopyProfile<? echo $strou;?></CopyProfile>',
 '</component>',
 '</settings>',
 '<settings pass="oobeSystem">',
@@ -765,14 +763,6 @@ $f->push(new Table());
     $f->add(
         new TrFormElement(_T('Customer Experience Improvement Program (CEIP)','imaging').":", $CEIPEnabled),
             array("value" => (isset($parameters)) ? $parameters['CEIPEnabled'] : "0","required" => True)
-    );
-    //_____________
-    $CopyProfile = new SelectItemtitle("CopyProfile", $InfoBule_CopyProfile);
-    $CopyProfile->setElements($yes_no);
-    $CopyProfile->setElementsVal($truefalse);
-    $f->add(
-        new TrFormElement(_T('Copy Profile','imaging').":", $CopyProfile),
-        array("value" => (isset($parameters)) ? $parameters['CopyProfile'] : "true","required" => True)
     );
     //_____________
     $BGC = new SelectItemtitle("BGC",$InfoBule_SystemDefaultBackgroundColor);
