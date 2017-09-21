@@ -111,6 +111,10 @@ function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
 }
 
+function xmlrpc_runXmppReverseSSHforGuacamole($uuid, $cux_id, $cux_type){
+    return xmlCall("xmppmaster.CallXmppPlugin", array("guacamole", array("uuid"=>$uuid, "cux_id"=>$cux_id, "cux_type"=>$cux_type)));
+}
+
 function xmlrpc_getdeploybymachinerecent($uuidinventory, $state, $duree, $min, $max, $filt) {
     return xmlCall("xmppmaster.getdeploybymachinerecent", array($uuidinventory, $state, $duree, $min , $max, $filt));
 }
