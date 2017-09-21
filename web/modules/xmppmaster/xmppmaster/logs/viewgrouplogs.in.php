@@ -86,7 +86,7 @@ if ($timestampnow > ($end_date)){
 $terminate = 0;
 $deployinprogress = 0;
 echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
-if ($convergenceonpackage ==0){
+if ($convergenceonpackage !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
 }
 echo "<br>";
@@ -148,16 +148,19 @@ else{
         $f->display();
     }
 
-    $evolution  = round(($nb_machine_deployer_from_msc / $total_machine_from_msc)*100,2);
-    $Success    = round(($machine_success_from_deploy / $total_machine_from_msc)*100,2);
-    $error      = round(($machine_error_from_deploy / $total_machine_from_msc)*100,2);
-    $process    = round(($machine_process_from_deploy / $total_machine_from_msc)*100,2);
+    $evolution  = round(($nb_machine_deployer_from_msc / $total_machine_from_msc) * 100,2);
+    $Success    = round(($machine_success_from_deploy / $total_machine_from_msc) * 100,2);
+    $error      = round(($machine_error_from_deploy / $total_machine_from_msc) * 100,2);
+    $process    = round(($machine_process_from_deploy / $total_machine_from_msc) * 100,2);
     
-    
+    //$nb_machine_deployer_from_msc
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
-echo '<div class="bars">';
-    echo'<br><progress class="mscdeloy" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_from_msc.'" form="form-id"></progress>
-    <span style="margin-left:10px">deployemt '.$evolution.'%</span>';
+    echo '<div class="bars">';
+        echo '<span style="width: 200px;">';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'."2".'" form="form-id"></progress>';
+        echo '</span>';
+    echo'<span style="margin-left:10px">deployemt '.$evolution.'%</span>';
+    
     $wol = ($total_machine_from_msc-$total_machine_from_deploy);
     echo "<br><br>Number of machines in the deployment group. : ".$total_machine_from_msc;
     echo "<br>Number of machines in the group : ".$countmachine;
@@ -235,9 +238,7 @@ echo "<br>";
             echo '<br>';
       }
 }
-// else{
 
-   // if ($terminate != 0){
         echo'
             <script type="text/javascript">
             console.log("hello");
@@ -247,8 +248,6 @@ echo "<br>";
                 }
             </script>
             ';
-    //}
-//
 echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
 $group->prettyDisplay();
 
@@ -260,32 +259,6 @@ $group->prettyDisplay();
         if ($nbsuccess > $countmachine){
                 $nbsuccess = $countmachine;
         }
-//         echo ' <div>';
-// //         echo'<div style="float:left;" id="holder"></div>';
-//         echo '<div style="float:left;">';
-// //                 echo "<br>";
-// //                 echo "Number of machines in the deployment group. : ".$stat['nbmachine'];
-// //                 echo "<br>";
-// //                 echo "Number of machines in the group. : ".$countmachine;
-// //                 echo "<br>";
-// //                 echo "Number of machines being deployed : ". $info['len'];
-// //                 echo "<br>";
-// //                 echo "Number of deployments that succeeded : ". $nbsuccess;
-// //                 echo "<br>";
-// //                 $sucessdeploy = $nbsuccess / $countmachine * 100;
-// //                 $machinedeploy = $info['len'] / $countmachine;
-// //                 $machinewokonlan = (1 - $machinedeploy) * 100;
-// //                 $machinedeploy = $machinedeploy * 100;
-// //                 echo " Succes : ".round($sucessdeploy, 2)."%";
-// //                 echo "<br>";
-// //                 echo " Machine deploy in group : ".round($machinedeploy, 2)."%";
-// //                 echo "<br>";
-// //                 echo " Machine where we tried an WOL: ".round($machinewokonlan, 2)."%";
-// //                 echo "<br>";
-// //                 $nbdeploy = $info['len'];
-// //                 $nberror = $nbdeploy - $nbsuccess;
-//             echo "</div>";
-//          echo ' </div>';
     }
 
 if ($info['len'] != 0){
@@ -324,13 +297,6 @@ if ($info['len'] != 0){
     $machineerror     = count ( $uuiderror );
     $machineinprocess = count ( $uuidprocess );
     $machinewol       = $stat['nbmachine']-$stat['nbdeploydone'];
-
-/*
-    $total_machine_from_deploy     = $resultfromdeploy['totalmachinedeploy'];
-$machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
-$machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
-$machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
-$machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy);*/
 
         echo '
         <script>
@@ -422,77 +388,29 @@ li.remove_machine a {
         color: #FFF;
 }
 
-
-progress {
-  /*width: 400px;*/
-  /*width: 50%;*/
-  height: 9px;
-  margin:-5px;
-  border-style: solid;   /* Style de la bordure  */
-  border-width: 0px;   /* Epaisseur de la bordure  */
-  padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
-  display: inline;
+progress{
+    border-color: #ffffff;
+    background-color: #009ea9; 
+}
+progress.mscdeloy{
+    width: 390px; 
+    background-color: #00f3f3; 
 }
 
 progress::-webkit-progress-bar {
-    background: #f3f3f3 ;
-}
-progress::-webkit-progress-value {
-     Background: #ef9ea9;
+    background: #00f3f3 ;
 }
 
-progress.mscdeloy::-moz-progress-bar {
+progress::-webkit-progress-value {
+     Background: #009ea9;
+}
+progress::-moz-progress-bar {
   background-color:blue;
 }
 
-progress.deloysuccess::-moz-progress-bar {
-  background-color:#2EFE2E;
-}
-progress.deloyerror::-moz-progress-bar {
-  background-color:#FE2E64;
-}
-progress.deloyinprogress::-moz-progress-bar {
-  background-color:orange;
-}
-
-progress.deloyinwol::-moz-progress-bar {
-  background-color:Grey;
-}
-
-
-
-progress.deloysuccess{
-border-color: #2EFE2E;   /* Couleur de la bordure  */
-width: 90%;
-}
-
-progress.mscdeloy{
-    border-color: #0000dd;   /* Couleur de la bordure  */
-    width: 250px;
-}
-progress.deloyerror{
-    border-color: #FFFFFF;   /* Couleur de la bordure  */
-    width: 90%;
-}
-
-progress.deloyinwol{
-    border-color: #0000dd;   /* Couleur de la bordure  */
-    width: 90%;
-}
-
-
-progress.deloysuccess{
-    border-color: #dd00dd;   /* Couleur de la bordure  */
-    background-color: #eeffff;   /* Couleur de fond */
-}
-.barprogress{
-    display: inline;
-}
 
 .bars{
-    width: 400px;float:left;
-/*     border-width:1px;
-    border-style:dotted;
-    border-color:black; */
+    width: 400px;
+    float:left;
 }
 </style>
