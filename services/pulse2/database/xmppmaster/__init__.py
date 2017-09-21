@@ -1834,3 +1834,23 @@ class XmppMasterDatabase(DatabaseHelper):
         if ret[0] == 0 :
             return False
         return True
+
+    @DatabaseHelper._sessionm
+    def getRelayServerForMachineUuid(self, session, uuid):
+        relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
+        session.commit()
+        session.flush()
+        try:
+            result = {
+                        "uuid" : uuid,
+                        "jid" : relayserver.groupdeploy
+                        }
+            for i in result:
+                if result[i] == None:
+                    result[i] = ""
+        except Exception:
+            result = {
+                        "uuid" : uuid,
+                        "jid" : ""
+                    }
+        return result
