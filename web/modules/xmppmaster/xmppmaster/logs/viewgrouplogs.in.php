@@ -153,11 +153,11 @@ else{
     $error      = round(($machine_error_from_deploy / $total_machine_from_msc) * 100,2);
     $process    = round(($machine_process_from_deploy / $total_machine_from_msc) * 100,2);
     
-    //$nb_machine_deployer_from_msc
+    //
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
-            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'."2".'" form="form-id"></progress>';
+            echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_from_msc.'" form="form-id"></progress>';
         echo '</span>';
     echo'<span style="margin-left:10px">deployemt '.$evolution.'%</span>';
     
