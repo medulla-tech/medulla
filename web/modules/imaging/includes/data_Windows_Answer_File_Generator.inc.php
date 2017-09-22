@@ -302,7 +302,9 @@ function update() {
         var list_id_masque=[
             "Format",
             "DriveLetter",
-            "Label"
+            "Label",
+            "InstallDisk",
+            "PartitionOrder"
         ];
 
         jQuery.each(list_id_masque, function( index,value) {
