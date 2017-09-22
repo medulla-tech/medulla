@@ -1621,7 +1621,7 @@ class MscDatabase(DatabaseHelper):
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
 
-   def getCommandsByGroup1(self, gid):
+    def getCommandsByGroup1(self, gid):
         session = create_session()
         ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
         ret = ret.order_by(desc(self.commands.c.start_date)).all()
