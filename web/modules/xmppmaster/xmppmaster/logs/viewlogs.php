@@ -31,11 +31,9 @@ extract($_GET);
 
 if ( isset ($_POST['bStop'])) {
     $_MYREQUEST = array_merge($_GET, $_POST);
-    //xmlrpc_stopdeployfromcommandid($cmd_id, $uuid);
-
-
     if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){
         $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid']);
+        xmlrpc_updategroup($_MYREQUEST['gid']);
     }
     else{
         $info = xmlrpc_get_machine_stop_deploy( $_MYREQUEST['cmd_id'], $_MYREQUEST['uuid']);

@@ -47,6 +47,7 @@ $nb_deployer_machine_yet_from_msc = $total_machine_from_msc - $total_machine_fro
 
 $convergenceonpackage = is_commands_convergence_type($cmd_id);
 $command_detail = command_detail($cmd_id);
+
 $lastcommandid = get_last_commands_on_cmd_id($cmd_id);
 $start_date = mktime(   $lastcommandid['start_date'][3],
                         $lastcommandid['start_date'][4],

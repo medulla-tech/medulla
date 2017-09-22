@@ -50,7 +50,7 @@ $p->display();
                                 $info['objectdeploy'][0]['sessionid'], "deploy",
                                 "-1",
                                 "pulse_mmc" );
-        xmlrpc_updatedeploystate($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
+        xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
     }
         $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);

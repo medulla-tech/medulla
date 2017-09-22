@@ -95,6 +95,10 @@ function xmlrpc_updatedeploystate($sessionid, $state){
     return xmlCall("xmppmaster.updatedeploystate", array($sessionid, $state ));
 }
 
+function xmlrpc_updatedeploy_states_start_and_process($sessionid, $state){
+    return xmlCall("xmppmaster.updatedeploystate1", array($sessionid, $state ));
+}
+
 function xmlrpc_get_machine_stop_deploy($cmdid, $uuid) {
     return xmlCall("xmppmaster.get_machine_stop_deploy", array($cmdid, $uuid));
 }
