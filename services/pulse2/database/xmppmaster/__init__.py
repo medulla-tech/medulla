@@ -524,21 +524,31 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def getstatdeployfromcommandidstartdate(self, session, command_id, datestart):
-        machinedeploy = session.query(Deploy).filter(and_( Deploy.command == command_id,
-                                                           Deploy.startcmd == datestart
-                                                     )
-                                              )
-        totalmachinedeploy =  self.get_count(machinedeploy)
-        #count success deploy
-        machinesuccessdeploy = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END SUCESS')))
-        #count error deploy
-        machineerrordeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END ERROR')))
-        #count process deploy
-        machineprocessdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'STARDEPLOY')))
-        return { 'totalmachinedeploy' : totalmachinedeploy,
-                 'machinesuccessdeploy' : machinesuccessdeploy,
-                 'machineerrordeploy' : machineerrordeploy,
-                 'machineprocessdeploy' : machineprocessdeploy }
+        try:
+            machinedeploy = session.query(Deploy).filter(and_( Deploy.command == command_id,
+                                                            Deploy.startcmd == datestart
+                                                        )
+                                                )
+            totalmachinedeploy =  self.get_count(machinedeploy)
+            #count success deploy
+            machinesuccessdeploy = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END SUCESS')))
+            #count error deploy
+            machineerrordeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'END ERROR')))
+            #count process deploy
+            machineprocessdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'STARDEPLOY')))
+            #count abort deploy
+            machineabortdeploy   = self.get_count(machinedeploy.filter(and_(Deploy.state == 'DEPLOYMENT ABORT')))
+            return { 'totalmachinedeploy' : totalmachinedeploy,
+                    'machinesuccessdeploy' : machinesuccessdeploy,
+                    'machineerrordeploy' : machineerrordeploy,
+                    'machineprocessdeploy' : machineprocessdeploy,
+                    'machineabortdeploy' : machineabortdeploy }
+        except Exception:
+            return { 'totalmachinedeploy' : 0,
+                    'machinesuccessdeploy' : 0,
+                    'machineerrordeploy' : 0,
+                    'machineprocessdeploy' : 0,
+                    'machineabortdeploy' : 0 }
 
 
     @DatabaseHelper._sessionm
@@ -648,6 +658,21 @@ class XmppMasterDatabase(DatabaseHelper):
         session.commit()
         session.flush()
         return [x for x in result]
+
+    @DatabaseHelper._sessionm
+    def updatedeploystate1(self, session, sessionid, state):
+        try:
+            session.query(Deploy).filter(and_(Deploy.sessionid == sessionid,
+                                              Deploy.state != "END SUCESS",
+                                              Deploy.state != "END ERROR")
+                                  ).\
+                    update({Deploy.state: state})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            return -1
 
     @DatabaseHelper._sessionm
     def updatedeploystate(self, session, sessionid, state):
@@ -1109,6 +1134,7 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
             ret['tabdeploy']['title'].append(linedeploy[0].title)
         return ret
+
 
     @DatabaseHelper._sessionm
     def getdeploybyuser(self, session, login = None, numrow = None, offset=None):

@@ -103,6 +103,10 @@ function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
     return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
 }
 
+function xmlrpc_updategroup($grp_id){
+    return xmlCall('msc.updategroup', array($grp_id));
+}
+
 function get_targets_for_coh($coh_ids) {
     return xmlCall('msc.get_targets_for_coh', array($coh_ids));
 }

@@ -327,7 +327,6 @@ class MscDatabase(DatabaseHelper):
     def get_count(self,q):
         return q.with_entities(func.count()).scalar()
 
-
     def deployxmppscheduler(self, login, min , max, filt):
         datenow = datetime.datetime.now()
         sqlselect="""
@@ -420,8 +419,8 @@ class MscDatabase(DatabaseHelper):
             AND
             """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
-        result={}
-        resulta = self.db.execute(reqsql)
+        result={}       
+        resulta = self.db.execute(reqsql)        
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
@@ -467,6 +466,25 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['groupid'] = groupid
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
+    
+    def updategroup(self, group):
+        session = create_session()
+        join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
+        q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
+        q = q.select_from(join)
+        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute', 
+                            self.commands_on_host_phase.c.state == 'ready',
+                            self.target.c.id_group == group 
+                            )).all()
+        for x in q:
+            print x.CommandsOnHost.id
+            session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).delete()
+            session.flush()
+            session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).delete()
+            session.flush()
+        session.flush()
+        session.close()
+        return True
 
     def deployxmpp(self):
         """ 

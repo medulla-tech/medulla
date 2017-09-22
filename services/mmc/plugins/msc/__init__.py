@@ -626,6 +626,9 @@ class RpcProxy(RpcProxyI):
             ret.append(c)
         return xmlrpcCleanup((size, ret))
 
+    def updategroup(self, grp_id):
+        return MscDatabase().updategroup(grp_id)
+
     def get_all_commandsonhost_currentstate(self):
         ctx = self.currentContext
         return xmlrpcCleanup(MscDatabase().getAllCommandsonhostCurrentstate(ctx))
