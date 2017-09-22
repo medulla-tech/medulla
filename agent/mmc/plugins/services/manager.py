@@ -95,7 +95,7 @@ class ServiceManager(object):
             if not self.is_plugin_service(unit['id']) and \
                unit['id'].endswith(".service") and \
                unit['unit_file_state'] != "static" and \
-               unit['can_start'] != "False":
+               unit['can_start'] != False :
                 if filter and any(v for k, v in unit.items() if filter in str(v)):
                     list.append(unit)
                 if not filter:
