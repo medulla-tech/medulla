@@ -123,6 +123,10 @@ function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $f
     return xmlCall("xmppmaster.getdeploybymachinegrprecent", array($gid, $state, $duree, $min , $max, $filt));
 }
 
+function xmlrpc_delDeploybygroup( $numgrp) {
+    return xmlCall("xmppmaster.delDeploybygroup", array($numgrp));
+}
+
 function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
 }
