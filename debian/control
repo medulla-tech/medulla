@@ -224,7 +224,7 @@ Description: Pulse 2 / MBS BackupPC plugin for MMC agent
 Package: python-mmc-update
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version})
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), pulse-update-manager
 Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
