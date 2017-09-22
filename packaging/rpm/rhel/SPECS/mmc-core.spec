@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                0
 %define git                    git20130205
-%define version                3.9.92
+%define version                3.9.93
 
 Summary:	Management Console
 Name:		mmc-core
