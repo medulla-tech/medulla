@@ -329,6 +329,7 @@ class MscDatabase(DatabaseHelper):
 
 
     def deployxmppscheduler(self, login, min , max, filt):
+        datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
                 COUNT(*) as nbmachine,
@@ -359,7 +360,9 @@ class MscDatabase(DatabaseHelper):
                     INNER JOIN
                 phase ON commands_on_host.id = phase.fk_commands_on_host
             WHERE
-            """
+            commands.start_date > '%s'
+            AND
+            """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         sqlfilter = """
             phase.name = 'execute'
                 AND
@@ -387,7 +390,7 @@ class MscDatabase(DatabaseHelper):
                 LIMIT %d 
                 OFFSET %d"""%(int(max)-int(min), int(min))
             reqsql = reqsql + sqllimit
-            
+
         sqlgroupby = """
             GROUP BY titledeploy"""
 
@@ -413,7 +416,9 @@ class MscDatabase(DatabaseHelper):
                         INNER JOIN
                     phase ON commands_on_host.id = phase.fk_commands_on_host
                 WHERE
-                    """
+                    commands.start_date > '%s'
+            AND
+            """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
         result={}
         resulta = self.db.execute(reqsql)
@@ -1615,6 +1620,14 @@ class MscDatabase(DatabaseHelper):
 
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
+
+   def getCommandsByGroup1(self, gid):
+        session = create_session()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
+        ret = ret.order_by(desc(self.commands.c.start_date)).all()
+        session.close()
+        arraycommands_id = map(lambda c:c.id, ret)
+        return arraycommands_id
 
     def getCommandsByGroup(self, gid):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()

@@ -2,7 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
- *
+ * (c) 2017 siveo, http://www.siveo.net
  * $Id$
  *
  * This file is part of Mandriva Management Console (MMC).
@@ -19,15 +19,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ * File delete_group.php
  */
 require_once("modules/dyngroup/includes/includes.php");
+
+if (in_array("xmppmaster", $_SESSION["modulesList"])) {
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
+    require_once('modules/msc/includes/commands_xmlrpc.inc.php');
+}
 if (in_array("imaging", $_SESSION["modulesList"])) {
-            // Get Current Location
-            require_once('modules/imaging/includes/xmlrpc.inc.php');
-            }
+    // Get Current Location
+    require_once('modules/imaging/includes/xmlrpc.inc.php');
+}
 $location ="";
-$id = quickGet('gid');
-$group = new Group($id, False);
+$gid = quickGet('gid');
+$group = new Group($gid, False);
 $type = quickGet('type');
 if ($type == 1) { // Imaging group
     $stype = "_profiles";
@@ -47,7 +54,7 @@ if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
             // Get Current Location
             require_once('modules/imaging/includes/xmlrpc.inc.php');
-            $location = xmlrpc_getProfileLocation($id);
+            $location = xmlrpc_getProfileLocation($gid);
             $objprocess=array();
             $scriptmulticast = 'multicast.sh';
             $path="/tmp/";
@@ -59,14 +66,23 @@ if ($type == 1) { // Imaging group
                 <p>'.$msg.'</p>
                     <input name="bback" type="submit" class="btnSecondary" value="'._T("Cancel", "dyngroup").'" onClick="closePopup();return true;"/>
                 </form>';
-                    exit;  
+                    exit;
             }
         }
     }
-    
-if (quickGet('valid')) {
 
+if (quickGet('valid')) {
     $group->delete();
+    if (in_array("xmppmaster", $_SESSION["modulesList"])) {
+        xmlrpc_delDeploybygroup($gid);
+        $array_command_id = get_commands_by_group($gid);
+        foreach ($array_command_id as $commandeid){
+            echo "delete";
+            echo $commandeid;
+            //delete_command_on_host($commandeid);
+            delete_command($commandeid);
+        }
+    }
     if ($type == 1) { // Imaging group
         if (in_array("imaging", $_SESSION["modulesList"])) {
             // Synchro Location
@@ -84,7 +100,7 @@ if (quickGet('valid')) {
 
 <h2><?php echo $title ?></h2>
 
-<form action="<?php echo urlStr("base/computers/delete_group", array('gid' => $id, 'type' => $type)) ?>" method="post">
+<form action="<?php echo urlStr("base/computers/delete_group", array('gid' => $gid, 'type' => $type)) ?>" method="post">
     <p>
 
 <?php

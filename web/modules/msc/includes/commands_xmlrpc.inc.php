@@ -267,6 +267,9 @@ function extend_command($cmd_id, $start_date, $end_date) {
     return xmlCall('msc.extend_command', array($cmd_id, $start_date, $end_date));
 }
 
+function get_commands_by_group($grp_id) {
+    return xmlCall('msc.get_commands_by_group', array($grp_id));
+}
 /*
  * Expire all commands for a given package
  * Used usually when a package is dropped
@@ -277,12 +280,15 @@ function extend_command($cmd_id, $start_date, $end_date) {
 function expire_all_package_commands($pid) {
     return xmlCall('msc.expire_all_package_commands', array($pid));
 }
+
 function delete_bundle($id) {
     return xmlCall('msc.delete_bundle', array($id));
 }
+
 function delete_command($id) {
     return xmlCall('msc.delete_command', array($id));
 }
+
 function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }

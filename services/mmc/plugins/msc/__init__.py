@@ -516,6 +516,9 @@ class RpcProxy(RpcProxyI):
         return MscDatabase().deleteCommandOnHost(coh_id)
 
 
+    def get_commands_by_group(self, grp_id):
+        return MscDatabase().getCommandsByGroup1(grp_id)
+
 
     def is_pull_target(self, uuid):
         """

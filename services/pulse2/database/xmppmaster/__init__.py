@@ -1029,6 +1029,16 @@ class XmppMasterDatabase(DatabaseHelper):
             ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
+    @DatabaseHelper._sessionm
+    def delDeploybygroup( self,
+                          session,
+                          numgrp):
+        """
+            creation d'une organization
+        """
+            session.query(Deploy).filter(Deploy.group_uuid == numgrp).delete()
+            session.commit()
+            session.flush()
 
     @DatabaseHelper._sessionm
     def getdeploybyuserrecent(self, session, login , state, duree, min , max, filt):
