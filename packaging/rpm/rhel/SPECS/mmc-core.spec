@@ -37,11 +37,7 @@ Release:        5%{?dist}
 License:	GPL
 Group:		System/Servers
 URL:		https://github.com/pulse-project/pulse
-%if !%use_git
 Source0:        %{name}-%{version}.tar.gz
-%else
-Source0:        %{name}_%{version}+%git.orig.tar.gz
-%endif
 Source1:        output.py
 Source2:        get_file.php
 Patch1:         0001-Add-pre-post-deluser-hooks.patch
