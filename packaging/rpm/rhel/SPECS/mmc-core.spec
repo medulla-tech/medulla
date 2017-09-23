@@ -22,15 +22,15 @@
 
 %define _enable_debug_packages %{nil}
 %define debug_package          %{nil}
-%define use_git                0
-%define git                    git20130205
+%define use_git                1
+%define git                    SHA
 %define version                3.9.93
 
 Summary:	Management Console
 Name:		mmc-core
 Version:	%{version}
 %if %use_git
-Release:        %mkrel 2.%git.3
+Release:        0.%git.1%{?dist}
 %else
 Release:        5%{?dist}
 %endif
