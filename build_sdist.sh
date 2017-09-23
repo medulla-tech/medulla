@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION='3.9.92'
+VERSION='3.9.93'
 
 rm -f pulse2-*.tar.gz pulse2-*.tar.gz.md5
 git clean -fdx && ./autogen.sh && ./configure --sysconfdir=/etc --localstatedir=/var --disable-python-check --disable-conf && make distcheck

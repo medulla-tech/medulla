@@ -6,9 +6,9 @@
 %define _enable_debug_packages %{nil}
 %define debug_package          %{nil}
 
-%define use_git                0
-%define git                    %nil
-%define real_version           3.9.92
+%define use_git                1
+%define git                    SHA
+%define real_version           3.9.93
 %define mmc_version            3.1.0
 
 Summary:	Management Console
@@ -17,16 +17,12 @@ Version:	%real_version
 %if ! %use_git
 Release:        13%{?dist}
 %else
-Release:        %mkrel 0.%git.3
+Release:        0.%git.1%{?dist}%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
 URL:		https://github.com/pulse-project/pulse
-%if ! %use_git
 Source0:        %{name}_%{real_version}.orig.tar.gz
-%else
-Source0:	%{name}_%{real_version}+%{git}.orig.tar.gz
-%endif
 #TODO: Adapt for Mageia
 Source1:        pulse2-dlp-server.init
 Source2:        pulse2-inventory-server.service
