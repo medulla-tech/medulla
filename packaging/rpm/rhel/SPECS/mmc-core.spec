@@ -441,8 +441,6 @@ cat > %{buildroot}%{_sysconfdir}/logrotate.d/mmc-agent << EOF
     compress
     missingok
     postrotate
-	service mmc-agent restart >/dev/null 2>&1 || :
-    endscript
 }
 EOF
 
