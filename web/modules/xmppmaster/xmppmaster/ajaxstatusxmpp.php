@@ -89,15 +89,15 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
         //recherche information de deployement sur ce groupe.
         $lastcommandid = get_last_commands_on_cmd_id($arraydeploy['tabdeploy']['command'][$index]);
         if ( is_commands_convergence_type($arraydeploy['tabdeploy']['command'][$index]) != 0 ){
-        $arraytitlename[] = "<span style='color : blue;'>(<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_convergence.png'/> GRP[".$namegrp."] ".$arraydeploy['tabdeploy']['len'][$index] . "/".$countmachine."mach) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_convergence.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }else{
-             $arraytitlename[] = "<span style='color : blue;'>(GRP[".$namegrp."] ".$arraydeploy['tabdeploy']['len'][$index] . "/".$countmachine."mach) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
+            $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
         }
         $start_date = date("Y-m-d H:i:s", mktime( $lastcommandid['start_date'][3],
-                              $lastcommandid['start_date'][4], 
-                              $lastcommandid['start_date'][5], 
-                              $lastcommandid['start_date'][1], 
-                              $lastcommandid['start_date'][2], 
+                              $lastcommandid['start_date'][4],
+                              $lastcommandid['start_date'][5],
+                              $lastcommandid['start_date'][1],
+                              $lastcommandid['start_date'][2],
                               $lastcommandid['start_date'][0]));
         $result = xmlrpc_getstatdeployfromcommandidstartdate($arraydeploy['tabdeploy']['command'][$index], $start_date);
 
@@ -111,31 +111,31 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             case $sucess <= 10:
                 $color = "#ff0000";
                 break;
-            case $sucess <= 20: 
+            case $sucess <= 20:
                 $color = "#ff3535";
                 break;
-            case $sucess <= 30: 
+            case $sucess <= 30:
                 $color = "#ff5050";
                 break;
-            case $sucess <= 40: 
+            case $sucess <= 40:
                 $color = "#ff8080";
                 break;
-            case $sucess <  50: 
+            case $sucess <  50:
                 $color = "#ffA0A0";
                 break;
-            case $sucess <=  60: 
+            case $sucess <=  60:
                 $color = "#c8ffc8";
                 break;
-            case $sucess <= 70: 
+            case $sucess <= 70:
                 $color = "#97ff97";
                 break;
-            case $sucess <= 80: 
+            case $sucess <= 80:
                 $color = "#64ff64";
                 break;
-            case $sucess <=  90: 
+            case $sucess <=  90:
                 $color = "#2eff2e";
                 break;
-            case $sucess >90: 
+            case $sucess >90:
                 $color = "#00ff00";
                 break;
         }
@@ -147,29 +147,25 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
             $arrayname[] ="This group doesn't exist";
         }
         else {
-            $arrayname[] = $group->getName();
+            $arrayname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/> " . $group->getName();
         }
     }
     else{
-        $arraytitlename[] = "<span style='color : green;'>( Mach : ) ".$arraydeploy['tabdeploy']['title'][$index]."</span>";
-        $arrayname[] = $arraydeploy['tabdeploy']['host'][$index];
+        $arraytitlename[] = "<img style='position:relative;top : 5px;'src='modules/msc/graph/images/install_package.png'/>" . $arraydeploy['tabdeploy']['title'][$index];
+        $arrayname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_machinesList.gif'/> " . $arraydeploy['tabdeploy']['host'][$index];
         $arraystate[]="<span style='font-weight: bold; color : green;'>".$arraydeploy['tabdeploy']['state'][$index]."</span>";
     }
     $index++;
 }
 
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
-$n->addExtraInfo( $arrayname, _T("Name", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start", "xmppmaster"));
-$n->addExtraInfo( $arraystate, _T("State", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'],_T("Package", "xmppmaster"));
+$n->addExtraInfo( $arrayname, _T("Target", "xmppmaster"));
+$n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
+$n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
-$n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
-
 $n->addActionItemArray($logs);
-$n->setCssClass("machineName");
 
 $n->setTableHeaderPadding(0);
 $n->setParamInfo($params);
@@ -192,7 +188,7 @@ progress {
   border-color: #dddddd;   /* Couleur de la bordure  */
   padding: 3px 3px 3px 3px;   /* Espace entre les bords et le contenu : haut droite bas gauche  */
 }
- 
+
 progress::-webkit-progress-bar {
     background: #f3f3f3 ;
 }
