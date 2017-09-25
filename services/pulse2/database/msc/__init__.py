@@ -327,8 +327,8 @@ class MscDatabase(DatabaseHelper):
     def get_count(self,q):
         return q.with_entities(func.count()).scalar()
 
-
     def deployxmppscheduler(self, login, min , max, filt):
+        datenow = datetime.datetime.now()
         sqlselect="""
             SELECT
                 COUNT(*) as nbmachine,
@@ -359,7 +359,9 @@ class MscDatabase(DatabaseHelper):
                     INNER JOIN
                 phase ON commands_on_host.id = phase.fk_commands_on_host
             WHERE
-            """
+            commands.start_date > '%s'
+            AND
+            """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         sqlfilter = """
             phase.name = 'execute'
                 AND
@@ -387,7 +389,7 @@ class MscDatabase(DatabaseHelper):
                 LIMIT %d 
                 OFFSET %d"""%(int(max)-int(min), int(min))
             reqsql = reqsql + sqllimit
-            
+
         sqlgroupby = """
             GROUP BY titledeploy"""
 
@@ -413,10 +415,12 @@ class MscDatabase(DatabaseHelper):
                         INNER JOIN
                     phase ON commands_on_host.id = phase.fk_commands_on_host
                 WHERE
-                    """
+                    commands.start_date > '%s'
+            AND
+            """% datenow.strftime('%Y-%m-%d %H:%M:%S')
         reqsql1 = sqlselect + sqlfilter + sqllimit + sqlgroupby + ") as tmp;";
-        result={}
-        resulta = self.db.execute(reqsql)
+        result={}       
+        resulta = self.db.execute(reqsql)        
         resultb = self.db.execute(reqsql1)
         sizereq = [x for x in resultb][0][0]
         result['lentotal'] = sizereq
@@ -462,6 +466,25 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['groupid'] = groupid
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
+    
+    def updategroup(self, group):
+        session = create_session()
+        join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
+        q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
+        q = q.select_from(join)
+        q = q.filter(and_(self.commands_on_host_phase.c.name == 'execute', 
+                            self.commands_on_host_phase.c.state == 'ready',
+                            self.target.c.id_group == group 
+                            )).all()
+        for x in q:
+            print x.CommandsOnHost.id
+            session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).delete()
+            session.flush()
+            session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).delete()
+            session.flush()
+        session.flush()
+        session.close()
+        return True
 
     def deployxmpp(self):
         """ 
@@ -1571,6 +1594,13 @@ class MscDatabase(DatabaseHelper):
         return [ret, cmds]
 
     @DatabaseHelper._session
+    def isCommandsCconvergenceType(self, session, ctx, cmd_id):
+        if cmd_id == None or cmd_id == '':
+            return False
+        result = session.query(Commands).filter_by(id=cmd_id).one()
+        return result.type
+
+    @DatabaseHelper._session
     def getCommands(self, session, ctx, cmd_id):
         if cmd_id == None or cmd_id == '':
             return False
@@ -1608,6 +1638,14 @@ class MscDatabase(DatabaseHelper):
 
         self.logger.warn("User %s does not have good permissions to access command '%s'" % (ctx.userid, str(cmd_id)))
         return False
+
+    def getCommandsByGroup1(self, gid):
+        session = create_session()
+        ret = session.query(Commands).select_from(self.commands.join(self.commands_on_host).join(self.target)).filter(self.target.c.id_group == gid)
+        ret = ret.order_by(desc(self.commands.c.start_date)).all()
+        session.close()
+        arraycommands_id = map(lambda c:c.id, ret)
+        return arraycommands_id
 
     def getCommandsByGroup(self, gid):# TODO use ComputerLocationManager().doesUserHaveAccessToMachine
         session = create_session()
@@ -1671,9 +1709,25 @@ class MscDatabase(DatabaseHelper):
         session.close()
         return map(lambda c:c.id, ret)
 
+    def getstatbycmd(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(func.count(self.commands_on_host.c.current_state), CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).scalar()
+        nbmachinegroupe = int(ret)
+        ret = session.query(func.count(self.commands_on_host.c.current_state),
+                            CommandsOnHost).filter(and_(self.commands_on_host.c.fk_commands == cmd_id,self.commands_on_host.c.current_state == "done")).scalar()
+        nbdeploydone = int(ret)
+        session.close()
+        return { "nbmachine" : nbmachinegroupe, "nbdeploydone" : nbdeploydone  }
+
     def getFirstCommandsOncmd_id(self, ctx, cmd_id):
         session = create_session()
         ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).first()
+        session.close()
+        return ret
+
+    def getLastCommandsOncmd_id(self, ctx, cmd_id):
+        session = create_session()
+        ret = session.query(CommandsOnHost).filter(self.commands_on_host.c.fk_commands == cmd_id).order_by(desc(self.commands_on_host.c.id)).first()
         session.close()
         return ret
 

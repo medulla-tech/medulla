@@ -231,14 +231,22 @@ function update() {
             jQuery('#Installation_Notes').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_General_Settings=function(){
-        var list_id_masque=['ComputerName',
-                            'SetupUILanguage',
-                            "ShowWindowsLive",
-                            "InputLocale",
-                            "UserLocale",
-                            "TimeZone",
-                            "UILanguage"];
+        var list_id_masque=[
+            'ComputerName',
+            'SetupUILanguage',
+            "ShowWindowsLive",
+            "InputLocale",
+            "UserLocale",
+            "TimeZone",
+            "UILanguage",
+            "AcceptEULA",
+            "SkipAutoActivation",
+            "SkipRearm"
+        ];
+
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -249,6 +257,8 @@ function update() {
             jQuery('#General_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_Regional_Settings=function(){
         var list_id_masque=[];
         jQuery.each(list_id_masque, function( index,value) {
@@ -261,16 +271,21 @@ function update() {
             jQuery('#Regional_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_Out_Of_Box_Experience=function(){
-        var list_id_masque=["NetworkLocation",
-                            "HideEULA",
-                            "DaylightSettings",
-                            "HideWireless",
-                            "MachineOOBE",
-                            "UserOOBE",
-                            "ControlPanelView",
-                            "ControlPanelIconSize",
-                            "EnableFirewall"];
+        var list_id_masque=[
+            "NetworkLocation",
+            "HideEULA",
+            "DaylightSettings",
+            "HideWireless",
+            "MachineOOBE",
+            "UserOOBE",
+            "ControlPanelView",
+            "ControlPanelIconSize",
+            "EnableFirewall"
+        ];
+
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -281,11 +296,17 @@ function update() {
             jQuery('#Out_Of_Box_Experience').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_Partition_Settings=function(){
-        var list_id_masque=[//"MainPartition",
-                            "Format",
-                            "DriveLetter",
-                            "Label"];
+        var list_id_masque=[
+            "Format",
+            "DriveLetter",
+            "Label",
+            "InstallDisk",
+            "PartitionOrder"
+        ];
+
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
         });
@@ -296,12 +317,17 @@ function update() {
             jQuery('#Partition_Settings').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_User_Account=function(){
-        var list_id_masque=["FullName",
-                            "Group",
-                            "Description",
-                            "Password",
-                            "EnableUAC"];
+        var list_id_masque=[
+            "FullName",
+            "Group",
+            "Description",
+            "Password",
+            "EnableUAC"
+        ];
+
         jQuery.each(list_id_masque, function( index,value) {
             jQuery('#'+value).parents("tr").toggle();
 
@@ -313,6 +339,8 @@ function update() {
             jQuery('#User_Account').css( 'cursor', 's-resize' ).attr('src', 'modules/imaging/graph/images/imaging-add.png');
         }
     };
+
+
     fn_awfg_show=function(){
         var list_id_masque=["codeTocopy2"];
         jQuery.each(list_id_masque, function( index,value) {
