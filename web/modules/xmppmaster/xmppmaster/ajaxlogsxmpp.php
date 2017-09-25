@@ -65,7 +65,7 @@ for ($i=0;$i< count( $arraydeploy['tabdeploy']['start']);$i++){
 $index = 0;
 foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
     $error = False;
-    if($arraydeploy['tabdeploy']['state'][$index] == "STARDEPLOY" && (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
+    if($arraydeploy['tabdeploy']['state'][$index] == "DEPLOYMENT START" && (get_object_vars($arraydeploy['tabdeploy']['endcmd'][$index])['timestamp']- time()) < 0){
         $error = True;
         $arraydeploy['tabdeploy']['state'][$index] = "<span style='font-weight: bold; color : red;'>DEPLOY ERROR TIMEOUT</span>";
     }

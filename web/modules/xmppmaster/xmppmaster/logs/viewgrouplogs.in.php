@@ -116,7 +116,7 @@ foreach ($info['objectdeploy'] as $val)
    $_GET['ses'] .= $val['sessionid']."@@";
    $_GET['hos'] .= explode("/", $val['host'])[1]."@@";
    $_GET['sta'] .=  $val['state']."@@";
-   if ($val['state'] == "END SUCESS"){
+   if ($val['state'] == "DEPLOYMENT SUCCESS"){
         $nbsuccess ++;
    }
 }
@@ -279,13 +279,13 @@ if ($info['len'] != 0){
     foreach ($info['objectdeploy'] as  $val){
 
         switch($val['state']){
-            case "END SUCESS":
+            case "DEPLOYMENT SUCCESS":
                 $uuidsuccess[] = $val['inventoryuuid'];
                 break;
-            case "END ERROR":
+            case "DEPLOYMENT ERROR":
                 $uuiderror[] = $val['inventoryuuid'];
                 break;
-            case "STARDEPLOY":
+            case "DEPLOYMENT START":
                 $uuidprocess[] = $val['inventoryuuid'];
                 break;
             default:
