@@ -173,7 +173,7 @@ class XmppCommandDiffered:
                         break;
 
 class XmppSimpleCommand:
-    """ 
+    """
         Run XMPP command with session and timeout
         Thread waits for timeout or end of session
         Returns command result
@@ -321,7 +321,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            # wol 
+            # wol
             UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
@@ -483,10 +483,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        title = None):
         name = managepackage.getnamepackagefromuuidpackage(uuidpackage)
         if name is not None:
-            return self.applicationdeployjsonuuid(  str(uuidmachine), 
-                                                    str(name), 
-                                                    idcommand, 
-                                                    login, 
+            return self.applicationdeployjsonuuid(  str(uuidmachine),
+                                                    str(name),
+                                                    idcommand,
+                                                    login,
                                                     time,
                                                     start_date = start_date,
                                                     end_date = end_date,
@@ -523,8 +523,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return self.applicationdeploymentjson(  jidrelay,
                                                         jidmachine,
                                                         idcommand,
-                                                        login, 
-                                                        name, 
+                                                        login,
+                                                        name,
                                                         time,
                                                         encodebase64 = False,
                                                         uuidmachine=uuidmachine,
@@ -595,7 +595,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "ipmachine" : XmppMasterDatabase().ipfromjid(jidmachine)[0],
                 "ipmaster" : self.config.Server,
                 "Dtypequery" : "TQ",
-                "Devent" : "STARDEPLOY",
+                "Devent" : "DEPLOYMENT START",
                 "uuid" : uuidmachine,
                 "descriptor" : descript,
                 "transfert" : True
@@ -618,7 +618,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         jidmachine,
                                         uuidmachine,
                                         descript['info']['name'],
-                                        "STARDEPLOY",
+                                        "DEPLOYMENT START",
                                         sessionid,
                                         user = "",
                                         login = login,
@@ -670,7 +670,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
             if data['agenttype'] == "relayserver":
                 logger.info("package server : %s"%data['packageserver'])
-            
+
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
@@ -980,7 +980,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
                     continue
             elif x[0] == 4:
-                continue 
+                continue
                 logger.debug("analysis  rule Select relay server in same subnet")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False

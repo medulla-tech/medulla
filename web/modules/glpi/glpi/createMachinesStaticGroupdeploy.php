@@ -58,13 +58,13 @@ foreach ($gr as $key => $val){
 
 foreach ($info['objectdeploy'] as  $val){
     switch($val['state']){
-        case "END SUCESS":
+        case "DEPLOYMENT SUCCESS":
             $uuidsuccess[] = $val['inventoryuuid'];
             break;
-        case "END ERROR":
+        case "DEPLOYMENT ERROR":
             $uuiderror[] = $val['inventoryuuid'];
             break;
-        case "STARDEPLOY":
+        case "DEPLOYMENT START":
             $uuidprocess[] = $val['inventoryuuid'];
             break;
         default:
