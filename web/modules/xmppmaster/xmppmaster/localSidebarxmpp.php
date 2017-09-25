@@ -25,5 +25,7 @@
 $sidemenu= new SideMenu();
 $sidemenu->setClass("xmppmaster");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("My tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "index"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditdeploy"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("My past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditmypastdeploys"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("All users past tasks", 'xmppmaster'), "xmppmaster", "xmppmaster", "auditpastdeploys"));
 ?>

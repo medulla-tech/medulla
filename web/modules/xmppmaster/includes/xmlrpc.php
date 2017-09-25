@@ -135,6 +135,10 @@ function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $fil
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
 }
 
+function xmlrpc_getdeploybyuserpast( $login, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybyuserpast", array($login, $duree, $min , $max, $filt));
+}
+
 function xmlrpc_getdeploybyuserlen($login) {
     return xmlCall("xmppmaster.getdeploybyuserlen", array($login));
 }

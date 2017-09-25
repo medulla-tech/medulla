@@ -48,6 +48,12 @@ $submod->addPage($page);
 $page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("auditpastdeploys", _T('XMPP audit', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("auditmypastdeploys", _T('XMPP audit', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
