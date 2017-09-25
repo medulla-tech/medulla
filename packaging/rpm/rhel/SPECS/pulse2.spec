@@ -17,7 +17,7 @@ Version:	%real_version
 %if ! %use_git
 Release:        13%{?dist}
 %else
-Release:        0.%git.1%{?dist}%{?dist}
+Release:        0.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
