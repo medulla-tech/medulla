@@ -185,10 +185,10 @@ def get_machine_stop_deploy(cmdid, uuid) :
         "sessionid" : result['sessionid'],
         'data' : {"typerequest" : "bansessionid"},
         "ret" : 0,
-        'base64' : False 
+        'base64' : False
     }
     updatedeploystate(result['sessionid'],'DEPLOYMENT ABORT')
-    send_message_json1(result['jid_relay'], msg_stop_deploy ) 
+    send_message_json1(result['jid_relay'], msg_stop_deploy )
     send_message_json(result['jidmachine'], msg_stop_deploy )
     return True
 
@@ -203,7 +203,7 @@ def get_group_stop_deploy(grpid) :
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
         updatedeploystate1(machine['sessionid'],'DEPLOYMENT ABORT')
-        send_message_json(machine['jid_relay'], msg_stop_deploy ) 
+        send_message_json(machine['jid_relay'], msg_stop_deploy )
         send_message_json(machine['jidmachine'], msg_stop_deploy )
     return True
 
@@ -227,6 +227,9 @@ def delDeploybygroup(numgrp):
 def getdeploybyuserrecent(  login , state, duree, min , max, filt):
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)
 
+def getdeploybyuserpast(login, duree, min , max, filt):
+    return XmppMasterDatabase().getdeploybyuserpast(login, duree, min , max, filt)
+
 def getdeploybyuser( login, numrow, offset):
     if not numrow:
         numrow = None
@@ -241,7 +244,7 @@ def getshowmachinegrouprelayserver():
         else:
             return x
     machinelist = XmppMasterDatabase().showmachinegrouprelayserver()
-    array=[] 
+    array=[]
     for t in machinelist:
         z = [ Nonevalue(x) for x in list(t)]
         ob = {'jid' : z[0], 'type' : z[1], 'os' : z[2], 'rsdeploy' : z[3],'hostname' : z[4] ,'uuid' : z[5],'ip' : z[6],'subnet' : z[7] }
