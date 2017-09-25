@@ -29,6 +29,5 @@ $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a package", 'pkgs'), "pkgs",
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Bundle list", 'pkgs'), "pkgs", "pkgs", "bundleList"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a bundle", 'pkgs'), "pkgs", "pkgs", "addBundle"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Pending packages list", 'pkgs'), "pkgs", "pkgs", "pending"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Appstream settings", 'pkgs'), "pkgs", "pkgs", "appstreamSettings"));
 
 ?>

@@ -75,6 +75,10 @@ function command_detail($cmd_id) {
     return xmlCall('msc.get_commands', array($cmd_id));
 }
 
+function is_commands_convergence_type($cmd_id) {
+    return xmlCall('msc.is_commands_convergence_type', array($cmd_id));
+}
+
 function add_command_api($pid, $target, $params, $p_api, $mode, $gid = null, $proxy = array(), $cmd_type = 0) {
     return xmlCall('msc.add_command_api', array($pid, $target, $params, $p_api, $mode, $gid, $proxy, $cmd_type));
 }
@@ -97,6 +101,10 @@ function get_id_command_on_host($id) {
 
 function xmlrpc_get_deployxmppscheduler($login, $min, $max, $flit){
     return xmlCall('msc.get_deployxmppscheduler', array($login, $min, $max, $flit));
+}
+
+function xmlrpc_updategroup($grp_id){
+    return xmlCall('msc.updategroup', array($grp_id));
 }
 
 function get_targets_for_coh($coh_ids) {
@@ -230,8 +238,17 @@ function get_command_on_host_in_commands($cmd_id) {
     return xmlCall('msc.get_command_on_host_in_commands', array($cmd_id));
 }
 
+
+function xmlrpc_getstatbycmd($cmd_id){
+    return xmlCall('msc.getstatbycmd', array($cmd_id));
+}
+
 function get_first_commands_on_cmd_id($cmd_id) {
     return xmlCall('msc.get_first_commands_on_cmd_id', array($cmd_id));
+}
+
+function get_last_commands_on_cmd_id($cmd_id) {
+    return xmlCall('msc.get_last_commands_on_cmd_id', array($cmd_id));
 }
 
 function get_def_package_label($label, $version) {
@@ -254,6 +271,9 @@ function extend_command($cmd_id, $start_date, $end_date) {
     return xmlCall('msc.extend_command', array($cmd_id, $start_date, $end_date));
 }
 
+function get_commands_by_group($grp_id) {
+    return xmlCall('msc.get_commands_by_group', array($grp_id));
+}
 /*
  * Expire all commands for a given package
  * Used usually when a package is dropped
@@ -264,12 +284,15 @@ function extend_command($cmd_id, $start_date, $end_date) {
 function expire_all_package_commands($pid) {
     return xmlCall('msc.expire_all_package_commands', array($pid));
 }
+
 function delete_bundle($id) {
     return xmlCall('msc.delete_bundle', array($id));
 }
+
 function delete_command($id) {
     return xmlCall('msc.delete_command', array($id));
 }
+
 function delete_command_on_host($id) {
     return xmlCall('msc.delete_command_on_host', array($id));
 }

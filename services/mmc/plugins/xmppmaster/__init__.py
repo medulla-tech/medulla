@@ -95,6 +95,9 @@ def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who ):
 def updatedeploystate(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
 
+def updatedeploystate1(sessionxmppmessage, status):
+    return XmppMasterDatabase().updatedeploystate1(sessionxmppmessage, status)
+
 def getstepdeployinsession(sessionname):
     return XmppMasterDatabase().getstepdeployinsession(sessionname)
 
@@ -172,6 +175,9 @@ def loginbycommand(commandid):
 def getdeployfromcommandid(command_id, uuid) :
     return XmppMasterDatabase().getdeployfromcommandid(command_id, uuid)
 
+def getstatdeployfromcommandidstartdate(command_id, datestart) :
+    return XmppMasterDatabase().getstatdeployfromcommandidstartdate(command_id, datestart)
+
 def get_machine_stop_deploy(cmdid, uuid) :
     result = XmppMasterDatabase().get_machine_stop_deploy(cmdid, uuid)
     msg_stop_deploy= {
@@ -182,7 +188,7 @@ def get_machine_stop_deploy(cmdid, uuid) :
         'base64' : False 
     }
     updatedeploystate(result['sessionid'],'DEPLOYMENT ABORT')
-    send_message_json(result['jid_relay'], msg_stop_deploy ) 
+    send_message_json1(result['jid_relay'], msg_stop_deploy ) 
     send_message_json(result['jidmachine'], msg_stop_deploy )
     return True
 
@@ -196,7 +202,7 @@ def get_group_stop_deploy(grpid) :
         'base64' : False}
     for machine in result['objectdeploy']:
         msg_stop_deploy['sessionid'] = machine['sessionid']
-        updatedeploystate(machine['sessionid'],'DEPLOYMENT ABORT')
+        updatedeploystate1(machine['sessionid'],'DEPLOYMENT ABORT')
         send_message_json(machine['jid_relay'], msg_stop_deploy ) 
         send_message_json(machine['jidmachine'], msg_stop_deploy )
     return True
@@ -214,6 +220,9 @@ def getdeploybymachinerecent(uuidinventory, state, duree, min , max, filt):
 
 def getdeploybymachinegrprecent(gid, state, duree, min , max, filt):
     return XmppMasterDatabase().getdeploybymachinegrprecent(gid, state, duree, min , max, filt)
+
+def delDeploybygroup(numgrp):
+    return XmppMasterDatabase().delDeploybygroup( numgrp )
 
 def getdeploybyuserrecent(  login , state, duree, min , max, filt):
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)

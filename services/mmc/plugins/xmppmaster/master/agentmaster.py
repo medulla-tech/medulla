@@ -22,7 +22,8 @@
 #
 # file plugins/xmppmaster/master/agentmaster.py
 
-import sys, os
+import sys
+import os
 import re
 
 import ConfigParser
@@ -172,7 +173,7 @@ class XmppCommandDiffered:
                         break;
 
 class XmppSimpleCommand:
-    """ 
+    """
         Run XMPP command with session and timeout
         Thread waits for timeout or end of session
         Returns command result
@@ -284,32 +285,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.manage_scheduler.process_on_event()
 
     def scheduledeploy(self):
-        print len(self.machineWakeOnLan)
+        listobjsupp = []
         resultdeploymachine, e, wolupdatemachine = MscDatabase().deployxmpp();
-        #logging.debug( "scheduledeploy")
-        #for deploy in resultdeploymachine:
-            #logging.debug( "CommandsOnHost info")
-            #a = deploy.CommandsOnHost.__dict__
-            #for t in a:
-                #logging.debug("%s : %s"%(t, a[t]))
-            #logging.debug( "Commands info")
-            #a = deploy.Commands.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
-            #logging.debug( "Target info")
-            #a = deploy.Target.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
-            #logging.debug( "CommandsOnHostPhase info")
-            #a = deploy.CommandsOnHostPhase.__dict__
-            #for t in a:
-                #logging.debug( "%s : %s"%(t, a[t]))
 
         for uuiddeploy in self.machineWakeOnLan:
-            # verify presense machine deploy ou wake in lan
+            # not SEND WOL on presense machine
             if XmppMasterDatabase().getPresenceuuid(uuiddeploy):
+                listobjsupp.append(uuiddeploy)
+        for objsupp in listobjsupp:
+            try:
                 del self.machineWakeOnLan[uuiddeploy]
-
+            except Exception:
+                pass
         for deploy in resultdeploymachine:
             # creation deploiement
             UUID = str(deploy.Target.target_uuid)
@@ -334,7 +321,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     self.machineDeploy[UUID].append(deployobject)
 
         for deploy in wolupdatemachine:
-            # wol 
+            # wol
             UUID = str(deploy.Target.target_uuid)
 
             if UUID in self.machineWakeOnLan:
@@ -365,10 +352,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
                                         priority = -1 ,
                                         who = uuidmachine)
-
+        listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
                 deployobject = self.machineDeploy[deployuuid].pop(0)
+                logging.debug("send deploy on machine %s package %s"%(deployuuid, deployobject['pakkageid']))
                 self.applicationdeployjsonUuidMachineAndUuidPackage(deployuuid,
                                                                     deployobject['pakkageid'],
                                                                     deployobject['commandid'],
@@ -381,7 +369,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                     macadress = deployobject['mac'],
                                                                     GUID = deployobject['GUID'])
             except Exception:
-                del self.machineDeploy[deployuuid]
+                listobjsupp.append(deployuuid)
+        for objsupp in listobjsupp:
+            try:
+                del self.machineDeploy[objsupp]
+            except Exception:
+                pass
+
 
     def start(self, event):
         self.get_roster()
@@ -489,10 +483,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                        title = None):
         name = managepackage.getnamepackagefromuuidpackage(uuidpackage)
         if name is not None:
-            return self.applicationdeployjsonuuid(  str(uuidmachine), 
-                                                    str(name), 
-                                                    idcommand, 
-                                                    login, 
+            return self.applicationdeployjsonuuid(  str(uuidmachine),
+                                                    str(name),
+                                                    idcommand,
+                                                    login,
                                                     time,
                                                     start_date = start_date,
                                                     end_date = end_date,
@@ -529,8 +523,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return self.applicationdeploymentjson(  jidrelay,
                                                         jidmachine,
                                                         idcommand,
-                                                        login, 
-                                                        name, 
+                                                        login,
+                                                        name,
                                                         time,
                                                         encodebase64 = False,
                                                         uuidmachine=uuidmachine,
@@ -601,7 +595,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 "ipmachine" : XmppMasterDatabase().ipfromjid(jidmachine)[0],
                 "ipmaster" : self.config.Server,
                 "Dtypequery" : "TQ",
-                "Devent" : "STARDEPLOY",
+                "Devent" : "DEPLOYMENT START",
                 "uuid" : uuidmachine,
                 "descriptor" : descript,
                 "transfert" : True
@@ -624,7 +618,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                         jidmachine,
                                         uuidmachine,
                                         descript['info']['name'],
-                                        "STARDEPLOY",
+                                        "DEPLOYMENT START",
                                         sessionid,
                                         user = "",
                                         login = login,
@@ -676,7 +670,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
             logger.info("xmppmacnotshortened : %s"%data['xmppmacnotshortened'])
             if data['agenttype'] == "relayserver":
                 logger.info("package server : %s"%data['packageserver'])
-            
+
             if 'ipconnection' in data:
                 logger.info("ipconnection : %s"%data['ipconnection'])
             if 'portconnection' in data:
@@ -986,7 +980,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     traceback.print_exc(file=sys.stdout)
                     continue
             elif x[0] == 4:
-                continue 
+                continue
                 logger.debug("analysis  rule Select relay server in same subnet")
                 logger.debug("rule subnet : Test if network are identical")
                 subnetexist = False

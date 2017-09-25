@@ -97,9 +97,8 @@ class Localisation:
 
     def distCosineLaw(self,p1, p2):
         """
-            # Calculate the distance (in km) between 2 points specified by their
-            # latitude/longitude using trigonometric functions
-            #
+            Calculate the distance (in km) between 2 points specified by their
+            latitude/longitude using trigonometric functions
         """
         d = acos(sin(p1.lat)*sin(p2.lat) + cos(p1.lat)*cos(p2.lat)*cos(p2.lon-p1.lon)) * rt
         return d

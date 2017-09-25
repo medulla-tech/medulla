@@ -21,7 +21,6 @@
 # MA 02110-1301, USA.
 
 import netifaces
-import json
 import subprocess
 import sys
 import platform

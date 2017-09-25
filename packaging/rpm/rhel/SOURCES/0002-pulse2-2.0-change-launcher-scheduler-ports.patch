@@ -1,0 +1,57 @@
+diff --git a/services/conf/plugins/msc.ini b/services/conf/plugins/msc.ini
+index b4f07c0..898f44b 100644
+--- a/services/conf/plugins/msc.ini
++++ b/services/conf/plugins/msc.ini
+@@ -62,7 +62,7 @@ enablessl = 1
+ 
+ [scheduler_01]
+ host = 127.0.0.1
+-port = 8000
++port = 8010
+ username = username
+ password = password
+ enablessl = 1
+diff --git a/services/conf/pulse2/launchers/launchers.ini.in b/services/conf/pulse2/launchers/launchers.ini.in
+index 69ee426..472593b 100644
+--- a/services/conf/pulse2/launchers/launchers.ini.in
++++ b/services/conf/pulse2/launchers/launchers.ini.in
+@@ -111,7 +111,7 @@ smart_cleaner_path = @bindir@/pulse2-smart-cleaner.sh
+ 
+ [scheduler_01]
+ # host = 127.0.0.1
+-# port = 8000
++port = 8010
+ # enablessl = True
+ # username = username
+ # password = password
+@@ -125,7 +125,7 @@ smart_cleaner_path = @bindir@/pulse2-smart-cleaner.sh
+ # Launchers sections, one per launcher
+ [launcher_01]
+ # bind = 127.0.0.1
+-port = 8001
++port = 8011
+ # slots = 300
+ # username = username
+ # password = password
+diff --git a/services/conf/pulse2/scheduler/scheduler.ini.in b/services/conf/pulse2/scheduler/scheduler.ini.in
+index c6a83c2..7389361 100644
+--- a/services/conf/pulse2/scheduler/scheduler.ini.in
++++ b/services/conf/pulse2/scheduler/scheduler.ini.in
+@@ -11,7 +11,7 @@ scheduler_proxy_path = @sbindir@/pulse2-scheduler-proxy
+ # scheduler_proxy_buffer_tmp = /tmp/pulse2-scheduler-proxy.buff.tmp
+ 
+ ## NETWORK ##
+-# port = 8000
++port = 8010
+ # host = 127.0.0.1
+ # username = username
+ # password = password
+@@ -152,7 +152,7 @@ password = s3cr3t
+ # Our launchers
+ [launcher_01]
+ host=127.0.0.1
+-port=8001
++port=8011
+ username = username
+ password = password
+ enablessl = True

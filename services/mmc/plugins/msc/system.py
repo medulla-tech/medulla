@@ -23,22 +23,14 @@
 
 from mmc.support.mmctools import shLaunchDeferred
 
-#def sysShutdown(session, opt, time):
-#    cmd = "shutdown %s %s" % (opt, time)
-#    session.MSC_cmdAdd(cmd)
-#    res = session.MSC_cmdFlush()
-#    if len(res[cmd]['STDERR']) != 0:
-#        p1 = re.compile('<br />')
-#        msg = p1.split(res[cmd]['STDERR'])
-#        return False
-#
-#def sysReboot(session, time = 0):
-#    return MSC_sysShutdown(session, "-r", time)
-#
-#def sysHalt(session, time = 0):
-#    return MSC_sysShutdown(session, "-s", time)
-#
 def sysPing(ip, port = 22):
+    """
+    This function all to ping machines. Default port is 22
+
+    :param ip: IP of the machine to ping
+    :param port: Port to ping ( default 22 )
+
+    """
     def cb(shprocess):
         return shprocess.exitCode == 0
 
