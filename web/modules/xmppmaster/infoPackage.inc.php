@@ -48,6 +48,12 @@ $submod->addPage($page);
 $page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("auditpastdeploys", _T('XMPP audit', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("auditmypastdeploys", _T('XMPP audit', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -104,6 +110,12 @@ $page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 // --------------END QUICK ACTION--------------------
+
+// ajax procedure to start a reversessh on client machine for guacamole
+$page = new Page("actionreversessh");
+$page->setFile("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
 
 // ajax procedure read and send result from log
 $page = new Page("viewlogs");

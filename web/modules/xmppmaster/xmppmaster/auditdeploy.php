@@ -31,14 +31,13 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 
 
-$p = new PageGenerator(_T("All users", 'xmppmaster'));
+$p = new PageGenerator(_T("All users tasks", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => ''), 'formRunning' );
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => '', 'currenttasks' => '1'), 'formRunning' );
 $ajax->setRefresh(10000);
 $ajax->display();
-
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 

@@ -38,10 +38,10 @@ if ($delete) {
 $p = new PageGenerator(_T("My Tasks [".$_SESSION['login']."]", 'xmppmaster'));
 $p->setSideMenu($sidemenu);
 $p->display();
-$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login']), 'formRunning'  );
+
+$ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxstatusxmpp"), "container", array('login' => $_SESSION['login'], 'currenttasks' => '1'), 'formRunning'  );
 $ajax->setRefresh(15000);
 $ajax->display();
-
 print "<br/><br/><br/>";
 $ajax->displayDivToUpdate();
 

@@ -82,6 +82,10 @@ function xmlrpc_loginbycommand($commandid){
 function xmlrpc_getdeployfromcommandid($command_id, $uuid = "UUID_NONE") {
     return xmlCall("xmppmaster.getdeployfromcommandid", array($command_id, $uuid));
 }
+//jfk
+function xmlrpc_getstatdeployfromcommandidstartdate($command_id, $date) {
+    return xmlCall("xmppmaster.getstatdeployfromcommandidstartdate", array($command_id, $date));
+}
 
 function xmlrpc_set_simple_log($textinfo, $sessionxmppmessage, $typelog, $priority, $who ){
     return xmlCall("xmppmaster.set_simple_log", array($textinfo, $sessionxmppmessage, $typelog, $priority, $who ));
@@ -89,6 +93,10 @@ function xmlrpc_set_simple_log($textinfo, $sessionxmppmessage, $typelog, $priori
 
 function xmlrpc_updatedeploystate($sessionid, $state){
     return xmlCall("xmppmaster.updatedeploystate", array($sessionid, $state ));
+}
+
+function xmlrpc_updatedeploy_states_start_and_process($sessionid, $state){
+    return xmlCall("xmppmaster.updatedeploystate1", array($sessionid, $state ));
 }
 
 function xmlrpc_get_machine_stop_deploy($cmdid, $uuid) {
@@ -107,6 +115,10 @@ function xmlrpc_getlinelogssession($sessionxmpp){
     return xmlCall("xmppmaster.getlinelogssession", array($sessionxmpp));
 }
 
+function xmlrpc_runXmppReverseSSHforGuacamole($uuid, $cux_id, $cux_type){
+    return xmlCall("xmppmaster.CallXmppPlugin", array("guacamole", array("uuid"=>$uuid, "cux_id"=>$cux_id, "cux_type"=>$cux_type)));
+}
+
 function xmlrpc_getdeploybymachinerecent($uuidinventory, $state, $duree, $min, $max, $filt) {
     return xmlCall("xmppmaster.getdeploybymachinerecent", array($uuidinventory, $state, $duree, $min , $max, $filt));
 }
@@ -115,8 +127,16 @@ function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $f
     return xmlCall("xmppmaster.getdeploybymachinegrprecent", array($gid, $state, $duree, $min , $max, $filt));
 }
 
+function xmlrpc_delDeploybygroup( $numgrp) {
+    return xmlCall("xmppmaster.delDeploybygroup", array($numgrp));
+}
+
 function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
+}
+
+function xmlrpc_getdeploybyuserpast( $login, $duree, $min, $max, $filt) {
+    return xmlCall("xmppmaster.getdeploybyuserpast", array($login, $duree, $min , $max, $filt));
 }
 
 function xmlrpc_getdeploybyuserlen($login) {

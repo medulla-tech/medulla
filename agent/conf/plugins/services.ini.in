@@ -9,3 +9,4 @@ mail = dovecot,postfix,amavis,amavisd
 network = isc-dhcp-server,dhcpd,bind9,named,named-sdb
 shorewall = shorewall
 squid = squid
+base = mmc-agent,pulse2-inventory-server,pulse2-package-server,pulse-xmpp-agent-relay,pulse2-register-pxe,pulse-xmpp-agent-log

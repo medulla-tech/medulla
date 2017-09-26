@@ -1,0 +1,119 @@
+diff --git a/agent/mmc/plugins/base/__init__.py b/agent/mmc/plugins/base/__init__.py
+index 521a87d..8816e0f 100644
+--- a/agent/mmc/plugins/base/__init__.py
++++ b/agent/mmc/plugins/base/__init__.py
+@@ -285,8 +285,8 @@ def getHomeDir(uid, homeDir):
+ def getDefaultShells():
+     return ldapUserGroupControl().getDefaultShells()
+ 
+-def createUser(login, passwd, firstname, surname, homedir, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
+-    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, createHomeDir, ownHomeDir, primaryGroup)
++def createUser(login, passwd, firstname, surname, homedir, mail=None, createHomeDir=True, ownHomeDir=False, primaryGroup=None):
++    return ldapUserGroupControl().addUser(login, passwd, firstname, surname, homedir, mail, createHomeDir, ownHomeDir, primaryGroup)
+ 
+ def addUserToGroup(cngroup,uiduser):
+     ldapObj = ldapUserGroupControl()
+@@ -707,18 +707,21 @@ class LdapUserGroupControl:
+                 # Make a temporary ldif file with user entry if an uid is specified
+                 fd, tmpname = tempfile.mkstemp()
+                 try:
+-                    fob = os.fdopen(fd, "wb")
+                     dn = self.searchUserDN(uid)
+-                    entry = self.getUserEntry(uid)
+-                    if password:
+-                        if isinstance(password, xmlrpclib.Binary):
+-                            password = str(password)
+-                        # Put user password in clear text in ldif
+-                        entry["userPassword"] = [password]
+-                    writer = ldif.LDIFWriter(fob)
+-                    writer.unparse(dn, entry)
+-                    fob.close()
+-                    mmctools.shlaunch(self.hooks[hookName] + " " + tmpname)
++                    if dn:
++                        entry = self.getUserEntry(uid)
++                        if password:
++                            if isinstance(password, xmlrpclib.Binary):
++                                password = str(password)
++                            # Put user password in clear text in ldif
++                            entry["userPassword"] = [password]
++                        fob = os.fdopen(fd, "wb")
++                        writer = ldif.LDIFWriter(fob)
++                        writer.unparse(dn, entry)
++                        fob.close()
++                        mmctools.shlaunch(self.hooks[hookName] + " " + tmpname)
++                    else:
++                        mmctools.shlaunch(self.hooks[hookName] + " " + uid)
+                 finally:
+                     os.remove(tmpname)
+             else:
+@@ -826,7 +829,9 @@ class LdapUserGroupControl:
+                 if not found: entry[attribute] = value
+         return entry
+ 
+-    def addUser(self, uid, password, firstN, lastN, homeDir = None, createHomeDir = True, ownHomeDir = False, primaryGroup = None):
++    def addUser(self, uid, password, firstN, lastN,
++                homeDir = None, mail=None, createHomeDir=True, ownHomeDir=False,
++                primaryGroup = None):
+         """
+         Add an user in ldap directory
+ 
+@@ -921,6 +926,9 @@ class LdapUserGroupControl:
+                      'shadowLastChange': '11192',
+                      }
+ 
++        if mail:
++            user_info['mail'] = (mail,)
++
+         user_info = self._applyUserDefault(user_info, self.userDefault["base"])
+ 
+         # Search Python unicode string and encode them to UTF-8
+@@ -1335,9 +1343,9 @@ class LdapUserGroupControl:
+         """
+         userdn = self.searchUserDN(uid)
+         r = AF().log(PLUGIN_NAME, AA.BASE_DEL_USER, [(userdn, AT.USER)])
+-        # Run delUser hook
+-        self.runHook("base.deluser", uid)
+ 
++        # Run delUser hook
++        self.runHook("base.pre_deluser", uid)
+         if home and self.userHomeAction:
+             homedir = self.getDetailedUser(uid)['homeDirectory'][0]
+             if os.path.exists(homedir):
+diff --git a/web/modules/base/includes/publicFunc.php b/web/modules/base/includes/publicFunc.php
+index 1bd70cd..e4413e4 100644
+--- a/web/modules/base/includes/publicFunc.php
++++ b/web/modules/base/includes/publicFunc.php
+@@ -157,6 +157,7 @@ function _base_changeUser($FH, $mode) {
+             $FH->getPostValue("givenName"),
+             $FH->getPostValue("sn"),
+             $FH->getPostValue("homeDirectory"),
++            $FH->getPostValue("mail"),
+             $createHomeDir, $ownHomeDir,
+             $FH->getPostValue("primary")
+         );
+@@ -168,9 +169,6 @@ function _base_changeUser($FH, $mode) {
+             $FH->setPostValue("pass", $randomPass);
+             $FH->setValue("pass", $randomPass);
+         }
+-        # add mail attribute
+-        if ($FH->getPostValue('mail'))
+-            changeUserAttributes($uid, "mail", $FH->getPostValue("mail"));
+         if ($FH->getPostValue('loginShell'))
+             changeUserAttributes($uid, "loginShell",
+                 $FH->getPostValue('loginShell'));
+diff --git a/web/modules/base/includes/users-xmlrpc.inc.php b/web/modules/base/includes/users-xmlrpc.inc.php
+index 35bc480..6315b5b 100644
+--- a/web/modules/base/includes/users-xmlrpc.inc.php
++++ b/web/modules/base/includes/users-xmlrpc.inc.php
+@@ -102,9 +102,9 @@ function get_users_detailed(&$error, $filter = null, $start = null, $end = null)
+  * @param $name user's name
+  * @param $homedir user home directory
+  */
+-function add_user($login, $pass, $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup = "")
++function add_user($login, $pass, $firstname, $name, $homedir, $mail, $createhomedir, $ownHomeDir, $primaryGroup = "")
+ {
+-    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $createhomedir, $ownHomeDir, $primaryGroup);
++    $param = array($login, prepare_string($pass), $firstname, $name, $homedir, $mail, $createhomedir, $ownHomeDir, $primaryGroup);
+     $ret = xmlCall("base.createUser", $param);
+     if ($ret == 5) {
+         $msg = sprintf(_("User %s created but password is not valid regarding your password policies.<br/><strong>You must change the user password.</strong>"), $login) . "<br />";

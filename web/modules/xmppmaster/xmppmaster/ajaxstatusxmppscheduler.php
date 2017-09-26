@@ -38,8 +38,13 @@ echo "<h2>Planned tasks</h2>";
 $login   = array();
 $startdeploy = array();
 
-foreach( $arraydeploy['tabdeploy']['start'] as $ss){
-   $startdeploy[]="$ss[0]-$ss[1]-$ss[2] $ss[3]:$ss[4]:$ss[5]";
+foreach( $arraydeploy['tabdeploy']['start'] as $start_date){
+  $startdeploy[] = date("Y-m-d H:i:s", mktime( $start_date[3],
+                        $start_date[4],
+                        $start_date[5],
+                        $start_date[1],
+                        $start_date[2],
+                        $start_date[0]));
 }
 foreach( $arraydeploy['tabdeploy']['command'] as $ss){
    $login[]=xmlrpc_loginbycommand($ss);
@@ -68,25 +73,24 @@ foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $params[] = $param;
     $delete[] = $deletecommand;
     if($groupid){
-        $arraytitlename[] = "<span style='color : blue;'>GRP(".$arraydeploy['tabdeploy']['nbmachine'][$index] .") ".$arraydeploy['tabdeploy']['title'][$index]."</span>" ;
+        $groupname = getPGobject($arraydeploy['tabdeploy']['groupid'][$index], true)->getName();
+        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_groupsList.gif'/> " . $groupname ;
     }
     else{
-        $arraytitlename[] = "<span style='color : green;'>Mach ".$arraydeploy['tabdeploy']['nbmachine'][$index] .$arraydeploy['tabdeploy']['title'][$index]."</span>" ;
+        $arraytargetname[] = "<img style='position:relative;top : 5px;'src='img/machines/icn_machinesList.gif'/> " . $arraydeploy['tabdeploy']['host'][$index] ;
     }
     $index++;
 }
 
 $arraydeploy['tabdeploy']['start'] = $startdeploy;
-$n = new OptimizedListInfos($arraytitlename, _T("Deployment", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['host'], _T("Name", "xmppmaster"));
-$n->addExtraInfo( $startdeploy, _T("Start", "xmppmaster"));
-$n->addExtraInfo( $arraydeploy['tabdeploy']['pathpackage'], _T("Package", "xmppmaster"));
+$n = new OptimizedListInfos($arraydeploy['tabdeploy']['title'], _T("Deployment", "xmppmaster"));
+$n->addExtraInfo( $arraytargetname, _T("Target", "xmppmaster"));
+$n->addExtraInfo( $startdeploy, _T("Start date", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['creator'], _T("User", "xmppmaster"));
 
 $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
-$n->setCssClass("machineName");
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
 
@@ -94,7 +98,7 @@ $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $end;
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter));
-print "<br/>"; 
+print "<br/>";
 
 $n->display();
 
