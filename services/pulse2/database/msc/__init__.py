@@ -466,8 +466,9 @@ class MscDatabase(DatabaseHelper):
         result['tabdeploy']['groupid'] = groupid
         result['tabdeploy']['titledeploy'] = titledeploy
         return result
-    
+
     def updategroup(self, group):
+        #jfkjfk
         session = create_session()
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
@@ -476,15 +477,39 @@ class MscDatabase(DatabaseHelper):
                             self.commands_on_host_phase.c.state == 'ready',
                             self.target.c.id_group == group 
                             )).all()
+        ## return informations for update table deploy xmpp
+        result=[]
+        for objdeploy in q:
+            resultat = {}
+            resultat['gid']         = group
+            resultat['pathpackage'] = objdeploy.Commands.package_id
+            resultat['state']       = 'DEPLOYMENT ABORT'
+            resultat['start']       = objdeploy.CommandsOnHost.start_date
+            resultat['end']         = objdeploy.CommandsOnHost.end_date
+            resultat['inventoryuuid'] = objdeploy.Target.target_uuid
+            resultat['host']        = objdeploy.Target.target_name
+            resultat['command']     = objdeploy.Commands.id
+            resultat['title']       = objdeploy.Commands.title
+            resultat['macadress']   = objdeploy.Target.target_macaddr
+            resultat['login']       = objdeploy.Commands.creator
+            result.append(resultat)
         for x in q:
-            print x.CommandsOnHost.id
-            session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).delete()
+            #print x.CommandsOnHost.id
+            #session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).delete()
+            #session.flush()
+            #session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).delete()
+            #session.flush()
+            session.query(CommandsOnHost).filter(CommandsOnHost.id == x.CommandsOnHost.id ).\
+                        update({CommandsOnHost.current_state: "done",
+                                CommandsOnHost.stage : "ended"
+                                })
             session.flush()
-            session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).delete()
+            session.query(CommandsOnHostPhase).filter(CommandsOnHostPhase.fk_commands_on_host == x.CommandsOnHost.id ).\
+                update({ CommandsOnHostPhase.state : "done" })
             session.flush()
         session.flush()
         session.close()
-        return True
+        return result
 
     def deployxmpp(self):
         """ 

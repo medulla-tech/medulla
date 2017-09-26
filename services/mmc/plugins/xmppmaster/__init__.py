@@ -95,6 +95,40 @@ def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who ):
 def updatedeploystate(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
 
+def adddeployabort( 
+                    idcommand,
+                    jidmachine,
+                    jidrelay,
+                    host,
+                    inventoryuuid,
+                    uuidpackage,
+                    state,
+                    sessionid,
+                    user,
+                    login,
+                    title,
+                    group_uuid,
+                    startcmd,
+                    endcmd,
+                    macadress):
+    return XmppMasterDatabase().adddeploy(
+                                           
+                                            idcommand,
+                                            jidmachine,
+                                            jidrelay,
+                                            host,
+                                            inventoryuuid,
+                                            uuidpackage,
+                                            state,
+                                            sessionid,
+                                            user,
+                                            login,
+                                            title,
+                                            group_uuid,
+                                            startcmd,
+                                            endcmd,
+                                            macadress)
+
 def updatedeploystate1(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate1(sessionxmppmessage, status)
 

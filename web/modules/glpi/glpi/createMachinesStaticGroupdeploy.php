@@ -21,6 +21,12 @@
  * File createMachinesStaticGroupdeploy.php
  *
  */
+require_once("modules/dyngroup/includes/dyngroup.php"); // For Group Class
+require_once("modules/glpi/includes/xmlrpc.php"); // For total_machines
+require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
+require_once("modules/dyngroup/includes/xmlrpc.php");
+extract($_GET);
+
  function creategroup($grpname, $arraygrp, $datagr){
     $tmp = array();
     $groupname = sprintf (_T("Machines $grpname at %s", "glpi"), date("Y-m-d H:i:s"));
@@ -34,23 +40,17 @@
     exit;
   };
 
-require_once("modules/dyngroup/includes/dyngroup.php"); // For Group Class
-require_once("modules/glpi/includes/xmlrpc.php"); // For total_machines
-require_once("modules/xmppmaster/includes/xmlrpc.php"); // For machines_online
-require_once("modules/dyngroup/includes/xmlrpc.php");
-
-extract($_GET);
-
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 $gr   = getRestrictedComputersList(0,-1, array('gid' =>$gid));
 // getRestrictedComputersList(0,-1, {'uuid': ['UUID3','UUID1','UUID2']}, False)
-$uuidgr = array();
+$uuidgr      = array();
 $uuidsuccess = array();
-$uuiderror = array();
+$uuiderror   = array();
 $uuidprocess = array();
 $uuiddefault = array();
-$uuidall = array();
-$uuidwol = array();
+$uuidall     = array();
+$uuidwol     = array();
+$uuidabort   = array();
 
 foreach ($gr as $key => $val){
     $uuidgr[] =  $key;
@@ -66,6 +66,9 @@ foreach ($info['objectdeploy'] as  $val){
             break;
         case "DEPLOYMENT START":
             $uuidprocess[] = $val['inventoryuuid'];
+            break;
+        case "DEPLOYMENT ABORT":
+            $uuidabort[] = $val['inventoryuuid'];
             break;
         default:
             $uuiddefault[] = $val['inventoryuuid'];
@@ -95,6 +98,10 @@ switch($type){
     break;
     case "machineprocess":
         creategroup("deployinprocess", $uuidprocess, $gr);
+        exit;
+    break;
+    case "machineabort" :
+        creategroup("deployabort", $uuidabort, $gr);
         exit;
     break;
 }
