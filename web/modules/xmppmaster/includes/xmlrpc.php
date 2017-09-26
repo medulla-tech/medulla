@@ -217,8 +217,7 @@ function xmlrpc_setfromxmppmasterlogxmpp(   $text,
                                                     $fromuser));
 }
 
-function xmlrpc_adddeployabort(
-                                $idcommand,
+function xmlrpc_adddeployabort( $idcommand,
                                 $jidmachine,
                                 $jidrelay,
                                 $host,
@@ -234,8 +233,7 @@ function xmlrpc_adddeployabort(
                                 $endcmd = None,
                                 $macadress = None
                                 ){
-    return xmlCall("xmppmaster.adddeployabort", array( 
-                                                        $idcommand,
+    return xmlCall("xmppmaster.adddeployabort", array(  $idcommand,
                                                         $jidmachine,
                                                         $jidrelay,
                                                         $host,
