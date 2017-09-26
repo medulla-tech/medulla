@@ -216,4 +216,40 @@ function xmlrpc_setfromxmppmasterlogxmpp(   $text,
                                                     $touser,
                                                     $fromuser));
 }
+
+function xmlrpc_adddeployabort(
+                                $idcommand,
+                                $jidmachine,
+                                $jidrelay,
+                                $host,
+                                $inventoryuuid,
+                                $uuidpackage,
+                                $state,
+                                $sessionid,
+                                $user="",
+                                $login="",
+                                $title="",
+                                $group_uuid = None,
+                                $startcmd = None,
+                                $endcmd = None,
+                                $macadress = None
+                                ){
+    return xmlCall("xmppmaster.adddeployabort", array( 
+                                                        $idcommand,
+                                                        $jidmachine,
+                                                        $jidrelay,
+                                                        $host,
+                                                        $inventoryuuid,
+                                                        $uuidpackage,
+                                                        $state,
+                                                        $sessionid,
+                                                        $user,
+                                                        $login,
+                                                        $title,
+                                                        $group_uuid,
+                                                        $startcmd,
+                                                        $endcmd,
+                                                        $macadress));
+}
+
 ?>
