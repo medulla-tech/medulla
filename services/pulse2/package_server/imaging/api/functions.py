@@ -1021,7 +1021,7 @@ class Imaging(object):
         returnprocess = False
         logging.getLogger()
         if re.search("/usr/sbin/drbl-ocs", output):
-                returnprocess = True
+            returnprocess = True
         s.stdout.close()
         if returnprocess:
             logging.getLogger().debug("drbl-ocs running")
