@@ -38,20 +38,52 @@ $p->display();
 
 <?
     // Retrieve information deploy. For cmn_id
-    $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+
+$info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
+
+//presentation du deploy
+echo "<pre>";
+         print_r(get_last_commands_on_cmd_id($cmd_id));
+//         echo "kkkkkkkkkkkkk";
+        $result = command_detail($cmd_id);
+        //print_r($result);
+        $start_date = mktime($result['start_date'][3],
+                            $result['start_date'][4],
+                            $result['start_date'][5],
+                            $result['start_date'][1],
+                            $result['start_date'][2],
+                            $result['start_date'][0]);
+
+        $start_date = date("Y-m-d H:i:s", $start_date);
+
+        $end_date = mktime(     $result['end_date'][3],
+                                $result['end_date'][4],
+                                $result['end_date'][5],
+                                $result['end_date'][1],
+                                $result['end_date'][2],
+                                $result['end_date'][0]);
+        $end_date = date("Y-m-d H:i:s", $end_date);
+        echo "<h2>Please wait ( Deployement package ".$result['title']." Planned : [$start_date - $end_date ])</h2>";
+
+echo "</pre>";
+
+if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
+    echo "<H1>DEPLOYMENT ABORT</H1>"; 
+}
+
     $boolterminate = false;
     if(isset($info['objectdeploy'][0]['sessionid'])){
-    if (isset($_POST['bStop'])){
-        $_SESSION[$info['objectdeploy'][0]['sessionid']]="end";
-        // if stop deploy message direct in les log 
-        // session for session id
-        //xmlrpc_getlinelogssession($sessionxmpp);
-        xmlrpc_set_simple_log('<span style="color : Orange, font-style : bold">WARNING !!! </span><span  style="color : Orange ">Request for a stop of deployment</span>',
-                                $info['objectdeploy'][0]['sessionid'], "deploy",
-                                "-1",
-                                "pulse_mmc" );
-        xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
-    }
+        if (isset($_POST['bStop'])){
+            $_SESSION[$info['objectdeploy'][0]['sessionid']]="end";
+            // if stop deploy message direct in les log 
+            // session for session id
+            //xmlrpc_getlinelogssession($sessionxmpp);
+            xmlrpc_set_simple_log('<span style="color : Orange, font-style : bold">WARNING !!! </span><span  style="color : Orange ">Request for a stop of deployment</span>',
+                                    $info['objectdeploy'][0]['sessionid'], "deploy",
+                                    "-1",
+                                    "pulse_mmc" );
+            xmlrpc_updatedeploy_states_start_and_process($info['objectdeploy'][0]['sessionid'], "DEPLOYMENT ABORT");
+        }
         $sessionxmpp = $info['objectdeploy'][0]['sessionid'];
         $infodeploy = xmlrpc_getlinelogssession($sessionxmpp);
         $uuid = $info['objectdeploy'][0]['inventoryuuid'];
@@ -79,7 +111,8 @@ $p->display();
     }
    if ($datawol['len'] != 0){
         echo "<br>";
-            echo "<h2>Wan on Lan</h2>";
+            echo "<h2 class='replytab' >Hide Wan on Lan</h2>";
+            echo "<div>";
             echo '<table class="listinfos" cellspacing="0" cellpadding="5" border="1">';
                 echo "<thead>";
                     echo "<tr>";
@@ -112,9 +145,9 @@ $p->display();
             }
         echo "</tbody>";
         echo "</table>";
+        echo "</div>";
     }
     if ( $info['len'] == 0 || $boolterminate == false){
-
         echo'
             <script type="text/javascript">
             setTimeout(refresh, 5000);
@@ -123,18 +156,38 @@ $p->display();
             }
         </script>
         ';
-        echo "<br>Preparing deployment. Please wait...";
-        echo "<img src='modules/xmppmaster/img/waitting.gif'>";
-        echo "<br>";
+        $result = command_detail($cmd_id);
+        $start_date = mktime($result['start_date'][3],
+                            $result['start_date'][4],
+                            $result['start_date'][5],
+                            $result['start_date'][1],
+                            $result['start_date'][2],
+                            $result['start_date'][0]);
+        $start_date = date("Y-m-d H:i:s", $start_date);
+        $end_date = mktime(     $result['end_date'][3],
+                                $result['end_date'][4],
+                                $result['end_date'][5],
+                                $result['end_date'][1],
+                                $result['end_date'][2],
+                                $result['end_date'][0]);
+        $end_date = date("Y-m-d H:i:s", $end_date);
+        echo "<h2>Please wait ( Deployement package ".$result['title']." Planned : [$start_date - $end_date ])</h2>";
+        if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START"){
+            echo "<br>Preparing deployment. Please wait...";
+            echo "<img src='modules/xmppmaster/img/waitting.gif'>";
+            echo "<br>";
+        }
     }
     if ( $info['len'] != 0)
     {
-        if ( !$boolterminate && !isset($_POST['bStop'])){
-            if (!isset($_SESSION[$info['objectdeploy'][0]['sessionid']])){
-                $f = new ValidatingForm();
-                $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-                $f->addButton("bStop","Stop Deploy");
-                $f->display();
+        if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START"){
+            if ( !$boolterminate && !isset($_POST['bStop'])){
+                if (!isset($_SESSION[$info['objectdeploy'][0]['sessionid']])){
+                    $f = new ValidatingForm();
+                    $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
+                    $f->addButton("bStop","Stop Deploy");
+                    $f->display();
+                }
             }
         }
         $state = $info['objectdeploy'][0]['state'];
@@ -338,6 +391,7 @@ $p->display();
         echo "</table>";
         echo "</div>";
     }
+
     if (isset($descriptorslist)){
         echo "<br>";
         echo "<h2 class='replytab'>Hide Deployment result</h2>
