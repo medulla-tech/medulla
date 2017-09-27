@@ -195,6 +195,9 @@ class RpcProxy(RpcProxyI):
 
 
     def installProductUpdates(self):
+        """
+            This function update packages used for pulse ( pulse, mmc, etc.)
+        """
 
         # Reset update cache
         global last_update_check_ts, available_updates
