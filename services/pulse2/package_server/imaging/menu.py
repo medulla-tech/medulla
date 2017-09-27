@@ -1033,6 +1033,8 @@ INITRD ../davos/initrd.img
         if self.networkserver == reseaumachine :
             self.logger.info("machine address %s in network %s"%(adressmachine,self.networkserver))
             return True
+        else :
+            self.logger.error("machine %s in not in network %s. Please check your public_mask setting."%(adressmachine,self.networkserver))
         return False
 
     def chooseMacAddress(self):
