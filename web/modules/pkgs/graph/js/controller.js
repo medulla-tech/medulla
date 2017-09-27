@@ -129,6 +129,17 @@ jQuery("#label").on('change click',function(){
  *
  */
 jQuery("#infos-package").on('click change',function(){
+if(jQuery("#name-package").val() == "")
+{
+    jQuery("#createPackageMessage").text("You must specify a name for the package");
+    jQuery("#createPackage").prop("disabled", true);
+}
+
+else
+{
+    jQuery("#createPackageMessage").text("");
+    jQuery("#createPackage").prop("disabled", false);
+}
 
     infoPackage = {
         'name':jQuery('#name-package').val(),
@@ -157,7 +168,6 @@ jQuery("#infos-package").on('click change',function(){
     // Manage query information
     if(jQuery("#associateinventory-package").is(':checked')){
         jQuery('#Qvendor-package').prop('disabled',false);
-        jQuery('#Qsoftware-package').prop('disabled',false);
         jQuery('#Qversion-package').prop('disabled',false);
         jQuery('#Qlicence-package').prop('disabled',false);
 
@@ -176,7 +186,6 @@ jQuery("#infos-package").on('click change',function(){
             delete(infoPackage.Qlicence);
         }
         jQuery("#Qvendor-package").prop('disabled',true);
-        jQuery("#Qsoftware-package").prop('disabled',true);
         jQuery("#Qversion-package").prop('disabled',true);
         jQuery("#Qlicence-package").prop('disabled',true);
     }
@@ -191,7 +200,6 @@ jQuery("#infos-package").on('click change',function(){
 jQuery('select[name="action"]').on('change',function(){
     action = jQuery('select[name="action"]').val();
     actionToCreate['action'] = action;
-
 
     loadOptions(action,"options");
 });
@@ -389,8 +397,10 @@ function updateList()
  *
  */
 function toggleAction() {
-    jQuery("#workflow-selected-list li h3").on('click', function () {
-        jQuery(this).parent('div').next('span').toggle();
+
+    jQuery("#workflow-selected-list .ui-accordion-header").on('click', function () {
+
+        jQuery(this).next('span').toggle();
 
         //Remove "add" and "remove" button from options in workflow list
         jQuery("#workflow-selected-list .add,.remove").hide();
@@ -433,7 +443,7 @@ function toggleAction() {
     });
 
     jQuery(".delete").on('click', function () {
-        jQuery(this).parent().remove();
+        jQuery(this).parent().parent().remove();
         updateList();
     });
 }

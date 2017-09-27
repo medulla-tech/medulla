@@ -78,8 +78,13 @@ a.info:hover span{
 .delete{
     position : relative;
     top : 3px;
+    width : 32px;
 }
 
+.label
+{
+    display:inline-block;
+}
 
 .dragged
 {
@@ -129,4 +134,8 @@ a.info:hover span{
     margin: 5px;
     position:relative;
     top:5px;
+}
+
+#workflow-selected-list li>span{
+    display:block;
 }

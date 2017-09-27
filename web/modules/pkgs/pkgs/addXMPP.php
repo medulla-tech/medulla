@@ -47,16 +47,15 @@ if(isset($_POST['saveList']))
     @import url(modules/pkgs/graph/pkgs/package.css);
 </style>
 
-<script src="modules/pkgs/graph/js/jQuery.js"></script>
+<!--<script src="modules/pkgs/graph/js/jQuery.js"></script>
 <script src="modules/pkgs/graph/js/jQuery-ui.js"></script>
-
+-->
 <h2>Infos package</h2>
 <div id="infos-package" style="display:flex;margin-bottom:10px;">
     <div>
         <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
         <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
         <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
-        <label for="software-package">Package software</label><input type="text" name="software-package" placeholder="Software" id="software-package" required/><br />
         <input type="hidden" name="uuid-package" id="uuid-package" value="<?php echo uniqid();?>" required/><br />
     </div>
     <div>
@@ -153,7 +152,8 @@ if(isset($_POST['saveList']))
 
         <form action="main.php?module=pkgs&submod=pkgs&action=add#" method="post" onsubmit="updateList()">
             <input type="hidden" id="saveList" name="saveList" value="">
-            <input type="submit" />
+            <p id="createPackageMessage" style="color:red"></p>
+            <input type="submit" id="createPackage" disabled />
         </form>
     </div>
 </div>
