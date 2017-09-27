@@ -207,8 +207,15 @@ class RpcProxy(RpcProxyI):
 
         @deferred
         def _runInstall():
+            try:
+                os.utime("/tmp/pulse-update-manager", None)
+            except Exception:
+                open("/tmp/pulse-update-manager", 'a').close()
+
             # Running install command with no pipe
             subprocess.call(install_cmd, shell=True)
+
+            os.remove("/tmp/pulse-update-manager", None)
 
         _runInstall()
 
