@@ -112,7 +112,7 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
-#jfk
+
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
