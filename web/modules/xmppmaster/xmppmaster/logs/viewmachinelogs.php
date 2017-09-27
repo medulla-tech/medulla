@@ -41,31 +41,6 @@ $p->display();
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, $uuid);
 
-//presentation du deploy
-echo "<pre>";
-         print_r(get_last_commands_on_cmd_id($cmd_id));
-//         echo "kkkkkkkkkkkkk";
-        $result = command_detail($cmd_id);
-        //print_r($result);
-        $start_date = mktime($result['start_date'][3],
-                            $result['start_date'][4],
-                            $result['start_date'][5],
-                            $result['start_date'][1],
-                            $result['start_date'][2],
-                            $result['start_date'][0]);
-
-        $start_date = date("Y-m-d H:i:s", $start_date);
-
-        $end_date = mktime(     $result['end_date'][3],
-                                $result['end_date'][4],
-                                $result['end_date'][5],
-                                $result['end_date'][1],
-                                $result['end_date'][2],
-                                $result['end_date'][0]);
-        $end_date = date("Y-m-d H:i:s", $end_date);
-        echo "<h2>Please wait ( Deployement package ".$result['title']." Planned : [$start_date - $end_date ])</h2>";
-
-echo "</pre>";
 
 if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT ABORT"){
     echo "<H1>DEPLOYMENT ABORT</H1>"; 
