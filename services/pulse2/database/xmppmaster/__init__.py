@@ -862,27 +862,27 @@ class XmppMasterDatabase(DatabaseHelper):
         logs = session.query(Logs)
         if start_date != "":
             logs = logs.filter( Logs.date > start_date)
-            print "date\n"
         if end_date != "":
             logs = logs.filter( Logs.date < end_date)
-            print "date\n"
-        if typelog != "None":
+        if not (typelog == "None" or typelog == ""):
             logs = logs.filter( Logs.type == typelog)
-            print "typelog\n"
-        if action != "None":
+        if not (action == "None" or action == ""):
             logs = logs.filter( Logs.action == action)
-            print "action\n"
-        if module != "None":
-            logs = logs.filter( Logs.module == module)
-            print "module\n"
-        if user != "":
-            logs = logs.filter( Logs.fromuser == user)
-        if how != "":
+        if not (module == "None" or module == ""):
+            #plusieurs criteres peuvent se trouver dans ce parametre.
+            criterformodule = [x.strip() for x in module.split("|") if x.strip() != "" and x != "None"]
+            for x in criterformodule:
+                stringsearchinmodule = "%"+x+"%"
+                logs = logs.filter( Logs.module.like(stringsearchinmodule))
+        if not (user == "None" or user == ""):
+            logs = logs.filter( func.lower(Logs.fromuser).like(func.lower(user)) )
+        if not (how == "None" or how == ""):
             logs = logs.filter( Logs.how == how)
-        if who != "":
+        if not (who == "None" or who == ""):
             logs = logs.filter( Logs.who == who)
-        if why != "":
+        if not (why == "None" or why == ""):
             logs = logs.filter( Logs.why == why)
+        logs = logs.order_by(desc(Logs.id)).limit(1000)
         print logs
         result = logs.all()
         session.commit()
@@ -906,7 +906,6 @@ class XmppMasterDatabase(DatabaseHelper):
             listchamp.append(linelogs.text)
             ret['data'].append(listchamp)
             #index = index + 1
-        print ret
         return ret
 
     @DatabaseHelper._sessionm
