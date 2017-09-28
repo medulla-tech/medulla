@@ -675,3 +675,4 @@ def get_xmpp_package(package_uuid):
         return json
     else:
         return False
+
