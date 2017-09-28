@@ -641,7 +641,7 @@ def xmpp_packages_list():
 def remove_xmpp_package(package_uuid):
     """
     Remove the specified xmpp package. If it is ok, return true, else return false
-    :param packageUuid:
+    :param packageUuid: uuid of the package
     :return: success | failure
     """
 
@@ -658,8 +658,8 @@ def remove_xmpp_package(package_uuid):
 def get_xmpp_package(package_uuid):
     """
     Select the specified package and return the information in the json
-    :param package_uuid:
-    :return:
+    :param package_uuid:  uuid of the package
+    :return: the json or false if it does not exist
     """
 
     path = "/var/lib/pulse2/packages"
