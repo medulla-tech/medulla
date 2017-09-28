@@ -641,7 +641,7 @@ def xmpp_packages_list():
 def remove_xmpp_package(package_uuid):
     """
     Remove the specified xmpp package. If it is ok, return true, else return false
-    :param packageUuid: uuid of the package
+    :param package_uuid: uuid of the package
     :return: success | failure
     """
 
