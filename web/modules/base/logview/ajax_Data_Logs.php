@@ -35,7 +35,8 @@ require_once("../../xmppmaster/includes/xmlrpc.php");
 
 extract($_GET);
 
-    $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module);
+//xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why=""){
+   $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module, $user, $how,$who, $why);
 
     echo json_encode($result);
 

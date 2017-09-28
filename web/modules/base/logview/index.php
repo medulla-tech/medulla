@@ -47,8 +47,10 @@
 
 <?php
     require("graph/navbar.inc.php");
-    //require("includes/statusSidebar.inc.php");
     require("localSidebar.inc.php");
+    $p = new PageGenerator(_("Alls Logs"));
+    $p->setSideMenu($sidemenu);
+    $p->display();
 ?>
 
 
