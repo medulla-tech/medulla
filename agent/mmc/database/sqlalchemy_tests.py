@@ -28,6 +28,9 @@ MAX_VERSION = '1.0.15' # Debian Stretch version
 CUR_VERSION = __version__
 
 def checkSqlalchemy():
+    """
+    Check if the provided version of sqlalchemy is suitable for mmc-core
+    """
     #if MIN_VERSION <= CUR_VERSION <= MAX_VERSION:
     if StrictVersion(MIN_VERSION) <= StrictVersion(CUR_VERSION) <=  StrictVersion(MAX_VERSION) :
         return True
