@@ -22,72 +22,93 @@
  *
  */
 
-if(isset($_POST['saveList']))
+
+if(isset($_GET["action"]) && $_GET["action"] =="edit")
 {
-    $_SESSION['workflow'] = $_POST['saveList'];
+    if(isset($_POST['saveList']))
+    {
+        //If something to be saved (receive the editing form)
+    }
 
-    //print_r($_SESSION['workflow']);
-
-    $_SESSION['workflow'] = str_replace("\"[","[",$_SESSION['workflow']);
-    $_SESSION['workflow'] = str_replace("]\"","]",$_SESSION['workflow']);
-    $_SESSION['workflow'] = str_replace("\"{","{",$_SESSION['workflow']);
-    $_SESSION['workflow'] = str_replace("}\"","}",$_SESSION['workflow']);
-
-    $_SESSION['workflow']= stripslashes($_SESSION['workflow']);
-
-    $result = save_xmpp_json($_SESSION['workflow']);
-
-    if($result)
-        echo '<p>The package has been created.</p>';
     else
-        echo '<p>Write error : the package can\'t be created.</p>';
+    {
+        //If entering in edit mode : get json information
+        $json = get_xmpp_package($_GET['packageUuid']);
+        if($json)
+        {
+            echo '<input type="hidden" id="loadJson" value=\''.$json.'\' />';
+            echo "<script>jQuery('#createPackage').prop('disabled',false);</script>";
+        }
+
+        $json = json_decode($json,true);
+    }
+}
+else
+{
+    if(isset($_POST['saveList']))
+    {
+        $_SESSION['workflow'] = $_POST['saveList'];
+
+        //print_r($_SESSION['workflow']);
+
+        $_SESSION['workflow'] = str_replace("\"[","[",$_SESSION['workflow']);
+        $_SESSION['workflow'] = str_replace("]\"","]",$_SESSION['workflow']);
+        $_SESSION['workflow'] = str_replace("\"{","{",$_SESSION['workflow']);
+        $_SESSION['workflow'] = str_replace("}\"","}",$_SESSION['workflow']);
+
+        $_SESSION['workflow']= stripslashes($_SESSION['workflow']);
+
+        $result = save_xmpp_json($_SESSION['workflow']);
+
+        if($result)
+            echo '<p>The package has been created.</p>';
+        else
+            echo '<p>Write error : the package can\'t be created.</p>';
+    }
 }
 ?>
 <style type="text/css">
     @import url(modules/pkgs/graph/pkgs/package.css);
 </style>
 
-<!--<script src="modules/pkgs/graph/js/jQuery.js"></script>
-<script src="modules/pkgs/graph/js/jQuery-ui.js"></script>
--->
 <h2>Infos package</h2>
 <div id="infos-package" style="display:flex;margin-bottom:10px;">
     <div>
-        <label for="name-package">Package name</label><input type="text" name="name-package" placeholder="Name" id="name-package" required/><br />
-        <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" required/><br />
-        <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" required/><br />
-        <input type="hidden" name="uuid-package" id="uuid-package" value="<?php echo uniqid();?>" required/><br />
+        <label for="name-package">Package name</label><input type="text" value="<?php echo isset($json['info']['name']) ? $json['info']['name'] : "";?>" name="name-package" placeholder="Name" id="name-package" required/><br />
+        <label for="description-package">Package description</label><input type="text" name="description-package" placeholder="Description" id="description-package" value="<?php echo isset($json['info']['description']) ? $json['info']['description'] : "";?>" required/><br />
+        <label for="version-package">Package version</label><input type="text" name="version-package" placeholder="Version" id="version-package" value="<?php echo isset($json['info']['version']) ? $json['info']['version'] : "";?>"required/><br />
+        <input type="hidden" name="uuid-package" id="uuid-package" value="<?php echo isset($json['info']['id']) ? $json['info']['id'] : uniqid();?>" required/><br />
     </div>
     <div>
-        <label for="quitonerror-package">Quit on error</label>
+        <label for="quitonerror-package">Quit on error(<?php echo $json['info']['quitonerror'];?>)</label>
         <select name="quitonerror-package" id="quitonerror-package">
-            <option value="false">false</option>
-            <option value="true">true</option>
+            <option value="False" <? echo (isset($json['info']['quitonerror']) && $json['info']['quitonerror'] == 'False') ? 'selected' :"" ?>>False</option>
+            <option value="True" <? echo (isset($json['info']['quitonerror']) && $json['info']['quitonerror'] == 'True') ? 'selected' :"" ?>>True</option>
         </select>
         <label for="transferfile-package">Transfer file</label>
         <select name="transferfile-package" id="transferfile-package">
-            <option value="false">false</option>
-            <option value="true">true</option>
+            <option value="False" <? echo (isset($json['info']['transferfile']) && $json['info']['transferfile'] == 'False') ? 'selected' :"" ?>>False</option>
+            <option value="True" <? echo (isset($json['info']['transferfile']) && $json['info']['transferfile'] == 'True') ? 'selected' :"" ?>>True</option>
         </select>
 
         <label for="methodtransfert-package">Transfert method</label>
-        <select name="methodtransfert-package" id="methodtransfert-package" disabled>
-            <option value="pushscp">scp</option>
-            <option value="pushrsync">rsync</option>
-            <option value="pullcurl">curl</option>
+        <select name="methodtransfert-package" id="methodtransfert-package" <? echo (isset($json['info']['transferfile']) && $json['info']['transferfile'] == 'False') ? 'disabled' :"" ?>>
+            <option value="pushscp" <? echo (isset($json['info']['methodtransfert']) && $json['info']['methodtransfert'] == 'pushscp') ? 'selected' :"" ?>>scp</option>
+            <option value="pushrsync" <? echo (isset($json['info']['methodtransfert']) && $json['info']['methodtransfert'] == 'pushrsync') ? 'selected' :"" ?>>rsync</option>
+            <option value="pullcurl" <? echo (isset($json['info']['methodtransfert']) && $json['info']['methodtransfert'] == 'pullcurl') ? 'selected' :"" ?>>pullcurl</option>
         </select>
     </div>
     <div>
         <label for="associateinventory-package">Associate inventory</label>
-        <input type="checkbox" name="associateinventory-package" id="associateinventory-package" />
+        <input type="checkbox" name="associateinventory-package" id="associateinventory-package" <? echo (isset($json['info']['Qsoftware']) || isset($json['info']['Qlicence']) || isset($json['info']['Qversion']) || isset($json['info']['Qvendor'])) ? 'checked' :"" ?>/>
         <label for="Qvendor-package">Vendor</label>
-        <input type="text" name="Qvendor-package" id="Qvendor-package" disabled />
+        <input type="text" name="Qvendor-package" id="Qvendor-package" <? echo (isset($json['info']['Qvendor'])) ? "value=\"".$json['info']['Qvendor']."\"" : "disabled"; ?> />
         <label for="Qsoftare-package">Software</label>
-        <input type="text" name="Qsoftware-package" id="Qsoftware-package" disabled />
+        <input type="text" name="Qsoftware-package" id="Qsoftware-package" <? echo (isset($json['info']['Qsoftware'])) ? "value=\"".$json['info']['Qsoftware']."\"" : "disabled"; ?> />
         <label for="Qversion-package">Version</label>
-        <input type="text" name="Qversion-package" id="Qversion-package" disabled />
+        <input type="text" name="Qversion-package" id="Qversion-package" <? echo (isset($json['info']['Qversion'])) ? "value=\"".$json['info']['Qversion']."\"" : "disabled"; ?> />
         <label for="Qlicence-package">Licence</label>
-        <input type="text" name="Qlicence-package" id ="Qlicence-package" disabled />
+        <input type="text" name="Qlicence-package" id ="Qlicence-package" <? echo (isset($json['info']['Qlicence'])) ? "value=\"".$json['info']['Qlicence']."\"" : "disabled"; ?> />
     </div>
 </div>
 
@@ -150,15 +171,13 @@ if(isset($_POST['saveList']))
             </ul>
         </div>
 
-        <form action="main.php?module=pkgs&submod=pkgs&action=add#" method="post" onsubmit="updateList()">
+        <form action="main.php?module=pkgs&submod=pkgs&action=<?php echo $_GET['action'];?>#" method="post" onsubmit="updateList()">
             <input type="hidden" id="saveList" name="saveList" value="">
             <p id="createPackageMessage" style="color:red"></p>
             <input type="submit" id="createPackage" disabled />
         </form>
     </div>
 </div>
-<a href="./main.php?module=pkgs&submod=pkgs&action=add&reset">Reset all</a>
-
 
 <script src="modules/pkgs/graph/js/class.js"></script>
 <script src="modules/pkgs/graph/js/controller.js"></script>

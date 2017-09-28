@@ -25,7 +25,7 @@
 var osSelected = "mac";
 
 //wfList is an array which contains the Os workflow i.e.: wfList['mac'] will contains the mac sequence
-wfList = {};
+var wfList = {};
 
 //infosPackage collects all the info about workflow information
 var infoPackage = {};
@@ -444,7 +444,7 @@ function Workflow()
 
             //add the the html to display
             jQuery(selector).append('<li id="'+action['label']+'" data-name="'+action['label']+'" >'+
-                '<div class="ui-accordion-header ui-state-default" >'+add+'<h3 class="label">'+action['label']+'</h3></div>'+
+                '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3><h4>'+action['action']+'</h4></div>'+
                 '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active">'+form+'</span>'+
                 '</li>');
 
@@ -576,5 +576,18 @@ function Workflow()
         });//End each sequence as id=>action
 
         this.sequence = tmp;
+    }
+
+    /**
+     * Copy the imported json into workflow
+     * @param json
+     */
+    this.import = function(sequence){
+        this.sequence = {};
+        jQuery.each(sequence, function(name,value){
+            console.log(name);
+            console.log(value);
+        });
+        this.sequence = sequence;
     }
 }

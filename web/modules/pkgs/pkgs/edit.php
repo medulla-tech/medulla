@@ -38,6 +38,11 @@ $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+
+if(!isExpertMode())
+{
+
+
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 
@@ -335,4 +340,11 @@ $f->pop();
 $f->addValidateButton("bcreate");
 
 $f->display();
+
+}
+
+else
+{
+    include("addXMPP.php");
+}
 ?>

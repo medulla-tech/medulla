@@ -647,9 +647,31 @@ def remove_xmpp_package(package_uuid):
 
     path = "/var/lib/pulse2/packages"
 
-    # If the
+    # If the package exists, delete it and return true
     if os.path.exists(path + '/' + package_uuid):
         shutil.rmtree(path + '/' + package_uuid)
         return True
     else :
+        return False
+
+
+def get_xmpp_package(package_uuid):
+    """
+    Select the specified package and return the information in the json
+    :param package_uuid:
+    :return:
+    """
+
+    path = "/var/lib/pulse2/packages"
+
+    if os.path.exists(path + '/' + package_uuid):
+        # Read all the content of the package
+
+        json_file = open(path + '/' + package_uuid + '/xmppdeploy.json', 'r')
+        json = json_file.read()
+
+        json_file.close()
+
+        return json
+    else:
         return False

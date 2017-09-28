@@ -159,4 +159,8 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
 function remove_xmpp_package($packageUuid){
     return xmlCall("pkgs.remove_xmpp_package", array($packageUuid));
 }
+
+function get_xmpp_package($packageUuid){
+    return xmlCall("pkgs.get_xmpp_package", array($packageUuid));
+}
 ?>

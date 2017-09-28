@@ -22,13 +22,38 @@
  */
 
 
+
 /**
  *
  * INITIALIZE WORKFLOWS
  * @see pkgs/graph/js/class.js
  *
  */
-wfList[osSelected] = new Workflow(osSelected);
+
+
+if(typeof(jQuery("#loadJson").val()) != "undefined" && jQuery("#loadJson").val() != "")
+{
+    tmp = JSON.parse(jQuery("#loadJson").val());
+
+    //Get the elements of the sequences
+    jQuery.each(tmp, function(key, element){
+        if(key == "info")
+            wfList['info'] == element;
+        else
+        {
+            wfList[key] = new Workflow();
+            wfList[key].import(element['sequence']);
+        }
+    });
+
+    if(tmp != null)
+    {
+        wfList['info'] = tmp['info'];
+    }
+}
+else
+    wfList[osSelected] = new Workflow(osSelected);
+
 wfList[osSelected].display('#workflow-selected-list', toggleAction);
 updateList();
 
@@ -151,13 +176,15 @@ else
     };
 
     // Manage the transfert file
-    if(jQuery("#transferfile-package").val() == 'true')
+    console.log(jQuery("#transferfile-package").val());
+    if(jQuery("#transferfile-package").val() == 'True')
     {
         jQuery("#methodtransfert-package").prop('disabled',false);
         infoPackage['methodtransfert'] = jQuery('#methodtransfert-package').val();
     }
     else
     {
+
         if(typeof(infoPackage['methodtransfert']) != 'undefined')
         {
             delete(infoPackage.methodtransfert);
@@ -170,6 +197,7 @@ else
         jQuery('#Qvendor-package').prop('disabled',false);
         jQuery('#Qversion-package').prop('disabled',false);
         jQuery('#Qlicence-package').prop('disabled',false);
+        jQuery('#Qsoftware-package').prop('disabled',false);
 
         infoPackage['Qvendor'] = jQuery('#Qvendor-package').val();
         infoPackage['Qsoftware'] = jQuery('#Qsoftware-package').val();
@@ -188,6 +216,7 @@ else
         jQuery("#Qvendor-package").prop('disabled',true);
         jQuery("#Qversion-package").prop('disabled',true);
         jQuery("#Qlicence-package").prop('disabled',true);
+        jQuery('#Qsoftware-package').prop('disabled',true);
     }
 });
 
