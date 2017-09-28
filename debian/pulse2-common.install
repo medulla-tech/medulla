@@ -6,6 +6,7 @@ usr/sbin/pulse2-setup
 usr/sbin/pulse2-create-group
 usr/sbin/pulse2-load-defaults
 usr/sbin/pulse2-create-group
+usr/sbin/restart-pulse-services
 var/lib/pulse2/clients/win32
 var/lib/pulse2/clients/templates/
 var/lib/pulse2/clients/create-repos.sh
