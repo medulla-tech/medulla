@@ -38,14 +38,13 @@ PROJECT_NAME           = Pulse
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 3.9.90
+PROJECT_NUMBER         = 3.9.93
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = 
-
+PROJECT_BRIEF          =  Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are.
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
