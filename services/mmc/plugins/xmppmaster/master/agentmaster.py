@@ -1311,6 +1311,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         else:
                             # Register machine in inventory
                             logger.debug("** Call inventory on %s"% msg['from'].bare)
+                            XmppMasterDatabase().setlogxmpp(    "Master ask inventory for registration",
+                                                                "Master msg",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'QuickAction|Inventory|Inventory reception',
+                                                                '',
+                                                                '',
+                                                                "Master")
                             self.callinventory(data['from'])
                 else:
                     logger.error("** enregistration base error")

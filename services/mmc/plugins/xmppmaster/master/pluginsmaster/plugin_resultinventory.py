@@ -18,8 +18,8 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
              }
     try:
         logging.getLogger().debug("plugin_resultinventory")
-        print os.environ
-        print message['from']
+        #print os.environ
+        #print message['from']
         # send inventory to inventory server
         try:
             url = xmppobject.config.inventory_url
@@ -34,6 +34,18 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
             reginventory = json.loads(base64.b64decode(data['reginventory']))
         except:
             reginventory = False
+        #send inventory to inventory server
+        XmppMasterDatabase().setlogxmpp( "inject inventory to Glpi",
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                message['from'],
+                                                                'Manuel',
+                                                                '',
+                                                                'QuickAction |Inventory | Inventory requested',
+                                                                '',
+                                                                '',
+                                                                "Master")
         if reginventory:
             computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
             logging.getLogger().debug("Computers ID: %s" % computers_id)

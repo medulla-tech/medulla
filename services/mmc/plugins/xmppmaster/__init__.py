@@ -301,10 +301,11 @@ def CallXmppPlugin(*args, **kwargs ):
 def callInventoryinterface(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callInventory(jid)
+        callInventory(jid)
+        return jid
     else:
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def callrestart(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
