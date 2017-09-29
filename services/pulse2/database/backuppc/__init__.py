@@ -170,6 +170,17 @@ class BackuppcDatabase(DatabaseHelper):
     # HOSTS TABLE FUNCTIONS
     # =====================================================================
 
+
+    @DatabaseHelper._session
+    def get_count_of_backuped_hosts(self, session):
+        ret = session.query(Hosts.id).all()
+
+        count = 0
+        for item in ret:
+            count += 1
+        return count
+
+
     @DatabaseHelper._session
     def get_all_hosts(self, session):
         ret = session.query(Hosts).all()
