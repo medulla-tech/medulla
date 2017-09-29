@@ -52,16 +52,18 @@ switch($_GET['action']){
                 xmlrpc_synchroComputer($_GET['objectUUID'], false,  false);
             }
             xmlrpc_runXmppWolforuuid($_GET['objectUUID']);
-            xmlrpc_setfromxmppmasterlogxmpp( 'wol '.$typewol.' from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'].'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction shutdown on machine',
-                                            $touser =  $_GET['cn'],
-                                            $fromuser = $_SESSION['login']);
+
+            xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send wol to presente [ Machine : \"".$_GET['cn']."\"]",
+                                            "QA",
+                                            '' ,
+                                            0,
+                                            $_GET['cn'],
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'QuickAction | WOL sent');
         break;
     case "deployquickgroup":
         //work for all machines on group
@@ -73,6 +75,17 @@ switch($_GET['action']){
         $machine_not_present      = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] send a wol to machines on Group : [\"".$_GET['groupname']."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        'Grp : '.$_GET['groupname'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | WOL sent');
         xmlrpc_setfromxmppmasterlogxmpp( 'wol '.$typewol.' from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
                                         $type = "USER",
                                         $sessionname = '' ,
@@ -96,6 +109,19 @@ switch($_GET['action']){
                     xmlrpc_synchroComputer($key, false,  false);
                 }
                 xmlrpc_runXmppWolforuuid( $key );
+                xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
+                                                    "[Group :\"".$_GET['groupname'].
+                                                    "\"] sent Wol to absent [machine : \"".$value[1]['cn'][0]."\"]",
+                                                "QA",
+                                                '' ,
+                                                0,
+                                                $value[1]['cn'][0],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Reboot sent');
             }
             else{
                 $presence[] = 1;
