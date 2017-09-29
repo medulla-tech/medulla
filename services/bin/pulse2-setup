@@ -353,6 +353,9 @@ class Service(object):
 class SrvMmcAgent(Service):
     name = 'mmc-agent'
 
+    def is_enable(self):
+        return self.config['inventory.service.enable']
+
     def restart(self, *args, **kwargs):
         super(SrvMmcAgent, self).restart(fatal=True)
 
