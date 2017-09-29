@@ -32,7 +32,7 @@ function get_host_list($pattern) {
 }
 
 function get_count_of_backuped_hosts() {
-    return xmlCall("backuppc.get_count_of_all_hosts", array());
+    return xmlCall("backuppc.get_count_of_backuped_hosts", array());
 }
 
 function get_backup_list($host) {
