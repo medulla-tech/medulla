@@ -40,17 +40,19 @@ require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 switch($_GET['action']){
     case "deployquick":
         //work for one machine
-        xmlrpc_setfromxmppmasterlogxmpp(    'inventory from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'] .']',
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction inventory on machine',
-                                            $touser =  $_GET['cn'],
-                                            $fromuser = $_SESSION['login']);
-        echo xmlrpc_callInventoryinterface($_GET['objectUUID']);
+        $jid = xmlrpc_callInventoryinterface($_GET['objectUUID']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : user \"".$_SESSION["login"]."\" ask a inventory to [ machine : \"".$_GET['cn']."\"] [jid : \"".$jid."\"]",
+                                                "QA",
+                                                '',
+                                                0,
+                                                $_GET['cn'] ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Inventory | Inventory requested');
+
         break;
     case "deployquickgroup":
     //work for all machines on group
@@ -62,16 +64,17 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp(    'inventory from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .']',
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction inventory on group',
-                                            $touser =  'group '.$_GET['groupname'] ,
-                                            $fromuser = $_SESSION['login']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a inventory to presente machine on Group : [\"".$_GET['groupname']."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        '',
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Inventory | Inventory requested');
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -82,7 +85,20 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callInventoryinterface( $key );
+                $jid = xmlrpc_callInventoryinterface( $key );
+                xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
+                                                    "[Group :\"".$_GET['groupname'].
+                                                    "\"] Inventory to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
+                                                "QA",
+                                                '' ,
+                                                0,
+                                                $value[1]['cn'][0],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Inventory | Inventory requested');
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }

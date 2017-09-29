@@ -52,8 +52,22 @@ if (isset($_POST["bconfirm"])) {
 
         if (in_array("xmppmaster", $_SESSION["supportModList"])){
             // send message agent machine pour quel se réinscrive.
-            xmlrpc_callInventoryinterface($uuid);
+            if(xmlrpc_getPresenceuuid($uuid)){
+                 $jid = xmlrpc_callInventoryinterface($uuid);
+                xmlrpc_setfromxmppmasterlogxmpp("QA : Master ask a inventory to ".$jid." after delete machine of glpi [".$_SESSION["login"] ."]",
+                                                "infouser",
+                                                '' ,
+                                                0,
+                                                $jid,
+                                                'auto',
+                                                '',
+                                                '',
+                                                '',
+                                                "master",
+                                                'QuickAction | Inventory | Inventory requested');
+            }
         }
+
         if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been deleted."));
         header("Location: " . urlStrRedirect("base/computers/index"));
         exit;
