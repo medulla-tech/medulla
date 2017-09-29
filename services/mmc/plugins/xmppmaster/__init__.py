@@ -111,9 +111,7 @@ def adddeployabort(
                     startcmd,
                     endcmd,
                     macadress):
-    return XmppMasterDatabase().adddeploy(
-                                           
-                                            idcommand,
+    return XmppMasterDatabase().adddeploy(  idcommand,
                                             jidmachine,
                                             jidrelay,
                                             host,
@@ -310,18 +308,20 @@ def callInventoryinterface(uuid):
 def callrestart(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callrestartbymaster(jid)
+        callrestartbymaster(jid)
+        return jid
     else:
         logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def callshutdown(uuid, time, msg):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callshutdownbymaster(jid, time, msg)
+        callshutdownbymaster(jid, time, msg)
+        return jid
     else:
         logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def runXmppCommand(cmd,machine):
     data = {
