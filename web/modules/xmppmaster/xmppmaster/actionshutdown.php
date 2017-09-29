@@ -34,8 +34,6 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
-
-
 switch($_GET['action']){
     case "deployquick":
         // work for one machine
@@ -50,7 +48,7 @@ switch($_GET['action']){
                                         '',
                                         '',
                                         "session user ".$_SESSION["login"],
-                                        'QuickAction | Reboot sent');
+                                        'QuickAction | Shutdown sent');
 
         $result = $_GET;
         echo json_encode($result);
@@ -75,7 +73,7 @@ switch($_GET['action']){
                                         '',
                                         '',
                                         "session user ".$_SESSION["login"],
-                                        'QuickAction | Reboot sent');
+                                        'QuickAction | Shutdown sent');
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -99,8 +97,9 @@ switch($_GET['action']){
                                                 '',
                                                 '',
                                                 "session user ".$_SESSION["login"],
-                                                'QuickAction | Reboot sent');
+                                                'QuickAction | Shutdown sent');
             };
+
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
         echo json_encode($result);

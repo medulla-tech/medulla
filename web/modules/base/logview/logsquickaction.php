@@ -245,7 +245,6 @@ jQuery(function(){
     });
 });
     function searchlogs(url){
-    alert(url);
         jQuery('#tablelog').DataTable()
                             .ajax.url(
                                 url

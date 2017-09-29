@@ -60,8 +60,7 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        
-        
+
         xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a restart to machines on Group : [\"".$_GET['groupname']."\"]",
                                         "QA",
                                         '' ,

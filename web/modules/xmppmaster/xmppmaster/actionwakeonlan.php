@@ -86,16 +86,7 @@ switch($_GET['action']){
                                         '',
                                         "session user ".$_SESSION["login"],
                                         'QuickAction | WOL sent');
-        xmlrpc_setfromxmppmasterlogxmpp( 'wol '.$typewol.' from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
-                                        $type = "USER",
-                                        $sessionname = '' ,
-                                        $priority = 0,
-                                        $who = 'AMR',
-                                        $how = 'xmpp',
-                                        $why = '',
-                                        $action = 'quickaction wol on group',
-                                        $touser =  'group '.$_GET['groupname'] ,
-                                        $fromuser = $_SESSION['login']);
+      
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -121,7 +112,7 @@ switch($_GET['action']){
                                                 '',
                                                 '',
                                                 "session user ".$_SESSION["login"],
-                                                'QuickAction | Reboot sent');
+                                                'QuickAction | WOL sent');
             }
             else{
                 $presence[] = 1;
@@ -133,3 +124,14 @@ switch($_GET['action']){
     break;
 }
 ?>
+            
+            
+            
+            
+           
+
+QuickAction | Shutdown sent | Manual | User
+QuickAction | Reboot sent | Manual | User
+
+
+
