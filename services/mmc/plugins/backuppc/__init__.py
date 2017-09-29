@@ -142,6 +142,11 @@ def get_all_hosts():
     return BackuppcDatabase().get_all_hosts()
 
 
+def get_count_of_backuped_hosts():
+    """Return the number of machines which are hosted in backuppc"""
+    return BackuppcDatabase().get_count_of_backuped_hosts()
+
+
 # PERIOD PROFILES
 
 def get_period_profiles():
