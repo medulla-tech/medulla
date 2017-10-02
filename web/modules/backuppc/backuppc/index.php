@@ -27,11 +27,36 @@ require("graph/navbar.inc.php");
 require("localSidebar.php");
 require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+$cn = "";
+if (isset( $_GET['objectUUID'])) {
+    $filter = array('hostname' => $_POST["uuid"]);
+    $cl = getRestrictedComputersList(0, -1, $filter, False);
+    foreach ($cl as $k => $v) {
+        $cn = $v[1]['cn'][0];
+    }
+    // xmlrpc_getPresenceuuid
+    // xmlrpc_getjidMachinefromuuid
+}
 
 // Unset backup for selected host
 if (isset($_GET['objectUUID'])){
     unset_backup_for_host($_GET['objectUUID']);
-    if (!isXMLRPCError()) new NotifyWidgetSuccess(_("The computer has been removed from the backup system."));
+    if (!isXMLRPCError()) {
+    xmlrpc_setfromxmppmasterlogxmpp("The computer $cn has been removed from the backup system.",
+                                    "BPC",
+                                    '',
+                                    0,
+                                    $cn ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Backup | Full Removed Starting | Manual');
+        new NotifyWidgetSuccess(_("The computer has been removed from the backup system."));
+    }
 }
 
 $p = new PageGenerator(_T("Backup status", 'backuppc'));

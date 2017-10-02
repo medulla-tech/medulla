@@ -26,6 +26,7 @@ require_once("modules/backuppc/includes/xmlrpc.php");
 require_once("modules/backuppc/includes/functions.php");
 require_once("modules/backuppc/includes/html.inc.php");
 require_once("modules/base/includes/computers.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 require("graph/navbar.inc.php");
 require("localSidebar.php");
 
@@ -41,20 +42,32 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
     // Checking reponse
     if (isset($response)) {
         if (isXMLRPCError() || $response['err']) {
+            xmlrpc_setfromxmppmasterlogxmpp(_T('Error Backup configuration Computer', 'backuppc')." ". $computer_name." ".$response['err'],
+                                                "BPC",
+                                                '',
+                                                0,
+                                                $computer_name ,
+                                                'Manual',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Backup | Configuration | Error | Manual | auto');
             new NotifyWidgetFailure(nl2br($response['errtext']));
         }
         else {
+            xmlrpc_setfromxmppmasterlogxmpp(_T('Computer', 'backuppc')." ". $computer_name." "._T('has been added to backup system successfully.', 'backuppc'),
+                                                "BPC",
+                                                '',
+                                                0,
+                                                $computer_name ,
+                                                'Manual',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Backup | Configuration | Manual | auto');
             new NotifyWidgetSuccess(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name));
-            xmlrpc_setfrombackuppclogxmpp(sprintf(_T('Computer %s has been added to backup system successfully.<br />You can now configure its filesets and scheduling.', 'backuppc'), $computer_name),
-                                                $type = "USER",
-                                                $sessionname = '' ,
-                                                $priority = 0,
-                                                $who = 'AMR',
-                                                $how = 'xmpp',
-                                                $why = '',
-                                                $action = 'hostStatus',
-                                                $touser =  'group '.$_GET['groupname'] ,
-                                                $fromuser = $_SESSION['login']);
             $_GET['tab'] = 'tab2';
         }
     }
@@ -158,6 +171,17 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
 
     set_host_config($_POST['host'], $cfg);
+    xmlrpc_setfromxmppmasterlogxmpp(_T('Computer', 'backuppc')." ". $computer_name." "._T('Save configure host ', 'backuppc'),
+                                                "BPC",
+                                                '',
+                                                0,
+                                                $computer_name ,
+                                                'Manual',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Backup | Configuration | Manual | auto');
     new NotifyWidgetSuccess(_T('Configuration saved', 'backuppc'));
 }
 
