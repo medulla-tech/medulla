@@ -49,58 +49,6 @@ Inventory | Inventory reception | Planned | Machine
 Inventory | Inventory requested | Deployment | User
 Inventory | Inventory requested | Quick Action | User
 
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
-
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
-
-Packaging | Package creation | Manual | User
-Packaging | Package edition | Manual | User
-Packaging | Package deletion | Manual | User
-Packaging | Bundle creation | Manual | User
-Packaging | Bundle edition | Manual | User
-Packaging | Bundle deletion | Manual | User
-
-Remote desktop | service| Manual | User
-Remote desktop | Remote desktop control request | Manual | User
-Remote desktop | Reverse SSH start | Remote desktop control request | ARS
-Remote desktop | Reverse SSH stop | Remote desktop control request | ARS
-
-
 From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
 Action: L'action
 Module: Le module
@@ -108,8 +56,6 @@ Text: Détail
 How: Le contexte: par exemple, lors d'un déploiement, planifié, etc.
 Who: Nom du groupe ou de la machine
 Why: Groupe ou machine
-
-
 */
 ?>
 
@@ -248,27 +194,13 @@ jQuery(function(){
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=Inventory%7CNone&user=&how=&who=&why=")
     } );
-    </script>';
+    </script>
 
 <?php
 
-print '';
-    
-
 
 /*
-$yes_no  =        array(
-                                        _T('Yes','imaging'),
-                                        _T('No','imaging'));
-
-$typelog  =        array(
-                                        _T('MMC','logs'),
-                                        _T('AMR','logs'),
-                                        _T('AM','logs'),
-                                        _T('ARS','logs'),
-                                        _T('None','logs'));*/
-/*                                        
-                                        Inventory | Inventory requested | New machine | Master
+Inventory | Inventory requested | New machine | Master
 Inventory | Inventory reception | Planned | Machine
 Inventory | Inventory requested | Deployment | User
 Inventory | Inventory requested | Quick Action | User

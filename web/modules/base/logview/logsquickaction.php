@@ -68,11 +68,7 @@ Deployment | Deployment execution | Planned | User
 Deployment | Deployment execution | Convergence | ARS ou Master
 Deployment | WOL sent | Deployment | ARS
 
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
+
 
 Imaging | Menu change | Manual | User
 Imaging | Menu change | WOL | User
@@ -95,7 +91,8 @@ Packaging | Package deletion | Manual | User
 Packaging | Bundle creation | Manual | User
 Packaging | Bundle edition | Manual | User
 Packaging | Bundle deletion | Manual | User
- 
+
+Remote desktop | service| Manual | User
 Remote desktop | Remote desktop control request | Manual | User
 Remote desktop | Reverse SSH start | Remote desktop control request | ARS
 Remote desktop | Reverse SSH stop | Remote desktop control request | ARS
@@ -178,24 +175,6 @@ class SelectItemlabeltitle extends SelectItem {
     $p->display();
 
     $filterlogs = "QuickAction";
-//     QuickAction | WOL sent | Manual | User
-// QuickAction | Inventory requested | Manual | User
-// QuickAction | Inventory reception | Manual | User
-// QuickAction | Shutdown sent | Manual | User
-// QuickAction | Reboot sent | Manual | User
-// function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why=""){
-//  var param = {
-//                 "start_date" :  jQuery('#start_date').val(),
-//                 "end_date"   : jQuery('#end_date').val(),
-//                 "type" : jQuery('#type option:selected').val(),
-//                 "action" : jQuery('#action option:selected').val(),
-//                 "module" : jQuery('#module option:selected').val(),
-//                 "user" : "",
-//                 "how" : "",
-//                 "who" : "",
-//                 "why" : "",
-//             }
-
 
 ?>
 
@@ -254,16 +233,17 @@ jQuery(function(){
 
 
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=QuickAction%7CNone&user=&how=&who=&why=")
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
+        //searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=QuickAction%7CNone&user=&how=&who=&why=")
     } );
-    </script>';
+    </script>
 
 <?php
-
-print '';
-    
-
-
+// QuickAction | WOL sent | Manual | User
+// QuickAction | Inventory requested | Manual | User
+// QuickAction | Inventory reception | Manual | User
+// QuickAction | Shutdown sent | Manual | User
+// QuickAction | Reboot sent | Manual | User
 /*
 $yes_no  =        array(
                                         _T('Yes','imaging'),

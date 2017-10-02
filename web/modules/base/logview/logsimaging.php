@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * File : logsdeployment.php
+ * File : logsimaging.php
  */
  
  /*
@@ -73,20 +73,7 @@ QuickAction | Inventory reception | Manual | User
 QuickAction | Shutdown sent | Manual | User
 QuickAction | Reboot sent | Manual | User
 
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
+
 
 Packaging | Package creation | Manual | User
 Packaging | Package edition | Manual | User
@@ -108,6 +95,7 @@ Text: Détail
 How: Le contexte: par exemple, lors d'un déploiement, planifié, etc.
 Who: Nom du groupe ou de la machine
 Why: Groupe ou machine
+
 
 */
 ?>
@@ -174,8 +162,7 @@ class SelectItemlabeltitle extends SelectItem {
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    $filterlogs = "Deployment";
-
+    $filterlogs = "Imaging";
 
 ?>
 
@@ -239,80 +226,60 @@ jQuery(function(){
     </script>
 
 <?php
-
-print '';
-
-/*                                        
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
+/*
+Imaging | Menu change | Manual | User
+Imaging | Menu change | WOL | User
+Imaging | Menu change | Multicast | User
+Imaging | Post-imaging script creation | Manual | User
+Imaging | Master creation | Manual | User
+Imaging | Master edition | Manual | User
+Imaging | Master deletion | Manual | User
+Imaging | Master deployment | Manual | User
+Imaging | Master deployment | Multicast | User
+Imaging | Backup image creation | Manual | User
+Imaging | Backup image creation | WOL | User
+Imaging | Image deployment | Manual | User
+Imaging | Image deployment | WOL | User
+Imaging | Image deletion | Manual | User
 */
 
-
 $typecritere  =        array(
-                                        _T('Deployment planning','logs'),
-                                        _T('Deployment execution','logs'),
-                                        _T('WOL sent','logs'),
+                                        _T('Menu change','logs'),
+                                        _T('Post-imaging Script Creation','logs'),
+                                        _T('Master Creation','logs'),
+                                        _T('Master Edition','logs'),
+                                        _T('Master Deletion','logs'),
+                                        _T('Master Deployment','logs'),
+                                        _T('Master Deployment Multicast','logs'),
+                                        _T('Backup Image creation','logs'),
+                                        _T('Image Deployment','logs'),
+                                        _T('WOL','logs'),
+                                        _T('Image Deletion','logs'),
                                         _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
-                                        'planning',
-                                        'execution',
+                                        'Menu',
+                                        'Post-imaging',
+                                        'creation | Master',
+                                        'deletion | Master',
+                                        'deployment | Master',
+                                        'Multicast | Master',
+                                        'Backup| Image | ',
+                                        'Image | deployment',
                                         'WOL',
-                                        'None');
-
-$typecritere1  =        array(
-                                        _T('Manual','logs'),
-                                        _T('Planned ','logs'),
-                                        _T('no criteria selected','logs'));
-
-$typecritereval1 =        array(
-                                        'Manual',
-                                        'Planned',
-                                        'None');
-$typecritere2  =        array(
-                                        _T('Convergence','logs'),
-                                        _T('no criteria selected','logs'));
-
-$typecritereval2  =        array(
-                                        'Convergence',
+                                        'Image|deletion',
                                         'None');
 
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-// $type = new SelectItemlabeltitle("type", "Type", "Provenance du logs");
-// $type->setElements($typelog);
-// $type->setElementsVal($typelog);
-// $type->setSelected("None");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
+$modules = new SelectItemlabeltitle("criterionssearch", "criterions", "critere search");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-
-$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), "critere search1");
-$modules1->setElements($typecritere1);
-$modules1->setSelected("None");
-$modules1->setElementsVal($typecritereval1);
-
-
-
-$modules2 = new SelectItemlabeltitle("criterionssearch21", _T('criterions','logs'), "critere search2");
-$modules2->setElements($typecritere2);
-$modules2->setSelected("None");
-$modules2->setElementsVal($typecritereval2);
-
-
-// $action = new SelectItemlabeltitle("action", "Actions", "Evenement ACTION");
-// $action->setElements($typeaction);
-// $action->setElementsVal($typeactionval);
-// $action->setSelected("None");
 ?>
 
 <style>
@@ -393,8 +360,6 @@ th.libelle {
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
-                <th><?php echo $modules1->display(); ?></th>
-                <th><?php echo $modules2->display(); ?></th>
             </tr>
         </thead>
      </table>
