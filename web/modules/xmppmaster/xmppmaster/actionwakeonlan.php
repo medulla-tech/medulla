@@ -124,14 +124,6 @@ switch($_GET['action']){
     break;
 }
 ?>
-            
-            
-            
-            
-           
-
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
 
 
 
