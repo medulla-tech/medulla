@@ -381,12 +381,9 @@ th.libelle {
          <!--       
                 <th style="width: 6%;">type</th>
                 <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th> 
-        
+                <th style="width: 6%;">module</th>
                 <th style="width: 6%;">how</th>
-                
                 <th style="width: 6%;">why</th>
-
                 <th style="width: 6%;">priority</th>
                 <th style="width: 6%;">touser</th>
                 <th style="width: 6%;">sessionname</th>
