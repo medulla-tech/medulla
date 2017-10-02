@@ -53,7 +53,7 @@ switch($_GET['action']){
                                                 "session user ".$_SESSION["login"],
                                                 'QuickAction | Inventory | Inventory requested');
 
-        break;
+    break;
     case "deployquickgroup":
     //work for all machines on group
         header('Content-type: application/json');
@@ -68,7 +68,7 @@ switch($_GET['action']){
                                         "QA",
                                         '' ,
                                         0,
-                                        '',
+                                        'Grp : '.$_GET['groupname'],
                                         'Manuel',
                                         '',
                                         '',

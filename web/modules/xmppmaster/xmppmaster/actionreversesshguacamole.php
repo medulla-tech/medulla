@@ -39,7 +39,7 @@ require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 xmlrpc_runXmppReverseSSHforGuacamole($_GET['uuid'], $_GET['cux_id'], $_GET['cux_type']);
 
-xmlrpc_setfromxmppmasterlogxmpp( 'Reverse SSH for Guacamole on machine '.$_GET['uuid'].', connecion id: '.$_GET['cux_id'].', connection type: '.$_GET['cux_type'],
+xmlrpc_setfromxmppmasterlogxmpp( 'Reverse SSH for Guacamole on [ machine : '.$_GET['cn'].'] , [ connecion id : '.$_GET['cux_id'].'], [ connection type : '.$_GET['cux_type'].']',
                                 $type = "USER",
                                 $sessionname = '' ,
                                 $priority = 0,
