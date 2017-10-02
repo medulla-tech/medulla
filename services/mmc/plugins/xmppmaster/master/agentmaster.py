@@ -1128,7 +1128,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             " example {....sendother : \"autre@infos\"} jid is databpointer by data['autre']['infos']\n"\
                                                 " data is %s"%(json.dumps(data, indent=4)))
                                 break
-                        print jidmachine
+                        #print jidmachine
                         jidmachine = str(jidmachine)
                         if jidmachine != "":
                             self.send_message( mto = jidmachine,
@@ -1299,17 +1299,42 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 jidrs = "%s@%s"%(jidrs,jidm)
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
+                                #update inventory
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                XmppMasterDatabase().setlogxmpp( "register inventory in xmpp",
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'QuickAction|Inventory|Inventory reception',
+                                                                '',
+                                                                '',
+                                                                "Master")
+
+                                XmppMasterDatabase().setlogxmpp( "Remote desktop [machine : %s][RS : %s][ remote service : %s]"%(data['information']['info']['hostname'],jidrs,data['remoteservice']),
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'Remote desktop | service',
+                                                                '',
+                                                                '',
+                                                                "Master")
                                 self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                             'machine_ip' : data['xmppip'],
                                                                             'uuid' : str(computer.id),
                                                                             'remoteservice' : data['remoteservice'] })
                                 break
+                            
                             else:
                                 logging.getLogger().debug("computer is None")
                                 pass
                         else:
-                            # Register machine in inventory
+                            # Register machine in inventory creation
                             logger.debug("** Call inventory on %s"% msg['from'].bare)
                             XmppMasterDatabase().setlogxmpp(    "Master ask inventory for registration",
                                                                 "Master msg",
@@ -1318,7 +1343,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 data['from'],
                                                                 'auto',
                                                                 '',
-                                                                'QuickAction|Inventory|Inventory reception',
+                                                                'QuickAction|Inventory|Inventory requested',
                                                                 '',
                                                                 '',
                                                                 "Master")

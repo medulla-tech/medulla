@@ -9,7 +9,7 @@ import logging
 from mmc.plugins.glpi.database import Glpi
 from pulse2.database.xmppmaster import XmppMasterDatabase
 
-
+plugin = { "VERSION" : "1.0", "NAME" : "resultinventory", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
     HEADER = {"Pragma": "no-cache",
@@ -18,8 +18,6 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
              }
     try:
         logging.getLogger().debug("plugin_resultinventory")
-        #print os.environ
-        #print message['from']
         # send inventory to inventory server
         try:
             url = xmppobject.config.inventory_url
@@ -36,16 +34,17 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
             reginventory = False
         #send inventory to inventory server
         XmppMasterDatabase().setlogxmpp( "inject inventory to Glpi",
-                                                                "Master",
-                                                                "",
-                                                                0,
-                                                                message['from'],
-                                                                'Manuel',
-                                                                '',
-                                                                'QuickAction |Inventory | Inventory requested',
-                                                                '',
-                                                                '',
-                                                                "Master")
+                                        "Master",
+                                        "",
+                                        0,
+                                        message['from'],
+                                        'Manuel',
+                                        '',
+                                        'QuickAction |Inventory | Inventory requested',
+                                        '',
+                                        '',
+                                        "Master")
+
         if reginventory:
             computers_id = XmppMasterDatabase().getUuidFromJid(message['from'])
             logging.getLogger().debug("Computers ID: %s" % computers_id)
@@ -63,6 +62,19 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                     logging.getLogger().debug("  key_name: %s" % key_name)
                     registry_id = Glpi().getRegistryCollect(reg_key)
                     logging.getLogger().debug("  registry_id: %s" % registry_id)
+                    XmppMasterDatabase().setlogxmpp( "Inventory Registry information: [machine :  %s][reg_key_num : %s]"\
+                                                        "[reg_key: %s][reg_key_value : %s]"\
+                                                            "[key_name : %s]"%(message['from'],reg_key_num,reg_key,reg_key_value,key_name),
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                message['from'],
+                                                                'Manuel',
+                                                                '',
+                                                                'QuickAction |Inventory | Inventory requested',
+                                                                '',
+                                                                '',
+                                                                "Master")
                     Glpi().addRegistryCollectContent(computers_id, registry_id, key_name, reg_key_value)
                 except Exception, e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
