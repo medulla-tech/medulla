@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * (c) 2011 Mandriva, http://www.mandriva.com
  *
  * $Id$

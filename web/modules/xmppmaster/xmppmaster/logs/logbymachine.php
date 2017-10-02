@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$

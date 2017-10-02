@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2016 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).

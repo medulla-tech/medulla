@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2015 siveo, http://www.siveo.net/
  *
  * $Id$

@@ -1,4 +1,5 @@
-/**
+<?php
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  * (c) 2015-2016 Siveo http://www.siveo.net
@@ -21,7 +22,7 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+?>
 
 <?php if ($_SESSION['__notify'])  { ?>
 <script type="text/javascript">
