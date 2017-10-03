@@ -34,16 +34,16 @@ $uuid = $_GET['objectUUID'];
 if (isset($_POST['startFullBackup'])) {
     $response = start_full_backup($_POST['host']);
     xmlrpc_setfromxmppmasterlogxmpp("Start full backup on machine $computer_name",
-                                                "BPC",
-                                                '',
-                                                0,
-                                                $computer_name ,
-                                                'Manuel',
-                                                '',
-                                                '',
-                                                '',
-                                                "session user ".$_SESSION["login"],
-                                                'Backup | Full backup requested | Manual');
+                                    "BPC",
+                                    '',
+                                    0,
+                                    $computer_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Backup | Full backup requested | Manual');
     sleep(2);
 } elseif (isset($_POST['startIncrBackup'])) {
     $response = start_incr_backup($_POST['host']);
@@ -78,7 +78,7 @@ if (isset($_POST['startFullBackup'])) {
 
 if (isset($response)) {
     if (isXMLRPCError() || $response['err']) {
-        xmlrpc_setfromxmppmasterlogxmpp("Error backup on machine ".$computer_name." : ".nl2br($response['errtext']),
+        xmlrpc_setfromxmppmasterlogxmpp("Notify Error : backup on machine ".$computer_name." : ".nl2br($response['errtext']),
                                                 "BPC",
                                                 '',
                                                 0,
@@ -89,24 +89,10 @@ if (isset($response)) {
                                                 '',
                                                 "session user ".$_SESSION["login"],
                                                 'Backup | Error  | Manual| auto');
-// Backup | Backup configuration | Manual | User
-// Backup | Full backup requested | Planned | BackupPC
-// Backup | Full backup requested | Manual | User
-// Backup | Planned | BackupPC
-// Backup | Incremental backup requested | Manual | User
-// Backup | Reverse SSH start | Backup | ARS
-// Backup | Reverse SSH stop | Backup | ARS
-// Backup | Restore requested | Manual | User
-// Backup | Reverse SSH start | Restore | ARS
-// Backup | Reverse SSH stop | Restore | ARS
-// Backup | Error | Restore | ARS
-// Backup | Success | Restore | ARS
-
-                                                
         new NotifyWidgetFailure(nl2br($response['errtext']));
     } else {
         new NotifyWidgetSuccess(_T('Action requested successfully', 'backuppc'));
-        xmlrpc_setfromxmppmasterlogxmpp("Action requested successfully ".$computer_name,
+        xmlrpc_setfromxmppmasterlogxmpp("Notify Success : Action requested successfully ".$computer_name,
                                                 "BPC",
                                                 '',
                                                 0,
@@ -126,7 +112,7 @@ if (isset($response)) {
 if (get_backupserver_for_computer($uuid) != '') {
     if (!host_exists($uuid)) {
         printf(_T("Backup is not set for this computer.", 'backuppc'));
-        xmlrpc_setfromxmppmasterlogxmpp("Backup is not set for this computer. $computer_name",
+        xmlrpc_setfromxmppmasterlogxmpp("Notify : Backup is not set for this computer. $computer_name",
                                                 "BPC",
                                                 '',
                                                 0,
@@ -146,7 +132,7 @@ if (get_backupserver_for_computer($uuid) != '') {
         return;
     }
 } else {
-        xmlrpc_setfromxmppmasterlogxmpp(_T("There is no backup server assigned for the computer entity.".$computer_name , 'backuppc'),
+        xmlrpc_setfromxmppmasterlogxmpp(_T("notify warning : There is no backup server assigned for the computer entity.".$computer_name , 'backuppc'),
                                                 "BPC",
                                                 '',
                                                 0,
@@ -165,7 +151,7 @@ $response = get_host_status($uuid);
 
 // Check if error occured
 if ($response['err']) {
-    xmlrpc_setfromxmppmasterlogxmpp("Error : " . nl2br($response['errtext']),
+    xmlrpc_setfromxmppmasterlogxmpp("Notify Error : " . nl2br($response['errtext']),
                                                 "BPC",
                                                 '',
                                                 0,
@@ -198,7 +184,7 @@ $status_strings = array(
 print '<table><tr><td width="130" valign="top">' . _T('Current state: ', 'backuppc') . '</td><td><b id="statustext">';
 foreach ($response['status'] as $line)
     print $status_strings[$line] . '<br/>';
-    xmlrpc_setfromxmppmasterlogxmpp("Current state: " .$status_strings[$line],
+    xmlrpc_setfromxmppmasterlogxmpp("Notify : Current state: " .$status_strings[$line],
                                                 "BPC",
                                                 '',
                                                 0,

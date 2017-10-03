@@ -44,7 +44,7 @@ if (isset( $_GET['objectUUID'])) {
 if (isset($_GET['objectUUID'])){
     unset_backup_for_host($_GET['objectUUID']);
     if (!isXMLRPCError()) {
-    xmlrpc_setfromxmppmasterlogxmpp("The computer $cn has been removed from the backup system.",
+    xmlrpc_setfromxmppmasterlogxmpp("Notify : The computer $cn has been removed from the backup system.",
                                     "BPC",
                                     '',
                                     0,

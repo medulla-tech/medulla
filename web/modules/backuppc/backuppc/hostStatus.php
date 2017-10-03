@@ -42,7 +42,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
     // Checking reponse
     if (isset($response)) {
         if (isXMLRPCError() || $response['err']) {
-            xmlrpc_setfromxmppmasterlogxmpp(_T('Error Backup configuration Computer', 'backuppc')." ". $computer_name." ".$response['err'],
+            xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Error : Backup configuration Computer', 'backuppc')." ". $computer_name." ".$response['err'],
                                                 "BPC",
                                                 '',
                                                 0,
@@ -56,7 +56,7 @@ if (isset($_POST['setBackup'],$_POST['host'])) {
             new NotifyWidgetFailure(nl2br($response['errtext']));
         }
         else {
-            xmlrpc_setfromxmppmasterlogxmpp(_T('Computer', 'backuppc')." ". $computer_name." "._T('has been added to backup system successfully.', 'backuppc'),
+            xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('has been added to backup system successfully.', 'backuppc'),
                                                 "BPC",
                                                 '',
                                                 0,
@@ -171,7 +171,7 @@ if (isset($_POST['bconfirm'],$_POST['host'])){
     $cfg['BackupsDisable'] = isset($_POST['active'])?'0':'1';
 
     set_host_config($_POST['host'], $cfg);
-    xmlrpc_setfromxmppmasterlogxmpp(_T('Computer', 'backuppc')." ". $computer_name." "._T('Save configure host ', 'backuppc'),
+    xmlrpc_setfromxmppmasterlogxmpp(_T('Notify Computer :', 'backuppc')." ". $computer_name." "._T('Save configure host ', 'backuppc'),
                                                 "BPC",
                                                 '',
                                                 0,

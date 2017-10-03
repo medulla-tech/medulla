@@ -37,16 +37,16 @@ if (isset( $_POST["uuid"])) {
     // xmlrpc_getjidMachinefromuuid
 }
 xmlrpc_setfromxmppmasterlogxmpp("Stoping Full backup on machine $cn",
-                                    "BPC",
-                                    '',
-                                    0,
-                                    $cn ,
-                                    'Manuel',
-                                    '',
-                                    '',
-                                    '',
-                                    "session user ".$_SESSION["login"],
-                                    'Backup | Full backup Starting | Manual');
+                                "BPC",
+                                '',
+                                0,
+                                $cn ,
+                                'Manuel',
+                                '',
+                                '',
+                                '',
+                                "session user ".$_SESSION["login"],
+                                'Backup | Full backup Starting | Manual');
 stop_backup($_POST["uuid"]);
 ?>
 <script type="text/javascript">
