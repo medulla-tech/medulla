@@ -3918,6 +3918,7 @@ class Glpi91(DyngroupDatabaseHelper):
         user.auths_id = 0
         user.is_deleted = 0
         user.is_active = 1
+        user.locations_id = ''
         session.add(user)
         session.commit()
         session.flush()
