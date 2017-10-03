@@ -188,7 +188,7 @@ def get_machine_stop_deploy(cmdid, uuid) :
         'base64' : False
     }
     updatedeploystate(result['sessionid'],'DEPLOYMENT ABORT')
-    send_message_json1(result['jid_relay'], msg_stop_deploy )
+    send_message_json(result['jid_relay'], msg_stop_deploy )
     send_message_json(result['jidmachine'], msg_stop_deploy )
     return True
 
