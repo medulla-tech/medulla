@@ -44,14 +44,14 @@ $submod->addPage($page);
 
 // $page = new Page("logsmachine", _T('Commands logs', 'msc'));
 //         $submodmsc->addPage($page);
-        
-$page = new Page("auditdeploy", _T('XMPP audit', 'xmppmaster'));
+
+$page = new Page("auditdeploy", _T('XMPP All users tasks', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("auditpastdeploys", _T('XMPP audit', 'xmppmaster'));
+$page = new Page("auditpastdeploys", _T('XMPP All users past task', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("auditmypastdeploys", _T('XMPP audit', 'xmppmaster'));
+$page = new Page("auditmypastdeploys", _T('XMPP My Past tasks', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
@@ -83,36 +83,36 @@ $page->setFile("modules/xmppmaster/xmppmaster/deployquick.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
-$page = new Page("deployquickgroup", _T("action deploy quick group", "xmppmaster"));
+$page = new Page("deployquickgroup", _T("quick action deploy group", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/deployquickgroup.php");
 $page->setOptions(array("visible" => False, "noHeader" => True));
 $submod->addPage($page);
 
 
-$page = new Page("actionwakeonlan");
+$page = new Page("actionwakeonlan", _T("quick action Wol", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionwakeonlan.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("actioninventory");
+$page = new Page("actioninventory", _T("quick action Inventory", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actioninventory.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 
-$page = new Page("actionrestart");
+$page = new Page("actionrestart", _T("quick action Restart", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionrestart.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
-$page = new Page("actionshutdown");
+$page = new Page("actionshutdown", _T("quick action shutdown", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 // --------------END QUICK ACTION--------------------
 
 // ajax procedure to start a reversessh on client machine for guacamole
-$page = new Page("actionreversessh");
+$page = new Page("actionreversessh", _T("quick action reversessh for guacamole", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionreversesshguacamole.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
@@ -122,6 +122,8 @@ $page = new Page("viewlogs",_T('Audit deployment', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
 $page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
+//$page->setOptions(array("AJAX" => False, "visible" => False));
+
 
 // $page = new Page("taskformachine");
 // $page->setFile("modules/xmppmaster/xmppmaster/logs/taskformachine.php");
@@ -135,7 +137,7 @@ $submod->addPage($page);
 
 $page = new Page("logbymachine", _T('XMPP log', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/logbymachine.php");
-$page->setOptions(array("visible" => False, "noHeader" => True));
+$page->setOptions(array("visible" => True, "noHeader" => True));
 $submod->addPage($page);
 
 $page = new Page("logbygrpmachine", _T('XMPP log', 'xmppmaster'));
