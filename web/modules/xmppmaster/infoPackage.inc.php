@@ -118,9 +118,9 @@ $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
 // ajax procedure read and send result from log
-$page = new Page("viewlogs");
+$page = new Page("viewlogs",_T('Audit deployment', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
-//$page->setOptions(array("AJAX" => True, "visible" => False));
+$page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
 
 // $page = new Page("taskformachine");
