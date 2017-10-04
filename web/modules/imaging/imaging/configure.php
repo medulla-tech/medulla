@@ -171,7 +171,7 @@ if (isset($_POST["bvalid"])) {
     $target_name = $_POST['target_name'];
 
     if ($type == 'group') { // profile
-        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("choose network profile for group %s", "imaging"),$target_name),
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("choose network profile for group %s", "imaging"), urldecode($label), $target_name),
                                     "IMG",
                                     '',
                                     0,
@@ -320,7 +320,7 @@ if (isset($_POST["bvalid"])) {
         }
     } else {
         $str = sprintf(_T("Failed to generate the boot menu those computers : %s", "imaging"), implode($ret[1], ", "));
-        new NotifyWidgetFailure($str);
+        new NotifyWidgetFailure();
         xmlrpc_setfromxmppmasterlogxmpp($str,
                                     "IMG",
                                     '',
@@ -389,6 +389,7 @@ else if (isset($_POST["bunregister2"])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Imaging | Image | Menu | server | Manual');
+        
         unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
         header("Location: " . urlStrRedirect("base/computers/register_target", $params));
         exit;

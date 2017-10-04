@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -26,7 +27,7 @@
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $params = getParams();
 $location = getCurrentLocation();
@@ -46,23 +47,66 @@ if (isset($_POST["bconfirm"])) {
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Image <strong>%s</strong> added to default boot menu", "imaging"), $label);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | Add | Manual');
         new NotifyWidgetSuccess($str);
-         
+
         // Synchronize boot menu
+        
         $ret = xmlrpc_synchroLocation($location);
-        if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        // goto images list
+        if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
+            $str = sprintf(_T("Boot menu generation Succes for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"));
+            /* insert notification code here if needed */
+        } elseif (!$ret[0] and !isXMLRPCError()) {
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
+        }
+        elseif (isXMLRPCError()) {
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
         }
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
         exit;
     } elseif ($ret[0]) {
+        $str = sprintf(_T("Error : Image <strong>%s</strong> added to default boot menu", "imaging"), $label);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | Add | Manual');
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
         exit;
     } else {
+        xmlrpc_setfromxmppmasterlogxmpp($ret[1],
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | Add | Manual');
         new NotifyWidgetFailure($ret[1]);
     }
 }
-
 
 if(isset($_GET['mod']))
     $mod = $_GET['mod'];

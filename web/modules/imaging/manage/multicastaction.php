@@ -25,9 +25,8 @@ require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-
- 
  // fichier /tmp/multicast.sh existe
  // multicast lancer "affichage seulement bouton arrêt" voir aprés pour bar de progression
  // multicast non lancer "affichage seulement bouton stop"

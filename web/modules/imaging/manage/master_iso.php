@@ -2,6 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -24,6 +25,7 @@
 
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $id = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
@@ -49,7 +51,17 @@ if ($_POST) {
         $str .= "</p><p>";
         $str .= _T("This operation will last according to the amount of data of the master.", "imaging");
         $str .= "</p>";
-
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $label ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Master | Menu | Iso |Start | Manual');
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
         exit;
@@ -57,6 +69,17 @@ if ($_POST) {
         header("Location: " . urlStrRedirect("imaging/manage/master", $params));
         exit;
     } else {
+        xmlrpc_setfromxmppmasterlogxmpp("Error Create iso from master : " . $label."  ".$title,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $label ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Master | Menu | Iso |Start | Manual');
         new NotifyWidgetFailure($ret[1]);
     }
 }

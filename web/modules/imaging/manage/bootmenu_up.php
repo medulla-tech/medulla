@@ -1,8 +1,8 @@
 <?php
-
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -25,7 +25,7 @@
 
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $params = getParams();
 $location = getCurrentLocation();
 $item_uuid = $_GET['itemid'];
@@ -34,9 +34,31 @@ $label = urldecode($_GET['itemlabel']);
 $ret = xmlrpc_moveItemUpInMenu4Location($location, $item_uuid);
 
 if ($ret) {
-    /* insert notification code here if needed */
+    $str = sprintf(_T("Success to move <strong>%s</strong> in the default boot menu", "imaging"), $label);
+    xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | server | Manual');
 } else {
     $str = sprintf(_T("Failed to move <strong>%s</strong> in the default boot menu", "imaging"), $label);
+    xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | server | Manual');
     new NotifyWidgetFailure($str);
 }
 header("Location: " . urlStrRedirect("imaging/manage/bootmenu", $params));

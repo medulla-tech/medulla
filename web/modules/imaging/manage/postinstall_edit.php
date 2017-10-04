@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -31,7 +32,7 @@ require("localSidebar.php");
 require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 // id of the script
 $script_id = $_GET['itemid'];
 $location = getCurrentLocation();
@@ -88,13 +89,48 @@ if (count($_POST) > 0) {
     // check result
     if ((is_array($ret) && $ret[0]) || $ret) {
         $str = sprintf(_T("<strong>%s</strong> script %s", "imaging"), $script_name, $action);
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Succes : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
+
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;
     } elseif (count($ret) > 1) {
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action."[".$ret[1]."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
+
         new NotifyWidgetFailure($ret[1]);
     } else {
         $str = sprintf(_T("<strong>%s</strong> script wasn't %s", "imaging"), $script_name, $action);
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetFailure($str);
     }
 }

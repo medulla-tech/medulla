@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -28,6 +29,7 @@ require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $id = $_GET['itemid'];
 $location = getCurrentLocation();
@@ -92,6 +94,18 @@ if(count($_POST) == 0) {
 
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Master <strong>%s</strong> modified with success", "imaging"), $label);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $label ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Master | Menu | Edit | Iso |Start | Manual');
+
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;
@@ -99,6 +113,19 @@ if(count($_POST) == 0) {
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;
     } else {
+        $str = sprintf(_T("Master %s modified with error", "imaging"), $label);
+        $str .= "Error : ".$ret[1];
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $label ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Master | Menu | Edit | Iso |Start | Manual');
         new NotifyWidgetFailure($ret[1]);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;

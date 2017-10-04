@@ -28,13 +28,26 @@ if(!isset($_GET['tab']) && $_GET['action'] == 'sysprepList')
 	require_once('modules/imaging/includes/includes.php');
 	require_once('modules/imaging/includes/xmlrpc.inc.php');
 }
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 //Verify if any file must be deleted
 if (isset($_GET['deleteFile'])){
     echo xmlrpc_deleteWindowsAnswerFile($_GET['deleteFile']);
     if (!isXMLRPCError())
     {
-		new NotifyWidgetSuccess(_("The sysprep answer file has been removed from the imaging system."));
+        $str = sprintf(_T("The sysprep answer file %s has been removed from the imaging system.", "imaging"),$_GET['deleteFile']);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $_GET['deleteFile'] ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Postinstall | Menu | Configuration | Manual');
+		new NotifyWidgetSuccess($str);
 	}
 }
 if(isset($_GET['display']))

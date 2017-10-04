@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -31,6 +32,7 @@ require_once("includes/session.inc.php");
 require_once("includes/PageGenerator.php");
 require("modules/imaging/includes/includes.php");
 require_once("modules/imaging/includes/xmlrpc.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();
 $params = getParams();
@@ -63,11 +65,23 @@ if (xmlrpc_doesLocationHasImagingServer($location)) {
         // goto images list
         if ($ret[0] and !isXMLRPCError()) {
             $str = sprintf(_T("Imaging server <strong>%s</strong> configuration saved.", "imaging"), $label, $loc_id);
+            xmlrpc_setfromxmppmasterlogxmpp($str,
+                                            "IMG",
+                                            '',
+                                            0,
+                                            $label ,
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Imaging | Postinstall | Menu | Configuration | Manual');
             new NotifyWidgetSuccess($str);
             // Synchronize boot menu
             $ret = xmlrpc_synchroLocation($location);
             if (isXMLRPCError()) {
-                new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
+                $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+                new NotifyWidgetFailure($str);
             }
         } else {
             new NotifyWidgetFailure($ret[1]);

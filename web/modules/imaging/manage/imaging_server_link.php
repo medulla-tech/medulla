@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -31,7 +32,7 @@ require_once('modules/imaging/includes/web_def.inc.php');
 // get entities
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();
 
@@ -56,12 +57,25 @@ if (isset($_POST["bconfirm"])) {
 
     // goto images list 
     if ($ret[0] and !isXMLRPCError()) {
-        $str = sprintf(_T("Link between imaging server <strong>%s</strong> and the entity <strong>%s</strong> succeeded.", "imaging"), $label, $loc_id);
+        $str = sprintf(_T("Link between package server <strong>%s</strong> and the entity <strong>%s</strong> succeeded.", "imaging"), $label, $loc_id);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | server | Manual');
         new NotifyWidgetSuccess($str);
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
+        
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+            $str = sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
         }
         header("Location: " . urlStrRedirect("imaging/manage/configuration", $params));
         exit;
@@ -74,7 +88,6 @@ if (isset($_POST["bconfirm"])) {
         exit;
     }
 }
-
 
 $locations = getUserLocations();
 foreach ($locations as $loc) {

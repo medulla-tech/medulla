@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -26,7 +27,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $location = getCurrentLocation();
 
 if (isset($_POST["bconfirm"])) {
@@ -46,10 +47,21 @@ if (isset($_POST["bconfirm"])) {
     // goto images list 
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Service <strong>%s</strong> added to default boot menu", "imaging"), $label);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                            "IMG",
+                                            '',
+                                            0,
+                                            $label ,
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Imaging | Postinstall | Menu | Configuration | Manual');
         new NotifyWidgetSuccess($str);
-         
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
+        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging")));
         if (isXMLRPCError()) {
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
