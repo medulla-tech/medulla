@@ -91,7 +91,7 @@ define (DIR_SYS_PREP, "/var/lib/pulse2/imaging/postinst/sysprep");
     $p->display();
     if (isset($_POST['bvalid'])){
         $gg = $_POST['codeToCopy'];
-        $dom = new DomDocument;
+        $dom = new DomDocument();
         $dom->preserveWhiteSpace = FALSE;
         $dom->loadXML($gg);
         $dom->formatOutput = true;
