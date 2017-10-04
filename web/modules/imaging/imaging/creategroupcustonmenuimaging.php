@@ -27,6 +27,7 @@ require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/imaging/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $requestedlocation = $_GET['location'];
 
@@ -60,8 +61,22 @@ $groupname = sprintf (_T("Machine with custom menu on entity [%s] at %s", "imagi
 $group = new Profile();
 $group->create($groupname, False);
 $group->addMembers($groupmembers);
+xmlrpc_setfromxmppmasterlogxmpp("Creation group Imaging: ".$groupname,
+                                    "Group",
+                                    '',
+                                    0,
+                                    $groupname ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Group | server | Manual');
 $truncate_limit = getMaxElementsForStaticList();
-if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
+if ($truncate_limit == count($groupmembers)) {
+    $str = sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit);
+    new NotifyWidgetWarning($str);
+}
 
 // link group to server entity
 xmlrpc_set_profile_imaging_server($group->id, $requestedlocation);

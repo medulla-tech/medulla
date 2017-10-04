@@ -241,16 +241,98 @@ function xmlrpc_getLocationSynchroState($id) {
 }
 
 function xmlrpc_synchroComputer($id,  $menuimagingbool = false, $macbool = false) {
+    $cn_ = getComputersName(array('uuid' => $id));
+    $name = "";
+    if(isset($cn_[0])){ 
+        $name = $cn_[0];
+    }
+    $str = sprintf(_T("Boot menu generation For machine %s", "imaging"),$name );
+    xmlrpc_setimaginglogxmpp(   $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Group | Menu | Manual');
     return xmlCall("imaging.synchroComputer", array($id, $macbool, $menuimagingbool));
 }
 
-function xmlrpc_synchroProfile($id) {
+
+function xmlrpc_synchroProfile($id) {//require_once('modules/dyngroup/includes/dyngroup.php'); // for getPGobject method
+    $result =  xmlCall("dyngroup.get_group", array($id, false, false));
+    //{'uuid': 'UUID5', 'bool': False, 'query': False, 'type': '0', 'id': '5', 'name': 'all'}
+    $Namegroup = "";
+    if (isset($result['name'])){
+        $Namegroup = $result['name'];
+    }
+    $str = sprintf(_T("Boot menu generation For Imaging Group %s", "imaging"),$Namegroup);
+    xmlrpc_setimaginglogxmpp(   $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $Namegroup ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Group | Menu | Manual');
     return xmlCall("imaging.synchroProfile", array($id));
 }
 
+
 function xmlrpc_synchroLocation($id) {
-    return xmlCall("imaging.synchroLocation", array($id));
+    $ret = xmlCall("imaging.synchroLocation", array($id));
+    $location_name = xmlrpc_getLocationName($id);
+
+    if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
+        $str = sprintf(_T("Boot menu generation Succes for Package Server on location %s", "imaging"),$location_name);
+        xmlrpc_setimaginglogxmpp(   $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $location_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging |  Menu | Manual');
+    } elseif (!$ret[0] and !isXMLRPCError()) {
+        $str = sprintf(_T("Boot menu generation failed for package server on location %s [%s]", "imaging"), $location_name, implode(', ', $ret[1]));
+        xmlrpc_setimaginglogxmpp(   $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $location_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging |  Menu | Manual');
+    }
+    elseif (isXMLRPCError()) {
+        $str = sprintf(_T("Boot menu generation failed for package server on location %s [%s]", "imaging"), $location_name, implode(', ', $ret[1]));
+        xmlrpc_setimaginglogxmpp(   $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $location_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging |  Menu | Manual');
+    }
+    return $ret;
 }
+
 
 //Actions
 function xmlrpc_moveItemDownInMenu($target_uuid, $type, $item_uuid) {
@@ -580,5 +662,9 @@ function xmlrpc_setimaginglogxmpp(   $text,
                                                     $action,
                                                     $touser,
                                                     $fromuser));
-}                                                    
+}
+
+
+
+
 ?>

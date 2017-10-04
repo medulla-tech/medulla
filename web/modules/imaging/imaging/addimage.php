@@ -26,7 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     $params = getParams();
     if(isset($_POST['gid']) && $_POST['gid'] != '') {
@@ -45,6 +45,18 @@ if (isset($_POST["bconfirm"])) {
     $params['hidden_WOL'] = ($_POST['do_display_WOL'] != 'on');
     $params['default'] = ($_POST['do_default'] == 'on');
     $params['default_WOL'] = ($_POST['do_default_WOL'] == 'on');
+
+    xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Add the image <b>%s</b> to <b>%s</b>", "imaging"), $label, $params['name']),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $params['name'] ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
 
     $ret = xmlrpc_addImageToTarget($item_uuid, $target_uuid, $params, $type);
     $ret = xmlrpc_editImageToTarget($item_uuid, $target_uuid, $params, $type);
@@ -67,9 +79,20 @@ if (isset($_POST["bconfirm"])) {
             $objprocess['process'] = $path.$scriptmulticast;
             if (xmlrpc_check_process_multicast($objprocess)){
                 $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
+                xmlrpc_setfromxmppmasterlogxmpp($msg."on Location : ".$location_name,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $location_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Master | Menu | server | Manual');
                 new NotifyWidgetFailure($msg);
                 header("Location: " . urlStrRedirect("imaging/manage/index"));
-                exit;  
+                exit;
             }
             else{
                 $ret = xmlrpc_synchroProfile($target_uuid);
