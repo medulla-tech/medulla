@@ -1308,19 +1308,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                 data['from'],
                                                                 'auto',
                                                                 '',
-                                                                'QuickAction|Inventory|Inventory reception',
+                                                                'QuickAction|Inventory|Inventory reception|Auto',
                                                                 '',
                                                                 '',
                                                                 "Master")
 
-                                XmppMasterDatabase().setlogxmpp( "Remote desktop [machine : %s][RS : %s][ remote service : %s]"%(data['information']['info']['hostname'],jidrs,data['remoteservice']),
+                                XmppMasterDatabase().setlogxmpp( "Remote Service <b>%s</b> : for [machine : %s][RS : %s]"%(data['remoteservice'], data['information']['info']['hostname'],jidrs,),
                                                                 "Master",
                                                                 "",
                                                                 0,
                                                                 data['from'],
                                                                 'auto',
                                                                 '',
-                                                                'Remote desktop | service',
+                                                                'Remote_desktop | Guacamole | Service | Auto',
                                                                 '',
                                                                 '',
                                                                 "Master")
@@ -1329,7 +1329,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                                             'uuid' : str(computer.id),
                                                                             'remoteservice' : data['remoteservice'] })
                                 break
-                            
+
                             else:
                                 logging.getLogger().debug("computer is None")
                                 pass
