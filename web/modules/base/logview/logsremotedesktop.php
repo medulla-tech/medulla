@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  *
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * File : logsremotedesktop.php
+ * File : logsbackuppc.php
  */
  
  /*
@@ -43,6 +43,12 @@
 +-------------+------------------+------+-----+-------------------+----------------+
 
 Module | Action | How | From user
+
+Remote_desktop | service| Manual | User
+Remote_desktop | Remote desktop control request | Manual | User
+Remote_desktop | Reverse SSH start | Remote desktop control request | ARS
+Remote_desktop | Reverse SSH stop | Remote desktop control request | ARS
+
 
 From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
 Action: L'action
@@ -116,7 +122,10 @@ class SelectItemlabeltitle extends SelectItem {
     $p = new PageGenerator(_("Quick Actions Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
-    $filterlogs = "Remote";
+
+    $filterlogs = "Remote_desktop";
+
+
 ?>
 
 <script type="text/javascript">
@@ -172,18 +181,14 @@ jQuery(function(){
                             .load();
     }
 
+
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
     } );
     </script>
 
 <?php
-/*
-Remote | service| Manual | User
-Remote | Remote desktop control request | Manual | User
-Remote | Reverse SSH start | Remote desktop control request | ARS
-Remote | Reverse SSH stop | Remote desktop control request | ARS
-*/
+
 $typecritere  =        array(
                                         _T('Remote desktop service','logs'),
                                         _T('Remote desktop control request','logs'),
