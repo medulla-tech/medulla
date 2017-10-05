@@ -73,7 +73,7 @@ if (in_array("glpi", $_SESSION['supportModList'])) {
 
 
 $dede= xmlrpc_getComputersWithImageInEntity(getCurrentLocation());
-//smm = xmlrpc_getMyMenuProfile(58);
+
 
 //$ffffff = xmlrpc_getMyMenuProfile(58);
 //imaging.getMyMenuProfile('58',)
