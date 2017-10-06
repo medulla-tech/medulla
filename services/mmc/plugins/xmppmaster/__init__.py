@@ -95,6 +95,38 @@ def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who ):
 def updatedeploystate(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
 
+def adddeployabort(
+                    idcommand,
+                    jidmachine,
+                    jidrelay,
+                    host,
+                    inventoryuuid,
+                    uuidpackage,
+                    state,
+                    sessionid,
+                    user,
+                    login,
+                    title,
+                    group_uuid,
+                    startcmd,
+                    endcmd,
+                    macadress):
+    return XmppMasterDatabase().adddeploy(  idcommand,
+                                            jidmachine,
+                                            jidrelay,
+                                            host,
+                                            inventoryuuid,
+                                            uuidpackage,
+                                            state,
+                                            sessionid,
+                                            user,
+                                            login,
+                                            title,
+                                            group_uuid,
+                                            startcmd,
+                                            endcmd,
+                                            macadress)
+
 def updatedeploystate1(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate1(sessionxmppmessage, status)
 
@@ -156,6 +188,9 @@ def getListPresenceAgent():
 
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
+
+def getCountPresenceMachine():
+    return XmppMasterDatabase().getCountPresenceMachine()
 
 def getjidMachinefromuuid(uuid):
     return XmppMasterDatabase().getjidMachinefromuuid(uuid)
@@ -267,26 +302,29 @@ def CallXmppPlugin(*args, **kwargs ):
 def callInventoryinterface(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callInventory(jid)
+        callInventory(jid)
+        return jid
     else:
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def callrestart(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callrestartbymaster(jid)
+        callrestartbymaster(jid)
+        return jid
     else:
         logging.getLogger().error("callrestartbymaster for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def callshutdown(uuid, time, msg):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
-        return callshutdownbymaster(jid, time, msg)
+        callshutdownbymaster(jid, time, msg)
+        return jid
     else:
         logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
-        return False
+        return "jid missing"
 
 def runXmppCommand(cmd,machine):
     data = {
