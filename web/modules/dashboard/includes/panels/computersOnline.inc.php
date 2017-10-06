@@ -33,18 +33,9 @@ $options = array(
 class ComputersOnlinePanel extends Panel {
 
     function display_content() {
-        $machines_list = xmlrpc_getListPresenceMachine();
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
-        $total_machines = count(getComputersList());
-
-        $machines_online = 0;
-        foreach($machines_list as $machine)
-        {
-            if($machine['type'] != 'relayserver')
-                $machines_online++;
-            else
-                continue;
-        }
+        $total_machines = getComputerCount();
+        $machines_online = xmlrpc_getCountPresenceMachine();
 
         $machines_offline = $total_machines - $machines_online;
         echo 'Total machines : '.$total_machines.'<br/>';
