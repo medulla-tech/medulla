@@ -59,6 +59,10 @@ function xmlrpc_getListPresenceMachine() {
     return xmlCall("xmppmaster.getListPresenceMachine", array());
 }
 
+function xmlrpc_getCountPresenceMachine() {
+    return xmlCall("xmppmaster.getCountPresenceMachine", array());
+}
+
 function xmlrpc_getListPresenceRelay() {
     return xmlCall("xmppmaster.getListPresenceRelay", array());
 }
@@ -176,7 +180,7 @@ function xmlrpc_runXmppWol($pluginname, $macadress){
 function xmlrpc_runXmppWolforuuid($uuid){
     return xmlCall("xmppmaster.CallXmppPlugin", array("wakeonlan", array("UUID"=>$uuid)));
 }
- 
+
 function xmlrpc_callInventoryinterface($uuid){
     return xmlCall("xmppmaster.callInventoryinterface", array($uuid));
 }
