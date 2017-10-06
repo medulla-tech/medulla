@@ -1835,6 +1835,20 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def getCountPresenceMachine(self, session):
+        sql = """SELECT
+                    COUNT(*) AS 'nb'
+                 FROM
+                    xmppmaster.machines
+                 WHERE
+                    agenttype='machine';"""
+        nb = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = [x for x in nb][0][0]
+        return result
+
+    @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
         result = ['-1']
         try:

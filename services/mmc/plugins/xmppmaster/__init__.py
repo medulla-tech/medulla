@@ -95,7 +95,7 @@ def set_simple_log(textinfo, sessionxmppmessage, typelog, priority, who ):
 def updatedeploystate(sessionxmppmessage, status):
     return XmppMasterDatabase().updatedeploystate(sessionxmppmessage, status)
 
-def adddeployabort( 
+def adddeployabort(
                     idcommand,
                     jidmachine,
                     jidrelay,
@@ -188,6 +188,9 @@ def getListPresenceAgent():
 
 def getListPresenceMachine():
     return XmppMasterDatabase().getListPresenceMachine()
+
+def getCountPresenceMachine():
+    return XmppMasterDatabase().getCountPresenceMachine()
 
 def getjidMachinefromuuid(uuid):
     return XmppMasterDatabase().getjidMachinefromuuid(uuid)
