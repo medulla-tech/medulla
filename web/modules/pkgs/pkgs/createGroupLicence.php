@@ -57,7 +57,24 @@ $group = new Group();
 $group->create($groupname, False);
 $group->addMembers($groupmembers);
 $truncate_limit = getMaxElementsForStaticList();
-if ($truncate_limit == count($groupmembers)) new NotifyWidgetWarning(sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit));
+
+//ICI
+if ($truncate_limit == count($groupmembers))
+{
+    $str = sprintf(_T("Computers list has been truncated at %d computers", "dyngroup"), $truncate_limit);
+    new NotifyWidgetWarning($str);
+    xmlrpc_setfrompkgslogxmpp( $str,
+                                "IMG",
+                                '',
+                                0,
+                                "",
+                                'Manuel',
+                                '',
+                                '',
+                                '',
+                                "session user ".$_SESSION["login"],
+                                'Packaging | List | Manual');
+}
 $parm=array();
 $parm['gid']=$group->id;
 header("Location: " . urlStrRedirect("base/computers/display", $parm));

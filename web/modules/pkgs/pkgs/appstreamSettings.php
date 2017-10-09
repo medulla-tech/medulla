@@ -50,13 +50,52 @@ if (isset($_POST['bconfirm'])){
     $json['my_password'] = $_POST['my_password'];
     if (setAppstreamJSON($json)){
         $available = getAvailableAppstreamPackages();
-        if ($available['detail'] == 'Invalid username/password')
-            new NotifyWidgetFailure(_T('Invalid My Credentials, please verify your username/password.', 'pkgs'));
-        else
-            new NotifyWidgetSuccess(_T('Your My credentials have been set successfuly.', 'pkgs'));
+        if ($available['detail'] == 'Invalid username/password'){
+            $str = _T('Invalid My Credentials, please verify your username/password.', 'pkgs');
+            new NotifyWidgetFailure($str);
+            new NotifyWidgetSuccess($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_POST['my_username'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Bundle | Manual');
+        }
+        else{
+            $str = _T('Your My credentials have been set successfuly.', 'pkgs');
+            new NotifyWidgetSuccess($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_POST['my_username'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Bundle | Manual');
+        }
     }
     else{
-        new NotifyWidgetFailure(_T('Cannot set My Credentials.', 'pkgs'));
+        $str = _T('Cannot set My Credentials.', 'pkgs');
+        new NotifyWidgetFailure($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_POST['my_username'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Bundle | Manual');
     }
 }
 

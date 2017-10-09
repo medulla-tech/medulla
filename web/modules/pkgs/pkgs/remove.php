@@ -34,7 +34,23 @@ if(!isExpertMode()) {
         $from = $_GET["from"];
         $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
         $expire_result = expire_all_package_commands($ret);
-        if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
+
+        // ICI
+        if (!isXMLRPCError() and $ret != -1) {
+            $str = _T("The package has been deleted.", "pkgs");
+            new NotifyWidgetSuccess($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET["from"],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Remove | Package | Manual');
+        }
         if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
         $to = "index";
         if ($from) {
@@ -72,8 +88,36 @@ else
 
         //$ret = dropPackage(base64_decode($p_api), base64_decode($pid));
         //$expire_result = expire_all_package_commands($ret);
-        if (!isXMLRPCError() and $return != false) new NotifyWidgetSuccess(_T("The package ".$name." has been deleted.", "pkgs"));
-        if ($return == false) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
+        if (!isXMLRPCError() and $return != false) {
+            $str = _T("The package ".$name." has been deleted.", "pkgs");
+            new NotifyWidgetSuccess($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $name,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Remove | Manual');
+        }
+        if ($return == false) {
+            $str = _T("The package failed to delete"." ".$name, "pkgs");
+            new NotifyWidgetFailure($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $name,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Remove | Manual');
+        }
         $to = "index";
         if ($from) {
             $to = $from;

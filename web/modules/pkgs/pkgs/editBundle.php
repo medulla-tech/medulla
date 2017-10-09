@@ -62,8 +62,7 @@ if (isset($_POST['bconfirm'])){
     else
         // Creation mode
         $package['mode'] = 'creation';
-        
-    
+
     $package['reboot'] = empty($_POST['do_reboot']) ? '0' : 1;
     $package['associateinventory'] = empty($_POST['do_associateinventory']) ? '0' : 1;
         
@@ -77,10 +76,22 @@ if (isset($_POST['bconfirm'])){
         );
         
     }
-    
+    // ICI
     putPackageDetail($_POST['p_api'], $package, True);
     if (!isXMLRPCError()) {
-        new NotifyWidgetSuccess(_T("Bundle successfully edited", "pkgs"));
+        $str = _T("Bundle successfully edited", "pkgs");
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $package,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Bundle | Manual');
     }
 }
 

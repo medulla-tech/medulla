@@ -88,7 +88,20 @@ if (isset($_POST['bconfirm'])) {
                 if (count($ret) > 1) {
                     $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                 }
-                new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
+                //ICI
+                $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp(  $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $explain ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | List | Manual');
                 header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                 exit;
             } else {
@@ -96,7 +109,19 @@ if (isset($_POST['bconfirm'])) {
                 if (count($ret) > 1) {
                     $reason = sprintf(" : <br/>%s", $ret[1]);
                 }
-                new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
+                $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
+                new NotifyWidgetFailure($str);
+                xmlrpc_setfrompkgslogxmpp(  $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $reason ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | List | Manual');
             }
         } else {
             new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));

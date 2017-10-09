@@ -50,7 +50,19 @@ foreach ($res as $mirror) {
     }
 }
 if ($err) {
-    new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
+    $str = implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs"))));
+    new NotifyWidgetFailure($str);
+    xmlrpc_setfrompkgslogxmpp( $str,
+                                "PKG",
+                                '',
+                                0,
+                                "",
+                                'Manuel',
+                                '',
+                                '',
+                                '',
+                                "session user ".$_SESSION["login"],
+                                'Packaging | Bundle | Manual');
 }
 
 $ajax = new AjaxFilterLocation(urlStrRedirect("pkgs/pkgs/ajaxPackageList"));

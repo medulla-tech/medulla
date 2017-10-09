@@ -38,11 +38,6 @@ $p = new PageGenerator(_T("Edit package", "pkgs"));
 $p->setSideMenu($sidemenu);
 $p->display();
 
-
-if(!isExpertMode())
-{
-
-
 // var formating
 $_GET['p_api'] = isset($_GET['p_api']) ? $_GET['p_api'] : "";
 
@@ -88,13 +83,37 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             if ($_GET["action"] == "add") {
-                #new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
+                $str = sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]);
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp( $str,
+                                            "PKG",
+                                            '',
+                                            0,
+                                            $ret[2],
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Packaging | List | Create | Manual');
                 if (!isset($_POST["bassoc"])) {
                     header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id)))); # TODO add params to go on the good p_api
                     exit;
                 }
-            } else {
-                new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+            } else {//ICI
+                $str= _T("Package successfully edited", "pkgs");
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp( $str,
+                                            "PKG",
+                                            '',
+                                            0,
+                                            "",
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Packaging | List | | Create |Manual');
                 $package = $ret[3];
             }
             $pid = $package['id'];
@@ -110,7 +129,21 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         if (count($ret) > 1) {
                             $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                         }
-                        new NotifyWidgetSuccess(sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
+                        // ICI$_POST['files_uploaded']
+                        $str = sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion);
+                        new NotifyWidgetSuccess($str);
+                        xmlrpc_setfrompkgslogxmpp( $str,
+                                                    "PKG",
+                                                    '',
+                                                    0,
+                                                    $_POST['files_uploaded'],
+                                                    'Manuel',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    "session user ".$_SESSION["login"],
+                                                    'Packaging | List | Manual');
+                                
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -118,18 +151,66 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         if (count($ret) > 1) {
                             $reason = sprintf(" : <br/>%s", $ret[1]);
                         }
-                        new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
+                        //ICI
+                        $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
+                        new NotifyWidgetFailure($str);
+                        xmlrpc_setfrompkgslogxmpp( $str,
+                                                    "PKG",
+                                                    '',
+                                                    0,
+                                                    $_POST['files_uploaded'],
+                                                    'Manuel',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    "session user ".$_SESSION["login"],
+                                                    'Packaging | Files | Manual');
                     }
                 } else {
-                    new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
+                    $str= _T("Failed to associate files", "pkgs");
+                    new NotifyWidgetFailure($str);
+                    xmlrpc_setfrompkgslogxmpp( $str,
+                                                "PKG",
+                                                '',
+                                                0,
+                                                $_POST['files_uploaded'],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Packaging | Files | Manual');
                 }
                 // === END ASSOCIATING FILES ==========================
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
+            xmlrpc_setfrompkgslogxmpp( $ret[1],
+                                        "PKG",
+                                        '',
+                                        0,
+                                        "",
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Manual');
         }
     } else {
-        new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
+        $str =_T("Package failed to save", "pkgs");
+        new NotifyWidgetFailure($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        "",
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Manual');
     }
 }
 
@@ -144,16 +225,53 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
             if (count($ret) > 1) {
                 $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
             }
-            new NotifyWidgetSuccess(sprintf(_T("File successfully deleted.", "pkgs")));
+            //ICI
+            $str = sprintf(_T("File successfully deleted.", "pkgs"));
+            new NotifyWidgetSuccess($str);
+             xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET['filename'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Delete | Manual');
         } else {
             $reason = '';
             if (count($ret) > 1) {
                 $reason = sprintf(" : <br/>%s", $ret[1]);
             }
-            new NotifyWidgetFailure(sprintf(_T("Failed to delete files%s", "pkgs"), $reason));
+            $str = sprintf(_T("Failed to delete files%s", "pkgs"), $reason);
+            new NotifyWidgetFailure($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET['filename'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Delete | Manual');
         }
     } else {
-        new NotifyWidgetFailure(_T("Failed to delete files", "pkgs"));
+        $str = _T("Failed to delete files", "pkgs");
+        new NotifyWidgetFailure($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_GET['filename'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Files | Delete | Manual');
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
 }
@@ -340,11 +458,4 @@ $f->pop();
 $f->addValidateButton("bcreate");
 
 $f->display();
-
-}
-
-else
-{
-    include("addXMPP.php");
-}
 ?>

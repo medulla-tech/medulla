@@ -21,12 +21,33 @@
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-
+// Packaging | Package creation | Manual | User
+// Packaging | Package edition | Manual | User
+// Packaging | Package deletion | Manual | User
+// Packaging | Bundle creation | Manual | User
+// Packaging | Bundle edition | Manual | User
+// Packaging | Bundle deletion | Manual | User
 require_once("modules/pkgs/includes/xmlrpc.php");
 
 if (isset($_POST["bconfirm"])) {
     activateAppstreamFlow($_POST['id'], $_POST['package_name'], $_POST['package_label'], $_POST['duration']);
-    if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The stream has been added successfully. You will receive the latest updates of this stream directly in your package list.", "pkgs"));
+    
+    //ICI
+    if (!isXMLRPCError() and $ret != -1) {
+        $str = _T("The stream has been added successfully. You will receive the latest updates of this stream directly in your package list.", "pkgs");
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfrompkgslogxmpp(  $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $_POST['package_name'] ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | List | Manual');
+    }
     if ($ret == -1) new NotifyWidgetFailure(_T("Unable to add stream.", "pkgs"));
 
     header("Location: " . urlStrRedirect("pkgs/pkgs/appstreamSettings", array()));
