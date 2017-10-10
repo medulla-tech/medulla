@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  *
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
@@ -168,15 +168,12 @@ class SelectItemlabeltitle extends SelectItem {
     }
 }
 
-
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Quick Actions Logs"));
+    $p = new PageGenerator(_("Backup Pc Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
-
     $filterlogs = "Backup";
-
-
+    $headercolumn= "date@fromuser@who@text";
 ?>
 
 <script type="text/javascript">
@@ -197,6 +194,7 @@ function encodeurl(){
         "how" : "",
         "who" : "",
         "why" : "",
+        "headercolumn" : "<?php echo $headercolumn; ?>"
     }
     uri = uri +"?"+xwwwfurlenc(param)
     return uri
@@ -234,7 +232,7 @@ jQuery(function(){
 
 
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     } );
     </script>
 

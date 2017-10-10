@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
@@ -174,55 +174,56 @@ class SelectItemlabeltitle extends SelectItem {
     $p->setSideMenu($sidemenu);
     $p->display();
 
-    $filterlogs = "QuickAction";
-
+    $filterlogs   = "QuickAction";
+    $headercolumn = "date@fromuser@who@text";
 ?>
 
 <script type="text/javascript">
 
-var filterlogs = <?php echo "'$filterlogs'";?>;
+    var filterlogs = <?php echo "'$filterlogs'";?>;
 
-function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criteresearch option:selected').val();
-    uri = "modules/base/logview/ajax_Data_Logs.php"
-    //QuickAction
-    var param = {
-        "start_date" : jQuery('#start_date').val(),
-        "end_date"   : jQuery('#end_date').val(),
-        "type" : "",
-        "action" : "",
-        "module" : critere,
-        "user" : "",
-        "how" : "",
-        "who" : "",
-        "why" : "",
+    function encodeurl(){
+        var critere = filterlogs + "|" + jQuery('#criteresearch option:selected').val();
+        uri = "modules/base/logview/ajax_Data_Logs.php"
+        //QuickAction
+        var param = {
+            "start_date" : jQuery('#start_date').val(),
+            "end_date"   : jQuery('#end_date').val(),
+            "type" : "",
+            "action" : "",
+            "module" : critere,
+            "user" : "",
+            "how" : "",
+            "who" : "",
+            "why" : "",
+            "headercolumn" : "<?php echo $headercolumn; ?>"
+        }
+        uri = uri +"?"+xwwwfurlenc(param)
+        return uri
     }
-    uri = uri +"?"+xwwwfurlenc(param)
-    return uri
-}
 
-function xwwwfurlenc(srcjson){
-    if(typeof srcjson !== "object")
-      if(typeof console !== "undefined"){
-        console.log("\"srcjson\" is not a JSON object");
-        return null;
-      }
-    u = encodeURIComponent;
-    var urljson = "";
-    var keys = Object.keys(srcjson);
-    for(var i=0; i <keys.length; i++){
-        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-        if(i < (keys.length-1))urljson+="&";
+    function xwwwfurlenc(srcjson){
+        if(typeof srcjson !== "object")
+        if(typeof console !== "undefined"){
+            console.log("\"srcjson\" is not a JSON object");
+            return null;
+        }
+        u = encodeURIComponent;
+        var urljson = "";
+        var keys = Object.keys(srcjson);
+        for(var i=0; i <keys.length; i++){
+            urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
+            if(i < (keys.length-1))urljson+="&";
+        }
+        return urljson;
     }
-    return urljson;
-}
 
-jQuery(function(){
-    jQuery("p").click(function(){
-        searchlogs( encodeurl());
-    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    jQuery(function(){
+        jQuery("p").click(function(){
+            searchlogs( encodeurl());
+        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+        });
     });
-});
     function searchlogs(url){
         jQuery('#tablelog').DataTable()
                             .ajax.url(
@@ -233,8 +234,7 @@ jQuery(function(){
 
 
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
-        //searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=QuickAction%7CNone&user=&how=&who=&why=")
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     } );
     </script>
 

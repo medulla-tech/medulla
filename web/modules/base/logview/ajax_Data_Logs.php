@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * (c) 2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
@@ -44,8 +44,9 @@ extract($_GET);
     if( !isset($how))       { $how = ""; }
     if( !isset($who))       { $who = ""; }
     if( !isset($user))      { $user = ""; }
+    if( !isset($headercolumn)){ $headercolumn = ""; }
 
-   $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module, $user, $how, $who, $why);
+   $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module, $user, $how, $who, $why, $headercolumn);
 
     echo json_encode($result);
 

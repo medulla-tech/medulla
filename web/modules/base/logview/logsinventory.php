@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  *
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
@@ -114,74 +114,62 @@ class SelectItemlabeltitle extends SelectItem {
         return $ret;
     }
 }
-
-
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Quick Actions Logs"));
+    $p = new PageGenerator(_("Inventory Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
 
     $filterlogs = "Inventory";
-// function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why=""){
-//  var param = {
-//                 "start_date" :  jQuery('#start_date').val(),
-//                 "end_date"   : jQuery('#end_date').val(),
-//                 "type" : jQuery('#type option:selected').val(),
-//                 "action" : jQuery('#action option:selected').val(),
-//                 "module" : jQuery('#module option:selected').val(),
-//                 "user" : "",
-//                 "how" : "",
-//                 "who" : "",
-//                 "why" : "",
-//             }
+    $headercolumn= "date@fromuser@who@text";
 
 ?>
 
 <script type="text/javascript">
 
-var filterlogs = <?php echo "'$filterlogs'";?>;
+    var filterlogs = <?php echo "'$filterlogs'";?>;
 
-function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val();
-    uri = "modules/base/logview/ajax_Data_Logs.php"
-    //QuickAction
-    var param = {
-        "start_date" : jQuery('#start_date').val(),
-        "end_date"   : jQuery('#end_date').val(),
-        "type" : "",
-        "action" : "",
-        "module" : critere,
-        "user" : "",
-        "how" : "",
-        "who" : "",
-        "why" : "",
+    function encodeurl(){
+        var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val();
+        uri = "modules/base/logview/ajax_Data_Logs.php"
+        //QuickAction
+        var param = {
+            "start_date" : jQuery('#start_date').val(),
+            "end_date"   : jQuery('#end_date').val(),
+            "type" : "",
+            "action" : "",
+            "module" : critere,
+            "user" : "",
+            "how" : "",
+            "who" : "",
+            "why" : "",
+            "headercolumn" : "<?php echo $headercolumn; ?>"
+        }
+        uri = uri +"?"+xwwwfurlenc(param)
+        return uri
     }
-    uri = uri +"?"+xwwwfurlenc(param)
-    return uri
-}
 
-function xwwwfurlenc(srcjson){
-    if(typeof srcjson !== "object")
-      if(typeof console !== "undefined"){
-        console.log("\"srcjson\" is not a JSON object");
-        return null;
-      }
-    u = encodeURIComponent;
-    var urljson = "";
-    var keys = Object.keys(srcjson);
-    for(var i=0; i <keys.length; i++){
-        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-        if(i < (keys.length-1))urljson+="&";
+    function xwwwfurlenc(srcjson){
+        if(typeof srcjson !== "object")
+        if(typeof console !== "undefined"){
+            console.log("\"srcjson\" is not a JSON object");
+            return null;
+        }
+        u = encodeURIComponent;
+        var urljson = "";
+        var keys = Object.keys(srcjson);
+        for(var i=0; i <keys.length; i++){
+            urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
+            if(i < (keys.length-1))urljson+="&";
+        }
+        return urljson;
     }
-    return urljson;
-}
 
-jQuery(function(){
-    jQuery("p").click(function(){
-        searchlogs( encodeurl());
-    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    jQuery(function(){
+        jQuery("p").click(function(){
+            searchlogs( encodeurl());
+        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+        });
     });
-});
     function searchlogs(url){
         jQuery('#tablelog').DataTable()
                             .ajax.url(
@@ -189,7 +177,6 @@ jQuery(function(){
                             )
                             .load();
     }
-
 
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=Inventory%7CNone&user=&how=&who=&why=")

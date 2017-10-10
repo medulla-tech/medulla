@@ -44,6 +44,57 @@
 
 Module | Action | How | From user
 
+Inventory | Inventory requested | New machine | Master
+Inventory | Inventory reception | Planned | Machine
+Inventory | Inventory requested | Deployment | User
+Inventory | Inventory requested | Quick Action | User
+
+Backup | Backup configuration | Manual | User
+Backup | Full backup requested | Planned | BackupPC
+Backup | Full backup requested | Manual | User
+Backup | Incremental backup requested | Planned | BackupPC
+Backup | Incremental backup requested | Manual | User
+Backup | Reverse SSH start | Backup | ARS
+Backup | Reverse SSH stop | Backup | ARS
+Backup | Restore requested | Manual | User
+Backup | Reverse SSH start | Restore | ARS
+Backup | Reverse SSH stop | Restore | ARS
+
+Deployment | Deployment planning | Manual | User
+Deployment | Deployment planning | Convergence | User
+Deployment | Deployment execution | Manual | User
+Deployment | Deployment execution | Planned | User
+Deployment | Deployment execution | Convergence | ARS ou Master
+Deployment | WOL sent | Deployment | ARS
+
+QuickAction | WOL sent | Manual | User
+QuickAction | Inventory requested | Manual | User
+QuickAction | Inventory reception | Manual | User
+QuickAction | Shutdown sent | Manual | User
+QuickAction | Reboot sent | Manual | User
+
+Imaging | Menu change | Manual | User
+Imaging | Menu change | WOL | User
+Imaging | Menu change | Multicast | User
+Imaging | Post-imaging script creation | Manual | User
+Imaging | Master creation | Manual | User
+Imaging | Master edition | Manual | User
+Imaging | Master deletion | Manual | User
+Imaging | Master deployment | Manual | User
+Imaging | Master deployment | Multicast | User
+Imaging | Backup image creation | Manual | User
+Imaging | Backup image creation | WOL | User
+Imaging | Image deployment | Manual | User
+Imaging | Image deployment | WOL | User
+Imaging | Image deletion | Manual | User
+
+Packaging | Package creation | Manual | User
+Packaging | Package edition | Manual | User
+Packaging | Package deletion | Manual | User
+Packaging | Bundle creation | Manual | User
+Packaging | Bundle edition | Manual | User
+Packaging | Bundle deletion | Manual | User
+
 Remote_desktop | service| Manual | User
 Remote_desktop | Remote desktop control request | Manual | User
 Remote_desktop | Reverse SSH start | Remote desktop control request | ARS
@@ -119,60 +170,59 @@ class SelectItemlabeltitle extends SelectItem {
 
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Quick Actions Logs"));
+    $p = new PageGenerator(_("Remote Desktop Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
-
     $filterlogs = "Remote_desktop";
-
-
+    $headercolumn = "date@fromuser@who@text";
 ?>
 
 <script type="text/javascript">
 
-var filterlogs = <?php echo "'$filterlogs'";?>;
+    var filterlogs = <?php echo "'$filterlogs'";?>;
 
-function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val()+ "|" + jQuery('#criterionsdetail option:selected').val();
-    uri = "modules/base/logview/ajax_Data_Logs.php"
-    //QuickAction
-    var param = {
-        "start_date" : jQuery('#start_date').val(),
-        "end_date"   : jQuery('#end_date').val(),
-        "type" : "",
-        "action" : "",
-        "module" : critere,
-        "user" : "",
-        "how" : "",
-        "who" : "",
-        "why" : "",
+    function encodeurl(){
+        var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val()+ "|" + jQuery('#criterionsdetail option:selected').val();
+        uri = "modules/base/logview/ajax_Data_Logs.php"
+        //QuickAction
+        var param = {
+            "start_date" : jQuery('#start_date').val(),
+            "end_date"   : jQuery('#end_date').val(),
+            "type" : "",
+            "action" : "",
+            "module" : critere,
+            "user" : "",
+            "how" : "",
+            "who" : "",
+            "why" : "",
+            "headercolumn" : "<?php echo $headercolumn; ?>"
+        }
+        uri = uri +"?"+xwwwfurlenc(param)
+        return uri
     }
-    uri = uri +"?"+xwwwfurlenc(param)
-    return uri
-}
 
-function xwwwfurlenc(srcjson){
-    if(typeof srcjson !== "object")
-      if(typeof console !== "undefined"){
-        console.log("\"srcjson\" is not a JSON object");
-        return null;
-      }
-    u = encodeURIComponent;
-    var urljson = "";
-    var keys = Object.keys(srcjson);
-    for(var i=0; i <keys.length; i++){
-        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-        if(i < (keys.length-1))urljson+="&";
+    function xwwwfurlenc(srcjson){
+        if(typeof srcjson !== "object")
+        if(typeof console !== "undefined"){
+            console.log("\"srcjson\" is not a JSON object");
+            return null;
+        }
+        u = encodeURIComponent;
+        var urljson = "";
+        var keys = Object.keys(srcjson);
+        for(var i=0; i <keys.length; i++){
+            urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
+            if(i < (keys.length-1))urljson+="&";
+        }
+        return urljson;
     }
-    return urljson;
-}
 
-jQuery(function(){
-    jQuery("p").click(function(){
-        searchlogs( encodeurl());
-    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    jQuery(function(){
+        jQuery("p").click(function(){
+            searchlogs( encodeurl());
+        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+        });
     });
-});
     function searchlogs(url){
         jQuery('#tablelog').DataTable()
                             .ajax.url(
@@ -181,13 +231,19 @@ jQuery(function(){
                             .load();
     }
 
-
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     } );
     </script>
 
 <?php
+
+/*
+Remote_desktop | service| Manual | User
+Remote_desktop | Remote desktop control request | Manual | User
+Remote_desktop | Reverse SSH start | Remote desktop control request | ARS
+Remote_desktop | Reverse SSH stop | Remote desktop control request | ARS
+*/
 
 $typecritere  =        array(
                                         _T('Remote desktop service','logs'),

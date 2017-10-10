@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  *
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
@@ -170,12 +170,12 @@ class SelectItemlabeltitle extends SelectItem {
 
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Quick Actions Logs"));
+    $p = new PageGenerator(_("Deployment Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
 
     $filterlogs = "Deployment";
-
+    $headercolumn= "date@fromuser@who@sessionname@text";
 
 ?>
 
@@ -197,6 +197,7 @@ function encodeurl(){
         "how" : "",
         "who" : "",
         "why" : "",
+        "headercolumn" : "<?php echo $headercolumn; ?>"
     }
     uri = uri +"?"+xwwwfurlenc(param)
     return uri
@@ -234,13 +235,11 @@ jQuery(function(){
 
 
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=")
-    } );
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
+    });
     </script>
 
 <?php
-
-print '';
 
 /*                                        
 Deployment | Deployment planning | Manual | User
@@ -410,7 +409,7 @@ th.libelle {
 <table id="tablelog" class="display" width="100%" cellspacing="0">
         <thead>
             <tr>
-                <th style="width: 12%;">date</th>
+                <th style="width: 8%;">date</th>
                 <th style="width: 8%;">user</th>
                 <th style="width: 6%;">who</th>
          <!--       
@@ -423,15 +422,15 @@ th.libelle {
                 <th style="width: 6%;">why</th>
 
                 <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
+                <th style="width: 6%;">touser</th> -->
                 <th style="width: 6%;">sessionname</th>
-        -->
+       
                 <th>text</th>
             </tr>
         </thead>
         <tfoot>
             <tr>
-                <th style="width: 12%;">date</th>
+                <th style="width: 8%;">date</th>
                 <th style="width: 8%;">user</th>
                 <th style="width: 6%;">who</th>
             <!--    
@@ -443,9 +442,9 @@ th.libelle {
 
                 <th style="width: 6%;">why</th>
                 <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
+                <th style="width: 6%;">touser</th> -->
                 <th style="width: 6%;">sessionname</th>
-            -->
+           
                 <th>text</th>
             </tr>
         </tfoot>
