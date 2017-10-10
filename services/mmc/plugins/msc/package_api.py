@@ -394,6 +394,7 @@ class SendPackageCommand:
             cmd['state'],
             cmd_type = self.cmd_type
         )
+        
         if type(addCmd) != int:
             addCmd.addCallbacks(self.sendResult, self.onError)
         else:

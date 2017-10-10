@@ -204,8 +204,20 @@ def getListPresenceRelay():
 def deploylog(uuidinventory, nblastline):
     return XmppMasterDatabase().deploylog(uuidinventory, nblastline)
 
-def addlogincommand(login, commandid):
-    return XmppMasterDatabase().addlogincommand(login, commandid)
+def addlogincommand(login, 
+                    commandid, 
+                    grpid,
+                    nb_machine_in_grp,
+                    instructions_nb_machine_for_exec,
+                    instructions_datetime_for_exec,
+                    parameterspackage):
+    return XmppMasterDatabase().addlogincommand(login, 
+                                                commandid,
+                                                grpid,
+                                                nb_machine_in_grp,
+                                                instructions_nb_machine_for_exec,
+                                                instructions_datetime_for_exec,
+                                                parameterspackage)
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)

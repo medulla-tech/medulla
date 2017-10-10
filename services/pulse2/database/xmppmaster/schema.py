@@ -252,8 +252,14 @@ class Has_login_command(Base, XmppMasterDBObj):
     # Here we define columns for the table deploy.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
-    login = Column(String(45), nullable=False)
-    command = Column(Integer)
+    login = Column(String(45), nullable = False)
+    command = Column(Integer, nullable=False)
+    start_exec_on_time = Column(DateTime, default=None)
+    grpid = Column(Integer, default = None)
+    nb_machine_for_deploy = Column(Integer, default = None)
+    start_exec_on_nb_deploy = Column(Integer, default = None)
+    count_deploy_progress= Column(Integer, default = 0)
+    parameters_deploy = Column(Text, default=None)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
