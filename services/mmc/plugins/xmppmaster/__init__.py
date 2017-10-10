@@ -155,7 +155,8 @@ def setlogxmpp( text,
                                             action,
                                             touser,
                                             fromuser)
-def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why):
+
+def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why, headercolumn):
     if typelog == "None" and action ==  "None"  and module == "None" and start_date == "" :
         return []
     if typelog == "None":
@@ -172,7 +173,9 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            user,
                                            how,
                                            who,
-                                           why)
+                                           why,
+                                           headercolumn)
+
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)

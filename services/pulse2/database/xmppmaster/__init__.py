@@ -858,8 +858,11 @@ class XmppMasterDatabase(DatabaseHelper):
                     user,
                     how,
                     who,
-                    why):
+                    why,
+                    headercolumn):
         logs = session.query(Logs)
+        if headercolumn == "":
+            headercolumn = "date@fromuser@who@text"
         if start_date != "":
             logs = logs.filter( Logs.date > start_date)
         if end_date != "":
@@ -883,7 +886,6 @@ class XmppMasterDatabase(DatabaseHelper):
         if not (why == "None" or why == ""):
             logs = logs.filter( Logs.why == why)
         logs = logs.order_by(desc(Logs.id)).limit(1000)
-        print logs
         result = logs.all()
         session.commit()
         session.flush()
@@ -892,20 +894,31 @@ class XmppMasterDatabase(DatabaseHelper):
         for linelogs in result:
             listchamp = []
             #listchamp.append(index)
-            listchamp.append(str(linelogs.date))
-            listchamp.append(linelogs.fromuser)
-            #listchamp.append(linelogs.type)
-            #listchamp.append(linelogs.action)
-            #listchamp.append(linelogs.module)
-            #listchamp.append(linelogs.how)
-            listchamp.append(linelogs.who)
-            #listchamp.append(linelogs.why)
-            #listchamp.append(linelogs.priority)
-            #listchamp.append(linelogs.touser)
-            #listchamp.append(linelogs.sessionname)
-            listchamp.append(linelogs.text)
+            if headercolumn != "" and "date" in headercolumn:
+                listchamp.append(str(linelogs.date))
+            if headercolumn != "" and "fromuser" in headercolumn:
+                listchamp.append(linelogs.fromuser)
+            if headercolumn != "" and "type" in headercolumn:
+                listchamp.append(linelogs.type)
+            if headercolumn != "" and "action" in headercolumn:
+                listchamp.append(linelogs.action)
+            if headercolumn != "" and "module" in headercolumn:
+                listchamp.append(linelogs.module)
+            if headercolumn != "" and "how" in headercolumn:
+                listchamp.append(linelogs.how)
+            if headercolumn != "" and "who" in headercolumn:
+                listchamp.append(linelogs.who)
+            if headercolumn != "" and "why" in headercolumn:
+                listchamp.append(linelogs.why)
+            if headercolumn != "" and "priority" in headercolumn:
+                listchamp.append(linelogs.priority)
+            if headercolumn != "" and "touser" in headercolumn:
+                listchamp.append(linelogs.touser)
+            if headercolumn != "" and "sessionname" in headercolumn:
+                listchamp.append(linelogs.sessionname)
+            if headercolumn != "" and "text" in headercolumn:
+                listchamp.append(linelogs.text)
             ret['data'].append(listchamp)
-            #index = index + 1
         return ret
 
     @DatabaseHelper._sessionm
