@@ -7,7 +7,7 @@ before_install:
 - sudo apt-get install -y python-sqlalchemy python-mysqldb python-twisted-web python-ldap
   python-gobject xsltproc docbook-xsl
 install: sh -c ' cd core && sh autogen.sh && ./configure && make && sudo make install
-  &&  cd ../pulse2 && sh autogen.sh && ./configure && make && sudo make install '
+  &&  sh autogen.sh && ./configure && make && sudo make install '
 script:
 - echo "DONE"
 notifications:
