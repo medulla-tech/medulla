@@ -1,4 +1,6 @@
-# Pulse
+# Pulse (devel branch)*
+
+*The devel branch corresponds to the release actively under development.*
 
 [![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
 
