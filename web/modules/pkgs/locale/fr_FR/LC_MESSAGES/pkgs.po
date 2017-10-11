@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-24 11:16+0100\n"
+"POT-Creation-Date: 2017-10-11 09:21+0200\n"
 "PO-Revision-Date: 2017-02-27 16:17+0100\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>\n"
 "Language-Team: French (France) (http://transifex.mandriva.com/projects/p/"
@@ -78,7 +78,6 @@ msgstr "Liste des mises à jour Appstream"
 
 #: modules/pkgs/infoPackage.inc.php:70
 #: modules/pkgs/pkgs/appstreamSettings.php:34
-#: modules/pkgs/pkgs/localSidebar.php:32
 msgid "Appstream settings"
 msgstr "Paramètres de l'Appstream"
 

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 14:16+0200\n"
+"POT-Creation-Date: 2017-10-11 09:21+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Andre Machado <andre@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -122,7 +122,7 @@ msgstr "Todas as entradas compartilhadas"
 msgid "An imaging group already exists with name '%s'"
 msgstr "Um grupo de imagem já existe com o nome '%s'"
 
-#: modules/dyngroup/dyngroup/delete_group.php:42
+#: modules/dyngroup/dyngroup/delete_group.php:49
 #, php-format
 msgid ""
 "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
@@ -131,15 +131,15 @@ msgstr ""
 "Você está certo que deseja excluir o grupo <b>%s</b>?<br/> (ele pode ser "
 "usado em outro grupo)."
 
-#: modules/dyngroup/dyngroup/delete_group.php:36
+#: modules/dyngroup/dyngroup/delete_group.php:43
 #, php-format
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr ""
 "Você tem certeza que deseja deletar esse grupo de imagem <b>%s</b>?<br/>"
 
 #: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/dyngroup/delete_group.php:60
-#: modules/dyngroup/dyngroup/delete_group.php:95
+#: modules/dyngroup/dyngroup/delete_group.php:67
+#: modules/dyngroup/dyngroup/delete_group.php:111
 #: modules/dyngroup/includes/groups.inc.php:86
 #: modules/dyngroup/includes/groups.inc.php:281
 msgid "Cancel"
@@ -231,13 +231,13 @@ msgstr "Excluir"
 msgid "Delete a group of computers"
 msgstr "Excluir um grupo de computadores"
 
-#: modules/dyngroup/dyngroup/delete_group.php:41
-#: modules/dyngroup/dyngroup/delete_group.php:43
+#: modules/dyngroup/dyngroup/delete_group.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:50
 msgid "Delete group"
 msgstr "Excluir grupo"
 
-#: modules/dyngroup/dyngroup/delete_group.php:35
-#: modules/dyngroup/dyngroup/delete_group.php:37
+#: modules/dyngroup/dyngroup/delete_group.php:42
+#: modules/dyngroup/dyngroup/delete_group.php:44
 msgid "Delete imaging group"
 msgstr "Deletar esse grupo de imagem"
 
@@ -353,7 +353,7 @@ msgstr "Grupos favoritos"
 msgid "Go to save step"
 msgstr "Ir para o passo salvar "
 
-#: modules/dyngroup/dyngroup/delete_group.php:79
+#: modules/dyngroup/dyngroup/delete_group.php:95
 #, php-format
 msgid "Group %s was successfully deleted"
 msgstr "Grupo %s foi deletado com sucesso"
@@ -429,7 +429,7 @@ msgstr "Hostname do computador"
 msgid "Identification"
 msgstr "Identificação"
 
-#: modules/dyngroup/dyngroup/delete_group.php:76
+#: modules/dyngroup/dyngroup/delete_group.php:92
 #, php-format
 msgid "Imaging group %s was successfully deleted"
 msgstr "Grupo de imagem %s foi deletado com sucesso"
@@ -742,7 +742,7 @@ msgid ""
 "running."
 msgstr ""
 
-#: modules/dyngroup/dyngroup/delete_group.php:57
+#: modules/dyngroup/dyngroup/delete_group.php:64
 msgid ""
 "The group cannot be deleted as a multicast deployment is currently running."
 msgstr ""

@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.pkgs]
+file_filter = <lang>/LC_MESSAGES/pkgs.po
+source_file = pkgs.pot
+source_lang = en_US
+type = PO
+

@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.guacamole]
+file_filter = <lang>/LC_MESSAGES/guacamole.po
+source_file = guacamole.pot
+source_lang = en_US
+type = PO
+
