@@ -16,4 +16,5 @@ notifications:
     channels:
       - "irc.freenode.net#pulse-fr"
       - "irc.freenode.net#pulse-en"
+    on_success: never
     on_failure: always #|never|change] # default: always
