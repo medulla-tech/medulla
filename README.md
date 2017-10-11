@@ -1,4 +1,4 @@
-# Pulse2
+# Pulse
 
 [![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)](https://travis-ci.org/pulse-project/pulse2/branches)
 
