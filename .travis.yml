@@ -1,7 +1,6 @@
 branches:
   only:
   - master
-  - xmppmaster
 before_install:
 - sudo sh -c "echo 'deb https://git.siveo.net xmppmaster mmc-core' > /etc/apt/sources.list.d/pulse.list"
 - sudo wget -qO - https://git.siveo.net/pubkey.txt | sudo apt-key add -
@@ -13,11 +12,6 @@ install: sh autogen.sh && ./configure && make && sudo make install
 script:
 - echo "DONE"
 notifications:
-  email:
-    recipients:
-    - yvan.manon@siveo.net
-    on_success: change
-    on_failure: always
   irc:
     channels:
       - "irc.freenode.net#pulse-fr"
