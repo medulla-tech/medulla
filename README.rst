@@ -3,8 +3,11 @@ Pulse2
 
 
 ![Compilation Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)
-Format: ![Compilation Status](https://travis-ci.org/pulse-project/pulse2)
 
+[Compilation Status](https://travis-ci.org/pulse-project/pulse2)
+
+
+[]![Compilation Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=master)(https://travis-ci.org/pulse-project/pulse2)
 
 Pulse 2 helps organizations ranging from a few computers to 100 000+
 heterogeneous computers to inventory, maintain, update and take full
