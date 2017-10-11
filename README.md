@@ -23,6 +23,10 @@ Pulse provides a real-time management solution for complex and distributed envir
 
 ## Installation
 
+* Stable branche and previous tagged version
+Read INSTALL files of each project (first mmc-core and pulse2) for installation instructions.
+
+* Devel branche
 Installation process had been simplified to easily install all differents components from one command line.
 
 [Easy install process](https://github.com/pulse-project/tools/tree/master/install)
