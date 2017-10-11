@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.pulse2]
+file_filter = <lang>/LC_MESSAGES/pulse2.po
+source_file = pulse2.pot
+source_lang = en_US
+type = PO
+

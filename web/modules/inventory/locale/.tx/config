@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.inventory]
+file_filter = <lang>/LC_MESSAGES/inventory.po
+source_file = inventory.pot
+source_lang = en_US
+type = PO
+

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 14:16+0200\n"
+"POT-Creation-Date: 2017-10-11 09:21+0200\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
 "Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
@@ -51,7 +51,7 @@ msgstr "%s (Servidor Proxy Local)"
 msgid "%s <i>(no additional parameter given)</i>"
 msgstr "%s <i>(parâmetro adicional não informado)</i>"
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:124
+#: modules/msc/includes/commands_xmlrpc.inc.php:132
 #, php-format
 msgid "%s deployment subgroup - %s"
 msgstr "%s subgrupo de implantação - %s"
@@ -711,7 +711,7 @@ msgstr ""
 msgid "Deploy status"
 msgstr "Status da instalação"
 
-#: modules/msc/includes/commands_xmlrpc.inc.php:147
+#: modules/msc/includes/commands_xmlrpc.inc.php:155
 #, php-format
 msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" target=\"_blank"

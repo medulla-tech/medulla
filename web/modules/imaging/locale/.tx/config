@@ -1,0 +1,9 @@
+[main]
+host = https://www.transifex.com
+
+[pulse-1.imaging]
+file_filter = <lang>/LC_MESSAGES/imaging.po
+source_file = imaging.pot
+source_lang = en_US
+type = PO
+
