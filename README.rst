@@ -1,6 +1,8 @@
 Pulse2
 ======
-
+<a href='https://travis-ci.org/pulse-project/pulse2'>
+    <img src='https://travis-ci.org/pulse-project/pulse2.svg?branch=master' alt='Compilation Status' />
+</a>
 Pulse 2 helps organizations ranging from a few computers to 100 000+
 heterogeneous computers to inventory, maintain, update and take full
 control on their IT assets. It has been designed to handle 100 000+
