@@ -3,7 +3,7 @@ branches:
   - master
   - xmppmaster
 before_install:
-- sudo echo "deb https://git.siveo.net xmppmaster mmc-core" > /etc/apt/sources.list.d/pulse.list
+- sudo sh -c "echo 'deb https://git.siveo.net xmppmaster mmc-core' > /etc/apt/sources.list.d/pulse.list"
 - sudo apt-get update -qq
 - sudo apt-get install -y python-sqlalchemy python-mysqldb python-twisted-web python-ldap
   python-gobject xsltproc docbook-xsl dh-autoreconf
