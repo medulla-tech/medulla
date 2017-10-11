@@ -1,43 +1,47 @@
-Pulse2
-======
+# Pulse
+
 [![Build Status](https://travis-ci.org/pulse-project/pulse2.svg?branch=xmppmaster)](https://travis-ci.org/pulse-project/pulse2/branches)
 
-Pulse 2 helps organizations ranging from a few computers to 100 000+
-heterogeneous computers to inventory, maintain, update and take full
-control on their IT assets. It has been designed to handle 100 000+
-computers spread on many sites.  It supports heterogeneous platforms
-such as MS Windows, GNU/Linux (Mandriva, Redhat, Debian, Ubuntu.,
-etc.), Mac OSX, HP-UX, IBM AIX and Solaris systems.
+Pulse is a radically simple IT automation and lifecycle management tool that offers the ability to handle repetitive tasks, quickly deploy applications, operating system and proactively manage them all where ever they are.
 
-Configuration
-~~~~~~~~~~~~~
+Pulse provides a real-time management solution for complex and distributed environments.
 
-Pulse2 is designed in a very distributed way, involving several agents
-running together on the same machine or not. See Installation
+## Main feature :
 
-Installation
-~~~~~~~~~~~~~
+* Imaging and Multicast
+  * System Configuration Builder
+  * Driver extraction and injection
+* Package deployment
+  * Auto-packaging wizard
+  * Compliance management
+  * Auto remediation
+* License management
+* Complete inventory
+* Remote control
+* Backup and Restore
+* Update management
+
+## Installation
+
 Installation process had been simplified to easily install all differents components from one command line.
 
-Check here :
+[Easy install process](https://github.com/pulse-project/tools/tree/master/install)
 
-https://github.com/pulse-project/tools/tree/master/install
 
-Pulse2 clients
-~~~~~~~~~~~~~~
+## Supported clients
 
-* Win32:
+Pulse manage either windows (from 7 to lastest CBB and LTSB), linux and Mac OSX
 
-  A complete win32 client agent pack can be built with the script 
-  
-  /var/lib/pulse2/clients/win32/generate-agent-pack.sh
+## Documentation
 
-* Linux and Mac
+Read [documentation](http://pulse-automation-tools.readthedocs.org/)
 
-  A script is available to build it automatically
-  
-  /var/lib/pulse2/clients/generate-agent.sh
+Read [code documentation](http://doc.siveo.net/)
 
-All agents will be available for downloads from http://ippulseserver/downloads/
+## Community
 
+* Access community [Pulse forum](https://forum.pulse2.fr/)
+* Discuss on IRC chanel [irc.freenode.net](irc.freenode.net)
+  * Channel : #pulse-fr
+  * Channel : #pulse-en
 
