@@ -1,5 +1,9 @@
-Pulse 2 3.7.0
+Pulse 2 4.0
 =============
+ * [FEATURE] Use xmpp to deliver messages, orders, etc
+ * [FEATURE] Add glpi 9.1 Support
+ * [BUGFIX]  Fix Antivirus detection with latest glpi
+ * [BUGFIX]  Fix user creation with latest glpi
 
 Pulse 2 3.6.0
 =============
