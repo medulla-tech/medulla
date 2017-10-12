@@ -1169,6 +1169,10 @@ class DeletableTrFormElement extends FormElement {
  * display a tr html tag in a form
  * using corresponding template
  */
+/**
+ * display a tr html tag in a form
+ * using corresponding template
+ */
 class TrFormElement extends FormElement {
 
     var $template;
@@ -1182,10 +1186,12 @@ class TrFormElement extends FormElement {
         $this->firstColWidth = "40%";
         $this->style = null; /* css style */
         $this->class = null; /* html class for the tr element */
+        $this->trid = null;
         foreach ($extraInfo as $key => $value) {
             $this->$key = $value;
         }
     }
+
 
     /**
      *  display input Element
@@ -1198,6 +1204,8 @@ class TrFormElement extends FormElement {
             $this->cssErrorName = isset($this->template->name) ? $this->template->name : "";
 
         printf('<tr');
+        if ($this->trid !== null)
+            printf(' id="%s"', $this->trid);
         if ($this->class !== null)
             printf(' class="%s"', $this->class);
         if ($this->style !== null)
