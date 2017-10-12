@@ -609,7 +609,7 @@ class XmppMasterDatabase(DatabaseHelper):
         ret['log']= arraylist
         return ret
 
-   @DatabaseHelper._sessionm
+    @DatabaseHelper._sessionm
     def addlogincommand(self, session, 
                         login, 
                         commandid,
