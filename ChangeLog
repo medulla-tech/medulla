@@ -7,6 +7,7 @@ Pulse 2 4.0
  online, offline) 
  * [BUGFIX]  Fix Antivirus detection with latest glpi
  * [BUGFIX]  Fix user creation with latest glpi
+ * [BUGFIX]  Fix port to php7
 
 Pulse 2 3.6.0
 =============
