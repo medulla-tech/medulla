@@ -610,36 +610,36 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
    @DatabaseHelper._sessionm
-   def addlogincommand(self, session, 
-                       login, 
-                       commandid,
-                       grpid,
-                       nb_machine_in_grp,
-                       instructions_nb_machine_for_exec,
-                       instructions_datetime_for_exec,
-                       parameterspackage):
-       try:
-           new_logincommand = Has_login_command()
-           new_logincommand.login = login
-           new_logincommand.command = commandid
-           new_logincommand.count_deploy_progress = 0
-           if grpid != "":
-               new_logincommand.grpid = grpid
-           if instructions_datetime_for_exec != "":
-               new_logincommand.start_exec_on_time = instructions_datetime_for_exec
-           if nb_machine_in_grp != "":
-               new_logincommand.nb_machine_for_deploy = nb_machine_in_grp
-           if instructions_nb_machine_for_exec != "":
-               new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
-           if parameterspackage != "":
-               new_logincommand.parameters_deploy = parameterspackage
-           session.add(new_logincommand)
-           session.commit()
-           session.flush()
-       except Exception, e:
-           print str(e)
-           logging.getLogger().error(str(e))
-       return new_logincommand.id
+    def addlogincommand(self, session, 
+                        login, 
+                        commandid,
+                        grpid,
+                        nb_machine_in_grp,
+                        instructions_nb_machine_for_exec,
+                        instructions_datetime_for_exec,
+                        parameterspackage):
+        try:
+            new_logincommand = Has_login_command()
+            new_logincommand.login = login
+            new_logincommand.command = commandid
+            new_logincommand.count_deploy_progress = 0
+            if grpid != "":
+                new_logincommand.grpid = grpid
+            if instructions_datetime_for_exec != "":
+                new_logincommand.start_exec_on_time = instructions_datetime_for_exec
+            if nb_machine_in_grp != "":
+                new_logincommand.nb_machine_for_deploy = nb_machine_in_grp
+            if instructions_nb_machine_for_exec != "":
+                new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
+            if parameterspackage != "":
+                new_logincommand.parameters_deploy = parameterspackage
+            session.add(new_logincommand)
+            session.commit()
+            session.flush()
+        except Exception, e:
+            print str(e)
+            logging.getLogger().error(str(e))
+        return new_logincommand.id
 
     @DatabaseHelper._sessionm
     def getListPresenceRelay(self, session):
