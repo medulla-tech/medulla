@@ -2,6 +2,9 @@ Pulse 2 4.0
 =============
  * [FEATURE] Use xmpp to deliver messages, orders, etc
  * [FEATURE] Add glpi 9.1 Support
+ * [FEATURE] Add a dashboard widget to follow backups
+ * [FEATURE] Add a dashboard widget to know the number of machines (total,
+ online, offline) 
  * [BUGFIX]  Fix Antivirus detection with latest glpi
  * [BUGFIX]  Fix user creation with latest glpi
 
