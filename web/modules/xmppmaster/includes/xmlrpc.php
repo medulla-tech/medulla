@@ -74,19 +74,19 @@ function xmlrpc_getdeploylog($uuid,$nbline) {
     return xmlCall("xmppmaster.deploylog", array($uuid, $nbline));
 }
 
-function xmlrpc_addlogincommand($login, 
-                                $commandid, 
-                                $grpid = '', 
+function xmlrpc_addlogincommand($login,
+                                $commandid,
+                                $grpid = '',
                                 $nb_machine_in_grp = '',
-                                $instructions_nb_machine_for_exec, 
+                                $instructions_nb_machine_for_exec,
                                 $instructions_datetime_for_exec = '',
-                                $parameterspackage = '',
+                                $parameterspackage = ''
                                 ) {
-    return xmlCall("xmppmaster.addlogincommand", array( $login, 
-                                                        $commandid, 
-                                                        $grpid, 
+    return xmlCall("xmppmaster.addlogincommand", array( $login,
+                                                        $commandid,
+                                                        $grpid,
                                                         $nb_machine_in_grp,
-                                                        $instructions_nb_machine_for_exec, 
+                                                        $instructions_nb_machine_for_exec,
                                                         $instructions_datetime_for_exec,
                                                         $parameterspackage));
 }
