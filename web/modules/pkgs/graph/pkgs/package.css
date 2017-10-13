@@ -136,6 +136,60 @@ a.info:hover span{
     top:5px;
 }
 
-#workflow-selected-list li>span{
+h1
+{
+    font-size:15px;
+}
+
+#workflow-selected-list li{
     display:block;
+    margin-bottom:5px;
+}
+
+#aviable-actions .header, #current-actions .header{
+    background-color:lightslategrey;
+}
+
+#aviable-actions .header
+{
+    margin-bottom: 3px;
+}
+
+#aviable-actions .header h1, #current-actions .header h1{
+    color:white;
+}
+
+#aviable-actions .content
+{
+    display:none;
+}
+
+#aviable-actions,#current-actions
+{
+    margin:5px;
+    background-color:white;
+}
+
+ul{
+    padding:5px;
+}
+
+#aviable-actions li:hover
+{
+    cursor:move;
+}
+
+#current-actions li{
+    width:95%;
+}
+
+#current-actions li .content{
+    background-color: #fdfdfd;
+    border: solid #5b5b5b 1px;
+    margin-bottom:3px;
+}
+
+textarea{
+    width:200px;
+    height:5em;
 }

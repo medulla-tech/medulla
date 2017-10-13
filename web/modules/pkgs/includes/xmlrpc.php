@@ -123,8 +123,8 @@ function getAppstreamNotifications(){
     return xmlCall("pkgs.getAppstreamNotifications", array());
 }
 
-function save_xmpp_json($json){
-    return xmlCall("pkgs.save_xmpp_json", array($json));
+function save_xmpp_json($json, $files = ""){
+    return xmlCall("pkgs.save_xmpp_json", array($json, $files));
 }
 
 function xmpp_packages_list(){

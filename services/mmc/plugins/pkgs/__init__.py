@@ -580,15 +580,16 @@ def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
 
 
-def save_xmpp_json(json_content):
+def save_xmpp_json(json_content, files):
     """
     Save the xmpp json package into new package
-    :param package_name:
-    :param json_content:
+    :param json_content:string
+    :param files:string
     :return bool:
     """
 
     path="/var/lib/pulse2/packages"
+    tmp_path = "/tmp"
 
     # 1 - Test the json, if it's ok, then next step
     try:
@@ -602,14 +603,28 @@ def save_xmpp_json(json_content):
     name = infos['name']
     uuid = infos['id']
 
-    # 4 - Create the path/uuid directory if not exists
+    # 3 - Create the path/uuid directory if not exists
     package_name = name+'-'+uuid
     if not os.path.exists(path+'/'+package_name):
-        os.mkdir(path+'/'+package_name)
+        os.mkdir(path+'/'+package_name, 0755)
 
-    # 5 - Create the xmppdeploy.json file
+    # 4 - Create the xmppdeploy.json file
     xmppdeploy = open(path+'/'+package_name+'/xmppdeploy.json','w')
     json.dump(content,xmppdeploy)
+
+    # 5 - If the file list is not empty, move the files into package dir
+    if file != "":
+        try:
+            fileList = json.loads(files)
+            print("########### File List ###########")
+            print(fileList)
+            for name in fileList:
+                # Move
+                print(tmp_path+'/'+name+'->'+path+'/'+package_name+'/'+name)
+                shutil.move(tmp_path+'/'+name, path+'/'+package_name+'/'+name)
+        except ValueError:
+            pass
+
     xmppdeploy.close()
     return True
 

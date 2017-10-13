@@ -21,6 +21,105 @@
  *
  */
 
+/**
+ * UPLOAD FILES
+ */
+jQuery("#infos-package").on("submit", function (e) {
+    e.preventDefault();
+    jQuery.ajax({
+        url:"modules/pkgs/pkgs/ajaxUploadFiles.php",
+        method:"POST",
+        data: new FormData(this),
+        contentType:false,
+        processData:false,
+
+        // During the upload processing, get transfer information
+        xhr: function() {
+            var xhr = new window.XMLHttpRequest();
+
+            xhr.upload.addEventListener("progress", function(evt) {
+                if (evt.lengthComputable) {
+                    // Calculate the percentage uploaded
+                    var percentComplete = evt.loaded / evt.total;
+                    percentComplete = parseInt(percentComplete * 100);
+                    // And write it to #upload-progress div
+                    jQuery("#upload-progress").val(percentComplete);
+
+                    // If the upload is done : reset the progress bar
+                    if (percentComplete === 100) {
+                        jQuery("#upload-progress").val(0);
+                    }
+
+                }
+            }, false);
+
+            return xhr;
+        },
+
+        // In the upload succeeded, update the file list
+        success:function(data){
+            jQuery.each(document.getElementById("files").files, function(id,file){
+                filesList.push(file['name']);
+            });
+            jQuery("#upload-result").html(data);
+            jQuery("#saveFiles").val(JSON.stringify(filesList));
+            console.log(jQuery("#saveFiles"));
+        },
+    });
+});
+
+/**
+ * Put some information when files are selected
+ */
+jQuery("#files").on("change",function(){
+    var files = document.getElementById("files").files;
+    var size = 0;
+    jQuery.each(files, function(id,file){
+        size += file.size;
+    });
+    var sizeMo = size / 1000000;
+    // The global size of the upload
+    if(sizeMo > 200)
+    {
+        jQuery("#uploadForm").children("input[type='submit']").prop("disabled",true);
+        alert("The files are too large : "+sizeMo+'/200 Mo');
+    }
+    else
+    {
+        jQuery("#files-size").text(sizeMo+"/ 200 Mo");
+        jQuery("#uploadForm").children("input[type='submit']").prop("disabled",false);
+    }
+});
+
+
+/**
+ *
+ * LOAD AVIABLE ACTIONS
+ *
+ */
+jQuery(function(){
+    jQuery.each(optionsForAction, function(actionName, tmp){
+        jQuery("#aviable-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php"));
+    });
+})
+
+
+/**
+ *
+ * ACTIONS ARE SORTABLE
+ */
+jQuery( function() {
+    jQuery( "#current-actions" ).sortable({
+        revert: true
+    });
+    jQuery( "#aviable-actions li" ).draggable({
+        cursor: "move",
+        connectToSortable: "#current-actions",
+        helper: "clone",
+        revert: "invalid"
+    });
+    jQuery( "ul, li" ).disableSelection();
+} );
 
 
 /**
@@ -29,124 +128,29 @@
  * @see pkgs/graph/js/class.js
  *
  */
-
-
 if(typeof(jQuery("#loadJson").val()) != "undefined" && jQuery("#loadJson").val() != "")
-{
+{// If something into #loadJson = edit mode
+
     tmp = JSON.parse(jQuery("#loadJson").val());
 
-    //Get the elements of the sequences
-    jQuery.each(tmp, function(key, element){
-        if(key == "info")
-            wfList['info'] == element;
-        else
-        {
-            wfList[key] = new Workflow();
-            wfList[key].import(element['sequence']);
-        }
-    });
+    //Get the elements of the sequence
+    sequence = getSequenceFromJSON(tmp);
 
-    if(tmp != null)
-    {
-        wfList['info'] = tmp['info'];
-    }
+    jQuery.each(sequence, function(id,action){
+        jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action['action']+".php", action));
+
+    });
 }
 else
-    wfList[osSelected] = new Workflow(osSelected);
+{
+    // Else new package : add actionsuccescompletedend and actionerrorcompletedend to the flow
+    var actions = ['actionsuccescompletedend','actionerrorcompletedend'];
+    jQuery.each(actions, function(id,action){
+        jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action+".php"));
 
-wfList[osSelected].display('#workflow-selected-list', toggleAction);
-updateList();
-
-
-/**
- *
- * CREATE TABS
- *
- */
-jQuery(function(){
-
-    var tabs = jQuery("#workflow").tabs();
-
-    //Tabs are sortable on x axis
-    tabs.find( ".ui-tabs-nav" ).sortable({
-        axis: "x",
-        cursor: "move",
-        stop: function() {
-            tabs.tabs( "refresh" );
-        }
     });
-});
+}
 
-
-/**
- *
- * WORKFLOW-LISTS ARE SORTABLE
- *
- */
-jQuery( function() {
-    jQuery(".accordion").accordion({collapsible: true}).sortable({revert : true, stop : function(event,ui){updateList(); }});
-    jQuery( "#workflow-selected-list" ).disableSelection();
-} );
-
-
-/**
- *
- * TOGGLE THE ACTIONS MANAGER
- *
- */
-jQuery(function(){
-    jQuery(".actions").click(function(){
-        if(jQuery('.action-manager').is(':visible'))
-        {
-            jQuery('.action-manager').hide();
-        }
-        else
-        {
-            jQuery('.action-manager').css('display','flex');
-        }
-
-        jQuery('#workflow-selected-list .action-manager').show();
-    });
-});
-
-
-/**
- *
- * ACTIONS CONTROLLER
- *
- */
-jQuery("#label").on('change click',function(){
-
-    label = jQuery("#label").val();
-    //Uppercase the first letter
-    label = label.charAt(0).toUpperCase()+label.slice(1);
-    //Remove special characters from label
-    label = label.replace(/[^a-zA-Z0-9]/g, '_');
-
-    jQuery("#label").val(label);
-
-    if(label == '' || labelExists(label))
-    {
-        jQuery("#error-message").html("The label must be specified or already exists");
-        jQuery('#select-action').hide();
-        jQuery("#options").hide();
-        jQuery("#aviable-options").hide();
-    }
-
-    else {
-        jQuery("#error-message").html("");
-        //Add label and os into actionToCreate
-        actionToCreate['label'] = label;
-
-        jQuery('#select-action').show();
-        jQuery("#options").show();
-        jQuery("#aviable-options").show();
-
-        // Initialisation of action selector
-        actionToCreate['action'] = action;
-        loadOptions(action);
-    }
-});
 
 /**
  *
@@ -154,37 +158,23 @@ jQuery("#label").on('change click',function(){
  *
  */
 jQuery("#infos-package").on('click change',function(){
-if(jQuery("#name-package").val() == "")
-{
-    jQuery("#createPackageMessage").text("You must specify a name for the package");
-    jQuery("#createPackage").prop("disabled", true);
-}
-
-else
-{
-    jQuery("#createPackageMessage").text("");
-    jQuery("#createPackage").prop("disabled", false);
-}
-
-    infoPackage = {
-        'name':jQuery('#name-package').val(),
-        'description':jQuery('#description-package').val(),
-        'version':jQuery('#version-package').val(),
-        'quitonerror':jQuery('#quitonerror-package').val(),
-        'transferfile':jQuery('#transferfile-package').val(),
-        'id':jQuery("#uuid-package").val()
-    };
-
-    // Manage the transfert file
-    console.log(jQuery("#transferfile-package").val());
-    if(jQuery("#transferfile-package").val() == 'True')
+    if(jQuery("#name-package").val() == "")
     {
+        jQuery("#createPackage").prop("disabled",true);
+    }
+    else
+        jQuery("#createPackage").prop("disabled",false);
+
+    // Manage the transfer file
+    if(jQuery("#transferfile-package").is(":checked"))
+    {
+        jQuery("#transfer-div").show();
         jQuery("#methodtransfert-package").prop('disabled',false);
         infoPackage['methodtransfert'] = jQuery('#methodtransfert-package').val();
     }
     else
     {
-
+        jQuery("#transfer-div").hide();
         if(typeof(infoPackage['methodtransfert']) != 'undefined')
         {
             delete(infoPackage.methodtransfert);
@@ -193,7 +183,8 @@ else
     }
 
     // Manage query information
-    if(jQuery("#associateinventory-package").is(':checked')){
+    if(jQuery("#associateinventory-package").is(":checked")){
+        jQuery("#Qoptions").show();
         jQuery('#Qvendor-package').prop('disabled',false);
         jQuery('#Qversion-package').prop('disabled',false);
         jQuery('#Qlicence-package').prop('disabled',false);
@@ -206,6 +197,7 @@ else
     }
     else
     {
+        jQuery("#Qoptions").hide();
         if(typeof(infoPackage['Qvendor']) != 'undefined' && typeof(infoPackage['Qsoftware']) != 'undefined' && typeof(infoPackage['Qversion']) != 'undefined' && typeof(infoPackage['Qlicence']) != 'undefined')
         {
             delete(infoPackage.Qvendor);
@@ -218,265 +210,79 @@ else
         jQuery("#Qlicence-package").prop('disabled',true);
         jQuery('#Qsoftware-package').prop('disabled',true);
     }
-});
 
-
-/**
- *
- * DISPLAY OPTIONS FOR THE SELECTED ACTION
- *
- */
-jQuery('select[name="action"]').on('change',function(){
-    action = jQuery('select[name="action"]').val();
-    actionToCreate['action'] = action;
-
-    loadOptions(action,"options");
-});
-
-
-/**
- *
- * WHEN A NEW ACTION IS CREATED
- *
- */
-jQuery("#firstStep").on('click',function(){
-
-    //Disable add button
-    jQuery("#firstStep").prop('disabled',true);
-
-    var newAction = jQuery("#new-action").html();
-    //Test the values
-    testOptions();
-
-    var getdatas = jQuery("#new-action").serializeArray();
-    var datas = [];
-
-    var action = Object.create(actionToCreate);
-
-
-    jQuery.each(getdatas,function(key, value){
-        //Replace some option name by meta-name, i.e. : resultcommand is replaced by @resultcommand
-        if(jQuery.inArray(value['name'], optionsMeta) != -1)
-        {
-            value['name'] = '@'+value['name'];
-        }
-        action[value['name']] = value['value'];
-    });
-
-    //Add action to workflow
-    wfList[osSelected].sequence.push(action);
-
-    //Reset action form
-    loadOptions(action);
-
-    jQuery('#workflow-selected-list').html('');
-    wfList[osSelected].display('#workflow-selected-list',toggleAction);
-    updateList();
-});
-
-
-//*******************
-//List of functions
-//*******************
-
-
-/**
- * Called when a Os tab is clicked. It initialize new workflow with os name specified
- * @param os
- *
- */
-function updateOs(os)
-{
-    var selector = '#workflow-selected-list';
-    osSelected = os;
-
-    if(wfList[os] == null)
+    if(jQuery("#package-method").val() == "upload")
     {
-        wfList[os] = new Workflow();
+        jQuery("#uploadForm").show();
     }
+    else
+    {
+        jQuery("#uploadForm").hide();
+    }
+})
 
-    wfList[os].display(selector,toggleAction);
-}
 
 
-/**
- * Check if the specified label is already existing.
- * @var string label
- * @return bool
- */
-function labelExists(label)
+// Get all the workflow elements and create a sequence
+function createSequence()
 {
-    var flag = false;
-    //If label is into selected list : return true
-    jQuery.each(labelList,function(key,value){
-        if(label == value)
-            flag = true;
-    });
+    // Create a new sequence
+    var sequence = [];
 
-    //else return false
-    return flag;
-}
+    /**
+     * Get all the form element in #current-actions and serialize them
+     */
+    // For each action :
+    jQuery.each(jQuery("#current-actions").children(),function(id,element){
+        datas = jQuery(element).children('form').serializeArray();
 
+        // Create new action array
+        var action = {};
 
-/**
- * Load extras options for the specified action
- * @var string actionName
- * @var string selectorName (without '#')
- */
-function loadOptions(actionName,selectorName="options")
-{
-    var template = "";
-
-    jQuery("#"+selectorName+" ul").html('');
-    jQuery("#aviable-"+selectorName+" ul").html('');
-
-    jQuery.each(optionsForAction[actionName],function(key,value){
-        template = value +'-' + optionsList[key]['type'];
-
-        if (value == 'critic' || value == 'mandatory')
-        {
-            jQuery("#mandatories-"+selectorName).append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
-        }
-
-        else
-        {
-            jQuery("#aviable-"+selectorName+" ul").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/templates.php ." + template,{'option':key,'labels':labelList},optionCallback));
-        }
-    });
-}
-
-
-/**
- *
- * Binding actions for each loaded option
- *
- */
-function optionCallback(){
-    jQuery('.add').on('click',function(){
-        element = jQuery(this).parent().parent();
-
-        jQuery('#options-added').append(element);
-        jQuery('#aviable-options ul').remove(element);
-    });
-
-    jQuery('.remove').on('click',function(){
-        element = jQuery(this).parent().parent();
-
-        jQuery('#aviable-options ul').append(element);
-        jQuery('#options-added').remove(element);
-    });
-    testOptions();
-}
-
-
-/**
- *
- * test all the fields of action form
- *
- */
-function testOptions() {
-    var datas = {};
-    var name ="";
-    var value = "";
-    var message="";
-
-    jQuery("#new-action").on("mousedown change",function(){
-        datas = jQuery("#new-action").serializeArray();
-        message = "";
-        jQuery("#firstStep").prop("disabled",false);
-
-        jQuery.each(datas, function (key, parameter) {
-                name = parameter['name'];
-                value = parameter['value'];
-
-                if((name != "resultcommand" && name != "codereturn" && name != "step" && name != "label") && (value == "" || value == null))
-                {
-                    message += "The "+ name+" value is null<br />";
-                    jQuery("#firstStep").prop("disabled",true);
-                }
-            });
-            jQuery("#error-message").html(message);
-    });
-}
-
-
-/**
- *
- * get the list of labels for the selected os and update the sequence of action in wfList
- * @see class.js/labelList
- */
-function updateList()
-{
-    labelList = [];
-    //Get the list of action ordered
-    jQuery('#workflow-selected-list li h3').each(function(key,value){
-        labelList.push(jQuery(value).html());
-    });
-
-    //Reorder the ation list in the sequence
-    wfList[osSelected].sort();
-
-    getJSON();
-}
-
-
-/**
- *
- * SHOW/HIDE details of added actions
- *
- */
-function toggleAction() {
-
-    jQuery("#workflow-selected-list .ui-accordion-header").on('click', function () {
-
-        jQuery(this).next('span').toggle();
-
-        //Remove "add" and "remove" button from options in workflow list
-        jQuery("#workflow-selected-list .add,.remove").hide();
-    });
-
-    //Action to execute when an action is edited
-    jQuery(".editAction").on("click",function(){
-
-        var options = {};
-
-        jQuery.each(jQuery(this).parent('form').serializeArray(), function(id, option){
-            //The options are represented as options[name] = value instead of {'name': name,'value':value}
-            options[option['name']] = option['value'];
+        // For each element in form :
+            // Add {form.elementName : form.elementValue} to action
+        jQuery.each(datas,function(idoption, actionRaw){
+            action[actionRaw['name']] = actionRaw['value'];
         });
+        // Add {step:increment} to this action
+        action['step'] = id;
 
-
-        for(var i=0; i < wfList[osSelected]['sequence'].length;i++)
-        {
-            //Push key value in action['step'] and push the action in the sequence
-            if(wfList[osSelected]['sequence'][i]['label'] == options['label'])
-            {
-                jQuery.each(options,function(name,value)
-                {
-                    if(jQuery.inArray(value['name'], optionsMeta) != -1) {
-                        wfList[osSelected]['sequence'][i]['@'+name] = value;
-                    }
-                    else
-                    wfList[osSelected]['sequence'][i][name] = value;
-                });
-            }
-        }
-
-
-        //Need to update the right action in the sequence with those options
-        console.log(wfList[osSelected]['sequence']);
-
-
-        updateList();
-
+        // Then the sequence is created
+        sequence.push(action);
     });
-
-    jQuery(".delete").on('click', function () {
-        jQuery(this).parent().parent().remove();
-        updateList();
-    });
+    return sequence;
 }
 
+
+// Get info from interface and return it as json
+function createInfo()
+{
+    var info = {};
+
+    datas = jQuery("#infos-package").serializeArray();
+
+    jQuery.each(datas, function(id,param){
+        info[param['name']] = param['value'];
+    });
+    return info;
+}
+
+/**
+ * Get info json and sequence json and return workflow json
+ * @return the workfows json
+ */
+function createJson()
+{
+    var json = {};
+
+    json['info'] = createInfo();
+    json[json['info']['os']] = {};
+
+    json[json['info']['os']]['sequence'] = {};
+    json[json['info']['os']]['sequence'] = createSequence();
+
+    return json;
+}
 
 /**
  *
@@ -485,31 +291,17 @@ function toggleAction() {
  */
 function getJSON()
 {
-    var tmp = {};
-    var tmpAction = {};
-
-    jQuery("#saveList").val('');
-
-    jQuery.each(wfList,function(key,datas){
-        tmp['info'] = infoPackage;
-        tmp[key] = {'sequence':[]};
-        jQuery.each(datas['sequence'], function(key2, action){
-            tmp[key]['sequence'].push(action);
-
-        });
-    });
-    jQuery("#saveList").val(JSON.stringify(tmp));
+    jQuery("#saveList").val(JSON.stringify(createJson()));
 }
 
-/**
- *
- * apply the the modification to the saved action
- * @var string label is the label name edited
- *
- */
-function editAction(label)
+function getSequenceFromJSON(json)
 {
-
-    console.log(jQuery('#'+label+ ' form'));
-
+    var actionList = [];
+    jQuery.each(json, function(key, obj){
+        if(key != "info")
+        {
+            actionList = json[key]['sequence'];
+        }
+    });
+    return actionList;
 }

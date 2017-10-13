@@ -46,7 +46,8 @@ $package = array();
 /*
  * File Upload
  */
-
+if(!isExpertMode())
+{
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
@@ -458,4 +459,12 @@ $f->pop();
 $f->addValidateButton("bcreate");
 
 $f->display();
+
+
+}
+
+else
+{
+    include('addXMPP.php');
+}
 ?>

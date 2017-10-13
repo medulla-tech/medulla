@@ -21,6 +21,9 @@
  *
  */
 
+//FilesList contains the name of the uploaded files which will be transfered into the package
+var filesList = [];
+
 //osSelected is used to know which os is selected in the workflow tab. It is updated by the function called updateOs
 var osSelected = "mac";
 
