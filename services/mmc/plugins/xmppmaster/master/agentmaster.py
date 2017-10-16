@@ -580,9 +580,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" %(name, uuidmachine))
             return None
+        objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
         data =  {
                 "name" : name,
                 "login" : login,
+                "advanced" : objdeployadvanced,
+                "idcmd" : idcommand,
                 'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),

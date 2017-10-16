@@ -36,7 +36,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
         Organization, Packages_list
 # Imported last
 import logging
-
+import json
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -394,6 +394,42 @@ class XmppMasterDatabase(DatabaseHelper):
             #logging.getLogger().error("addPresenceMachine %s" % jid)
             logging.getLogger().error(str(e))
             return ""
+
+    @DatabaseHelper._sessionm
+    def datacmddeploy(self, session, idcommand):
+        try:
+            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).one()
+            session.commit()
+            session.flush()
+            obj={}
+            if result.login != '':
+                obj['login'] = result.login
+            obj['idcmd'] = result.command
+            if result.start_exec_on_time != '':
+                obj['exectime'] = str(result.start_exec_on_time)
+            if result.grpid != '':
+                obj['grp'] = result.grpid
+            if result.nb_machine_for_deploy != '':
+                obj['nbtotal'] = result.nb_machine_for_deploy
+            if result.start_exec_on_nb_deploy != '':
+                obj['consignnb'] = result.start_exec_on_nb_deploy
+            if result.count_deploy_progress != '':
+                obj['countnb'] = result.count_deploy_progress
+            try:
+                params = str(result.parameters_deploy)
+                if params == '':
+                    return obj
+                if not params.startswith('{'):
+                    params = '{' + params
+                if not params.endswith('}'):
+                    params = params + '}'
+                obj['paramdeploy'] = json.loads(params)
+            except Exception, e:
+                logging.getLogger().error(str(e)+" [the parameters must be declared in a json dictionary]")
+            return obj
+        except Exception, e:
+            logging.getLogger().error(str(e) + " [ obj commandid missing]")
+            return {}
 
     @DatabaseHelper._sessionm
     def adddeploy(self,
