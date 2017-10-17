@@ -396,25 +396,41 @@ class XmppMasterDatabase(DatabaseHelper):
             return ""
 
     @DatabaseHelper._sessionm
+    def updatedeployinfo(self, session, idcommand):
+        try:
+            session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)
+                                  ).\
+                    update({Deploy.count_deploy_progress: Deploy.count_deploy_progress + 1})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            return -1
+
+    @DatabaseHelper._sessionm
     def datacmddeploy(self, session, idcommand):
         try:
             result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).one()
             session.commit()
             session.flush()
-            obj={}
+            obj={
+                    'countnb': 0,
+                    'exec' : True
+                 }
             if result.login != '':
                 obj['login'] = result.login
             obj['idcmd'] = result.command
-            if result.start_exec_on_time != '':
+            if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
                 obj['exectime'] = str(result.start_exec_on_time)
+                obj['exec'] = False
+
             if result.grpid != '':
                 obj['grp'] = result.grpid
             if result.nb_machine_for_deploy != '':
                 obj['nbtotal'] = result.nb_machine_for_deploy
-            if result.start_exec_on_nb_deploy != '':
+            if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
                 obj['consignnb'] = result.start_exec_on_nb_deploy
-            if result.count_deploy_progress != '':
-                obj['countnb'] = result.count_deploy_progress
+                obj['exec'] = False
             try:
                 params = str(result.parameters_deploy)
                 if params == '':
@@ -430,7 +446,6 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e) + " [ obj commandid missing]")
             return {}
-
     @DatabaseHelper._sessionm
     def adddeploy(self,
                   session,

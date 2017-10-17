@@ -584,8 +584,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         data =  {
                 "name" : name,
                 "login" : login,
-                "advanced" : objdeployadvanced,
                 "idcmd" : idcommand,
+                "advanced" : objdeployadvanced,
                 'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),
