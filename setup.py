@@ -43,7 +43,7 @@ setup(
 
     keywords='pulse2',
     name='pulse2', 
-    version='3.9.93',
+    version='4.0',
     debian_distro='stretch',
     description = 'pulse2',
     url='https://www.siveo.net/',
