@@ -17,7 +17,6 @@ body
 }
 #work-flow
 {
-    width : 100%;
     padding : 0;
     /*z-index:0;*/
 }
@@ -26,7 +25,6 @@ body
 
 #work-flow>div
 {
-    width : 100%;
     /*margin-left : 5px;
     margin-right : 5px;*/
     padding : 0;
@@ -86,11 +84,6 @@ a.info:hover span{
     display:inline-block;
 }
 
-.dragged
-{
-    width : 100%;
-}
-
 .actions
 {
     padding: 2px;
@@ -147,7 +140,7 @@ h1
 }
 
 #aviable-actions .header, #current-actions .header{
-    background-color:lightslategrey;
+    background-color: #9b9f9d;
 }
 
 #aviable-actions .header
@@ -180,7 +173,7 @@ ul{
 }
 
 #current-actions li{
-    width:95%;
+    width:100%;
 }
 
 #current-actions li .content{
@@ -192,4 +185,13 @@ ul{
 textarea{
     width:200px;
     height:5em;
+}
+
+.content textarea{
+    width:500px;
+    height:15em;
+}
+
+#upload-result{
+    clear:left;
 }

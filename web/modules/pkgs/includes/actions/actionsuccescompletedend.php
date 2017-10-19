@@ -2,12 +2,11 @@
     <h1>End Success</h1>
 </div>
 
-<form class="content">
+<div class="content">
     <div>
         <input type="hidden" name="step" />
+        <input type="hidden" name="actionlabel" value="<?php echo (isset($_POST['actionlabel']))? $_POST['actionlabel'] : uniqid(); ?>"/>
         <input type="hidden" name="action" value="actionsuccescompletedend" />
-    </div>
-    <div>
         <?php
         if(isset($_POST['clear']))
         {
@@ -18,4 +17,4 @@
         }?>
     </div>
 
-</form>
+</div>

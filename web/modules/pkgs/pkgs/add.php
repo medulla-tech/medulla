@@ -36,9 +36,9 @@ $p->display();
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
 
-if(!isExpertMode())
-{
+
 if (isset($_POST['bconfirm'])) {
+
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
@@ -67,11 +67,20 @@ if (isset($_POST['bconfirm'])) {
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
+
+    if(isset($_POST['saveList']))
+    {
+
+        $saveList = $_POST['saveList'];
+        $saveList1 = clean_json($saveList);
+        $result = save_xmpp_json($ret[2],$saveList1);
+    }
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
             $cbx = array($random_dir);
         } else if ($_POST['package-method'] == "package") {
             $cbx = array();
+
             foreach ($_POST as $post => $v) {
                 if (preg_match("/cbx_/", $post) > 0) {
                     $cbx[] = preg_replace("/cbx_/", "", $post);
@@ -151,11 +160,11 @@ if (isset($_POST['bconfirm'])) {
     $selectpapi->setElementsVal($list_val);
     $_SESSION['pkgs_selected'] = array_values($list_val)[0];
 
-    $f = new ValidatingForm();
+    $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
     $f->push(new Table());
 
     // Step title
-    $f->add(new TrFormElement("", $span), array());
+    $f->add(new TrFormElement("", $span));
 
     $r = new RadioTpl("package-method");
     $vals = array("package", "upload", "empty");
@@ -183,25 +192,24 @@ if (isset($_POST['bconfirm'])) {
         array('description', _T("Description", "pkgs"), array()),
     );
 
-    $command = _T('Command:', 'pkgs') . '<br /><br />';
-    $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
-If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.\n\n
-Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\n
-You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:\n\n
-<a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
-    $command = $command . str_replace('\n', '<br />', $commandHelper);
-    $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), $command), /*
-              array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-              array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-              array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-              array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) // */
-    );
 
-    $options = array(
-        array('reboot', _T('Need a reboot ?', 'pkgs'))
-    );
+    if(!isExpertMode())
+    {
+        $command = _T('Command:', 'pkgs') . '<br /><br />';
+        $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
+        If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.\n\n
+        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\n
+        You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:\n\n
+        <a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
+        $command = $command . str_replace('\n', '<br />', $commandHelper);
+        $cmds = array(
+            array('command', _T('Command\'s name : ', 'pkgs'), $command)
+        );
 
+        $options = array(
+            array('reboot', _T('Need a reboot ?', 'pkgs'))
+        );
+    }
     $os = array(
         array('win', 'linux', 'mac'),
         array(_T('Windows'), _T('Linux'), _T('Mac OS'))
@@ -244,15 +252,14 @@ You may also ask Google for the silent installation switches. If you\'re feeling
     addQuerySection($f, $package);
 
     $f->pop();
+    if(isExpertMode())
+    {
+        $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
+        include('addXMPP.php');
+    }
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
     $f->display();
-}
-}
-
-else
-{
-    include('addXMPP.php');
 }
 ?>
 

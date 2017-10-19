@@ -1,13 +1,13 @@
 <div class="header">
-    <h1>Pwd_package</h1>
+    <h1>Pwd package</h1>
 </div>
 
-<form class="content">
+<div class="content">
     <div>
         <input type="hidden" name="step" />
+        <input type="hidden" name="actionlabel" value="<?php echo (isset($_POST['actionlabel']))? $_POST['actionlabel'] : uniqid(); ?>"/>
         <input type="hidden" name="action" value="action_pwd_package" />
-    </div>
-    <div>
+
         <?php
         if(isset($_POST['packageuuid']))
         {
@@ -21,4 +21,4 @@
     </div>
 
     <input type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-</form>
+</div>

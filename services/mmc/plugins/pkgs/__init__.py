@@ -580,16 +580,13 @@ def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
 
 
-def save_xmpp_json(json_content, files):
+def save_xmpp_json(folder, json_content):
     """
     Save the xmpp json package into new package
+    :param folder:string
     :param json_content:string
-    :param files:string
     :return bool:
     """
-
-    path="/var/lib/pulse2/packages"
-    tmp_path = "/tmp"
 
     # 1 - Test the json, if it's ok, then next step
     try:
@@ -597,33 +594,13 @@ def save_xmpp_json(json_content, files):
     except ValueError:
         return False
 
-    # 2 - Extracts the uuid used to name the package directory
-    infos = content['info']
-    # :todo: 3 - Add the label package to the name
-    name = infos['name']
-    uuid = infos['id']
+    # 2 - Create the path/uuid directory if not exists
+    if not os.path.exists(folder):
+        os.mkdir(folder, 0755)
 
-    # 3 - Create the path/uuid directory if not exists
-    package_name = name+'-'+uuid
-    if not os.path.exists(path+'/'+package_name):
-        os.mkdir(path+'/'+package_name, 0755)
-
-    # 4 - Create the xmppdeploy.json file
-    xmppdeploy = open(path+'/'+package_name+'/xmppdeploy.json','w')
+    # 3 - Create the xmppdeploy.json file
+    xmppdeploy = open(folder+'/'+'xmppdeploy.json','w')
     json.dump(content,xmppdeploy)
-
-    # 5 - If the file list is not empty, move the files into package dir
-    if file != "":
-        try:
-            fileList = json.loads(files)
-            print("########### File List ###########")
-            print(fileList)
-            for name in fileList:
-                # Move
-                print(tmp_path+'/'+name+'->'+path+'/'+package_name+'/'+name)
-                shutil.move(tmp_path+'/'+name, path+'/'+package_name+'/'+name)
-        except ValueError:
-            pass
 
     xmppdeploy.close()
     return True
@@ -647,9 +624,9 @@ def xmpp_packages_list():
         if os.path.isfile(path+'/'+dirname+'/xmppdeploy.json') is True:
             # 3 - Extracts the package information and add it to the package list
             json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
+            json_content['info']['uuid'] = dirname;
             xmpp_list.append(json_content['info'])
 
-    print xmpp_list
     return xmpp_list
     
 

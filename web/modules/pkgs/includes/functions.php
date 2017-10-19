@@ -65,4 +65,16 @@ function get_php_max_upload_size() {
     $max_post = (int)(ini_get('post_max_size'));
     return min($max_upload, $max_post);
 }
+
+function clean_json($json)
+{
+    $json = str_replace("\"[","[",$json);
+    $json = str_replace("]\"","]",$json);
+    $json = str_replace("\"{","{",$json);
+    $json = str_replace("}\"","}",$json);
+
+    $json= stripslashes($json);
+    return $json;
+}
 ?>
+

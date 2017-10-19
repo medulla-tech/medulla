@@ -152,6 +152,7 @@ else
 {
     // 1 - Get the list of xmpp packages
     $packages = xmpp_packages_list();
+
     $count = count($packages);
     // 2 - For each package, extract information
     foreach($packages as $package)
@@ -166,8 +167,8 @@ else
         $err = false;
 
         // This array contains the URI parameters for each entry
-        $package_name = $package['name'].'-'.$package['id'];
-        $params[] = array('packageUuid' => $package_name);
+        $package_name = $package['uuid'];
+        $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($package_name),'packageUuid' => $package_name);
     }
 }
 echo "<br>";

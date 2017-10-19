@@ -77,7 +77,7 @@ var optionsForAction = {
         'packageuuid':'extra'
     },
 
-    'action_set_environ':
+    /*'action_set_environ':
     {
         'step':'critic',
         'codereturn':'critic',
@@ -88,9 +88,9 @@ var optionsForAction = {
         'lastlines':'mandatory',
         'firstlines':'mandatory',
         'timeout':'mandatory'
-    },
+    },*/
 
-    'action_command_natif_shell':
+    /*'action_command_natif_shell':
     {
         'step':'critic',
         'codereturn':'critic',
@@ -101,23 +101,16 @@ var optionsForAction = {
         'lastlines':'mandatory',
         'firstlines':'mandatory',
         'timeout':'mandatory'
-    },
+    },*/
 
-    'actionrestartbot':
+    /*'actionrestartbot':
     {
         'step':'critic',
-    },
+    },*/
 
-    'actionprocessscript':
-    {
-        'step':'critic',
-        'command':'mandatory',
-        'succes':'extra',
-        'resultcommand':'extra',
-        'timeout':'extra'
-    },
+    'actionprocessscript':{},
 
-    'actionconfirm':
+    /*'actionconfirm':
     {
         'step':'critic',
         'title':'mandatory',
@@ -125,14 +118,14 @@ var optionsForAction = {
         'icon':'mandatory',
         'boutontype':'mandatory',
         'goto':'extra'
-    },
+    },*/
 
-    'actionwaitandgoto':
+    /*'actionwaitandgoto':
     {
         'step' : 'critic',
         'waiting':'mandatory',
         'goto':'mandatory'
-    },
+    },*/
 
     'actionrestart':
     {
@@ -143,20 +136,7 @@ var optionsForAction = {
     {
         'step':'critic',
     },
-
-    'actionerrorcompletedend':
-    {
-        'step':'critic',
-        'clear':'extra'
-    },
-
-    'actionsuccescompletedend':
-    {
-        'step':'critic',
-        'clear':'extra'
-    },
-
-    'action_unzip_file':
+    /*'action_unzip_file':
     {
         'step':'critic',
         'filename':'mandatory',
@@ -179,7 +159,7 @@ var optionsForAction = {
         {
             'step':'critic',
             'environ':'mandatory'
-        }
+        },*/
 };
 
 /**

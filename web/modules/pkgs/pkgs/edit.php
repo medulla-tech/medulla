@@ -46,9 +46,9 @@ $package = array();
 /*
  * File Upload
  */
-if(!isExpertMode())
-{
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
+
+
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
     if ($_GET["action"] == "add") {
@@ -63,11 +63,12 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-    // Package command
-    $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 
-    // Simple package: not a bundle
-    $package['sub_packages'] = array();
+
+        // Package command
+        $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+        // Simple package: not a bundle
+        $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
@@ -79,6 +80,17 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         update_convergence_groups_request($p_api_id, $package);
         // stop current active convergence commands and set new commands
         restart_active_convergence_commands($p_api_id, $package);
+    }
+
+
+    if(isset($_POST['saveList']))
+    {
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
+        $saveList = $_POST['saveList'];
+        $saveList1 = clean_json($saveList);
+        $result = save_xmpp_json($ret[2],$saveList1);
     }
 
     if (!isXMLRPCError() and $ret and $ret != -1) {
@@ -300,7 +312,7 @@ if (count($package) == 0) {
  */
 
 // display an edit package form (description, version, ...)
-$f = new ValidatingForm();
+$f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
 
 $p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
@@ -330,6 +342,8 @@ $fields = array(
     array("version", _T("Package version", "pkgs"), array("required" => True)),
     array('description', _T("Description", "pkgs"), array()),
 );
+if(!isExpertMode())
+{
 
 $cmds = array(
     array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), /*
@@ -343,6 +357,7 @@ $options = array(
     array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
+}
 $os = array(
     array('win', 'linux', 'mac'),
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
@@ -455,16 +470,14 @@ $f->add(
 // =========================================================================
 
 $f->pop();
+if(isExpertMode())
+{
+    $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
+    include('addXMPP.php');
+}
 
 $f->addValidateButton("bcreate");
 
 $f->display();
 
-
-}
-
-else
-{
-    include('addXMPP.php');
-}
 ?>
