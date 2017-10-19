@@ -37,6 +37,7 @@ from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Us
 # Imported last
 import logging
 import json
+import time
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -395,17 +396,47 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return ""
 
+
+
     @DatabaseHelper._sessionm
     def updatedeployinfo(self, session, idcommand):
         try:
             session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)
                                   ).\
-                    update({Deploy.count_deploy_progress: Deploy.count_deploy_progress + 1})
+                    update({ Has_login_command.count_deploy_progress : Has_login_command.count_deploy_progress + 1})
             session.commit()
             session.flush()
             return 1
         except Exception, e:
             return -1
+
+
+    #def convertTimestampToSQLDateTime(self, value):
+        #return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(value))
+
+    #def convertSQLDateTimeToTimestamp(self, value):
+        #return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
+
+    @DatabaseHelper._sessionm
+    def checkstatusdeploy(self, session, idcommand):
+        nowtime = datetime.utcnow()
+        result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).one()
+        deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).one()
+        if not (deployresult.startcmd <= nowtime and deployresult.endcmd >= nowtime):
+            #on est plus dans la plage de deployments.
+            #abandonmentdeploy
+            return 'abandonmentdeploy'
+
+        if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
+            #traitement du time
+            if nowtime > result.start_exec_on_time:
+                return 'run'
+
+        if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
+            #traitement du nb de deploy
+            if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
+                return 'run'
+        return "pause"
 
     @DatabaseHelper._sessionm
     def datacmddeploy(self, session, idcommand):
@@ -446,6 +477,7 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             logging.getLogger().error(str(e) + " [ obj commandid missing]")
             return {}
+
     @DatabaseHelper._sessionm
     def adddeploy(self,
                   session,
@@ -929,9 +961,11 @@ class XmppMasterDatabase(DatabaseHelper):
                     who,
                     why,
                     headercolumn):
+        ##labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
         if headercolumn == "":
             headercolumn = "date@fromuser@who@text"
+            
         if start_date != "":
             logs = logs.filter( Logs.date > start_date)
         if end_date != "":
@@ -955,6 +989,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if not (why == "None" or why == ""):
             logs = logs.filter( Logs.why == why)
         logs = logs.order_by(desc(Logs.id)).limit(1000)
+        print logs
         result = logs.all()
         session.commit()
         session.flush()
@@ -987,7 +1022,18 @@ class XmppMasterDatabase(DatabaseHelper):
                 listchamp.append(linelogs.sessionname)
             if headercolumn != "" and "text" in headercolumn:
                 listchamp.append(linelogs.text)
+            ##listchamp.append(linelogs.type)
+            ##listchamp.append(linelogs.action)
+            ##listchamp.append(linelogs.module)
+            ##listchamp.append(linelogs.how)
+            #listchamp.append(linelogs.who)
+            ##listchamp.append(linelogs.why)
+            ##listchamp.append(linelogs.priority)
+            ##listchamp.append(linelogs.touser)
+            #listchamp.append(linelogs.sessionname)
+            #listchamp.append(linelogs.text)
             ret['data'].append(listchamp)
+            #index = index + 1
         return ret
 
     @DatabaseHelper._sessionm
@@ -1870,6 +1916,20 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
+    def getCountPresenceMachine(self, session):
+        sql = """SELECT
+                    COUNT(*) AS 'nb'
+                 FROM
+                    xmppmaster.machines
+                 WHERE
+                    agenttype='machine';"""
+        nb = session.execute(sql)
+        session.commit()
+        session.flush()
+        result = [x for x in nb][0][0]
+        return result
+
+    @DatabaseHelper._sessionm
     def getstepdeployinsession(self, session, sessiondeploy):
         sql = """
                 SELECT
@@ -1915,20 +1975,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return a
         except:
             return -1
-
-    @DatabaseHelper._sessionm
-    def getCountPresenceMachine(self, session):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                 FROM
-                    xmppmaster.machines
-                 WHERE
-                    agenttype='machine';"""
-        nb = session.execute(sql)
-        session.commit()
-        session.flush()
-        result = [x for x in nb][0][0]
-        return result
 
     @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):

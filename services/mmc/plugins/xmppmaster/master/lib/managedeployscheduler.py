@@ -20,7 +20,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-
 import sys, os
 import os.path
 import json
@@ -28,7 +27,6 @@ import logging
 import bsddb
 
 logger = logging.getLogger()
-
 
 class manageschedulerdeploy:
 

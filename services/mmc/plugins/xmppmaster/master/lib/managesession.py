@@ -246,3 +246,9 @@ class session:
         for i in self.sessiondata:
             if i.sessionid == sessionid :
                 i.setdatasession(data)
+
+    def sessiongetdata(self, sessionid):
+        for i in self.sessiondata:
+            if i.sessionid == sessionid :
+                return i.getdatasession()
+        return None
