@@ -419,12 +419,16 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def checkstatusdeploy(self, session, idcommand):
+        """
+            this function check status of deploy
+        """
         nowtime = datetime.utcnow()
-        result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).one()
-        deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).one()
+
+        result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
+        deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).limit(1).one()
+
         if not (deployresult.startcmd <= nowtime and deployresult.endcmd >= nowtime):
             #on est plus dans la plage de deployments.
-            #abandonmentdeploy
             return 'abandonmentdeploy'
 
         if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
@@ -436,12 +440,13 @@ class XmppMasterDatabase(DatabaseHelper):
             #traitement du nb de deploy
             if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
                 return 'run'
+
         return "pause"
 
     @DatabaseHelper._sessionm
     def datacmddeploy(self, session, idcommand):
         try:
-            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).one()
+            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
             session.commit()
             session.flush()
             obj={
