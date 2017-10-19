@@ -348,10 +348,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if macadress != "":
                         logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
                         self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress } )
-                        self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
-                                        sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
-                                        priority = -1 ,
-                                        who = uuidmachine)
+                        #self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
+                                        #sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
+                                        #priority = -1 ,
+                                        #who = uuidmachine)
+                        
         listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
@@ -407,6 +408,40 @@ class MUCBot(sleekxmpp.ClientXMPP):
             except Exception as e:
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 traceback.print_exc(file=sys.stdout)
+
+    def xmpplog(self,
+                text,
+                type = 'noset',
+                sessionname = '',
+                priority = 0,
+                action = "",
+                who = "",
+                how = "",
+                why = "",
+                module = "",
+                date = None ,
+                fromuser = "",
+                touser = ""):
+        if who == "":
+            who = self.boundjid.bare
+        msgbody = {
+                    'log' : 'xmpplog',
+                    'text' : text,
+                    'type': type,
+                    'session' : sessionname,
+                    'priority': priority,
+                    'action' : action ,
+                    'who': who,
+                    'how' : how,
+                    'why' : why,
+                    'module': module,
+                    'date' : None ,
+                    'fromuser' : fromuser,
+                    'touser' : touser
+                    }
+        self.send_message(  mto = jid.JID("log@pulse"),
+                            mbody=json.dumps(msgbody),
+                            mtype='chat')
 
     def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
         msgbody = {
@@ -608,12 +643,25 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
+        
+        self.xmpplog("Start1 deploy on machine %s"%jidmachine,
+                type = 'deploy',
+                sessionname = sessionid,
+                priority =-1,
+                action = "",
+                who = "",
+                how = "",
+                why = self.boundjid.bare,
+                module = "Deployment | Start | Creation",
+                date = None ,
+                fromuser = data['login'],
+                touser = "")
 
-        self.logtopulse("Start deploy on machine %s"%jidmachine,
-                        type = 'deploy',
-                        sessionname = sessionid,
-                        priority = -1,
-                        who = "MASTER")
+        #self.logtopulse("Start deploy on machine %s"%jidmachine,
+                        #type = 'deploy',
+                        #sessionname = sessionid,
+                        #priority = -1,
+                        #who = "MASTER")
         self.eventmanage.show_eventloop()
         XmppMasterDatabase().adddeploy( idcommand,
                                         jidmachine,
