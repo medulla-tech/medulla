@@ -15,23 +15,23 @@ h1 {
     margin-bottom:5px;
 }
 
-#aviable-actions .header, #current-actions .header {
+#available-actions .header, #current-actions .header {
     background-color: #9b9f9d;
 }
 
-#aviable-actions .header {
+#available-actions .header {
     margin-bottom: 3px;
 }
 
-#aviable-actions .header h1, #current-actions .header h1 {
+#available-actions .header h1, #current-actions .header h1 {
     color:white;
 }
 
-#aviable-actions .content {
+#available-actions .content {
     display:none;
 }
 
-#aviable-actions,#current-actions {
+#available-actions,#current-actions {
     margin:5px;
     background-color:white;
 }
@@ -40,7 +40,7 @@ ul {
     padding:5px;
 }
 
-#aviable-actions li:hover {
+#available-actions li:hover {
     cursor:move;
 }
 

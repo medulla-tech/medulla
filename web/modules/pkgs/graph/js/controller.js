@@ -27,7 +27,7 @@
  * UPDATE THE INFORMATION SECTION INTO THE JSON
  *
  */
-/*jQuery("#workflow,#aviable-actions,#Form").hover(function(){
+/*jQuery("#workflow,#available-actions,#Form").hover(function(){
     getJSON();
 });
 
@@ -39,7 +39,7 @@
  */
 jQuery(function(){
     jQuery.each(optionsForAction, function(actionName, tmp){
-        jQuery("#aviable-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php"));
+        jQuery("#available-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php"));
     });
 })
 
@@ -52,7 +52,7 @@ jQuery( function() {
     jQuery( "#current-actions" ).sortable({
         revert: true
     });
-    jQuery( "#aviable-actions li" ).draggable({
+    jQuery( "#available-actions li" ).draggable({
         cursor: "move",
         connectToSortable: "#current-actions",
         helper: "clone",
