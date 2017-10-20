@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Clean</h1>
+    <h1>Remove uploaded files</h1>
 </div>
 
 <div class="content">

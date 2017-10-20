@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Pwd package</h1>
+    <h1>Go to package folder</h1>
 </div>
 
 <div class="content">

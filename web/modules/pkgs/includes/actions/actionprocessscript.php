@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>Process script</h1>
+    <h1>Run command</h1>
 </div>
 
 <div class="content">
