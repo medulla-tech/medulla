@@ -24,7 +24,7 @@
 %define debug_package          %{nil}
 %define use_git                1
 %define git                    SHA
-%define version                3.9.93
+%define version                4.0
 
 Summary:	Management Console
 Name:		mmc-core
@@ -32,7 +32,7 @@ Version:	%{version}
 %if %use_git
 Release:        0.%git.1%{?dist}
 %else
-Release:        5%{?dist}
+Release:        1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
