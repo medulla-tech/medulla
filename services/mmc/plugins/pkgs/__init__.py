@@ -602,6 +602,10 @@ def save_xmpp_json(folder, json_content):
     xmppdeploy = open(folder+'/'+'xmppdeploy.json','w')
     json.dump(content,xmppdeploy)
 
+# 4 - Delete xmppdeploy.bat if exists
+    if os.path.isfile(folder+'/'+'xmppdeploy.bat'):
+        os.remove(folder+'/'+'xmppdeploy.bat')
+
     xmppdeploy.close()
     return True
 
