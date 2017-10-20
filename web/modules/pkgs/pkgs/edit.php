@@ -85,9 +85,6 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
     if(isset($_POST['saveList']))
     {
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
         $result = save_xmpp_json($ret[2],$saveList1);
