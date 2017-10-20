@@ -24,21 +24,11 @@
 
 /**
  *
- * UPDATE THE INFORMATION SECTION INTO THE JSON
- *
- */
-/*jQuery("#workflow,#available-actions,#Form").hover(function(){
-    getJSON();
-});
-
-
-/**
- *
  * LOAD AVIABLE ACTIONS
  *
  */
 jQuery(function(){
-    jQuery.each(optionsForAction, function(actionName, tmp){
+    jQuery.each(actionsList, function(id, actionName){
         jQuery("#available-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php"));
     });
 })

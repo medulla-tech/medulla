@@ -55,112 +55,23 @@ var labelList = [];
 var action = jQuery('select[name="action"]').val();
 
 /**
- * optionsForAction is a structure which specifies what are the options for each action.
- * The structure is
- * 'action_name':
- * {
- *   'option_name': 'mode',
- *   'option_name': 'mode',
- *   etc.
- * },
- *
- * 3 modes are declared actually :
- *  - critic : critic mode creates a hidden option
- *  - mandatory : mandatory mode creates a visible option but it can't be removed form action manager
- *  - extra : extra mode creates a visible and removable option from action manager
+ * The uncommented actions here are shown into available action list
  *
  */
-var optionsForAction = {
-    'action_pwd_package':
-    {
-        'step': 'critic',
-        'packageuuid':'extra'
-    },
-
-    /*'action_set_environ':
-    {
-        'step':'critic',
-        'codereturn':'critic',
-        'command':'mandatory',
-        'succes':'mandatory',
-        'error':'mandatory',
-        'resultcommand':'mandatory',
-        'lastlines':'mandatory',
-        'firstlines':'mandatory',
-        'timeout':'mandatory'
-    },*/
-
-    /*'action_command_natif_shell':
-    {
-        'step':'critic',
-        'codereturn':'critic',
-        'command':'mandatory',
-        'succes':'mandatory',
-        'error':'mandatory',
-        'resultcommand':'mandatory',
-        'lastlines':'mandatory',
-        'firstlines':'mandatory',
-        'timeout':'mandatory'
-    },*/
-
-    /*'actionrestartbot':
-    {
-        'step':'critic',
-    },*/
-
-    'actionprocessscript':{},
-
-    /*'actionconfirm':
-    {
-        'step':'critic',
-        'title':'mandatory',
-        'query':'mandatory',
-        'icon':'mandatory',
-        'boutontype':'mandatory',
-        'goto':'extra'
-    },*/
-
-    /*'actionwaitandgoto':
-    {
-        'step' : 'critic',
-        'waiting':'mandatory',
-        'goto':'mandatory'
-    },*/
-
-    'actionrestart':
-    {
-        'step':'critic',
-    },
-
-    'actioncleaning':
-    {
-        'step':'critic',
-    },
-    /*'action_unzip_file':
-    {
-        'step':'critic',
-        'filename':'mandatory',
-        'pathdirectorytounzip':'mandatory',
-        'resultcommand':'extra',
-        'lastlines':'extra',
-        'firstlines':'extra',
-        'succes':'extra',
-        'error':'extra',
-        'goto':'extra'
-    },
-
-    'action_no_operation':
-    {
-        'step':'critic'
-    },
-
-
-    'action_set_environ' :
-        {
-            'step':'critic',
-            'environ':'mandatory'
-        },*/
-};
+var actionsList = [
+    'action_pwd_package',
+    //'action_set_environ',
+    //'action_command_natif_shell',
+    //'actionrestartbot',
+    'actionprocessscript',
+    //'actionconfirm',
+    //'actionwaitandgoto',
+    'actionrestart',
+    'actioncleaning',
+    'action_unzip_file',
+    'action_no_operation',
+    'action_set_environ',
+];
 
 /**
  *
