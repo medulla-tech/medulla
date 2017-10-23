@@ -184,7 +184,10 @@ class SelectItemlabeltitle extends SelectItem {
 var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val();
+    var critere = filterlogs +
+                    "|" + jQuery('#criterionssearch option:selected').val() + 
+                    "|" + jQuery('#criterionssearch1 option:selected').val() +
+                    "|" + jQuery('#criterionssearch2 option:selected').val();
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
     var param = {
@@ -252,32 +255,63 @@ Deployment | WOL sent | Deployment | ARS
 
 
 $typecritere  =        array(
-                                        _T('Deployment planning','logs'),
-                                        _T('Deployment execution','logs'),
+                                        _T('Deployment Transfert','logs'),
+                                        _T('Deployment Execution','logs'),
+                                        _T('Deployment Download','logs'),
+                                        _T('Deployment Notify','logs'),
+                                        _T('Deployment Error','logs'),
+                                        _T('Deployment Terminate','logs'),
                                         _T('WOL sent','logs'),
                                         _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
-                                        'planning',
-                                        'execution',
+                                        'Transfert',
+                                        'Execution',
+                                        'Download',
+                                        'Notify',
+                                        'Error',
+                                        'Terminate',
                                         'WOL',
                                         'None');
 
 $typecritere1  =        array(
-                                        _T('Manual','logs'),
-                                        _T('Planned ','logs'),
+                                        _T('Deployment Transfert','logs'),
+                                        _T('Deployment Execution','logs'),
+                                        _T('Deployment Download','logs'),
+                                        _T('Deployment Notify','logs'),
+                                        _T('Deployment Error','logs'),
+                                        _T('Deployment Terminate','logs'),
+                                        _T('WOL sent','logs'),
                                         _T('no criteria selected','logs'));
 
-$typecritereval1 =        array(
-                                        'Manual',
-                                        'Planned',
+$typecritereval1  =        array(
+                                        'Transfert',
+                                        'Execution',
+                                        'Download',
+                                        'Notify',
+                                        'Error',
+                                        'Terminate',
+                                        'WOL',
                                         'None');
+
 $typecritere2  =        array(
-                                        _T('Convergence','logs'),
+                                        _T('Deployment Transfert','logs'),
+                                        _T('Deployment Execution','logs'),
+                                        _T('Deployment Download','logs'),
+                                        _T('Deployment Notify','logs'),
+                                        _T('Deployment Error','logs'),
+                                        _T('Deployment Terminate','logs'),
+                                        _T('WOL sent','logs'),
                                         _T('no criteria selected','logs'));
 
 $typecritereval2  =        array(
-                                        'Convergence',
+                                        'Transfert',
+                                        'Execution',
+                                        'Download',
+                                        'Notify',
+                                        'Error',
+                                        'Terminate',
+                                        'WOL',
                                         'None');
 
 
@@ -302,7 +336,7 @@ $modules1->setElementsVal($typecritereval1);
 
 
 
-$modules2 = new SelectItemlabeltitle("criterionssearch21", _T('criterions','logs'), "critere search2");
+$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), "critere search2");
 $modules2->setElements($typecritere2);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval2);
