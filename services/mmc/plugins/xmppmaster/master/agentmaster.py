@@ -44,8 +44,6 @@ from lib.managesession import sessiondatainfo, session
 from lib.utils import *
 from lib.managepackage import managepackage
 from lib.manageADorganization import manage_fqdn_window_activedirectory
-from lib.manage_event import manage_event
-from lib.manage_process import mannageprocess
 from lib.manageRSAsigned import MsgsignedRSA
 from lib.localisation import Localisation
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -223,9 +221,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.domaindefault = "pulse"
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
-        self.queue_read_event_from_command = Queue()
-        self.eventmanage = manage_event(self.queue_read_event_from_command, self)
-        self.mannageprocess = mannageprocess(self.queue_read_event_from_command)
+        #self.queue_read_event_from_command = Queue()
+        #self.eventmanage = manage_event(self.queue_read_event_from_command, self)
+        #self.mannageprocess = mannageprocess(self.queue_read_event_from_command)
         self.listdeployinprocess = {}
         self.deploywaitting = {}
         self.plugintype = {}
@@ -643,7 +641,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
-
+        
         self.xmpplog("Start deploy on machine %s"%jidmachine,
                 type = 'deploy',
                 sessionname = sessionid,
@@ -662,7 +660,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         #sessionname = sessionid,
                         #priority = -1,
                         #who = "MASTER")
-        self.eventmanage.show_eventloop()
+        #self.eventmanage.show_eventloop()
         XmppMasterDatabase().adddeploy( idcommand,
                                         jidmachine,
                                         jidrelay,
