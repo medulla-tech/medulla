@@ -868,6 +868,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
+    def getCountPresenceMachine(self, session):
+        return session.query(func.count(Machines.id)).scalar()
+
+    @DatabaseHelper._sessionm
     def adduser(self, session,
                     namesession,
                     hostname,
