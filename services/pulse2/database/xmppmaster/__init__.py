@@ -400,6 +400,9 @@ class XmppMasterDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def updatedeployinfo(self, session, idcommand):
+        """
+        this function allows to update the counter of deployments in pause
+        """
         try:
             session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)
                                   ).\
@@ -410,17 +413,16 @@ class XmppMasterDatabase(DatabaseHelper):
         except Exception, e:
             return -1
 
+    def convertTimestampToSQLDateTime(self, value):
+        return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(value))
 
-    #def convertTimestampToSQLDateTime(self, value):
-        #return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(value))
-
-    #def convertSQLDateTimeToTimestamp(self, value):
-        #return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
+    def convertSQLDateTimeToTimestamp(self, value):
+        return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
 
     @DatabaseHelper._sessionm
     def checkstatusdeploy(self, session, idcommand):
         """
-            this function check status of deploy
+        this function is used to determine the state of the deployment when the deployemnet is scheduled and scheduler
         """
         nowtime = datetime.utcnow()
 
@@ -428,19 +430,17 @@ class XmppMasterDatabase(DatabaseHelper):
         deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).limit(1).one()
 
         if not (deployresult.startcmd <= nowtime and deployresult.endcmd >= nowtime):
-            #on est plus dans la plage de deployments.
+            #we are more in the range of deployments.
+            #abandonmentdeploy
             return 'abandonmentdeploy'
-
         if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
-            #traitement du time
+            #time processing
             if nowtime > result.start_exec_on_time:
                 return 'run'
-
         if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
-            #traitement du nb de deploy
+            #nb of deploy processing
             if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
                 return 'run'
-
         return "pause"
 
     @DatabaseHelper._sessionm
@@ -1027,6 +1027,8 @@ class XmppMasterDatabase(DatabaseHelper):
                 listchamp.append(linelogs.sessionname)
             if headercolumn != "" and "text" in headercolumn:
                 listchamp.append(linelogs.text)
+                
+            
             ##listchamp.append(linelogs.type)
             ##listchamp.append(linelogs.action)
             ##listchamp.append(linelogs.module)
@@ -1919,20 +1921,6 @@ class XmppMasterDatabase(DatabaseHelper):
         if ret[0] == 0 :
             return False
         return True
-
-    @DatabaseHelper._sessionm
-    def getCountPresenceMachine(self, session):
-        sql = """SELECT
-                    COUNT(*) AS 'nb'
-                 FROM
-                    xmppmaster.machines
-                 WHERE
-                    agenttype='machine';"""
-        nb = session.execute(sql)
-        session.commit()
-        session.flush()
-        result = [x for x in nb][0][0]
-        return result
 
     @DatabaseHelper._sessionm
     def getstepdeployinsession(self, session, sessiondeploy):
