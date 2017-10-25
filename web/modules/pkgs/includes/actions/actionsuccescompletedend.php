@@ -16,5 +16,4 @@
             echo '<p><input type="checkbox" onclick="if(jQuery(this).is(\':checked\')){jQuery(this).next().prop(\'disabled\',false);}else{jQuery(this).next().prop(\'disabled\',true);}" />Clear <select name="clear" disabled><option value="True">True</option><option value="False">False</option><select></p>';
         }?>
     </div>
-
 </div>

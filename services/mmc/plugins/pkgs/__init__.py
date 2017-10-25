@@ -580,6 +580,9 @@ def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
 
 
+def _path_package():
+    return os.path.join("/", "var", "lib", "pulse2", "packages")
+
 def save_xmpp_json(folder, json_content):
     """
     Save the xmpp json package into new package
@@ -599,16 +602,15 @@ def save_xmpp_json(folder, json_content):
         os.mkdir(folder, 0755)
 
     # 3 - Create the xmppdeploy.json file
-    xmppdeploy = open(folder+'/'+'xmppdeploy.json','w')
-    json.dump(content,xmppdeploy)
+    xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
+    json.dump(content,xmppdeploy,indent=4)
 
-# 4 - Delete xmppdeploy.bat if exists
-    if os.path.isfile(folder+'/'+'xmppdeploy.bat'):
+    # 4 - Delete xmppdeploy.bat if exists
+    if os.path.isfile(os.path.join(folder,'xmppdeploy.bat' )):
         os.remove(folder+'/'+'xmppdeploy.bat')
 
     xmppdeploy.close()
     return True
-
 
 def xmpp_packages_list():
     """
@@ -616,23 +618,20 @@ def xmpp_packages_list():
     :return: list of packages
     """
 
-    path = "/var/lib/pulse2/packages"
+    path = _path_package()
 
     # 1 - list the packages directories
     list_all = os.listdir(path)
     xmpp_list = []
 
     for dirname in list_all:
-
         # 2 - if the directory contains xmppdeploy.json
-        if os.path.isfile(path+'/'+dirname+'/xmppdeploy.json') is True:
+        if os.path.isfile(os.path.join(path, dirname, 'xmppdeploy.json')) is True:
             # 3 - Extracts the package information and add it to the package list
-            json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
+            json_content = json.load(file(os.path.join(path, dirname, 'xmppdeploy.json')))
             json_content['info']['uuid'] = dirname;
             xmpp_list.append(json_content['info'])
-
     return xmpp_list
-    
 
 def remove_xmpp_package(package_uuid):
     """
@@ -641,34 +640,31 @@ def remove_xmpp_package(package_uuid):
     :return: success | failure
     """
 
-    path = "/var/lib/pulse2/packages"
-
     # If the package exists, delete it and return true
-    if os.path.exists(path + '/' + package_uuid):
-        shutil.rmtree(path + '/' + package_uuid)
+    pathpackagename = os.path.join(_path_package(), package_uuid)
+    if os.path.exists(pathpackagename):
+        shutil.rmtree(pathpackagename)
         return True
     else :
         return False
 
 
-def get_xmpp_package(package_uuid):
+ef get_xmpp_package(package_uuid):
     """
     Select the specified package and return the information in the json
     :param package_uuid:  uuid of the package
     :return: the json or false if it does not exist
     """
 
-    path = "/var/lib/pulse2/packages"
+    path = _path_package()
 
-    if os.path.exists(path + '/' + package_uuid):
+    if os.path.exists(os.path.join(path, package_uuid)):
         # Read all the content of the package
-
-        json_file = open(path + '/' + package_uuid + '/xmppdeploy.json', 'r')
+        json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
         json = json_file.read()
-
         json_file.close()
-
         return json
     else:
         return False
+
 
