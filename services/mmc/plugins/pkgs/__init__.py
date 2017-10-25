@@ -649,7 +649,7 @@ def remove_xmpp_package(package_uuid):
         return False
 
 
-ef get_xmpp_package(package_uuid):
+def get_xmpp_package(package_uuid):
     """
     Select the specified package and return the information in the json
     :param package_uuid:  uuid of the package

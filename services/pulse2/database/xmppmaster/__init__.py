@@ -705,7 +705,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         nb_machine_in_grp,
                         instructions_nb_machine_for_exec,
                         instructions_datetime_for_exec,
-                        parameterspackage):
+                        parameterspackage,
+                        rebootneed):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
@@ -721,6 +722,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
             if parameterspackage != "":
                 new_logincommand.parameters_deploy = parameterspackage
+            if rebootneed == 0:
+                new_logincommand.rebootneed = False
+            else:
+                new_logincommand.rebootneed = True
             session.add(new_logincommand)
             session.commit()
             session.flush()

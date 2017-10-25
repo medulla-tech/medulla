@@ -210,14 +210,16 @@ def addlogincommand(login,
                     nb_machine_in_grp,
                     instructions_nb_machine_for_exec,
                     instructions_datetime_for_exec,
-                    parameterspackage):
+                    parameterspackage,
+                    rebootneed):
     return XmppMasterDatabase().addlogincommand(login, 
                                                 commandid,
                                                 grpid,
                                                 nb_machine_in_grp,
                                                 instructions_nb_machine_for_exec,
                                                 instructions_datetime_for_exec,
-                                                parameterspackage)
+                                                parameterspackage,
+                                                rebootneed)
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)

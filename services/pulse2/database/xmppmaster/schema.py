@@ -260,6 +260,7 @@ class Has_login_command(Base, XmppMasterDBObj):
     start_exec_on_nb_deploy = Column(Integer, default = None)
     count_deploy_progress= Column(Integer, default = 0)
     parameters_deploy = Column(Text, default=None)
+    rebootneed = Column(Boolean, default=False)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -269,7 +270,7 @@ class Organization(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     name = Column(String(45), nullable=False)
-  
+
 class Packages_list(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'packageslist'
@@ -279,4 +280,4 @@ class Packages_list(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     organization_id= Column(Integer, nullable=False)
     packageuuid = Column(String(45), nullable=False)
-    
+
