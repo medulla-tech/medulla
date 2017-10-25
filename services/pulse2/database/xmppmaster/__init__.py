@@ -467,6 +467,7 @@ class XmppMasterDatabase(DatabaseHelper):
             if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
                 obj['consignnb'] = result.start_exec_on_nb_deploy
                 obj['exec'] = False
+            obj['rebootneeded'] = result.rebootneed
             try:
                 params = str(result.parameters_deploy)
                 if params == '':
