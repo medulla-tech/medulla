@@ -80,15 +80,22 @@ function xmlrpc_addlogincommand($login,
                                 $nb_machine_in_grp = '',
                                 $instructions_nb_machine_for_exec,
                                 $instructions_datetime_for_exec = '',
-                                $parameterspackage = ''
+                                $parameterspackage = '',
+                                $rebootneed = 0
                                 ) {
+    if($rebootneed == "on"){
+        $rebootneed = 1;
+    }else{
+        $rebootneed = 0;
+    }
     return xmlCall("xmppmaster.addlogincommand", array( $login,
                                                         $commandid,
                                                         $grpid,
                                                         $nb_machine_in_grp,
                                                         $instructions_nb_machine_for_exec,
                                                         $instructions_datetime_for_exec,
-                                                        $parameterspackage));
+                                                        $parameterspackage,
+                                                        $rebootneed));
 }
 
 
