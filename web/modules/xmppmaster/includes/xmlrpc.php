@@ -81,12 +81,20 @@ function xmlrpc_addlogincommand($login,
                                 $instructions_nb_machine_for_exec,
                                 $instructions_datetime_for_exec = '',
                                 $parameterspackage = '',
-                                $rebootneed = 0
+                                $rebootrequired = 0,
+                                $shutdownrequired = 0
                                 ) {
-    if($rebootneed == "on"){
-        $rebootneed = 1;
+
+    if($rebootrequired != "0"){
+        $rebootrequired = 1;
+    }
+    else{
+        $rebootrequired = 0;
+    }
+    if($shutdownrequired != "0"){
+        $shutdownrequired = 1;
     }else{
-        $rebootneed = 0;
+        $shutdownrequired = 0;
     }
     return xmlCall("xmppmaster.addlogincommand", array( $login,
                                                         $commandid,
@@ -95,7 +103,8 @@ function xmlrpc_addlogincommand($login,
                                                         $instructions_nb_machine_for_exec,
                                                         $instructions_datetime_for_exec,
                                                         $parameterspackage,
-                                                        $rebootneed));
+                                                        $rebootrequired,
+                                                        $shutdownrequired));
 }
 
 
