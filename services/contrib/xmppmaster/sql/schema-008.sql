@@ -22,7 +22,10 @@
 
 
 ALTER TABLE `xmppmaster`.`has_login_command` 
-ADD COLUMN `rebootneed` TINYINT(1) NULL DEFAULT 0 AFTER `parameters_deploy`;
+ADD COLUMN `rebootrequired` TINYINT(1) NULL DEFAULT 0 AFTER `parameters_deploy`;
+
+ALTER TABLE `xmppmaster`.`has_login_command` 
+ADD COLUMN `shutdownrequired` TINYINT(1) NULL DEFAULT 0 AFTER `rebootrequired`;
 
 -- ----------------------------------------------------------------------
 -- Database version

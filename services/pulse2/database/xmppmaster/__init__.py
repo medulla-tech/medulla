@@ -467,7 +467,8 @@ class XmppMasterDatabase(DatabaseHelper):
             if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
                 obj['consignnb'] = result.start_exec_on_nb_deploy
                 obj['exec'] = False
-            obj['rebootneeded'] = result.rebootneed
+            obj['rebootrequired'] = result.rebootrequired
+            obj['shutdownrequired'] = result.shutdownrequired
             try:
                 params = str(result.parameters_deploy)
                 if params == '':
@@ -707,7 +708,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         instructions_nb_machine_for_exec,
                         instructions_datetime_for_exec,
                         parameterspackage,
-                        rebootneed):
+                        rebootrequired,
+                        shutdownrequired):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
@@ -723,10 +725,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
             if parameterspackage != "":
                 new_logincommand.parameters_deploy = parameterspackage
-            if rebootneed == 0:
-                new_logincommand.rebootneed = False
+            if rebootrequired == 0:
+                new_logincommand.rebootrequired = False
             else:
-                new_logincommand.rebootneed = True
+                new_logincommand.rebootrequired = True
+            if shutdownrequired == 0:
+                new_logincommand.shutdownrequired = False
+            else:
+                new_logincommand.shutdownrequired = True
             session.add(new_logincommand)
             session.commit()
             session.flush()

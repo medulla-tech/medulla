@@ -144,12 +144,13 @@ function start_a_command($proxy = array()) {
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
             $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
-            $Rebootneed = (quick_get('rebootneed')) ? quick_get('rebootneed') : 0;
+            $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
+            $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
             $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
             if ($exec_date != "" && $exec_date == $start_date){
                 $exec_date = '';
             }
-            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $Rebootneed);
+            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
@@ -209,7 +210,7 @@ function start_a_command($proxy = array()) {
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0);
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0);
                 }
 
                 if (!$active) {
@@ -261,7 +262,8 @@ function start_a_command($proxy = array()) {
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                 $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
-                $Rebootneed = (quick_get('rebootneed')) ? quick_get('rebootneed') : 0;
+                $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
+                $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
 
                 $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
                 if ($exec_date != "" && $exec_date == $start_date){
@@ -269,7 +271,7 @@ function start_a_command($proxy = array()) {
                 }
                 $instructions_nb_machine_for_exec    = (quick_get('instructions_nb_machine_for_exec')) ? quick_get('instructions_nb_machine_for_exec') : '';
 
-                xmlrpc_addlogincommand($_SESSION['login'], $id, $gid, $countmachine, $instructions_nb_machine_for_exec, $exec_date, $parameterspacquage, $Rebootneed);
+                xmlrpc_addlogincommand($_SESSION['login'], $id, $gid, $countmachine, $instructions_nb_machine_for_exec, $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
 
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -625,8 +627,13 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             );
             $f->add(
                 new TrFormElement(
-                    _T('Reboot need', 'msc'), new CheckboxTpl('rebootneed')
-                ), array("value" => quick_get('rebootneed', True) == 'on' ? 'checked' : '')
+                    _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
+                ), array("value" => quick_get('rebootrequired', True) == 'on' ? 'checked' : '')
+            );
+            $f->add(
+                new TrFormElement(
+                    _T('Shutdown required', 'msc'), new CheckboxTpl('shutdownrequired')
+                ), array("value" => quick_get('shutdownrequired', True) == 'on' ? 'shutdownrequired' : '')
             );
             $f->add(
                 new TrFormElement(

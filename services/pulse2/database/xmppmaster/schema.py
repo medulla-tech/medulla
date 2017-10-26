@@ -260,7 +260,8 @@ class Has_login_command(Base, XmppMasterDBObj):
     start_exec_on_nb_deploy = Column(Integer, default = None)
     count_deploy_progress= Column(Integer, default = 0)
     parameters_deploy = Column(Text, default=None)
-    rebootneed = Column(Boolean, default=False)
+    rebootrequired = Column(Boolean, default=False)
+    shutdownrequired = Column(Boolean, default=False)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
