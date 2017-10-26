@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * File : logsbackuppc.php
  */
- 
+
  /*
  this page show logs table
 +-------------+------------------+------+-----+-------------------+----------------+
@@ -169,7 +169,7 @@ class SelectItemlabeltitle extends SelectItem {
 }
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Backup Pc Logs"));
+    $p = new PageGenerator(_("Backup Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
     $filterlogs = "Backup";
@@ -238,7 +238,7 @@ jQuery(function(){
 
 <?php
 
-/*                                        
+/*
 Backup | Backup configuration | Manual | User
 Backup | Full backup requested | Planned | BackupPC
 Backup | Full backup requested | Manual | User
@@ -320,73 +320,12 @@ $modulesaction->setElementsVal($typecritereval1);
 
 .inline { display : inline; }
 
-th {
-    background-color: #e6e6e6;
-    color: blue;
-    padding: 10px;
-    height: 20px;
-}
-
-.bouton5 {
-	border-radius:12px 0 12px 0;
-	background: Black;
-	border:none;
-	color:white;
-	font:bold 12px Verdana;
-	padding:6px 0px 6px 0px;
-	margin-left: auto;
-
-    margin-right: 15px;
-    text-align: center;
-    width : 200px;
-}
-
-/*div.container {
-        width: 80%;
-    }*/
-/*table, th, td {
-    border: 1px solid black;
-}*/
-/*table {
-    width: 100%;
-    border-collapse: collapse;
-}
-th {
-    height: 30px;
-}
-th {
-    text-align: left;
-}
-td {
-    height: 50px;
-    vertical-align: bottom;
-}
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-th {
-    background-color: #4CAF50;
-    color: white;
-}
-tr:nth-child(even) {
-    background-color: #f2f2f2
-}*/
-
-th.libelle {
-    height: 10px;
-    padding: 5px;
-    background-color: #00fF50;
-    color: blue;
-}
-
 </style>
 
 
 
 <div style="overflow-x:auto;">
-    <table>
+    <table border="1" cellspacing="0" cellpadding="5" class="listinfos">
         <thead>
             <tr>
                 <th><?php echo $start_date->display(); ?></th>
@@ -399,25 +338,25 @@ th.libelle {
 </div>
 
 
-<p class="bouton5">
-  VOIR LES LOGS
+<p class="btnPrimary">
+  Filter logs
 </p>
 
 <br>
 
-<table id="tablelog" class="display" width="100%" cellspacing="0">
+<table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
                 <th style="width: 12%;">date</th>
                 <th style="width: 8%;">user</th>
                 <th style="width: 6%;">who</th>
-         <!--       
+         <!--
                 <th style="width: 6%;">type</th>
                 <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th> 
-        
+                <th style="width: 6%;">module</th>
+
                 <th style="width: 6%;">how</th>
-                
+
                 <th style="width: 6%;">why</th>
 
                 <th style="width: 6%;">priority</th>
@@ -427,25 +366,5 @@ th.libelle {
                 <th>text</th>
             </tr>
         </thead>
-        <tfoot>
-            <tr>
-                <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
-            <!--    
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-            -->
-                <th>text</th>
-            </tr>
-        </tfoot>
 
     </table>
