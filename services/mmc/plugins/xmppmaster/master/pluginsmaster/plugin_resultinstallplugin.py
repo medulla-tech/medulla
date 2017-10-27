@@ -22,10 +22,15 @@
 #
 # file pluginsmaster/plugin_resultinstallplugin.py
 
+import logging
+
 plugin = { "VERSION" : "1.0", "NAME" : "resultinstallplugin", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+    logging.getLogger().debug(plugin)
     try:
-       print "plugin resultinstallplugin from %s  ret [%s]"%(message['from'], ret)
+        logging.getLogger().debug("plugin resultinstallplugin from %s  ret [%s]"%(message['from'], ret))
+        pass 
     except Exception as e:
-        print "Error in plugin resultinstallplugin %s"%str(e)
+        logging.getLogger().debug("Error in plugin resultinstallplugin %s"%str(e))
+        pass 

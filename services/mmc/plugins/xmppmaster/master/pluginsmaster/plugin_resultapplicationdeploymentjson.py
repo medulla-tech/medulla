@@ -30,6 +30,7 @@ import sys
 plugin = { "VERSION" : "1.0", "NAME" : "resultapplicationdeploymentjson", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+    logging.getLogger().debug(plugin)
     try:
         if ret == 0:
             ###logging.getLogger().debug("deploiement session %s success"% sessionid)

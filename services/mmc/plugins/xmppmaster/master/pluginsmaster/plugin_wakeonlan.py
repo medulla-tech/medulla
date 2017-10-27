@@ -28,18 +28,15 @@ from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.glpi.database import Glpi
 import traceback
 from utils import name_random
+import logging
 
 # plugin run wake on lan on mac adress
 
 plugin = { "VERSION" : "1.0", "NAME" : "wakeonlan", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    print "call master plugin Master wakeonlan"
-    
-    
-    
+    logging.getLogger().debug(plugin)
     sessionid = name_random(5, "wakeonlan")
-    
     try:
         listserverrelay = XmppMasterDatabase().listserverrelay()
         if 'macadress' in data:

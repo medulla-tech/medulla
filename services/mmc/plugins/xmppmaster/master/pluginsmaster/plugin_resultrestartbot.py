@@ -22,10 +22,15 @@
 #
 # file pluginsmaster/plugin_resultrestartbot.py
 
+import logging
+
 plugin = { "VERSION" : "1.0", "NAME" : "resultrestartbot", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+    logging.getLogger().debug(plugin)
     try:
-       print "restart bot machine %s"%message['from']
+        logging.getLogger().debug("restart bot machine %s"%message['from'])
+        pass
     except Exception as e:
-        print "Error in plugin restart bot%s"%str(e)
+        logging.getLogger().error("Error in plugin restart bot%s"%str(e))
+        pass

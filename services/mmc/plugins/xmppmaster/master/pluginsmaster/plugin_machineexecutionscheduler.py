@@ -19,6 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# file pluginsmaster/plugin_machineexecutionscheduler.py
 """
 this plugin check status of deploy
 if deploy is pause, run, abandonned
@@ -56,11 +57,11 @@ plugin = { "VERSION" : "1.0", "NAME" : "machineexecutionscheduler", "TYPE" : "ma
 """
 DEBUGPULSEPLUGIN = 25
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.log(DEBUGPULSEPLUGIN,"%s"%plugin)
+    logging.getLogger().debug(plugin)
+
     advanced = data['advanced']
     try:
         result = XmppMasterDatabase().checkstatusdeploy(advanced['idcmd'])
-
         advanced['actionscheduler'] = result # abandonmentdeploy, run or pause
         datasend = {
                         'action': data['fromaction'],
@@ -74,3 +75,14 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                  mtype='chat')
     except Exception as e:
         print "Error in plugin %s"%str(e)
+        advanced['actionscheduler'] = "error" # abandonmentdeploy, run or pause
+        datasend = {
+                        'action': data['fromaction'],
+                        'sessionid': sessionid,
+                        'data' : advanced,
+                        'ret' : 0,
+                        'base64' : False
+                    }
+        xmppobject.send_message( mto=message['from'],
+                                 mbody=json.dumps(datasend),
+                                 mtype='chat')

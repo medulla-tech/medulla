@@ -33,9 +33,7 @@ import logging
 plugin = { "VERSION" : "1.0", "NAME" : "applicationdeployment", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
-    logging.getLogger().debug("_______________________________________________________________________")
     logging.getLogger().debug(plugin)
-    logging.getLogger().debug("_______________________________________________________________________")
     try:
         if 'Dtypequery' in  data:
             if data['Dtypequery'] == 'TED':
@@ -54,7 +52,6 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             else:
                 # Update session with data
                 xmppobject.session.sessionsetdata(sessionid, data)
+        pass
     except Exception as e:
-        logging.getLogger().debug("_______________________________________________________________________")
-        logging.getLogger().debug("Error in plugin %s : %s"%(plugin['NAME'], str(e)))
-        logging.getLogger().debug("_______________________________________________________________________")
+        logging.getLogger().error("Error in plugin %s : %s"%(plugin['NAME'], str(e)))

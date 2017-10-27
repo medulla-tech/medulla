@@ -29,7 +29,7 @@ import os
 import zlib
 from utils import md5
 import hashlib
-
+import logging
 
 plugin = { "VERSION" : "1.0", "NAME" : "resultdownloadfile", "TYPE" : "master" }
 
@@ -52,6 +52,7 @@ def delfile(name):
 
 @pluginmastersessionaction("actualise",20)
 def action( xmppobject, action, sessionid, data, message, ret, dataobj, objsessiondata):
+    logging.getLogger().debug(plugin)
     try:
         if ret != 0:
             xmppobject.event("pluginaction", { 'action': 'transferfile','sessionid': sessionid,'status': 'start', 'to' : message['from'], 'form' : message['to'] ,'file' : objsessiondata.getdatasession()['whowritefile']})

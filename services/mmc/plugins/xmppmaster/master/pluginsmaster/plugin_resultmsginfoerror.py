@@ -22,10 +22,13 @@
 #
 # file pluginsmaster/plugin_resultmsginfoerror.py
 
+import logging
+
 DEBUGPULSEPLUGIN = 25
 plugin = { "VERSION" : "1.0", "NAME" : "resultmsginfoerror", "TYPE" : "master" }
 
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
+    logging.getLogger().debug(plugin)
     if 'msg' in data:
-        print "Error plugin : %s"%data['msg']
+        logging.getLogger().error("Error plugin : %s"%data['msg'])
     pass
