@@ -1,4 +1,5 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8; -*-
 #
 # (c) 2016-2017 siveo, http://www.siveo.net
 #
@@ -18,6 +19,8 @@
 # along with Pulse 2; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
+#
+# file pluginsmaster/plugin_updatenbdeploy.py
 
 import base64
 import json
