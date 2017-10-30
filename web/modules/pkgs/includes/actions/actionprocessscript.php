@@ -1,9 +1,9 @@
 <?php 
 extract($_POST);
-
-// echo "<pre>";
-// print_r($_POST );
-// echo "</pre>";
+/*
+echo "<pre>";
+    print_r( $_POST );
+echo "</pre>";*/
 ?>
 <div class="header">
     <h1>Run command</h1>
@@ -13,6 +13,7 @@ extract($_POST);
     <div>
         <input type="hidden" name="action" value="actionprocessscript" />
         <input type="hidden" name="step" />
+        <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
             <th>step label:</th>
@@ -58,22 +59,13 @@ extract($_POST);
         </tr>
         <tr>
             <td>
-            <input type="checkbox" <?php echo (isset($codereturn)) ? " checked " : " "; ?> onclick="if(jQuery(this).is(':checked')){
-                    jQuery(this).next().prop('disabled',false);
-                }
-                else{
-                    jQuery(this).next().prop('disabled',true);
-                }" />codereturn
-            <input type="hidden" value="" disabled name="codereturn" />
             </td>
             <td>
-
             </td>
         </tr>
         <tr>
-            
             <?php
-        $resultlist = array(array('label' => 'pas de result','value' => "noneresult"),
+        $resultlist = array(
                             array('label' => 'the 10 first lines result','value' => "10@firstlines"),
                             array('label' => 'the 20 first lines','value' => "20@firstlines"),
                             array('label' => 'the 30 first lines','value' => "30@firstlines"),
@@ -84,7 +76,7 @@ extract($_POST);
                             array('label' => 'the 2 last lines result','value' => "2@lastlines"),
                             array('label' => 'the last line result','value' => "1@lastlines"),
         );
-        $posibleresultname = array( "noneresult",
+        $posibleresultname = array(
                                     "10@firstlines",
                                     "20@firstlines",
                                     "30@firstlines",
@@ -96,16 +88,19 @@ extract($_POST);
                                     "1@lastlines"
         );
         $options = "";
+        $boolselected = false;
         // search in $Post if input result
         foreach($_POST as $key=>$val){
             if (in_array($key, $posibleresultname)){
                 $selectresult = $key;
+                $boolselected = true;
                 break;
             }
         }
-//         if (!isset($selectresult)){
-//             $selectresult = "noneresult";
-//         }
+        if (!isset($selectresult)){
+            $selectresult = "1@lastlines";
+        }
+
         foreach($resultlist as $selectedbyuser)
         {
             if(isset($selectresult) && $selectedbyuser['value'] == $selectresult)
@@ -116,7 +111,7 @@ extract($_POST);
                 $options .= "<option value='".$selectedbyuser['value']."'>".$selectedbyuser['label']."</option>";
         }
 
-        if(isset($selectresult))// and $selectresult != "noneresult"
+        if($boolselected)// and $selectresult != "noneresult"
         {
             echo '
             <td>
@@ -128,7 +123,7 @@ extract($_POST);
                                                         }" />Result
             </td>
             <td> 
-                <select id = "gggg" onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
+                <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
             </td>';
 
         }
@@ -143,19 +138,81 @@ extract($_POST);
                                                 }" />Result
             </td>
             <td>
-            <select id = "gggg" onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
-                disabled name="'.$selectresult.'">'.$options.'</select>
+            <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
+                name="1@lastlines">'.$options.'</select>
             </td>';
         }
         ?>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+           <?php
+            if(isset($success))
+            {
+                echo '
+                <td>
+                    <input type="checkbox" checked onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />Success Process
+                </td>
+                <td>
+                    <input " type="text"  value="'.$success.'" name="success"  />
+                </td>';
+            }
+            else{
+                echo '
+                <td>
+                    <input type="checkbox"  onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />Success Process
+                </td>
+                <td>
+                    <input type="text" value="END_SUCCESS" disabled name="success"  />
+                </td>';
+            }
+            ?>
         </tr>
         <tr>
-            <td></td>
-            <td></td>
+            <?php
+            if(isset($error))
+            {
+                echo '
+                <td>
+                    <input type="checkbox" checked onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />Error Process
+                </td>
+                <td>
+                    <input " type="text"  value="'.$error.'" name="error"  />
+                </td>';
+            }
+            else{
+                echo '
+                <td>
+                    <input type="checkbox"  onclick="
+                    if(jQuery(this).is(\':checked\')){
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
+                    }
+                    else{
+                        jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
+                    }" />Error Process
+                </td>
+                <td>
+                    <input type="text" value="END_ERROR" disabled name="error"  />
+                </td>';
+            }
+            ?>
         </tr>
     </table>
         <!-- Option timeout -->
