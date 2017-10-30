@@ -241,6 +241,11 @@ if (isset($_POST['bconfirm'])) {
         $transferfile->setElements(['True','False']);
         $transferfile->setElementsVal(['True','False']);
         $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile),['value'=>'']);
+
+        $methodtransfer = new SelectItem('methodetransfert');
+        $methodtransfer->setElements(['pushrsync','pullcurl']);
+        $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
+        $f->add(new TrFormElement(_T('Method transfer','pkgs'),$methodtransfer),['value'=>'']);
     }
 
     foreach ($cmds as $p) {
