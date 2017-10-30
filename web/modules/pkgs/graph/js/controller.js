@@ -69,8 +69,12 @@ jQuery(function(){
 
         tmp = JSON.parse(jQuery("#loadJson").val());
 
-        //Set transferfile value with the saved value 
-        jQuery('#transferfile option[value="'+tmp['info']['transferfile']+'"]').attr("selected",true);
+        //Set transferfile value with the saved value
+        if(tmp['info']['transferfile'] == true)
+            jQuery('#transferfile option[value=1]').attr("selected",true);
+        else
+            jQuery('#transferfile option[value=0]').attr("selected",true);
+
         //Set methodtransfer value with the saved value
         jQuery('#methodetransfert option[value="'+tmp['info']['methodetransfert']+'"]').attr("selected",true);
         
@@ -141,8 +145,18 @@ function createInfo()
 
         else
             if(param['name'] != "saveList")
-                info[param['name']] = param['value'];
+            {
+                if(param['name'] == 'transferfile')
+                {
+                    if(param['value'] == 1)
+                        info[param['name']] = true;
 
+                    else
+                        info[param['name']] = false;
+                }
+                else
+                    info[param['name']] = param['value'];
+            }
     });
     return info;
 }
