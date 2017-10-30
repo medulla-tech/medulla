@@ -1,3 +1,8 @@
+<?php
+extract($_POST);
+$lab = "END_SUCCESS";
+// $lab =  (isset($actionlabel))? $actionlabel : uniqid();
+?>
 <div class="header">
     <h1>End Success</h1>
 </div>
@@ -5,15 +10,60 @@
 <div class="content">
     <div>
         <input type="hidden" name="step" />
-        <input type="hidden" name="actionlabel" value="<?php echo (isset($_POST['actionlabel']))? $_POST['actionlabel'] : uniqid(); ?>"/>
         <input type="hidden" name="action" value="actionsuccescompletedend" />
         <?php
-        if(isset($_POST['clear']))
-        {
-            echo '<p><input type="checkbox" checked onclick="if(jQuery(this).is(\':checked\')){jQuery(this).next().prop(\'disabled\',false);}else{jQuery(this).next().prop(\'disabled\',true);}" />Clear <select name="clear"><option value="True">True</option><option value="False">False</option><select></p>';
-        }
-        else{
-            echo '<p><input type="checkbox" onclick="if(jQuery(this).is(\':checked\')){jQuery(this).next().prop(\'disabled\',false);}else{jQuery(this).next().prop(\'disabled\',true);}" />Clear <select name="clear" disabled><option value="True">True</option><option value="False">False</option><select></p>';
-        }?>
+            echo '<input type="hidden" name="actionlabel" value="'.$lab.'"/>';
+        ?>
+        <?php
+        echo'
+        <table>
+            <tr>
+                <th width="16%">step label : </th>
+                <th width="25%">'.$lab.'
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
+             ';
+            if(isset($clear))
+            {
+                echo '<td width="16%">
+                    <input type="checkbox" checked 
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Package clear
+                </td>
+                <td width="25%">
+                    <select name="clear">
+                        <option selected value="True">True</option>
+                        <option value="False">False</option>
+                    <select>
+                </td>';
+            }
+            else{
+                echo '<td width="16%">
+                    <input type="checkbox" 
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Package clear
+                    </td>
+                    <td width="25%">
+                         <select name="clear" disabled>
+                            <option value="True">True</option>
+                            <option selected value="False">False</option>
+                         <select>
+                    </td>';
+            }
+        echo '
+        <td></td><td></td>
+            </tr>
+        </table>';
+        ?>
     </div>
 </div>
