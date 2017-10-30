@@ -584,6 +584,91 @@ def _path_package():
     return os.path.join("/", "var", "lib", "pulse2", "packages")
 
 def save_xmpp_json(folder, json_content):
+    print type(json_content)
+    structpacquage = json.loads(json_content)
+    keysupp = [ "actionlabel",
+                "p_api",
+                "id", 
+                "random_dir", 
+                "Qversion", 
+                "codereturn",
+                "Qsoftware",
+                "Qvendor", 
+                "files_uploaded", 
+                "step",
+                "command", 
+                "action",
+                "success",
+                "error",
+                "timeout",
+                "boolcnd",
+                "targetos",
+                "resultcommand",
+                "metaparameter",
+                "clear"
+                ]
+    for z in structpacquage['info']:
+        if z.startswith('old_') or z.endswith('lastlines') or z.endswith('firstlines'):
+            keysupp.append(z)
+    for y in keysupp:
+        try:
+            del structpacquage['info'][y]
+        except :
+            pass
+
+    if not 'Dependency' in structpacquage['info']:
+        structpacquage['info']['Dependency'] = []
+    if not 'software' in structpacquage['info']:
+        structpacquage['info']['software'] = structpacquage['info']['name']
+
+    structpacquage['metaparameter'] = {}
+    listos =[]
+    if 'linux' in structpacquage:
+        listos.append('linux')
+        structpacquage['metaparameter']['linux']={}
+    if "darwin" in structpacquage:
+        listos.append('darwin')
+        structpacquage['metaparameter']['darwin']={}
+    if "win" in structpacquage:
+        listos.append('win')
+        structpacquage['metaparameter']['win']={}
+    structpacquage['metaparameter']['os'] = listos
+
+    for osmachine in listos:
+        vv = structpacquage['metaparameter'][osmachine]
+        vv['label']={}
+        for stepseq in structpacquage[osmachine]['sequence']:
+            vv['label'][stepseq['actionlabel']] = stepseq['step']
+
+    for osmachine in listos:
+        vv = structpacquage['metaparameter'][osmachine]['label']
+        for stepseq in structpacquage[osmachine]['sequence']:
+            if "success" in stepseq:
+                valsuccess = _stepforalias(stepseq['success'], vv )
+                if valsuccess != None:
+                    stepseq['success'] = valsuccess
+            if "error" in stepseq:
+                valerror = _stepforalias(stepseq['error'], vv )
+                if valerror != None:
+                    stepseq['error'] = valerror
+    json_content= json.dumps(structpacquage)
+    _save_xmpp_json(folder, json_content)
+
+def _aliasforstep(step, dictstepseq):
+    for t in dictstepseq:
+        if dictstepseq[t] == step:
+            return t
+    return None
+
+def _stepforalias(alias, dictstepseq):
+    print "alias",alias
+    for t in dictstepseq:
+        print t
+        if t == alias:
+            return dictstepseq[t]
+    return None
+
+def _save_xmpp_json(folder, json_content):
     """
     Save the xmpp json package into new package
     :param folder:string
@@ -628,6 +713,7 @@ def xmpp_packages_list():
         # 2 - if the directory contains xmppdeploy.json
         if os.path.isfile(os.path.join(path, dirname, 'xmppdeploy.json')) is True:
             # 3 - Extracts the package information and add it to the package list
+            #json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
             json_content = json.load(file(os.path.join(path, dirname, 'xmppdeploy.json')))
             json_content['info']['uuid'] = dirname;
             xmpp_list.append(json_content['info'])
@@ -649,6 +735,7 @@ def remove_xmpp_package(package_uuid):
         return False
 
 
+
 def get_xmpp_package(package_uuid):
     """
     Select the specified package and return the information in the json
@@ -661,9 +748,27 @@ def get_xmpp_package(package_uuid):
     if os.path.exists(os.path.join(path, package_uuid)):
         # Read all the content of the package
         json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
-        json = json_file.read()
+        jsonstr = json_file.read()
         json_file.close()
-        return json
+        structpacquage = json.loads(jsonstr)
+        for os_seq in structpacquage['metaparameter']['os']:
+            vv = structpacquage['metaparameter'][os_seq]['label']
+            for stepseq in structpacquage[os_seq]['sequence']:
+                if "success" in stepseq:
+                    valalias = _aliasforstep(stepseq['success'], vv )
+                    print valalias
+                    if valalias != None:
+                        stepseq['success'] = valalias
+                if "error" in stepseq:
+                    valalias = _aliasforstep(stepseq['error'], vv )
+                    if valalias != None:
+                        stepseq['error'] = valalias
+        try:
+            del structpacquage['metaparameter']
+        except:
+            pass
+        jsonstr = json.dumps(structpacquage)
+        return jsonstr
     else:
         return False
 
