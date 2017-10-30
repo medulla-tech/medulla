@@ -234,6 +234,15 @@ if (isset($_POST['bconfirm'])) {
             new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
     );
 
+    if(isExpertMode())
+    {
+
+        $transferfile = new SelectItem('transferfile');
+        $transferfile->setElements(['True','False']);
+        $transferfile->setElementsVal(['True','False']);
+        $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile),['value'=>'']);
+    }
+
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)

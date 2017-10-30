@@ -68,6 +68,10 @@ jQuery(function(){
     {// If something into #loadJson = edit mode
 
         tmp = JSON.parse(jQuery("#loadJson").val());
+
+        //Set transferfile value with the saved value 
+        jQuery('#transferfile option[value="'+tmp['info']['transferfile']+'"]').attr("selected",true);
+        
         //Get the elements of the sequence
         sequence = getSequenceFromJSON(tmp);
 
