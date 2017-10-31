@@ -672,26 +672,26 @@ def _stepforalias(alias, dictstepseq):
 def _save_xmpp_json(folder, json_content):
     """
     Save the xmpp json package into new package
-    :param folder:string
-    :param json_content:string
-    :return bool:
+
+    Args:
+    folder: Folder where the json file is stored
+    json_content: Content of the json file
+
+    Returns:
+    bool:
     """
 
-    # 1 - Test the json, if it's ok, then next step
     try:
         content = json.loads(json_content)
     except ValueError:
         return False
 
-    # 2 - Create the path/uuid directory if not exists
     if not os.path.exists(folder):
         os.mkdir(folder, 0755)
 
-    # 3 - Create the xmppdeploy.json file
     xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
     json.dump(content,xmppdeploy,indent=4)
 
-    # 4 - Delete xmppdeploy.bat if exists
     if os.path.isfile(os.path.join(folder,'xmppdeploy.bat' )):
         os.remove(folder+'/'+'xmppdeploy.bat')
 
