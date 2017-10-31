@@ -87,10 +87,11 @@ class ConfigReader(object):
         """
         Get the configuration from config file
 
-        @param inifile: path to config file
-        @type inifile: string
+        Args:
+        inifile: path to config file
 
-        @return: ConfigParser.ConfigParser instance
+        Returns:
+        ConfigParser.ConfigParser instance
         """
         logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
