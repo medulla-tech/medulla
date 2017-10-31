@@ -24,7 +24,9 @@
 import logging
 import os
 import shutil
-import requests, json, tempfile
+import requests
+import json
+import tempfile
 import urllib2
 from contextlib import closing
 from ConfigParser import ConfigParser
