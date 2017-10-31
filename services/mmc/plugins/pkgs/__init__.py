@@ -301,12 +301,14 @@ class RpcProxy(RpcProxyI):
 
 class DownloadAppstreamPackageList(object):
     """
-    Create list of Appstream who need to be download and download them
+    Create list of Appstream who need to be downloaded and download them
     """
     def __init__(self):
-        #dict of package to be download
+        """
+        This method initialize the class.
+        By default there is no working update
+        """
         self.download_packages= {}
-        #by default, there is no working update
         self.update=False
 
     def _add_appstream(self,package_name):
@@ -314,6 +316,10 @@ class DownloadAppstreamPackageList(object):
         This methods add package in the dict of
         package who need to be download and set it to "wait"
         status.
+
+        Args:
+        package_name: name of the package in the appstream
+
         """
         self.download_packages[package_name]="wait"
 
