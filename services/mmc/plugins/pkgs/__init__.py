@@ -585,7 +585,7 @@ def _path_package():
 
 def save_xmpp_json(folder, json_content):
     print type(json_content)
-    structpacquage = json.loads(json_content)
+    structpackage = json.loads(json_content)
     keysupp = [ "actionlabel",
                 "p_api",
                 "id", 
@@ -607,42 +607,42 @@ def save_xmpp_json(folder, json_content):
                 "metaparameter",
                 "clear"
                 ]
-    for z in structpacquage['info']:
+    for z in structpackage['info']:
         if z.startswith('old_') or z.endswith('lastlines') or z.endswith('firstlines'):
             keysupp.append(z)
     for y in keysupp:
         try:
-            del structpacquage['info'][y]
+            del structpackage['info'][y]
         except :
             pass
 
-    if not 'Dependency' in structpacquage['info']:
-        structpacquage['info']['Dependency'] = []
-    if not 'software' in structpacquage['info']:
-        structpacquage['info']['software'] = structpacquage['info']['name']
+    if not 'Dependency' in structpackage['info']:
+        structpackage['info']['Dependency'] = []
+    if not 'software' in structpackage['info']:
+        structpackage['info']['software'] = structpackage['info']['name']
 
-    structpacquage['metaparameter'] = {}
+    structpackage['metaparameter'] = {}
     listos =[]
-    if 'linux' in structpacquage:
+    if 'linux' in structpackage:
         listos.append('linux')
-        structpacquage['metaparameter']['linux']={}
-    if "darwin" in structpacquage:
+        structpackage['metaparameter']['linux']={}
+    if "darwin" in structpackage:
         listos.append('darwin')
-        structpacquage['metaparameter']['darwin']={}
-    if "win" in structpacquage:
+        structpackage['metaparameter']['darwin']={}
+    if "win" in structpackage:
         listos.append('win')
-        structpacquage['metaparameter']['win']={}
-    structpacquage['metaparameter']['os'] = listos
+        structpackage['metaparameter']['win']={}
+    structpackage['metaparameter']['os'] = listos
 
     for osmachine in listos:
-        vv = structpacquage['metaparameter'][osmachine]
+        vv = structpackage['metaparameter'][osmachine]
         vv['label']={}
-        for stepseq in structpacquage[osmachine]['sequence']:
+        for stepseq in structpackage[osmachine]['sequence']:
             vv['label'][stepseq['actionlabel']] = stepseq['step']
 
     for osmachine in listos:
-        vv = structpacquage['metaparameter'][osmachine]['label']
-        for stepseq in structpacquage[osmachine]['sequence']:
+        vv = structpackage['metaparameter'][osmachine]['label']
+        for stepseq in structpackage[osmachine]['sequence']:
             if "success" in stepseq:
                 valsuccess = _stepforalias(stepseq['success'], vv )
                 if valsuccess != None:
@@ -651,7 +651,7 @@ def save_xmpp_json(folder, json_content):
                 valerror = _stepforalias(stepseq['error'], vv )
                 if valerror != None:
                     stepseq['error'] = valerror
-    json_content= json.dumps(structpacquage)
+    json_content= json.dumps(structpackage)
     _save_xmpp_json(folder, json_content)
 
 def _aliasforstep(step, dictstepseq):
@@ -750,10 +750,10 @@ def get_xmpp_package(package_uuid):
         json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
         jsonstr = json_file.read()
         json_file.close()
-        structpacquage = json.loads(jsonstr)
-        for os_seq in structpacquage['metaparameter']['os']:
-            vv = structpacquage['metaparameter'][os_seq]['label']
-            for stepseq in structpacquage[os_seq]['sequence']:
+        structpackage = json.loads(jsonstr)
+        for os_seq in structpackage['metaparameter']['os']:
+            vv = structpackage['metaparameter'][os_seq]['label']
+            for stepseq in structpackage[os_seq]['sequence']:
                 if "success" in stepseq:
                     valalias = _aliasforstep(stepseq['success'], vv )
                     print valalias
@@ -764,10 +764,10 @@ def get_xmpp_package(package_uuid):
                     if valalias != None:
                         stepseq['error'] = valalias
         try:
-            del structpacquage['metaparameter']
+            del structpackage['metaparameter']
         except:
             pass
-        jsonstr = json.dumps(structpacquage)
+        jsonstr = json.dumps(structpackage)
         return jsonstr
     else:
         return False
