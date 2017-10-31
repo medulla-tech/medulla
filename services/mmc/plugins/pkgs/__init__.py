@@ -550,9 +550,9 @@ def getDownloadAppstreamPackages():
     """
     This methods give new appstream packages who are not
     yet downloaded.
-    @rtype: dict of unicode like { 'package_name' : 'status' } ,
-        valid status are "download" and "wait".
-    @return: list of new appstream packages name who are not
+
+    Returns:
+    list of new appstream packages name who are not
     yet downloaded.
     """
     return dapl.getDownloadAppstreamPackages()
