@@ -30,7 +30,7 @@ Summary:	Management Console
 Name:		mmc-core
 Version:	%{version}
 %if %use_git
-Release:        0.%git.1%{?dist}
+Release:        2.%git.1%{?dist}
 %else
 Release:        5%{?dist}
 %endif
