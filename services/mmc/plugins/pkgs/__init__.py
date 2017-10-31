@@ -649,11 +649,11 @@ def save_xmpp_json(folder, json_content):
         vv = structpackage['metaparameter'][osmachine]['label']
         for stepseq in structpackage[osmachine]['sequence']:
             if "success" in stepseq:
-                valsuccess = _stepforalias(stepseq['success'], vv )
+                valsuccess = _stepforalias(stepseq['success'], vv)
                 if valsuccess != None:
                     stepseq['success'] = valsuccess
             if "error" in stepseq:
-                valerror = _stepforalias(stepseq['error'], vv )
+                valerror = _stepforalias(stepseq['error'], vv)
                 if valerror != None:
                     stepseq['error'] = valerror
     json_content= json.dumps(structpackage)
@@ -696,7 +696,7 @@ def _save_xmpp_json(folder, json_content):
     xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
     json.dump(content,xmppdeploy,indent=4)
 
-    if os.path.isfile(os.path.join(folder,'xmppdeploy.bat' )):
+    if os.path.isfile(os.path.join(folder,'xmppdeploy.bat')):
         os.remove(folder+'/'+'xmppdeploy.bat')
 
     xmppdeploy.close()
@@ -765,12 +765,12 @@ def get_xmpp_package(package_uuid):
             vv = structpackage['metaparameter'][os_seq]['label']
             for stepseq in structpackage[os_seq]['sequence']:
                 if "success" in stepseq:
-                    valalias = _aliasforstep(stepseq['success'], vv )
+                    valalias = _aliasforstep(stepseq['success'], vv)
                     print valalias
                     if valalias != None:
                         stepseq['success'] = valalias
                 if "error" in stepseq:
-                    valalias = _aliasforstep(stepseq['error'], vv )
+                    valalias = _aliasforstep(stepseq['error'], vv)
                     if valalias != None:
                         stepseq['error'] = valalias
         try:
