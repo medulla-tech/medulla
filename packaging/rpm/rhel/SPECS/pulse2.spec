@@ -8,16 +8,16 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           3.9.93
+%define real_version           4.0
 %define mmc_version            3.1.0
 
 Summary:	Management Console
 Name:		pulse2
 Version:	%real_version
 %if ! %use_git
-Release:        13%{?dist}
+Release:        1%{?dist}
 %else
-Release:        0.%git.1%{?dist}%{?dist}
+Release:        2.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
