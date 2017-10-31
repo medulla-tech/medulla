@@ -50,7 +50,7 @@ jQuery( function() {
         start  : function(event, ui){
             jQuery(ui.helper).css("width",'100%');
             jQuery(ui.helper).css("height",'100%');
-            jQuery(ui.helper).children('.content').children("div").children("input[name='actionlabel']").val(uuid);
+            jQuery(ui.helper).children('.content').children("div").find("input[name='actionlabel']").val(uuid);
         }
     });
     jQuery( "ul, li" ).disableSelection();
