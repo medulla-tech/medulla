@@ -701,7 +701,8 @@ def _save_xmpp_json(folder, json_content):
 def xmpp_packages_list():
     """
     Create a list of xmpp packages and return the list and the information for each of them
-    :return: list of packages
+    Returns:
+    list of packages
     """
 
     path = _path_package()
@@ -723,8 +724,12 @@ def xmpp_packages_list():
 def remove_xmpp_package(package_uuid):
     """
     Remove the specified xmpp package. If it is ok, return true, else return false
-    :param package_uuid: uuid of the package
-    :return: success | failure
+
+    Args:
+    package_uuid: uuid of the package
+
+    Returns:
+    success | failure
     """
 
     # If the package exists, delete it and return true
