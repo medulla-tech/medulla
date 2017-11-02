@@ -30,8 +30,8 @@ DROP TABLE IF EXISTS `xmppmaster`.`qa_custom_command` ;
 CREATE TABLE IF NOT EXISTS `xmppmaster`.`qa_custom_command` (
   `user` VARCHAR(45) NOT NULL,
   `os` VARCHAR(45) NOT NULL,
-  `namecommande` VARCHAR(45) NOT NULL,
-  `customcommand` TEXT NOT NULL,
+  `namecmd` VARCHAR(45) NOT NULL,
+  `customcmd` TEXT NOT NULL,
   `description` VARCHAR(45) NULL DEFAULT '\"\"',
   PRIMARY KEY (`namecommande`, `user`, `os`))
 ENGINE = InnoDB;

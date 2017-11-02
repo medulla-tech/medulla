@@ -38,10 +38,10 @@ class Qa_custom_command(Base):
     ## ====== Table name =========================
     __tablename__ = 'qa_custom_command'
     ## ====== Fields =============================
-    namecommande = Column(String(45), primary_key=True)
+    namecmd = Column(String(45), primary_key=True)
     user =  Column(String(45), primary_key=True)
     os = Column(String(45), primary_key=True)
-    customcommand = Column(Text, nullable=False)
+    customcmd = Column(Text, nullable=False)
     description = Column(String(45), nullable=False, default = "")
 
 class Logs(Base, XmppMasterDBObj):
