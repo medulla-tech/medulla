@@ -352,7 +352,7 @@ def runXmppCommand(cmd,machine):
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=XmppSimpleCommand(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 70)
     d = a.t2.join()
     return a.result
 
@@ -363,6 +363,6 @@ def runXmppScript(cmd,machine):
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=XmppSimpleCommand(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 70)
     d = a.t2.join()
     return a.result
