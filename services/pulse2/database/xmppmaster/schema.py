@@ -34,21 +34,15 @@ class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
 
-#class Logs(Base, XmppMasterDBObj):
+class Qa_custom_command(Base):
     ## ====== Table name =========================
-    #__tablename__ = 'logs'
+    __tablename__ = 'qa_custom_command'
     ## ====== Fields =============================
-    ## Here we define columns for the table machines.
-    ## Notice that each column is also a normal Python instance attribute.
-    ##id = Column(Integer, primary_key=True)
-    ## Warning, if you modify the wrapper, you also have to change it in log.py
-    #type = Column(String(6), nullable=False,default = "noset")
-    #date = Column(DateTime, default=datetime.datetime.utcnow)
-    #text = Column(String(255), nullable=False)
-    #sessionname = Column(String(20), nullable=False, default = "")
-    #priority = Column(Integer, default = 0)
-    #who = Column(String(20), nullable=False, default = "")
-
+    namecommande = Column(String(45), primary_key=True)
+    user =  Column(String(45), primary_key=True)
+    os = Column(String(45), primary_key=True)
+    customcommand = Column(Text, nullable=False)
+    description = Column(String(45), nullable=False, default = "")
 
 class Logs(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -71,7 +65,6 @@ class Logs(Base, XmppMasterDBObj):
     action = Column(String(45), nullable=False, default = "")
     touser = Column(String(45), nullable=False, default = "")
     fromuser = Column(String(45), nullable=False, default = "")
-
 
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
