@@ -109,6 +109,11 @@ $page = new Page("actionshutdown", _T("quick action shutdown", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionshutdown.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
+
+$page = new Page("actionvncchangeperms", _T("quick action change vnc settings", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/actionvncchangeperms.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
 // --------------END QUICK ACTION--------------------
 
 // ajax procedure to start a reversessh on client machine for guacamole
@@ -175,4 +180,3 @@ $mod->addSubmod($submod);
 $MMCApp =& MMCApp::getInstance();
 $MMCApp->addModule($mod);
 ?>
-
