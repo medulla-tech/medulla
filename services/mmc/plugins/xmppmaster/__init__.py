@@ -52,9 +52,6 @@ logger = logging.getLogger()
 def getApiVersion():
     return APIVERSION
 
-def dede():
-    logging.getLogger().info("test")
-
 def activate():
     """
     Read the plugin configuration, initialize it, and run some tests to ensure
