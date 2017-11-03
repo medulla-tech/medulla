@@ -42,6 +42,7 @@
                     echo '<td id="shutdown0" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
                     echo '<td id="reboot0" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
                     echo '<td id="inventory0" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
+                    echo '<td id="vncchangeperms0" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
                 }
                 else{
                     echo '<td id="wol0" align="center"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
@@ -66,6 +67,12 @@
                                 </form></td>';
                     echo '<td id="reboot" align="center">Reboot</td>';
                     echo '<td id="inventory" align="center">Run inventory</td>';
+                    echo '<td><span id="vncchangeperms">Change VNC settings</span>
+                                <form name = "infosvncchangeperms">
+                                    <label>
+                                        <input type="checkbox" name="askpermission" id = "checkboxvncchangeperms" checked> Ask user approval
+                                    </label>
+                                </form></td>';
                 }
                 else{
                     echo '<td align="center"><span id="wol">Wake on LAN</span>
@@ -139,8 +146,26 @@
             })
     })
 
+    jQuery('#vncchangeperms').on('click', function(){
+        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+          uuid['askpermission'] = 1
+        }
+        else {
+          uuid['askpermission'] = 0
+        }
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid )
+            .done(function( data ) {
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "VNC settings change : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "VNC settings change : to machine" + uuid['cn'] )
+                }
+            })
+    })
+
     jQuery('#wol0').on('click', function(){
-        uuid['wol'] = jQuery('#checkboxwol').is(':checked'); 
+        uuid['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", uuid )
             .done(function( data ) {
                 if (typeof(uuid['entity'] ) != "undefined"){
@@ -186,6 +211,24 @@
                 }
                 else{
                     alert( "shutdown : to machine" + uuid['cn'] )
+                }
+            })
+    })
+
+    jQuery('#vncchangeperms0').on('click', function(){
+        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+          uuid['askpermission'] = 1
+        }
+        else {
+          uuid['askpermission'] = 0
+        }
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", uuid )
+            .done(function( data ) {
+                if (typeof(uuid['entity'] ) != "undefined"){
+                    alert( "VNC settings change : to machine" + uuid['cn'] + " in entity [" + uuid['entity'] + "]" )
+                }
+                else{
+                    alert( "VNC settings change : to machine" + uuid['cn'] )
                 }
             })
     })

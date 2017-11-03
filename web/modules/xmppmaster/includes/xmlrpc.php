@@ -222,6 +222,10 @@ function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
     return xmlCall("xmppmaster.callshutdown", array($uuid, $time, $msg));
 }
 
+function xmlrpc_callvncchangeperms($uuid, $askpermission = 1){
+    return xmlCall("xmppmaster.callvncchangeperms", array($uuid, $askpermission));
+}
+
 function xmlrpc_getstepdeployinsession($session){
     return xmlCall("xmppmaster.getstepdeployinsession", array($session));
 }
