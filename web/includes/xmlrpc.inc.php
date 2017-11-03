@@ -365,7 +365,7 @@ function xmlCall($method, $params = null) {
  * @see ErrorHandlingItem
  */
 function findErrorHandling($errorFaultCode) {
-    require("includes/commonErrorHandling.php");
+    require("commonErrorHandling.php");
 
     if (!empty($_GET["module"])) {
         $errorfile = "modules/".$_GET["module"]."/includes/errorHandling.php";
