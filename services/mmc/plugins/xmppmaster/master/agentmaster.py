@@ -106,6 +106,9 @@ def callrestartbymaster(to):
 def callshutdownbymaster(to, time, msg):
    return ObjectXmpp().callshutdownbymaster( to, time, msg)
 
+def callvncchangepermsbymaster(to, askpermission):
+  return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
+
 class XmppCommandDiffered:
     """
     Thread in charge of running precommand
@@ -850,6 +853,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
             }
         self.send_message(mto=to,
                         mbody=json.dumps(shutdownmachine),
+                        mtype='chat')
+        return True
+
+    def callvncchangepermsbymaster(self, to, askpermission = 1):
+        vncchangepermsonmachine = {
+            'action' : "vncchangepermsfrommaster",
+            'sessionid' : name_random(5, "vncchangeperms"),
+            'data' : {'askpermission' : askpermission},
+            'ret': 0
+            }
+        self.send_message(mto=to,
+                        mbody=json.dumps(vncchangepermsonmachine),
                         mtype='chat')
         return True
 

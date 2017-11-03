@@ -37,7 +37,8 @@ from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
-                                                      callshutdownbymaster, send_message_json
+                                                      callshutdownbymaster, send_message_json,\
+                                                      callvncchangepermsbymaster
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -340,6 +341,15 @@ def callshutdown(uuid, time, msg):
         return jid
     else:
         logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
+        return "jid missing"
+
+def callvncchangeperms(uuid, askpermission):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        callvncchangepermsbymaster(jid, askpermission)
+        return jid
+    else:
+        logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
 def runXmppCommand(cmd,machine):
