@@ -1,6 +1,6 @@
 <?
 /*
- *  (c) 2016 siveo, http://www.siveo.net
+ *  (c) 2016 - 1017 siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -27,6 +27,10 @@ if (isExpertMode()){
     );
     $sidemenu->addSideMenuItem(
         new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
+    );
+
+    $sidemenu->addSideMenuItem(
+        new SideMenuItem(_T("XMPP Custom Quick Action","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
     );
 }
 ?>

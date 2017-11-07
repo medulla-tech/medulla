@@ -1,6 +1,6 @@
 <?php
 /**
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2017 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -42,9 +42,6 @@ $submod->setDefaultPage("xmppmaster/xmppmaster/index");
 $page = new Page("index", _T('xmppmaster status', 'xmppmaster'));
 $submod->addPage($page);
 
-// $page = new Page("logsmachine", _T('Commands logs', 'msc'));
-//         $submodmsc->addPage($page);
-
 $page = new Page("auditdeploy", _T('XMPP All users tasks', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -57,6 +54,27 @@ $submod->addPage($page);
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+
+$page = new Page("customQA", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("ajaxFiltercustom");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
+
+$page = new Page("editqa", _T('Edit Custon Quick Action', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("", _T('delete Custon Quick Action', 'xmppmaster'));
+$submod->addPage($page);
+
+
+$page = new Page("deleteqa",_T("Delete Custon Quick Action", 'pkgs'));
+$page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
+$submod->addPage($page);
+
+
 $page = new Page("logbymachine", _T('XMPP logs', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -64,6 +82,9 @@ $page = new Page("logbygrpmachine", _T('XMPP logs grp', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("wakeonlan", _T('Wake on LAN', 'xmppmaster'));
@@ -127,18 +148,6 @@ $page = new Page("viewlogs",_T('Audit deployment', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/viewlogs.php");
 $page->setOptions(array("visible" => True, "noHeader" => False));
 $submod->addPage($page);
-//$page->setOptions(array("AJAX" => False, "visible" => False));
-
-
-// $page = new Page("taskformachine");
-// $page->setFile("modules/xmppmaster/xmppmaster/logs/taskformachine.php");
-// //$page->setOptions(array("AJAX" => True, "visible" => False));
-// $submod->addPage($page);
-
-// $page = new Page("currenttaskformachine");
-// $page->setFile("modules/xmppmaster/xmppmaster/logs/currenttaskformachine.php");
-// //$page->setOptions(array("AJAX" => True, "visible" => False));
-// $submod->addPage($page);
 
 $page = new Page("logbymachine", _T('XMPP log', 'xmppmaster'));
 $page->setFile("modules/xmppmaster/xmppmaster/logs/logbymachine.php");

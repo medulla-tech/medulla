@@ -1,7 +1,7 @@
 <?php
 
 /*
- * (c) 2015-2016 Siveo, http://www.siveo.net
+ * (c) 2015-2017 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -26,8 +26,27 @@
 //======================================================================
 //require_once("modules/xmppmaster/includes/xmlrpc.php");
 
+
+
 function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
+}
+
+
+function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null   ) {
+    return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt ));
+}
+
+function xmlrpc_delQa_custom_command($login, $namecmd, $os ) {
+    return xmlCall("xmppmaster.delQa_custom_command", array($login, $namecmd, $os));
+}
+
+function xmlrpc_create_Qa_custom_command($login, $os, $namecmd, $customcmd, $description="" ) {
+    return xmlCall("xmppmaster.create_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
+}
+
+function xmlrpc_updateName_Qa_custom_command($login, $os, $namecmd, $customcmd, $description ='' ) {
+    return xmlCall("xmppmaster.updateName_Qa_custom_command", array($login, $os, $namecmd, $customcmd, $description));
 }
 
 function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", $module="", $user="", $how="",$who="", $why="", $headercolumn=""){
