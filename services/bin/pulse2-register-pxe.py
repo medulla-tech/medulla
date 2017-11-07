@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 #
 # (c) 2015 siveo, http://www.siveo.net
@@ -40,6 +40,7 @@ import ConfigParser
 import logging
 import getopt
 import xml.etree.cElementTree as ET
+import traceback
 
 conf ={}
 
@@ -93,8 +94,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             cpu=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("cpu\n%s"%cpu)
-        except:
-            logging.getLogger().error("Error loading json cpu")
+        except Exception as e:
+            logging.getLogger().error("Error loading json cpu %s"%str(e))
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
     else:
         z1.insert(0, "")
 
@@ -107,8 +109,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pxe = json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pxe\n%s"%pxe)
-        except:
-            logging.getLogger().error("Error loading json pxe")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json pxe %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -120,8 +123,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             syslinux=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("syslinux\n%s"%syslinux)
-        except:
-            logging.getLogger().error("Error loading json syslinux")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json syslinux %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -133,8 +137,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vpd=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vpd\n%s"%vpd)
-        except:
-            logging.getLogger().error("Error loading json vpd")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json vpd %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -148,8 +153,8 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             vesa=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("vesa\n%s"%vesa)
-        except:
-            logging.getLogger().error("Error loading json vesa")
+        except Exception as e:
+            logging.getLogger().error("Error loading json vesa %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -164,8 +169,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             disks=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("disks\n%s"%disks)
-        except:
-            logging.getLogger().error("Error loading json disks")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json disks %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -179,8 +185,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             dmi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("dmi\n%s"%dmi)
-        except:
-            logging.getLogger().error("Error loading json dmi")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json dmi %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -194,8 +201,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             memory=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("memory\n%s"%memory)
-        except:
-            logging.getLogger().error("Error loading json memory")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json memory %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -209,8 +217,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             pci=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("pci\n%s"%pci)
-        except:
-            logging.getLogger().error("Error loading json pci")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json pci %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -225,8 +234,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             acpi=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("acpi\n%s"%acpi)
-        except:
-            logging.getLogger().error("Error loading json acpi")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json acpi %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -237,8 +247,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             kernel=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("kernel\n%s"%kernel)
-        except:
-            logging.getLogger().error("Error loading json kernel")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json kernel %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -250,8 +261,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hdt=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hdt\n%s"%hdt)
-        except:
-            logging.getLogger().error("Error loading json hdt")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json hdt %s"%str(e))
     else:
         z1.insert(0, "")
 
@@ -263,8 +275,9 @@ def parsejsoninventory(file, file_content):
             logging.getLogger().debug("Trying to load:\n%s"%str(z1[0]))
             hostname=json.loads(str(z1[0]), strict=False)
             logging.getLogger().debug("hostname\n%s"%hostname)
-        except:
-            logging.getLogger().error("Error loading json hostname")
+        except Exception as e:
+            traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+            logging.getLogger().error("Error loading json hostname %s"%str(e))
     else:
         z1.insert(0, "")
     ##############REQUEST##############
@@ -369,8 +382,9 @@ def parsejsoninventory(file, file_content):
                             partition_size = str(int(float(partition_size)))
                         TOTAL = ET.SubElement(DRIVES,'TOTAL').text=partition_size
                         TYPE = ET.SubElement(DRIVES,'TYPE').text=disks[diskid][partitionid]['partition->os_type']
-                    except:
-                        logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s "%(diskid, partitionid))
+                    except Exception as e:
+                        traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+                        logging.getLogger().warn("Unrecognized Partition Layout disk %s partition%s %s"%(diskid, partitionid, str(e)))
 
     xmlstring = ET.tostring(REQUEST)
     print xmlstring
@@ -450,12 +464,16 @@ class MyEventHandler(pyinotify.ProcessEvent):
                         logging.getLogger().debug("XML recv from pxe client %s"% xmldata)
                         os.remove(name)
                         senddata(xmldata,'127.0.0.1',conf['port'])
-                    except:
-                        logging.getLogger().error("UDP error sending to %s:%d"%('127.0.0.1',conf['port']))
-                except:
-                    logging.getLogger().error("MAC address error")
-            except:
+                    except Exception as e:
+                        traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+                        logging.getLogger().error("UDP error sending to %s:%d [%s]"%('127.0.0.1', conf['port'], str(e)))
+                except Exception as e:
+                    traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
+                    logging.getLogger().error("MAC address error %s"%str(e))
+            except Exception as e:
+                traceback.print_exc(file='/var/log/mmc/pulse2-register-pxe.log')
                 logging.getLogger().error("Error traitement file %s"%str(name))
+                logging.getLogger().error("Error traitement %s"%str(e))
 
 class watchInventory:
     def __init__(self):
