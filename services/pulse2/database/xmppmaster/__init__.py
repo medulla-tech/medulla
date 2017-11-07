@@ -33,7 +33,7 @@ from datetime import date, datetime, timedelta
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
-        Organization, Packages_list
+        Organization, Packages_list, Qa_custom_command
 # Imported last
 import logging
 import json
@@ -269,14 +269,13 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
-    
 
-    #################Custom Command################################
+    #################Custom Command Quick Action################################
     @DatabaseHelper._sessionm
     def create_Qa_custom_command( self,
                                   session,
                                   user, 
-                                  os,
+                                  osname,
                                   namecmd,
                                   customcmd, 
                                   description = ""):
@@ -287,7 +286,7 @@ class XmppMasterDatabase(DatabaseHelper):
             qa_custom_command = Qa_custom_command()
             qa_custom_command.namecmd = namecmd
             qa_custom_command.user = user
-            qa_custom_command.os = os
+            qa_custom_command.os = osname
             qa_custom_command.customcmd = customcmd
             qa_custom_command.description = description
             session.add(qa_custom_command)
@@ -300,17 +299,42 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def updateName_Qa_custom_command( self,
+                                     session,
+                                     user, 
+                                     osname,
+                                     namecmd,
+                                     customcmd,
+                                     description):
+        """
+            update updateName_Qa_custom_command
+        """
+
+        try:
+            session.query(Qa_custom_command).filter( Qa_custom_command.namecmd == namecmd).\
+                                            update( { Qa_custom_command.customcmd : customcmd ,
+                                                        Qa_custom_command.description : description,
+                                                        Qa_custom_command.os : osname })
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().debug("updateName_Qa_custom_command error %s->"%str(e))
+            return -1
+
+
+    @DatabaseHelper._sessionm
     def delQa_custom_command( self,
                               session,
                               user, 
-                              os,
+                              osname,
                               namecmd):
         """
             del Qa_custom_command
         """
         try:
             session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
-                                                        Qa_custom_command.os == os,
+                                                        Qa_custom_command.os == osname,
                                                         Qa_custom_command.namecmd == namecmd)
                                                         ).delete()
             session.commit()
@@ -320,76 +344,55 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().debug("delQa_custom_command error %s ->"%str(e))
             return -1
 
-    @DatabaseHelper._sessionm
-    def updateName_Qa_custom_command( self,
-                                      session,
-                                      user, 
-                                      os,
-                                      namecmd):
-        """
-            update Qa_custom_command
-        """
-        try:
-            session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
-                                                        Qa_custom_command.os == os,
-                                                        Qa_custom_command.namecmd == namecmd,
-                                                        )).update( { Qa_custom_command.namecmd:namecmd } )
-            session.commit()
-            session.flush()
-            return 1
-        except Exception, e:
-            logging.getLogger().debug("updateName_Qa_custom_command error %s->"%str(e))
-            return -1
 
-    @DatabaseHelper._sessionm
-    def updatecmd_Qa_custom_command( self,
-                                     session,
-                                     user, 
-                                     os,
-                                     namecmd,
-                                     customcmd):
-        """
-            update Qa_custom_command
-        """
-        try:
-            session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
-                                                        Qa_custom_command.os == os,
-                                                        Qa_custom_command.namecmd == namecmd,
-                                                        )).update( { Qa_custom_command.customcmd:customcmd } )
-            session.commit()
-            session.flush()
-            return 1
-        except Exception, e:
-            logging.getLogger().debug("updateName_Qa_custom_command error %s->"%str(e))
-            return -1
-
+#jfkjfk
     @DatabaseHelper._sessionm
     def getlistcommandforuserbyos( self,
                                    session,
                                    user,
-                                   os  = None,
+                                   osname  = None,
                                    min = None,
                                    max = None,
                                    filt = None):
-        ret={ 'len' : 0,
+        ret={ 'len'     : 0,
+              'nb'      : 0,
+              'limit'   : 0,
+              'max'     : 0,
+              'min'     : 0,
+              'filt'    : '',
               'command' : []}
         try:
-            if os is None:
+            if osname is None:
                 result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user))
             else:
                 result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
-                                                                      Qa_custom_command.os == os))
+                                                                      Qa_custom_command.os == osname))
+
+            total =  self.get_count(result)
             #todo filter
             if filt is not None:
                 result = result.filter( or_(  result.namecmd.like('%%%s%%'%(filt)),
-                                              result.os.like('%%%s%%'%(filt))))
-            nb = self.get_count(result)
+                                              result.os.like('%%%s%%'%(filt)),
+                                              result.description.like('%%%s%%'%(filt))
+                                        )
+                        )
+
+            nbfilter =  self.get_count(result)
+
             if min is not None and max is not None:
                 result = result.offset(int(min)).limit(int(max)-int(min))
+                ret['limit'] = int(max)-int(min)
+
+
+            if min : ret['min'] = min
+            if max : ret['max'] = max
+            if filt : ret['filt'] = filt
             result = result.all()
             session.commit()
             session.flush()
-            ret['len'] = nb
+            ret['len'] = total
+            ret['nb'] = nbfilter
+
             arraylist = []
             for t in result:
                 obj={}
@@ -436,7 +439,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     return -1
             else:
                 return -1
-            print "###############addition package organization ",idorganization
 
             # addition reference package in listpackages for attribut organization id.
             packageslist = Packages_list()
@@ -663,7 +665,6 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception, e:
-            print str(e)
             logging.getLogger().error(str(e))
         return new_deploy.id
 
@@ -872,7 +873,6 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception, e:
-            print str(e)
             logging.getLogger().error(str(e))
         return new_logincommand.id
 
@@ -1145,7 +1145,6 @@ class XmppMasterDatabase(DatabaseHelper):
         if not (why == "None" or why == ""):
             logs = logs.filter( Logs.why == why)
         logs = logs.order_by(desc(Logs.id)).limit(1000)
-        print logs
         result = logs.all()
         session.commit()
         session.flush()

@@ -174,9 +174,29 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            why,
                                            headercolumn)
 
-
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
+#jfkjfk
+def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
+    if osname == '':
+        osname = None
+    if min == '':
+        min = None
+    if max == '':
+        max = None
+    if filt == '':
+        filt = None
+
+    return XmppMasterDatabase().getlistcommandforuserbyos(login, osname=osname, min = min, max = max, filt = filt)
+
+def delQa_custom_command(login, name, osname):
+    return XmppMasterDatabase().delQa_custom_command(login, name, osname )
+
+def create_Qa_custom_command(login, osname, namecmd, customcmd, description ) :
+    return XmppMasterDatabase().create_Qa_custom_command(login, osname, namecmd, customcmd, description  )
+
+def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  ):
+    return XmppMasterDatabase().updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  )
 
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
