@@ -77,9 +77,9 @@ function xwwwfurlenc(srcjson){
             var param = {
                 "start_date" :  jQuery('#start_date').val(),
                 "end_date"   : jQuery('#end_date').val(),
-                "type" : jQuery('#type option:selected').val(),
+                "type" : "",
                 "module" : jQuery('#module option:selected').val(),
-                "action" : jQuery('#action option:selected').val()
+                "action" : ""
             }
             uri = uri +"?"+xwwwfurlenc(param)
             return uri
@@ -166,39 +166,21 @@ $yes_no  =        array(
                                         _T('Yes','imaging'),
                                         _T('No','imaging'));
 
-$typelog  =        array(
-                                        _T('MMC','logs'),
-                                        _T('AMR','logs'),
-                                        _T('AM','logs'),
-                                        _T('ARS','logs'),
-                                        _T('None','logs'));
+
 
  $typemodule  =        array(
-                                        _T('deploy','logs'),
+                                        _T('deployment','logs'),
                                         _T('quickaction','logs'),
                                         _T('imaging','logs'),
                                         _T('backup','logs'),
                                         _T('inventory','logs'),
                                         _T('None','logs'));
 
-$typeaction  =         array(
-                                        _T('event AM','logs'),
-                                        _T('event ARS','logs'),
-                                        _T('event AMR','logs'),
-                                        _T('None','logs'));
-$typeactionval  =        array(
-                                        _T('evt_AM','logs'),
-                                        _T('evt_ARS','logs'),
-                                        _T('evt_AMR','logs'),
-                                        _T('None','logs'));
+
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$type = new SelectItemlabeltitle("type", "Type", "Provenance du logs");
-$type->setElements($typelog);
-$type->setElementsVal($typelog);
-$type->setSelected("None");
 
 $modules = new SelectItemlabeltitle("module", "Modules", "quategory du log");
 $modules->setElements($typemodule);
@@ -206,10 +188,6 @@ $modules->setSelected("None");
 $modules->setElementsVal($typemodule);
 
 
-$action = new SelectItemlabeltitle("action", "Actions", "Evenement ACTION");
-$action->setElements($typeaction);
-$action->setElementsVal($typeactionval);
-$action->setSelected("None");
 ?>
 
 <style>
@@ -228,9 +206,7 @@ $action->setSelected("None");
             <tr>
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
-                <th><?php echo $type->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
-                <th><?php echo $action->display(); ?></th>
             </tr>
         </thead>
 
