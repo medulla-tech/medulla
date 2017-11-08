@@ -41,80 +41,44 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
-
-Module | Action | How | From user
-
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
-
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
-
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
-
-Packaging | Package creation | Manual | User
-Packaging | Package edition | Manual | User
-Packaging | Package deletion | Manual | User
-Packaging | Bundle creation | Manual | User
-Packaging | Bundle edition | Manual | User
-Packaging | Bundle deletion | Manual | User
-
-Remote desktop | service| Manual | User
-Remote desktop | Remote desktop control request | Manual | User
-Remote desktop | Reverse SSH start | Remote desktop control request | ARS
-Remote desktop | Reverse SSH stop | Remote desktop control request | ARS
-
-
-From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
-Action: L'action
-Module: Le module
-Text: Détail
-How: Le contexte: par exemple, lors d'un déploiement, planifié, etc.
-Who: Nom du groupe ou de la machine
-Why: Groupe ou machine
-
+key criterium for search
+Inventory
+Inventory requested
+Deployment
+User
+Deployment planning
+Deployment execution
+Manual
+Convergence
+Planned
+ARS
+WOL sent
+Master
 */
 ?>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
+
+    global $conf;
+    $maxperpage = $conf["global"]["maxperpage"];
+    if ($maxperpage >= 100){
+        $maxperpage = 100;
+    }
+    elseif($maxperpage >= 75){
+        $maxperpage = 75;
+    }
+    elseif($maxperpage >= 50){
+        $maxperpage = 50;
+    }
 
     class DateTimeTplnew extends DateTimeTpl{
 
@@ -167,7 +131,6 @@ class SelectItemlabeltitle extends SelectItem {
         return $ret;
     }
 }
-
 
 // ------------------------------------------------------------------------------------------------
     $p = new PageGenerator(_("Deployment Logs"));
@@ -222,19 +185,35 @@ function xwwwfurlenc(srcjson){
     return urljson;
 }
 
-jQuery(function(){
-    jQuery("p").click(function(){
-        searchlogs( encodeurl());
-    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    jQuery(function(){
+        jQuery("p").click(function(){
+            searchlogs( encodeurl());
+        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+        });
     });
-});
-    function searchlogs(url){
-        jQuery('#tablelog').DataTable()
+
+function searchlogs(url){
+        jQuery('#tablelog').DataTable({
+        'retrieve': true,
+        "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+        "iDisplayLength": <?php echo $maxperpage; ?>,
+        "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+        buttons: [
+        { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+        { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+        { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+        { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+        ]
+    } )
                             .ajax.url(
                                 url
                             )
                             .load();
     }
+
+//     setInterval( function () {
+//         searchlogs( encodeurl());
+//     }, 30000 );
 
 
     jQuery(function(){
@@ -243,15 +222,16 @@ jQuery(function(){
     </script>
 
 <?php
+// { extend: 'pdf',
+//             className: 'btn btn-primary',
+//             text: 'Save current page',
+//             exportOptions: {
+//                 modifier: {
+//                     page: 'current'
+//                 }
+//             }
+//         }
 
-/*
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-*/
 
 
 $typecritere  =        array(
@@ -274,54 +254,9 @@ $typecritereval  =        array(
                                         'WOL',
                                         'None');
 
-$typecritere1  =        array(
-                                        _T('Deployment Transfert','logs'),
-                                        _T('Deployment Execution','logs'),
-                                        _T('Deployment Download','logs'),
-                                        _T('Deployment Notify','logs'),
-                                        _T('Deployment Error','logs'),
-                                        _T('Deployment Terminate','logs'),
-                                        _T('WOL sent','logs'),
-                                        _T('no criteria selected','logs'));
-
-$typecritereval1  =        array(
-                                        'Transfert',
-                                        'Execution',
-                                        'Download',
-                                        'Notify',
-                                        'Error',
-                                        'Terminate',
-                                        'WOL',
-                                        'None');
-
-$typecritere2  =        array(
-                                        _T('Deployment Transfert','logs'),
-                                        _T('Deployment Execution','logs'),
-                                        _T('Deployment Download','logs'),
-                                        _T('Deployment Notify','logs'),
-                                        _T('Deployment Error','logs'),
-                                        _T('Deployment Terminate','logs'),
-                                        _T('WOL sent','logs'),
-                                        _T('no criteria selected','logs'));
-
-$typecritereval2  =        array(
-                                        'Transfert',
-                                        'Execution',
-                                        'Download',
-                                        'Notify',
-                                        'Error',
-                                        'Terminate',
-                                        'WOL',
-                                        'None');
-
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
-
-// $type = new SelectItemlabeltitle("type", "Type", "Provenance du logs");
-// $type->setElements($typelog);
-// $type->setElementsVal($typelog);
-// $type->setSelected("None");
 
 $modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
 $modules->setElements($typecritere);
@@ -330,22 +265,17 @@ $modules->setElementsVal($typecritereval);
 
 
 $modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), "critere search1");
-$modules1->setElements($typecritere1);
+$modules1->setElements($typecritere);
 $modules1->setSelected("None");
-$modules1->setElementsVal($typecritereval1);
+$modules1->setElementsVal($typecritereval);
 
 
 
 $modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), "critere search2");
-$modules2->setElements($typecritere2);
+$modules2->setElements($typecritere);
 $modules2->setSelected("None");
-$modules2->setElementsVal($typecritereval2);
+$modules2->setElementsVal($typecritereval);
 
-
-// $action = new SelectItemlabeltitle("action", "Actions", "Evenement ACTION");
-// $action->setElements($typeaction);
-// $action->setElementsVal($typeactionval);
-// $action->setSelected("None");
 ?>
 
 <style>

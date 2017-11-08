@@ -41,65 +41,20 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
-
-Module | Action | How | From user
-
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
-
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
-
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
-
-Packaging | Package creation | Manual | User
-Packaging | Package edition | Manual | User
-Packaging | Package deletion | Manual | User
-Packaging | Bundle creation | Manual | User
-Packaging | Bundle edition | Manual | User
-Packaging | Bundle deletion | Manual | User
-
-Remote desktop | service| Manual | User
-Remote desktop | Remote desktop control request | Manual | User
-Remote desktop | Reverse SSH start | Remote desktop control request | ARS
-Remote desktop | Reverse SSH stop | Remote desktop control request | ARS
-
+key criterium for search
+Backup
+Backup configuration
+Manual
+User
+Full backup requested
+Planned
+BackupPC
+Backup
+Full backup requested
+Incremental backup requested
+Reverse SSH start
+Reverse SSH stop
+ARS
 
 From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
 Action: L'action
@@ -111,10 +66,28 @@ Why: Groupe ou machine
 
 */
 ?>
-
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
+
+    global $conf;
+    $maxperpage = $conf["global"]["maxperpage"];
+    if ($maxperpage >= 100){
+        $maxperpage = 100;
+    }
+    elseif($maxperpage >= 75){
+        $maxperpage = 75;
+    }
+    elseif($maxperpage >= 50){
+        $maxperpage = 50;
+    }
 
     class DateTimeTplnew extends DateTimeTpl{
 
@@ -169,7 +142,7 @@ class SelectItemlabeltitle extends SelectItem {
 }
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Backup Logs"));
+    $p = new PageGenerator(_T("Backup Logs",'logs'));
     $p->setSideMenu($sidemenu);
     $p->display();
     $filterlogs = "Backup";
@@ -181,7 +154,10 @@ class SelectItemlabeltitle extends SelectItem {
 var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val()+ "|" + jQuery('#criterionsdetail option:selected').val();
+    var critere = filterlogs +
+                    "|" + jQuery('#criterionssearch option:selected').val() +
+                    "|" + jQuery('#criterionssearch1 option:selected').val() +
+                    "|" + jQuery('#criterionssearch2 option:selected').val();
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
     var param = {
@@ -223,7 +199,18 @@ jQuery(function(){
     });
 });
     function searchlogs(url){
-        jQuery('#tablelog').DataTable()
+                            jQuery('#tablelog').DataTable({
+                            'retrieve': true,
+                            "iDisplayLength": <?php echo $maxperpage; ?>,
+                            "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+                            "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+                            buttons: [
+                            { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+                            { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+                            { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+                            { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+                            ]
+                        } )
                             .ajax.url(
                                 url
                             )
@@ -238,20 +225,6 @@ jQuery(function(){
 
 <?php
 
-/*
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-*/
-
-
 $typecritere  =        array(
                                         _T('Backup configuration','logs'),
                                         _T('Full backup requested','logs'),
@@ -259,61 +232,47 @@ $typecritere  =        array(
                                         _T('Reverse SSH start','logs'),
                                         _T('Reverse SSH stop','logs'),
                                         _T('Restore requested','logs'),
-                                        _T('no criteria selected','logs'));
-
-$typecritereval  =        array(
-                                        'configuration',
-                                        'Full',
-                                        'Incremental',
-                                        'Reverse SSH start',
-                                        'Reverse SSH stop',
-                                        'Restore requested',
-                                        'None');
-$typecritere1  =        array(
                                         _T('Manual','logs'),
                                         _T('Planned','logs'),
                                         _T('Restore','logs'),
+                                        _T('User','logs'),
+                                        _T('BackupPC','logs'),
+                                        'Agent Relay Server',
                                         _T('no criteria selected','logs'));
 
-$typecritereval1  =        array(
+$typecritereval  =        array(
+                                        'Backup configuration',
+                                        'Full backup requested',
+                                        'Incremental backup requested',
+                                        'Reverse SSH start',
+                                        'Reverse SSH stop',
+                                        'Restore requested',
                                         'Manual',
                                         'Planned',
                                         'Restore',
+                                        'User',
+                                        'BackupPC',
+                                        'ARS',
                                         'None');
-
-// $typeaction  =         array(
-//                                         _T('event AM','logs'),
-//                                         _T('event ARS','logs'),
-//                                         _T('event AMR','logs'),
-//                                         _T('None','logs'));
-// $typeactionval  =        array(
-//                                         _T('evt_AM','logs'),
-//                                         _T('evt_ARS','logs'),
-//                                         _T('evt_AMR','logs'),
-//                                         _T('None','logs'));
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-// $type = new SelectItemlabeltitle("type", "Type", "Provenance du logs");
-// $type->setElements($typelog);
-// $type->setElementsVal($typelog);
-// $type->setSelected("None");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
+$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'),  _T('critere search','logs'));
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modulesaction = new SelectItemlabeltitle("criterionsdetail",  _T('criterions','logs'), "critere search1");
-$modulesaction->setElements($typecritere1);
-$modulesaction->setSelected("None");
-$modulesaction->setElementsVal($typecritereval1);
+$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), _T('critere search','logs'));
+$modules1->setElements($typecritere);
+$modules1->setSelected("None");
+$modules1->setElementsVal($typecritereval);
 
-// $action = new SelectItemlabeltitle("action", "Actions", "Evenement ACTION");
-// $action->setElements($typeaction);
-// $action->setElementsVal($typeactionval);
-// $action->setSelected("None");
+$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), _T('critere search','logs'));
+$modules2->setElements($typecritere);
+$modules2->setSelected("None");
+$modules2->setElementsVal($typecritereval);
 ?>
 
 <style>
@@ -331,7 +290,8 @@ $modulesaction->setElementsVal($typecritereval1);
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
-                <th><?php echo $modulesaction->display(); ?></th>
+                <th><?php echo $modules1->display(); ?></th>
+                <th><?php echo $modules2->display(); ?></th>
             </tr>
         </thead>
      </table>
@@ -348,8 +308,8 @@ $modulesaction->setElementsVal($typecritereval1);
         <thead>
             <tr>
                 <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
+                <th style="width: 7%;">user</th>
+                <th style="width: 7%;">who</th>
          <!--
                 <th style="width: 6%;">type</th>
                 <th style="width: 6%;">action</th>

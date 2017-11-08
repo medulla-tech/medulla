@@ -41,13 +41,20 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
+key criterium for search
 
-Module | Action | How | From user
+Inventory
+Inventory requested
+New machine
+Master
+Inventory reception
+Planned
+Machine
+Deployment
+User
+Quick Action 
 
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
+
 
 From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
 Action: L'action
@@ -58,10 +65,30 @@ Who: Nom du groupe ou de la machine
 Why: Groupe ou machine
 */
 ?>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
+
 
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
+ 
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+if ($maxperpage >= 100){
+    $maxperpage = 100;
+}
+elseif($maxperpage >= 75){
+    $maxperpage = 75;
+}
+elseif($maxperpage >= 50){
+    $maxperpage = 50;
+}
 
     class DateTimeTplnew extends DateTimeTpl{
 
@@ -129,7 +156,10 @@ class SelectItemlabeltitle extends SelectItem {
     var filterlogs = <?php echo "'$filterlogs'";?>;
 
     function encodeurl(){
-        var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val();
+        var critere = filterlogs +
+                    "|" + jQuery('#criterionssearch option:selected').val() +
+                    "|" + jQuery('#criterionssearch1 option:selected').val() +
+                    "|" + jQuery('#criterionssearch2 option:selected').val();
         uri = "modules/base/logview/ajax_Data_Logs.php"
         //QuickAction
         var param = {
@@ -171,7 +201,18 @@ class SelectItemlabeltitle extends SelectItem {
         });
     });
     function searchlogs(url){
-        jQuery('#tablelog').DataTable()
+        jQuery('#tablelog').DataTable({
+        'retrieve': true,
+        "iDisplayLength": <?php echo $maxperpage; ?>,
+        "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+        "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+        buttons: [
+        { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+        { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+        { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+        { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+        ]
+    } )
                             .ajax.url(
                                 url
                             )
@@ -179,20 +220,11 @@ class SelectItemlabeltitle extends SelectItem {
     }
 
     jQuery(function(){
-        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=Inventory%7CNone&user=&how=&who=&why=")
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     } );
     </script>
 
 <?php
-
-
-/*
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
-*/
-
 
 $typecritere  =        array(
                                         _T('Inventory reception','logs'),
@@ -200,6 +232,10 @@ $typecritere  =        array(
                                         _T('Inventory Deployment','logs'),
                                         _T('Inventory Planned','logs'),
                                         _T('Inventory Quick Action','logs'),
+                                        _T('Inventory User','logs'),
+                                        _T('Inventory Machine','logs'),
+                                        _T('Inventory Master','logs'),
+                                        _T('Inventory New machine','logs'),
                                         _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
@@ -207,37 +243,33 @@ $typecritereval  =        array(
                                         'requested',
                                         'Deployment',
                                         'Planned',
-                                        'QuickAction',
+                                        'Quick Action',
+                                        'User',
+                                        'Machine',
+                                        'Master',
+                                        'New machine',
                                         'None');
-
-// $typeaction  =         array(
-//                                         _T('event AM','logs'),
-//                                         _T('event ARS','logs'),
-//                                         _T('event AMR','logs'),
-//                                         _T('None','logs'));
-// $typeactionval  =        array(
-//                                         _T('evt_AM','logs'),
-//                                         _T('evt_ARS','logs'),
-//                                         _T('evt_AMR','logs'),
-//                                         _T('None','logs'));
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-// $type = new SelectItemlabeltitle("type", "Type", "Provenance du logs");
-// $type->setElements($typelog);
-// $type->setElementsVal($typelog);
-// $type->setSelected("None");
 
-$modules = new SelectItemlabeltitle("criterionssearch", "criterions", "critere search");
+
+$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), _T('critere search','logs'));
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-// $action = new SelectItemlabeltitle("action", "Actions", "Evenement ACTION");
-// $action->setElements($typeaction);
-// $action->setElementsVal($typeactionval);
-// $action->setSelected("None");
+$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'),  _T('critere search','logs'));
+$modules1->setElements($typecritere);
+$modules1->setSelected("None");
+$modules1->setElementsVal($typecritereval);
+
+$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'),  _T('critere search','logs'));
+$modules2->setElements($typecritere);
+$modules2->setSelected("None");
+$modules2->setElementsVal($typecritereval);
+
 ?>
 
 <style>
@@ -258,11 +290,9 @@ $modules->setElementsVal($typecritereval);
             <tr>
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
-                <?php  //echo "<th>".$type->display()."></th>";
-                ?>
                 <th><?php echo $modules->display(); ?></th>
-                <?php  //echo  "<th>".$action->display()."></th>";
-                ?>
+                <th><?php echo $modules1->display(); ?></th>
+                <th><?php echo $modules2->display(); ?></th>
             </tr>
         </thead>
      </table>

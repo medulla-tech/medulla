@@ -41,59 +41,8 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
+key criterium for search
 
-Module | Action | How | From user
-
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
-
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
-
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
-
-Packaging | Package creation | Manual | User
-Packaging | Package edition | Manual | User
-Packaging | Package deletion | Manual | User
-Packaging | Bundle creation | Manual | User
-Packaging | Bundle edition | Manual | User
-Packaging | Bundle deletion | Manual | User
 
 Remote_desktop | service| Manual | User
 Remote_desktop | Remote desktop control request | Manual | User
@@ -111,10 +60,28 @@ Why: Groupe ou machine
 
 */
 ?>
-
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
+ 
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+if ($maxperpage >= 100){
+    $maxperpage = 100;
+}
+elseif($maxperpage >= 75){
+    $maxperpage = 75;
+}
+elseif($maxperpage >= 50){
+    $maxperpage = 50;
+}
 
     class DateTimeTplnew extends DateTimeTpl{
 
@@ -224,7 +191,18 @@ class SelectItemlabeltitle extends SelectItem {
         });
     });
     function searchlogs(url){
-        jQuery('#tablelog').DataTable()
+        jQuery('#tablelog').DataTable({
+                                'retrieve': true,
+                                "iDisplayLength": <?php echo $maxperpage; ?>,
+                                "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+                                "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+                                buttons: [
+                                { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+                                { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+                                { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+                                { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+                                ]
+                            } )
                             .ajax.url(
                                 url
                             )

@@ -41,53 +41,33 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
-
-Module | Action | How | From user
-
-Inventory | Inventory requested | New machine | Master
-Inventory | Inventory reception | Planned | Machine
-Inventory | Inventory requested | Deployment | User
-Inventory | Inventory requested | Quick Action | User
-
-Backup | Backup configuration | Manual | User
-Backup | Full backup requested | Planned | BackupPC
-Backup | Full backup requested | Manual | User
-Backup | Incremental backup requested | Planned | BackupPC
-Backup | Incremental backup requested | Manual | User
-Backup | Reverse SSH start | Backup | ARS
-Backup | Reverse SSH stop | Backup | ARS
-Backup | Restore requested | Manual | User
-Backup | Reverse SSH start | Restore | ARS
-Backup | Reverse SSH stop | Restore | ARS
-
-Deployment | Deployment planning | Manual | User
-Deployment | Deployment planning | Convergence | User
-Deployment | Deployment execution | Manual | User
-Deployment | Deployment execution | Planned | User
-Deployment | Deployment execution | Convergence | ARS ou Master
-Deployment | WOL sent | Deployment | ARS
-
-QuickAction | WOL sent | Manual | User
-QuickAction | Inventory requested | Manual | User
-QuickAction | Inventory reception | Manual | User
-QuickAction | Shutdown sent | Manual | User
-QuickAction | Reboot sent | Manual | User
-
-
-
-Packaging | Package creation | Manual | User
-Packaging | Package edition | Manual | User
-Packaging | Package deletion | Manual | User
-Packaging | Bundle creation | Manual | User
-Packaging | Bundle edition | Manual | User
-Packaging | Bundle deletion | Manual | User
-
-Remote desktop | service| Manual | User
-Remote desktop | Remote desktop control request | Manual | User
-Remote desktop | Reverse SSH start | Remote desktop control request | ARS
-Remote desktop | Reverse SSH stop | Remote desktop control request | ARS
-
-
+key criterium for search
+'Menu',
+'Post-imaging script creation',
+'creation',
+'edition'
+'deletion ',
+'Multicast',
+'Backup',
+'Image',
+'WOL',
+'deletion',
+'Master',
+'Menu',
+'server',
+'Manual',
+'Multicast',
+'Start',
+'Postinstall',
+'Configuration',
+'Clone',
+'Iso',
+'Add',
+'Edit',
+'Group',
+'delete',
+'Service',
+'Image',
 From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
 Action: L'action
 Module: Le module
@@ -95,14 +75,32 @@ Text: Détail
 How: Le contexte: par exemple, lors d'un déploiement, planifié, etc.
 Who: Nom du groupe ou de la machine
 Why: Groupe ou machine
-
-
 */
 ?>
-
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
+
+
+global $conf;
+$maxperpage = $conf["global"]["maxperpage"];
+if ($maxperpage >= 100){
+    $maxperpage = 100;
+}
+elseif($maxperpage >= 75){
+    $maxperpage = 75;
+}
+elseif($maxperpage >= 50){
+    $maxperpage = 50;
+}
+
 
     class DateTimeTplnew extends DateTimeTpl{
 
@@ -156,7 +154,6 @@ class SelectItemlabeltitle extends SelectItem {
     }
 }
 
-
 // ------------------------------------------------------------------------------------------------
     $p = new PageGenerator(_("Imaging Logs"));
     $p->setSideMenu($sidemenu);
@@ -170,7 +167,14 @@ class SelectItemlabeltitle extends SelectItem {
 var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
-    var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val();
+    var critere = filterlogs +
+                    "|" + jQuery('#criterionssearch option:selected').val() +
+                    "|" + jQuery('#criterionssearch1 option:selected').val() +
+                    "|" + jQuery('#criterionssearch2 option:selected').val() +
+                    "|" + jQuery('#criterionssearch3 option:selected').val();
+                    //+
+                    //"|" + jQuery('#criterionssearch4 option:selected').val();
+
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
     var param = {
@@ -189,36 +193,47 @@ function encodeurl(){
     return uri
 }
 
-function xwwwfurlenc(srcjson){
-    if(typeof srcjson !== "object")
-      if(typeof console !== "undefined"){
-        console.log("\"srcjson\" is not a JSON object");
-        return null;
-      }
-    u = encodeURIComponent;
-    var urljson = "";
-    var keys = Object.keys(srcjson);
-    for(var i=0; i <keys.length; i++){
-        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-        if(i < (keys.length-1))urljson+="&";
+    function xwwwfurlenc(srcjson){
+        if(typeof srcjson !== "object")
+        if(typeof console !== "undefined"){
+            console.log("\"srcjson\" is not a JSON object");
+            return null;
+        }
+        u = encodeURIComponent;
+        var urljson = "";
+        var keys = Object.keys(srcjson);
+        for(var i=0; i <keys.length; i++){
+            urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
+            if(i < (keys.length-1))urljson+="&";
+        }
+        return urljson;
     }
-    return urljson;
-}
 
-jQuery(function(){
-    jQuery("p").click(function(){
-        searchlogs( encodeurl());
-    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    jQuery(function(){
+        jQuery("p").click(function(){
+            searchlogs( encodeurl());
+        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+        });
     });
-});
+
     function searchlogs(url){
-        jQuery('#tablelog').DataTable()
+        jQuery('#tablelog').DataTable({
+        'retrieve': true,
+        "iDisplayLength": <?php echo $maxperpage; ?>,
+        "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+        "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+        buttons: [
+        { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+        { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+        { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+        { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+        ]
+    } )
                             .ajax.url(
                                 url
                             )
                             .load();
     }
-
 
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
@@ -226,22 +241,7 @@ jQuery(function(){
     </script>
 
 <?php
-/*
-Imaging | Menu change | Manual | User
-Imaging | Menu change | WOL | User
-Imaging | Menu change | Multicast | User
-Imaging | Post-imaging script creation | Manual | User
-Imaging | Master creation | Manual | User
-Imaging | Master edition | Manual | User
-Imaging | Master deletion | Manual | User
-Imaging | Master deployment | Manual | User
-Imaging | Master deployment | Multicast | User
-Imaging | Backup image creation | Manual | User
-Imaging | Backup image creation | WOL | User
-Imaging | Image deployment | Manual | User
-Imaging | Image deployment | WOL | User
-Imaging | Image deletion | Manual | User
-*/
+
 
 $typecritere  =        array(
                                         _T('Menu change','logs'),
@@ -249,25 +249,58 @@ $typecritere  =        array(
                                         _T('Master Creation','logs'),
                                         _T('Master Edition','logs'),
                                         _T('Master Deletion','logs'),
-                                        _T('Master Deployment','logs'),
                                         _T('Master Deployment Multicast','logs'),
                                         _T('Backup Image creation','logs'),
                                         _T('Image Deployment','logs'),
                                         _T('WOL','logs'),
                                         _T('Image Deletion','logs'),
+                                        'Master',
+                                        _T('Menu'),
+                                        _T('Server'),
+                                        _T('Manual'),
+                                        _T('Multicast'),
+                                        _T('Start'),
+                                        _T('Postinstall'),
+                                        _T('Configuration'),
+                                        _T('Clone'),
+                                        'Iso',
+                                        'Add',
+                                        _T('Edit'),
+                                        _T('Group'),
+                                        _T('Delete'),
+                                        _T('Service'),
+                                        _T('Image'),
+                                        _T('Quick Action'),
                                         _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
                                         'Menu',
-                                        'Post-imaging',
-                                        'creation | Master',
-                                        'deletion | Master',
-                                        'deployment | Master',
-                                        'Multicast | Master',
-                                        'Backup| Image | ',
-                                        'Image | deployment',
+                                        'Post-imaging script creation',
+                                        'creation',
+                                        'edition',
+                                        'deletion',
+                                        'Multicast',
+                                        'Backup',
+                                        'Image',
                                         'WOL',
-                                        'Image|deletion',
+                                        'deletion',
+                                        'Master',
+                                        'Menu',
+                                        'server',
+                                        'Manual',
+                                        'Multicast',
+                                        'Start',
+                                        'Postinstall',
+                                        'Configuration',
+                                        'Clone',
+                                        'Iso',
+                                        'Add',
+                                        'Edit',
+                                        'Group',
+                                        'delete',
+                                        'Service',
+                                        'Image',
+                                        'QuickAction',
                                         'None');
 
 
@@ -280,18 +313,28 @@ $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
+$modules1 = new SelectItemlabeltitle("criterionssearch1", "criterions", "critere search");
+$modules1->setElements($typecritere);
+$modules1->setSelected("None");
+$modules1->setElementsVal($typecritereval);
+
+$modules2 = new SelectItemlabeltitle("criterionssearch2", "criterions", "critere search");
+$modules2->setElements($typecritere);
+$modules2->setSelected("None");
+$modules2->setElementsVal($typecritereval);
+
+$modules3 = new SelectItemlabeltitle("criterionssearch3", "criterions", "critere search");
+$modules3->setElements($typecritere);
+$modules3->setSelected("None");
+$modules3->setElementsVal($typecritereval);
+
+// $modules4 = new SelectItemlabeltitle("criterionssearch4", "criterions", "critere search");
+// $modules4->setElements($typecritere);
+// $modules4->setSelected("None");
+// $modules4->setElementsVal($typecritereval);
+
 ?>
-
-<style>
-
-.inline { display : inline; }
-
-}
-
 </style>
-<?php
-
-?>
 
 
 <div style="overflow-x:auto;">
@@ -301,6 +344,10 @@ $modules->setElementsVal($typecritereval);
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
+                <th><?php echo $modules1->display(); ?></th>
+                <th><?php echo $modules2->display(); ?></th>
+                <th><?php echo $modules3->display(); ?></th>
+            <!--    <th><?php //echo $modules4->display(); ?></th>-->
             </tr>
         </thead>
      </table>
@@ -317,8 +364,8 @@ $modules->setElementsVal($typecritereval);
         <thead>
             <tr>
                 <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
+                <th style="width: 7%;">user</th>
+                <th style="width: 7%;">who</th>
          <!--
                 <th style="width: 6%;">type</th>
                 <th style="width: 6%;">action</th>

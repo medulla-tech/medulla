@@ -1,7 +1,6 @@
 <?php
-/*
- * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
- * (c) 2007-2008 Mandriva, http://www.mandriva.com
+/**
+ *
  * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
@@ -21,7 +20,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- * File : logview/index.php
+ * File : index.php
  */
 
  /*
@@ -42,86 +41,54 @@
 | why         | varchar(255)     | YES  |     | ""                |                |
 | priority    | int(11)          | YES  |     | 0                 |                |
 +-------------+------------------+------+-----+-------------------+----------------+
+key criterium for search
+
+
+From user (Acteur): Normalement utilisateur loggué à Pulse (pour MMC), Agent Machine, Master, ARS
+Action: L'action
+Module: Le module
+Text: Détail
+How: Le contexte: par exemple, lors d'un déploiement, planifié, etc.
+Who: Nom du groupe ou de la machine
+Why: Groupe ou machine
+
 */
 ?>
-
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.4.2/js/buttons.print.min.js"></script>
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
-    $p = new PageGenerator(_("All Logs"));
-    $p->setSideMenu($sidemenu);
-    $p->display();
-?>
 
-
-<script type="text/javascript">
-
-function xwwwfurlenc(srcjson){
-    if(typeof srcjson !== "object")
-      if(typeof console !== "undefined"){
-        console.log("\"srcjson\" is not a JSON object");
-        return null;
-      }
-    u = encodeURIComponent;
-    var urljson = "";
-    var keys = Object.keys(srcjson);
-    for(var i=0; i <keys.length; i++){
-        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
-        if(i < (keys.length-1))urljson+="&";
+    global $conf;
+    $maxperpage = $conf["global"]["maxperpage"];
+    if ($maxperpage >= 100){
+        $maxperpage = 100;
     }
-    return urljson;
-}
+    elseif($maxperpage >= 75){
+        $maxperpage = 75;
+    }
+    elseif($maxperpage >= 50){
+        $maxperpage = 50;
+    }
 
- function encodeurl(){
-            uri = "modules/base/logview/ajax_Data_Logs.php"
-            var param = {
-                "start_date" :  jQuery('#start_date').val(),
-                "end_date"   : jQuery('#end_date').val(),
-                "type" : "",
-                "module" : jQuery('#module option:selected').val(),
-                "action" : ""
-            }
-            uri = uri +"?"+xwwwfurlenc(param)
-            return uri
+    class DateTimeTplnew extends DateTimeTpl{
+
+        function DateTimeTplnew($name, $label = null){
+            $this->label = $label;
+            parent::__construct($name);
         }
 
-    jQuery(function(){
-
-        jQuery("p").click(function(){
-            dede( encodeurl());
-        //jQuery('#example').DataTable().ajax.reload(null, false).draw();
-        });
-    });
-<?php
-
-print '
-function dede(url){
-
-    jQuery(\'#example\').DataTable()
-                        .ajax.url(
-                            url
-                        )
-                        .load();
-}
-
-    jQuery(function(){
-        dede("modules/base/logview/ajax_Data_Logs.php")
-    } );
-    </script>';
-
-class DateTimeTplnew extends DateTimeTpl{
-
-    function DateTimeTplnew($name, $label = null){
-      $this->label = $label;
-         parent::__construct($name);
+        function display($arrParam = array()) {
+            print "<label for=\"".$this->name."\">".$this->label."</label>\n";
+            parent::display($arrParam);
+        }
     }
-
-    function display($arrParam = array()) {
-        print "<label for=\"".$this->name."\">".$this->label."</label>\n";
-        parent::display($arrParam);
-    }
-}
-
 
 class SelectItemlabeltitle extends SelectItem {
     var $title;
@@ -162,32 +129,268 @@ class SelectItemlabeltitle extends SelectItem {
     }
 }
 
-$yes_no  =        array(
-                                        _T('Yes','imaging'),
-                                        _T('No','imaging'));
+// ------------------------------------------------------------------------------------------------
+    $p = new PageGenerator(_T("All Logs",'logs'));
+    $p->setSideMenu($sidemenu);
+    $p->display();
+    $filterlogs = "";
+    $headercolumn= "date@fromuser@who@text";
+?>
+
+<script type="text/javascript">
+
+var filterlogs = <?php echo "'$filterlogs'";?>;
+
+function encodeurl(){
+    var critere =  jQuery('#criterionssearch option:selected').val() +
+                    "|" + jQuery('#criterionssearch1 option:selected').val() +
+                    "|" + jQuery('#criterionssearch2 option:selected').val();
+    uri = "modules/base/logview/ajax_Data_Logs.php"
+    //QuickAction
+    var param = {
+        "start_date" : jQuery('#start_date').val(),
+        "end_date"   : jQuery('#end_date').val(),
+        "type" : "",
+        "action" : "",
+        "module" : critere,
+        "user" : "",
+        "how" : "",
+        "who" : "",
+        "why" : "",
+        "headercolumn" : "<?php echo $headercolumn; ?>"
+    }
+    uri = uri +"?"+xwwwfurlenc(param)
+    return uri
+}
+
+function xwwwfurlenc(srcjson){
+    if(typeof srcjson !== "object")
+      if(typeof console !== "undefined"){
+        console.log("\"srcjson\" is not a JSON object");
+        return null;
+      }
+    u = encodeURIComponent;
+    var urljson = "";
+    var keys = Object.keys(srcjson);
+    for(var i=0; i <keys.length; i++){
+        urljson += u(keys[i]) + "=" + u(srcjson[keys[i]]);
+        if(i < (keys.length-1))urljson+="&";
+    }
+    return urljson;
+}
+
+jQuery(function(){
+    jQuery("p").click(function(){
+        searchlogs( encodeurl());
+    //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
+    });
+});
+    function searchlogs(url){
+                            jQuery('#tablelog').DataTable({
+                            'retrieve': true,
+                            "iDisplayLength": <?php echo $maxperpage; ?>,
+                            "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
+                            "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
+                            buttons: [
+                            { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
+                            { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
+                            { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
+                            { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+                            ]
+                        } )
+                            .ajax.url(
+                                url
+                            )
+                            .load();
+    }
 
 
+    jQuery(function(){
+        searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
+    } );
+    </script>
 
- $typemodule  =        array(
+<?php
+
+$typemodule  =        array(
                                         _T('deployment','logs'),
                                         _T('quickaction','logs'),
                                         _T('imaging','logs'),
                                         _T('backup','logs'),
                                         _T('inventory','logs'),
+                                        _T('Packaging','logs'),
                                         _T('None','logs'));
 
+$typemoduleval =        array(
+                                        'deployment',
+                                        'quickaction',
+                                        'imaging',
+                                        'backup',
+                                        'inventory',
+                                        'Packaging',
+                                        'None');
+                                        
+$typecritere  =        array(
+                                        _T('Backup configuration','logs'),
+                                        _T('Full backup requested','logs'),
+                                        _T('Incremental backup requested','logs'),
+                                        _T('Reverse SSH start','logs'),
+                                        _T('Reverse SSH stop','logs'),
+                                        _T('Restore requested','logs'),
+                                        _T('Manual','logs'),
+                                        _T('Planned','logs'),
+                                        _T('Restore','logs'),
+                                        _T('User','logs'),
+                                        _T('BackupPC','logs'),
+                                        'Agent Relay Server',
+                                        _T('Deployment Transfert','logs'),
+                                        _T('Deployment Execution','logs'),
+                                        _T('Deployment Download','logs'),
+                                        _T('Deployment Notify','logs'),
+                                        _T('Deployment Error','logs'),
+                                        _T('Deployment Terminate','logs'),
+                                        _T('WOL sent','logs'),
+                                        _T('Menu change','logs'),
+                                        _T('Post-imaging Script Creation','logs'),
+                                        _T('Master Creation','logs'),
+                                        _T('Master Edition','logs'),
+                                        _T('Master Deletion','logs'),
+                                        _T('Master Deployment Multicast','logs'),
+                                        _T('Backup Image creation','logs'),
+                                        _T('Image Deployment','logs'),
+                                        _T('WOL','logs'),
+                                        _T('Image Deletion','logs'),
+                                        'Master',
+                                        _T('Menu'),
+                                        _T('Server'),
+                                        _T('Manual'),
+                                        _T('Multicast'),
+                                        _T('Start'),
+                                        _T('Postinstall'),
+                                        _T('Configuration'),
+                                        _T('Clone'),
+                                        'Iso',
+                                        'Add',
+                                        _T('Edit'),
+                                        _T('Group'),
+                                        _T('Delete'),
+                                        _T('Service'),
+                                        _T('Image'),
+                                        _T('Quick Action'),
+                                        _T('Inventory reception','logs'),
+                                        _T('Inventory requested','logs'),
+                                        _T('Inventory Deployment','logs'),
+                                        _T('Inventory Planned','logs'),
+                                        _T('Inventory Quick Action','logs'),
+                                        _T('Inventory User','logs'),
+                                        _T('Inventory Machine','logs'),
+                                        _T('Inventory Master','logs'),
+                                        _T('Inventory New machine','logs'),
+                                        _T('Package creation','logs'),
+                                        _T('Package edition','logs'),
+                                        _T('Package deletion','logs'),
+                                        _T('User','logs'),
+                                        _T('Package','logs'),
+                                        _T('Files','logs'),
+                                        _T('List','logs'),
+                                        _T('Manual','logs'),
+                                        _T('Remove','logs'),
+                                        _T('Delete','logs'),
+                                        _T('Remote desktop service','logs'),
+                                        _T('Remote desktop control request','logs'),
+                                        _T('Reverse SSH','logs'),
+                                        _T('no criteria selected','logs'),
+                                        _T('no criteria selected','logs'));
 
+$typecritereval  =        array(
+                                        'Backup configuration',
+                                        'Full backup requested',
+                                        'Incremental backup requested',
+                                        'Reverse SSH start',
+                                        'Reverse SSH stop',
+                                        'Restore requested',
+                                        'Manual',
+                                        'Planned',
+                                        'Restore',
+                                        'User',
+                                        'BackupPC',
+                                        'ARS',
+                                        'Transfert',
+                                        'Execution',
+                                        'Download',
+                                        'Notify',
+                                        'Error',
+                                        'Terminate',
+                                        'WOL',
+                                        'Menu',
+                                        'Post-imaging script creation',
+                                        'creation',
+                                        'edition',
+                                        'deletion',
+                                        'Multicast',
+                                        'Backup',
+                                        'Image',
+                                        'WOL',
+                                        'deletion',
+                                        'Master',
+                                        'Menu',
+                                        'server',
+                                        'Manual',
+                                        'Multicast',
+                                        'Start',
+                                        'Postinstall',
+                                        'Configuration',
+                                        'Clone',
+                                        'Iso',
+                                        'Add',
+                                        'Edit',
+                                        'Group',
+                                        'delete',
+                                        'Service',
+                                        'Image',
+                                        'QuickAction',
+                                        'reception',
+                                        'requested',
+                                        'Deployment',
+                                        'Planned',
+                                        'Quick Action',
+                                        'User',
+                                        'Machine',
+                                        'Master',
+                                        'New machine',
+                                        'creation',
+                                        'edition',
+                                        'deletion',
+                                        'User',
+                                        'Package',
+                                        'Files',
+                                        'List',
+                                        'Manual',
+                                        'Remove',
+                                        'Delete',
+                                        'Service',
+                                        'Sontrol',
+                                        'Reverse SSH',
+                                        'None');
 
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
-$modules = new SelectItemlabeltitle("module", "Modules", "quategory du log");
+$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'),  _T('critere search','logs'));
 $modules->setElements($typemodule);
 $modules->setSelected("None");
-$modules->setElementsVal($typemodule);
+$modules->setElementsVal($typemoduleval);
 
+$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), _T('critere search','logs'));
+$modules1->setElements($typecritere);
+$modules1->setSelected("None");
+$modules1->setElementsVal($typecritereval);
 
+$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), _T('critere search','logs'));
+$modules2->setElements($typecritere);
+$modules2->setSelected("None");
+$modules2->setElementsVal($typecritereval);
 ?>
 
 <style>
@@ -195,9 +398,7 @@ $modules->setElementsVal($typemodule);
 .inline { display : inline; }
 
 </style>
-<?php
 
-?>
 
 
 <div style="overflow-x:auto;">
@@ -207,24 +408,26 @@ $modules->setElementsVal($typemodule);
                 <th><?php echo $start_date->display(); ?></th>
                 <th><?php echo $end_date->display(); ?></th>
                 <th><?php echo $modules->display(); ?></th>
+                <th><?php echo $modules1->display(); ?></th>
+                <th><?php echo $modules2->display(); ?></th>
             </tr>
         </thead>
-
      </table>
 </div>
+
+
 <p class="btnPrimary">
   Filter logs
 </p>
 
-<p>
+<br>
 
-
-<table id="example" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
+<table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
                 <th style="width: 12%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
+                <th style="width: 7%;">user</th>
+                <th style="width: 7%;">who</th>
          <!--
                 <th style="width: 6%;">type</th>
                 <th style="width: 6%;">action</th>
