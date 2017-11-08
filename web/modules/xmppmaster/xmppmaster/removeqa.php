@@ -32,7 +32,6 @@ if (isset($_POST["bconfirm"])) {
     header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
 }
 else{
-print_r($_GET);
     $f = new PopupForm(sprintf(_T("Delete this Quick Action :%s"),$namecmd));
     $hidden = new HiddenTpl("namecmd");
     $f->add($hidden, array("value" => $namecmd, "hide" => True));
