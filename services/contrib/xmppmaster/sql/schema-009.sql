@@ -33,11 +33,10 @@ CREATE TABLE IF NOT EXISTS `xmppmaster`.`qa_custom_command` (
   `namecmd` VARCHAR(45) NOT NULL,
   `customcmd` TEXT NOT NULL,
   `description` VARCHAR(45) NULL DEFAULT '\"\"',
-  PRIMARY KEY (`namecommande`, `user`, `os`))
+  PRIMARY KEY (`namecmd`, `user`, `os`))
 ENGINE = InnoDB;
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 9;
-
-
