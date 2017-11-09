@@ -182,7 +182,8 @@ function createInfo()
                     else
                         info[param['name']] = false;
                 }
-                else if (param['name'] == 'Dependency' | param['name'] == 'members[]' | )) {
+                else if(param['name'] == 'Dependency' | param['name'] == 'members[]')
+                {
                     //Managed before outside this loop because to manage it is special
                 }
                 else
