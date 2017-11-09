@@ -60,19 +60,18 @@ var action = jQuery('select[name="action"]').val();
  */
 var actionsList = [
     'action_pwd_package',
-    //'action_set_environ',
-    //'action_command_natif_shell',
-    //'actionrestartbot',
+    'actionrestartbot',
+    'actionwaitandgoto',
+    'action_unzip_file',
     'actionprocessscript',
     //'actionconfirm',
-    //'actionwaitandgoto',
     'actionrestart',
     'actioncleaning',
     'action_unzip_file',
     'action_no_operation',
     'action_set_environ',
+    'action_command_natif_shell',
 ];
-
 /**
  *
  * optionsList contains information about the options.
