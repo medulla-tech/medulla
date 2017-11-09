@@ -392,6 +392,56 @@ if(isExpertMode())
     $methodtransfer->setElements(['pushrsync','pullcurl']);
     $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
     $f->add(new TrFormElement(_T('Method transfer','pkgs'),$methodtransfer),['value'=>'']);
+
+    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+
+    if(isset($json['info']['Dependency']))
+    {
+        $dependencies = $json['info']['Dependency'];
+    }
+    else
+        $dependencies = [];
+
+
+    $packagesInOptionAdded = '';
+    $packagesInOptionNotAdded = '';
+    foreach(xmpp_packages_list() as $package)
+    {
+        if(in_array($package['uuid'], $dependencies))
+            $packagesInOptionAdded .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+        else
+            if($_GET['packageUuid'] != $package['uuid'])
+                $packagesInOptionNotAdded .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+    }
+    $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+    <table style="border: none;" cellspacing="0">
+        <tr style="display:flex">
+            <td style="border: none;">
+                <h3>Added dependencies</h3>
+                <div class="list">
+                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
+                    '.$packagesInOptionAdded.'
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div class="list" style="padding-left: 10px;">
+                    <h3>List of aviable dependencies</h3>
+                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                        '.$packagesInOptionNotAdded.'
+                    </select>
+                </div>
+                <div class="clearer"></div>
+            </td>
+        </tr>
+    </table>
+</div>',"pkgs")));
 }
 
 foreach ($cmds as $p) {

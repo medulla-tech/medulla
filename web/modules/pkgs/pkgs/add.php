@@ -246,6 +246,41 @@ if (isset($_POST['bconfirm'])) {
         $methodtransfer->setElements(['pushrsync','pullcurl']);
         $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
         $f->add(new TrFormElement(_T('Method transfer','pkgs'),$methodtransfer),['value'=>'']);
+
+        $packagesInOption = '';
+        foreach(xmpp_packages_list() as $package)
+        {
+            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+        }
+        $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+    <table style="border: none;" cellspacing="0">
+        <tr style="display:flex">
+            <td style="border: none;">
+                <h3>Added dependencies</h3>
+                <div class="list">
+                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
+
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div class="list" style="padding-left: 10px;">
+                    <h3>List of aviable dependencies</h3>
+                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                        '.$packagesInOption.'
+                    </select>
+                </div>
+                <div class="clearer"></div>
+            </td>
+        </tr>
+    </table>
+</div>',"pkgs")));
     }
 
     foreach ($cmds as $p) {

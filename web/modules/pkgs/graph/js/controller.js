@@ -78,7 +78,7 @@ jQuery(function(){
 
         //Set methodtransfer value with the saved value
         jQuery('#methodetransfert option[value="'+tmp['info']['methodetransfert']+'"]').attr("selected",true);
-        
+
         //Get the elements of the sequence
         sequence = getSequenceFromJSON(tmp);
 
@@ -98,6 +98,27 @@ jQuery(function(){
     }
 });
 
+
+//Add selected dependencies into dependencies list of the json
+function moveToLeft()
+{
+    selectedDependencies = jQuery("#pooldependencies").val();
+
+    jQuery.each(selectedDependencies, function(id,dependency){
+        jQuery("#addeddependencies").append(jQuery("#pooldependencies").find("[value="+dependency+"]")[0]);
+    });
+
+}
+
+//Remove selected dependencies from dependencies list of the json
+function moveToRight()
+{
+    selectedDependencies = jQuery("#addeddependencies").val();
+    jQuery.each(selectedDependencies, function(id,dependency){
+        jQuery("#pooldependencies").append(jQuery("#addeddependencies").find("[value="+dependency+"]")[0]);
+    });
+
+}
 
 
 // Get all the workflow elements and create a sequence
@@ -137,6 +158,12 @@ function createInfo()
 {
     var info = {};
 
+    // Manage dependencies
+    info['Dependency'] = []
+    jQuery.each(jQuery("#addeddependencies").children('option'),function(id,dependency){
+        info['Dependency'].push(jQuery(dependency).val());
+    });
+
     datas = jQuery("#Form").serializeArray();
 
     jQuery.each(datas, function(id,param){
@@ -154,6 +181,9 @@ function createInfo()
 
                     else
                         info[param['name']] = false;
+                }
+                else if (param['name'] == 'Dependency' | param['name'] == 'members[]' | )) {
+                    //Managed before outside this loop because to manage it is special
                 }
                 else
                     info[param['name']] = param['value'];
