@@ -83,7 +83,6 @@ var actionsList = [
         'help':'help message'
         'placeholder':'displayed text by default'
         'selected' : 'label',
-
  *  }
  *
  * The templates are :

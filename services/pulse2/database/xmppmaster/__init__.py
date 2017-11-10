@@ -1350,8 +1350,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserrecent(self, session, login , state, duree, min , max, filt):
-
+    def getdeploybyuserrecent(self, session, login , state, duree, min=None , max=None, filt=None):
         deploylog = session.query(Deploy)
         if login:
             deploylog = deploylog.filter( Deploy.login == login)
@@ -1361,27 +1360,26 @@ class XmppMasterDatabase(DatabaseHelper):
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
 
-        if filt:
+        if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
                                                 Deploy.login.like('%%%s%%'%(filt)),
                                                 Deploy.host.like('%%%s%%'%(filt))))
-
-        lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+        lentaillerequette = self.get_count(deploylog)
+        #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
         deploylog = deploylog.group_by(Deploy.title)
 
         deploylog = deploylog.order_by(desc(Deploy.id))
 
-        deploylog = deploylog.add_column(func.count(Deploy.title))
-        if min and max:
+        ##deploylog = deploylog.add_column(func.count(Deploy.title))
+        if min is not None and max is not None:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
-
         result = deploylog.all()
         session.commit()
         session.flush()
         ret ={'lentotal' : 0,
-              'tabdeploy' : {   'len' : [],
+              'tabdeploy' : {
                                 'state' : [],
                                 'pathpackage' : [],
                                 'sessionid' : [],
@@ -1399,29 +1397,28 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'jid_relay' : [],
                                 'title' : []}}
 
+        ret['lentotal'] = lentaillerequette#[0]
         for linedeploy in result:
-            ret['lentotal'] = lentaillerequette[0]
-            ret['tabdeploy']['len'].append(linedeploy[1])
-            ret['tabdeploy']['state'].append(linedeploy[0].state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy[0].pathpackage.split("/")[-1])
-            ret['tabdeploy']['sessionid'].append(linedeploy[0].sessionid)
-            ret['tabdeploy']['start'].append(str(linedeploy[0].start))
-            ret['tabdeploy']['inventoryuuid'].append(linedeploy[0].inventoryuuid)
-            ret['tabdeploy']['command'].append(linedeploy[0].command)
-            ret['tabdeploy']['login'].append(linedeploy[0].login)
-            ret['tabdeploy']['host'].append(linedeploy[0].host.split("/")[-1])
-            ret['tabdeploy']['macadress'].append(linedeploy[0].macadress)
-            ret['tabdeploy']['group_uuid'].append(linedeploy[0].group_uuid)
-            ret['tabdeploy']['startcmd'].append(linedeploy[0].startcmd)
-            ret['tabdeploy']['endcmd'].append(linedeploy[0].endcmd)
-            ret['tabdeploy']['jidmachine'].append(linedeploy[0].jidmachine)
-            ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
-            ret['tabdeploy']['title'].append(linedeploy[0].title)
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserpast(self, session, login , duree, min , max, filt):
+    def getdeploybyuserpast(self, session, login , duree, min=None , max=None, filt=None):
 
         deploylog = session.query(Deploy)
         if login:
@@ -1430,7 +1427,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
 
-        if filt:
+        if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
@@ -1446,10 +1443,12 @@ class XmppMasterDatabase(DatabaseHelper):
 
         deploylog = deploylog.order_by(desc(Deploy.id))
 
-        deploylog = deploylog.add_column(func.count(Deploy.title))
-        if min and max:
-            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
+        #deploylog = deploylog.add_column(func.count(Deploy.title))
 
+        nbfilter =  self.get_count(deploylog)
+
+        if min is not None and max is not None:
+            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
         result = deploylog.all()
         session.commit()
         session.flush()
@@ -1472,24 +1471,24 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'jid_relay' : [],
                                 'title' : []}}
 
+        #ret['lentotal'] = nbfilter
+        ret['lentotal'] = lentaillerequette[0]
         for linedeploy in result:
-            ret['lentotal'] = lentaillerequette[0]
-            ret['tabdeploy']['len'].append(linedeploy[1])
-            ret['tabdeploy']['state'].append(linedeploy[0].state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy[0].pathpackage.split("/")[-1])
-            ret['tabdeploy']['sessionid'].append(linedeploy[0].sessionid)
-            ret['tabdeploy']['start'].append(str(linedeploy[0].start))
-            ret['tabdeploy']['inventoryuuid'].append(linedeploy[0].inventoryuuid)
-            ret['tabdeploy']['command'].append(linedeploy[0].command)
-            ret['tabdeploy']['login'].append(linedeploy[0].login)
-            ret['tabdeploy']['host'].append(linedeploy[0].host.split("/")[-1])
-            ret['tabdeploy']['macadress'].append(linedeploy[0].macadress)
-            ret['tabdeploy']['group_uuid'].append(linedeploy[0].group_uuid)
-            ret['tabdeploy']['startcmd'].append(linedeploy[0].startcmd)
-            ret['tabdeploy']['endcmd'].append(linedeploy[0].endcmd)
-            ret['tabdeploy']['jidmachine'].append(linedeploy[0].jidmachine)
-            ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
-            ret['tabdeploy']['title'].append(linedeploy[0].title)
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
 

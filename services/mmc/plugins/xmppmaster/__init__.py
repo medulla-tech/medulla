@@ -296,10 +296,20 @@ def getdeploybymachinegrprecent(gid, state, duree, min , max, filt):
 def delDeploybygroup(numgrp):
     return XmppMasterDatabase().delDeploybygroup( numgrp )
 
-def getdeploybyuserrecent(  login , state, duree, min , max, filt):
+def getdeploybyuserrecent(  login , state, duree, min=None , max=None, filt=None):
+    if min == "" :
+        min = None
+    if max == "":
+        max = None
+    if filt == "":
+        filt = None
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)
 
-def getdeploybyuserpast(login, duree, min , max, filt):
+def getdeploybyuserpast(login, duree, min=None , max=None, filt=None):
+    if min == "" :
+        min = None
+    if max == "":
+        max = None
     return XmppMasterDatabase().getdeploybyuserpast(login, duree, min , max, filt)
 
 def getdeploybyuser( login, numrow, offset):
