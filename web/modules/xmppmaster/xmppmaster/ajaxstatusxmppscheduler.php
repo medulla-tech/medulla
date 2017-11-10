@@ -55,6 +55,7 @@ $deletecommand = new ActionItem(_("Delete deploy"), "index", "delete", "audit", 
 $arraytitlename=array();
 $delete=array();
 $params=array();
+$arraytargetname=array();
 $index = 0;
 foreach($arraydeploy['tabdeploy']['groupid'] as $groupid){
     $param=array();
@@ -91,13 +92,14 @@ $n->addExtraInfo( $arraydeploy['tabdeploy']['creator'], _T("User", "xmppmaster")
 $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(0);
 $n->setItemCount($arraydeploy['lentotal']);
+$n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning1"));
 $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
 
 $n->setParamInfo($params);
 $n->start = $start;
 $n->end = $end;
-$n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter));
+
 print "<br/>";
 
 $n->display();

@@ -182,12 +182,12 @@ function xmlrpc_getdeploybymachinegrprecent($gid, $state, $duree, $min, $max, $f
 function xmlrpc_delDeploybygroup( $numgrp) {
     return xmlCall("xmppmaster.delDeploybygroup", array($numgrp));
 }
-
-function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min, $max, $filt) {
+//ici
+function xmlrpc_getdeploybyuserrecent( $login , $state, $duree, $min=null, $max=null, $filt=null) {
     return xmlCall("xmppmaster.getdeploybyuserrecent", array($login , $state, $duree, $min , $max, $filt));
 }
 
-function xmlrpc_getdeploybyuserpast( $login, $duree, $min, $max, $filt) {
+function xmlrpc_getdeploybyuserpast( $login, $duree, $min=null, $max=null, $filt=null) {
     return xmlCall("xmppmaster.getdeploybyuserpast", array($login, $duree, $min , $max, $filt));
 }
 
@@ -239,10 +239,6 @@ function xmlrpc_callrestart($uuid){
 
 function xmlrpc_callshutdown($uuid, $time = 0, $msg = ""){
     return xmlCall("xmppmaster.callshutdown", array($uuid, $time, $msg));
-}
-
-function xmlrpc_callvncchangeperms($uuid, $askpermission = 1){
-    return xmlCall("xmppmaster.callvncchangeperms", array($uuid, $askpermission));
 }
 
 function xmlrpc_getstepdeployinsession($session){

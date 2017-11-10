@@ -30,21 +30,31 @@ require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 <?php
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
+$filter = $_GET["filter"];
+
+
+    if (isset($_GET["start"])) {
+        $start = $_GET["start"];
+    } else {
+        $start = 0;
+    }
 
 $filter  = isset($_GET['filter'])?$_GET['filter']:"";
 $start = isset($_GET['start'])?$_GET['start']:0;
 $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 
+
+
 if ($_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
   echo "<h2>Current tasks (last 24 hours)</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, "", $filter) ;
+  $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
 }
 else {
   $LastdeployINsecond = 3600*2160;
   echo "<h2>Past tasks (last 3 months)</h2>";
-  $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, "", $filter) ;
+  $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
 }
 $arrayname = array();
 $arraytitlename = array();
@@ -166,19 +176,21 @@ foreach($arraydeploy['tabdeploy']['group_uuid'] as $groupid){
 }
 
 $n = new OptimizedListInfos( $arraytitlename, _T("Deployment", "xmppmaster"));
+$n->setCssClass("package");
+ $n->disableFirstColumnActionLink();
 $n->addExtraInfo( $arrayname, _T("Target", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmaster"));
 $n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
-$n->setTableHeaderPadding(0);
-$n->setItemCount($arraydeploy['lentotal']);
+//$n->setTableHeaderPadding(0);
+$n->setItemCount(count($arraydeploy['tabdeploy']));
+$n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($logs);
+ //function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
 
-$n->setTableHeaderPadding(0);
 $n->setParamInfo($params);
-$n->start = $start;
-$n->end = $end;
-$n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter));
+$n->start = isset($_GET['start'])?$_GET['start']:0;
+$n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
 
 print "<br/><br/>";
 
