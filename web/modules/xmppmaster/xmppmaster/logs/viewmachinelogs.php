@@ -147,7 +147,9 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
                                 $result['end_date'][0]);
         $end_date = date("Y-m-d H:i:s", $end_date);
         echo "<h2>Please wait ( Deployement package ".$result['title']." Planned : [$start_date - $end_date ])</h2>";
-        if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START"){
+        if(isset($info['objectdeploy'][0]['state']) &&
+            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
+                $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             echo "<br>Preparing deployment. Please wait...";
             echo "<img src='modules/xmppmaster/img/waitting.gif'>";
             echo "<br>";
@@ -155,7 +157,9 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
     }
     if ( $info['len'] != 0)
     {
-        if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START"){
+        if(isset($info['objectdeploy'][0]['state']) && 
+            (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
+                $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
             if ( !$boolterminate && !isset($_POST['bStop'])){
                 if (!isset($_SESSION[$info['objectdeploy'][0]['sessionid']])){
                     $f = new ValidatingForm();
