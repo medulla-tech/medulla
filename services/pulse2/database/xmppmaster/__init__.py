@@ -569,7 +569,10 @@ class XmppMasterDatabase(DatabaseHelper):
         if not (deployresult.startcmd <= nowtime and deployresult.endcmd >= nowtime):
             #we are more in the range of deployments.
             #abandonmentdeploy
+            for id in  self.sessionidforidcommand(idcommand):
+                self.updatedeploystate(id,"DEPLOYMENT ERROR")
             return 'abandonmentdeploy'
+
         if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
             #time processing
             if nowtime > result.start_exec_on_time:
@@ -578,7 +581,18 @@ class XmppMasterDatabase(DatabaseHelper):
             #nb of deploy processing
             if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
                 return 'run'
+        for id in  self.sessionidforidcommand(idcommand):
+                self.updatedeploystate(id,"DEPLOYMENT DIFFERED")
         return "pause"
+
+    @DatabaseHelper._sessionm
+    def sessionidforidcommand(self, session, idcommand):
+        result = session.query(Deploy.sessionid).filter(Deploy.command == idcommand).all()
+        if result:
+            a= [m[0] for m in result]
+            return a
+        else:
+            return []
 
     @DatabaseHelper._sessionm
     def datacmddeploy(self, session, idcommand):
