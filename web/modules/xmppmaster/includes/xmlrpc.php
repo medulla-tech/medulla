@@ -302,4 +302,8 @@ function xmlrpc_adddeployabort( $idcommand,
                                                         $macadress));
 }
 
+function xmlrpc_getCountOnlineMachine() {
+    return xmlCall("xmppmaster.getCountOnlineMachine", array());
+}
+
 ?>
