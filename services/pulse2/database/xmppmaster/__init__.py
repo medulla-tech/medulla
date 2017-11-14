@@ -2260,3 +2260,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "jid" : ""
                     }
         return result
+
+    @DatabaseHelper._sessionm
+    def getCountOnlineMachine(self, session):
+        return session.query(func.count(Machines.id)).filter(Machines.agenttype == "machine").scalar()

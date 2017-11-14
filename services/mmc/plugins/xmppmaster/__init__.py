@@ -403,3 +403,6 @@ def runXmppScript(cmd,machine):
     a=XmppSimpleCommand(machine, data , 70)
     d = a.t2.join()
     return a.result
+
+def getCountOnlineMachine():
+    return XmppMasterDatabase().getCountOnlineMachine()
