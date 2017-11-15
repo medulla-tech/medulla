@@ -140,7 +140,27 @@ function createSequence()
         // For each element in form :
             // Add {form.elementName : form.elementValue} to action
         jQuery.each(datas,function(idoption, actionRaw){
-            action[actionRaw['name']] = actionRaw['value'];
+            if(actionRaw['name'] == 'environ')
+            {
+                tmp = {}
+                params = actionRaw['value'].replace(/[\n\r]/g, "")
+                if(params[params.length-1] == ',')
+                {
+                    params = params.slice(0,-2);
+                }
+
+                params = params.split(/[\s]?,[\s]?/)
+
+                jQuery.each(params, function(id, row){
+                    row = row.split(/[\s]?:{2}[\s]?/);
+                    tmp[row[0]] = row[1];
+                })
+
+                action[actionRaw['name']] = tmp;
+            }
+            else
+                action[actionRaw['name']] = actionRaw['value'];
+
         });
         // Add {step:increment} to this action
         action['step'] = id;
@@ -182,10 +202,16 @@ function createInfo()
                     else
                         info[param['name']] = false;
                 }
-                else if(param['name'] == 'Dependency' | param['name'] == 'members[]')
+
+                else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd',
+                    'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
+                    'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
+                    'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting']) >= 0)
                 {
-                    //Managed before outside this loop because to manage it is special
+                    // All the element from the array are not added into the info section.
+                    // Dependency is also ignored because it is managed outside this loop
                 }
+
                 else
                     info[param['name']] = param['value'];
             }

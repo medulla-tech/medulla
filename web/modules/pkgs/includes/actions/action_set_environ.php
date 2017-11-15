@@ -9,10 +9,16 @@
 <?php
 extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
-$environ=  (isset($environ))? $environ : "{
-'key1' : 'value1',
-'key2' : 'value2'
-}";
+
+$environstr="key1 :: value1,\nkey2 :: value2,";
+if(isset($environ))
+{
+    $environstr = "";
+    foreach($environ as $key=>$value)
+    {
+        $environstr .= $key.' :: '.$value.",\n";
+    }
+}
 ?>
 <div class="header">
     <h1>Set Environ</h1>
