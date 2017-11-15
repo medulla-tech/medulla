@@ -10,7 +10,7 @@
 extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 
-$environstr="key1 :: value1,\nkey2 :: value2,";
+$environstr="key1 :: value1,\nkey2 :: value2";
 if(isset($environ))
 {
     $environstr = "";
@@ -19,7 +19,10 @@ if(isset($environ))
         $environstr .= $key.' :: '.$value.",\n";
     }
 }
+
+$environstr = trim($environstr,",\n\r");
 ?>
+
 <div class="header">
     <h1>Set Environ</h1>
 </div>
@@ -40,7 +43,7 @@ if(isset($environ))
                     <th width="16%">json environ varaible</th>
                     <th width="25%">
                         <?php 
-                        echo'<textarea title="eg : {\'PLIP22\' : \'plop\'}" style="width:206px;height: 50px;" name="environ" cols="5" rows="5">'.$environ.'</textarea>';
+                        echo'<textarea title="eg : key1 :: value1,'."\n".'key1 :: value1" style="width:206px;height: 50px;" name="environ" cols="5" rows="5">'.$environstr.'</textarea>';
                         ?>
                     </th>
                     <th></th>

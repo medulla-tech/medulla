@@ -144,10 +144,6 @@ function createSequence()
             {
                 tmp = {}
                 params = actionRaw['value'].replace(/[\n\r]/g, "")
-                if(params[params.length-1] == ',')
-                {
-                    params = params.slice(0,-2);
-                }
 
                 params = params.split(/[\s]?,[\s]?/)
 
