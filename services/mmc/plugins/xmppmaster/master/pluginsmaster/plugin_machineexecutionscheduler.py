@@ -27,11 +27,11 @@ if deploy is pause, run, abandonned
 """
 import base64
 import json
-import os
+import os, sys
 import utils
 import pprint
 from pulse2.database.xmppmaster import XmppMasterDatabase
-
+import traceback
 import logging
 
 plugin = { "VERSION" : "1.0", "NAME" : "machineexecutionscheduler", "TYPE" : "master" }
@@ -75,6 +75,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                  mtype='chat')
     except Exception as e:
         print "Error in plugin %s"%str(e)
+        traceback.print_exc(file=sys.stdout)
         advanced['actionscheduler'] = "error" # abandonmentdeploy, run or pause
         datasend = {
                         'action': data['fromaction'],

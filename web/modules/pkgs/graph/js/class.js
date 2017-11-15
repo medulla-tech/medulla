@@ -69,7 +69,7 @@ var actionsList = [
     'actioncleaning',
     'action_unzip_file',
     'action_no_operation',
-    'action_set_environ',
+    //'action_set_environ',
     'action_command_natif_shell',
 ];
 /**
