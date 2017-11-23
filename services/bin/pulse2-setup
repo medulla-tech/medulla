@@ -1099,7 +1099,7 @@ class SetupApp(object):
 
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi", "baseurl", base_url)
-        glpi_conf.set("provisioning_glpi", "doauth", 1)
+        glpi_conf.set("authentication_glpi", "doauth", 1)
         glpi_conf.set("provisioning_glpi", "profiles_order", "profile1 profile2 profile3")
         glpi_conf.set("provisioning_glpi", "exclude", "root")
 
