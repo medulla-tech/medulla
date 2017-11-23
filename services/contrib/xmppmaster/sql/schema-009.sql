@@ -20,6 +20,8 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+START TRANSACTION;
+
 -- --------------------------------------------------------------
 -- command customizer by user for console xmpp
 -- --------------------------------------------------------------
@@ -40,3 +42,5 @@ ENGINE = InnoDB;
 -- Database version
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 9;
+
+COMMIT;

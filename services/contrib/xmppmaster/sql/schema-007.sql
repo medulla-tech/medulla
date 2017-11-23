@@ -20,6 +20,7 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+START TRANSACTION;
 
 -- ----------------------------------------------------------------------
 -- Database vADD CULUMN TABLE has_login_command
@@ -35,7 +36,7 @@
 
 -- ----------------------------------------------------------------------
 
-ALTER TABLE `xmppmaster`.`has_login_command` 
+ALTER TABLE `xmppmaster`.`has_login_command`
 ADD COLUMN `start_exec_on_time` DATETIME NULL AFTER `command`,
 ADD COLUMN `grpid` INT(11) NULL AFTER `start_exec_on_time`,
 ADD COLUMN `nb_machine_for_deploy` INT(11) NULL AFTER `grpid`,
@@ -49,4 +50,4 @@ ADD COLUMN `parameters_deploy` TEXT NULL AFTER `count_deploy_progress`;
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 7;
 
-
+COMMIT;

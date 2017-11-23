@@ -20,11 +20,12 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 -- MA 02110-1301, USA.
 
+START TRANSACTION;
 
-ALTER TABLE `xmppmaster`.`has_login_command` 
+ALTER TABLE `xmppmaster`.`has_login_command`
 ADD COLUMN `rebootrequired` TINYINT(1) NULL DEFAULT 0 AFTER `parameters_deploy`;
 
-ALTER TABLE `xmppmaster`.`has_login_command` 
+ALTER TABLE `xmppmaster`.`has_login_command`
 ADD COLUMN `shutdownrequired` TINYINT(1) NULL DEFAULT 0 AFTER `rebootrequired`;
 
 -- ----------------------------------------------------------------------
@@ -32,4 +33,4 @@ ADD COLUMN `shutdownrequired` TINYINT(1) NULL DEFAULT 0 AFTER `rebootrequired`;
 -- ----------------------------------------------------------------------
 UPDATE version SET Number = 8;
 
-
+COMMIT;
