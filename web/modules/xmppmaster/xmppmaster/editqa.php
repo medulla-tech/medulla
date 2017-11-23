@@ -27,7 +27,7 @@
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-    $os  = isset($_POST['os'])?$_POST['os']:(isset($_GET['os'])?$_GET['os']:'linux');
+    $os  = isset($_POST['os'])?$_POST['os']:(isset($_GET['os'])?$_GET['os']:'windows');
     $namecmd  = isset($_POST['namecmd'])?$_POST['namecmd']:(isset($_GET['namecmd'])?$_GET['namecmd']:'');
     $customcmd  = isset($_POST['customcmd'])?$_POST['customcmd']:(isset($_GET['customcmd'])?$_GET['customcmd']:'');
     $description  = isset($_POST['description']) ? $_POST['description'] : (isset($_GET['description'])?$_GET['description']:'');
@@ -42,17 +42,17 @@ if (isset($_POST["bcreate"])){
                 new NotifyWidgetFailure("Error creating custom Quick Action");
             }
             else{
-                new NotifyWidgetSuccess(sprintf("Created custom Quick Action %s",$namecmd));
+                new NotifyWidgetSuccess(sprintf("Custom Quick Action %s created successfully",$namecmd));
             }
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
         break;
         case 'editeqa':
             $response = xmlrpc_updateName_Qa_custom_command($user, $os, $namecmd, $customcmd, $description);
             if ($response== -1) {
-                new NotifyWidgetFailure(sprintf("Error updating custom Quick Action : %s",$namecmd));
+                new NotifyWidgetFailure(sprintf("Error updating custom Quick Action %s",$namecmd));
             }
             else{
-                new NotifyWidgetSuccess(sprintf("updated custom Quick Action %s",$namecmd));
+                new NotifyWidgetSuccess(sprintf("Custom Quick Action %s updated successfully",$namecmd));
             }
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/customQA", array()));
         break;
@@ -77,11 +77,11 @@ else{
 
     $f->add( new TrFormElement(_T('Operating System', 'xmppmaster'), $oslist), array());
     if ($editcreate == 'createqa'){
-        $f->add( new TrFormElement(_T("Name command", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
+        $f->add( new TrFormElement(_T("Command name", "xmpmaster"), new InputTpl('namecmd')), array("value" => $namecmd, "required" => True));
     }
     $f->add( new TrFormElement(_T("Command", "xmpmaster"), new InputTpl('customcmd')), array("value" => $customcmd, "required" => True));
 
-    $f->add( new TrFormElement(_T("description command", "xmpmaster"), new InputTpl('description')), array("value" => $description,"required" => True));
+    $f->add( new TrFormElement(_T("Command description", "xmpmaster"), new InputTpl('description')), array("value" => $description,"required" => True));
 
     $f->add(new HiddenTpl("user"), array("value" => $user, "hide" => True));
     if ($editcreate == 'editeqa'){

@@ -63,7 +63,7 @@ $user  = isset($_GET['user']) ? $_GET['user'] : $_POST['user'];
 $description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$description'];
     $tab = explode("/", $machine);
 
-    $p = new PageGenerator(_T("Custon Quick command", 'xmppmaster')." $tab[1]");
+    $p = new PageGenerator(_T("Send custom command to", 'xmppmaster')." $tab[1]");
     $p->setSideMenu($sidemenu);
     $p->display();
 
@@ -91,9 +91,7 @@ $description  = isset($_GET['$description']) ? $_GET['$description'] : $_POST['$
 
     echo "<div style = 'text-align: center;'>
     <hr>";
-    echo 'Custom command <span>"'.$namecmd.'"</span> for <span>'.$os .'</span> machine<br><br>';
-
-    echo'<span id="descrip"></span><br><br>
+    echo'<br><br>
             <select id="select">';
             foreach($qacomand['command'] as $tabblecommand){
                 if ($namecmd == $tabblecommand['namecmd']){
@@ -122,14 +120,8 @@ echo'
         <input  type="hidden" value="'.$os.'" name="os"/>
         <input  type="hidden" value="'.$user.'" name="user"/>
         <input  type="hidden" value="'.$description.'" name="description"/>
-        <input  id="command1" type="text" value="'.$cmdsend.'" name="command"/>
-    
-    
-    <div width="70%" style = "text-align: center;">
-    <hr>
-        Shell command : <pre id="command">'.$cmdsend.'</pre>
-    </div>
-    <hr>
+        <input  id="command1" type="hidden" value="'.$cmdsend.'" name="command"/>
+
     <div width="70%" style = "text-align: center;">
         <input type="submit" name="bvalid" value="Confirm" class="btnPrimary"  />
     </div>
@@ -138,7 +130,7 @@ echo'
        <span>Command result :</span><span id="cmdsendshow">'.$cmdsend.'</span>
     <textarea name="result" id="result" rows="6" cols="190"  />'.$result['data']['result'].'</textarea>
 <br>
-<span>Code Return : '.$result['ret'].'</span></div>
+<span>Return code : '.$result['ret'].'</span></div>
 </form>
 ';
 
@@ -152,8 +144,6 @@ echo'
         echo"
         jQuery(function() {
             var t = jQuery('#select option:selected').text();
-            jQuery('#descrip').text(myObject[t].description);
-
             jQuery('#namecmd').val(t);
             jQuery('#customcmd').val(myObject[t].customcmd);
             jQuery('#description').val(myObject[t].description);
@@ -170,7 +160,6 @@ echo'
 
         jQuery('#select').on('change', function() {
             var t = jQuery('#select option:selected').text();
-            jQuery('#descrip').text(myObject[t].description);
             jQuery('#namecmd').val(t);
             jQuery('#customcmd').val(myObject[t].customcmd);
             jQuery('#description').val(myObject[t].description);

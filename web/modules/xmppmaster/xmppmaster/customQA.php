@@ -35,17 +35,14 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
     }
 
     $ajax = new AjaxFilter(urlStrRedirect("xmppmaster/xmppmaster/ajaxFiltercustom"));
-    $p = new PageGenerator(sprintf (_T("List Quick Action user : %s", 'xmppmaster'),$_SESSION['login']));
+    $p = new PageGenerator(sprintf (_T("Quick action list for user %s", 'xmppmaster'),$_SESSION['login']));
     $p->setSideMenu($sidemenu);
     $p->display();
 
     $f = new ValidatingForm(array());
     echo "<br><br>";
-    echo "<h2>";
-    echo "Create New Custom Quick Action";
-    echo "</h2>";
     $f->add(new HiddenTpl("editcreate"), array("value" => "createqa", "hide" => True));
-    $f->addValidateButton("bcreate");
+    $f->addButton("bcreate", _T("Create new Quick Action", "xmppmaster"));
     $f->display();
 $ajax->display();
 $ajax->displayDivToUpdate();

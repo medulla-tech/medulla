@@ -125,8 +125,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                                     };
                         echo'</select>
                     </td>
-                    <td><span id="descrip"> </span></td>
-                    <td><input id="buttoncmd" class="btn btn-primary" type=button value="Send custon Quick command"></td>';
+                    <td><input id="buttoncmd" class="btn btn-primary" type=button value="Send custom command"></td>';
                     echo '</tr>';
                 echo "</table>";
                 echo "<form name id ='formcmdcustom' ='qcmd' action='main.php' method='GET' >";
@@ -165,8 +164,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         echo"
         jQuery(function() {
             var t = jQuery('#select option:selected').text();
-            jQuery('#descrip').text(myObject[t].description);
-
             jQuery('#namecmd').val(t);
             jQuery('#customcmd').val(myObject[t].customcmd);
             jQuery('#description').val(myObject[t].description);
@@ -180,7 +177,6 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
 
         jQuery('#select').on('change', function() {
             var t = jQuery('#select option:selected').text();
-            jQuery('#descrip').text(myObject[t].description);
             jQuery('#namecmd').val(t);
             jQuery('#customcmd').val(myObject[t].customcmd);
             jQuery('#description').val(myObject[t].description);
