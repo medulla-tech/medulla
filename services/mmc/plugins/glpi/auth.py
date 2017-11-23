@@ -50,8 +50,8 @@ class GlpiAuthenticatorConfig(AuthenticatorConfig):
     def setDefault(self):
         AuthenticatorConfig.setDefault(self)
         self.loginpage = "index.php"
-        self.loginpost = "login.php"
-        self.match = "window.location='.*/front/central.php'"
+        self.loginpost = "front/login.php"
+        self.match = "window.location='.*/front/central.php'|window.location='.*/front/helpdesk.public.php'"
         self.doauth = True
 
 class GlpiAuthenticator(AuthenticatorI):
@@ -70,7 +70,7 @@ class GlpiAuthenticator(AuthenticatorI):
         phpsessid = value.response_headers["set-cookie"][0].split("=")
         params = { "method" : "POST", "cookies" : { phpsessid[0] : phpsessid[1]},
                    "headers": {"Content-Type": "application/x-www-form-urlencoded", "Referer" : urlparse.urljoin(self.config.baseurl, self.config.loginpage)},
-                   "postdata" : urllib.urlencode({"login_name" : self.user, "login_password" : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
+                   "postdata" : urllib.urlencode({value.login_namename : self.user, value.login_passwordname : self.password, "_glpi_csrf_token" : value.glpi_csrf_token})}
         return params
 
     def _cbLoginPost(self, params):
@@ -113,9 +113,18 @@ class HTTPClientFactoryWithHeader(HTTPClientFactory):
         # grabbing the GLPI anti-csrf token (GLPI 0.83.3+) by
         # looking for such patterns :
         # <input type='hidden' name='_glpi_csrf_token' value='82d37af7f30d76f2238d49c28167654f'>
-        m = re.search("<input type='hidden' name='_glpi_csrf_token' value='([0-9a-z]{32})'>", page)
+        m = re.search('input type="hidden" name="_glpi_csrf_token" value="([0-9a-z]{32})">', page)
         if m is not None:
             self.glpi_csrf_token = m.group(1)
+
+        m = re.search('input type="password" name="([0-9a-z]{19})" id="login_password"', page)
+        if m is not None:
+            self.login_passwordname =  m.group(1)
+
+        m = re.search('input type="text" name="([0-9a-z]{19})" id="login_name"', page)
+        if m is not None:
+            self.login_namename =  m.group(1)
+
         if self.waiting:
             self.waiting = 0
             self.deferred.callback(self)
