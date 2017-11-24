@@ -391,7 +391,7 @@ if(isExpertMode())
     $methodtransfer = new SelectItem('methodetransfert');
     $methodtransfer->setElements(['pushrsync','pullcurl']);
     $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
-    $f->add(new TrFormElement(_T('Method transfer','pkgs'),$methodtransfer),['value'=>'']);
+    $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer),['value'=>'']);
 
     $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
 
@@ -432,7 +432,7 @@ if(isExpertMode())
             </td>
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
-                    <h3>List of aviable dependencies</h3>
+                    <h3>Available dependencies</h3>
                     <select multiple size="15" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
