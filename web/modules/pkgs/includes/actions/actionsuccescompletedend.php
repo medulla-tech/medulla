@@ -34,7 +34,7 @@ $lab = "END_SUCCESS";
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Package clear
+                                }" />Delete package
                 </td>
                 <td width="25%">
                     <select name="clear">
@@ -51,7 +51,7 @@ $lab = "END_SUCCESS";
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Package clear
+                                }" />Delete package
                     </td>
                     <td width="25%">
                          <select name="clear" disabled>

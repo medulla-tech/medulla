@@ -1,4 +1,4 @@
-<?php 
+<?php
 extract($_POST);
 /*
 
@@ -9,7 +9,7 @@ descriptor type
                        "waiting" : 60,
                        "goto" : 7
         }
-        
+
 echo "<pre>";
     print_r( $_POST );
 echo "</pre>";*/
@@ -17,7 +17,7 @@ $waiting =  (isset($waiting))? $waiting : 10;
 $goto =  (isset($goto))? $goto : "END_SUCCESS";
 ?>
 <div class="header">
-    <h1>waiting and goto step</h1>
+    <h1>Wait and go to step</h1>
 </div>
 <div class="content">
     <div>
@@ -26,7 +26,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
         <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
-            <th width="16%">step label:</th>
+            <th width="16%">Step label:</th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
             </th>
@@ -37,7 +37,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
             <?php
                 echo '
                 <td>
-                    waiting
+                    Wait for (seconds)
                 </td>
                 <td>
                     <input " type="number" min="1" value="'.$waiting.'" name="waiting"  />
@@ -45,7 +45,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
             ?>
         </tr>
         <tr>
-        
+
         <?php
            if(isset($goto))
             {
@@ -64,13 +64,13 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                                }" />goto
+                                }" />Go to step
                     </td>
                     <td width="25%">
                          <input type="text" min="0" value="END_SUCCESS" name="goto"  />
@@ -79,9 +79,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
             ?><td></td>
             <td></td>
         </tr>
-        
-        
-        
+
     </table>
         <!-- Option timeout -->
     </div>

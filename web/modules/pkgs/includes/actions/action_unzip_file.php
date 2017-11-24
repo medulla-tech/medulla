@@ -1,4 +1,4 @@
-<?php 
+<?php
 extract($_POST);
 /*
 
@@ -38,7 +38,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
         <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
-            <th width="16%">step label:</th>
+            <th width="16%">Step label:</th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
             </th>
@@ -58,15 +58,15 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
         <tr>
             <?php
         $resultlist = array(
-                            array('label' => 'the 10 first lines result','value' => "10@firstlines"),
-                            array('label' => 'the 20 first lines','value' => "20@firstlines"),
-                            array('label' => 'the 30 first lines','value' => "30@firstlines"),
-                            array('label' => 'conplet result ','value' => "@resultcommand"),
-                            array('label' => 'the 10 last lines result','value' => "10@lastlines"),
-                            array('label' => 'the 20 last lines result','value' => "20@lastlines"),
-                            array('label' => 'the 30 last lines result','value' => "30@lastlines"),
-                            array('label' => 'the 2 last lines result','value' => "2@lastlines"),
-                            array('label' => 'the last line result','value' => "1@lastlines"),
+                            array('label' => '10 first lines of result','value' => "10@firstlines"),
+                            array('label' => '20 first lines of result','value' => "20@firstlines"),
+                            array('label' => '30 first lines of result','value' => "30@firstlines"),
+                            array('label' => 'Complete results','value' => "@resultcommand"),
+                            array('label' => '10 last lines of result','value' => "10@lastlines"),
+                            array('label' => '20 last lines of result','value' => "20@lastlines"),
+                            array('label' => '30 last lines of result','value' => "30@lastlines"),
+                            array('label' => '20 last lines of result','value' => "2@lastlines"),
+                            array('label' => 'The last line of result','value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -112,9 +112,9 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Result
+                                                        }" />Return result
             </td>
-            <td> 
+            <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
             </td>
             <td></td><td></td>
@@ -129,12 +129,12 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Result
+                                                }" />Return result
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
                 name="1@lastlines">'.$options.'</select>
-            </td> 
+            </td>
             <td></td><td></td>';
         }
         ?>
@@ -153,7 +153,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />path directory to unzip
+                    }" />Unzip to specified folder
                 </td>
                 <td>
                     <input " type="text"  value="'.$pathdirectorytounzip.'" name="pathdirectorytounzip"  />
@@ -168,7 +168,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />path directory to unzip
+                    }" />Unzip to specified folder
                 </td>
                 <td>
                     <input type="text" value="" disabled name="pathdirectorytounzip"  />
@@ -187,7 +187,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                                }" />goto
+                                }" />Go to step
                 </td>
                 <td width="25%">
                     <input type="text"  value="'.$goto.'" name="goto"  />
@@ -195,13 +195,13 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
             }
             else{
                 echo '<td width="16%">
-                    <input type="checkbox" 
+                    <input type="checkbox"
                         onclick="if(jQuery(this).is(\':checked\')){
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',false);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                                }" />goto
+                                }" />Go to step
                     </td>
                     <td width="25%">
                          <input type="text" disabled value="" name="goto"  />
@@ -209,9 +209,9 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
             }
             ?>
         </tr>
-        
-        
-        
+
+
+
         <tr>
            <?php
             if(isset($success))
@@ -224,7 +224,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Success Process
+                    }" />On success go to step
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -239,7 +239,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Success Process
+                    }" />On success go to step
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -259,7 +259,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Error Process
+                    }" />On error go to step
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -274,7 +274,7 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Error Process
+                    }" />On error go to step
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" disabled name="error"  />

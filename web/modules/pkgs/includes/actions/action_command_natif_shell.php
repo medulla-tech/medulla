@@ -1,4 +1,4 @@
-<?php 
+<?php
 extract($_POST);
 /*
 echo "<pre>";
@@ -6,7 +6,7 @@ echo "<pre>";
 echo "</pre>";*/
 ?>
 <div class="header">
-    <h1>Rum Command in shell</h1>
+    <h1>Run Command in shell</h1>
 </div>
 <div class="content">
 
@@ -16,7 +16,7 @@ echo "</pre>";*/
         <input type="hidden" name="codereturn" value=""/>
     <table>
         <tr>
-            <th>step label:</th>
+            <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
             <th rowspan="6">
                 Command<br>
@@ -34,7 +34,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Timeout
+                    }" />Set timeout
                 </td>
                 <td>
                     <input " type="number" min="0" value="'.$timeout.'" name="timeout"  />
@@ -49,7 +49,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Timeout
+                    }" />Set timeout
                 </td>
                 <td>
                     <input type="number" min="0" value="10" disabled name="timeout"  />
@@ -66,15 +66,15 @@ echo "</pre>";*/
         <tr>
             <?php
         $resultlist = array(
-                            array('label' => 'the 10 first lines result','value' => "10@firstlines"),
-                            array('label' => 'the 20 first lines','value' => "20@firstlines"),
-                            array('label' => 'the 30 first lines','value' => "30@firstlines"),
-                            array('label' => 'conplet result ','value' => "@resultcommand"),
-                            array('label' => 'the 10 last lines result','value' => "10@lastlines"),
-                            array('label' => 'the 20 last lines result','value' => "20@lastlines"),
-                            array('label' => 'the 30 last lines result','value' => "30@lastlines"),
-                            array('label' => 'the 2 last lines result','value' => "2@lastlines"),
-                            array('label' => 'the last line result','value' => "1@lastlines"),
+                            array('label' => '10 first lines of result','value' => "10@firstlines"),
+                            array('label' => '20 first lines of result','value' => "20@firstlines"),
+                            array('label' => '30 first lines of result','value' => "30@firstlines"),
+                            array('label' => 'Complete results','value' => "@resultcommand"),
+                            array('label' => '10 last lines of result','value' => "10@lastlines"),
+                            array('label' => '20 last lines of result','value' => "20@lastlines"),
+                            array('label' => '30 last lines of result','value' => "30@lastlines"),
+                            array('label' => '20 last lines of result','value' => "2@lastlines"),
+                            array('label' => 'The last line of result','value' => "1@lastlines"),
         );
         $posibleresultname = array(
                                     "10@firstlines",
@@ -120,9 +120,9 @@ echo "</pre>";*/
                                                         }
                                                         else{
                                                             jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                        }" />Result
+                                                        }" />Return result
             </td>
-            <td> 
+            <td>
                 <select  onchange="jQuery(this).attr(\'name\',jQuery(this).val());" name="'.$selectresult.'">'.$options.'</select>
             </td>';
 
@@ -135,7 +135,7 @@ echo "</pre>";*/
                                                 }
                                                 else{
                                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                                }" />Result
+                                                }" />Return result
             </td>
             <td>
             <select disabled onchange="jQuery(this).attr(\'name\',jQuery(this).val());"
@@ -156,7 +156,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Success Process
+                    }" />On success go to step
                 </td>
                 <td>
                     <input " type="text"  value="'.$success.'" name="success"  />
@@ -171,7 +171,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Success Process
+                    }" />On success go to step
                 </td>
                 <td>
                     <input type="text" value="END_SUCCESS" disabled name="success"  />
@@ -191,7 +191,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Error Process
+                    }" />On error go to step
                 </td>
                 <td>
                     <input " type="text"  value="'.$error.'" name="error"  />
@@ -206,7 +206,7 @@ echo "</pre>";*/
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />Error Process
+                    }" />On error go to step
                 </td>
                 <td>
                     <input type="text" value="END_ERROR" disabled name="error"  />

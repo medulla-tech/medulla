@@ -46,7 +46,7 @@ extract($_POST);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Package uuid
+                                }" />Alternate package
                 </td>
                 <td width="25%">
                     <select name="packageuuid">'.$options.'</select>
@@ -60,7 +60,7 @@ extract($_POST);
                                 }
                                 else{
                                     jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
-                                }" />Package uuid
+                                }" />Alternate package
                     </td>
                     <td width="25%">
                         <select disabled name="packageuuid">'.$options.'</select>
