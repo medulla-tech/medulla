@@ -22,7 +22,7 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         echo'
             <table>
                 <tr>
-                    <th width="16%">step label : </th>
+                    <th width="16%">Step label : </th>
                     <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>';
                     echo'

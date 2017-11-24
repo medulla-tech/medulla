@@ -18,7 +18,7 @@ $lab = "END_SUCCESS";
         echo'
         <table>
             <tr>
-                <th width="16%">step label : </th>
+                <th width="16%">Step label : </th>
                 <th width="25%">'.$lab.'
                 <th></th>
                 <th></th>
