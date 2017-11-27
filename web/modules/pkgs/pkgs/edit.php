@@ -153,7 +153,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                                                     '',
                                                     "session user ".$_SESSION["login"],
                                                     'Packaging | List | Manual');
-                                
+
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -405,13 +405,13 @@ if(isExpertMode())
 
     $packagesInOptionAdded = '';
     $packagesInOptionNotAdded = '';
-    foreach(xmpp_packages_list() as $package)
+    foreach(xmpp_packages_list() as $xmpp_package)
     {
-        if(in_array($package['uuid'], $dependencies))
-            $packagesInOptionAdded .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+        if(in_array($xmpp_package['uuid'], $dependencies))
+            $packagesInOptionAdded .= '<option value="'.$xmpp_package['uuid'].'">'.$xmpp_package['name'].'</option>';
         else
-            if($_GET['packageUuid'] != $package['uuid'])
-                $packagesInOptionNotAdded .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+            if($_GET['packageUuid'] != $xmpp_package['uuid'])
+                $packagesInOptionNotAdded .= '<option value="'.$xmpp_package['uuid'].'">'.$xmpp_package['name'].'</option>';
     }
     $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
