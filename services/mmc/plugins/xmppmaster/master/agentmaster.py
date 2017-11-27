@@ -644,7 +644,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               data,
                                               datasession = None,
                                               encodebase64 = False)
-        
+
         self.xmpplog("Start deploy on machine %s"%jidmachine,
                 type = 'deploy',
                 sessionname = sessionid,
