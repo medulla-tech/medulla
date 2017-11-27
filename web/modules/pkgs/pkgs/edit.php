@@ -48,7 +48,6 @@ $package = array();
  */
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
 
-
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
     if ($_GET["action"] == "add") {
@@ -153,7 +152,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                                                     '',
                                                     "session user ".$_SESSION["login"],
                                                     'Packaging | List | Manual');
-
+                                
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -285,7 +284,6 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
 }
-
 if (count($package) == 0) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
@@ -295,6 +293,7 @@ if (count($package) == 0) {
     if ($package['do_reboot']) {
         $package['reboot'] = $package['do_reboot'];
     }
+
     $formElt = new HiddenTpl("id");
 
     $selectpapi = new HiddenTpl('p_api');
@@ -382,18 +381,39 @@ $f->add(
 
 if(isExpertMode())
 {
+    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+
+
+    if(isset($json['info']['transferfile']))
+    {
+        $setTransferfile = $json['info']['transferfile'];
+    }
+    else
+    {
+        $setTransferfile = 0;
+    }
 
     $transferfile = new SelectItem('transferfile');
     $transferfile->setElements(['True','False']);
     $transferfile->setElementsVal([1,0]);
-    $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile),['value'=>1]);
+    $transferfile->setSelected($setTransferfile);
+    $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile, ['trid'=>'trTransferfile']),['value'=>1]);
 
+
+    if(isset($json['info']['methodetransfert']))
+    {
+        $setmethodetransfert = $json['info']['methodetransfert'];
+    }
+    else
+    {
+        $setmethodetransfert = 'pushrsync';
+    }
     $methodtransfer = new SelectItem('methodetransfert');
     $methodtransfer->setElements(['pushrsync','pullcurl']);
     $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
-    $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer),['value'=>'']);
+    $methodtransfer->setSelected($setmethodetransfert);
 
-    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+    $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
 
     if(isset($json['info']['Dependency']))
     {
@@ -489,7 +509,6 @@ foreach ($package['files'] as $file) {
 }
 
 $count = count($names);
-
 $n = new OptimizedListInfos($names, _T('File', 'pkgs'));
 $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($sizes, _T("Size", "pkgs"));

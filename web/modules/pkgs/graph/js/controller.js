@@ -98,6 +98,23 @@ jQuery(function(){
     }
 });
 
+jQuery(function(){
+    if(jQuery("#transferfile").val() == "0")
+    {
+        //Disable the transfermethod select
+        jQuery("#methodetransfert").prop("disabled",true);
+    }
+    jQuery("#transferfile").on('change', function(){
+        if(jQuery("#transferfile").val() == '0')
+        {
+            //Disable the transfermethod select
+            jQuery("#methodetransfert").prop("disabled",true);
+        }
+        else{
+            jQuery("#methodetransfert").prop("disabled",false);
+        }
+    });
+});
 
 //Add selected dependencies into dependencies list of the json
 function moveToLeft()
@@ -234,7 +251,6 @@ function createJson()
 function getJSON()
 {
     jQuery("input[name='saveList']").val(JSON.stringify(createJson()));
-    console.log(jQuery("input[name='saveList']").val());
 }
 
 function getSequenceFromJSON(json)

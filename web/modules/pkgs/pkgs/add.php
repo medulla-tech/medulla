@@ -67,13 +67,13 @@ if (isset($_POST['bconfirm'])) {
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
-
+    $package_uuid = "";
     if(isset($_POST['saveList']))
     {
-
         $saveList = $_POST['saveList'];
         $saveList1 = clean_json($saveList);
-        $result = save_xmpp_json($ret[2],$saveList1);
+        $package_uuid = $ret[2];
+        $result = save_xmpp_json($package_uuid,$saveList1);
     }
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
@@ -131,6 +131,7 @@ if (isset($_POST['bconfirm'])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Packaging | List | Manual');
+                remove_xmpp_package($package_uuid);
             }
         } else {
             new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
@@ -240,12 +241,12 @@ if (isset($_POST['bconfirm'])) {
         $transferfile = new SelectItem('transferfile');
         $transferfile->setElements(['True','False']);
         $transferfile->setElementsVal([1,0]);
-        $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile),['value'=>1]);
+        $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile,['trid'=>'trTransferfile']),['value'=>1]);
 
         $methodtransfer = new SelectItem('methodetransfert');
         $methodtransfer->setElements(['pushrsync','pullcurl']);
         $methodtransfer->setElementsVal(['pushrsync','pullcurl']);
-        $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer),['value'=>'']);
+        $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)
@@ -310,6 +311,7 @@ if (isset($_POST['bconfirm'])) {
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
     $f->display();
 }
+
 ?>
 
 <script src="modules/pkgs/lib/fileuploader/fileuploader.js"
@@ -344,8 +346,39 @@ if (isset($_POST['bconfirm'])) {
                 success: function(data) {
                     jQuery('#version').val(data.version);
                     jQuery('#commandcmd').val(data.commandcmd);
+
                 }
             });
+
+            if(jQuery('input:checked[type="radio"][name="package-method"]').val() == 'upload' || 'package')
+            {
+
+                jQuery("#trTransferfile").show();
+                jQuery("#transferfile").prop('disabled',false);
+
+                if(jQuery("#transferfile").val() == "1")
+                {
+                    jQuery("#trTransfermethod").show();
+                    jQuery("#methodetransfert").prop('disabled',false);
+                }
+                jQuery("#transferfile").on("change",function(){
+                    if(jQuery(this).val() == "1")
+                    {
+                        jQuery("#methodetransfert").prop('disabled',false);
+                        jQuery("#trTransfermethod").show();
+
+                    }
+                    else
+                        jQuery("#methodetransfert").prop('disabled',true);
+                });
+            }
+            else
+            {
+                jQuery("#trTransferfile").hide();
+                jQuery("#transferfile").prop('disabled',true);
+                jQuery("#trTransfermethod").hide();
+                jQuery("#methodetransfert").prop('disabled',true);
+            }
         }
         /*
          * Refresh Package API tempdir content
@@ -391,7 +424,6 @@ if (isset($_POST['bconfirm'])) {
             selectedPapi = refreshTempPapi();
         });
 
-
         jQuery('input[name="package-method"]').click(function() {
 
             // display temp package or upload form
@@ -415,6 +447,11 @@ if (isset($_POST['bconfirm'])) {
                     }
                 }
                 jQuery('#directory-label').parent().parent().fadeOut();
+
+                jQuery("#trTransferfile").hide();
+                jQuery("#transferfile").prop("disabled",true);
+                jQuery("#trTransfermethod").hide();
+                jQuery("#methodetransfert").prop("disabled",true);
             }
             else if (selectedValue == "upload") {
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
@@ -423,7 +460,29 @@ if (isset($_POST['bconfirm'])) {
                 jQuery('#commandcmd').val("");
                 jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
                 jQuery('#directory-label').parent().parent().fadeIn();
+
+                jQuery("#trTransferfile").show();
+                jQuery("#transferfile").prop('disabled',false)
+                if(jQuery("#transferfile").val() == "1")
+                {
+                    jQuery("#trTransfermethod").show();
+                    jQuery("#methodetransfert").prop('disabled',false);
+                }
+                else
+                {
+                    jQuery("#methodetransfert").prop('disabled',true);
+                }
+                jQuery("#transferfile").on("change",function(){
+                    if(jQuery(this).val() == "1")
+                    {
+                        jQuery("#methodetransfert").prop('disabled',false);
+                        jQuery("#trTransfermethod").show();
+                    }
+                    else
+                        jQuery("#methodetransfert").prop('disabled',true);
+                });
             }
+
 
         });
     });
@@ -433,6 +492,7 @@ if (count($list) < 2) {
     echo <<< EOT
             // Hide package api field
             jQuery('#p_api').parents('tr:first').hide();
+
 EOT;
 }
 ?>
