@@ -18,9 +18,12 @@ echo "</pre>";*/
         <tr>
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
-            <th rowspan="6">
-                Command<br>
-                <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea></th>
+        </tr>
+        <tr>
+            <th>Command</th>
+            <th>
+              <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea>
+            </th>
         </tr>
         <tr>
             <?php
@@ -56,12 +59,6 @@ echo "</pre>";*/
                 </td>';
             }
             ?>
-        </tr>
-        <tr>
-            <td>
-            </td>
-            <td>
-            </td>
         </tr>
         <tr>
             <?php

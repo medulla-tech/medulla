@@ -24,7 +24,7 @@ $environstr = trim($environstr,",\n\r");
 ?>
 
 <div class="header">
-    <h1>Set Environ</h1>
+    <h1>Set Environment</h1>
 </div>
 <div class="content">
     <div>
@@ -40,9 +40,9 @@ $environstr = trim($environstr,",\n\r");
                     <th></th>
                 </tr>
                 <tr>
-                    <th width="16%">json environ varaible</th>
+                    <th width="16%">Environment variable</th>
                     <th width="25%">
-                        <?php 
+                        <?php
                         echo'<textarea title="eg : key1 :: value1,'."\n".'key1 :: value1" style="width:206px;height: 50px;" name="environ" cols="5" rows="5">'.$environstr.'</textarea>';
                         ?>
                     </th>
