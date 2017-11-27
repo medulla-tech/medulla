@@ -595,7 +595,6 @@ def _path_package():
     return os.path.join("/", "var", "lib", "pulse2", "packages")
 
 def save_xmpp_json(folder, json_content):
-    print type(json_content)
     structpackage = json.loads(json_content)
     keysupp = [ "actionlabel",
                 "p_api",

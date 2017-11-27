@@ -561,7 +561,8 @@ class XmppMasterDatabase(DatabaseHelper):
         """
         this function is used to determine the state of the deployment when the deployemnet is scheduled and scheduler
         """
-        nowtime = datetime.utcnow()
+        #nowtime = datetime.utcnow()
+        nowtime = datetime.now()
         try:
             result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
             deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).limit(1).one()

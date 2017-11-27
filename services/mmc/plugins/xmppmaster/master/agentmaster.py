@@ -1474,9 +1474,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return False
 
     def message(self, msg):
-        print "*******MESSAGE %s" %msg['from']
-        print msg['body']
-        logger.debug("message")
+        logger.debug("*******MESSAGE %s" %msg['from'])
+        #logger.debug(msg['body'])
         if  msg['body'] == "This room is not anonymous":
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:
