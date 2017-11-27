@@ -52,7 +52,7 @@ def activate():
     DM.register_panel(PluginsPanel("plugins"))
     DM.register_panel(PluginsPanel("computersOnline"))
     DM.register_panel(PluginsPanel("backup"))
-    DM.register_panel(PluginsPanel("pulseupdates"))
+    DM.register_panel(PluginsPanel("product_updates"))
     return True
 
 # XML-RPC methods
