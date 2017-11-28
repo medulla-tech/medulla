@@ -28,8 +28,9 @@
  *
  */
 jQuery(function(){
+    var os = createInfo()
     jQuery.each(actionsList, function(id, actionName){
-        jQuery("#available-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php"));
+        jQuery("#available-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+actionName+".php", {os : os['targetos']}));
     });
 })
 
