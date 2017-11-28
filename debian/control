@@ -104,7 +104,7 @@ Description: Xmpp mmc module
 Package: python-mmc-update
 Architecture: all
 Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), pulse-update-manager
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common, pulse-update-manager
 Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
@@ -114,7 +114,7 @@ Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
 
 Package: mmc-web-update
 Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Depends: ${misc:Depends}, pulse2-common, mmc-web-base (>= 3.1.1-1)
 Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
  Pulse 2 is Open Source computer system management for medium and large
  organizations.
