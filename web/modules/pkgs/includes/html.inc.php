@@ -75,6 +75,7 @@ class MultiFileTpl extends AbstractTpl {
                             var googleFileName = \'\';
                             jQuery(\'#version\').val(data.version);
                             jQuery(\'#commandcmd\').val(data.commandcmd);
+                            jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/actionprocessscript.php",{"command":data.commandcmd}));
                             jQuery(\'.qq-upload-file\').each(function() {
                                 googleFileName = jQuery(this).text();
                                 return false;
