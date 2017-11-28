@@ -1,4 +1,19 @@
 <?php
+
+/*
+    creation action actionprocessscriptfile
+                "step": intnb,
+                "action": "actionprocessscriptfile",
+                "typescript": "",
+                "script" :  "",
+                "suffix" : "",
+                "bang" : "",
+                "codereturn": "",
+                "timeout": 900,
+                "error": 5,
+                "success": 3,
+                "@resultcommand": ""
+*/
 extract($_POST);
 // echo "<pre>";
 //     print_r( $os );
@@ -27,32 +42,34 @@ extract($_POST);
         echo "<tr>";
         $options = "";
         $boolselected = false;
-       
             $selectedbyscript = array(
                                         array(
-                                            "label" => 'natif bash', 
-                                            "value" => "bach"),
+                                            "label" => 'Script Python', 
+                                            "value" => "python"),
                                             array(
-                                            "label" => 'other', 
-                                            "value" => ""),
-            );
-        /*
-                "step": intnb,
-                "action": "actionprocessscriptfile",
-                "typescript": "",
-                "script" :  "",
-                "suffix" : "",
-                "bang" : "",
-                "codereturn": "",
-                "timeout": 900,
-                "error": 5,
-                "success": 3,
-                "@resultcommand": ""
-        }*/
+                                            "label" => 'Visual Basic Script WINDOWS', 
+                                            "value" => "visualbasicscript"),
+                                            array(
+                                            "label" => 'Script DOS WINDOWS', 
+                                            "value" => "Batch"),
+                                            array(
+                                            "label" => 'Script Power Shell WINDOWS', 
+                                            "value" => "powershell"),
+                                            array(
+                                            "label" => 'Script Unix Korn Shell', 
+                                            "value" => "unixKornshell"),
+                                            array(
+                                            "label" => 'script bash linux', 
+                                            "value" => "Batch"),
+                                            array(
+                                            "label" => 'Unix C Shell', 
+                                            "value" => "unixCshell")
+        );
 
+      
         foreach($selectedbyscript as $val)
         {
-            if(isset($typescript) && $typescript == $val['val'])
+            if(isset($typescript) && $typescript == $val['value'])
             {
                 $options .= "<option value='".$typescript."' selected>".$val['label']."</option>";
             }
@@ -61,23 +78,13 @@ extract($_POST);
         }
        echo '<tr>
              ';
-            if(isset($typescript))
-            {
+            
                 echo '<td width="16%">
                     type script
                 </td>
                 <td width="25%">
                     <select name="typescript">'.$options.'</select>
                 </td>';
-            }
-            else{
-                echo '<td width="16%">
-                    type script
-                    </td>
-                    <td width="25%">
-                        <select disabled name="typescript">'.$options.'</select>
-                    </td>';
-            }
         echo "</tr>";
     ?>
 
