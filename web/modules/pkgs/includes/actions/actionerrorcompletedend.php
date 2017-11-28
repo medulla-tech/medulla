@@ -4,7 +4,7 @@ $lab = "END_ERROR";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>End Error</h1>
+    <h1 style ="color:#FE642E">End Error</h1>
 </div>
 
 <div class="content">

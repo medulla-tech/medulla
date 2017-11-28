@@ -3,7 +3,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1>Restart</h1>
+    <h1 style ="color:#00FF00">Restart</h1>
 </div>
 
 <div class="content">

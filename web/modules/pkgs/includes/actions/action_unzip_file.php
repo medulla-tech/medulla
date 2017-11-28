@@ -29,7 +29,7 @@ $waiting =  (isset($waiting))? $waiting : 10;/*
 $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
 ?>
 <div class="header">
-    <h1>Unzip File</h1>
+    <h1 style ="color: #FFFF00">Unzip File</h1>
 </div>
 <div class="content">
     <div>

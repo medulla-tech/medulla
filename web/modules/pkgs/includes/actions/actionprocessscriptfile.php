@@ -20,7 +20,7 @@ extract($_POST);
 // echo "</pre>";
 ?>
 <div class="header">
-    <h1>Execute script</h1>
+    <h1 style ="color:#0040FF">Execute script</h1>
 </div>
 <div class="content">
     <div>
