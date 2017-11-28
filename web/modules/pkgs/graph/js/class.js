@@ -59,17 +59,23 @@ var action = jQuery('select[name="action"]').val();
  *
  */
 var actionsList = [
-    'action_pwd_package',
-    'actionrestartbot',
-    'actionwaitandgoto',
-    'action_unzip_file',
     'actionprocessscript',
-    //'actionconfirm',
-    'actionrestart',
-    'actioncleaning',
-    'action_no_operation',
+    'actionprocessscriptfile',
+    'action_command_natif_shell',
+
     'action_set_environ',
+
+    'actionrestartbot',
+    'actionrestart',
+
+    'actionwaitandgoto',
+    'action_no_operation',
     'action_comment',
+
+    'action_unzip_file',
+    //'actionconfirm',
+    'action_pwd_package',
+    'actioncleaning', 
 ];
 /**
  *
