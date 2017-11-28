@@ -18,7 +18,7 @@ extract($_POST);
         echo'
         <table>
             <tr>
-                <th width="16%">step label : </th>
+                <th width="16%">Step label : </th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
                 <th></th>
@@ -31,23 +31,23 @@ extract($_POST);
                 </td>
                 <td width="25%">
                 <textarea name="comment" cols="5" rows="2">';
-                echo (isset($comment)) ? $comment : "jid AMR : @@@JID_MASTER@@@[@@@IP_MASTER@@@]
-jid ARS : @@@JID_RELAYSERVER@@@[@@@IP_RELAYSERVER@@@]
-jid AM  : @@@JID_MACHINE@@@[@@@IP_MACHINE@@@]
-nom du package : @@@PACKAGE_NAME@@@
-session de deployement : @@@SESSION_ID@@@
-hostname : @@@HOSTNAME@@@
-python implentation : @@@PYTHON_IMPLEMENTATION@@@
-architecture machine : @@@ARCHI_MACHINE@@@
-os family : @@@OS_FAMILY@@@
-os complet name :   @@@OS_COMPLET_NAME@@@
-uuid package : @@@UUID_PACKAGE@@@
-folder package : @@@PACKAGE_DIRECTORY_ABS_MACHINE@@@
-list interface network :@@@LIST_INTERFACE_NET@@@
-list adress mac : @@@LIST_MAC_ADRESS@@@
-list ip adress : @@@LIST_IP_ADRESS@@@
-ip xmpp machine : @@@IP_MACHINE_XMPP@@@
-tmp dir machine : @@@TMP_DIR@@@
+                echo (isset($comment)) ? $comment : "JID AMR : @@@JID_MASTER@@@[@@@IP_MASTER@@@]
+JID ARS : @@@JID_RELAYSERVER@@@[@@@IP_RELAYSERVER@@@]
+JID AM  : @@@JID_MACHINE@@@[@@@IP_MACHINE@@@]
+Package name : @@@PACKAGE_NAME@@@
+Deployement session id : @@@SESSION_ID@@@
+Hostname : @@@HOSTNAME@@@
+Python implentation : @@@PYTHON_IMPLEMENTATION@@@
+Machine architecture : @@@ARCHI_MACHINE@@@
+OS family : @@@OS_FAMILY@@@
+OS complete name :   @@@OS_COMPLET_NAME@@@
+Package UUID : @@@UUID_PACKAGE@@@
+Package folder : @@@PACKAGE_DIRECTORY_ABS_MACHINE@@@
+List of network interfaces :@@@LIST_INTERFACE_NET@@@
+List of MAC addresses : @@@LIST_MAC_ADRESS@@@
+list of IP addresses : @@@LIST_IP_ADRESS@@@
+Machine IP address connected to XMPP : @@@IP_MACHINE_XMPP@@@
+Machine tmp folder : @@@TMP_DIR@@@
 " ;
                 echo '</textarea>';
                 echo'
