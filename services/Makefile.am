@@ -20,4 +20,4 @@
 # Author(s):
 #   Jean Parpaillon <jparpaillon@mandriva.com>
 #
-SUBDIRS = mmc
+SUBDIRS = conf mmc
