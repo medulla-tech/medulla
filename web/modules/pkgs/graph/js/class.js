@@ -69,7 +69,6 @@ var actionsList = [
     'actioncleaning',
     'action_no_operation',
     'action_set_environ',
-    'action_command_natif_shell',
     'action_comment',
 ];
 /**
