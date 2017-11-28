@@ -146,7 +146,7 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
                                 $result['end_date'][2],
                                 $result['end_date'][0]);
         $end_date = date("Y-m-d H:i:s", $end_date);
-        echo "<h2>Please wait ( Deployement package ".$result['title']." Planned : [$start_date - $end_date ])</h2>";
+        echo "<h2>Please wait (".$result['title'].")</h2>";
         if(isset($info['objectdeploy'][0]['state']) &&
             (   $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT START" ||
                 $info['objectdeploy'][0]['state'] ==  "DEPLOYMENT DIFFERED")){
@@ -339,7 +339,7 @@ if(isset($info['objectdeploy'][0]['state']) && $info['objectdeploy'][0]['state']
         $res = str_replace ( "C:\\", "C:\\\\" ,$res);
         $res = explode ( "' , '" , $res);
         echo "<br>";
-        echo "<h2 class='replytab'>Hide Environnement</h2>";
+        echo "<h2 class='replytab'>Hide Environment</h2>";
         echo "<div>";
         echo '<table class="listinfos" cellspacing="0" cellpadding="2" border="1">';
         echo "<thead>";
