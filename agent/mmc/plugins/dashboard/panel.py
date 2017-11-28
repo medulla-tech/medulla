@@ -137,7 +137,7 @@ class ComputersOnlinePanel(Panel):
         """This method does nothing but needs to be implemented"""
         pass
     
-    class PulseUpdates(Panel):
+class PulseUpdates(Panel):
     """This class is called by the Backup widget from the dashboard"""
     def serialize(self):
         """This method does nothing but needs to be implemented"""
