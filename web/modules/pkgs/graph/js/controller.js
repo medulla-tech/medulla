@@ -217,7 +217,7 @@ function createInfo()
                         info[param['name']] = false;
                 }
 
-                else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd',
+                else if(jQuery.inArray(param['name'],['Dependency',"members[]",'environ','action','actionlabel','boolcnd','script','comment',
                     'codereturn','command','filename','goto','old_Qsoftware','old_Qvendor','old_Qversion','old_associateinventory',
                     'old_boolcnd','old_label', 'old_description','old_licenses','old_methodetransfert','old_p_api','old_package-method',
                     'old_pkgs','old_pkgs-title','old_targetos','old_version','p_api','random_dir','step','mode','waiting']) >= 0)
