@@ -61,7 +61,6 @@ var action = jQuery('select[name="action"]').val();
 var actionsList = [
     'actionprocessscript',
     'actionprocessscriptfile',
-    'action_command_natif_shell',
 
     'action_set_environ',
 
