@@ -514,10 +514,6 @@ class Common(pulse2.utils.Singleton):
         self.packages[pid].setRoot(confdir)
         conf_file = os.path.join(confdir, self.CONFFILE)
         descriptor_file = os.path.join(confdir, self.DESCRIPTORFILE)
-        if self.packages[pid].targetos == 'win':
-            deployment_script = os.path.join(confdir, 'xmppdeploy.bat')
-        else:
-            deployment_script = os.path.join(confdir, 'xmppdeploy.sh')
         conf_filetmp = conf_file + '.tmp'
         if not os.path.exists(confdir):
             os.mkdir(confdir)
@@ -594,10 +590,6 @@ class Common(pulse2.utils.Singleton):
             conf_data_xmppdeploy = self.parser.concat_xmppdeploy(self.packages[pid])
             f = open(descriptor_file, 'w+')
             f.write(conf_data_xmppdeploy)
-            f.close()
-            # Create xmpp deployment script
-            f = open(deployment_script, 'w+')
-            f.write(self.packages[pid].cmd.command)
             f.close()
 
             # Try Reading old conf for merge

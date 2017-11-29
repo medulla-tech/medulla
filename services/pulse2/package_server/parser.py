@@ -455,11 +455,9 @@ class PackageParserJSON:
 
         sequence = {}
         sequence['step'] = seq_count
-        sequence['action'] = 'actionprocessscript'
-        if package.targetos == 'win':
-            sequence['command'] = 'xmppdeploy.bat'
-        else:
-            sequence['command'] = 'xmppdeploy.sh'
+        sequence['action'] = 'actionprocessscriptfile'
+        sequence['script'] = package.cmd.command
+        sequence['typescript'] = 'Batch'
         sequence['codereturn'] = ''
         sequence['success'] = seq_count+1
         if package.reboot:

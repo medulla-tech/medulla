@@ -152,7 +152,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                                                     '',
                                                     "session user ".$_SESSION["login"],
                                                     'Packaging | List | Manual');
-                                
+
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -494,7 +494,7 @@ elseif ($papi_details['mountpoint'] == '/appstream')
 $pserver_base_url = $papi_details['protocol'] . '://' . $papi_details['server'] . ':' . $papi_details['port'] . '/' . $mirror . "_files/$pid/";
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json" || $file['name'] == "xmppdeploy.bat" || $file['name'] == "xmppdeploy.sh")
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
         continue;
     $names[] = sprintf('<a href="%s">%s</a>', $pserver_base_url . $file['name'] , $file['name']);
     $params[] = array(

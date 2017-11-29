@@ -703,9 +703,6 @@ def _save_xmpp_json(folder, json_content):
     xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
     json.dump(content,xmppdeploy,indent=4)
 
-    if os.path.isfile(os.path.join(folder,'xmppdeploy.bat')):
-        os.remove(folder+'/'+'xmppdeploy.bat')
-
     xmppdeploy.close()
     return True
 
