@@ -44,29 +44,29 @@ extract($_POST);
         $boolselected = false;
             $selectedbyscript = array(
                                         array(
-                                            "label" => 'Script Python', 
+                                            "label" => 'Python',
                                             "value" => "python"),
                                             array(
-                                            "label" => 'Visual Basic Script WINDOWS', 
+                                            "label" => 'Visual Basic Script (Windows)',
                                             "value" => "visualbasicscript"),
                                             array(
-                                            "label" => 'Script DOS WINDOWS', 
-                                            "value" => "Batch"),
+                                            "label" => 'Batch (Windows)',
+                                            "value" => "batch"),
                                             array(
-                                            "label" => 'Script Power Shell WINDOWS', 
+                                            "label" => 'Power Shell (Windows)',
                                             "value" => "powershell"),
                                             array(
-                                            "label" => 'Script Unix Korn Shell', 
+                                            "label" => 'Korn Shell (Linux & macOS)',
                                             "value" => "unixKornshell"),
                                             array(
-                                            "label" => 'script bash linux', 
-                                            "value" => "Batch"),
+                                            "label" => 'Bash (Linux & macOS)',
+                                            "value" => "bash"),
                                             array(
-                                            "label" => 'Unix C Shell', 
+                                            "label" => 'C Shell (Linux & macOS)',
                                             "value" => "unixCshell")
         );
 
-      
+
         foreach($selectedbyscript as $val)
         {
             if(isset($typescript) && $typescript == $val['value'])
@@ -78,9 +78,9 @@ extract($_POST);
         }
        echo '<tr>
              ';
-            
+
                 echo '<td width="16%">
-                    type script
+                    Script language
                 </td>
                 <td width="25%">
                     <select name="typescript">'.$options.'</select>
@@ -100,15 +100,13 @@ extract($_POST);
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />forced suffix script
+                    }" />Force suffix
                 </td>
                 <td>
-                    <input  type="text" 
-                           title=\'the "script type" property above applies a suffix to the script by default.
-but,
-    if this property is set,
-    the imposed suffix will be this one\' 
-                            value="'.$suffix.'" 
+                    <input  type="text"
+                           title=\'The "Script language" property above applies a suffix to the script by default.
+However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                            value="'.$suffix.'"
                             name="suffix"  />
                 </td><td></td><td></td>';
             }
@@ -121,15 +119,13 @@ but,
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />forced suffix script
+                    }" />Force suffix
                 </td>
                 <td>
-                    <input  type="text"  
-                            title=\'the "script type" property above applies a suffix to the script by default.
-but,
-    if this property is set,
-    the imposed suffix will be this one\' 
-                            value="" disabled 
+                    <input  type="text"
+                            title=\'The "Script language" property above applies a suffix to the script by default.
+ However, if the "Force suffix" property is set, the imposed suffix will be this one\'
+                            value="" disabled
                             name="suffix"  />
                 </td><td></td><td></td>';
             }
@@ -148,15 +144,13 @@ but,
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />forced bang script
+                    }" />Force hash-bang
                 </td>
                 <td>
-                    <input  type="text" 
-                            title=\'the "script type" property above applies a bang to the script by default.
-but,
-    if this property is set,
-    the imposed bang will be this one\' 
-                            value="'.$bang.'" 
+                    <input  type="text"
+                            title=\'The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            value="'.$bang.'"
                             name="bang"  />
                 </td><td></td><td></td>';
             }
@@ -169,15 +163,13 @@ but,
                     }
                     else{
                         jQuery(this).closest(\'td\').next().find(\'input\').prop(\'disabled\',true);
-                    }" />forced bang script
+                    }" />Force hash-bang
                 </td>
                 <td>
-                    <input  type="text"  
-                            title=\'the "script type" property above applies a bang to the script by default.
-but,
-    if this property is set,
-    the imposed bang will be this one\' 
-                            value="" disabled 
+                    <input  type="text"
+                            title=\'The "Script language" property above applies a hash-bang to the script by default.
+ However, if the "Force hash-bang" property is set, the imposed hash-bang will be this one\'
+                            value="" disabled
                             name="bang"  />
                 </td><td></td><td></td>';
             }
