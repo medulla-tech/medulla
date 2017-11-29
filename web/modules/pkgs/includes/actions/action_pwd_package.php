@@ -5,7 +5,7 @@ require_once("../../../../includes/xmlrpc.inc.php");
 extract($_POST);
 ?>
 <div class="header">
-    <h1 style ="color:#FE642E">Go to package folder</h1>
+    <h1>Go to package folder</h1>
 </div>
 
 <div class="content">

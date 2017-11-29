@@ -5,7 +5,7 @@ require_once("../../../../includes/xmlrpc.inc.php");
 extract($_POST);
 ?>
 <div class="header">
-    <h1 style ="color:#ECF6CE">User Comment</h1>
+    <h1>User Comment</h1>
 </div>
 
 <div class="content">

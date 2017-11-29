@@ -4,7 +4,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1 style ="color:#FE642E">Remove uploaded files</h1>
+    <h1>Remove uploaded files</h1>
 </div>
 
 <div class="content">

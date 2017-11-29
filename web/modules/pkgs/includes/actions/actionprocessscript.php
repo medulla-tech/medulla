@@ -6,7 +6,7 @@ echo "<pre>";
 echo "</pre>";*/
 ?>
 <div class="header">
-    <h1 style ="color:#0040FF">Run command</h1>
+    <h1>Run command</h1>
 </div>
 <div class="content">
 

@@ -4,7 +4,7 @@ $lab = "END_SUCCESS";
 // $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1 style ="color:#FE642E">End Success</h1>
+    <h1>End Success</h1>
 </div>
 
 <div class="content">

@@ -17,7 +17,7 @@ $waiting =  (isset($waiting))? $waiting : 10;
 $goto =  (isset($goto))? $goto : "END_SUCCESS";
 ?>
 <div class="header">
-    <h1 style ="color:#ECF6CE">Wait and go to step</h1>
+    <h1>Wait and go to step</h1>
 </div>
 <div class="content">
     <div>

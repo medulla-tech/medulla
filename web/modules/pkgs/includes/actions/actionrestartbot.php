@@ -11,7 +11,7 @@ extract($_POST);
 $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
-    <h1 style ="color:#00FF00">Restart Xmpp Agent</h1>
+    <h1>Restart Xmpp Agent</h1>
 </div>
 
 <div class="content">
