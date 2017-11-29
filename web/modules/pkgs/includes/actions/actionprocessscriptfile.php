@@ -45,7 +45,7 @@ extract($_POST);
                                             "value" => "visualbasicscript"),
                                             array(
                                             "label" => 'Batch (Windows)',
-                                            "value" => "batch"),
+                                            "value" => "Batch"),
                                             array(
                                             "label" => 'Power Shell (Windows)',
                                             "value" => "powershell"),
@@ -54,7 +54,7 @@ extract($_POST);
                                             "value" => "unixKornshell"),
                                             array(
                                             "label" => 'Bash (Linux & macOS)',
-                                            "value" => "bash"),
+                                            "value" => "Batch"),
                                             array(
                                             "label" => 'C Shell (Linux & macOS)',
                                             "value" => "unixCshell")
