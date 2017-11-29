@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com/
+ * (c) 2016 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -89,94 +90,63 @@ $size = array();
 $err = array();
 $desc = array();
 
-/*
- * Standard mode
- * -------------
- *
- * The standard mode is used by the old package server
- *
- */
-if(!isExpertMode()) {
-    $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
-    $count = $packages[0];
-    $packages = $packages[1];
-    foreach ($packages as $p) {
-        $p = $p[0];
-        if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
-            $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $p['mirror']);
-        } else {
-            $names[] = $p['label'];
-            $versions[] = $p['version'];
-            $desc[] = $p['description'];
-            // #### begin licenses ####
-            $tmp_licenses = '';
-            if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
-                $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
-                //lien vers creation groupe des machine avec licence.
-                $param = array();
-                $param['vendor'] = $p['Qvendor'];
-                $param['software'] = $p['Qsoftware'];
-                $param['version'] = $p['Qversion'];
-                $param['count'] = $licensescount;
-                $param['licencemax'] = $p['licenses'];
-                $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $param);
-                $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
-                    '<a href="' .
-                    $urlRedirect . '" title="Create group">' .
-                    $licensescount .
-                    '/' .
-                    $p['licenses'] .
-                    '</a></span>';
+$packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
-                if ($licensescount > $p['licenses']) { // highlights the exceeded license count
-                    $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
-                }
+$count = $packages[0];
+$packages = $packages[1];
+
+foreach ($packages as $p) {
+    $p = $p[0];
+
+    if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
+        $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $p['mirror']);
+    } else {
+        $uuid = $p['id'];
+        $names[] = $p['label'];
+        $versions[] = $p['version'];
+        $desc[] = $p['description'];
+        // #### begin licenses ####
+        $tmp_licenses = '';
+        if ($p['associateinventory'] == 1 && isset($p['licenses']) && !empty($p['licenses'])) {
+            $licensescount = getLicensesCount($p['Qvendor'], $p['Qsoftware'], $p['Qversion'])['count'];
+            //Link to the group creation for machines with licence.
+            $param = array();
+            $param['vendor'] = $p['Qvendor'];
+            $param['software'] = $p['Qsoftware'];
+            $param['version'] = $p['Qversion'];
+            $param['count'] = $licensescount;
+            $param['licencemax'] = $p['licenses'];
+            $urlRedirect = urlStrRedirect("pkgs/pkgs/createGroupLicence", $param);
+
+            $tmp_licenses = '<span style="border-width:1px;border-style:dotted; border-color:black; ">' .
+                '<a href="' .
+                $urlRedirect . '" title="Create group">' .
+                $licensescount .
+                '/' .
+                $p['licenses'] .
+                '</a></span>';
+
+            if ($licensescount > $p['licenses']) { // highlights the exceeded license count
+                $tmp_licenses = '<font color="FF0000">' . $tmp_licenses . '</font>';
             }
-            $licenses[] = $tmp_licenses;
-            // #### end licenses ####
-            $size[] = prettyOctetDisplay($p['size']);
-            $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
         }
+        $licenses[] = $tmp_licenses;
+        // #### end licenses ####
+        $size[] = prettyOctetDisplay($p['size']);
+        if(!isExpertMode())
+            $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
+        else
+            $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']),'packageUuid' => $p['id']);
     }
 }
 
-/*
-* Expert mode
-* -------------
-*
-* The expert mode is used by the xmpp package server
-*
-*/
-else
-{
-    // 1 - Get the list of xmpp packages
-    $packages = xmpp_packages_list();
-
-    $count = count($packages);
-    // 2 - For each package, extract information
-    foreach($packages as $package)
-    {
-        // 3 - Load the appropriate information into each array
-        $names[] = $package['name'];
-        if(isset($package['version']))
-            $versions[] = $package['version'];
-        $licenses[] = "";
-        $size[] = "";
-        $desc[] = $package['description'];
-        $err = false;
-
-        // This array contains the URI parameters for each entry
-        $package_name = $package['uuid'];
-        $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($package_name),'packageUuid' => $package_name);
-    }
-}
 echo "<br>";
 if ($err) {
     new NotifyWidgetFailure(implode('<br/>', array_merge($err, array(_T("Please contact your administrator.", "pkgs")))));
 }
 
-// 4 - Display the list
+// Display the list
 $n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
 $n->setCssClass("package");
 $n->disableFirstColumnActionLink();

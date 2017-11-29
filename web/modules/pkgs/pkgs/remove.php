@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2016 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -26,119 +27,53 @@ require_once("modules/pkgs/includes/xmlrpc.php");
 require_once("modules/msc/includes/commands_xmlrpc.inc.php");
 
 
-if(!isExpertMode()) {
-    if (isset($_POST["bconfirm"])) {
-
-        $p_api = $_GET["p_api"];
-        $pid = $_GET["pid"];
-        $from = $_GET["from"];
-        $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
-        $expire_result = expire_all_package_commands($ret);
-
-        // ICI
-        if (!isXMLRPCError() and $ret != -1) {
-            $str = _T("The package has been deleted.", "pkgs");
-            new NotifyWidgetSuccess($str);
-            xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $_GET["from"],
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Remove | Package | Manual');
-        }
-        if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
-        $to = "index";
-        if ($from) {
-            $to = $from;
-        }
-        header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
-        exit;
-
-    } else {
-        $p_api = $_GET["p_api"];
-        $pid = $_GET["pid"];
-        $from = $_GET["from"];
-        $f = new PopupForm(_T("Delete this package"));
-        $hidden = new HiddenTpl("p_api");
-        $f->add($hidden, array("value" => $p_api, "hide" => True));
-        $hidden = new HiddenTpl("pid");
-        $f->add($hidden, array("value" => $pid, "hide" => True));
-        $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
-        $f->addValidateButton("bconfirm");
-        $f->addCancelButton("bback");
-        $f->display();
-    }
-}
-
-//If delete package action in expert mode
-else
-{
-    //If the deletion is confirmed
-    if (isset($_POST["bconfirm"])) {
-
+if (isset($_POST["bconfirm"])) {
+    $p_api = $_GET["p_api"];
+    $pid = $_GET["pid"];
+    $from = $_GET["from"];
+    if(isExpertMode()) {
         $uuid = $_GET["packageUuid"];
-        $name = $_GET['packageName'];
-        //Then delete the package
         $return = remove_xmpp_package($uuid);
-
-        //$ret = dropPackage(base64_decode($p_api), base64_decode($pid));
-        //$expire_result = expire_all_package_commands($ret);
-        if (!isXMLRPCError() and $return != false) {
-            $str = _T("The package ".$name." has been deleted.", "pkgs");
-            new NotifyWidgetSuccess($str);
-            xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $name,
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Remove | Manual');
-        }
-        if ($return == false) {
-            $str = _T("The package failed to delete"." ".$name, "pkgs");
-            new NotifyWidgetFailure($str);
-            xmlrpc_setfrompkgslogxmpp( $str,
-                                        "PKG",
-                                        '',
-                                        0,
-                                        $name,
-                                        'Manuel',
-                                        '',
-                                        '',
-                                        '',
-                                        "session user ".$_SESSION["login"],
-                                        'Packaging | Remove | Manual');
-        }
-        $to = "index";
-        if ($from) {
-            $to = $from;
-        }
-        header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
-        exit;
-
     }
-    // Else show the form popup
-    else {
-        $packageUuid = $_GET["packageUuid"];
-        $packageName = $_GET["packageName"];
-        $f = new PopupForm(_T("Delete the package ".$packageName));
-        $hidden = new HiddenTpl("packageUuid");
-        $f->add($hidden, array("value" => $packageUuid, "hide" => True));
-        $hidden = new HiddenTpl("packageName");
-        $f->add($hidden, array("value" => $packageName, "hide" => True));
-        $f->addValidateButton("bconfirm");
-        $f->addCancelButton("bback");
-        $f->display();
+    $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
+    $expire_result = expire_all_package_commands($ret);
+
+    // ICI
+    if (!isXMLRPCError() and $ret != -1) {
+        $str = _T("The package has been deleted.", "pkgs");
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_GET["from"],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Package | Manual');
     }
+    if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
+    $to = "index";
+    if ($from) {
+        $to = $from;
+    }
+    header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
+    exit;
+
+} else {
+    $p_api = $_GET["p_api"];
+    $pid = $_GET["pid"];
+    $from = $_GET["from"];
+    $f = new PopupForm(_T("Delete this package"));
+    $hidden = new HiddenTpl("p_api");
+    $f->add($hidden, array("value" => $p_api, "hide" => True));
+    $hidden = new HiddenTpl("pid");
+    $f->add($hidden, array("value" => $pid, "hide" => True));
+    $f->add(new HiddenTpl("from"), array("value" => $from, "hide" => True));
+    $f->addValidateButton("bconfirm");
+    $f->addCancelButton("bback");
+    $f->display();
 }
-
 ?>
