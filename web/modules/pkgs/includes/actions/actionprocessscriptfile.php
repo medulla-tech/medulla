@@ -32,12 +32,6 @@ extract($_POST);
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
-        <tr>
-            <th>Script</th>
-            <th>
-              <textarea name="script" cols="5" rows="5"><?php echo (isset($script)) ? $script : "" ;?></textarea>
-            </th>
-        </tr>
     <?php
         echo "<tr>";
         $options = "";
@@ -79,14 +73,20 @@ extract($_POST);
        echo '<tr>
              ';
 
-                echo '<td width="16%">
+                echo '<th width="16%">
                     Script language
-                </td>
-                <td width="25%">
+                </th>
+                <th width="25%">
                     <select name="typescript">'.$options.'</select>
-                </td>';
+                </th>';
         echo "</tr>";
     ?>
+        <tr>
+            <th>Script</th>
+            <th>
+              <textarea name="script" cols="5" rows="5"><?php echo (isset($script)) ? $script : "" ;?></textarea>
+            </th>
+        </tr>
 
     <tr>
            <?php
