@@ -487,4 +487,10 @@ class PackageParserJSON:
         sequence['action'] = 'actionerrorcompletedend'
         data[package.targetos]['sequence'].append(sequence)
 
+        data['metaparameter'] = {}
+        data['metaparameter'][package.targetos] = {}
+        data['metaparameter'][package.targetos]['label'] = {}
+        data['metaparameter']['os'] = []
+        data['metaparameter']['os'].append(package.targetos)
+
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
