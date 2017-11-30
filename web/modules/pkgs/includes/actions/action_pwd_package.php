@@ -3,6 +3,9 @@ require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
 extract($_POST);
+$tableToggle =  "tableToggle".uniqid();
+$toggleable  =  "toggleable".uniqid();
+$idclass     =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
     <h1>Go to package folder</h1>
@@ -26,17 +29,20 @@ extract($_POST);
                 $options .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
         }
         $lab =  (isset($actionlabel))? $actionlabel : uniqid();
+        ?>
+        <table id="<?php echo $tableToggle;?>">
+        <?php
+        
+        echo '<tr class="'.$toggleable.'">';
         echo'
-        <table>
-            <tr>
                 <th width="16%">Step label : </th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
                 <th></th>
                 <th></th>
             </tr>
-            <tr>
              ';
+            echo '<tr class="'.$toggleable.'">'; 
             if(isset($packageuuid))
             {
                 echo '<td width="16%">
@@ -75,4 +81,10 @@ extract($_POST);
     </div>
 
     <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="propriety" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+    });
+</script>
