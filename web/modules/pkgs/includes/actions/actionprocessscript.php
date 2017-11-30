@@ -14,8 +14,8 @@ echo "</pre>";*/
         <input type="hidden" name="action" value="actionprocessscript" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table>
-        <tr>
+    <table id="tableToggle">
+        <tr class="toggleable">
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
@@ -141,7 +141,7 @@ echo "</pre>";*/
         }
         ?>
         </tr>
-        <tr>
+        <tr class="toggleable">
            <?php
             if(isset($success))
             {
@@ -176,7 +176,7 @@ echo "</pre>";*/
             }
             ?>
         </tr>
-        <tr>
+        <tr class="toggleable">
             <?php
             if(isset($error))
             {
@@ -216,4 +216,11 @@ echo "</pre>";*/
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
 </div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#tableToggle tr.toggleable" ).hide();
+    });
+</script>
