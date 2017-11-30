@@ -120,6 +120,51 @@ function moveToRight()
 }
 
 
+function positionInList(element)
+{
+    var listOfPositions = []
+
+    //This function seach the position of each selected elements in the added dependencies and return each position
+    jQuery.each(element,function(id,item){
+        listOfPositions.push(jQuery(jQuery("#addeddependencies").find("[value="+item+"]")[0]).index( jQuery("#addeddependencies")['value']));
+    });
+    return listOfPositions
+}
+
+//Remove selected dependencies from dependencies list of the json
+function moveToUp()
+{
+    selectedDependencies = jQuery("#addeddependencies").val();
+
+    index = positionInList(selectedDependencies);
+
+    jQuery.each(index, function(i,index){
+        var data = jQuery("#addeddependencies option")[index];
+        if(index-1 >0)
+            jQuery(data).insertBefore(jQuery(data).parent().find("option").eq(index-1));
+        else
+            jQuery(data).insertBefore(jQuery(data).parent().find("option").eq(0));
+    });
+}
+
+//Remove selected dependencies from dependencies list of the json
+function moveToDown()
+{
+selectedDependencies = jQuery("#addeddependencies").val();
+
+index = positionInList(selectedDependencies);
+
+jQuery.each(index, function(i,index){
+    var data = jQuery("#addeddependencies option")[index];
+    var size = jQuery("#addeddependencies option").length;
+
+    if(index+1 < size)
+        jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(index+1));
+    else
+        jQuery(data).insertAfter(jQuery(data).parent().find("option").eq(size));
+});
+}
+
 // Get all the workflow elements and create a sequence
 function createSequence()
 {

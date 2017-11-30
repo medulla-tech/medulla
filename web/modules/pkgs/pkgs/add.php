@@ -255,7 +255,13 @@ if (isset($_POST['bconfirm'])) {
         }
         $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
-        <tr style="display:flex">
+        <tr>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowup.png" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
+                    <img src="img/common/icn_arrowdown.png" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                </div>
+            </td>
             <td style="border: none;">
                 <h3>Added dependencies</h3>
                 <div class="list">
