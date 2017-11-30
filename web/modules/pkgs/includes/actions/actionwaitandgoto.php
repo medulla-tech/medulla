@@ -1,7 +1,6 @@
 <?php
 extract($_POST);
 /*
-
 descriptor type
          {
                        "step" : 8,
@@ -15,6 +14,9 @@ echo "<pre>";
 echo "</pre>";*/
 $waiting =  (isset($waiting))? $waiting : 10;
 $goto =  (isset($goto))? $goto : "END_SUCCESS";
+$tableToggle=  "tableToggle".uniqid();
+$toggleable =  "toggleable".uniqid();
+$idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
     <h1>Wait and go to step</h1>
@@ -24,8 +26,8 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
         <input type="hidden" name="action" value="actionwaitandgoto" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table>
-        <tr>
+    <table id="<?php echo $tableToggle;?>">
+        <?php echo '<tr class="'.$toggleable.'">';?>
             <th width="16%">Step label:</th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
@@ -44,8 +46,8 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
                 </td>';
             ?>
         </tr>
-        <tr>
 
+        <?php echo '<tr class="'.$toggleable.'">';?>
         <?php
            if(isset($goto))
             {
@@ -83,5 +85,11 @@ $goto =  (isset($goto))? $goto : "END_SUCCESS";
     </table>
         <!-- Option timeout -->
     </div>
-    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" /> 
+    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="propriety" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+    });
+</script>
