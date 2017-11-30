@@ -27,6 +27,11 @@ echo "<pre>";
 echo "</pre>";*/
 $waiting =  (isset($waiting))? $waiting : 10;/*
 $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
+
+
+$tableToggle=  "tableToggle".uniqid();
+$toggleable =  "toggleable".uniqid();
+$idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
     <h1>Unzip File</h1>
