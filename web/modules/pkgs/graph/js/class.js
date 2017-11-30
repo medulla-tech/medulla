@@ -64,7 +64,6 @@ var actionsList = [
 
     'action_set_environ',
 
-    'actionrestartbot',
     'actionrestart',
 
     'actionwaitandgoto',
