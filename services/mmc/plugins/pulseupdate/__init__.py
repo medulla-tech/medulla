@@ -36,7 +36,7 @@ from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.panel import Panel
 
 from mmc.plugins.update.config import updateConfig
-from mmc.plugins.update.database import updateDatabase
+from mmc.plugins.update.database import pulseupdateDatabase
 from mmc.plugins.msc import create_update_command
 from mmc.plugins.base.computers import ComputerManager
 
@@ -54,7 +54,7 @@ def activate():
     if config.disabled:
         logger.warning("Plugin UpdateMgr: disabled by configuration.")
         return False
-    if not updateDatabase().activate(config):
+    if not pulseupdateDatabase().activate(config):
         logger.error("UpdateMgr database not activated")
         return False
     
@@ -67,29 +67,29 @@ def activate():
 
 
 def calldb(func, *args, **kw):
-    return getattr(updateDatabase(), func).__call__(*args, **kw)
+    return getattr(pulseupdateDatabase(), func).__call__(*args, **kw)
 
 
 def get_os_classes(params):
-    return updateDatabase().get_os_classes(params)
+    return pulseupdateDatabase().get_os_classes(params)
 
 def enable_only_os_classes(os_classes_ids):
     """
     Enable spacified os_classes and disble others
     """
-    return updateDatabase().enable_only_os_classes(os_classes_ids)
+    return pulseupdateDatabase().enable_only_os_classes(os_classes_ids)
 
 
 def get_update_types(params):
-    return updateDatabase().get_update_types(params)
+    return pulseupdateDatabase().get_update_types(params)
 
 
 def get_updates(params):
-    return updateDatabase().get_updates(params)
+    return pulseupdateDatabase().get_updates(params)
 
 
 def set_update_status(update_id, status):
-    return updateDatabase().set_update_status(update_id, status)
+    return pulseupdateDatabase().set_update_status(update_id, status)
 
 
 def create_update_commands():
@@ -111,7 +111,7 @@ def create_update_commands():
         return False
 
     # Get all enabled os_classes
-    os_classes = updateDatabase().get_os_classes({'filters': {'enabled': 1}})
+    os_classes = pulseupdateDatabase().get_os_classes({'filters': {'enabled': 1}})
 
     # Create update command for enabled os_classes
     for os_class in os_classes['data']:
@@ -132,7 +132,7 @@ def create_update_commands():
         # Fetching all targets
         for uuid in targets:
             machine_id = int(uuid.lower().replace('uuid', ''))
-            updates = updateDatabase().get_eligible_updates_for_host(machine_id)
+            updates = pulseupdateDatabase().get_eligible_updates_for_host(machine_id)
 
             update_list = [update['uuid'] for update in updates]
 

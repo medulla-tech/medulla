@@ -26,13 +26,13 @@ import logging
 from sqlalchemy import create_engine, MetaData, func
 
 from mmc.database.database_helper import DatabaseHelper
-from mmc.plugins.update.schema import OsClass, UpdateType, Update, Target,\
+from mmc.plugins.pulseupdate.schema import OsClass, UpdateType, Update, Target,\
     STATUS_NEUTRAL, STATUS_ENABLED, STATUS_DISABLED
 
 
 logger = logging.getLogger()
 
-class updateDatabase(DatabaseHelper):
+class pulseupdateDatabase(DatabaseHelper):
     """
     Singleton Class to query the update database.
     """
@@ -40,7 +40,7 @@ class updateDatabase(DatabaseHelper):
 
     def db_check(self):
         self.my_name = "update"
-        self.configfile = "update.ini"
+        self.configfile = "pulseupdate.ini"
         return DatabaseHelper.db_check(self)
 
     def activate(self, config):
