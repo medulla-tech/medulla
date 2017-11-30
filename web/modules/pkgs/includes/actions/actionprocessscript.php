@@ -22,7 +22,7 @@ echo "</pre>";*/
         <tr>
             <th>Command</th>
             <th>
-              <textarea name="command" cols="5" rows="5"><?php echo (isset($command)) ? $command : "" ;?></textarea>
+              <input type="text" name="command" size="80" value="<?php echo (isset($command)) ? $command : "" ;?>"/>
             </th>
         </tr>
         <tr>
