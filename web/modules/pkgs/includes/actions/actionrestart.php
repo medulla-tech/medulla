@@ -67,9 +67,6 @@ $options = "";
         //-------------------------------------------------------------
         
         ?>
-        
-        
-        
         <!-- All extra options are added here-->
     </div>
  <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
