@@ -122,3 +122,15 @@ Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
  This package contains the update plugin to handle security updates
  (Windows Updates, Linux packages) within Pulse.
 
+
+Package: python-mmc-pulseupdate
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common, pulse-update-manager
+Description: Pulse 2 plugin to manage pulse 2 updates
+
+Package: mmc-web-pulseupdate
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common, mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 plugin to manage pulse 2 updates
+
