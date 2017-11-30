@@ -3,6 +3,9 @@ require_once("../xmlrpc.php");
 require_once("../../../../includes/session.inc.php");
 require_once("../../../../includes/xmlrpc.inc.php");
 extract($_POST);
+$tableToggle=  "tableToggle".uniqid();
+$toggleable =  "toggleable".uniqid();
+$idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
     <h1>User Comment</h1>
@@ -15,9 +18,11 @@ extract($_POST);
         <?php
 
         $lab =  (isset($actionlabel))? $actionlabel : uniqid();
+        ?>
+        <table id="<?php echo $tableToggle; ?>">
+        <?php
         echo'
-        <table>
-            <tr>
+           <tr class="'.$toggleable.'">
                 <th width="16%">Step label : </th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
@@ -31,6 +36,10 @@ extract($_POST);
                 </td>
                 <td width="25%">
                 <textarea name="comment" cols="5" rows="2">';
+                
+                echo (isset($comment)) ? $comment : "You log comment ! ";
+                
+    /*            
                 echo (isset($comment)) ? $comment : "JID AMR : @@@JID_MASTER@@@[@@@IP_MASTER@@@]
 JID ARS : @@@JID_RELAYSERVER@@@[@@@IP_RELAYSERVER@@@]
 JID AM  : @@@JID_MACHINE@@@[@@@IP_MACHINE@@@]
@@ -48,7 +57,7 @@ List of MAC addresses : @@@LIST_MAC_ADRESS@@@
 list of IP addresses : @@@LIST_IP_ADRESS@@@
 Machine IP address connected to XMPP : @@@IP_MACHINE_XMPP@@@
 Machine tmp folder : @@@TMP_DIR@@@
-" ;
+" ;*/
                 echo '</textarea>';
                 echo'
                 </td>';
@@ -61,4 +70,11 @@ Machine tmp folder : @@@TMP_DIR@@@
     </div>
 
     <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="propriety" />
 </div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+    });
+</script>
