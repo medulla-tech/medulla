@@ -16,14 +16,14 @@ $lab = "END_SUCCESS";
         ?>
         <?php
         echo'
-        <table>
+        <table id="tableToggle">
             <tr>
                 <th width="16%">Step label : </th>
                 <th width="25%">'.$lab.'
                 <th></th>
                 <th></th>
             </tr>
-            <tr>
+            <tr class="toggleable">
              ';
             if(isset($clear))
             {
@@ -66,4 +66,11 @@ $lab = "END_SUCCESS";
         </table>';
         ?>
     </div>
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#tableToggle tr.toggleable" ).hide();
+    });
+</script>
+
