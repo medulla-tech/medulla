@@ -65,7 +65,6 @@ jQuery( function() {
  *
  */
 jQuery(function(){
-
     if(typeof(jQuery("#loadJson").val()) != "undefined" && jQuery("#loadJson").val() != "")
     {// If something into #loadJson = edit mode
 
@@ -97,24 +96,6 @@ jQuery(function(){
             jQuery("#current-actions").append(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/"+action+".php"));
         });
     }
-});
-
-jQuery(function(){
-    if(jQuery("#transferfile").val() == "0")
-    {
-        //Disable the transfermethod select
-        jQuery("#methodetransfert").prop("disabled",true);
-    }
-    jQuery("#transferfile").on('change', function(){
-        if(jQuery("#transferfile").val() == '0')
-        {
-            //Disable the transfermethod select
-            jQuery("#methodetransfert").prop("disabled",true);
-        }
-        else{
-            jQuery("#methodetransfert").prop("disabled",false);
-        }
-    });
 });
 
 //Add selected dependencies into dependencies list of the json

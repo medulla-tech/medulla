@@ -383,22 +383,7 @@ if(isExpertMode())
 {
     $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
 
-
-    if(isset($json['info']['transferfile']))
-    {
-        $setTransferfile = $json['info']['transferfile'];
-    }
-    else
-    {
-        $setTransferfile = 0;
-    }
-
-    $transferfile = new SelectItem('transferfile');
-    $transferfile->setElements(['True','False']);
-    $transferfile->setElementsVal([1,0]);
-    $transferfile->setSelected($setTransferfile);
-    $f->add(new TrFormElement(_T('Transfer files','pkgs'),$transferfile, ['trid'=>'trTransferfile']),['value'=>1]);
-
+    $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
 
     if(isset($json['info']['methodetransfert']))
     {

@@ -349,36 +349,6 @@ if (isset($_POST['bconfirm'])) {
 
                 }
             });
-
-            if(jQuery('input:checked[type="radio"][name="package-method"]').val() == 'upload' || 'package')
-            {
-
-                jQuery("#trTransferfile").show();
-                jQuery("#transferfile").prop('disabled',false);
-
-                if(jQuery("#transferfile").val() == "1")
-                {
-                    jQuery("#trTransfermethod").show();
-                    jQuery("#methodetransfert").prop('disabled',false);
-                }
-                jQuery("#transferfile").on("change",function(){
-                    if(jQuery(this).val() == "1")
-                    {
-                        jQuery("#methodetransfert").prop('disabled',false);
-                        jQuery("#trTransfermethod").show();
-
-                    }
-                    else
-                        jQuery("#methodetransfert").prop('disabled',true);
-                });
-            }
-            else
-            {
-                jQuery("#trTransferfile").hide();
-                jQuery("#transferfile").prop('disabled',true);
-                jQuery("#trTransfermethod").hide();
-                jQuery("#methodetransfert").prop('disabled',true);
-            }
         }
         /*
          * Refresh Package API tempdir content
@@ -447,11 +417,6 @@ if (isset($_POST['bconfirm'])) {
                     }
                 }
                 jQuery('#directory-label').parent().parent().fadeOut();
-
-                jQuery("#trTransferfile").hide();
-                jQuery("#transferfile").prop("disabled",true);
-                jQuery("#trTransfermethod").hide();
-                jQuery("#methodetransfert").prop("disabled",true);
             }
             else if (selectedValue == "upload") {
                 jQuery('#package-temp-directory').load('<?php echo urlStrRedirect("pkgs/pkgs/ajaxDisplayUploadForm") ?>&papi=' + selectedPapi);
@@ -460,27 +425,6 @@ if (isset($_POST['bconfirm'])) {
                 jQuery('#commandcmd').val("");
                 jQuery('#directory-label').html("<?php echo sprintf(_T("Files upload (<b><u title='%s'>%sM max</u></b>)", "pkgs"), _T("Change post_max_size and upload_max_filesize directives in php.ini file to increase upload size.", "pkgs"), get_php_max_upload_size()) ?>");
                 jQuery('#directory-label').parent().parent().fadeIn();
-
-                jQuery("#trTransferfile").show();
-                jQuery("#transferfile").prop('disabled',false)
-                if(jQuery("#transferfile").val() == "1")
-                {
-                    jQuery("#trTransfermethod").show();
-                    jQuery("#methodetransfert").prop('disabled',false);
-                }
-                else
-                {
-                    jQuery("#methodetransfert").prop('disabled',true);
-                }
-                jQuery("#transferfile").on("change",function(){
-                    if(jQuery(this).val() == "1")
-                    {
-                        jQuery("#methodetransfert").prop('disabled',false);
-                        jQuery("#trTransfermethod").show();
-                    }
-                    else
-                        jQuery("#methodetransfert").prop('disabled',true);
-                });
             }
 
 
