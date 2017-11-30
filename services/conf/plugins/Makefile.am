@@ -25,4 +25,4 @@ INSTALL += --backup=numbered
 endif
 
 pluginsconfdir = $(sysconfdir)/mmc/plugins
-dist_pluginsconf_DATA = update.ini
+dist_pluginsconf_DATA = update.ini pulseupdate.ini
