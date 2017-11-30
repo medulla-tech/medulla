@@ -34,8 +34,8 @@ $mod->setAPIVersion("0:0:0");
 $mod->setPriority(990);
 
 $submod = new SubModule("update", _T("Updates", "update"));
-$submod->setDefaultPage("update/update/index");
-$submod->setImg('modules/update/graph/navbar/update');
+$submod->setDefaultPage("pulseupdate/update/index");
+$submod->setImg('modules/pulseupdate/graph/navbar/update');
 $submod->setPriority(990);
 
 $page = new Page("index", _T("All updates", "update"));
@@ -58,13 +58,6 @@ $submod->addPage($page);
 
 $page = new Page("settings", _T("Settings", "update"));
 $submod->addPage($page);
-
-//$mod->addSubmod($submod);
-
-/*$submod = new SubModule("product_updates", _T("Product updates", "update"));
-//$submod->setDefaultPage("update/product_updates/installProductUpdates");
-$submod->setImg('modules/update/graph/navbar/update');
-$submod->setPriority(990);*/
 
 $page = new Page("installProductUpdates", _T("Product Updates installation", "update"));
 $page->setOptions(array("visible" => True, "noHeader" => False));
