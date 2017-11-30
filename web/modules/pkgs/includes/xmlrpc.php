@@ -131,10 +131,6 @@ function xmpp_packages_list(){
     return xmlCall("pkgs.xmpp_packages_list", array());
 }
 
-function xmpp_packages_list_without_dependencies(){
-    return xmlCall("pkgs.xmpp_packages_list_without_dependencies", array());
-}
-
 function xmlrpc_setfrompkgslogxmpp(   $text,
                                             $type = "infouser",
                                             $sessionname = '' ,

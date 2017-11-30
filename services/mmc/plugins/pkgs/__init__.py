@@ -729,34 +729,6 @@ def xmpp_packages_list():
             xmpp_list.append(json_content['info'])
     return xmpp_list
 
-def xmpp_packages_list_without_dependencies():
-    """
-    Create a list of xmpp packages that do not have dependencies and return the
-    list and the information for each of them
-    Returns:
-    list of packages
-    """
-
-    path = _path_package()
-
-    # 1 - list the packages directories
-    list_all = os.listdir(path)
-    xmpp_list = []
-
-    for dirname in list_all:
-        # 2 - if the directory contains xmppdeploy.json
-        if os.path.isfile(os.path.join(path, dirname, 'xmppdeploy.json')) is True:
-            # 3 - Check if the package has a Dependency
-            json_content = json.load(file(os.path.join(path, dirname, 'xmppdeploy.json')))
-            try:
-                if json_content['info']['Dependency'][0] is None:
-                    # 4 - Extracts the package information and add it to the package list
-                    xmpp_list.append(json_content['info'])
-            except:
-                # 4 - Extracts the package information and add it to the package list
-                xmpp_list.append(json_content['info'])
-    return xmpp_list
-
 def remove_xmpp_package(package_uuid):
     """
     Remove the specified xmpp package. If it is ok, return true, else return false
