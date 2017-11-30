@@ -163,4 +163,8 @@ function remove_xmpp_package($packageUuid){
 function get_xmpp_package($packageUuid){
     return xmlCall("pkgs.get_xmpp_package", array($packageUuid));
 }
+
+function get_meta_from_xmpp_package($packageUuid){
+    return xmlCall("pkgs.get_meta_from_xmpp_package", array($packageUuid));
+}
 ?>

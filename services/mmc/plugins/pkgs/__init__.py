@@ -765,20 +765,24 @@ def get_xmpp_package(package_uuid):
         jsonstr = json_file.read()
         json_file.close()
         structpackage = json.loads(jsonstr)
-        for os_seq in structpackage['metaparameter']['os']:
-            vv = structpackage['metaparameter'][os_seq]['label']
-            for stepseq in structpackage[os_seq]['sequence']:
-                if "success" in stepseq:
-                    valalias = _aliasforstep(stepseq['success'], vv)
-                    print valalias
-                    if valalias != None:
-                        stepseq['success'] = valalias
-                if "error" in stepseq:
-                    valalias = _aliasforstep(stepseq['error'], vv)
-                    if valalias != None:
-                        stepseq['error'] = valalias
+
         try:
-            del structpackage['metaparameter']
+            for os_seq in structpackage['metaparameter']['os']:
+                vv = structpackage['metaparameter'][os_seq]['label']
+                for stepseq in structpackage[os_seq]['sequence']:
+                    if "success" in stepseq:
+                        valalias = _aliasforstep(stepseq['success'], vv)
+                        print valalias
+                        if valalias != None:
+                            stepseq['success'] = valalias
+                    if "error" in stepseq:
+                        valalias = _aliasforstep(stepseq['error'], vv)
+                        if valalias != None:
+                            stepseq['error'] = valalias
+            try:
+                del structpackage['metaparameter']
+            except:
+                pass
         except:
             pass
         jsonstr = json.dumps(structpackage)
@@ -786,4 +790,28 @@ def get_xmpp_package(package_uuid):
     else:
         return False
 
+
+def get_meta_from_xmpp_package(package_uuid):
+    """
+    Select the specified package and return the metaparameters in the json
+    :param package_uuid: uuid of the package
+    :return: return the json or false if it does not exists
+    """
+
+    path = _path_package()
+
+    if os.path.exists(os.path.join(path, package_uuid)):
+        # Read all the content of the package
+        json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
+        jsonstr = json_file.read()
+        json_file.close()
+        structpackage = json.loads(jsonstr)
+
+        try:
+            #jsonstr(structpackage['metaparameter'])
+            return structpackage['metaparameter']
+        except:
+            return False
+    else:
+        return False
 
