@@ -27,39 +27,33 @@ extract($_POST);
         <input type="hidden" name="action" value="actionprocessscriptfile" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table>
-        <tr>
+    <table id="tableToggle">
+        <tr class="toggleable">
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
+
     <?php
-        echo "<tr>";
+        echo '<tr class="toggleable">';
         $options = "";
         $boolselected = false;
-            $selectedbyscript = array(
-                                        array(
-                                            "label" => 'Python',
-                                            "value" => "python"),
-                                            array(
-                                            "label" => 'Visual Basic Script (Windows)',
-                                            "value" => "visualbasicscript"),
-                                            array(
-                                            "label" => 'Batch (Windows)',
-                                            "value" => "Batch"),
-                                            array(
-                                            "label" => 'Power Shell (Windows)',
-                                            "value" => "powershell"),
-                                            array(
-                                            "label" => 'Korn Shell (Linux & macOS)',
-                                            "value" => "unixKornshell"),
-                                            array(
-                                            "label" => 'Bash (Linux & macOS)',
-                                            "value" => "Batch"),
-                                            array(
-                                            "label" => 'C Shell (Linux & macOS)',
+        $selectedbyscript = array(
+                                    array(
+                                        "label" => 'Batch',
+                                        "value" => "Batch"),
+                                    array(
+                                        "label" => 'Visual Basic Script (Windows)',
+                                        "value" => "visualbasicscript"),
+                                    array(
+                                        "label" => 'Power Shell (Windows)',
+                                        "value" => "powershell"),
+                                    array(
+                                        "label" => 'Korn Shell (Linux & macOS)',
+                                        "value" => "unixKornshell"),
+                                    array(
+                                        "label" => 'C Shell (Linux & macOS)',
                                             "value" => "unixCshell")
         );
-
 
         foreach($selectedbyscript as $val)
         {
@@ -70,8 +64,7 @@ extract($_POST);
             else
                 $options .= "<option value='".$val['value']."'>".$val['label']."</option>";
         }
-       echo '<tr>
-             ';
+      
 
                 echo '<th width="16%">
                     Script language
@@ -81,6 +74,7 @@ extract($_POST);
                 </th>';
         echo "</tr>";
     ?>
+
         <tr>
             <th>Script</th>
             <th>
@@ -88,7 +82,7 @@ extract($_POST);
             </th>
         </tr>
 
-    <tr>
+    <tr class="toggleable">
            <?php
             if(isset($suffix))
             {
@@ -132,7 +126,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
-      <tr>
+      <tr class="toggleable">
            <?php
             if(isset($bang))
             {
@@ -177,7 +171,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
         </tr>
 
     <?php
-            echo "<tr>";
+            echo "<tr class='toggleable'>";
 
             if(isset($timeout))
             {
@@ -210,11 +204,11 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                     <input type="number" min="0" value="10" disabled name="timeout"  />
                 </td>';
             }
-            ?>
+    ?>
         </tr>
 
-        <tr>
-            <?php
+    <tr>
+    <?php
         $resultlist = array(
                             array('label' => '10 first lines of result','value' => "10@firstlines"),
                             array('label' => '20 first lines of result','value' => "20@firstlines"),
@@ -292,9 +286,10 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
                 name="1@lastlines">'.$options.'</select>
             </td>';
         }
-        ?>
+    ?>
+
         </tr>
-        <tr>
+        <tr class="toggleable">
            <?php
             if(isset($success))
             {
@@ -329,7 +324,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             }
             ?>
         </tr>
-        <tr>
+        <tr class="toggleable">
             <?php
             if(isset($error))
             {
@@ -369,4 +364,10 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#tableToggle tr.toggleable" ).hide();
+    });
+</script>
