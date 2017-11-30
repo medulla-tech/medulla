@@ -425,7 +425,7 @@ if(isExpertMode())
 
     $packagesInOptionAdded = '';
     $packagesInOptionNotAdded = '';
-    foreach(xmpp_packages_list() as $xmpp_package)
+    foreach(xmpp_packages_list_without_dependencies() as $xmpp_package)
     {
         if(in_array($xmpp_package['uuid'], $dependencies))
             $packagesInOptionAdded .= '<option value="'.$xmpp_package['uuid'].'">'.$xmpp_package['name'].'</option>';

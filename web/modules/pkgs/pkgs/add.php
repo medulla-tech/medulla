@@ -249,7 +249,7 @@ if (isset($_POST['bconfirm'])) {
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
         $packagesInOption = '';
-        foreach(xmpp_packages_list() as $package)
+        foreach(xmpp_packages_list_without_dependencies() as $package)
         {
             $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
         }
