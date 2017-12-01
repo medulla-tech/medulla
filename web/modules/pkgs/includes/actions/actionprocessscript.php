@@ -77,10 +77,6 @@ $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         ?>
         
         
-        
-        
-        
-        
         <tr class="toggleable">
             <?php
             if(isset($timeout))

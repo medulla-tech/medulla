@@ -1,5 +1,7 @@
 <?php
-
+require_once("../xmlrpc.php");
+require_once("../../../../includes/session.inc.php");
+require_once("../../../../includes/xmlrpc.inc.php");
 /*
     creation action actionprocessscriptfile
                 "step": intnb,
@@ -15,9 +17,18 @@
                 "@resultcommand": ""
 */
 extract($_POST);
-// echo "<pre>";
-//     print_r( $os );
-// echo "</pre>";
+   $packageList = xmpp_packages_list();
+        $optionspackage= "";
+
+        foreach($packageList as $id=>$package)
+        {
+            if(isset($packageuuid) && $packageuuid == $package['uuid'])
+            {
+                $optionspackage .= "<option value='".$package['uuid']."' selected>".$package['name']."</option>";
+            }
+            else
+                $optionspackage .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
+        }
 ?>
 <div class="header">
     <h1>Execute script</h1>
@@ -82,6 +93,46 @@ extract($_POST);
             </th>
         </tr>
 
+        
+           
+        
+        <?php
+          echo '<tr class="toggleable">'; 
+            if(isset($packageuuid))
+            {
+                echo '<td width="16%">
+                    <input type="checkbox" checked 
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Alternate package
+                </td>
+                <td width="25%">
+                    <select name="packageuuid">'.$optionspackage.'</select>
+                </td>';
+            }
+            else{
+                echo '<td width="16%">
+                    <input type="checkbox" 
+                        onclick="if(jQuery(this).is(\':checked\')){
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                }
+                                else{
+                                    jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                }" />Alternate package
+                    </td>
+                    <td width="25%">
+                        <select disabled name="packageuuid">'.$optionspackage.'</select>
+                    </td>';
+            }
+        echo '
+        <td></td><td></td>
+            </tr>';
+        ?>
+        
+        
     <tr class="toggleable">
            <?php
             if(isset($suffix))
@@ -126,6 +177,11 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
+            
+     
+        
+        
+        
       <tr class="toggleable">
            <?php
             if(isset($bang))
@@ -170,6 +226,10 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
+        
+    
+        
+        
     <?php
             echo "<tr class='toggleable'>";
 
