@@ -21,7 +21,7 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/update/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
 
 $options = array(
     "class" => "UpdatePanel",
