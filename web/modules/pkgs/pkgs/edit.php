@@ -417,8 +417,9 @@ if(isExpertMode())
 
     //Generate the list of not-added dependencies, the sort is not important
     $packagesInOptionNotAdded = '';
-    foreach($allDependenciesList as $xmpp_name => $xmpp_package){
-        if(in_array($xmpp_package,$dependencies))
+
+    foreach($allDependenciesList as $xmpp_package => $xmpp_name){
+        if(!in_array($xmpp_package,$dependencies))
             $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
     }
 
