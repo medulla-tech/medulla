@@ -64,7 +64,7 @@ extract($_POST);
             else
                 $options .= "<option value='".$val['value']."'>".$val['label']."</option>";
         }
-      
+
 
                 echo '<th width="16%">
                     Script language
@@ -364,7 +364,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="Options" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){

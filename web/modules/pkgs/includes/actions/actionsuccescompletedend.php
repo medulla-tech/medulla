@@ -66,7 +66,7 @@ $lab = "END_SUCCESS";
         </table>';
         ?>
     </div>
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="Options" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){

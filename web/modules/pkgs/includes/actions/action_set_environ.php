@@ -24,7 +24,7 @@ $environstr = trim($environstr,",\n\r");
 ?>
 
 <div class="header">
-    <h1>Set Environment</h1>
+    <h1>Set Environment variables</h1>
 </div>
 <div class="content">
     <div>

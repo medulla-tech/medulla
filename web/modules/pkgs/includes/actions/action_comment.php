@@ -8,7 +8,7 @@ $toggleable =  "toggleable".uniqid();
 $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 ?>
 <div class="header">
-    <h1>User Comment</h1>
+    <h1>Add info in deployment log</h1>
 </div>
 
 <div class="content">
@@ -32,14 +32,14 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             <tr>
              ';
             echo '<td width="16%">
-                   User Comment
+                   Information
                 </td>
                 <td width="25%">
                 <textarea name="comment" cols="5" rows="2">';
-                
+
                 echo (isset($comment)) ? $comment : "You log comment ! ";
-                
-    /*            
+
+    /*
                 echo (isset($comment)) ? $comment : "JID AMR : @@@JID_MASTER@@@[@@@IP_MASTER@@@]
 JID ARS : @@@JID_RELAYSERVER@@@[@@@IP_RELAYSERVER@@@]
 JID AM  : @@@JID_MACHINE@@@[@@@IP_MACHINE@@@]
@@ -70,7 +70,7 @@ Machine tmp folder : @@@TMP_DIR@@@
     </div>
 
     <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="propriety" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="Options" />
 </div>
 
 <script type="text/javascript">
