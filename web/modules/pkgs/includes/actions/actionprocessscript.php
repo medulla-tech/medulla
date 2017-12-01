@@ -216,11 +216,21 @@ echo "</pre>";*/
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleactionprocessscript tr.toggleableactionprocessscript").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='toggleOption(jQuery(this).parent().find(".toggleable"));' type="button" value="Options" />
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
+        function toggleOption(options)
+        {
+            jQuery.each(options, function(id,option){
+                if(jQuery(option).is(":visible"))
+                    jQuery(this).hide();
+                else
+                    jQuery(this).show();
+            });
+        }
+
         jQuery("#tableToggleactionprocessscript tr.toggleableactionprocessscript" ).hide();
     });
 </script>

@@ -59,21 +59,21 @@ var action = jQuery('select[name="action"]').val();
  *
  */
 var actionsList = [
-    'actionprocessscript',
-    'actionprocessscriptfile',
+    'actionprocessscript', //Run command
+    'actionprocessscriptfile', //Execute script
 
-    'action_set_environ',
+    'action_set_environ', //Set environment variable
 
-    'actionrestart',
+    'actionrestart', //Restart
 
-    'actionwaitandgoto',
-    'action_no_operation',
-    'action_comment',
+    'actionwaitandgoto', //Wait and go to step
+    //'action_no_operation',
+    'action_comment', //Add info in deployment log
 
-    'action_unzip_file',
+    'action_unzip_file', //Unzip file
     //'actionconfirm',
-    'action_pwd_package',
-    'actioncleaning', 
+    'action_pwd_package', //Go to package folder
+    'actioncleaning', //Remove uploaded files
 ];
 /**
  *
