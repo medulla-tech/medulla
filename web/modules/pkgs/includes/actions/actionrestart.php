@@ -40,10 +40,10 @@ $options = "";
     <div>
         <input type="hidden" name="action" value="actionrestart" />
         <input type="hidden" name="step" />
-        <table id="<?php echo $tableToggle;?>">
+        <table id="tableToggle">
         <?php
         //---------------------label-----------------------------------
-        echo '<tr class="'.$toggleable.'">';
+        echo '<tr class="toggleable">';
             echo'
                     <th width="16%">Step label : </th>
                     <th width="25%">
@@ -54,7 +54,7 @@ $options = "";
                     <th></th>
                 </tr>';
 
-            echo '<tr class="'.$toggleable.'">';
+            echo '<tr class="toggleable">';
  
                 echo '<td width="16%">Target Restart</td>
                     <td width="25%">
@@ -70,11 +70,11 @@ $options = "";
         <!-- All extra options are added here-->
     </div>
  <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
- <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="Options" />
+<input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
+
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>
-

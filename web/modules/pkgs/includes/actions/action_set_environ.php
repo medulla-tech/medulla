@@ -30,7 +30,7 @@ $environstr = trim($environstr,",\n\r");
     <div>
         <input type="hidden" name="action" value="action_set_environ" />
         <input type="hidden" name="step" />
-            <table id="tableToggleaction_set_environ">
+            <table id="tableToggle">
                 <tr class="toggleable">
                     <th width="16%">Step label : </th>
                     <th width="25%">
@@ -53,10 +53,11 @@ $environstr = trim($environstr,",\n\r");
         <!-- All extra options are added here-->
     </div>
  <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
- <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleaction_set_environ tr.toggleable").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
+
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#tableToggleaction_set_environ tr.toggleable" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>

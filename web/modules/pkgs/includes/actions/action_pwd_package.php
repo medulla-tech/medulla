@@ -30,10 +30,10 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
         }
         $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         ?>
-        <table id="<?php echo $tableToggle;?>">
+        <table id="tableToggle">
         <?php
         
-        echo '<tr class="'.$toggleable.'">';
+        echo '<tr class="toggleable">';
         echo'
                 <th width="16%">Step label : </th>
                 <th width="25%">
@@ -42,7 +42,7 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
                 <th></th>
             </tr>
              ';
-            echo '<tr class="'.$toggleable.'">'; 
+            echo '<tr class="toggleable">'; 
             if(isset($packageuuid))
             {
                 echo '<td width="16%">
@@ -81,10 +81,11 @@ $idclass     =  "#".$tableToggle.' tr.'.$toggleable;
     </div>
 
     <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
+
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>

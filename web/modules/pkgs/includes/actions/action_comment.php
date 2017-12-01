@@ -19,10 +19,10 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 
         $lab =  (isset($actionlabel))? $actionlabel : uniqid();
         ?>
-        <table id="<?php echo $tableToggle; ?>">
+        <table id="tableToggle">
         <?php
         echo'
-           <tr class="'.$toggleable.'">
+           <tr class="toggleable">
                 <th width="16%">Step label : </th>
                 <th width="25%">
                     <input type="text" name="actionlabel" value="'.$lab.'"/>
@@ -70,11 +70,11 @@ Machine tmp folder : @@@TMP_DIR@@@
     </div>
 
     <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>

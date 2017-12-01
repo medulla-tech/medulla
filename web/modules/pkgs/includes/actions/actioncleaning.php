@@ -15,8 +15,8 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
     <div>
         <input type="hidden" name="action" value="actioncleaning" />
         <input type="hidden" name="step" />
-        <table id="<?php echo $tableToggle;?>">
-            <?php echo '<tr class="'.$toggleable.'">'; ?>
+        <table id="tableToggle">
+          <tr class="toggleable">
         <?php
         echo'
                     <th width="16%">Step label : </th>
@@ -34,10 +34,11 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <!-- All extra options are added here-->
     </div>
  <input class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
- <input  class="btn btn-primary" id="property" onclick='jQuery("<?php echo $idclass;?>").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
+
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#<?php echo $tableToggle.' tr.'.$toggleable;?>" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>

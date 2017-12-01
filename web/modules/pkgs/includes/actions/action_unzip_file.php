@@ -41,7 +41,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <input type="hidden" name="action" value="action_unzip_file" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table id="tableToggleaction_unzip_file">
+    <table id="tableToggle">
         <tr class="toggleable">
             <th width="16%">Step label:</th>
             <th width="25%">
@@ -60,7 +60,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             <th></th>
         </tr>
 
-        <tr>
+         <tr class="toggleable">
             <?php
         $resultlist = array(
                             array('label' => '10 first lines of result','value' => "10@firstlines"),
@@ -146,7 +146,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         </tr>
 
 
-       <tr>
+        <tr class="toggleable">
            <?php
             if(isset($pathdirectorytounzip))
             {
@@ -181,7 +181,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             }
             ?>
         </tr>
-        <tr>
+         <tr class="toggleable">
         <?php
            if(isset($goto))
             {
@@ -217,7 +217,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
 
 
 
-        <tr>
+         <tr class="toggleable">
            <?php
             if(isset($success))
             {
@@ -252,7 +252,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
             }
             ?>
         </tr>
-        <tr>
+         <tr class="toggleable">
             <?php
             if(isset($error))
             {
@@ -291,10 +291,11 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <!-- Option timeout -->
     </div>
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-<input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleaction_unzip_file tr.toggleable").toggle();' type="button" value="Options" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery(this).parent().find(".toggleable").each(function(){ jQuery(this).toggle()});' type="button" value="Options" />
 </div>
+
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#tableToggleaction_unzip_file tr.toggleable" ).hide();
+        jQuery("#tableToggle tr.toggleable").hide();
     });
 </script>
