@@ -380,14 +380,14 @@ class PackageParserJSON:
                 reboot,
                 targetos,
                 entity_id,
-                metagenerator,
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],
                 queries['boolcnd'],
                 licenses,
                 sub_packages,
-                associateinventory
+                associateinventory,
+                metagenerator
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
