@@ -75,8 +75,13 @@ class MultiFileTpl extends AbstractTpl {
                             var googleFileName = \'\';
                             jQuery(\'#version\').val(data.version);
                             jQuery(\'#commandcmd\').val(data.commandcmd);
-                            jQuery("#current-actions").prepend(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
-                            jQuery("#current-actions").prepend(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/action_pwd_package.php"));
+                            if(document.getElementById("autocmd")){
+                              jQuery(\'#autocmd\').find("[name=\'script\']").val(data.commandcmd);
+                            }
+                            else{
+                              jQuery("#current-actions").prepend(jQuery(document.createElement("li")).prop("id","autocmd").load("/mmc/modules/pkgs/includes/actions/actionprocessscriptfile.php",{"script":data.commandcmd,"typescript":"Batch"}));
+                              jQuery("#current-actions").prepend(jQuery(document.createElement("li")).load("/mmc/modules/pkgs/includes/actions/action_pwd_package.php"));
+                            }
                             jQuery(\'.qq-upload-file\').each(function() {
                                 googleFileName = jQuery(this).text();
                                 return false;
