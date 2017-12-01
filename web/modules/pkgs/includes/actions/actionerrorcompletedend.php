@@ -17,8 +17,8 @@ $lab = "END_ERROR";
 
         <?php
         echo'
-            <table>
-                <tr>
+            <table id="tableToggle">
+                 <tr class="toggleable">
                     <th width="16%">Step label : </th>
                     <th width="25%">'.$lab.'
                     </th>
@@ -31,5 +31,10 @@ $lab = "END_ERROR";
         ?>
         <!-- All extra options are added here-->
     </div>
-
+  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#tableToggle tr.toggleable" ).hide();
+    });
+</script>

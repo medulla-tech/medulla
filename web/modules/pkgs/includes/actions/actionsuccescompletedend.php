@@ -17,7 +17,7 @@ $lab = "END_SUCCESS";
         <?php
         echo'
         <table id="tableToggle">
-            <tr>
+            <tr class="toggleable">
                 <th width="16%">Step label : </th>
                 <th width="25%">'.$lab.'
                 <th></th>
