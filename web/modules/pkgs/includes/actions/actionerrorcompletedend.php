@@ -1,7 +1,6 @@
 <?php
 extract($_POST);
 $lab = "END_ERROR";
-// $lab =  (isset($actionlabel))? $actionlabel : uniqid();
 ?>
 <div class="header">
     <h1>End Error</h1>
@@ -17,7 +16,7 @@ $lab = "END_ERROR";
 
         <?php
         echo'
-            <table id="tableToggle">
+            <table id="tableToggleend">
                  <tr class="toggleable">
                     <th width="16%">Step label : </th>
                     <th width="25%">'.$lab.'
@@ -31,10 +30,10 @@ $lab = "END_ERROR";
         ?>
         <!-- All extra options are added here-->
     </div>
-  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="propriety" />
+  <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleend tr.toggleable").toggle();' type="button" value="Options" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#tableToggle tr.toggleable" ).hide();
+        jQuery("#tableToggleend tr.toggleable" ).hide();
     });
 </script>

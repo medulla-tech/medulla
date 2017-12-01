@@ -41,8 +41,8 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <input type="hidden" name="action" value="action_unzip_file" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table>
-        <tr>
+    <table id="tableToggleaction_unzip_file">
+        <tr class="toggleable">
             <th width="16%">Step label:</th>
             <th width="25%">
                 <input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/>
@@ -291,4 +291,10 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <!-- Option timeout -->
     </div>
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
+<input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleaction_unzip_file tr.toggleable").toggle();' type="button" value="Options" />
 </div>
+<script type="text/javascript">
+    jQuery(document).ready(function(){
+        jQuery("#tableToggleaction_unzip_file tr.toggleable" ).hide();
+    });
+</script>

@@ -14,8 +14,8 @@ echo "</pre>";*/
         <input type="hidden" name="action" value="actionprocessscript" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table id="tableToggle">
-        <tr class="toggleable">
+    <table id="tableToggleactionprocessscript">
+        <tr class="toggleableactionprocessscript">
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
@@ -25,7 +25,7 @@ echo "</pre>";*/
               <input type="text" name="command" size="80" value="<?php echo (isset($command)) ? $command : "" ;?>"/>
             </th>
         </tr>
-        <tr>
+        <tr class="toggleableactionprocessscript">
             <?php
             if(isset($timeout))
             {
@@ -141,7 +141,7 @@ echo "</pre>";*/
         }
         ?>
         </tr>
-        <tr class="toggleable">
+        <tr class="toggleableactionprocessscript">
            <?php
             if(isset($success))
             {
@@ -176,7 +176,7 @@ echo "</pre>";*/
             }
             ?>
         </tr>
-        <tr class="toggleable">
+        <tr class="toggleableactionprocessscript">
             <?php
             if(isset($error))
             {
@@ -216,11 +216,11 @@ echo "</pre>";*/
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleactionprocessscript tr.toggleableactionprocessscript").toggle();' type="button" value="Options" />
 </div>
 
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#tableToggle tr.toggleable" ).hide();
+        jQuery("#tableToggleactionprocessscript tr.toggleableactionprocessscript" ).hide();
     });
 </script>

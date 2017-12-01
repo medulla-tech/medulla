@@ -27,14 +27,14 @@ extract($_POST);
         <input type="hidden" name="action" value="actionprocessscriptfile" />
         <input type="hidden" name="step" />
         <input type="hidden" name="codereturn" value=""/>
-    <table id="tableToggle">
-        <tr class="toggleable">
+    <table id="tableToggleactionprocessscriptfile">
+        <tr class="toggleableactionprocessscriptfile">
             <th>Step label:</th>
             <th><input id="laction" type="text" name="actionlabel" value="<?php echo (isset($actionlabel))? $actionlabel : uniqid(); ?>"/></th>
         </tr>
 
     <?php
-        echo '<tr class="toggleable">';
+        echo '<tr class="toggleableactionprocessscriptfile">';
         $options = "";
         $boolselected = false;
         $selectedbyscript = array(
@@ -82,7 +82,7 @@ extract($_POST);
             </th>
         </tr>
 
-    <tr class="toggleable">
+    <tr class="toggleableactionprocessscriptfile">
            <?php
             if(isset($suffix))
             {
@@ -126,7 +126,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             ?>
         </tr>
 
-      <tr class="toggleable">
+      <tr class="toggleableactionprocessscriptfile">
            <?php
             if(isset($bang))
             {
@@ -171,7 +171,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
         </tr>
 
     <?php
-            echo "<tr class='toggleable'>";
+            echo "<tr class='toggleableactionprocessscriptfile'>";
 
             if(isset($timeout))
             {
@@ -289,7 +289,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
     ?>
 
         </tr>
-        <tr class="toggleable">
+        <tr class="toggleableactionprocessscriptfile">
            <?php
             if(isset($success))
             {
@@ -324,7 +324,7 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
             }
             ?>
         </tr>
-        <tr class="toggleable">
+        <tr class="toggleableactionprocessscriptfile">
             <?php
             if(isset($error))
             {
@@ -364,10 +364,10 @@ However, if the "Force suffix" property is set, the imposed suffix will be this 
     </div>
 
     <input  class="btn btn-primary" type="button" onclick="jQuery(this).parent().parent('li').detach()" value="Delete" />
-    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggle tr.toggleable").toggle();' type="button" value="Options" />
+    <input  class="btn btn-primary" id="property" onclick='jQuery("#tableToggleactionprocessscriptfile tr.toggleableactionprocessscriptfile").toggle();' type="button" value="Options" />
 </div>
 <script type="text/javascript">
     jQuery(document).ready(function(){
-        jQuery("#tableToggle tr.toggleable" ).hide();
+        jQuery("#tableToggleactionprocessscriptfile tr.toggleableactionprocessscriptfile" ).hide();
     });
 </script>
