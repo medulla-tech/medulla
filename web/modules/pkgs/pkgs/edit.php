@@ -400,6 +400,7 @@ if(isExpertMode())
 
     $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
 
+    //Get the sorted list of dependencies
     if(isset($json['info']['Dependency']))
     {
         $dependencies = $json['info']['Dependency'];
@@ -407,17 +408,27 @@ if(isExpertMode())
     else
         $dependencies = [];
 
-
-    $packagesInOptionAdded = '';
-    $packagesInOptionNotAdded = '';
-    foreach(xmpp_packages_list() as $xmpp_package)
-    {
-        if(in_array($xmpp_package['uuid'], $dependencies))
-            $packagesInOptionAdded .= '<option value="'.$xmpp_package['uuid'].'">'.$xmpp_package['name'].'</option>';
-        else
-            if($_GET['packageUuid'] != $xmpp_package['uuid'])
-                $packagesInOptionNotAdded .= '<option value="'.$xmpp_package['uuid'].'">'.$xmpp_package['name'].'</option>';
+    //Get all the dependencies as uuid => name
+    $allDependenciesList = [];
+    foreach(xmpp_packages_list() as $xmpp_package) {
+        if($_GET['packageUuid'] != $xmpp_package['uuid'])
+            $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
     }
+
+    //Generate the list of not-added dependencies, the sort is not important
+    $packagesInOptionNotAdded = '';
+    foreach($allDependenciesList as $xmpp_name => $xmpp_package){
+        if(in_array($xmpp_package,$dependencies))
+            $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
+    }
+
+    //Generate the sorted list of added dependencies
+    $packagesInOptionAdded = '';
+    foreach($dependencies as $uuid_package){
+        if(isset($allDependenciesList[$uuid_package]))
+            $packagesInOptionAdded .= '<option value="'.$uuid_package.'">'.$allDependenciesList[$uuid_package].'</option>';
+    }
+
     $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
     <table style="border: none;" cellspacing="0">
         <tr>
