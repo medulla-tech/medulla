@@ -99,7 +99,7 @@ class Package:
     def init(self, id, label, version, size, description, cmd, initcmd='',
              precmd='', postcmd_ok='', postcmd_ko='', reboot=0, targetos='win',
              entity_id=None, Qvendor='', Qsoftware='', Qversion='', boolcnd='',
-             licenses='', sub_packages=None, associateinventory=0):
+             licenses='', sub_packages=None, associateinventory=0, metagenerator='standard'):
         # Mutable list sub_packages used as default argument to a method or function
         sub_packages = sub_packages or []
         self.label = label
@@ -125,6 +125,7 @@ class Package:
         self.sub_packages = sub_packages
         self.entity_id = entity_id
         self.associateinventory = associateinventory
+        self.metagenerator = metagenerator
 
     def addFile(self, file):
         self.files.append(file)
@@ -160,7 +161,8 @@ class Package:
             'licenses': self.licenses,
             'sub_packages': self.sub_packages,
             'entity_id': self.entity_id,
-            'associateinventory': self.associateinventory
+            'associateinventory': self.associateinventory,
+            'metagenerator': self.metagenerator
         }
         if self.root != '':
             # The package root is decoded using the current encoding to get a Python
@@ -235,6 +237,8 @@ class Package:
             self.entity_id = h['entity_id']
         if 'associateinventory' in h:
             self.associateinventory = h['associateinventory']
+        if 'metagenerator' in h:
+            self.metagenerator = h['metagenerator']
         return self
 
     def equal(self, p):

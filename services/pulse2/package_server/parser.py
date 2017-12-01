@@ -352,6 +352,11 @@ class PackageParserJSON:
                 except KeyError:
                     entity_id = 0
 
+                try:
+                    metagenerator = data['metagenerator']
+                except KeyError:
+                    metagenerator = 'standard'
+
                 # Inventory section
                 licenses = data['inventory']['licenses']
                 associateinventory = data['inventory']['associateinventory']
@@ -375,6 +380,7 @@ class PackageParserJSON:
                 reboot,
                 targetos,
                 entity_id,
+                metagenerator,
                 queries['Qvendor'],
                 queries['Qsoftware'],
                 queries['Qversion'],

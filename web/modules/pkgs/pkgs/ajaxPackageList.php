@@ -90,6 +90,12 @@ $size = array();
 $err = array();
 $desc = array();
 
+$editActions = array();
+$editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
+$emptyAction = new EmptyActionItem();
+$delActions = array();
+$delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
+
 
 $packages = advGetAllPackages($filter, $start, $start + $maxperpage);
 
@@ -134,10 +140,33 @@ foreach ($packages as $p) {
         $licenses[] = $tmp_licenses;
         // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
-        if(!isExpertMode())
+
+        if(!isExpertMode()) {
             $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
-        else
+            if ($p['metagenerator'] == 'manual') {
+                $editActions[] = $emptyAction;
+                $delActions[] = $delAction;
+            }
+            else {
+                $editActions[] = $editAction;
+                $delActions[] = $delAction;
+            }
+        }
+        else {
             $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']),'packageUuid' => $p['id']);
+            if ($p['metagenerator'] == 'manual') {
+                $editActions[] = $emptyAction;
+                $delActions[] = $delAction;
+            }
+            elseif ($p['metagenerator'] == 'expert') {
+                $editActions[] = $emptyAction;
+                $delActions[] = $delAction;
+            }
+            else {
+                $editActions[] = $editAction;
+                $delActions[] = $delAction;
+            }
+        }
     }
 }
 
@@ -157,12 +186,10 @@ $n->addExtraInfo($size, _T("Package size", "pkgs"));
 $n->setItemCount($count);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 $n->setParamInfo($params);
+$n->addActionItemArray($editActions);
+$n->addActionItemArray($delActions);
 $n->start = 0;
 $n->end = $count;
-
-$n->addActionItem(new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs"));
-
-$n->addActionItem(new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs"));
 
 print "<br/><br/>"; // to go below the location bar : FIXME, really ugly as line height dependent
 
