@@ -25,7 +25,7 @@ from mmc.database.config import DatabaseConfig
 
 
 class updateConfig(PluginConfig, DatabaseConfig):
-    def __init__(self, name='update', conffile=None):
+    def __init__(self, name='pulseupdate', conffile=None):
         if not hasattr(self, 'initdone'):
             PluginConfig.__init__(self, name, conffile)
             DatabaseConfig.__init__(self)
