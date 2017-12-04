@@ -237,6 +237,7 @@ class Package:
             self.entity_id = h['entity_id']
         if 'associateinventory' in h:
             self.associateinventory = h['associateinventory']
+        self.metagenerator = 'standard'
         if 'metagenerator' in h:
             self.metagenerator = h['metagenerator']
         return self

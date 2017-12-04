@@ -55,7 +55,7 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
 
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
-            'boolcnd', 'licenses', 'targetos') as $post) {
+            'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
     }
 
@@ -378,6 +378,14 @@ $oslist->setElementsVal($os[0]);
 $f->add(
         new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
 );
+
+if(isExpertMode())
+{
+  $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
+}
+else {
+  $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
+}
 
 if(isExpertMode())
 {

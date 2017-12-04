@@ -141,7 +141,7 @@ foreach ($packages as $p) {
         // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
 
-        if(!isExpertMode()) {
+        if(isExpertMode()) {
             $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
             if ($p['metagenerator'] == 'manual') {
                 $editActions[] = $emptyAction;

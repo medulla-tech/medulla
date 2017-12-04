@@ -408,6 +408,7 @@ class PackageParserJSON:
         data['description'] = package.description
         data['reboot'] = package.reboot
         data['targetos'] = package.targetos
+        data['metagenerator'] = package.metagenerator
 
         # Sub packages if exists
         data['sub_packages'] = package.sub_packages
@@ -448,6 +449,7 @@ class PackageParserJSON:
         data['info']['version'] = str(package.version)
         data['info']['description'] = package.description
         data['info']['transferfile'] = 'true'
+        data['info']['metagenerator'] = package.metagenerator
 
         data[package.targetos] = {}
         data[package.targetos]['sequence'] = []

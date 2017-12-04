@@ -49,7 +49,7 @@ if (isset($_POST['bconfirm'])) {
     }
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
-            'Qversion', 'boolcnd', 'licenses', 'targetos') as $post) {
+            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot', 'associateinventory') as $post) {
@@ -234,6 +234,14 @@ if (isset($_POST['bconfirm'])) {
     $f->add(
             new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
     );
+
+    if(isExpertMode())
+    {
+      $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
+    }
+    else {
+      $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
+    }
 
     if(isExpertMode())
     {
