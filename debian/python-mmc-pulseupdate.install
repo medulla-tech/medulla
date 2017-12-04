@@ -1,2 +1,3 @@
 usr/lib/python2.?/*-packages/mmc/plugins/pulseupdate
 etc/mmc/plugins/pulseupdate.ini
+usr/share/doc/mmc/contrib/pulseupdate/sql
