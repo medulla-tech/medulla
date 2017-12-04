@@ -35,8 +35,8 @@ from mmc.core.tasks import TaskManager
 from mmc.plugins.dashboard.manager import DashboardManager
 from mmc.plugins.dashboard.panel import Panel
 
-from mmc.plugins.update.config import updateConfig
-from mmc.plugins.update.database import pulseupdateDatabase
+from mmc.plugins.pulseupdate.config import updateConfig
+from mmc.plugins.pulseupdate.database import pulseupdateDatabase
 from mmc.plugins.msc import create_update_command
 from mmc.plugins.base.computers import ComputerManager
 
