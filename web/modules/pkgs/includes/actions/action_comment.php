@@ -37,7 +37,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                 <td width="25%">
                 <textarea name="comment" cols="5" rows="2">';
 
-                echo (isset($comment)) ? $comment : "You log comment ! ";
+                echo (isset($comment)) ? $comment : "Your log comments !";
 
     /*
                 echo (isset($comment)) ? $comment : "JID AMR : @@@JID_MASTER@@@[@@@IP_MASTER@@@]
