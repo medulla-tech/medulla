@@ -141,9 +141,13 @@ foreach ($packages as $p) {
         // #### end licenses ####
         $size[] = prettyOctetDisplay($p['size']);
 
-        if(isExpertMode()) {
+        if(!isExpertMode()) {
             $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
             if ($p['metagenerator'] == 'manual') {
+                $editActions[] = $emptyAction;
+                $delActions[] = $delAction;
+            }
+            elseif ($p['metagenerator'] == 'expert') {
                 $editActions[] = $emptyAction;
                 $delActions[] = $delAction;
             }
@@ -155,10 +159,6 @@ foreach ($packages as $p) {
         else {
             $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']),'packageUuid' => $p['id']);
             if ($p['metagenerator'] == 'manual') {
-                $editActions[] = $emptyAction;
-                $delActions[] = $delAction;
-            }
-            elseif ($p['metagenerator'] == 'expert') {
                 $editActions[] = $emptyAction;
                 $delActions[] = $delAction;
             }
