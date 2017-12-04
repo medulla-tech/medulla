@@ -50,7 +50,7 @@ def getApiVersion(): return APIVERSION
 
 
 def activate():
-    config = updateConfig("update")
+    config = updateConfig("pulseupdate")
     if config.disabled:
         logger.warning("Plugin UpdateMgr: disabled by configuration.")
         return False
