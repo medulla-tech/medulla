@@ -72,7 +72,7 @@ var actionsList = [
 
     'action_unzip_file', //Unzip file
     //'actionconfirm',
-    'action_pwd_package', //Go to package folder
+    //'action_pwd_package', //Go to package folder
     'actioncleaning', //Remove uploaded files
 ];
 /**
