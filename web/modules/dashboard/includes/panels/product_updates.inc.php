@@ -58,7 +58,7 @@ class UpdatePanel extends Panel {
                 print <<<EOS
                 <a title="View updates" class="btnSecondary"
                     href="javascript:;"
-                    onclick="PopupWindow(event,'main.php?module=update&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+                    onclick="PopupWindow(event,'main.php?module=pulseupdate&amp;submod=pulseupdate&amp;action=viewProductUpdates', 300); return false;"
                     >$view_updates_text</a><br/><br/>
                     <a title="Install updates" class="btnSecondary"
                     href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
