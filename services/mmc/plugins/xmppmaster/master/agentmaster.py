@@ -744,9 +744,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.info("PAS De localisation AD par User")
             logger.info("-----------------------------------")
 
-            logger.info("DETAILED INFORMATION")
+            logger.debug("DETAILED INFORMATION")
             if 'information' in data:
-                logger.info("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
+                logger.debug("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
 
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
