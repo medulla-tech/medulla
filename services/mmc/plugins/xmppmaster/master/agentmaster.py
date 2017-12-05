@@ -479,7 +479,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 for i in listrs:
                     li = XmppMasterDatabase().listmachinesfromdeploy(i[0])
                     logger.info("RS [%s] for deploy on %s Machine"%(i[0],len(li)-1))
-                    logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
+                    logger.debug('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
                                                                         "uuid",
                                                                         "Machine",
                                                                         "jid",
@@ -489,7 +489,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             TY = 'RSer'
                         else:
                             TY = "Mach"
-                        logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
+                        logger.debug('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
             else:
                 logger.info("Aucune Machine repertorié")
 
