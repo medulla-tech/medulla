@@ -22,7 +22,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-require_once("modules/update/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
 
 // Disabling Multiple updates
 if (isset($_POST["selected_updates"])) {

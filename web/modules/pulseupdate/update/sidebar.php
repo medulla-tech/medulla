@@ -26,8 +26,8 @@
 <?php
 
 require_once("graph/navbar.inc.php");
-require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/update/includes/html.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/html.inc.php");
 
 $MMCApp = & MMCApp::getInstance();
 

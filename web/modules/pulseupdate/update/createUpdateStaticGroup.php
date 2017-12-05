@@ -23,7 +23,7 @@
  */
 
 require_once("modules/dyngroup/includes/dyngroup.php"); # for Group Class
-require_once("modules/update/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/locations_xmlrpc.inc.php");
 require_once("modules/base/includes/computers.inc.php");

@@ -25,8 +25,8 @@
 ?>
 <?php
 
-require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/update/includes/html.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/html.inc.php");
 
 $MMCApp = & MMCApp::getInstance();
 
@@ -40,7 +40,7 @@ $params = array();
 if (isset($_GET["os_class_id"]))
     $params['os_class_id'] = $_GET["os_class_id"];
 
-$ajax = new AjaxFilterLocation(urlStrRedirect("update/update/ajaxUpdates"), "container", "status", $params);
+$ajax = new AjaxFilterLocation(urlStrRedirect("pulseupdate/update/ajaxUpdates"), "container", "status", $params);
 
 $ajax->setElements(array(
                          _T('Available', 'update'),

@@ -25,8 +25,8 @@
 ?>
 <?php
 
-require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/update/includes/html.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/html.inc.php");
 require_once("graph/navbar.inc.php");
 
 installProductUpdates();
@@ -42,7 +42,7 @@ $p->display();
 <div id="update_status"></div>
 <script type="text/javascript">
     var update_status = function(){
-	jQuery('#update_status').load('<?php print urlStrRedirect("update/update/ajaxInstallProductUpdates"); ?>');
+	jQuery('#update_status').load('<?php print urlStrRedirect("pulseupdate/update/ajaxInstallProductUpdates"); ?>');
 	setTimeout(update_status, 500);
     };
     update_status();

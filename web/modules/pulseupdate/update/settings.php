@@ -25,8 +25,8 @@
 ?>
 <?php
 
-require_once("modules/update/includes/xmlrpc.inc.php");
-require_once("modules/update/includes/html.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/html.inc.php");
 
 
 // ============================================================
@@ -43,7 +43,7 @@ if (isset($_POST['bconfirm'])){
 // Create update commands
 if (isset($_GET['create_update_commands'])){
     create_update_commands();
-    header("Location: " . urlStrRedirect("update/update/settings"));
+    header("Location: " . urlStrRedirect("pulseupdate/update/settings"));
     return;
 }
 

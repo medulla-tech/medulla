@@ -25,7 +25,7 @@
 print "<h1>"._T('Available updates','update')."</h1>";
 
 require_once("includes/xmlrpc.inc.php");
-require_once("modules/update/includes/xmlrpc.inc.php");
+require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
 
 $updates = getProductUpdates();
 $update_titles = array();
