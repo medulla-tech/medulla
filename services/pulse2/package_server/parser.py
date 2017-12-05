@@ -457,12 +457,6 @@ class PackageParserJSON:
 
         sequence = {}
         sequence['step'] = seq_count
-        sequence['action'] = 'action_pwd_package'
-        data[package.targetos]['sequence'].append(sequence)
-        seq_count += 1
-
-        sequence = {}
-        sequence['step'] = seq_count
         sequence['action'] = 'actionprocessscriptfile'
         sequence['script'] = package.cmd.command
         sequence['typescript'] = 'Batch'
