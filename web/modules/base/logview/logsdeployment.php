@@ -199,10 +199,10 @@ function searchlogs(url){
         "iDisplayLength": <?php echo $maxperpage; ?>,
         "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
         buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: 'copy to clipboard',},
-        { extend: 'csv', className: 'btn btn-primary',  text: 'save to cvs file' },
-        { extend: 'excel', className: 'btn btn-primary',  text: 'save to excel file' },
-        { extend: 'print', className: 'btn btn-primary',  text: 'direct print logs'  }
+        { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard',},
+        { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
+        { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
+        { extend: 'print', className: 'btn btn-primary',  text: 'Print logs'  }
         ]
     } )
                             .ajax.url(
