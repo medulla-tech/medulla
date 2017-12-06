@@ -468,6 +468,7 @@ class PackageParserJSON:
         sequence['actionlabel'] = 'EXECUTE_SCRIPT'
         sequence['typescript'] = 'Batch'
         sequence['codereturn'] = ''
+        sequence['@resultcommand'] = '@resultcommand'
         data[package.targetos]['sequence'].append(sequence)
         data['metaparameter'][package.targetos]['label']['EXECUTE_SCRIPT'] = seq_count
         seq_count += 1
