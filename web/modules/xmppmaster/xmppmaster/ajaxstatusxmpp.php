@@ -50,6 +50,8 @@ if ($_GET['currenttasks'] == '1'){
   $LastdeployINsecond = 3600*24;
   echo "<h2>Current tasks (last 24 hours)</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
+   
+ 
 }
 else {
   $LastdeployINsecond = 3600*2160;
@@ -185,18 +187,18 @@ $n->addExtraInfo( $arraydeploy['tabdeploy']['start'], _T("Start date", "xmppmast
 $n->addExtraInfo( $arraystate, _T("Status", "xmppmaster"));
 $n->addExtraInfo( $arraydeploy['tabdeploy']['login'],_T("User", "xmppmaster"));
 //$n->setTableHeaderPadding(0);
-$n->setItemCount(count($arraydeploy['tabdeploy']));
+$n->setItemCount($arraydeploy['lentotal']);
 $n->setNavBar(new AjaxNavBar($arraydeploy['lentotal'], $filter, "updateSearchParamformRunning"));
 $n->addActionItemArray($logs);
  //function AjaxNavBar($itemcount, $filter, $jsfunc = "updateSearchParam", $max = "", $paginator = false) {
 
 $n->setParamInfo($params);
-$n->start = isset($_GET['start'])?$_GET['start']:0;
-$n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
-
-print "<br/><br/>";
-
+// $n->start = isset($_GET['start'])?$_GET['start']:0;
+// $n->end = (isset($_GET['end'])?$_GET['end']:$maxperpage);
+$n->start = 0;
+$n->end = $arraydeploy['lentotal'];
 $n->display();
+echo "<br>";
 ?>
 <style>
 progress {
