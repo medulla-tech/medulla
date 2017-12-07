@@ -1,3 +1,16 @@
+Pulse 2 4.1
+=============
+* [FEATURE] New interface for building complex packages and workflows with dependencies
+* [FEATURE] New history view that captures all operations
+* [FEATURE] Pulse update module widget is now a standalone widget
+* [FEATURE] Create and run custom quick actions
+* [FEATURE] Ability to delay the execution step of deployments based on time, percentage or number of machines having received the package
+* [FEATURE] Add support for UEFI in the DHCP server configuration for Pulse imaging
+* [BUGFIX] Fix saving of sysprep answer files
+* [BUGFIX] Fix the abortion of deployments
+* [BUGFIX] Fix authentication to GLPI for user provisioning
+* [BUGFIX] Fix multicast imaging in Debian Stretch
+
 Pulse 2 4.0
 =============
  * [FEATURE] Use xmpp to deliver messages, orders, etc
@@ -61,5 +74,3 @@ Pulse 2 3.3.0
  * [FEATURE] Management of multiple entities in Imaging
  * [BUGFIX]  Fix restore of a specific version of a file
  * [FEATURE] Replacement of historic Pulse PXE by PXELINUX
-
-
