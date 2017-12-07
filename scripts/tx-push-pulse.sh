@@ -20,5 +20,6 @@ modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update support
 for mod in $modules
 do
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx push -r pulse-1.${mod} -s -t -f --no-interactive
+	tx push -r pulse-1.${mod} -s -t 
+	#-f --no-interactive
 done

@@ -27,6 +27,7 @@ require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
 
+
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
     $target_uuid = isset($_GET['gid']) ? $_GET['gid'] : "";

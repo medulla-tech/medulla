@@ -125,8 +125,6 @@ function displayLogs($params) {
 
         require_once("modules/dyngroup/includes/dyngroup.php");
         require_once("modules/dyngroup/includes/xmlrpc.php");
-
-        
         // Group name
         $cmd_name = $result[1][0][0]['title'];
         $groupname = sprintf (_T("%s deployment subgroup - %s", "msc"), $cmd_name, date("Y-m-d H:i:s"));

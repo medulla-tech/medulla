@@ -58,10 +58,32 @@ if (($type == '' && (xmlrpc_isComputerRegistered($target_uuid) || xmlrpc_isCompu
 
         // goto images list
         if ($ret[0]) {
-            /* insert notification code here if needed */
+            $msg = sprintf( _T("Add service %s",'imaging'), $label);
+            xmlrpc_setfromxmppmasterlogxmpp($msg,
+                                    "SERVICE",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Service | server | Manual');
             header("Location: ".urlStrRedirect("base/computers/imgtabs/".$type."tabservices", $params));
             exit;
         } else {
+            xmlrpc_setfromxmppmasterlogxmpp($ret[1],
+                                    "SERVICE",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Service | server | Manual');
             new NotifyWidgetFailure($ret[1]);
         }
     }

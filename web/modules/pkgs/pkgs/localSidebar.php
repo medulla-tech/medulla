@@ -26,8 +26,6 @@ $sidemenu= new SideMenu();
 $sidemenu->setClass("pkgs");
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Packages list", 'pkgs'), "pkgs", "pkgs", "index"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a package", 'pkgs'), "pkgs", "pkgs", "add"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Bundle list", 'pkgs'), "pkgs", "pkgs", "bundleList"));
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add a bundle", 'pkgs'), "pkgs", "pkgs", "addBundle"));
 $sidemenu->addSideMenuItem(new SideMenuItem(_T("Pending packages list", 'pkgs'), "pkgs", "pkgs", "pending"));
 
 ?>

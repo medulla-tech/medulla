@@ -25,6 +25,8 @@
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+
 $params = getParams();
 $params['from'] = $_GET['from'];
 $item_uuid = $_GET['itemid'];
@@ -56,8 +58,30 @@ if (isset($_GET['gid'])) {
 if (quickGet('valid')) {
     if (isset($bs_uuid)) {
         $ret = xmlrpc_delServiceToTarget($bs_uuid, $target_uuid, $type);
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Remove Service %s", "imaging"), $bs_uuid),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $bs_uuid ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     } else {
         $ret = xmlrpc_delImageToTarget($im_uuid, $target_uuid, $type);
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Remove Image %s", "imaging"), $im_uuid),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $im_uuid ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     }
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
@@ -77,9 +101,20 @@ if (quickGet('valid')) {
           
             if (xmlrpc_check_process_multicast($objprocess)){
                 $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
+                xmlrpc_setfromxmppmasterlogxmpp($msg,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    "" ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
                 new NotifyWidgetFailure($msg);
                 header("Location: " . urlStrRedirect("imaging/manage/index"));
-                exit;  
+                exit;
             }
             else{
                 $ret = xmlrpc_synchroProfile($target_uuid);
@@ -89,7 +124,19 @@ if (quickGet('valid')) {
             $ret = xmlrpc_synchroComputer($target_uuid);
         }
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
+        $msg=sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1]));
+        xmlrpc_setfromxmppmasterlogxmpp($msg,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    "" ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
+            new NotifyWidgetFailure($msg);
         }
     } elseif (!$ret[0]) {
         new NotifyWidgetFailure($ret[1]);

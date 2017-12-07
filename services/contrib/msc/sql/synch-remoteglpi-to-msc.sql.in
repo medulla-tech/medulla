@@ -21,7 +21,7 @@ USE `@@GLPI_DBNAME@@`;
 
 DELIMITER $$
 
-DROP TRIGGER IF EXISTS @@GLPI_DBNAME@@.glpi_ipaddresses_AFTER_UPDATE$$
+DROP TRIGGER IF EXISTS `@@GLPI_DBNAME@@`.`glpi_ipaddresses_AFTER_UPDATE`$$
 USE `@@GLPI_DBNAME@@`$$
 CREATE DEFINER=`root`@`localhost` TRIGGER `@@GLPI_DBNAME@@`.`glpi_ipaddresses_AFTER_UPDATE` AFTER UPDATE ON `glpi_ipaddresses` FOR EACH ROW
 BEGIN
@@ -35,7 +35,7 @@ DROP procedure IF EXISTS `update_MSC_Ips`;
 
 DELIMITER $$
 USE `@@GLPI_DBNAME@@`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `update_MSC_Ips`(IN id_machine VARCHAR(20))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_MSC_Ips`(IN `id_machine` VARCHAR(20))
 BEGIN
 DECLARE uuid varchar(40) ;
 DECLARE ret varchar(255) ;
@@ -50,7 +50,7 @@ set uuid =  CONCAT("UUID",id_machine);
         SELECT
             GROUP_CONCAT(`name`    SEPARATOR '||')
         INTO ret FROM
-            @@GLPI_DBNAME@@.glpi_ipaddresses
+            `@@GLPI_DBNAME@@`.`glpi_ipaddresses`
         WHERE
             mainitems_id = id_machine;
     END IF;

@@ -42,6 +42,18 @@ from mmc.plugins.pulse2.pulse import Pulse2Pulse2Manager
 
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 
+
+import logging
+import subprocess
+import json
+from time import time
+from twisted.internet.threads import deferToThread
+deferred = deferToThread.__get__ #Create an alias for deferred functions
+
+
+last_update_check_ts = None
+available_updates = []
+
 APIVERSION = "0:0:0"
 
 NOAUTHNEEDED = [
@@ -141,6 +153,31 @@ class ContextMaker(ContextMakerI):
         s.userid = self.userid
         return s
 
+import subprocess
+def simplecommand(cmd):
+    obj={}
+    p = subprocess.Popen(cmd,
+                            shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+    result = p.stdout.readlines()
+    obj['code']=p.wait()
+    obj['result']=result
+    return obj
+
+def simplecommandstr(cmd):
+    obj={}
+    p = subprocess.Popen(cmd,
+                            shell=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+    result = p.stdout.readlines()
+    obj['code']=p.wait()
+    obj['result']="\n".join(result)
+    return obj
+
+
+
 
 class RpcProxy(RpcProxyI):
     # groups
@@ -194,7 +231,84 @@ class RpcProxy(RpcProxyI):
         """
         ctx = self.currentContext
         return ComputerImagingManager().getAllImagingServers(ctx.userid, associated)
+    
+    def runinshell(self, cmd):
+        process = subprocess.Popen([cmd], stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        out, err = process.communicate()
+        return out.strip(), err.strip(), process.returncode
 
+    def getProductUpdates(self):
+
+        @deferred
+        def _getProductUpdates():
+            updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
+            global last_update_check_ts, available_updates
+            o, e, ec = self.runinshell('%s -l --json' % updMgrPath)
+
+            # Check json part existence
+            if not '===JSON_BEGIN===' in o or not '===JSON_END===' in o:
+                available_updates = False
+
+            # Get json output
+            json_output = o.split('===JSON_BEGIN===')[1].split('===JSON_END===')[0].strip()
+            packages = json.loads(json_output)['content']
+
+            result = []
+
+            for pkg in packages:
+                pulse_filters = ('python-mmc', 'python-pulse2', 'mmc-web', 'pulse', 'mmc-agent')
+
+                # Skip non-Pulse packages
+                if not pkg[2].startswith(pulse_filters):
+                    continue
+
+                result.append({
+                    'name': pkg[2],
+                    'title': pkg[1]
+                })
+
+            # Caching last result
+            available_updates = result
+            last_update_check_ts = time()
+
+
+        global last_update_check_ts, available_updates
+        # If last checking is least than 4 hours, return cached value
+        if not last_update_check_ts or (time() - last_update_check_ts) > 14400:
+            _getProductUpdates()
+
+        return available_updates
+
+    def installProductUpdates(self):
+        """
+            This function update packages used for pulse ( pulse, mmc, etc.)
+        """
+
+        # Reset update cache
+        global last_update_check_ts, available_updates
+        last_update_check_ts = None
+        available_updates = []
+        updMgrPath = '/usr/share/pulse-update-manager/pulse-update-manager'
+
+        pulse_packages_filter = "|grep -e '^python-mmc' -e '^python-pulse2' -e '^mmc-web' -e '^pulse' -e '^mmc-agent$' -e '^pulse-xmpp-agent$'"
+        install_cmd = "LANG=C dpkg -l|awk '{print $2}' %s|xargs apt-get -y install" % pulse_packages_filter
+        install_cmd = "%s -l|awk '{print $1}' %s|xargs %s -i" % (updMgrPath, pulse_packages_filter, updMgrPath)
+
+        @deferred
+        def _runInstall():
+            try:
+                os.utime("/tmp/pulse-update-manager", None)
+            except Exception:
+                open("/tmp/pulse-update-manager", 'a').close()
+
+            # Running install command with no pipe
+            subprocess.call(install_cmd, shell=True)
+
+            os.remove("/tmp/pulse-update-manager", None)
+
+        _runInstall()
+
+        return True
 
 def displayLocalisationBar():
     return xmlrpcCleanup(ComputerLocationManager().displayLocalisationBar())

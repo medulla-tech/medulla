@@ -2,6 +2,7 @@
 /**
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2016 Siveo, http://siveo.net/
  *
  * $Id$
  *
@@ -30,14 +31,37 @@ if (isset($_POST["bconfirm"])) {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
     $from = $_GET["from"];
+    if(isExpertMode()) {
+        $uuid = $_GET["packageUuid"];
+        $return = remove_xmpp_package($uuid);
+    }
     $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
     $expire_result = expire_all_package_commands($ret);
-    if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
+
+    // ICI
+    if (!isXMLRPCError() and $ret != -1) {
+        $str = _T("The package has been deleted.", "pkgs");
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_GET["from"],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Package | Manual');
+    }
     if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
     $to = "index";
-    if ($from) { $to = $from; }
-    header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api'=>$p_api)));
+    if ($from) {
+        $to = $from;
+    }
+    header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api' => $p_api)));
     exit;
+
 } else {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
@@ -52,5 +76,4 @@ if (isset($_POST["bconfirm"])) {
     $f->addCancelButton("bback");
     $f->display();
 }
-
 ?>

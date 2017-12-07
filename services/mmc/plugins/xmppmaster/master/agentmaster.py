@@ -44,8 +44,6 @@ from lib.managesession import sessiondatainfo, session
 from lib.utils import *
 from lib.managepackage import managepackage
 from lib.manageADorganization import manage_fqdn_window_activedirectory
-from lib.manage_event import manage_event
-from lib.manage_process import mannageprocess
 from lib.manageRSAsigned import MsgsignedRSA
 from lib.localisation import Localisation
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
@@ -107,6 +105,9 @@ def callrestartbymaster(to):
 
 def callshutdownbymaster(to, time, msg):
    return ObjectXmpp().callshutdownbymaster( to, time, msg)
+
+def callvncchangepermsbymaster(to, askpermission):
+  return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
 
 class XmppCommandDiffered:
     """
@@ -223,9 +224,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.domaindefault = "pulse"
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
-        self.queue_read_event_from_command = Queue()
-        self.eventmanage = manage_event(self.queue_read_event_from_command, self)
-        self.mannageprocess = mannageprocess(self.queue_read_event_from_command)
+        #self.queue_read_event_from_command = Queue()
+        #self.eventmanage = manage_event(self.queue_read_event_from_command, self)
+        #self.mannageprocess = mannageprocess(self.queue_read_event_from_command)
         self.listdeployinprocess = {}
         self.deploywaitting = {}
         self.plugintype = {}
@@ -348,10 +349,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     if macadress != "":
                         logging.debug("wakeonlan machine  [Machine : %s]"%uuidmachine)
                         self.callpluginmasterfrommmc('wakeonlan', {'macadress': macadress } )
-                        self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
-                                        sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
-                                        priority = -1 ,
-                                        who = uuidmachine)
+                        #self.logtopulse("wake on lan on macadress %s"%macadress,type='Wol',
+                                        #sessionname = self.machineWakeOnLan[uuidmachine]['commanid'],
+                                        #priority = -1 ,
+                                        #who = uuidmachine)
+                        
         listobjsupp = []
         for deployuuid in self.machineDeploy:
             try:
@@ -408,6 +410,40 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logging.error("Executing plugin %s %s" % (plugin, str(e)))
                 traceback.print_exc(file=sys.stdout)
 
+    def xmpplog(self,
+                text,
+                type = 'noset',
+                sessionname = '',
+                priority = 0,
+                action = "",
+                who = "",
+                how = "",
+                why = "",
+                module = "",
+                date = None ,
+                fromuser = "",
+                touser = ""):
+        if who == "":
+            who = self.boundjid.bare
+        msgbody = {
+                    'log' : 'xmpplog',
+                    'text' : text,
+                    'type': type,
+                    'session' : sessionname,
+                    'priority': priority,
+                    'action' : action ,
+                    'who': who,
+                    'how' : how,
+                    'why' : why,
+                    'module': module,
+                    'date' : None ,
+                    'fromuser' : fromuser,
+                    'touser' : touser
+                    }
+        self.send_message(  mto = jid.JID("log@pulse"),
+                            mbody=json.dumps(msgbody),
+                            mtype='chat')
+
     def logtopulse(self,text,type='noset',sessionname = '',priority = 0, who =''):
         msgbody = {
                     'text' : text,
@@ -443,7 +479,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 for i in listrs:
                     li = XmppMasterDatabase().listmachinesfromdeploy(i[0])
                     logger.info("RS [%s] for deploy on %s Machine"%(i[0],len(li)-1))
-                    logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
+                    logger.debug('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format("type",
                                                                         "uuid",
                                                                         "Machine",
                                                                         "jid",
@@ -453,7 +489,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             TY = 'RSer'
                         else:
                             TY = "Mach"
-                        logger.info('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
+                        logger.debug('{0:5}|{1:7}|{2:20}|{3:35}|{4:55}'.format(TY,j[5],j[4],j[1],j[2]))
             else:
                 logger.info("Aucune Machine repertorié")
 
@@ -580,9 +616,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if descript is None:
             logger.error("deploy %s on %s  error : xmppdeploy.json missing" %(name, uuidmachine))
             return None
+        objdeployadvanced = XmppMasterDatabase().datacmddeploy(idcommand)
         data =  {
                 "name" : name,
                 "login" : login,
+                "idcmd" : idcommand,
+                "advanced" : objdeployadvanced,
                 'methodetransfert' : 'pushrsync',
                 "path" : path,
                 "packagefile":os.listdir(path),
@@ -606,12 +645,25 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                               datasession = None,
                                               encodebase64 = False)
 
-        self.logtopulse("Start deploy on machine %s"%jidmachine,
-                        type = 'deploy',
-                        sessionname = sessionid,
-                        priority = -1,
-                        who = "MASTER")
-        self.eventmanage.show_eventloop()
+        self.xmpplog("Start deploy on machine %s"%jidmachine,
+                type = 'deploy',
+                sessionname = sessionid,
+                priority =-1,
+                action = "",
+                who = "",
+                how = "",
+                why = self.boundjid.bare,
+                module = "Deployment | Start | Creation",
+                date = None ,
+                fromuser = data['login'],
+                touser = "")
+
+        #self.logtopulse("Start deploy on machine %s"%jidmachine,
+                        #type = 'deploy',
+                        #sessionname = sessionid,
+                        #priority = -1,
+                        #who = "MASTER")
+        #self.eventmanage.show_eventloop()
         XmppMasterDatabase().adddeploy( idcommand,
                                         jidmachine,
                                         jidrelay,
@@ -692,9 +744,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     logger.info("PAS De localisation AD par User")
             logger.info("-----------------------------------")
 
-            logger.info("DETAILED INFORMATION")
+            logger.debug("DETAILED INFORMATION")
             if 'information' in data:
-                logger.info("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
+                logger.debug("%s"% json.dumps(data['information'], indent=4, sort_keys=True))
 
     def handlemanagesession(self):
         self.session.decrementesessiondatainfo()
@@ -801,6 +853,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
             }
         self.send_message(mto=to,
                         mbody=json.dumps(shutdownmachine),
+                        mtype='chat')
+        return True
+
+    def callvncchangepermsbymaster(self, to, askpermission = 1):
+        vncchangepermsonmachine = {
+            'action' : "vncchangepermsfrommaster",
+            'sessionid' : name_random(5, "vncchangeperms"),
+            'data' : {'askpermission' : askpermission},
+            'ret': 0
+            }
+        self.send_message(mto=to,
+                        mbody=json.dumps(vncchangepermsonmachine),
                         mtype='chat')
         return True
 
@@ -1128,7 +1192,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                             " example {....sendother : \"autre@infos\"} jid is databpointer by data['autre']['infos']\n"\
                                                 " data is %s"%(json.dumps(data, indent=4)))
                                 break
-                        print jidmachine
+                        #print jidmachine
                         jidmachine = str(jidmachine)
                         if jidmachine != "":
                             self.send_message( mto = jidmachine,
@@ -1299,18 +1363,54 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                 jidrs = "%s@%s"%(jidrs,jidm)
                                 uuid = 'UUID' + str(computer.id)
                                 logger.debug("** update uuid %s for machine %s "%(uuid, msg['from'].bare))
+                                #update inventory
                                 XmppMasterDatabase().updateMachineidinventory(uuid, idmachine)
+                                XmppMasterDatabase().setlogxmpp( "register inventory in xmpp",
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'QuickAction|Inventory|Inventory reception|Auto',
+                                                                '',
+                                                                '',
+                                                                "Master")
+
+                                XmppMasterDatabase().setlogxmpp( "Remote Service <b>%s</b> : for [machine : %s][RS : %s]"%(data['remoteservice'], data['information']['info']['hostname'],jidrs,),
+                                                                "Master",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'Remote_desktop | Guacamole | Service | Auto',
+                                                                '',
+                                                                '',
+                                                                "Master")
                                 self.callInstallConfGuacamole( jidrs, {'hostname' : data['information']['info']['hostname'],
                                                                             'machine_ip' : data['xmppip'],
                                                                             'uuid' : str(computer.id),
                                                                             'remoteservice' : data['remoteservice'] })
                                 break
+
                             else:
                                 logging.getLogger().debug("computer is None")
                                 pass
                         else:
-                            # Register machine in inventory
+                            # Register machine in inventory creation
                             logger.debug("** Call inventory on %s"% msg['from'].bare)
+                            XmppMasterDatabase().setlogxmpp(    "Master ask inventory for registration",
+                                                                "Master msg",
+                                                                "",
+                                                                0,
+                                                                data['from'],
+                                                                'auto',
+                                                                '',
+                                                                'QuickAction|Inventory|Inventory requested',
+                                                                '',
+                                                                '',
+                                                                "Master")
                             self.callinventory(data['from'])
                 else:
                     logger.error("** enregistration base error")
@@ -1374,9 +1474,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         return False
 
     def message(self, msg):
-        print "*******MESSAGE %s" %msg['from']
-        print msg['body']
-        logger.debug("message")
+        logger.debug("*******MESSAGE %s" %msg['from'])
+        #logger.debug(msg['body'])
         if  msg['body'] == "This room is not anonymous":
             return False
         if msg['from'].bare == self.config.jidchatroommaster or msg['from'].bare == self.config.confjidchatroom:

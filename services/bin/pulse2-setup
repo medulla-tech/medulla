@@ -353,6 +353,9 @@ class Service(object):
 class SrvMmcAgent(Service):
     name = 'mmc-agent'
 
+    def is_enable(self):
+        return self.config['inventory.service.enable']
+
     def restart(self, *args, **kwargs):
         super(SrvMmcAgent, self).restart(fatal=True)
 
@@ -448,7 +451,8 @@ class Pulse2ConfigFile(object):
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig']
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
+                'PluginsPulseUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -635,6 +639,8 @@ class PluginsDyngroupConfig(Pulse2ConfigFile):
 class PluginsUpdateConfig(Pulse2ConfigFile):
     path = 'plugins/update.ini'
 
+class PluginsPulseUpdateConfig(Pulse2ConfigFile):
+    path = 'plugins/pulseupdate.ini'
 
 class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
@@ -1033,6 +1039,11 @@ class SetupApp(object):
         self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/update.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
+        # update db
+        self.confs['plugins/pulseupdate.ini'].set('database', 'dbhost', self.config['dbhost'])
+        self.confs['plugins/pulseupdate.ini'].set('database', 'dbuser', self.config['dbuser'])
+        self.confs['plugins/pulseupdate.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
+
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/imaging.ini'].set('database', 'dbuser', self.config['dbuser'])
@@ -1096,7 +1107,7 @@ class SetupApp(object):
 
         glpi_conf.set("main", "glpi_computer_uri", computer_url)
         glpi_conf.set("authentication_glpi", "baseurl", base_url)
-        glpi_conf.set("provisioning_glpi", "doauth", 1)
+        glpi_conf.set("authentication_glpi", "doauth", 1)
         glpi_conf.set("provisioning_glpi", "profiles_order", "profile1 profile2 profile3")
         glpi_conf.set("provisioning_glpi", "exclude", "root")
 

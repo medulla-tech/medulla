@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -31,6 +32,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 // get entities
 require("modules/pulse2/includes/xmlrpc.inc.php");
 require_once("modules/pulse2/includes/utilities.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 if(!isset($params))
     $params = array();
@@ -54,12 +56,15 @@ if (isset($_POST['bsync'])) {
     $ret = xmlrpc_synchroLocation($_POST['location_uuid']);
     // goto images list
     if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
+        //$str = sprintf(_T("Boot menu generation Succes for package server on location %s ", "imaging"),$_POST['location_uuid']);
         /* insert notification code here if needed */
     } elseif (!$ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
+        $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+        new NotifyWidgetFailure($str);
     }
     elseif (isXMLRPCError()) {
-        new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1])));
+        $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+        new NotifyWidgetFailure($str);
     }
 }
 

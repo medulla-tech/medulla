@@ -123,6 +123,14 @@ function getAppstreamNotifications(){
     return xmlCall("pkgs.getAppstreamNotifications", array());
 }
 
+function save_xmpp_json($folder, $json){
+    return xmlCall("pkgs.save_xmpp_json", array($folder, $json));
+}
+
+function xmpp_packages_list(){
+    return xmlCall("pkgs.xmpp_packages_list", array());
+}
+
 function xmlrpc_setfrompkgslogxmpp(   $text,
                                             $type = "infouser",
                                             $sessionname = '' ,
@@ -147,4 +155,16 @@ function xmlrpc_setfrompkgslogxmpp(   $text,
                                                     $fromuser));
 }
 
+
+function remove_xmpp_package($packageUuid){
+    return xmlCall("pkgs.remove_xmpp_package", array($packageUuid));
+}
+
+function get_xmpp_package($packageUuid){
+    return xmlCall("pkgs.get_xmpp_package", array($packageUuid));
+}
+
+function get_meta_from_xmpp_package($packageUuid){
+    return xmlCall("pkgs.get_meta_from_xmpp_package", array($packageUuid));
+}
 ?>

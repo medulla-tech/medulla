@@ -25,7 +25,7 @@
 
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $params = getParams();
 if (isset($_GET['gid']) && $_GET['gid'] != '') {
     $type = 'group';
@@ -45,19 +45,46 @@ if (isset($_GET['gid']) && $_GET['gid'] != '') {
 if (isset($params['hostname']) && !isset($target_name)) {
     $target_name = $params['hostname'];
 }
-
 function item_up() {
     $params = getParams();
     $item_uuid = $_GET['itemid'];
     $label = $_GET['itemlabel'];
-
+    if (isset($_GET['hostname'])) {
+        $target_name = $_GET['hostname'];
+    } elseif (isset($_GET['target_name'])) {
+        $target_name = $_GET['target_name'];
+    } else {
+        $target_name = '';
+    }
     if (isset($_GET['gid'])) {
         $type = 'group';
         $gid = $params['gid'];
         $ret = xmlrpc_moveItemUpInMenu($gid, $type, $item_uuid);
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Item Menu %s for group up %s", "imaging"), urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     } else {
         $type = '';
         $uuid = $params['uuid'];
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Item Menu %s for machine up %s", "imaging"),urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         $ret = xmlrpc_moveItemUpInMenu($uuid, $type, $item_uuid);
     }
     if ($ret) {
@@ -89,17 +116,57 @@ function item_down() {
     $item_uuid = $_GET['itemid'];
     $label = $_GET['itemlabel'];
     $uuid = $params['uuid'];
-
+    if (isset($_GET['hostname'])) {
+        $target_name = $_GET['hostname'];
+    } elseif (isset($_GET['target_name'])) {
+        $target_name = $_GET['target_name'];
+    } else {
+        $target_name = '';
+    }
     if (isset($_GET['gid'])) {
         $type = 'group';
         $gid = $params['gid'];
         $ret = xmlrpc_moveItemDownInMenu($gid, $type, $item_uuid);
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Item Menu %s%s", "imaging"),urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     } else {
         $type = '';
         $uuid = $params['uuid'];
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Item Menu %s for machine down %s", "imaging"), urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         $ret = xmlrpc_moveItemDownInMenu($uuid, $type, $item_uuid);
     }
     if ($ret) {
+        $str = sprintf(_T("Success to move item <strong>%s</strong> in the boot menu [ %s ]", "imaging"), urldecode($label), $target_name);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         if (isset($_GET['gid'])) {
             if (xmlrpc_isProfileRegistered($_GET['gid'])) {
                 // Get Current Location
@@ -111,6 +178,17 @@ function item_down() {
         }
     } else {
         $str = sprintf(_T("Failed to move item <strong>%s</strong> in the boot menu", "imaging"), urldecode($label));
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         new NotifyWidgetFailure($str);
     }
 
@@ -201,10 +279,42 @@ function item_edit() {
         $params['hidden_WOL'] = ($_POST['displayed_WOL'] == 'on'?False:True);
         $params['default_name'] = $_POST['default_name'];
 
-        if (isset($bs_uuid) && $bs_uuid != '') {
-            $ret = xmlrpc_editServiceToTarget($bs_uuid, $target_uuid, $params, $type);
+        if (isset($_GET['hostname'])) {
+            $target_name = $_GET['hostname'];
+        } elseif (isset($_GET['target_name'])) {
+            $target_name = $_GET['target_name'];
         } else {
+            $target_name = '';
+        }
+
+        if (isset($bs_uuid) && $bs_uuid != '') {
+            $str = sprintf(_T("Edit item <strong>%s</strong> in the boot Menu [ %s ]", "imaging"), urldecode($label), $target_name);
+            $ret = xmlrpc_editServiceToTarget($bs_uuid, $target_uuid, $params, $type);
+            xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
+        } else {
+            $str = sprintf(_T("Edit item <strong>%s</strong> in the boot Menu [ %s ]", "imaging"), urldecode($label), $target_name);
             $ret = xmlrpc_editImageToTarget($im_uuid, $target_uuid, $params, $type);
+            xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         }
         if ($ret)
         {
@@ -294,7 +404,7 @@ function item_list() {
             $a_desc[] = $entry['boot_service']['default_desc'];
             $entry['default_name'] = $entry['boot_service']['default_name'];
             $kind = 'BS';
-            if ($entry['read_only']) {
+            if (isset($entry['read_only']) && $entry['read_only' ]) {
                 $url = '<img src="modules/imaging/graph/images/service-action-ro.png" style="vertical-align: middle" alt="'._T('boot service from profile', 'imaging').'"/> ';
             } else {
                 $url = '<img src="modules/imaging/graph/images/service-action.png" style="vertical-align: middle" alt="'._T('boot service', 'imaging').'"/> ';

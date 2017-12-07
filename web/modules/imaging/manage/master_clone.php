@@ -25,6 +25,7 @@ require("graph/navbar.inc.php");
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();
 list($list, $values) = getEntitiesSelectableElements();
@@ -71,8 +72,19 @@ if (count($process) > 0){
 }
 else{
     if(count($list) == 0){
-	$msg = sprintf (_T("There is no imaging server available to clone the master")."%s",$label );
-	new NotifyWidgetWarning($msg);
+        $msg = sprintf (_T("There is no imaging server available to clone the master", "imaging")."%s",$label );
+        xmlrpc_setfromxmppmasterlogxmpp($msg,
+                                        "IMG",
+                                        '',
+                                        0,
+                                        $label ,
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Imaging | Master | Menu | Clone | Manual');
+        new NotifyWidgetWarning($msg);
         header("Location: " . urlStrRedirect("imaging/manage/master"));
         exit;
     }else

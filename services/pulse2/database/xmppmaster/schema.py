@@ -34,21 +34,15 @@ class XmppMasterDBObj(DBObj):
     # All XmppMaster tables have id colmun as primary key
     id = Column(Integer, primary_key=True)
 
-#class Logs(Base, XmppMasterDBObj):
+class Qa_custom_command(Base):
     ## ====== Table name =========================
-    #__tablename__ = 'logs'
+    __tablename__ = 'qa_custom_command'
     ## ====== Fields =============================
-    ## Here we define columns for the table machines.
-    ## Notice that each column is also a normal Python instance attribute.
-    ##id = Column(Integer, primary_key=True)
-    ## Warning, if you modify the wrapper, you also have to change it in log.py
-    #type = Column(String(6), nullable=False,default = "noset")
-    #date = Column(DateTime, default=datetime.datetime.utcnow)
-    #text = Column(String(255), nullable=False)
-    #sessionname = Column(String(20), nullable=False, default = "")
-    #priority = Column(Integer, default = 0)
-    #who = Column(String(20), nullable=False, default = "")
-
+    namecmd = Column(String(45), primary_key=True)
+    user =  Column(String(45), primary_key=True)
+    os = Column(String(45), primary_key=True)
+    customcmd = Column(Text, nullable=False)
+    description = Column(String(45), nullable=False, default = "")
 
 class Logs(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -71,7 +65,6 @@ class Logs(Base, XmppMasterDBObj):
     action = Column(String(45), nullable=False, default = "")
     touser = Column(String(45), nullable=False, default = "")
     fromuser = Column(String(45), nullable=False, default = "")
-
 
 class UserLog(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -252,8 +245,16 @@ class Has_login_command(Base, XmppMasterDBObj):
     # Here we define columns for the table deploy.
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
-    login = Column(String(45), nullable=False)
-    command = Column(Integer)
+    login = Column(String(45), nullable = False)
+    command = Column(Integer, nullable=False)
+    start_exec_on_time = Column(DateTime, default=None)
+    grpid = Column(Integer, default = None)
+    nb_machine_for_deploy = Column(Integer, default = None)
+    start_exec_on_nb_deploy = Column(Integer, default = None)
+    count_deploy_progress= Column(Integer, default = 0)
+    parameters_deploy = Column(Text, default=None)
+    rebootrequired = Column(Boolean, default=False)
+    shutdownrequired = Column(Boolean, default=False)
 
 class Organization(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -263,7 +264,7 @@ class Organization(Base, XmppMasterDBObj):
     # Notice that each column is also a normal Python instance attribute.
     #id = Column(Integer, primary_key=True)
     name = Column(String(45), nullable=False)
-  
+
 class Packages_list(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'packageslist'
@@ -273,4 +274,4 @@ class Packages_list(Base, XmppMasterDBObj):
     #id = Column(Integer, primary_key=True)
     organization_id= Column(Integer, nullable=False)
     packageuuid = Column(String(45), nullable=False)
-    
+

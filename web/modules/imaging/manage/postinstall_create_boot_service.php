@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2012 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -25,22 +26,44 @@
 
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     // id of the script
+    $itemlabel= $_POST['itemlabel'];
     $script_id = $_POST['itemid'];
     $location = getCurrentLocation();
     $ret = xmlrpc_createBootServiceFromPostInstall($script_id, $location);
-
     $ret = (is_array($ret)) ? $ret[0] : $ret;
     if ($ret) {
         $str = sprintf(_T("Boot service successfully created", "imaging"));
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Success : Boot service successfully created", 'Imaging').' '."Script id : "."( ".$script_id." ) "."on location : ".$location."[".$itemlabel."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $itemlabel ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/service"));
         exit;
     }
     else {
         $str = sprintf(_T("Error while creating Boot Service", "imaging"));
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : Error while creating Boot Service", 'Imaging').' '."Script id : "."( ".$script_id." ) "."on location : ".$location."[".$itemlabel."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $itemlabel ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetFailure($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;

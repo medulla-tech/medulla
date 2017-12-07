@@ -26,6 +26,7 @@ dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging
 	pulse2-backup-servers pulse2-debug pulse2-dbupdate \
 	pulse2-msc-clean-database pulse2-inventory-clean-database \
 	pulse2-collect-info pulse2-create-group pulse2-cm pulse2-register-pxe.py \
-	pulse2-connect-machine-backuppc pulse2-disconnect-machine-backuppc
+	pulse2-connect-machine-backuppc pulse2-disconnect-machine-backuppc \
+	restart-pulse-services
 
 dist_bin_SCRIPTS = pulse2-uuid-resolver pulse2-dlp-server pulse2-backup-handler pulse2-synch-masters

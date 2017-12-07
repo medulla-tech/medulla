@@ -1,0 +1,69 @@
+body {
+    display : flex;
+}
+
+li {
+    list-style-type:none;
+}
+
+h1 {
+    font-size:15px;
+}
+
+#workflow-selected-list li{
+    display:block;
+    margin-bottom:5px;
+}
+
+#available-actions .header, #current-actions .header {
+    background-color: #9b9f9d;
+}
+
+#available-actions .header {
+    margin-bottom: 3px;
+}
+
+#available-actions .header h1, #current-actions .header h1 {
+    color:white;
+}
+
+#available-actions .content {
+    display:none;
+}
+
+#available-actions,#current-actions {
+    margin:5px;
+    background-color:white;
+}
+
+ul {
+    padding:5px;
+}
+
+#available-actions li:hover {
+    cursor:move;
+}
+
+#current-actions li {
+    width:100%;
+}
+
+#current-actions li .content {
+    background-color: #fdfdfd;
+    border: solid #5b5b5b 1px;
+    margin-bottom:3px;
+}
+
+textarea {
+    width:200px;
+    height:5em;
+}
+
+.content textarea {
+    width:500px;
+    height:15em;
+}
+
+#upload-result {
+    clear:left;
+}

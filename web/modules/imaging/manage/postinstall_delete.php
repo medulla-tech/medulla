@@ -2,6 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -28,7 +29,7 @@
 
 include('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 //$params = getParams();
 $script_id = $_GET['itemid'];
 $location = getCurrentLocation();
@@ -42,13 +43,46 @@ if ($_POST) {
     // check result
     if ((is_array($ret) && $ret[0]) || $ret) {
         $str = sprintf(_T("<strong>%s</strong> script deleted", "imaging"), $script_name);
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Success : script deleted", 'Imaging').' '."Script : "."( ".$script_name." ) "."on location : ".$location."[".$label."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetSuccess($str);
         header("Location: " . urlStrRedirect("imaging/manage/postinstall"));
         exit;
     } elseif (count($ret) > 1) {
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : script deleted", 'Imaging').' '."Script : "."( ".$script_name." ) "."on location : ".$location."[".$label."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetFailure($ret[1]);
     } else {
         $str = sprintf(_T("<strong>%s</strong> script wasn't deleted", "imaging"), $script_name);
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Warning : script wasn't deleted", 'Imaging').' '."Script : "."( ".$script_name." ) "."on location : ".$location."[".$label."]",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $script_name ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Start | Manual');
         new NotifyWidgetFailure($str);
     }
 } else {

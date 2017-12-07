@@ -30,7 +30,6 @@ elif sys.platform.startswith('win'):
 elif sys.platform.startswith('darwin'):
     fileconf = os.path.join("/", "Library", "Application Support", "Pulse", "etc")
 
-
 setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -44,7 +43,7 @@ setup(
 
     keywords='pulse2',
     name='pulse2', 
-    version='4.0',
+    version='4.1',
     debian_distro='stretch',
     description = 'pulse2',
     url='https://www.siveo.net/',

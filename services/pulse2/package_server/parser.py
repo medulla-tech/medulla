@@ -352,6 +352,11 @@ class PackageParserJSON:
                 except KeyError:
                     entity_id = 0
 
+                try:
+                    metagenerator = data['metagenerator']
+                except KeyError:
+                    metagenerator = 'standard'
+
                 # Inventory section
                 licenses = data['inventory']['licenses']
                 associateinventory = data['inventory']['associateinventory']
@@ -381,7 +386,8 @@ class PackageParserJSON:
                 queries['boolcnd'],
                 licenses,
                 sub_packages,
-                associateinventory
+                associateinventory,
+                metagenerator
             )
         except Exception, e:
             logging.getLogger().error("parse_str failed")
@@ -402,6 +408,7 @@ class PackageParserJSON:
         data['description'] = package.description
         data['reboot'] = package.reboot
         data['targetos'] = package.targetos
+        data['metagenerator'] = package.metagenerator
 
         # Sub packages if exists
         data['sub_packages'] = package.sub_packages
@@ -436,12 +443,19 @@ class PackageParserJSON:
 
         data = {}
 
+        data['metaparameter'] = {}
+        data['metaparameter'][package.targetos] = {}
+        data['metaparameter'][package.targetos]['label'] = {}
+
         data['info'] = {}
         data['info']['name'] = str(package.label+' '+package.version+' ('+package.id+')')
         data['info']['software'] = package.label
         data['info']['version'] = str(package.version)
         data['info']['description'] = package.description
-        data['info']['transferfile'] = 'true'
+        data['info']['transferfile'] = True
+        data['info']['methodetransfert'] = 'pullcurl'
+        data['info']['Dependency'] = []
+        data['info']['metagenerator'] = package.metagenerator
 
         data[package.targetos] = {}
         data[package.targetos]['sequence'] = []
@@ -449,44 +463,46 @@ class PackageParserJSON:
 
         sequence = {}
         sequence['step'] = seq_count
-        sequence['action'] = 'action_pwd_package'
-        data[package.targetos]['sequence'].append(sequence)
-        seq_count += 1
-
-        sequence = {}
-        sequence['step'] = seq_count
-        sequence['action'] = 'actionprocessscript'
-        if package.targetos == 'win':
-            sequence['command'] = 'xmppdeploy.bat'
-        else:
-            sequence['command'] = 'xmppdeploy.sh'
+        sequence['action'] = 'actionprocessscriptfile'
+        sequence['script'] = package.cmd.command
+        sequence['actionlabel'] = 'EXECUTE_SCRIPT'
+        sequence['typescript'] = 'Batch'
         sequence['codereturn'] = ''
+        sequence['@resultcommand'] = '@resultcommand'
         sequence['success'] = seq_count+1
         if package.reboot:
             sequence['error'] = seq_count+3
         else:
             sequence['error'] = seq_count+2
-        sequence['@resultcommand'] = ''
-        sequence['timeout'] = 900
         data[package.targetos]['sequence'].append(sequence)
+        data['metaparameter'][package.targetos]['label']['EXECUTE_SCRIPT'] = seq_count
         seq_count += 1
 
         if package.reboot:
             sequence = {}
             sequence['step'] = seq_count
             sequence['action'] = 'actionrestart'
+            sequence['actionlabel'] = 'REBOOT'
             data[package.targetos]['sequence'].append(sequence)
+            data['metaparameter'][package.targetos]['label']['REBOOT'] = seq_count
             seq_count += 1
 
         sequence = {}
         sequence['step'] = seq_count
         sequence['action'] = 'actionsuccescompletedend'
+        sequence['actionlabel'] = 'END_SUCCESS'
         data[package.targetos]['sequence'].append(sequence)
+        data['metaparameter'][package.targetos]['label']['END_SUCCESS'] = seq_count
         seq_count += 1
 
         sequence = {}
         sequence['step'] = seq_count
         sequence['action'] = 'actionerrorcompletedend'
+        sequence['actionlabel'] = 'END_ERROR'
         data[package.targetos]['sequence'].append(sequence)
+        data['metaparameter'][package.targetos]['label']['END_ERROR'] = seq_count
+
+        data['metaparameter']['os'] = []
+        data['metaparameter']['os'].append(package.targetos)
 
         return json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))

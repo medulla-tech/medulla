@@ -2,6 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -25,6 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $location = getCurrentLocation();
 
@@ -62,26 +64,79 @@ if (isset($_POST['removeServices'])) {
     foreach ($bootServicesToDelFromTarget as $boot_service) {
         $ret = xmlrpc_delServiceToTarget($boot_service['bs_uuid'], $boot_service['target_uuid'], $boot_service['type']);
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Removal of boot service failed", "imaging")));
+            $str = sprintf(_T("Removal of boot service failed", "imaging"));
+            xmlrpc_setfromxmppmasterlogxmpp("Error : ".$str,
+                                            "IMG",
+                                            '',
+                                            0,
+                                            $boot_service['target_uuid'] ,
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Imaging | Postinstall | Menu | Configuration | Manual');
+            new NotifyWidgetFailure($str);
         }
 
         // Synchronize boot menu
         $ret = xmlrpc_synchroComputer($boot_service['target_uuid']);
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1])));
+            $str = sprintf(_T("Boot menu generation failed for computer: %s", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
         }
     }
     foreach ($bootServicesToDelFromLocation as $boot_service) {
+
         $ret = xmlrpc_delServiceToLocation($boot_service['bs_uuid'], $boot_service['location']);
+        if ($ret[0] and !isXMLRPCError()) {
+            $str = sprintf(_T("Service <strong>%s</strong> removed from default boot menu", "imaging"), $label);
+            xmlrpc_setfromxmppmasterlogxmpp($str,
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $boot_service['bs_uuid'] ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Postinstall | Menu | Configuration | Manual');
+                new NotifyWidgetSuccess($str);
+        }
         if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Removal of boot service failed", "imaging")));
+            $str = sprintf(_T("Removal of boot service failed", "imaging"));
+            xmlrpc_setfromxmppmasterlogxmpp("Error : ".$str,
+                                            "IMG",
+                                            '',
+                                            0,
+                                            $boot_service['bs_uuid'] ,
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Imaging | Postinstall | Menu | Configuration | Manual');
+            new NotifyWidgetFailure($str);
         }
 
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($boot_service['location']);
-        if (isXMLRPCError()) {
-            new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+        // goto images list
+        if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
+        } elseif (!$ret[0] and !isXMLRPCError()) {
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
         }
+        elseif (isXMLRPCError()) {
+            $str = sprintf(_T("Boot menu generation failed for package server: %s<br /><br />Check /var/log/mmc/pulse2-package-server.log", "imaging"), implode(', ', $ret[1]));
+            new NotifyWidgetFailure($str);
+        }
+//        // Synchronize boot menu
+//         $ret = xmlrpc_synchroLocation($boot_service['location']);
+//         if (isXMLRPCError()) {
+//             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
+//         }
     }
     if (isset($_POST['uuid']) and isset($_POST['hostname'])) {
         // Come from a computer page

@@ -31,6 +31,8 @@ require_once('modules/msc/includes/package_api.php');
 require_once('modules/msc/includes/scheduler_xmlrpc.php');
 require_once('modules/msc/includes/mscoptions_xmlrpc.php');
 
+
+
 function quick_get($param, $is_checkbox = False) {
     if ($is_checkbox) {
         return $_GET[$param];
@@ -99,6 +101,7 @@ function start_a_command($proxy = array()) {
     $submod = $path[1];
     $page = $path[2];
     $params = array();
+    //,'parameterspacquage'
     foreach (array('start_script', 'clean_on_success', 'do_reboot', 'do_wol', 'next_connection_delay', 'max_connection_attempt', 'do_inventory', 'ltitle', 'parameters', 'papi', 'maxbw', 'deployment_intervals', 'max_clients_per_proxy', 'launchAction') as $param) {
         $params[$param] = $post[$param];
     }
@@ -124,6 +127,9 @@ function start_a_command($proxy = array()) {
             $params[$param] = $post[$param];
         }
     }
+
+    //$params['exec_date'] = $post['exec_date'];
+
     // scheduler_start_these_commands
     $pid = $post['pid'];
     $mode = $post['copy_mode'];
@@ -134,9 +140,17 @@ function start_a_command($proxy = array()) {
         $target = array($uuid);
         $tab = 'tablogs';
         /* record new command */
+
         $id = add_command_api($pid, $target, $params, $p_api, $mode, NULL);
         if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-            xmlrpc_addlogincommand($_SESSION['login'], $id);
+            $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
+            $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
+            $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
+            $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
+            if ($exec_date != "" && $exec_date == $start_date){
+                $exec_date = '';
+            }
+            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
@@ -195,7 +209,8 @@ function start_a_command($proxy = array()) {
                 $deploy_group_id = xmlrpc_get_deploy_group_id($gid, $p_api, $pid);
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id);
+                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0);
                 }
 
                 if (!$active) {
@@ -225,7 +240,8 @@ function start_a_command($proxy = array()) {
                 // Add command on sub-group
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id);
+                    $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id, $countmachine );
                 }
 
                 if (!$active) {
@@ -241,9 +257,22 @@ function start_a_command($proxy = array()) {
             exit;
         }
         else {
+            // deploy on group
             $id = add_command_api($pid, NULL, $params, $p_api, $mode, $gid, $ordered_proxies);
             if(in_array("xmppmaster", $_SESSION["modulesList"])) {
-                xmlrpc_addlogincommand($_SESSION['login'], $id);
+                $countmachine = getRestrictedComputersListLen( array('gid' => $gid));
+                $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
+                $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
+                $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
+
+                $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
+                if ($exec_date != "" && $exec_date == $start_date){
+                    $exec_date = '';
+                }
+                $instructions_nb_machine_for_exec    = (quick_get('instructions_nb_machine_for_exec')) ? quick_get('instructions_nb_machine_for_exec') : '';
+
+                xmlrpc_addlogincommand($_SESSION['login'], $id, $gid, $countmachine, $instructions_nb_machine_for_exec, $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
+
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
                                                                                     'hostname' => $hostname,
@@ -331,7 +360,6 @@ if (isset($_POST["bconfirmproxy"])) {
     start_a_command($proxy);
 }
 
-
 /* cancel button handling */
 if (isset($_POST['bback'])) {
     $from = $_POST['from'];
@@ -342,7 +370,6 @@ if (isset($_POST['bback'])) {
     if (isset($_POST["gid"])) {
         echo "$module/$submod/$page";
         echo $_POST["gid"];
-        
             header("Location: " . urlStrRedirect("$module/$submod/$page", array('tab' => "grouptablaunch", 'gid' => $_POST["gid"])));
             exit;
     }
@@ -365,6 +392,16 @@ if (isset($_GET['badvanced']) and isset($_POST['bconfirm']) and !isset($_POST['l
 
 /* Advanced action: form display */
 if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
+
+
+
+
+
+
+
+
+
+
     // Vars seeding
     $from = quick_get('from');
     $pid = quick_get('pid');
@@ -374,7 +411,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     if (!isset($name) || $name == '') {
         $name = getPackageLabel($p_api, quick_get('pid'));
     }
-
     // form design
     $f = new ValidatingForm();
 
@@ -394,6 +430,7 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
         $gid = $_GET['gid'];
         $group = new Group($gid, true);
         if ($group->exists != False) {
+            $namegroup = $group->getName();
             if (quick_get('convergence')) {
                 $label = new RenderedLabel(3, sprintf(_T('Software Convergence: action "%s" on "%s"', 'msc'), $name, $group->getName()));
             }
@@ -417,7 +454,6 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
 
     $start_script = quick_get('start_script', True);
     $clean_on_success = quick_get('clean_on_success', True);
-
     $max_bw = quick_get('maxbw');
     if (!isset($max_bw) || $max_bw == '') {
         $max_bw = web_def_maxbw();
@@ -429,12 +465,15 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
     // $coh_life_time is set to 24h for convergence commands
     $coh_life_time = (quick_get('convergence')) ? 24 : web_def_coh_life_time();
     $end_date = (quick_get('end_date')) ? quick_get('end_date') : date("Y-m-d H:i:s", time() + $coh_life_time * 60 * 60);
-
+//     $exec_date = (quick_get('exec_date')) ? quick_get('exec_date') : date("Y-m-d H:i:s");
+    $exec_date = (quick_get('exec_date')) ? quick_get('exec_date') : '';
     if (quick_get('launchAction')) { // Advanced Quick Action
+    $ss =  new TrFormElement(
+                _T('The command must start after', 'msc'),
+                new DateTimeTpl('start_date')
+            );
         $f->add(
-            new TrFormElement(
-                _T('The command must start after', 'msc'), new DateTimeTpl('start_date')
-            ), array(
+           $ss, array(
                 "value" => $start_date,
                 "ask_for_now" => 0
             )
@@ -560,63 +599,128 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
                 )
             );
         }
-
         if(quick_get('editConvergence')) {
             $f->add(
                 new HiddenTpl('editConvergence'), array("value" => quick_get('editConvergence'), "hide" => True)
             );
         }
-
-            $deployment_fields = array(
-                new InputTpl('deployment_intervals'),
-                new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
-            );
-            $deployment_values = array(
-                "value" => array(
-                    quick_get('deployment_intervals'),
-                    '',
-                ),
+        $deployment_fields = array(
+            new InputTpl('deployment_intervals'),
+            new TextTpl(sprintf('<i style="color: #999999">%s</i>', _T('Example for lunch and night (24h format): 12-14,20-8', 'msc')))
+        );
+        $deployment_values = array(
+            "value" => array(
+                quick_get('deployment_intervals'),
+                '',
+            ),
+        );
+        $f->add(
+            new TrFormElement(
+                _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
+            ), $deployment_values
+        );
+        if (isExpertMode()){
+            $f->add(
+                    new TrFormElement(
+                        _T('Dynamic parameters Packages', 'msc'), new InputTpl('parameterspacquage')
+                    ), array("value" => quick_get('parameterspacquage'))
             );
             $f->add(
                 new TrFormElement(
-                    _T('Deployment interval', 'msc'), new multifieldTpl($deployment_fields)
-                ), $deployment_values
+                    _T('Reboot required', 'msc'), new CheckboxTpl('rebootrequired')
+                ), array("value" => quick_get('rebootrequired', True) == 'on' ? 'checked' : '')
             );
-           if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+            $f->add(
+                new TrFormElement(
+                    _T('Shutdown required', 'msc'), new CheckboxTpl('shutdownrequired')
+                ), array("value" => quick_get('shutdownrequired', True) == 'on' ? 'shutdownrequired' : '')
+            );
+            $f->add(
+                new TrFormElement(
+                    _T('Delay install', 'msc'), new CheckboxTpl('Delay_install')
+                ), array("value" => quick_get('Delay_install', True) == 'on' ? 'checked' : '')
+            );
+            if( isset($gid)){
+                $rb = new RadioTpl("choix_methode_exec");
+                $rb->setChoices(array(_T('time', 'msc'), _T('Number of machines', 'msc')));
+                $rb->setvalues(array('timeinstall','nbinstall'));
+                $rb->setSelected('continueinstall');
+            }
+                else{
+                $rb = new RadioTpl("choix_methode_exec");
+                $rb->setChoices(array(_T('time', 'msc')));
+                $rb->setvalues(array('timeinstall'));
+                $rb->setSelected('continueinstall');
+            }
+            $f->add(
+                new TrFormElement(
+                    _T('Choix install Mode', 'msc'), $rb,array("trid"=>"choixmethod")
+                )
+            );
+        }
+        if (isExpertMode()){
+            $f->add(
+                new TrFormElement(
+                    _T('Startup to run the package in the deployment time range', 'msc'), new DateTimeTpl('exec_date'),array("trid"=>"idexecdate")
+                ), array(
+                    "value" => $exec_date,
+                    "ask_for_never" => 0
+                )
+            );
+        }
+        if (isExpertMode()){
+            if( isset($gid)){
+                $nbmachineforexec = array(
+                    new InputTpl('instructions_nb_machine_for_exec'),
+                    new TextTpl("Machines"),
+                    new TextTpl(" Percentage"),
+                    new InputTpl('instructions_nb_machine_pourcent'),
+                    new TextTpl("%")
+                );
                 $f->add(
-                    new TrFormElement(
-                        _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
-                    ), array("value" => $max_bw, "required" => true)
+                new TrFormElement(
+                    '', new TextTpl(sprintf('<h2>Group "%s" [Machine in Group : %s]</h2>',$namegroup, getRestrictedComputersListLen( array('gid' => $gid)))),array("trid"=>"idnbmachine1")
+                )
+            );
+                $f->add(
+                    new TrFormElement("Nb"
+                        , new multifieldTpl($nbmachineforexec),array("trid"=>"idnbmachine")
+                    ), $deployment_values
                 );
             }
-            else{
-                $f->add(new HiddenTpl('maxbw'), array("value" => 0, "hide" => True));
+        }
+        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+            $f->add(
+                new TrFormElement(
+                    _T('Max bandwidth (kbits/s)', 'msc'), new NumericInputTpl('maxbw')
+                ), array("value" => $max_bw, "required" => true)
+            );
+        }
+        else{
+            $f->add(new HiddenTpl('maxbw'), array("value" => 0, "hide" => True));
+        }
+        if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
+            if (web_force_mode()) {
+                $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
+            } else {
+                $rb = new RadioTpl("copy_mode");
+                $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
+                $rb->setvalues(array('push', 'push_pull'));
+                $rb->setSelected($_GET['copy_mode']);
+                $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
             }
-            if(!in_array("xmppmaster", $_SESSION["modulesList"])) {
-                if (web_force_mode()) {
-                    $f->add(new HiddenTpl("copy_mode"), array("value" => web_def_mode(), "hide" => True));
-                } else {
-                    $rb = new RadioTpl("copy_mode");
-                    $rb->setChoices(array(_T('push', 'msc'), _T('push / pull', 'msc')));
-                    $rb->setvalues(array('push', 'push_pull'));
-                    $rb->setSelected($_GET['copy_mode']);
-                    $f->add(new TrFormElement(_T('Copy Mode', 'msc'), $rb));
-                }
-
-                /* Only display local proxy button on a group and if allowed */
-                if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
-                    $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
-                }
+            /* Only display local proxy button on a group and if allowed */
+            if (isset($_GET['gid']) && strlen($_GET['gid']) && web_allow_local_proxy()) {
+                $f->add(new TrFormElement(_T('Deploy using a local proxy', 'msc'), new CheckboxTpl("local_proxy")), array("value" => ''));
             }
+        }
     }
-
     $f->pop();
     $f->addValidateButton("bconfirm");
     $f->addCancelButton("bback");
     $f->display();
 }
 ### /Advanced actions handling ###
-
 /* single target: form display */
 if (!isset($_GET['badvanced']) && $_GET['uuid'] && !isset($_POST['launchAction'])) {
     $machine = new Machine(array(
@@ -660,12 +764,12 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
             $msc_actions = new RenderedMSCActions(msc_script_list_file(), $group->getName(), array("gid" => $_GET['gid']));
             $msc_actions->display();
         }
-
         $ajax = new AjaxFilter(urlStrRedirect("base/computers/ajaxPackageFilter"), "container", array("gid" => $_GET['gid']));
         $ajax->display();
         print "<br/>";
         $ajax->displayDivToUpdate();
-    } else {
+    } 
+    else {
         $msc_host = new RenderedMSCGroupDontExists();
         $msc_host->headerDisplay();
     }
@@ -678,3 +782,151 @@ if (!isset($_GET['badvanced']) && isset($_GET['gid']) && !isset($_POST['launchAc
     }
 
 </style>
+
+
+<script type="text/javascript">
+
+<?php
+    if( isset($gid)){
+        echo "var Nbgroup = ".getRestrictedComputersListLen( array('gid' => $gid)).";
+        ";
+    }
+?>
+
+
+    function toTimestamp(strDate){
+        var datum = Date.parse(strDate);
+        return datum/1000;
+    }
+
+
+    jQuery('#start_date').change( function() {
+        var start = toTimestamp(jQuery('#start_date').val())
+        var end   = toTimestamp(jQuery('#end_date').val())
+        var exec  = toTimestamp(jQuery('#exec_date').val())
+        if (exec < start){
+            jQuery('#exec_date').val(jQuery('#start_date').val())
+        }
+        if (start > end){
+            alert ("inconsistency within the deployment range");
+        }
+    });
+
+    jQuery('#end_date').change( function() {
+        var start = toTimestamp(jQuery('#start_date').val())
+        var end   = toTimestamp(jQuery('#end_date').val())
+        var exec  = toTimestamp(jQuery('#exec_date').val())
+        if (exec < start){
+            jQuery('#exec_date').val(jQuery('#start_date').val())
+        }
+        if (start > end){
+            alert ("inconsistency within the deployment range");
+        }
+    });
+
+    jQuery('#exec_date').change( function() {
+        NormedateExec()
+    });
+
+
+    jQuery('input:radio[name=choix_methode_exec]').change(function () {
+        checkedval = jQuery('input:radio[name=choix_methode_exec]:checked').val();
+        switch(checkedval){
+    //         case 'continueinstall':
+    //             jQuery('#idnbmachine').hide();
+    //             jQuery('#idnbmachine1').hide();
+    //             jQuery('#idexecdate').hide();
+    //         break;
+        case 'timeinstall':
+                jQuery('#idexecdate').show();
+                jQuery('#idnbmachine').hide();
+                jQuery('#idnbmachine1').hide();
+                //jQuery('#idexecdate').val()
+                if(jQuery('#exec_date').val() == ''){
+                    jQuery('#exec_date').val(jQuery('#start_date').val())
+                }
+               // jQuery('#exec_date').val(jQuery('#start_date').val())
+            break;
+        case 'nbinstall':
+                jQuery('#idnbmachine').show();
+                jQuery('#idnbmachine1').show();
+                jQuery('#idexecdate').hide();
+            break;
+        }
+    });
+//jQuery('#exec_date').val(jQuery('#start_date').val())
+function NormedateExec(){
+    var start = toTimestamp(jQuery('#start_date').val())
+    var end   = toTimestamp(jQuery('#end_date').val())
+    var exec  = toTimestamp(jQuery('#exec_date').val())
+    if (exec > end || exec < start){
+        alert ("the execution datetime of the package must be in the range ["+jQuery('#start_date').val() +","+jQuery('#end_date').val() +"]");
+        jQuery('#exec_date').val(jQuery('#start_date').val())
+    }
+}
+
+jQuery('#choixmethod').hide();
+jQuery('#idexecdate').hide();
+jQuery('#idnbmachine').hide();
+jQuery('#idnbmachine1').hide();
+
+jQuery('input[name=Delay_install]').change(function () {
+    //test si checked case acoche
+    if( jQuery('input[name=Delay_install]').is(':checked') ){
+        //list choix method
+        jQuery('#choixmethod').show();
+        jQuery('input[name="choix_methode_exec"]').first().prop('checked', true)
+        jQuery('#idexecdate').show();
+        jQuery('#idnbmachine').hide();
+        jQuery('#idnbmachine1').hide();
+        if(jQuery('#exec_date').val() == ''){
+            jQuery('#exec_date').val(jQuery('#start_date').val())
+        }
+    }
+    else {
+        jQuery('#choixmethod').hide();
+        jQuery('#idnbmachine').hide();
+        jQuery('#idnbmachine1').hide();
+        jQuery('#idexecdate').hide();
+    }
+});
+
+jQuery('#instructions_nb_machine_for_exec').on('input',function(e){
+    contenue = String( jQuery('#instructions_nb_machine_for_exec').val());
+    contenue = contenue.replace(new RegExp("[^(0-9]", "g"), '');
+    contenue = Math.ceil(contenue);
+    jQuery('#instructions_nb_machine_for_exec').val(contenue);
+   if (typeof(contenue) == "undefined" || contenue == ''){
+        jQuery('#instructions_nb_machine_for_exec').val(0);
+        jQuery('#instructions_nb_machine_pourcent').val(0);
+        return
+   }
+   if (parseInt(contenue) > Nbgroup){
+        jQuery('#instructions_nb_machine_for_exec').val(Nbgroup);
+        jQuery('#instructions_nb_machine_pourcent').val(100);
+        return
+   }
+    perc =  Math.ceil(parseInt(contenue)/ parseInt(Nbgroup)*100);
+    jQuery('#instructions_nb_machine_pourcent').val(perc);
+});
+
+jQuery('#instructions_nb_machine_pourcent').on('input',function(e){
+    contenue = String( jQuery('#instructions_nb_machine_pourcent').val());
+    contenue = contenue.replace(new RegExp("[^(0-9]", "g"), '');
+    contenue = Math.ceil(contenue);
+    jQuery('#instructions_nb_machine_pourcent').val(parseInt(contenue));
+    if (typeof(contenue) == "undefined" || contenue == ''){
+        jQuery('#instructions_nb_machine_for_exec').val(0);
+        jQuery('#instructions_nb_machine_pourcent').val(0);
+        return
+    }
+    if (parseInt(contenue) > 100){
+        jQuery('#instructions_nb_machine_for_exec').val(Nbgroup);
+        jQuery('#instructions_nb_machine_pourcent').val(100);
+        return
+    }
+    nb = Math.ceil((parseInt(contenue)*Nbgroup)/100);
+    jQuery('#instructions_nb_machine_for_exec').val(nb);
+});
+
+</script>

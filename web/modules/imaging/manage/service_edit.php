@@ -3,6 +3,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -25,6 +26,7 @@
 
 require("localSidebar.php");
 require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $services = array(
     array('Start computer', 'Boot on system hard drive', true),
@@ -36,18 +38,18 @@ $services = array(
 $id = $_GET['itemid'];
 
 if(count($_POST) == 0) {
-            
+
     // get current values
     if($services[$id][2] == true)
         $in_bootmenu = 'CHECKED';
     $label = $services[$id][0];
     $desc = $services[$id][1];
-    
+
     $p = new PageGenerator(_T("Edit service : ", "imaging").$label);
     $sidemenu->forceActiveItem("service");
     $p->setSideMenu($sidemenu);
     $p->display();
-    
+
     $f = new ValidatingForm();
     $f->push(new Table());
     $f->add(
@@ -72,11 +74,22 @@ if(count($_POST) == 0) {
 }
 else {
     // set new values
-    foreach($_POST as $key => $value) {
-    
-    }
+//     foreach($_POST as $key => $value) {
+// 
+//     }
     $label = $_POST['service_label'];
     $str = sprintf(_T("Service <strong>%s</strong> modified with success", "imaging"), $label);
+    xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Postinstall | Menu | Configuration | Manual');
     new NotifyWidgetSuccess($str);
     // goto menu boot list
     header("Location: " . urlStrRedirect("imaging/manage/service"));

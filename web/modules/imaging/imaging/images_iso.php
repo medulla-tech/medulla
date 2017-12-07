@@ -24,6 +24,7 @@
 
 include('modules/imaging/includes/includes.php');
 include('modules/imaging/includes/xmlrpc.inc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 
 $id = $_GET['itemid'];
 $label = urldecode($_GET['itemlabel']);
@@ -65,6 +66,17 @@ if ($_POST) {
         $str .= "</p>";
 
         new NotifyWidgetSuccess($str);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $label ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | delete | server | Manual');
         header("Location: " . urlStrRedirect("base/computers/imgtabs/" . $type . "tabimages", $params));
         exit;
     } elseif ($ret[0]) {

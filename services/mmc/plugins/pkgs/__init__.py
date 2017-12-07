@@ -1,6 +1,7 @@
 #
 # (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
 # (c) 2007-2008 Mandriva
+# (c) 2017      Siveo
 #
 # $Id$
 #
@@ -21,8 +22,11 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 import logging
-import os, shutil
-import requests, json, tempfile
+import os
+import shutil
+import requests
+import json
+import tempfile
 import urllib2
 from contextlib import closing
 from ConfigParser import ConfigParser
@@ -86,10 +90,11 @@ class ConfigReader(object):
         """
         Get the configuration from config file
 
-        @param inifile: path to config file
-        @type inifile: string
+        Args:
+        inifile: path to config file
 
-        @return: ConfigParser.ConfigParser instance
+        Returns:
+        ConfigParser.ConfigParser instance
         """
         logging.getLogger().debug("Load config file %s" % inifile)
         if not os.path.exists(inifile) :
@@ -99,7 +104,7 @@ class ConfigReader(object):
         config = ConfigParser()
         config.readfp(open(inifile))
         if os.path.isfile(inifile + '.local'):
-            config.readfp(open(inifile + '.local','r'))
+            config.readfp(open(inifile + '.local', 'r'))
 
         return config
 
@@ -296,12 +301,14 @@ class RpcProxy(RpcProxyI):
 
 class DownloadAppstreamPackageList(object):
     """
-    Create list of Appstream who need to be download and download them
+    Create list of Appstream who need to be downloaded and download them
     """
     def __init__(self):
-        #dict of package to be download
+        """
+        This method initialize the class.
+        By default there is no working update
+        """
         self.download_packages= {}
-        #by default, there is no working update
         self.update=False
 
     def _add_appstream(self,package_name):
@@ -309,6 +316,10 @@ class DownloadAppstreamPackageList(object):
         This methods add package in the dict of
         package who need to be download and set it to "wait"
         status.
+
+        Args:
+        package_name: name of the package in the appstream
+
         """
         self.download_packages[package_name]="wait"
 
@@ -545,9 +556,9 @@ def getDownloadAppstreamPackages():
     """
     This methods give new appstream packages who are not
     yet downloaded.
-    @rtype: dict of unicode like { 'package_name' : 'status' } ,
-        valid status are "download" and "wait".
-    @return: list of new appstream packages name who are not
+
+    Returns:
+    list of new appstream packages name who are not
     yet downloaded.
     """
     return dapl.getDownloadAppstreamPackages()
@@ -571,10 +582,236 @@ def _cb_updateAppstreamPackages(reason):
 
 def _eb_updateAppstreamPackages(failure):
     """
-    This methode is the error Back of updateAppstreamPackages
+    This method is the error Back of updateAppstreamPackages
     """
     logger = logging.getLogger()
     logger.warning("Update of appstream packages failed : %s " % repr(failure))
 
 def getAppstreamNotifications():
     return notificationManager().getModuleNotification('pkgs')
+
+
+def _path_package():
+    return os.path.join("/", "var", "lib", "pulse2", "packages")
+
+def save_xmpp_json(folder, json_content):
+    structpackage = json.loads(json_content)
+    keysupp = [ "actionlabel",
+                "p_api",
+                "id", 
+                "random_dir", 
+                "Qversion", 
+                "codereturn",
+                "Qsoftware",
+                "Qvendor", 
+                "files_uploaded", 
+                "step",
+                "command", 
+                "action",
+                "success",
+                "error",
+                "timeout",
+                "boolcnd",
+                "targetos",
+                "resultcommand",
+                "metaparameter",
+                "clear"
+                ]
+    for z in structpackage['info']:
+        if z.startswith('old_') or z.endswith('lastlines') or z.endswith('firstlines'):
+            keysupp.append(z)
+    for y in keysupp:
+        try:
+            del structpackage['info'][y]
+        except :
+            pass
+
+    if not 'Dependency' in structpackage['info']:
+        structpackage['info']['Dependency'] = []
+    if not 'software' in structpackage['info']:
+        structpackage['info']['software'] = structpackage['info']['name']
+
+    structpackage['metaparameter'] = {}
+    listos =[]
+
+    if 'linux' in structpackage:
+        listos.append('linux')
+        structpackage['metaparameter']['linux']={}
+    if "darwin" in structpackage:
+        listos.append('darwin')
+        structpackage['metaparameter']['darwin']={}
+    if "win" in structpackage:
+        listos.append('win')
+        structpackage['metaparameter']['win']={}
+
+    structpackage['metaparameter']['os'] = listos
+
+    for osmachine in listos:
+        vv = structpackage['metaparameter'][osmachine]
+        vv['label']={}
+        for stepseq in structpackage[osmachine]['sequence']:
+            vv['label'][stepseq['actionlabel']] = stepseq['step']
+
+    for osmachine in listos:
+        vv = structpackage['metaparameter'][osmachine]['label']
+        for stepseq in structpackage[osmachine]['sequence']:
+            if "success" in stepseq:
+                valsuccess = _stepforalias(stepseq['success'], vv)
+                if valsuccess != None:
+                    stepseq['success'] = valsuccess
+            if "error" in stepseq:
+                valerror = _stepforalias(stepseq['error'], vv)
+                if valerror != None:
+                    stepseq['error'] = valerror
+    json_content= json.dumps(structpackage)
+    _save_xmpp_json(folder, json_content)
+
+def _aliasforstep(step, dictstepseq):
+    for t in dictstepseq:
+        if dictstepseq[t] == step:
+            return t
+    return None
+
+def _stepforalias(alias, dictstepseq):
+    print "alias",alias
+    for t in dictstepseq:
+        print t
+        if t == alias:
+            return dictstepseq[t]
+    return None
+
+def _save_xmpp_json(folder, json_content):
+    """
+    Save the xmpp json package into new package
+
+    Args:
+    folder: Folder where the json file is stored
+    json_content: Content of the json file
+
+    Returns:
+    bool:
+    """
+
+    try:
+        content = json.loads(json_content)
+    except ValueError:
+        return False
+
+    if not os.path.exists(folder):
+        os.mkdir(folder, 0755)
+
+    xmppdeploy = open(os.path.join(folder,'xmppdeploy.json' ),'w')
+    json.dump(content,xmppdeploy,indent=4)
+
+    xmppdeploy.close()
+    return True
+
+def xmpp_packages_list():
+    """
+    Create a list of xmpp packages and return the list and the information for each of them
+    Returns:
+    list of packages
+    """
+
+    path = _path_package()
+
+    # 1 - list the packages directories
+    list_all = os.listdir(path)
+    xmpp_list = []
+
+    for dirname in list_all:
+        # 2 - if the directory contains xmppdeploy.json
+        if os.path.isfile(os.path.join(path, dirname, 'xmppdeploy.json')) is True:
+            # 3 - Extracts the package information and add it to the package list
+            #json_content = json.load(file(path+'/'+dirname+'/xmppdeploy.json'))
+            json_content = json.load(file(os.path.join(path, dirname, 'xmppdeploy.json')))
+            json_content['info']['uuid'] = dirname;
+            xmpp_list.append(json_content['info'])
+    return xmpp_list
+
+def remove_xmpp_package(package_uuid):
+    """
+    Remove the specified xmpp package. If it is ok, return true, else return false
+
+    Args:
+    package_uuid: uuid of the package
+
+    Returns:
+    success | failure
+    """
+
+    # If the package exists, delete it and return true
+    pathpackagename = os.path.join(_path_package(), package_uuid)
+    if os.path.exists(pathpackagename):
+        shutil.rmtree(pathpackagename)
+        return True
+    else :
+        return False
+
+
+
+def get_xmpp_package(package_uuid):
+    """
+    Select the specified package and return the information in the json
+    :param package_uuid:  uuid of the package
+    :return: the json or false if it does not exist
+    """
+
+    path = _path_package()
+
+    if os.path.exists(os.path.join(path, package_uuid)):
+        # Read all the content of the package
+        json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
+        jsonstr = json_file.read()
+        json_file.close()
+        structpackage = json.loads(jsonstr)
+
+        try:
+            for os_seq in structpackage['metaparameter']['os']:
+                vv = structpackage['metaparameter'][os_seq]['label']
+                for stepseq in structpackage[os_seq]['sequence']:
+                    if "success" in stepseq:
+                        valalias = _aliasforstep(stepseq['success'], vv)
+                        print valalias
+                        if valalias != None:
+                            stepseq['success'] = valalias
+                    if "error" in stepseq:
+                        valalias = _aliasforstep(stepseq['error'], vv)
+                        if valalias != None:
+                            stepseq['error'] = valalias
+            try:
+                del structpackage['metaparameter']
+            except:
+                pass
+        except:
+            pass
+        jsonstr = json.dumps(structpackage)
+        return jsonstr
+    else:
+        return False
+
+
+def get_meta_from_xmpp_package(package_uuid):
+    """
+    Select the specified package and return the metaparameters in the json
+    :param package_uuid: uuid of the package
+    :return: return the json or false if it does not exists
+    """
+
+    path = _path_package()
+
+    if os.path.exists(os.path.join(path, package_uuid)):
+        # Read all the content of the package
+        json_file = open(os.path.join(path, package_uuid, 'xmppdeploy.json'), 'r')
+        jsonstr = json_file.read()
+        json_file.close()
+        structpackage = json.loads(jsonstr)
+
+        try:
+            #jsonstr(structpackage['metaparameter'])
+            return structpackage['metaparameter']
+        except:
+            return False
+    else:
+        return False
+

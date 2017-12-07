@@ -37,7 +37,8 @@ from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
-                                                      callshutdownbymaster, send_message_json
+                                                      callshutdownbymaster, send_message_json,\
+                                                      callvncchangepermsbymaster
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -51,9 +52,6 @@ logger = logging.getLogger()
 
 def getApiVersion():
     return APIVERSION
-
-def dede():
-    logging.getLogger().info("test")
 
 def activate():
     """
@@ -155,7 +153,8 @@ def setlogxmpp( text,
                                             action,
                                             touser,
                                             fromuser)
-def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why):
+
+def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, why, headercolumn):
     if typelog == "None" and action ==  "None"  and module == "None" and start_date == "" :
         return []
     if typelog == "None":
@@ -172,10 +171,32 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
                                            user,
                                            how,
                                            who,
-                                           why)
+                                           why,
+                                           headercolumn)
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
+#jfkjfk
+def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
+    if osname == '':
+        osname = None
+    if min == '':
+        min = None
+    if max == '':
+        max = None
+    if filt == '':
+        filt = None
+
+    return XmppMasterDatabase().getlistcommandforuserbyos(login, osname=osname, min = min, max = max, filt = filt)
+
+def delQa_custom_command(login, name, osname):
+    return XmppMasterDatabase().delQa_custom_command(login, name, osname )
+
+def create_Qa_custom_command(login, osname, namecmd, customcmd, description ) :
+    return XmppMasterDatabase().create_Qa_custom_command(login, osname, namecmd, customcmd, description  )
+
+def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  ):
+    return XmppMasterDatabase().updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  )
 
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
@@ -201,8 +222,24 @@ def getListPresenceRelay():
 def deploylog(uuidinventory, nblastline):
     return XmppMasterDatabase().deploylog(uuidinventory, nblastline)
 
-def addlogincommand(login, commandid):
-    return XmppMasterDatabase().addlogincommand(login, commandid)
+def addlogincommand(login, 
+                    commandid, 
+                    grpid,
+                    nb_machine_in_grp,
+                    instructions_nb_machine_for_exec,
+                    instructions_datetime_for_exec,
+                    parameterspackage,
+                    rebootrequired,
+                    shutdownrequired):
+    return XmppMasterDatabase().addlogincommand(login, 
+                                                commandid,
+                                                grpid,
+                                                nb_machine_in_grp,
+                                                instructions_nb_machine_for_exec,
+                                                instructions_datetime_for_exec,
+                                                parameterspackage,
+                                                rebootrequired,
+                                                shutdownrequired)
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)
@@ -259,10 +296,20 @@ def getdeploybymachinegrprecent(gid, state, duree, min , max, filt):
 def delDeploybygroup(numgrp):
     return XmppMasterDatabase().delDeploybygroup( numgrp )
 
-def getdeploybyuserrecent(  login , state, duree, min , max, filt):
+def getdeploybyuserrecent(  login , state, duree, min=None , max=None, filt=None):
+    if min == "" :
+        min = None
+    if max == "":
+        max = None
+    if filt == "":
+        filt = None
     return XmppMasterDatabase().getdeploybyuserrecent(  login , state, duree, min , max, filt)
 
-def getdeploybyuserpast(login, duree, min , max, filt):
+def getdeploybyuserpast(login, duree, min=None , max=None, filt=None):
+    if min == "" :
+        min = None
+    if max == "":
+        max = None
     return XmppMasterDatabase().getdeploybyuserpast(login, duree, min , max, filt)
 
 def getdeploybyuser( login, numrow, offset):
@@ -326,6 +373,15 @@ def callshutdown(uuid, time, msg):
         logging.getLogger().error("callshutdownbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
+def callvncchangeperms(uuid, askpermission):
+    jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
+    if jid != "":
+        callvncchangepermsbymaster(jid, askpermission)
+        return jid
+    else:
+        logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
+        return "jid missing"
+
 def runXmppCommand(cmd,machine):
     data = {
 	"action": "shellcommand",
@@ -333,7 +389,7 @@ def runXmppCommand(cmd,machine):
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=XmppSimpleCommand(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 70)
     d = a.t2.join()
     return a.result
 
@@ -344,6 +400,9 @@ def runXmppScript(cmd,machine):
 	"data" : {'cmd' : cmd},
 	"base64" :False
     }
-    a=XmppSimpleCommand(machine, data , 4)
+    a=XmppSimpleCommand(machine, data , 70)
     d = a.t2.join()
     return a.result
+
+def getCountOnlineMachine():
+    return XmppMasterDatabase().getCountOnlineMachine()

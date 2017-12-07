@@ -19,8 +19,10 @@ set -e
 
 case "$1" in
     configure)
-	cd /usr/lib/systemd/system/
-     	for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
+	if [ ! -e "/tmp/pulse-update-manager" ]; then
+		cd /usr/lib/systemd/system/
+     		for service in $(ls mmc-agent.service pulse2-*); do systemctl restart $service; done
+	fi
 
     ;;
 

@@ -24,7 +24,7 @@
  */
 
 
-        $dom = new DomDocument;
+        $dom = new DomDocument();
         $dom->preserveWhiteSpace = FALSE;
         $dom->loadXML($_POST['data']);
         $dom->formatOutput = true;

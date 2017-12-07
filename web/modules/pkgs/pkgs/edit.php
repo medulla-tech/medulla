@@ -46,8 +46,8 @@ $package = array();
 /*
  * File Upload
  */
-
 if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
+
     $p_api_id = $_POST['p_api'];
     $need_assign = False;
     if ($_GET["action"] == "add") {
@@ -55,18 +55,19 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
     }
 
     foreach (array('id', 'label', 'version', 'description', 'Qvendor', 'Qsoftware', 'Qversion',
-            'boolcnd', 'licenses', 'targetos') as $post) {
+            'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
     }
 
     foreach (array('reboot', 'associateinventory') as $post) {
         $package[$post] = ($_POST[$post] == 'on' ? 1 : 0);
     }
-    // Package command
-    $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
 
-    // Simple package: not a bundle
-    $package['sub_packages'] = array();
+
+        // Package command
+        $package['command'] = array('name' => $_POST['commandname'], 'command' => $_POST['commandcmd']);
+        // Simple package: not a bundle
+        $package['sub_packages'] = array();
 
     // Send Package Infos via XMLRPC
     $ret = putPackageDetail($p_api_id, $package, $need_assign);
@@ -80,16 +81,48 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
         restart_active_convergence_commands($p_api_id, $package);
     }
 
+
+    if(isset($_POST['saveList']))
+    {
+        $saveList = $_POST['saveList'];
+        $saveList1 = clean_json($saveList);
+        $result = save_xmpp_json($ret[2],$saveList1);
+    }
+
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($ret[0]) {
             if ($_GET["action"] == "add") {
-                #new NotifyWidgetSuccess(sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]));
+                $str = sprintf(_T("Package successfully added in %s", "pkgs"), $ret[2]);
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp( $str,
+                                            "PKG",
+                                            '',
+                                            0,
+                                            $ret[2],
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Packaging | List | Create | Manual');
                 if (!isset($_POST["bassoc"])) {
                     header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id)))); # TODO add params to go on the good p_api
                     exit;
                 }
-            } else {
-                new NotifyWidgetSuccess(_T("Package successfully edited", "pkgs"));
+            } else {//ICI
+                $str= _T("Package successfully edited", "pkgs");
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp( $str,
+                                            "PKG",
+                                            '',
+                                            0,
+                                            "",
+                                            'Manuel',
+                                            '',
+                                            '',
+                                            '',
+                                            "session user ".$_SESSION["login"],
+                                            'Packaging | List | | Create |Manual');
                 $package = $ret[3];
             }
             $pid = $package['id'];
@@ -105,7 +138,21 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         if (count($ret) > 1) {
                             $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                         }
-                        new NotifyWidgetSuccess(sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion));
+                        // ICI$_POST['files_uploaded']
+                        $str = sprintf(_T("Files successfully added to the package <b>%s (%s)</b>", "pkgs"), $plabel, $pversion);
+                        new NotifyWidgetSuccess($str);
+                        xmlrpc_setfrompkgslogxmpp( $str,
+                                                    "PKG",
+                                                    '',
+                                                    0,
+                                                    $_POST['files_uploaded'],
+                                                    'Manuel',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    "session user ".$_SESSION["login"],
+                                                    'Packaging | List | Manual');
+
                         header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                         exit;
                     } else {
@@ -113,18 +160,66 @@ if (isset($_POST["bcreate"]) || isset($_POST["bassoc"])) {
                         if (count($ret) > 1) {
                             $reason = sprintf(" : <br/>%s", $ret[1]);
                         }
-                        new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
+                        //ICI
+                        $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
+                        new NotifyWidgetFailure($str);
+                        xmlrpc_setfrompkgslogxmpp( $str,
+                                                    "PKG",
+                                                    '',
+                                                    0,
+                                                    $_POST['files_uploaded'],
+                                                    'Manuel',
+                                                    '',
+                                                    '',
+                                                    '',
+                                                    "session user ".$_SESSION["login"],
+                                                    'Packaging | Files | Manual');
                     }
                 } else {
-                    new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
+                    $str= _T("Failed to associate files", "pkgs");
+                    new NotifyWidgetFailure($str);
+                    xmlrpc_setfrompkgslogxmpp( $str,
+                                                "PKG",
+                                                '',
+                                                0,
+                                                $_POST['files_uploaded'],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Packaging | Files | Manual');
                 }
                 // === END ASSOCIATING FILES ==========================
             }
         } else {
             new NotifyWidgetFailure($ret[1]);
+            xmlrpc_setfrompkgslogxmpp( $ret[1],
+                                        "PKG",
+                                        '',
+                                        0,
+                                        "",
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Manual');
         }
     } else {
-        new NotifyWidgetFailure(_T("Package failed to save", "pkgs"));
+        $str =_T("Package failed to save", "pkgs");
+        new NotifyWidgetFailure($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        "",
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Manual');
     }
 }
 
@@ -139,20 +234,56 @@ if (isset($_GET['delete_file'], $_GET['filename'])) {
             if (count($ret) > 1) {
                 $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
             }
-            new NotifyWidgetSuccess(sprintf(_T("File successfully deleted.", "pkgs")));
+            //ICI
+            $str = sprintf(_T("File successfully deleted.", "pkgs"));
+            new NotifyWidgetSuccess($str);
+             xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET['filename'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Delete | Manual');
         } else {
             $reason = '';
             if (count($ret) > 1) {
                 $reason = sprintf(" : <br/>%s", $ret[1]);
             }
-            new NotifyWidgetFailure(sprintf(_T("Failed to delete files%s", "pkgs"), $reason));
+            $str = sprintf(_T("Failed to delete files%s", "pkgs"), $reason);
+            new NotifyWidgetFailure($str);
+            xmlrpc_setfrompkgslogxmpp( $str,
+                                        "PKG",
+                                        '',
+                                        0,
+                                        $_GET['filename'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'Packaging | Files | Delete | Manual');
         }
     } else {
-        new NotifyWidgetFailure(_T("Failed to delete files", "pkgs"));
+        $str = _T("Failed to delete files", "pkgs");
+        new NotifyWidgetFailure($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $_GET['filename'],
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Files | Delete | Manual');
     }
     header("Location: " . urlStrRedirect("pkgs/pkgs/edit", array('p_api' => $_GET['p_api'], 'pid' => $_GET['pid'])));
 }
-
 if (count($package) == 0) {
     $title = _T("Edit a package", "pkgs");
     $activeItem = "index";
@@ -162,6 +293,7 @@ if (count($package) == 0) {
     if ($package['do_reboot']) {
         $package['reboot'] = $package['do_reboot'];
     }
+
     $formElt = new HiddenTpl("id");
 
     $selectpapi = new HiddenTpl('p_api');
@@ -176,7 +308,7 @@ if (count($package) == 0) {
  */
 
 // display an edit package form (description, version, ...)
-$f = new ValidatingForm();
+$f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
 $f->push(new Table());
 
 $p_api_id = ($_GET['p_api']) ? base64_decode($_GET['p_api']) : base64_decode($_POST['p_api']);
@@ -206,6 +338,8 @@ $fields = array(
     array("version", _T("Package version", "pkgs"), array("required" => True)),
     array('description', _T("Description", "pkgs"), array()),
 );
+if(!isExpertMode())
+{
 
 $cmds = array(
     array('command', _T('Command\'s name : ', 'pkgs'), _T('Command : ', 'pkgs')), /*
@@ -219,6 +353,7 @@ $options = array(
     array('reboot', _T('Need a reboot ?', 'pkgs'))
 );
 
+}
 $os = array(
     array('win', 'linux', 'mac'),
     array(_T('Windows'), _T('Linux'), _T('Mac OS'))
@@ -243,6 +378,102 @@ $oslist->setElementsVal($os[0]);
 $f->add(
         new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => $package['targetos'])
 );
+
+if(isExpertMode())
+{
+  $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
+}
+else {
+  $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
+}
+
+if(isExpertMode())
+{
+    $json = json_decode(get_xmpp_package($_GET['packageUuid']),true);
+
+    $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
+
+    if(isset($json['info']['methodetransfert']))
+    {
+        $setmethodetransfert = $json['info']['methodetransfert'];
+    }
+    else
+    {
+        $setmethodetransfert = 'pushrsync';
+    }
+    $methodtransfer = new SelectItem('methodetransfert');
+    $methodtransfer->setElements(['pullcurl','pushrsync']);
+    $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
+    $methodtransfer->setSelected($setmethodetransfert);
+
+    $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
+
+    //Get the sorted list of dependencies
+    if(isset($json['info']['Dependency']))
+    {
+        $dependencies = $json['info']['Dependency'];
+    }
+    else
+        $dependencies = [];
+
+    //Get all the dependencies as uuid => name
+    $allDependenciesList = [];
+    foreach(xmpp_packages_list() as $xmpp_package) {
+        if($_GET['packageUuid'] != $xmpp_package['uuid'])
+            $allDependenciesList[$xmpp_package['uuid']] = $xmpp_package['name'];
+    }
+
+    //Generate the list of not-added dependencies, the sort is not important
+    $packagesInOptionNotAdded = '';
+
+    foreach($allDependenciesList as $xmpp_package => $xmpp_name){
+        if(!in_array($xmpp_package,$dependencies))
+            $packagesInOptionNotAdded .= '<option value="'.$xmpp_package.'">'.$xmpp_name.'</option>';
+    }
+
+    //Generate the sorted list of added dependencies
+    $packagesInOptionAdded = '';
+    foreach($dependencies as $uuid_package){
+        if(isset($allDependenciesList[$uuid_package]))
+            $packagesInOptionAdded .= '<option value="'.$uuid_package.'">'.$allDependenciesList[$uuid_package].'</option>';
+    }
+
+    $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+    <table style="border: none;" cellspacing="0">
+        <tr>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowup.png" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
+                    <img src="img/common/icn_arrowdown.png" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <h3>Added dependencies</h3>
+                <div class="list">
+                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
+                    '.$packagesInOptionAdded.'
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div class="list" style="padding-left: 10px;">
+                    <h3>Available dependencies</h3>
+                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                        '.$packagesInOptionNotAdded.'
+                    </select>
+                </div>
+                <div class="clearer"></div>
+            </td>
+        </tr>
+    </table>
+</div>',"pkgs")));
+}
 
 foreach ($cmds as $p) {
     $f->add(
@@ -274,7 +505,7 @@ elseif ($papi_details['mountpoint'] == '/appstream')
 $pserver_base_url = $papi_details['protocol'] . '://' . $papi_details['server'] . ':' . $papi_details['port'] . '/' . $mirror . "_files/$pid/";
 
 foreach ($package['files'] as $file) {
-    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json" || $file['name'] == "xmppdeploy.bat" || $file['name'] == "xmppdeploy.sh")
+    if ($file['name'] == "MD5SUMS" || $file['name'] == "xmppdeploy.json")
         continue;
     $names[] = sprintf('<a href="%s">%s</a>', $pserver_base_url . $file['name'] , $file['name']);
     $params[] = array(
@@ -289,7 +520,6 @@ foreach ($package['files'] as $file) {
 }
 
 $count = count($names);
-
 $n = new OptimizedListInfos($names, _T('File', 'pkgs'));
 $n->disableFirstColumnActionLink();
 //$n->addExtraInfo($sizes, _T("Size", "pkgs"));
@@ -331,8 +561,14 @@ $f->add(
 // =========================================================================
 
 $f->pop();
+if(isExpertMode())
+{
+    $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
+    include('addXMPP.php');
+}
 
 $f->addValidateButton("bcreate");
 
 $f->display();
+
 ?>

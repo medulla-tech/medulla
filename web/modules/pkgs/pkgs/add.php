@@ -36,7 +36,9 @@ $p->display();
 // @see ajaxrefreshPackageTempdir.php
 $_SESSION['pkgs-add-reloaded'] = array();
 
+
 if (isset($_POST['bconfirm'])) {
+
     $p_api_id = $_POST['p_api'];
     $random_dir = $_SESSION['random_dir'];
     $need_assign = True;
@@ -47,7 +49,7 @@ if (isset($_POST['bconfirm'])) {
     }
 
     foreach (array('id', 'label', 'version', 'description', 'mode', 'Qvendor', 'Qsoftware',
-            'Qversion', 'boolcnd', 'licenses', 'targetos') as $post) {
+            'Qversion', 'boolcnd', 'licenses', 'targetos', 'metagenerator') as $post) {
         $package[$post] = $_POST[$post];
     }
     foreach (array('reboot', 'associateinventory') as $post) {
@@ -65,11 +67,20 @@ if (isset($_POST['bconfirm'])) {
     $plabel = $ret[3]['label'];
     $pversion = $ret[3]['version'];
 
+    $package_uuid = "";
+    if(isset($_POST['saveList']))
+    {
+        $saveList = $_POST['saveList'];
+        $saveList1 = clean_json($saveList);
+        $package_uuid = $ret[2];
+        $result = save_xmpp_json($package_uuid,$saveList1);
+    }
     if (!isXMLRPCError() and $ret and $ret != -1) {
         if ($_POST['package-method'] == "upload") {
             $cbx = array($random_dir);
         } else if ($_POST['package-method'] == "package") {
             $cbx = array();
+
             foreach ($_POST as $post => $v) {
                 if (preg_match("/cbx_/", $post) > 0) {
                     $cbx[] = preg_replace("/cbx_/", "", $post);
@@ -86,7 +97,20 @@ if (isset($_POST['bconfirm'])) {
                 if (count($ret) > 1) {
                     $explain = sprintf(" : <br/>%s", implode("<br/>", $ret[1]));
                 }
-                new NotifyWidgetSuccess(sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain));
+                //ICI
+                $str = sprintf(_T("Files successfully associated with package <b>%s (%s)</b>%s", "pkgs"), $plabel, $pversion, $explain);
+                new NotifyWidgetSuccess($str);
+                xmlrpc_setfrompkgslogxmpp(  $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $explain ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | List | Manual');
                 header("Location: " . urlStrRedirect("pkgs/pkgs/index", array('location' => base64_encode($p_api_id))));
                 exit;
             } else {
@@ -94,7 +118,20 @@ if (isset($_POST['bconfirm'])) {
                 if (count($ret) > 1) {
                     $reason = sprintf(" : <br/>%s", $ret[1]);
                 }
-                new NotifyWidgetFailure(sprintf(_T("Failed to associate files%s", "pkgs"), $reason));
+                $str = sprintf(_T("Failed to associate files%s", "pkgs"), $reason);
+                new NotifyWidgetFailure($str);
+                xmlrpc_setfrompkgslogxmpp(  $str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $reason ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | List | Manual');
+                remove_xmpp_package($package_uuid);
             }
         } else {
             new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
@@ -124,11 +161,11 @@ if (isset($_POST['bconfirm'])) {
     $selectpapi->setElementsVal($list_val);
     $_SESSION['pkgs_selected'] = array_values($list_val)[0];
 
-    $f = new ValidatingForm();
+    $f = new ValidatingForm(array("onchange"=>"getJSON()","onclick"=>"getJSON()"));
     $f->push(new Table());
 
     // Step title
-    $f->add(new TrFormElement("", $span), array());
+    $f->add(new TrFormElement("", $span));
 
     $r = new RadioTpl("package-method");
     $vals = array("package", "upload", "empty");
@@ -156,25 +193,24 @@ if (isset($_POST['bconfirm'])) {
         array('description', _T("Description", "pkgs"), array()),
     );
 
-    $command = _T('Command:', 'pkgs') . '<br /><br />';
-    $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
-If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.\n\n
-Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\n
-You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:\n\n
-<a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
-    $command = $command . str_replace('\n', '<br />', $commandHelper);
-    $cmds = array(
-        array('command', _T('Command\'s name : ', 'pkgs'), $command), /*
-              array('installInit', _T('installInit', 'pkgs'), _T('Install Init', 'pkgs')),
-              array('preCommand', _T('preCommand', 'pkgs'), _T('Pre Command', 'pkgs')),
-              array('postCommandFailure', _T('postCommandFailure', 'pkgs'), _T('postCommandFailure', 'pkgs')),
-              array('postCommandSuccess', _T('postCommandSuccess', 'pkgs'), _T('postCommandSuccess', 'pkgs')) // */
-    );
 
-    $options = array(
-        array('reboot', _T('Need a reboot ?', 'pkgs'))
-    );
+    if(!isExpertMode())
+    {
+        $command = _T('Command:', 'pkgs') . '<br /><br />';
+        $commandHelper = '<span>' . _T('Pulse will try to figure out how to install the uploaded files.\n\n
+        If the detection fails, it doesn\'t mean that the application cannot be installed using Pulse but that you\'ll have to figure out the proper command.\n\n
+        Many vendors (Acrobat, Flash, Skype) provide a MSI version of their applications which can be processed automatically by Pulse.\n
+        You may also ask Google for the silent installation switches. If you\'re feeling lucky, here is a Google search that may help:\n\n
+        <a href="@@GOOGLE_SEARCH_URL@@">Google search</a>', 'pkgs') . '</span>';
+        $command = $command . str_replace('\n', '<br />', $commandHelper);
+        $cmds = array(
+            array('command', _T('Command\'s name : ', 'pkgs'), $command)
+        );
 
+        $options = array(
+            array('reboot', _T('Need a reboot ?', 'pkgs'))
+        );
+    }
     $os = array(
         array('win', 'linux', 'mac'),
         array(_T('Windows'), _T('Linux'), _T('Mac OS'))
@@ -199,6 +235,66 @@ You may also ask Google for the silent installation switches. If you\'re feeling
             new TrFormElement(_T('Operating System', 'pkgs'), $oslist), array("value" => '')
     );
 
+    if(isExpertMode())
+    {
+      $f->add(new HiddenTpl("metagenerator"), array("value" => "expert", "hide" => True));
+    }
+    else {
+      $f->add(new HiddenTpl("metagenerator"), array("value" => "standard", "hide" => True));
+    }
+
+    if(isExpertMode())
+    {
+
+        $f->add(new HiddenTpl('transferfile'), array("value" => true, "hide" => true));
+
+        $methodtransfer = new SelectItem('methodetransfert');
+        $methodtransfer->setElements(['pullcurl','pushrsync']);
+        $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
+        $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
+
+        $packagesInOption = '';
+        foreach(xmpp_packages_list() as $package)
+        {
+            $packagesInOption .= '<option value="'.$package['uuid'].'">'.$package['name'].'</option>';
+        }
+        $f->add(new TrFormElement("Dependencies",new SpanElement('<div id="grouplist">
+    <table style="border: none;" cellspacing="0">
+        <tr>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowup.png" alt="|^" id="moveDependencyToUp" onclick="moveToUp()"/><br/>
+                    <img src="img/common/icn_arrowdown.png" alt="|v" id="moveDependencyToDown" onclick="moveToDown()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <h3>Added dependencies</h3>
+                <div class="list">
+                    <select multiple size="13" class="list" name="Dependency" id="addeddependencies">
+
+                    </select>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div>
+                    <img src="img/common/icn_arrowright.gif" alt="-->" id="moveDependencyToRight" onclick="moveToRight()"/><br/>
+                    <img src="img/common/icn_arrowleft.gif" alt="<--" id="moveDependencyToLeft" onclick="moveToLeft()"/></a><br/>
+                </div>
+            </td>
+            <td style="border: none;">
+                <div class="list" style="padding-left: 10px;">
+                    <h3>Available dependencies</h3>
+                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                        '.$packagesInOption.'
+                    </select>
+                </div>
+                <div class="clearer"></div>
+            </td>
+        </tr>
+    </table>
+</div>',"pkgs")));
+    }
+
     foreach ($cmds as $p) {
         $f->add(
                 new HiddenTpl($p[0] . 'name'), array("value" => '', "hide" => True)
@@ -217,10 +313,16 @@ You may also ask Google for the silent installation switches. If you\'re feeling
     addQuerySection($f, $package);
 
     $f->pop();
+    if(isExpertMode())
+    {
+        $f->add(new HiddenTpl('saveList'), array('id'=>'saveList','name'=>'saveList',"value" => '', "hide" => True));
+        include('addXMPP.php');
+    }
 
     $f->addValidateButton("bconfirm", _T("Add", "pkgs"));
     $f->display();
 }
+
 ?>
 
 <script src="modules/pkgs/lib/fileuploader/fileuploader.js"
@@ -255,6 +357,7 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 success: function(data) {
                     jQuery('#version').val(data.version);
                     jQuery('#commandcmd').val(data.commandcmd);
+
                 }
             });
         }
@@ -302,7 +405,6 @@ You may also ask Google for the silent installation switches. If you\'re feeling
             selectedPapi = refreshTempPapi();
         });
 
-
         jQuery('input[name="package-method"]').click(function() {
 
             // display temp package or upload form
@@ -336,6 +438,7 @@ You may also ask Google for the silent installation switches. If you\'re feeling
                 jQuery('#directory-label').parent().parent().fadeIn();
             }
 
+
         });
     });
 <?php
@@ -344,6 +447,7 @@ if (count($list) < 2) {
     echo <<< EOT
             // Hide package api field
             jQuery('#p_api').parents('tr:first').hide();
+
 EOT;
 }
 ?>

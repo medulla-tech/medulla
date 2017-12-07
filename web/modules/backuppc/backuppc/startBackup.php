@@ -24,13 +24,50 @@
 
 require_once("includes/xmlrpc.inc.php");
 require_once('modules/backuppc/includes/xmlrpc.php');
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+$cn = "";
+if (isset( $_POST["uuid"])) {
+    $filter = array('hostname' => $_POST["uuid"]);
+    $cl = getRestrictedComputersList(0, -1, $filter, False);
+    foreach ($cl as $k => $v) {
+        $cn = $v[1]['cn'][0];
+    }
+    // xmlrpc_getPresenceuuid
+    // xmlrpc_getjidMachinefromuuid
+}
 
 if (isset($_POST["bfull"], $_POST["uuid"])) {
     // Starting Full backup
+    xmlrpc_setfromxmppmasterlogxmpp("Starting Full backup on machine $cn",
+                                    "BPC",
+                                    '',
+                                    0,
+                                    $cn ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Backup | Full backup Starting | Manual');
+
     start_full_backup($_POST["uuid"]);
+
     return;
 } elseif (isset($_POST["bincr"], $_POST["uuid"])) {
     // Starting Full backup
+    xmlrpc_setfromxmppmasterlogxmpp("Starting increment backup on machine $cn",
+                                    "BPC",
+                                    '',
+                                    0,
+                                    $cn ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Backup | Incremental backup requested | Manual');
+
     start_incr_backup($_POST["uuid"]);
     return;
 } else {

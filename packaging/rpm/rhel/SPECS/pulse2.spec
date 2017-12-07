@@ -8,8 +8,8 @@
 
 %define use_git                1
 %define git                    SHA
-%define real_version           4.0
-%define mmc_version            3.1.0
+%define real_version           4.1
+%define mmc_version            4.1
 
 Summary:	Management Console
 Name:		pulse2
@@ -17,7 +17,7 @@ Version:	%real_version
 %if ! %use_git
 Release:        1%{?dist}
 %else
-Release:        2.%git.1%{?dist}
+Release:        0.%git.1%{?dist}
 %endif
 License:	GPL
 Group:		System/Servers
@@ -237,36 +237,6 @@ deployment process.
 
 %files -n mmc-web-msc
 %{_datadir}/mmc/modules/msc
-
-#--------------------------------------------------------------------
-
-%package -n     mmc-web-update
-Summary:        Pulse 2 plugin to manage security updates (Linux, Windows Update)
-Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       mmc-web-base >= %mmc_version
-
-%description -n mmc-web-update
-This package contains the update plugin to handle security updates
-(Windows Updates, Linux packages) within Pulse.
-
-%files -n mmc-web-update
-%{_datadir}/mmc/modules/update
-
-#--------------------------------------------------------------------
-
-%package -n python-mmc-update
-Summary:    Pulse 2 plugin to manage security updates (Linux, Windows Update)
-Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-
-%description -n python-mmc-update
-This package contains the update plugin to handle security updates
-(Windows Updates, Linux packages) within Pulse.
-
-%files -n python-mmc-update
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/update.ini
-%python2_sitelib/mmc/plugins/update
 
 #--------------------------------------------------------------------
 
@@ -499,6 +469,7 @@ This package contains Pulse 2 common files like documentation.
 %{_sbindir}/pulse2-dbupdate
 %{_sbindir}/pulse2-debug
 %{_sbindir}/pulse2-collect-info
+%{_sbindir}/restart-pulse-services
 %{_var}/lib/pulse2/clients
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf

@@ -216,7 +216,7 @@ if (isset($params['uuid'])) {
 
             $p->addTab("tabbootmenu", _T("Boot menu", 'imaging'), _T("Current boot menu", "imaging"), "modules/imaging/imaging/bootmenu.php", $params);
             $ddd=$params;
-            $ddd['namee'] = "llllllllll";
+            // $ddd['namee'] = "llllllllll";
             $p->addTab("tabimages", _T("Images and Masters", 'imaging'), "", "modules/imaging/imaging/images.php", $ddd);
             $p->addTab("tabservices", _T("Boot services", 'imaging'), _T("Available boot menu services", "imaging"), "modules/imaging/imaging/services.php", $params);
             $p->addTab("tabimlogs", _T("Imaging log", 'imaging'), "", "modules/imaging/imaging/logs.php", $params);

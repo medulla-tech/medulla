@@ -30,7 +30,7 @@ pythonmodules = plugins plugins.dyngroup plugins.dyngroup.querymanager \
 	plugins.inventory.provisioning_plugins.network_to_entity \
 	plugins.inventory.querymanager plugins.msc plugins.msc.client \
 	plugins.pkgs plugins.backuppc plugins.backuppc.report plugins.pulse2 \
-	plugins.update plugins.update.report plugins.support \
+	plugins.support \
 	plugins.xmppmaster plugins.xmppmaster.master plugins.xmppmaster.master.lib \
 	plugins.xmppmaster.master.pluginsmaster plugins.xmppmaster.master.script \
 	plugins.xmppmaster.master.script.perl

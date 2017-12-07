@@ -59,6 +59,10 @@ $submod->addPage($page);
 $page = new Page("editBundle", _T('Edit a bundle', 'pkgs'));
 $submod->addPage($page);
 
+$page = new Page("addXMPP", 'Add XMPP package');
+$page->setOptions(array("AJAX" => True, "visible" => False, "noHeader"=>False));
+$submod->addPage($page);
+
 $page = new Page("createGroupLicence", _T("Create licence static group", "glpi"));
 $page->setFile("modules/pkgs/pkgs/createGroupLicence.php");
 $page->setOptions(array("visible"=>False, "noHeader"=>True));

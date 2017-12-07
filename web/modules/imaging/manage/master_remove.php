@@ -2,6 +2,7 @@
 /*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2009 Mandriva, http://www.mandriva.com
+ * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -24,7 +25,7 @@
 
 include('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 $item_uuid = $_GET['itemid'];
 $location = getCurrentLocation();
 $label = urldecode($_GET['itemlabel']);
@@ -34,10 +35,33 @@ if ($_POST) {
     $ret = xmlrpc_delImageToLocation($menu_item_id, $location);
     if ($ret[0] and !isXMLRPCError()) {
         $str = sprintf(_T("Image <strong>%s</strong> removed from default boot menu.", "imaging"), $label);
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Success : removed from default boot menu.", 'Imaging').' '."Label : "."( ".$label." )",
+                                                "IMG",
+                                                '',
+                                                0,
+                                                $label ,
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'Imaging | Master | Menu | Start | Manual');
         new NotifyWidgetSuccess($str);
         // Synchronize boot menu
         $ret = xmlrpc_synchroLocation($location);
+        
         if (isXMLRPCError()) {
+//             xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Error : removed from default boot menu.", 'Imaging').' '."Label : "."( ".$label." )".implode(', ', $ret[1]),
+//                                                 "IMG",
+//                                                 '',
+//                                                 0,
+//                                                 $label ,
+//                                                 'Manuel',
+//                                                 '',
+//                                                 '',
+//                                                 '',
+//                                                 "session user ".$_SESSION["login"],
+//                                                 'Imaging | Master | Menu | Start | Manual');
             new NotifyWidgetFailure(sprintf(_T("Boot menu generation failed for package server: %s", "imaging"), implode(', ', $ret[1])));
         }
         header("Location: " . urlStrRedirect("imaging/manage/master"));

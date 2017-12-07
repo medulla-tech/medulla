@@ -33,7 +33,7 @@ require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
 require_once('modules/imaging/includes/part-type.inc.php');
 require_once('modules/imaging/includes/post_install_script.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 function expertModeDisplay($f, $has_profile, $type, $menu, $opts, $target, $real_target) {
     if (!$has_profile) {
         $f->add(new TitleElement(sprintf(_T("%s menu parameters", "imaging"), ($type=='' ? _T('Computer', 'imaging') : _T('Profile', 'imaging') ))));
@@ -171,6 +171,17 @@ if (isset($_POST["bvalid"])) {
     $target_name = $_POST['target_name'];
 
     if ($type == 'group') { // profile
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("choose network profile for group %s", "imaging"), urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         /*
          * choose_network_profile reminder...
          * $_POST['choose_network_MachineUUID'] = NetworkUUID
@@ -186,6 +197,17 @@ if (isset($_POST["bvalid"])) {
         }
     }
     else { // single machine
+        xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("choose network profile for machine %s", "imaging"), urldecode($label), $target_name),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         $choose_network = $_POST["choose_network"];
     }
 
@@ -256,6 +278,17 @@ if (isset($_POST["bvalid"])) {
         } else {
             $str = sprintf(_T("Boot menu modified for <strong>%s</strong>.", "imaging"), $target_name);
         }
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
         new NotifyWidgetSuccess($str);
         if ($is_registering) {
             if ($type == 'group') { // Imaging group
@@ -286,7 +319,19 @@ if (isset($_POST["bvalid"])) {
             exit;
         }
     } else {
-        new NotifyWidgetFailure(sprintf(_T("Failed to generate the boot menu those computers : %s", "imaging"), implode($ret[1], ", ")));
+        $str = sprintf(_T("Failed to generate the boot menu those computers : %s", "imaging"), implode($ret[1], ", "));
+        new NotifyWidgetFailure();
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     }
 }
 
@@ -304,6 +349,7 @@ if (isset($_POST["bunregister"])) {
     $params['target_uuid'] = $target_uuid;
     $params['target_name'] = $target_name;
     $msg = _T("You are going to unregister this computer from the imaging module, are you sure you want to do that?", "imaging");
+    
     $f = new ValidatingForm();
     $f->add(new TitleElement($msg, 3));
     $f->push(new Table());
@@ -330,12 +376,38 @@ else if (isset($_POST["bunregister2"])) {
 
     $ret = xmlrpc_delComputersImaging(array($target_uuid), ($params['backup'] ? true : false));
     if ($ret[0] and !isXMLRPCError()) {
-        new NotifyWidgetSuccess(sprintf(_T("The computer %s has correctly been unregistered from imaging", 'imaging'), $target_name));
+        $str= sprintf(_T("The computer %s has correctly been unregistered from imaging", 'imaging'), $target_name);
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
+        
         unset($_SESSION["imaging.isComputerRegistered_".$target_uuid]);
         header("Location: " . urlStrRedirect("base/computers/register_target", $params));
         exit;
-    } else {
-        new NotifyWidgetFailure(sprintf(_T("Failed to unregister the computer %s", 'imaging'), $target_name));
+    } 
+    else {
+        $str = sprintf(_T("Failed to unregister the computer %s", 'imaging'), $target_name);
+        xmlrpc_setfromxmppmasterlogxmpp($str,
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $target_name ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
+        new NotifyWidgetFailure($str);
     }
     $is_unregistering = True;
 }

@@ -33,10 +33,11 @@ from datetime import date, datetime, timedelta
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
-        Organization, Packages_list
+        Organization, Packages_list, Qa_custom_command
 # Imported last
 import logging
-
+import json
+import time
 
 class XmppMasterDatabase(DatabaseHelper):
     """
@@ -232,7 +233,7 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().debug("organization name : %s is not exist"%name_organization)
             return -1
 
-    #
+
     @DatabaseHelper._sessionm
     def addOrganization( self,
                           session,
@@ -251,13 +252,12 @@ class XmppMasterDatabase(DatabaseHelper):
         else :
             return id
 
-    #
     @DatabaseHelper._sessionm
     def delOrganization( self,
                           session,
                           name_organization):
         """
-            creation d'une organization
+            del organization name
         """
         idorganization = self.getIdOrganization(name_organization)
         if idorganization != -1:
@@ -269,13 +269,152 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
 
+
+    #################Custom Command Quick Action################################
+    @DatabaseHelper._sessionm
+    def create_Qa_custom_command( self,
+                                  session,
+                                  user, 
+                                  osname,
+                                  namecmd,
+                                  customcmd, 
+                                  description = ""):
+        """
+            create Qa_custom_command
+        """
+        try:
+            qa_custom_command = Qa_custom_command()
+            qa_custom_command.namecmd = namecmd
+            qa_custom_command.user = user
+            qa_custom_command.os = osname
+            qa_custom_command.customcmd = customcmd
+            qa_custom_command.description = description
+            session.add(qa_custom_command)
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().error(str(e))
+            logging.getLogger().debug("qa_custom_command error")
+            return -1
+
+    @DatabaseHelper._sessionm
+    def updateName_Qa_custom_command( self,
+                                     session,
+                                     user, 
+                                     osname,
+                                     namecmd,
+                                     customcmd,
+                                     description):
+        """
+            update updateName_Qa_custom_command
+        """
+
+        try:
+            session.query(Qa_custom_command).filter( Qa_custom_command.namecmd == namecmd).\
+                                            update( { Qa_custom_command.customcmd : customcmd ,
+                                                        Qa_custom_command.description : description,
+                                                        Qa_custom_command.os : osname })
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().debug("updateName_Qa_custom_command error %s->"%str(e))
+            return -1
+
+
+    @DatabaseHelper._sessionm
+    def delQa_custom_command( self,
+                              session,
+                              user, 
+                              osname,
+                              namecmd):
+        """
+            del Qa_custom_command
+        """
+        try:
+            session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
+                                                        Qa_custom_command.os == osname,
+                                                        Qa_custom_command.namecmd == namecmd)
+                                                        ).delete()
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            logging.getLogger().debug("delQa_custom_command error %s ->"%str(e))
+            return -1
+
+
+#jfkjfk
+    @DatabaseHelper._sessionm
+    def getlistcommandforuserbyos( self,
+                                   session,
+                                   user,
+                                   osname  = None,
+                                   min = None,
+                                   max = None,
+                                   filt = None):
+        ret={ 'len'     : 0,
+              'nb'      : 0,
+              'limit'   : 0,
+              'max'     : 0,
+              'min'     : 0,
+              'filt'    : '',
+              'command' : []}
+        try:
+            if osname is None:
+                result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user))
+            else:
+                result = session.query(Qa_custom_command).filter(and_(Qa_custom_command.user == user,
+                                                                      Qa_custom_command.os == osname))
+
+            total =  self.get_count(result)
+            #todo filter
+            if filt is not None:
+                result = result.filter( or_(  result.namecmd.like('%%%s%%'%(filt)),
+                                              result.os.like('%%%s%%'%(filt)),
+                                              result.description.like('%%%s%%'%(filt))
+                                        )
+                        )
+
+            nbfilter =  self.get_count(result)
+
+            if min is not None and max is not None:
+                result = result.offset(int(min)).limit(int(max)-int(min))
+                ret['limit'] = int(max)-int(min)
+
+
+            if min : ret['min'] = min
+            if max : ret['max'] = max
+            if filt : ret['filt'] = filt
+            result = result.all()
+            session.commit()
+            session.flush()
+            ret['len'] = total
+            ret['nb'] = nbfilter
+
+            arraylist = []
+            for t in result:
+                obj={}
+                obj['user']=t.user
+                obj['os']=t.os
+                obj['namecmd']=t.namecmd
+                obj['customcmd']=t.customcmd
+                obj['description']=t.description
+                arraylist.append(obj)
+            ret['command']= arraylist
+            return ret
+        except Exception, e:
+            logging.getLogger().debug("getlistcommandforuserbyos error %s->"%str(e))
+            return ret
+################################################
+
     @DatabaseHelper._sessionm
     def addPackageByOrganization( self,
                                   session,
                                   packageuuid,
                                   organization_name = None,
-                                  organization_id   = None
-                                  ):
+                                  organization_id   = None ):
         """
         addition reference package in packages table for organization id
             the organization input parameter is either organization name or either organization id
@@ -300,7 +439,6 @@ class XmppMasterDatabase(DatabaseHelper):
                     return -1
             else:
                 return -1
-            print "###############addition package organization ",idorganization
 
             # addition reference package in listpackages for attribut organization id.
             packageslist = Packages_list()
@@ -395,6 +533,112 @@ class XmppMasterDatabase(DatabaseHelper):
             logging.getLogger().error(str(e))
             return ""
 
+
+
+    @DatabaseHelper._sessionm
+    def updatedeployinfo(self, session, idcommand):
+        """
+        this function allows to update the counter of deployments in pause
+        """
+        try:
+            session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)
+                                  ).\
+                    update({ Has_login_command.count_deploy_progress : Has_login_command.count_deploy_progress + 1})
+            session.commit()
+            session.flush()
+            return 1
+        except Exception, e:
+            return -1
+
+    def convertTimestampToSQLDateTime(self, value):
+        return time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(value))
+
+    def convertSQLDateTimeToTimestamp(self, value):
+        return time.mktime(time.strptime(value, '%Y-%m-%d %H:%M:%S'))
+
+    @DatabaseHelper._sessionm
+    def checkstatusdeploy(self, session, idcommand):
+        """
+        this function is used to determine the state of the deployment when the deployemnet is scheduled and scheduler
+        """
+        nowtime = datetime.now()
+        try:
+            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
+            deployresult = session.query(Deploy).filter(and_(Deploy.command == idcommand)).order_by(desc(Deploy.id)).limit(1).one()
+        except :
+            # error case command supp base nunualy
+            return 'abandonmentdeploy'
+            pass
+        if not (deployresult.startcmd <= nowtime and deployresult.endcmd >= nowtime):
+            #we are more in the range of deployments.
+            #abandonmentdeploy
+            for id in  self.sessionidforidcommand(idcommand):
+                self.updatedeploystate(id,"DEPLOYMENT ERROR")
+            return 'abandonmentdeploy'
+
+        if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
+            #time processing
+            if nowtime > result.start_exec_on_time:
+                return 'run'
+        if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
+            #nb of deploy processing
+            if result.start_exec_on_nb_deploy <= result.count_deploy_progress:
+                return 'run'
+        for id in  self.sessionidforidcommand(idcommand):
+                self.updatedeploystate(id,"DEPLOYMENT DIFFERED")
+        return "pause"
+
+    @DatabaseHelper._sessionm
+    def sessionidforidcommand(self, session, idcommand):
+        result = session.query(Deploy.sessionid).filter(Deploy.command == idcommand).all()
+        if result:
+            a= [m[0] for m in result]
+            return a
+        else:
+            return []
+
+    @DatabaseHelper._sessionm
+    def datacmddeploy(self, session, idcommand):
+        try:
+            result = session.query(Has_login_command).filter(and_(Has_login_command.command == idcommand)).order_by(desc(Has_login_command.id)).limit(1).one()
+            session.commit()
+            session.flush()
+            obj={
+                    'countnb': 0,
+                    'exec' : True
+                 }
+            if result.login != '':
+                obj['login'] = result.login
+            obj['idcmd'] = result.command
+            if not (result.start_exec_on_time is None or str(result.start_exec_on_time) == '' or str(result.start_exec_on_time) == "None"):
+                obj['exectime'] = str(result.start_exec_on_time)
+                obj['exec'] = False
+
+            if result.grpid != '':
+                obj['grp'] = result.grpid
+            if result.nb_machine_for_deploy != '':
+                obj['nbtotal'] = result.nb_machine_for_deploy
+            if not (result.start_exec_on_nb_deploy is None or result.start_exec_on_nb_deploy == ''):
+                obj['consignnb'] = result.start_exec_on_nb_deploy
+                obj['exec'] = False
+            obj['rebootrequired'] = result.rebootrequired
+            obj['shutdownrequired'] = result.shutdownrequired
+            try:
+                params = str(result.parameters_deploy)
+                if params == '':
+                    return obj
+                if not params.startswith('{'):
+                    params = '{' + params
+                if not params.endswith('}'):
+                    params = params + '}'
+                obj['paramdeploy'] = json.loads(params)
+            except Exception, e:
+                logging.getLogger().error(str(e)+" [the parameters must be declared in a json dictionary]")
+            return obj
+        except Exception, e:
+            logging.getLogger().error(str(e) + " [ obj commandid missing]")
+            return {}
+
     @DatabaseHelper._sessionm
     def adddeploy(self,
                   session,
@@ -438,7 +682,6 @@ class XmppMasterDatabase(DatabaseHelper):
             session.commit()
             session.flush()
         except Exception, e:
-            print str(e)
             logging.getLogger().error(str(e))
         return new_deploy.id
 
@@ -610,16 +853,43 @@ class XmppMasterDatabase(DatabaseHelper):
         return ret
 
     @DatabaseHelper._sessionm
-    def addlogincommand(self, session, login, commandid):
+    def addlogincommand(self, session, 
+                        login, 
+                        commandid,
+                        grpid,
+                        nb_machine_in_grp,
+                        instructions_nb_machine_for_exec,
+                        instructions_datetime_for_exec,
+                        parameterspackage,
+                        rebootrequired,
+                        shutdownrequired):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
             new_logincommand.command = commandid
+            new_logincommand.count_deploy_progress = 0
+            if grpid != "":
+                new_logincommand.grpid = grpid
+            if instructions_datetime_for_exec != "":
+                new_logincommand.start_exec_on_time = instructions_datetime_for_exec
+            if nb_machine_in_grp != "":
+                new_logincommand.nb_machine_for_deploy = nb_machine_in_grp
+            if instructions_nb_machine_for_exec != "":
+                new_logincommand.start_exec_on_nb_deploy =instructions_nb_machine_for_exec
+            if parameterspackage != "":
+                new_logincommand.parameters_deploy = parameterspackage
+            if rebootrequired == 0:
+                new_logincommand.rebootrequired = False
+            else:
+                new_logincommand.rebootrequired = True
+            if shutdownrequired == 0:
+                new_logincommand.shutdownrequired = False
+            else:
+                new_logincommand.shutdownrequired = True
             session.add(new_logincommand)
             session.commit()
             session.flush()
         except Exception, e:
-            print str(e)
             logging.getLogger().error(str(e))
         return new_logincommand.id
 
@@ -762,6 +1032,10 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
+    def getCountPresenceMachine(self, session):
+        return session.query(func.count(Machines.id)).scalar()
+
+    @DatabaseHelper._sessionm
     def adduser(self, session,
                     namesession,
                     hostname,
@@ -858,32 +1132,36 @@ class XmppMasterDatabase(DatabaseHelper):
                     user,
                     how,
                     who,
-                    why):
+                    why,
+                    headercolumn):
+        ##labelheader = [x.strip() for x in headercolumn.split("|") if x.strip() != "" and x is not "None"]
         logs = session.query(Logs)
+        if headercolumn == "":
+            headercolumn = "date@fromuser@who@text"
+            
         if start_date != "":
             logs = logs.filter( Logs.date > start_date)
-            print "date\n"
         if end_date != "":
             logs = logs.filter( Logs.date < end_date)
-            print "date\n"
-        if typelog != "None":
+        if not (typelog == "None" or typelog == ""):
             logs = logs.filter( Logs.type == typelog)
-            print "typelog\n"
-        if action != "None":
+        if not (action == "None" or action == ""):
             logs = logs.filter( Logs.action == action)
-            print "action\n"
-        if module != "None":
-            logs = logs.filter( Logs.module == module)
-            print "module\n"
-        if user != "":
-            logs = logs.filter( Logs.fromuser == user)
-        if how != "":
+        if not (module == "None" or module == ""):
+            #plusieurs criteres peuvent se trouver dans ce parametre.
+            criterformodule = [x.strip() for x in module.split("|") if x.strip() != "" and x != "None"]
+            for x in criterformodule:
+                stringsearchinmodule = "%"+x+"%"
+                logs = logs.filter( Logs.module.like(stringsearchinmodule))
+        if not (user == "None" or user == ""):
+            logs = logs.filter( func.lower(Logs.fromuser).like(func.lower(user)) )
+        if not (how == "None" or how == ""):
             logs = logs.filter( Logs.how == how)
-        if who != "":
+        if not (who == "None" or who == ""):
             logs = logs.filter( Logs.who == who)
-        if why != "":
+        if not (why == "None" or why == ""):
             logs = logs.filter( Logs.why == why)
-        print logs
+        logs = logs.order_by(desc(Logs.id)).limit(1000)
         result = logs.all()
         session.commit()
         session.flush()
@@ -892,21 +1170,44 @@ class XmppMasterDatabase(DatabaseHelper):
         for linelogs in result:
             listchamp = []
             #listchamp.append(index)
-            listchamp.append(str(linelogs.date))
-            listchamp.append(linelogs.fromuser)
-            #listchamp.append(linelogs.type)
-            #listchamp.append(linelogs.action)
-            #listchamp.append(linelogs.module)
-            #listchamp.append(linelogs.how)
-            listchamp.append(linelogs.who)
-            #listchamp.append(linelogs.why)
-            #listchamp.append(linelogs.priority)
-            #listchamp.append(linelogs.touser)
+            if headercolumn != "" and "date" in headercolumn:
+                listchamp.append(str(linelogs.date))
+            if headercolumn != "" and "fromuser" in headercolumn:
+                listchamp.append(linelogs.fromuser)
+            if headercolumn != "" and "type" in headercolumn:
+                listchamp.append(linelogs.type)
+            if headercolumn != "" and "action" in headercolumn:
+                listchamp.append(linelogs.action)
+            if headercolumn != "" and "module" in headercolumn:
+                listchamp.append(linelogs.module)
+            if headercolumn != "" and "how" in headercolumn:
+                listchamp.append(linelogs.how)
+            if headercolumn != "" and "who" in headercolumn:
+                listchamp.append(linelogs.who)
+            if headercolumn != "" and "why" in headercolumn:
+                listchamp.append(linelogs.why)
+            if headercolumn != "" and "priority" in headercolumn:
+                listchamp.append(linelogs.priority)
+            if headercolumn != "" and "touser" in headercolumn:
+                listchamp.append(linelogs.touser)
+            if headercolumn != "" and "sessionname" in headercolumn:
+                listchamp.append(linelogs.sessionname)
+            if headercolumn != "" and "text" in headercolumn:
+                listchamp.append(linelogs.text)
+                
+            
+            ##listchamp.append(linelogs.type)
+            ##listchamp.append(linelogs.action)
+            ##listchamp.append(linelogs.module)
+            ##listchamp.append(linelogs.how)
+            #listchamp.append(linelogs.who)
+            ##listchamp.append(linelogs.why)
+            ##listchamp.append(linelogs.priority)
+            ##listchamp.append(linelogs.touser)
             #listchamp.append(linelogs.sessionname)
-            listchamp.append(linelogs.text)
+            #listchamp.append(linelogs.text)
             ret['data'].append(listchamp)
             #index = index + 1
-        print ret
         return ret
 
     @DatabaseHelper._sessionm
@@ -934,7 +1235,7 @@ class XmppMasterDatabase(DatabaseHelper):
         nb = self.get_count(deploylog)
         if min and max:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
-        print deploylog
+
         result = deploylog.all()
         session.commit()
         session.flush()
@@ -1066,8 +1367,7 @@ class XmppMasterDatabase(DatabaseHelper):
         session.flush()
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserrecent(self, session, login , state, duree, min , max, filt):
-
+    def getdeploybyuserrecent(self, session, login , state, duree, min=None , max=None, filt=None):
         deploylog = session.query(Deploy)
         if login:
             deploylog = deploylog.filter( Deploy.login == login)
@@ -1077,27 +1377,26 @@ class XmppMasterDatabase(DatabaseHelper):
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
 
-        if filt:
+        if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
                                                 Deploy.login.like('%%%s%%'%(filt)),
                                                 Deploy.host.like('%%%s%%'%(filt))))
-
-        lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
+        lentaillerequette = self.get_count(deploylog)
+        #lentaillerequette = session.query(func.count(distinct(Deploy.title)))[0]
         deploylog = deploylog.group_by(Deploy.title)
 
         deploylog = deploylog.order_by(desc(Deploy.id))
 
-        deploylog = deploylog.add_column(func.count(Deploy.title))
-        if min and max:
+        ##deploylog = deploylog.add_column(func.count(Deploy.title))
+        if min is not None and max is not None:
             deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
-
         result = deploylog.all()
         session.commit()
         session.flush()
         ret ={'lentotal' : 0,
-              'tabdeploy' : {   'len' : [],
+              'tabdeploy' : {
                                 'state' : [],
                                 'pathpackage' : [],
                                 'sessionid' : [],
@@ -1115,29 +1414,28 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'jid_relay' : [],
                                 'title' : []}}
 
+        ret['lentotal'] = lentaillerequette#[0]
         for linedeploy in result:
-            ret['lentotal'] = lentaillerequette[0]
-            ret['tabdeploy']['len'].append(linedeploy[1])
-            ret['tabdeploy']['state'].append(linedeploy[0].state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy[0].pathpackage.split("/")[-1])
-            ret['tabdeploy']['sessionid'].append(linedeploy[0].sessionid)
-            ret['tabdeploy']['start'].append(str(linedeploy[0].start))
-            ret['tabdeploy']['inventoryuuid'].append(linedeploy[0].inventoryuuid)
-            ret['tabdeploy']['command'].append(linedeploy[0].command)
-            ret['tabdeploy']['login'].append(linedeploy[0].login)
-            ret['tabdeploy']['host'].append(linedeploy[0].host.split("/")[-1])
-            ret['tabdeploy']['macadress'].append(linedeploy[0].macadress)
-            ret['tabdeploy']['group_uuid'].append(linedeploy[0].group_uuid)
-            ret['tabdeploy']['startcmd'].append(linedeploy[0].startcmd)
-            ret['tabdeploy']['endcmd'].append(linedeploy[0].endcmd)
-            ret['tabdeploy']['jidmachine'].append(linedeploy[0].jidmachine)
-            ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
-            ret['tabdeploy']['title'].append(linedeploy[0].title)
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
 
     @DatabaseHelper._sessionm
-    def getdeploybyuserpast(self, session, login , duree, min , max, filt):
+    def getdeploybyuserpast(self, session, login , duree, min=None , max=None, filt=None):
 
         deploylog = session.query(Deploy)
         if login:
@@ -1146,7 +1444,7 @@ class XmppMasterDatabase(DatabaseHelper):
         if duree:
             deploylog = deploylog.filter( Deploy.start >= (datetime.utcnow() - timedelta(seconds=duree)))
 
-        if filt:
+        if filt is not None:
             deploylog = deploylog.filter( or_(  Deploy.state.like('%%%s%%'%(filt)),
                                                 Deploy.pathpackage.like('%%%s%%'%(filt)),
                                                 Deploy.start.like('%%%s%%'%(filt)),
@@ -1162,10 +1460,12 @@ class XmppMasterDatabase(DatabaseHelper):
 
         deploylog = deploylog.order_by(desc(Deploy.id))
 
-        deploylog = deploylog.add_column(func.count(Deploy.title))
-        if min and max:
-            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
+        #deploylog = deploylog.add_column(func.count(Deploy.title))
 
+        nbfilter =  self.get_count(deploylog)
+
+        if min is not None and max is not None:
+            deploylog = deploylog.offset(int(min)).limit(int(max)-int(min))
         result = deploylog.all()
         session.commit()
         session.flush()
@@ -1188,24 +1488,24 @@ class XmppMasterDatabase(DatabaseHelper):
                                 'jid_relay' : [],
                                 'title' : []}}
 
+        #ret['lentotal'] = nbfilter
+        ret['lentotal'] = lentaillerequette[0]
         for linedeploy in result:
-            ret['lentotal'] = lentaillerequette[0]
-            ret['tabdeploy']['len'].append(linedeploy[1])
-            ret['tabdeploy']['state'].append(linedeploy[0].state)
-            ret['tabdeploy']['pathpackage'].append(linedeploy[0].pathpackage.split("/")[-1])
-            ret['tabdeploy']['sessionid'].append(linedeploy[0].sessionid)
-            ret['tabdeploy']['start'].append(str(linedeploy[0].start))
-            ret['tabdeploy']['inventoryuuid'].append(linedeploy[0].inventoryuuid)
-            ret['tabdeploy']['command'].append(linedeploy[0].command)
-            ret['tabdeploy']['login'].append(linedeploy[0].login)
-            ret['tabdeploy']['host'].append(linedeploy[0].host.split("/")[-1])
-            ret['tabdeploy']['macadress'].append(linedeploy[0].macadress)
-            ret['tabdeploy']['group_uuid'].append(linedeploy[0].group_uuid)
-            ret['tabdeploy']['startcmd'].append(linedeploy[0].startcmd)
-            ret['tabdeploy']['endcmd'].append(linedeploy[0].endcmd)
-            ret['tabdeploy']['jidmachine'].append(linedeploy[0].jidmachine)
-            ret['tabdeploy']['jid_relay'].append(linedeploy[0].jid_relay)
-            ret['tabdeploy']['title'].append(linedeploy[0].title)
+            ret['tabdeploy']['state'].append(linedeploy.state)
+            ret['tabdeploy']['pathpackage'].append(linedeploy.pathpackage.split("/")[-1])
+            ret['tabdeploy']['sessionid'].append(linedeploy.sessionid)
+            ret['tabdeploy']['start'].append(str(linedeploy.start))
+            ret['tabdeploy']['inventoryuuid'].append(linedeploy.inventoryuuid)
+            ret['tabdeploy']['command'].append(linedeploy.command)
+            ret['tabdeploy']['login'].append(linedeploy.login)
+            ret['tabdeploy']['host'].append(linedeploy.host.split("/")[-1])
+            ret['tabdeploy']['macadress'].append(linedeploy.macadress)
+            ret['tabdeploy']['group_uuid'].append(linedeploy.group_uuid)
+            ret['tabdeploy']['startcmd'].append(linedeploy.startcmd)
+            ret['tabdeploy']['endcmd'].append(linedeploy.endcmd)
+            ret['tabdeploy']['jidmachine'].append(linedeploy.jidmachine)
+            ret['tabdeploy']['jid_relay'].append(linedeploy.jid_relay)
+            ret['tabdeploy']['title'].append(linedeploy.title)
         return ret
 
 
@@ -1977,3 +2277,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "jid" : ""
                     }
         return result
+
+    @DatabaseHelper._sessionm
+    def getCountOnlineMachine(self, session):
+        return session.query(func.count(Machines.id)).filter(Machines.agenttype == "machine").scalar()

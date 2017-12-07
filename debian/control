@@ -221,17 +221,6 @@ Description: Pulse 2 / MBS BackupPC plugin for MMC agent
  .
  This package contains the BackupPC plugin for MMC agent.
 
-Package: python-mmc-update
-Architecture: all
-Section: python
-Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), pulse-update-manager
-Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains the update plugin to handle security updates
- (Windows Updates, Linux packages) within Pulse.
-
 Package: python-mmc-support
 Architecture: all
 Section: python
@@ -372,16 +361,6 @@ Description: Pulse 2 / MBS monitoring plugin for MMC web interface
  organizations.
  .
  This package contains the monitoring plugin for the MMC web interface.
-
-Package: mmc-web-update
-Architecture: all
-Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
-Description: Pulse 2 plugin to manage security updates (Linux, Windows Update)
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This package contains the update plugin to handle security updates
- (Windows Updates, Linux packages) within Pulse.
 
 Package: mmc-web-support
 Architecture: all

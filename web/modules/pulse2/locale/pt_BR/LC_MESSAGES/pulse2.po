@@ -1,32 +1,32 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-# # Translators:
-#   <andre@mandriva.com>, 2013, 2015.
-#   <francisco@mandriva.com.br>, 2014.
-#   <leonardoc@mandriva.com.br>, 2013.
-#   <sergio@mandriva.com.br>, 2012.
-# Andre Paulo Machado <andre.panm@gmail.com>, 2009.
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Pulse 2\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-12 14:16+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Andre Machado <andre@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
+"POT-Creation-Date: 2017-12-07 16:38+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lcureuil <neoclust@mageia.org>, 2017\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/"
+"teams/72118/pt_BR/)\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.6.10\n"
 
 #: modules/pulse2/includes/utilities.php:86
 msgid "All my entities"
 msgstr "Todas as minhas entidades"
+
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:58
 msgid "Backup status"
@@ -50,11 +50,11 @@ msgstr "Remover este perfil"
 
 #: modules/pulse2/includes/menu_group_action.php:52
 msgid "Display this group's content"
-msgstr "Exibir o conteúdo deste grupo"
+msgstr "Exibir o contedo deste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:68
 msgid "Display this imaging group's content"
-msgstr "Mostrar o conteúdo desse grupo de imagem"
+msgstr "Mostrar o contedo desse grupo de imagem"
 
 #: modules/pulse2/includes/menu_group_action.php:53
 msgid "Edit this group"
@@ -73,17 +73,25 @@ msgstr ""
 msgid "Imaging management"
 msgstr "Gerenciamento de imagens"
 
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr ""
+
 #: modules/pulse2/includes/menu_action.php:56
 msgid "Inventory"
-msgstr "Inventário"
+msgstr "Inventrio"
 
 #: modules/pulse2/includes/menu_group_action.php:64
 msgid "Inventory on this profile"
-msgstr "Inventário neste perfil"
+msgstr "Inventrio neste perfil"
 
 #: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
-msgstr "Seleção de localização em um computador"
+msgstr "Seleo de localizao em um computador"
+
+#: modules/pulse2/infoPackage.inc.php:77
+msgid "Product Updates installation (ajax)"
+msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
@@ -122,30 +130,40 @@ msgstr "Compartilhar esse grupo de imagem"
 #: modules/pulse2/includes/menu_action.php:84
 #: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr "Implantação de Software"
+msgstr "Implantao de Software"
 
 #: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
-msgstr "Implatanção de Software neste grupo"
+msgstr "Implatano de Software neste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:74
 msgid "Software deployment on this imaging group"
-msgstr "Implantação de software nesse grupo de imagens"
+msgstr "Implantao de software nesse grupo de imagens"
+
+#: modules/pulse2/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:60
 msgid "Update on this group"
-msgstr "Atualização neste grupo"
+msgstr "Atualizao neste grupo"
 
 #: modules/pulse2/includes/menu_action.php:57
 msgid "extTicket issue"
-msgstr "questão extTicket"
+msgstr "questo extTicket"
+
+#: modules/pulse2/infoPackage.inc.php:71
+msgid "install Product Updates"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:65
+msgid "viewProductUpdates"
+msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
 msgstr ""
-
-#~ msgid "Inventory on this group"
-#~ msgstr "Inventário neste grupo"
-
-#~ msgid "Monitoring"
-#~ msgstr "Monitoramento"

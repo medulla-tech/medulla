@@ -26,7 +26,7 @@
 require_once('modules/imaging/includes/includes.php');
 require_once('modules/imaging/includes/xmlrpc.inc.php');
 require_once('modules/imaging/includes/web_def.inc.php');
-
+require_once("modules/xmppmaster/includes/xmlrpc.php");
 if (isset($_POST["bconfirm"])) {
     $params = getParams();
     if(isset($_POST['gid']) && $_POST['gid'] != '') {
@@ -48,7 +48,17 @@ if (isset($_POST["bconfirm"])) {
 
     $ret = xmlrpc_addServiceToTarget($item_uuid, $target_uuid, $params, $type);
     $ret = xmlrpc_editServiceToTarget($item_uuid, $target_uuid, $params, $type);
-    
+    xmlrpc_setfromxmppmasterlogxmpp(sprintf(_T("Add the boot service <b>%s</b> to <b>%s</b>", "imaging"), $label, $params['name']),
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $params['name'] ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
     // goto images list
     if ($ret[0] and !isXMLRPCError()) {
         /* insert notification code here if needed */
@@ -66,6 +76,17 @@ if (isset($_POST["bconfirm"])) {
             $objprocess['process'] = $path.$scriptmulticast;
             if (xmlrpc_check_process_multicast($objprocess)){
                 $msg = _T("The bootmenus cannot be generated as a multicast deployment is currently running.", "imaging");
+                xmlrpc_setfromxmppmasterlogxmpp($msg." [ ".$label." , ".$params['name']." ]",
+                                    "IMG",
+                                    '',
+                                    0,
+                                    $params['name'] ,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Imaging | Image | Menu | server | Manual');
                 new NotifyWidgetFailure($msg);
                 header("Location: " . urlStrRedirect("imaging/manage/index"));
                 exit;  

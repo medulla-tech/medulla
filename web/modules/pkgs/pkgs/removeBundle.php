@@ -32,13 +32,42 @@ if (isset($_POST["bconfirm"])) {
     $from = $_GET["from"];
     $ret = dropPackage(base64_decode($p_api), base64_decode($pid));
     $expire_result = expire_all_package_commands($ret);
-    if (!isXMLRPCError() and $ret != -1) new NotifyWidgetSuccess(_T("The package has been deleted.", "pkgs"));
-    if ($ret == -1) new NotifyWidgetFailure(_T("The package failed to delete", "pkgs"));
+    if (!isXMLRPCError() and $ret != -1) {
+        $str = _T("The package has been deleted.", "pkgs");
+        new NotifyWidgetSuccess($str);
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $from,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Bundle | Manual');
+    }
+    if ($ret == -1) {
+        new NotifyWidgetFailure();
+        $str = _T("The package failed to delete", "pkgs");
+        xmlrpc_setfrompkgslogxmpp( $str,
+                                    "PKG",
+                                    '',
+                                    0,
+                                    $from,
+                                    'Manuel',
+                                    '',
+                                    '',
+                                    '',
+                                    "session user ".$_SESSION["login"],
+                                    'Packaging | Remove | Bundle | Manual');
+    }
     $to = "bundleList";
     if ($from) { $to = $from; }
     header("Location: " . urlStrRedirect("pkgs/pkgs/$to", array('p_api'=>$p_api)));
     exit;
-} else {
+}
+else {
     $p_api = $_GET["p_api"];
     $pid = $_GET["pid"];
     $from = $_GET["from"];
