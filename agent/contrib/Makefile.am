@@ -36,11 +36,4 @@ nobase_dist_contrib_DATA = audit/sql/install.sh \
 						  base/nsswitch.conf \
 						  base/pam_ldap.conf \
 						  base/slapd.conf \
-						  ppolicy/ppolicy.schema \
-						  pulseupdate/sql/schema-001.sql \
-						  pulseupdate/sql/schema-002.sql \
-						  pulseupdate/sql/schema-003.sql \
-						  pulseupdate/sql/schema-004.sql \
-						  pulseupdate/sql/schema-005.sql \
-						  pulseupdate/sql/schema-006.sql \
-						  pulseupdate/sql/schema-007.sql
+						  ppolicy/ppolicy.schema

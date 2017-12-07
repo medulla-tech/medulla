@@ -62,7 +62,7 @@ Description: Generate reports within MMC framework
 
 Package: mmc-agent
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-openssl | python-pyopenssl, python (>= 2.6) | python-multiprocessing, ldap-utils, python-gobject (>= 2.21.4), mmc-web-pulseupdate, python-mmc-pulseupdate
+Depends: ${misc:Depends}, ${python:Depends}, python-mmc-base (= ${source:Version}), python-openssl | python-pyopenssl, python (>= 2.6) | python-multiprocessing, ldap-utils, python-gobject (>= 2.21.4)
 Description: Mandriva Management Console Agent
  XMLRPC server of the MMC API.
 
