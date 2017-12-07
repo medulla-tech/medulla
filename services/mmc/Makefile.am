@@ -24,7 +24,7 @@
 xmpp_baseplugindir = $(localstatedir)/lib/pulse2/xmpp_baseplugin
 
 
-pythonmodules = plugins plugins.update plugins.update.report plugins.pulseupdate plugins.pulseupdate.report
+pythonmodules = plugins plugins.update plugins.update.report 
 
 # Expands Python modules list with found *.py files in each module given in pythonmodules
 modpythondir = $(pythondir)/$(notdir $(realpath $(srcdir)))
