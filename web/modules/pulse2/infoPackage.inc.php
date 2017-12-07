@@ -54,7 +54,7 @@ $submod->addPage($page);
 
 unset($submod);
 
-/ Module update
+// Module update
 $submod = new SubModule("update");
 $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("update", "pulse2"));
