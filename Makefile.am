@@ -23,7 +23,7 @@
 ACLOCAL_AMFLAGS = -I m4
 DISTCHECK_CONFIGURE_FLAGS=--disable-conf-backup --disable-python-check
 
-SUBDIRS  = agent web services
+SUBDIRS  = agent web
 
 EXTRA_DIST = m4
 
