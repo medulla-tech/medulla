@@ -44,10 +44,10 @@ $p->display();
 ?>
 <div id="update_status"></div>
 <script type="text/javascript">
-//     var update_status = function(){
-// 	jQuery('#update_status').load('<?php print urlStrRedirect("pulse2/update/ajaxInstallProductUpdates"); ?>');
-// 	setTimeout(update_status, 500);
-//     };
-//     update_status();
+    var update_status = function(){
+	jQuery('#update_status').load('<?php print urlStrRedirect("pulse2/update/ajaxInstallProductUpdates"); ?>');
+	setTimeout(update_status, 500);
+    };
+    update_status();
 
 </script>
