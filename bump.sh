@@ -17,11 +17,11 @@ if [ ! -z $1 ]; then
     done
 
     git diff
-#    if [ ! -z $2 ]; then
-#        git commit -a -m "core: bump version to $1 (RC)"
-#    else
-#        git commit -a -m "core: bump version to $1"
-#    fi
+    if [ ! -z $2 ]; then
+        git commit -a -m "core: bump version to $1 (RC)"
+    else
+        git commit -a -m "core: bump version to $1"
+    fi
 
 else
 
