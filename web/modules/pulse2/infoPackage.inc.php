@@ -54,5 +54,37 @@ $submod->addPage($page);
 
 unset($submod);
 
+/ Module update
+$submod = new SubModule("update");
+$submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
+$submod->setDescription(_T("update", "pulse2"));
+// $submod->setDefaultPage("xmppmaster/update/viewProductUpdates.php");
+
+
+
+$page = new Page("viewProductUpdates", _T("viewProductUpdates", "pulse2"));
+$page->setFile("modules/pulse2/update/viewProductUpdates.php");
+ $page->setOptions(array("visible" => False, "noHeader" => True));
+//$page->setOptions(array("visible"=>False));
+$submod->addPage($page);
+
+$page = new Page("installProductUpdates",_T('install Product Updates', 'pulse2'));
+$page->setFile("modules/pulse2/update/installProductUpdates.php");
+// $page->setOptions(array("visible" => True, "noHeader" => False));
+$submod->addPage($page);
+
+
+$page = new Page("ajaxInstallProductUpdates", _T("Product Updates installation (ajax)", "update"));
+$page->setOptions(array("visible" => False, "noHeader" => True));
+$submod->addPage($page);
+
+
+
+$mod->addSubmod($submod);
+
+
+$MMCApp =& MMCApp::getInstance();
+$MMCApp->addModule($mod);
+
 
 ?>

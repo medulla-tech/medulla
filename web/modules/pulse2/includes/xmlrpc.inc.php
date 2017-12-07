@@ -28,6 +28,16 @@ function displayLocalisationBar() {
     }
     return $_SESSION["displayLocalisationBar"];
 }
+
+
+function getProductUpdates(){
+    return xmlCall("pulse2.getProductUpdates", array());
+}
+
+function installProductUpdates(){
+    return xmlCall("pulse2.installProductUpdates", array());
+}
+
 function xmlrpc_setfrompulse2logxmpp(   $text,
                                             $type = "infouser",
                                             $sessionname = '' ,
