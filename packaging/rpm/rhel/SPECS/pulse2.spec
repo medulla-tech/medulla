@@ -240,36 +240,6 @@ deployment process.
 
 #--------------------------------------------------------------------
 
-%package -n     mmc-web-update
-Summary:        Pulse 2 plugin to manage security updates (Linux, Windows Update)
-Group:          System/Servers
-Requires:       pulse2-common = %version-%release
-Requires:       mmc-web-base >= %mmc_version
-
-%description -n mmc-web-update
-This package contains the update plugin to handle security updates
-(Windows Updates, Linux packages) within Pulse.
-
-%files -n mmc-web-update
-%{_datadir}/mmc/modules/update
-
-#--------------------------------------------------------------------
-
-%package -n python-mmc-update
-Summary:    Pulse 2 plugin to manage security updates (Linux, Windows Update)
-Group:      System/Servers
-Requires:   pulse2-common = %version-%release
-
-%description -n python-mmc-update
-This package contains the update plugin to handle security updates
-(Windows Updates, Linux packages) within Pulse.
-
-%files -n python-mmc-update
-%attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/update.ini
-%python2_sitelib/mmc/plugins/update
-
-#--------------------------------------------------------------------
-
 %package -n python-mmc-imaging
 Summary:    Imaging plugin for MMC agent
 Group:      System/Servers
