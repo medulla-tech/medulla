@@ -21,7 +21,7 @@
  */
 
 include_once("modules/dashboard/includes/panel.class.php");
-require_once("modules/pulseupdate/includes/xmlrpc.inc.php");
+require_once("modules/pulse2/includes/xmlrpc.inc.php");
 
 $options = array(
     "class" => "UpdatePanel",
@@ -43,33 +43,30 @@ class UpdatePanel extends Panel {
 	printf('<center style="color:red;font-weight:bold">%s</center>', _T('An error occured while fetching updates'));
 	}
 	else{
-        
             $view_updates_text = _T('View updates', 'update');
             $install_updates_text = _T('Install updates', 'update');
-            
-            
+
             print '<center>';
-            
             if ($update_count == 0)
                 printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
             else{
                 printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
-                
+
                 print <<<EOS
                 <a title="View updates" class="btnSecondary"
                     href="javascript:;"
-                    onclick="PopupWindow(event,'main.php?module=pulseupdate&amp;submod=pulseupdate&amp;action=viewProductUpdates', 300); return false;"
-                    >$view_updates_text</a><br/><br/>
+                    onclick="PopupWindow(event,'main.php?module=pulse2&amp;submod=update&amp;action=viewProductUpdates', 300); return false;"
+                    >$view_updates_text</a>
+                    <br/><br/>
                     <a title="Install updates" class="btnSecondary"
-                    href="main.php?module=update&amp;submod=update&amp;action=installProductUpdates"
+                    href="main.php?module=pulse2&amp;submod=update&amp;action=installProductUpdates"
                     >$install_updates_text</a>
                 </center>
 EOS;
-                
             }
 
 	}
-    
+
     }
 
     function display_licence($type, $title) {
