@@ -101,5 +101,3 @@ Architecture: all
 Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
 Description: Xmpp mmc module
 
-
-

@@ -1,6 +1,6 @@
 <?php
 
-/**
+/*
  * (c) 2016-2017 Siveo, http://www.siveo.net
  *
  * This file is part of Mandriva Management Console (MMC).

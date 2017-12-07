@@ -1,7 +1,8 @@
 <?php
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
+ * (c) 2015-2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
  *
@@ -115,36 +116,55 @@ if (has_audit_working()) {
     $mod->addSubmod($submod);
 }
 // Deprecated module
-if (isLogViewEnabled()) {
+
+if(in_array("xmppmaster", $_SESSION["modulesList"])) {
+//  if (isLogViewEnabled()) {
     $submod = new SubModule("logview");
     $submod->setDescription(_T("History", "logview"));
-    //     $submod = new ExpertSubModule("logview", _("History"));
+    //$submod = new ExpertSubModule("logview", _("History"));
     $submod->setVisibility(True);
     $submod->setImg('modules/base/graph/navbar/logview');
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index",_("recent History"));
+    $page = new Page("index",_("logs all module"));
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
-
     $submod->addPage($page);
 
-//     $page = new Page("show");
-//     $page->setFile("modules/base/logview/ajax_showlog.php",
-//                    array("AJAX" =>True,"visible"=>False));
-//     $submod->addPage($page);
-// 
-//     $page = new Page("setsearch");
-//     $page->setFile("modules/base/logview/ajax_setSearch.php",
-//                    array("AJAX" =>True,"visible"=>False));
-//     $submod->addPage($page);
-// 
+    $page = new Page("logsinventory",_T("logs inventory","base"));
+    $page->setFile("modules/base/logview/logsinventory.php");
+    $submod->addPage($page);
+
+    $page = new Page("logsbackuppc",_T("logs backuppc","base"));
+    $page->setFile("modules/base/logview/logsbackuppc.php");
+    $submod->addPage($page);
+
+    $page = new Page("logsdeployment",_T("logs deployment","base"));
+    $page->setFile("modules/base/logview/logsdeployment.php");
+    $submod->addPage($page);
+
+    $page = new Page("logsquickaction",_T("logs quickaction","base"));
+    $page->setFile("modules/base/logview/logsquickaction.php");
+    $submod->addPage($page);
+
+    $page = new Page("logspackaging",_T("logs packaging","base"));
+    $page->setFile("modules/base/logview/logspackaging.php");
+    $submod->addPage($page);
+
+    $page = new Page("logsremotedesktop",_T("logs remote desktop","base"));
+    $page->setFile("modules/base/logview/logsremotedesktop.php");
+    $submod->addPage($page);
+
+    $page = new Page("logsimaging",_T("logs Imaging","base"));
+    $page->setFile("modules/base/logview/logsimaging.php");
+    $submod->addPage($page);
+
     $page = new Page("ajax_Data_Logs");
     $page->setFile("modules/base/logview/ajax_Data_Logs.php",array("AJAX" =>True,"visible"=>False));
     $submod->addPage($page);
 
     $mod->addSubmod($submod);
- }
+  }
 
 $submod = new SubModule("status", _("Status"));
 $submod->setVisibility(True);

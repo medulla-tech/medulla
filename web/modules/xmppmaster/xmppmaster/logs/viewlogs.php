@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2017 Siveo, http://http://www.siveo.net
  *
  * $Id$
@@ -27,13 +27,40 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 require_once('modules/msc/includes/commands_xmlrpc.inc.php');
 
+function aleatoirechaine($prefixe, $nbcar){
+    $chaine=str_split('abcdefghijklmnopqrstuvwxyz0123456789');
+    shuffle($chaine);
+    $chaine = implode('',$chaine);
+    echo "$chaine";
+    $pass = substr($chaine, 0, $nbcar);
+    return $prefixe."_".$pass;
+    }
+
+
 extract($_GET);
 
 if ( isset ($_POST['bStop'])) {
     $_MYREQUEST = array_merge($_GET, $_POST);
     if ( isset($_MYREQUEST['gid']) && $_MYREQUEST['gid'] != "" ){
         $info = xmlrpc_get_group_stop_deploy($_MYREQUEST['gid']);
-        xmlrpc_updategroup($_MYREQUEST['gid']);
+        $result = xmlrpc_updategroup($_MYREQUEST['gid']);
+        foreach($result as $data){
+            xmlrpc_adddeployabort(  $data['command'],
+                                    "fake_jidmachine",
+                                    "fake_jidrelay",
+                                    $data['host'],
+                                    $data['inventoryuuid'],
+                                    $data['pathpackage'],
+                                    "DEPLOYMENT ABORT",
+                                    aleatoirechaine("abortdeploy",5),
+                                    $data['login'],
+                                    $data['login'],
+                                    $data['title'],
+                                    $data['gid'],
+                                    date("Y-m-d H:i:s", get_object_vars($data['start'])['timestamp']),
+                                    date("Y-m-d H:i:s", get_object_vars($data['end'])['timestamp']),
+                                    $data['macadress']);
+        }
     }
     else{
         $info = xmlrpc_get_machine_stop_deploy( $_MYREQUEST['cmd_id'], $_MYREQUEST['uuid']);

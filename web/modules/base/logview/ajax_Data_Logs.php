@@ -35,7 +35,18 @@ require_once("../../xmppmaster/includes/xmlrpc.php");
 
 extract($_GET);
 
-    $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module);
+    if( !isset($end_date))  { $end_date = ""; }
+    if( !isset($start_date)){ $start_date = ""; }
+    if( !isset($type))      { $type = ""; }
+    if( !isset($action))    { $action = ""; }
+    if( !isset($module))    { $module = ""; }
+    if( !isset($why))       { $why = ""; }
+    if( !isset($how))       { $how = ""; }
+    if( !isset($who))       { $who = ""; }
+    if( !isset($user))      { $user = ""; }
+    if( !isset($headercolumn)){ $headercolumn = ""; }
+
+   $result =  xmlrpc_getLogxmpp($start_date, $end_date, $type , $action, $module, $user, $how, $who, $why, $headercolumn);
 
     echo json_encode($result);
 

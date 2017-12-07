@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2012 Mandriva, http://www.mandriva.com
  *
  * This file is part of Mandriva Management Console (MMC).

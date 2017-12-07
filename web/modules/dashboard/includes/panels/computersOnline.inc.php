@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2016 siveo, http://www.siveo.net/
  *
  * This file is part of Management Console (MMC).
@@ -35,7 +35,7 @@ class ComputersOnlinePanel extends Panel {
     function display_content() {
         $urlRedirect = urlStrRedirect("base/computers/createMachinesStaticGroup");
         $total_machines = getComputerCount();
-        $machines_online = xmlrpc_getCountPresenceMachine();
+        $machines_online = xmlrpc_getCountOnlineMachine();
 
         $machines_offline = $total_machines - $machines_online;
         echo 'Total machines : '.$total_machines.'<br/>';

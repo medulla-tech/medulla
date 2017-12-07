@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2015 siveo, http://www.siveo.net/
  *
  * $Id$
@@ -106,6 +106,7 @@ input[type="text"] {
                         echo '<td id="shutdown" align="center"><img src="modules/base/graph/computers/shutdown.png" height="70" width="70"> </td>';
                         echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
                         echo '<td id="inventory" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
+                        echo '<td id="vncchangeperms" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
                     }
                     if ($nbr_absent != 0){
                         echo '<td id="wol"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
@@ -129,6 +130,12 @@ input[type="text"] {
                                 </form></td>';
                         echo '<td id="reboot0" align="center">Reboot</td>';
                         echo '<td id="inventory0" align="center">Run inventory</td>';
+                        echo '<td><span id="vncchangeperms0">Change VNC settings</span>
+                                    <form name = "infosvncchangeperms">
+                                        <label>
+                                            <input type="checkbox" name="askpermission" id = "checkboxvncchangeperms" checked> Ask user approval
+                                        </label>
+                                    </form></td>';
                     }
                     if ($nbr_absent != 0){
                         echo '<td><span id="wol0">Wake on LAN</span>
@@ -227,6 +234,24 @@ input[type="text"] {
         }
     }
 
+    function vncchangepermsfunction(data){
+        uuid = data[0];
+        cn = data[1];
+        presence = data[2];
+        machine_already_present = data[3];
+        machine_not_present = data[4];
+        if (machine_already_present.length == 0){
+            alert("All machines are off\nVNC settings change available only on running machines")
+        }
+        else{
+                text = "";
+                for(var i = 0; i < machine_already_present.length; i++){
+                    text = text +  machine_already_present[i] + ", ";
+                }
+            alert("VNC settings change on the following machines in progress\n"+text)
+        }
+    }
+
     jQuery('#wol').unbind().on('click', function(){
         groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
@@ -285,6 +310,32 @@ input[type="text"] {
         groupinfo['time'] = jQuery('#mytimeshutdown').val()
         groupinfo['msg'] = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
+            .done(function( data ) {
+                shutdownfunction(data)
+            })
+    })
+
+    jQuery('#vncchangeperms').on('click', function(){
+        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+          groupinfo['askpermission'] = 1
+        }
+        else {
+          groupinfo['askpermission'] = 0
+        }
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", groupinfo )
+            .done(function( data ) {
+                shutdownfunction(data)
+            })
+    })
+
+    jQuery('#vncchangeperms0').on('click', function(){
+        if (jQuery('#checkboxvncchangeperms').val() == "on"){
+          groupinfo['askpermission'] = 1
+        }
+        else {
+          groupinfo['askpermission'] = 0
+        }
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionvncchangeperms.php", groupinfo )
             .done(function( data ) {
                 shutdownfunction(data)
             })

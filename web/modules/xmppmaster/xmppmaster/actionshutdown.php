@@ -34,22 +34,22 @@ require_once('../includes/xmlrpc.php');
 
 require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
-
-
 switch($_GET['action']){
     case "deployquick":
         // work for one machine
-        echo xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
-        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'].'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction shutdown on machine',
-                                            $touser =  $_GET['cn'],
-                                            $fromuser = $_SESSION['login']);
+        $jid = xmlrpc_callshutdown($_GET['objectUUID'], $_GET['time'], $_GET['msg']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown [time : ".$_GET['time']."s] to presente [ Machine : \"".$_GET['cn']."\"][jid : \"".$jid."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        $_GET['cn'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Shutdown sent');
+
         $result = $_GET;
         echo json_encode($result);
         break;
@@ -63,16 +63,17 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp(    'shutdown from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .'] time :'.$_GET['time']."s msg : ".$_GET['msg'],
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction shutdown on group',
-                                            $touser =  'group '.$_GET['groupname'] ,
-                                            $fromuser = $_SESSION['login']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a shutdown to machines on Group : [\"".$_GET['groupname']."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        'Grp : '.$_GET['groupname'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Shutdown sent');
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -83,8 +84,22 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callshutdown($key,  $_GET['time'], $_GET['msg']);
+                $jid = xmlrpc_callshutdown($key,  $_GET['time'], $_GET['msg']);
+                xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
+                                                    "[Group :\"".$_GET['groupname'].
+                                                    "\"] shutdown [time : ".$_GET['time']."s] to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
+                                                "QA",
+                                                '' ,
+                                                0,
+                                                $value[1]['cn'][0],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Shutdown sent');
             };
+
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }
         echo json_encode($result);

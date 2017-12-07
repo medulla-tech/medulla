@@ -36,19 +36,20 @@ require_once("../../pulse2/includes/locations_xmlrpc.inc.php");
 
 switch($_GET['action']){
     case "deployquick":
-        //work for one machine
-        echo  xmlrpc_callrestart($_GET['objectUUID']);
-        xmlrpc_setfromxmppmasterlogxmpp(    'restart from quick action : machine '.$_GET['cn'].'['.$_GET['objectUUID'] .']',
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction restart on machine',
-                                            $touser =  $_GET['cn'],
-                                            $fromuser = $_SESSION['login']);
-        break;
+        // work for one machine
+        $jid =  xmlrpc_callrestart($_GET['objectUUID']);
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a Reboot to presente [ Machine : \"".$_GET['cn']."\"][jid : \"".$jid."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        $_GET['cn'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Reboot sent');
+    break;
     case "deployquickgroup":
         //work for all machines on group
         header('Content-type: application/json');
@@ -59,16 +60,19 @@ switch($_GET['action']){
         $machine_not_present     = array();
         $result = array();
         $list = getRestrictedComputersList(0, -1, array('gid' => $_GET['gid']), False);
-        xmlrpc_setfromxmppmasterlogxmpp(    'restart from quick action : group : '.$_GET['groupname'].' ['.$_GET['gid'] .']',
-                                            $type = "USER",
-                                            $sessionname = '' ,
-                                            $priority = 0,
-                                            $who = 'AMR',
-                                            $how = 'xmpp',
-                                            $why = '',
-                                            $action = 'quickaction restart on group',
-                                            $touser =  'group '.$_GET['groupname'] ,
-                                            $fromuser = $_SESSION['login']);
+
+        xmlrpc_setfromxmppmasterlogxmpp("QA : [user \"".$_SESSION["login"]."\"] ask a restart to machines on Group : [\"".$_GET['groupname']."\"]",
+                                        "QA",
+                                        '' ,
+                                        0,
+                                        'Grp : '.$_GET['groupname'],
+                                        'Manuel',
+                                        '',
+                                        '',
+                                        '',
+                                        "session user ".$_SESSION["login"],
+                                        'QuickAction | Reboot sent');
+
         foreach($list as $key =>$value){
             $cn[] = $value[1]['cn'][0];
             $uuid[] = $key;
@@ -79,7 +83,20 @@ switch($_GET['action']){
             else{
                 $presence[] = 1;
                 $machine_already_present[] =  $value[1]['cn'][0];
-                xmlrpc_callrestart($key);
+                $jid = xmlrpc_callrestart($key);
+                xmlrpc_setfromxmppmasterlogxmpp("QA : [user : \"".$_SESSION["login"]."\"] ".
+                                                    "[Group :\"".$_GET['groupname'].
+                                                    "\"] Restart to presente machine\"".$value[1]['cn'][0]."\" [jid : \"".$jid."\"]",
+                                                "QA",
+                                                '' ,
+                                                0,
+                                                $value[1]['cn'][0],
+                                                'Manuel',
+                                                '',
+                                                '',
+                                                '',
+                                                "session user ".$_SESSION["login"],
+                                                'QuickAction | Reboot sent');
             };
             $result = array($uuid, $cn, $presence,$machine_already_present, $machine_not_present );
         }

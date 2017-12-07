@@ -136,6 +136,12 @@ class ComputersOnlinePanel(Panel):
     def serialize(self):
         """This method does nothing but needs to be implemented"""
         pass
+    
+class UpdatePanel(Panel):
+    """This class is called by the Pulse Update widget from the dashboard"""
+    def serialize(self):
+        """This method does nothing but needs to be implemented"""
+        pass
 
 
 class BackupPanel(Panel):

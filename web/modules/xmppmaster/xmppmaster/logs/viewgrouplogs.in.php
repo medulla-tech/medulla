@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2017 Siveo, http://http://www.siveo.net
  * $Id$
  *
@@ -21,7 +21,7 @@
  *
  * file viewgrouplogs.in.php
  */
-//jfkjfk
+
 require_once("modules/dyngroup/includes/dyngroup.php");
 require_once("modules/dyngroup/includes/xmlrpc.php");
 require_once("modules/dyngroup/includes/includes.php");
@@ -56,15 +56,27 @@ $start_date = mktime(   $lastcommandid['start_date'][3],
                         $lastcommandid['start_date'][2],
                         $lastcommandid['start_date'][0]);
 
-$resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate(   $cmd_id,
-                                                        date("Y-m-d H:i:s", $start_date));
+$resultfromdeploy = xmlrpc_getstatdeployfromcommandidstartdate( $cmd_id,
+                                                                date("Y-m-d H:i:s",
+                                                                $start_date));
 $total_machine_from_deploy     = $resultfromdeploy['totalmachinedeploy'];
 $machine_error_from_deploy     = $resultfromdeploy['machineerrordeploy'];
 $machine_success_from_deploy   = $resultfromdeploy['machinesuccessdeploy'];
 $machine_process_from_deploy   = $resultfromdeploy['machineprocessdeploy'];
+$machine_abort_from_deploy     = $resultfromdeploy['machineabortdeploy'];
+
 $machine_wol_from_deploy       = $totalmachinedeploy-($machineerrordeploy + $machinesuccessdeploy + $machineprocessdeploy);
 
+$terminate = 0;
+$deployinprogress = 0;
 
+$waiting = $total_machine_from_msc - $total_machine_from_deploy;
+
+// $evolution
+if ($waiting == 0 && $machine_process_from_deploy == 0 ){
+    $terminate = 1;
+}
+//echo $terminate;
 $end_date = mktime(     $lastcommandid['end_date'][3],
                         $lastcommandid['end_date'][4],
                         $lastcommandid['end_date'][5],
@@ -84,8 +96,8 @@ if ($timestampnow > ($end_date)){
     $end_deploy = 1;
 };
 
-$terminate = 0;
-$deployinprogress = 0;
+
+
 echo "Deployment programming between [".date("Y-m-d H:i:s", $start_date)." and ".date("Y-m-d H:i:s", $end_date)."]";
 if ($convergenceonpackage !=0 ){
     echo "<img style='position:relative;top : 5px;' src='modules/msc/graph/images/install_convergence.png'/>";
@@ -100,7 +112,7 @@ function urlredirect_group_for_deploy($typegroup, $g_id, $login_deploy , $cmddep
 
 $info = xmlrpc_getdeployfromcommandid($cmd_id, "UUID_NONE");
 
-#jfk
+
 if (!isset($_GET['refresh'])){
     $_GET['refresh'] = 1;
 }
@@ -120,10 +132,10 @@ foreach ($info['objectdeploy'] as $val)
         $nbsuccess ++;
    }
 }
-if (isset($countmachine) && ($info['len'] == $countmachine)){
-    $terminate = 1;
-    $deployinprogress = 0;
-}
+// if (isset($countmachine) && ($info['len'] == $countmachine)){
+//     $terminate = 1;
+//     $deployinprogress = 0;
+// }
 
 if ( $start_deploy){
     echo "<br>";
@@ -134,7 +146,7 @@ if ( $start_deploy){
         echo "<br>";
     }else{
         echo "<h2>Deployment in progress</h2>";
-        echo "START DEPLOY From <span>".($timestampnow - $start_date)."</span> s";
+        echo "Started since <span>".($timestampnow - $start_date)."</span> s";
         $deployinprogress = 1;
     }
 }
@@ -142,43 +154,41 @@ else{
     echo "WAITING FOR START ".date("Y-m-d H:i:s", $start_date);
 }
 
-    if ($deployinprogress ){
+    //if ($deployinprogress ){
+    if($terminate == 0){
         $f = new ValidatingForm();
         $f->add(new HiddenTpl("id"), array("value" => $ID, "hide" => True));
-        $f->addButton("bStop", _T("Stop Deploy", 'xmppmaster'));
+        $f->addButton("bStop", _T("Stop Deployment", 'xmppmaster'));
         $f->display();
     }
 
     $evolution  = round(($nb_machine_deployer_from_msc / $total_machine_from_msc) * 100,2);
-    $Success    = round(($machine_success_from_deploy / $total_machine_from_msc) * 100,2);
-    $error      = round(($machine_error_from_deploy / $total_machine_from_msc) * 100,2);
-    $process    = round(($machine_process_from_deploy / $total_machine_from_msc) * 100,2);
-    
-    //
     $deploymachine = $machine_success_from_deploy + $machine_error_from_deploy;
     echo '<div class="bars">';
         echo '<span style="width: 200px;">';
             echo'<progress class="mscdeloy" data-label="50% Complete" max="'.$total_machine_from_msc.'" value="'.$nb_machine_deployer_from_msc.'" form="form-id"></progress>';
         echo '</span>';
-    echo'<span style="margin-left:10px">deployemt '.$evolution.'%</span>';
-    
+    echo'<span style="margin-left:10px">Deployment '.$evolution.'%</span>';
+
     $wol = ($total_machine_from_msc-$total_machine_from_deploy);
     echo "<br><br>Number of machines in the deployment group. : ".$total_machine_from_msc;
     echo "<br>Number of machines in the group : ".$countmachine;
     echo "<br>Number of machines being deployed : ". $deploymachine;
 
-    echo "<br>Deploy";
+    echo "<br>Deployment summary:";
     echo "<table><tr>";
     echo "<td>sucess</td>
         <td>error</td>
         <td>progress</td>
-        <td>Waiting</td>";
+        <td>Waiting</td>
+        <td>abort</td>";
     echo "</tr>
     <tr>";
     echo "<td>".$machine_success_from_deploy."</td>
         <td>".$machine_error_from_deploy."</td>
         <td>".$machine_process_from_deploy."</td>
-        <td>".$wol."</td>";
+        <td>".$wol."</td>
+        <td>".$machine_abort_from_deploy."</td>";
     echo "</tr></table>";
 echo '</div>';
       echo'<div  style="float:left; height: 120px" id="holder"></div>';
@@ -239,7 +249,7 @@ echo "<br>";
             echo '<br>';
       }
 }
-
+ if($terminate == 0){
         echo'
             <script type="text/javascript">
             console.log("hello");
@@ -249,6 +259,7 @@ echo "<br>";
                 }
             </script>
             ';
+}
 echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";echo "<br>";
 $group->prettyDisplay();
 
@@ -286,6 +297,7 @@ if ($info['len'] != 0){
                 $uuiderror[] = $val['inventoryuuid'];
                 break;
             case "DEPLOYMENT START":
+            case "DEPLOYMENT DIFFERED":
                 $uuidprocess[] = $val['inventoryuuid'];
                 break;
             default:
@@ -299,6 +311,8 @@ if ($info['len'] != 0){
     $machineinprocess = count ( $uuidprocess );
     $machinewol       = $stat['nbmachine']-$stat['nbdeploydone'];
 
+
+
         echo '
         <script>
             var u = "";
@@ -310,35 +324,41 @@ if ($info['len'] != 0){
                 var color = new Array();
                 ';
 
-                if ($machinesucess > 0){
+                if ($machine_success_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_success_from_deploy.');';
                     echo 'legend.push("%%.%% - Machines deploy in sucess");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinesucess",$_GET['gid'], $_GET['login'], $cmd_id).'");';
                     echo 'color.push("#2EFE2E");';
                 }
-                if ($machineerror > 0){
+                if ($machine_error_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_error_from_deploy.');';
                     echo 'legend.push("%%.%% - Machines deploy in error");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineerror",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#FE2E64");';
                 }
-                if ($machineinprocess > 0){
+                if ($machine_process_from_deploy > 0){
                     echo 'datadeploy.push('.$machine_process_from_deploy.');';
                     echo 'legend.push("%%.%% - Machines deploy in process");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machineprocess",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#2E9AFE");';
                 }
-                if ($machinewol > 0){
-                    echo 'datadeploy.push('.$machine_wol_from_deploy.');';
+                if ($wol > 0){
+                    echo 'datadeploy.push('.$wol.');';
                     echo 'legend.push("%%.%% - Waiting for machine start (WOL send).");';
                     echo 'href.push("'.urlredirect_group_for_deploy("machinewol",$_GET['gid'],$_GET['login'],$cmd_id).'");';
                     echo 'color.push("#DBA901");';
                 }
+                if ($machine_abort_from_deploy > 0){
+                    echo 'datadeploy.push('.$machine_abort_from_deploy.');';
+                    echo 'legend.push("%%.%% - Machine deploy in abort.");';
+                    echo 'href.push("'.urlredirect_group_for_deploy("machineabort",$_GET['gid'],$_GET['login'],$cmd_id).'");';
+                    echo 'color.push("#ff5050");';
+                }
                 echo'
                 r = Raphael("holder"),
-                    pie = r.piechart(100, 60, 50, datadeploy, 
+                    pie = r.piechart(100, 60, 50, datadeploy,
                         {   legend: legend,
-                            legendpos: "est", 
+                            legendpos: "est",
                             href: href,
                             colors: color
                         }
@@ -347,12 +367,12 @@ if ($info['len'] != 0){
                 r.text(210, 50, "Deploy Machines").attr({ font: "20px sans-serif" });
 
                 pie.hover(function () {
-                    u = this;                 // My Code   
-                    u.onclick = clickEvent;   //  hook to the function 
+                    u = this;                 // My Code
+                    u.onclick = clickEvent;   //  hook to the function
                 this.sector.stop();
-                    this.sector.scale(1.1, 1.1, this.cx, this.cy);  // Scale slice 
+                    this.sector.scale(1.1, 1.1, this.cx, this.cy);  // Scale slice
 
-                    if (this.label) {                               // Scale button and bolden text 
+                    if (this.label) {                               // Scale button and bolden text
                         this.label[0].stop();
                         this.label[0].attr({ r: 7.5 });
                         this.label[1].attr({ "font-weight": 800 });
@@ -373,11 +393,11 @@ if ($info['len'] != 0){
             }
         </script>';
     }
-  
- 
-    
+
+
+
 ?>
-<style> 
+<style>
 li.remove_machine a {
         /*padding: 1px 3px 5px 20px;*/
        /* margin: 0 0px 0 0px;*/
@@ -391,11 +411,11 @@ li.remove_machine a {
 
 progress{
     border-color: #ffffff;
-    background-color: #009ea9; 
+    background-color: #009ea9;
 }
 progress.mscdeloy{
-    width: 390px; 
-    background-color: #00f3f3; 
+    width: 390px;
+    background-color: #00f3f3;
 }
 
 progress::-webkit-progress-bar {

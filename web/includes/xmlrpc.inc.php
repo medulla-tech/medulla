@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * (c) 2004-2007 Linbox / Free&ALter Soft, http://linbox.com
  * (c) 2007-2008 Mandriva, http://www.mandriva.com
  *
@@ -365,7 +365,7 @@ function xmlCall($method, $params = null) {
  * @see ErrorHandlingItem
  */
 function findErrorHandling($errorFaultCode) {
-    require("includes/commonErrorHandling.php");
+    require("commonErrorHandling.php");
 
     if (!empty($_GET["module"])) {
         $errorfile = "modules/".$_GET["module"]."/includes/errorHandling.php";
