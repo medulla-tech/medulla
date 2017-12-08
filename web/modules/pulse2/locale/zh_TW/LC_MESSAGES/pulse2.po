@@ -2,104 +2,53 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-07 16:38+0100\n"
+"POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lcureuil <neoclust@mageia.org>, 2017\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/"
-"zh_TW/)\n"
-"Language: zh_TW\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr ""
-
-#: modules/pulse2/update/viewProductUpdates.php:25
-#: modules/pulse2/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:58
-msgid "Backup status"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:45
-msgid "Computers list"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:97
-msgid "Csv export"
-msgstr "Csv "
-
-#: modules/pulse2/includes/menu_group_action.php:47
-msgid "Delete this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:49
-msgid "Delete this profile"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:52
-msgid "Display this group's content"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:68
-msgid "Display this imaging group's content"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:53
-msgid "Edit this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:70
-msgid "Edit this imaging group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:84
-msgid "Group Quick action"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:78
-#: modules/pulse2/includes/menu_action.php:60
-msgid "Imaging management"
-msgstr ""
-
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:56
-msgid "Inventory"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:64
-msgid "Inventory on this profile"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:77
-msgid "Product Updates installation (ajax)"
-msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:34
 msgid "Pulse2"
 msgstr "Pulse2"
 
-#: modules/pulse2/includes/menu_action.php:73
-msgid "Quick action"
-msgstr ""
+#: modules/pulse2/infoPackage.inc.php:45
+msgid "Computers list"
+msgstr "電腦清單"
+
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "電腦編輯中的位置選擇"
+
+#: modules/pulse2/includes/menu_group_action.php:47
+msgid "Delete this group"
+msgstr "刪除此群組"
+
+#: modules/pulse2/includes/menu_group_action.php:49
+msgid "Delete this profile"
+msgstr "刪除此設定檔"
+
+#: modules/pulse2/includes/menu_group_action.php:52
+msgid "Display this group's content"
+msgstr "顯示此群組的內容"
+
+#: modules/pulse2/includes/menu_group_action.php:53
+msgid "Edit this group"
+msgstr "編輯此群組"
+
+#: modules/pulse2/includes/menu_group_action.php:54
+msgid "Share this group"
+msgstr "共用此群組"
 
 #: modules/pulse2/includes/menu_group_action.php:56
 #: modules/pulse2/includes/menu_group_action.php:73
@@ -107,63 +56,84 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:83
 #: modules/pulse2/includes/menu_action.php:88
 msgid "Read log"
+msgstr "讀取記錄"
+
+#: modules/pulse2/includes/menu_group_action.php:57
+msgid "Software deployment on this group"
+msgstr "此群組上的軟體部署"
+
+#: modules/pulse2/includes/menu_group_action.php:60
+msgid "Update on this group"
 msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:64
+msgid "Inventory on this profile"
+msgstr "此設定檔上的清查"
+
+#: modules/pulse2/includes/menu_group_action.php:68
+msgid "Display this imaging group's content"
+msgstr "顯示此影像群組的內容"
+
+#: modules/pulse2/includes/menu_group_action.php:70
+msgid "Edit this imaging group"
+msgstr "編輯此影像群組"
+
+#: modules/pulse2/includes/menu_group_action.php:71
+msgid "Share this imaging group"
+msgstr "共用此影像群組"
+
+#: modules/pulse2/includes/menu_group_action.php:74
+msgid "Software deployment on this imaging group"
+msgstr "此影像群組上的軟體部署"
+
+#: modules/pulse2/includes/menu_group_action.php:78
+#: modules/pulse2/includes/menu_action.php:60
+msgid "Imaging management"
+msgstr "影像管理"
+
+#: modules/pulse2/includes/menu_group_action.php:84
+msgid "Group Quick action"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:97
+msgid "Csv export"
+msgstr "Csv 匯出"
+
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "根實體"
+
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "所有我的實體"
+
+#: modules/pulse2/includes/menu_action.php:56
+msgid "Inventory"
+msgstr "清查"
+
+#: modules/pulse2/includes/menu_action.php:57
+msgid "extTicket issue"
+msgstr ""
+
+#: modules/pulse2/includes/menu_action.php:58
+msgid "Backup status"
+msgstr "備份狀態"
 
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
+msgstr "遠端控制"
+
+#: modules/pulse2/includes/menu_action.php:72
+msgid "xmppconsole"
 msgstr ""
 
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:54
-msgid "Share this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:71
-msgid "Share this imaging group"
+#: modules/pulse2/includes/menu_action.php:73
+msgid "Quick action"
 msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:80
 #: modules/pulse2/includes/menu_action.php:84
 #: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:57
-msgid "Software deployment on this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:74
-msgid "Software deployment on this imaging group"
-msgstr ""
-
-#: modules/pulse2/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:60
-msgid "Update on this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:57
-msgid "extTicket issue"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:71
-msgid "install Product Updates"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:60
-msgid "update"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:65
-msgid "viewProductUpdates"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:72
-msgid "xmppconsole"
-msgstr ""
+msgstr "軟體部署"

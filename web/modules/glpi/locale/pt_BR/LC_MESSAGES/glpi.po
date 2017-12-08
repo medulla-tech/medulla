@@ -8,19 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Andre Machado <andre@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
-"Language: pt_BR\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -63,13 +54,10 @@ msgstr ""
 msgid "Entities"
 msgstr "Entidades"
 
-<<<<<<< HEAD
-=======
 #: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
 msgid "Entities (ajax)"
 msgstr "Entidades (ajax)"
 
->>>>>>> origin/xmppmaster
 #: modules/glpi/infoPackage.inc.php:94 modules/glpi/infoPackage.inc.php:107
 #: modules/glpi/glpi/addEntity.php:43
 msgid "Add entity"
@@ -99,15 +87,9 @@ msgstr "Remover regra de entidade"
 msgid "Change entity rule order (up)"
 msgstr "Modificar ordem da regra de entidade (para cima)"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:175 modules/glpi/infoPackage.inc.php:208
-msgid "Administrative tab (GLPI)"
-msgstr "Aba Administrativa (GLPI)"
-=======
 #: modules/glpi/infoPackage.inc.php:134
 msgid "Change entity rule order (down)"
 msgstr "Modificar ordem da regra de entidade (para baixo)"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/infoPackage.inc.php:141
 msgid "Display locations"
@@ -161,15 +143,6 @@ msgstr "Inventário (GLPI) na máquina"
 msgid "The entity rule has been deleted successfully."
 msgstr "A entidade da regra foi removida com sucesso."
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:134
-msgid "Change entity rule order (down)"
-msgstr "Modificar ordem da regra de entidade (para baixo)"
-
-#: modules/glpi/infoPackage.inc.php:129
-msgid "Change entity rule order (up)"
-msgstr "Modificar ordem da regra de entidade (para cima)"
-=======
 #: modules/glpi/glpi/deleteEntityRule.php:36
 msgid "Delete this rule?"
 msgstr "Remover esta regra?"
@@ -177,7 +150,6 @@ msgstr "Remover esta regra?"
 #: modules/glpi/glpi/addEntityRule.php:31
 msgid "The entity rule has been added successfully."
 msgstr "A regra da entidade foi adicionada com sucesso."
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/addEntityRule.php:35
 msgid "The entity rule has been edited successfully."
@@ -245,25 +217,6 @@ msgstr "contém"
 msgid "does not contain"
 msgstr "não contém"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:80
-#, fuzzy
-msgid "Create static group from machines backup widget (GLPI)"
-msgstr "Criar um grupo estático através dos widgets do painel (GLPI)"
-
-#: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:75
-#, fuzzy
-msgid "Create static group from machines dashboard widget (GLPI)"
-msgstr "Criar um grupo estático através dos widgets do painel (GLPI)"
-
-#: modules/glpi/glpi/addEntityRule.php:149
-msgid "Criterion"
-msgstr "Critério"
-
-#: modules/glpi/glpi/ajaxViewPart.php:251
-msgid "Date"
-msgstr "Data"
-=======
 #: modules/glpi/glpi/addEntityRule.php:117
 msgid "starts with"
 msgstr "inicia com"
@@ -272,21 +225,14 @@ msgstr "inicia com"
 #: modules/glpi/glpi/addEntityRule.php:119
 msgid "finishes by"
 msgstr "finaliza com"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/addEntityRule.php:120
 msgid "matches (regex)"
 msgstr "combina (regex)"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:124
-msgid "Delete entity rule"
-msgstr "Remover regra de entidade"
-=======
 #: modules/glpi/glpi/addEntityRule.php:121
 msgid "does not match (regex)"
 msgstr "não combina (regex)"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/addEntityRule.php:122
 msgid "exists"
@@ -305,15 +251,9 @@ msgstr "Remover"
 msgid "Criterion"
 msgstr "Critério"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:141
-msgid "Display locations"
-msgstr "Mostrar locais"
-=======
 #: modules/glpi/glpi/addEntityRule.php:155
 msgid "Add criterion"
 msgstr "Adicionar critério"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/addEntityRule.php:168
 #: modules/glpi/glpi/addEntityRule.php:190
@@ -352,15 +292,6 @@ msgstr "Nenhum antivírus encontrado em %s"
 msgid "Computers list has been truncated at %d computers"
 msgstr "A lista de computadores foi truncada em %d computadores"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:85
-msgid "Entities"
-msgstr "Entidades"
-
-#: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
-msgid "Entities (ajax)"
-msgstr "Entidades (ajax)"
-=======
 #: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
@@ -370,7 +301,6 @@ msgstr "Nenhuma entrada encontrada"
 #: modules/glpi/glpi/ajaxLocationList.php:66
 msgid "Location name"
 msgstr "Nome da localização"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxLocationList.php:68
 #: modules/glpi/glpi/ajaxViewPart.php:250
@@ -399,15 +329,6 @@ msgstr "Propriedades"
 msgid "Value"
 msgstr "Valor"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:111 modules/glpi/glpi/entityRules.php:28
-msgid "Entity rules"
-msgstr "Regras das entidades"
-
-#: modules/glpi/infoPackage.inc.php:115
-msgid "Entity rules (ajax)"
-msgstr "Regras das entidades (ajax)"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:143
 msgid "No record found for this period."
 msgstr "Nenhum registro encontrado neste periodo."
@@ -415,7 +336,6 @@ msgstr "Nenhum registro encontrado neste periodo."
 #: modules/glpi/glpi/ajaxViewPart.php:146
 msgid "Unable to detect any Antivirus software on this machine."
 msgstr "Incapaz de detectar qualquer software de antivírus nesta maquina."
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:147
 msgid ""
@@ -462,15 +382,9 @@ msgstr "Placa de Video"
 msgid "Sound Cards"
 msgstr "Placa de Som"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:163 modules/glpi/infoPackage.inc.php:196
-msgid "Hardware tab (GLPI)"
-msgstr "Aba Hardware (GLPI)"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:196
 msgid "Others"
 msgstr "Outros"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:210
 msgid "Yes"
@@ -480,15 +394,9 @@ msgstr "Sim"
 msgid "No"
 msgstr "Não"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:178 modules/glpi/infoPackage.inc.php:211
-msgid "History tab (GLPI)"
-msgstr "Aba Histórico (GLPI)"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "Network Type"
 msgstr "Tipo de Rede"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:214
 msgid "MAC Address"
@@ -506,15 +414,6 @@ msgstr "Mascara de rede"
 msgid "Gateway"
 msgstr "Gateway"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:156
-msgid "Inventory (GLPI) on a group of machines"
-msgstr "Inventário (GLPI) em um grupo de máquinas"
-
-#: modules/glpi/infoPackage.inc.php:189
-msgid "Inventory (GLPI) on machine"
-msgstr "Inventário (GLPI) na máquina"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
 msgstr "Dispositivo"
@@ -522,7 +421,6 @@ msgstr "Dispositivo"
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
 msgstr "Ponto de montagem"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:220
 msgid "Filesystem"
@@ -581,27 +479,9 @@ msgstr "Entidade"
 msgid "Location"
 msgstr "Localização"
 
-<<<<<<< HEAD
-#: modules/glpi/glpi/locationList.php:28
-msgid "Location list"
-msgstr "Lista de locais"
-
-#: modules/glpi/glpi/ajaxLocationList.php:66
-msgid "Location name"
-msgstr "Nome da localização"
-
-#: modules/glpi/infoPackage.inc.php:98
-msgid "Locations"
-msgstr "Localizações"
-
-#: modules/glpi/glpi/ajaxViewPart.php:214
-msgid "MAC Address"
-msgstr "Endereço MAC"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
 msgstr "Ultimo usuário logado"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:237
 msgid "OS"
@@ -667,15 +547,9 @@ msgstr "Ação"
 msgid "Today"
 msgstr "Hoje"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:169 modules/glpi/infoPackage.inc.php:202
-msgid "Network tab (GLPI)"
-msgstr "Aba Redes (GLPI)"
-=======
 #: modules/glpi/glpi/ajaxViewPart.php:256 modules/glpi/includes/html.php:58
 msgid "Last 7 days"
 msgstr "Ultimo 7 dias"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/ajaxViewPart.php:257 modules/glpi/includes/html.php:59
 msgid "Last 30 days"
@@ -751,25 +625,9 @@ msgstr ""
 msgid "Machines offline at %s"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:184 modules/glpi/infoPackage.inc.php:217
-#, fuzzy
-msgid "Registry tab (GLPI)"
-msgstr "Aba Histórico (GLPI)"
-
-#: modules/glpi/glpi/addEntityRule.php:138
-#: modules/glpi/includes/publicFunc.php:142
-msgid "Remove"
-msgstr "Remover"
-
-#: modules/glpi/glpi/ajaxEntityRules.php:66
-msgid "Rule name"
-msgstr "Nome da regra"
-=======
 #: modules/glpi/glpi/locationList.php:28
 msgid "Location list"
 msgstr "Lista de locais"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/locationList.php:36
 msgid "All locations"
@@ -788,15 +646,9 @@ msgstr "O local foi adicionado com sucesso"
 msgid "The location has been edited successfully."
 msgstr "A localização foi editada com sucesso."
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:172 modules/glpi/infoPackage.inc.php:205
-msgid "Softwares tab (GLPI)"
-msgstr "Aba Programas (GLPI)"
-=======
 #: modules/glpi/glpi/addLocation.php:43
 msgid "Add location"
 msgstr "Adicionar local"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/addLocation.php:96
 msgid "Parent location"
@@ -810,15 +662,9 @@ msgstr "Todas as regas"
 msgid "This client has been registered in pull mode"
 msgstr "Esta máquina cliente não foi registrada no modo Pull"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:166 modules/glpi/infoPackage.inc.php:199
-msgid "Storage tab (GLPI)"
-msgstr "Aba Armazenamento (GLPI)"
-=======
 #: modules/glpi/glpi/tabs.php:62
 msgid "Leave pull mode"
 msgstr "Sair do modo Pull"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/tabs.php:72
 #, php-format
@@ -829,23 +675,9 @@ msgstr "Inventário %s do %s"
 msgid "Summary"
 msgstr "Sumário"
 
-<<<<<<< HEAD
-#: modules/glpi/infoPackage.inc.php:160 modules/glpi/infoPackage.inc.php:193
-msgid "Summary tab (GLPI)"
-msgstr "Aba Sumario (GLPI)"
-
-#: modules/glpi/glpi/ajaxViewPart.php:223
-msgid "Supplier"
-msgstr "Fornecedor"
-
-#: modules/glpi/glpi/addEntityRule.php:180
-msgid "Target entity"
-msgstr "Entidade de destino"
-=======
 #: modules/glpi/glpi/tabs.php:79
 msgid "Hardware"
 msgstr "Hardware"
->>>>>>> origin/xmppmaster
 
 #: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
