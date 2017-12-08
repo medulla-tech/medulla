@@ -451,8 +451,7 @@ class Pulse2ConfigFile(object):
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
                 'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
-                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig',
-                'PluginsPulseUpdateConfig']
+                'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
     # examplesdir
@@ -639,8 +638,6 @@ class PluginsDyngroupConfig(Pulse2ConfigFile):
 class PluginsUpdateConfig(Pulse2ConfigFile):
     path = 'plugins/update.ini'
 
-class PluginsPulseUpdateConfig(Pulse2ConfigFile):
-    path = 'plugins/pulseupdate.ini'
 
 class PluginsInventoryConfig(Pulse2ConfigFile):
     path = 'plugins/inventory.ini'
@@ -1038,11 +1035,6 @@ class SetupApp(object):
         self.confs['plugins/update.ini'].set('database', 'dbhost', self.config['dbhost'])
         self.confs['plugins/update.ini'].set('database', 'dbuser', self.config['dbuser'])
         self.confs['plugins/update.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
-
-        # update db
-        self.confs['plugins/pulseupdate.ini'].set('database', 'dbhost', self.config['dbhost'])
-        self.confs['plugins/pulseupdate.ini'].set('database', 'dbuser', self.config['dbuser'])
-        self.confs['plugins/pulseupdate.ini'].set('database', 'dbpasswd', self.config['dbpasswd'])
 
         # imaging db
         self.confs['plugins/imaging.ini'].set('database', 'dbhost', self.config['dbhost'])
