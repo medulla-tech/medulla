@@ -99,6 +99,7 @@ install: build
 	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
 	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
 	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
+	rm -fv $(DESTDIR)/usr/share/mmc/modules/update/locale/.tx/config
 
 binary-indep: build install
 binary-arch: build install
