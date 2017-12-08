@@ -38,7 +38,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
-                                                      callvncchangepermsbymaster
+                                                      callvncchangepermsbymaster, callInstallKey
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -354,6 +354,14 @@ def callInventoryinterface(uuid):
     else:
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
+
+def callInstallKeyAM(jidAM,jidARS):
+    if jidARS != "" and jidAM != "":
+        callInstallKey(jidAM, jidARS)
+        return jidAM
+    else:
+        logging.getLogger().error("for machine %s : install key ARS %s"%(jidAM, jidARS) )
+        return "jid (AM or ARS) missing"
 
 def callrestart(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)

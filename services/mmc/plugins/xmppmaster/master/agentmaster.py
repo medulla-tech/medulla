@@ -109,6 +109,9 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
   return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
 
+def callInstallKey( jidAM, jidARS):
+    return ObjectXmpp().callInstallKey( jidAM, jidARS)
+
 class XmppCommandDiffered:
     """
     Thread in charge of running precommand
@@ -867,6 +870,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         mbody=json.dumps(vncchangepermsonmachine),
                         mtype='chat')
         return True
+
+    def callInstallKey(self, jidAM, jidARS):
+        try:
+            body = {'action' : 'installkey',
+                    'sessionid': name_random(5, "installkey"),
+                    'data' : { 'jidAM' : jidAM
+                    } 
+            }
+            self.send_message(  mto = jidARS,
+                                mbody = json.dumps(body),
+                                mtype = 'chat')
+        except:
+            traceback.print_exc(file=sys.stdout)
 
     def callinventory(self, to):
         try:
