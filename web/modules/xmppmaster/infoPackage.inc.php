@@ -135,6 +135,11 @@ $page = new Page("actionvncchangeperms", _T("quick action change vnc settings", 
 $page->setFile("modules/xmppmaster/xmppmaster/actionvncchangeperms.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
+
+$page = new Page("actionrestart", _T("quick action Install key", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/actionkeyinstall.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
 // --------------END QUICK ACTION--------------------
 
 // ajax procedure to start a reversessh on client machine for guacamole

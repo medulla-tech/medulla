@@ -57,6 +57,10 @@ function xmlrpc_getXmppConfiguration() {
     return xmlCall("xmppmaster.getXmppConfiguration", array());
 }
 
+function xmlrpc_callinstallkey($jidAM, $jidARS) {
+    return xmlCall("xmppmaster.callInstallKeyAM", array($jidAM, $jidARS));
+}
+
 function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
     return xmlCall("xmppmaster.getGuacamoleRelayServerMachineUuid", array($uuid));
 }

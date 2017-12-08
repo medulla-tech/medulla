@@ -107,6 +107,8 @@ input[type="text"] {
                         echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
                         echo '<td id="inventory" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
                         echo '<td id="vncchangeperms" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
+                        echo '<td id="installkey" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
+
                     }
                     if ($nbr_absent != 0){
                         echo '<td id="wol"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
@@ -136,6 +138,7 @@ input[type="text"] {
                                             <input type="checkbox" name="askpermission" id = "checkboxvncchangeperms" checked> Ask user approval
                                         </label>
                                     </form></td>';
+                        echo '<td id="installkey0" align="center">Installing the ARS public key on the machine agent</td>';
                     }
                     if ($nbr_absent != 0){
                         echo '<td><span id="wol0">Wake on LAN</span>
@@ -192,7 +195,7 @@ input[type="text"] {
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_not_present[i] + ", ";
+                    text = text +  machine_already_present[i] + ", ";
                 }
             alert("Inventory on the following machines in progress\n"+text)
         }
@@ -230,7 +233,7 @@ input[type="text"] {
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("shutdown sur les machines suivante en cours\n"+text)
+            alert("shutdown on the following machines in progress\n"+text)
         }
     }
 
@@ -252,6 +255,24 @@ input[type="text"] {
         }
     }
 
+    function installkey(data){
+        uuid = data[0];
+        cn = data[1];
+        presence = data[2];
+        machine_already_present = data[3];
+        machine_not_present = data[4];
+        if (machine_already_present.length == 0){
+            alert("No machines are running\ninstall ARS key only on running machine")
+        }
+        else{
+                text = "";
+                for(var i = 0; i < machine_already_present.length; i++){
+                    text = text +  machine_already_present[i] + ", ";
+                }
+            alert("install ARS key on the following machines in progress\n"+text)
+        }
+    }
+    
     jQuery('#wol').unbind().on('click', function(){
         groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
@@ -296,8 +317,23 @@ input[type="text"] {
             })
     })
 
+    jQuery('#installkey').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
+            .done(function( data ) {
+            //alert(data);
+               installkey(data)
+            })
+    })
+
+    jQuery('#installkey0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
+            .done(function( data ) {
+             //alert(data);
+               installkey(data)
+            })
+    })
+
     jQuery('#shutdown').on('click', function(){
-        //         val = jQuery.param({'time' : jQuery('#mytimeshutdown').val(), 'msg' : jQuery('#msgshutdown').val()})
         groupinfo['time'] = jQuery('#mytimeshutdown').val()
         groupinfo['msg'] = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )
