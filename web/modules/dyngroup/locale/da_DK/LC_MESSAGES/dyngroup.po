@@ -8,17 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: da_DK\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Danish (Denmark) (https://www.transifex.com/siveo/teams/72118/da_DK/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -118,23 +110,13 @@ msgstr ""
 msgid "Remove a computer"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:49
-=======
 #: modules/dyngroup/dyngroup/remove_machine.php:54
->>>>>>> origin/xmppmaster
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:43
-#, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-=======
 #: modules/dyngroup/dyngroup/remove_machine.php:57
 msgid "Remove Computer"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/dyngroup/dyngroup/remove_machine.php:58
@@ -230,23 +212,12 @@ msgstr ""
 msgid "Software deployment on this group"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:48
-#: modules/dyngroup/dyngroup/delete_group.php:50
-msgid "Delete group"
-msgstr ""
-
-#: modules/dyngroup/dyngroup/delete_group.php:42
-#: modules/dyngroup/dyngroup/delete_group.php:44
-msgid "Delete imaging group"
-=======
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:136
 msgid "Update on this group"
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:139
 msgid "Display this imaging group's content"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:141
@@ -367,14 +338,8 @@ msgstr ""
 msgid "Your internal inventory number"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:95
-#, php-format
-msgid "Group %s was successfully deleted"
-=======
 #: modules/dyngroup/dyngroup/creator.php:330
 msgid "Hardware"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:331
@@ -441,14 +406,8 @@ msgstr ""
 msgid "Installed software"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:92
-#, php-format
-msgid "Imaging group %s was successfully deleted"
-=======
 #: modules/dyngroup/dyngroup/creator.php:347
 msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:348
@@ -756,14 +715,8 @@ msgstr ""
 msgid "Save a group of computers"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:64
-msgid ""
-"The group cannot be deleted as a multicast deployment is currently running."
-=======
 #: modules/dyngroup/infoPackage.inc.php:139
 msgid "Detailed page of save a group of computers"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/dyngroup/infoPackage.inc.php:144

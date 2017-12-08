@@ -8,19 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Andre Machado <andre@mandriva.com>\n"
-"Language-Team: Portuguese (Brazilian) (http://transifex.mandriva.com/"
-"projects/p/pulse2/team/pt_BR/)\n"
-"Language: pt_BR\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -116,24 +107,11 @@ msgstr "Atualizar cache de nome de computadores no grupo dinâmico"
 msgid "update machine cache : %s machines"
 msgstr "atualizar cache do computador: %s computadores"
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:49
-#, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
-msgstr ""
-"Você está certo que deseja excluir o grupo <b>%s</b>?<br/> (ele pode ser "
-"usado em outro grupo)."
-
-#: modules/dyngroup/dyngroup/delete_group.php:43
-=======
 #: modules/dyngroup/dyngroup/remove_machine.php:48
 msgid "Remove a computer"
 msgstr "Remover um computador"
 
 #: modules/dyngroup/dyngroup/remove_machine.php:54
->>>>>>> origin/xmppmaster
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
 msgstr "Você vai remover o computador <b>%s</b> do grupo <b>%s</b>."
@@ -222,17 +200,6 @@ msgstr "Mostrar o inventário deste grupo"
 msgid "Edit this group"
 msgstr "Editar este grupo"
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:48
-#: modules/dyngroup/dyngroup/delete_group.php:50
-msgid "Delete group"
-msgstr "Excluir grupo"
-
-#: modules/dyngroup/dyngroup/delete_group.php:42
-#: modules/dyngroup/dyngroup/delete_group.php:44
-msgid "Delete imaging group"
-msgstr "Deletar esse grupo de imagem"
-=======
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:127
 msgid "Share this group"
 msgstr "Compartilhar este grupo"
@@ -241,7 +208,6 @@ msgstr "Compartilhar este grupo"
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:150
 msgid "Read log"
 msgstr "Ver o log"
->>>>>>> origin/xmppmaster
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:133
 msgid "Software deployment on this group"
@@ -345,42 +311,9 @@ msgstr "A consulta é :"
 msgid "Go to save step"
 msgstr "Ir para o passo salvar "
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:95
-#, php-format
-msgid "Group %s was successfully deleted"
-msgstr "Grupo %s foi deletado com sucesso"
-
-#: modules/dyngroup/dyngroup/display.php:60
-#, php-format
-msgid "Group '%s' content"
-msgstr "Conteudo do Grupo '%s'"
-
-#: modules/dyngroup/dyngroup/tab.php:40
-msgid "Group creation"
-msgstr "Criação de grupo"
-
-#: modules/dyngroup/dyngroup/add_groups.php:226
-msgid "Group failed to modify"
-msgstr "Grupo falhou ao tentar modificar"
-
-#: modules/dyngroup/dyngroup/edit_share.php:89
-msgid "Group failed to share"
-msgstr "Grupo falhou ao tentar compartilhar"
-
-#: modules/dyngroup/dyngroup/list.php:29
-msgid "Group list"
-msgstr "Lista de grupos"
-
-#: modules/dyngroup/includes/groups.inc.php:120
-#: modules/dyngroup/includes/groups.inc.php:124
-msgid "Group members"
-msgstr "Membros do grupo"
-=======
 #: modules/dyngroup/dyngroup/creator.php:323
 msgid "Identification"
 msgstr "Identificação"
->>>>>>> origin/xmppmaster
 
 #: modules/dyngroup/dyngroup/creator.php:324
 msgid "Computer name"
@@ -422,16 +355,9 @@ msgstr "Notebook, Desktop, Rack..."
 msgid "System manufacturer"
 msgstr "Fabricante do sistema"
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:92
-#, php-format
-msgid "Imaging group %s was successfully deleted"
-msgstr "Grupo de imagem %s foi deletado com sucesso"
-=======
 #: modules/dyngroup/dyngroup/creator.php:334
 msgid "Dell, HP, Apple ..."
 msgstr "Dell, HP, Apple ..."
->>>>>>> origin/xmppmaster
 
 #: modules/dyngroup/dyngroup/creator.php:335
 msgid "System model"
@@ -797,16 +723,9 @@ msgstr "Segunda página da criação de grupo resultado/consulta"
 msgid "Save a group of computers"
 msgstr "Salvar um grupo de computadores"
 
-<<<<<<< HEAD
-#: modules/dyngroup/dyngroup/delete_group.php:64
-msgid ""
-"The group cannot be deleted as a multicast deployment is currently running."
-msgstr ""
-=======
 #: modules/dyngroup/infoPackage.inc.php:139
 msgid "Detailed page of save a group of computers"
 msgstr "Página detalhada de um grupo de computadores salvo"
->>>>>>> origin/xmppmaster
 
 #: modules/dyngroup/infoPackage.inc.php:144
 #: modules/dyngroup/infoPackage.inc.php:152

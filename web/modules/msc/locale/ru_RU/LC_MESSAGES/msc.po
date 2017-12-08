@@ -8,19 +8,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Russian (Russia) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/ru_RU/)\n"
-"Language: ru_RU\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -45,14 +36,8 @@ msgstr "Мои команды"
 msgid "All user commands"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/msc/includes/commands_xmlrpc.inc.php:132
-#, php-format
-msgid "%s deployment subgroup - %s"
-=======
 #: modules/msc/infoPackage.inc.php:58
 msgid "Commands logs"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/msc/infoPackage.inc.php:61
@@ -776,11 +761,7 @@ msgstr "Не приостановлен <b>ни один</b> компьютер 
 msgid "<b>One</b> computer is paused"
 msgstr "Приостановлен <b>один</b> компьютер "
 
-<<<<<<< HEAD
-#: modules/msc/includes/commands_xmlrpc.inc.php:155
-=======
 #: modules/msc/msc/msctabsstatus.php:108
->>>>>>> origin/xmppmaster
 #, php-format
 msgid "<b>%s</b> computers are paused"
 msgstr "Приостановлено <b>%s</b> компьютеров "

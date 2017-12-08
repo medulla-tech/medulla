@@ -8,17 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: pl_PL\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,14 +31,8 @@ msgstr ""
 msgid "My commands"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/msc/includes/commands_xmlrpc.inc.php:132
-#, php-format
-msgid "%s deployment subgroup - %s"
-=======
 #: modules/msc/infoPackage.inc.php:55 modules/msc/logs/localSidebar.php:29
 msgid "All user commands"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/msc/infoPackage.inc.php:58
@@ -659,11 +645,7 @@ msgstr ""
 msgid "<b>One</b> package installation is stopped"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/msc/includes/commands_xmlrpc.inc.php:155
-=======
 #: modules/msc/msc/msctabsstatus.php:69
->>>>>>> origin/xmppmaster
 #, php-format
 msgid "<b>%s</b> packages installation are stopped"
 msgstr ""

@@ -8,46 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-<<<<<<< HEAD
-"POT-Creation-Date: 2017-10-11 09:21+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Buildbot Mandriva <buildbot@mandriva.com>\n"
-"Language-Team: Chinese (Taiwan) (http://transifex.mandriva.com/projects/p/"
-"pulse2/team/zh_TW/)\n"
-"Language: zh_TW\n"
-=======
 "POT-Creation-Date: 2017-10-11 09:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
->>>>>>> origin/xmppmaster
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_TW\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
-msgid "   - Hide the Microsoft Software License Terms page in Windows Welcome"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1540
-msgid "   - Skip Welcome Center, also known as Per User OOBE"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1538
-msgid "   - Skip Windows Welcome, also known as Machine OOBE"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1544
-msgid "   - The network type"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1546
-msgid "   - What type of computer protection is in place"
-msgstr ""
-=======
 #: modules/imaging/imaging/bootmenu.php:74
 #: modules/imaging/imaging/bootmenu.php:113
 #, php-format
@@ -86,7 +56,6 @@ msgstr "顯示"
 #: modules/imaging/manage/service_add.php:106
 msgid "Selected by default on WOL"
 msgstr "在 WOL 上預設選取"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/bootmenu.php:177
 #: modules/imaging/imaging/bootmenu.php:355
@@ -159,18 +128,6 @@ msgid ""
 "default boot entry."
 msgstr "使用 \"預先選擇的選項\" 或 \"WOL 上預先選擇的選項\" 定義預設開機項目。"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:411
-#: modules/imaging/manage/ajaxFormWin8.php:486
-#: modules/imaging/manage/ajaxFormWin10.php:504
-#: modules/imaging/manage/ajaxFormWin81.php:585
-msgid "Accept EULA"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1366
-msgid "Account Operators"
-msgstr ""
-=======
 #: modules/imaging/imaging/bootmenu.php:343
 #: modules/imaging/imaging/bootmenu.php:345
 msgid ""
@@ -183,7 +140,6 @@ msgid ""
 "When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
 " this value will be set on all the computers in this group."
 msgstr "變更 \"預先選擇的選項\" 或 \"WOL 上預先選擇的選項\" 項目時，將對此群組中的所有電腦設定此值。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/bootmenu.php:347
 #: modules/imaging/imaging/images.php:104
@@ -270,18 +226,6 @@ msgid ""
 "files of your media size will be created."
 msgstr "請選擇媒體大小。如果您的資料超出容量大小，將建立幾個您的媒體大小的檔案。"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:676
-#: modules/imaging/manage/ajaxFormWin8.php:751
-#: modules/imaging/manage/ajaxFormWin10.php:756
-#: modules/imaging/manage/ajaxFormWin81.php:927
-msgid "Administrator Account"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1367
-msgid "Administrators"
-msgstr ""
-=======
 #: modules/imaging/imaging/images_iso.php:86
 #: modules/imaging/manage/master_iso.php:72
 msgid "Media size"
@@ -290,7 +234,6 @@ msgstr "媒體大小"
 #: modules/imaging/imaging/images_iso.php:99
 msgid "Start ISO generation"
 msgstr "開始 ISO 產生作業"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/images_iso.php:100
 #: modules/imaging/imaging/showtarget.php:131
@@ -411,16 +354,9 @@ msgstr "母片版本"
 msgid "Save"
 msgstr "儲存"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1368
-#, fuzzy
-msgid "Backup Operators"
-msgstr "正在進行備份"
-=======
 #: modules/imaging/imaging/images.php:126
 msgid "Save (converting to image)"
 msgstr "儲存（轉換為映像）"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/images.php:128
 msgid "Convert to master"
@@ -544,18 +480,10 @@ msgstr "取消登錄此電腦"
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr "已正確地從映像建立取消登錄電腦 %s"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
-msgid ""
-"CEIPEnabled indicates whether the Windows Customer Experience Improvement "
-"Program (CEIP) is enabled"
-msgstr ""
-=======
 #: modules/imaging/imaging/configure.php:338
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr "無法取消登錄電腦 %s"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/configure.php:356
 #, php-format
@@ -573,16 +501,6 @@ msgid ""
 "manages the entity of this computer."
 msgstr "若要登錄，您必須先設定預設功能表至管理此電腦實體的映像伺服器。"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:619
-#: modules/imaging/manage/ajaxFormWin8.php:694
-#: modules/imaging/manage/ajaxFormWin10.php:704
-#: modules/imaging/manage/ajaxFormWin81.php:907
-msgid "Category View"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1740
-=======
 #: modules/imaging/imaging/configure.php:384
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
@@ -590,22 +508,15 @@ msgid ""
 msgstr "若要登錄，您必須先設定預設功能表至屬於此設定檔的管理此電腦實體的映像伺服器。"
 
 #: modules/imaging/imaging/configure.php:389
->>>>>>> origin/xmppmaster
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC"
 " address or the only NIC doesn't have any network mask. It can't be "
 "registered into the imaging module."
 msgstr "電腦沒有 MAC 位址，或有多個 MAC 位址，或僅有的 NIC 沒有任何網路遮罩。無法將其登錄至映像模組。"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1401
-msgid "Check for updates but choose to download and install"
-msgstr ""
-=======
 #: modules/imaging/imaging/configure.php:394
 msgid "The profile can't be registered into the imaging module."
 msgstr "無法將設定檔登錄至映像模組。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/configure.php:427
 msgid "Computer:"
@@ -622,19 +533,10 @@ msgid ""
 "Please switch to expert mode now if you want to change more parameters."
 msgstr "如果要變更更多參數，請立即切換至專業模式。"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:619
-#: modules/imaging/manage/ajaxFormWin8.php:694
-#: modules/imaging/manage/ajaxFormWin10.php:704
-#: modules/imaging/manage/ajaxFormWin81.php:907
-msgid "Classic View"
-msgstr ""
-=======
 #: modules/imaging/imaging/configure.php:443
 #: modules/imaging/imaging/configure.php:578
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr "如果您需要更少參數，您現在可以切換至標準模式。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/configure.php:462
 msgid ""
@@ -663,18 +565,6 @@ msgstr "要備份的硬碟和磁碟分割選取項目"
 msgid "Hard disk number: %d"
 msgstr "硬碟編號：%d"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1529
-msgid "CommandLine reg"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1639
-msgid "CommandLine reg ControlPanel AllItemsIconView"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
-msgid "CommandLine reg Set the Control Panel View to Small Icons"
-=======
 #: modules/imaging/imaging/configure.php:507
 msgid "Select this hard disk"
 msgstr "選擇此硬碟"
@@ -688,7 +578,6 @@ msgstr "磁碟分割編號：%d"
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:58
 #, php-format
 msgid "Machine with custom menu on entity [%s] at %s"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/imaging/creategroupcustonmenu.php:57
@@ -706,13 +595,6 @@ msgstr ""
 msgid "root"
 msgstr "根"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:441
-#: modules/imaging/manage/ajaxFormWin8.php:516
-#: modules/imaging/manage/ajaxFormWin10.php:534
-#: modules/imaging/manage/ajaxFormWin81.php:617
-msgid "Computer Name"
-=======
 #: modules/imaging/imaging/addimage.php:69
 #: modules/imaging/imaging/tabs.php:100
 #: modules/imaging/imaging/addservice.php:68
@@ -720,7 +602,6 @@ msgid "Computer Name"
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/imaging/addimage.php:142
@@ -760,16 +641,6 @@ msgstr "無法在映像模組中宣告此電腦：其已是一個中斷的映像
 msgid "Please declare the imaging group first %shere%s."
 msgstr "請先宣告映像群組%shere%s 。"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1683
-msgid "Configure Administrators Account"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1460
-#, fuzzy
-msgid "Configure General Settings"
-msgstr "強制執行產生"
-=======
 #: modules/imaging/imaging/tabs.php:164 modules/imaging/imaging/tabs.php:250
 #, php-format
 msgid "Reset synchronisation state for %s (%s) succeed"
@@ -778,48 +649,22 @@ msgstr "已成功為 %s (%s) 重設同步處理狀態"
 #: modules/imaging/imaging/tabs.php:168 modules/imaging/imaging/tabs.php:254
 msgid "Failed to reset synchronise state."
 msgstr "無法重設同步處理狀態。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/tabs.php:179 modules/imaging/imaging/tabs.php:265
 #, php-format
 msgid "Generating boot menu... Please wait or reload the page %shere%s.<br/>"
 msgstr "正在產生開機功能表... 請稍候或重新載入頁面 %shere%s。<br/> "
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1520
-msgid "Configure Partition Settings"
-msgstr ""
-=======
 #: modules/imaging/imaging/tabs.php:182 modules/imaging/imaging/tabs.php:268
 msgid ""
 "If the processing exceeds 5 minutes, please reset the synchro state of this "
 "computer."
 msgstr "如果處理超過 5 分鐘，請重設此電腦的同步處理狀態。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/tabs.php:190 modules/imaging/imaging/tabs.php:276
 msgid "Reset Synchro state"
 msgstr "重設同步處理狀態"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1526
-msgid "Configure User Account"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:630
-#: modules/imaging/manage/ajaxFormWin8.php:705
-#: modules/imaging/manage/ajaxFormWin10.php:715
-#: modules/imaging/manage/ajaxFormWin81.php:918
-msgid "Control Panel Icon Size"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:622
-#: modules/imaging/manage/ajaxFormWin8.php:697
-#: modules/imaging/manage/ajaxFormWin10.php:707
-#: modules/imaging/manage/ajaxFormWin81.php:910
-msgid "Control Panel View"
-msgstr ""
-=======
 #: modules/imaging/imaging/tabs.php:197
 #: modules/imaging/includes/ajaxcommon.inc.php:126
 msgid "The registering in the imaging server has failed."
@@ -835,25 +680,16 @@ msgstr "%s 的電腦映像建立（在群組中）"
 #: modules/imaging/infoPackage.inc.php:353
 msgid "Boot menu"
 msgstr "開機功能表"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
 msgid "Current boot menu"
 msgstr "目前的開機功能表"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:710
-#: modules/imaging/manage/ajaxFormWin10.php:790
-#: modules/imaging/manage/ajaxFormWin81.php:778
-msgid "Copy Profile"
-msgstr ""
-=======
 #: modules/imaging/imaging/tabs.php:220
 #: modules/imaging/infoPackage.inc.php:276
 #: modules/imaging/infoPackage.inc.php:355
 msgid "Images and Masters"
 msgstr "映像和母片"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
 #: modules/imaging/infoPackage.inc.php:278
@@ -885,18 +721,9 @@ msgstr "%s 的設定檔映像建立"
 msgid "%s's imaging group"
 msgstr "%s 的映像群組"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:737
-#: modules/imaging/manage/ajaxFormWin8.php:826
-#: modules/imaging/manage/ajaxFormWin10.php:825
-#: modules/imaging/manage/ajaxFormWin81.php:938
-msgid "Create Xml Windows Answer File Generator"
-msgstr ""
-=======
 #: modules/imaging/imaging/tabs.php:290
 msgid "Masters"
 msgstr "母片"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/tabs.php:301
 msgid "Not enough information"
@@ -938,168 +765,16 @@ msgstr "檢視映像記錄檔"
 msgid "Created"
 msgstr "已建立"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/logs.inc.php:77
-msgid "Critical error"
-msgstr "嚴重錯誤"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1369
-msgid "Crypto Operators"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:465
-#: modules/imaging/manage/ajaxFormWin8.php:540
-#: modules/imaging/manage/ajaxFormWin10.php:550
-#: modules/imaging/manage/ajaxFormWin81.php:812
-msgid "Currency and Date format"
-msgstr ""
-=======
 #: modules/imaging/imaging/ajaxImages.php:173
 #: modules/imaging/manage/ajaxMasterLevel2.php:99
 msgid "Size (compressed)"
 msgstr "大小（已壓縮）"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/ajaxImages.php:174
 #: modules/imaging/manage/ajaxServiceLevel2.php:94
 msgid "In boot menu"
 msgstr "在開機功能表中"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:702
-#: modules/imaging/manage/ajaxFormWin8.php:777
-#: modules/imaging/manage/ajaxFormWin10.php:782
-#: modules/imaging/manage/ajaxFormWin81.php:690
-msgid "Customer Experience Improvement Program (CEIP)"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1732
-msgid "Customize the desired user profile settings"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1370
-msgid "DCOM Users"
-msgstr ""
-
-#: modules/imaging/manage/ajaxBootmenu.php:99
-msgid "Default"
-msgstr "預設值"
-
-#: modules/imaging/manage/localSidebar.php:37
-#: modules/imaging/infoPackage.inc.php:143
-msgid "Default boot menu"
-msgstr "預設開機功能表"
-
-#: modules/imaging/manage/ajaxBootmenu.php:93
-msgid "Default boot menu configuration"
-msgstr "預設開機功能表設定"
-
-#: modules/imaging/imaging/tabs.php:61
-msgid "Default menu has been successfully restored."
-msgstr "已成功還原預設功能表。"
-
-#: modules/imaging/manage/bootmenu_edit.php:77
-msgid "Default menu item label"
-msgstr "預設功能表項目標籤"
-
-#: modules/imaging/imaging/configure.php:43
-#: modules/imaging/manage/ajaxConfiguration.php:94
-msgid "Default menu label"
-msgstr "預設功能表標籤"
-
-#: modules/imaging/manage/ajaxConfiguration.php:90
-msgid "Default menu parameters"
-msgstr "預設功能表參數"
-
-#: modules/imaging/manage/ajaxConfiguration.php:97
-msgid "Default menu timeout"
-msgstr "預設功能表逾時"
-
-#: modules/imaging/manage/ajaxBootmenu.php:101
-msgid "Default on WOL"
-msgstr "WOL 上的預設值"
-
-#: modules/imaging/imaging/bootmenu.php:257
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:53
-#: modules/imaging/manage/ajaxMasterLevel2.php:63
-#: modules/imaging/manage/postinstall_delete.php:67
-#: modules/imaging/manage/ajaxLogs.php:58
-#: modules/imaging/includes/logs.inc.php:34
-msgid "Delete"
-msgstr "刪除"
-
-#: modules/imaging/infoPackage.inc.php:293
-msgid "Delete a group of computers"
-msgstr "刪除一個電腦群組"
-
-#: modules/imaging/imaging/images_delete.php:55
-#: modules/imaging/infoPackage.inc.php:437
-msgid "Delete image"
-msgstr "刪除映像"
-
-#: modules/imaging/manage/master_delete.php:50
-#: modules/imaging/infoPackage.inc.php:104
-msgid "Delete master"
-msgstr "刪除母片"
-
-#: modules/imaging/manage/postinstall_delete.php:63
-#: modules/imaging/infoPackage.inc.php:169
-msgid "Delete post-imaging script"
-msgstr "刪除映像建立後指令碼"
-
-#: modules/imaging/manage/ajaxServiceLevel2.php:51
-msgid "Delete service"
-msgstr "刪除服務"
-
-#: modules/imaging/manage/sysprepList.php:79
-#, fuzzy
-msgid "Delete sysprep file"
-msgstr "刪除服務"
-
-#: modules/imaging/imaging/ajaxImages.php:83
-msgid "Delete the image"
-msgstr "刪除映像"
-
-#: modules/imaging/imaging/bootmenu.php:349
-#: modules/imaging/imaging/images.php:108
-#: modules/imaging/imaging/ajaxImages.php:171
-#: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/manage/ajaxBootmenu.php:98
-#: modules/imaging/manage/sysprepList.php:74
-#: modules/imaging/manage/ajaxFormWin7.php:728
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:90
-#: modules/imaging/manage/ajaxFormWin8.php:809
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:76
-#: modules/imaging/manage/ajaxMasterLevel2.php:97
-#: modules/imaging/manage/ajaxFormWin10.php:808
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/service_edit.php:59
-#: modules/imaging/manage/ajaxServiceLevel2.php:93
-#: modules/imaging/manage/ajaxFormWin81.php:724
-#: modules/imaging/includes/post_install_script.php:65
-msgid "Description"
-msgstr "說明"
-
-#: modules/imaging/manage/ajaxFormWin7.php:606
-#: modules/imaging/manage/ajaxFormWin8.php:681
-#: modules/imaging/manage/ajaxFormWin10.php:691
-#: modules/imaging/manage/ajaxFormWin81.php:878
-msgid "Disable auto daylight timeset"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
-msgid "Disabled"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1724
-msgid "Disables Windows Firewall for Windows PE"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1659
-msgid "Disk_ID is an integer"
-msgstr ""
-=======
 #: modules/imaging/imaging/ajaxImages.php:176
 #: modules/imaging/imaging/ajaxServices.php:102
 msgid "From profile"
@@ -1140,7 +815,6 @@ msgstr "強制執行產生"
 #: modules/imaging/imaging/header.php:51
 msgid "This target's boot menu is up-to-date."
 msgstr "此目標的開機功能表已是最新。"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/imaging/header.php:60
 #, php-format
@@ -1162,40 +836,9 @@ msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/imaging/bootmenu.php:167
-#: modules/imaging/imaging/bootmenu.php:352
-#: modules/imaging/imaging/addimage.php:156
-#: modules/imaging/imaging/addservice.php:139
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/master_add.php:105
-#: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/service_add.php:104
-msgid "Displayed"
-msgstr "顯示"
-
-#: modules/imaging/imaging/bootmenu.php:177
-#: modules/imaging/imaging/bootmenu.php:355
-#: modules/imaging/imaging/addimage.php:160
-#: modules/imaging/imaging/addservice.php:143
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/master_add.php:109
-#: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/service_add.php:108
-msgid "Displayed on WOL"
-msgstr "在 WOL 上顯示"
-
-#: modules/imaging/imaging/configure.php:157
-msgid "Do not check hard disk size"
-msgstr "不要檢查硬碟大小"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1408
-msgid "Do not install selective updates"
-=======
 #: modules/imaging/imaging/multicast.php:54
 #: modules/imaging/imaging/multicast.php:64
 msgid "Multicast menu has not been created : number of computers missing"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/imaging/multicast.php:70
@@ -1207,42 +850,6 @@ msgid ""
 "computers and you have entered %d"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1744
-msgid "Does not change the default user profile"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1607
-msgid "Does not hide the Join Wireless Network screen during Windows Welcome"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:645
-#: modules/imaging/manage/ajaxFormWin8.php:720
-#: modules/imaging/manage/ajaxFormWin10.php:729
-msgid "Domain"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:655
-#: modules/imaging/manage/ajaxFormWin8.php:730
-#: modules/imaging/manage/ajaxFormWin10.php:737
-#, fuzzy
-msgid "Domain Password"
-msgstr "PXE 密碼"
-
-#: modules/imaging/manage/ajaxFormWin7.php:641
-#: modules/imaging/manage/ajaxFormWin8.php:716
-#: modules/imaging/manage/ajaxFormWin10.php:725
-msgid "Domain Settings"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:650
-#: modules/imaging/manage/ajaxFormWin8.php:725
-#: modules/imaging/manage/ajaxFormWin10.php:733
-msgid "Domain User"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1771
-=======
 #: modules/imaging/imaging/multicast.php:131
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
 msgstr ""
@@ -1272,19 +879,13 @@ msgstr ""
 
 #: modules/imaging/imaging/multicast.php:226
 #, php-format
->>>>>>> origin/xmppmaster
 msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
 "multicast"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1777
-msgid "Domain to join"
-=======
 #: modules/imaging/imaging/multicast.php:233
 msgid "Number of machines to wait for"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/imaging/multicast.php:249
@@ -1292,14 +893,9 @@ msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1402
-msgid "Download updates but choose when to install"
-=======
 #: modules/imaging/imaging/multicast.php:267
 #: modules/imaging/manage/ajaxStatus.php:569
 msgid "Start multicast deploy"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/imaging/addservice.php:125
@@ -1375,21 +971,6 @@ msgstr "移除母片"
 msgid "Are you sure you want to remove <b>%s</b> master ?"
 msgstr "是否確定要移除 <b>%s</b> 母片？"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
-msgid "Enable"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:598
-#: modules/imaging/manage/ajaxFormWin8.php:673
-#: modules/imaging/manage/ajaxFormWin10.php:683
-#: modules/imaging/manage/ajaxFormWin81.php:752
-msgid "Enable Firewall"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1720
-msgid "Enables Windows Firewall for Windows PE"
-=======
 #: modules/imaging/manage/master_add.php:48
 #, php-format
 msgid "Image <strong>%s</strong> added to default boot menu"
@@ -1405,7 +986,6 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:37
 msgid "The sysprep answer file has been removed from the imaging system."
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:65
@@ -1420,15 +1000,8 @@ msgstr ""
 msgid "OS"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1467
-msgid ""
-"Entering an invalid product key in the answer file will cause Windows Setup "
-"to fail"
-=======
 #: modules/imaging/manage/sysprepList.php:77
 msgid "Display sysprep file"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:78
@@ -1467,24 +1040,12 @@ msgstr "預設開機功能表"
 msgid "Post-imaging scripts"
 msgstr "映像建立後指令碼"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:525
-#: modules/imaging/manage/ajaxFormWin8.php:600
-#: modules/imaging/manage/ajaxFormWin10.php:610
-#: modules/imaging/manage/ajaxFormWin81.php:770
-msgid "Extend OS Partition"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1668
-msgid "FAT32"
-=======
 #: modules/imaging/manage/localSidebar.php:43
 msgid "Imaging Configuration"
 msgstr "映像建立設定"
 
 #: modules/imaging/manage/localSidebar.php:46
 msgid "Windows System Image Manager"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/imaging_server_link.php:59
@@ -1565,19 +1126,6 @@ msgstr ""
 msgid "Organization Name"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin8.php:792
-msgid "For Windows 8"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin8.php:793
-msgid "For Windows 8.1"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1483
-msgid ""
-"For automatic activation to complete, a valid Windows product key is required"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:411
 #: modules/imaging/manage/ajaxFormWin8.php:486
 #: modules/imaging/manage/ajaxFormWin10.php:504
@@ -1597,7 +1145,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:520
 #: modules/imaging/manage/ajaxFormWin81.php:601
 msgid "Skip License Rearm"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:436
@@ -1614,14 +1161,6 @@ msgstr ""
 msgid "Computer Name"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1670
-msgid "Formats the partition for the File Allocation Table (FAT) file system"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1666
-msgid "Formats the partition for the NTFS file system"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:449
 #: modules/imaging/manage/ajaxFormWin8.php:524
 #: modules/imaging/manage/ajaxFormWin81.php:786
@@ -1633,7 +1172,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:542
 #: modules/imaging/manage/ajaxFormWin81.php:804
 msgid "Keyboard or input method"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:465
@@ -1685,17 +1223,6 @@ msgstr ""
 msgid "Partition Order"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:723
-#: modules/imaging/manage/ajaxFormWin8.php:804
-#: modules/imaging/manage/ajaxFormWin10.php:803
-#: modules/imaging/manage/ajaxFormWin81.php:719
-msgid "Group"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
-msgid "Guests"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:525
 #: modules/imaging/manage/ajaxFormWin8.php:600
 #: modules/imaging/manage/ajaxFormWin10.php:610
@@ -1708,7 +1235,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:618
 #: modules/imaging/manage/ajaxFormWin81.php:659
 msgid "Main Partition Format"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:546
@@ -1787,19 +1313,11 @@ msgstr ""
 msgid "Classic View"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:590
-#: modules/imaging/manage/ajaxFormWin8.php:665
-#: modules/imaging/manage/ajaxFormWin10.php:675
-#: modules/imaging/manage/ajaxFormWin81.php:870
-msgid "Hide EULA page"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:622
 #: modules/imaging/manage/ajaxFormWin8.php:697
 #: modules/imaging/manage/ajaxFormWin10.php:707
 #: modules/imaging/manage/ajaxFormWin81.php:910
 msgid "Control Panel View"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:627
@@ -1816,21 +1334,6 @@ msgstr ""
 msgid "Small"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:614
-#: modules/imaging/manage/ajaxFormWin8.php:689
-#: modules/imaging/manage/ajaxFormWin10.php:699
-#: modules/imaging/manage/ajaxFormWin81.php:886
-msgid "Hide wireless setup in OOBE"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1603
-msgid "Hides the Join Wireless Network screen during Windows Welcome"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
-msgid "Home"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:630
 #: modules/imaging/manage/ajaxFormWin8.php:705
 #: modules/imaging/manage/ajaxFormWin10.php:715
@@ -1848,7 +1351,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin8.php:720
 #: modules/imaging/manage/ajaxFormWin10.php:729
 msgid "Domain"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:650
@@ -1863,14 +1365,6 @@ msgstr ""
 msgid "Domain Password"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1465
-msgid "IMPORTANT"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1372
-msgid "IUsers"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:660
 #: modules/imaging/manage/ajaxFormWin8.php:735
 #: modules/imaging/manage/ajaxFormWin10.php:741
@@ -1881,7 +1375,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin8.php:740
 #: modules/imaging/manage/ajaxFormWin10.php:745
 msgid "MachineObjectOU"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:676
@@ -1912,18 +1405,6 @@ msgstr ""
 msgid "Customer Experience Improvement Program (CEIP)"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
-msgid ""
-"If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
-"data to Microsoft about Windows usage"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1749
-msgid ""
-"If the Windows Live shortcut has been removed from the Start menu, this "
-"setting cannot be used to put it back on the Start menu"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:710
 #: modules/imaging/manage/ajaxFormWin10.php:790
 #: modules/imaging/manage/ajaxFormWin81.php:778
@@ -1935,7 +1416,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:795
 #: modules/imaging/manage/ajaxFormWin81.php:711
 msgid "User Name"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:723
@@ -1952,17 +1432,6 @@ msgstr ""
 msgid "Password: (Optional)"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1657
-msgid ""
-"If you are installing to a computer with a single disk, you must specify 0"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1622
-msgid ""
-"If you enable SkipMachineOOBE, any settings specified for ProtectYourPC and "
-"NetworkLocation in your answer file are ignored"
-=======
 #: modules/imaging/manage/ajaxFormWin7.php:737
 #: modules/imaging/manage/ajaxFormWin8.php:826
 #: modules/imaging/manage/ajaxFormWin10.php:825
@@ -1975,7 +1444,6 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:833
 #: modules/imaging/manage/ajaxFormWin81.php:946
 msgid "Xml Windows Answer File Generator"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:51
@@ -2129,23 +1597,6 @@ msgstr "此作業將依據母片的資料量而持續。"
 msgid "Create iso for <strong>%s</strong>"
 msgstr "為 <strong>%s</strong> 建立 iso"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1763
-msgid ""
-"In Windows 8, SystemDefaultBackgroundColor must be a value from 0 to 24, as "
-"shown in the following image, which represents the index of the color scheme "
-"as viewed in the SystemSettings"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1766
-msgid ""
-"In Windows 8.1, SystemDefaultBackgroundColor must be a value from 0 to 24 "
-"which represents the index of the color scheme as viewed in the out-of-box "
-"experience (OOBE) phase. The colors are indexed in the same manner as "
-"Windows 8 colors, from left to right. Samples of the color choices are shown "
-"in the following image"
-msgstr ""
-=======
 #: modules/imaging/manage/master_iso.php:85
 msgid "Launch backup"
 msgstr "啟動備份"
@@ -2154,7 +1605,6 @@ msgstr "啟動備份"
 #, php-format
 msgid "<b>%s</b> was already added to Boot Services"
 msgstr "<b>%s</b> 已新增至開機服務"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/manage/sysprepView.php:33
 msgid "View "
@@ -2177,28 +1627,6 @@ msgstr "關聯實體至映像伺服器"
 msgid "Identifier"
 msgstr "識別碼"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1407
-msgid "Install selective updates"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:509
-#: modules/imaging/manage/ajaxFormWin8.php:584
-#: modules/imaging/manage/ajaxFormWin10.php:594
-#: modules/imaging/manage/ajaxFormWin81.php:643
-msgid "Install to disk"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1403
-msgid "Install updates automatically"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:348
-#: modules/imaging/manage/ajaxFormWin8.php:423
-#: modules/imaging/manage/ajaxFormWin10.php:441
-#: modules/imaging/manage/ajaxFormWin81.php:524
-msgid "Installation Notes"
-=======
 #: modules/imaging/manage/synchromaster.php:47
 #, php-format
 msgid "Master copy: %s ( %s )"
@@ -2214,30 +1642,18 @@ msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:119
 msgid "Complete"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1542
-msgid "It also specifies the following"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:660
-#: modules/imaging/manage/ajaxFormWin8.php:735
-#: modules/imaging/manage/ajaxFormWin10.php:741
-msgid "Join Domain"
-=======
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
 msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:139
 msgid "Copy of master In progress"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/service_del.php:42
@@ -2245,36 +1661,18 @@ msgstr ""
 msgid "Service <strong>%s</strong> removed from default boot menu"
 msgstr "服務 <strong>%s</strong> 已從預設開機功能表移除"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:457
-#: modules/imaging/manage/ajaxFormWin8.php:532
-#: modules/imaging/manage/ajaxFormWin10.php:542
-#: modules/imaging/manage/ajaxFormWin81.php:804
-msgid "Keyboard or input method"
-msgstr ""
-=======
 #: modules/imaging/manage/service_del.php:64
 #, php-format
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
 msgstr "從預設開機功能表移除開機服務 <b>%s</b>"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/manage/ajaxConfiguration.php:28
 msgid "Imaging server configuration"
 msgstr "映像伺服器設定"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:627
-#: modules/imaging/manage/ajaxFormWin8.php:702
-#: modules/imaging/manage/ajaxFormWin10.php:712
-#: modules/imaging/manage/ajaxFormWin81.php:915
-msgid "Large"
-msgstr ""
-=======
 #: modules/imaging/manage/ajaxConfiguration.php:59
 msgid "Menu language"
 msgstr "功能表語言"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/manage/ajaxConfiguration.php:62
 msgid "PXE Password"
@@ -2288,19 +1686,8 @@ msgstr "將此欄位留為空白以取消設定 PXE 密碼"
 msgid "Clonezilla parameters for saving images"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxStatus.php:122
-msgid "Load on server"
-msgstr "伺服器負載"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1730
-msgid ""
-"Log on as a user whose profile you can customize (for example, the built-in-"
-"administrator account)"
-=======
 #: modules/imaging/manage/ajaxConfiguration.php:82
 msgid "Clonezilla parameters for restoring images"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxConfiguration.php:90
@@ -2328,40 +1715,6 @@ msgid ""
 msgstr ""
 "若要定義母片，請瀏覽至電腦模組，對您要從其建立母片的電腦按一下映像建立圖示，然後選擇&quot;映像和母片&quot;，並在備份映像上按一下編輯按鈕以將其轉換為母片。"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:665
-#: modules/imaging/manage/ajaxFormWin8.php:740
-#: modules/imaging/manage/ajaxFormWin10.php:745
-msgid "MachineObjectOU"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1779
-msgid ""
-"MachineObjectOU is an optional setting. It specifies the Lightweight "
-"Directory Access Protocol (LDAP) X 500-distinguished name of the "
-"organizational unit (OU) in which the computer account is created. This "
-"account is in Active Directory on a domain controller in the domain to which "
-"the computer is being joined."
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:533
-#: modules/imaging/manage/ajaxFormWin8.php:608
-#: modules/imaging/manage/ajaxFormWin10.php:618
-#: modules/imaging/manage/ajaxFormWin81.php:659
-msgid "Main Partition Format"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1523
-#, fuzzy
-msgid "Main Partition Label"
-msgstr "磁碟分割編號：%d"
-
-#: modules/imaging/manage/ajaxFormWin7.php:546
-#: modules/imaging/manage/ajaxFormWin8.php:621
-#: modules/imaging/manage/ajaxFormWin10.php:631
-#: modules/imaging/manage/ajaxFormWin81.php:672
-msgid "Main Partition Letter"
-=======
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
 msgstr "新增映像至預設開機功能表"
@@ -2376,7 +1729,6 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:119
 msgid "Master Clone"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxPostInstall.php:27
@@ -2464,16 +1816,10 @@ msgstr "錯誤"
 msgid "Inventory"
 msgstr "清查"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
-msgid "Meta Information xml"
-msgstr ""
-=======
 #: modules/imaging/manage/ajaxLogs.php:61
 #: modules/imaging/includes/logs.inc.php:35
 msgid "Restore in progress"
 msgstr "正在進行還原"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/manage/ajaxLogs.php:62
 #: modules/imaging/includes/logs.inc.php:36
@@ -2561,45 +1907,6 @@ msgstr ""
 msgid "Clone master : "
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1664
-msgid "NTFS"
-msgstr ""
-
-#: modules/imaging/manage/ajaxPostInstallLevel2.php:89
-#: modules/imaging/manage/ajaxAvailableImagingServer.php:74
-#: modules/imaging/includes/post_install_script.php:63
-msgid "Name"
-msgstr "名稱"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1373
-msgid "Network Configuration Operators"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:582
-#: modules/imaging/manage/ajaxFormWin8.php:657
-#: modules/imaging/manage/ajaxFormWin10.php:667
-#: modules/imaging/manage/ajaxFormWin81.php:846
-msgid "Network Location"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1563
-msgid "Network discovery is disabled by default on this network type"
-msgstr ""
-
-#: modules/imaging/includes/includes.php:221
-msgid "Never"
-msgstr "永不"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
-msgid "Never check for updates"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
-msgid "No"
-=======
 #: modules/imaging/manage/master_clone.php:94
 msgid "Master"
 msgstr ""
@@ -2622,7 +1929,6 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/master_delete.php:36
@@ -2652,15 +1958,9 @@ msgstr "從預設開機功能表移除服務"
 msgid "Delete service"
 msgstr "刪除服務"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1532
-msgid "OOBE specifies the out-of-box experience for the end user"
-msgstr ""
-=======
 #: modules/imaging/manage/ajaxServiceLevel2.php:52
 msgid "Show where service is used"
 msgstr "顯示服務的使用位置"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/manage/ajaxFormWin81.php:541
 msgid "General Settings"
@@ -2670,76 +1970,32 @@ msgstr ""
 msgid "Auto Logon"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:403
-#: modules/imaging/manage/ajaxFormWin8.php:478
-#: modules/imaging/manage/ajaxFormWin10.php:496
-#: modules/imaging/manage/ajaxFormWin81.php:577
-msgid "Organization Name"
-=======
 #: modules/imaging/manage/ajaxFormWin81.php:761
 msgid "Specialize Settings"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin81.php:762
 msgid "Configure Specialize Settings"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:367
-#: modules/imaging/manage/ajaxFormWin8.php:442
-#: modules/imaging/manage/ajaxFormWin10.php:460
-msgid "Os Settings"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1559
-msgid "Other"
-=======
 #: modules/imaging/manage/ajaxFormWin81.php:795
 msgid "Regional Settings"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin81.php:796
 msgid "Configure International Settings in Windows"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin81.php:837
 msgid "Out Of Box Experience"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxConfiguration.php:62
-msgid "PXE Password"
-msgstr "PXE 密碼"
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1437
-msgid ""
-"Participation in this program is voluntary, and the results are recorded to "
-"implement improvements for future releases"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:517
-#: modules/imaging/manage/ajaxFormWin8.php:592
-#: modules/imaging/manage/ajaxFormWin10.php:602
-#: modules/imaging/manage/ajaxFormWin81.php:651
-msgid "Partition Order"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:492
-#: modules/imaging/manage/ajaxFormWin8.php:567
-#: modules/imaging/manage/ajaxFormWin10.php:577
-#: modules/imaging/manage/ajaxFormWin81.php:626
-msgid "Partition Settings"
-=======
 #: modules/imaging/manage/ajaxFormWin81.php:894
 msgid "Skip machine OOBE"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin81.php:902
 msgid "Skip user OOBE"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/manage/bootmenu_down.php:39
@@ -2747,35 +2003,6 @@ msgstr ""
 msgid "Failed to move down <strong>%s</strong> in the default boot menu"
 msgstr "無法下移預設開機功能表中的 <strong>%s</strong> "
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:681
-#: modules/imaging/manage/ajaxFormWin8.php:756
-#: modules/imaging/manage/ajaxFormWin10.php:761
-#: modules/imaging/manage/ajaxFormWin81.php:933
-msgid "Password"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1773
-msgid ""
-"Password specifies the password of the user account used for authentication "
-"of an account to the domain before the computer can be joined to a domain "
-"during Windows Setup."
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:733
-#: modules/imaging/manage/ajaxFormWin8.php:814
-#: modules/imaging/manage/ajaxFormWin10.php:813
-#: modules/imaging/manage/ajaxFormWin81.php:729
-msgid "Password: (Optional)"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1374
-msgid "Perf Logging Users"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1375
-msgid "Perf Monitoring Users"
-=======
 #: modules/imaging/infoPackage.inc.php:33
 msgid "Imaging service"
 msgstr "映像建立服務"
@@ -2803,7 +2030,6 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:86
 #: modules/imaging/infoPackage.inc.php:91
 msgid "Create static group from menu set"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:96
@@ -2840,15 +2066,9 @@ msgstr "新增服務"
 msgid "Show used services"
 msgstr "顯示已使用的服務"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1376
-msgid "Power Users"
-msgstr ""
-=======
 #: modules/imaging/infoPackage.inc.php:145
 msgid "Up service"
 msgstr "向上服務"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/infoPackage.inc.php:148
 #: modules/imaging/infoPackage.inc.php:151
@@ -2872,18 +2092,6 @@ msgstr "重新導向至開機服務頁面"
 msgid "Imaging configuration"
 msgstr "映像建立設定"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1377
-msgid "Print Operators"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:398
-#: modules/imaging/manage/ajaxFormWin8.php:473
-#: modules/imaging/manage/ajaxFormWin10.php:491
-#: modules/imaging/manage/ajaxFormWin81.php:572
-msgid "Product Key"
-msgstr ""
-=======
 #: modules/imaging/infoPackage.inc.php:175
 msgid "Save an Imaging Server configuration"
 msgstr "儲存映像伺服器設定"
@@ -2891,7 +2099,6 @@ msgstr "儲存映像伺服器設定"
 #: modules/imaging/infoPackage.inc.php:179
 msgid "Available Imaging Server"
 msgstr "可用映像伺服器"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/infoPackage.inc.php:182
 msgid "Link an Imaging Server"
@@ -2924,20 +2131,6 @@ msgstr "來自檔案匯入的設定檔建立標籤"
 msgid "Computers Profile Creator Sub Request Editor"
 msgstr "電腦設定檔建立器子請求編輯器"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1478
-msgid ""
-"Prompts the user to accept the license terms before proceeding with Windows "
-"Setup"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:566
-#: modules/imaging/manage/ajaxFormWin8.php:641
-#: modules/imaging/manage/ajaxFormWin10.php:651
-#: modules/imaging/manage/ajaxFormWin81.php:854
-msgid "Protect Your Computer"
-msgstr ""
-=======
 #: modules/imaging/infoPackage.inc.php:217
 msgid "Computers Profile Creator Sub Request Delete"
 msgstr "電腦設定檔建立器子請求刪除"
@@ -2946,21 +2139,14 @@ msgstr "電腦設定檔建立器子請求刪除"
 #: modules/imaging/infoPackage.inc.php:254
 msgid "Computers Profile Editor"
 msgstr "電腦設定檔編輯器"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/infoPackage.inc.php:236
 msgid "Computers Profile Sub Request Editor"
 msgstr "電腦設定檔子請求編輯器"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1406
-msgid "Recommended settings"
-msgstr ""
-=======
 #: modules/imaging/infoPackage.inc.php:241
 msgid "Computers Profile Sub Request Delete"
 msgstr "電腦設定檔子請求刪除"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/infoPackage.inc.php:246
 #: modules/imaging/infoPackage.inc.php:259
@@ -3028,16 +2214,9 @@ msgstr "建立一個帶自訂映像建立功能表的包含電腦的靜態群組
 msgid "Imaging on computer"
 msgstr "電腦映像建立"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1378
-#, fuzzy
-msgid "Remote Desktop Users"
-msgstr "移除母片"
-=======
 #: modules/imaging/infoPackage.inc.php:370
 msgid "Show target that use that image"
 msgstr "顯示使用該映像的目標"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/infoPackage.inc.php:374
 msgid "Show sync status"
@@ -3117,16 +2296,9 @@ msgstr "您需要登錄此電腦的映像伺服器才能建立映像。"
 msgid "Uptime: "
 msgstr "存留時間："
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1379
-#, fuzzy
-msgid "Replicator"
-msgstr "複製"
-=======
 #: modules/imaging/includes/includes.php:197
 msgid "day"
 msgstr "日"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
@@ -3161,17 +2333,9 @@ msgstr "<i>未定義</i>"
 msgid "Backup log messages"
 msgstr "備分記錄檔訊息"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1736
-msgid ""
-"Run sysprep /generalize /unattend:unattend.xml to copy the customized user "
-"profile settings over the default user profile"
-msgstr ""
-=======
 #: modules/imaging/includes/post_install_script.php:28
 msgid "Not selected"
 msgstr "未選取"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/post_install_script.php:66
 msgid "Order"
@@ -3193,17 +2357,9 @@ msgstr "顯示的開機功能表"
 msgid "Hardware Inventory received"
 msgstr "硬體清查已收到"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:557
-#: modules/imaging/manage/ajaxFormWin8.php:632
-#: modules/imaging/manage/ajaxFormWin10.php:642
-msgid "Security Settings"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:48
 msgid "Hardware Inventory not stored"
 msgstr "硬體清查未儲存"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:49
 msgid "Hardware Inventory not updated"
@@ -3241,26 +2397,6 @@ msgstr "映像 UUID 已傳送"
 msgid "Failed to send an Image UUID"
 msgstr "無法傳送映像 UUID"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1734
-msgid ""
-"Set CopyProfile to true in the Unattend.xml file that you will use with "
-"Sysprep in the next step"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:436
-#: modules/imaging/manage/ajaxFormWin8.php:511
-#: modules/imaging/manage/ajaxFormWin10.php:529
-#: modules/imaging/manage/ajaxFormWin81.php:612
-msgid "Setup Language"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1505
-msgid ""
-"SetupUILanguage defines the language to use in Windows Setup and Windows "
-"Deployment Services"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:61
 msgid "End of Backup Request"
 msgstr "備份結束請求"
@@ -3272,19 +2408,11 @@ msgstr "備份結束失敗"
 #: modules/imaging/includes/logs.inc.php:63
 msgid "End of Backup Success"
 msgstr "備份結束成功"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:65
 msgid "Preselected Menu Entry Change Request"
 msgstr "預先選擇功能表項目變更請求"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:449
-#: modules/imaging/manage/ajaxFormWin8.php:524
-#: modules/imaging/manage/ajaxFormWin81.php:786
-msgid "Show Windows Live"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:66
 msgid "Preselected Menu Entry Change Success"
 msgstr "預先選擇功能表項目變更成功"
@@ -3292,21 +2420,14 @@ msgstr "預先選擇功能表項目變更成功"
 #: modules/imaging/includes/logs.inc.php:67
 msgid "Preselected Menu Entry Change Failure"
 msgstr "預先選擇功能表項目變更失敗"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:69
 msgid "Booted"
 msgstr "已開機"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1769
-msgid "Show file XML AWFG"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:70
 msgid "Choosen Menu Entry"
 msgstr "選取的功能表項目"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:71
 msgid "Restoration Started"
@@ -3328,37 +2449,14 @@ msgstr "備份已完成"
 msgid "Postinstall Started"
 msgstr "安裝後服務已啟動"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1747
-msgid ""
-"ShowWindowsLive specifies whether to display a link to Windows Live on the "
-"Start menu"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:76
 msgid "Postinstall Finished"
 msgstr "安裝後服務已完成"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:77
 msgid "Critical error"
 msgstr "嚴重錯誤"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:427
-#: modules/imaging/manage/ajaxFormWin8.php:502
-#: modules/imaging/manage/ajaxFormWin10.php:520
-#: modules/imaging/manage/ajaxFormWin81.php:601
-msgid "Skip License Rearm"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:419
-#: modules/imaging/manage/ajaxFormWin8.php:494
-#: modules/imaging/manage/ajaxFormWin10.php:512
-#: modules/imaging/manage/ajaxFormWin81.php:593
-msgid "Skip automatic activation"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:79
 msgid "Hostname Request"
 msgstr "主機名稱請求"
@@ -3366,7 +2464,6 @@ msgstr "主機名稱請求"
 #: modules/imaging/includes/logs.inc.php:80
 msgid "Failed to obtain a Hostname"
 msgstr "無法取得主機名稱"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:81
 msgid "Hostname sent"
@@ -3376,18 +2473,9 @@ msgstr "主機名稱已傳送"
 msgid "Failed to send a Hostname"
 msgstr "無法傳送主機名稱"
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:627
-#: modules/imaging/manage/ajaxFormWin8.php:702
-#: modules/imaging/manage/ajaxFormWin10.php:712
-#: modules/imaging/manage/ajaxFormWin81.php:915
-msgid "Small"
-msgstr ""
-=======
 #: modules/imaging/includes/logs.inc.php:84
 msgid "Computer UUID Request"
 msgstr "電腦 UUID 請求"
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/logs.inc.php:85
 msgid "Failed to obtain a Computer UUID"
@@ -3397,161 +2485,6 @@ msgstr "無法取得電腦 UUID"
 msgid "Computer UUID Sent"
 msgstr "電腦 UUID 已傳送"
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1692
-msgid "Specifies a LocalAccount"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
-msgid "Specifies a private home network"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1557
-msgid "Specifies a private office network"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1561
-msgid "Specifies neither a home or work network"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1633
-msgid "Specifies that Welcome Center is shown"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
-msgid "Specifies that Welcome Center is skipped"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1445
-msgid "Specifies that Windows CEIP is enabled"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1441
-msgid "Specifies that Windows CEIP is not enabled"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1618
-msgid "Specifies that Windows Welcome is shown"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1614
-msgid "Specifies that Windows Welcome is skipped"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1491
-msgid "Specifies that Windows attempts to automatically activate"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1487
-msgid "Specifies that Windows does not attempt to automatically activate"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1753
-msgid "Specifies that a link to Windows Live is displayed on the Start menu"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1757
-msgid ""
-"Specifies that a link to Windows Live is not displayed on the Start menu"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1574
-msgid "Specifies that automatic protection is disabled"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1572
-msgid "Specifies that only updates are installed"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1585
-msgid ""
-"Specifies that the Microsoft Software License Terms page of Windows Welcome "
-"is displayed"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1581
-msgid ""
-"Specifies that the Microsoft Software License Terms page of Windows Welcome "
-"is not displayed"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
-msgid ""
-"Specifies that the computer is not rearmed and the computer will not be "
-"restored to its original, out-of-box state. All activation-related licensing "
-"and registry data will remain and will not be reset. Similarly, any grace "
-"period timers is not reset."
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1502
-msgid ""
-"Specifies that the computer is rearmed, restoring the computer to the "
-"original, out-of-box state. All activation-related licensing and registry "
-"data is removed or reset, and any grace period timers are also reset."
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1646
-msgid "Specifies that the disk is erased"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1650
-msgid "Specifies that the disk is not erased"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1474
-msgid ""
-"Specifies that the license terms are automatically accepted without being "
-"displayed to the end user"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1592
-msgid ""
-"Specifies that the time on the computer is not reset to daylight saving time"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1596
-msgid ""
-"Specifies that the time on the computer is reset to daylight saving time"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1686
-msgid ""
-"Specifies the administrator password of the computer and whether it is "
-"hidden in the unattended installation answer file"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1508
-msgid ""
-"Specifies the computer name used to access the computer from the network"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1451
-msgid ""
-"Specifies the default system language to display user interface (UI) items "
-"(such as menus, dialog boxes, and help files)"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1653
-msgid "Specifies the disk ID of the disk to which the image is to be installed"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
-msgid ""
-"Specifies the drive letter to apply to a partition. Drive_letter is an "
-"uppercase letter, C through Z"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1517
-msgid ""
-"Specifies the input language and keyboard layout for a Windows installation"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1463
-msgid "Specifies the key used to activate Windows"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
-=======
 #: modules/imaging/includes/logs.inc.php:87
 msgid "Failed to send a Computer UUID"
 msgstr "無法傳送電腦 UUID"
@@ -3686,51 +2619,23 @@ msgid "Disabled"
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
->>>>>>> origin/xmppmaster
 msgid ""
 "CEIPEnabled indicates whether the Windows Customer Experience Improvement "
 "Program (CEIP) is enabled"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1689
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1435
->>>>>>> origin/xmppmaster
 msgid ""
 "If the Microsoft-Windows-SQMAPI component is enabled, it collects and sends "
 "data to Microsoft about Windows usage"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1698
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1437
->>>>>>> origin/xmppmaster
 msgid ""
 "Participation in this program is voluntary, and the results are recorded to "
 "implement improvements for future releases"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1511
-msgid "Specifies the name of the organization that owns the computer"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1676
-msgid ""
-"Specifies the order in which the ModifyPartition command is to be run at "
-"first logon"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1695
-msgid ""
-"Specifies the password for a LocalAccount and whether the password is hidden "
-"in the unattended installation answer file"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1514
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1439
 msgid "enabled "
 msgstr ""
@@ -3744,21 +2649,15 @@ msgid "Specifies that Windows CEIP is enabled"
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1448
->>>>>>> origin/xmppmaster
 msgid ""
 "SystemDefaultBackgroundColor specifies the system default Windows background"
 " color scheme appearing on first boot, and on LogonUI if no user is selected"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1570
-msgid "Specifies the recommended level of protection for your computer"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1451
 msgid ""
 "Specifies the default system language to display user interface (UI) items "
 "(such as menus, dialog boxes, and help files)"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1454
@@ -3767,20 +2666,6 @@ msgid ""
 "in Windows System Image Manager are not localized"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1701
-msgid ""
-"Specifies whether Windows User Account Controls (UAC) notifies the user when "
-"programs try to make changes to the computer. UAC was formerly known as "
-"Limited User Account (LUA)"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1481
-msgid "Specifies whether Windows attempts to automatically activate"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1588
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1457
 msgid "Meta Information xml"
 msgstr ""
@@ -3798,7 +2683,6 @@ msgid "IMPORTANT"
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1467
->>>>>>> origin/xmppmaster
 msgid ""
 "Entering an invalid product key in the answer file will cause Windows Setup "
 "to fail"
@@ -3810,21 +2694,13 @@ msgid ""
 "Terms"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1566
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1474
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies that the license terms are automatically accepted without being "
 "displayed to the end user"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1642
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1478
->>>>>>> origin/xmppmaster
 msgid ""
 "Prompts the user to accept the license terms before proceeding with Windows "
 "Setup"
@@ -3834,34 +2710,12 @@ msgstr ""
 msgid "Specifies whether Windows attempts to automatically activate"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1662
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1483
->>>>>>> origin/xmppmaster
 msgid ""
 "For automatic activation to complete, a valid Windows product key is "
 "required"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1760
-msgid "Specifies whether to extend the partition to fill the entire hard disk"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1599
-msgid ""
-"Specifies whether to hide the Join Wireless Network screen that appears "
-"during Windows Welcome"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1577
-msgid ""
-"Specifies whether to hide the Microsoft Software License Terms page of "
-"Windows Welcome"
-msgstr ""
-
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1485
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1579
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1590
@@ -3898,16 +2752,11 @@ msgstr ""
 msgid "Specifies that Windows attempts to automatically activate"
 msgstr ""
 
->>>>>>> origin/xmppmaster
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1494
 msgid "Specifies whether to run the Windows Software Licensing Rearm program"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1625
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1498
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies that the computer is not rearmed and the computer will not be "
 "restored to its original, out-of-box state. All activation-related licensing"
@@ -3915,16 +2764,11 @@ msgid ""
 "period timers is not reset."
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1610
-msgid "Specifies whether to skip Windows Welcome"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1502
 msgid ""
 "Specifies that the computer is rearmed, restoring the computer to the "
 "original, out-of-box state. All activation-related licensing and registry "
 "data is removed or reset, and any grace period timers are also reset."
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1505
@@ -3942,21 +2786,13 @@ msgstr ""
 msgid "Specifies the name of the organization that owns the computer"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1680
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1514
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies the per-user settings used for formatting dates, times, currency, "
 "and numbers in a Windows installation"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1678
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1517
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies the input language and keyboard layout for a Windows installation"
 msgstr ""
@@ -3965,38 +2801,14 @@ msgstr ""
 msgid "Configure Partition Settings"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin8.php:785
-#: modules/imaging/manage/ajaxFormWin81.php:698
-msgid "System Background Colour"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1523
 msgid "Main Partition Label"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1526
 msgid "Configure User Account"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1380
-#, fuzzy
-msgid "System Operators"
-msgstr "強制執行產生"
-
-#: modules/imaging/manage/ajaxFormWin7.php:574
-#: modules/imaging/manage/ajaxFormWin8.php:649
-#: modules/imaging/manage/ajaxFormWin10.php:659
-#: modules/imaging/manage/ajaxFormWin81.php:862
-msgid "System Updates"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1448
-msgid ""
-"SystemDefaultBackgroundColor specifies the system default Windows background "
-"color scheme appearing on first boot, and on LogonUI if no user is selected"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1529
 msgid "CommandLine reg"
 msgstr ""
@@ -4007,7 +2819,6 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1534
 msgid "These settings specify whether to do the following"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1536
@@ -4088,13 +2899,8 @@ msgstr ""
 msgid "Specifies that only updates are installed"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1534
-msgid "These settings specify whether to do the following"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1574
 msgid "Specifies that automatic protection is disabled"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1577
@@ -4152,13 +2958,8 @@ msgstr ""
 msgid "Specifies that Windows Welcome is skipped"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1655
-msgid "This sequence starts with 0"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1618
 msgid "Specifies that Windows Welcome is shown"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1620
@@ -4177,47 +2978,23 @@ msgid ""
 "prior to shipment"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:473
-#: modules/imaging/manage/ajaxFormWin8.php:548
-#: modules/imaging/manage/ajaxFormWin10.php:558
-#: modules/imaging/manage/ajaxFormWin81.php:820
-msgid "Time Zone"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1629
 msgid "Specifies that Welcome Center is skipped"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1633
 msgid "Specifies that Welcome Center is shown"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/imaging/images_iso.php:81
-#: modules/imaging/manage/ajaxFormWin7.php:354
-#: modules/imaging/manage/ajaxFormWin8.php:429
-#: modules/imaging/manage/master_iso.php:67
-#: modules/imaging/manage/ajaxFormWin10.php:447
-#: modules/imaging/manage/ajaxFormWin81.php:530
-msgid "Title"
-msgstr "標題"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1636
 msgid "CommandLine reg Set the Control Panel View to Small Icons"
 msgstr ""
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1639
 msgid "CommandLine reg ControlPanel AllItemsIconView"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1711
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1716
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1642
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies whether to erase all partitions on the hard disk before adding "
 "additional configurations to the disk"
@@ -4231,19 +3008,6 @@ msgstr ""
 msgid "Specifies that the disk is not erased"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin8.php:821
-#: modules/imaging/manage/ajaxFormWin10.php:820
-#: modules/imaging/manage/ajaxFormWin81.php:744
-msgid "UAC"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:481
-#: modules/imaging/manage/ajaxFormWin8.php:556
-#: modules/imaging/manage/ajaxFormWin10.php:566
-#: modules/imaging/manage/ajaxFormWin81.php:828
-msgid "UI Language"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1653
 msgid ""
 "Specifies the disk ID of the disk to which the image is to be installed"
@@ -4251,7 +3015,6 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1655
 msgid "This sequence starts with 0"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1657
@@ -4285,33 +3048,12 @@ msgstr ""
 msgid "Formats the partition for the File Allocation Table (FAT) file system"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1727
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1673
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies the drive letter to apply to a partition. Drive_letter is an "
 "uppercase letter, C through Z"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:693
-#: modules/imaging/manage/ajaxFormWin8.php:768
-#: modules/imaging/manage/ajaxFormWin10.php:773
-#: modules/imaging/manage/ajaxFormWin81.php:681
-msgid "User Account"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:715
-#: modules/imaging/manage/ajaxFormWin8.php:796
-#: modules/imaging/manage/ajaxFormWin10.php:795
-#: modules/imaging/manage/ajaxFormWin81.php:711
-msgid "User Name"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1775
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1676
 msgid ""
 "Specifies the order in which the ModifyPartition command is to be run at "
@@ -4326,31 +3068,11 @@ msgid ""
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1680
->>>>>>> origin/xmppmaster
 msgid ""
 "Synchronous commands are always run before asynchronous commands in the same"
 " configuration pass"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
-msgid "Users"
-msgstr ""
-
-#: modules/imaging/imaging/bootmenu.php:182
-#: modules/imaging/manage/postinstall_edit.php:126
-#: modules/imaging/manage/ajaxFormWin7.php:737
-#: modules/imaging/manage/ajaxFormWin8.php:826
-#: modules/imaging/manage/ajaxConfiguration.php:123
-#: modules/imaging/manage/bootmenu_edit.php:101
-#: modules/imaging/manage/ajaxFormWin10.php:825
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/service_edit.php:69
-#: modules/imaging/manage/master_clone.php:109
-#: modules/imaging/manage/ajaxFormWin81.php:938
-msgid "Validate"
-msgstr "驗證"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1683
 msgid "Configure Administrators Account"
 msgstr ""
@@ -4360,7 +3082,6 @@ msgid ""
 "Specifies the administrator password of the computer and whether it is "
 "hidden in the unattended installation answer file"
 msgstr ""
->>>>>>> origin/xmppmaster
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1689
 msgid ""
@@ -4384,11 +3105,7 @@ msgid ""
 "length of 63 characters"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1701
->>>>>>> origin/xmppmaster
 msgid ""
 "Specifies whether Windows User Account Controls (UAC) notifies the user when"
 " programs try to make changes to the computer. UAC was formerly known as "
@@ -4406,12 +3123,8 @@ msgid ""
 "make changes to the computer"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1705
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1711
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1716
->>>>>>> origin/xmppmaster
 msgid ""
 "To provide better protection for computers connected to any kind of network "
 "(such as the Internet, a home network, or an organization network), the "
@@ -4419,30 +3132,6 @@ msgid ""
 " by default"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/manage/ajaxFormWin7.php:501
-#: modules/imaging/manage/ajaxFormWin8.php:576
-#: modules/imaging/manage/ajaxFormWin10.php:586
-#: modules/imaging/manage/ajaxFormWin81.php:635
-msgid "Wipe Disk"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1555
-msgid "Work"
-msgstr ""
-
-#: modules/imaging/manage/ajaxFormWin7.php:745
-#: modules/imaging/manage/ajaxFormWin8.php:834
-#: modules/imaging/manage/ajaxFormWin10.php:833
-#: modules/imaging/manage/ajaxFormWin81.php:946
-msgid "Xml Windows Answer File Generator"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1412
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
-msgid "Yes"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1714
 msgid ""
 "Windows Firewall is a stateful host firewall that discards unsolicited "
@@ -4461,7 +3150,6 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1727
 msgid ""
 "Use the following steps to use CopyProfile to set customized user profiles"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1730
@@ -4503,39 +3191,19 @@ msgid ""
 "Start menu"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1439
-msgid "enabled "
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1749
 msgid ""
 "If the Windows Live shortcut has been removed from the Start menu, this "
 "setting cannot be used to put it back on the Start menu"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1753
 msgid "Specifies that a link to Windows Live is displayed on the Start menu"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1489
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1583
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1594
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1605
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1616
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1631
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1648
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1707
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1722
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1742
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1755
-msgid "false"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1757
 msgid ""
 "Specifies that a link to Windows Live is not displayed on the Start menu"
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1760
@@ -4562,24 +3230,6 @@ msgstr ""
 msgid "Show file XML AWFG"
 msgstr ""
 
-<<<<<<< HEAD
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1485
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1579
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1590
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1601
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1612
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1627
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1644
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1703
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1718
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1738
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1751
-msgid "true"
-msgstr ""
-
-#: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1620
-msgid "warning"
-=======
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1771
 msgid ""
 "Domain specifies the name of the domain used for an account authentication. "
@@ -4592,7 +3242,6 @@ msgid ""
 "Password specifies the password of the user account used for authentication "
 "of an account to the domain before the computer can be joined to a domain "
 "during Windows Setup."
->>>>>>> origin/xmppmaster
 msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1775
