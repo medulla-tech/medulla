@@ -4,7 +4,8 @@ mmc-core 4.1
 * [FEATURE] New history view that captures all operations
 * [FEATURE] Pulse update module widget is now a standalone widget
 * [FEATURE] Create and run custom quick actions
-* [BUGFIX] Fix authentication to GLPI for user provisioning
+* [BUGFIX]  Fix authentication to GLPI for user provisioning
+* [BUGFIX]  Fix service module with new systemd
 
 mmc-core 3.1.1
 --------------
