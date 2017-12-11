@@ -1,6 +1,7 @@
 mmc-core 4.2
 --------------
 
+* [BUGFIX] Fix the service module to work with newer systemd
 
 mmc-core 4.1
 --------------
