@@ -1,4 +1,8 @@
 <?php
+require_once("../xmlrpc.php");
+require_once("../../../../includes/session.inc.php");
+require_once("../../../../includes/xmlrpc.inc.php");
+
 extract($_POST);
 /*
 
@@ -21,10 +25,21 @@ descriptor type
             error
             goto
         """
+*/
 
-echo "<pre>";
-    print_r( $_POST );
-echo "</pre>";*/
+$packageList = xmpp_packages_list();
+$optionspackage= "";
+
+foreach($packageList as $id=>$package)
+{
+   if(isset($packageuuid) && $packageuuid == $package['uuid'])
+   {
+       $optionspackage .= "<option value='".$package['uuid']."' selected>".$package['name']."</option>";
+   }
+   else
+       $optionspackage .= "<option value='".$package['uuid']."'>".$package['name']."</option>";
+}
+
 $waiting =  (isset($waiting))? $waiting : 10;/*
 $goto =  (isset($goto))? $goto : "END_SUCCESS";*/
 
@@ -54,11 +69,48 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <tr>
             <th width="16%">Zip file:</th>
             <th width="25%">
-                <input type="text" name="filename" value="<?php echo (isset($$filename))? $filename : ""; ?>"/>
+                <input type="text" name="filename" value="<?php echo (isset($filename))? $filename : ""; ?>"/>
             </th>
             <th></th>
             <th></th>
         </tr>
+
+        <?php
+            echo '<tr class="toggleable">';
+              if(isset($packageuuid))
+              {
+                  echo '<td width="16%">
+                      <input type="checkbox" checked
+                          onclick="if(jQuery(this).is(\':checked\')){
+                                      jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                  }
+                                  else{
+                                      jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                  }" />Alternate package
+                  </td>
+                  <td width="25%">
+                      <select name="packageuuid">'.$optionspackage.'</select>
+                  </td>';
+              }
+              else{
+                  echo '<td width="16%">
+                      <input type="checkbox"
+                          onclick="if(jQuery(this).is(\':checked\')){
+                                      jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',false);
+                                  }
+                                  else{
+                                      jQuery(this).closest(\'td\').next().find(\'select\').prop(\'disabled\',true);
+                                  }" />Alternate package
+                      </td>
+                      <td width="25%">
+                          <select disabled name="packageuuid">'.$optionspackage.'</select>
+                      </td>';
+              }
+          echo '
+          <td></td><td></td>
+              </tr>';
+      ?>
+
 
          <tr class="toggleable">
             <?php
