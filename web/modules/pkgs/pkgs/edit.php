@@ -464,7 +464,7 @@ if(isExpertMode())
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>Available dependencies</h3>
-                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                    <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
                 </div>
