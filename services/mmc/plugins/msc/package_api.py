@@ -583,7 +583,7 @@ class GetPackagesGroupFiltered:
             if not isinstance(result, failure.Failure):
                 self.tmppackages.append(result)
             else:
-                logging.getLogger().error("Error: %s", str(result))
+                logging.getLogger().error("%s", str(result))
         if not self.p_apis and self.tmppackages:
             # Merge temporary results
             lp = self.tmppackages[0]
