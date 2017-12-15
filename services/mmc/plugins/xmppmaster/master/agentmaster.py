@@ -1457,7 +1457,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 return True
             return False
         except Exception as e:
-            logging.getLogger().error("ERROR : machine info %s"%(str(e)))
+            logging.getLogger().error("machine info %s"%(str(e)))
             traceback.print_exc(file=sys.stdout)
         return False
 
