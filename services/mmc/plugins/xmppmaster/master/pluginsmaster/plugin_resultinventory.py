@@ -17,8 +17,9 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
               "Content-Type": "application/x-compress",
              }
     try:
-        logging.getLogger().debug("plugin_resultinventory")
-        # send inventory to inventory server
+        logging.getLogger().debug("=====================================================")
+        logging.getLogger().debug(plugin)
+        logging.getLogger().debug("=====================================================")
         try:
             url = xmppobject.config.inventory_url
         except:
@@ -26,6 +27,30 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
         inventory = zlib.decompress(base64.b64decode(data['inventory']))
         request = urllib2.Request(url, inventory, HEADER)
         response = urllib2.urlopen(request)
+        nbsize = len(inventory)
+        XmppMasterDatabase().setlogxmpp( "inject inventory to Glpi",
+                                        "Master",
+                                        "",
+                                        0,
+                                        message['from'],
+                                        'Manuel',
+                                        '',
+                                        'QuickAction |Inventory | Inventory requested',
+                                        '',
+                                        '',
+                                        "Master")
+        if nbsize < 250:
+            XmppMasterDatabase().setlogxmpp( '<font color="Orange">Warning, Inventory XML size %s byte</font>'%nbsize,
+                                            "Master",
+                                            "",
+                                            0,
+                                            message['from'],
+                                            'Manuel',
+                                            '',
+                                            'Inventory | Notify',
+                                            '',
+                                            '',
+                                            "Master")
         time.sleep(5)
         # save registry inventory
         try:
@@ -79,8 +104,22 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                 except Exception, e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
+
+        time.sleep(25)
+        if not xmppobject.isInventoried(message['from']):
+            XmppMasterDatabase().setlogxmpp( '<font color="red">Error Injection Inventory for Machine %s</font>'%(message['from']),
+                                                                "Inventory Server",
+                                                                "",
+                                                                0,
+                                                                message['from'],
+                                                                'auto',
+                                                                '',
+                                                                'Inventory | Notify',
+                                                                '',
+                                                                '',
+                                                                "InvServer")
         # restart agent
-        xmppobject.restartAgent(message['from'])
+        #xmppobject.restartAgent(message['from'])
     except Exception, e:
         print str(e)
         traceback.print_exc(file=sys.stdout)
