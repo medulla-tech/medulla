@@ -1135,6 +1135,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def info_xmppmachinebyuuid(self, uuid):
         return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid("UUID%s"%uuid)
 
+    def isInventoried(self, jid):
+        machine = XmppMasterDatabase().getMachinefromjid(jid)
+        if machine['uuid_inventorymachine'] is None or  machine['uuid_inventorymachine'] == "":
+            return False
+        else:
+            return True
+
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
