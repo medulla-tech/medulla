@@ -2245,6 +2245,29 @@ class XmppMasterDatabase(DatabaseHelper):
         return True
 
     @DatabaseHelper._sessionm
+    def getMachinefromjid(self, session, jid):
+        machine = session.query(Machines).filter(Machines.jid == jid).first()
+        session.commit()
+        session.flush()
+        result = {}
+        if machine:
+            result = {  "id" : machine.id,
+                        "jid" : machine.jid,
+                        "platform" : machine.platform,
+                        "archi" : machine.archi, 
+                        "hostname" : machine.hostname,
+                        "uuid_inventorymachine" : machine.uuid_inventorymachine,
+                        "ip_xmpp" : machine.ip_xmpp, 
+                        "macaddress" : machine.macaddress, 
+                        "subnetxmpp" : machine.subnetxmpp, 
+                        "agenttype" : machine.agenttype, 
+                        "classutil" : machine.classutil, 
+                        "groupdeploy" : machine.groupdeploy, 
+                        "urlguacamole" : machine.urlguacamole, 
+                        "picklekeypublic" : machine.picklekeypublic}
+        return result
+
+    @DatabaseHelper._sessionm
     def getRelayServerForMachineUuid(self, session, uuid):
         relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
         session.commit()
