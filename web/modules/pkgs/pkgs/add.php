@@ -131,7 +131,8 @@ if (isset($_POST['bconfirm'])) {
                                     '',
                                     "session user ".$_SESSION["login"],
                                     'Packaging | List | Manual');
-                remove_xmpp_package($package_uuid);
+                if($package_uuid != '')
+                    remove_xmpp_package($package_uuid);
             }
         } else {
             new NotifyWidgetFailure(_T("Failed to associate files", "pkgs"));
