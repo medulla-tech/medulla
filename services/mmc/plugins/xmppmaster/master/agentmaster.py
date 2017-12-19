@@ -235,6 +235,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.plugintype = {}
         self.plugindata = {}
         self.loadPluginList()
+        self.plugindatascheduler = {}
+        self.loadPluginschedulerList() ###update variable self.plugindatascheduler
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler  = manage_scheduler(self)
@@ -755,6 +757,28 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.session.decrementesessiondatainfo()
         ###test
 
+    def loadPluginschedulerList(self):
+        logger.debug("Verify base plugin scheduler")
+        plugindataseach = {}
+        plugintype = {}
+        for element in os.listdir(self.config.dirschedulerplugins):
+            if element.endswith('.py') and element.startswith('scheduling_'):
+                f = open(os.path.join(self.config.dirschedulerplugins,element),'r')
+                lignes  = f.readlines()
+                f.close()
+                for ligne in lignes:
+                    if 'VERSION' in ligne and 'NAME' in ligne:
+                        l=ligne.split("=")
+                        plugin = eval(l[1])
+                        plugindataseach[plugin['NAME']] = plugin['VERSION']
+                        try:
+                            plugintype[plugin['NAME']]=plugin['TYPE']
+                        except:
+                            plugintype[plugin['NAME']]="machine"
+                        break;
+        self.plugindatascheduler = plugindataseach
+        self.plugintypescheduler = plugintype
+
     def loadPluginList(self):
         logger.debug("Verify base plugin")
         plugindataseach={}
@@ -834,6 +858,39 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             mtype='chat')
         except:
             traceback.print_exc(file=sys.stdout)
+    
+    def deployPluginscheduled(self, msg, plugin):
+        data =''
+        fichierdata={}
+        namefile =  os.path.join(self.config.dirschedulerplugins,"%s.py"%plugin)
+        if os.path.isfile(namefile) :
+            logger.debug("File plugin scheduled found %s"%namefile)
+        else:
+            logger.error("File plugin scheduled not found %s"%namefile)
+            return
+        try:
+            fileplugin = open(namefile, "rb")
+            data=fileplugin.read()
+            fileplugin.close()
+        except :
+            logger.error("File read error")
+            traceback.print_exc(file=sys.stdout)
+            return
+        fichierdata['action'] = 'installpluginscheduled'
+        fichierdata['data'] = {}
+        dd = {}
+        dd['datafile']= data
+        dd['pluginname'] = "%s.py"%plugin
+        fichierdata['data']= base64.b64encode(json.dumps(dd))
+        fichierdata['sessionid'] = "sans"
+        fichierdata['base64'] = True
+        try:
+            self.send_message(mto=msg['from'],
+                            mbody=json.dumps(fichierdata),
+                            mtype='chat')
+        except:
+            traceback.print_exc(file=sys.stdout)
+
 
     def callrestartbymaster(self, to):
         restartmachine = {
@@ -1154,9 +1211,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def isInventoried(self, jid):
         machine = XmppMasterDatabase().getMachinefromjid(jid)
         if machine['uuid_inventorymachine'] is None or  machine['uuid_inventorymachine'] == "":
-            return False
+            # we try to see if we can update uuid_inventaire by querying glpi
+            result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+            results = result[0].split(",")
+            logging.getLogger().debug("listMacAdressforMachine   %s"%results)
+            uuid =''
+            for t in results:
+                computer = ComputerManager().getComputerByMac(t)
+                if computer != None:
+                    uuid = 'UUID' + str(computer.id)
+                    logger.debug("** update uuid %s for machine %s "%(uuid, machine['jid']))
+                    #update inventory
+                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                    return True
         else:
             return True
+        return False
 
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
@@ -1438,13 +1508,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 else:
                     logger.error("** enregistration base error")
                     return
-
                 # Show plugins information logs
                 if self.config.showplugins:
-                    logger.info("___________________________")
+                    logger.info("__________________________________________")
                     logger.info("LIST PLUGINS INSTALLED AGENT")
                     logger.info("%s"% json.dumps(data['plugin'], indent=4, sort_keys=True))
                     logger.info("__________________________________________")
+                    if 'pluginscheduled' in data:
+                        logger.info("__________________________________________")
+                        logger.info("LIST SCHEDULED PLUGINGS INSTALLED AGENT")
+                        logger.info("%s"% json.dumps(data['pluginscheduled'], indent=4, sort_keys=True))
+                        logger.info("__________________________________________")
                 restartAgent = False
                 if self.config.showplugins:
                     logger.info("_____________Deploy plugin_________________")
@@ -1469,10 +1543,39 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             logger.info("deploy %s version %s on %s"%(k,v,msg['from']))
                         self.deployPlugin(msg,k)
                         self.restartAgent(msg['from'])
-                        break
+                        if self.config.showplugins:
+                            logger.info("__________________________________________")
+                        return True
 
-                if self.config.showplugins:
-                    logger.info("__________________________________________")
+                if 'pluginscheduled' in data:
+                    if self.config.showplugins:
+                        logger.info("_____________Deploy plugin scheduled_________________")
+                        for k,v in self.plugindatascheduler.iteritems():
+                            if k in data['pluginscheduled']:
+                                if v != data['pluginscheduled'][k]:
+                                    #deploy on changement de version
+                                    print "changement de version"
+                                    print "*******************"
+                                    self.deployPluginscheduled(msg,k)
+                                    self.restartAgent(msg['from'])
+                                    break
+                                else :
+                                    print "pas de changement de version"
+                            else:
+                                #le plugin k n'est pas dans la liste des plugin sur A
+                                if k in self.plugintypescheduler:
+                                    if self.plugintypescheduler[k] == 'all':
+                                        self.deployPluginscheduled(msg,k)
+                                        self.restartAgent(msg['from'])
+                                        break
+                                    if self.plugintypescheduler[k] == 'relayserver' and data['agenttype'] == "relayserver":
+                                        self.deployPluginscheduled(msg,k)
+                                        self.restartAgent(msg['from'])
+                                        break
+                                    if self.plugintypescheduler[k] == 'machine' and data['agenttype'] == "machine":
+                                        self.deployPluginscheduled(msg,k)
+                                        self.restartAgent(msg['from'])
+                                        break
                 self.showListClient()
                 # indicate that the guacamole configurations must be made
                 # for sub network subnetxmpp

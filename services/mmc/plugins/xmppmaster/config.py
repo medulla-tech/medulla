@@ -109,6 +109,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.NickName = "MASTER"
 
         self.dirplugins = self.get('plugins', 'dirplugins')
+        self.dirschedulerplugins = self.get('plugins', 'dirschedulerplugins')
         self.information={}
         self.PlatformSystem=platform.platform()
         self.information['platform']=self.PlatformSystem
