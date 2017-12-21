@@ -1138,9 +1138,22 @@ class MUCBot(sleekxmpp.ClientXMPP):
     def isInventoried(self, jid):
         machine = XmppMasterDatabase().getMachinefromjid(jid)
         if machine['uuid_inventorymachine'] is None or  machine['uuid_inventorymachine'] == "":
-            return False
+            # Check if uuid_inventory can be updated from what is in GLPI
+            result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+            results = result[0].split(",")
+            logging.getLogger().debug("listMacAdressforMachine   %s"%results)
+            uuid =''
+            for t in results:
+                computer = ComputerManager().getComputerByMac(t)
+                if computer != None:
+                    uuid = 'UUID' + str(computer.id)
+                    logger.debug("** update uuid %s for machine %s "%(uuid, machine['jid']))
+                    #update inventory
+                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                    return True
         else:
             return True
+        return False
 
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
