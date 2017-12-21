@@ -254,6 +254,13 @@ if (isset($_POST['bconfirm'])) {
         $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
+
+        $bpuploaddownload = new IntegerTpl("limit_rate_ko");
+        $bpuploaddownload->setAttributCustom('min = 0');
+        $f->add(
+                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+        );
+
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)
         {
