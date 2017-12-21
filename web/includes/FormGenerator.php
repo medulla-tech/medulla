@@ -314,10 +314,19 @@ class InputTpl extends AbstractTpl {
         $this->regexp = $regexp;
         $this->fieldType = "text";
         $this->size = '23';
+        $this->attributcustom = '';
     }
 
     function setSize($size) {
         $this->size = $size;
+    }
+
+    function setAttributCustom($attribut){
+        $this->attributcustom = $attribut;
+    }
+
+    function getAttributCustom(){
+        return $this->attributcustom;
     }
 
     /**
@@ -336,16 +345,14 @@ class InputTpl extends AbstractTpl {
         }
         $required_attr = isset($arrParam["required"]) ? ' rel="required"' : '';
         $regexp_attr = isset($this->regexp) ? ' data-regexp="' . $this->regexp . '"' : '';
-
-        print '<span id="container_input_' . $this->name . '"><input name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" value="' . $arrParam["value"] . '" placeholder="' . $arrParam["placeholder"] . '" ' . $arrParam["disabled"] . $required_attr . $regexp_attr . ' autocomplete="off" /></span>';
-
+        print '<span id="container_input_' . $this->name . '"><input name="' . $this->name . '" id="' . $this->name . '" type="' . $this->fieldType . '" size="' . $this->size . '" '.
+        $this->attributcustom . ' value="' . $arrParam["value"] . '" placeholder="' . $arrParam["placeholder"] . '" ' . $arrParam["disabled"] . $required_attr . $regexp_attr . ' autocomplete="off" /></span>';
         if (isset($arrParam["onchange"])) {
             print '<script type="text/javascript">';
             print 'jQuery(\'#' . $this->name . '\').change( function() {' . $arrParam["onchange"] . '});';
             print '</script>';
         }
     }
-
 }
 
 /**
@@ -359,6 +366,21 @@ class PasswordTpl extends InputTpl {
     }
 
 }
+
+/**
+ * number input template
+ */
+class IntegerTpl extends InputTpl {
+
+    function IntegerTpl($name, $regexp = '/.+/') {
+        $this->InputTpl($name, $regexp);
+        $this->fieldType = "number";
+        $this->fieldType = "number";
+        $this->attributcustom ='';
+    }
+
+}
+
 
 /**
  * Input with IA5 string check. Lots of LDAP fields only accept IA5 strings.
