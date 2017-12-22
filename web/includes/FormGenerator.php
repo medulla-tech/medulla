@@ -375,7 +375,6 @@ class IntegerTpl extends InputTpl {
     function IntegerTpl($name, $regexp = '/.+/') {
         $this->InputTpl($name, $regexp);
         $this->fieldType = "number";
-        $this->fieldType = "number";
         $this->attributcustom ='';
     }
 
