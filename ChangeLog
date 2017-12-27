@@ -2,6 +2,12 @@ Pulse 2 4.2
 =============
 * [FEATURE] Quick action to install ARS SSH key to Machines
 * [FEATURE] Allow deployment of python scripts
+* [FEATURE] Do not restart agent after an inventory
+* [FEATURE] Auto-update scheduler plugins
+* [FEATURE] Limit bandwidth usage during a deployment
+* [FEATURE] Differentiate packages created in expert mode
+* [BUGFIX] Standardize the size of dependencies boxes in package modification
+* [BUGFIX] Fix the bug that deletes all packages if an empty package is created
 
 Pulse 2 4.1
 =============
