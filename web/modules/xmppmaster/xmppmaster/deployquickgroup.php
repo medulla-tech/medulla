@@ -178,7 +178,7 @@ input[type="text"] {
                 for(var i = 0; i < machine_not_present.length; i++){
                     text = text +  machine_not_present[i] + ", ";
                 }
-            alert("Wakeonlan on extinct machines in progress\n"+text)
+            alert("Wakeonlan on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -190,14 +190,14 @@ input[type="text"] {
         machine_not_present = data[4];
 
         if (machine_already_present.length == 0){
-            alert("All machines are off\nInventory only on running machines")
+            alert("All machines are off\nInventory possible only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("Inventory on the following machines in progress\n"+text)
+            alert("Inventory on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -208,14 +208,14 @@ input[type="text"] {
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("No machines are running\nRebbot only on running machine")
+            alert("No machines are running\nReboot possible only on running machine")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_not_present[i] + ", ";
                 }
-            alert("Reboot on the following machines in progress\n"+text)
+            alert("Reboot on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -226,14 +226,14 @@ input[type="text"] {
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("All machines are off\nshutdown only on running machines")
+            alert("All machines are off\nShutdown possible only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("shutdown on the following machines in progress\n"+text)
+            alert("shutdown on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -251,7 +251,7 @@ input[type="text"] {
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("VNC settings change on the following machines in progress\n"+text)
+            alert("VNC settings change on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -262,17 +262,17 @@ input[type="text"] {
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("No machines are running\ninstall ARS key only on running machine")
+            alert("No machines are running\nARS key installation possible only on running machine")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("install ARS key on the following machines in progress\n"+text)
+            alert("ARS key installation on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
-    
+
     jQuery('#wol').unbind().on('click', function(){
         groupinfo['wol'] = jQuery('#checkboxwol').is(':checked');
         jQuery.get( "modules/xmppmaster/xmppmaster/actionwakeonlan.php", groupinfo )
