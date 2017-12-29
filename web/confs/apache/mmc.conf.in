@@ -9,3 +9,6 @@ Alias /mmc @datadir@/mmc
     php_flag short_open_tag on
     php_flag magic_quotes_gpc on
 </Directory>
+
+### Redirect / to /mmc
+RedirectMatch ^/$ /mmc/
