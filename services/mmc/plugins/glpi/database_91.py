@@ -464,15 +464,22 @@ class Glpi91(DyngroupDatabaseHelper):
         mapper(Group, self.group)
 
         # collects
-        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata, autoload = True)
+        self.collects = Table("glpi_plugin_fusioninventory_collects", self.metadata,
+            Column('entities_id', Integer, ForeignKey('glpi_entities.id')),
+            autoload = True)
         mapper(Collects, self.collects)
 
         # registries
-        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata, autoload = True)
+        self.registries = Table("glpi_plugin_fusioninventory_collects_registries", self.metadata,
+            Column('plugin_fusioninventory_collects_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects.id')),
+            autoload = True)
         mapper(Registries, self.registries)
 
         # registries contents
-        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata, autoload = True)
+        self.regcontents = Table("glpi_plugin_fusioninventory_collects_registries_contents", self.metadata,
+            Column('computers_id', Integer, ForeignKey('glpi_computers.id')),
+            Column('plugin_fusioninventory_collects_registries_id', Integer, ForeignKey('glpi_plugin_fusioninventory_collects_registries.id')),
+            autoload = True)
         mapper(RegContents, self.regcontents)
 
     ##################### internal query generators
@@ -1918,16 +1925,22 @@ class Glpi91(DyngroupDatabaseHelper):
 
     def getLastMachineRegistryPart(self, session, uuid, part, min = 0, max = -1, filt = None, options = {}, count = False):
         #Mutable dict options used as default argument to a method or function
-        query = session.query(RegContents).filter(self.regcontents.c.computers_id == int(str(uuid).replace("UUID", ""))).all()
+        query = self.filterOnUUID(
+            session.query(RegContents).add_column(self.registries.c.name) \
+            .add_column(self.regcontents.c.key) \
+            .add_column(self.regcontents.c.value).select_from(
+                self.machine.outerjoin(self.regcontents) \
+                .outerjoin(self.registries)
+            ), int(str(uuid).replace("UUID", "")))
 
-        ret = []
         if count:
-            ret = len(query)
+            ret = query.count()
         else:
+            ret = []
             for row in query:
                 if row.key is not None:
                     l = [
-                        ['Registry key', row.key],
+                        ['Registry key', row.name],
                         ['Value', row.value],
                     ]
                     ret.append(l)
@@ -4349,12 +4362,15 @@ class Glpi91(DyngroupDatabaseHelper):
             return False
 
     @DatabaseHelper._session
-    def addRegistryCollect(self, session, full_key):
+    def addRegistryCollect(self, session, full_key, key_name):
         """
         Add the registry collect for the defined key
 
         @param full_key: the registry key in the form hive/path/key
         @type full_key: str
+
+        @param key_name: the name to be displayed
+        @type key_name: str
 
         @return: success of the operation
         @rtype: bool
@@ -4367,7 +4383,7 @@ class Glpi91(DyngroupDatabaseHelper):
         path = '/'+path+'/'
         # Insert in database
         registry = Registries()
-        registry.name = key
+        registry.name = key_name
         # Get collects_id
         try:
             collects_id = session.query(Collects).filter_by(name='PulseRegistryCollects').first().id
