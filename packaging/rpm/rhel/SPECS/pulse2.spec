@@ -53,7 +53,6 @@ Requires:       python-mmc-pulse2
 Requires:       pulse2-common
 Requires:       pulse2-davos-client
 Requires:       pulse2-inventory-server
-Requires:       pulse2-launchers
 Requires:       pulse2-package-server
 Requires:       pulse2-scheduler
 Requires:       python-pulse2-common-database-dyngroup
@@ -509,52 +508,6 @@ service pulse2-inventory-server stop >/dev/null 2>&1 || :
 %{_sbindir}/pulse2-inventory-server
 %_mandir/man1/pulse2-inventory-server.1*
 %python2_sitelib/pulse2/inventoryserver
-
-#--------------------------------------------------------------------
-
-%package -n     pulse2-launchers
-Summary:        Pulse 2 launcher service
-Group:          System/Servers
-Requires:       rsync
-Requires:       pulse2-common = %version-%release
-Requires:       python-pulse2-common = %version-%release
-#Requires:       libsys-syslog-perl
-Requires:       openssh-clients
-Requires:       iputils
-Requires:       python-mmc-base >= %mmc_version
-Requires:       pyOpenSSL
-Obsoletes:      pulse2-launcher < 1.5.0
-Provides:       pulse2-launcher = %version-%release
-
-%description -n pulse2-launchers
-This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
-service asks the launcher to connect to a set of target computers and start
-a deployment. Multiple launchers can be instantiated at the same time for
-scalability.
-
-%post -n pulse2-launchers
-service pulse2-launchers start >/dev/null 2>&1 || :
-
-%preun -n pulse2-launchers
-service pulse2-launchers stop >/dev/null 2>&1 || :
-
-%files -n pulse2-launchers
-%{_sysconfdir}/init.d/pulse2-launchers
-%config(noreplace) %{_sysconfdir}/mmc/pulse2/launchers/launchers.ini
-%{_sysconfdir}/mmc/pulse2/launchers/keys
-%{_sbindir}/pulse2-launcher
-%{_sbindir}/pulse2-launchers-manager
-%{_sbindir}/pulse2-output-wrapper
-%{_sbindir}/pulse2-ping
-%{_sbindir}/pulse2-wol
-%{_sbindir}/pulse2-tcp-sproxy
-%{_mandir}/man1/pulse2-launcher.1.*
-%{_mandir}/man1/pulse2-launchers-manager.1.*
-%{_mandir}/man1/pulse2-output-wrapper.1.*
-%{_mandir}/man1/pulse2-ping.1.*
-%{_mandir}/man1/pulse2-tcp-sproxy.1.*
-%{_mandir}/man1/pulse2-wol.1.*
-%python2_sitelib/pulse2/launcher
 
 #--------------------------------------------------------------------
 

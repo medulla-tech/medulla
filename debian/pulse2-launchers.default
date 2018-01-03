@@ -1,9 +1,0 @@
-# Defaults for pulse2-launcher initscript
-# sourced by /etc/init.d/pulse2-launcher
-# installed at /etc/default/pulse2-launcher by the maintainer scripts
-
-#
-# This is a POSIX shell fragment
-#
-
-ENABLE=no

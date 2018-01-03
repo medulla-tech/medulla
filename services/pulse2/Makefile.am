@@ -24,7 +24,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	database.imaging database.inventory database.msc \
 	database.msc.orm database.pulse database.xmppmaster imaging \
 	imaging_server inventoryserver inventoryserver.scheduler \
-	launcher managers package_server package_server.assign_algo \
+	managers package_server package_server.assign_algo \
 	package_server.assign_algo.default \
 	package_server.assign_algo.terminal_type \
 	package_server.assign_algo.multi_site \
