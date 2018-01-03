@@ -1,5 +1,3 @@
-usr/sbin/pulse2-launcher
-usr/sbin/pulse2-launchers-manager
 usr/sbin/pulse2-output-wrapper
 usr/sbin/pulse2-ping
 usr/sbin/pulse2-wol
