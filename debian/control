@@ -21,6 +21,7 @@ Depends: ${misc:Depends},
          pulse2-common,
          pulse2-imaging-client | pulse2-davos-client,
          pulse2-inventory-server,
+         pulse2-launchers,
          pulse2-package-server,
          pulse2-scheduler,
          pulse2-homepage
@@ -116,6 +117,21 @@ Description: Pulse 2 inventory server
  .
  This package contains Pulse 2 inventory server. It collects computers
  inventories and insert them into the database.
+
+Package: pulse2-launchers
+Replaces: pulse2-launcher
+Architecture: any
+Pre-Depends: python-psutil (>= 0.7.0), python-openssl
+Depends: ${misc:Depends}, ${python:Depends}, ${shlibs:Depends}, pulse2-common (= ${source:Version}), python-pulse2-common (= ${source:Version}), perl-modules, libsys-syslog-perl, openssh-client, iputils-ping, python-mmc-base (>= 3.1.1-1)
+Recommends: rsync
+Description: Pulse 2 software deployment handling service
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
+ service asks the launcher to connect to a set of target computers and start
+ a deployment. Multiple launchers can be instantiated at the same time for
+ scalability.
 
 Package: python-mmc-pulse2
 Architecture: all
