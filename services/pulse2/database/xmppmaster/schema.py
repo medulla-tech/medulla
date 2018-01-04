@@ -193,6 +193,20 @@ class Has_guacamole(Base, XmppMasterDBObj):
     idinventory = Column(Integer)
     protocol   = Column(String(10))
 
+class Has_cluster_ars(Base, XmppMasterDBObj):
+    ## ====== Table name =========================
+    __tablename__ = 'has_cluster_ars'
+    ## ====== ForeignKey =============================
+    id_ars = Column(Integer)
+    id_cluster = Column(Integer)
+
+class Cluster_ars(Base, XmppMasterDBObj):
+    ## ====== Table name =========================
+    __tablename__ = 'cluster_ars'
+    ## ====== ForeignKey =============================
+    name = Column(String(40))
+    description = Column(String(255))
+
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================
     __tablename__ = 'version'
