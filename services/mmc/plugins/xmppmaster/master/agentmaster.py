@@ -27,7 +27,7 @@ import os
 import re
 
 import ConfigParser
-
+import operator
 
 import sleekxmpp
 from  sleekxmpp import jid
@@ -1172,12 +1172,28 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.warn("The configuration of Relay server is impossible : missing")
                 result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,self.domaindefault,self.config.defaultrelayserverbaseurlguacamole]
         try:
+            listars =  XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2])
+            #print json.dumps(listars, indent = 4)
+            z = [listars[x] for x in listars]
+            
+            z1 =  sorted(z, key=operator.itemgetter(4))
+            ### Start relay server agent configuration
+            # on ordone les ARS du moin utilise au plus utilise.
+            ###print XmppMasterDatabase().algoloadbalancerforcluster()
             reponse = {
                 'action' : 'resultconnectionconf',
                 'sessionid' : data['sessionid'],
-                'data' : [result[0],result[1],result[2],result[3]],
+                'data' : z1,
                 'ret': 0
                 }
+
+            #reponse = {
+                #'action' : 'resultconnectionconf',
+                #'sessionid' : data['sessionid'],
+                #'data' : [result[0],result[1],result[2],result[3]],
+                #'ret': 0
+                #}
+
             self.send_message(mto=msg['from'],
                             mbody=json.dumps(reponse),
                             mtype='chat')

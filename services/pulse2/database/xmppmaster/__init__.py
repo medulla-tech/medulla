@@ -33,7 +33,8 @@ from datetime import date, datetime, timedelta
 from mmc.database.database_helper import DatabaseHelper
 from pulse2.database.xmppmaster.schema import Network, Machines, RelayServer, Users, Regles, Has_machinesusers,\
     Has_relayserverrules, Has_guacamole, Base, UserLog, Deploy, Has_login_command, Logs, ParametersDeploy, \
-        Organization, Packages_list, Qa_custom_command
+        Organization, Packages_list, Qa_custom_command,\
+            Cluster_ars, Has_cluster_ars
 # Imported last
 import logging
 import json
@@ -2290,3 +2291,72 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def getCountOnlineMachine(self, session):
         return session.query(func.count(Machines.id)).filter(Machines.agenttype == "machine").scalar()
+
+    @DatabaseHelper._sessionm
+    def getRelayServerofclusterFromjidars(self, session, jid):
+        #determine ARS id from jid
+        relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
+        relayserver = relayserver.first()
+        session.commit()
+        session.flush()
+        if relayserver:
+            #object complete 
+            #result = [relayserver.id,
+                      #relayserver.urlguacamole,
+                      #relayserver.subnet,
+                      #relayserver.nameserver,
+                      #relayserver.ipserver,
+                      #relayserver.ipconnection,
+                      #relayserver.port,
+                      #relayserver.portconnection,
+                      #relayserver.mask,
+                      #relayserver.jid,
+                      #relayserver.longitude,
+                      #relayserver.latitude,
+                      #relayserver.enabled,
+                      #relayserver.classutil,
+                      #relayserver.groupdeploy,
+                      #relayserver.package_server_ip,
+                      #relayserver.package_server_port
+            #]
+            #search for clusters where ARS is
+            clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
+            clustersid = clustersid.all()
+            session.commit()
+            session.flush()
+            #search the ARS in the same cluster that ARS finds
+            if clustersid:
+                result = [m.id for m in clustersid]
+                ars = session.query(RelayServer).\
+                    join(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id).\
+                        join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id).\
+                        filter(and_(Has_cluster_ars.id_cluster.in_(result), RelayServer.enabled == 1  ))
+                ars = ars.all()
+                session.commit()
+                session.flush()
+                if ars:
+                    #result1 = [(m.ipconnection,m.port,m.jid,m.urlguacamole)for m in ars]
+                    result2 = { m.jid :[m.ipconnection, m.port, m.jid, m.urlguacamole, 0 ] for m in ars}
+                    countarsclient = self.algoloadbalancerforcluster()
+                    if len(countarsclient) != 0:
+                        for i in countarsclient:
+                            result2[i[1]][4] = i[0]
+                    return result2
+
+
+    @DatabaseHelper._sessionm
+    def algoloadbalancerforcluster(self, session):
+        sql = """
+            SELECT
+                COUNT(*) AS nb, `machines`.`groupdeploy`
+            FROM
+                xmppmaster.machines
+            WHERE
+                agenttype = 'machine'
+            GROUP BY `machines`.`groupdeploy`
+            ORDER BY nb DESC;"""
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        return [x for x in result]
+
