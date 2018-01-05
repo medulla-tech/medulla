@@ -2340,7 +2340,11 @@ class XmppMasterDatabase(DatabaseHelper):
                     countarsclient = self.algoloadbalancerforcluster()
                     if len(countarsclient) != 0:
                         for i in countarsclient:
-                            result2[i[1]][4] = i[0]
+                            try:
+                                if result2[i[1]]:
+                                    result2[i[1]][4] = i[0]
+                            except KeyError:
+                                pass
                     return result2
         return {}
 
