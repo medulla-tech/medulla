@@ -2139,6 +2139,7 @@ class XmppMasterDatabase(DatabaseHelper):
     @DatabaseHelper._sessionm
     def delPresenceMachine(self, session, jid):
         result = ['-1']
+        typemachine = "machine"
         try:
             sql = """SELECT
                         id, hostname, agenttype
@@ -2163,6 +2164,7 @@ class XmppMasterDatabase(DatabaseHelper):
                     WHERE
                         `has_machinesusers`.`machines_id` = '%s';"""%result[0]
             if result[2] == "relayserver":
+                typemachine = "relayserver"
                 sql2 = """UPDATE `xmppmaster`.`relayserver`
                             SET
                                 `enabled` = '0'
@@ -2176,9 +2178,12 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
         except IndexError:
             logging.getLogger().warning("Configuration agent machine jid [%s]. no jid in base for configuration"%jid)
+            return {}
         except Exception, e:
             logging.getLogger().error(str(e))
-        return result
+            return {}
+        resulttypemachine={"type" : typemachine }
+        return resulttypemachine
 
     @DatabaseHelper._sessionm
     def getGuacamoleRelayServerMachineUuid(self, session, uuid):
@@ -2319,7 +2324,7 @@ class XmppMasterDatabase(DatabaseHelper):
                       #relayserver.package_server_ip,
                       #relayserver.package_server_port
             #]
-            #search for clusters where ARS is
+            # search for clusters where ARS is
             clustersid = session.query(Has_cluster_ars).filter(Has_cluster_ars.id_ars == relayserver.id)
             clustersid = clustersid.all()
             session.commit()

@@ -461,7 +461,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                             mbody = json.dumps(msgbody),
                             mtype = 'chat')
 
-    def changed_status(self,msg_changed_status):
+    def changed_status(self, msg_changed_status):
         try:
             if msg_changed_status['from'].resource == 'MASTER':
                 return
@@ -471,6 +471,21 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if msg_changed_status['type'] == 'unavailable':
             try:
                 result = XmppMasterDatabase().delPresenceMachine(msg_changed_status['from'])
+                if "type" in result and result['type'] ==  "relayserver":
+                    # recover list of cluster ARS
+                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
+                    cluster={
+                            'action' : "cluster",
+                            'sessionid': name_random(5, "cluster"),
+                            'data' : {'subaction' : 'initclusterlist',
+                                      'data' : listrelayserver
+                            }
+                    }
+                    # all Relays server in the cluster are notified.
+                    for ARScluster in listrelayserver:
+                        self.send_message( mto = ARScluster,
+                                           mbody = json.dumps(cluster),
+                                           mtype = 'chat')
             except:
                 traceback.print_exc(file=sys.stdout)
 
@@ -1175,25 +1190,15 @@ class MUCBot(sleekxmpp.ClientXMPP):
             listars =  XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2])
             #print json.dumps(listars, indent = 4)
             z = [listars[x] for x in listars]
-            
             z1 =  sorted(z, key=operator.itemgetter(4))
             ### Start relay server agent configuration
-            # on ordone les ARS du moin utilise au plus utilise.
-            ###print XmppMasterDatabase().algoloadbalancerforcluster()
+            # we order the ARS from the least used to the most used.
             reponse = {
-                'action' : 'resultconnectionconf',
-                'sessionid' : data['sessionid'],
-                'data' : z1,
-                'ret': 0
-                }
-
-            #reponse = {
-                #'action' : 'resultconnectionconf',
-                #'sessionid' : data['sessionid'],
-                #'data' : [result[0],result[1],result[2],result[3]],
-                #'ret': 0
-                #}
-
+                        'action' : 'resultconnectionconf',
+                        'sessionid' : data['sessionid'],
+                        'data' : z1,
+                        'ret': 0
+            }
             self.send_message(mto=msg['from'],
                             mbody=json.dumps(reponse),
                             mtype='chat')
@@ -1424,6 +1429,20 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             data['packageserver']['public_ip'],
                                                             data['packageserver']['port']
                                                             )
+                    # recover list of cluster ARS
+                    listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
+                    cluster={
+                            'action' : "cluster",
+                            'sessionid': name_random(5, "cluster"),
+                            'data' : {'subaction' : 'initclusterlist',
+                                      'data' : listrelayserver
+                            }
+                    }
+                    # all Relays server in the cluster are notified.
+                    for ARScluster in listrelayserver:
+                        self.send_message( mto = ARScluster,
+                                           mbody = json.dumps(cluster),
+                                           mtype = 'chat')
                 logger.debug("** Add machine in base")
                 # Add machine
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
