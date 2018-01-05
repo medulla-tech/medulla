@@ -2326,11 +2326,11 @@ class XmppMasterDatabase(DatabaseHelper):
             session.flush()
             #search the ARS in the same cluster that ARS finds
             if clustersid:
-                result = [m.id for m in clustersid]
+                listcluster_id = [m.id_cluster for m in clustersid]
                 ars = session.query(RelayServer).\
                     join(Has_cluster_ars, Has_cluster_ars.id_ars == RelayServer.id).\
                         join(Cluster_ars, Has_cluster_ars.id_cluster == Cluster_ars.id).\
-                        filter(and_(Has_cluster_ars.id_cluster.in_(result), RelayServer.enabled == 1  ))
+                        filter(and_(Has_cluster_ars.id_cluster.in_(listcluster_id), RelayServer.enabled == 1  ))
                 ars = ars.all()
                 session.commit()
                 session.flush()
@@ -2342,7 +2342,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         for i in countarsclient:
                             result2[i[1]][4] = i[0]
                     return result2
-
+        return {}
 
     @DatabaseHelper._sessionm
     def algoloadbalancerforcluster(self, session):
