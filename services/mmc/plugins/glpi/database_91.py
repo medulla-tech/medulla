@@ -60,6 +60,7 @@ from mmc.plugins.glpi.database_utils import decode_latin1, encode_latin1, decode
 from mmc.plugins.glpi.database_utils import DbTOA # pyflakes.ignore
 from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
+from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 class Glpi91(DyngroupDatabaseHelper):
     """
@@ -641,6 +642,10 @@ class Glpi91(DyngroupDatabaseHelper):
                    'owner_firstname' in self.config.summary or \
                    'owner_realname' in self.config.summary:
                     join_query = join_query.outerjoin(self.user)
+                r=re.compile('reg_key_.*')
+                regs=filter(r.search, self.config.summary)
+                if regs[0]:
+                    join_query = join_query.outerjoin(self.regcontents)
 
 
             if self.fusionagents is not None:
@@ -694,6 +699,10 @@ class Glpi91(DyngroupDatabaseHelper):
                         clauses.append(self.glpi_computermodels.c.name.like('%'+filt['hostname']+'%'))
                     if 'manufacturer' in self.config.summary:
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
+                    r=re.compile('reg_key_.*')
+                    regs=filter(r.search, self.config.summary)
+                    if regs[0]:
+                        clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
@@ -1284,9 +1293,17 @@ class Glpi91(DyngroupDatabaseHelper):
                     datas['owner_firstname'] = owner_firstname
                 if 'owner_realname' in self.config.summary:
                     datas['owner_realname'] = owner_realname
-
-
-
+                master_config = xmppMasterConfig()
+                regvalue = []
+                r=re.compile(r'reg_key_.*')
+                regs=filter(r.search, self.config.summary)
+                for regkey in regs:
+                    regkeyconf = getattr( master_config, regkey).split("|")[0].split("\\")[-1]
+                    try:
+                        keyname, keyvalue = self.getMachineRegistryKey(m,regkeyconf)
+                        datas[regkey] = keyvalue
+                    except TypeError:
+                        pass
 
             ret[m.getUUID()] = [None, datas]
 
@@ -1616,6 +1633,36 @@ class Glpi91(DyngroupDatabaseHelper):
         path.append('UUID0')
         return path
 
+    def getMachineRegistryKey(self, machine, regkey):
+        """
+        Returns the registry keys and values defined on the computer.
+
+        @param machine: computer's instance
+        @type machine: Machine
+
+        @param regkey: registry key
+        @type regkey: str
+
+        @return: name, value
+        @rtype: tuple
+        """
+
+        ret = None
+        session = create_session()
+
+        query = session.query(RegContents).add_column(self.registries.c.name) \
+            .add_column(self.regcontents.c.key) \
+            .add_column(self.regcontents.c.value) \
+            .select_from(self.machine.outerjoin(self.regcontents) \
+                .outerjoin(self.registries))
+        query = query.filter(self.machine.c.id == machine.id, self.regcontents.c.key == regkey)
+
+        if query.first() is not None:
+            ret = query.first().name, query.first().value
+
+        session.close()
+        return ret
+
     def doesUserHaveAccessToMachines(self, ctx, a_machine_uuid, all = True):
         """
         Check if the user has correct permissions to access more than one or to all machines
@@ -1928,9 +1975,9 @@ class Glpi91(DyngroupDatabaseHelper):
         query = self.filterOnUUID(
             session.query(RegContents).add_column(self.registries.c.name) \
             .add_column(self.regcontents.c.key) \
-            .add_column(self.regcontents.c.value).select_from(
-                self.machine.outerjoin(self.regcontents) \
-                .outerjoin(self.registries)
+            .add_column(self.regcontents.c.value) \
+            .select_from(self.machine.outerjoin(self.regcontents) \
+                .outerjoin(self.registries) \
             ), int(str(uuid).replace("UUID", "")))
 
         if count:
