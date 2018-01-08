@@ -30,6 +30,8 @@ from mmc.plugins.glpi.utilities import complete_ctx
 from pulse2.managers.imaging import ComputerImagingManager
 import logging
 import exceptions
+import re
+from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
 class GlpiComputers(ComputerI):
     def __init__(self, conffile = None):
@@ -276,6 +278,17 @@ class GlpiComputers(ComputerI):
             'model': ['model', 'Model'],
             'manufacturer': ['manufacturer', 'Manufacturer'],
         }
+
+        # Add registry keys to the computers view if needed
+        master_config = xmppMasterConfig()
+        regvalue = []
+        r=re.compile(r'reg_key_.*')
+        regs=filter(r.search, self.config.summary)
+        for regkey in regs:
+            regkeyconf = getattr( master_config, regkey).split("|")[-1]
+            if regkeyconf.startswith('HKEY'):
+                regkeyconf = getattr( master_config, regkey).split("\\")[-1]
+            __headers[regkey]=[regkey, regkeyconf]
 
         return [__headers[x] for x in self.config.summary]
 
