@@ -20,7 +20,6 @@
 #
 dist_sbin_SCRIPTS = pulse2-package-server pulse2-package-server-register-imaging \
 	pulse2-inventory-server pulse2-scheduler pulse2-scheduler-manager \
-	pulse2-output-wrapper \
 	pulse2-setup pulse2-load-defaults \
 	pulse2-scheduler-proxy pulse2-extract-glpi-search-options \
 	pulse2-backup-servers pulse2-debug pulse2-dbupdate \
