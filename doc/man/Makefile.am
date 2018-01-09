@@ -29,7 +29,6 @@ man_MANS = \
 	pulse2-output-wrapper.1 \
 	pulse2-package-server.1 \
 	pulse2-package-server-register-imaging.1 \
-	pulse2-ping.1 \
 	pulse2-scheduler.1 \
 	pulse2-scheduler-manager.1 \
 	pulse2-tcp-sproxy.1 \
