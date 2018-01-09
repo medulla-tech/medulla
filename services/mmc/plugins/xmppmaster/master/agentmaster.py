@@ -1187,7 +1187,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 logger.warn("The configuration of Relay server is impossible : missing")
                 result = [self.config.defaultrelayserverip,self.config.defaultrelayserverport,self.domaindefault,self.config.defaultrelayserverbaseurlguacamole]
         try:
-            listars =  XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2])
+            listars =  XmppMasterDatabase().getRelayServerofclusterFromjidars(result[2], "static")
             #print json.dumps(listars, indent = 4)
             z = [listars[x] for x in listars]
             z1 =  sorted(z, key=operator.itemgetter(4))
