@@ -1,8 +1,6 @@
 usr/sbin/pulse2-output-wrapper
 usr/sbin/pulse2-wol
-usr/sbin/pulse2-tcp-sproxy
 etc/mmc/pulse2/launchers
 usr/share/man/man1/pulse2-launchers-manager.1
 usr/share/man/man1/pulse2-output-wrapper.1
 usr/share/man/man1/pulse2-wol.1
-usr/share/man/man1/pulse2-tcp-sproxy.1
