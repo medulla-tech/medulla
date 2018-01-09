@@ -23,7 +23,6 @@
 man_MANS = \
 	pulse2-inventory-clean-database.1 \
 	pulse2-inventory-server.1 \
-	pulse2-launcher.1 \
 	pulse2-launchers-manager.1 \
 	pulse2-msc-clean-database.1 \
 	pulse2-output-wrapper.1 \
