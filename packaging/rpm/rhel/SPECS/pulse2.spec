@@ -741,19 +741,12 @@ This package contains Pulse 2 common files.
 
 %configure --disable-python-check --disable-wol
 
-%make_build -C services/3rd_party wol-src
-pushd services/3rd_party/wol-src
-        	%configure
-popd
-
 %make_build
-%make_build -C services/3rd_party pulse2-wol
 
 %install
 %makeinstall
 
 mkdir -p %buildroot%{_sbindir}
-install -m 755 services/3rd_party/pulse2-wol %buildroot%{_sbindir}/pulse2-wol
 
 mkdir -p %buildroot%_var/lib/pulse2/packages
 

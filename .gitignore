@@ -26,8 +26,6 @@ m4/lt~obsolete.m4
 missing
 py-compile
 depcomp
-services/3rd_party/wol-src
-services/3rd_party/pulse2-wol
 services/init.d/pulse2-imaging-server
 services/init.d/pulse2-inventory-server
 services/init.d/pulse2-launchers

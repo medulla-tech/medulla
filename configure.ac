@@ -126,21 +126,6 @@ AC_ARG_ENABLE([conf-backup],
 AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
 dnl
-dnl --disable-wol
-dnl   Fetch and compile wake-on-lan tool (3rd party)
-dnl
-if test "x$enable_packager_mode" = "xno"; then
-    AC_ARG_ENABLE([wol],
-                  [AS_HELP_STRING([--disable-wol],
-                                  [Disable wake-on-lan tool (3rd party) @<:@default=enable@:>@])],
-                  [],
-                  [enable_wol="yes"])
-else
-    enable_wol=no
-fi
-AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
-
-dnl
 dnl --with-examples-dir
 dnl   Set path to configuration files examples dir
 dnl   Default to DOCDIR/examples
