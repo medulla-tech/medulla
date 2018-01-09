@@ -644,8 +644,11 @@ class Glpi91(DyngroupDatabaseHelper):
                     join_query = join_query.outerjoin(self.user)
                 r=re.compile('reg_key_.*')
                 regs=filter(r.search, self.config.summary)
-                if regs[0]:
-                    join_query = join_query.outerjoin(self.regcontents)
+                try:
+                    if regs[0]:
+                        join_query = join_query.outerjoin(self.regcontents)
+                except IndexError:
+                    pass
 
 
             if self.fusionagents is not None:
@@ -701,8 +704,11 @@ class Glpi91(DyngroupDatabaseHelper):
                         clauses.append(self.manufacturers.c.name.like('%'+filt['hostname']+'%'))
                     r=re.compile('reg_key_.*')
                     regs=filter(r.search, self.config.summary)
-                    if regs[0]:
-                        clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
+                    try:
+                        if regs[0]:
+                            clauses.append(self.regcontents.c.value.like('%'+filt['hostname']+'%'))
+                    except IndexError:
+                        pass
                     # Filtering on computer list page
                     if clauses:
                         query = query.filter(or_(*clauses))
