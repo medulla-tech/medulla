@@ -1,4 +1,3 @@
 usr/sbin/pulse2-output-wrapper
 etc/mmc/pulse2/launchers
-usr/share/man/man1/pulse2-launchers-manager.1
 usr/share/man/man1/pulse2-output-wrapper.1
