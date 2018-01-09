@@ -52,6 +52,13 @@ ENGINE = InnoDB;
 
 INSERT INTO `xmppmaster`.`has_cluster_ars` (`id`, `id_ars`, `id_cluster`) VALUES ('1', '1', '1');
 
+-- -----------------------------------------------------
+-- Table `relayserver add infos in relayserver`
+-- -----------------------------------------------------
+ALTER TABLE `xmppmaster`.`relayserver` 
+ADD COLUMN `moderelayserver` VARCHAR(7) NOT NULL DEFAULT 'static' AFTER `package_server_port`;
+
+
 -- ----------------------------------------------------------------------
 -- Database version
 -- ----------------------------------------------------------------------
