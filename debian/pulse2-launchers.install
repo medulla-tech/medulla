@@ -1,5 +1,4 @@
 usr/sbin/pulse2-output-wrapper
-usr/sbin/pulse2-ping
 usr/sbin/pulse2-wol
 usr/sbin/pulse2-tcp-sproxy
 etc/mmc/pulse2/launchers
