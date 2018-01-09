@@ -993,7 +993,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         enabled = False,
                         classutil="private",
                         packageserverip ="",
-                        packageserverport = ""):
+                        packageserverport = "",
+                        moderelayserver = "static"):
         sql = "SELECT count(*) as nb FROM xmppmaster.relayserver where `relayserver`.`nameserver`='%s';"%nameserver
         nb = session.execute(sql)
         session.commit()
@@ -1018,6 +1019,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 new_relayserver.classutil = classutil
                 new_relayserver.package_server_ip = packageserverip
                 new_relayserver.package_server_port = packageserverport
+                new_relayserver.moderelayserver = moderelayserver
                 session.add(new_relayserver)
                 session.commit()
                 session.flush()
@@ -1700,6 +1702,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
             limit 1;"""%(rule, username, enabled, classutilMachine)
         else:
@@ -1711,6 +1714,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(rule, userou, enabled)
         result = session.execute(sql)
         session.commit()
@@ -1735,6 +1739,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
             limit 1;"""%(rule, machineou, enabled, classutilMachine)
         else:
@@ -1746,6 +1751,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(rule, machineou, enabled)
         result = session.execute(sql)
         session.commit()
@@ -1771,6 +1777,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
             limit 1;"""%(rule, username, enabled, classutilMachine)
         else:
@@ -1782,6 +1789,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(rule, username, enabled)
         result = session.execute(sql)
         session.commit()
@@ -1802,6 +1810,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
                     AND `relayserver`.`classutil` = '%s'
             limit 1;"""%(rule, hostname, enabled, classutilMachine)
         else:
@@ -1813,6 +1822,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 `has_relayserverrules`.`rules_id` = %d
                     AND `has_relayserverrules`.`subject` = '%s'
                     AND `relayserver`.`enabled` = %d
+                    AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(rule, hostname, enabled)
         result = session.execute(sql)
         session.commit()
@@ -1850,6 +1860,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         `relayserver`.`enabled` = %d
                     AND `relayserver`.`subnet` ='%s'
                     AND `relayserver`.`classutil` = '%s'
+                    AND `relayserver`.`moderelayserver` = 'static'
             limit 1;"""%(enabled, subnetmachine, classutilMachine)
         else:
             sql = """select `relayserver`.`id`
@@ -1905,7 +1916,8 @@ class XmppMasterDatabase(DatabaseHelper):
                         xmppmaster.relayserver
                     WHERE
                             `relayserver`.`enabled` = %d
-                        AND `relayserver`.`classutil` = '%s';"""%(enabled, classutilMachine)
+                        AND `relayserver`.`classutil` = '%s'
+                    AND `relayserver`.`moderelayserver` = 'static';"""%(enabled, classutilMachine)
         else:
             sql = """SELECT
                         id,longitude,latitude
@@ -1984,11 +1996,14 @@ class XmppMasterDatabase(DatabaseHelper):
                 logging.getLogger().error(str(e))
 
     @DatabaseHelper._sessionm
-    def listserverrelay(self, session):
+    def listserverrelay(self, session, moderelayserver = "static"):
         sql = """SELECT
                     jid
                 FROM
-                    xmppmaster.relayserver;"""
+                    xmppmaster.relayserver
+                WHERE
+                    `xmppmaster`.`relayserver`.`moderelayserver` = '%s'
+                    ;"""%moderelayserver
         result = session.execute(sql)
         session.commit()
         session.flush()

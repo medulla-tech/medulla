@@ -104,20 +104,20 @@ def action( xmppobject, action, sessionid, data, message, ret, objsessiondata):
                 except Exception, e:
                     logging.getLogger().debug("Error getting key: %s" % reg_key)
                     pass
-
         time.sleep(25)
-        if not xmppobject.isInventoried(message['from']):
-            XmppMasterDatabase().setlogxmpp( '<font color="red">Error Injection Inventory for Machine %s</font>'%(message['from']),
+        if not xmppobject.XmppUpdateInventoried(message['from']):
+            XmppMasterDatabase().setlogxmpp( '<font color="deeppink">Error Injection Inventory for Machine %s</font>'%(message['from']),
                                                                 "Inventory Server",
                                                                 "",
                                                                 0,
                                                                 message['from'],
                                                                 'auto',
                                                                 '',
-                                                                'Inventory | Notify',
+                                                                'Inventory | Notify | Error',
                                                                 '',
                                                                 '',
                                                                 "InvServer")
+
         # restart agent
         #xmppobject.restartAgent(message['from'])
     except Exception, e:

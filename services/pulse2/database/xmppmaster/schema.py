@@ -138,6 +138,7 @@ class RelayServer(Base, XmppMasterDBObj):
     latitude = Column(String(45))
     enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
+    moderelayserver = Column(String(7))
 
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================

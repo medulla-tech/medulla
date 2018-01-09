@@ -1249,6 +1249,26 @@ class MUCBot(sleekxmpp.ClientXMPP):
             return True
         return False
 
+    def XmppUpdateInventoried(self, jid):
+        try:
+            machine = XmppMasterDatabase().getMachinefromjid(jid)
+            # on essai de voir si on peut mettre à jour uuid_inventaire en interrogant glpi
+            result = XmppMasterDatabase().listMacAdressforMachine(machine['id'])
+            results = result[0].split(",")
+            logging.getLogger().debug("listMacAdressforMachine   %s"%results)
+            uuid =''
+            for t in results:
+                computer = ComputerManager().getComputerByMac(t)
+                if computer != None:
+                    uuid = 'UUID' + str(computer.id)
+                    logger.debug("** update uuid %s for machine %s "%(uuid, machine['jid']))
+                    #update inventory
+                    XmppMasterDatabase().updateMachineidinventory(uuid, machine['id'])
+                    return True
+        except Exception:
+            logger.error("** Erreur update inventaire %s"%(jid))
+        return False
+
     def MessagesAgentFromChatroomMaster(self, msg):
         ### Message from chatroom master
         ### jabber routes the message.
@@ -1412,6 +1432,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 # Add relayserver or update status in database
                 logger.debug("** Add relayserver or update status in database %s"%msg['from'].bare)
                 if data['agenttype'] == "relayserver":
+                    if 'moderelayserver' in data:
+                        moderelayserver = data['moderelayserver']
+                    else:
+                        moderelayserver = "static"
                     XmppMasterDatabase().addServerRelay(data['baseurlguacamole'],
                                                             data['subnetxmpp'],
                                                             data['information']['info']['hostname'],
@@ -1427,7 +1451,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             True,
                                                             data['classutil'],
                                                             data['packageserver']['public_ip'],
-                                                            data['packageserver']['port']
+                                                            data['packageserver']['port'],
+                                                            moderelayserver = moderelayserver
                                                             )
                     # recover list of cluster ARS
                     listrelayserver = XmppMasterDatabase().getRelayServerofclusterFromjidars(str(data['from']))
