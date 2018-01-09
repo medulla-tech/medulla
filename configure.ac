@@ -149,7 +149,6 @@ AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/conf/plugins/Makefile])
 AC_CONFIG_FILES([services/conf/pulse2/Makefile])
 AC_CONFIG_FILES([services/init.d/Makefile])
-AC_CONFIG_FILES([services/3rd_party/Makefile])
 AC_CONFIG_FILES([services/clients/Makefile])
 AC_CONFIG_FILES([services/clients/win32/Makefile])
 AC_CONFIG_FILES([web/Makefile])
@@ -162,7 +161,6 @@ dnl write all stuff
 AC_OUTPUT
 
 dnl Fetch 3rd-party sources
-make -C services/3rd_party configure
 make -C doc DocumentConverter.py
 
 dnl Warn user sysconfdir is not /etc, if necessary.
