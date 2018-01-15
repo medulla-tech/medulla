@@ -158,6 +158,34 @@ This package contains the backuppc plugin for the MMC web interface.
 
 #--------------------------------------------------------------------
 
+%package -n     pulse2-launchers
+Summary:        Pulse 2 launcher service
+Group:          System/Servers
+Obsoletes:      pulse2-launcher < 1.5.0
+Provides:       pulse2-launcher = %version-%release
+
+%description -n pulse2-launchers
+This package contains the Pulse 2 launcher service. The Pulse 2 scheduler
+service asks the launcher to connect to a set of target computers and start
+a deployment. Multiple launchers can be instantiated at the same time for
+scalability.
+
+%post -n pulse2-launchers
+service pulse2-launchers start >/dev/null 2>&1 || :
+
+%preun -n pulse2-launchers
+service pulse2-launchers stop >/dev/null 2>&1 || :
+
+%files -n pulse2-launchers
+service asks the launcher to connect to a set of target computers and start
+a deployment. Multiple launchers can be instantiated at the same time for
+scalability.
+
+%files -n pulse2-launchers
+%{_sysconfdir}/mmc/pulse2/launchers/keys
+
+#--------------------------------------------------------------------
+
 %package -n python-mmc-glpi
 Summary:    GLPI plugin for the MMC agent
 Group:      System/Servers
