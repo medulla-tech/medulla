@@ -819,5 +819,5 @@ cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
-find '%{buildroot}' -name '.tx' -delete
+find '%{buildroot}' -name '.tx' | xargs rm -fr
 
