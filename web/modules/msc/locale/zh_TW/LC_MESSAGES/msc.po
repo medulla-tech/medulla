@@ -1871,6 +1871,7 @@ msgstr " '%s' "
 
 #: modules/msc/includes/command_history.php:415
 #, php-format
+#, fuzzy
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
@@ -1878,6 +1879,7 @@ msgstr ""
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
+#, fuzzy
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
