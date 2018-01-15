@@ -29,7 +29,6 @@ Source2:        pulse2-inventory-server.service
 Source3:        pulse2-imaging-server.service
 Source4:        pulse2-register-pxe.service
 
-Patch1:         0002-pulse2-2.0-change-launcher-scheduler-ports.patch
 BuildRequires:	python-devel
 BuildRequires:	gettext
 BuildRequires:	gettext-devel
@@ -735,7 +734,6 @@ This package contains Pulse 2 common files.
 
 %prep
 %setup -q  -n pulse2-%version
-%patch1 -p1
 
 %build
 
