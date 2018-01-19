@@ -89,7 +89,7 @@ if (count($_POST) > 0) {
     // check result
     if ((is_array($ret) && $ret[0]) || $ret) {
         $str = sprintf(_T("<strong>%s</strong> script %s", "imaging"), $script_name, $action);
-        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Succes : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
+        xmlrpc_setfromxmppmasterlogxmpp(_T("Notify Success : ", 'Imaging').' '."Script : "."( ".$script_name." ) "."on action : ".$action,
                                                 "IMG",
                                                 '',
                                                 0,
