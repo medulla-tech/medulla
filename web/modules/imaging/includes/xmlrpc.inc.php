@@ -290,7 +290,7 @@ function xmlrpc_synchroLocation($id) {
     $location_name = xmlrpc_getLocationName($id);
 
     if ((is_array($ret) and $ret[0] or !is_array($ret) and $ret) and !isXMLRPCError()) {
-        $str = sprintf(_T("Boot menu generation Succes for Package Server on location %s", "imaging"),$location_name);
+        $str = sprintf(_T("Boot menu generation Success for Package Server on location %s", "imaging"),$location_name);
         xmlrpc_setimaginglogxmpp(   $str,
                                     "IMG",
                                     '',

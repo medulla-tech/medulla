@@ -337,7 +337,7 @@ function Workflow()
                 form ='<form><ul></ul><input type="hidden" name="label" value="'+action['label']+'"><input type="button" value="save" class="editAction"/></form>';
             }
 
-            //add the the html to display
+            //add the html to display
             jQuery(selector).append('<li id="'+action['label']+'" data-name="'+action['label']+'" >'+
                 '<div class="ui-accordion-header ui-state-default">'+add+'<h3 class="label">'+action['label']+'</h3><h4>'+action['action']+'</h4></div>'+
                 '<span class="ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active">'+form+'</span>'+

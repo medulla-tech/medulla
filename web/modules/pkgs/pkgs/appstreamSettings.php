@@ -67,7 +67,7 @@ if (isset($_POST['bconfirm'])){
                                     'Packaging | Remove | Bundle | Manual');
         }
         else{
-            $str = _T('Your My credentials have been set successfuly.', 'pkgs');
+            $str = _T('Your My credentials have been set successfully.', 'pkgs');
             new NotifyWidgetSuccess($str);
             xmlrpc_setfrompkgslogxmpp( $str,
                                     "PKG",

@@ -67,7 +67,7 @@ $logMessages = array(
    "preselected-menu-entry-change failure" => _T("Preselected Menu Entry Change Failure", "imaging"),
 
    "booted" => _T("Booted", "imaging"),
-   "choosen menu entry" => _T("Choosen Menu Entry", "imaging"),
+   "choosen menu entry" => _T("Chosen Menu Entry", "imaging"),
    "restoration started" => _T("Restoration Started", "imaging"),
    "restoration finished" => _T("Restoration Finished", "imaging"),
    "backup started" => _T("Backup Started", "imaging"),
