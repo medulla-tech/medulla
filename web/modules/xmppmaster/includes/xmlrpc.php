@@ -207,10 +207,6 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_runXmppCommand($command, $machine){
-    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine));
-}
-
 function xmlrpc_runXmppCommand($command, $machine, $postinfo){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
