@@ -37,8 +37,6 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-
-
  if (   isset($_POST['bvalid']) &&
         isset($_POST['command']) &&
         isset($_POST['Machine']) &&
@@ -46,7 +44,7 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
         trim($_POST['command'])!= ""
         ){
         $_POST['result']='';
-        $result = xmlrpc_runXmppCommand(trim($_POST['command']),trim($_POST['Machine']));
+        $result = xmlrpc_runXmppCommand(trim($_POST['command']),trim($_POST['Machine']),array($_POST, $_GET) );
  }else
  {
     $result="";

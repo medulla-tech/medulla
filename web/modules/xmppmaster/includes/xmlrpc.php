@@ -211,6 +211,10 @@ function xmlrpc_runXmppCommand($command, $machine){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine));
 }
 
+function xmlrpc_runXmppCommand($command, $machine, $postinfo){
+    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
+}
+
 function xmlrpc_runXmppScript($command, $machine){
     return xmlCall("xmppmaster.runXmppScript", array($command, $machine));
 }
