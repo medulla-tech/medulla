@@ -1618,6 +1618,25 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
     @DatabaseHelper._sessionm
+    def groupdeployfromjid(self, session, jid):
+        """ return groupdeploy xmpp for JID """
+        sql = """SELECT
+                    groupdeploy
+                FROM
+                    xmppmaster.machines
+                WHERE
+                    jid LIKE ('%s%%')
+                                LIMIT 1;"""%jid
+        result = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a = list([x for x in result][0])
+            return a
+        except:
+            return -1
+
+    @DatabaseHelper._sessionm
     def ippackageserver(self, session, jid):
         """ return ip xmpp for JID """
         sql = """SELECT

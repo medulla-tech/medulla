@@ -390,15 +390,38 @@ def callvncchangeperms(uuid, askpermission):
         logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
-def runXmppCommand(cmd,machine):
+def runXmppCommand(cmd, machine, information = ""):
     data = {
-	"action": "shellcommand",
-	"sessionid":name_random(8,"mcc_"),
-	"data" : {'cmd' : cmd},
-	"base64" :False
-    }
-    a=XmppSimpleCommand(machine, data , 70)
-    d = a.t2.join()
+                "action" : "cmd",
+                "sessionid" : name_random(8,"quick_"),
+                "data" : [machine, information] ,
+                "base64" : False
+        }
+    cmd = cmd.strip()
+    if cmd.startswith("pluging_"):
+        # call plugin master
+        lineplugingcalling = [x.strip() for x in cmd.split("@_@")]
+        plugingcalling = lineplugingcalling[0]
+        del lineplugingcalling[0]
+        action =  plugingcalling.strip().split("_")[1]
+        data ={
+                "action" : action,
+                "sessionid" : name_random(8,"quick_"),
+                "data" : [machine, information, lineplugingcalling] ,
+                "base64" : False
+        }
+        callXmppPlugin( action, data )
+        return {u'action': u'resultshellcommand', u'sessionid': u'mcc_221n4h6h', u'base64': False, u'data': {'result': 'call plugin : %s to machine : %s'%(action,machine ) }, u'ret': 0}
+    else:
+        data = {
+            "action": "shellcommand",
+            "sessionid":name_random(8,"mcc_"),
+            "data" : {'cmd' : cmd},
+            "base64" :False
+            }
+        a = XmppSimpleCommand(machine, data , 70)
+        d = a.t2.join()
+        print type(a.result)
     return a.result
 
 def runXmppScript(cmd,machine):
