@@ -84,6 +84,9 @@ $submod->addPage($page);
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("xmppfilesbrowsing", _T('XMPP bowser file', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 

@@ -105,9 +105,14 @@ function list_computers($names,
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
 
-        $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
-        $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
+        $inventconsole = new ActionItem(_("xmppconsole"), "consolecomputerxmpp","console", "computers", "xmppmaster", "xmppmaster");
+        $inventnoconsole = new EmptyActionItem1(_("xmppconsole")," consolecomputerxmpp", "consoleg", "computers", "xmppmaster", "xmppmaster");
         $actionConsole = array();
+
+        $actionxmppbrowsing = array();
+        $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","console","computers", "xmppmaster", "xmppmaster");
+        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","consoleg","computers","xmppmaster", "xmppmaster");
+
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
     }else{
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "vncclient", "computer", "base", "computers");
@@ -206,11 +211,13 @@ function list_computers($names,
             if ( $presencemachinexmpp ){
                 //$action_deploy_msc[] = $mscAction;
                 $actionConsole[] = $inventconsole;
+                $actionxmppbrowsing[] = $inventxmppbrowsing;
             }
             else{
                 //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
                 $actionConsole[] = $inventnoconsole;
+                $actionxmppbrowsing[] = $inventnoxmppbrowsing;
             }
         }
         else{
