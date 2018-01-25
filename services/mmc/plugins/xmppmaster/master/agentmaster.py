@@ -62,6 +62,10 @@ from datetime import datetime
 from multiprocessing import Process, Queue, TimeoutError
 from mmc.agent import PluginManager
 
+
+from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
+from sleekxmpp.stanza.iq import Iq
+
 from mmc.plugins.msc.database import MscDatabase
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
@@ -220,6 +224,7 @@ class XmppSimpleCommand:
         return self.result
 
 
+
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf): #jid, password, room, nick):
         self.config = conf
@@ -289,6 +294,61 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def schedulerfunction(self):
         self.manage_scheduler.process_on_event()
+
+    def iqsendpulse(self, to, datain, timeout):
+        # send iq synchro message
+        if type(datain) == dict or type(datain) == list:
+            try:
+                data = json.dumps(datain)
+            except Exception as e:
+                logging.error("iqsendpulse : encode json : %s"%str(e))
+                return ""
+        elif type(datain) == unicode:
+            data = str(datain)
+        else :
+            data = datain
+        try:
+            data = data.encode("base64")
+        except Exception as e:
+            logging.error("iqsendpulse : encode base64 : %s"%str(e))
+            return ""
+        try:
+            iq = self.make_iq_get(queryxmlns='custom_xep',ito=to)
+            itemXML = ET.Element('{%s}data' %data )
+            for child in iq.xml:
+                if child.tag.endswith('query'):
+                    child.append(itemXML)
+            try:
+                result = iq.send(timeout=timeout)
+                if result['type'] == 'result':
+                    for child in result.xml:
+                        if child.tag.endswith('query'):
+                            for z in child:
+                                if z.tag.endswith('data'):
+                                    #decode result
+                                    print z.tag[1:-5]
+
+                                    try:
+                                        data = base64.b64decode(z.tag[1:-5])
+                                        return data
+                                    except Exception as e:
+                                        logging.error("iqsendpulse : decode base64 : %s"%str(e))
+                                        traceback.print_exc(file=sys.stdout)
+                                        return ""
+                                    return ""
+            except IqError as e:
+                err_resp = e.iq
+                logging.error("iqsendpulse : Iq error %s"%str(err_resp))
+
+            except IqTimeout:
+                logging.error("iqsendpulse : Timeout Error")
+                return ""
+        except Exception as e:
+            logging.error("iqsendpulse : error %s"%str(e))
+            return ""
+        return ""
+
+
 
     def scheduledeploy(self):
         listobjsupp = []
