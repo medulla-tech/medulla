@@ -32,6 +32,17 @@ function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
+function xmlrpc_getMachinefromjid($jid) {
+    return xmlCall("xmppmaster.getMachinefromjid", array($jid));
+}
+
+function xmlrpc_remotefilesystem($currentdir, $jidmachine){
+    return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
+}
+
+function xmlrpc_localfilesystem($currentdir){
+    return xmlCall("xmppmaster.localfile", array($currentdir));
+}
 
 function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null   ) {
     return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt ));
