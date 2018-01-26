@@ -72,7 +72,7 @@ if(isset($_GET['establishproxy']) and $_GET['establishproxy'] == "yes") {
                         <br/>
                         "._T("This connection will be automatically shut down in 60 minutes.", "msc") . "<br/>
                         <br/>
-                        "._T("Please close this windows when you are done.", "msc") . "<br/>
+                        "._T("Please close this window when you are done.", "msc") . "<br/>
                         <br/>
                         <button id='btnPrimary' onclick='window.close();'>Close window</button>
                     </div>
