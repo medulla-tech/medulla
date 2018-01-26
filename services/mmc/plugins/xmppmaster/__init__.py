@@ -38,7 +38,8 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
-                                                      callvncchangepermsbymaster, callInstallKey
+                                                      callvncchangepermsbymaster, callInstallKey,\
+                                                      callremotefile, calllocalfile
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -176,6 +177,11 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
+
+#jfkjfk
+def getMachinefromjid(jid):
+    return XmppMasterDatabase().getMachinefromjid(jid)
+
 #jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':
@@ -389,6 +395,12 @@ def callvncchangeperms(uuid, askpermission):
     else:
         logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
+
+def remotefile( currentdir, jidmachine):
+    return callremotefile(jidmachine, currentdir)
+
+def localfile(currentdir):
+    return calllocalfile(currentdir)
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {

@@ -66,6 +66,8 @@ from mmc.agent import PluginManager
 from sleekxmpp.xmlstream.stanzabase import ElementBase, ET, JID
 from sleekxmpp.stanza.iq import Iq
 
+from lib.manage_xmppbrowsing import xmppbrowsing
+
 from mmc.plugins.msc.database import MscDatabase
 
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib"))
@@ -113,8 +115,15 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
   return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
 
+def callremotefile( jidmachine, currentdir=""):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefile", "data": currentdir }, 4)
+
+def calllocalfile(currentdir=""):
+    return ObjectXmpp().xmppbrowsingpath.listfileindir(currentdir)
+
 def callInstallKey( jidAM, jidARS):
     return ObjectXmpp().callInstallKey( jidAM, jidARS)
+
 
 class XmppCommandDiffered:
     """
@@ -245,6 +254,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler  = manage_scheduler(self)
+        self.xmppbrowsingpath = xmppbrowsing()
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
