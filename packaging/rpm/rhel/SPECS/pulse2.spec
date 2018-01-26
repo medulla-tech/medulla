@@ -473,6 +473,7 @@ This package contains Pulse 2 common files like documentation.
 %{_var}/lib/pulse2/clients
 %_docdir/mmc/contrib/
 %_datadir/mmc/conf/apache/pulse.conf
+%_sysconfdir/httpd/conf.d/pulse.conf
 %exclude %{_var}/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.
@@ -816,6 +817,9 @@ cp %{SOURCE1} %buildroot%_sysconfdir/init.d/pulse2-dlp-server
 cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
+
+mkdir %buildroot%_sysconfdir/httpd/conf.d/
+cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/httpd/conf.d/
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
