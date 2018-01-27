@@ -24,7 +24,7 @@
 
 function msg_err_qa($msg) {
     $msgs = array(
-        "Quick action path don't exists" => sprintf(_T("Quick action path %s don't exists", "msc"), $msg[2])
+        "Quick action path don't exists" => sprintf(_T("Quick action path %s doesn't exist", "msc"), $msg[2])
     );
     return $msgs[$msg[1]];
 }
