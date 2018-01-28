@@ -135,7 +135,7 @@ $operator_select = new SelectItemtitle("operators[]",
                                                     _T(' not start with word   /^(?!my string).*$/','inventory')."\n".
                                                     _T(' start with my string /^my string.*$/','inventory')."\n".
                                                     _T(' does not contain /^((?!my string).)*$/','inventory')."\n".
-                                                    _T(' egal to or contains','inventory')."/my string/"."\n".
+                                                    _T(' equal to or contains','inventory')."/my string/"."\n".
                                                     _T(' finishes by  /.*(my string)$/','inventory')."\n\n".
                                                     _T('Equal or noequal','inventory').":\n".
                                                     _T(' strictly equal or inequality','inventory')."\n\n".
