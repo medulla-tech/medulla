@@ -169,7 +169,7 @@ echo '</script>';
 
     <div class ="piedbrowser"> 
         <form>
-            <div><input id ="download" type="button" name="Dowload" value="<< Download <<">
+            <div><input class="btnPrimary" id ="download" type="button" name="Download" value="<< Download <<">
             </div>
         </form> 
     </div>
