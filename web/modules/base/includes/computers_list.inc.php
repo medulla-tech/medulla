@@ -110,8 +110,8 @@ function list_computers($names,
         $actionConsole = array();
 
         $actionxmppbrowsing = array();
-        $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","console","computers", "xmppmaster", "xmppmaster");
-        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","consoleg","computers","xmppmaster", "xmppmaster");
+        $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
+        $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
 
         $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
     }else{

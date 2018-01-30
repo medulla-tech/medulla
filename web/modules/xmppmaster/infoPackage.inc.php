@@ -98,6 +98,21 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("xmpprefrechfilesremote");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmppplugindownload");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmpprefrechfileslocal");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 // $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
 //     $page->addTab($tab);
 // --------------QUICK ACTION--------------------

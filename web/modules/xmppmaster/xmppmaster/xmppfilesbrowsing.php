@@ -112,11 +112,13 @@ ul.leftfile, ul.rightfile {
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
+/*
+print_r($_GET);
+print_r($_POST);*/
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
-
+print_r();
 $tab = explode("/",$machine);
 $p = new PageGenerator(_T("xmpp files browser", 'xmppmaster')." : ". $ma['hostname']." (".$ma['platform']. ")"); 
 $p->setSideMenu($sidemenu);
@@ -141,10 +143,11 @@ else{
 }
 echo '</script>';
 ?>
+<div id="messageaction">
 
+</div>
 <br>
 <div id="global">
-
 
     <div id="gauche">
         <div class ="titlebrowser"><h2><?php echo _T("File Serveur Pulse", 'xmppmaster'); ?></h2></div>
@@ -179,6 +182,7 @@ echo '</script>';
         filelocal  = false;
         filerem = "";
         filelocal = "";
+        jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
         jQuery("#download").hide(200)
         local();
@@ -191,8 +195,15 @@ echo '</script>';
                                             jQuery('input[name=path_abs_current_remote]').val() + seperator + filerem+
                                             "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
                                             jQuery('input[name=path_abs_current_local]').val()+"/"+filerem);
+
                 if (responce_user == true) {
-                    txt = "send massage xmpp pour download.";
+                    jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                            dest : jQuery('input[name=path_abs_current_local]').val()+"/"+filerem,
+                            src : jQuery('input[name=path_abs_current_remote]').val() + seperator + filerem,
+                            "jidmachine" : jid }, function( data ) {
+                            jQuery("#messageaction").text(data);
+                     });
+ 
                 }
             }
         });

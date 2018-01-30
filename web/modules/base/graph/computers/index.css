@@ -24,6 +24,32 @@ li.installg a {
         opacity:0.5;
 }
 
+li.folderg a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+
+li.console a {
+        padding: 5px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
 li.console a {
         padding: 5px 0px  5px 22px;
         margin: 0 0px 0 0px;
