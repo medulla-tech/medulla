@@ -1475,6 +1475,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_name = str(data['localisationifo']['country_name'])
                     city = str(data['localisationifo']['city'])
                 try:
+                    #assignment of the user system, if user absent.
+                    if 'users' in data['information'] and len (data['information']['users']) == 0:
+                        data['information']['users'] = "system"
+                    
                     if 'users' in data['information'] and len (data['information']['users']) > 0:
                         logger.debug("** addition user %s in base"%data['information']['users'][0])
                         logger.info("add user : %s for machine : %s country_name : %s"%(data['information']['users'][0],
