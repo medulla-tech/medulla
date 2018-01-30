@@ -396,11 +396,11 @@ def callvncchangeperms(uuid, askpermission):
         logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
-def remotefile( currentdir, jidmachine):
-    return callremotefile(jidmachine, currentdir)
-
 def localfile(currentdir):
     return calllocalfile(currentdir)
+
+def remotefile( currentdir, jidmachine):
+    return callremotefile(jidmachine, currentdir)
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {

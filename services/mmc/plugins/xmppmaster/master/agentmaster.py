@@ -233,7 +233,6 @@ class XmppSimpleCommand:
         return self.result
 
 
-
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf): #jid, password, room, nick):
         self.config = conf
@@ -254,7 +253,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler  = manage_scheduler(self)
-        self.xmppbrowsingpath = xmppbrowsing()
+        self.xmppbrowsingpath = xmppbrowsing(defaultdir =  self.config.defaultdir, rootfilesystem = self.config.rootfilesystem)
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}

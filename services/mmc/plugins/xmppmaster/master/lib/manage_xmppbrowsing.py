@@ -21,37 +21,43 @@
 #
 # file manage_xmppbrowsing.py
 
-#jfkjfk
-from Crypto.PublicKey import RSA
-from Crypto.Util import randpool
-import pickle
-import sys, os
-import base64
-from utils import file_get_contents, file_put_contents
-
+import os
 class xmppbrowsing:
     """
-
     """
-    def __init__(self, defaultdir = None):
+    def __init__(self, defaultdir = None, rootfilesystem = None):
         """
-        :param type: Uses this parameter to give a path abs
-        :type defaultdir: string
-        :return: Function init has no return
+            :param type: Uses this parameter to give a path abs
+            :type defaultdir: string
+            :type rootfilesystem :string
+            :return: Function init has no return
         """
-        self.dirinfos = {}
+        self.defaultdir     = None
+        self.rootfilesystem = None
+        self.dirinfos       = {}
+
+        if defaultdir is not None:
+            self.defaultdir = defaultdir
+        if rootfilesystem is not None:
+            self.rootfilesystem = rootfilesystem
         self.listfileindir()
 
     def listfileindir(self, path_abs_current = None):
-        if path_abs_current is  None:
-            pathabs = os.getcwd()
+        if path_abs_current is  None or path_abs_current == "":
+            if self.defaultdir is None:
+                pathabs = os.getcwd()
+            else:
+                pathabs = self.defaultdir
         else:
-            pathabs = os.path.abspath(path_abs_current)
+            if self.rootfilesystem in path_abs_current:
+                pathabs = os.path.abspath(path_abs_current)
+            else:
+                pathabs = self.rootfilesystem
         self.dirinfos = {
             "path_abs_current" : pathabs,
             "list_dirs_current" : os.walk(pathabs).next()[1],
             "list_files_current" : os.walk(pathabs).next()[2],
-            "parentdir" : os.path.abspath(os.path.join(pathabs, os.pardir)),
+            "parentdir" : os.path.abspath(os.path.join(pathabs, os.pardir))
         }
         return self.dirinfos
 
