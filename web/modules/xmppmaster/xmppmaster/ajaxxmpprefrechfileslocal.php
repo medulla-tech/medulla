@@ -30,9 +30,9 @@ require_once("../../../includes/acl.inc.php");
 require_once("../../../includes/session.inc.php");
 extract($_POST);
 
+
 if (!isset($path_abs_current_local) || $path_abs_current_local == ""){
     $lifdir = xmlrpc_localfilesystem("");
-    
 }
 else{
     if ( $selectdir == ".."){
@@ -46,9 +46,10 @@ else{
 
 printf ('
 <form>
-    <input id ="path_abs_current_local" type="text" name="path_abs_current_local" value="%s">
-    <input id ="parentdirlocal" type="text" name="parentdirlocal" value="%s">
+    <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
+    <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
 </form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
+echo "<h2> Current Dir : <span  id='localcurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
 echo'
 <ul class="leftdir">';
  echo "<li>..</li>";
@@ -67,7 +68,4 @@ echo'
       echo '
     </ul>
             ';
-echo "<pre>";
-    print_r($lifdir);
-echo "</pre>";
 ?>

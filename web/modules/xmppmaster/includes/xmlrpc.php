@@ -36,6 +36,10 @@ function xmlrpc_getMachinefromjid($jid) {
     return xmlCall("xmppmaster.getMachinefromjid", array($jid));
 }
 
+function xmlrpc_CallXmppPluginmmc($nameplugin, $array_tab_key_value){
+    return xmlCall("xmppmaster.CallXmppPlugin", array($nameplugin, $array_tab_key_value));
+}
+
 function xmlrpc_remotefilesystem($currentdir, $jidmachine){
     return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
 }

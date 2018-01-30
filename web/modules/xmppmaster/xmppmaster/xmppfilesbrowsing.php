@@ -26,8 +26,8 @@
 textarea {
     width:50% ;
     height:150px;
-    margin:auto;   /* exemple pour centrer */
-    display:block; /* pour effectivement centrer ! */
+    margin:auto;
+    display:block; 
 }
 
 body{
@@ -118,11 +118,28 @@ $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinef
 $ma = xmlrpc_getMachinefromjid($machine);
 
 $tab = explode("/",$machine);
-
-
 $p = new PageGenerator(_T("xmpp files browser", 'xmppmaster')." : ". $ma['hostname']." (".$ma['platform']. ")"); 
 $p->setSideMenu($sidemenu);
 $p->display();
+
+
+echo '<script type="text/javascript">';
+
+if (stristr($ma['platform'], "win")) {
+
+    echo 'var seperator = "\\";';
+    echo 'var os = "win";';
+}
+else{
+    echo 'var seperator = "/";';
+    if (stristr($ma['platform'], "darwin")){
+        echo 'var os = "darwin";';
+    }
+    else{
+        echo 'var os = "linux";';
+    }
+}
+echo '</script>';
 ?>
 
 <br>
@@ -149,123 +166,127 @@ $p->display();
 
     <div class ="piedbrowser"> 
         <form>
-            <div>
-                <input class="fileselect" type="imput" name="Destination" value="" size="55">
-                <input class="fileselect" type="imput" name="Sources" value="" size="55">
+            <div><input id ="download" type="button" name="Dowload" value="<< Download <<">
             </div>
-            <br>
-            <input type="button" name="Dowload" value="<< Download <<">
-            <input type="button" name="upload" value=">>  upload  >>"><br>
-            <input type="button" name="Editremotefile" value="Edit remotefile">
         </form> 
     </div>
 
 </div>
 
 <script type="text/javascript">
-jQuery( document ).ready(function() {
-    local();
-    remote();
-});
-
-//  <input id ="curentpathremote" type="hidden" name="curentpathremote" value="%s">
-//     <input id ="parentremote" type="hidden" name="parentremote" value=%s">
-    
-function local(selectdir){
-    if (typeof selectdir == 'undefined'){
-        var selectdir = "";
-    }
-    var path_abs_current_local = jQuery('input[name=path_abs_current_local]').val();
-    if (typeof path_abs_current_local == 'undefined'){
-        var path_abs_current_local = "";
-    }
-    var parentdirlocal = jQuery('input[name=parentdirlocal]').val();
-    if (typeof parentdirlocal == 'undefined'){
-        var parentdirlocal = "";
-    }
-
-    jQuery( "#fileshowlocal" ).load( 
-                    "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
-                    {
-                        "parentdirlocal" : parentdirlocal,
-                        "path_abs_current_local" : path_abs_current_local,
-                        "machine" : <?php echo '"'.$machine.'"'; ?>,
-                        "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
-                        "selectdir" : selectdir
-                    },
-                    function() {
-    // LOCAL
-        jQuery("ul.leftdir > li").click(function() {
-            var dirsel = jQuery(this).text();
-            if (typeof dirsel == 'undefined'){
-                var dirsel = "";
+    jQuery( document ).ready(function() {
+        fileremote = false;
+        filelocal  = false;
+        filerem = "";
+        filelocal = "";
+        nameremotepath = "";
+        jQuery("#download").hide(200)
+        local();
+        remote();
+        jQuery("#download").click(function(){
+            if (fileremote){
+                // fichier pas repertoire.
+                // alert(jQuery('input[name=path_abs_current_remote]').val());
+                var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
+                                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filerem+
+                                            "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
+                                            jQuery('input[name=path_abs_current_local]').val()+"/"+filerem);
+                if (responce_user == true) {
+                    txt = "send massage xmpp pour download.";
+                }
             }
-            //  recupere repertoire en local
-            local(dirsel);
-            jQuery('#dirlocal').text(jQuery(this).text());
-        });
-
-        jQuery("ul.leftfile > li").click(function() {
-            //  recupere repertoire en local
-            alert(jQuery(this).text());
         });
     });
-}
-// jQuery( "#fileshowlocal" ).load( "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php" );
 
-function remote(selectdir){
-    if (typeof selectdir == 'undefined'){
-        var selectdir = "";
-    }
-    var path_abs_current_remote = jQuery('input[name=path_abs_current_remote]').val();
-    if (typeof path_abs_current_remote == 'undefined'){
-        var path_abs_current_remote = "";
-    }
-    var parentdirremote = jQuery('input[name=parentdirremote]').val();
-    if (typeof parentdirremote == 'undefined'){
-        var parentdirremote = "";
-    }
+    function local(selectdir){
+        if (typeof selectdir == 'undefined'){
+            var selectdir = "";
+        }
+        var path_abs_current_local = jQuery('input[name=path_abs_current_local]').val();
+        if (typeof path_abs_current_local == 'undefined'){
+            var path_abs_current_local = "";
+        }
+        var parentdirlocal = jQuery('input[name=parentdirlocal]').val();
+        if (typeof parentdirlocal == 'undefined'){
+            var parentdirlocal = "";
+        }
 
-    jQuery( "#fileshowremote" ).load( 
-                    "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php",
-                    {
-                        "parentdirremote" : parentdirremote,
-                        "path_abs_current_remote" : path_abs_current_remote,
-                        "machine" : <?php echo '"'.$machine.'"'; ?>,
-                        "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
-                        "selectdir" : selectdir
-                    },
-                    function() {
-        // REMOTE
-        jQuery("ul.rightdir > li").click(function() {
-            var dirsel = jQuery(this).text();
-            if (typeof dirsel == 'undefined'){
-                var dirsel = "";
-            }
-            
-//             else{
-//                 if ( dirsel == ".." ){
-//                     dirsel = parentdirremote;
-//                 }
-//                 
-//                 
-//             }
-            remote(dirsel);
-            //  recupere file local en remote
-            jQuery('#dirremote').text(jQuery(this).text());
+        jQuery( "#fileshowlocal" ).load( 
+                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
+                        {
+                            "parentdirlocal" : parentdirlocal,
+                            "path_abs_current_local" : path_abs_current_local,
+                            "machine" : <?php echo '"'.$machine.'"'; ?>,
+                            "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
+                            "selectdir" : selectdir
+                        },
+                        function() {
+        // LOCAL
+            jQuery("ul.leftdir > li").click(function() {
+                var dirsel = jQuery(this).text();
+                if (typeof dirsel == 'undefined'){
+                    var dirsel = "";
+                }
+                //  recupere repertoire en local
+                local(dirsel);
+                jQuery('#dirlocal').text(jQuery(this).text());
+            });
+            // on ne peut pas selectionner un fichier juste le repertoire de copie.
+            // le fichier dest aura le meme nom que le fichier scr 
+            // jQuery("ul.leftfile > li").click(function() {
+            // recupere file en local
+            // alert(jQuery(this).text());
+            // });
         });
+    }
 
-        jQuery("ul.rightfile > li").click(function() {
-            //  recupere file en remote
-            alert(jQuery(this).text());
 
+    function remote(selectdir){
+        if (typeof selectdir == 'undefined'){
+            var selectdir = "";
+        }
+        var path_abs_current_remote = jQuery('input[name=path_abs_current_remote]').val();
+        if (typeof path_abs_current_remote == 'undefined'){
+            var path_abs_current_remote = "";
+        }
+        var parentdirremote = jQuery('input[name=parentdirremote]').val();
+        if (typeof parentdirremote == 'undefined'){
+            var parentdirremote = "";
+        }
+
+        jQuery( "#fileshowremote" ).load(
+                        "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php",
+                        {
+                            "parentdirremote" : parentdirremote,
+                            "path_abs_current_remote" : path_abs_current_remote,
+                            "machine" : <?php echo '"'.$machine.'"'; ?>,
+                            "os" : <?php echo '"'.$ma['platform'].'"'; ?>,
+                            "selectdir" : selectdir
+                        },
+                        function() {
+            // REMOTE
+            jQuery("ul.rightdir > li").click(function() {
+                fileremote = false;
+                filerem = "";
+                jQuery("#download").hide(200)
+                var dirsel = jQuery(this).text();
+                if (typeof dirsel == 'undefined'){
+                    var dirsel = "";
+                }
+                remote(dirsel);
+                jQuery('#dirremote').text(jQuery(this).text());
+            });
+
+            jQuery("ul.rightfile > li").click(function() {
+                //  recupere file en remote
+                fileremote = true;
+                filerem = jQuery(this).text();
+                jQuery("#download").show(200)
+                nameremotepath = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).text()
+                jQuery('#remotecurrrent').text(nameremotepath);
+            });
         });
-    });
-}
-// jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php", function( data ) {
-//                         jQuery( "#fileshowlocal" ).html( data ); 
-//                     });
-
+    }
 </script>
 
 

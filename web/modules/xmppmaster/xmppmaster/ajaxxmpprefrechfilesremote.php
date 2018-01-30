@@ -53,7 +53,6 @@ else{
     }
 }
 
-
 $lifdir = json_decode($lifdirstr, true);
 $lifdir = $lifdir['data'];
 
@@ -62,9 +61,8 @@ printf ('
     <input id ="path_abs_current_remote" type="hidden" name="path_abs_current_remote" value="%s">
     <input id ="parentdirremote" type="hidden" name="parentdirremote" value="%s">
 </form>' ,$lifdir['path_abs_current'],$lifdir['parentdir']);
-echo "<h2> Current Dir : ".$lifdir['path_abs_current'] ."</h2>";
+echo "<h2> Current Dir : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
 echo'
-
     <ul class="rightdir">';
         echo "<li>..</li>";
         foreach($lifdir['list_dirs_current'] as $namedir){
