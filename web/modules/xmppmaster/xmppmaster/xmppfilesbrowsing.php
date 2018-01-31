@@ -125,12 +125,14 @@ $p->setSideMenu($sidemenu);
 $p->display();
 
 
-echo '<script type="text/javascript">';
+echo '<script type="text/javascript">
+';
 
 if (stristr($ma['platform'], "win")) {
 
-    echo 'var seperator = "\\";';
-    echo 'var os = "win";';
+    echo "var seperator = '\\\\';
+    var os = 'win';
+    ";
 }
 else{
     echo 'var seperator = "/";';
@@ -141,7 +143,8 @@ else{
         echo 'var os = "linux";';
     }
 }
-echo '</script>';
+echo '
+</script>';
 ?>
 <div id="messageaction">
 
