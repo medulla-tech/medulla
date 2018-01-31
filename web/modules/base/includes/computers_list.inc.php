@@ -105,11 +105,11 @@ function list_computers($names,
         $logNoAction = new EmptyActionItem1(_("Read log"),"msctabs","logfileg","computer", "base", "computers", "tablogs");
         $mscNoAction = new EmptyActionItem1(_("Software deployment"),"msctabs","installg","computer", "base", "computers");
 
-        $inventconsole = new ActionItem(_("xmppconsole"), "consolecomputerxmpp","console", "computers", "xmppmaster", "xmppmaster");
-        $inventnoconsole = new EmptyActionItem1(_("xmppconsole")," consolecomputerxmpp", "consoleg", "computers", "xmppmaster", "xmppmaster");
+        $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
+        $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
         $actionConsole = array();
 
-        $actionxmppbrowsing = array();
+        //$actionxmppbrowsing = array();
         $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
         $inventnoxmppbrowsing = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsing","folderg","computers","xmppmaster", "xmppmaster");
 
@@ -366,6 +366,7 @@ function list_computers($names,
     if (isExpertMode()){
         if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
             $n->addActionItemArray($actionConsole);
+            $n->addActionItemArray($actionxmppbrowsing);
             $n->addActionItemArray($actionxmppquickdeoloy);
         }
     }
