@@ -450,7 +450,7 @@ class Pulse2ConfigFile(object):
     clsnames = ['PluginsPkgConfig', 'PluginsImagingConfig', 'PluginsGlpiConfig',
                 'PluginsBaseConfig', 'PluginsDyngroupConfig', 'PluginsInventoryConfig',
                 'PluginsPulse2Config', 'PluginsMscConfig', 'PluginsBackuppcConfig', 'InventoryServerConfig',
-                'LaunchersConfig', 'PackageServerConfig', 'SchedulerConfig',
+                'PackageServerConfig', 'SchedulerConfig',
                 'MMCAgentConfig', 'UUIDResolverConfig', 'PluginsUpdateConfig']
     path = None
     # If defaults is None, try to read default values from config file in
@@ -660,11 +660,6 @@ class InventoryServerConfig(LoggingConfig):
     log_path = 'pulse2-inventory-server.log'
 
 
-class LaunchersConfig(LoggingConfig):
-    path = 'pulse2/launchers/launchers.ini'
-    log_path = 'pulse2-launchers.log'
-
-
 class PackageServerConfig(LoggingConfig):
     path = 'pulse2/package-server/package-server.ini'
     log_path = 'pulse2-package-server.log'
@@ -802,8 +797,6 @@ class SetupApp(object):
             self.defaults['dbpasswd'] = gen_passwd()
         else:
             self.defaults['dbpasswd'] = self.confs['plugins/pulse2.ini'].get('database', 'dbpasswd')
-
-        self.defaults['wol'] = self.confs['pulse2/launchers/launchers.ini'].get('wol', 'wol_path')
 
         self.defaults['glpiurl'] = self.options["glpi_url"] or "http://127.0.0.1"
         self.defaults['glpidbuser'] = self.options["glpi_dbuser"]
@@ -1126,9 +1119,6 @@ class SetupApp(object):
 
     def init_misc(self):
         # Setup server IP address
-        conf = self.confs['pulse2/launchers/launchers.ini']
-        conf.set('tcp_sproxy', 'tcp_sproxy_host', self.config['server.ip.external'])
-
         conf = self.confs['pulse2/package-server/package-server.ini']
         conf.set('main', 'public_ip', self.config['server.ip.external'])
 
@@ -1171,16 +1161,6 @@ class SetupApp(object):
 	     if path and not os.path.isdir(path):
                 log.info("Creating directory: %s" % path)
                 os.makedirs(path)
-
-        # Check wol tool path
-        wol_path_ok = False
-        while not wol_path_ok:
-            wol_path = self.read_opt('Wake-on-lan tool path', self.defaults['wol'])
-            self.confs['pulse2/launchers/launchers.ini'].set('wol', 'wol_path', wol_path)
-            if os.path.exists(wol_path):
-                wol_path_ok = True
-            else:
-                log.error('Can not find %s' % wol_path)
 
         # Update services
         for srv in self.services:
@@ -1388,7 +1368,7 @@ if __name__ == '__main__':
     parser.add_option("--glpi-dbpasswd", dest="glpidbpasswd",
                       help="MySQL administrator password")
     parser.add_option("--external-ip-address", dest="ipexternal",
-                      help="Set an external IP Address used in package-server.ini and launchers.ini")
+                      help="Set an external IP Address used in package-server.ini")
     parser.add_option("--backuppc-ip", dest="backuppc_ip",
                       help="BackupPC IP, you can specify port. Per example: 127.0.0.1:81")
     parser.add_option("--backuppc-entity", dest="backuppc_entity",
