@@ -1543,6 +1543,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                            mtype = 'chat')
                 logger.debug("** Add machine in base")
                 # Add machine
+                ippublic = None
+                if "ippublic" in data:
+                    ippublic = data['ippublic']
+                if ippublic == None:
+                    ippublic = data['xmppip']
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                             data['platform'],
                                                             data['information']['info']['hostname'],
@@ -1555,7 +1560,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             classutil=data['classutil'],
                                                             urlguacamole =data['baseurlguacamole'],
                                                             groupdeploy =data['deployment'],
-                                                            objkeypublic= publickeybase64
+                                                            objkeypublic= publickeybase64,
+                                                            ippublic = ippublic
                                                             )
                 if idmachine != -1:
                     if useradd != -1:

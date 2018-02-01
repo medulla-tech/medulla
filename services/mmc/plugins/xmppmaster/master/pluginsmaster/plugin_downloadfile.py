@@ -119,6 +119,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                 'host'              : Machineinfo['uuid_inventorymachine'],# item host is uuid glpi machine
                                 'ipars'             : relayserver['ip_xmpp'],
                                 'ipmachine'         : Machineinfo['ip_xmpp'],
+                                'ipmachinepublic'   : Machineinfo['ippublic'],
                                 'ipmaster'          : str(xmppobject.config.Server),
                                 'osmachine'         : Machineinfo['platform']
                     }

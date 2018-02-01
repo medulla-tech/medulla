@@ -90,6 +90,7 @@ class Machines(Base, XmppMasterDBObj):
     hostname = Column(String(45), nullable=False)
     archi= Column(String(45), nullable=False)
     uuid_inventorymachine= Column(String(45), nullable=False)
+    ippublic = Column(String(20))
     ip_xmpp = Column(String(45))
     subnetxmpp = Column(String(45))
     macaddress = Column(String(45))

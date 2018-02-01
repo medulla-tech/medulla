@@ -482,7 +482,8 @@ class XmppMasterDatabase(DatabaseHelper):
                            classutil='private',
                            urlguacamole ="",
                            groupdeploy ="",
-                           objkeypublic = None):
+                           objkeypublic = None,
+                           ippublic = None):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -490,6 +491,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.hostname = hostname
             new_machine.archi = archi
             new_machine.uuid_inventorymachine = uuid_inventorymachine
+            new_machine.ippublic = ippublic
             new_machine.ip_xmpp = ip_xmpp
             new_machine.subnetxmpp = subnetxmpp
             new_machine.macaddress = macaddress
