@@ -79,8 +79,8 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.passwordconnexionmuc=self.get('chatroom', 'password')
 
         #######configuration bowserfile#######
-        self.defaultdir     = os.path.join("/","var","lib","pulse2", "transfert")
-        self.rootfilesystem = os.path.join("/","var","lib","pulse2","transfert")
+        self.defaultdir     = os.path.join("/","var","lib","pulse2", "file-transfer")
+        self.rootfilesystem = os.path.join("/","var","lib","pulse2","file-transfer")
         if self.has_option("bowserfile", "defaultdir"):
             self.defaultdir = self.get('Bowserfile', 'defaultdir')
         if self.has_option("bowserfile", "rootfilesystem"):
