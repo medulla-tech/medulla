@@ -2300,6 +2300,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "hostname" : machine.hostname,
                         "uuid_inventorymachine" : machine.uuid_inventorymachine,
                         "ip_xmpp" : machine.ip_xmpp, 
+                        "ippubblic" : machine.ippublic, 
                         "macaddress" : machine.macaddress, 
                         "subnetxmpp" : machine.subnetxmpp, 
                         "agenttype" : machine.agenttype, 
