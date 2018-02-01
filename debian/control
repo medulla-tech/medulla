@@ -264,17 +264,6 @@ Description: Pulse 2 Connection Manager
  provides incoming connections from pulse2 clients which controls
  initial agent installs and updates the target table by correct IP.  
 
-Package: pulse2-imaging-server
-Architecture: all
-Depends: ${misc:Depends}, pulse2-imaging-server (>> 1.5.0+git20130712)
-Description: transitional dummy package
- Pulse 2 is Open Source computer system management for medium and large
- organizations.
- .
- This is a transitional dummy package. It can safely be removed.
- .
- Imaging server features have been merged into pulse2-package-server.
-
 Package: mmc-web-dyngroup
 Architecture: all
 Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
