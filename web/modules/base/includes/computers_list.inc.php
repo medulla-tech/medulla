@@ -108,6 +108,8 @@ function list_computers($names,
         $inventconsole   = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
         $inventnoconsole = new EmptyActionItem1(_("xmppconsole"),"consolecomputerxmpp","consoleg","computers","xmppmaster", "xmppmaster");
         $actionConsole = array();
+        $inventxmppbrowsingne   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
+        $inventnoxmppbrowsingne = new EmptyActionItem1(_("files browsing"),"xmppfilesbrowsingne","folderg","computers","xmppmaster", "xmppmaster");
 
         //$actionxmppbrowsing = array();
         $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
@@ -210,14 +212,24 @@ function list_computers($names,
             }
             if ( $presencemachinexmpp ){
                 //$action_deploy_msc[] = $mscAction;
-                $actionConsole[] = $inventconsole;
-                $actionxmppbrowsing[] = $inventxmppbrowsing;
+                if (isExpertMode()){
+                    $actionConsole[] = $inventconsole;
+                    $actionxmppbrowsing[] = $inventxmppbrowsing;
+                }
+                else{
+                    $actionxmppbrowsingne[] = $inventxmppbrowsingne;
+                }
             }
             else{
                 //$action_deploy_msc[] = $mscNoAction;
                 //$actionConsole[] = $emptyAction; // action no console xmpp (icone or not icone)
-                $actionConsole[] = $inventnoconsole;
-                $actionxmppbrowsing[] = $inventnoxmppbrowsing;
+                if (isExpertMode()){
+                    $actionConsole[] = $inventnoconsole;
+                    $actionxmppbrowsing[]   = $inventnoxmppbrowsing;
+                }
+                else{
+                    $actionxmppbrowsingne[] = $inventnoxmppbrowsingne;
+                }
             }
         }
         else{
@@ -363,16 +375,15 @@ function list_computers($names,
             $n->addActionItemArray($actionImaging);
         }
     }
-    if (isExpertMode()){
-        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+    if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+        if (isExpertMode()){
             $n->addActionItemArray($actionConsole);
             $n->addActionItemArray($actionxmppbrowsing);
             $n->addActionItemArray($actionxmppquickdeoloy);
         }
-    }
-    else{
-        if (in_array("xmppmaster", $_SESSION["supportModList"]) ){
+        else{
             $n->addActionItemArray($actionxmppquickdeoloy);
+            $n->addActionItemArray($actionxmppbrowsingne);
         }
     }
     if (in_array("xmppmaster", $_SESSION["supportModList"]) &&  $groupinfodeploy == -1  ){
