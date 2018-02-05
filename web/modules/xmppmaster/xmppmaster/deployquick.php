@@ -120,11 +120,11 @@ require_once("modules/xmppmaster/includes/xmlrpc.php");
                         <select id="select">';
                         foreach($qacomand['command'] as $tabblecommand){
                             echo '<option value="'.$tabblecommand['customcmd'].'">'.$tabblecommand['namecmd'].'</option>';
-                                    $mm[] =  "'".$tabblecommand['namecmd']."': {
+                                    $mm[] =  "'".addslashes($tabblecommand['namecmd'])."': {
                                         'description' : '".addslashes( $tabblecommand['description'] )."',
-                                        'customcmd' : '".$tabblecommand['customcmd']."',
-                                        'os' : '".$tabblecommand['os']."',
-                                        'user' : '".$tabblecommand['user']."'}";
+                                        'customcmd' : '".addslashes($tabblecommand['customcmd'])."',
+                                        'os' : '".addslashes($tabblecommand['os'])."',
+                                        'user' : '".addslashes($tabblecommand['user'])."'}";
                                     };
                         echo'</select>
                     </td>
