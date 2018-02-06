@@ -46,7 +46,6 @@ function sizefile($tailleoctet){
     }
 }
 
-
 //print_r($_POST);
 if (!isset($path_abs_current_local) || $path_abs_current_local == ""){
     $lifdir = xmlrpc_localfilesystem("");
@@ -75,10 +74,6 @@ echo "<h2> Current Dir : <span  id='localcurrrent'>".$lifdir['path_abs_current']
 echo'
 <ul class="leftdir">';
  echo "<li>.</li>";
- if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
-    echo "<li>..</li>";
- }
- 
  foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>".$namedir."</li>";
         }
@@ -88,14 +83,9 @@ echo'
   echo '
     <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
-            echo "<li>
-                <span>".$namefile[0]."</span>
-                </span></span>
-                <span style='float:right; position : relative; top : 7px;'>".sizefile($namefile[1])."</span>
-            </li>";
+            echo "<li><span>".$namefile[0]."</span><span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span></li>";
         }
       echo '
     </ul>
             ';
-
 ?>

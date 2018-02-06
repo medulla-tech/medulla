@@ -48,6 +48,10 @@ function xmlrpc_localfilesystem($currentdir){
     return xmlCall("xmppmaster.localfile", array($currentdir));
 }
 
+function xmlrpc_create_local_dir_transfert($pathroot, $hostname){
+    return xmlCall("xmppmaster.create_local_dir_transfert", array($pathroot, $hostname));
+}
+
 function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null   ) {
     return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt ));
 }

@@ -33,6 +33,7 @@ require_once("../../../includes/session.inc.php");
 
 extract($_POST);
 
+
 function sizefile($tailleoctet){
     $tailleko = $tailleoctet/1024;
     $taillemo = $tailleoctet/(1024*1024);
@@ -48,6 +49,7 @@ function sizefile($tailleoctet){
         }
     }
 }
+
 
 if (!isset($path_abs_current_remote) || $path_abs_current_remote == ""){
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
@@ -72,7 +74,6 @@ else{
                 break;
     }
 }
-
 
 $lifdir = json_decode($lifdirstr, true);
 $lifdir = $lifdir['data'];
@@ -99,9 +100,8 @@ echo'
     <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
             echo "<li><span>".$namefile[0]."</span>
-                    </span><input class='download' type='button' name='Dowload' value='.. . ..' title='Download file ".$namefile[0] ."'></span>
-                    <span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span>
-                </li>";
+            </span><input class='download' type='button' name='Dowload' value='.. . ..' title='Download file ".$namefile[0] ."'></span>
+            <span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span></li>";
         }
       echo '
     </ul>

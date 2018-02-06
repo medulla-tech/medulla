@@ -51,10 +51,18 @@ body{
     border-color:black;
 }
 
+.download{
+    display : none;
+    background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;
+    cursor:pointer;
+    border: none;
+}
+
 .fileshow {
     overflow:auto;
     height:85%;
 }
+
 #gauche {
     width:49%;
     height:90%;
@@ -90,13 +98,14 @@ body{
 
 ul.leftdir, ul.rightdir {
     list-style-image: url('modules/xmppmaster/graph/img/closedir.png');
+    padding-right:25px;
+    cursor: pointer;
 }
 ul.leftfile, ul.rightfile {
     list-style-image: url('modules/xmppmaster/graph/img/file1.png');
+    padding-right:25px;
+    cursor: pointer;
 }
-
-
-
 .fileselect{
     margin-left  : 250px;
     margin-right : 250px;
@@ -118,21 +127,22 @@ print_r($_POST);*/
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
-print_r();
+
 $tab = explode("/",$machine);
 $p = new PageGenerator(_T("xmpp files browser", 'xmppmaster')." : ". $ma['hostname']." (".$ma['platform']. ")"); 
 $p->setSideMenu($sidemenu);
 $p->display();
+// creation repertoire namemachine si non existe.
+// et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles/machine25pulse
+$filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
+$curentdir = $filecurentdir['path_abs_current'];
 
-
-echo '<script type="text/javascript">
-';
+echo '<script type="text/javascript">';
 
 if (stristr($ma['platform'], "win")) {
 
-    echo "var seperator = '\\\\';
-    var os = 'win';
-    ";
+    echo 'var seperator = "\\";';
+    echo 'var os = "win";';
 }
 else{
     echo 'var seperator = "/";';
@@ -143,8 +153,7 @@ else{
         echo 'var os = "linux";';
     }
 }
-echo '
-</script>';
+echo '</script>';
 ?>
 <div id="messageaction">
 
@@ -157,60 +166,72 @@ echo '
         <div class ="currentdir">
             <h2 id="localcurrentdir">Name Directory: <span id="dirlocal"></span></h2>
         </div>
-            <div id="fileshowlocal" class="fileshow"></div>
+            <div id="fileshowlocal" class="fileshow">
+             <?php
+                printf ('
+                <form>
+                    <input id ="path_abs_current_local" type="hidden" name="path_abs_current_local" value="%s">
+                    <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
+                </form>' ,$curentdir, $filecurentdir['parentdir']);
+                ?>
+            </div>
        <div class ="piedbrowser"><h2></h2></div>
     </div>
 
    <div id="droite">
-        <div class ="titlebrowser"><h2><?php echo _T("Files Machines", 'xmppmaster')." : ". $ma['hostname']." [".$ma['platform']."]"; ?></h2></div>
+        <div class ="titlebrowser">
+            <h2>
+                <?php echo _T("Files Machines", 'xmppmaster')." : ". $ma['hostname']." [".$ma['platform']."]"; ?>
+            </h2>
+        </div>
         <div class ="currentdir">
             <h2 id="remotecurrentdir">Name Directory: <span id="dirremote"></span>
             </h2>
         </div>
-            <div id ="fileshowremote" class="fileshow"></div>
+            <div id ="fileshowremote" class="fileshow">
+            </div>
     </div>
 
     <div class ="piedbrowser"> 
         <form>
-            <div><input class="btnPrimary" id ="download" type="button" name="Download" value="<< Download <<">
+            <div>
+                <!--<input  class="btnPrimary" id ="download" type="button" name="Dowload" value="<< Download <<"> -->
             </div>
         </form> 
     </div>
-
 </div>
 
 <script type="text/javascript">
     jQuery( document ).ready(function() {
         fileremote = false;
         filelocal  = false;
-        filerem = "";
-        filelocal = "";
+        taillefile = "";
+        filenameremote = "";
+        filenamelocal = "";
+        user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
         jQuery("#download").hide(200)
         local();
         remote();
-        jQuery("#download").click(function(){
-            if (fileremote){
-                // fichier pas repertoire.
-                // alert(jQuery('input[name=path_abs_current_remote]').val());
-                var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
-                                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filerem+
-                                            "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
-                                            jQuery('input[name=path_abs_current_local]').val()+"/"+filerem);
-
-                if (responce_user == true) {
-                    jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
-                            dest : jQuery('input[name=path_abs_current_local]').val()+"/"+filerem,
-                            src : jQuery('input[name=path_abs_current_remote]').val() + seperator + filerem,
-                            "jidmachine" : jid }, function( data ) {
-                            jQuery("#messageaction").text(data);
-                     });
- 
-                }
-            }
-        });
     });
+
+    function datetimenow(){
+        var newdate = new Date();
+        var moi      = "0" + (newdate.getMonth() +1 );
+        var jour     = "0" + newdate.getDate();
+        var heure    = "0" + newdate.getHours();
+        var minutes  = "0" + newdate.getMinutes();
+        var secondes = "0" + newdate.getSeconds();
+        var datetime = newdate.getFullYear() +
+                                                "-" + 
+                                                moi.substr(-2)+ 
+                                                "-"+ jour.substr(-2)+ 
+                                                "-"+ heure.substr(-2)+
+                                                ":"+ minutes.substr(-2)+
+                                                ":"+ secondes.substr(-2);
+        return datetime;
+    }
 
     function local(selectdir){
         if (typeof selectdir == 'undefined'){
@@ -224,7 +245,6 @@ echo '
         if (typeof parentdirlocal == 'undefined'){
             var parentdirlocal = "";
         }
-
         jQuery( "#fileshowlocal" ).load( 
                         "modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php",
                         {
@@ -281,8 +301,7 @@ echo '
             // REMOTE
             jQuery("ul.rightdir > li").click(function() {
                 fileremote = false;
-                filerem = "";
-                jQuery("#download").hide(200)
+                filenameremote = "";
                 var dirsel = jQuery(this).text();
                 if (typeof dirsel == 'undefined'){
                     var dirsel = "";
@@ -290,17 +309,40 @@ echo '
                 remote(dirsel);
                 jQuery('#dirremote').text(jQuery(this).text());
             });
+            jQuery(".download").click(function() {
+                if (fileremote){
+                    // fichier pas repertoire.
+                    // alert(jQuery('input[name=path_abs_current_remote]').val());
+                    var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
+                                                jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote+
+                                                "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
+                                                jQuery('input[name=path_abs_current_local]').val()+"/"+filenamelocal);
 
+                    if (responce_user == true) {
+                        jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + filenamelocal,
+                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote,
+                                "jidmachine" : jid }, function( data ) {
+                                jQuery("#messageaction").text(data);
+                        });
+                    }
+                }
+            });
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
-                filerem = jQuery(this).text();
-                jQuery("#download").show(200)
-                nameremotepath = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).text()
+                jQuery(".rightfile LI").each(function(){ 
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).find(':nth-child(2)').hide()
+                });
+                jQuery(this).css({ 'color' : 'blue', 'font-weight' : 'bold'});
+                jQuery(this).find(':nth-child(2)').show()
+                filenameremote = jQuery(this).find(':first').text();
+                taillefile = jQuery(this).find(':last').text();
+                filenamelocal =  user + "-" + datetimenow() + "-" + filenameremote
+                nameremotepath = jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote
                 jQuery('#remotecurrrent').text(nameremotepath);
             });
         });
     }
 </script>
-
-
