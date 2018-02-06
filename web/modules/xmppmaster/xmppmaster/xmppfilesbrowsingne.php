@@ -144,7 +144,7 @@ echo '<script type="text/javascript">';
 
 if (stristr($ma['platform'], "win")) {
 
-    echo 'var seperator = "\\";';
+    echo 'var seperator = "\\\\";';
     echo 'var os = "win";';
 }
 else{

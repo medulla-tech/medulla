@@ -34,7 +34,7 @@ body{
     font-family: Georgia;
     font-size: 11pt;
 }
-  
+
 /*h2{
     text-align: center;
 }*/
@@ -141,7 +141,7 @@ echo '<script type="text/javascript">';
 
 if (stristr($ma['platform'], "win")) {
 
-    echo 'var seperator = "\\";';
+    echo 'var seperator = "\\\\";';
     echo 'var os = "win";';
 }
 else{
