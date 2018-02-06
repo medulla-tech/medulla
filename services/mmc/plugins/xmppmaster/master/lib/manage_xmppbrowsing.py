@@ -42,7 +42,7 @@ class xmppbrowsing:
             self.rootfilesystem = rootfilesystem
         self.listfileindir()
 
-    def listfileindir(self, path_abs_current = None):
+    def listfileindir1(self, path_abs_current = None):
         if path_abs_current is  None or path_abs_current == "":
             if self.defaultdir is None:
                 pathabs = os.getcwd()
@@ -57,7 +57,36 @@ class xmppbrowsing:
             "path_abs_current" : pathabs,
             "list_dirs_current" : os.walk(pathabs).next()[1],
             "list_files_current" : os.walk(pathabs).next()[2],
-            "parentdir" : os.path.abspath(os.path.join(pathabs, os.pardir))
+            "parentdir" : os.path.abspath(os.path.join(pathabs, os.pardir)),
+            "rootfilesystem" : self.rootfilesystem,
+            "defaultdir" : self.defaultdir
+        }
+        return self.dirinfos
+
+
+    def listfileindir(self, path_abs_current = None):
+        if path_abs_current is  None or path_abs_current == "":
+            if self.defaultdir is None:
+                pathabs = os.getcwd()
+            else:
+                pathabs = self.defaultdir
+        else:
+            if self.rootfilesystem in path_abs_current:
+                pathabs = os.path.abspath(path_abs_current)
+            else:
+                pathabs = self.rootfilesystem
+        list_files_current = os.walk(pathabs).next()[2];
+        ff =[]
+        for t in list_files_current:
+            fii = os.path.join(pathabs,t)
+            ff.append((t, os.path.getsize(fii)))
+        self.dirinfos = {
+            "path_abs_current" : pathabs,
+            "list_dirs_current" : os.walk(pathabs).next()[1],
+            "list_files_current" : ff,
+            "parentdir" : os.path.abspath(os.path.join(pathabs, os.pardir)),
+            "rootfilesystem" : self.rootfilesystem,
+            "defaultdir" : self.defaultdir
         }
         return self.dirinfos
 
