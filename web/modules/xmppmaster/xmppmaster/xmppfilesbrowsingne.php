@@ -316,6 +316,7 @@ echo '</script>';
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){ 
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).find(':nth-child(2)').hide()
                 });
                 jQuery(this).css({ 'color' : 'blue', 'font-weight' : 'bold'});
                 jQuery(this).find(':nth-child(2)').show()
