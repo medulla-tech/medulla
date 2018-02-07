@@ -84,11 +84,11 @@ $submod->addPage($page);
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("xmppfilesbrowsing", _T('XMPP bowser file', 'xmppmaster'));
+$page = new Page("xmppfilesbrowsing", _T('XMPP browser file', 'xmppmaster'));
 $submod->addPage($page);
 
 //ne non expert mode
-$page = new Page("xmppfilesbrowsingne", _T('XMPP bowser file', 'xmppmaster'));
+$page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
