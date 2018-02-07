@@ -182,6 +182,9 @@ def getPresenceuuid(uuid):
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)
 
+def getRelayServerfromjid(jid):
+    return XmppMasterDatabase().getRelayServerfromjid(jid)
+
 #jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':

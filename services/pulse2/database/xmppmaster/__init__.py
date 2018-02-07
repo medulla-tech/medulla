@@ -2311,6 +2311,37 @@ class XmppMasterDatabase(DatabaseHelper):
         return result
 
     @DatabaseHelper._sessionm
+    def getRelayServerfromjid(self, session, jid):
+        relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
+        relayserver = relayserver.first()
+        session.commit()
+        session.flush()
+        try:
+            result = {  'id' :  relayserver.id,
+                        'urlguacamole': relayserver.urlguacamole,
+                        'subnet' : relayserver.subnet,
+                        'nameserver' : relayserver.nameserver,
+                        'ipserver' : relayserver.ipserver,
+                        'ipconnection' : relayserver.ipconnection,
+                        'port' : relayserver.port,
+                        'portconnection' : relayserver.portconnection,
+                        'mask' : relayserver.mask,
+                        'jid' : relayserver.jid,
+                        'longitude' : relayserver.longitude,
+                        'latitude' : relayserver.latitude,
+                        'enabled' : relayserver.enabled,
+                        'classutil' : relayserver.classutil,
+                        'groupdeploy' : relayserver.groupdeploy,
+                        'package_server_ip' : relayserver.package_server_ip,
+                        'package_server_port' : relayserver.package_server_port,
+                        'moderelayserver' : relayserver.moderelayserver
+            }
+        except Exception:
+            result = {}
+        return result
+
+
+    @DatabaseHelper._sessionm
     def getRelayServerForMachineUuid(self, session, uuid):
         relayserver = session.query(Machines).filter(Machines.uuid_inventorymachine == uuid).one()
         session.commit()

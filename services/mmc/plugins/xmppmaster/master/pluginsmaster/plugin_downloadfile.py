@@ -93,6 +93,22 @@ def createnamefile(user, prefixe ="", suffixe=""):
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
     print json.dumps(data[0], indent = 4)
+    transpxmpp = True
+    if 'taillefile' in data[0]:
+        ###determine si fichier est transportable dans un message xmppmaster
+        if "Mo" in data[0]['taillefile']:
+            transpxmpp = False
+            print "Mo"
+        else:
+            if "ko" in data['taillefile']:
+                data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
+            else:
+                data[0]['taillefile'] = float(data[0]['taillefile'])
+            if data[0]['taillefile'] > 256000 :
+                transpxmpp = False
+
+    #if transpxmpp:
+        #la taille du fichier permet de faire le transfert dans un message xmpp pas encore implemente
 
     if 'dest' in data and 'src' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
@@ -109,6 +125,9 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
         jidmachine = data['data'][0]
     Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
     relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
+    relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
+
+    print json.dumps(relayserinfo, indent = 4)
     datasend = {
                     'session_id' : sessionid,
                     'action' : "downloadfile",
@@ -118,7 +137,9 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                 'jidmachine'        : jidmachine,
                                 'host'              : Machineinfo['uuid_inventorymachine'],# item host is uuid glpi machine
                                 'ipars'             : relayserver['ip_xmpp'],
+                                'ipserverars'       : relayserinfo['ipserver'],
                                 'iparspublic'       : relayserver['ippublic'],
+                                'package_server_ip' : relayserinfo['package_server_ip'],
                                 'ipmachine'         : Machineinfo['ip_xmpp'],
                                 'ipmachinepublic'   : Machineinfo['ippublic'],
                                 'ipmaster'          : str(xmppobject.config.Server),
