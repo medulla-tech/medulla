@@ -464,6 +464,7 @@ class TestGrep(object):
         with pytest.raises(TypeError):
             pulse2.utils.grep("", 5)
 
+
 class TestGrepv(object):
     """This class tests the grepv function"""
 
@@ -472,6 +473,23 @@ class TestGrepv(object):
         Test57"""
         with pytest.raises(TypeError):
             pulse2.utils.grepv()
+
+    def test_with_unexpected_parameters(self):
+        """Tests the function without parameters
+        Test58"""
+        with pytest.raises(TypeError):
+            pulse2.utils.grepv(1, 3)
+            pulse2.utils.grepv(1, [1, 2, 3])
+            pulse2.utils.grepv("Test", [1, 2, 3])
+
+    def test_with_expected_parameters(self):
+        """Tests the function without parameters
+        Test59"""
+        assert pulse2.utils.grepv("1", ["1", "2", "3"]) == ["2", "3"]
+
+        # Test 60
+        assert pulse2.utils.grepv("a", "arbre") == ["r", 'b', 'r', 'e']
+
 
 
 ###
