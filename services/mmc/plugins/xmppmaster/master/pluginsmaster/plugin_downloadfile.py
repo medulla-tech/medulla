@@ -100,7 +100,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
             transpxmpp = False
             print "Mo"
         else:
-            if "ko" in data['taillefile']:
+            if "ko" in data[0]['taillefile']:
                 data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
             else:
                 data[0]['taillefile'] = float(data[0]['taillefile'])
