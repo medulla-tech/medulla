@@ -44,6 +44,11 @@ function xmlrpc_CallXmppPluginmmc($nameplugin, $array_tab_key_value){
     return xmlCall("xmppmaster.CallXmppPlugin", array($nameplugin, $array_tab_key_value));
 }
 
+function xmlrpc_createdirectoryuser($directory){
+    return xmlCall("xmppmaster.createdirectoryuser", array($directory));
+}
+
+
 function xmlrpc_remotefilesystem($currentdir, $jidmachine){
     return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
 }

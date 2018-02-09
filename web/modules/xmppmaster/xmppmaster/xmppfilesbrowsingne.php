@@ -210,6 +210,7 @@ echo '</script>';
         filelocal  = false;
         filenameremote = "";
         filenamelocal = "";
+        timetmp = "";
         taillefile ="";
         //filelocal = "";
         jid = "<?php echo $ma['jid']; ?>";
@@ -298,13 +299,14 @@ echo '</script>';
                     // alert(jQuery('input[name=path_abs_current_remote]').val());
                     var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
                                                 jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote+
-                                                "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
-                                                jQuery('input[name=path_abs_current_local]').val()+"/"+filenamelocal);
+                                                "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : " +
+                                                jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal);
 
                     if (responce_user == true) {
                         jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
-                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + filenamelocal,
-                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote,
+                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal,
+                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
+                                directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                 "jidmachine" : jid }, function( data ) {
                                 jQuery("#messageaction").text(data);
                         });
@@ -322,12 +324,11 @@ echo '</script>';
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();
-                filenamelocal =  user + "-" + datetimenow() + "-" + filenameremote;
+                filenamelocal = filenameremote ; // datetimenow() + "-" + filenameremote
+                timetmp = user + "-" + datetimenow();
                 nameremotepath = jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote
                 jQuery('#remotecurrrent').text(nameremotepath);
             });
         });
     }
 </script>
-
-

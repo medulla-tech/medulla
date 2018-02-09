@@ -32,6 +32,10 @@ require_once("../../../includes/session.inc.php");
 
 
 extract($_GET);
+
+xmlrpc_createdirectoryuser($directory);
+
+
 xmlrpc_CallXmppPluginmmc("downloadfile",Array($_GET));
 // message a ecrire
 // dest, src, jidmachine
