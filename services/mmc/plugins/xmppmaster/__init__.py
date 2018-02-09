@@ -370,6 +370,12 @@ def callInventoryinterface(uuid):
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
+def createdirectoryuser(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory, mode=0700)
+        return True
+    return False
+
 def callInstallKeyAM(jidAM,jidARS):
     if jidARS != "" and jidAM != "":
         callInstallKey(jidAM, jidARS)
