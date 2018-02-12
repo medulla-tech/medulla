@@ -37,11 +37,12 @@ msgstr "Connexion"
 
 #: modules/support/infoPackage.inc.php:44
 msgid "Disconnect"
-msgstr "Dconnexion"
+msgstr "Déconnexion"
 
 #: modules/support/infoPackage.inc.php:46
 msgid "Download an archive including logs and config files"
-msgstr "Tlcharger une archive contenant les logs et fichiers de configuration"
+msgstr ""
+"Télécharger une archive contenant les logs et fichiers de configuration"
 
 #: modules/support/includes/panels/license.inc.php:30
 msgid "Subscription info"
@@ -77,7 +78,7 @@ msgstr "Liens"
 
 #: modules/support/includes/panels/license.inc.php:132
 msgid "Activate again / Use another subscription"
-msgstr "Ractiver / Utiliser une autre souscription"
+msgstr "Réactiver / Utiliser une autre souscription"
 
 #: modules/support/includes/panels/remotesupport.inc.php:30
 msgid "Extract logs"
@@ -85,7 +86,7 @@ msgstr "Extraire les journaux"
 
 #: modules/support/includes/panels/remotesupport.inc.php:56
 msgid "Download archive"
-msgstr "Tlcharger l'archive"
+msgstr "Télécharger l'archive"
 
 #: modules/support/includes/panels/remotesupport.inc.php:59
 msgid "Extract log and config files"

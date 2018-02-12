@@ -403,7 +403,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
-msgstr "L'ordinateur a t supprim du systme de sauvegarde."
+msgstr "L'ordinateur a été supprimé du système de sauvegarde."
 
 #: modules/backuppc/backuppc/index.php:62
 #: modules/backuppc/infoPackage.inc.php:42
@@ -416,7 +416,7 @@ msgstr "Restaurations"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:63
 msgid "Download"
-msgstr "Tlcharger"
+msgstr "Télécharger"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/viewFileVersions.php:47
@@ -427,7 +427,7 @@ msgstr "%A, %e %B %Y"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
 msgid "Latest direct restore to host"
-msgstr "Dernire restauration directe vers la machine"
+msgstr "Dernière restauration directe vers la machine"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:91
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
@@ -450,12 +450,12 @@ msgstr "Editer le planning"
 #: modules/backuppc/backuppc/EditPeriodProfile.php:103
 #: modules/backuppc/backuppc/edit.php:173
 msgid "Interval between two full backups (days)"
-msgstr "Intervalle entre deux sauvegardes compltes (jours)"
+msgstr "Intervalle entre deux sauvegardes complètes (jours)"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:109
 #: modules/backuppc/backuppc/edit.php:178
 msgid "Interval between two incr backups (days)"
-msgstr "Intervalle entre deux sauvegardes incrmentales (jours)"
+msgstr "Intervalle entre deux sauvegardes incrémentales (jours)"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:114
 #: modules/backuppc/backuppc/edit.php:182
@@ -513,28 +513,28 @@ msgstr "Ajouter une exclusion"
 #: modules/backuppc/backuppc/edit.php:284
 #: modules/backuppc/backuppc/edit.php:285
 msgid "Select days"
-msgstr "Slectionner les jours"
+msgstr "Sélectionner les jours"
 
 #: modules/backuppc/backuppc/restoreZip.php:52
 msgid ""
 "Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
 "this archive (for proper special characters handling)."
 msgstr ""
-"Votre archive ZIP est en cours de prparation.<br/>Merci d'utiliser 7zip pour"
-" l'ouvrir (pour une support optimal des caractres spciaux)."
+"Votre archive ZIP est en cours de préparation.<br/>Merci d'utiliser 7zip "
+"pour l'ouvrir (pour une support optimal des caractères spéciaux)."
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
-msgstr "Sauvegarde de l'hte non dfinie."
+msgstr "Sauvegarde de l'hôte non définie."
 
 #: modules/backuppc/backuppc/edit.php:66
 msgid "Enabled"
-msgstr "Activ"
+msgstr "Activé"
 
 #: modules/backuppc/backuppc/edit.php:73
 #: modules/backuppc/backuppc/edit.php:158
 msgid "Custom"
-msgstr "Personnalis"
+msgstr "Personnalisé"
 
 #: modules/backuppc/backuppc/edit.php:81
 #: modules/backuppc/backuppc/ViewProfiles.php:68
@@ -552,16 +552,16 @@ msgstr "Choisissez le type de sauvegarde"
 
 #: modules/backuppc/backuppc/startBackup.php:79
 msgid "Full backup"
-msgstr "Sauvegarde complte"
+msgstr "Sauvegarde complète"
 
 #: modules/backuppc/backuppc/startBackup.php:80
 msgid "Incremental backup"
-msgstr "Sauvegarde incrmentielle"
+msgstr "Sauvegarde incrémentielle"
 
 #: modules/backuppc/backuppc/advScripts.php:40
 #: modules/backuppc/backuppc/hostStatus.php:185
 msgid "Configuration saved"
-msgstr "Configuration enregistre"
+msgstr "Configuration enregistré"
 
 #: modules/backuppc/backuppc/advScripts.php:64
 msgid "Pre-backup script"
@@ -597,7 +597,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/viewFileVersions.php:37
 msgid "No other version."
-msgstr "Pas de version supplmentaire"
+msgstr "Pas de version supplémentaire"
 
 #: modules/backuppc/backuppc/viewFileVersions.php:49
 msgid "Restore from "
@@ -626,8 +626,8 @@ msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr ""
-"La machine %s a t ajoute au systme de sauvegarde avec succs.<br />Vous "
-"pouvez dsormais configurer les jeux de fichiers  sauvegarder ainsi que sa "
+"La machine %s a été ajouté au système de sauvegarde avec succès.<br />Vous "
+"pouvez désormais configurer les jeux de fichiers  sauvegarder ainsi que sa "
 "planification de sauvegardes."
 
 #: modules/backuppc/backuppc/hostStatus.php:174
@@ -641,7 +641,7 @@ msgstr "Statut de la sauvegarde de %s"
 
 #: modules/backuppc/backuppc/hostStatus.php:202
 msgid "Summary"
-msgstr "Rsum"
+msgstr "Résumé"
 
 #: modules/backuppc/backuppc/hostStatus.php:206
 msgid "Configuration"
@@ -650,7 +650,7 @@ msgstr "Configuration"
 #: modules/backuppc/backuppc/hostStatus.php:207
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
-msgstr "Scripts avancs"
+msgstr "Scripts avancés"
 
 #: modules/backuppc/backuppc/hostStatus.php:208
 #: modules/backuppc/infoPackage.inc.php:57
@@ -659,11 +659,11 @@ msgstr "Recherche de fichiers"
 
 #: modules/backuppc/backuppc/restoreToHost.php:51
 msgid "No file selected."
-msgstr "Aucun fichier slectionn."
+msgstr "Aucun fichier sélectionné."
 
 #: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
-msgstr "Les fichiers slectionns vont tre restaurs vers"
+msgstr "Les fichiers sélectionnés vont être restaurés vers"
 
 #: modules/backuppc/backuppc/ajaxFileSearch.php:116
 msgid "File"
@@ -671,7 +671,7 @@ msgstr "Fichier"
 
 #: modules/backuppc/backuppc/ajaxRestoreFile.php:30
 msgid "Your file is being prepared, please wait."
-msgstr "Fichier en cours de prparation, veuillez patienter."
+msgstr "Fichier en cours de préparation, veuillez patienter."
 
 #: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
@@ -679,7 +679,7 @@ msgstr "Demande prise en compte"
 
 #: modules/backuppc/backuppc/hostSummary.php:114
 msgid "Backup is not set for this computer."
-msgstr "Pas de sauvegarde dfinie pour cette machine"
+msgstr "Pas de sauvegarde définie pour cette machine"
 
 #: modules/backuppc/backuppc/hostSummary.php:130
 msgid "Configure"
@@ -692,7 +692,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."
-msgstr "Pas de serveur de sauvegarde dfini pour cette entit."
+msgstr "Pas de serveur de sauvegarde défini pour cette entité."
 
 #: modules/backuppc/backuppc/hostSummary.php:184
 msgid "Current state: "
@@ -700,15 +700,15 @@ msgstr "Etat courant: "
 
 #: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
-msgstr "Lancer sauvegarde complte"
+msgstr "Lancer sauvegarde complète"
 
 #: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Sart Incr Backup"
-msgstr "Lancer sauvegarde incrmentale"
+msgstr "Lancer sauvegarde incrémentale"
 
 #: modules/backuppc/backuppc/hostSummary.php:213
 msgid "Stop Backup"
-msgstr "Arrter la sauvegarde"
+msgstr "Arréter la sauvegarde"
 
 #: modules/backuppc/backuppc/hostSummary.php:249
 msgid "Backup time"
@@ -787,7 +787,7 @@ msgstr "Windows XP (Disque C: complet)"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:141
 msgid "Daytime"
-msgstr "En journe"
+msgstr "En journée"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:142
 msgid "Nightly"
@@ -817,7 +817,7 @@ msgstr "Statut de la sauvegarde"
 
 #: modules/backuppc/infoPackage.inc.php:48
 msgid "Host summary"
-msgstr "Rsum"
+msgstr "Résumé"
 
 #: modules/backuppc/infoPackage.inc.php:51
 msgid "Edit host config"
@@ -829,7 +829,7 @@ msgstr "Editer le profil de sauvegarde"
 
 #: modules/backuppc/infoPackage.inc.php:66
 msgid "Edit Backup period Profile"
-msgstr "Editer la priode de sauvegarde"
+msgstr "Editer la période de sauvegarde"
 
 #: modules/backuppc/infoPackage.inc.php:70
 msgid "See pending packages"
@@ -849,4 +849,4 @@ msgstr "Profils de sauvegarde"
 
 #: modules/backuppc/infoPackage.inc.php:91
 msgid "Download files/ZIP from backup"
-msgstr "Tlcharger les fichiers/ZIP depuis la sauvegarde"
+msgstr "Télécharger les fichiers/ZIP depuis la sauvegarde"

@@ -518,7 +518,7 @@ msgstr ""
 #: modules/msc/msc/download_file.php:56
 #, php-format
 msgid "Start download from computer %s"
-msgstr "Dmarrer le tlchargement depuis %s"
+msgstr "Démarrer le téléchargement depuis %s"
 
 #: modules/msc/msc/localSidebar.php:27
 msgid "Repository"
@@ -564,7 +564,7 @@ msgstr "La connexion sera automatiquement interrompue dans 60 minutes."
 
 #: modules/msc/msc/vnc_client_java.php:75
 msgid "Please close this windows when you are done."
-msgstr "Please close this windows when you are done."
+msgstr "Merci de fermer la fenêtre quand vous avez terminé."
 
 #: modules/msc/msc/vnc_client_java.php:168
 msgid ""
@@ -575,10 +575,10 @@ msgid ""
 "target='_blank' "
 "href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
 msgstr ""
-"Le plugin Java n'est pas install sur <u>votre ordinateur</u>. Merci de le "
-"tlcharger ici <a "
+"Le plugin Java n'est pas installé sur <u>votre ordinateur</u>. Merci de le "
+"télécharger ici <a "
 "href='http://www.java.com/download/'>http://www.java.com/download/</a>, de "
-"l'installer puis de redmarrer et votre ordinateur et enfin de vrifier votre "
+"l'installer puis de redémarrer votre ordinateur et enfin de vérifier votre "
 "installation sur <a target='_blank' "
 "href='http://www.java.com/verify/'>http://www.java.com/verify/</a>."
 
@@ -590,17 +590,17 @@ msgstr "Prendre le contrle de cet ordinateur"
 #: modules/msc/msc/ajaxPing.php:33
 msgid ""
 "Connection was refused by the other side while trying to ping the machine"
-msgstr "La connexion a t refuse lors de la tentative de ping de la machine"
+msgstr "La connexion a été refusée lors de la tentative de ping de la machine"
 
 #: modules/msc/msc/msctabsstatus.php:33
 #, php-format
 msgid "Command '%s' state concerning <b>one</b> computer"
-msgstr "tat de la commande '%s' sur <b>une</b> machines"
+msgstr "état de la commande '%s' sur <b>une</b> machines"
 
 #: modules/msc/msc/msctabsstatus.php:35
 #, php-format
 msgid "Command '%s' state concerning <b>%s</b> computers"
-msgstr "tat de la commande '%s' sur <b>%s</b> machines"
+msgstr "état de la commande '%s' sur <b>%s</b> machines"
 
 #: modules/msc/msc/msctabsstatus.php:41
 msgid "error : the bundle_id given does not exists in the database."
@@ -611,58 +611,58 @@ msgstr ""
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>one</b> computer"
 msgstr ""
-"tat du groupe de logiciels '%s' concernant <b>une</b> commande sur "
+"état du groupe de logiciels '%s' concernant <b>une</b> commande sur "
 "<b>une</b> machine"
 
 #: modules/msc/msc/msctabsstatus.php:47
 #, php-format
 msgid "Bundle '%s' state concerning <b>one</b> command on <b>%s</b> computers"
 msgstr ""
-"tat du groupe de logiciels '%s' concernant <b>une</b> commande sur <b>%s</b>"
-" machines"
+"état du groupe de logiciels '%s' concernant <b>une</b> commande sur "
+"<b>%s</b> machines"
 
 #: modules/msc/msc/msctabsstatus.php:49
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>one</b> computer"
 msgstr ""
-"tat du groupe de logiciels '%s' concernant <b>%s</b> commandes sur "
+"état du groupe de logiciels '%s' concernant <b>%s</b> commandes sur "
 "<b>une</b> machine"
 
 #: modules/msc/msc/msctabsstatus.php:50
 #, php-format
 msgid "Bundle '%s' state concerning <b>%s</b> commands on <b>%s</b> computers"
 msgstr ""
-"tat du groupe de logiciels '%s' concernant <b>%s</b> commandes sur <b>%s</b>"
-" machines"
+"état du groupe de logiciels '%s' concernant <b>%s</b> commandes sur "
+"<b>%s</b> machines"
 
 #: modules/msc/msc/msctabsstatus.php:54
 msgid "error : cmd_id or bundle_id must be given"
-msgstr "erreur: cmd_id ou bundle_id doit tre renseign"
+msgstr "erreur: cmd_id ou bundle_id doit être renseigné"
 
 #: modules/msc/msc/msctabsstatus.php:61
 msgid "<b>No</b> package installation was successful"
-msgstr "<b>Aucune</b> installation de package n'a russi"
+msgstr "<b>Aucune</b> installation de package n'a réussi"
 
 #: modules/msc/msc/msctabsstatus.php:62
 msgid "<b>One</b> package installation was successful"
-msgstr "<b>Une</b> installation de packages a russi"
+msgstr "<b>Une</b> installation de packages a réussi"
 
 #: modules/msc/msc/msctabsstatus.php:63
 #, php-format
 msgid "<b>%s</b> packages installation were successful"
-msgstr "<b>%s</b> installations de packages ont russi"
+msgstr "<b>%s</b> installations de packages ont réussi"
 
 #: modules/msc/msc/msctabsstatus.php:64
 msgid "Success: %percent% (%d packages)"
-msgstr "Termin: %percent% (%d packages)"
+msgstr "Terminé: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:67
 msgid "<b>No</b> package installation is stopped"
-msgstr "<b>Aucune</b> installation de package n'est arrte"
+msgstr "<b>Aucune</b> installation de package n'est arrêtée"
 
 #: modules/msc/msc/msctabsstatus.php:68
 msgid "<b>One</b> package installation is stopped"
-msgstr "<b>Une</b> installation de packages a chou"
+msgstr "<b>Une</b> installation de packages a échoué"
 
 #: modules/msc/msc/msctabsstatus.php:69
 #, php-format
@@ -709,50 +709,50 @@ msgstr "En cours: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:85
 msgid "<b>No</b> package installation failed"
-msgstr "<b>Aucune</b> installation de package n'a chou"
+msgstr "<b>Aucune</b> installation de package a échoué"
 
 #: modules/msc/msc/msctabsstatus.php:86
 msgid "<b>One</b> package installation failed"
-msgstr "<b>Une</b> installation de packages a chou"
+msgstr "<b>Une</b> installation de packages a échoué"
 
 #: modules/msc/msc/msctabsstatus.php:87
 #, php-format
 msgid "<b>%s</b> packages installation failed"
-msgstr "<b>%s</b> installations de packages ont chou"
+msgstr "<b>%s</b> installations de packages ont échoué"
 
 #: modules/msc/msc/msctabsstatus.php:88
 msgid "Failed: %percent% (%d packages)"
-msgstr "chec: %percent% (%d packages)"
+msgstr "échec: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:94
 msgid "<b>No</b> computer was successfully deployed"
-msgstr "<b>Aucune</b> machine n'a russi son dploiement"
+msgstr "<b>Aucune</b> machine n'a réussi son déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:95
 msgid "<b>One</b> computer was successfully deployed"
-msgstr "<b>Une</b> machine a russi son dploiement"
+msgstr "<b>Une</b> machine a réussi son déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:96
 #, php-format
 msgid "<b>%s</b> computers were successfully deployed"
-msgstr "<b>%s</b> machines ont russi leur dploiement"
+msgstr "<b>%s</b> machines ont réussi leur déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:97
 msgid "Success: %percent% (%d computers)"
-msgstr "Termin: %percent% (%d machines)"
+msgstr "Terminé: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:100
 msgid "<b>No</b> computer is stopped"
-msgstr "<b>Aucune</b> machine n'est arrte"
+msgstr "<b>Aucune</b> machine n'est arrêtée"
 
 #: modules/msc/msc/msctabsstatus.php:101
 msgid "<b>One</b> computer is stopped"
-msgstr "<b>Une</b> machine est arrte"
+msgstr "<b>Une</b> machine est arrêtée"
 
 #: modules/msc/msc/msctabsstatus.php:102
 #, php-format
 msgid "<b>%s</b> computers are stopped"
-msgstr "<b>%s</b> machines ont t stoppes"
+msgstr "<b>%s</b> machines ont été stoppées"
 
 #: modules/msc/msc/msctabsstatus.php:103
 msgid "Stopped: %percent% (%d computers)"
@@ -777,16 +777,16 @@ msgstr "En pause: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:112
 msgid "<b>No</b> computer is running a deployment"
-msgstr "<b>Aucune</b> machine n'est en cours de dploiement"
+msgstr "<b>Aucune</b> machine n'est en cours de déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:113
 msgid "<b>One</b> computer is running a deployment"
-msgstr "<b>Une</b> machine est en cours de dploiement"
+msgstr "<b>Une</b> machine est en cours de déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:114
 #, php-format
 msgid "<b>%s</b> computers are running a deployment"
-msgstr "<b>%s</b> machines sont en cours de dploiement"
+msgstr "<b>%s</b> machines sont en cours de déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:115
 msgid "In progress: %percent% (%d computers)"
@@ -794,20 +794,20 @@ msgstr "En cours: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:118
 msgid "<b>No</b> computer failed to deploy"
-msgstr "<b>Aucune</b> machine n'a chou lors du dploiement"
+msgstr "<b>Aucune</b> machine n'a échoué lors du déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:119
 msgid "<b>One</b> computer failed to deploy"
-msgstr "<b>Une</b> machine a chou lors du dploiement"
+msgstr "<b>Une</b> machine a échoué lors du déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:120
 #, php-format
 msgid "<b>%s</b> computers failed to deploy"
-msgstr "<b>%s</b> machines ont chou lors du dploiement"
+msgstr "<b>%s</b> machines ont échoué lors du déploiement"
 
 #: modules/msc/msc/msctabsstatus.php:121
 msgid "Failed: %percent% (%d computers)"
-msgstr "chec: %percent% (%d machines)"
+msgstr "échec: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:127 modules/msc/msc/msctabsstatus.php:129
 msgid "is"
@@ -827,7 +827,7 @@ msgstr "ont"
 
 #: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/statuscsv.php:110
 msgid "waiting to upload"
-msgstr "en attente de tlchargement"
+msgstr "en attente de téléchargement"
 
 #: modules/msc/msc/msctabsstatus.php:136 modules/msc/msc/msctabsstatus.php:138
 #: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/msctabsstatus.php:142
@@ -837,15 +837,15 @@ msgstr "(dont %s ont dj tent)"
 
 #: modules/msc/msc/msctabsstatus.php:137
 msgid "uploading"
-msgstr "en cours de tlchargement"
+msgstr "en cours de téléchargement"
 
 #: modules/msc/msc/msctabsstatus.php:138 modules/msc/msc/statuscsv.php:113
 msgid "waiting to execute"
-msgstr "en attente d'excution"
+msgstr "en attente d'exécution"
 
 #: modules/msc/msc/msctabsstatus.php:139
 msgid "executing"
-msgstr "en cours d'excution"
+msgstr "en cours d'exécution"
 
 #: modules/msc/msc/msctabsstatus.php:140 modules/msc/msc/statuscsv.php:116
 msgid "waiting to suppress"
@@ -865,7 +865,7 @@ msgstr "Inventaire en cours"
 
 #: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/statuscsv.php:120
 msgid "failed during upload"
-msgstr "chou durant le tlchargement"
+msgstr "échoué durant le téléchargement"
 
 #: modules/msc/msc/msctabsstatus.php:146 modules/msc/msc/msctabsstatus.php:149
 #: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/msctabsstatus.php:155
@@ -875,95 +875,95 @@ msgstr "(dont %s sont injoignables)"
 
 #: modules/msc/msc/msctabsstatus.php:147
 msgid "Upload Failed: %percent% (%d computers)"
-msgstr "chec de l'envoi: %percent% (%d machines)"
+msgstr "échec de l'envoi: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:148
 msgid "Upload Failed: %percent% (%d packages)"
-msgstr "chec de l'envoi: %percent% (%d packages)"
+msgstr "échec de l'envoi: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:149 modules/msc/msc/statuscsv.php:122
 msgid "failed during execution"
-msgstr "chou durant l'excution"
+msgstr "échoué durant l'exécution"
 
 #: modules/msc/msc/msctabsstatus.php:150
 msgid "Execution Failed: %percent% (%d computers)"
-msgstr "chec de l'excution: %percent% (%d machines)"
+msgstr "échec de l'exécution: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:151
 msgid "Execution Failed: %percent% (%d packages)"
-msgstr "chec de l'excution: %percent% (%d packages)"
+msgstr "échec de l'exécution: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:152 modules/msc/msc/statuscsv.php:124
 msgid "failed during suppression"
-msgstr "chou durant la suppression"
+msgstr "échoué durant la suppression"
 
 #: modules/msc/msc/msctabsstatus.php:153
 msgid "Delete Failed: %percent% (%d computers)"
-msgstr "chec de la suppression: %percent% (%d machines)"
+msgstr "échec de la suppression: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:154
 msgid "Delete Failed: %percent% (%d packages)"
-msgstr "chec de la suppression: %percent% (%d packages)"
+msgstr "échec de la suppression: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:155
 msgid "failed during inventory"
-msgstr "chec pendant l'inventaire"
+msgstr "échec pendant l'inventaire"
 
 #: modules/msc/msc/msctabsstatus.php:156
 msgid "Inventory Failed: %percent% (%d computers)"
-msgstr "chec de l'inventaire: %percent% (%d machines)"
+msgstr "échec de l'inventaire: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:157
 msgid "Inventory Failed: %percent% (%d packages)"
-msgstr "chec de l'inventaire: %percent% (%d packages)"
+msgstr "échec de l'inventaire: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:158
 msgid "out of the valid period of execution"
-msgstr "en dehors de la priode valide d'excution"
+msgstr "en dehors de la période valide d'exécution"
 
 #: modules/msc/msc/msctabsstatus.php:159
 msgid "Over-timed: %percent% (%d computers)"
-msgstr "Dlai dpass: %percent% (%d machines)"
+msgstr "Délai dépassé: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:160
 msgid "Over-timed: %percent% (%d packages)"
-msgstr "Dlai dpass: %percent% (%d packages)"
+msgstr "Délai dépassé: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:161
 msgid "failed during awake"
-msgstr "chec du rveil"
+msgstr "échec du réveil"
 
 #: modules/msc/msc/msctabsstatus.php:162
 msgid "Awake Failed: %percent% (%d computers)"
-msgstr "chec du rveil: %percent% (%d machines)"
+msgstr "échec du réveil: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:163
 msgid "Awake Failed: %percent% (%d packages)"
-msgstr "chec du rveil: %percent% (%d packages)"
+msgstr "échec du réveil: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:164
 msgid "failed during reboot"
-msgstr "chec du redmarrage"
+msgstr "échec du redémarrage"
 
 #: modules/msc/msc/msctabsstatus.php:165
 msgid "Reboot Failed: %percent% (%d computers)"
-msgstr "chec du redmarrage: %percent% (%d machines)"
+msgstr "échec du redémarrage: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:166
 msgid "Reboot Failed: %percent% (%d packages)"
-msgstr "chec du redmarrage: %percent% (%d packages)"
+msgstr "échec du redémarrage: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:167
 msgid "failed during halt"
-msgstr "chec pendant l'extinction"
+msgstr "échec pendant l'extinction"
 
 #: modules/msc/msc/msctabsstatus.php:168
 msgid "Halt Failed: %percent% (%d computers)"
-msgstr "chec de l'extinction: %percent% (%d machines)"
+msgstr "échec de l'extinction: %percent% (%d machines)"
 
 #: modules/msc/msc/msctabsstatus.php:169
 msgid "Halt Failed: %percent% (%d packages)"
-msgstr "chec de l'extinction: %percent% (%d packages)"
+msgstr "échec de l'extinction: %percent% (%d packages)"
 
 #: modules/msc/msc/msctabsstatus.php:277
 msgid "One"
@@ -972,12 +972,12 @@ msgstr "Une"
 #: modules/msc/msc/ajaxPackageFilter.php:45
 #, php-format
 msgid "These packages can be installed on computer \"%s\""
-msgstr "Les packages suivants peuvent tre installs sur le client \"%s\""
+msgstr "Les packages suivants peuvent être installés sur le client \"%s\""
 
 #: modules/msc/msc/ajaxPackageFilter.php:47
 #, php-format
 msgid "These packages can be installed on group \"%s\""
-msgstr "Les packages suivants peuvent tre installs sur le groupe \"%s\""
+msgstr "Les packages suivants peuvent être installés sur le groupe \"%s\""
 
 #: modules/msc/msc/ajaxPackageFilter.php:76
 msgid "Available"
@@ -985,7 +985,7 @@ msgstr "Disponible"
 
 #: modules/msc/msc/ajaxPackageFilter.php:78
 msgid "Active"
-msgstr "Activ"
+msgstr "Activé"
 
 #: modules/msc/msc/ajaxPackageFilter.php:80
 msgid "Inactive"
@@ -1005,7 +1005,7 @@ msgstr "Convergence"
 #: modules/msc/includes/bundle_widgets.php:199
 #, php-format
 msgid "MMC failed to contact package server %s."
-msgstr "La MMC a chou  contacter le serveur de package %s."
+msgstr "La MMC a échoué à contacter le serveur de package %s."
 
 #: modules/msc/msc/ajaxPackageFilter.php:155
 #: modules/msc/includes/bundle_widgets.php:150
@@ -1038,7 +1038,7 @@ msgstr "Lancer l'action"
 #: modules/msc/msc/tabs.php:52 modules/msc/msc/tabs.php:61
 #, php-format
 msgid "%s's computer secure control"
-msgstr "Contrle scuris du client %s"
+msgstr "Contrôle sécurisé du client %s"
 
 #: modules/msc/msc/tabs.php:63 modules/msc/msc/tabs.php:89
 msgid "Launch Actions"
@@ -1056,7 +1056,7 @@ msgstr "Journaux"
 #: modules/msc/msc/tabs.php:87
 #, php-format
 msgid "%s's group secure control"
-msgstr "Contrle scuris du groupe %s"
+msgstr "Contrôle sécurisé du groupe %s"
 
 #: modules/msc/msc/tabs.php:107
 msgid "Not enough information"
@@ -1069,12 +1069,12 @@ msgstr "Lancer"
 #: modules/msc/msc/msctabssinglestatus.php:33
 #, php-format
 msgid "Command '%s' state concerning <b>%s</b>"
-msgstr "tat de la commande '%s' sur <b>%s</b>"
+msgstr "état de la commande '%s' sur <b>%s</b>"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 #: modules/msc/includes/command_history.php:39
 msgid "Current State"
-msgstr "tat actuel"
+msgstr "état actuel"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "uploaded"
@@ -1082,7 +1082,7 @@ msgstr "envoi"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "executed"
-msgstr "excution"
+msgstr "exécution"
 
 #: modules/msc/msc/msctabssinglestatus.php:38
 msgid "deleted"
@@ -1090,7 +1090,7 @@ msgstr "suppression"
 
 #: modules/msc/msc/msctabssinglestatus.php:47
 msgid "error : cmd_id must be given"
-msgstr "erreur: cmd_id doit tre renseign"
+msgstr "erreur: cmd_id doit être renseigné"
 
 #: modules/msc/msc/statuscsv.php:91
 msgid "uuid"
@@ -1102,11 +1102,11 @@ msgstr "Ordinateur"
 
 #: modules/msc/msc/statuscsv.php:93
 msgid "current state"
-msgstr "tat actuel"
+msgstr "État actuel"
 
 #: modules/msc/msc/statuscsv.php:94
 msgid "start date"
-msgstr "date de dbut"
+msgstr "date de début"
 
 #: modules/msc/msc/statuscsv.php:95
 msgid "end date"
@@ -1122,11 +1122,11 @@ msgstr "total"
 
 #: modules/msc/msc/statuscsv.php:105
 msgid "computers successfully deployed"
-msgstr "machines ont russi leur dploiement"
+msgstr "machines ont réussi leur déploiement"
 
 #: modules/msc/msc/statuscsv.php:106
 msgid "computers stopped"
-msgstr "machines sont stoppes"
+msgstr "machines sont stoppées"
 
 #: modules/msc/msc/statuscsv.php:107
 msgid "computers paused"
@@ -1134,27 +1134,27 @@ msgstr "machines en pause"
 
 #: modules/msc/msc/statuscsv.php:108
 msgid "computers out of the valid period"
-msgstr "machines hors dlai"
+msgstr "machines hors délai"
 
 #: modules/msc/msc/statuscsv.php:109
 msgid "computers running a deployment"
-msgstr "machines sont en cours de dploiement"
+msgstr "machines  en cours de déploiement"
 
 #: modules/msc/msc/statuscsv.php:111
 msgid "waiting to upload and already try"
-msgstr "en attente de tlchargement pour la seconde fois"
+msgstr "en attente de téléchargement pour la seconde fois"
 
 #: modules/msc/msc/statuscsv.php:112
 msgid "running upload"
-msgstr "en cours de tlchargement"
+msgstr "en cours de téléchargement"
 
 #: modules/msc/msc/statuscsv.php:114
 msgid "waiting to execute and already try"
-msgstr "en attente d'excution pour la seconde fois"
+msgstr "en attente d'exécution pour la seconde fois"
 
 #: modules/msc/msc/statuscsv.php:115
 msgid "running execution"
-msgstr "en cours d'excution"
+msgstr "en cours d'exécution"
 
 #: modules/msc/msc/statuscsv.php:117
 msgid "waiting to suppress and already try"
@@ -1166,33 +1166,33 @@ msgstr "en cours de suppression"
 
 #: modules/msc/msc/statuscsv.php:119
 msgid "computers failed to deploy"
-msgstr "machines ont chou lors du dploiement"
+msgstr "machines ont échoué lors du déploiement"
 
 #: modules/msc/msc/statuscsv.php:121
 msgid "unreachable during upload"
-msgstr "chou durant le tlchargement"
+msgstr "échoué durant le téléchargement"
 
 #: modules/msc/msc/statuscsv.php:123
 msgid "unreachable during execution"
-msgstr "non accessible durant l'excution"
+msgstr "non accessible durant l'exécution"
 
 #: modules/msc/msc/statuscsv.php:125
 msgid "unreachable during suppression"
-msgstr "chou durant la suppression"
+msgstr "échoué durant la suppression"
 
 #: modules/msc/msc/connection_error.php:24
 msgid "Remote control of :"
-msgstr "Contrle  distance de : "
+msgstr "Contrôle à distance de : "
 
 #: modules/msc/msc/msctabsstop.php:124
 #, php-format
 msgid "Stop %s %s on this group"
-msgstr "Arrt %s %s sur ce groupe"
+msgstr "Arrêt %s %s sur ce groupe"
 
 #: modules/msc/msc/msctabsstop.php:126
 #, php-format
 msgid "Stop %s %s on host %s"
-msgstr "Arrt %s %s sur %s"
+msgstr "Arrêt %s %s sur %s"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:136
 #, php-format
@@ -1201,9 +1201,9 @@ msgid ""
 "your browser settings or add Pulse Server address (%s) to the excluded hosts"
 " list."
 msgstr ""
-"Un proxy HTTP a t dtect. Essayez de dsactiver le proxy pour les adresses "
-"locales dans votre navigateur ou ajoutez l'adresse du serveur Pulse (%s) "
-"dans la liste d'exceptions."
+"Un proxy HTTP a été détecté. Essayez de désactiver le proxy pour les "
+"adresses locales dans votre navigateur ou ajoutez l'adresse du serveur Pulse"
+" (%s) dans la liste d'exceptions."
 
 #: modules/msc/msc/vnc_client_no_vnc.php:150
 msgid "Send Ctrl+Alt+Del"
@@ -1211,7 +1211,7 @@ msgstr "Envoyer Ctrl+Alt+Suppr"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:154
 msgid "Transfer to/from clipboard"
-msgstr "Transfrer de/vers le presse-papier"
+msgstr "Transférer de/vers le presse-papier"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:221
 msgid "Connecting ..."
@@ -1219,11 +1219,11 @@ msgstr "Connexion en cours ..."
 
 #: modules/msc/msc/vnc_client_no_vnc.php:226
 msgid "through SSH tunnel"
-msgstr " travers un tunnel SSH"
+msgstr " à travers un tunnel SSH"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:227
 msgid "Connection failed"
-msgstr "La connexion a chou"
+msgstr "La connexion a échoué"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:228
 msgid "Waiting for user approval"
@@ -1235,11 +1235,11 @@ msgstr "Mot de passe requis"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:230
 msgid "Host rejected connection"
-msgstr "L'hte distant a rejet la connexion"
+msgstr "L'hôte distant a rejeté la connexion"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:231
 msgid "Unable to reach remote host"
-msgstr "Impossible de contacter l'hte distant"
+msgstr "Impossible de contacter l'hôte distant"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:232
 msgid "reason"
@@ -1247,7 +1247,7 @@ msgstr "motif"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:233
 msgid "Connected"
-msgstr "Connect"
+msgstr "Connecté"
 
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
@@ -1255,7 +1255,7 @@ msgstr "à"
 
 #: modules/msc/msc/ajaxDownloadFile.php:34
 msgid "Download file"
-msgstr "Tlcharger le fichier"
+msgstr "Télécharger le fichier"
 
 #: modules/msc/msc/ajaxDownloadFile.php:35
 msgid "Delete file"
@@ -1263,17 +1263,17 @@ msgstr "Supprimer le fichier"
 
 #: modules/msc/msc/ajaxDownloadFile.php:67
 msgid "Downloading"
-msgstr "Tlchargement en cours"
+msgstr "Téléchargement en cours"
 
 #: modules/msc/msc/ajaxDownloadFile.php:72
 msgid "Error"
-msgstr "Erreur de tlchargement"
+msgstr "Erreur de téléchargement"
 
 #: modules/msc/msc/ajaxDownloadFile.php:77
 #: modules/msc/includes/functions.php:47
 #: modules/msc/includes/functions.php:331
 msgid "Ready"
-msgstr "Prt"
+msgstr "Prêt"
 
 #: modules/msc/msc/ajaxDownloadFile.php:86
 msgid "Timestamp"
@@ -1295,7 +1295,8 @@ msgstr "Taille"
 #: modules/msc/msc/ajaxPingProbe.php:63 modules/msc/msc/ajaxPingProbe.php:72
 msgid ""
 "Connection was refused by the other side while trying to probe the machine"
-msgstr "La connexion a t refuse lors de la tentative de probe de la machine"
+msgstr ""
+"La connexion a été refusée lors de la tentative de probe de la machine"
 
 #: modules/msc/msc/ajaxPingProbe.php:39 modules/msc/msc/ajaxPingProbe.php:52
 #: modules/msc/msc/ajaxPingProbe.php:65 modules/msc/msc/ajaxPingProbe.php:74
@@ -1304,15 +1305,15 @@ msgstr "Erreur dans le scheduler !"
 
 #: modules/msc/msc/ajaxPingProbe.php:42 modules/msc/msc/ajaxPingProbe.php:68
 msgid "Ping failed"
-msgstr "chec du ping"
+msgstr "échec du ping"
 
 #: modules/msc/msc/ajaxPingProbe.php:45
 msgid "Ping succeeded"
-msgstr "Russite du ping"
+msgstr "Réussite du ping"
 
 #: modules/msc/msc/ajaxPingProbe.php:55
 msgid "SSH connection failed"
-msgstr "chec de la connexion SSH"
+msgstr "échec de la connexion SSH"
 
 #: modules/msc/msc/ajaxPingProbe.php:58 modules/msc/msc/ajaxPingProbe.php:80
 #, php-format
@@ -1321,11 +1322,11 @@ msgstr "La plateforme cible est %s"
 
 #: modules/msc/msc/ajaxPingProbe.php:77
 msgid "Ping succeeded, SSH connection failed"
-msgstr "Russite du ping, chec de la connexion SSH"
+msgstr "Réussite du ping, échec de la connexion SSH"
 
 #: modules/msc/msc/ajaxPingProbe.php:85
 msgid "No probe performed"
-msgstr "Pas de probe effectu"
+msgstr "Pas de probe effectué"
 
 #: modules/msc/msc/convergence.php:116
 msgid "Convergence on "
@@ -1347,7 +1348,7 @@ msgstr "Mise en pause %s %s sur %s"
 
 #: modules/msc/msc/package_detail.php:36
 msgid "Label"
-msgstr "Libell"
+msgstr "Libellé"
 
 #: modules/msc/msc/package_detail.php:39
 #: modules/msc/includes/command_history.php:53
@@ -1371,11 +1372,11 @@ msgstr "<br/>Date de fin"
 
 #: modules/msc/msc/local_proxy.php:68
 msgid "Random (indicate number of proxies) : "
-msgstr "Choix alatoire (indiquez le nombre de proxys) : "
+msgstr "Choix aléatoire (indiquez le nombre de proxys) : "
 
 #: modules/msc/msc/local_proxy.php:74
 msgid "Or designate the proxies manually below : "
-msgstr "Ou dsignez manuellement les proxys ci-dessous : "
+msgstr "Ou désignez manuellement les proxys ci-dessous : "
 
 #: modules/msc/msc/local_proxy.php:79
 msgid "Computers in this command"
@@ -1401,17 +1402,17 @@ msgstr "Mode proxy local"
 
 #: modules/msc/msc/local_proxy.php:226
 msgid "Maximum number of simultaneous connections to a proxy"
-msgstr "Nombre maximal de connexions simultanes sur un proxy"
+msgstr "Nombre maximal de connexions simultanées sur un proxy"
 
 #: modules/msc/msc/local_proxy.php:248
 msgid "Local proxies selection"
-msgstr "Slection des proxys locaux"
+msgstr "Sélection des proxys locaux"
 
 #: modules/msc/msc/launch.php:82
 msgid "Your start and end dates are not coherent, please check them.<br/>"
 msgstr ""
-"Vos dates de dbut et de fin ne sont pas cohrentes, veuillez les "
-"vrifier.<br/>"
+"Vos dates de début et de fin ne sont pas cohérentes, veuillez les "
+"vérifier.<br/>"
 
 #: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:308
 msgid "now"
@@ -1424,7 +1425,7 @@ msgstr "jamais"
 #: modules/msc/msc/launch.php:424
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
-msgstr "Lancement avanc sur poste : action \"%s\" sur \"%s\""
+msgstr "Lancement avancé sur poste : action \"%s\" sur \"%s\""
 
 #: modules/msc/msc/launch.php:435
 #, php-format
@@ -1434,15 +1435,15 @@ msgstr "Convergence logicielle: commande \"%s\" sur \"%s\""
 #: modules/msc/msc/launch.php:438
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
-msgstr "Lancement avanc sur groupe : action \"%s\" sur \"%s\""
+msgstr "Lancement avancé sur groupe : action \"%s\" sur \"%s\""
 
 #: modules/msc/msc/launch.php:472 modules/msc/msc/launch.php:586
 msgid "The command must start after"
-msgstr "La commande doit commencer aprs"
+msgstr "La commande doit commencer après"
 
 #: modules/msc/msc/launch.php:484 modules/msc/msc/launch.php:595
 msgid "The command must stop before"
-msgstr "La commande doit s'arrter avant"
+msgstr "La commande doit s’arrêter avant"
 
 #: modules/msc/msc/launch.php:504 modules/msc/msc/launch.php:553
 #: modules/msc/includes/command_history.php:34
@@ -1452,23 +1453,23 @@ msgstr "Nom de la commande"
 
 #: modules/msc/msc/launch.php:510
 msgid "Script parameters"
-msgstr "Paramtres du script"
+msgstr "Paramètres du script"
 
 #: modules/msc/msc/launch.php:516 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
-msgstr "Lancer un rveil rseau (WOL) si la connexion choue"
+msgstr "Lancer un réveil réseau (WOL) si la connexion échoue"
 
 #: modules/msc/msc/launch.php:522
 msgid "Start script"
-msgstr "Dmarrer le script"
+msgstr "Démarrer le script"
 
 #: modules/msc/msc/launch.php:528 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
-msgstr "Supprimer les fichiers aprs une commande russie"
+msgstr "Supprimer les fichiers après une commande réussie"
 
 #: modules/msc/msc/launch.php:534
 msgid "Do an inventory after a successful execution"
-msgstr "Faire un inventaire aprs une commande russie"
+msgstr "Faire un inventaire après une commande réussie"
 
 #: modules/msc/msc/launch.php:540
 msgid "Reboot client"
@@ -1476,7 +1477,7 @@ msgstr "Redmarrage du client"
 
 #: modules/msc/msc/launch.php:546
 msgid "Halt client"
-msgstr "Arrter le client"
+msgstr "Arrêter le client"
 
 #: modules/msc/msc/launch.php:572
 msgid "Convergence is active"
@@ -1520,7 +1521,7 @@ msgstr ""
 
 #: modules/msc/msc/launch.php:695 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
-msgstr "Dbit maximum (kbits/s)"
+msgstr "Débit maximum (kbits/s)"
 
 #: modules/msc/msc/launch.php:707 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
@@ -1536,11 +1537,11 @@ msgstr "Mode de transfert"
 
 #: modules/msc/msc/launch.php:714 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
-msgstr "Dploiement par proxy local"
+msgstr "Déploiement par proxy local"
 
 #: modules/msc/msc/launch.php:738
 msgid "Probe status"
-msgstr "Vrifier l'tat"
+msgstr "Vérifier l'état"
 
 #: modules/msc/includes/functions.php:25
 msgid "Upload in progress"
@@ -1548,23 +1549,23 @@ msgstr "Envoi en cours"
 
 #: modules/msc/includes/functions.php:26
 msgid "Upload done"
-msgstr "Envoi termin"
+msgstr "Envoi terminé"
 
 #: modules/msc/includes/functions.php:27
 msgid "Upload failed"
-msgstr "chec de l'envoi"
+msgstr "échec de l'envoi"
 
 #: modules/msc/includes/functions.php:28
 msgid "Execution in progress"
-msgstr "Excution en cours"
+msgstr "Exécution en cours"
 
 #: modules/msc/includes/functions.php:29
 msgid "Execution done"
-msgstr "Excution termine"
+msgstr "Exécution terminée"
 
 #: modules/msc/includes/functions.php:30
 msgid "Execution failed"
-msgstr "chec de l'excution"
+msgstr "échec de l'excution"
 
 #: modules/msc/includes/functions.php:31
 msgid "Delete in progress"
@@ -1572,11 +1573,11 @@ msgstr "Suppression en cours"
 
 #: modules/msc/includes/functions.php:32
 msgid "Delete done"
-msgstr "Suppression termine"
+msgstr "Suppression terminée"
 
 #: modules/msc/includes/functions.php:33
 msgid "Delete failed"
-msgstr "chec de la suppression"
+msgstr "échec de la suppression"
 
 #: modules/msc/includes/functions.php:34
 msgid "Inventory in progress"
@@ -1584,47 +1585,47 @@ msgstr "Inventaire en cours"
 
 #: modules/msc/includes/functions.php:35
 msgid "Inventory failed"
-msgstr "chec de l'inventaire"
+msgstr "échec de l'inventaire"
 
 #: modules/msc/includes/functions.php:36
 msgid "Inventory done"
-msgstr "Inventaire termin"
+msgstr "Inventaire terminé"
 
 #: modules/msc/includes/functions.php:37
 msgid "Reboot in progress"
-msgstr "Redmarrage en cours"
+msgstr "Redémarrage en cours"
 
 #: modules/msc/includes/functions.php:38
 msgid "Reboot failed"
-msgstr "chec du redmarrage"
+msgstr "échec du redémarrage"
 
 #: modules/msc/includes/functions.php:39
 msgid "Reboot done"
-msgstr "Redmarrage termin"
+msgstr "Redémarrage terminé"
 
 #: modules/msc/includes/functions.php:40
 msgid "WOL request being sent"
-msgstr "La requte de WOL est en cours de prparation"
+msgstr "La requête de WOL est en cours de préparation"
 
 #: modules/msc/includes/functions.php:41
 msgid "Failed to send WOL request"
-msgstr "La tentative d'envoi de la demande de WOL a chou"
+msgstr "La tentative d'envoi de la demande de WOL a échoué"
 
 #: modules/msc/includes/functions.php:42
 msgid "WOL request has been sent"
-msgstr "La requte de WOL est partie"
+msgstr "La requête de WOL est partie"
 
 #: modules/msc/includes/functions.php:43
 msgid "Halt in progress"
-msgstr "Arrt en cours"
+msgstr "Arrêt en cours"
 
 #: modules/msc/includes/functions.php:44
 msgid "Halt done"
-msgstr "Arrt termin"
+msgstr "Arrêt terminé"
 
 #: modules/msc/includes/functions.php:45
 msgid "Halt failed"
-msgstr "chec de l'extinction"
+msgstr "échec de l'extinction"
 
 #: modules/msc/includes/functions.php:46
 msgid "Not reachable"
@@ -1636,15 +1637,15 @@ msgstr "En Pause"
 
 #: modules/msc/includes/functions.php:52
 msgid "Scheduled"
-msgstr "Programm"
+msgstr "Programmé"
 
 #: modules/msc/includes/functions.php:53
 msgid "Rescheduled"
-msgstr "Re-programm"
+msgstr "Re-programmé"
 
 #: modules/msc/includes/functions.php:55
 msgid "Time Exceeded"
-msgstr "Dlai Dpass"
+msgstr "Délai Dépassé"
 
 #: modules/msc/includes/functions.php:56
 msgid "To do"
@@ -1652,7 +1653,7 @@ msgstr " faire"
 
 #: modules/msc/includes/functions.php:57
 msgid "Ignored"
-msgstr "Ignor"
+msgstr "Ignoré"
 
 #: modules/msc/includes/functions.php:60
 msgid "Work in progress"
@@ -1668,7 +1669,7 @@ msgstr "Envoi"
 
 #: modules/msc/includes/functions.php:317
 msgid "Execution"
-msgstr "Excution"
+msgstr "Exécution"
 
 #: modules/msc/includes/functions.php:318
 msgid "Windows Update parse"
@@ -1684,27 +1685,27 @@ msgstr "Inventaire"
 
 #: modules/msc/includes/functions.php:321
 msgid "Restart"
-msgstr "Redmarrage"
+msgstr "Redémarrage"
 
 #: modules/msc/includes/functions.php:322
 msgid "Shutdown"
-msgstr "Arrt"
+msgstr "Arrêt"
 
 #: modules/msc/includes/functions.php:323
 msgid "Before bootmenu actions"
-msgstr "Menu de dmarrage (pr)"
+msgstr "Menu de démarrage (pré)"
 
 #: modules/msc/includes/functions.php:324
 msgid "After bootmenu actions"
-msgstr "Menu de dmarrage (post)"
+msgstr "Menu de démarrage (post)"
 
 #: modules/msc/includes/functions.php:325
 msgid "Finish"
-msgstr "Termin"
+msgstr "Terminé"
 
 #: modules/msc/includes/command_history.php:35
 msgid "Host"
-msgstr "Hte"
+msgstr "Hôte"
 
 #: modules/msc/includes/command_history.php:49
 msgid " on "
@@ -1712,35 +1713,35 @@ msgstr " sur "
 
 #: modules/msc/includes/command_history.php:145
 msgid "Bundle success percent"
-msgstr "% de succs (bundle)"
+msgstr "% de succès (bundle)"
 
 #: modules/msc/includes/command_history.php:184
 msgid "User command creator"
-msgstr "Crateur de la commande"
+msgstr "Créateur de la commande"
 
 #: modules/msc/includes/command_history.php:185
 msgid "Execute file"
-msgstr "Fichier excut"
+msgstr "Fichier exécuté"
 
 #: modules/msc/includes/command_history.php:186
 msgid "Execution arguments"
-msgstr "Arguments de l'excution"
+msgstr "Arguments de l'exécution"
 
 #: modules/msc/includes/command_history.php:187
 msgid "Start execute file"
-msgstr "Lancer l'excution du fichier"
+msgstr "Lancer l'exécution du fichier"
 
 #: modules/msc/includes/command_history.php:188
 msgid "Start inventory agent"
-msgstr "Dmarrer un inventaire"
+msgstr "Démarrer un inventaire"
 
 #: modules/msc/includes/command_history.php:190
 msgid "Delay between two connections"
-msgstr "Dlai entre deux connexions"
+msgstr "Délai entre deux connexions"
 
 #: modules/msc/includes/command_history.php:191
 msgid "Command start date"
-msgstr "Date de dmarrage de la commande"
+msgstr "Date de démarrage de la commande"
 
 #: modules/msc/includes/command_history.php:192
 msgid "Command expiry date"
@@ -1753,7 +1754,7 @@ msgstr "Replanifier"
 #: modules/msc/includes/command_history.php:265
 #: modules/msc/includes/command_history.php:340
 msgid "<i>not set</i>"
-msgstr "<i>non renseign</i>"
+msgstr "<i>non renseigné</i>"
 
 #: modules/msc/includes/command_history.php:293
 #, php-format
@@ -1777,11 +1778,11 @@ msgstr "<i>toujours</i>"
 #: modules/msc/includes/command_history.php:304
 #: modules/msc/includes/command_history.php:309
 msgid "<i>whole day</i>"
-msgstr "<i>toute la journe</i>"
+msgstr "<i>toute la journée</i>"
 
 #: modules/msc/includes/command_history.php:317
 msgid "<i>as soon as possible</i>"
-msgstr "<i>Ds que possible</i>"
+msgstr "<i>Dès que possible</i>"
 
 #: modules/msc/includes/command_history.php:322
 #: modules/msc/includes/command_history.php:327
@@ -1804,7 +1805,7 @@ msgstr "%s %s"
 #: modules/msc/includes/command_history.php:338
 #, php-format
 msgid "%s <i>(no additional parameter given)</i>"
-msgstr "%s <i>(pas de paramtre supplmentaire donn)</i>"
+msgstr "%s <i>(pas de paramètre supplémentaire donné)</i>"
 
 #: modules/msc/includes/command_history.php:343
 msgid "None (Local Proxy Client)"
@@ -1825,23 +1826,23 @@ msgstr "Aucune"
 
 #: modules/msc/includes/command_history.php:364
 msgid "enable"
-msgstr "activ"
+msgstr "activé"
 
 #: modules/msc/includes/command_history.php:365
 msgid "disable"
-msgstr "dsactiv"
+msgstr "désactivé"
 
 #: modules/msc/includes/command_history.php:366
 msgid "done"
-msgstr "Termin"
+msgstr "Terminé"
 
 #: modules/msc/includes/command_history.php:367
 msgid "failed"
-msgstr "chec"
+msgstr "échec"
 
 #: modules/msc/includes/command_history.php:368
 msgid "over_time"
-msgstr "dlai dpass"
+msgstr "délai dépassé"
 
 #: modules/msc/includes/command_history.php:369
 msgid "out_of_interval"
@@ -1852,37 +1853,37 @@ msgid ""
 "Error while connecting to secure agent on this host. Please check network "
 "connectivity, and that the secure agent is installed on this host."
 msgstr ""
-"Erreur lors de la connexion  l'agent scuris de cette machine. Veuillez "
-"vrifier votre rseau, et que l'agent scuris est bien install sur cette "
+"Erreur lors de la connexion  l'agent sécurisé de cette machine. Veuillez "
+"vérifier votre réseau, et que l'agent sécurisé est bien installé sur cette "
 "machine."
 
 #: modules/msc/includes/command_history.php:406
 msgid "The script was killed by Pulse 2 (timeout ?)."
-msgstr "Le script a t annul par Pulse 2 (dure trop longue ?)."
+msgstr "Le script a été annulé par Pulse 2 (durée trop longue ?)."
 
 #: modules/msc/includes/command_history.php:407
 msgid "The script was terminated by Pulse 2."
-msgstr "Le script a t termin par Pulse 2."
+msgstr "Le script a été terminé par Pulse 2."
 
 #: modules/msc/includes/command_history.php:409
 msgid "Something goes wrong while checking client identity."
 msgstr ""
-"Il s'est pass quelque chose d'inattendu lors de la vrification de l'identit "
-"du poste client."
+"Il s'est pas quelque chose d'inattendu lors de la vérification de l'identité"
+" du poste client."
 
 #: modules/msc/includes/command_history.php:410
 msgid ""
 "The current host name doesn't match the host name from the inventory "
 "database."
 msgstr ""
-"Le nom de l'ordinateur ne correspond pas  celui prsent dans l'inventaire."
+"Le nom de l'ordinateur ne correspond pas  celui présent dans l'inventaire."
 
 #: modules/msc/includes/command_history.php:411
 msgid ""
 "The current host IP address doesn't match the IP address from the inventory "
 "database."
 msgstr ""
-"L'adresse IP de l'ordinateur ne correspond pas  celle prsente dans "
+"L'adresse IP de l'ordinateur ne correspond pas  celle présente dans "
 "l'inventaire."
 
 #: modules/msc/includes/command_history.php:412
@@ -1890,7 +1891,7 @@ msgid ""
 "The current host MAC address doesn't match the MAC address from the "
 "inventory database."
 msgstr ""
-"L'adresse MAC de l'ordinateur ne correspond pas  celle prsente dans "
+"L'adresse MAC de l'ordinateur ne correspond pas  celle présente dans "
 "l'inventaire."
 
 #: modules/msc/includes/command_history.php:414
@@ -1904,8 +1905,8 @@ msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu tre rcupres sur le miroir principal '%s'.\n"
-"Veuillez vrifier que le package et ses fichiers n'ont pas t modifis depuis la planification de la commande."
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir principal '%s'.\n"
+"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
@@ -1913,8 +1914,8 @@ msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
 msgstr ""
-"Les URI des fichiers du package '%s' n'ont pas pu tre rcupres sur le miroir de secours '%s'.\n"
-"Veuillez vrifier que le package et ses fichiers n'ont pas t modifis depuis la planification de la commande."
+"Les URI des fichiers du package '%s' n'ont pas pu être récupérées sur le miroir de secours '%s'.\n"
+"Veuillez vérifier que le package et ses fichiers n'ont pas été modifiés depuis la planification de la commande."
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
@@ -1923,7 +1924,7 @@ msgid ""
 "was refused."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir "
-"principal '%s' : la connexion a t refuse"
+"principal '%s' : la connexion a été refusée"
 
 #: modules/msc/includes/command_history.php:418
 #, php-format
@@ -1932,7 +1933,7 @@ msgid ""
 "connection was refused."
 msgstr ""
 "Une erreur s'est produite lors de la tentative de contact du miroir de "
-"secours '%s' : la connexion a t refuse"
+"secours '%s' : la connexion a été refusée"
 
 #: modules/msc/includes/command_history.php:419
 #, php-format
@@ -1973,7 +1974,7 @@ msgstr "prochain essai"
 
 #: modules/msc/includes/command_history.php:497
 msgid "Step log"
-msgstr "Log de l'tape"
+msgstr "Log de l'étape"
 
 #: modules/msc/includes/command_history.php:506
 msgid "Show log"
@@ -1985,7 +1986,7 @@ msgstr "Etape"
 
 #: modules/msc/includes/command_history.php:553
 msgid "Reserved bandwidth"
-msgstr "Bande passante rserve"
+msgstr "Bande passante réservée"
 
 #: modules/msc/includes/command_history.php:553
 msgid "<i>none</i>"
@@ -2001,7 +2002,7 @@ msgstr "Mode de proxy"
 
 #: modules/msc/includes/command_history.php:555
 msgid "Proxy priority"
-msgstr "Priorit du proxy"
+msgstr "Priorité du proxy"
 
 #: modules/msc/includes/command_history.php:556
 msgid "Scheduler"
@@ -2037,16 +2038,16 @@ msgstr "Jamais"
 #: modules/msc/includes/command_history.php:656
 #: modules/msc/includes/command_history.php:661
 msgid "As soon as possible"
-msgstr "Ds que possible"
+msgstr "Dès que possible"
 
 #: modules/msc/includes/command_history.php:663
 msgid "<i>undefined</i>"
-msgstr "<i>indfini</i>"
+msgstr "<i>indéfini</i>"
 
 #: modules/msc/includes/widgets.inc.php:27
 #, php-format
 msgid "Quick action path %s don't exists"
-msgstr "Le rpertoire des actions rapides %s n'existe pas"
+msgstr "Le répertoire des actions rapides %s n'existe pas"
 
 #: modules/msc/includes/widgets.inc.php:33
 msgid "Other/N.A."
@@ -2063,8 +2064,8 @@ msgid ""
 "group \"%s\" is not defined in the MSC module, or you don't have permissions"
 " to access it"
 msgstr ""
-"le groupe \"%s\" n'est pas dfini dans le module MSC, ou vous n'avez pas la "
-"permission d'y accder"
+"le groupe \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas la "
+"permission d'y accéder"
 
 #: modules/msc/includes/widgets.inc.php:96
 #, php-format
@@ -2072,8 +2073,8 @@ msgid ""
 "%s host is not defined in the MSC module, or you don't have permissions to "
 "access it"
 msgstr ""
-"L'ordinateur \"%s\" n'est pas dfini dans le module MSC, ou vous n'avez pas "
-"la permission d'y accder"
+"L'ordinateur \"%s\" n'est pas défini dans le module MSC, ou vous n'avez pas "
+"la permission d'y accéder"
 
 #: modules/msc/includes/widgets.inc.php:117
 msgid "You don't have the right permissions to display this command"
@@ -2099,7 +2100,7 @@ msgstr "Commandes de tous les utilisateurs"
 
 #: modules/msc/includes/widgets.inc.php:387
 msgid "State filter"
-msgstr "tat du filtre"
+msgstr "état du filtre"
 
 #: modules/msc/includes/widgets.inc.php:393
 msgid "In progress"
@@ -2107,7 +2108,7 @@ msgstr "En cours"
 
 #: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
-msgstr "Crer un groupe"
+msgstr "Créer un groupe"
 
 #: modules/msc/includes/utilities.php:32
 msgid "Bytes"
@@ -2120,7 +2121,7 @@ msgstr "%3.1f %s%s"
 
 #: modules/msc/includes/bundle_widgets.php:119
 msgid "Set order"
-msgstr "Dfinir l'ordre"
+msgstr "Définir l'ordre"
 
 #: modules/msc/includes/bundle_widgets.php:158
 #: modules/msc/includes/bundle_widgets.php:187
@@ -2134,7 +2135,7 @@ msgstr "Actions possibles"
 
 #: modules/msc/includes/bundle_widgets.php:285
 msgid "Launch (advanced)"
-msgstr "Lancer (avanc)"
+msgstr "Lancer (avancé)"
 
 #: modules/msc/includes/bundle_widgets.php:286
 msgid "Cancel"
@@ -2142,7 +2143,7 @@ msgstr "Annuler"
 
 #: modules/msc/includes/bundle_widgets.php:304
 msgid "awake"
-msgstr "rveil"
+msgstr "réveil"
 
 #: modules/msc/includes/bundle_widgets.php:306
 msgid "invent."
@@ -2154,41 +2155,41 @@ msgstr "Nom du groupe de logiciels"
 
 #: modules/msc/includes/bundle_widgets.php:350
 msgid "Wake on lan"
-msgstr "Rveil rseau (WOL)"
+msgstr "Réveil réseau (WOL)"
 
 #: modules/msc/includes/bundle_widgets.php:351
 msgid "Start the script"
-msgstr "Dmarrer le script"
+msgstr "Démarrer le script"
 
 #: modules/msc/includes/bundle_widgets.php:353
 msgid "Start inventory"
-msgstr "Dmarrer un inventaire"
+msgstr "Démarrer un inventaire"
 
 #: modules/msc/includes/bundle_widgets.php:355
 msgid "Halt client after"
-msgstr "Arrter la machine aprs"
+msgstr "Arrêter la machine après"
 
 #: modules/msc/includes/bundle_widgets.php:360
 msgid "Command parameters"
-msgstr "Paramtres du script"
+msgstr "Paramètres du script"
 
 #: modules/msc/includes/bundle_widgets.php:361
 msgid "Beginning of validity"
-msgstr "Dbut de validit"
+msgstr "Début de validité"
 
 #: modules/msc/includes/bundle_widgets.php:362
 msgid "End of validity"
-msgstr "Fin de validit"
+msgstr "Fin de validité"
 
 #: modules/msc/includes/bundle_widgets.php:389
 #: modules/msc/includes/bundle_widgets.php:405
 msgid "Cancel bundle creation"
-msgstr "Annuler la cration du groupe de logiciels"
+msgstr "Annuler la création du groupe de logiciels"
 
 #: modules/msc/includes/commands_xmlrpc.inc.php:130
 #, php-format
 msgid "%s deployment subgroup - %s"
-msgstr "Sous-groupe de dploiement (%s) - %s"
+msgstr "Sous-groupe de déploiement (%s) - %s"
 
 #: modules/msc/includes/commands_xmlrpc.inc.php:153
 #, php-format
@@ -2196,5 +2197,5 @@ msgid ""
 "Deploy subgroup created successfully. <br/><a href=\"%s\" "
 "target=\"_blank\">View group</a>"
 msgstr ""
-"Le sous-groupe de dploiement a t cr avec succs. <br/><a href=\"%s\" "
+"Le sous-groupe de déploiement a été créer avec succès. <br/><a href=\"%s\" "
 "target=\"_blank\">Voir le groupe</a>"
