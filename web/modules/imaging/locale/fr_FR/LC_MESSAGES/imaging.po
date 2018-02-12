@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
+"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,7 +62,7 @@ msgstr "Éditer l'élément"
 #: modules/imaging/manage/bootmenu_edit.php:81
 #: modules/imaging/manage/service_add.php:114
 msgid "Selected by default"
-msgstr "Sélectionn par défaut"
+msgstr "Sélectionné par défaut"
 
 #: modules/imaging/imaging/bootmenu.php:245
 #: modules/imaging/imaging/bootmenu.php:462
@@ -345,7 +345,7 @@ msgstr "Tout sélectionner"
 #: modules/imaging/imaging/showtarget.php:129
 #: modules/imaging/manage/service_show_used.php:198
 msgid "Unselect all"
-msgstr "Tout déslectionner"
+msgstr "Tout désélectionner"
 
 #: modules/imaging/imaging/showtarget.php:130
 #: modules/imaging/imaging/images_delete.php:72
@@ -774,7 +774,7 @@ msgstr "Menu de démarrage"
 
 #: modules/imaging/imaging/tabs.php:217 modules/imaging/imaging/tabs.php:289
 msgid "Current boot menu"
-msgstr "Menu de dmarrage actuel"
+msgstr "Menu de démarrage actuel"
 
 #: modules/imaging/imaging/tabs.php:220
 #: modules/imaging/infoPackage.inc.php:276
@@ -786,11 +786,11 @@ msgstr "Images et masters"
 #: modules/imaging/infoPackage.inc.php:278
 #: modules/imaging/infoPackage.inc.php:357
 msgid "Boot services"
-msgstr "Services de dmarrage"
+msgstr "Services de démarrage"
 
 #: modules/imaging/imaging/tabs.php:221 modules/imaging/imaging/tabs.php:291
 msgid "Available boot menu services"
-msgstr "Services de dmarrage disponibles"
+msgstr "Services de démarrage disponibles"
 
 #: modules/imaging/imaging/tabs.php:222 modules/imaging/imaging/tabs.php:292
 msgid "Imaging log"
@@ -850,7 +850,7 @@ msgstr "Afficher les cibles utilisant cette image"
 #: modules/imaging/imaging/ajaxImages.php:207
 #: modules/imaging/manage/ajaxMasterLevel2.php:107
 msgid "Edit image"
-msgstr "diter l'image"
+msgstr "Éditer l'image"
 
 #: modules/imaging/imaging/ajaxImages.php:91
 msgid "View image log"
@@ -859,7 +859,7 @@ msgstr "Voir les logs de l'image"
 #: modules/imaging/imaging/ajaxImages.php:172
 #: modules/imaging/manage/ajaxMasterLevel2.php:98
 msgid "Created"
-msgstr "Cr"
+msgstr "Créer"
 
 #: modules/imaging/imaging/ajaxImages.php:173
 #: modules/imaging/manage/ajaxMasterLevel2.php:99
@@ -879,7 +879,7 @@ msgstr "Venant du profil"
 #: modules/imaging/imaging/ajaxImages.php:181
 #: modules/imaging/manage/ajaxMasterLevel2.php:103
 msgid "Create bootable iso"
-msgstr "Crer une iso bootable"
+msgstr "Créer une iso bootable"
 
 #: modules/imaging/imaging/ajaxImages.php:200
 msgid "Multicast init"
@@ -890,14 +890,14 @@ msgid ""
 "You have modified this target's boot menu, if you are done please click on "
 "\"Generate Menu\" to update the computer boot menu."
 msgstr ""
-"Vous avez modifi le menu de dmarrage de cette cible, si vous n'avez pas "
-"d'autres modifications  faire merci de cliquer sur \"Gnrer\" pour finaliser "
-"cette modification."
+"Vous avez modifié le menu de démarrage de cette cible, si vous n'avez pas "
+"d'autres modifications  faire merci de cliquer sur \"Générer\" pour "
+"finaliser cette modification."
 
 #: modules/imaging/imaging/header.php:38
 #: modules/imaging/includes/ajaxcommon.inc.php:141
 msgid "Generate Menu"
-msgstr "Gnrer le menu"
+msgstr "Générer le menu"
 
 #: modules/imaging/imaging/header.php:43
 #: modules/imaging/includes/ajaxcommon.inc.php:146
@@ -905,17 +905,17 @@ msgid ""
 "Click on \"Force Generation\" if you want to force the update of the boot "
 "menu"
 msgstr ""
-"Cliquez sur \"Forcer la gnration\" si vous voulez forcer la mise  jour du "
+"Cliquez sur \"Forcer la génération\" si vous voulez forcer la mise  jour du "
 "menu de dmarrage."
 
 #: modules/imaging/imaging/header.php:46
 #: modules/imaging/includes/ajaxcommon.inc.php:152
 msgid "Force Generation"
-msgstr "Forcer la gnration"
+msgstr "Forcer la génération"
 
 #: modules/imaging/imaging/header.php:51
 msgid "This target's boot menu is up-to-date."
-msgstr "Le menu de dmarrage de cette cible est  jour."
+msgstr "Le menu de démarrage de cette cible est  jour."
 
 #: modules/imaging/imaging/header.php:60
 #, php-format
@@ -923,8 +923,8 @@ msgid ""
 "This computer has a <u>custom boot menu</u>. <a href=\"%s\">Click here</a> "
 "to get back the default one."
 msgstr ""
-"Cet ordinateur a <u>menu de dmarrage personnalis</u>. <a href=\"%s\">Cliquer"
-" ici</a> pour rcuprer le menu par dfaut."
+"Cet ordinateur a <u>menu de démarrage personnalis</u>. <a "
+"href=\"%s\">Cliquer ici</a> pour récupérer le menu par défaut."
 
 #: modules/imaging/imaging/header.php:75
 #, php-format
@@ -939,12 +939,13 @@ msgstr ""
 #: modules/imaging/imaging/multicast.php:237
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
-msgstr "Le muticast n'a pas t cr  : il n'y a pas d'ordinateurs dans le groupe"
+msgstr ""
+"Le muticast n'a pas été créer  : il n'y a pas d'ordinateurs dans le groupe"
 
 #: modules/imaging/imaging/multicast.php:66
 #: modules/imaging/imaging/multicast.php:87
 msgid "Multicast menu has not been created : number of computers missing"
-msgstr "Le muticast n'a pas t cr  : nombre d'ordinateurs manquant"
+msgstr "Le muticast n'a pas été créer  : nombre d'ordinateurs manquant"
 
 #: modules/imaging/imaging/multicast.php:104
 #: modules/imaging/imaging/multicast.php:121
@@ -954,8 +955,8 @@ msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
 "computers and you have entered %d"
 msgstr ""
-"Le muticast n'a pas t cr  : le groupe imaging contient %d ordinateurs et "
-"vous en avez saisi %d"
+"Le muticast n'a pas été créer  : le groupe imaging contient %d ordinateurs "
+"et vous en avez saisi %d"
 
 #: modules/imaging/imaging/multicast.php:187
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
@@ -963,28 +964,30 @@ msgstr ""
 
 #: modules/imaging/imaging/multicast.php:210
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
-msgstr "Le muticast n'a pas t cr : --max-time-to-wait missing"
+msgstr "Le muticast n'a pas été créer : --max-time-to-wait missing"
 
 #: modules/imaging/imaging/multicast.php:228
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
-msgstr "Le muticast n'a pas t cr : --max-time-to-wait < 60"
+msgstr "Le muticast n'a pas été créer : --max-time-to-wait < 60"
 
 #: modules/imaging/imaging/multicast.php:254
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
-"Le muticast n'a pas t cr  : le master slectionn est manquant sur le disque"
+"Le muticast n'a pas été créer : le master sélectionné est manquant sur le "
+"disque"
 
 #: modules/imaging/imaging/multicast.php:293
 msgid "Multicast menu has been successfully created."
-msgstr "Le menu du Multicast a t cr avec succs."
+msgstr "Le menu du Multicast a été créer avec succès."
 
 #: modules/imaging/imaging/multicast.php:311
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
 msgstr ""
-"Le muticast n'a pas t cr  : vrifiez que le serveur d'imaging est dmarr"
+"Le muticast n'a pas été créer  : vérifiez que le serveur d'imaging est "
+"démarré"
 
 #: modules/imaging/imaging/multicast.php:348
 #, php-format
@@ -1005,13 +1008,13 @@ msgstr ""
 #: modules/imaging/imaging/multicast.php:389
 #: modules/imaging/manage/ajaxStatus.php:569
 msgid "Start multicast deploy"
-msgstr "Dmarrer le dploiement multicast"
+msgstr "Démarrer le déploiement multicast"
 
 #: modules/imaging/imaging/addservice.php:51
 #: modules/imaging/imaging/addservice.php:146
 #, php-format
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
-msgstr "Ajouter le service de dmarrage <b>%s</b>  <b>%s</b>"
+msgstr "Ajouter le service de démarrage <b>%s</b>  <b>%s</b>"
 
 #: modules/imaging/imaging/ajaxLogs.php:90
 #: modules/imaging/manage/ajaxLogs.php:109
@@ -1030,19 +1033,19 @@ msgstr "Message"
 
 #: modules/imaging/imaging/ajaxLogs.php:96
 msgid "State"
-msgstr "tat"
+msgstr "état "
 
 #: modules/imaging/imaging/ajaxServices.php:51
 msgid "Add service to boot menu"
-msgstr "Ajouter un service au menu de dmarrage"
+msgstr "Ajouter un service au menu de démarrage"
 
 #: modules/imaging/imaging/ajaxServices.php:52
 msgid "Remove service from boot menu"
-msgstr "Supprimer un service du menu de dmarrage"
+msgstr "Supprimer un service du menu de démarrage"
 
 #: modules/imaging/imaging/ajaxServices.php:100
 msgid "In bootmenu"
-msgstr "Dans le menu de dmarrage"
+msgstr "Dans le menu de démarrage"
 
 #: modules/imaging/imaging/bootmenu_remove.php:61
 #, php-format
@@ -1057,19 +1060,19 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu_remove.php:159
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
-msgstr "tes-vous sr de vouloir supprimer <b>%s</b> du menu de dmarrage ?"
+msgstr "tes-vous sr de vouloir supprimer <b>%s</b> du menu de démarrage ?"
 
 #: modules/imaging/manage/ajaxBootmenu.php:94
 msgid "Default boot menu configuration"
-msgstr "Configuration du menu de dmarrage par dfaut"
+msgstr "Configuration du menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxBootmenu.php:100
 msgid "Default"
-msgstr "Par dfaut"
+msgstr "Par défaut"
 
 #: modules/imaging/manage/ajaxBootmenu.php:102
 msgid "Default on WOL"
-msgstr "Par dfaut sur WOL"
+msgstr "Par défaut sur WOL"
 
 #: modules/imaging/manage/bootmenu_up.php:37
 #, php-format
@@ -1080,12 +1083,14 @@ msgstr ""
 #, php-format
 msgid "Failed to move <strong>%s</strong> in the default boot menu"
 msgstr ""
-"Impossible de dplacer <strong>%s</strong> dans le menu de dmarrage par dfaut"
+"Impossible de déplacer <strong>%s</strong> dans le menu de démarrage par "
+"défaut"
 
 #: modules/imaging/manage/master_remove.php:37
 #, php-format
 msgid "Image <strong>%s</strong> removed from default boot menu."
-msgstr "L'image <strong>%s</strong> a t retire du menu de dmarrage par dfaut."
+msgstr ""
+"L'image <strong>%s</strong> a été retirée du menu de démarrage par défaut."
 
 #: modules/imaging/manage/master_remove.php:38
 msgid "Notify Success : removed from default boot menu."
@@ -1099,12 +1104,13 @@ msgstr "Supprimer le master"
 #: modules/imaging/manage/master_remove.php:91
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> master ?"
-msgstr "Etes-vous sr de vouloir supprimer le master <b>%s</b> ?"
+msgstr "Etes-vous sur de vouloir supprimer le master <b>%s</b> ?"
 
 #: modules/imaging/manage/master_add.php:49
 #, php-format
 msgid "Image <strong>%s</strong> added to default boot menu"
-msgstr "L'image <strong>%s</strong> a t ajoute au menu de dmarrage par dfaut"
+msgstr ""
+"L'image <strong>%s</strong> a été ajoutée au menu de démarrage par défaut"
 
 #: modules/imaging/manage/master_add.php:68
 #, php-format
@@ -1125,8 +1131,8 @@ msgid ""
 "Boot menu generation failed for package server: %s<br /><br />Check "
 "/var/log/mmc/pulse2-package-server.log"
 msgstr ""
-"La gnration du menu de dmarrage sur le package server %s a chou.<br /><br "
-"/>Vrifiez /var/log/mmc/pulse2-package-server.log"
+"La génération du menu de démarrage sur le package server %s a échoué.<br "
+"/><br />Vérifiez /var/log/mmc/pulse2-package-server.log"
 
 #: modules/imaging/manage/master_add.php:81
 #, php-format
@@ -1135,7 +1141,7 @@ msgstr ""
 
 #: modules/imaging/manage/systemImageManager.php:38
 msgid "Sysprep generator"
-msgstr "Gnrateur de Sysprep"
+msgstr "Générateur de Sysprep"
 
 #: modules/imaging/manage/systemImageManager.php:39
 msgid "Sysprep list"
@@ -1148,7 +1154,7 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:78
 msgid "All Windows Answer Files"
-msgstr "Tout les fichiers de rponse de windows"
+msgstr "Tout les fichiers de réponse de windows"
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
@@ -1164,7 +1170,7 @@ msgstr "Afficher le fichier sysprep"
 
 #: modules/imaging/manage/sysprepList.php:91
 msgid "Edit sysprep file"
-msgstr "diter le fichier sysprep"
+msgstr "Editer le fichier sysprep"
 
 #: modules/imaging/manage/sysprepList.php:92
 msgid "Delete sysprep file"
@@ -1172,7 +1178,7 @@ msgstr "Supprimer le fichier sysprep"
 
 #: modules/imaging/manage/sysprepList.php:92
 msgid "Are you sure you want to unset this sysrep answer file?"
-msgstr "tes-vous sr de vouloir supprimer ce fichier de rponse sysprep ?"
+msgstr "Êtes-vous sûr de vouloir supprimer ce fichier de réponse sysprep ?"
 
 #: modules/imaging/manage/localSidebar.php:28
 msgid "Imaging server status"
@@ -1181,17 +1187,17 @@ msgstr "Statut du serveur d'imaging"
 #: modules/imaging/manage/localSidebar.php:31
 #: modules/imaging/infoPackage.inc.php:99
 msgid "Manage masters"
-msgstr "Grer les masters"
+msgstr "Gérer les masters"
 
 #: modules/imaging/manage/localSidebar.php:34
 #: modules/imaging/infoPackage.inc.php:125
 msgid "Manage boot services"
-msgstr "Grer les services de dmarrage"
+msgstr "Gérer les services de démarrage"
 
 #: modules/imaging/manage/localSidebar.php:37
 #: modules/imaging/infoPackage.inc.php:143
 msgid "Default boot menu"
-msgstr "Menu de dmarrage par dfaut"
+msgstr "Menu de démarrage par défaut"
 
 #: modules/imaging/manage/localSidebar.php:40
 #: modules/imaging/infoPackage.inc.php:155
@@ -1219,8 +1225,8 @@ msgid ""
 "Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
 "'<b>%s</b>'"
 msgstr ""
-"tes vous sur de vouloir associer le serveur d'imaging '<b>%s</b>'  l'entit "
-"'<b>%s</b>'"
+"êtes vous sur de vouloir associer le serveur d'imaging '<b>%s</b>'  l'entité"
+" '<b>%s</b>'"
 
 #: modules/imaging/manage/postinstall_edit.php:91
 #, php-format
@@ -1239,7 +1245,7 @@ msgstr ""
 #: modules/imaging/manage/postinstall_edit.php:122
 #, php-format
 msgid "<strong>%s</strong> script wasn't %s"
-msgstr "<strong>%s</strong> script n'a pas t %s"
+msgstr "<strong>%s</strong> script n'a pas été %s"
 
 #: modules/imaging/manage/postinstall_edit.php:158
 msgid "Script value"
@@ -1248,16 +1254,16 @@ msgstr "Valeur du script"
 #: modules/imaging/manage/service_remove.php:44
 #, php-format
 msgid "Service <strong>%s</strong> successfully removed"
-msgstr "Le service <strong>%s</strong> a t supprim avec succs"
+msgstr "Le service <strong>%s</strong> a été supprimé avec succès"
 
 #: modules/imaging/manage/service_remove.php:79
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
-msgstr "tes-vous sr de vouloir supprimer le service de dmarrage <b>%s</b> ?"
+msgstr "êtes-vous sr de vouloir supprimer le service de démarrage <b>%s</b> ?"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:38
 msgid "Boot service successfully created"
-msgstr "Le service de dmarrage a t cr avec succs"
+msgstr "Le service de démarrage a été créer avec succès"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:39
 msgid "Notify Success : Boot service successfully created"
@@ -1265,7 +1271,7 @@ msgstr ""
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:55
 msgid "Error while creating Boot Service"
-msgstr "Une erreur est survenue lors de la cration du service de dmarrage"
+msgstr "Une erreur est survenue lors de la création du service de démarrage"
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:56
 msgid "Notify Error : Error while creating Boot Service"
@@ -1274,7 +1280,7 @@ msgstr ""
 #: modules/imaging/manage/postinstall_create_boot_service.php:77
 #, php-format
 msgid "Add <b>%s</b> to available Boot Services ?"
-msgstr "Ajouter <b>%s</b> aux services de dmarrage ?"
+msgstr "Ajouter <b>%s</b> aux services de démarrage ?"
 
 #: modules/imaging/manage/ajaxFormWin7.php:348
 #: modules/imaging/manage/ajaxFormWin8.php:423
@@ -1432,7 +1438,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:651
 #: modules/imaging/manage/ajaxFormWin81.php:854
 msgid "Protect Your Computer"
-msgstr "Protger Votre Ordinateur"
+msgstr "Protéger Votre Ordinateur"
 
 #: modules/imaging/manage/ajaxFormWin7.php:574
 #: modules/imaging/manage/ajaxFormWin8.php:649
@@ -1580,7 +1586,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:782
 #: modules/imaging/manage/ajaxFormWin81.php:690
 msgid "Customer Experience Improvement Program (CEIP)"
-msgstr "Programme damlioration de Windows (CEIP)"
+msgstr "Programme d'amélioration de Windows (CEIP)"
 
 #: modules/imaging/manage/ajaxFormWin7.php:710
 #: modules/imaging/manage/ajaxFormWin10.php:790
@@ -1614,18 +1620,18 @@ msgstr "Mot de passe: (Optionnel)"
 #: modules/imaging/manage/ajaxFormWin10.php:825
 #: modules/imaging/manage/ajaxFormWin81.php:938
 msgid "Create Xml Windows Answer File Generator"
-msgstr "Crer un fichier de Xml rponse Windows"
+msgstr "Créer un fichier XML de réponse Windows"
 
 #: modules/imaging/manage/ajaxFormWin7.php:745
 #: modules/imaging/manage/ajaxFormWin8.php:834
 #: modules/imaging/manage/ajaxFormWin10.php:833
 #: modules/imaging/manage/ajaxFormWin81.php:946
 msgid "Xml Windows Answer File Generator"
-msgstr "Gnrateur de fichier de rponse Windows Xml"
+msgstr "Générateur de fichier de réponse Windows XML"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:51
 msgid "Create Boot Service"
-msgstr "Crer un service de dmarrage"
+msgstr "Créer un service de démarrage"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:52
 msgid "Edit script"
@@ -1633,7 +1639,7 @@ msgstr "diter le script"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:54
 msgid "Boot Service already created"
-msgstr "Le service de dmarrage existe dj"
+msgstr "Le service de démarrage existe déjà"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:89
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
@@ -1659,7 +1665,7 @@ msgstr "Charge du serveur"
 
 #: modules/imaging/manage/ajaxStatus.php:129
 msgid "Synchronization state"
-msgstr "tat de la synchronisation"
+msgstr "état de la synchronisation"
 
 #: modules/imaging/manage/ajaxStatus.php:133
 msgid "Up-to-date"
@@ -1671,15 +1677,15 @@ msgstr "Statistiques"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr "Entit"
+msgstr "Entité"
 
 #: modules/imaging/manage/ajaxStatus.php:145
 msgid "client(s) registered"
-msgstr "client(s) enregistr(s)"
+msgstr "client(s) enregistré(s)"
 
 #: modules/imaging/manage/ajaxStatus.php:150
 msgid "with custom menu"
-msgstr "avec menu personnalis"
+msgstr "avec menu personnalisé"
 
 #: modules/imaging/manage/ajaxStatus.php:234
 msgid "client have rescue image"
@@ -1700,20 +1706,21 @@ msgstr "Emplacement du multicast actuel"
 
 #: modules/imaging/manage/ajaxStatus.php:552
 msgid "Stop multicast deploy"
-msgstr "Arrter le dploiement multicast"
+msgstr "Arrêter le déploiement multicast"
 
 #: modules/imaging/manage/ajaxStatus.php:581
 msgid "Clear multicast deploy"
-msgstr "Nettoyer le dploiement multicast"
+msgstr "Nettoyer le déploiement multicast"
 
 #: modules/imaging/manage/ajaxStatus.php:617
 msgid "Recent activity"
-msgstr "Activit rcente"
+msgstr "Activité récente"
 
 #: modules/imaging/manage/ajaxStatus.php:626
 msgid "Can't connect to the imaging server linked to the selected entity."
 msgstr ""
-"Impossible de se connecter au serveur d'imaging associ  l'entit slectionne."
+"Impossible de se connecter au serveur d'imaging associé à  l'entité "
+"sélectionnée."
 
 #: modules/imaging/manage/ajaxFormWin8.php:785
 #: modules/imaging/manage/ajaxFormWin81.php:698
@@ -1737,13 +1744,14 @@ msgstr "UAC"
 #: modules/imaging/manage/master_iso.php:44
 #: modules/imaging/infoPackage.inc.php:121
 msgid "Create iso from master"
-msgstr "Crer une iso depuis le master"
+msgstr "Créer un ISO  depuis le master"
 
 #: modules/imaging/manage/master_iso.php:46
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
 msgstr ""
-"La cration de l'iso du master <strong>%s</strong> a t lance en tche de fond."
+"La création de l'ISO du master <strong>%s</strong> a été lancé en tâche de "
+"fond."
 
 #: modules/imaging/manage/master_iso.php:48
 #, php-format
@@ -1751,26 +1759,26 @@ msgid ""
 "The files will be stored in the directory %s of the server at the end of the"
 " backup."
 msgstr ""
-"Les fichiers seront stocks dans le rpertoire %s du serveur  la fin de la "
+"Les fichiers seront stockés dans le répertoire %s du serveur à la fin de la "
 "sauvegarde."
 
 #: modules/imaging/manage/master_iso.php:50
 msgid "Please go to the status page to check the iso creation status."
 msgstr ""
-"Merci de visiter la page de statuts pour suivre l'avancement de la cration "
-"de l'iso."
+"Merci de visiter la page des statuts pour suivre l'avancement de la création"
+" de l'ISO."
 
 #: modules/imaging/manage/master_iso.php:52
 msgid ""
 "This operation will last according to the amount of data of the master."
 msgstr ""
-"La dure de cette opration dpend du volume de donnes contenues dans le "
+"La durée de cette opération dépend du volume de données contenues dans le "
 "master."
 
 #: modules/imaging/manage/master_iso.php:88
 #, php-format
 msgid "Create iso for <strong>%s</strong>"
-msgstr "Crer une iso de <strong>%s</strong>"
+msgstr "Créer un ISO de <strong>%s</strong>"
 
 #: modules/imaging/manage/master_iso.php:108
 msgid "Launch backup"
@@ -1812,7 +1820,7 @@ msgstr ""
 #: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
 #, php-format
 msgid "<b>%s</b> was already added to Boot Services"
-msgstr "<b>%s</b> a dj t converti en service de dmarrage"
+msgstr "<b>%s</b> a déjà été converti en service de démarrage"
 
 #: modules/imaging/manage/sysprepView.php:33
 msgid "View "
@@ -1825,11 +1833,11 @@ msgstr "Pas de serveur d'imaging disponible pour l'association."
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:47
 #, php-format
 msgid "Link this Imaging Server to the '%s' entity."
-msgstr "Associer ce serveur d'imaging  l'entit '%s'."
+msgstr "Associer ce serveur d'imaging  à l'entité '%s'."
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:70
 msgid "Associate an entity to an imaging server"
-msgstr "Associer une entit  un serveur d'imaging"
+msgstr "Associer une entité à  un serveur d'imaging"
 
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:77
 msgid "Identifier"
@@ -1842,7 +1850,7 @@ msgstr "Copie du master: %s ( %s )"
 
 #: modules/imaging/manage/synchromaster.php:60
 msgid "Copy of master Not Started"
-msgstr "La copie du master n'a pas dmarr"
+msgstr "La copie du master n'a pas démarré"
 
 #: modules/imaging/manage/synchromaster.php:66
 msgid "Copy of master"
@@ -1850,7 +1858,7 @@ msgstr "Copie du master"
 
 #: modules/imaging/manage/synchromaster.php:119
 msgid "Complete"
-msgstr "Termin"
+msgstr "Terminé"
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
@@ -1858,7 +1866,7 @@ msgstr "En cours"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
-msgstr "Copie du master termine"
+msgstr "Copie du master terminé"
 
 #: modules/imaging/manage/synchromaster.php:139
 msgid "Copy of master In progress"
@@ -1869,12 +1877,13 @@ msgstr "Copie du master en cours"
 #, php-format
 msgid "Service <strong>%s</strong> removed from default boot menu"
 msgstr ""
-"Le service <strong>%s</strong> a t supprim du menu de dmarrage par dfaut"
+"Le service <strong>%s</strong> a été supprimé du menu de démarrage par "
+"défaut"
 
 #: modules/imaging/manage/service_del.php:78
 #, php-format
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
-msgstr "Supprimer le service <b>%s</b> du menu de dmarrage par dfaut"
+msgstr "Supprimer le service <b>%s</b> du menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxConfiguration.php:28
 msgid "Imaging server configuration"
@@ -1890,23 +1899,23 @@ msgstr "Mot de passe PXE"
 
 #: modules/imaging/manage/ajaxConfiguration.php:63
 msgid "Leave this field empty to unset PXE Password"
-msgstr "Laisser ce champ vide pour dsactiver le mot de passe PXE"
+msgstr "Laisser ce champ vide pour désactiver le mot de passe PXE"
 
 #: modules/imaging/manage/ajaxConfiguration.php:79
 msgid "Clonezilla parameters for saving images"
-msgstr "Paramtres de Clonezilla pour sauvegarder les images"
+msgstr "Paramètres de Clonezilla pour sauvegarder les images"
 
 #: modules/imaging/manage/ajaxConfiguration.php:82
 msgid "Clonezilla parameters for restoring images"
-msgstr "Paramtres de Clonezilla pour restaurer les images"
+msgstr "Paramètres de Clonezilla pour restaurer les images"
 
 #: modules/imaging/manage/ajaxConfiguration.php:90
 msgid "Default menu parameters"
-msgstr "Paramtres du menu par dfaut"
+msgstr "Paramètres du menu par défaut"
 
 #: modules/imaging/manage/ajaxConfiguration.php:97
 msgid "Default menu timeout"
-msgstr "Timeout du menu par dfaut"
+msgstr "Timeout du menu par défaut"
 
 #: modules/imaging/manage/ajaxConfiguration.php:105
 msgid "Hide menu"
@@ -1923,18 +1932,18 @@ msgid ""
 "and Masters&quot;, followed by clicking the edit button on a backup image to"
 " convert it to a master."
 msgstr ""
-"Pour dfinir un master, aller dans l'onglet  Ordinateurs , cliquer sur l'icne"
-" d'imaging de l'ordinateur dont vous souhaitez faire un master, cliquer sur "
-"Images et masters, puis cliquer sur le bouton d'dition de l'image de secours"
-"  convertir en master."
+"Pour définir un master, aller dans l'onglet  Ordinateurs , cliquer sur "
+"l'icône d'imaging de l'ordinateur dont vous souhaitez faire un master, "
+"cliquer sur Images et masters, puis cliquer sur le bouton d'édition de "
+"l'image de secours  convertir en master."
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:52
 msgid "Add image to default boot menu"
-msgstr "Ajouter l'image au menu de dmarrage par dfaut"
+msgstr "Ajouter l'image au menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:100
 msgid "In default boot menu"
-msgstr "Dans le menu de dmarrage par dfaut"
+msgstr "Dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxMasterLevel2.php:113
 msgid "copy master In progress"
@@ -1951,16 +1960,16 @@ msgstr "Scripts de post-imaging disponibles"
 #: modules/imaging/manage/bootmenu_edit.php:68
 #, php-format
 msgid "Edit : %s"
-msgstr "diter: %s"
+msgstr "éditer: %s"
 
 #: modules/imaging/manage/bootmenu_edit.php:77
 msgid "Default menu item label"
-msgstr "Libell de l'lment du menu par dfaut"
+msgstr "Libellé de l'élément du menu par défaut"
 
 #: modules/imaging/manage/postinstall_delete.php:45
 #, php-format
 msgid "<strong>%s</strong> script deleted"
-msgstr "Le script <strong>%s</strong> a t supprim"
+msgstr "Le script <strong>%s</strong> a été supprimé"
 
 #: modules/imaging/manage/postinstall_delete.php:46
 msgid "Notify Success : script deleted"
@@ -1973,7 +1982,7 @@ msgstr ""
 #: modules/imaging/manage/postinstall_delete.php:74
 #, php-format
 msgid "<strong>%s</strong> script wasn't deleted"
-msgstr "Le script <strong>%s</strong> n'a pas t supprim"
+msgstr "Le script <strong>%s</strong> n'a pas été supprimé"
 
 #: modules/imaging/manage/postinstall_delete.php:75
 msgid "Notify Warning : script wasn't deleted"
@@ -1993,11 +2002,11 @@ msgstr "Supprimer le script de post-imaging"
 #: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
-msgstr "tes-vous sr de vouloir supprimer le script <b>%s</b> ?"
+msgstr "êtes-vous sr de vouloir supprimer le script <b>%s</b> ?"
 
 #: modules/imaging/manage/ajaxService.php:27
 msgid "Manage services"
-msgstr "Grer les services"
+msgstr "Gérer les services"
 
 #: modules/imaging/manage/ajaxLogs.php:45
 msgid "No log available."
@@ -2011,7 +2020,7 @@ msgstr "Statut inconnu"
 #: modules/imaging/manage/ajaxLogs.php:52
 #: modules/imaging/includes/logs.inc.php:28
 msgid "Boot"
-msgstr "Dmarrage"
+msgstr "Démarrage"
 
 #: modules/imaging/manage/ajaxLogs.php:53
 #: modules/imaging/includes/logs.inc.php:25
@@ -2051,12 +2060,12 @@ msgstr "Restauration en cours"
 #: modules/imaging/manage/ajaxLogs.php:62
 #: modules/imaging/includes/logs.inc.php:36
 msgid "Restore done"
-msgstr "Restauration termine"
+msgstr "Restauration terminé"
 
 #: modules/imaging/manage/ajaxLogs.php:63
 #: modules/imaging/includes/logs.inc.php:37
 msgid "Restore failed"
-msgstr "chec de la restauration"
+msgstr "Echec de la restauration"
 
 #: modules/imaging/manage/ajaxLogs.php:64
 #: modules/imaging/includes/logs.inc.php:38
@@ -2066,21 +2075,21 @@ msgstr "Sauvegarde en cours"
 #: modules/imaging/manage/ajaxLogs.php:65
 #: modules/imaging/includes/logs.inc.php:39
 msgid "Backup done"
-msgstr "Sauvegarde termine"
+msgstr "Sauvegarde terminé"
 
 #: modules/imaging/manage/ajaxLogs.php:66
 #: modules/imaging/includes/logs.inc.php:40
 msgid "Backup failed"
-msgstr "chec de la sauvegarde"
+msgstr "Echec de la sauvegarde"
 
 #: modules/imaging/manage/master_edit.php:45
 msgid "Edit master : "
-msgstr "diter le master : "
+msgstr "Éditer le master"
 
 #: modules/imaging/manage/master_edit.php:96
 #, php-format
 msgid "Master <strong>%s</strong> modified with success"
-msgstr "Le master <strong>%s</strong> a t modifi avec succs"
+msgstr "Le master <strong>%s</strong> a été modifié avec succès"
 
 #: modules/imaging/manage/master_edit.php:116
 #, php-format
@@ -2091,50 +2100,51 @@ msgstr ""
 #, php-format
 msgid "Service <strong>%s</strong> added to default boot menu"
 msgstr ""
-"Le service <strong>%s</strong> a t ajout au menu de dmarrage par dfaut"
+"Le service <strong>%s</strong> a été ajouté au menu de démarrage par défaut"
 
 #: modules/imaging/manage/service_add.php:100
 #, php-format
 msgid "Add the boot service <b>%s</b> to the default boot menu"
-msgstr "Ajout du service de dmarrage <b>%s</b> au menu de dmarrage par dfaut"
+msgstr ""
+"Ajout du service de démarrage <b>%s</b> au menu de démarrage par défaut"
 
 #: modules/imaging/manage/save_configuration.php:67
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr ""
-"La configuration du serveur d'Imaging <strong>%s</strong> a t enregistre "
-"avec succs."
+"La configuration du serveur d'Imaging <strong>%s</strong> a été enregistré "
+"avec succès."
 
 #: modules/imaging/manage/service_show_used.php:67
 #: modules/imaging/manage/service_show_used.php:108
 msgid "Removal of boot service failed"
-msgstr "La suppression du service de dmarrage a chou"
+msgstr "La suppression du service de démarrage a échoué"
 
 #: modules/imaging/manage/service_show_used.php:170
 #, php-format
 msgid "Remove this boot service from imaging server %s"
-msgstr "Supprimer ce service de dmarrage du serveur d'imaging %s"
+msgstr "Supprimer ce service de démarrage du serveur d'imaging %s"
 
 #: modules/imaging/manage/service_show_used.php:194
 msgid ""
 "If you want to remove this boot service from one or more targets, check "
 "these targets and click on the remove button"
 msgstr ""
-"Si vous voulez enlever ce service de dmarrage d'une ou plusieurs cibles, "
-"slectionnez-les et validez"
+"Si vous voulez enlever ce service de démarrage d'une ou plusieurs cibles, "
+"sélectionnez-les et validez"
 
 #: modules/imaging/manage/service_edit.php:48
 msgid "Edit service : "
-msgstr "diter le service : "
+msgstr "éditer le service : "
 
 #: modules/imaging/manage/service_edit.php:66
 msgid "In default bootmenu"
-msgstr "Dans le menu de dmarrage par dfaut"
+msgstr "Dans le menu de démarrage par défaut"
 
 #: modules/imaging/manage/service_edit.php:81
 #, php-format
 msgid "Service <strong>%s</strong> modified with success"
-msgstr "Le service <strong>%s</strong> a t modifi avec succs"
+msgstr "Le service <strong>%s</strong> a t modifié avec succès"
 
 #: modules/imaging/manage/master_clone.php:75
 msgid "There is no imaging server available to clone the master"
@@ -2158,11 +2168,11 @@ msgstr "Formulaire introuvable"
 
 #: modules/imaging/manage/unattended.php:89
 msgid "Windows Answer File Generator"
-msgstr "Gnrateur de fichier rponse pour Windows"
+msgstr "Générateur de fichier réponse pour Windows"
 
 #: modules/imaging/manage/unattended.php:104
 msgid "error create file"
-msgstr "Erreur lors de la cration du fichier"
+msgstr "Erreur lors de la création du fichier"
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
@@ -2171,7 +2181,7 @@ msgstr "Choisir le paquetage source"
 #: modules/imaging/manage/master_delete.php:38
 #, php-format
 msgid "Image <strong>%s</strong> deleted from the imaging server."
-msgstr "L'image <strong>%s</strong> a t supprime du serveur d'imaging."
+msgstr "L'image <strong>%s</strong> a été supprimé du serveur d'imaging."
 
 #: modules/imaging/manage/master_delete.php:57
 #, php-format
@@ -2186,15 +2196,15 @@ msgstr "Supprimer le master"
 #: modules/imaging/manage/master_delete.php:78
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> master ?"
-msgstr "tes-vous sr de vouloir supprimer le master <b>%s</b> ?"
+msgstr "êtes-vous sur de vouloir supprimer le master <b>%s</b> ?"
 
 #: modules/imaging/manage/ajaxServiceLevel2.php:49
 msgid "Add service to default boot menu"
-msgstr "Ajouter le service au menu de dmarrage par dfaut"
+msgstr "Ajouter le service au menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxServiceLevel2.php:50
 msgid "Remove service from default boot menu"
-msgstr "Enlever le service du menu de dmarrage par dfaut"
+msgstr "Enlever le service du menu de démarrage par défaut"
 
 #: modules/imaging/manage/ajaxServiceLevel2.php:51
 msgid "Delete service"
@@ -2206,7 +2216,7 @@ msgstr "Afficher qui utilise ce service"
 
 #: modules/imaging/manage/ajaxFormWin81.php:541
 msgid "General Settings"
-msgstr "Paramtres gnraux"
+msgstr "Paramètres généraux"
 
 #: modules/imaging/manage/ajaxFormWin81.php:736
 msgid "Auto Logon"
@@ -2222,7 +2232,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin81.php:795
 msgid "Regional Settings"
-msgstr "Paramtres rgionaux"
+msgstr "Paramètres régionaux"
 
 #: modules/imaging/manage/ajaxFormWin81.php:796
 msgid "Configure International Settings in Windows"
@@ -2278,7 +2288,7 @@ msgstr ""
 #: modules/imaging/infoPackage.inc.php:86
 #: modules/imaging/infoPackage.inc.php:91
 msgid "Create static group from menu set"
-msgstr "Crer un groupe statique du menu"
+msgstr "Créer un groupe statique du menu"
 
 #: modules/imaging/infoPackage.inc.php:96
 msgid "Server status"
@@ -2286,7 +2296,7 @@ msgstr "Statut du serveur"
 
 #: modules/imaging/infoPackage.inc.php:107
 msgid "Edit master"
-msgstr "diter le master"
+msgstr "Éditer le master"
 
 #: modules/imaging/infoPackage.inc.php:111
 #: modules/imaging/infoPackage.inc.php:114
@@ -2299,7 +2309,7 @@ msgstr "Ajouter un master"
 
 #: modules/imaging/infoPackage.inc.php:127
 msgid "Edit service"
-msgstr "diter le service"
+msgstr "Editer le service"
 
 #: modules/imaging/infoPackage.inc.php:130
 #: modules/imaging/infoPackage.inc.php:136
@@ -2312,7 +2322,7 @@ msgstr "Ajouter un service"
 
 #: modules/imaging/infoPackage.inc.php:139
 msgid "Show used services"
-msgstr "Afficher les services utiliss"
+msgstr "Afficher les services utilisés"
 
 #: modules/imaging/infoPackage.inc.php:145
 msgid "Up service"
@@ -2326,15 +2336,15 @@ msgstr "Descendre le service"
 #: modules/imaging/infoPackage.inc.php:157
 #: modules/imaging/infoPackage.inc.php:160
 msgid "Edit post-imaging script"
-msgstr "diter le script de post-imaging"
+msgstr "Editer  le script de post-imaging"
 
 #: modules/imaging/infoPackage.inc.php:163
 msgid "Create boot service from postinstall script"
-msgstr "Crer un boot service"
+msgstr "Créer un boot service"
 
 #: modules/imaging/infoPackage.inc.php:166
 msgid "Redirect to Boot Services page"
-msgstr "tre redirig vers la page des services de dmarrage"
+msgstr "être redirigé vers la page des services de démarrage"
 
 #: modules/imaging/infoPackage.inc.php:173
 msgid "Imaging configuration"
@@ -2355,51 +2365,51 @@ msgstr "Associer un serveur d'imaging"
 #: modules/imaging/infoPackage.inc.php:190
 #: modules/imaging/infoPackage.inc.php:250
 msgid "Computers Profile Creator"
-msgstr "Crateur de profile de machines"
+msgstr "Créateur de profile de machines"
 
 #: modules/imaging/infoPackage.inc.php:193
 #: modules/imaging/infoPackage.inc.php:207
 #: modules/imaging/infoPackage.inc.php:221
 msgid "Profile creation's tab from dynamic request"
-msgstr "Onglet de cration de profile bas sur une requte dynamique"
+msgstr "Onglet de création de profile bas sur une requète dynamique"
 
 #: modules/imaging/infoPackage.inc.php:196
 #: modules/imaging/infoPackage.inc.php:210
 #: modules/imaging/infoPackage.inc.php:224
 msgid "Profile creation's tab from machine list"
-msgstr "Onglet de cration de profile  partir de la liste des machines"
+msgstr "Onglet de création de profil à  partir de la liste des machines"
 
 #: modules/imaging/infoPackage.inc.php:199
 #: modules/imaging/infoPackage.inc.php:213
 #: modules/imaging/infoPackage.inc.php:227
 msgid "Profile creation's tab from file import"
-msgstr "Onglet de cration de profile depuis un import de fichier"
+msgstr "Onglet de création de profil depuis un import de fichier"
 
 #: modules/imaging/infoPackage.inc.php:203
 msgid "Computers Profile Creator Sub Request Editor"
-msgstr "diteur de sous-requte du crateur de profile"
+msgstr "Éditeur de sous-requête du créateur de profil"
 
 #: modules/imaging/infoPackage.inc.php:217
 msgid "Computers Profile Creator Sub Request Delete"
-msgstr "Suppression d'une sous rqute du crateur de profile"
+msgstr "Suppression d'une sous route du créateur de profil"
 
 #: modules/imaging/infoPackage.inc.php:231
 #: modules/imaging/infoPackage.inc.php:254
 msgid "Computers Profile Editor"
-msgstr "diteur de profile de machines"
+msgstr "Éditeur de profil de machines"
 
 #: modules/imaging/infoPackage.inc.php:236
 msgid "Computers Profile Sub Request Editor"
-msgstr "diteur de sous-requte du profile"
+msgstr "Éditeur de sous-requête du profile"
 
 #: modules/imaging/infoPackage.inc.php:241
 msgid "Computers Profile Sub Request Delete"
-msgstr "Suppression d'une sous-requte du profile"
+msgstr "Suppression d'une sous-requête du profile"
 
 #: modules/imaging/infoPackage.inc.php:246
 #: modules/imaging/infoPackage.inc.php:259
 msgid "List all profiles of computers"
-msgstr "Afficher tous les profiles de machines"
+msgstr "Afficher tous les profils de machines"
 
 #: modules/imaging/infoPackage.inc.php:265
 msgid "Register a profile in the imaging module"
@@ -2424,7 +2434,7 @@ msgstr "Supprimer un groupe de machines"
 
 #: modules/imaging/infoPackage.inc.php:297
 msgid "Computers Group Editor"
-msgstr "diter un groupe de machines"
+msgstr "Editer un groupe de machines"
 
 #: modules/imaging/infoPackage.inc.php:301
 msgid "Share a group of computers"
@@ -2432,7 +2442,7 @@ msgstr "Partager un groupe de machines"
 
 #: modules/imaging/infoPackage.inc.php:307
 msgid "Secure control on a group of computers"
-msgstr "Dploiement sur un groupe de machines"
+msgstr "Déploiement sur un groupe de machines"
 
 #: modules/imaging/infoPackage.inc.php:311
 msgid "MSC launch tab for a group"
@@ -2457,8 +2467,8 @@ msgstr "Enregistrer un ordinateur dans le module d'imaging"
 #: modules/imaging/infoPackage.inc.php:345
 msgid "Create a static group containing computers with custom imaging menu"
 msgstr ""
-"Crer un groupe statique contenant les ordinateurs ayant un menu d'imaging "
-"personnalis"
+"Créer un groupe statique contenant les ordinateurs ayant un menu d'imaging "
+"personnalisé"
 
 #: modules/imaging/infoPackage.inc.php:350
 msgid "Imaging on computer"
@@ -2478,7 +2488,7 @@ msgstr "Ajouter un service  une cible"
 
 #: modules/imaging/infoPackage.inc.php:420
 msgid "Edit parameters of a service on a target"
-msgstr "diter les paramtres d'un service sur une cible"
+msgstr "Editer les paramètres d'un service sur une cible"
 
 #: modules/imaging/infoPackage.inc.php:424
 msgid "Remove a service from a target"
@@ -2490,11 +2500,11 @@ msgstr "Ajouter une image  une cible"
 
 #: modules/imaging/infoPackage.inc.php:433
 msgid "Edit parameters of a image on a target"
-msgstr "diter les paramtres d'une image sur une cible"
+msgstr "Editer les paramètres d'une image sur une cible"
 
 #: modules/imaging/infoPackage.inc.php:441
 msgid "Create iso image"
-msgstr "Crer une image iso"
+msgstr "Créer une image ISO"
 
 #: modules/imaging/infoPackage.inc.php:445
 msgid "init multicast"
@@ -2502,7 +2512,7 @@ msgstr ""
 
 #: modules/imaging/includes/includes.php:35
 msgid "There was an error (this is a default message)."
-msgstr "Une erreur est arrive (ceci est un message par dfaut)."
+msgstr "Une erreur est arrive (ceci est un message par défaut)."
 
 #: modules/imaging/includes/includes.php:36
 msgid "The nomenclature is missing."
@@ -2514,11 +2524,11 @@ msgstr "Ce serveur d'imaging n'existe pas."
 
 #: modules/imaging/includes/includes.php:38
 msgid "This entity already exists."
-msgstr "Cette entit existe dj."
+msgstr "Cette entité existe déjà."
 
 #: modules/imaging/includes/includes.php:39
 msgid "You asked for an unexisting menu item."
-msgstr "Vous avez demand un item inexistant."
+msgstr "Vous avez demandé un item inexistant."
 
 #: modules/imaging/includes/includes.php:40
 msgid "This target has no menu."
@@ -2527,16 +2537,16 @@ msgstr "Cette cible n'a pas de menu."
 #: modules/imaging/includes/includes.php:41
 msgid "This entity has no default menu, you first need to set one."
 msgstr ""
-"Cette entit n'a pas de menu par dfaut, vous devez commencer par lui en "
+"Cette entité n'a pas de menu par défaut, vous devez commencer par lui en "
 "assigner un."
 
 #: modules/imaging/includes/includes.php:42
 msgid "This image already exists."
-msgstr "Cette image existe dj."
+msgstr "Cette image existe déjà."
 
 #: modules/imaging/includes/includes.php:43
 msgid "This computer already exists."
-msgstr "Cet ordinateur existe dj."
+msgstr "Cet ordinateur existe déjà."
 
 #: modules/imaging/includes/includes.php:44
 msgid ""
@@ -2548,7 +2558,7 @@ msgstr ""
 
 #: modules/imaging/includes/includes.php:195
 msgid "Uptime: "
-msgstr "Dure de fonctionnement: "
+msgstr "Durée de fonctionnement: "
 
 #: modules/imaging/includes/includes.php:197
 msgid "day"
@@ -2564,11 +2574,11 @@ msgstr "minute"
 
 #: modules/imaging/includes/includes.php:206
 msgid "Memory"
-msgstr "Mmoire"
+msgstr "Mémoire"
 
 #: modules/imaging/includes/includes.php:209
 msgid "Swap"
-msgstr "Partition d'change (swap)"
+msgstr "Partition d'échange (swap)"
 
 #: modules/imaging/includes/includes.php:221
 msgid "Never"
@@ -2577,11 +2587,11 @@ msgstr "Jamais"
 #: modules/imaging/includes/includes.php:224
 #: modules/imaging/includes/includes.php:230
 msgid "As soon as possible"
-msgstr "Ds que possible"
+msgstr "Dès que possible"
 
 #: modules/imaging/includes/includes.php:232
 msgid "<i>undefined</i>"
-msgstr "<i>indfini</i>"
+msgstr "<i>indéfini</i>"
 
 #: modules/imaging/includes/includes.php:301
 msgid "Backup log messages"
@@ -2589,7 +2599,7 @@ msgstr "Logs du backup"
 
 #: modules/imaging/includes/post_install_script.php:28
 msgid "Not selected"
-msgstr "Non slectionn"
+msgstr "Non slectionné"
 
 #: modules/imaging/includes/post_install_script.php:66
 msgid "Order"
@@ -2597,7 +2607,7 @@ msgstr "Ordre"
 
 #: modules/imaging/includes/post_install_script.php:88
 msgid "This value is already used."
-msgstr "Cette valeur est dj utilise."
+msgstr "Cette valeur est déjà utilisé."
 
 #: modules/imaging/includes/logs.inc.php:33
 msgid "Status unknown"
@@ -2605,23 +2615,23 @@ msgstr "Statut inconnu"
 
 #: modules/imaging/includes/logs.inc.php:45
 msgid "Boot menu shown"
-msgstr "Menu de dmarrage affich"
+msgstr "Menu de démarrage affiché"
 
 #: modules/imaging/includes/logs.inc.php:47
 msgid "Hardware Inventory received"
-msgstr "Succs de la mise  jour de l'Inventaire Matriel"
+msgstr "Succès de la mise  jour de l'Inventaire Matériel"
 
 #: modules/imaging/includes/logs.inc.php:48
 msgid "Hardware Inventory not stored"
-msgstr "chec du stockage de l'Inventaire matriel"
+msgstr "échec du stockage de l'Inventaire matériel"
 
 #: modules/imaging/includes/logs.inc.php:49
 msgid "Hardware Inventory not updated"
-msgstr "chec de la mise  jour de l'Inventaire Matriel"
+msgstr "échec de la mise  jour de l'Inventaire Matériel"
 
 #: modules/imaging/includes/logs.inc.php:50
 msgid "Hardware Inventory updated"
-msgstr "Inventaire matriel mis  jour"
+msgstr "Inventaire matériel mis  jour"
 
 #: modules/imaging/includes/logs.inc.php:52
 msgid "Identification Request"
@@ -2629,11 +2639,11 @@ msgstr "Demande d'identification"
 
 #: modules/imaging/includes/logs.inc.php:53
 msgid "Identification Success"
-msgstr "Russite de l'identification"
+msgstr "Réussite de l'identification"
 
 #: modules/imaging/includes/logs.inc.php:54
 msgid "Identification Failure"
-msgstr "chec de l'identification"
+msgstr "échec de l'identification"
 
 #: modules/imaging/includes/logs.inc.php:56
 msgid "Image UUID Request"
@@ -2641,7 +2651,7 @@ msgstr "Demande d'Image UUID"
 
 #: modules/imaging/includes/logs.inc.php:57
 msgid "Failed to summon an Image UUID"
-msgstr "N'a pas pu rcuprer un UUID d'image"
+msgstr "N'a pas pu récupérer un UUID d'image"
 
 #: modules/imaging/includes/logs.inc.php:58
 msgid "Image UUID sent"
@@ -2653,59 +2663,59 @@ msgstr "N'a pas pu envoyer un UUID d'image"
 
 #: modules/imaging/includes/logs.inc.php:61
 msgid "End of Backup Request"
-msgstr "Requte de fin de sauvegarde"
+msgstr "Requête de fin de sauvegarde"
 
 #: modules/imaging/includes/logs.inc.php:62
 msgid "End of Backup Failure"
-msgstr "chec de la fin de la sauvegarde"
+msgstr "échec de la fin de la sauvegarde"
 
 #: modules/imaging/includes/logs.inc.php:63
 msgid "End of Backup Success"
-msgstr "Succs de fin de sauvegarde"
+msgstr "Succès de fin de sauvegarde"
 
 #: modules/imaging/includes/logs.inc.php:65
 msgid "Preselected Menu Entry Change Request"
-msgstr "Demande de modification de l'entre prslectionne"
+msgstr "Demande de modification de l'entrée présélectionnée"
 
 #: modules/imaging/includes/logs.inc.php:66
 msgid "Preselected Menu Entry Change Success"
-msgstr "Russite du changement de l'entre de menu prslectionne"
+msgstr "Réussite du changement de l'entre de menu présélectionnée"
 
 #: modules/imaging/includes/logs.inc.php:67
 msgid "Preselected Menu Entry Change Failure"
-msgstr "chec du changement de l'entre de menu prslectionne"
+msgstr "échec du changement de l'entrée de menu prééslectionnée"
 
 #: modules/imaging/includes/logs.inc.php:69
 msgid "Booted"
-msgstr "Dmarr"
+msgstr "Démaré"
 
 #: modules/imaging/includes/logs.inc.php:70
 msgid "Choosen Menu Entry"
-msgstr "Entre de menu choisie"
+msgstr "Entrée de menu choisie"
 
 #: modules/imaging/includes/logs.inc.php:71
 msgid "Restoration Started"
-msgstr "Restauration commence"
+msgstr "Restauration commencé"
 
 #: modules/imaging/includes/logs.inc.php:72
 msgid "Restoration Finished"
-msgstr "Restauration termine"
+msgstr "Restauration terminé"
 
 #: modules/imaging/includes/logs.inc.php:73
 msgid "Backup Started"
-msgstr "Sauvegarde dmarre"
+msgstr "Sauvegarde démarré"
 
 #: modules/imaging/includes/logs.inc.php:74
 msgid "Backup Finished"
-msgstr "Sauvegarde termine"
+msgstr "Sauvegarde terminé"
 
 #: modules/imaging/includes/logs.inc.php:75
 msgid "Postinstall Started"
-msgstr "Post-installation commence"
+msgstr "Post-installation commencé"
 
 #: modules/imaging/includes/logs.inc.php:76
 msgid "Postinstall Finished"
-msgstr "Post-installation termine"
+msgstr "Post-installation terminé"
 
 #: modules/imaging/includes/logs.inc.php:77
 msgid "Critical error"
@@ -2717,11 +2727,11 @@ msgstr "Demande de hostname"
 
 #: modules/imaging/includes/logs.inc.php:80
 msgid "Failed to obtain a Hostname"
-msgstr "N'a pas pu rcuprer de nom d'hte"
+msgstr "N'a pas pu récupérer de nom d'hôte"
 
 #: modules/imaging/includes/logs.inc.php:81
 msgid "Hostname sent"
-msgstr "Nom d'hte envoy"
+msgstr "Nom d'hôte envoyé"
 
 #: modules/imaging/includes/logs.inc.php:82
 msgid "Failed to send a Hostname"
@@ -2737,7 +2747,7 @@ msgstr "N'a pas pu recevoir de UUID d'ordinateur"
 
 #: modules/imaging/includes/logs.inc.php:86
 msgid "Computer UUID Sent"
-msgstr "Computer UUID envoy"
+msgstr "Computer UUID envoyé"
 
 #: modules/imaging/includes/logs.inc.php:87
 msgid "Failed to send a Computer UUID"
@@ -2781,7 +2791,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1371
 msgid "Guests"
-msgstr "Invits"
+msgstr "Invités"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1372
 msgid "IUsers"
@@ -2870,7 +2880,7 @@ msgstr "Activer"
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
 msgid "Disabled"
-msgstr "Dsactiv"
+msgstr "Désactivé"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
 msgid ""
@@ -3097,7 +3107,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1546
 msgid "   - What type of computer protection is in place"
-msgstr " - Quelle type de protection est dj existante"
+msgstr " - Quelle type de protection est déjà existante"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1549
 msgid ""
@@ -3520,12 +3530,12 @@ msgstr ""
 #: modules/imaging/includes/ajaxcommon_bottom.inc.php:24
 #, php-format
 msgid "Available imaging servers for entity %s"
-msgstr "Server d'imaging disponibles pour l'entit %s"
+msgstr "Server d'imaging disponibles pour l'entité %s"
 
 #: modules/imaging/includes/ajaxcommon.inc.php:84
 #, php-format
 msgid "Imaging server of entity %s"
-msgstr "Serveur d'imaging de l'entit %s"
+msgstr "Serveur d'imaging de l'entité %s"
 
 #: modules/imaging/includes/ajaxcommon.inc.php:103
 msgid "the entity itself"
@@ -3537,8 +3547,8 @@ msgid ""
 "Boot menu generation is still in progress for the following items : %s. "
 "Please wait or reload the page %shere%s."
 msgstr ""
-"La gnration du menu de dmarrage est en cours pour les lments suivants : %s. "
-"Merci de patienter ou rechargez la page en cliquant %sici%s."
+"La génération du menu de démarrage est en cours pour les éléments suivants :"
+" %s. Merci de patienter ou rechargez la page en cliquant %sici%s."
 
 #: modules/imaging/includes/ajaxcommon.inc.php:135
 #, php-format
@@ -3546,9 +3556,9 @@ msgid ""
 "You have modified the boot menu for the following items : %s. If you are "
 "done please click on \"Generate Menu\" to update the computer boot menu."
 msgstr ""
-"Vous avez modifi le menu de dmarrage pour l'lment : %s. Si vous n'avez pas "
-"d'autres modifications  faire merci de cliquer sur \"Gnrer\" pour finaliser "
-"cette modification."
+"Vous avez modifié le menu de démarrage pour l'élément : %s. Si vous n'avez "
+"pas d'autres modifications  faire merci de cliquer sur \"Générer\" pour "
+"finaliser cette modification."
 
 #: modules/imaging/includes/xmlrpc.inc.php:249
 #, php-format

@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
+"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,11 +34,11 @@ msgstr "Editer"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:53
 msgid "No entry found."
-msgstr "Aucune entre trouve"
+msgstr "Aucune entrée trouvée"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:92
 msgid "Full number"
-msgstr "Nb compltes"
+msgstr "Nb complètes"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:93
 msgid "Full size (GB)"
@@ -46,11 +46,11 @@ msgstr "Taille (Go)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:94
 msgid "incr. number"
-msgstr "Nb incrmentales"
+msgstr "Nb incrémentales"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:95
 msgid "Last backup (days)"
-msgstr "Age de la dernire sauvegarde (en jours)"
+msgstr "Age de la dernière sauvegarde (en jours)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:96
 msgid "Current state"
@@ -62,7 +62,7 @@ msgstr "Dernier message"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:99
 msgid "Start backup"
-msgstr "Dmarrer la sauvegarde"
+msgstr "Démarrer la sauvegarde"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:100
 msgid "Stop backup"
@@ -75,15 +75,16 @@ msgstr "Afficher les erreurs"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:102
 msgid "Unset backup"
-msgstr "Dsactiver la sauvegarde"
+msgstr "Désactiver la sauvegarde"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:102
 msgid "Are you sure you want to unset backup for this computer?"
-msgstr "Etes-vous sr de vouloir dsactiver la sauvegarde pour cet ordinateur?"
+msgstr ""
+"Etes-vous sur de vouloir désactiver la sauvegarde pour cet ordinateur?"
 
 #: modules/backuppc/backuppc/deleteProfile.php:43
 msgid "The profile has been deleted successfully."
-msgstr "Le profil a t supprim avec succs"
+msgstr "Le profil a été supprimé avec succès"
 
 #: modules/backuppc/backuppc/deleteProfile.php:46
 msgid "Failed to delete the selected profile"
@@ -91,7 +92,7 @@ msgstr "Echec de suppression du profil"
 
 #: modules/backuppc/backuppc/deleteProfile.php:58
 msgid "Error : Default profiles cannot be deleted"
-msgstr "Erreur: les profils par dfaut ne peuvent tre supprims"
+msgstr "Erreur: les profils par défaut ne peuvent être supprimés"
 
 #: modules/backuppc/backuppc/deleteProfile.php:60
 msgid "Delete this profile"
@@ -99,12 +100,12 @@ msgstr "Supprimer ce profil"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:39
 msgid "Error while retrieving status."
-msgstr "Impossible de rcuprer l'tat."
+msgstr "Impossible de récupérer l'état."
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
 #: modules/backuppc/backuppc/hostSummary.php:173
 msgid "No ping response"
-msgstr "Pas de rponse au ping"
+msgstr "Pas de réponse au ping"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
 #: modules/backuppc/backuppc/hostSummary.php:174
@@ -124,12 +125,12 @@ msgstr "Sauvegarde  jour"
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
 #: modules/backuppc/backuppc/hostSummary.php:177
 msgid "Restore done"
-msgstr "Restauration effectue"
+msgstr "Restauration éffectué"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
 #: modules/backuppc/backuppc/hostSummary.php:178
 msgid "This computer has never been backed up"
-msgstr "Cette machine n'a jamais t sauvegarde"
+msgstr "Cette machine n'a jamais été sauvegardé"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
 #: modules/backuppc/backuppc/hostSummary.php:179
@@ -139,7 +140,7 @@ msgstr "Rien  faire"
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
 #: modules/backuppc/backuppc/hostSummary.php:180
 msgid "Cancelled by user"
-msgstr "Annul par l'utilisateur"
+msgstr "Annulé par l'utilisateur"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
 #: modules/backuppc/backuppc/hostSummary.php:181
@@ -226,8 +227,8 @@ msgid ""
 "Default profiles can't be modified. Your changes will be saved as a new "
 "profile."
 msgstr ""
-"Les profils par dfaut ne peuvent tre modifis. Vos modifications seront "
-"sauvegardes comme un nouveau profil."
+"Les profils par défaut ne peuvent être modifiés. Vos modifications seront "
+"sauvegardés comme un nouveau profil."
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
@@ -386,7 +387,7 @@ msgstr "Taille"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
-msgstr "Tlcharger les items slectionns (ZIP)"
+msgstr "Télécharger les items sélectionnés (ZIP)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
 msgid "Restore to host (overwrite)"
