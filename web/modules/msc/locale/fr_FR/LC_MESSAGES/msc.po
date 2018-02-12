@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
+"Last-Translator: tekmans <yvan.manon@siveo.net>, 2017\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: modules/msc/infoPackage.inc.php:44
 msgid "Secure Control"
-msgstr "Contrle scuris"
+msgstr "Contrôle sécurisé"
 
 #: modules/msc/infoPackage.inc.php:48
 msgid "Audit"
@@ -58,7 +58,7 @@ msgstr "Montrer les actions finies"
 
 #: modules/msc/infoPackage.inc.php:70
 msgid "Show custom state task's logs"
-msgstr "Montrer les actions par tat"
+msgstr "Montrer les actions par état"
 
 #: modules/msc/infoPackage.inc.php:73 modules/msc/infoPackage.inc.php:267
 #: modules/msc/infoPackage.inc.php:272
@@ -71,7 +71,7 @@ msgstr "Vue consolide des diffusions"
 
 #: modules/msc/infoPackage.inc.php:79
 msgid "the state list"
-msgstr "la liste des tats"
+msgstr "la liste des états"
 
 #: modules/msc/infoPackage.inc.php:89
 msgid "Remove machine from pull mode"
@@ -79,11 +79,11 @@ msgstr "Enlever cette machine du mode pull"
 
 #: modules/msc/infoPackage.inc.php:95
 msgid "Deploy specific package"
-msgstr "Dployer un paquetage prcis"
+msgstr "Déployer un paquetage précis"
 
 #: modules/msc/infoPackage.inc.php:100
 msgid "Secure control on a group of computers"
-msgstr "Contrle scuris du groupe de machines"
+msgstr "Contrôle sécurisé du groupe de machines"
 
 #: modules/msc/infoPackage.inc.php:104
 msgid "MSC launch tab for a group"
@@ -99,7 +99,7 @@ msgstr "Onglet des journaux pour un groupe"
 
 #: modules/msc/infoPackage.inc.php:115
 msgid "Secure control on computer"
-msgstr "Contrle scuris de l'ordinateur"
+msgstr "Contrôle sécurisé de l'ordinateur"
 
 #: modules/msc/infoPackage.inc.php:119
 msgid "MSC launch tab for a machine"
@@ -115,19 +115,19 @@ msgstr "Onglet des journaux pour une machine"
 
 #: modules/msc/infoPackage.inc.php:130
 msgid "Download file from a computer"
-msgstr "Tlchargement de fichier depuis un ordinateur"
+msgstr "Téléchargement de fichier depuis un ordinateur"
 
 #: modules/msc/infoPackage.inc.php:136
 msgid "Remove a downloaded file"
-msgstr "Supprimer un fichier tlcharg"
+msgstr "Supprimer un fichier téléchargé"
 
 #: modules/msc/infoPackage.inc.php:142
 msgid "Get a downloaded file"
-msgstr "Rcuprer un fichier tlcharg"
+msgstr "Récupérer un fichier téléchargé"
 
 #: modules/msc/infoPackage.inc.php:148
 msgid "Take control of a computer"
-msgstr "Prendre le contrle d'un ordinateur"
+msgstr "Prendre le contrôle d'un ordinateur"
 
 #: modules/msc/infoPackage.inc.php:155
 msgid "Play a command"
@@ -159,7 +159,7 @@ msgstr "Statut de la commande"
 
 #: modules/msc/infoPackage.inc.php:197
 msgid "Show package's details"
-msgstr "Montrer les dtails pour ce package"
+msgstr "Montrer les détails pour ce package"
 
 #: modules/msc/infoPackage.inc.php:204
 msgid "Launch a command"
@@ -167,7 +167,7 @@ msgstr "Lancer une action"
 
 #: modules/msc/infoPackage.inc.php:210
 msgid "Launch a advanced command"
-msgstr "Lancer une action (avanc)"
+msgstr "Lancer une action (avancée)"
 
 #: modules/msc/infoPackage.inc.php:216
 msgid "Software convergence configuration"
@@ -191,7 +191,7 @@ msgstr "Ping"
 
 #: modules/msc/infoPackage.inc.php:242
 msgid "Platform"
-msgstr "Systme d'exploitation"
+msgstr "Système d'exploitation"
 
 #: modules/msc/infoPackage.inc.php:247
 msgid "MAC Addr."
@@ -203,7 +203,7 @@ msgstr "Adresse IP"
 
 #: modules/msc/infoPackage.inc.php:257 modules/msc/msc/download_file.php:32
 msgid "Download file page"
-msgstr "Tlchargement de fichiers"
+msgstr "Téléchargement de fichiers"
 
 #: modules/msc/infoPackage.inc.php:262
 msgid "Csv's export"
@@ -216,7 +216,7 @@ msgstr "Export csv"
 #: modules/msc/includes/command_history.php:147
 #: modules/msc/includes/command_history.php:244
 msgid "Start"
-msgstr "Dmarrer"
+msgstr "Démarrer"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
@@ -230,7 +230,7 @@ msgstr "Supprimer"
 #: modules/msc/includes/command_history.php:148
 #: modules/msc/includes/command_history.php:245
 msgid "Stop"
-msgstr "Arrter"
+msgstr "Arrêter"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:59
 #: modules/msc/logs/ajaxConsultLogsFilter.php:60
@@ -351,7 +351,7 @@ msgstr "Date"
 #: modules/msc/logs/ajaxLogsFilter.php:135
 #: modules/msc/msc/ajaxLogsFilter.php:253
 msgid "Current state"
-msgstr "tat actuel"
+msgstr "État actuel"
 
 #: modules/msc/logs/viewLogs.php:117 modules/msc/logs/viewLogs.php:185
 #: modules/msc/logs/viewLogs.php:217
@@ -368,11 +368,11 @@ msgstr "Montrer toutes les actions"
 
 #: modules/msc/logs/consult.php:39 modules/msc/msc/logs.php:33
 msgid "Current tasks"
-msgstr "Tches en cours"
+msgstr "Tâches en cours"
 
 #: modules/msc/logs/consult.php:64 modules/msc/msc/logs.php:38
 msgid "Expired tasks"
-msgstr "Tches expirs"
+msgstr "Tâches expirées"
 
 #: modules/msc/logs/finished.php:33
 msgid "Show all finished task's logs"
@@ -380,11 +380,11 @@ msgstr "Montrer toutes les actions finies"
 
 #: modules/msc/logs/custom.php:33
 msgid "Show custom status task's logs"
-msgstr "Montrer les actions par tat"
+msgstr "Montrer les actions par état"
 
 #: modules/msc/msc/download_file_remove.php:28
 msgid "The file has been deleted."
-msgstr "Le fichier a t supprim."
+msgstr "Le fichier a été supprimée."
 
 #: modules/msc/msc/download_file_remove.php:32
 msgid "Please confirm file deletion"
@@ -393,11 +393,11 @@ msgstr "Veuillez confirmer la suppression du fichier"
 #: modules/msc/msc/download_file_get.php:28
 #: modules/msc/msc/download_file.php:44
 msgid "The download has failed."
-msgstr "Le tlchargement a chou"
+msgstr "Le téléchargement a échoué"
 
 #: modules/msc/msc/ajaxLogsFilter.php:141
 msgid "Can't get bundle for the requested id"
-msgstr "Ne peut accder au groupe de logiciels pour l'id demand"
+msgstr "Ne peut accéder au groupe de logiciels pour l'id demandé"
 
 #: modules/msc/msc/ajaxLogsFilter.php:145
 #, php-format
@@ -452,7 +452,7 @@ msgstr "Client"
 
 #: modules/msc/msc/ajaxLogsFilter.php:400
 msgid "Global State"
-msgstr "Etat gnral"
+msgstr "Etat général"
 
 #: modules/msc/msc/ajaxLogsFilter.php:402
 msgid "Current step"
@@ -470,50 +470,50 @@ msgstr "Fait"
 #: modules/msc/includes/functions.php:333
 #: modules/msc/includes/widgets.inc.php:391
 msgid "Failed"
-msgstr "chec"
+msgstr "Échec"
 
 #: modules/msc/msc/ajaxLogsFilter.php:431
 #: modules/msc/includes/functions.php:50 modules/msc/includes/functions.php:51
 #: modules/msc/includes/widgets.inc.php:397
 msgid "Stopped"
-msgstr "Arrt"
+msgstr "Arrêt"
 
 #: modules/msc/msc/ajaxLogsFilter.php:432
 #: modules/msc/includes/widgets.inc.php:395
 msgid "Overtime"
-msgstr "Dlai dpass"
+msgstr "Délai dépassé"
 
 #: modules/msc/msc/ajaxLogsFilter.php:443
 msgid "Deploy status"
-msgstr "tat du dploiement"
+msgstr "État du déploiement"
 
 #: modules/msc/msc/start_quick_action.php:100
 msgid "Failed to retrieve this quick action."
-msgstr "chec lors de la rcupration de cette action rapide."
+msgstr "Échec lors de la récupération de cette action rapide."
 
 #: modules/msc/msc/start_quick_action.php:136
 msgid "Please confirm you really want to perform this action"
-msgstr "Merci de confirmer que vous voulez vraiment excuter cette action"
+msgstr "Merci de confirmer que vous voulez vraiment exécuter cette action"
 
 #: modules/msc/msc/start_quick_action.php:138
 msgid "Advanced"
-msgstr "Avanc"
+msgstr "Avancé"
 
 #: modules/msc/msc/download_file.php:39
 msgid "The download is in progress."
-msgstr "Le tlchargement est en cours."
+msgstr "Le téléchargement est en cours."
 
 #: modules/msc/msc/download_file.php:42
 msgid "A file is already being downloaded."
-msgstr "Un fichier est dj en cours de tlchargement."
+msgstr "Un fichier est déjà en cours de téléchargement."
 
 #: modules/msc/msc/download_file.php:54
 msgid ""
 "Click below to start downloading file from this computer. Warning: the "
 "download may last a long time"
 msgstr ""
-"Cliquer sur le bouton ci-dessous pour dmarrer le tlchargement de fichier "
-"depuis cet ordinateur. Attention: le tlchargement peut prendre du temps."
+"Cliquer sur le bouton ci-dessous pour démarrer le téléchargement de fichier "
+"depuis cet ordinateur. Attention: le téléchargement peut prendre du temps."
 
 #: modules/msc/msc/download_file.php:56
 #, php-format
@@ -522,7 +522,7 @@ msgstr "Dmarrer le tlchargement depuis %s"
 
 #: modules/msc/msc/localSidebar.php:27
 msgid "Repository"
-msgstr "Dpt"
+msgstr "Dépôt"
 
 #: modules/msc/msc/msctabsplay.php:120 modules/msc/msc/msctabsstop.php:119
 #: modules/msc/msc/msctabspause.php:119
@@ -552,11 +552,11 @@ msgstr "Erreur de connexion !"
 #: modules/msc/msc/vnc_client_java.php:47
 #: modules/msc/msc/vnc_client_no_vnc.php:59
 msgid "Connection was refused by the other side."
-msgstr "La connexion a t refuse"
+msgstr "La connexion a été refusée"
 
 #: modules/msc/msc/vnc_client_java.php:71
 msgid "Connection Succeeded !"
-msgstr "La connexion a russi !"
+msgstr "La connexion a réussi !"
 
 #: modules/msc/msc/vnc_client_java.php:73
 msgid "This connection will be automatically shut down in 60 minutes."
@@ -1488,31 +1488,31 @@ msgstr "Exemple: pendant le repas et la nuit (12-14,20-8)"
 
 #: modules/msc/msc/launch.php:625
 msgid "Dynamic parameters Packages"
-msgstr ""
+msgstr "Paramètres dynamiques"
 
 #: modules/msc/msc/launch.php:630
 msgid "Reboot required"
-msgstr ""
+msgstr "Redémarrage nécessaire"
 
 #: modules/msc/msc/launch.php:635
 msgid "Shutdown required"
-msgstr ""
+msgstr "Arrêt requis"
 
 #: modules/msc/msc/launch.php:640
 msgid "Delay install"
-msgstr ""
+msgstr "Retarder l'installation"
 
 #: modules/msc/msc/launch.php:645 modules/msc/msc/launch.php:651
 msgid "time"
-msgstr ""
+msgstr "temps"
 
 #: modules/msc/msc/launch.php:645
 msgid "Number of machines"
-msgstr ""
+msgstr "Nombre de machines"
 
 #: modules/msc/msc/launch.php:657
 msgid "Choix install Mode"
-msgstr ""
+msgstr "Choix mode d'installation"
 
 #: modules/msc/msc/launch.php:664
 msgid "Startup to run the package in the deployment time range"
