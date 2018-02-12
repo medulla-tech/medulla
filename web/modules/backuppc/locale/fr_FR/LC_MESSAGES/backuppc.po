@@ -391,15 +391,15 @@ msgstr "Télécharger les items sélectionnés (ZIP)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
 msgid "Restore to host (overwrite)"
-msgstr ""
+msgstr "Restaurer sur la machine (écrase le fichier d'origine)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:193
 msgid "Restore to host (subfolder)"
-msgstr ""
+msgstr "Restaurer sur un répertoire de la machine"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:194
 msgid "Advanced restore"
-msgstr ""
+msgstr "Restaurer sur une autre machine"
 
 #: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
@@ -585,15 +585,15 @@ msgstr "Restaurer les fichiers"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "Hôte"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"
-msgstr ""
+msgstr "Dossier de destination"
 
 #: modules/backuppc/backuppc/restorePopup.php:37
 msgid "Restore"
-msgstr ""
+msgstr "restaurer"
 
 #: modules/backuppc/backuppc/viewFileVersions.php:37
 msgid "No other version."
@@ -609,16 +609,16 @@ msgstr "Afficher les points de restauration"
 
 #: modules/backuppc/backuppc/hostStatus.php:45
 msgid "Notify Error : Backup configuration Computer"
-msgstr ""
+msgstr "Erreur: configuration Sauvegarde sur l'ordinateur"
 
 #: modules/backuppc/backuppc/hostStatus.php:59
 #: modules/backuppc/backuppc/hostStatus.php:174
 msgid "Notify Computer :"
-msgstr ""
+msgstr "Notification ordinateur:"
 
 #: modules/backuppc/backuppc/hostStatus.php:59
 msgid "has been added to backup system successfully."
-msgstr ""
+msgstr "A été ajouté dans le système de sauvegarde avec succès"
 
 #: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
@@ -632,7 +632,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/hostStatus.php:174
 msgid "Save configure host "
-msgstr ""
+msgstr "Sauvegarder la configuration de l'hôte."
 
 #: modules/backuppc/backuppc/hostStatus.php:199
 #, php-format
@@ -689,6 +689,8 @@ msgstr "Configurer"
 msgid ""
 "notify warning : There is no backup server assigned for the computer entity."
 msgstr ""
+"Avertissement: il n'y a pas de serveur de sauvegarde assigné à cet entité "
+"d'ordinateur"
 
 #: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."

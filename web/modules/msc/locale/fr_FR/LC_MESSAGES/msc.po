@@ -1518,6 +1518,7 @@ msgstr "Choix mode d'installation"
 #: modules/msc/msc/launch.php:664
 msgid "Startup to run the package in the deployment time range"
 msgstr ""
+"Démarrage pour exécuter le package dans la plage de temps de déploiement"
 
 #: modules/msc/msc/launch.php:695 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"

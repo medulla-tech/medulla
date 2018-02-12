@@ -48,11 +48,11 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:70 modules/glpi/infoPackage.inc.php:75
 msgid "Create static group from machines dashboard widget (GLPI)"
-msgstr ""
+msgstr "Créer un groupe statique de machines depuis le widget ( GLPI )"
 
 #: modules/glpi/infoPackage.inc.php:80
 msgid "Create static group from machines backup widget (GLPI)"
-msgstr ""
+msgstr "Créer un groupe statique de machine depuis le widget backup (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:85
 msgid "Entities"
@@ -137,7 +137,7 @@ msgstr "Onglet antivirus (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:184 modules/glpi/infoPackage.inc.php:217
 msgid "Registry tab (GLPI)"
-msgstr ""
+msgstr "Onglet registre (GLPI)"
 
 #: modules/glpi/infoPackage.inc.php:189
 msgid "Inventory (GLPI) on machine"
@@ -569,7 +569,7 @@ msgstr "Service Pack"
 
 #: modules/glpi/glpi/ajaxViewPart.php:260
 msgid "Architecture"
-msgstr ""
+msgstr "Architecture"
 
 #: modules/glpi/glpi/ajaxViewPart.php:261
 msgid "Windows Key"
@@ -622,12 +622,12 @@ msgstr "Entité parente"
 #: modules/glpi/glpi/createMachinesStaticGroup.php:66
 #, php-format
 msgid "Machines online at %s"
-msgstr ""
+msgstr "Machines allumés à %s"
 
 #: modules/glpi/glpi/createMachinesStaticGroup.php:72
 #, php-format
 msgid "Machines offline at %s"
-msgstr ""
+msgstr "Machines éteinte à %s"
 
 #: modules/glpi/glpi/locationList.php:28
 msgid "Location list"
@@ -710,7 +710,7 @@ msgstr "Antivirus"
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "Registre"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
@@ -729,12 +729,12 @@ msgstr "Dernier inventaire de plus de %s jours au %s"
 #: modules/glpi/glpi/createBackupStaticGroup.php:70
 #, php-format
 msgid "Machines backup configured at %s"
-msgstr ""
+msgstr "Sauvegarde des machines configurée %s"
 
 #: modules/glpi/glpi/createBackupStaticGroup.php:75
 #, php-format
 msgid "Machines backup not configured at %s"
-msgstr ""
+msgstr "Sauvegarde des machines non configurée %s"
 
 #: modules/glpi/glpi/entityList.php:28
 msgid "Entity list"
