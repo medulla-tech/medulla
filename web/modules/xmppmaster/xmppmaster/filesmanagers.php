@@ -1,6 +1,6 @@
-<?
+<?php
 /*
- *  (c) 2016 - 1017 siveo, http://www.siveo.net
+ * (c) 2017 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -19,21 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ * File xmppmaster/filesmanagers.php
  */
-
-if (isExpertMode()){
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP Console","xmppmaster"), "xmppmaster", "xmppmaster", "consolexmpp")
-    );
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP Wake on LAN","xmppmaster"), "xmppmaster", "xmppmaster", "wakeonlan")
-    );
-
-    $sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP Custom Quick Action","xmppmaster"), "xmppmaster", "xmppmaster", "customQA")
-    );
-}
-$sidemenu->addSideMenuItem(
-        new SideMenuItem(_T("XMPP File manager","xmppmaster"), "xmppmaster", "xmppmaster", "filesmanagers")
-    );
 ?>
+
+<?php
+require("modules/base/computers/localSidebar.php");
+require("graph/navbar.inc.php");
+require_once("modules/xmppmaster/includes/xmlrpc.php");
+?>
+
+  
+
+<iframe id = "jj" style = "margin:1px;
+   padding:1px; min-height: 100vh;" src="/webfilemanager/ajax_php_file_manager/fileman.html"
+   width="99%"
+   height="99%"  >
+</iframe>
+
+<script type="text/javascript">
+jQuery( 'document' ).ready(function() {
+
+    });
+
+</script>

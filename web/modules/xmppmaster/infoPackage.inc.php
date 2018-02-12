@@ -54,8 +54,10 @@ $submod->addPage($page);
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-
 $page = new Page("customQA", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("filesmanagers", _T('XMPP files managers', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ajaxFiltercustom");
