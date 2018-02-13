@@ -10,132 +10,133 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-13 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
+"Last-Translator: Guillaume <guillaume.lassarre@siveo.net>, 2018\n"
+"Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: modules/dashboard/infoPackage.inc.php:36
 #: modules/dashboard/infoPackage.inc.php:40
 #: modules/dashboard/infoPackage.inc.php:46
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #: modules/dashboard/infoPackage.inc.php:51
 msgid "Panels"
-msgstr ""
+msgstr "Panneaux"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
-msgstr ""
+msgstr "Mise à jour clients"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:42
 #: modules/dashboard/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
-msgstr ""
+msgstr "Une erreur s'est produite lors de la récupération des mises à jour"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:45
 #: modules/dashboard/includes/panels/product_updates.inc.php:46
 msgid "View updates"
-msgstr ""
+msgstr "Afficher les mises à jour"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:50
 #: modules/dashboard/includes/panels/product_updates.inc.php:51
 msgid "No updates available."
-msgstr ""
+msgstr "Aucune mises à jour disponible"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:52
 #: modules/dashboard/includes/panels/product_updates.inc.php:53
 msgid "updates available."
-msgstr ""
+msgstr "mises à jour disponibles"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:64
 msgid "Up-to-date"
-msgstr ""
+msgstr "système à jour"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:65
 msgid "Updates planned"
-msgstr ""
+msgstr "Mises à jour planifiés"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:66
 msgid "Updates availables"
-msgstr ""
+msgstr "Mises à jour disponibles"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:67
 msgid "OS Update disabled"
-msgstr ""
+msgstr "mises à jour système désactivé"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:68
 msgid "Not registered"
-msgstr ""
+msgstr "Non enregistré"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:69
 msgid "Not Supported"
-msgstr ""
+msgstr "Non supportés"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
 msgid "Create a group"
-msgstr ""
+msgstr "Créer un groupe"
 
 #: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
-msgstr ""
+msgstr "Raccourcis"
 
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #: modules/dashboard/includes/panels/general.inc.php:38
 msgid "on"
-msgstr ""
+msgstr "sur"
 
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
-msgstr ""
+msgstr "Uptime"
 
 #: modules/dashboard/includes/panels/general.inc.php:40
 msgid "Load"
-msgstr ""
+msgstr "Charge"
 
 #: modules/dashboard/includes/panels/general.inc.php:43
 msgid "RAM"
-msgstr ""
+msgstr "RAM"
 
 #: modules/dashboard/includes/panels/general.inc.php:74
 #: modules/dashboard/includes/panels/space.inc.php:37
 msgid "free"
-msgstr ""
+msgstr "libre"
 
 #: modules/dashboard/includes/panels/plugins.inc.php:28
 msgid "Plugins loaded"
-msgstr ""
+msgstr "Plugins chargés"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
-msgstr ""
+msgstr "Utilisation des disques"
 
 #: modules/dashboard/includes/panels/space.inc.php:36
 msgid "used"
-msgstr ""
+msgstr "utilisé"
 
 #: modules/dashboard/includes/panels/backup.inc.php:28
 msgid "Machines backup"
-msgstr ""
+msgstr "Sauvegarde des machines"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
-msgstr ""
+msgstr "Mises à jour de Pulse"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Install updates"
-msgstr ""
+msgstr "Installer les mises à jour"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:29
 msgid "Machines Online"
-msgstr ""
+msgstr "Machines en ligne"
 
 #: modules/dashboard/includes/panels/process.inc.php:28
 msgid "Pulse processes"
-msgstr ""
+msgstr "Processus pulse"

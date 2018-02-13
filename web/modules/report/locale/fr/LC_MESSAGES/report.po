@@ -10,253 +10,254 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-13 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: modules/report/report/localSidebar.php:27
 #: modules/report/report/index.php:44 modules/report/infoPackage.inc.php:41
 msgid "Report creation"
-msgstr ""
+msgstr "Création de rapport"
 
 #: modules/report/report/index.php:62
 msgid "Period"
-msgstr ""
+msgstr "Période"
 
 #: modules/report/report/index.php:63
 msgid "from"
-msgstr ""
+msgstr "Du"
 
 #: modules/report/report/index.php:63
 msgid "to"
-msgstr ""
+msgstr "au"
 
 #: modules/report/report/index.php:76
 msgid "Entities"
-msgstr ""
+msgstr "Entités"
 
 #: modules/report/report/index.php:90
 msgid "Generate Report"
-msgstr ""
+msgstr "Générer le rapport"
 
 #: modules/report/report/index.php:132
 msgid "Select some data to include in the report."
-msgstr ""
+msgstr "Choisissez des données à inclure dans le rapport."
 
 #: modules/report/report/index.php:194
 msgid "Download image"
-msgstr ""
+msgstr "Télécharger l'image"
 
 #: modules/report/report/index.php:234
 msgid "Get XLS Report"
-msgstr ""
+msgstr "Obtenir le rapport XLS"
 
 #: modules/report/report/index.php:236
 msgid "Get PDF Report"
-msgstr ""
+msgstr "Obtenir le rapport PDF"
 
 #: modules/report/infoPackage.inc.php:32
 msgid "Reporting"
-msgstr ""
+msgstr "Rapports"
 
 #: modules/report/infoPackage.inc.php:36
 msgid "Report"
-msgstr ""
+msgstr "Rapport"
 
 #: modules/report/infoPackage.inc.php:44
 msgid "Download a file from report module (report or PNG)"
-msgstr ""
+msgstr "Télécharger un fichier du module de rapports (rapport ou PNG)"
 
 #: modules/report/includes/html.inc.php:100
 msgid "January"
-msgstr ""
+msgstr "Janvier"
 
 #: modules/report/includes/html.inc.php:101
 msgid "February"
-msgstr ""
+msgstr "Février"
 
 #: modules/report/includes/html.inc.php:102
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #: modules/report/includes/html.inc.php:103
 msgid "April"
-msgstr ""
+msgstr "Avril"
 
 #: modules/report/includes/html.inc.php:104
 #: modules/report/includes/html.inc.php:116
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #: modules/report/includes/html.inc.php:105
 msgid "June"
-msgstr ""
+msgstr "Juin"
 
 #: modules/report/includes/html.inc.php:106
 msgid "July"
-msgstr ""
+msgstr "Juillet"
 
 #: modules/report/includes/html.inc.php:107
 msgid "August"
-msgstr ""
+msgstr "Aôut"
 
 #: modules/report/includes/html.inc.php:108
 msgid "September"
-msgstr ""
+msgstr "Septembre"
 
 #: modules/report/includes/html.inc.php:109
 msgid "October"
-msgstr ""
+msgstr "Octobre"
 
 #: modules/report/includes/html.inc.php:110
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #: modules/report/includes/html.inc.php:111
 msgid "December"
-msgstr ""
+msgstr "Décembre"
 
 #: modules/report/includes/html.inc.php:112
 msgid "Jan"
-msgstr ""
+msgstr "Jan"
 
 #: modules/report/includes/html.inc.php:113
 msgid "Feb"
-msgstr ""
+msgstr "Fév"
 
 #: modules/report/includes/html.inc.php:114
 msgid "Mar"
-msgstr ""
+msgstr "Mar"
 
 #: modules/report/includes/html.inc.php:115
 msgid "Apr"
-msgstr ""
+msgstr "Avr"
 
 #: modules/report/includes/html.inc.php:117
 msgid "Jun"
-msgstr ""
+msgstr "Jui"
 
 #: modules/report/includes/html.inc.php:118
 msgid "Jul"
-msgstr ""
+msgstr "Juil"
 
 #: modules/report/includes/html.inc.php:119
 msgid "Aug"
-msgstr ""
+msgstr "Aôu"
 
 #: modules/report/includes/html.inc.php:120
 msgid "Sep"
-msgstr ""
+msgstr "Sep"
 
 #: modules/report/includes/html.inc.php:121
 msgid "Oct"
-msgstr ""
+msgstr "Oct"
 
 #: modules/report/includes/html.inc.php:122
 msgid "Nov"
-msgstr ""
+msgstr "Nov"
 
 #: modules/report/includes/html.inc.php:123
 msgid "Dec"
-msgstr ""
+msgstr "Déc"
 
 #: modules/report/includes/html.inc.php:124
 msgid "Sunday"
-msgstr ""
+msgstr "Dimanche"
 
 #: modules/report/includes/html.inc.php:125
 msgid "Monday"
-msgstr ""
+msgstr "Lundi"
 
 #: modules/report/includes/html.inc.php:126
 msgid "Tuesday"
-msgstr ""
+msgstr "Mardi"
 
 #: modules/report/includes/html.inc.php:127
 msgid "Wednesday"
-msgstr ""
+msgstr "Mercredi"
 
 #: modules/report/includes/html.inc.php:128
 msgid "Thursday"
-msgstr ""
+msgstr "Jeudi"
 
 #: modules/report/includes/html.inc.php:129
 msgid "Friday"
-msgstr ""
+msgstr "Vendredi"
 
 #: modules/report/includes/html.inc.php:130
 msgid "Saturday"
-msgstr ""
+msgstr "Samedi"
 
 #: modules/report/includes/html.inc.php:131
 msgid "Sun"
-msgstr ""
+msgstr "Dim"
 
 #: modules/report/includes/html.inc.php:132
 msgid "Mon"
-msgstr ""
+msgstr "Lun"
 
 #: modules/report/includes/html.inc.php:133
 msgid "Tue"
-msgstr ""
+msgstr "Mar"
 
 #: modules/report/includes/html.inc.php:134
 msgid "Wed"
-msgstr ""
+msgstr "Mer"
 
 #: modules/report/includes/html.inc.php:135
 msgid "Thu"
-msgstr ""
+msgstr "Jeu"
 
 #: modules/report/includes/html.inc.php:136
 msgid "Fri"
-msgstr ""
+msgstr "Ven"
 
 #: modules/report/includes/html.inc.php:137
 msgid "Sat"
-msgstr ""
+msgstr "Sam"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Su"
-msgstr ""
+msgstr "Di"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Mo"
-msgstr ""
+msgstr "Lu"
 
 #: modules/report/includes/html.inc.php:138
 msgid "Tu"
-msgstr ""
+msgstr "Ma"
 
 #: modules/report/includes/html.inc.php:139
 msgid "We"
-msgstr ""
+msgstr "Me"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Th"
-msgstr ""
+msgstr "Je"
 
 #: modules/report/includes/html.inc.php:139
 msgid "Fr"
-msgstr ""
+msgstr "Ve"
 
 #: modules/report/includes/html.inc.php:140
 msgid "Sa"
-msgstr ""
+msgstr "Sa"
 
 #: modules/report/includes/html.inc.php:141
 msgid "Wk"
-msgstr ""
+msgstr "Sem"
 
 #: modules/report/includes/report.inc.php:36
 #: modules/report/includes/report.inc.php:80
 msgid "Less detail"
-msgstr ""
+msgstr "Moins de détails"
 
 #: modules/report/includes/report.inc.php:39
 #: modules/report/includes/report.inc.php:197
 msgid "More detail"
-msgstr ""
+msgstr "Plus de détails"

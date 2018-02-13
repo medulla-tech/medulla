@@ -10,139 +10,140 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-02-13 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Language-Team: French (https://www.transifex.com/siveo/teams/72118/fr/)\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/fr_FR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: fr_FR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: modules/services/infoPackage.inc.php:32
 msgid "Services management"
-msgstr ""
+msgstr "Gestion des services"
 
 #: modules/services/infoPackage.inc.php:36
 #: modules/services/includes/panels/services.inc.php:30
 msgid "Services"
-msgstr ""
+msgstr "Services"
 
 #: modules/services/infoPackage.inc.php:42
 #: modules/services/infoPackage.inc.php:45
 #: modules/services/control/localSidebar.php:25
 #: modules/services/control/index.php:26
 msgid "Core services"
-msgstr ""
+msgstr "Services essentiels"
 
 #: modules/services/infoPackage.inc.php:49
 msgid "Others services"
-msgstr ""
+msgstr "Autres services"
 
 #: modules/services/infoPackage.inc.php:76
 #: modules/services/control/localSidebar.php:31
 #: modules/services/control/log.php:38
 msgid "Services log"
-msgstr ""
+msgstr "Log des services"
 
 #: modules/services/infoPackage.inc.php:88
 #: modules/services/includes/panels/system.inc.php:48
 msgid "Reboot"
-msgstr ""
+msgstr "Redémarrer"
 
 #: modules/services/infoPackage.inc.php:92
 #: modules/services/includes/panels/system.inc.php:49
 msgid "Poweroff"
-msgstr ""
+msgstr "Éteindre"
 
 #: modules/services/control/others.php:29
 #: modules/services/control/localSidebar.php:28
 msgid "Other services"
-msgstr ""
+msgstr "Autres services"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:28
 #: modules/services/control/ajaxServicesFilter.php:28
 msgid "Start service"
-msgstr ""
+msgstr "Démarrer le service"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:29
 #: modules/services/control/ajaxServicesFilter.php:29
 msgid "Stop service"
-msgstr ""
+msgstr "Stopper le service"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:30
 #: modules/services/control/ajaxServicesFilter.php:30
 msgid "Reload service"
-msgstr ""
+msgstr "Recharger le service"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:31
 #: modules/services/control/ajaxServicesFilter.php:31
 msgid "Restart service"
-msgstr ""
+msgstr "Redémarrer le service"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:32
 #: modules/services/control/ajaxServicesFilter.php:32
 msgid "View log"
-msgstr ""
+msgstr "Voir le log"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:49
 #: modules/services/control/ajaxServicesFilter.php:76
 #: modules/services/control/ajaxLogFilter.php:57
 msgid "Service"
-msgstr ""
+msgstr "Service"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:52
 #: modules/services/control/ajaxServicesFilter.php:79
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:53
 #: modules/services/control/ajaxServicesFilter.php:80
 msgid "Status"
-msgstr ""
+msgstr "Statut"
 
 #: modules/services/control/ajaxLogFilter.php:53
 msgid "Date"
-msgstr ""
+msgstr "Date"
 
 #: modules/services/control/ajaxLogFilter.php:58
 msgid "UID"
-msgstr ""
+msgstr "UID"
 
 #: modules/services/control/ajaxLogFilter.php:59
 msgid "GID"
-msgstr ""
+msgstr "GID"
 
 #: modules/services/control/ajaxLogFilter.php:60
 msgid "PID"
-msgstr ""
+msgstr "PID"
 
 #: modules/services/control/ajaxLogFilter.php:61
 msgid "Message"
-msgstr ""
+msgstr "Message"
 
 #: modules/services/control/log.php:36
 #, php-format
 msgid "%s service log"
-msgstr ""
+msgstr "Log du service %s "
 
 #: modules/services/includes/panels/services.inc.php:44
 #, php-format
 msgid "%d inactive service"
 msgid_plural "%d inactive services"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d service inactif"
+msgstr[1] "%d services inactifs"
 
 #: modules/services/includes/panels/services.inc.php:50
 msgid "All services are up"
-msgstr ""
+msgstr "Tous les services sont en fonctionnement"
 
 #: modules/services/includes/panels/system.inc.php:29
 msgid "System"
-msgstr ""
+msgstr "Système"
 
 #: modules/services/includes/panels/system.inc.php:38
 msgid "The server will reboot. Are you sure ?"
-msgstr ""
+msgstr "Le serveur va redémarrer. Êtes-vous sur ?"
 
 #: modules/services/includes/panels/system.inc.php:43
 msgid "The server will be poweroff. Are you sure ?"
-msgstr ""
+msgstr "Le serveur va être mis hors tension. Êtes-vous sur ?"
