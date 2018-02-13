@@ -207,7 +207,7 @@ msgstr "Tag d'inventaire"
 
 #: modules/glpi/glpi/addEntityRule.php:113
 msgid "equal to"
-msgstr "est égal "
+msgstr "est égal à"
 
 #: modules/glpi/glpi/addEntityRule.php:114
 msgid "different from"
@@ -796,7 +796,7 @@ msgstr "Inactif ou pas  jour: %percent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:43
 msgid "No antivirus found: %percent% (%d)"
-msgstr "Pas d'antivirus dtect: %percent% (%d)"
+msgstr "Pas d'antivirus détect: %percent% (%d)"
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Computers"
