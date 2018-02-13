@@ -1,7 +1,7 @@
 [main]
 host = https://www.transifex.com
 
-[pulse-1.dashboard]
+[pulse-1.pdashboard]
 file_filter = <lang>/LC_MESSAGES/dashboard.po
 source_file = dashboard.pot
 source_lang = en_US
