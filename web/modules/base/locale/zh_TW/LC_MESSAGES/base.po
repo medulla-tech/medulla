@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:05+0100\n"
+"POT-Creation-Date: 2018-02-13 16:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -1735,7 +1735,7 @@ msgstr "精靈停止"
 msgid "MMC agent"
 msgstr "MMC 代理程式"
 
-#: includes/acl.inc.php:128
+#: includes/acl.inc.php:132
 msgid "You do not have required rights"
 msgstr "您沒有所需的權限"
 
