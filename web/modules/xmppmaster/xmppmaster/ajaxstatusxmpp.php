@@ -48,14 +48,14 @@ $end   = (isset($_GET['end'])?$_GET['end']:$maxperpage-1);
 if ($_GET['currenttasks'] == '1'){
   $status="";
   $LastdeployINsecond = 3600*24;
-  echo "<h2>Current tasks (last 24 hours)</h2>";
+  echo "<h2>" . _T("Current tasks (last 24 hours)") . "</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserrecent( $_GET['login'] ,$status, $LastdeployINsecond, $start, $end, $filter) ;
    
  
 }
 else {
   $LastdeployINsecond = 3600*2160;
-  echo "<h2>Past tasks (last 3 months)</h2>";
+  echo "<h2>" . _T("Past tasks (last 3 months)") ."</h2>";
   $arraydeploy = xmlrpc_getdeploybyuserpast( $_GET['login'] ,$LastdeployINsecond, $start, $end, $filter) ;
 }
 $arrayname = array();
