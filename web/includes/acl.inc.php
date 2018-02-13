@@ -57,9 +57,13 @@ function getAclAttr($attr) {
     $ret = "";
     if ($_SESSION["login"]=="root") {
         $ret = "rw";
-    } else {
-        if (!empty($_SESSION["aclattr"][$attr])) {
-            $ret = $_SESSION["aclattr"][$attr];
+    } 
+    else {
+        foreach ($_SESSION["aclattr"] as $key=>$val){
+            $pos = strpos($key, $attr);
+            if ($pos !== false && $pos == 0) {
+                $ret = substr($key, -2, 2);
+            }
         }
     }
     return $ret;
