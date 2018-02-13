@@ -20,7 +20,7 @@
 
 [ ! -d modules ] && echo "Run this script from the web directory." && exit 1
 
-for module in base ppolicy services dashboard report; do
+for module in base ppolicy services dashboard report xmppmaster; do
     POT="modules/${module}/locale/${module}.pot"
     rm -f $POT
     touch $POT
