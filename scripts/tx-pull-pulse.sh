@@ -21,5 +21,6 @@ modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc support guacam
 for mod in $modules
 do
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx pull -f -r pulse-1.${mod} ${lang} ${args}
+	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
+	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES
 done
