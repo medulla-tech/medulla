@@ -25,7 +25,7 @@ li.installg a {
 }
 
 li.folder a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
@@ -36,7 +36,7 @@ li.folder a {
 }
 
 li.folderg a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/folder.png");
         background-repeat: no-repeat;
@@ -50,7 +50,7 @@ li.folderg a {
         opacity:0.5;
 }
 li.console a {
-        padding: 5px 0px  5px 22px;
+        padding: 5px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
@@ -61,7 +61,7 @@ li.console a {
 }
 
 li.consoleg a {
-        padding: 5px 0px  5px 22px;
+        padding: 5px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/console.png");
         background-repeat: no-repeat;
@@ -75,7 +75,7 @@ li.consoleg a {
         opacity:0.5;
 }
 li.quick a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
@@ -86,7 +86,7 @@ li.quick a {
 }
 
 li.guaca a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
@@ -97,7 +97,7 @@ li.guaca a {
 }
 
 li.guacag a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/guaca.png");
         background-repeat: no-repeat;
@@ -111,7 +111,7 @@ li.guacag a {
         opacity:0.5;
 }
 li.quickg a {
-        padding: 5px 0px  5px 22px;
+        padding: 0px 0px 5px 22px;
         margin: 0 0px 0 0px;
         background-image: url("modules/base/graph/computers/quick.png");
         background-repeat: no-repeat;
