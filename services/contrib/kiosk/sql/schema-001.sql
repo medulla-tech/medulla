@@ -38,12 +38,12 @@ CREATE TABLE `version` (
 -- Table structure for profils
 -- 
 
-CREATE TABLE 'profils' (
-	'id' int NOT NULL AUTO_INCREMENT, PRIMARY KEY('id'),
-	'name' varchar(50) NOT NULL,
-	'active' boolean,
-	'creation_date' datetime,
-) ENGINE + InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE IF NOT EXISTS `profiles` (
+	`id` int NOT NULL AUTO_INCREMENT, PRIMARY KEY(`id`),
+	`name` varchar(50) NOT NULL,
+	`active` boolean,
+	`creation_date` datetime
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `version` VALUES (1);
 

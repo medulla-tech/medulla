@@ -29,7 +29,7 @@ from sqlalchemy.exc import DBAPIError
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-# from pulse2.database.kiosk.schema import # tes tables
+from pulse2.database.kiosk.schema import Profiles
 # Imported last
 import logging
 import json
@@ -37,7 +37,7 @@ import time
 
 class KioskDatabase(DatabaseHelper):
     """
-    Singleton Class to query the kiosk database.
+    Singleton Class to query the xmppmaster database.
 
     """
     is_activated = False
@@ -57,17 +57,13 @@ class KioskDatabase(DatabaseHelper):
         print self.makeConnectionPath()
         if not self.db_check():
             return False
-
         self.metadata = MetaData(self.db)
         if not self.initMappersCatchException():
             self.session = None
-
             return False
         self.metadata.create_all()
-
         self.is_activated = True
         result = self.db.execute("SELECT * FROM kiosk.version limit 1;")
-
         re = [x.Number for x in result]
         #logging.getLogger().debug("xmppmaster database connected (version:%s)"%(re[0]))
         return True
@@ -99,5 +95,21 @@ class KioskDatabase(DatabaseHelper):
     # kiosk FUNCTIONS
     # =====================================================================
 
-    #@DatabaseHelper._sessionm
+    @DatabaseHelper._sessionm
+    def get_profiles_list(self, session):
 
+        ret = session.query(Profiles).all()
+        lines = []
+        for row in ret:
+            lines.append(row.toDict())
+
+        return lines
+
+    @DatabaseHelper._sessionm
+    def get_profiles_name_list(self, session):
+
+        ret = session.query(Profiles.name).all()
+        lines = []
+        for row in ret:
+            lines.append(row[0])
+        return lines

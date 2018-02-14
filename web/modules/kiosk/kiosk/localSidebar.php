@@ -21,6 +21,7 @@
 
 $sidemenu= new SideMenu();
 $sidemenu->setClass("kiosk");
-$sidemenu->addSideMenuItem(new SideMenuItem(_T("Status", 'kiosk'), "kiosk", "kiosk", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Profils List", 'kiosk'), "kiosk", "kiosk", "index"));
+$sidemenu->addSideMenuItem(new SideMenuItem(_T("Add Profil", 'kiosk'), "kiosk", "kiosk", "add"));
 
 ?>

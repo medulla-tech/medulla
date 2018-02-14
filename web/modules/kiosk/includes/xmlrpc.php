@@ -23,4 +23,13 @@
 // Main Kiosk communications functions [HTTP]
 //======================================================================
 
+
+function xmlrpc_get_profiles_list(){
+    return xmlCall("kiosk.get_profiles_list", array());
+}
+
+// Used by kiosk/kiosk/index.php
+function xmlrpc_get_profiles_name_list(){
+    return xmlCall("kiosk.get_profiles_name_list", array());
+}
 ?>
