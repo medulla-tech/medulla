@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"POT-Creation-Date: 2018-02-14 09:22+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,26 +47,16 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:132
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:132
-msgid "xmpp files browser"
+msgid "File manager"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:168
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:165
-msgid "File Serveur Pulse"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:187
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:184
-msgid "Files Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:300
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:317
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:287
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
 msgid "Copy Remote File"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:302
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:319
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:289
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:306
 msgid "Local File : "
 msgstr ""
 
@@ -176,7 +166,7 @@ msgstr ""
 msgid "XMPP Custom Quick Action"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:37
+#: modules/xmppmaster/xmppmaster/localSidebar.php:36
 msgid "XMPP File manager"
 msgstr ""
 
