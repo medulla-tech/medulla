@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -43,12 +43,12 @@ msgstr ""
 
 #: modules/ppolicy/default/edit.php:126
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: modules/ppolicy/default/edit.php:132
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
@@ -137,11 +137,11 @@ msgstr ""
 
 #: modules/ppolicy/default/delete.php:45
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: modules/ppolicy/default/delete.php:46
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: modules/ppolicy/infoPackage.inc.php:36
 msgid "Password Policy"

@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,24 +93,24 @@ msgstr ""
 #: modules/services/control/ajaxOthersServicesFilter.php:52
 #: modules/services/control/ajaxServicesFilter.php:79
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: modules/services/control/ajaxOthersServicesFilter.php:53
 #: modules/services/control/ajaxServicesFilter.php:80
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: modules/services/control/ajaxLogFilter.php:53
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #: modules/services/control/ajaxLogFilter.php:58
 msgid "UID"
-msgstr ""
+msgstr "UID"
 
 #: modules/services/control/ajaxLogFilter.php:59
 msgid "GID"
-msgstr ""
+msgstr "GID"
 
 #: modules/services/control/ajaxLogFilter.php:60
 msgid "PID"
@@ -117,7 +118,7 @@ msgstr ""
 
 #: modules/services/control/ajaxLogFilter.php:61
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 #: modules/services/control/log.php:36
 #, php-format
@@ -137,7 +138,7 @@ msgstr ""
 
 #: modules/services/includes/panels/system.inc.php:29
 msgid "System"
-msgstr ""
+msgstr "System"
 
 #: modules/services/includes/panels/system.inc.php:38
 msgid "The server will reboot. Are you sure ?"

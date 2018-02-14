@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +87,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:93
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
@@ -186,7 +187,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:87
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Edit a Quick Action"
@@ -237,6 +238,14 @@ msgstr ""
 msgid "Computer deploy group"
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
+msgid "Current tasks (last 24 hours)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
+msgid "Past tasks (last 3 months)"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Target"
@@ -249,7 +258,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:187
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
 msgid "Delete deploy"

@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,121 +22,121 @@ msgstr ""
 #: modules/dashboard/infoPackage.inc.php:40
 #: modules/dashboard/infoPackage.inc.php:46
 msgid "Dashboard"
-msgstr ""
+msgstr "Панель приладів"
 
 #: modules/dashboard/infoPackage.inc.php:51
 msgid "Panels"
-msgstr ""
+msgstr "Панелі"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
-msgstr ""
+msgstr "Оновлення клієнтів"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:42
 #: modules/dashboard/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
-msgstr ""
+msgstr "Під час отримання оновлень сталася помилка"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:45
 #: modules/dashboard/includes/panels/product_updates.inc.php:46
 msgid "View updates"
-msgstr ""
+msgstr "Переглянути оновлення"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:50
 #: modules/dashboard/includes/panels/product_updates.inc.php:51
 msgid "No updates available."
-msgstr ""
+msgstr "Немає оновлень."
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:52
 #: modules/dashboard/includes/panels/product_updates.inc.php:53
 msgid "updates available."
-msgstr ""
+msgstr "оновлень доступно."
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:64
 msgid "Up-to-date"
-msgstr ""
+msgstr "Найновіший"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:65
 msgid "Updates planned"
-msgstr ""
+msgstr "Заплановані оновлення"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:66
 msgid "Updates availables"
-msgstr ""
+msgstr "Доступні оновлення"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:67
 msgid "OS Update disabled"
-msgstr ""
+msgstr "Вимкнено оновлення ОС"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:68
 msgid "Not registered"
-msgstr ""
+msgstr "Не зареєстровано"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:69
 msgid "Not Supported"
-msgstr ""
+msgstr "Не підтримується"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
 msgid "Create a group"
-msgstr ""
+msgstr "Створити групу"
 
 #: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
-msgstr ""
+msgstr "Скорочення"
 
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
-msgstr ""
+msgstr "Загальне"
 
 #: modules/dashboard/includes/panels/general.inc.php:38
 msgid "on"
-msgstr ""
+msgstr "у"
 
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
-msgstr ""
+msgstr "Час роботи"
 
 #: modules/dashboard/includes/panels/general.inc.php:40
 msgid "Load"
-msgstr ""
+msgstr "Завантажити"
 
 #: modules/dashboard/includes/panels/general.inc.php:43
 msgid "RAM"
-msgstr ""
+msgstr "Пам’ять"
 
 #: modules/dashboard/includes/panels/general.inc.php:74
 #: modules/dashboard/includes/panels/space.inc.php:37
 msgid "free"
-msgstr ""
+msgstr "вільно"
 
 #: modules/dashboard/includes/panels/plugins.inc.php:28
 msgid "Plugins loaded"
-msgstr ""
+msgstr "Завантажені додатки"
 
 #: modules/dashboard/includes/panels/space.inc.php:28
 msgid "Disk usage"
-msgstr ""
+msgstr "Використання диска"
 
 #: modules/dashboard/includes/panels/space.inc.php:36
 msgid "used"
-msgstr ""
+msgstr "використано"
 
 #: modules/dashboard/includes/panels/backup.inc.php:28
 msgid "Machines backup"
-msgstr ""
+msgstr "Резервне копіювання машин"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
-msgstr ""
+msgstr "Оновлення Pulse"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Install updates"
-msgstr ""
+msgstr "Встановити оновлення"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:29
 msgid "Machines Online"
-msgstr ""
+msgstr "Робочі машини"
 
 #: modules/dashboard/includes/panels/process.inc.php:28
 msgid "Pulse processes"
-msgstr ""
+msgstr "Процеси Pulse"

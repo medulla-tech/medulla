@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/zh_TW/)\n"
@@ -35,26 +35,26 @@ msgstr ""
 #: modules/dashboard/includes/panels/clients_updates.inc.php:42
 #: modules/dashboard/includes/panels/product_updates.inc.php:43
 msgid "An error occured while fetching updates"
-msgstr ""
+msgstr "擷取更新時發生錯誤"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:45
 #: modules/dashboard/includes/panels/product_updates.inc.php:46
 msgid "View updates"
-msgstr ""
+msgstr "檢視更新"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:50
 #: modules/dashboard/includes/panels/product_updates.inc.php:51
 msgid "No updates available."
-msgstr ""
+msgstr "無可用更新。"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:52
 #: modules/dashboard/includes/panels/product_updates.inc.php:53
 msgid "updates available."
-msgstr ""
+msgstr "有可用更新。"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:64
 msgid "Up-to-date"
-msgstr ""
+msgstr "最新"
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:65
 msgid "Updates planned"
@@ -78,7 +78,7 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:92
 msgid "Create a group"
-msgstr ""
+msgstr "建立一個群組"
 
 #: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
@@ -131,7 +131,7 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:47
 msgid "Install updates"
-msgstr ""
+msgstr "安裝更新"
 
 #: modules/dashboard/includes/panels/computersOnline.inc.php:29
 msgid "Machines Online"

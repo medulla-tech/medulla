@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -40,16 +40,16 @@ msgstr ""
 
 #: graph/header.inc.php:213 graph/header.inc.php:249
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: graph/header.inc.php:216 graph/header.inc.php:218
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: graph/header.inc.php:251 includes/PageGenerator.php:2256
 #: includes/FormGenerator.php:642
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: graph/header.inc.php:315
 msgid "Form cannot be submit. Input errors are highlighted in red."
@@ -1041,7 +1041,7 @@ msgstr ""
 
 #: modules/base/includes/publicFunc.php:459
 msgid "All groups"
-msgstr ""
+msgstr "Все группы"
 
 #: modules/base/includes/publicFunc.php:491
 #: modules/base/views/index.tpl.php:87

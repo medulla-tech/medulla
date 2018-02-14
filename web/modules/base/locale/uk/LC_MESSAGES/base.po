@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -1195,7 +1195,7 @@ msgstr ""
 
 #: modules/base/includes/panels/support.inc.php:39
 msgid "Support"
-msgstr ""
+msgstr "Підтримка"
 
 #: modules/base/includes/panels/support.inc.php:44
 msgid "Phone :"
@@ -1602,7 +1602,7 @@ msgstr ""
 
 #: modules/dashboard/includes/panels/clients_updates.inc.php:30
 msgid "Clients Update"
-msgstr ""
+msgstr "Оновлення клієнтів"
 
 #: modules/dashboard/includes/panels/general.inc.php:39
 msgid "Uptime"
@@ -1610,7 +1610,7 @@ msgstr "Час роботи"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
-msgstr ""
+msgstr "Оновлення Pulse"
 
 #: index.php:63 token.php:56
 #, php-format

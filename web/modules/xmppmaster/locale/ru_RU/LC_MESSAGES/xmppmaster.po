@@ -8,8 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-13 16:22+0100\n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,29 +87,29 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:93
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
 msgid "Start"
-msgstr ""
+msgstr "Запуск"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:95
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
 msgid "State"
-msgstr ""
+msgstr "Состояние"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:96
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
 msgid "Package"
-msgstr ""
+msgstr "Пакет"
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:90
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
 msgid "My tasks"
@@ -145,11 +146,11 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/editqa.php:80
 msgid "Command name"
-msgstr ""
+msgstr "Название команды"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:82
 msgid "Command"
-msgstr ""
+msgstr "Команда"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:84
 msgid "Command description"
@@ -186,7 +187,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:87
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Edit a Quick Action"
@@ -211,7 +212,7 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
 msgid "Computer Name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:64
 msgid "Send custom command to"
@@ -237,19 +238,27 @@ msgstr ""
 msgid "Computer deploy group"
 msgstr ""
 
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
+msgid "Current tasks (last 24 hours)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
+msgid "Past tasks (last 3 months)"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Target"
-msgstr ""
+msgstr "пользователь"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 msgid "Start date"
-msgstr ""
+msgstr "дата начала"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:187
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
 msgid "Delete deploy"
@@ -368,7 +377,7 @@ msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:202
 msgid "List all groups of computers"
-msgstr ""
+msgstr "Список групп компьютеров"
 
 #: modules/xmppmaster/infoPackage.inc.php:207
 msgid "ajax view grp deploy"
