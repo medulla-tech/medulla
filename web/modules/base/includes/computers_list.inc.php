@@ -183,7 +183,12 @@ function list_computers($names,
         $presencemachinexmpp ? $value['presencemachinexmpp'] = "1" : $value['presencemachinexmpp'] = "0";
 
         $value['presencemachinexmpp'] = $presencemachinexmpp;
-        $cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
+        //$cssClasses[] = (in_array($value['objectUUID'], $pull_list)) ? 'machinePull' : 'machineName';
+        if ($value['presencemachinexmpp'] == "1"){
+            $cssClasses[] = 'machineNamepresente';
+        }else{
+            $cssClasses[] = 'machineName';
+        }
 
         foreach ($headers as $header) {
             if (!empty($value[$header[0]])) {
