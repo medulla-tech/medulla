@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"POT-Creation-Date: 2018-02-14 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
@@ -48,26 +48,16 @@ msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:132
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:132
-msgid "xmpp files browser"
+msgid "File manager"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:168
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:165
-msgid "File Serveur Pulse"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:187
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:184
-msgid "Files Machines"
-msgstr ""
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:300
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:317
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:287
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
 msgid "Copy Remote File"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:302
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:319
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:289
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:306
 msgid "Local File : "
 msgstr ""
 
@@ -81,7 +71,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:39
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:182
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
 msgid "Deployment"
 msgstr ""
 
@@ -107,7 +97,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:90
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 msgid "User"
 msgstr "Usuario"
 
@@ -177,7 +167,7 @@ msgstr ""
 msgid "XMPP Custom Quick Action"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:37
+#: modules/xmppmaster/xmppmaster/localSidebar.php:36
 msgid "XMPP File manager"
 msgstr ""
 
@@ -247,12 +237,12 @@ msgid "Past tasks (last 3 months)"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
 msgid "Target"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Start date"
 msgstr ""
 
@@ -260,7 +250,11 @@ msgstr ""
 msgid "Status"
 msgstr "Estado"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
+msgid "Planned tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
 msgstr ""
 
