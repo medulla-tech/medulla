@@ -73,8 +73,8 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp->setWidth(600);
 
-    
-    
+
+
     if ($presencemachinexmpp != 1) {
         $logAction = new EmptyActionItem1(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new EmptyActionItem1(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
@@ -154,7 +154,7 @@ foreach ($actions as $action){
         if (is_array($paramArray) & !empty($paramArray)){
             $urlChunk = $action->buildUrlChunk($paramArray);
         }
-        else{ 
+        else{
             $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
 
         }
@@ -194,80 +194,3 @@ foreach ($actions as $action){
 }
 echo "</ul>";
 ?>
-<style type="text/css">
-li.console a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.consoleg a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/console.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quick a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guaca a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-}
-
-li.guacag a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/guaca.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
-li.quickg a {
-        padding: 5px 0px  5px 22px;
-        margin: 0 0px 0 0px;
-        background-image: url("modules/base/graph/computers/quick.png");
-        background-repeat: no-repeat;
-        background-position: left top;
-        line-height: 18px;
-        text-decoration: none;
-        color: #FFF;
-        filter: grayscale(50%);
-        -webkit-filter: grayscale(50%);
-        -moz-filter: grayscale(50%);
-        opacity:0.5;
-}
- </style>
