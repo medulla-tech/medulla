@@ -1874,42 +1874,42 @@ msgstr " '%s' "
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI\\n\n"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI\\n\n"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
 msgid ""
 "An error occurred when trying to contact the mirror '%s' : the connection "
 "was refused."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:418
 #, php-format
 msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "connection was refused."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:419
 #, php-format
 msgid ""
 "An error occurred when trying to contact the mirror '%s' : the mountpoint "
 "doesn't exists."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:420
 #, php-format
 msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "mountpoint doesn't exists."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:421
 #, php-format
@@ -1917,22 +1917,21 @@ msgid ""
 "Package '%s' is NOT available on primary mirror %s\n"
 "Package '%s' is available on fallback mirror %s"
 msgstr ""
-" '%s'  %s \\n\n"
-" '%s'  %s "
+""
 
 #: modules/msc/includes/command_history.php:422
 #, php-format
 msgid "Package '%s' is available on primary mirror %s"
-msgstr " '%s'  %s "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:481
 #: modules/msc/includes/command_history.php:512
 msgid "next attempt"
-msgstr "下次尝试"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:497
 msgid "Step log"
-msgstr "步骤记录档"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:506
 msgid "Show log"
