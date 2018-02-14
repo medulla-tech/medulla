@@ -1856,13 +1856,13 @@ msgstr "目前的主機名稱與來自清查資料庫的主機名稱不相符。
 msgid ""
 "The current host IP address doesn't match the IP address from the inventory "
 "database."
-msgstr " IP  IP "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:412
 msgid ""
 "The current host MAC address doesn't match the MAC address from the "
 "inventory database."
-msgstr " MAC  MAC "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:414
 #, php-format
@@ -1874,7 +1874,7 @@ msgstr " '%s' "
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
