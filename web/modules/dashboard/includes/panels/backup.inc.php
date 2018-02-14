@@ -36,9 +36,9 @@ class BackupPanel extends Panel {
         $total_machines = getComputerCount();
         $machines_backup = get_count_of_backuped_hosts();
         $machines_not_backup = $total_machines - $machines_backup;
-        echo 'Total machines : '.$total_machines.'<br/>';
-        echo '<span style="color:green">Backup configured : '.$machines_backup.'</span><a href="'.$urlRedirect.'&backup=yes"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-        echo '<span style="color:red">Backup not configured : ' .$machines_not_backup.'</span><a href="'.$urlRedirect.'&backup=no"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo _T("Total machines: ") .$total_machines.'<br/>';
+        echo '<span style="color:green">' . _T("Backup configured: ") . $machines_backup.'</span><a href="'.$urlRedirect.'&backup=yes"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo '<span style="color:red">' . _T("Backup not configured: ") .$machines_not_backup.'</span><a href="'.$urlRedirect.'&backup=no"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
     }
 }
 ?>

@@ -1,0 +1,396 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: it_IT\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:43
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:39
+msgid "Console"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:70
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:77
+msgid "Shell command"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:74
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:81
+msgid "Command result"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:110
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:117
+msgid "Code Return : "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:35
+msgid "Wake On Lan"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/wakeonlan.php:41
+msgid "Mac address"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:132
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:132
+msgid "xmpp files browser"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:168
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:165
+msgid "File Serveur Pulse"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:187
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:184
+msgid "Files Machines"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:300
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:317
+msgid "Copy Remote File"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:302
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:319
+msgid "Local File : "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:50
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:74
+msgid "detaildeploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:92
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:39
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:182
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
+msgid "Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:93
+msgid "Name"
+msgstr "Nome"
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:94
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:82
+msgid "Start"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:95
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:83
+msgid "State"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:96
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:84
+msgid "Package"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:90
+msgid "User"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:27
+msgid "My tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:28
+#: modules/xmppmaster/xmppmaster/auditdeploy.php:34
+msgid "All users tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:29
+#: modules/xmppmaster/xmppmaster/auditmypastdeploys.php:34
+msgid "My past tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebarxmpp.php:30
+#: modules/xmppmaster/xmppmaster/auditpastdeploys.php:34
+msgid "All users past tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:63
+#, php-format
+msgid "Edit Custom Quick action : %s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:65
+msgid "Create Custom Quick action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:78
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:88
+msgid "Operating System"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:80
+msgid "Command name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:82
+msgid "Command"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/editqa.php:84
+msgid "Command description"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/removeqa.php:35
+#, php-format
+msgid "Delete this Quick Action :%s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebar.php:26
+#: modules/xmppmaster/infoPackage.inc.php:54
+#: modules/xmppmaster/infoPackage.inc.php:57
+#: modules/xmppmaster/infoPackage.inc.php:86
+#: modules/xmppmaster/infoPackage.inc.php:96
+msgid "XMPP Console"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebar.php:29
+msgid "XMPP Wake on LAN"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebar.php:33
+msgid "XMPP Custom Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/localSidebar.php:37
+msgid "XMPP File manager"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:84
+msgid "Custom command name"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:87
+msgid "Description"
+msgstr "Descrizione"
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
+msgid "Edit a Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:96
+msgid "Delete a Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:88
+#: modules/xmppmaster/xmppmaster/consolexmpp.php:72
+msgid "Select a machine"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/deployxmpp.php:96
+msgid "Select a package"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/index.php:38
+msgid "My Tasks ["
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:81
+msgid "Computer Name"
+msgstr "Nome del computer"
+
+#: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:64
+msgid "Send custom command to"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
+msgid "Computer deploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:39
+msgid "Deployment [ group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:161
+msgid "Stop Deployment"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
+msgid "Deployment [machine "
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
+msgid "Computer deploy group"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
+msgid "Current tasks (last 24 hours)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
+msgid "Past tasks (last 3 months)"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
+msgid "Target"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+msgid "Start date"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:187
+msgid "Status"
+msgstr "Stato"
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
+msgid "Delete deploy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/customQA.php:38
+#, php-format
+msgid "Quick action list for user %s"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/customQA.php:45
+msgid "Create new Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:32
+msgid "xmppmaster"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:38
+msgid "Audit"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:42
+msgid "xmppmaster status"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:45
+msgid "XMPP All users tasks"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:48
+msgid "XMPP All users past task"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:51
+msgid "XMPP My Past tasks"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:60
+msgid "XMPP files managers"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:68
+msgid "Edit Custon Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:71
+msgid "delete Custon Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:75
+msgid "Delete Custon Quick Action"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:80
+msgid "XMPP logs"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:83
+msgid "XMPP logs grp"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:89
+#: modules/xmppmaster/infoPackage.inc.php:93
+msgid "XMPP browser file"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:99
+msgid "Wake on LAN"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:137
+msgid "action deploy quick"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:142
+msgid "quick action deploy group"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:148
+msgid "quick action Wol"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:153
+msgid "quick action Inventory"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:159
+msgid "quick action Restart"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:164
+msgid "quick action shutdown"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:169
+msgid "quick action change vnc settings"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:174
+msgid "quick action Install key"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:181
+msgid "quick action reversessh for guacamole"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:187
+msgid "Audit deployment"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:192
+#: modules/xmppmaster/infoPackage.inc.php:197
+msgid "XMPP log"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:202
+msgid "List all groups of computers"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:207
+msgid "ajax view grp deploy"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:212
+msgid "List computers deploy"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:217
+msgid "List computers deploy by group"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:222
+msgid "List computer deploy"
+msgstr ""

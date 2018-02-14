@@ -347,16 +347,12 @@ $modules3->setElementsVal($typecritereval);
                 <th><?php echo $modules1->display(); ?></th>
                 <th><?php echo $modules2->display(); ?></th>
                 <th><?php echo $modules3->display(); ?></th>
+		<th><p class="btnPrimary">Filter logs</p></th>
             <!--    <th><?php //echo $modules4->display(); ?></th>-->
             </tr>
         </thead>
      </table>
 </div>
-
-
-<p class="btnPrimary">
-  Filter logs
-</p>
 
 <br>
 

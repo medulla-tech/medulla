@@ -177,6 +177,7 @@ class ServiceManager(object):
         fields = ("PRIORITY", "_HOSTNAME", "TIMESTAMP", "_UID", "_GID", "_PID", "MESSAGE", "_SYSTEMD_UNIT")
         if service:
             service_filter += service
+
         code, out, err = shlaunch('%s -n 500 -o json -u %s --no-pager' % (self.config.journalctl_path, service_filter))
         logs = []
         for line in out:

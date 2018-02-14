@@ -1,63 +1,36 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl_PL\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 1.6.10\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
+#: modules/ppolicy/default/index.php:31
+msgid "Password policies list"
+msgstr ""
+
+#: modules/ppolicy/default/edit.php:44 modules/ppolicy/infoPackage.inc.php:52
+#: modules/ppolicy/includes/localSidebar.php:28
+msgid "Add a password policy"
+msgstr ""
+
+#: modules/ppolicy/default/edit.php:48
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:44
 #: modules/ppolicy/default/ajaxPPoliciesFilter.php:47
-#: modules/ppolicy/default/edit.php:48
 msgid "Edit password policy"
-msgstr ""
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
-msgid "Delete password policy"
-msgstr ""
-
-#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
-#: modules/ppolicy/includes/localSidebar.php:27
-#: modules/ppolicy/infoPackage.inc.php:46
-msgid "Password policies"
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:29
-msgid "The password policy has been deleted."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:41
-#, php-format
-msgid ""
-"You will delete the password policy <strong>%s</strong>. Default password "
-"policy will be applied to users that use this password policy."
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:45
-msgid "Delete"
-msgstr ""
-
-#: modules/ppolicy/default/delete.php:46
-msgid "Cancel"
-msgstr ""
-
-#: modules/ppolicy/default/edit.php:44
-#: modules/ppolicy/includes/localSidebar.php:28
-#: modules/ppolicy/infoPackage.inc.php:52
-msgid "Add a password policy"
 msgstr ""
 
 #: modules/ppolicy/default/edit.php:62
@@ -70,12 +43,12 @@ msgstr ""
 
 #: modules/ppolicy/default/edit.php:126
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: modules/ppolicy/default/edit.php:132
 #: modules/ppolicy/includes/ppolicy.inc.php:48
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: modules/ppolicy/default/edit.php:138
 #: modules/ppolicy/includes/ppolicy.inc.php:37
@@ -119,8 +92,14 @@ msgstr ""
 msgid "Lockout duration (seconds)"
 msgstr ""
 
-#: modules/ppolicy/default/index.php:31
-msgid "Password policies list"
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:48
+msgid "Delete password policy"
+msgstr ""
+
+#: modules/ppolicy/default/ajaxPPoliciesFilter.php:53
+#: modules/ppolicy/infoPackage.inc.php:46
+#: modules/ppolicy/includes/localSidebar.php:27
+msgid "Password policies"
 msgstr ""
 
 #: modules/ppolicy/default/warnuser.php:35
@@ -135,6 +114,148 @@ msgid ""
 "Warning your password has been reset by an administrator. Your LDAP account "
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
+msgstr ""
+
+#: modules/ppolicy/default/delete.php:29
+msgid "The password policy has been deleted."
+msgstr ""
+
+#: modules/ppolicy/default/delete.php:41
+#, php-format
+msgid ""
+"You will delete the password policy <strong>%s</strong>. Default password "
+"policy will be applied to users that use this password policy."
+msgstr ""
+
+#: modules/ppolicy/default/delete.php:45
+msgid "Delete"
+msgstr "Usuń"
+
+#: modules/ppolicy/default/delete.php:46
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: modules/ppolicy/infoPackage.inc.php:36
+msgid "Password Policy"
+msgstr ""
+
+#: modules/ppolicy/infoPackage.inc.php:58
+msgid "Edit a password policy"
+msgstr ""
+
+#: modules/ppolicy/infoPackage.inc.php:63
+msgid "Delete a password policy"
+msgstr ""
+
+#: modules/ppolicy/infoPackage.inc.php:79
+msgid "Default "
+msgstr ""
+
+#: modules/ppolicy/infoPackage.inc.php:82
+msgid "Enable user specific password policy"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:4
+#: modules/ppolicy/includes/auditCodes.php:9
+msgid "Change ppolicy attribute"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:5
+#: modules/ppolicy/includes/auditCodes.php:10
+msgid "Delete ppolicy attribute"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:6
+msgid "Add ppolicy to user"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:7
+msgid "Update ppolicy for user"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:8
+msgid "Delete ppolicy on user"
+msgstr ""
+
+#: modules/ppolicy/includes/auditCodes.php:11
+#: modules/ppolicy/includes/auditCodes.php:12
+msgid "ppolicy"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:37
+#: modules/ppolicy/includes/publicFunc.php:63
+#: modules/ppolicy/includes/publicFunc.php:71
+#: modules/ppolicy/includes/publicFunc.php:78
+#: modules/ppolicy/includes/publicFunc.php:83
+#: modules/ppolicy/includes/publicFunc.php:201
+msgid "Password policy management"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:64
+msgid "This account is locked by the LDAP directory."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:72
+msgid ""
+"The password of this account has expired. The user cannot change his "
+"password."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:79
+#, php-format
+msgid ""
+"The password of this account has expired. The user has %s login(s) left to "
+"change his password."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:84
+msgid ""
+"The password of this account has expired. The user can change his password."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:88
+msgid "Lock account"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:89
+msgid "If checked, permanently lock the user account"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:94
+msgid "Password reset flag"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:95
+msgid ""
+"If checked, the user must change her password when she first binds to the "
+"LDAP directory after password is set or reset by a password administrator"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:117
+msgid "Enable a specific password policy for this user"
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:118
+#: modules/ppolicy/includes/publicFunc.php:224
+msgid "If not set the default password policy is enforced."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:170
+#, php-format
+msgid "Password policy %s applied."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:174
+#, php-format
+msgid "Password policy %s removed."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:186
+msgid "Password policy attributes updated."
+msgstr ""
+
+#: modules/ppolicy/includes/publicFunc.php:223
+msgid "Apply a password policy for all group users"
 msgstr ""
 
 #: modules/ppolicy/includes/ppolicy.inc.php:38
@@ -251,131 +372,8 @@ msgid ""
 "This attribute indicates how the password quality will be verified while "
 "being modified or added. If this attribute is not present, or if the value "
 "is '0', quality checking will not be enforced.  A value of '1' indicates "
-"that the server will check the quality, and if the server is unable to check "
-"it (due to a hashed password or other reasons) it will be accepted. A value "
-"of '2' indicates that the server will check the quality, and if the server "
+"that the server will check the quality, and if the server is unable to check"
+" it (due to a hashed password or other reasons) it will be accepted. A value"
+" of '2' indicates that the server will check the quality, and if the server "
 "is unable to verify it, it will return an error refusing the password."
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:4
-#: modules/ppolicy/includes/auditCodes.php:9
-msgid "Change ppolicy attribute"
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:5
-#: modules/ppolicy/includes/auditCodes.php:10
-msgid "Delete ppolicy attribute"
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:6
-msgid "Add ppolicy to user"
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:7
-msgid "Update ppolicy for user"
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:8
-msgid "Delete ppolicy on user"
-msgstr ""
-
-#: modules/ppolicy/includes/auditCodes.php:11
-#: modules/ppolicy/includes/auditCodes.php:12
-msgid "ppolicy"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:37
-#: modules/ppolicy/includes/publicFunc.php:63
-#: modules/ppolicy/includes/publicFunc.php:71
-#: modules/ppolicy/includes/publicFunc.php:78
-#: modules/ppolicy/includes/publicFunc.php:83
-#: modules/ppolicy/includes/publicFunc.php:201
-msgid "Password policy management"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:64
-msgid "This account is locked by the LDAP directory."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:72
-msgid ""
-"The password of this account has expired. The user cannot change his "
-"password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:79
-#, php-format
-msgid ""
-"The password of this account has expired. The user has %s login(s) left to "
-"change his password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:84
-msgid ""
-"The password of this account has expired. The user can change his password."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:88
-msgid "Lock account"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:89
-msgid "If checked, permanently lock the user account"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:94
-msgid "Password reset flag"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:95
-msgid ""
-"If checked, the user must change her password when she first binds to the "
-"LDAP directory after password is set or reset by a password administrator"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:117
-msgid "Enable a specific password policy for this user"
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:118
-#: modules/ppolicy/includes/publicFunc.php:224
-msgid "If not set the default password policy is enforced."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:170
-#, php-format
-msgid "Password policy %s applied."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:174
-#, php-format
-msgid "Password policy %s removed."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:186
-msgid "Password policy attributes updated."
-msgstr ""
-
-#: modules/ppolicy/includes/publicFunc.php:223
-msgid "Apply a password policy for all group users"
-msgstr ""
-
-#: modules/ppolicy/infoPackage.inc.php:36
-msgid "Password Policy"
-msgstr ""
-
-#: modules/ppolicy/infoPackage.inc.php:58
-msgid "Edit a password policy"
-msgstr ""
-
-#: modules/ppolicy/infoPackage.inc.php:63
-msgid "Delete a password policy"
-msgstr ""
-
-#: modules/ppolicy/infoPackage.inc.php:79
-msgid "Default "
-msgstr ""
-
-#: modules/ppolicy/infoPackage.inc.php:82
-msgid "Enable user specific password policy"
 msgstr ""

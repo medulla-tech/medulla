@@ -33,8 +33,7 @@ $arraydeploy= xmlrpc_get_deployxmppscheduler( $_GET['login'] , $start, $end, $fi
 
 $etat="";
 $LastdeployINsecond = 3600 * 72;
-//echo "<h2>".$_GET['login']."</h2>";
-echo "<h2>Planned tasks</h2>";
+echo "<h2>" . _T("Planned tasks") . "</h2>";
 $login   = array();
 $startdeploy = array();
 
@@ -97,8 +96,10 @@ $n->addActionItemArray($delete);
 $n->setTableHeaderPadding(0);
 
 $n->setParamInfo($params);
-$n->start = $start;
-$n->end = $end;
+// $n->start = $start;
+// $n->end = $end;
+$n->start = 0;
+$n->end = $arraydeploy['lentotal'];
 
 print "<br/>";
 

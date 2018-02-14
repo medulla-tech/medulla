@@ -107,6 +107,8 @@ input[type="text"] {
                         echo '<td id="reboot" align="center"><img src="modules/base/graph/computers/reboot.png" height="70" width="70" ></td>';
                         echo '<td id="inventory" align="center"><img src="modules/base/graph/computers/inventory0.png" height="70" width="70" ></td>';
                         echo '<td id="vncchangeperms" align="center"><img src="modules/base/graph/computers/remotedesktop.png" height="70" width="70" ></td>';
+                        echo '<td id="installkey" align="center"><img src="modules/base/graph/computers/installkeydesktop.png" height="70" width="70" ></td>';
+
                     }
                     if ($nbr_absent != 0){
                         echo '<td id="wol"><img src="modules/base/graph/computers/wol.png" height="70" width="70" ></td>';
@@ -136,6 +138,7 @@ input[type="text"] {
                                             <input type="checkbox" name="askpermission" id = "checkboxvncchangeperms" checked> Ask user approval
                                         </label>
                                     </form></td>';
+                        echo '<td id="installkey0" align="center">Installing the ARS public key on the machine agent</td>';
                     }
                     if ($nbr_absent != 0){
                         echo '<td><span id="wol0">Wake on LAN</span>
@@ -175,7 +178,7 @@ input[type="text"] {
                 for(var i = 0; i < machine_not_present.length; i++){
                     text = text +  machine_not_present[i] + ", ";
                 }
-            alert("Wakeonlan on extinct machines in progress\n"+text)
+            alert("Wakeonlan on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -187,14 +190,14 @@ input[type="text"] {
         machine_not_present = data[4];
 
         if (machine_already_present.length == 0){
-            alert("All machines are off\nInventory only on running machines")
+            alert("All machines are off\nInventory possible only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
-                    text = text +  machine_not_present[i] + ", ";
+                    text = text +  machine_already_present[i] + ", ";
                 }
-            alert("Inventory on the following machines in progress\n"+text)
+            alert("Inventory on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -205,14 +208,14 @@ input[type="text"] {
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("No machines are running\nRebbot only on running machine")
+            alert("No machines are running\nReboot possible only on running machine")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_not_present[i] + ", ";
                 }
-            alert("Reboot on the following machines in progress\n"+text)
+            alert("Reboot on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -223,14 +226,14 @@ input[type="text"] {
         machine_already_present = data[3];
         machine_not_present = data[4];
         if (machine_already_present.length == 0){
-            alert("All machines are off\nshutdown only on running machines")
+            alert("All machines are off\nShutdown possible only on running machines")
         }
         else{
                 text = "";
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("shutdown sur les machines suivante en cours\n"+text)
+            alert("shutdown on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -248,7 +251,25 @@ input[type="text"] {
                 for(var i = 0; i < machine_already_present.length; i++){
                     text = text +  machine_already_present[i] + ", ";
                 }
-            alert("VNC settings change on the following machines in progress\n"+text)
+            alert("VNC settings change on the following machines in progress\n"+text , "" , "alert-info")
+        }
+    }
+
+    function installkey(data){
+        uuid = data[0];
+        cn = data[1];
+        presence = data[2];
+        machine_already_present = data[3];
+        machine_not_present = data[4];
+        if (machine_already_present.length == 0){
+            alert("No machines are running\nARS key installation possible only on running machine")
+        }
+        else{
+                text = "";
+                for(var i = 0; i < machine_already_present.length; i++){
+                    text = text +  machine_already_present[i] + ", ";
+                }
+            alert("ARS key installation on the following machines in progress\n"+text , "" , "alert-info")
         }
     }
 
@@ -296,8 +317,23 @@ input[type="text"] {
             })
     })
 
+    jQuery('#installkey').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
+            .done(function( data ) {
+            //alert(data);
+               installkey(data)
+            })
+    })
+
+    jQuery('#installkey0').on('click', function(){
+        jQuery.get( "modules/xmppmaster/xmppmaster/actionkeyinstall.php", groupinfo )
+            .done(function( data ) {
+             //alert(data);
+               installkey(data)
+            })
+    })
+
     jQuery('#shutdown').on('click', function(){
-        //         val = jQuery.param({'time' : jQuery('#mytimeshutdown').val(), 'msg' : jQuery('#msgshutdown').val()})
         groupinfo['time'] = jQuery('#mytimeshutdown').val()
         groupinfo['msg'] = jQuery('#msgshutdown').val()
         jQuery.get( "modules/xmppmaster/xmppmaster/actionshutdown.php", groupinfo )

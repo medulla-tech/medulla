@@ -1,41 +1,88 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
-# # Translators:
-#   <maikwagner@yahoo.com>, 2013.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Mandriva Directory Server\n"
-"Report-Msgid-Bugs-To: http://projects.mandriva.org/projects/mmc/issues\n"
-"POT-Creation-Date: 2015-05-21 16:10+0200\n"
-"PO-Revision-Date: 2016-06-01 17:32+0100\n"
-"Last-Translator: Maik Wagner <maikwagner@yahoo.com>\n"
-"Language-Team: German (Germany) (http://transifex.mandriva.com/projects/p/"
-"mds/team/de_DE/)\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
+"Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.10\n"
+
+#: modules/dashboard/infoPackage.inc.php:36
+#: modules/dashboard/infoPackage.inc.php:40
+#: modules/dashboard/infoPackage.inc.php:46
+msgid "Dashboard"
+msgstr "Dashboard"
+
+#: modules/dashboard/infoPackage.inc.php:51
+msgid "Panels"
+msgstr "Panels"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:30
+msgid "Clients Update"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:42
+#: modules/dashboard/includes/panels/product_updates.inc.php:43
+msgid "An error occured while fetching updates"
+msgstr "Ein Fehler ist beim Holen der Aktualisierungen aufgetreten"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:45
+#: modules/dashboard/includes/panels/product_updates.inc.php:46
+msgid "View updates"
+msgstr "Aktualisierungen anschauen"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:50
+#: modules/dashboard/includes/panels/product_updates.inc.php:51
+msgid "No updates available."
+msgstr "Keine Updates verfügbar."
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:52
+#: modules/dashboard/includes/panels/product_updates.inc.php:53
+msgid "updates available."
+msgstr "Updates verfügbar."
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:64
+msgid "Up-to-date"
+msgstr "Up-to-date"
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:65
+msgid "Updates planned"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:66
+msgid "Updates availables"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:67
+msgid "OS Update disabled"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:68
+msgid "Not registered"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:69
+msgid "Not Supported"
+msgstr ""
+
+#: modules/dashboard/includes/panels/clients_updates.inc.php:92
+msgid "Create a group"
+msgstr "Eine Gruppe erstellen"
 
 #: modules/dashboard/includes/panels/shortcuts.inc.php:29
 msgid "Shortcuts"
 msgstr "Shortcuts"
-
-#: modules/dashboard/includes/panels/space.inc.php:28
-msgid "Disk usage"
-msgstr "Plattennutzung"
-
-#: modules/dashboard/includes/panels/space.inc.php:36
-msgid "used"
-msgstr "benutzt"
-
-#: modules/dashboard/includes/panels/space.inc.php:37
-#: modules/dashboard/includes/panels/general.inc.php:74
-msgid "free"
-msgstr "frei"
 
 #: modules/dashboard/includes/panels/general.inc.php:28
 msgid "General"
@@ -57,12 +104,39 @@ msgstr "Load"
 msgid "RAM"
 msgstr "RAM"
 
-#: modules/dashboard/infoPackage.inc.php:36
-#: modules/dashboard/infoPackage.inc.php:40
-#: modules/dashboard/infoPackage.inc.php:46
-msgid "Dashboard"
-msgstr "Dashboard"
+#: modules/dashboard/includes/panels/general.inc.php:74
+#: modules/dashboard/includes/panels/space.inc.php:37
+msgid "free"
+msgstr "frei"
 
-#: modules/dashboard/infoPackage.inc.php:51
-msgid "Panels"
-msgstr "Panels"
+#: modules/dashboard/includes/panels/plugins.inc.php:28
+msgid "Plugins loaded"
+msgstr ""
+
+#: modules/dashboard/includes/panels/space.inc.php:28
+msgid "Disk usage"
+msgstr "Plattennutzung"
+
+#: modules/dashboard/includes/panels/space.inc.php:36
+msgid "used"
+msgstr "benutzt"
+
+#: modules/dashboard/includes/panels/backup.inc.php:28
+msgid "Machines backup"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:30
+msgid "Pulse Updates"
+msgstr ""
+
+#: modules/dashboard/includes/panels/product_updates.inc.php:47
+msgid "Install updates"
+msgstr "Aktualisierungen installieren"
+
+#: modules/dashboard/includes/panels/computersOnline.inc.php:29
+msgid "Machines Online"
+msgstr ""
+
+#: modules/dashboard/includes/panels/process.inc.php:28
+msgid "Pulse processes"
+msgstr ""

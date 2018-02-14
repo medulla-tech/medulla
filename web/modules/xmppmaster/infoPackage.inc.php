@@ -54,8 +54,10 @@ $submod->addPage($page);
 $page = new Page("consolexmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
-
 $page = new Page("customQA", _T('XMPP Console', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("filesmanagers", _T('XMPP files managers', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ajaxFiltercustom");
@@ -84,6 +86,13 @@ $submod->addPage($page);
 $page = new Page("consolecomputerxmpp", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("xmppfilesbrowsing", _T('XMPP browser file', 'xmppmaster'));
+$submod->addPage($page);
+
+//ne non expert mode
+$page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
@@ -94,6 +103,32 @@ $page = new Page("ajaxdeploylog");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
+
+$page = new Page("xmpprefrechfilesremote");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmpprefrechfilesremotene");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremotene.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmppplugindownload");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmpprefrechfileslocal");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocal.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("xmpprefrechfileslocalne");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocalne.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 
 // $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
 //     $page->addTab($tab);
@@ -133,6 +168,11 @@ $submod->addPage($page);
 
 $page = new Page("actionvncchangeperms", _T("quick action change vnc settings", "xmppmaster"));
 $page->setFile("modules/xmppmaster/xmppmaster/actionvncchangeperms.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("actionrestart", _T("quick action Install key", "xmppmaster"));
+$page->setFile("modules/xmppmaster/xmppmaster/actionkeyinstall.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 // --------------END QUICK ACTION--------------------

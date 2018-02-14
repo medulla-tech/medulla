@@ -32,6 +32,34 @@ function xmlrpc_getPresenceuuid($uuid) {
     return xmlCall("xmppmaster.getPresenceuuid", array($uuid));
 }
 
+function xmlrpc_getMachinefromjid($jid) {
+    return xmlCall("xmppmaster.getMachinefromjid", array($jid));
+}
+
+function xmlrpc_getRelayServerfromjid($jid) {
+    return xmlCall("xmppmaster.getRelayServerfromjid", array($jid));
+}
+
+function xmlrpc_CallXmppPluginmmc($nameplugin, $array_tab_key_value){
+    return xmlCall("xmppmaster.CallXmppPlugin", array($nameplugin, $array_tab_key_value));
+}
+
+function xmlrpc_createdirectoryuser($directory){
+    return xmlCall("xmppmaster.createdirectoryuser", array($directory));
+}
+
+
+function xmlrpc_remotefilesystem($currentdir, $jidmachine){
+    return xmlCall("xmppmaster.remotefile", array($currentdir, $jidmachine));
+}
+
+function xmlrpc_localfilesystem($currentdir){
+    return xmlCall("xmppmaster.localfile", array($currentdir));
+}
+
+function xmlrpc_create_local_dir_transfert($pathroot, $hostname){
+    return xmlCall("xmppmaster.create_local_dir_transfert", array($pathroot, $hostname));
+}
 
 function xmlrpc_getlistcommandforuserbyos($login, $os=null, $min = null, $max = null, $filt = null   ) {
     return xmlCall("xmppmaster.getlistcommandforuserbyos", array($login, $os,  $min, $max, $filt ));
@@ -55,6 +83,10 @@ function xmlrpc_getLogxmpp($start_date="", $end_date="", $type="" , $action="", 
 
 function xmlrpc_getXmppConfiguration() {
     return xmlCall("xmppmaster.getXmppConfiguration", array());
+}
+
+function xmlrpc_callinstallkey($jidAM, $jidARS) {
+    return xmlCall("xmppmaster.callInstallKeyAM", array($jidAM, $jidARS));
 }
 
 function xmlrpc_getGuacamoleRelayServerMachineUuid($uuid) {
@@ -203,8 +235,8 @@ function xmlrpc_getshowmachinegrouprelayserver() {
     return xmlCall("xmppmaster.getshowmachinegrouprelayserver", array());
 }
 
-function xmlrpc_runXmppCommand($command, $machine){
-    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine));
+function xmlrpc_runXmppCommand($command, $machine, $postinfo){
+    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
 
 function xmlrpc_runXmppScript($command, $machine){
