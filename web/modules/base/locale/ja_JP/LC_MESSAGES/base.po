@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 00:11+0100\n"
+"POT-Creation-Date: 2018-02-14 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -1589,7 +1589,7 @@ msgstr "ユーザー %s ACL の編集"
 msgid "Download ACL string"
 msgstr "ACL 文字列のダウンロード"
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
 msgstr ""
 
