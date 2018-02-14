@@ -129,7 +129,7 @@ $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinef
 $ma = xmlrpc_getMachinefromjid($machine);
 
 $tab = explode("/",$machine);
-$p = new PageGenerator(_T("xmpp files browser", 'xmppmaster')." : ". $ma['hostname']." (".$ma['platform']. ")"); 
+$p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
 // creation repertoire namemachine si non existe.
@@ -162,10 +162,6 @@ echo '</script>';
 <div id="global">
 
     <div id="gauche">
-        <div class ="titlebrowser"><h2><?php echo _T("File Serveur Pulse", 'xmppmaster'); ?></h2></div>
-        <div class ="currentdir">
-            <h2 id="localcurrentdir">Name Directory: <span id="dirlocal"></span></h2>
-        </div>
             <div id="fileshowlocal" class="fileshow">
              <?php
                 printf ('
@@ -179,15 +175,6 @@ echo '</script>';
     </div>
 
    <div id="droite">
-        <div class ="titlebrowser">
-            <h2>
-                <?php echo _T("Files Machines", 'xmppmaster')." : ". $ma['hostname']." [".$ma['platform']."]"; ?>
-            </h2>
-        </div>
-        <div class ="currentdir">
-            <h2 id="remotecurrentdir">Name Directory: <span id="dirremote"></span>
-            </h2>
-        </div>
             <div id ="fileshowremote" class="fileshow">
             </div>
     </div>
