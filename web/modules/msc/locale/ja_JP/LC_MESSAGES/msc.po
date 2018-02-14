@@ -1875,14 +1875,14 @@ msgstr " '%s' "
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI \n"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
