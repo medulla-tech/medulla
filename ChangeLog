@@ -1,7 +1,22 @@
+mmc-core 4.3
+--------------
+
+
 mmc-core 4.2
 --------------
 
+* [FEATURE] Quick action that installs the public key of the relay server to the machines
+* [FEATURE] Allow a tooltip message on empty actions
+* [FEATURE] Automatically redirect user to /mmc
+* [FEATURE] Allow to call a plugin from a quick action
+* [FEATURE] Add a file browser page for file-transfer folder
+* [FEATURE] Download remote files from machines using XMPP
+* [FEATURE] Add presence info on machines icons
 * [BUGFIX] Fix the service module to work with newer systemd
+* [BUGFIX] Fix the color of quick action alerts
+* [BUGFIX] Fix quote characters in quick actions
+* [BUGFIX] Fix alignment of action icons
+* [BUGFIX] Update translations
 
 mmc-core 4.1
 --------------
