@@ -1881,28 +1881,28 @@ msgstr " %s  '%s'  URI"
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr " %s  '%s'  URI\n"
+msgstr ""
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
 msgid ""
 "An error occurred when trying to contact the mirror '%s' : the connection "
 "was refused."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:418
 #, php-format
 msgid ""
 "An error occurred when trying to contact the fallback mirror '%s' : the "
 "connection was refused."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:419
 #, php-format
 msgid ""
 "An error occurred when trying to contact the mirror '%s' : the mountpoint "
 "doesn't exists."
-msgstr " '%s' "
+msgstr ""
 
 #: modules/msc/includes/command_history.php:420
 #, php-format
