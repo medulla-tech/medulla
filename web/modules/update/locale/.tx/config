@@ -1,9 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[pulse-1.update]
-file_filter = <lang>/LC_MESSAGES/update.po
-source_file = update.pot
-source_lang = en_US
-type = PO
-
