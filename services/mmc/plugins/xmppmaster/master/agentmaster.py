@@ -238,6 +238,14 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
+        ###clear conf compte.
+        logger.debug( 'clear muc conf compte')
+        cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        Exception as e:
+            pass
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         #self.queue_read_event_from_command = Queue()
