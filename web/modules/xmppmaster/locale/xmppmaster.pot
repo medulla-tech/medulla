@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 09:22+0100\n"
+"POT-Creation-Date: 2018-02-14 09:58+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -70,7 +70,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:39
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:80
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:182
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:86
 msgid "Deployment"
 msgstr ""
 
@@ -96,7 +96,7 @@ msgstr ""
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:90
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
 msgid "User"
 msgstr ""
 
@@ -236,12 +236,12 @@ msgid "Past tasks (last 3 months)"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
 msgid "Target"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:186
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:89
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:88
 msgid "Start date"
 msgstr ""
 
@@ -249,7 +249,11 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:53
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
+msgid "Planned tasks"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
 msgstr ""
 
