@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "Переместить"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -313,7 +313,7 @@ msgstr "Обновить"
 
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Компьютеры"
 
 #: modules/inventory/includes/panels/inventory.inc.php:43
 msgid "Create a group"
@@ -561,11 +561,11 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:569
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/inventory/inventory/ajaxViewPart.php:570
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/inventory/inventory/ajaxViewPart.php:571
 #: modules/inventory/inventory/ajaxViewPart.php:587
@@ -651,7 +651,7 @@ msgstr "Версия"
 
 #: modules/inventory/inventory/ajaxViewPart.php:589
 msgid "Computer Name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/inventory/inventory/ajaxViewPart.php:590
 #: modules/inventory/inventory/i18n_labels.php:60
@@ -726,7 +726,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:608
 msgid "Comment"
-msgstr ""
+msgstr "Комментарии"
 
 #: modules/inventory/inventory/ajaxViewPart.php:610
 #: modules/inventory/inventory/i18n_labels.php:159
@@ -739,7 +739,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:612
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #: modules/inventory/inventory/ajaxViewPart.php:613
 msgid "Today"
@@ -788,7 +788,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:625
 msgid "Up-to-date"
-msgstr ""
+msgstr "Своевременный"
 
 #: modules/inventory/inventory/EditEntity.php:45
 msgid "The entity has not been updated."
@@ -1378,7 +1378,7 @@ msgstr ""
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "     %d  "
 
 #: modules/inventory/inventory/deleteEntity.php:46
 msgid "The entity has not been deleted."

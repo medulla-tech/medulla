@@ -706,7 +706,7 @@ msgstr "Antivrus"
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "Registro"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"

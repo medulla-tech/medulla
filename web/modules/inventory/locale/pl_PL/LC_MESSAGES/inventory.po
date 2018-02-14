@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: modules/inventory/infoPackage.inc.php:36
 #: modules/inventory/inventory/history.php:80
 msgid "Inventory"
-msgstr ""
+msgstr "Katalog"
 
 #: modules/inventory/infoPackage.inc.php:40
 #: modules/inventory/inventory/localSidebar.php:28
@@ -75,7 +76,7 @@ msgstr ""
 #: modules/inventory/inventory/localSidebar.php:39
 #: modules/inventory/inventory/i18n_labels.php:100
 msgid "Memory"
-msgstr ""
+msgstr "Pamięć"
 
 #: modules/inventory/infoPackage.inc.php:59
 #: modules/inventory/inventory/localSidebar.php:40
@@ -296,7 +297,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxViewPart.php:609
 #: modules/inventory/inventory/i18n_labels.php:53
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: modules/inventory/includes/html.php:98
 msgid "Filter software"
@@ -573,7 +574,7 @@ msgstr ""
 #: modules/inventory/inventory/i18n_labels.php:106
 #: modules/inventory/inventory/deleteEntity.php:64
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: modules/inventory/inventory/ajaxViewPart.php:572
 #: modules/inventory/inventory/i18n_labels.php:108
@@ -655,7 +656,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxViewPart.php:590
 #: modules/inventory/inventory/i18n_labels.php:60
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: modules/inventory/inventory/ajaxViewPart.php:591
 msgid "Entity (Location)"
@@ -1007,7 +1008,7 @@ msgstr ""
 
 #: modules/inventory/inventory/i18n_labels.php:44
 msgid "Comments"
-msgstr ""
+msgstr "Komentarze"
 
 #: modules/inventory/inventory/i18n_labels.php:45
 msgid "Company"

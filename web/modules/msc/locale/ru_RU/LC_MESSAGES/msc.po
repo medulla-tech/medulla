@@ -221,7 +221,7 @@ msgstr "Запуск"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/logs/ajaxLogsFilter.php:60
@@ -998,7 +998,7 @@ msgstr ",    ."
 
 #: modules/msc/msc/ajaxPackageFilter.php:159
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: modules/msc/msc/ajaxPackageFilter.php:160 modules/msc/msc/packages.php:41
 #: modules/msc/msc/package_detail.php:36
@@ -1232,7 +1232,7 @@ msgstr ""
 
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
-msgstr ""
+msgstr "в"
 
 #: modules/msc/msc/ajaxDownloadFile.php:34
 msgid "Download file"
@@ -1659,7 +1659,7 @@ msgstr ""
 
 #: modules/msc/includes/functions.php:320
 msgid "Inventory"
-msgstr ""
+msgstr "Инвентарь"
 
 #: modules/msc/includes/functions.php:321
 msgid "Restart"
@@ -1992,7 +1992,7 @@ msgstr " : %s"
 #: modules/msc/includes/command_history.php:637
 #: modules/msc/includes/command_history.php:653
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: modules/msc/includes/command_history.php:640
 #: modules/msc/includes/command_history.php:656
@@ -2095,7 +2095,7 @@ msgstr ""
 
 #: modules/msc/includes/bundle_widgets.php:286
 msgid "Cancel"
-msgstr ""
+msgstr "Отмена"
 
 #: modules/msc/includes/bundle_widgets.php:304
 msgid "awake"

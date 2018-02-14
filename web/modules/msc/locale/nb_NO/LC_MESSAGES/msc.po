@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,7 +221,7 @@ msgstr ""
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/logs/ajaxLogsFilter.php:60
@@ -236,7 +237,7 @@ msgstr ""
 #: modules/msc/msc/ajaxLogsFilter.php:107
 #: modules/msc/msc/ajaxDownloadFile.php:90
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:136
 #: modules/msc/logs/ajaxConsultLogsFilter.php:142
@@ -344,7 +345,7 @@ msgstr ""
 
 #: modules/msc/logs/ajaxLogsFilter.php:127
 msgid "Date"
-msgstr ""
+msgstr "Dato"
 
 #: modules/msc/logs/ajaxLogsFilter.php:135
 #: modules/msc/msc/ajaxLogsFilter.php:253
@@ -995,7 +996,7 @@ msgstr ""
 
 #: modules/msc/msc/ajaxPackageFilter.php:159
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
 #: modules/msc/msc/ajaxPackageFilter.php:160 modules/msc/msc/packages.php:41
 #: modules/msc/msc/package_detail.php:36
@@ -1229,7 +1230,7 @@ msgstr ""
 
 #: modules/msc/msc/vnc_client_no_vnc.php:234
 msgid "to"
-msgstr ""
+msgstr "til"
 
 #: modules/msc/msc/ajaxDownloadFile.php:34
 msgid "Download file"
@@ -1331,7 +1332,7 @@ msgstr ""
 #: modules/msc/includes/command_history.php:53
 #: modules/msc/includes/command_history.php:205
 msgid "Name"
-msgstr ""
+msgstr "Etternavn"
 
 #: modules/msc/msc/package_detail.php:40
 #: modules/msc/includes/command_history.php:55
@@ -2086,7 +2087,7 @@ msgstr ""
 
 #: modules/msc/includes/bundle_widgets.php:286
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: modules/msc/includes/bundle_widgets.php:304
 msgid "awake"

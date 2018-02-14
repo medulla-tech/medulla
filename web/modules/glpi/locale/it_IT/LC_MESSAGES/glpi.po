@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,7 +20,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
-msgstr ""
+msgstr "Inventario GLPI"
 
 #: modules/glpi/infoPackage.inc.php:38
 msgid "Glpi"
@@ -163,13 +164,13 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
 #: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #: modules/glpi/glpi/addEntityRule.php:77
 #: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
 msgid "Description"
-msgstr ""
+msgstr "Descrizione"
 
 #: modules/glpi/glpi/addEntityRule.php:86
 msgid "Aggregator"
@@ -353,7 +354,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:189
 #: modules/glpi/glpi/ajaxViewPart.php:249
 msgid "Memory"
-msgstr ""
+msgstr "Memoria"
 
 #: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Hard Drives"
@@ -462,7 +463,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
-msgstr ""
+msgstr "Nome del computer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Entity (Location)"
@@ -474,7 +475,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Location"
-msgstr ""
+msgstr "Località"
 
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
@@ -526,7 +527,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: modules/glpi/glpi/ajaxViewPart.php:252
 msgid "User"

@@ -20,33 +20,33 @@ msgstr ""
 
 #: modules/msc/infoPackage.inc.php:44
 msgid "Secure Control"
-msgstr ""
+msgstr "安全控制"
 
 #: modules/msc/infoPackage.inc.php:48
 msgid "Audit"
-msgstr ""
+msgstr "稽核"
 
 #: modules/msc/infoPackage.inc.php:52 modules/msc/logs/localSidebar.php:28
 #: modules/msc/includes/widgets.inc.php:345
 #: modules/msc/includes/widgets.inc.php:517
 msgid "My commands"
-msgstr ""
+msgstr "我的命令"
 
 #: modules/msc/infoPackage.inc.php:55 modules/msc/logs/localSidebar.php:29
 msgid "All user commands"
-msgstr ""
+msgstr "所有使用者命令"
 
 #: modules/msc/infoPackage.inc.php:58
 msgid "Commands logs"
-msgstr ""
+msgstr "命令記錄檔"
 
 #: modules/msc/infoPackage.inc.php:61
 msgid "Show all logs"
-msgstr ""
+msgstr "顯示所有記錄檔"
 
 #: modules/msc/infoPackage.inc.php:63
 msgid "Show pending task's logs"
-msgstr ""
+msgstr "顯示擱置工作的記錄檔"
 
 #: modules/msc/infoPackage.inc.php:65
 msgid "Show running task's logs"
@@ -221,7 +221,7 @@ msgstr "開始"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
 msgid "Delete"
-msgstr ""
+msgstr "刪除"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/logs/ajaxLogsFilter.php:60
@@ -1517,7 +1517,7 @@ msgstr "複製模式"
 
 #: modules/msc/msc/launch.php:714 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
-msgstr ""
+msgstr " proxy "
 
 #: modules/msc/msc/launch.php:738
 msgid "Probe status"
@@ -1585,15 +1585,15 @@ msgstr "重新開機完成"
 
 #: modules/msc/includes/functions.php:40
 msgid "WOL request being sent"
-msgstr ""
+msgstr " WOL "
 
 #: modules/msc/includes/functions.php:41
 msgid "Failed to send WOL request"
-msgstr ""
+msgstr " WOL "
 
 #: modules/msc/includes/functions.php:42
 msgid "WOL request has been sent"
-msgstr ""
+msgstr "WOL "
 
 #: modules/msc/includes/functions.php:43
 msgid "Halt in progress"
@@ -1653,7 +1653,7 @@ msgstr "執行"
 
 #: modules/msc/includes/functions.php:318
 msgid "Windows Update parse"
-msgstr ""
+msgstr "Windows "
 
 #: modules/msc/includes/functions.php:319
 msgid "Clean"
@@ -1836,11 +1836,11 @@ msgstr "連線至此主機上的安全代理程式時候發生錯誤。請檢查
 
 #: modules/msc/includes/command_history.php:406
 msgid "The script was killed by Pulse 2 (timeout ?)."
-msgstr ""
+msgstr " Pulse 2 "
 
 #: modules/msc/includes/command_history.php:407
 msgid "The script was terminated by Pulse 2."
-msgstr ""
+msgstr " Pulse 2 "
 
 #: modules/msc/includes/command_history.php:409
 msgid "Something goes wrong while checking client identity."
@@ -1874,14 +1874,14 @@ msgstr " '%s' "
 msgid ""
 "Can't get files URI for package '%s' on mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr ""
+msgstr " %s  '%s'  URI"
 
 #: modules/msc/includes/command_history.php:416
 #, php-format
 msgid ""
 "Can't get files URI for package '%s' on fallback mirror %s.\n"
 "Please check that the package and its files have not been modified since the planning of the command."
-msgstr ""
+msgstr " %s  '%s'  URI\n"
 
 #: modules/msc/includes/command_history.php:417
 #, php-format
@@ -2062,7 +2062,7 @@ msgstr "進行中"
 
 #: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
-msgstr ""
+msgstr "建立一個群組"
 
 #: modules/msc/includes/utilities.php:32
 msgid "Bytes"

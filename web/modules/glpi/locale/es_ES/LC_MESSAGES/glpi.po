@@ -20,7 +20,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
-msgstr ""
+msgstr "Inventario GLPI"
 
 #: modules/glpi/infoPackage.inc.php:38
 msgid "Glpi"
@@ -164,13 +164,13 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
 #: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: modules/glpi/glpi/addEntityRule.php:77
 #: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
 msgid "Description"
-msgstr ""
+msgstr "Descripción "
 
 #: modules/glpi/glpi/addEntityRule.php:86
 msgid "Aggregator"
@@ -306,7 +306,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:250
 #: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
-msgstr ""
+msgstr "Comentario"
 
 #: modules/glpi/glpi/ajaxLocationList.php:70
 #: modules/glpi/glpi/addLocation.php:52
@@ -354,7 +354,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:189
 #: modules/glpi/glpi/ajaxViewPart.php:249
 msgid "Memory"
-msgstr ""
+msgstr "Memoria"
 
 #: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Hard Drives"
@@ -410,11 +410,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Gateway"
-msgstr ""
+msgstr "Puerta de enlace"
 
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
-msgstr ""
+msgstr "Dispositivo"
 
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
@@ -463,7 +463,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
-msgstr ""
+msgstr "Nombre del equipo"
 
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Entity (Location)"
@@ -475,7 +475,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Location"
-msgstr ""
+msgstr "Localización"
 
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
@@ -499,7 +499,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Manufacturer"
@@ -515,7 +515,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Bandwidth"
@@ -527,11 +527,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: modules/glpi/glpi/ajaxViewPart.php:252
 msgid "User"
-msgstr ""
+msgstr "Usuario"
 
 #: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Category"
@@ -539,7 +539,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:254
 msgid "Action"
-msgstr ""
+msgstr "Acciones"
 
 #: modules/glpi/glpi/ajaxViewPart.php:255 modules/glpi/includes/html.php:57
 msgid "Today"
@@ -679,7 +679,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
-msgstr ""
+msgstr "Almacenamiento"
 
 #: modules/glpi/glpi/tabs.php:81
 msgid "Network"
@@ -704,7 +704,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "Registro"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
@@ -794,7 +794,7 @@ msgstr ""
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Computadoras"
 
 #: modules/glpi/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"

@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Italian (Italy) (https://www.transifex.com/siveo/teams/72118/it_IT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +24,7 @@ msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
-msgstr ""
+msgstr "Lista dei computer"
 
 #: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
@@ -71,7 +72,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:83
 #: modules/pulse2/includes/menu_action.php:88
 msgid "Read log"
-msgstr ""
+msgstr "Leggi il log"
 
 #: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
@@ -124,7 +125,7 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_action.php:56
 msgid "Inventory"
-msgstr ""
+msgstr "Inventario"
 
 #: modules/pulse2/includes/menu_action.php:57
 msgid "extTicket issue"
@@ -137,7 +138,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
-msgstr ""
+msgstr "Controllo remoto"
 
 #: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
@@ -151,7 +152,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:84
 #: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr ""
+msgstr "Sviluppo software"
 
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51

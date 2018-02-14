@@ -48,7 +48,7 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
-msgstr ""
+msgstr "Удалить группу"
 
 #: modules/pulse2/includes/menu_group_action.php:49
 msgid "Delete this profile"
@@ -56,15 +56,15 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:52
 msgid "Display this group's content"
-msgstr ""
+msgstr "Показать содержимое этой группы"
 
 #: modules/pulse2/includes/menu_group_action.php:53
 msgid "Edit this group"
-msgstr ""
+msgstr "Редактировать группу"
 
 #: modules/pulse2/includes/menu_group_action.php:54
 msgid "Share this group"
-msgstr ""
+msgstr "Предоставить общий доступ к этой группе"
 
 #: modules/pulse2/includes/menu_group_action.php:56
 #: modules/pulse2/includes/menu_group_action.php:73
@@ -72,11 +72,11 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:83
 #: modules/pulse2/includes/menu_action.php:88
 msgid "Read log"
-msgstr ""
+msgstr "Читать журнал"
 
 #: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
-msgstr ""
+msgstr "Внедрение программного обеспечения в этой группе"
 
 #: modules/pulse2/includes/menu_group_action.php:60
 msgid "Update on this group"
@@ -105,7 +105,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:60
 msgid "Imaging management"
-msgstr ""
+msgstr "Управление образами"
 
 #: modules/pulse2/includes/menu_group_action.php:84
 msgid "Group Quick action"
@@ -113,7 +113,7 @@ msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:97
 msgid "Csv export"
-msgstr ""
+msgstr " csv"
 
 #: modules/pulse2/includes/locations_xmlrpc.inc.php:31
 msgid "Root entity"
@@ -125,7 +125,7 @@ msgstr "Все мои объекты"
 
 #: modules/pulse2/includes/menu_action.php:56
 msgid "Inventory"
-msgstr ""
+msgstr "Инвентарь"
 
 #: modules/pulse2/includes/menu_action.php:57
 msgid "extTicket issue"
@@ -138,7 +138,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
-msgstr ""
+msgstr "Удаленное управление"
 
 #: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
@@ -152,7 +152,7 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:84
 #: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr ""
+msgstr "Развертывание ПО"
 
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51

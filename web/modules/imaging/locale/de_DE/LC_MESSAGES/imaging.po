@@ -657,7 +657,7 @@ msgstr ""
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
 
 #: modules/imaging/imaging/addimage.php:49
 #: modules/imaging/imaging/addimage.php:165
@@ -1137,11 +1137,11 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
-msgstr ""
+msgstr "Dateiname"
 
 #: modules/imaging/manage/sysprepList.php:86
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/imaging/manage/sysprepList.php:90
 msgid "Display sysprep file"
@@ -1321,7 +1321,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:534
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
-msgstr ""
+msgstr "Computer Name"
 
 #: modules/imaging/manage/ajaxFormWin7.php:449
 #: modules/imaging/manage/ajaxFormWin8.php:524
@@ -1513,7 +1513,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin8.php:720
 #: modules/imaging/manage/ajaxFormWin10.php:729
 msgid "Domain"
-msgstr ""
+msgstr "Domain"
 
 #: modules/imaging/manage/ajaxFormWin7.php:650
 #: modules/imaging/manage/ajaxFormWin8.php:725
@@ -1551,7 +1551,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1585,7 +1585,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:803
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
-msgstr ""
+msgstr "Gruppe"
 
 #: modules/imaging/manage/ajaxFormWin7.php:733
 #: modules/imaging/manage/ajaxFormWin8.php:814
@@ -1656,7 +1656,7 @@ msgstr "Statistiken"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr ""
+msgstr "Entitt"
 
 #: modules/imaging/manage/ajaxStatus.php:145
 msgid "client(s) registered"
@@ -1838,7 +1838,7 @@ msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
-msgstr ""
+msgstr "Laufend"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
@@ -2146,7 +2146,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
-msgstr ""
+msgstr "Paketquelle whlen"
 
 #: modules/imaging/manage/master_delete.php:38
 #, php-format
@@ -2724,7 +2724,7 @@ msgstr "Fehler beim Senden der Computer UUID"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
-msgstr ""
+msgstr "Datei"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "available"
@@ -2800,7 +2800,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "Benutzer"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -2834,22 +2834,22 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
 msgid "Enable"
-msgstr ""
+msgstr "Aktivieren"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
 msgid "Disabled"
-msgstr ""
+msgstr "Deaktiviert"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
 msgid ""
@@ -3086,7 +3086,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "Übersicht"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"
@@ -3102,7 +3102,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1559
 msgid "Other"
-msgstr ""
+msgstr "Weitere"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1561
 msgid "Specifies neither a home or work network"

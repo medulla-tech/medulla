@@ -230,7 +230,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/add.php:236 modules/pkgs/pkgs/edit.php:379
 msgid "Operating System"
-msgstr ""
+msgstr "Sistema Operacional"
 
 #: modules/pkgs/pkgs/add.php:255 modules/pkgs/pkgs/edit.php:409
 msgid "Transfer method"
@@ -344,7 +344,7 @@ msgstr "Data de expirao"
 #: modules/pkgs/pkgs/createGroupLicence.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "A lista de computadores foi truncada em %d computadores"
 
 #: modules/pkgs/pkgs/edit.php:37
 msgid "Edit package"

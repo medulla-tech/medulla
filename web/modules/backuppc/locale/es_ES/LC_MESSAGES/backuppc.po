@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
 #: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #: modules/backuppc/backuppc/ajaxHostsList.php:65
 msgid "Edit config"
@@ -173,7 +174,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/fileSearch.php:105
 msgid "Date"
-msgstr ""
+msgstr "Fecha"
 
 #: modules/backuppc/backuppc/fileSearch.php:127
 #: modules/backuppc/backuppc/EditBackupProfile.php:148
@@ -229,7 +230,7 @@ msgstr ""
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 #: modules/backuppc/backuppc/edit.php:89
@@ -326,7 +327,7 @@ msgstr ""
 #: modules/backuppc/backuppc/localSidebar.php:27
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: modules/backuppc/backuppc/localSidebar.php:28
 msgid "Profiles"
@@ -429,7 +430,7 @@ msgstr ""
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
-msgstr ""
+msgstr "a"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
 msgid "Destination"
@@ -707,7 +708,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"
@@ -800,7 +801,7 @@ msgstr ""
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
 msgid "Backup"
-msgstr ""
+msgstr "Copia de seguridad"
 
 #: modules/backuppc/infoPackage.inc.php:45
 msgid "Host backup status"

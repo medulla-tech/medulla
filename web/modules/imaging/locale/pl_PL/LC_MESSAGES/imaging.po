@@ -10,6 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Polish (Poland) (https://www.transifex.com/siveo/teams/72118/pl_PL/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,7 +126,7 @@ msgstr ""
 #: modules/imaging/imaging/bootmenu.php:366
 #: modules/imaging/manage/ajaxBootmenu.php:106
 msgid "Edit"
-msgstr ""
+msgstr "Edytuj"
 
 #: modules/imaging/imaging/bootmenu.php:367
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:53
@@ -134,7 +135,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:58
 #: modules/imaging/includes/logs.inc.php:34
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 #: modules/imaging/imaging/bootmenu.php:399
 msgid "master from the profile"
@@ -201,7 +202,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin81.php:724
 #: modules/imaging/includes/post_install_script.php:65
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: modules/imaging/imaging/bootmenu.php:460
 msgid "Preselected choice"
@@ -248,18 +249,20 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:447
 #: modules/imaging/manage/ajaxFormWin81.php:530
 msgid "Title"
-msgstr ""
+msgstr "Tytuł"
 
 #: modules/imaging/imaging/images_iso.php:95
 msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
 msgstr ""
+"Proszę określić rozmiar nośnika. Jeżeli pojemność danych przekroczy dostępny"
+" rozmiar, zostanie utworzonych kilka plików o odpowiednim rozmiarze."
 
 #: modules/imaging/imaging/images_iso.php:98
 #: modules/imaging/manage/master_iso.php:95
 msgid "Media size"
-msgstr ""
+msgstr "Rozmiar nośnika"
 
 #: modules/imaging/imaging/images_iso.php:111
 msgid "Start ISO generation"
@@ -277,7 +280,7 @@ msgstr ""
 #: modules/imaging/manage/service_show_used.php:200
 #: modules/imaging/manage/master_delete.php:81
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: modules/imaging/imaging/showtarget.php:72
 #: modules/imaging/imaging/showtarget.php:84
@@ -318,7 +321,7 @@ msgstr ""
 #: modules/imaging/imaging/showtarget.php:127
 #: modules/imaging/manage/service_show_used.php:196
 msgid "Select all"
-msgstr ""
+msgstr "Zaznacz wszystkie"
 
 #: modules/imaging/imaging/showtarget.php:129
 #: modules/imaging/manage/service_show_used.php:198
@@ -1497,7 +1500,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "Hasło "
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1570,7 +1573,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 #: modules/imaging/includes/post_install_script.php:63
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:95
 msgid "Duplicate"
@@ -1578,7 +1581,7 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxStatus.php:33
 msgid "Status"
-msgstr ""
+msgstr "Stan"
 
 #: modules/imaging/manage/ajaxStatus.php:118
 msgid "Space available on server"
@@ -1679,7 +1682,7 @@ msgstr ""
 msgid ""
 "The files will be stored in the directory %s of the server at the end of the"
 " backup."
-msgstr ""
+msgstr "Po zakończeniu, zarchiwizowane pliki zostaną zapisane do katalogu %s."
 
 #: modules/imaging/manage/master_iso.php:50
 msgid "Please go to the status page to check the iso creation status."
@@ -1697,7 +1700,7 @@ msgstr ""
 
 #: modules/imaging/manage/master_iso.php:108
 msgid "Launch backup"
-msgstr ""
+msgstr "Rozpocznij archiwizowanie"
 
 #: modules/imaging/manage/multicastaction.php:68
 msgid "Start Multicast of ( Master :"
@@ -1942,7 +1945,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:55
 #: modules/imaging/includes/logs.inc.php:27
 msgid "Backup"
-msgstr ""
+msgstr "Kopia zapasowa"
 
 #: modules/imaging/manage/ajaxLogs.php:56
 #: modules/imaging/includes/logs.inc.php:30
@@ -1957,7 +1960,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:59
 #: modules/imaging/includes/logs.inc.php:26
 msgid "Inventory"
-msgstr ""
+msgstr "Katalog"
 
 #: modules/imaging/manage/ajaxLogs.php:61
 #: modules/imaging/includes/logs.inc.php:35
@@ -2193,7 +2196,7 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:96
 msgid "Server status"
-msgstr ""
+msgstr "Status serwera"
 
 #: modules/imaging/infoPackage.inc.php:107
 msgid "Edit master"
@@ -2453,27 +2456,27 @@ msgstr ""
 
 #: modules/imaging/includes/includes.php:195
 msgid "Uptime: "
-msgstr ""
+msgstr "Uptime: "
 
 #: modules/imaging/includes/includes.php:197
 msgid "day"
-msgstr ""
+msgstr "dzień"
 
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
-msgstr ""
+msgstr "godznia"
 
 #: modules/imaging/includes/includes.php:202
 msgid "minute"
-msgstr ""
+msgstr "minuta"
 
 #: modules/imaging/includes/includes.php:206
 msgid "Memory"
-msgstr ""
+msgstr "Pamięć"
 
 #: modules/imaging/includes/includes.php:209
 msgid "Swap"
-msgstr ""
+msgstr "Swap"
 
 #: modules/imaging/includes/includes.php:221
 msgid "Never"
@@ -2726,7 +2729,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "Użytkownicy"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -3012,7 +3015,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "Katalog domowy"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"

@@ -44,7 +44,7 @@ msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:77
 msgid "Product Updates installation (ajax)"
-msgstr ""
+msgstr "Instalação de Atualizações de Produto (ajax)"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -157,12 +157,12 @@ msgstr "Implantao de Software"
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51
 msgid "Available updates"
-msgstr ""
+msgstr "Atualizações disponíveis"
 
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 #: modules/pulse2/update/installProductUpdates.php:41
 msgid "Installing updates ..."
-msgstr ""
+msgstr "Instalando atualizações..."
