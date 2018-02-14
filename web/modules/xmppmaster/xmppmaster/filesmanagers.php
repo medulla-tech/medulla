@@ -30,10 +30,10 @@ require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 ?>
 
-  
+
 
 <iframe id = "jj" style = "margin:1px;
-   padding:1px; min-height: 100vh;" src="/webfilemanager/ajax_php_file_manager/fileman.html"
+   padding:1px; min-height: 100vh;" src="/webfilemanager/fileman.html"
    width="99%"
    height="99%"  >
 </iframe>
