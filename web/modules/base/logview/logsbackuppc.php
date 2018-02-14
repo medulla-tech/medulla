@@ -292,15 +292,11 @@ $modules2->setElementsVal($typecritereval);
                 <th><?php echo $modules->display(); ?></th>
                 <th><?php echo $modules1->display(); ?></th>
                 <th><?php echo $modules2->display(); ?></th>
+                <th><p class="btnPrimary">Filter logs</p></th>
             </tr>
         </thead>
      </table>
 </div>
-
-
-<p class="btnPrimary">
-  Filter logs
-</p>
 
 <br>
 
