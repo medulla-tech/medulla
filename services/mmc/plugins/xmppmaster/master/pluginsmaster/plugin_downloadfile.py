@@ -38,7 +38,7 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 #### "CONF" : "/etc/mmc/plugin/masterplugin_teledial.ini"
 ####
-plugin = { "VERSION" : "1.0", "NAME" : "downloadfile", "TYPE" : "master"}
+plugin = { "VERSION" : "1.1", "NAME" : "downloadfile", "TYPE" : "master"}
 
 
 def create_path(type ="windows", host="", ipordomain="", path=""):
@@ -143,7 +143,9 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                 'ipmachine'         : Machineinfo['ip_xmpp'],
                                 'ipmachinepublic'   : Machineinfo['ippublic'],
                                 'ipmaster'          : str(xmppobject.config.Server),
-                                'osmachine'         : Machineinfo['platform']
+                                'osmachine'         : Machineinfo['platform'],
+                                'jidmachine'        : jidmachine,
+                                'hostname'          : Machineinfo['hostname']
                     }
     }
 
