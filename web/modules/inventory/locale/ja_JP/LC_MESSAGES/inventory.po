@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -148,7 +148,7 @@ msgstr "チャート"
 
 #: modules/inventory/infoPackage.inc.php:92
 msgid "Csv's export"
-msgstr "CSV エクスポート"
+msgstr "CSV "
 
 #: modules/inventory/infoPackage.inc.php:96
 msgid "Create static group from dashboard"
@@ -168,7 +168,7 @@ msgstr "グループのハードウェアタブ"
 
 #: modules/inventory/infoPackage.inc.php:136
 msgid "Bios tab for a group"
-msgstr "グループの BIOS タブ"
+msgstr " BIOS "
 
 #: modules/inventory/infoPackage.inc.php:139
 msgid "Summary tab for a group"
@@ -208,7 +208,7 @@ msgstr "グループ内のコンピューターのストレージタブ"
 
 #: modules/inventory/infoPackage.inc.php:166
 msgid "Bios tab for a computer in a group"
-msgstr "グループ内のコンピューターの BIOS タブ"
+msgstr " BIOS "
 
 #: modules/inventory/infoPackage.inc.php:169
 msgid "Software tab for a computer in a group"
@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "削除"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -305,7 +305,7 @@ msgstr "ソフトウェアのフィルタ"
 
 #: modules/inventory/includes/html.php:103
 msgid "Hide Windows Updates"
-msgstr "Windows アップデート非表示"
+msgstr "Windows "
 
 #: modules/inventory/includes/html.php:117
 msgid "Refresh"
@@ -321,11 +321,11 @@ msgstr "グループを作成"
 
 #: modules/inventory/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
-msgstr "< %s 日: %percent% (%d)"
+msgstr "< %s : %percent% (%d)"
 
 #: modules/inventory/includes/panels/inventory.inc.php:45
 msgid "> %s days: %percent% (%d)"
-msgstr "> %s 日: %percent% (%d)"
+msgstr "> %s : %percent% (%d)"
 
 #: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:110
 msgid "Active"
-msgstr ""
+msgstr "アクティブ"
 
 #: modules/inventory/inventory/addEntityRule.php:113
 msgid "selection from this item"
@@ -494,7 +494,7 @@ msgstr "戻る"
 
 #: modules/inventory/inventory/ajaxViewPart.php:83
 msgid " (Not an antivirus)"
-msgstr " (アンチウイルスでない)"
+msgstr " ()"
 
 #: modules/inventory/inventory/ajaxViewPart.php:106
 msgid "Click here to see this computer on manufacturer website"
@@ -525,9 +525,7 @@ msgstr "このマシン上でアンチウイルスソフトウェアを検出で
 msgid ""
 "Please ensure you are running GLPI with FusionInventory plugin and "
 "FusionInventory Agent on this client."
-msgstr ""
-"このクライアント上で、必ず FusionInventory プラグインと FusionInventory エージェントとともに GLPI "
-"を実行してください。"
+msgstr " FusionInventory  FusionInventory  GLPI "
 
 #: modules/inventory/inventory/ajaxViewPart.php:147
 msgid "No record found."
@@ -586,7 +584,7 @@ msgstr "ネットワークタイプ"
 #: modules/inventory/inventory/ajaxViewPart.php:573
 #: modules/inventory/inventory/i18n_labels.php:93
 msgid "MAC Address"
-msgstr "MAC アドレス"
+msgstr "MAC "
 
 #: modules/inventory/inventory/ajaxViewPart.php:574
 #: modules/inventory/inventory/i18n_labels.php:86
@@ -662,7 +660,7 @@ msgstr "内容"
 
 #: modules/inventory/inventory/ajaxViewPart.php:591
 msgid "Entity (Location)"
-msgstr "エンティティ (場所)"
+msgstr " ()"
 
 #: modules/inventory/inventory/ajaxViewPart.php:592
 msgid "Entity"
@@ -692,7 +690,7 @@ msgstr "コンピュータータイプ"
 
 #: modules/inventory/inventory/ajaxViewPart.php:598
 msgid "Model / Type"
-msgstr "モデル / タイプ"
+msgstr " / "
 
 #: modules/inventory/inventory/ajaxViewPart.php:599
 #: modules/inventory/inventory/i18n_labels.php:103
@@ -749,11 +747,11 @@ msgstr "今日"
 
 #: modules/inventory/inventory/ajaxViewPart.php:614
 msgid "Last 7 days"
-msgstr "過去 7 日"
+msgstr " 7 "
 
 #: modules/inventory/inventory/ajaxViewPart.php:615
 msgid "Last 30 days"
-msgstr "過去 30 日"
+msgstr " 30 "
 
 #: modules/inventory/inventory/ajaxViewPart.php:616
 msgid "All"
@@ -765,7 +763,7 @@ msgstr "サービスパック"
 
 #: modules/inventory/inventory/ajaxViewPart.php:618
 msgid "Windows Key"
-msgstr "Windows キー"
+msgstr "Windows "
 
 #: modules/inventory/inventory/ajaxViewPart.php:619
 msgid "Domain"
@@ -803,7 +801,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxEntityList.php:51
 #: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
-msgstr ""
+msgstr "登録が見つかりませんでした"
 
 #: modules/inventory/inventory/ajaxEntityList.php:56
 msgid "Entity name"
@@ -894,7 +892,7 @@ msgstr "削除された要素"
 #: modules/inventory/inventory/view.php:44
 #, php-format
 msgid "Inventory of %s"
-msgstr "%s の在庫"
+msgstr "%s "
 
 #: modules/inventory/inventory/entityRules.php:28
 #: modules/inventory/inventory/localComputersSidebar.php:29
@@ -917,12 +915,12 @@ msgstr "プルモードを離脱"
 #: modules/inventory/inventory/tabs.php:77
 #, php-format
 msgid "%s's inventory"
-msgstr "%s の在庫"
+msgstr "%s "
 
 #: modules/inventory/inventory/tabs.php:79
 #, php-format
 msgid "%s's content inventory"
-msgstr "%s  の内容在庫"
+msgstr "%s  "
 
 #: modules/inventory/inventory/tabs.php:106
 msgid "History"
@@ -930,7 +928,7 @@ msgstr "履歴"
 
 #: modules/inventory/inventory/tabs.php:117
 msgid "Get XLS Report"
-msgstr ""
+msgstr "XLS レポート取得"
 
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -950,11 +948,11 @@ msgstr "可用性"
 
 #: modules/inventory/inventory/i18n_labels.php:29
 msgid "Bios Vendor"
-msgstr "BIOS ベンダー"
+msgstr "BIOS "
 
 #: modules/inventory/inventory/i18n_labels.php:30
 msgid "Bios Version"
-msgstr "BIOS バージョン"
+msgstr "BIOS "
 
 #: modules/inventory/inventory/i18n_labels.php:31
 msgid "Build"
@@ -1022,11 +1020,11 @@ msgstr "コネクタ"
 
 #: modules/inventory/inventory/i18n_labels.php:48
 msgid "Cpu Num"
-msgstr "CPU 番号"
+msgstr "CPU "
 
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
-msgstr "CPU ベンダー"
+msgstr "CPU "
 
 #: modules/inventory/inventory/i18n_labels.php:50
 msgid "Custom Field"
@@ -1138,7 +1136,7 @@ msgstr "ハイメモリ"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
-msgstr "IP アドレス"
+msgstr "IP "
 
 #: modules/inventory/inventory/i18n_labels.php:89
 msgid "KEY"
@@ -1158,7 +1156,7 @@ msgstr "MIB"
 
 #: modules/inventory/inventory/i18n_labels.php:95
 msgid "Mac Addr"
-msgstr "MAC アドレス"
+msgstr "MAC "
 
 #: modules/inventory/inventory/i18n_labels.php:96
 #: modules/inventory/inventory/csv.php:67
@@ -1180,7 +1178,7 @@ msgstr "その他のメモリ"
 
 #: modules/inventory/inventory/i18n_labels.php:102
 msgid "Misc SMB"
-msgstr "その他の SMB"
+msgstr " SMB"
 
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
@@ -1196,15 +1194,15 @@ msgstr "番号"
 
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "OS Serial Number"
-msgstr "OS シリアル番号"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:112
 msgid "Os Installation Date"
-msgstr "OS インストール日"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:113
 msgid "Os Architecture"
-msgstr "OS アーキテクチャ"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "Phone"
@@ -1244,7 +1242,7 @@ msgstr "製品バージョン"
 
 #: modules/inventory/inventory/i18n_labels.php:127
 msgid "Ram Total"
-msgstr "合計 RAM"
+msgstr " RAM"
 
 #: modules/inventory/inventory/i18n_labels.php:128
 msgid "Registered Company"
@@ -1277,23 +1275,23 @@ msgstr "スロット数"
 
 #: modules/inventory/inventory/i18n_labels.php:136
 msgid "Smb Manufacturer"
-msgstr "SMB メーカー"
+msgstr "SMB "
 
 #: modules/inventory/inventory/i18n_labels.php:137
 msgid "Smb Product"
-msgstr "SMB 製品"
+msgstr "SMB "
 
 #: modules/inventory/inventory/i18n_labels.php:138
 msgid "Smb Serial"
-msgstr "SMB シリアル"
+msgstr "SMB "
 
 #: modules/inventory/inventory/i18n_labels.php:139
 msgid "Smb Type"
-msgstr "SMB タイプ"
+msgstr "SMB "
 
 #: modules/inventory/inventory/i18n_labels.php:140
 msgid "Smb Version"
-msgstr "SMB バージョン"
+msgstr "SMB "
 
 #: modules/inventory/inventory/i18n_labels.php:143
 msgid "Speed"
@@ -1349,7 +1347,7 @@ msgstr "使用済"
 
 #: modules/inventory/inventory/i18n_labels.php:160
 msgid "VRAM Size"
-msgstr "VRAM サイズ"
+msgstr "VRAM "
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
@@ -1370,17 +1368,17 @@ msgstr "稼働日"
 #: modules/inventory/inventory/createStaticGroup.php:30
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
-msgstr "最新の在庫は %s で%s 日以内です"
+msgstr " %s %s "
 
 #: modules/inventory/inventory/createStaticGroup.php:33
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
-msgstr "最新の在庫は %s で %s 日以上です"
+msgstr " %s  %s "
 
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr "コンピューター一覧が、 %d 台のコンピューターでトランケートされました。"
+msgstr " %d "
 
 #: modules/inventory/inventory/deleteEntity.php:46
 msgid "The entity has not been deleted."
@@ -1400,7 +1398,7 @@ msgstr "在庫日"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
-msgstr ""
+msgstr "エンティティ"
 
 #: modules/inventory/inventory/localComputersSidebar.php:28
 msgid "Add an entity"
@@ -1412,11 +1410,11 @@ msgstr ""
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
-msgstr "BIOS 一覧"
+msgstr "BIOS "
 
 #: modules/inventory/inventory/body.php:42
 msgid "Hardware and OS information list"
-msgstr "ハードウェア & OS 情報一覧"
+msgstr " & OS "
 
 #: modules/inventory/inventory/body.php:43
 msgid "Software list"
@@ -1424,7 +1422,7 @@ msgstr "ソフトウェア一覧"
 
 #: modules/inventory/inventory/body.php:44
 msgid "Network card and configuration list"
-msgstr "ネットワークカード & 設定一覧"
+msgstr " & "
 
 #: modules/inventory/inventory/body.php:45
 msgid "Controller list"
@@ -1432,7 +1430,7 @@ msgstr "コントローラー一覧"
 
 #: modules/inventory/inventory/body.php:46
 msgid "Registry keys/values list"
-msgstr "レジストリキー/値一覧"
+msgstr "/"
 
 #: modules/inventory/inventory/body.php:47
 msgid "Drive list"

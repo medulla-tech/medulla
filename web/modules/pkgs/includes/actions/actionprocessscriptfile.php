@@ -50,8 +50,11 @@ extract($_POST);
         $boolselected = false;
         $selectedbyscript = array(
                                     array(
-                                        "label" => 'Batch',
+                                        "label" => 'Native (Windows batch, Linux bash and macOS bash)',
                                         "value" => "Batch"),
+                                    array(
+                                        "label" => 'Python (Windows, Linux and macOS)',
+                                        "value" => "python"),
                                     array(
                                         "label" => 'Visual Basic Script (Windows)',
                                         "value" => "visualbasicscript"),

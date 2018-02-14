@@ -16,10 +16,11 @@ test -d .tx || tx init --host=https://www.transifex.com
 [ ! x$1 == x ] && lang="-l $1" && shift 1
 args=$@
 
-modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc update support guacamole"
+modules="dyngroup glpi imaging inventory msc pkgs pulse2 backuppc support guacamole"
 
 for mod in $modules
 do
 	cd $SCRIPT_PROJECT/../web/modules/$mod/locale/
-	tx pull -f -r pulse-1.${mod} ${lang} ${args}
+	tx pull -a -f -r pulse-1.${mod} ${lang} ${args}
+	cp  -fv $SCRIPT_PROJECT/../web/modules/$mod/locale/fr_FR/LC_MESSAGES/* $SCRIPT_PROJECT/../web/modules/$mod/locale/fr/LC_MESSAGES
 done

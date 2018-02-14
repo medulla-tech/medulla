@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -148,7 +148,7 @@ msgstr "图表"
 
 #: modules/inventory/infoPackage.inc.php:92
 msgid "Csv's export"
-msgstr "Csv 格式的汇出"
+msgstr "Csv "
 
 #: modules/inventory/infoPackage.inc.php:96
 msgid "Create static group from dashboard"
@@ -168,7 +168,7 @@ msgstr "一个群组的硬体标签"
 
 #: modules/inventory/infoPackage.inc.php:136
 msgid "Bios tab for a group"
-msgstr "一个群组的 Bios 标签"
+msgstr " Bios "
 
 #: modules/inventory/infoPackage.inc.php:139
 msgid "Summary tab for a group"
@@ -208,7 +208,7 @@ msgstr "一个群组中某台电脑的储存区标签"
 
 #: modules/inventory/infoPackage.inc.php:166
 msgid "Bios tab for a computer in a group"
-msgstr "一个群组中某台电脑的 Bios 标签"
+msgstr " Bios "
 
 #: modules/inventory/infoPackage.inc.php:169
 msgid "Software tab for a computer in a group"
@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -305,7 +305,7 @@ msgstr "筛选软体"
 
 #: modules/inventory/includes/html.php:103
 msgid "Hide Windows Updates"
-msgstr "隐藏 Windows 更新"
+msgstr " Windows "
 
 #: modules/inventory/includes/html.php:117
 msgid "Refresh"
@@ -321,11 +321,11 @@ msgstr "建立一个群组"
 
 #: modules/inventory/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"
-msgstr "< %s 天：%percent% (%d)"
+msgstr "< %s %percent% (%d)"
 
 #: modules/inventory/includes/panels/inventory.inc.php:45
 msgid "> %s days: %percent% (%d)"
-msgstr "> %s 天：%percent% (%d)"
+msgstr "> %s %percent% (%d)"
 
 #: modules/inventory/includes/panels/inventory.inc.php:48
 msgid "Latest Inventory Date"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:110
 msgid "Active"
-msgstr ""
+msgstr "作用中"
 
 #: modules/inventory/inventory/addEntityRule.php:113
 msgid "selection from this item"
@@ -525,7 +525,7 @@ msgstr "在此电脑上侦测不到任何防病毒软体。"
 msgid ""
 "Please ensure you are running GLPI with FusionInventory plugin and "
 "FusionInventory Agent on this client."
-msgstr "请确认您正在此用户端上执行具有 FusionInventory 外挂程式和 FusionInventory Agent 的 GLPI。"
+msgstr " FusionInventory  FusionInventory Agent  GLPI"
 
 #: modules/inventory/inventory/ajaxViewPart.php:147
 msgid "No record found."
@@ -584,7 +584,7 @@ msgstr "网路类型"
 #: modules/inventory/inventory/ajaxViewPart.php:573
 #: modules/inventory/inventory/i18n_labels.php:93
 msgid "MAC Address"
-msgstr "MAC 位址"
+msgstr "MAC "
 
 #: modules/inventory/inventory/ajaxViewPart.php:574
 #: modules/inventory/inventory/i18n_labels.php:86
@@ -747,11 +747,11 @@ msgstr "今天"
 
 #: modules/inventory/inventory/ajaxViewPart.php:614
 msgid "Last 7 days"
-msgstr "最近 7 天"
+msgstr " 7 "
 
 #: modules/inventory/inventory/ajaxViewPart.php:615
 msgid "Last 30 days"
-msgstr "最近 30 天"
+msgstr " 30 "
 
 #: modules/inventory/inventory/ajaxViewPart.php:616
 msgid "All"
@@ -763,7 +763,7 @@ msgstr "Service Pack"
 
 #: modules/inventory/inventory/ajaxViewPart.php:618
 msgid "Windows Key"
-msgstr "Windows 键"
+msgstr "Windows "
 
 #: modules/inventory/inventory/ajaxViewPart.php:619
 msgid "Domain"
@@ -801,7 +801,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxEntityList.php:51
 #: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
-msgstr ""
+msgstr "找不到任何项目"
 
 #: modules/inventory/inventory/ajaxEntityList.php:56
 msgid "Entity name"
@@ -892,7 +892,7 @@ msgstr "已移除的元素"
 #: modules/inventory/inventory/view.php:44
 #, php-format
 msgid "Inventory of %s"
-msgstr "%s 清查"
+msgstr "%s "
 
 #: modules/inventory/inventory/entityRules.php:28
 #: modules/inventory/inventory/localComputersSidebar.php:29
@@ -906,21 +906,21 @@ msgstr ""
 #: modules/inventory/inventory/tabs.php:63
 #: modules/inventory/inventory/tabs.php:71
 msgid "This client has been registered in pull mode"
-msgstr "已在 pull 模式下注册此用户端"
+msgstr " pull "
 
 #: modules/inventory/inventory/tabs.php:65
 msgid "Leave pull mode"
-msgstr "退出 pull 模式"
+msgstr " pull "
 
 #: modules/inventory/inventory/tabs.php:77
 #, php-format
 msgid "%s's inventory"
-msgstr "%s 的清查"
+msgstr "%s "
 
 #: modules/inventory/inventory/tabs.php:79
 #, php-format
 msgid "%s's content inventory"
-msgstr "%s 的内容清查"
+msgstr "%s "
 
 #: modules/inventory/inventory/tabs.php:106
 msgid "History"
@@ -928,7 +928,7 @@ msgstr "历史记录"
 
 #: modules/inventory/inventory/tabs.php:117
 msgid "Get XLS Report"
-msgstr ""
+msgstr "取得 XLS 报告"
 
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -948,11 +948,11 @@ msgstr "可用性"
 
 #: modules/inventory/inventory/i18n_labels.php:29
 msgid "Bios Vendor"
-msgstr "Bios 厂商"
+msgstr "Bios "
 
 #: modules/inventory/inventory/i18n_labels.php:30
 msgid "Bios Version"
-msgstr "Bios 版本"
+msgstr "Bios "
 
 #: modules/inventory/inventory/i18n_labels.php:31
 msgid "Build"
@@ -1020,11 +1020,11 @@ msgstr "连接器"
 
 #: modules/inventory/inventory/i18n_labels.php:48
 msgid "Cpu Num"
-msgstr "Cpu 编号"
+msgstr "Cpu "
 
 #: modules/inventory/inventory/i18n_labels.php:49
 msgid "Cpu Vendor"
-msgstr "Cpu 厂商"
+msgstr "Cpu "
 
 #: modules/inventory/inventory/i18n_labels.php:50
 msgid "Custom Field"
@@ -1136,7 +1136,7 @@ msgstr "高端记忆体"
 
 #: modules/inventory/inventory/i18n_labels.php:88
 msgid "Ip Address"
-msgstr "Ip 位址"
+msgstr "Ip "
 
 #: modules/inventory/inventory/i18n_labels.php:89
 msgid "KEY"
@@ -1156,7 +1156,7 @@ msgstr "MIB"
 
 #: modules/inventory/inventory/i18n_labels.php:95
 msgid "Mac Addr"
-msgstr "Mac 位址"
+msgstr "Mac "
 
 #: modules/inventory/inventory/i18n_labels.php:96
 #: modules/inventory/inventory/csv.php:67
@@ -1178,7 +1178,7 @@ msgstr "其它记忆体"
 
 #: modules/inventory/inventory/i18n_labels.php:102
 msgid "Misc SMB"
-msgstr "其它 SMB"
+msgstr " SMB"
 
 #: modules/inventory/inventory/i18n_labels.php:104
 msgid "Modem"
@@ -1194,15 +1194,15 @@ msgstr "编号"
 
 #: modules/inventory/inventory/i18n_labels.php:111
 msgid "OS Serial Number"
-msgstr "OS 序号"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:112
 msgid "Os Installation Date"
-msgstr "OS 安装日期"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:113
 msgid "Os Architecture"
-msgstr "OS 架构"
+msgstr "OS "
 
 #: modules/inventory/inventory/i18n_labels.php:116
 msgid "Phone"
@@ -1242,7 +1242,7 @@ msgstr "产品版本"
 
 #: modules/inventory/inventory/i18n_labels.php:127
 msgid "Ram Total"
-msgstr "Ram 总容量"
+msgstr "Ram "
 
 #: modules/inventory/inventory/i18n_labels.php:128
 msgid "Registered Company"
@@ -1275,23 +1275,23 @@ msgstr "插槽数"
 
 #: modules/inventory/inventory/i18n_labels.php:136
 msgid "Smb Manufacturer"
-msgstr "Smb 制造商"
+msgstr "Smb "
 
 #: modules/inventory/inventory/i18n_labels.php:137
 msgid "Smb Product"
-msgstr "Smb 产品"
+msgstr "Smb "
 
 #: modules/inventory/inventory/i18n_labels.php:138
 msgid "Smb Serial"
-msgstr "Smb 序号"
+msgstr "Smb "
 
 #: modules/inventory/inventory/i18n_labels.php:139
 msgid "Smb Type"
-msgstr "Smb 类型"
+msgstr "Smb "
 
 #: modules/inventory/inventory/i18n_labels.php:140
 msgid "Smb Version"
-msgstr "Smb 版本"
+msgstr "Smb "
 
 #: modules/inventory/inventory/i18n_labels.php:143
 msgid "Speed"
@@ -1347,7 +1347,7 @@ msgstr "已使用"
 
 #: modules/inventory/inventory/i18n_labels.php:160
 msgid "VRAM Size"
-msgstr "VRAM 容量"
+msgstr "VRAM "
 
 #: modules/inventory/inventory/i18n_labels.php:164
 msgid "VolumeName"
@@ -1368,17 +1368,17 @@ msgstr "工作日期"
 #: modules/inventory/inventory/createStaticGroup.php:30
 #, php-format
 msgid "Latest inventory is less than %s days at %s"
-msgstr "在 %s 上的最新清查少於 %s 天"
+msgstr " %s  %s "
 
 #: modules/inventory/inventory/createStaticGroup.php:33
 #, php-format
 msgid "Latest inventory is more than %s days at %s"
-msgstr "在 %s 上的最新清查大于 %s 天"
+msgstr " %s  %s "
 
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr "在 %d 台电脑上的电脑清单已被截断"
+msgstr " %d "
 
 #: modules/inventory/inventory/deleteEntity.php:46
 msgid "The entity has not been deleted."
@@ -1398,7 +1398,7 @@ msgstr "清查日期"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
-msgstr ""
+msgstr "实体"
 
 #: modules/inventory/inventory/localComputersSidebar.php:28
 msgid "Add an entity"
@@ -1410,11 +1410,11 @@ msgstr ""
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
-msgstr "Bios 清单"
+msgstr "Bios "
 
 #: modules/inventory/inventory/body.php:42
 msgid "Hardware and OS information list"
-msgstr "硬体和 OS 资讯清单"
+msgstr " OS "
 
 #: modules/inventory/inventory/body.php:43
 msgid "Software list"
@@ -1430,7 +1430,7 @@ msgstr "控制器清单"
 
 #: modules/inventory/inventory/body.php:46
 msgid "Registry keys/values list"
-msgstr "登录机码/值清单"
+msgstr "/"
 
 #: modules/inventory/inventory/body.php:47
 msgid "Drive list"

@@ -41,17 +41,16 @@ nobase_pulseconf_DATA = \
 	inventory-server/xml-fix/08_Microsoft_consistency.py \
 	inventory-server/xml-fix/99_Strip_leading_trailing_spaces.py \
 	inventory-server/OcsNGMap.xml \
-	scheduler/scheduler.ini launchers/launchers.ini atftpd/pcre.conf \
+	scheduler/scheduler.ini atftpd/pcre.conf \
 	uuid-resolver/uuid-resolver.ini \
 	dlp-server/dlp-server.ini dlp-server/dlp-wsgi.ini dlp-server/dlp-apache.conf cm/cm.ini \
 	$(certca) $(certpriv)
 
 EXTRA_DIST = $(nobase_pulseconf_DATA) \
-             scheduler/scheduler.ini.in launchers/launchers.ini.in
-CLEANFILES = scheduler/scheduler.ini \
-             launchers/launchers.ini
+             scheduler/scheduler.ini.in
+CLEANFILES = scheduler/scheduler.ini 
 
-scheduler/scheduler.ini launchers/launchers.ini: Makefile
+scheduler/scheduler.ini: Makefile
 	rm -f $@ $@.tmp
 	$(MKDIR_P) $(@D)
 	srcdir=''; \

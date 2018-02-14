@@ -26,6 +26,7 @@ import sys
 import platform
 import utils
 import socket
+import psutil
 
 if sys.platform.startswith('win'):
     import wmi
@@ -60,24 +61,10 @@ class  networkagentinfo:
         return mac
 
     def getuser(self):
-        if sys.platform.startswith('linux') or sys.platform.startswith('darwin'):
-            obj = utils.simplecommandstr("users")
-        else:
-            #todo
-            # Return windows user
-            obj={}
-            obj['result']="inconue"
-            pythoncom.CoInitialize ()
-            c = wmi.WMI().Win32_ComputerSystem
-            computer = c()[0]
-            for propertyName in sorted( list( c.properties ) ):
-                if propertyName == "UserName":
-                    obj['result'] = getattr( computer, propertyName, '' ).split("\\")[1]
-        dd = [i.strip("\n") for i in obj['result'].split(" ") if i != ""]
-        return list(set(dd))
+        userlist = list(set([users[0]  for users in psutil.users()]))
+        return userlist
 
     def networkobjet(self, sessionid, action):
-        self.messagejson={}
         self.messagejson['action']     = action
         self.messagejson['sessionid']  = sessionid
         self.messagejson['listdns']    = []

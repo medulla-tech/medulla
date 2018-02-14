@@ -408,7 +408,20 @@ if(isExpertMode())
 
     $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer, ['trid'=>'trTransfermethod']),['value'=>'']);
 
-    //Get the sorted list of dependencies
+    if(isset($json['info']['limit_rate_ko']))
+    {
+        $setlimit_rate_ko = $json['info']['limit_rate_ko'];
+    }
+    else
+    {
+        $setlimit_rate_ko = '';
+    }
+    $bpuploaddownload = new IntegerTpl("limit_rate_ko");
+    $bpuploaddownload->setAttributCustom('min = 0');
+    $f->add(
+        new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => $setlimit_rate_ko), array('placeholder' => _T('<in ko>', 'pkgs')))
+    );
+    // Get the sorted list of dependencies
     if(isset($json['info']['Dependency']))
     {
         $dependencies = $json['info']['Dependency'];
@@ -464,7 +477,7 @@ if(isExpertMode())
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>Available dependencies</h3>
-                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                    <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOptionNotAdded.'
                     </select>
                 </div>

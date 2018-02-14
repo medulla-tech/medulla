@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -42,7 +42,7 @@ msgstr "完整编号"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:93
 msgid "Full size (GB)"
-msgstr "实际大小 (GB)"
+msgstr " (GB)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:94
 msgid "incr. number"
@@ -69,7 +69,7 @@ msgid "Stop backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:101
-#: modules/backuppc/backuppc/hostSummary.php:163
+#: modules/backuppc/backuppc/hostSummary.php:263
 msgid "View errors"
 msgstr "检视错误"
 
@@ -79,7 +79,7 @@ msgstr "取消设定备份"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:102
 msgid "Are you sure you want to unset backup for this computer?"
-msgstr "是否确定要取消设定此电脑的备份?"
+msgstr "?"
 
 #: modules/backuppc/backuppc/deleteProfile.php:43
 msgid "The profile has been deleted successfully."
@@ -102,47 +102,47 @@ msgid "Error while retrieving status."
 msgstr "撷取状态时出现错误。"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
-#: modules/backuppc/backuppc/hostSummary.php:84
+#: modules/backuppc/backuppc/hostSummary.php:173
 msgid "No ping response"
-msgstr "没有 ping 回应"
+msgstr " ping "
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
-#: modules/backuppc/backuppc/hostSummary.php:85
+#: modules/backuppc/backuppc/hostSummary.php:174
 msgid "Backup failed"
 msgstr "备份失败"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:45
-#: modules/backuppc/backuppc/hostSummary.php:86
+#: modules/backuppc/backuppc/hostSummary.php:175
 msgid "Restore failed"
 msgstr "还原失败"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:46
-#: modules/backuppc/backuppc/hostSummary.php:87
+#: modules/backuppc/backuppc/hostSummary.php:176
 msgid "Backup up to date"
 msgstr "最新备份"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
-#: modules/backuppc/backuppc/hostSummary.php:88
+#: modules/backuppc/backuppc/hostSummary.php:177
 msgid "Restore done"
 msgstr "还原已完成"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
-#: modules/backuppc/backuppc/hostSummary.php:89
+#: modules/backuppc/backuppc/hostSummary.php:178
 msgid "This computer has never been backed up"
 msgstr "此电脑从未备份"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
-#: modules/backuppc/backuppc/hostSummary.php:90
+#: modules/backuppc/backuppc/hostSummary.php:179
 msgid "Idle"
 msgstr "閒置"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
-#: modules/backuppc/backuppc/hostSummary.php:91
+#: modules/backuppc/backuppc/hostSummary.php:180
 msgid "Cancelled by user"
 msgstr "被使用者取消"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
-#: modules/backuppc/backuppc/hostSummary.php:92
+#: modules/backuppc/backuppc/hostSummary.php:181
 msgid "Backup in progress"
 msgstr "正在进行备份"
 
@@ -189,19 +189,19 @@ msgstr "任意大小"
 
 #: modules/backuppc/backuppc/fileSearch.php:150
 msgid "Less than 1 Mb"
-msgstr "少於 1 Mb"
+msgstr " 1 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:151
 msgid "1 Mb to 10 Mb"
-msgstr "1 Mb 至 10 Mb"
+msgstr "1 Mb  10 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:152
 msgid "10 Mb to 100 Mb"
-msgstr "10 Mb 至 100 Mb"
+msgstr "10 Mb  100 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:153
 msgid "Greater than 100 Mb"
-msgstr "大于 100 Mb"
+msgstr " 100 Mb"
 
 #: modules/backuppc/backuppc/fileSearch.php:164
 msgid "File size"
@@ -235,72 +235,72 @@ msgstr "名称"
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 #: modules/backuppc/backuppc/edit.php:89
 msgid "Windows-1252 - Western Europe"
-msgstr "Windows-1252 - 西欧"
+msgstr "Windows-1252 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:98
 #: modules/backuppc/backuppc/edit.php:90
 msgid "Windows-874 - Thai"
-msgstr "Windows-874 - 泰文"
+msgstr "Windows-874 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:99
 #: modules/backuppc/backuppc/edit.php:91
 msgid "Windows-932 - Japanese"
-msgstr "Windows-932 - 日文"
+msgstr "Windows-932 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:100
 #: modules/backuppc/backuppc/edit.php:92
 msgid "Windows-936 - Chinese (simplified)"
-msgstr "Windows-936 - 中文（简体）"
+msgstr "Windows-936 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:101
 #: modules/backuppc/backuppc/edit.php:93
 msgid "Windows-949 - Korean"
-msgstr "Windows-949 - 韩文"
+msgstr "Windows-949 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:102
 #: modules/backuppc/backuppc/edit.php:94
 msgid "Windows-950 - Chinese (traditional)"
-msgstr "Windows-950 - 中文（繁体）"
+msgstr "Windows-950 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
 #: modules/backuppc/backuppc/edit.php:95
 msgid "Windows-1250 - Latin (Central Europe)"
-msgstr "Windows-1250 - 拉丁文（中欧）"
+msgstr "Windows-1250 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:104
 #: modules/backuppc/backuppc/edit.php:96
 msgid "Windows-1251 - Cyrillic"
-msgstr "Windows-1251 - 斯拉夫文"
+msgstr "Windows-1251 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:105
 #: modules/backuppc/backuppc/edit.php:97
 msgid "Windows-1253 - Greek"
-msgstr "Windows-1253 - 希腊文"
+msgstr "Windows-1253 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:106
 #: modules/backuppc/backuppc/edit.php:98
 msgid "Windows-1254 - Turkish"
-msgstr "Windows-1254 - 土耳其文"
+msgstr "Windows-1254 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:107
 #: modules/backuppc/backuppc/edit.php:99
 msgid "Windows-1255 - Hebrew"
-msgstr "Windows-1255 - 希伯来文"
+msgstr "Windows-1255 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:108
 #: modules/backuppc/backuppc/edit.php:100
 msgid "Windows-1256 - Arabic"
-msgstr "Windows-1256 - 阿拉伯文"
+msgstr "Windows-1256 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:109
 #: modules/backuppc/backuppc/edit.php:101
 msgid "Windows-1257 - Latin (Baltic languages)"
-msgstr "Windows-1257 - 拉丁文（波罗的海语言）"
+msgstr "Windows-1257 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:110
 #: modules/backuppc/backuppc/edit.php:102
 msgid "Windows-1258 - Vietnamese"
-msgstr "Windows-1258 - 越南文"
+msgstr "Windows-1258 - "
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:118
 #: modules/backuppc/backuppc/edit.php:110
@@ -344,7 +344,7 @@ msgid "Browse backup"
 msgstr "浏览备份"
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:68
-#: modules/backuppc/backuppc/hostSummary.php:162
+#: modules/backuppc/backuppc/hostSummary.php:262
 msgid "Browse"
 msgstr "浏览"
 
@@ -384,7 +384,7 @@ msgstr "大小"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
-msgstr "下载选取项 (ZIP)"
+msgstr " (ZIP)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
 msgid "Restore to host (overwrite)"
@@ -398,11 +398,11 @@ msgstr ""
 msgid "Advanced restore"
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:34
+#: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
 msgstr "已从备份系统中移除该电脑。"
 
-#: modules/backuppc/backuppc/index.php:37
+#: modules/backuppc/backuppc/index.php:62
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr "备份状态"
@@ -418,7 +418,7 @@ msgstr "下载"
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/viewFileVersions.php:47
 #: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:142
+#: modules/backuppc/backuppc/hostSummary.php:242
 msgid "%A, %B %e %Y"
 msgstr "%A, %B %e %Y"
 
@@ -516,7 +516,7 @@ msgstr "选择天数"
 msgid ""
 "Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
 "this archive (for proper special characters handling)."
-msgstr "正在准备您的 ZIP 档案，请稍候。<br/>请使用 7zip 开启此存档（以正确处理特殊字元）。"
+msgstr " ZIP <br/> 7zip "
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
@@ -541,20 +541,20 @@ msgstr "档案集"
 msgid "Schedule"
 msgstr "排程"
 
-#: modules/backuppc/backuppc/startBackup.php:38
+#: modules/backuppc/backuppc/startBackup.php:75
 msgid "Choose the backup type."
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:42
+#: modules/backuppc/backuppc/startBackup.php:79
 msgid "Full backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:43
+#: modules/backuppc/backuppc/startBackup.php:80
 msgid "Incremental backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:185
 msgid "Configuration saved"
 msgstr "已储存设定"
 
@@ -580,7 +580,7 @@ msgstr "还原档案"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "主机"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"
@@ -602,33 +602,49 @@ msgstr "还原自"
 msgid "View restore points"
 msgstr "检视还原点"
 
-#: modules/backuppc/backuppc/hostStatus.php:47
-#: modules/backuppc/backuppc/hostStatus.php:48
+#: modules/backuppc/backuppc/hostStatus.php:45
+msgid "Notify Error : Backup configuration Computer"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Notify Computer :"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+msgid "has been added to backup system successfully."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
-msgstr "电脑 %s 已成功新增至备份系统。<br />您现在可设定其档案集与排程。"
+msgstr " %s <br />"
 
-#: modules/backuppc/backuppc/hostStatus.php:175
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Save configure host "
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:199
 #, php-format
 msgid "%s's backup status"
-msgstr "%s 的备份状态"
+msgstr "%s "
 
-#: modules/backuppc/backuppc/hostStatus.php:178
+#: modules/backuppc/backuppc/hostStatus.php:202
 msgid "Summary"
 msgstr "概要"
 
-#: modules/backuppc/backuppc/hostStatus.php:182
+#: modules/backuppc/backuppc/hostStatus.php:206
 msgid "Configuration"
 msgstr "设定"
 
-#: modules/backuppc/backuppc/hostStatus.php:183
+#: modules/backuppc/backuppc/hostStatus.php:207
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:184
+#: modules/backuppc/backuppc/hostStatus.php:208
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "档案搜寻"
@@ -649,61 +665,66 @@ msgstr "档案"
 msgid "Your file is being prepared, please wait."
 msgstr "正在准备您的档案，请稍候。"
 
-#: modules/backuppc/backuppc/hostSummary.php:49
+#: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
 msgstr "已成功请求动作"
 
-#: modules/backuppc/backuppc/hostSummary.php:58
+#: modules/backuppc/backuppc/hostSummary.php:114
 msgid "Backup is not set for this computer."
 msgstr "没有为此电脑设定备份。"
 
-#: modules/backuppc/backuppc/hostSummary.php:63
+#: modules/backuppc/backuppc/hostSummary.php:130
 msgid "Configure"
 msgstr "设定"
 
-#: modules/backuppc/backuppc/hostSummary.php:68
+#: modules/backuppc/backuppc/hostSummary.php:135
+msgid ""
+"notify warning : There is no backup server assigned for the computer entity."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."
 msgstr "没有为该电脑实体指定备份伺服器。"
 
-#: modules/backuppc/backuppc/hostSummary.php:95
+#: modules/backuppc/backuppc/hostSummary.php:184
 msgid "Current state: "
 msgstr "目前状态："
 
-#: modules/backuppc/backuppc/hostSummary.php:110
+#: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
 msgstr "开始完整备份"
 
-#: modules/backuppc/backuppc/hostSummary.php:112
+#: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Sart Incr Backup"
 msgstr "开始增量备份"
 
-#: modules/backuppc/backuppc/hostSummary.php:113
+#: modules/backuppc/backuppc/hostSummary.php:213
 msgid "Stop Backup"
 msgstr "停止备份"
 
-#: modules/backuppc/backuppc/hostSummary.php:149
+#: modules/backuppc/backuppc/hostSummary.php:249
 msgid "Backup time"
 msgstr "备份时间"
 
-#: modules/backuppc/backuppc/hostSummary.php:150
+#: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
 msgstr "类型"
 
-#: modules/backuppc/backuppc/hostSummary.php:151
+#: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"
 msgstr "持续时间（分钟）"
 
-#: modules/backuppc/backuppc/hostSummary.php:152
+#: modules/backuppc/backuppc/hostSummary.php:252
 msgid "Errors"
 msgstr "错误"
 
-#: modules/backuppc/backuppc/hostSummary.php:153
+#: modules/backuppc/backuppc/hostSummary.php:253
 msgid "File count (new)"
 msgstr "档案数（新）"
 
-#: modules/backuppc/backuppc/hostSummary.php:154
+#: modules/backuppc/backuppc/hostSummary.php:254
 msgid "Backup size (new) [Mb]"
-msgstr "备份容量（新）[Mb]"
+msgstr "[Mb]"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:27
 msgid "Filesets"
@@ -726,7 +747,7 @@ msgstr "排程"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:133
 msgid "Linux (User files)"
-msgstr "Linux（使用者档案）"
+msgstr "Linux"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:134
 msgid "Linux (Whole drive)"
@@ -742,19 +763,19 @@ msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:137
 msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista（使用者档案）"
+msgstr "Windows 7/Vista"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:138
 msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista（整个 C: 磁碟机）"
+msgstr "Windows 7/Vista C: "
 
 #: modules/backuppc/backuppc/ViewProfiles.php:139
 msgid "Windows XP (User files)"
-msgstr "Windows XP（使用者档案）"
+msgstr "Windows XP"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:140
 msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP（整个 C: 磁碟机）"
+msgstr "Windows XP C: "
 
 #: modules/backuppc/backuppc/ViewProfiles.php:141
 msgid "Daytime"
@@ -820,4 +841,4 @@ msgstr "备份设定档"
 
 #: modules/backuppc/infoPackage.inc.php:91
 msgid "Download files/ZIP from backup"
-msgstr "从备份中下载档案/ZIP"
+msgstr "/ZIP"

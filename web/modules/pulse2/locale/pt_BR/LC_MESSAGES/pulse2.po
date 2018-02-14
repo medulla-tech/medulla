@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/teams/72118/pt_BR/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pt_BR\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -28,7 +28,23 @@ msgstr "Lista de computadores"
 
 #: modules/pulse2/infoPackage.inc.php:50
 msgid "Location selection in computer edit"
-msgstr "Seleção de localização em um computador"
+msgstr "Seleo de localizao em um computador"
+
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:65
+msgid "viewProductUpdates"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:71
+msgid "install Product Updates"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:77
+msgid "Product Updates installation (ajax)"
+msgstr "Instalação de Atualizações de Produto (ajax)"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -40,7 +56,7 @@ msgstr "Remover este perfil"
 
 #: modules/pulse2/includes/menu_group_action.php:52
 msgid "Display this group's content"
-msgstr "Exibir o conteúdo deste grupo"
+msgstr "Exibir o contedo deste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:53
 msgid "Edit this group"
@@ -60,19 +76,19 @@ msgstr "Ler Log"
 
 #: modules/pulse2/includes/menu_group_action.php:57
 msgid "Software deployment on this group"
-msgstr "Implatanção de Software neste grupo"
+msgstr "Implatano de Software neste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:60
 msgid "Update on this group"
-msgstr "Atualização neste grupo"
+msgstr "Atualizao neste grupo"
 
 #: modules/pulse2/includes/menu_group_action.php:64
 msgid "Inventory on this profile"
-msgstr "Inventário neste perfil"
+msgstr "Inventrio neste perfil"
 
 #: modules/pulse2/includes/menu_group_action.php:68
 msgid "Display this imaging group's content"
-msgstr "Mostrar o conteúdo desse grupo de imagem"
+msgstr "Mostrar o contedo desse grupo de imagem"
 
 #: modules/pulse2/includes/menu_group_action.php:70
 msgid "Edit this imaging group"
@@ -84,7 +100,7 @@ msgstr "Compartilhar esse grupo de imagem"
 
 #: modules/pulse2/includes/menu_group_action.php:74
 msgid "Software deployment on this imaging group"
-msgstr "Implantação de software nesse grupo de imagens"
+msgstr "Implantao de software nesse grupo de imagens"
 
 #: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:60
@@ -109,11 +125,11 @@ msgstr "Todas as minhas entidades"
 
 #: modules/pulse2/includes/menu_action.php:56
 msgid "Inventory"
-msgstr "Inventário"
+msgstr "Inventrio"
 
 #: modules/pulse2/includes/menu_action.php:57
 msgid "extTicket issue"
-msgstr "questão extTicket"
+msgstr "questo extTicket"
 
 #: modules/pulse2/includes/menu_action.php:58
 msgid "Backup status"
@@ -136,4 +152,17 @@ msgstr ""
 #: modules/pulse2/includes/menu_action.php:84
 #: modules/pulse2/includes/menu_action.php:89
 msgid "Software deployment"
-msgstr "Implantação de Software"
+msgstr "Implantao de Software"
+
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "Atualizações disponíveis"
+
+#: modules/pulse2/update/viewProductUpdates.php:38
+msgid "Update"
+msgstr "Atualizar"
+
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Instalando atualizações..."

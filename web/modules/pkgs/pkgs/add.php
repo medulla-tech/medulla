@@ -254,6 +254,13 @@ if (isset($_POST['bconfirm'])) {
         $methodtransfer->setElementsVal(['pullcurl','pushrsync']);
         $f->add(new TrFormElement(_T('Transfer method','pkgs'),$methodtransfer,['trid'=>'trTransfermethod']),['value'=>'']);
 
+
+        $bpuploaddownload = new IntegerTpl("limit_rate_ko");
+        $bpuploaddownload->setAttributCustom('min = 0');
+        $f->add(
+                new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bpuploaddownload), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+        );
+
         $packagesInOption = '';
         foreach(xmpp_packages_list() as $package)
         {
@@ -285,7 +292,7 @@ if (isset($_POST['bconfirm'])) {
             <td style="border: none;">
                 <div class="list" style="padding-left: 10px;">
                     <h3>Available dependencies</h3>
-                    <select multiple size="15" class="list" name="members[]" id="pooldependencies">
+                    <select multiple size="13" class="list" name="members[]" id="pooldependencies">
                         '.$packagesInOption.'
                     </select>
                 </div>

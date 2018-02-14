@@ -1,0 +1,1528 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
+"Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: modules/inventory/infoPackage.inc.php:31
+#: modules/inventory/infoPackage.inc.php:36
+#: modules/inventory/inventory/history.php:80
+msgid "Inventory"
+msgstr "Облік"
+
+#: modules/inventory/infoPackage.inc.php:40
+#: modules/inventory/inventory/localSidebar.php:28
+msgid "Incoming"
+msgstr "Вхідні"
+
+#: modules/inventory/infoPackage.inc.php:42
+#: modules/inventory/inventory/localSidebar.php:29
+#: modules/inventory/inventory/i18n_labels.php:28
+msgid "Bios"
+msgstr "BIOS"
+
+#: modules/inventory/infoPackage.inc.php:44
+#: modules/inventory/inventory/localSidebar.php:30
+#: modules/inventory/inventory/i18n_labels.php:82
+msgid "Hardware"
+msgstr "Обладнання"
+
+#: modules/inventory/infoPackage.inc.php:46
+#: modules/inventory/inventory/localSidebar.php:32
+#: modules/inventory/inventory/i18n_labels.php:107
+msgid "Network"
+msgstr "Мережа"
+
+#: modules/inventory/infoPackage.inc.php:48
+#: modules/inventory/inventory/localSidebar.php:33
+#: modules/inventory/inventory/i18n_labels.php:47
+msgid "Controller"
+msgstr "Регулятор"
+
+#: modules/inventory/infoPackage.inc.php:50
+#: modules/inventory/inventory/body.php:41
+msgid "Summary"
+msgstr "Резюме"
+
+#: modules/inventory/infoPackage.inc.php:53
+#: modules/inventory/inventory/localSidebar.php:37
+#: modules/inventory/inventory/i18n_labels.php:64
+msgid "Drive"
+msgstr "Диск"
+
+#: modules/inventory/infoPackage.inc.php:55
+#: modules/inventory/inventory/localSidebar.php:38
+#: modules/inventory/inventory/i18n_labels.php:87
+msgid "Input"
+msgstr "Введення"
+
+#: modules/inventory/infoPackage.inc.php:57
+#: modules/inventory/inventory/ajaxViewPart.php:227
+#: modules/inventory/inventory/ajaxViewPart.php:607
+#: modules/inventory/inventory/localSidebar.php:39
+#: modules/inventory/inventory/i18n_labels.php:100
+msgid "Memory"
+msgstr "Пам'ять"
+
+#: modules/inventory/infoPackage.inc.php:59
+#: modules/inventory/inventory/localSidebar.php:40
+#: modules/inventory/inventory/i18n_labels.php:105
+msgid "Monitor"
+msgstr "Монітор"
+
+#: modules/inventory/infoPackage.inc.php:61
+#: modules/inventory/inventory/localSidebar.php:41
+#: modules/inventory/inventory/i18n_labels.php:118
+msgid "Port"
+msgstr "Порт"
+
+#: modules/inventory/infoPackage.inc.php:63
+#: modules/inventory/inventory/localSidebar.php:42
+#: modules/inventory/inventory/i18n_labels.php:120
+msgid "Printer"
+msgstr "Принтер"
+
+#: modules/inventory/infoPackage.inc.php:65
+#: modules/inventory/inventory/localSidebar.php:43
+#: modules/inventory/inventory/i18n_labels.php:142
+msgid "Sound"
+msgstr "Звук"
+
+#: modules/inventory/infoPackage.inc.php:67
+#: modules/inventory/inventory/ajaxViewPart.php:228
+#: modules/inventory/inventory/localSidebar.php:44
+#: modules/inventory/inventory/i18n_labels.php:148
+msgid "Storage"
+msgstr "Сховище даних"
+
+#: modules/inventory/infoPackage.inc.php:69
+#: modules/inventory/inventory/localSidebar.php:45
+msgid "VideoCard"
+msgstr "Відеокартка"
+
+#: modules/inventory/infoPackage.inc.php:71
+#: modules/inventory/inventory/localSidebar.php:31
+#: modules/inventory/inventory/i18n_labels.php:141
+msgid "Software"
+msgstr "Програмне забезпечення"
+
+#: modules/inventory/infoPackage.inc.php:73
+#: modules/inventory/inventory/localSidebar.php:34
+msgid "Registry"
+msgstr "Реєстр"
+
+#: modules/inventory/infoPackage.inc.php:76
+#: modules/inventory/inventory/ajaxViewPart.php:540
+#: modules/inventory/inventory/ajaxIncoming.php:84
+msgid "View"
+msgstr "Перегляд"
+
+#: modules/inventory/infoPackage.inc.php:80
+#: modules/inventory/inventory/ajaxViewPart.php:541
+#: modules/inventory/inventory/ajaxIncoming.php:85
+msgid "Information"
+msgstr "Інформація"
+
+#: modules/inventory/infoPackage.inc.php:84
+msgid "Charts"
+msgstr "Діаграми"
+
+#: modules/inventory/infoPackage.inc.php:88
+#: modules/inventory/inventory/graphs.php:35
+msgid "Chart"
+msgstr "Діаграма"
+
+#: modules/inventory/infoPackage.inc.php:92
+msgid "Csv's export"
+msgstr "Експортування до CSV"
+
+#: modules/inventory/infoPackage.inc.php:96
+msgid "Create static group from dashboard"
+msgstr "Створити статичну групу з панелі приладів"
+
+#: modules/inventory/infoPackage.inc.php:113
+msgid "Header"
+msgstr "Заголовок"
+
+#: modules/inventory/infoPackage.inc.php:130
+msgid "Inventory on a group of computers"
+msgstr "Облік щодо групи комп'ютерів"
+
+#: modules/inventory/infoPackage.inc.php:133
+msgid "Hardware tab for a group"
+msgstr "Вкладка «Обладнання» для групи"
+
+#: modules/inventory/infoPackage.inc.php:136
+msgid "Bios tab for a group"
+msgstr "Вкладка «BIOS» для групи"
+
+#: modules/inventory/infoPackage.inc.php:139
+msgid "Summary tab for a group"
+msgstr "Вкладка «Резюме» для групи"
+
+#: modules/inventory/infoPackage.inc.php:142
+msgid "Storage tab for a group"
+msgstr "Вкладка «Сховище даних» для групи"
+
+#: modules/inventory/infoPackage.inc.php:145
+msgid "Software tab for a group"
+msgstr "Вкладка «Програмне забезпечення» для групи"
+
+#: modules/inventory/infoPackage.inc.php:148
+msgid "Network tab for a group"
+msgstr "Вкладка «Мережа» для групи"
+
+#: modules/inventory/infoPackage.inc.php:151
+msgid "Controller tab for a group"
+msgstr "Вкладка «Контролер» для групи"
+
+#: modules/inventory/infoPackage.inc.php:154
+msgid "Registry tab for a group"
+msgstr "Вкладка «Реєстр» для групи"
+
+#: modules/inventory/infoPackage.inc.php:157
+msgid "Hardware tab for a computer in a group"
+msgstr "Вкладка «Обладнання» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:160
+msgid "Summary tab for a computer in a group"
+msgstr "Вкладка «Резюме» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:163
+msgid "Storage tab for a computer in a group"
+msgstr "Вкладка «Сховище даних» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:166
+msgid "Bios tab for a computer in a group"
+msgstr "Вкладка «BIOS» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:169
+msgid "Software tab for a computer in a group"
+msgstr "Вкладка «Програмне забезпечення» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:172
+msgid "Network tab for a computer in a group"
+msgstr "Вкладка «Мережа» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:175
+msgid "Controller tab for a computer in a group"
+msgstr "Вкладка «Контролер» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:178
+msgid "Registry tab for a computer in a group"
+msgstr "Вкладка «Реєстр» для комп'ютера у групі"
+
+#: modules/inventory/infoPackage.inc.php:183
+msgid "Inventory on a single computer"
+msgstr "Облік на окремому комп'ютері"
+
+#: modules/inventory/infoPackage.inc.php:187
+msgid "Hardware tab for a computer"
+msgstr "Вкладка «Обладнання» для комп'ютера"
+
+#: modules/inventory/infoPackage.inc.php:190
+msgid "Software tab for a computer"
+msgstr "Вкладка «Програмне забезпечення» для комп'ютера"
+
+#: modules/inventory/infoPackage.inc.php:193
+msgid "Network tab for a computer"
+msgstr "Вкладка «Мережа» для комп'ютера"
+
+#: modules/inventory/infoPackage.inc.php:196
+msgid "Controller tab for a computer"
+msgstr "Вкладка «Контролер» для комп'ютера"
+
+#: modules/inventory/infoPackage.inc.php:199
+msgid "Registry tab for a computer"
+msgstr "Вкладка «Реєстр» для комп'ютера"
+
+#: modules/inventory/infoPackage.inc.php:204
+msgid "Differences between two inventories"
+msgstr "Відмінності між двома обліками"
+
+#: modules/inventory/infoPackage.inc.php:210
+msgid "Entities (ajax)"
+msgstr "Записи (ajax)"
+
+#: modules/inventory/infoPackage.inc.php:215
+msgid "Entity rules (ajax)"
+msgstr "Правила записів (ajax)"
+
+#: modules/inventory/infoPackage.inc.php:221
+msgid "Change entity rule order (up)"
+msgstr "Змінити порядок правил записів (вище)"
+
+#: modules/inventory/infoPackage.inc.php:226
+msgid "Change entity rule order (down)"
+msgstr "Змінити порядок правил записів (нижче)"
+
+#: modules/inventory/includes/publicFunc.php:57
+#: modules/inventory/includes/publicFunc.php:90
+msgid "Entity right"
+msgstr "Правило запису"
+
+#: modules/inventory/includes/publicFunc.php:83
+#: modules/inventory/inventory/addEntityRule.php:180
+msgid "Remove"
+msgstr "Вилучити"
+
+#: modules/inventory/includes/publicFunc.php:83
+msgid "Remove entity for user"
+msgstr "Вилучити запис для користувача"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right"
+msgstr "Додати запису право"
+
+#: modules/inventory/includes/publicFunc.php:95
+msgid "Add entity right for user"
+msgstr "Додати правило записів для користувача"
+
+#: modules/inventory/includes/html.php:65
+#: modules/inventory/inventory/ajaxViewPart.php:188
+#: modules/inventory/inventory/ajaxViewPart.php:609
+#: modules/inventory/inventory/i18n_labels.php:53
+msgid "Date"
+msgstr "Дата"
+
+#: modules/inventory/includes/html.php:98
+msgid "Filter software"
+msgstr "Програмне забезпечення для фільтрування"
+
+#: modules/inventory/includes/html.php:103
+msgid "Hide Windows Updates"
+msgstr "Приховати оновлення Windows"
+
+#: modules/inventory/includes/html.php:117
+msgid "Refresh"
+msgstr "Оновити"
+
+#: modules/inventory/includes/panels/inventory.inc.php:30
+msgid "Computers"
+msgstr "Комп'ютери"
+
+#: modules/inventory/includes/panels/inventory.inc.php:43
+msgid "Create a group"
+msgstr "Створити групу"
+
+#: modules/inventory/includes/panels/inventory.inc.php:44
+msgid "< %s days: %percent% (%d)"
+msgstr "< %s днів: %percent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:45
+msgid "> %s days: %percent% (%d)"
+msgstr "> %s днів: %percent% (%d)"
+
+#: modules/inventory/includes/panels/inventory.inc.php:48
+msgid "Latest Inventory Date"
+msgstr "Найсвіжіша дата обліку"
+
+#: modules/inventory/inventory/deleteEntityRule.php:30
+msgid "The entity rule has been deleted successfully."
+msgstr "Правило записів було успішно вилучено."
+
+#: modules/inventory/inventory/deleteEntityRule.php:33
+msgid "Delete this rule?"
+msgstr "Вилучити це правило?"
+
+#: modules/inventory/inventory/pci.php:27
+#: modules/inventory/inventory/i18n_labels.php:115
+msgid "Pci"
+msgstr "PCI"
+
+#: modules/inventory/inventory/addEntityRule.php:64
+msgid "The entity rule has been added successfully."
+msgstr "Правило записів було успішно додано."
+
+#: modules/inventory/inventory/addEntityRule.php:103
+msgid "Add rule"
+msgstr "Додати правило"
+
+#: modules/inventory/inventory/addEntityRule.php:110
+msgid "Active"
+msgstr "Активний"
+
+#: modules/inventory/inventory/addEntityRule.php:113
+msgid "selection from this item"
+msgstr "позначене з цього пункту"
+
+#: modules/inventory/inventory/addEntityRule.php:117
+msgid "aggregator a rule"
+msgstr "агрегатор правила"
+
+#: modules/inventory/inventory/addEntityRule.php:118
+msgid "AND all rules TRUE select entitie"
+msgstr "AND усі правила TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:119
+msgid "OR one rule TRUE select entitie"
+msgstr "OR одне правило TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:120
+msgid "NONE rule TRUE select entitie"
+msgstr "NONE правило TRUE select запис"
+
+#: modules/inventory/inventory/addEntityRule.php:124
+msgid "Aggregator"
+msgstr "Агрегатор"
+
+#: modules/inventory/inventory/addEntityRule.php:131
+msgid "Match"
+msgstr "Відповідність"
+
+#: modules/inventory/inventory/addEntityRule.php:132
+msgid " regular expression"
+msgstr " формальний вираз"
+
+#: modules/inventory/inventory/addEntityRule.php:133
+msgid " special characters must be escaped in regular expressions"
+msgstr " спеціальні символи у формальних виразах слід екранувати"
+
+#: modules/inventory/inventory/addEntityRule.php:134
+msgid " .^$*+?()[{\\|"
+msgstr " .^$*+?()[{\\|"
+
+#: modules/inventory/inventory/addEntityRule.php:135
+msgid " not start with word   /^(?!my string).*$/"
+msgstr " не починається словом /^(?!мій рядок).*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:136
+msgid " start with my string /^my string.*$/"
+msgstr " починається на «мій рядок» /^мій рядок.*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:137
+msgid " does not contain /^((?!my string).)*$/"
+msgstr " не містить /^((?!мій рядок).)*$/"
+
+#: modules/inventory/inventory/addEntityRule.php:138
+msgid " egal to or contains"
+msgstr " дорівнює або містить"
+
+#: modules/inventory/inventory/addEntityRule.php:139
+msgid " finishes by  /.*(my string)$/"
+msgstr " завершується на  /.*(мій рядок)$/"
+
+#: modules/inventory/inventory/addEntityRule.php:140
+msgid "Equal or noequal"
+msgstr "Дорівнює або не дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:141
+msgid " strictly equal or inequality"
+msgstr " строго рівне або не рівне"
+
+#: modules/inventory/inventory/addEntityRule.php:142
+msgid "Contains or NoContains"
+msgstr "Містить або не містить"
+
+#: modules/inventory/inventory/addEntityRule.php:143
+msgid " has value or not"
+msgstr " має значення або не"
+
+#: modules/inventory/inventory/addEntityRule.php:144
+msgid "Starts by or Finishes"
+msgstr "Починається або завершується"
+
+#: modules/inventory/inventory/addEntityRule.php:145
+msgid " begins or ends with value"
+msgstr " починається або завершується значенням"
+
+#: modules/inventory/inventory/addEntityRule.php:146
+msgid "matches (regex)"
+msgstr "відповідає (формальному виразу)"
+
+#: modules/inventory/inventory/addEntityRule.php:147
+msgid "equal"
+msgstr "дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:148
+msgid "not equal"
+msgstr "не дорівнює"
+
+#: modules/inventory/inventory/addEntityRule.php:149
+msgid "contains"
+msgstr "містить"
+
+#: modules/inventory/inventory/addEntityRule.php:150
+msgid "not contains"
+msgstr "не містить"
+
+#: modules/inventory/inventory/addEntityRule.php:151
+msgid "starts by"
+msgstr "починається з"
+
+#: modules/inventory/inventory/addEntityRule.php:152
+msgid "finishes by"
+msgstr "завершується на"
+
+#: modules/inventory/inventory/addEntityRule.php:157
+msgid "entities list"
+msgstr "список записів"
+
+#: modules/inventory/inventory/addEntityRule.php:165
+msgid "regular expression or value"
+msgstr "формальний вираз або значення"
+
+#: modules/inventory/inventory/addEntityRule.php:166
+msgid "must not contain space character"
+msgstr "має не містити символу пробілу"
+
+#: modules/inventory/inventory/addEntityRule.php:194
+msgid "Criterion"
+msgstr "Критерій"
+
+#: modules/inventory/inventory/addEntityRule.php:200
+msgid "Add criterion"
+msgstr "Додати критерій"
+
+#: modules/inventory/inventory/graphs.php:47
+msgid "back"
+msgstr "назад"
+
+#: modules/inventory/inventory/ajaxViewPart.php:83
+msgid " (Not an antivirus)"
+msgstr " (не є антивірусом)"
+
+#: modules/inventory/inventory/ajaxViewPart.php:106
+msgid "Click here to see this computer on manufacturer website"
+msgstr ""
+"Натисніть тут, щоб переглянути сторінку цього комп'ютера або його виробника"
+
+#: modules/inventory/inventory/ajaxViewPart.php:121
+#: modules/inventory/inventory/view.php:74
+msgid "Properties"
+msgstr "Властивості"
+
+#: modules/inventory/inventory/ajaxViewPart.php:122
+#: modules/inventory/inventory/inventory_diff.php:76
+#: modules/inventory/inventory/inventory_diff.php:101
+#: modules/inventory/inventory/view.php:75
+#: modules/inventory/inventory/i18n_labels.php:161
+msgid "Value"
+msgstr "Значення"
+
+#: modules/inventory/inventory/ajaxViewPart.php:140
+msgid "No record found for this period."
+msgstr "Для цього періоду не знайдено записів."
+
+#: modules/inventory/inventory/ajaxViewPart.php:143
+msgid "Unable to detect any Antivirus software on this machine."
+msgstr ""
+"Не вдалося виявити жодного антивірусного програмного забезпечення на цій "
+"машині."
+
+#: modules/inventory/inventory/ajaxViewPart.php:144
+msgid ""
+"Please ensure you are running GLPI with FusionInventory plugin and "
+"FusionInventory Agent on this client."
+msgstr ""
+"Будь ласка, переконайтеся, що ви працюєте з GLPI з додатком FusionInventory,"
+" а на клієнті встановлено агент FusionInventory."
+
+#: modules/inventory/inventory/ajaxViewPart.php:147
+msgid "No record found."
+msgstr "Не знайдено запису."
+
+#: modules/inventory/inventory/ajaxViewPart.php:226
+msgid "Processors"
+msgstr "Процесори"
+
+#: modules/inventory/inventory/ajaxViewPart.php:229
+msgid "Controllers"
+msgstr "Контролери"
+
+#: modules/inventory/inventory/ajaxViewPart.php:230
+msgid "Network Cards"
+msgstr "Мережеві картки"
+
+#: modules/inventory/inventory/ajaxViewPart.php:231
+msgid "Drives"
+msgstr "Диски"
+
+#: modules/inventory/inventory/ajaxViewPart.php:232
+msgid "Graphic Cards"
+msgstr "Графічні картки"
+
+#: modules/inventory/inventory/ajaxViewPart.php:233
+msgid "Sound Cards"
+msgstr "Звукові картки"
+
+#: modules/inventory/inventory/ajaxViewPart.php:234
+msgid "Others"
+msgstr "Інші"
+
+#: modules/inventory/inventory/ajaxViewPart.php:569
+msgid "Yes"
+msgstr "Так"
+
+#: modules/inventory/inventory/ajaxViewPart.php:570
+msgid "No"
+msgstr "Ні"
+
+#: modules/inventory/inventory/ajaxViewPart.php:571
+#: modules/inventory/inventory/ajaxViewPart.php:587
+#: modules/inventory/inventory/EditEntity.php:55
+#: modules/inventory/inventory/addEntity.php:50
+#: modules/inventory/inventory/i18n_labels.php:106
+#: modules/inventory/inventory/deleteEntity.php:64
+msgid "Name"
+msgstr "Назва"
+
+#: modules/inventory/inventory/ajaxViewPart.php:572
+#: modules/inventory/inventory/i18n_labels.php:108
+msgid "Network Type"
+msgstr "Тип мережі"
+
+#: modules/inventory/inventory/ajaxViewPart.php:573
+#: modules/inventory/inventory/i18n_labels.php:93
+msgid "MAC Address"
+msgstr "MAC-адреса"
+
+#: modules/inventory/inventory/ajaxViewPart.php:574
+#: modules/inventory/inventory/i18n_labels.php:86
+msgid "IP"
+msgstr "IP"
+
+#: modules/inventory/inventory/ajaxViewPart.php:575
+msgid "Netmask"
+msgstr "Маска мережі"
+
+#: modules/inventory/inventory/ajaxViewPart.php:576
+#: modules/inventory/inventory/i18n_labels.php:81
+msgid "Gateway"
+msgstr "Шлюз"
+
+#: modules/inventory/inventory/ajaxViewPart.php:577
+#: modules/inventory/inventory/i18n_labels.php:61
+msgid "Device"
+msgstr "Пристрій"
+
+#: modules/inventory/inventory/ajaxViewPart.php:578
+msgid "Mount Point"
+msgstr "Точка монтування"
+
+#: modules/inventory/inventory/ajaxViewPart.php:579
+msgid "Filesystem"
+msgstr "Файлова система"
+
+#: modules/inventory/inventory/ajaxViewPart.php:580
+#: modules/inventory/inventory/ajaxViewPart.php:604
+#: modules/inventory/inventory/i18n_labels.php:133
+msgid "Size"
+msgstr "Розмір"
+
+#: modules/inventory/inventory/ajaxViewPart.php:581
+msgid "Free Size"
+msgstr "Вільне місце"
+
+#: modules/inventory/inventory/ajaxViewPart.php:582
+msgid "Supplier"
+msgstr "Постачальник"
+
+#: modules/inventory/inventory/ajaxViewPart.php:583
+msgid "Invoice Number"
+msgstr "Номер рахунка"
+
+#: modules/inventory/inventory/ajaxViewPart.php:584
+msgid "Date Of Purchase"
+msgstr "Дата придбання"
+
+#: modules/inventory/inventory/ajaxViewPart.php:585
+msgid "Warranty End Date"
+msgstr "Строк завершення гарантії"
+
+#: modules/inventory/inventory/ajaxViewPart.php:586
+#: modules/inventory/inventory/i18n_labels.php:162
+msgid "Vendor"
+msgstr "Постачальник"
+
+#: modules/inventory/inventory/ajaxViewPart.php:588
+#: modules/inventory/inventory/i18n_labels.php:163
+msgid "Version"
+msgstr "Версія"
+
+#: modules/inventory/inventory/ajaxViewPart.php:589
+msgid "Computer Name"
+msgstr "Назва комп'ютера"
+
+#: modules/inventory/inventory/ajaxViewPart.php:590
+#: modules/inventory/inventory/i18n_labels.php:60
+msgid "Description"
+msgstr "Опис"
+
+#: modules/inventory/inventory/ajaxViewPart.php:591
+msgid "Entity (Location)"
+msgstr "Запис (адреса)"
+
+#: modules/inventory/inventory/ajaxViewPart.php:592
+msgid "Entity"
+msgstr "Сутність"
+
+#: modules/inventory/inventory/ajaxViewPart.php:593
+#: modules/inventory/inventory/i18n_labels.php:91
+msgid "Location"
+msgstr "Адреса"
+
+#: modules/inventory/inventory/ajaxViewPart.php:594
+msgid "Last Logged User"
+msgstr "Останній користувач системи"
+
+#: modules/inventory/inventory/ajaxViewPart.php:595
+msgid "OS"
+msgstr "ОС"
+
+#: modules/inventory/inventory/ajaxViewPart.php:596
+#: modules/inventory/inventory/i18n_labels.php:114
+msgid "Operating System"
+msgstr "Операційна система"
+
+#: modules/inventory/inventory/ajaxViewPart.php:597
+msgid "Computer Type"
+msgstr "Тип комп'ютера"
+
+#: modules/inventory/inventory/ajaxViewPart.php:598
+msgid "Model / Type"
+msgstr "Модель/Тип"
+
+#: modules/inventory/inventory/ajaxViewPart.php:599
+#: modules/inventory/inventory/i18n_labels.php:103
+msgid "Model"
+msgstr "Модель"
+
+#: modules/inventory/inventory/ajaxViewPart.php:600
+#: modules/inventory/inventory/i18n_labels.php:98
+msgid "Manufacturer"
+msgstr "Виробник"
+
+#: modules/inventory/inventory/ajaxViewPart.php:601
+msgid "Serial Number"
+msgstr "Серійний номер"
+
+#: modules/inventory/inventory/ajaxViewPart.php:602
+#: modules/inventory/inventory/i18n_labels.php:79
+msgid "Frequency"
+msgstr "Частота"
+
+#: modules/inventory/inventory/ajaxViewPart.php:603
+#: modules/inventory/inventory/i18n_labels.php:156
+msgid "Type"
+msgstr "Тип"
+
+#: modules/inventory/inventory/ajaxViewPart.php:605
+msgid "Bandwidth"
+msgstr "Ширина каналу"
+
+#: modules/inventory/inventory/ajaxViewPart.php:606
+msgid "Writer"
+msgstr "Записувач"
+
+#: modules/inventory/inventory/ajaxViewPart.php:608
+msgid "Comment"
+msgstr "Коментар"
+
+#: modules/inventory/inventory/ajaxViewPart.php:610
+#: modules/inventory/inventory/i18n_labels.php:159
+msgid "User"
+msgstr "Користувач"
+
+#: modules/inventory/inventory/ajaxViewPart.php:611
+msgid "Category"
+msgstr "Категорія"
+
+#: modules/inventory/inventory/ajaxViewPart.php:612
+msgid "Action"
+msgstr "Дія"
+
+#: modules/inventory/inventory/ajaxViewPart.php:613
+msgid "Today"
+msgstr "Сьогодні"
+
+#: modules/inventory/inventory/ajaxViewPart.php:614
+msgid "Last 7 days"
+msgstr "Попередні 7 днів"
+
+#: modules/inventory/inventory/ajaxViewPart.php:615
+msgid "Last 30 days"
+msgstr "Попередні 30 днів"
+
+#: modules/inventory/inventory/ajaxViewPart.php:616
+msgid "All"
+msgstr "Всі"
+
+#: modules/inventory/inventory/ajaxViewPart.php:617
+msgid "Service Pack"
+msgstr "Обслуговувальний пакунок (SP)"
+
+#: modules/inventory/inventory/ajaxViewPart.php:618
+msgid "Windows Key"
+msgstr "Ключ Windows"
+
+#: modules/inventory/inventory/ajaxViewPart.php:619
+msgid "Domain"
+msgstr "Домен"
+
+#: modules/inventory/inventory/ajaxViewPart.php:620
+#: modules/inventory/inventory/i18n_labels.php:147
+msgid "State"
+msgstr "Стан"
+
+#: modules/inventory/inventory/ajaxViewPart.php:621
+msgid "Unknown"
+msgstr "Невідомий"
+
+#: modules/inventory/inventory/ajaxViewPart.php:622
+msgid "Inventory Number"
+msgstr "Обліковий номер"
+
+#: modules/inventory/inventory/ajaxViewPart.php:624
+msgid "Enabled"
+msgstr "Увімкнено"
+
+#: modules/inventory/inventory/ajaxViewPart.php:625
+msgid "Up-to-date"
+msgstr "Найновіший"
+
+#: modules/inventory/inventory/EditEntity.php:45
+msgid "The entity has not been updated."
+msgstr "Запис не було оновлено."
+
+#: modules/inventory/inventory/EditEntity.php:49
+msgid "Edit entity"
+msgstr "Редагувати запис"
+
+#: modules/inventory/inventory/ajaxEntityList.php:51
+#: modules/inventory/inventory/ajaxEntityRules.php:52
+msgid "No entry found"
+msgstr "Записів не знайдено"
+
+#: modules/inventory/inventory/ajaxEntityList.php:56
+msgid "Entity name"
+msgstr "Назва запису"
+
+#: modules/inventory/inventory/ajaxEntityList.php:63
+#: modules/inventory/inventory/ajaxEntityList.php:64
+msgid "Edit Entity"
+msgstr "Редагувати запис"
+
+#: modules/inventory/inventory/addEntity.php:42
+msgid "Add entity"
+msgstr "Додати запис"
+
+#: modules/inventory/inventory/addEntity.php:64
+msgid "Parent entity"
+msgstr "Батьківський запис"
+
+#: modules/inventory/inventory/ajaxIncoming.php:78
+msgid "Computer name"
+msgstr "Назва комп'ютера"
+
+#: modules/inventory/inventory/ajaxIncoming.php:80
+msgid "Inventory date"
+msgstr "Дата обліку"
+
+#: modules/inventory/inventory/ajaxIncoming.php:82
+msgid "New computer"
+msgstr "Новий комп'ютер"
+
+#: modules/inventory/inventory/ajaxIncoming.php:91
+msgid "Elements"
+msgstr "Елементи"
+
+#: modules/inventory/inventory/incoming.php:46
+msgid "Incoming Inventories"
+msgstr "Вхідні обліки"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last week"
+msgstr "Попереднього тижня"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last month"
+msgstr "Попередній місяць"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last quarter"
+msgstr "Попередній квартал"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last semester"
+msgstr "Попередній семестр"
+
+#: modules/inventory/inventory/incoming.php:56
+msgid "Last year"
+msgstr "Попередній рік"
+
+#: modules/inventory/inventory/incoming.php:67
+msgid "Period"
+msgstr "Період"
+
+#: modules/inventory/inventory/incoming.php:72
+msgid "Only new computers"
+msgstr "Лише нові комп'ютери"
+
+#: modules/inventory/inventory/incoming.php:73
+msgid "Load only the computers which were new when the inventory was made"
+msgstr ""
+"Завантажити дані лише для тих комп'ютерів, які були новими на час проведення"
+" обліку"
+
+#: modules/inventory/inventory/inventory_diff.php:48
+msgid "Inventory changes"
+msgstr "Зміни у обліку"
+
+#: modules/inventory/inventory/inventory_diff.php:75
+#: modules/inventory/inventory/inventory_diff.php:100
+msgid "Element"
+msgstr "Елемент"
+
+#: modules/inventory/inventory/inventory_diff.php:114
+msgid "Added elements"
+msgstr "Додано елементи"
+
+#: modules/inventory/inventory/inventory_diff.php:123
+msgid "Removed elements"
+msgstr "Вилучено елементи"
+
+#: modules/inventory/inventory/view.php:44
+#, php-format
+msgid "Inventory of %s"
+msgstr "Облік %s"
+
+#: modules/inventory/inventory/entityRules.php:28
+#: modules/inventory/inventory/localComputersSidebar.php:29
+msgid "Entity rules"
+msgstr "Правила записів"
+
+#: modules/inventory/inventory/entityRules.php:35
+msgid "All rules"
+msgstr "Усі правила"
+
+#: modules/inventory/inventory/tabs.php:63
+#: modules/inventory/inventory/tabs.php:71
+msgid "This client has been registered in pull mode"
+msgstr "Клієнт зареєстровано у режимі отримання"
+
+#: modules/inventory/inventory/tabs.php:65
+msgid "Leave pull mode"
+msgstr "Полишити режим отримання"
+
+#: modules/inventory/inventory/tabs.php:77
+#, php-format
+msgid "%s's inventory"
+msgstr "Облік %s"
+
+#: modules/inventory/inventory/tabs.php:79
+#, php-format
+msgid "%s's content inventory"
+msgstr "Облік вмісту %s"
+
+#: modules/inventory/inventory/tabs.php:106
+msgid "History"
+msgstr "Журнал"
+
+#: modules/inventory/inventory/tabs.php:117
+msgid "Get XLS Report"
+msgstr "Отримати звіт у XLS"
+
+#: modules/inventory/inventory/infos.php:33
+msgid "Additionnal informations"
+msgstr "Додаткова інформація"
+
+#: modules/inventory/inventory/infos.php:43
+msgid "First apparition"
+msgstr "Перша поява"
+
+#: modules/inventory/inventory/i18n_labels.php:26
+msgid "Application"
+msgstr "Програма"
+
+#: modules/inventory/inventory/i18n_labels.php:27
+msgid "Availability"
+msgstr "Доступність"
+
+#: modules/inventory/inventory/i18n_labels.php:29
+msgid "Bios Vendor"
+msgstr "Постачальник BIOS"
+
+#: modules/inventory/inventory/i18n_labels.php:30
+msgid "Bios Version"
+msgstr "Версія BIOS"
+
+#: modules/inventory/inventory/i18n_labels.php:31
+msgid "Build"
+msgstr "Збірка"
+
+#: modules/inventory/inventory/i18n_labels.php:32
+msgid "Bus"
+msgstr "Канал"
+
+#: modules/inventory/inventory/i18n_labels.php:33
+msgid "Buy Date"
+msgstr "Дата придбання"
+
+#: modules/inventory/inventory/i18n_labels.php:34
+msgid "Buy Value"
+msgstr "Вартість купівлі"
+
+#: modules/inventory/inventory/i18n_labels.php:35
+msgid "Capacity"
+msgstr "Місткість"
+
+#: modules/inventory/inventory/i18n_labels.php:36
+msgid "Caption"
+msgstr "Підпис"
+
+#: modules/inventory/inventory/i18n_labels.php:37
+msgid "Card Type"
+msgstr "Тип картки"
+
+#: modules/inventory/inventory/i18n_labels.php:38
+msgid "Chassis"
+msgstr "Апаратний блок"
+
+#: modules/inventory/inventory/i18n_labels.php:39
+msgid "Chip Serial"
+msgstr "Серійний номер чипу"
+
+#: modules/inventory/inventory/i18n_labels.php:40
+msgid "Chip Vendor"
+msgstr "Виробник чипу"
+
+#: modules/inventory/inventory/i18n_labels.php:41
+msgid "Chipset"
+msgstr "Набір мікросхем"
+
+#: modules/inventory/inventory/i18n_labels.php:42
+msgid "Chipset Type"
+msgstr "Тип набору мікросхем"
+
+#: modules/inventory/inventory/i18n_labels.php:43
+msgid "Class"
+msgstr "Клас"
+
+#: modules/inventory/inventory/i18n_labels.php:44
+msgid "Comments"
+msgstr "Коментарі"
+
+#: modules/inventory/inventory/i18n_labels.php:45
+msgid "Company"
+msgstr "Компанія"
+
+#: modules/inventory/inventory/i18n_labels.php:46
+msgid "Connector"
+msgstr "З'єднання"
+
+#: modules/inventory/inventory/i18n_labels.php:48
+msgid "Cpu Num"
+msgstr "К-ть процесорів"
+
+#: modules/inventory/inventory/i18n_labels.php:49
+msgid "Cpu Vendor"
+msgstr "Виробник процесора"
+
+#: modules/inventory/inventory/i18n_labels.php:50
+msgid "Custom Field"
+msgstr "Нетипове поле"
+
+#: modules/inventory/inventory/i18n_labels.php:51
+msgid "Cyl"
+msgstr "Цил"
+
+#: modules/inventory/inventory/i18n_labels.php:52
+msgid "DNS"
+msgstr "DNS"
+
+#: modules/inventory/inventory/i18n_labels.php:54
+msgid "Date Last Switch On"
+msgstr "Дата останнього вмикання"
+
+#: modules/inventory/inventory/i18n_labels.php:57
+msgid "Default Gateway"
+msgstr "Типовий шлюз"
+
+#: modules/inventory/inventory/i18n_labels.php:58
+msgid "Delivery Date"
+msgstr "Дата доставки"
+
+#: modules/inventory/inventory/i18n_labels.php:59
+msgid "Department"
+msgstr "Відділ"
+
+#: modules/inventory/inventory/i18n_labels.php:62
+msgid "Disk"
+msgstr "Диск"
+
+#: modules/inventory/inventory/i18n_labels.php:63
+msgid "Disk Size"
+msgstr "Розмір диска"
+
+#: modules/inventory/inventory/i18n_labels.php:65
+msgid "Drive Letter"
+msgstr "Літера диска"
+
+#: modules/inventory/inventory/i18n_labels.php:66
+msgid "Drive Type"
+msgstr "Тип пристрою"
+
+#: modules/inventory/inventory/i18n_labels.php:67
+msgid "Driver"
+msgstr "Драйвер"
+
+#: modules/inventory/inventory/i18n_labels.php:68
+msgid "Executable Size"
+msgstr "Розмір виконуваного файла"
+
+#: modules/inventory/inventory/i18n_labels.php:69
+msgid "Expanded Description"
+msgstr "Розширений опис"
+
+#: modules/inventory/inventory/i18n_labels.php:70
+msgid "Expanded Type"
+msgstr "Розширений тип"
+
+#: modules/inventory/inventory/i18n_labels.php:71
+msgid "Extended Description"
+msgstr "Розширений опис"
+
+#: modules/inventory/inventory/i18n_labels.php:72
+msgid "Field"
+msgstr "Поле"
+
+#: modules/inventory/inventory/i18n_labels.php:73
+msgid "File Count"
+msgstr "Кількість файлів"
+
+#: modules/inventory/inventory/i18n_labels.php:74
+msgid "File System"
+msgstr "Файлова система"
+
+#: modules/inventory/inventory/i18n_labels.php:75
+msgid "Flag"
+msgstr "Прапорець"
+
+#: modules/inventory/inventory/i18n_labels.php:76
+msgid "Form"
+msgstr "Форма"
+
+#: modules/inventory/inventory/i18n_labels.php:77
+msgid "Free Space"
+msgstr "Вільне місце"
+
+#: modules/inventory/inventory/i18n_labels.php:78
+msgid "Freq"
+msgstr "Част."
+
+#: modules/inventory/inventory/i18n_labels.php:80
+msgid "Func"
+msgstr "Функція"
+
+#: modules/inventory/inventory/i18n_labels.php:83
+msgid "Hardware Version"
+msgstr "Версія обладнання"
+
+#: modules/inventory/inventory/i18n_labels.php:84
+msgid "Head"
+msgstr "Голівка"
+
+#: modules/inventory/inventory/i18n_labels.php:85
+msgid "High Mem"
+msgstr "Верхня межа пам'яті"
+
+#: modules/inventory/inventory/i18n_labels.php:88
+msgid "Ip Address"
+msgstr "IP-адреса"
+
+#: modules/inventory/inventory/i18n_labels.php:89
+msgid "KEY"
+msgstr "КЛЮЧ"
+
+#: modules/inventory/inventory/i18n_labels.php:90
+msgid "Length"
+msgstr "Довжина"
+
+#: modules/inventory/inventory/i18n_labels.php:92
+msgid "Low Mem"
+msgstr "Нижня межа пам'яті"
+
+#: modules/inventory/inventory/i18n_labels.php:94
+msgid "MIB"
+msgstr "МіБ"
+
+#: modules/inventory/inventory/i18n_labels.php:95
+msgid "Mac Addr"
+msgstr "MAC-адреса"
+
+#: modules/inventory/inventory/i18n_labels.php:96
+#: modules/inventory/inventory/csv.php:67
+#: modules/inventory/inventory/csv.php:107
+msgid "Computer"
+msgstr "Комп'ютер"
+
+#: modules/inventory/inventory/i18n_labels.php:97
+msgid "Manuf"
+msgstr "Виробн."
+
+#: modules/inventory/inventory/i18n_labels.php:99
+msgid "Media"
+msgstr "Носій"
+
+#: modules/inventory/inventory/i18n_labels.php:101
+msgid "Misc Mem"
+msgstr "Інше щодо пам'яті"
+
+#: modules/inventory/inventory/i18n_labels.php:102
+msgid "Misc SMB"
+msgstr "Інше SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:104
+msgid "Modem"
+msgstr "Модем"
+
+#: modules/inventory/inventory/i18n_labels.php:109
+msgid "Num"
+msgstr "№"
+
+#: modules/inventory/inventory/i18n_labels.php:110
+msgid "Number"
+msgstr "Номер"
+
+#: modules/inventory/inventory/i18n_labels.php:111
+msgid "OS Serial Number"
+msgstr "Серійний номер ОС"
+
+#: modules/inventory/inventory/i18n_labels.php:112
+msgid "Os Installation Date"
+msgstr "Дата встановлення ОС"
+
+#: modules/inventory/inventory/i18n_labels.php:113
+msgid "Os Architecture"
+msgstr "Архітектура ОС"
+
+#: modules/inventory/inventory/i18n_labels.php:116
+msgid "Phone"
+msgstr "Телефон"
+
+#: modules/inventory/inventory/i18n_labels.php:117
+msgid "Point Type"
+msgstr "Тип точки"
+
+#: modules/inventory/inventory/i18n_labels.php:119
+msgid "Port Type"
+msgstr "Тип порту"
+
+#: modules/inventory/inventory/i18n_labels.php:121
+msgid "Processor Count"
+msgstr "Кількість процесорів"
+
+#: modules/inventory/inventory/i18n_labels.php:122
+msgid "Processor Frequency"
+msgstr "Частота процесора"
+
+#: modules/inventory/inventory/i18n_labels.php:123
+msgid "Processor Type"
+msgstr "Тип процесора"
+
+#: modules/inventory/inventory/i18n_labels.php:124
+msgid "Product Name"
+msgstr "Назва продукту"
+
+#: modules/inventory/inventory/i18n_labels.php:125
+msgid "Product Path"
+msgstr "Шлях продукту"
+
+#: modules/inventory/inventory/i18n_labels.php:126
+msgid "Product Version"
+msgstr "Версія продукту"
+
+#: modules/inventory/inventory/i18n_labels.php:127
+msgid "Ram Total"
+msgstr "Загалом оп. пам'яті"
+
+#: modules/inventory/inventory/i18n_labels.php:128
+msgid "Registered Company"
+msgstr "Зареєстрована компанія"
+
+#: modules/inventory/inventory/i18n_labels.php:129
+msgid "Registered Name"
+msgstr "Зареєстроване ім’я"
+
+#: modules/inventory/inventory/i18n_labels.php:130
+msgid "Resolution"
+msgstr "Роздільність"
+
+#: modules/inventory/inventory/i18n_labels.php:131
+msgid "Sector"
+msgstr "Сектор"
+
+#: modules/inventory/inventory/i18n_labels.php:132
+msgid "Serial"
+msgstr "Послідовний"
+
+#: modules/inventory/inventory/i18n_labels.php:134
+#: modules/inventory/inventory/slot.php:27
+msgid "Slot"
+msgstr "Слот"
+
+#: modules/inventory/inventory/i18n_labels.php:135
+msgid "Slot Count"
+msgstr "Кількість слотів"
+
+#: modules/inventory/inventory/i18n_labels.php:136
+msgid "Smb Manufacturer"
+msgstr "Виробник SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:137
+msgid "Smb Product"
+msgstr "Продукт SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:138
+msgid "Smb Serial"
+msgstr "Серійний номер SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:139
+msgid "Smb Type"
+msgstr "Тип SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:140
+msgid "Smb Version"
+msgstr "Версія SMB"
+
+#: modules/inventory/inventory/i18n_labels.php:143
+msgid "Speed"
+msgstr "Швидкість"
+
+#: modules/inventory/inventory/i18n_labels.php:144
+msgid "Stamp"
+msgstr "Штамп"
+
+#: modules/inventory/inventory/i18n_labels.php:145
+msgid "Standard Description"
+msgstr "Опис стандарту"
+
+#: modules/inventory/inventory/i18n_labels.php:146
+msgid "Standard Type"
+msgstr "Тип стандарту"
+
+#: modules/inventory/inventory/i18n_labels.php:149
+msgid "Subnet Mask"
+msgstr "Маска підмережі"
+
+#: modules/inventory/inventory/i18n_labels.php:150
+msgid "Support End"
+msgstr "Строк підтримки"
+
+#: modules/inventory/inventory/i18n_labels.php:151
+msgid "Swap Space"
+msgstr "Резервна пам’ять"
+
+#: modules/inventory/inventory/i18n_labels.php:152
+msgid "System"
+msgstr "Система"
+
+#: modules/inventory/inventory/i18n_labels.php:153
+msgid "Time"
+msgstr "Час"
+
+#: modules/inventory/inventory/i18n_labels.php:154
+msgid "Total Mem"
+msgstr "Загалом пам'яті"
+
+#: modules/inventory/inventory/i18n_labels.php:155
+msgid "Total Space"
+msgstr "Загалом місця"
+
+#: modules/inventory/inventory/i18n_labels.php:157
+msgid "Type Machine"
+msgstr "Тип машини"
+
+#: modules/inventory/inventory/i18n_labels.php:158
+msgid "Used"
+msgstr "Використано"
+
+#: modules/inventory/inventory/i18n_labels.php:160
+msgid "VRAM Size"
+msgstr "Розмір VRAM"
+
+#: modules/inventory/inventory/i18n_labels.php:164
+msgid "VolumeName"
+msgstr "Назва тому"
+
+#: modules/inventory/inventory/i18n_labels.php:165
+msgid "WarrantyEnd"
+msgstr "Гарантійний строк"
+
+#: modules/inventory/inventory/i18n_labels.php:166
+msgid "Workgroup"
+msgstr "Робоча група"
+
+#: modules/inventory/inventory/i18n_labels.php:167
+msgid "WorkingDate"
+msgstr "Робоча дата"
+
+#: modules/inventory/inventory/createStaticGroup.php:30
+#, php-format
+msgid "Latest inventory is less than %s days at %s"
+msgstr "Останній облік було здійснено менше за %s днів тому на %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:33
+#, php-format
+msgid "Latest inventory is more than %s days at %s"
+msgstr "Останній облік було здійснено більше за %s днів тому на %s"
+
+#: modules/inventory/inventory/createStaticGroup.php:43
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Список комп'ютерів обрізано до %d записів"
+
+#: modules/inventory/inventory/deleteEntity.php:46
+msgid "The entity has not been deleted."
+msgstr "Запис не було вилучено."
+
+#: modules/inventory/inventory/deleteEntity.php:52
+msgid "Delete entity"
+msgstr "Вилучити запис"
+
+#: modules/inventory/inventory/history.php:66
+msgid "View differences since previous inventory"
+msgstr "Переглянути відмінності з часу попереднього обліку"
+
+#: modules/inventory/inventory/history.php:75
+msgid "Inventory Date"
+msgstr "Дата обліку"
+
+#: modules/inventory/inventory/localComputersSidebar.php:27
+msgid "Entities"
+msgstr "Записи"
+
+#: modules/inventory/inventory/localComputersSidebar.php:28
+msgid "Add an entity"
+msgstr "Додати запис"
+
+#: modules/inventory/inventory/localComputersSidebar.php:30
+msgid "Add entity rule"
+msgstr "Додати правило записів"
+
+#: modules/inventory/inventory/body.php:40
+msgid "Bios list"
+msgstr "Список BIOS"
+
+#: modules/inventory/inventory/body.php:42
+msgid "Hardware and OS information list"
+msgstr "Список відомостей щодо обладнання і ОС"
+
+#: modules/inventory/inventory/body.php:43
+msgid "Software list"
+msgstr "Список програмного забезпечення"
+
+#: modules/inventory/inventory/body.php:44
+msgid "Network card and configuration list"
+msgstr "Список налаштувань і мережевих карток"
+
+#: modules/inventory/inventory/body.php:45
+msgid "Controller list"
+msgstr "Список контролерів"
+
+#: modules/inventory/inventory/body.php:46
+msgid "Registry keys/values list"
+msgstr "Список ключів і значень реєстру"
+
+#: modules/inventory/inventory/body.php:47
+msgid "Drive list"
+msgstr "Список дисків"
+
+#: modules/inventory/inventory/body.php:48
+msgid "Input device list"
+msgstr "Список пристроїв введення"
+
+#: modules/inventory/inventory/body.php:49
+msgid "Memory module list"
+msgstr "Список модулів пам'яті"
+
+#: modules/inventory/inventory/body.php:50
+msgid "Monitor list"
+msgstr "Список моніторів"
+
+#: modules/inventory/inventory/body.php:51
+msgid "Port list"
+msgstr "Список портів"
+
+#: modules/inventory/inventory/body.php:52
+msgid "Printer list"
+msgstr "Список принтерів"
+
+#: modules/inventory/inventory/body.php:53
+msgid "Sound list"
+msgstr "Список звукових пристроїв"
+
+#: modules/inventory/inventory/body.php:54
+msgid "Storage medium list"
+msgstr "Список носіїв даних"
+
+#: modules/inventory/inventory/body.php:55
+msgid "Video card list"
+msgstr "Список відеокарток"
+
+#: modules/inventory/inventory/entityList.php:27
+msgid "Entity list"
+msgstr "Список записів"
+
+#: modules/inventory/inventory/entityList.php:33
+msgid "All entities"
+msgstr "Усі записи"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:63
+msgid "Rule"
+msgstr "Правило"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:64
+msgid "actif"
+msgstr "actif"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:65
+msgid "entitie"
+msgstr "entitie"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:66
+msgid "aggregator"
+msgstr "агрегатор"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:67
+msgid "lvalue"
+msgstr "lvalue"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:68
+msgid "operator"
+msgstr "оператор"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:69
+msgid "rvalue"
+msgstr "rvalue"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:72
+msgid "Edit rule"
+msgstr "Редагувати правило"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:73
+msgid "Move rule up"
+msgstr "Пересунути правило вище"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:74
+msgid "Move rule down"
+msgstr "Пересунути правило нижче"
+
+#: modules/inventory/inventory/ajaxEntityRules.php:75
+msgid "Delete rule"
+msgstr "Вилучити правило"

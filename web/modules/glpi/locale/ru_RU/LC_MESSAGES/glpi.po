@@ -8,19 +8,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #: modules/glpi/infoPackage.inc.php:32
 msgid "GLPI Inventory"
-msgstr ""
+msgstr "GLPI Инвентарь"
 
 #: modules/glpi/infoPackage.inc.php:38
 msgid "Glpi"
@@ -137,7 +137,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:189
 msgid "Inventory (GLPI) on machine"
-msgstr "Инвентаризация (GLPI) на машине"
+msgstr " (GLPI)  "
 
 #: modules/glpi/glpi/deleteEntityRule.php:31
 msgid "The entity rule has been deleted successfully."
@@ -164,13 +164,13 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:229 modules/glpi/glpi/addEntity.php:78
 #: modules/glpi/glpi/addLocation.php:77
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: modules/glpi/glpi/addEntityRule.php:77
 #: modules/glpi/glpi/ajaxViewPart.php:232 modules/glpi/glpi/addEntity.php:100
 #: modules/glpi/glpi/addLocation.php:101
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #: modules/glpi/glpi/addEntityRule.php:86
 msgid "Aggregator"
@@ -245,7 +245,7 @@ msgstr ""
 #: modules/glpi/glpi/addEntityRule.php:138
 #: modules/glpi/includes/publicFunc.php:142
 msgid "Remove"
-msgstr ""
+msgstr "Переместить"
 
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
@@ -290,7 +290,7 @@ msgstr ""
 #: modules/glpi/glpi/createBackupStaticGroup.php:85
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "     %d  "
 
 #: modules/glpi/glpi/ajaxLocationList.php:51
 #: modules/glpi/glpi/ajaxEntityList.php:51
@@ -306,7 +306,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:250
 #: modules/glpi/glpi/ajaxEntityList.php:68
 msgid "Comment"
-msgstr ""
+msgstr "Комментарии"
 
 #: modules/glpi/glpi/ajaxLocationList.php:70
 #: modules/glpi/glpi/addLocation.php:52
@@ -354,7 +354,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:189
 #: modules/glpi/glpi/ajaxViewPart.php:249
 msgid "Memory"
-msgstr ""
+msgstr "Память"
 
 #: modules/glpi/glpi/ajaxViewPart.php:190
 msgid "Hard Drives"
@@ -386,11 +386,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:210
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/glpi/glpi/ajaxViewPart.php:211
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/glpi/glpi/ajaxViewPart.php:213
 msgid "Network Type"
@@ -402,7 +402,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:215
 msgid "IP"
-msgstr ""
+msgstr "IP"
 
 #: modules/glpi/glpi/ajaxViewPart.php:216
 msgid "Netmask"
@@ -410,11 +410,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:217
 msgid "Gateway"
-msgstr ""
+msgstr "Шлюз"
 
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
-msgstr ""
+msgstr "Устройство"
 
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
@@ -427,7 +427,7 @@ msgstr ""
 #: modules/glpi/glpi/ajaxViewPart.php:221
 #: modules/glpi/glpi/ajaxViewPart.php:246
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 #: modules/glpi/glpi/ajaxViewPart.php:222
 msgid "Free Size"
@@ -455,15 +455,15 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:228
 msgid "Vendor"
-msgstr ""
+msgstr "Производитель"
 
 #: modules/glpi/glpi/ajaxViewPart.php:230
 msgid "Version"
-msgstr ""
+msgstr "Версия"
 
 #: modules/glpi/glpi/ajaxViewPart.php:231
 msgid "Computer Name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/glpi/glpi/ajaxViewPart.php:233
 msgid "Entity (Location)"
@@ -475,7 +475,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Location"
-msgstr ""
+msgstr "Местоположение"
 
 #: modules/glpi/glpi/ajaxViewPart.php:236
 msgid "Last Logged User"
@@ -499,11 +499,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:241
 msgid "Model"
-msgstr ""
+msgstr "Модель"
 
 #: modules/glpi/glpi/ajaxViewPart.php:242
 msgid "Manufacturer"
-msgstr ""
+msgstr "Производитель"
 
 #: modules/glpi/glpi/ajaxViewPart.php:243
 msgid "Serial Number"
@@ -511,11 +511,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:244
 msgid "Frequency"
-msgstr ""
+msgstr "Частота"
 
 #: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: modules/glpi/glpi/ajaxViewPart.php:247
 msgid "Bandwidth"
@@ -527,11 +527,11 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:251
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: modules/glpi/glpi/ajaxViewPart.php:252
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #: modules/glpi/glpi/ajaxViewPart.php:253
 msgid "Category"
@@ -539,7 +539,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:254
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #: modules/glpi/glpi/ajaxViewPart.php:255 modules/glpi/includes/html.php:57
 msgid "Today"
@@ -571,7 +571,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:263
 msgid "State"
-msgstr ""
+msgstr "Состояние"
 
 #: modules/glpi/glpi/ajaxViewPart.php:264
 msgid "Unknown"
@@ -587,7 +587,7 @@ msgstr ""
 
 #: modules/glpi/glpi/ajaxViewPart.php:268
 msgid "Up-to-date"
-msgstr ""
+msgstr "Своевременный"
 
 #: modules/glpi/glpi/ajaxViewPart.php:301
 msgid "Invalid hostname"
@@ -679,7 +679,7 @@ msgstr "аппаратное обеспечение"
 
 #: modules/glpi/glpi/tabs.php:80
 msgid "Storage"
-msgstr ""
+msgstr "Хранение"
 
 #: modules/glpi/glpi/tabs.php:81
 msgid "Network"
@@ -687,7 +687,7 @@ msgstr "Сеть"
 
 #: modules/glpi/glpi/tabs.php:82
 msgid "Software"
-msgstr ""
+msgstr "ПрограммноеОбеспечение"
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
@@ -695,7 +695,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:84
 msgid "History"
-msgstr ""
+msgstr "История"
 
 #: modules/glpi/glpi/tabs.php:85
 #: modules/glpi/includes/panels/antivirus.inc.php:30
@@ -704,7 +704,7 @@ msgstr ""
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "Реестр"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
@@ -794,7 +794,7 @@ msgstr ""
 
 #: modules/glpi/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Компьютеры"
 
 #: modules/glpi/includes/panels/inventory.inc.php:44
 msgid "< %s days: %percent% (%d)"

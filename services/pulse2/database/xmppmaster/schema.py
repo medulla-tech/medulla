@@ -90,6 +90,7 @@ class Machines(Base, XmppMasterDBObj):
     hostname = Column(String(45), nullable=False)
     archi= Column(String(45), nullable=False)
     uuid_inventorymachine= Column(String(45), nullable=False)
+    ippublic = Column(String(20))
     ip_xmpp = Column(String(45))
     subnetxmpp = Column(String(45))
     macaddress = Column(String(45))
@@ -138,6 +139,7 @@ class RelayServer(Base, XmppMasterDBObj):
     latitude = Column(String(45))
     enabled=  Column(Boolean, unique=False)
     classutil = Column(String(10))
+    moderelayserver = Column(String(7))
 
 class Regles(Base, XmppMasterDBObj):
     # ====== Table name =========================
@@ -192,6 +194,20 @@ class Has_guacamole(Base, XmppMasterDBObj):
     idguacamole = Column(Integer)
     idinventory = Column(Integer)
     protocol   = Column(String(10))
+
+class Has_cluster_ars(Base, XmppMasterDBObj):
+    ## ====== Table name =========================
+    __tablename__ = 'has_cluster_ars'
+    ## ====== ForeignKey =============================
+    id_ars = Column(Integer)
+    id_cluster = Column(Integer)
+
+class Cluster_ars(Base, XmppMasterDBObj):
+    ## ====== Table name =========================
+    __tablename__ = 'cluster_ars'
+    ## ====== ForeignKey =============================
+    name = Column(String(40))
+    description = Column(String(255))
 
 class Version(Base, XmppMasterDBObj):
     # ====== Table name =========================

@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
@@ -148,7 +148,7 @@ msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:92
 msgid "Csv's export"
-msgstr "Экспорт csv"
+msgstr " csv"
 
 #: modules/inventory/infoPackage.inc.php:96
 msgid "Create static group from dashboard"
@@ -168,7 +168,7 @@ msgstr "Вкладке Оборудование для группы"
 
 #: modules/inventory/infoPackage.inc.php:136
 msgid "Bios tab for a group"
-msgstr "Вкладке Bios для группы"
+msgstr " Bios  "
 
 #: modules/inventory/infoPackage.inc.php:139
 msgid "Summary tab for a group"
@@ -208,7 +208,7 @@ msgstr ""
 
 #: modules/inventory/infoPackage.inc.php:166
 msgid "Bios tab for a computer in a group"
-msgstr "Вкладка Bios для компьютера в группе"
+msgstr " Bios    "
 
 #: modules/inventory/infoPackage.inc.php:169
 msgid "Software tab for a computer in a group"
@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "Переместить"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -313,7 +313,7 @@ msgstr "Обновить"
 
 #: modules/inventory/includes/panels/inventory.inc.php:30
 msgid "Computers"
-msgstr ""
+msgstr "Компьютеры"
 
 #: modules/inventory/includes/panels/inventory.inc.php:43
 msgid "Create a group"
@@ -561,11 +561,11 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:569
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/inventory/inventory/ajaxViewPart.php:570
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/inventory/inventory/ajaxViewPart.php:571
 #: modules/inventory/inventory/ajaxViewPart.php:587
@@ -651,7 +651,7 @@ msgstr "Версия"
 
 #: modules/inventory/inventory/ajaxViewPart.php:589
 msgid "Computer Name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/inventory/inventory/ajaxViewPart.php:590
 #: modules/inventory/inventory/i18n_labels.php:60
@@ -726,7 +726,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:608
 msgid "Comment"
-msgstr ""
+msgstr "Комментарии"
 
 #: modules/inventory/inventory/ajaxViewPart.php:610
 #: modules/inventory/inventory/i18n_labels.php:159
@@ -739,7 +739,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:612
 msgid "Action"
-msgstr ""
+msgstr "Действие"
 
 #: modules/inventory/inventory/ajaxViewPart.php:613
 msgid "Today"
@@ -788,7 +788,7 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxViewPart.php:625
 msgid "Up-to-date"
-msgstr ""
+msgstr "Своевременный"
 
 #: modules/inventory/inventory/EditEntity.php:45
 msgid "The entity has not been updated."
@@ -870,9 +870,7 @@ msgstr "Только новые компьютеры"
 
 #: modules/inventory/inventory/incoming.php:73
 msgid "Load only the computers which were new when the inventory was made"
-msgstr ""
-"Загрузить только те компьютеры, которые были новыми на момент завершения "
-"инвентаризации"
+msgstr "   ,       "
 
 #: modules/inventory/inventory/inventory_diff.php:48
 msgid "Inventory changes"
@@ -894,7 +892,7 @@ msgstr "Удаленные элементы"
 #: modules/inventory/inventory/view.php:44
 #, php-format
 msgid "Inventory of %s"
-msgstr "Инвентаризация %s"
+msgstr " %s"
 
 #: modules/inventory/inventory/entityRules.php:28
 #: modules/inventory/inventory/localComputersSidebar.php:29
@@ -917,12 +915,12 @@ msgstr ""
 #: modules/inventory/inventory/tabs.php:77
 #, php-format
 msgid "%s's inventory"
-msgstr "Инвентаризация %s"
+msgstr " %s"
 
 #: modules/inventory/inventory/tabs.php:79
 #, php-format
 msgid "%s's content inventory"
-msgstr "Инвентаризация содержимого %s"
+msgstr "  %s"
 
 #: modules/inventory/inventory/tabs.php:106
 msgid "History"
@@ -1380,7 +1378,7 @@ msgstr ""
 #: modules/inventory/inventory/createStaticGroup.php:43
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "     %d  "
 
 #: modules/inventory/inventory/deleteEntity.php:46
 msgid "The entity has not been deleted."
@@ -1412,7 +1410,7 @@ msgstr ""
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
-msgstr "Список Bios "
+msgstr " Bios "
 
 #: modules/inventory/inventory/body.php:42
 msgid "Hardware and OS information list"
@@ -1432,7 +1430,7 @@ msgstr "Список контроллера"
 
 #: modules/inventory/inventory/body.php:46
 msgid "Registry keys/values list"
-msgstr "Список ключей реестра/значений"
+msgstr "  /"
 
 #: modules/inventory/inventory/body.php:47
 msgid "Drive list"

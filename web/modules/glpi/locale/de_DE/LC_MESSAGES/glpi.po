@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -28,7 +28,7 @@ msgstr "Glpi"
 
 #: modules/glpi/infoPackage.inc.php:43
 msgid "Glpi Dashboard"
-msgstr "Glpi Übersichtstafel"
+msgstr "Glpi bersichtstafel"
 
 #: modules/glpi/infoPackage.inc.php:55
 msgid "Create static group from dashboard widgets (GLPI)"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:85
 msgid "Entities"
-msgstr ""
+msgstr "Entitäten"
 
 #: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
 msgid "Entities (ajax)"
@@ -157,7 +157,7 @@ msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:67
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: modules/glpi/glpi/addEntityRule.php:72
 #: modules/glpi/glpi/ajaxViewPart.php:212
@@ -245,7 +245,7 @@ msgstr ""
 #: modules/glpi/glpi/addEntityRule.php:138
 #: modules/glpi/includes/publicFunc.php:142
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
@@ -276,7 +276,7 @@ msgstr "Antivirus Status ist OK auf %s"
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:33
 #, php-format
 msgid "Antivirus is not running or not up-to-date at %s"
-msgstr "Antivirus läuft nicht oder nicht aktuell auf %s"
+msgstr "Antivirus luft nicht oder nicht aktuell auf %s"
 
 #: modules/glpi/glpi/createAntivirusStaticGroup.php:36
 #, php-format
@@ -296,7 +296,7 @@ msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
 msgid "No entry found"
-msgstr ""
+msgstr "Kein Eintrag gefunden"
 
 #: modules/glpi/glpi/ajaxLocationList.php:66
 msgid "Location name"
@@ -332,7 +332,7 @@ msgstr "Wert"
 
 #: modules/glpi/glpi/ajaxViewPart.php:143
 msgid "No record found for this period."
-msgstr "Keine Aufzeichnung für diese Periode gefunden."
+msgstr "Keine Aufzeichnung fr diese Periode gefunden."
 
 #: modules/glpi/glpi/ajaxViewPart.php:146
 msgid "Unable to detect any Antivirus software on this machine."
@@ -417,7 +417,7 @@ msgstr "Gateway"
 
 #: modules/glpi/glpi/ajaxViewPart.php:218
 msgid "Device"
-msgstr "Gerät"
+msgstr "Gert"
 
 #: modules/glpi/glpi/ajaxViewPart.php:219
 msgid "Mount Point"
@@ -430,11 +430,11 @@ msgstr "Dateisystem"
 #: modules/glpi/glpi/ajaxViewPart.php:221
 #: modules/glpi/glpi/ajaxViewPart.php:246
 msgid "Size"
-msgstr "Größe"
+msgstr "Gre"
 
 #: modules/glpi/glpi/ajaxViewPart.php:222
 msgid "Free Size"
-msgstr "Freie Größe"
+msgstr "Freie Gre"
 
 #: modules/glpi/glpi/ajaxViewPart.php:223
 msgid "Supplier"
@@ -474,7 +474,7 @@ msgstr "Einheit (Ort)"
 
 #: modules/glpi/glpi/ajaxViewPart.php:234
 msgid "Entity"
-msgstr "Entität"
+msgstr "Entitt"
 
 #: modules/glpi/glpi/ajaxViewPart.php:235
 msgid "Location"
@@ -514,7 +514,7 @@ msgstr "Seriennummer"
 
 #: modules/glpi/glpi/ajaxViewPart.php:244
 msgid "Frequency"
-msgstr "Häufigkeit"
+msgstr "Hufigkeit"
 
 #: modules/glpi/glpi/ajaxViewPart.php:245
 msgid "Type"
@@ -594,7 +594,7 @@ msgstr "Up-to-date"
 
 #: modules/glpi/glpi/ajaxViewPart.php:301
 msgid "Invalid hostname"
-msgstr "Ungültiger Hostname"
+msgstr "Ungltiger Hostname"
 
 #: modules/glpi/glpi/ajaxEntityList.php:66
 msgid "Entity name"
@@ -690,7 +690,7 @@ msgstr "Netzwerk"
 
 #: modules/glpi/glpi/tabs.php:82
 msgid "Software"
-msgstr ""
+msgstr "Software"
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
@@ -707,11 +707,11 @@ msgstr "Antivirus"
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "Registry"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
-msgstr ""
+msgstr "XLS-Bericht erhalten"
 
 #: modules/glpi/glpi/createStaticGroup.php:30
 #, php-format
@@ -789,7 +789,7 @@ msgstr "OK: %percent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:42
 msgid "Not running or not up-to-date: %percent% (%d)"
-msgstr "Läuft nicht oder ist nicht aktuell: %percent% (%d)"
+msgstr "Luft nicht oder ist nicht aktuell: %percent% (%d)"
 
 #: modules/glpi/includes/panels/antivirus.inc.php:43
 msgid "No antivirus found: %percent% (%d)"

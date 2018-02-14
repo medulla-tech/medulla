@@ -22,7 +22,7 @@ AC_PREREQ(2.59)
 
 dnl autoconf initialization
 define([project], [pulse2])
-AC_INIT(project, [4.1], [http://www.siveo.org])
+AC_INIT(project, [4.2], [http://www.siveo.org])
 
 AC_CANONICAL_BUILD
 AC_CANONICAL_HOST
@@ -126,21 +126,6 @@ AC_ARG_ENABLE([conf-backup],
 AM_CONDITIONAL([ENABLE_CONF_BACKUP], [test "$enable_conf_backup" = "yes"])
 
 dnl
-dnl --disable-wol
-dnl   Fetch and compile wake-on-lan tool (3rd party)
-dnl
-if test "x$enable_packager_mode" = "xno"; then
-    AC_ARG_ENABLE([wol],
-                  [AS_HELP_STRING([--disable-wol],
-                                  [Disable wake-on-lan tool (3rd party) @<:@default=enable@:>@])],
-                  [],
-                  [enable_wol="yes"])
-else
-    enable_wol=no
-fi
-AM_CONDITIONAL([ENABLE_WOL], [test "$enable_wol" = "yes"])
-
-dnl
 dnl --with-examples-dir
 dnl   Set path to configuration files examples dir
 dnl   Default to DOCDIR/examples
@@ -164,7 +149,6 @@ AC_CONFIG_FILES([services/conf/Makefile])
 AC_CONFIG_FILES([services/conf/plugins/Makefile])
 AC_CONFIG_FILES([services/conf/pulse2/Makefile])
 AC_CONFIG_FILES([services/init.d/Makefile])
-AC_CONFIG_FILES([services/3rd_party/Makefile])
 AC_CONFIG_FILES([services/clients/Makefile])
 AC_CONFIG_FILES([services/clients/win32/Makefile])
 AC_CONFIG_FILES([web/Makefile])
@@ -177,7 +161,6 @@ dnl write all stuff
 AC_OUTPUT
 
 dnl Fetch 3rd-party sources
-make -C services/3rd_party configure
 make -C doc DocumentConverter.py
 
 dnl Warn user sysconfdir is not /etc, if necessary.

@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -42,7 +42,7 @@ msgstr "フルナンバー"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:93
 msgid "Full size (GB)"
-msgstr "フルサイズ (GB)"
+msgstr " (GB)"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:94
 msgid "incr. number"
@@ -69,7 +69,7 @@ msgid "Stop backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:101
-#: modules/backuppc/backuppc/hostSummary.php:163
+#: modules/backuppc/backuppc/hostSummary.php:263
 msgid "View errors"
 msgstr "エラー表示"
 
@@ -91,7 +91,7 @@ msgstr "選択したプロファイルの削除に失敗しました。"
 
 #: modules/backuppc/backuppc/deleteProfile.php:58
 msgid "Error : Default profiles cannot be deleted"
-msgstr "エラー: デフォルトプロファイルは削除できません"
+msgstr ": "
 
 #: modules/backuppc/backuppc/deleteProfile.php:60
 msgid "Delete this profile"
@@ -102,47 +102,47 @@ msgid "Error while retrieving status."
 msgstr "ステータス検索中にエラーが発生しました。"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
-#: modules/backuppc/backuppc/hostSummary.php:84
+#: modules/backuppc/backuppc/hostSummary.php:173
 msgid "No ping response"
-msgstr "Ping に応答がありません"
+msgstr "Ping "
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
-#: modules/backuppc/backuppc/hostSummary.php:85
+#: modules/backuppc/backuppc/hostSummary.php:174
 msgid "Backup failed"
 msgstr "バックアップが失敗しました"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:45
-#: modules/backuppc/backuppc/hostSummary.php:86
+#: modules/backuppc/backuppc/hostSummary.php:175
 msgid "Restore failed"
 msgstr "リストアが失敗しました"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:46
-#: modules/backuppc/backuppc/hostSummary.php:87
+#: modules/backuppc/backuppc/hostSummary.php:176
 msgid "Backup up to date"
 msgstr "最新バックアップ"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
-#: modules/backuppc/backuppc/hostSummary.php:88
+#: modules/backuppc/backuppc/hostSummary.php:177
 msgid "Restore done"
 msgstr "リストアが完了しました"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
-#: modules/backuppc/backuppc/hostSummary.php:89
+#: modules/backuppc/backuppc/hostSummary.php:178
 msgid "This computer has never been backed up"
 msgstr "このコンピューターはバックアップされていません"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
-#: modules/backuppc/backuppc/hostSummary.php:90
+#: modules/backuppc/backuppc/hostSummary.php:179
 msgid "Idle"
 msgstr "待機"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
-#: modules/backuppc/backuppc/hostSummary.php:91
+#: modules/backuppc/backuppc/hostSummary.php:180
 msgid "Cancelled by user"
 msgstr "ユーザーによってキャンセルされました"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
-#: modules/backuppc/backuppc/hostSummary.php:92
+#: modules/backuppc/backuppc/hostSummary.php:181
 msgid "Backup in progress"
 msgstr "バックアップ中"
 
@@ -170,7 +170,7 @@ msgstr "すべて"
 #: modules/backuppc/backuppc/fileSearch.php:95
 #: modules/backuppc/backuppc/BrowseBackups.php:59
 msgid "Backup#"
-msgstr "バックアップ#"
+msgstr "#"
 
 #: modules/backuppc/backuppc/fileSearch.php:105
 msgid "Date"
@@ -189,7 +189,7 @@ msgstr "あらゆるサイズ"
 
 #: modules/backuppc/backuppc/fileSearch.php:150
 msgid "Less than 1 Mb"
-msgstr "1 MB 未満"
+msgstr "1 MB "
 
 #: modules/backuppc/backuppc/fileSearch.php:151
 msgid "1 Mb to 10 Mb"
@@ -201,7 +201,7 @@ msgstr "10 MB - 100 MB"
 
 #: modules/backuppc/backuppc/fileSearch.php:153
 msgid "Greater than 100 Mb"
-msgstr "100 MB 以上"
+msgstr "100 MB "
 
 #: modules/backuppc/backuppc/fileSearch.php:164
 msgid "File size"
@@ -235,72 +235,72 @@ msgstr "名前"
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 #: modules/backuppc/backuppc/edit.php:89
 msgid "Windows-1252 - Western Europe"
-msgstr "Windows-1252-西ヨーロッパ言語"
+msgstr "Windows-1252-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:98
 #: modules/backuppc/backuppc/edit.php:90
 msgid "Windows-874 - Thai"
-msgstr "Windows-874-タイ語"
+msgstr "Windows-874-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:99
 #: modules/backuppc/backuppc/edit.php:91
 msgid "Windows-932 - Japanese"
-msgstr "Windows-932-日本語"
+msgstr "Windows-932-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:100
 #: modules/backuppc/backuppc/edit.php:92
 msgid "Windows-936 - Chinese (simplified)"
-msgstr "Windows-936-中国語 (簡体字)"
+msgstr "Windows-936- ()"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:101
 #: modules/backuppc/backuppc/edit.php:93
 msgid "Windows-949 - Korean"
-msgstr "Windows-949-韓国語"
+msgstr "Windows-949-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:102
 #: modules/backuppc/backuppc/edit.php:94
 msgid "Windows-950 - Chinese (traditional)"
-msgstr "Windows-950-中国語 (繁体字)"
+msgstr "Windows-950- ()"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:103
 #: modules/backuppc/backuppc/edit.php:95
 msgid "Windows-1250 - Latin (Central Europe)"
-msgstr "Windows-1250-ラテン (中央ヨーロッパ)"
+msgstr "Windows-1250- ()"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:104
 #: modules/backuppc/backuppc/edit.php:96
 msgid "Windows-1251 - Cyrillic"
-msgstr "Windows-1251-キリル"
+msgstr "Windows-1251-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:105
 #: modules/backuppc/backuppc/edit.php:97
 msgid "Windows-1253 - Greek"
-msgstr "Windows-1253-ギリシャ語"
+msgstr "Windows-1253-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:106
 #: modules/backuppc/backuppc/edit.php:98
 msgid "Windows-1254 - Turkish"
-msgstr "Windows-1254-トルコ語"
+msgstr "Windows-1254-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:107
 #: modules/backuppc/backuppc/edit.php:99
 msgid "Windows-1255 - Hebrew"
-msgstr "Windows-1255-ヘブライ語"
+msgstr "Windows-1255-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:108
 #: modules/backuppc/backuppc/edit.php:100
 msgid "Windows-1256 - Arabic"
-msgstr "Windows-1256-アラブ語"
+msgstr "Windows-1256-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:109
 #: modules/backuppc/backuppc/edit.php:101
 msgid "Windows-1257 - Latin (Baltic languages)"
-msgstr "Windows-1257-ラテン (バルチック言語)"
+msgstr "Windows-1257- ()"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:110
 #: modules/backuppc/backuppc/edit.php:102
 msgid "Windows-1258 - Vietnamese"
-msgstr "Windows-1258-ベトナム語"
+msgstr "Windows-1258-"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:118
 #: modules/backuppc/backuppc/edit.php:110
@@ -344,7 +344,7 @@ msgid "Browse backup"
 msgstr "バックアップ閲覧"
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:68
-#: modules/backuppc/backuppc/hostSummary.php:162
+#: modules/backuppc/backuppc/hostSummary.php:262
 msgid "Browse"
 msgstr "閲覧"
 
@@ -370,7 +370,7 @@ msgstr "バイト"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
 msgid "Current directory :  "
-msgstr "現在のディレクトリ: "
+msgstr ": "
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:132
 #: modules/backuppc/backuppc/viewFileVersions.php:25
@@ -384,7 +384,7 @@ msgstr "サイズ"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
-msgstr "選択されたダウンロード (ZIP)"
+msgstr " (ZIP)"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:192
 msgid "Restore to host (overwrite)"
@@ -398,11 +398,11 @@ msgstr ""
 msgid "Advanced restore"
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:34
+#: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
 msgstr "コンピューターがバックアップシステムから削除されました。"
 
-#: modules/backuppc/backuppc/index.php:37
+#: modules/backuppc/backuppc/index.php:62
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr "バックアップステータス"
@@ -418,7 +418,7 @@ msgstr "ダウンロード"
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/viewFileVersions.php:47
 #: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:142
+#: modules/backuppc/backuppc/hostSummary.php:242
 msgid "%A, %B %e %Y"
 msgstr "%A, %B %e %Y"
 
@@ -447,12 +447,12 @@ msgstr "スケジュール編集"
 #: modules/backuppc/backuppc/EditPeriodProfile.php:103
 #: modules/backuppc/backuppc/edit.php:173
 msgid "Interval between two full backups (days)"
-msgstr "フルバックアップ間隔 (日)"
+msgstr " ()"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:109
 #: modules/backuppc/backuppc/edit.php:178
 msgid "Interval between two incr backups (days)"
-msgstr "増分バックアップ間隔 (日)"
+msgstr " ()"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:114
 #: modules/backuppc/backuppc/edit.php:182
@@ -497,7 +497,7 @@ msgstr " 場所"
 #: modules/backuppc/backuppc/EditPeriodProfile.php:160
 #: modules/backuppc/backuppc/edit.php:227
 msgid "Do not backup from"
-msgstr "次からバックアップしない:"
+msgstr ":"
 
 #: modules/backuppc/backuppc/EditPeriodProfile.php:168
 msgid "Add exclusion"
@@ -516,7 +516,7 @@ msgstr "日時選択"
 msgid ""
 "Your ZIP file is being prepared, please wait.<br/>Please use 7zip to open "
 "this archive (for proper special characters handling)."
-msgstr "Zip ファイルを準備しています。お待ちください。このアーカイブを開くには、7zip をお使いください (特殊文字を適切に処理するため)"
+msgstr "Zip 7zip  ()"
 
 #: modules/backuppc/backuppc/edit.php:43
 msgid "Host backup is not set."
@@ -541,20 +541,20 @@ msgstr "ファイルセット"
 msgid "Schedule"
 msgstr "スケジュール"
 
-#: modules/backuppc/backuppc/startBackup.php:38
+#: modules/backuppc/backuppc/startBackup.php:75
 msgid "Choose the backup type."
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:42
+#: modules/backuppc/backuppc/startBackup.php:79
 msgid "Full backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:43
+#: modules/backuppc/backuppc/startBackup.php:80
 msgid "Incremental backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:185
 msgid "Configuration saved"
 msgstr "設定が保存されました"
 
@@ -580,7 +580,7 @@ msgstr "ファイルのリストア"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "ホスト"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"
@@ -602,33 +602,49 @@ msgstr "リストア元 "
 msgid "View restore points"
 msgstr "リストアポイントの表示"
 
-#: modules/backuppc/backuppc/hostStatus.php:47
-#: modules/backuppc/backuppc/hostStatus.php:48
+#: modules/backuppc/backuppc/hostStatus.php:45
+msgid "Notify Error : Backup configuration Computer"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Notify Computer :"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+msgid "has been added to backup system successfully."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
-msgstr "コンピューター %s が、バックアップシステムに追加されました。.<br />ファイルセットおよびスケジュールを設定することができます。"
+msgstr " %s .<br />"
 
-#: modules/backuppc/backuppc/hostStatus.php:175
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Save configure host "
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:199
 #, php-format
 msgid "%s's backup status"
-msgstr "%s  のバックアップステータス"
+msgstr "%s  "
 
-#: modules/backuppc/backuppc/hostStatus.php:178
+#: modules/backuppc/backuppc/hostStatus.php:202
 msgid "Summary"
 msgstr "サマリー"
 
-#: modules/backuppc/backuppc/hostStatus.php:182
+#: modules/backuppc/backuppc/hostStatus.php:206
 msgid "Configuration"
 msgstr "設定"
 
-#: modules/backuppc/backuppc/hostStatus.php:183
+#: modules/backuppc/backuppc/hostStatus.php:207
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:184
+#: modules/backuppc/backuppc/hostStatus.php:208
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr "ファイル検索"
@@ -639,7 +655,7 @@ msgstr "ファイルが選択されませんでした。"
 
 #: modules/backuppc/backuppc/restoreToHost.php:58
 msgid "The selected files are going to be restored to"
-msgstr "選択されたファイルは、次の場所にリストアされます:"
+msgstr ":"
 
 #: modules/backuppc/backuppc/ajaxFileSearch.php:116
 msgid "File"
@@ -649,61 +665,66 @@ msgstr "ファイル"
 msgid "Your file is being prepared, please wait."
 msgstr "ファイルを準備しています。お待ちください。"
 
-#: modules/backuppc/backuppc/hostSummary.php:49
+#: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
 msgstr "アクションがリクエストされました"
 
-#: modules/backuppc/backuppc/hostSummary.php:58
+#: modules/backuppc/backuppc/hostSummary.php:114
 msgid "Backup is not set for this computer."
 msgstr "バックアップはこのコンピューターに設定されていません。"
 
-#: modules/backuppc/backuppc/hostSummary.php:63
+#: modules/backuppc/backuppc/hostSummary.php:130
 msgid "Configure"
 msgstr "設定"
 
-#: modules/backuppc/backuppc/hostSummary.php:68
+#: modules/backuppc/backuppc/hostSummary.php:135
+msgid ""
+"notify warning : There is no backup server assigned for the computer entity."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."
 msgstr "コンピューターに割り当てられたバックアップサーバーはありません。"
 
-#: modules/backuppc/backuppc/hostSummary.php:95
+#: modules/backuppc/backuppc/hostSummary.php:184
 msgid "Current state: "
-msgstr "現在の状態:"
+msgstr ":"
 
-#: modules/backuppc/backuppc/hostSummary.php:110
+#: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
 msgstr "フルバックアップ開始"
 
-#: modules/backuppc/backuppc/hostSummary.php:112
+#: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Sart Incr Backup"
 msgstr "増分バックアップ開始"
 
-#: modules/backuppc/backuppc/hostSummary.php:113
+#: modules/backuppc/backuppc/hostSummary.php:213
 msgid "Stop Backup"
 msgstr "バックアップ停止"
 
-#: modules/backuppc/backuppc/hostSummary.php:149
+#: modules/backuppc/backuppc/hostSummary.php:249
 msgid "Backup time"
 msgstr "バックアップ時間"
 
-#: modules/backuppc/backuppc/hostSummary.php:150
+#: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
 msgstr "タイプ"
 
-#: modules/backuppc/backuppc/hostSummary.php:151
+#: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"
-msgstr "期間 (分)"
+msgstr " ()"
 
-#: modules/backuppc/backuppc/hostSummary.php:152
+#: modules/backuppc/backuppc/hostSummary.php:252
 msgid "Errors"
 msgstr "エラー"
 
-#: modules/backuppc/backuppc/hostSummary.php:153
+#: modules/backuppc/backuppc/hostSummary.php:253
 msgid "File count (new)"
-msgstr "ファイルカウント (新規)"
+msgstr " ()"
 
-#: modules/backuppc/backuppc/hostSummary.php:154
+#: modules/backuppc/backuppc/hostSummary.php:254
 msgid "Backup size (new) [Mb]"
-msgstr "バックアップサイズ (新規) [MB]"
+msgstr " () [MB]"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:27
 msgid "Filesets"
@@ -726,7 +747,7 @@ msgstr "スケジュール"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:133
 msgid "Linux (User files)"
-msgstr "Linux (ユーザーファイル)"
+msgstr "Linux ()"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:134
 msgid "Linux (Whole drive)"
@@ -742,19 +763,19 @@ msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:137
 msgid "Windows 7/Vista (User files)"
-msgstr "Windows 7/Vista (ユーザーファイル)"
+msgstr "Windows 7/Vista ()"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:138
 msgid "Windows 7/Vista (Whole C: Drive)"
-msgstr "Windows 7/Vista (全体 C: ドライブ)"
+msgstr "Windows 7/Vista ( C: )"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:139
 msgid "Windows XP (User files)"
-msgstr "Windows XP (ユーザーファイル)"
+msgstr "Windows XP ()"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:140
 msgid "Windows XP (Whole C: Drive)"
-msgstr "Windows XP (全体 C: ドライブ)"
+msgstr "Windows XP ( C: )"
 
 #: modules/backuppc/backuppc/ViewProfiles.php:141
 msgid "Daytime"
@@ -820,4 +841,4 @@ msgstr "バックアッププロファイル"
 
 #: modules/backuppc/infoPackage.inc.php:91
 msgid "Download files/ZIP from backup"
-msgstr "バックアップからのファイル/ZIP ダウンロード"
+msgstr "/ZIP "

@@ -24,7 +24,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	database.imaging database.inventory database.msc \
 	database.msc.orm database.pulse database.xmppmaster imaging \
 	imaging_server inventoryserver inventoryserver.scheduler \
-	launcher managers package_server package_server.assign_algo \
+	managers package_server package_server.assign_algo \
 	package_server.assign_algo.default \
 	package_server.assign_algo.terminal_type \
 	package_server.assign_algo.multi_site \
@@ -39,7 +39,7 @@ pythonmodules = apis apis.clients database database.dyngroup \
 	scheduler.tracking scheduler.api scheduler.tests \
 	database.backuppc \
 	dlp dlp.api dlp.tests \
-	cm cm.tests
+	cm cm.tests tests
 
 all-local: site.py version.py
 

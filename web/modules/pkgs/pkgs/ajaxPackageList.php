@@ -83,7 +83,7 @@ $_SESSION['pkgs_selected'] = base64_decode($filter['location']);
  */
 $count = 0;
 $params = array();
-$names = array();
+$arraypackagename = array();
 $versions = array();
 $licenses = array();
 $size = array();
@@ -92,6 +92,7 @@ $desc = array();
 
 $editActions = array();
 $editAction = new ActionItem(_T("Edit a package", "pkgs"), "edit", "edit", "pkgs", "pkgs", "pkgs");
+$editExpertAction = new EmptyActionItem(_T("Please switch to Expert mode to edit this package", "pkgs"));
 $emptyAction = new EmptyActionItem();
 $delActions = array();
 $delAction = new ActionPopupItem(_T("Delete a package", "pkgs"), "delete", "delete", "pkgs", "pkgs", "pkgs");
@@ -108,8 +109,13 @@ foreach ($packages as $p) {
     if (isset($p['ERR']) && $p['ERR'] == 'PULSE2ERROR_GETALLPACKAGE') {
         $err[] = sprintf(_T("MMC failed to contact package server %s.", "pkgs"), $p['mirror']);
     } else {
+        if($p['metagenerator'] == 'expert'){
+            $arraypackagename[] = "<img style='position:relative;top : 5px;'src='modules/pkgs/graph/img/package_expert.png'/> " . $p['label'] ;
+        }
+        else{
+            $arraypackagename[] = "<img style='position:relative;top : 5px;'src='modules/pkgs/graph/img/package.png'/> " . $p['label'] ;
+        }
         $uuid = $p['id'];
-        $names[] = $p['label'];
         $versions[] = $p['version'];
         $desc[] = $p['description'];
         // #### begin licenses ####
@@ -148,7 +154,7 @@ foreach ($packages as $p) {
                 $delActions[] = $delAction;
             }
             elseif ($p['metagenerator'] == 'expert') {
-                $editActions[] = $emptyAction;
+                $editActions[] = $editExpertAction;
                 $delActions[] = $delAction;
             }
             else {
@@ -176,8 +182,7 @@ if ($err) {
 }
 
 // Display the list
-$n = new OptimizedListInfos($names, _T("Package name", "pkgs"));
-$n->setCssClass("package");
+$n = new OptimizedListInfos($arraypackagename, _T("Package name", "pkgs"));
 $n->disableFirstColumnActionLink();
 $n->addExtraInfo($desc, _T("Description", "pkgs"));
 $n->addExtraInfo($versions, _T("Version", "pkgs"));

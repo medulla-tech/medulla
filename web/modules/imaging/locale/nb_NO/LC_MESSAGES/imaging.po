@@ -8,245 +8,279 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/teams/72118/nb_NO/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: nb_NO\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/imaging/imaging/bootmenu.php:74
-#: modules/imaging/imaging/bootmenu.php:113
+#: modules/imaging/imaging/bootmenu.php:63
+#, php-format
+msgid "Item Menu %s for group up %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:77
+#, php-format
+msgid "Item Menu %s for machine up %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:101
+#: modules/imaging/imaging/bootmenu.php:180
 #, php-format
 msgid "Failed to move item <strong>%s</strong> in the boot menu"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:137
+#: modules/imaging/imaging/bootmenu.php:130
+#, php-format
+msgid "Item Menu %s%s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:144
+#, php-format
+msgid "Item Menu %s for machine down %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:158
+#, php-format
+msgid "Success to move item <strong>%s</strong> in the boot menu [ %s ]"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:215
 msgid "Edition of item"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:162
-#: modules/imaging/imaging/addimage.php:154
-#: modules/imaging/imaging/addservice.php:137
-#: modules/imaging/manage/master_add.php:103
+#: modules/imaging/imaging/bootmenu.php:240
+#: modules/imaging/imaging/addimage.php:177
+#: modules/imaging/imaging/addservice.php:158
+#: modules/imaging/manage/master_add.php:147
 #: modules/imaging/manage/bootmenu_edit.php:81
-#: modules/imaging/manage/service_add.php:102
+#: modules/imaging/manage/service_add.php:114
 msgid "Selected by default"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:167
-#: modules/imaging/imaging/bootmenu.php:352
-#: modules/imaging/imaging/addimage.php:156
-#: modules/imaging/imaging/addservice.php:139
-#: modules/imaging/manage/ajaxBootmenu.php:100
-#: modules/imaging/manage/master_add.php:105
+#: modules/imaging/imaging/bootmenu.php:245
+#: modules/imaging/imaging/bootmenu.php:462
+#: modules/imaging/imaging/addimage.php:179
+#: modules/imaging/imaging/addservice.php:160
+#: modules/imaging/manage/ajaxBootmenu.php:101
+#: modules/imaging/manage/master_add.php:149
 #: modules/imaging/manage/bootmenu_edit.php:86
-#: modules/imaging/manage/service_add.php:104
+#: modules/imaging/manage/service_add.php:116
 msgid "Displayed"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:172
-#: modules/imaging/imaging/addimage.php:158
-#: modules/imaging/imaging/addservice.php:141
-#: modules/imaging/manage/master_add.php:107
+#: modules/imaging/imaging/bootmenu.php:250
+#: modules/imaging/imaging/addimage.php:181
+#: modules/imaging/imaging/addservice.php:162
+#: modules/imaging/manage/master_add.php:151
 #: modules/imaging/manage/bootmenu_edit.php:91
-#: modules/imaging/manage/service_add.php:106
+#: modules/imaging/manage/service_add.php:118
 msgid "Selected by default on WOL"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:177
-#: modules/imaging/imaging/bootmenu.php:355
-#: modules/imaging/imaging/addimage.php:160
-#: modules/imaging/imaging/addservice.php:143
-#: modules/imaging/manage/ajaxBootmenu.php:102
-#: modules/imaging/manage/master_add.php:109
+#: modules/imaging/imaging/bootmenu.php:255
+#: modules/imaging/imaging/bootmenu.php:465
+#: modules/imaging/imaging/addimage.php:183
+#: modules/imaging/imaging/addservice.php:164
+#: modules/imaging/manage/ajaxBootmenu.php:103
+#: modules/imaging/manage/master_add.php:153
 #: modules/imaging/manage/bootmenu_edit.php:96
-#: modules/imaging/manage/service_add.php:108
+#: modules/imaging/manage/service_add.php:120
 msgid "Displayed on WOL"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:182
-#: modules/imaging/manage/postinstall_edit.php:126
+#: modules/imaging/imaging/bootmenu.php:260
+#: modules/imaging/manage/postinstall_edit.php:162
 #: modules/imaging/manage/ajaxFormWin7.php:737
 #: modules/imaging/manage/ajaxFormWin8.php:826
 #: modules/imaging/manage/ajaxConfiguration.php:123
 #: modules/imaging/manage/bootmenu_edit.php:101
 #: modules/imaging/manage/ajaxFormWin10.php:825
-#: modules/imaging/manage/master_edit.php:70
-#: modules/imaging/manage/service_edit.php:69
-#: modules/imaging/manage/master_clone.php:109
+#: modules/imaging/manage/master_edit.php:72
+#: modules/imaging/manage/service_edit.php:71
+#: modules/imaging/manage/master_clone.php:121
 #: modules/imaging/manage/ajaxFormWin81.php:938
 msgid "Validate"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:254
-#: modules/imaging/manage/ajaxBootmenu.php:29
+#: modules/imaging/imaging/bootmenu.php:291
+#: modules/imaging/imaging/bootmenu.php:305
+#, php-format
+msgid "Edit item <strong>%s</strong> in the boot Menu [ %s ]"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu.php:364
+#: modules/imaging/manage/ajaxBootmenu.php:30
 msgid "Move Up"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:255
-#: modules/imaging/manage/ajaxBootmenu.php:30
+#: modules/imaging/imaging/bootmenu.php:365
+#: modules/imaging/manage/ajaxBootmenu.php:31
 msgid "Move down"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:256
-#: modules/imaging/manage/ajaxBootmenu.php:105
+#: modules/imaging/imaging/bootmenu.php:366
+#: modules/imaging/manage/ajaxBootmenu.php:106
 msgid "Edit"
-msgstr ""
+msgstr "Rediger"
 
-#: modules/imaging/imaging/bootmenu.php:257
+#: modules/imaging/imaging/bootmenu.php:367
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:53
 #: modules/imaging/manage/ajaxMasterLevel2.php:63
-#: modules/imaging/manage/postinstall_delete.php:67
+#: modules/imaging/manage/postinstall_delete.php:101
 #: modules/imaging/manage/ajaxLogs.php:58
 #: modules/imaging/includes/logs.inc.php:34
 msgid "Delete"
-msgstr ""
+msgstr "Slett"
 
-#: modules/imaging/imaging/bootmenu.php:289
+#: modules/imaging/imaging/bootmenu.php:399
 msgid "master from the profile"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:291
+#: modules/imaging/imaging/bootmenu.php:401
 msgid "master"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:298
+#: modules/imaging/imaging/bootmenu.php:408
 msgid "boot service from profile"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:300
+#: modules/imaging/imaging/bootmenu.php:410
 msgid "boot service"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:340
+#: modules/imaging/imaging/bootmenu.php:450
 msgid ""
 "Use \"Preselected choice\" or \"Preselected choice on WOL\" to define the "
 "default boot entry."
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:343
-#: modules/imaging/imaging/bootmenu.php:345
+#: modules/imaging/imaging/bootmenu.php:453
+#: modules/imaging/imaging/bootmenu.php:455
 msgid ""
 "If the default entry is an image creation or restore, the following network "
 "boots will fall back to the first menu entry."
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:345
+#: modules/imaging/imaging/bootmenu.php:455
 msgid ""
 "When changing \"Preselected choice\" or \"Preselected choice on WOL\" entry,"
 " this value will be set on all the computers in this group."
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:347
-#: modules/imaging/imaging/images.php:104
+#: modules/imaging/imaging/bootmenu.php:457
+#: modules/imaging/imaging/images.php:105
 #: modules/imaging/imaging/ajaxImages.php:169
 #: modules/imaging/imaging/ajaxServices.php:98
-#: modules/imaging/manage/ajaxBootmenu.php:96
+#: modules/imaging/manage/ajaxBootmenu.php:97
 #: modules/imaging/manage/ajaxMasterLevel2.php:95
-#: modules/imaging/manage/master_edit.php:53
-#: modules/imaging/manage/service_edit.php:54
+#: modules/imaging/manage/master_edit.php:55
+#: modules/imaging/manage/service_edit.php:56
 #: modules/imaging/manage/ajaxServiceLevel2.php:91
 msgid "Label"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:349
-#: modules/imaging/imaging/images.php:108
+#: modules/imaging/imaging/bootmenu.php:459
+#: modules/imaging/imaging/images.php:109
 #: modules/imaging/imaging/ajaxImages.php:171
 #: modules/imaging/imaging/ajaxServices.php:99
-#: modules/imaging/manage/ajaxBootmenu.php:98
-#: modules/imaging/manage/sysprepList.php:74
+#: modules/imaging/manage/ajaxBootmenu.php:99
+#: modules/imaging/manage/sysprepList.php:87
 #: modules/imaging/manage/ajaxFormWin7.php:728
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:90
 #: modules/imaging/manage/ajaxFormWin8.php:809
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:76
 #: modules/imaging/manage/ajaxMasterLevel2.php:97
 #: modules/imaging/manage/ajaxFormWin10.php:808
-#: modules/imaging/manage/master_edit.php:57
-#: modules/imaging/manage/service_edit.php:59
+#: modules/imaging/manage/master_edit.php:59
+#: modules/imaging/manage/service_edit.php:61
 #: modules/imaging/manage/ajaxServiceLevel2.php:93
 #: modules/imaging/manage/ajaxFormWin81.php:724
 #: modules/imaging/includes/post_install_script.php:65
 msgid "Description"
-msgstr ""
+msgstr "Beskrivelse"
 
-#: modules/imaging/imaging/bootmenu.php:350
+#: modules/imaging/imaging/bootmenu.php:460
 msgid "Preselected choice"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu.php:353
+#: modules/imaging/imaging/bootmenu.php:463
 msgid "Preselected choice on WOL"
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:44
+#: modules/imaging/imaging/images_iso.php:45
 msgid "Please specify a title for the ISO image file."
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:53
+#: modules/imaging/imaging/images_iso.php:54
 msgid "Create ISO image from master"
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:55
+#: modules/imaging/imaging/images_iso.php:56
 #, php-format
 msgid ""
 "The ISO image generation of master <strong>%s</strong> has been launched in "
 "background."
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:57
+#: modules/imaging/imaging/images_iso.php:58
 msgid ""
 "The ISO image file will be stored into the imaging server at the end of the "
 "backup."
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:64
+#: modules/imaging/imaging/images_iso.php:65
 msgid "This operation will last according to the master size."
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:78
+#: modules/imaging/imaging/images_iso.php:90
 #, php-format
 msgid "Generate ISO for <strong>%s</strong>"
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:81
+#: modules/imaging/imaging/images_iso.php:93
 #: modules/imaging/manage/ajaxFormWin7.php:354
 #: modules/imaging/manage/ajaxFormWin8.php:429
-#: modules/imaging/manage/master_iso.php:67
+#: modules/imaging/manage/master_iso.php:90
 #: modules/imaging/manage/ajaxFormWin10.php:447
 #: modules/imaging/manage/ajaxFormWin81.php:530
 msgid "Title"
-msgstr ""
+msgstr "Tittel"
 
-#: modules/imaging/imaging/images_iso.php:83
+#: modules/imaging/imaging/images_iso.php:95
 msgid ""
 "Please select media size. If your data exceeds the volume size, several "
 "files of your media size will be created."
 msgstr ""
+"Vennligst velg størrelsen på media. Hvis datamengden overstiger "
+"volumstørreslen, vil flere filer på størrelse med valgt medie opprettes."
 
-#: modules/imaging/imaging/images_iso.php:86
-#: modules/imaging/manage/master_iso.php:72
+#: modules/imaging/imaging/images_iso.php:98
+#: modules/imaging/manage/master_iso.php:95
 msgid "Media size"
-msgstr ""
+msgstr "Mediestørrelse"
 
-#: modules/imaging/imaging/images_iso.php:99
+#: modules/imaging/imaging/images_iso.php:111
 msgid "Start ISO generation"
 msgstr ""
 
-#: modules/imaging/imaging/images_iso.php:100
+#: modules/imaging/imaging/images_iso.php:112
 #: modules/imaging/imaging/showtarget.php:131
-#: modules/imaging/imaging/images_delete.php:60
-#: modules/imaging/imaging/configure.php:319
-#: modules/imaging/imaging/multicast.php:268
-#: modules/imaging/imaging/bootmenu_remove.php:114
-#: modules/imaging/manage/master_remove.php:70
-#: modules/imaging/manage/master_iso.php:86
-#: modules/imaging/manage/postinstall_delete.php:68
-#: modules/imaging/manage/service_show_used.php:145
-#: modules/imaging/manage/master_delete.php:55
+#: modules/imaging/imaging/images_delete.php:73
+#: modules/imaging/imaging/configure.php:365
+#: modules/imaging/imaging/multicast.php:390
+#: modules/imaging/imaging/bootmenu_remove.php:161
+#: modules/imaging/manage/master_remove.php:94
+#: modules/imaging/manage/master_iso.php:109
+#: modules/imaging/manage/postinstall_delete.php:102
+#: modules/imaging/manage/service_show_used.php:200
+#: modules/imaging/manage/master_delete.php:81
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #: modules/imaging/imaging/showtarget.php:72
 #: modules/imaging/imaging/showtarget.php:84
@@ -254,28 +288,27 @@ msgid "Removal of master failed"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:78
-#: modules/imaging/imaging/addimage.php:83
-#: modules/imaging/imaging/addservice.php:82
-#: modules/imaging/imaging/bootmenu_remove.php:92
-#: modules/imaging/manage/service_show_used.php:71
+#: modules/imaging/imaging/addimage.php:106
+#: modules/imaging/imaging/addservice.php:103
+#: modules/imaging/imaging/bootmenu_remove.php:127
+#: modules/imaging/manage/service_show_used.php:85
 #, php-format
 msgid "Boot menu generation failed for computer: %s"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:90
-#: modules/imaging/manage/master_remove.php:41
-#: modules/imaging/manage/master_add.php:54
-#: modules/imaging/manage/imaging_server_link.php:64
-#: modules/imaging/manage/service_remove.php:48
-#: modules/imaging/manage/service_del.php:48
-#: modules/imaging/manage/service_add.php:54
-#: modules/imaging/manage/service_show_used.php:83
+#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/manage/imaging_server_link.php:77
+#: modules/imaging/manage/service_remove.php:62
+#: modules/imaging/manage/service_del.php:61
+#: modules/imaging/manage/service_add.php:64
+#: modules/imaging/manage/service_add.php:66
 #, php-format
 msgid "Boot menu generation failed for package server: %s"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:123
-#: modules/imaging/manage/service_show_used.php:108
+#: modules/imaging/manage/service_show_used.php:163
 msgid "Show all targets that use that image in their boot menu"
 msgstr ""
 
@@ -286,21 +319,21 @@ msgid ""
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:127
-#: modules/imaging/manage/service_show_used.php:141
+#: modules/imaging/manage/service_show_used.php:196
 msgid "Select all"
-msgstr ""
+msgstr "Velg alt"
 
 #: modules/imaging/imaging/showtarget.php:129
-#: modules/imaging/manage/service_show_used.php:143
+#: modules/imaging/manage/service_show_used.php:198
 msgid "Unselect all"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:130
-#: modules/imaging/imaging/images_delete.php:59
-#: modules/imaging/imaging/bootmenu_remove.php:113
-#: modules/imaging/manage/master_remove.php:69
-#: modules/imaging/manage/service_show_used.php:144
-#: modules/imaging/manage/master_delete.php:54
+#: modules/imaging/imaging/images_delete.php:72
+#: modules/imaging/imaging/bootmenu_remove.php:160
+#: modules/imaging/manage/master_remove.php:93
+#: modules/imaging/manage/service_show_used.php:199
+#: modules/imaging/manage/master_delete.php:80
 msgid "Remove"
 msgstr ""
 
@@ -310,67 +343,67 @@ msgid "Remove this master from imaging server %s"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:149
-#: modules/imaging/manage/service_show_used.php:116
+#: modules/imaging/manage/service_show_used.php:171
 msgid "Imaging server"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:156
-#: modules/imaging/manage/service_show_used.php:123
+#: modules/imaging/manage/service_show_used.php:178
 #, php-format
 msgid "Remove this master from computer %s"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:157
-#: modules/imaging/manage/service_show_used.php:124
+#: modules/imaging/manage/service_show_used.php:179
 msgid "Imaging group"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:157
 #: modules/imaging/imaging/configure.php:39
-#: modules/imaging/manage/service_show_used.php:124
+#: modules/imaging/manage/service_show_used.php:179
 msgid "Computer"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:67
+#: modules/imaging/imaging/images.php:68
 msgid "Available images"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:69
+#: modules/imaging/imaging/images.php:70
 #: modules/imaging/manage/ajaxMaster.php:27
 msgid "Available masters"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:93
+#: modules/imaging/imaging/images.php:94
 msgid "Edition of image"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:95
+#: modules/imaging/imaging/images.php:96
 msgid "Edition of master"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:124
-#: modules/imaging/imaging/images.php:151
+#: modules/imaging/imaging/images.php:125
+#: modules/imaging/imaging/images.php:152
 msgid "Save"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:126
+#: modules/imaging/imaging/images.php:127
 msgid "Save (converting to image)"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:128
+#: modules/imaging/imaging/images.php:129
 msgid "Convert to master"
 msgstr ""
 
-#: modules/imaging/imaging/images.php:192
+#: modules/imaging/imaging/images.php:193
 msgid "Image backup logs"
 msgstr ""
 
-#: modules/imaging/imaging/images_delete.php:55
+#: modules/imaging/imaging/images_delete.php:68
 #: modules/imaging/infoPackage.inc.php:437
 msgid "Delete image"
 msgstr ""
 
-#: modules/imaging/imaging/images_delete.php:57
+#: modules/imaging/imaging/images_delete.php:70
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> image ?"
 msgstr ""
@@ -444,169 +477,180 @@ msgstr ""
 msgid "Diskless Linux command line access"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:255
+#: modules/imaging/imaging/configure.php:174
+#, php-format
+msgid "choose network profile for group %s"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:200
+#, php-format
+msgid "choose network profile for machine %s"
+msgstr ""
+
+#: modules/imaging/imaging/configure.php:277
 #, php-format
 msgid "Boot menu is created for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:257
+#: modules/imaging/imaging/configure.php:279
 #, php-format
 msgid "Boot menu modified for <strong>%s</strong>."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:289
+#: modules/imaging/imaging/configure.php:322
 #, php-format
 msgid "Failed to generate the boot menu those computers : %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:306
+#: modules/imaging/imaging/configure.php:351
 msgid ""
 "You are going to unregister this computer from the imaging module, are you "
 "sure you want to do that?"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:311
+#: modules/imaging/imaging/configure.php:357
 msgid "Do you want a backup to be done ?"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:318
-#: modules/imaging/imaging/configure.php:589
+#: modules/imaging/imaging/configure.php:364
+#: modules/imaging/imaging/configure.php:661
 msgid "Unregister this computer"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:333
+#: modules/imaging/imaging/configure.php:379
 #, php-format
 msgid "The computer %s has correctly been unregistered from imaging"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:338
+#: modules/imaging/imaging/configure.php:398
 #, php-format
 msgid "Failed to unregister the computer %s"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:356
+#: modules/imaging/imaging/configure.php:428
 #, php-format
 msgid "Register computer '%s'"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:360
+#: modules/imaging/imaging/configure.php:432
 #, php-format
 msgid "Imaging activation for group '%s'"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:382
+#: modules/imaging/imaging/configure.php:454
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entity of this computer."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:384
+#: modules/imaging/imaging/configure.php:456
 msgid ""
 "To register, you must first set a default menu to the imaging server that "
 "manages the entities of the computers that belongs to this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:389
+#: modules/imaging/imaging/configure.php:461
 msgid ""
 "The computer either doesn't have a MAC address, either has more than one MAC"
 " address or the only NIC doesn't have any network mask. It can't be "
 "registered into the imaging module."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:394
+#: modules/imaging/imaging/configure.php:466
 msgid "The profile can't be registered into the imaging module."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:427
+#: modules/imaging/imaging/configure.php:499
 msgid "Computer:"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:428
-#: modules/imaging/imaging/configure.php:567
+#: modules/imaging/imaging/configure.php:500
+#: modules/imaging/imaging/configure.php:639
 msgid "Choose the MAC address you want to use"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:441
-#: modules/imaging/imaging/configure.php:576
+#: modules/imaging/imaging/configure.php:513
+#: modules/imaging/imaging/configure.php:648
 msgid ""
 "Please switch to expert mode now if you want to change more parameters."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:443
-#: modules/imaging/imaging/configure.php:578
+#: modules/imaging/imaging/configure.php:515
+#: modules/imaging/imaging/configure.php:650
 msgid "You can switch to standard mode now if you want less parameters."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:462
+#: modules/imaging/imaging/configure.php:534
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entity that owns this computer."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:465
+#: modules/imaging/imaging/configure.php:537
 msgid ""
 "The default values for the imaging parameters will be inherited from the "
 "imaging server that manages the entities of the computers that belongs to "
 "this profile."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:477
+#: modules/imaging/imaging/configure.php:549
 #, php-format
 msgid "The default values displayed here come from this %s's profile menu."
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:491
+#: modules/imaging/imaging/configure.php:563
 msgid "Hard disks and partitions selection to backup"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:496
+#: modules/imaging/imaging/configure.php:568
 #, php-format
 msgid "Hard disk number: %d"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:507
+#: modules/imaging/imaging/configure.php:579
 msgid "Select this hard disk"
 msgstr ""
 
-#: modules/imaging/imaging/configure.php:520
+#: modules/imaging/imaging/configure.php:592
 #, php-format
 msgid "Partition number: %d"
 msgstr ""
 
-#: modules/imaging/imaging/creategroupcustonmenu.php:48
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:58
+#: modules/imaging/imaging/creategroupcustonmenu.php:49
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:59
 #, php-format
 msgid "Machine with custom menu on entity [%s] at %s"
 msgstr ""
 
-#: modules/imaging/imaging/creategroupcustonmenu.php:57
-#: modules/imaging/imaging/creategroupcustonmenuimaging.php:64
+#: modules/imaging/imaging/creategroupcustonmenu.php:70
+#: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
 msgstr ""
 
-#: modules/imaging/imaging/addimage.php:60 modules/imaging/imaging/tabs.php:89
+#: modules/imaging/imaging/addimage.php:49
+#: modules/imaging/imaging/addimage.php:165
+#: modules/imaging/manage/master_add.php:133
+#, php-format
+msgid "Add the image <b>%s</b> to <b>%s</b>"
+msgstr ""
+
+#: modules/imaging/imaging/addimage.php:72 modules/imaging/imaging/tabs.php:89
 #: modules/imaging/imaging/ajaxImages.php:189
-#: modules/imaging/imaging/addservice.php:59
-#: modules/imaging/imaging/bootmenu_remove.php:69
+#: modules/imaging/imaging/addservice.php:69
+#: modules/imaging/imaging/bootmenu_remove.php:93
 #: modules/imaging/includes/ajaxcommon.inc.php:37
 #: modules/imaging/includes/ajaxcommon.inc.php:57
 msgid "root"
 msgstr ""
 
-#: modules/imaging/imaging/addimage.php:69
+#: modules/imaging/imaging/addimage.php:81
 #: modules/imaging/imaging/tabs.php:100
-#: modules/imaging/imaging/addservice.php:68
-#: modules/imaging/imaging/bootmenu_remove.php:79
+#: modules/imaging/imaging/addservice.php:78
+#: modules/imaging/imaging/bootmenu_remove.php:103
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
 "running."
-msgstr ""
-
-#: modules/imaging/imaging/addimage.php:142
-#: modules/imaging/manage/master_add.php:89
-#, php-format
-msgid "Add the image <b>%s</b> to <b>%s</b>"
 msgstr ""
 
 #: modules/imaging/imaging/tabs.php:61
@@ -728,12 +772,17 @@ msgstr ""
 msgid "Not enough information"
 msgstr ""
 
+#: modules/imaging/imaging/services.php:61
+#, php-format
+msgid "Add service %s"
+msgstr ""
+
 #: modules/imaging/imaging/ajaxImages.php:78
 msgid "Add image to boot menu"
 msgstr ""
 
 #: modules/imaging/imaging/ajaxImages.php:79
-#: modules/imaging/imaging/bootmenu_remove.php:109
+#: modules/imaging/imaging/bootmenu_remove.php:156
 #: modules/imaging/manage/ajaxMasterLevel2.php:53
 #: modules/imaging/infoPackage.inc.php:285
 #: modules/imaging/infoPackage.inc.php:366
@@ -829,75 +878,76 @@ msgid ""
 "to leave the group and customize the boot menu."
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:47
-#: modules/imaging/imaging/multicast.php:159
+#: modules/imaging/imaging/multicast.php:48
+#: modules/imaging/imaging/multicast.php:237
 msgid ""
 "Multicast menu has not been created : there are no computers in the group"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:54
-#: modules/imaging/imaging/multicast.php:64
+#: modules/imaging/imaging/multicast.php:66
+#: modules/imaging/imaging/multicast.php:87
 msgid "Multicast menu has not been created : number of computers missing"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:70
-#: modules/imaging/imaging/multicast.php:76
-#: modules/imaging/imaging/multicast.php:84
+#: modules/imaging/imaging/multicast.php:104
+#: modules/imaging/imaging/multicast.php:121
+#: modules/imaging/imaging/multicast.php:129
 #, php-format
 msgid ""
 "Multicast menu has not been created : the imaging group contains %d "
 "computers and you have entered %d"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:131
+#: modules/imaging/imaging/multicast.php:187
 msgid "computers have a [IPV6] interfaces address exclusively in the group"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:143
+#: modules/imaging/imaging/multicast.php:210
 msgid "Multicast menu has not been created : --max-time-to-wait missing"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:150
+#: modules/imaging/imaging/multicast.php:228
 msgid "Multicast menu has not been created : --max-time-to-wait < 60"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:165
+#: modules/imaging/imaging/multicast.php:254
 msgid ""
 "Multicast menu has not been created : the selected master is missing on disk"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:193
+#: modules/imaging/imaging/multicast.php:293
 msgid "Multicast menu has been successfully created."
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:200
+#: modules/imaging/imaging/multicast.php:311
 msgid ""
 "Multicast menu has not been created : check that the imaging server is "
 "running"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:226
+#: modules/imaging/imaging/multicast.php:348
 #, php-format
 msgid ""
 "deploy the master <strong>%s</strong> to this group <strong>%s</strong> in "
 "multicast"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:233
+#: modules/imaging/imaging/multicast.php:355
 msgid "Number of machines to wait for"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:249
+#: modules/imaging/imaging/multicast.php:371
 msgid ""
 "start anyways when t seconds since first receiver connection have passed"
 msgstr ""
 
-#: modules/imaging/imaging/multicast.php:267
+#: modules/imaging/imaging/multicast.php:389
 #: modules/imaging/manage/ajaxStatus.php:569
 msgid "Start multicast deploy"
 msgstr ""
 
-#: modules/imaging/imaging/addservice.php:125
+#: modules/imaging/imaging/addservice.php:51
+#: modules/imaging/imaging/addservice.php:146
 #, php-format
 msgid "Add the boot service <b>%s</b> to <b>%s</b>"
 msgstr ""
@@ -933,46 +983,90 @@ msgstr ""
 msgid "In bootmenu"
 msgstr ""
 
-#: modules/imaging/imaging/bootmenu_remove.php:112
+#: modules/imaging/imaging/bootmenu_remove.php:61
+#, php-format
+msgid "Remove Service %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu_remove.php:74
+#, php-format
+msgid "Remove Image %s"
+msgstr ""
+
+#: modules/imaging/imaging/bootmenu_remove.php:159
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> from the boot menu ?"
 msgstr ""
 
-#: modules/imaging/manage/ajaxBootmenu.php:93
+#: modules/imaging/manage/ajaxBootmenu.php:94
 msgid "Default boot menu configuration"
 msgstr ""
 
-#: modules/imaging/manage/ajaxBootmenu.php:99
+#: modules/imaging/manage/ajaxBootmenu.php:100
 msgid "Default"
 msgstr ""
 
-#: modules/imaging/manage/ajaxBootmenu.php:101
+#: modules/imaging/manage/ajaxBootmenu.php:102
 msgid "Default on WOL"
 msgstr ""
 
-#: modules/imaging/manage/bootmenu_up.php:39
+#: modules/imaging/manage/bootmenu_up.php:37
+#, php-format
+msgid "Success to move <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_up.php:50
 #, php-format
 msgid "Failed to move <strong>%s</strong> in the default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/master_remove.php:36
+#: modules/imaging/manage/master_remove.php:37
 #, php-format
 msgid "Image <strong>%s</strong> removed from default boot menu."
 msgstr ""
 
-#: modules/imaging/manage/master_remove.php:65
+#: modules/imaging/manage/master_remove.php:38
+msgid "Notify Success : removed from default boot menu."
+msgstr ""
+
+#: modules/imaging/manage/master_remove.php:89
 #: modules/imaging/infoPackage.inc.php:101
 msgid "Remove master"
 msgstr ""
 
-#: modules/imaging/manage/master_remove.php:67
+#: modules/imaging/manage/master_remove.php:91
 #, php-format
 msgid "Are you sure you want to remove <b>%s</b> master ?"
 msgstr ""
 
-#: modules/imaging/manage/master_add.php:48
+#: modules/imaging/manage/master_add.php:49
 #, php-format
 msgid "Image <strong>%s</strong> added to default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:68
+#, php-format
+msgid ""
+"Boot menu generation Succes for package server: %s<br /><br />Check "
+"/var/log/mmc/pulse2-package-server.log"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:71
+#: modules/imaging/manage/master_add.php:75
+#: modules/imaging/manage/location.php:62
+#: modules/imaging/manage/location.php:66
+#: modules/imaging/manage/save_configuration.php:83
+#: modules/imaging/manage/service_show_used.php:128
+#: modules/imaging/manage/service_show_used.php:132
+#, php-format
+msgid ""
+"Boot menu generation failed for package server: %s<br /><br />Check "
+"/var/log/mmc/pulse2-package-server.log"
+msgstr ""
+
+#: modules/imaging/manage/master_add.php:81
+#, php-format
+msgid "Error : Image <strong>%s</strong> added to default boot menu"
 msgstr ""
 
 #: modules/imaging/manage/systemImageManager.php:38
@@ -983,35 +1077,36 @@ msgstr ""
 msgid "Sysprep list"
 msgstr ""
 
-#: modules/imaging/manage/sysprepList.php:37
-msgid "The sysprep answer file has been removed from the imaging system."
-msgstr ""
-
-#: modules/imaging/manage/sysprepList.php:65
-msgid "All Windows Answer Files"
-msgstr ""
-
-#: modules/imaging/manage/sysprepList.php:70
-msgid "File name"
-msgstr ""
-
-#: modules/imaging/manage/sysprepList.php:73
-msgid "OS"
-msgstr ""
-
-#: modules/imaging/manage/sysprepList.php:77
-msgid "Display sysprep file"
+#: modules/imaging/manage/sysprepList.php:38
+#, php-format
+msgid "The sysprep answer file %s has been removed from the imaging system."
 msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:78
+msgid "All Windows Answer Files"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:83
+msgid "File name"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:86
+msgid "OS"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:90
+msgid "Display sysprep file"
+msgstr ""
+
+#: modules/imaging/manage/sysprepList.php:91
 msgid "Edit sysprep file"
 msgstr ""
 
-#: modules/imaging/manage/sysprepList.php:79
+#: modules/imaging/manage/sysprepList.php:92
 msgid "Delete sysprep file"
 msgstr ""
 
-#: modules/imaging/manage/sysprepList.php:79
+#: modules/imaging/manage/sysprepList.php:92
 msgid "Are you sure you want to unset this sysrep answer file?"
 msgstr ""
 
@@ -1047,53 +1142,70 @@ msgstr ""
 msgid "Windows System Image Manager"
 msgstr ""
 
-#: modules/imaging/manage/imaging_server_link.php:59
+#: modules/imaging/manage/imaging_server_link.php:60
 #, php-format
 msgid ""
-"Link between imaging server <strong>%s</strong> and the entity "
+"Link between package server <strong>%s</strong> and the entity "
 "<strong>%s</strong> succeeded."
 msgstr ""
 
-#: modules/imaging/manage/imaging_server_link.php:93
+#: modules/imaging/manage/imaging_server_link.php:106
 #, php-format
 msgid ""
 "Do you really want to link the Imaging Server '<b>%s</b>' to the entity "
 "'<b>%s</b>'"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:90
+#: modules/imaging/manage/postinstall_edit.php:91
 #, php-format
 msgid "<strong>%s</strong> script %s"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:97
+#: modules/imaging/manage/postinstall_edit.php:92
+msgid "Notify Succes : "
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:108
+#: modules/imaging/manage/postinstall_edit.php:123
+msgid "Notify Error : "
+msgstr ""
+
+#: modules/imaging/manage/postinstall_edit.php:122
 #, php-format
 msgid "<strong>%s</strong> script wasn't %s"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_edit.php:122
+#: modules/imaging/manage/postinstall_edit.php:158
 msgid "Script value"
 msgstr ""
 
-#: modules/imaging/manage/service_remove.php:42
+#: modules/imaging/manage/service_remove.php:44
 #, php-format
 msgid "Service <strong>%s</strong> successfully removed"
 msgstr ""
 
-#: modules/imaging/manage/service_remove.php:64
+#: modules/imaging/manage/service_remove.php:79
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> Boot Service ?"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_create_boot_service.php:37
+#: modules/imaging/manage/postinstall_create_boot_service.php:38
 msgid "Boot service successfully created"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_create_boot_service.php:43
+#: modules/imaging/manage/postinstall_create_boot_service.php:39
+msgid "Notify Success : Boot service successfully created"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:55
 msgid "Error while creating Boot Service"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_create_boot_service.php:54
+#: modules/imaging/manage/postinstall_create_boot_service.php:56
+msgid "Notify Error : Error while creating Boot Service"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_create_boot_service.php:77
 #, php-format
 msgid "Add <b>%s</b> to available Boot Services ?"
 msgstr ""
@@ -1388,7 +1500,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "Passord"
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1461,24 +1573,15 @@ msgstr ""
 #: modules/imaging/manage/ajaxAvailableImagingServer.php:74
 #: modules/imaging/includes/post_install_script.php:63
 msgid "Name"
-msgstr ""
+msgstr "Etternavn"
 
 #: modules/imaging/manage/ajaxPostInstallLevel2.php:95
 msgid "Duplicate"
 msgstr ""
 
-#: modules/imaging/manage/location.php:59
-#: modules/imaging/manage/location.php:62
-#: modules/imaging/manage/save_configuration.php:70
-#, php-format
-msgid ""
-"Boot menu generation failed for package server: %s<br /><br />Check "
-"/var/log/mmc/pulse2-package-server.log"
-msgstr ""
-
 #: modules/imaging/manage/ajaxStatus.php:33
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: modules/imaging/manage/ajaxStatus.php:118
 msgid "Space available on server"
@@ -1564,39 +1667,72 @@ msgstr ""
 msgid "UAC"
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:42
+#: modules/imaging/manage/master_iso.php:44
 #: modules/imaging/infoPackage.inc.php:121
 msgid "Create iso from master"
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:44
+#: modules/imaging/manage/master_iso.php:46
 #, php-format
 msgid "Iso of master <strong>%s</strong> has been launched in background."
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:46
+#: modules/imaging/manage/master_iso.php:48
 #, php-format
 msgid ""
 "The files will be stored in the directory %s of the server at the end of the"
 " backup."
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:48
+#: modules/imaging/manage/master_iso.php:50
 msgid "Please go to the status page to check the iso creation status."
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:50
+#: modules/imaging/manage/master_iso.php:52
 msgid ""
 "This operation will last according to the amount of data of the master."
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:65
+#: modules/imaging/manage/master_iso.php:88
 #, php-format
 msgid "Create iso for <strong>%s</strong>"
 msgstr ""
 
-#: modules/imaging/manage/master_iso.php:85
+#: modules/imaging/manage/master_iso.php:108
 msgid "Launch backup"
+msgstr "Start sikkerhetskopiering"
+
+#: modules/imaging/manage/multicastaction.php:68
+msgid "Start Multicast of ( Master :"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:69
+#: modules/imaging/manage/multicastaction.php:89
+#: modules/imaging/manage/multicastaction.php:136
+msgid "on (group :"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:70
+#: modules/imaging/manage/multicastaction.php:90
+#: modules/imaging/manage/multicastaction.php:137
+msgid "to (location : "
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:88
+msgid "Stop Multicast of ( Master :"
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:102
+#: modules/imaging/manage/multicastaction.php:121
+msgid "Synchro Profile Menu group : "
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:121
+msgid "location : "
+msgstr ""
+
+#: modules/imaging/manage/multicastaction.php:135
+msgid "Clear Multicast of ( Master :"
 msgstr ""
 
 #: modules/imaging/manage/postinstall_redirect_to_boot_service.php:38
@@ -1654,12 +1790,13 @@ msgstr ""
 msgid "Copy of master In progress"
 msgstr ""
 
-#: modules/imaging/manage/service_del.php:42
+#: modules/imaging/manage/service_del.php:44
+#: modules/imaging/manage/service_show_used.php:93
 #, php-format
 msgid "Service <strong>%s</strong> removed from default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/service_del.php:64
+#: modules/imaging/manage/service_del.php:78
 #, php-format
 msgid "Remove the boot service <b>%s</b> from the default boot menu"
 msgstr ""
@@ -1741,26 +1878,38 @@ msgstr ""
 msgid "Default menu item label"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:44
+#: modules/imaging/manage/postinstall_delete.php:45
 #, php-format
 msgid "<strong>%s</strong> script deleted"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:51
+#: modules/imaging/manage/postinstall_delete.php:46
+msgid "Notify Success : script deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:61
+msgid "Notify Error : script deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:74
 #, php-format
 msgid "<strong>%s</strong> script wasn't deleted"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:59
+#: modules/imaging/manage/postinstall_delete.php:75
+msgid "Notify Warning : script wasn't deleted"
+msgstr ""
+
+#: modules/imaging/manage/postinstall_delete.php:93
 msgid "Can't delete this post-imaging script, it's a global script."
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:63
+#: modules/imaging/manage/postinstall_delete.php:97
 #: modules/imaging/infoPackage.inc.php:169
 msgid "Delete post-imaging script"
 msgstr ""
 
-#: modules/imaging/manage/postinstall_delete.php:65
+#: modules/imaging/manage/postinstall_delete.php:99
 #, php-format
 msgid "Are you sure you want to delete the <b>%s</b> script ?"
 msgstr ""
@@ -1796,7 +1945,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxLogs.php:55
 #: modules/imaging/includes/logs.inc.php:27
 msgid "Backup"
-msgstr ""
+msgstr "Sikkerhetskopi"
 
 #: modules/imaging/manage/ajaxLogs.php:56
 #: modules/imaging/includes/logs.inc.php:30
@@ -1843,72 +1992,77 @@ msgstr ""
 msgid "Backup failed"
 msgstr ""
 
-#: modules/imaging/manage/master_edit.php:43
+#: modules/imaging/manage/master_edit.php:45
 msgid "Edit master : "
 msgstr ""
 
-#: modules/imaging/manage/master_edit.php:94
+#: modules/imaging/manage/master_edit.php:96
 #, php-format
 msgid "Master <strong>%s</strong> modified with success"
 msgstr ""
 
-#: modules/imaging/manage/service_add.php:48
+#: modules/imaging/manage/master_edit.php:116
+#, php-format
+msgid "Master %s modified with error"
+msgstr ""
+
+#: modules/imaging/manage/service_add.php:49
 #, php-format
 msgid "Service <strong>%s</strong> added to default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/service_add.php:88
+#: modules/imaging/manage/service_add.php:100
 #, php-format
 msgid "Add the boot service <b>%s</b> to the default boot menu"
 msgstr ""
 
-#: modules/imaging/manage/save_configuration.php:65
+#: modules/imaging/manage/save_configuration.php:67
 #, php-format
 msgid "Imaging server <strong>%s</strong> configuration saved."
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:65
-#: modules/imaging/manage/service_show_used.php:77
+#: modules/imaging/manage/service_show_used.php:67
+#: modules/imaging/manage/service_show_used.php:108
 msgid "Removal of boot service failed"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:115
+#: modules/imaging/manage/service_show_used.php:170
 #, php-format
 msgid "Remove this boot service from imaging server %s"
 msgstr ""
 
-#: modules/imaging/manage/service_show_used.php:139
+#: modules/imaging/manage/service_show_used.php:194
 msgid ""
 "If you want to remove this boot service from one or more targets, check "
 "these targets and click on the remove button"
 msgstr ""
 
-#: modules/imaging/manage/service_edit.php:46
+#: modules/imaging/manage/service_edit.php:48
 msgid "Edit service : "
 msgstr ""
 
-#: modules/imaging/manage/service_edit.php:64
+#: modules/imaging/manage/service_edit.php:66
 msgid "In default bootmenu"
 msgstr ""
 
-#: modules/imaging/manage/service_edit.php:79
+#: modules/imaging/manage/service_edit.php:81
 #, php-format
 msgid "Service <strong>%s</strong> modified with success"
 msgstr ""
 
-#: modules/imaging/manage/master_clone.php:74
+#: modules/imaging/manage/master_clone.php:75
 msgid "There is no imaging server available to clone the master"
 msgstr ""
 
-#: modules/imaging/manage/master_clone.php:81
+#: modules/imaging/manage/master_clone.php:93
 msgid "Clone master : "
 msgstr ""
 
-#: modules/imaging/manage/master_clone.php:94
+#: modules/imaging/manage/master_clone.php:106
 msgid "Master"
 msgstr ""
 
-#: modules/imaging/manage/master_clone.php:104
+#: modules/imaging/manage/master_clone.php:116
 msgid "Imaging Server"
 msgstr ""
 
@@ -1928,17 +2082,22 @@ msgstr ""
 msgid "Choose package source"
 msgstr ""
 
-#: modules/imaging/manage/master_delete.php:36
+#: modules/imaging/manage/master_delete.php:38
 #, php-format
 msgid "Image <strong>%s</strong> deleted from the imaging server."
 msgstr ""
 
-#: modules/imaging/manage/master_delete.php:50
+#: modules/imaging/manage/master_delete.php:57
+#, php-format
+msgid "Error : Image %s deleted from the imaging server."
+msgstr ""
+
+#: modules/imaging/manage/master_delete.php:76
 #: modules/imaging/infoPackage.inc.php:104
 msgid "Delete master"
 msgstr ""
 
-#: modules/imaging/manage/master_delete.php:52
+#: modules/imaging/manage/master_delete.php:78
 #, php-format
 msgid "Are you sure you want to delete <b>%s</b> master ?"
 msgstr ""
@@ -1995,9 +2154,15 @@ msgstr ""
 msgid "Skip user OOBE"
 msgstr ""
 
-#: modules/imaging/manage/bootmenu_down.php:39
+#: modules/imaging/manage/bootmenu_down.php:36
 #, php-format
-msgid "Failed to move down <strong>%s</strong> in the default boot menu"
+msgid "Success : to move down <strong>%s</strong> in the default boot menu"
+msgstr ""
+
+#: modules/imaging/manage/bootmenu_down.php:49
+#, php-format
+msgid ""
+"Error : Failed to move down <strong>%s</strong> in the default boot menu"
 msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:33
@@ -2031,7 +2196,7 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:96
 msgid "Server status"
-msgstr ""
+msgstr "Serverstatus"
 
 #: modules/imaging/infoPackage.inc.php:107
 msgid "Edit master"
@@ -2291,27 +2456,27 @@ msgstr ""
 
 #: modules/imaging/includes/includes.php:195
 msgid "Uptime: "
-msgstr ""
+msgstr "Oppetid: "
 
 #: modules/imaging/includes/includes.php:197
 msgid "day"
-msgstr ""
+msgstr "dag"
 
 #: modules/imaging/includes/includes.php:200
 msgid "hour"
-msgstr ""
+msgstr "time"
 
 #: modules/imaging/includes/includes.php:202
 msgid "minute"
-msgstr ""
+msgstr "minutt"
 
 #: modules/imaging/includes/includes.php:206
 msgid "Memory"
-msgstr ""
+msgstr "Minne"
 
 #: modules/imaging/includes/includes.php:209
 msgid "Swap"
-msgstr ""
+msgstr "Swap"
 
 #: modules/imaging/includes/includes.php:221
 msgid "Never"
@@ -2564,7 +2729,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "Brukere"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -2850,7 +3015,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "Hjem"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"
@@ -3286,4 +3451,25 @@ msgstr ""
 msgid ""
 "You have modified the boot menu for the following items : %s. If you are "
 "done please click on \"Generate Menu\" to update the computer boot menu."
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:249
+#, php-format
+msgid "Boot menu generation For machine %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:272
+#, php-format
+msgid "Boot menu generation For Imaging Group %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:293
+#, php-format
+msgid "Boot menu generation Succes for Package Server on location %s"
+msgstr ""
+
+#: modules/imaging/includes/xmlrpc.inc.php:306
+#: modules/imaging/includes/xmlrpc.inc.php:320
+#, php-format
+msgid "Boot menu generation failed for package server on location %s [%s]"
 msgstr ""

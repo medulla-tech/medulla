@@ -8,11 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 17:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ru_RU\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
@@ -25,7 +26,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxHostsList.php:64
 #: modules/backuppc/backuppc/BrowseBackups.php:68
 msgid "View"
-msgstr ""
+msgstr "Вид"
 
 #: modules/backuppc/backuppc/ajaxHostsList.php:65
 msgid "Edit config"
@@ -53,7 +54,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:96
 msgid "Current state"
-msgstr ""
+msgstr "текущее состояние"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:97
 msgid "Last message"
@@ -68,7 +69,7 @@ msgid "Stop backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:101
-#: modules/backuppc/backuppc/hostSummary.php:163
+#: modules/backuppc/backuppc/hostSummary.php:263
 msgid "View errors"
 msgstr ""
 
@@ -101,49 +102,49 @@ msgid "Error while retrieving status."
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:43
-#: modules/backuppc/backuppc/hostSummary.php:84
+#: modules/backuppc/backuppc/hostSummary.php:173
 msgid "No ping response"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:44
-#: modules/backuppc/backuppc/hostSummary.php:85
+#: modules/backuppc/backuppc/hostSummary.php:174
 msgid "Backup failed"
-msgstr ""
+msgstr "Не удалось выполнить резервное копирование"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:45
-#: modules/backuppc/backuppc/hostSummary.php:86
+#: modules/backuppc/backuppc/hostSummary.php:175
 msgid "Restore failed"
-msgstr ""
+msgstr "Не удалось выполнить восстановление"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:46
-#: modules/backuppc/backuppc/hostSummary.php:87
+#: modules/backuppc/backuppc/hostSummary.php:176
 msgid "Backup up to date"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:47
-#: modules/backuppc/backuppc/hostSummary.php:88
+#: modules/backuppc/backuppc/hostSummary.php:177
 msgid "Restore done"
-msgstr ""
+msgstr "Восстановление выполнено"
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:48
-#: modules/backuppc/backuppc/hostSummary.php:89
+#: modules/backuppc/backuppc/hostSummary.php:178
 msgid "This computer has never been backed up"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:49
-#: modules/backuppc/backuppc/hostSummary.php:90
+#: modules/backuppc/backuppc/hostSummary.php:179
 msgid "Idle"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:50
-#: modules/backuppc/backuppc/hostSummary.php:91
+#: modules/backuppc/backuppc/hostSummary.php:180
 msgid "Cancelled by user"
 msgstr ""
 
 #: modules/backuppc/backuppc/ajaxGetStatus.php:51
-#: modules/backuppc/backuppc/hostSummary.php:92
+#: modules/backuppc/backuppc/hostSummary.php:181
 msgid "Backup in progress"
-msgstr ""
+msgstr "Выполняется резервное копирование"
 
 #: modules/backuppc/backuppc/viewHostLog.php:25
 msgid "backup Log"
@@ -159,7 +160,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/fileSearch.php:83
 msgid "File name"
-msgstr ""
+msgstr "Имя файла"
 
 #: modules/backuppc/backuppc/fileSearch.php:92
 #: modules/backuppc/backuppc/fileSearch.php:114
@@ -173,7 +174,7 @@ msgstr ""
 
 #: modules/backuppc/backuppc/fileSearch.php:105
 msgid "Date"
-msgstr ""
+msgstr "Дата"
 
 #: modules/backuppc/backuppc/fileSearch.php:127
 #: modules/backuppc/backuppc/EditBackupProfile.php:148
@@ -229,7 +230,7 @@ msgstr ""
 #: modules/backuppc/backuppc/EditBackupProfile.php:88
 #: modules/backuppc/backuppc/EditPeriodProfile.php:97
 msgid "Name"
-msgstr ""
+msgstr "Имя"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:97
 #: modules/backuppc/backuppc/edit.php:89
@@ -316,7 +317,7 @@ msgstr ""
 #: modules/backuppc/backuppc/edit.php:131
 #: modules/backuppc/backuppc/edit.php:215
 msgid "Remove"
-msgstr ""
+msgstr "Переместить"
 
 #: modules/backuppc/backuppc/EditBackupProfile.php:154
 #: modules/backuppc/backuppc/edit.php:147
@@ -326,7 +327,7 @@ msgstr ""
 #: modules/backuppc/backuppc/localSidebar.php:27
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:113
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #: modules/backuppc/backuppc/localSidebar.php:28
 msgid "Profiles"
@@ -343,7 +344,7 @@ msgid "Browse backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/BrowseShareNames.php:68
-#: modules/backuppc/backuppc/hostSummary.php:162
+#: modules/backuppc/backuppc/hostSummary.php:262
 msgid "Browse"
 msgstr ""
 
@@ -365,7 +366,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:34
 #: modules/backuppc/backuppc/ajaxFileSearch.php:34
 msgid "Bytes"
-msgstr ""
+msgstr "Байты"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:106
 msgid "Current directory :  "
@@ -379,7 +380,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:170
 #: modules/backuppc/backuppc/ajaxFileSearch.php:118
 msgid "Size"
-msgstr ""
+msgstr "Размер"
 
 #: modules/backuppc/backuppc/ajaxBrowseFiles.php:191
 msgid "Download selected (ZIP)"
@@ -397,11 +398,11 @@ msgstr ""
 msgid "Advanced restore"
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:34
+#: modules/backuppc/backuppc/index.php:58
 msgid "The computer has been removed from the backup system."
 msgstr ""
 
-#: modules/backuppc/backuppc/index.php:37
+#: modules/backuppc/backuppc/index.php:62
 #: modules/backuppc/infoPackage.inc.php:42
 msgid "Backup status"
 msgstr ""
@@ -417,7 +418,7 @@ msgstr ""
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
 #: modules/backuppc/backuppc/viewFileVersions.php:47
 #: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:142
+#: modules/backuppc/backuppc/hostSummary.php:242
 msgid "%A, %B %e %Y"
 msgstr ""
 
@@ -429,7 +430,7 @@ msgstr ""
 #: modules/backuppc/backuppc/EditPeriodProfile.php:144
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
-msgstr ""
+msgstr "в"
 
 #: modules/backuppc/backuppc/ajaxDownloadsTable.php:111
 msgid "Destination"
@@ -540,20 +541,20 @@ msgstr ""
 msgid "Schedule"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:38
+#: modules/backuppc/backuppc/startBackup.php:75
 msgid "Choose the backup type."
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:42
+#: modules/backuppc/backuppc/startBackup.php:79
 msgid "Full backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/startBackup.php:43
+#: modules/backuppc/backuppc/startBackup.php:80
 msgid "Incremental backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:161
+#: modules/backuppc/backuppc/hostStatus.php:185
 msgid "Configuration saved"
 msgstr ""
 
@@ -601,33 +602,49 @@ msgstr ""
 msgid "View restore points"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:47
-#: modules/backuppc/backuppc/hostStatus.php:48
+#: modules/backuppc/backuppc/hostStatus.php:45
+msgid "Notify Error : Backup configuration Computer"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Notify Computer :"
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:59
+msgid "has been added to backup system successfully."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:70
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:175
+#: modules/backuppc/backuppc/hostStatus.php:174
+msgid "Save configure host "
+msgstr ""
+
+#: modules/backuppc/backuppc/hostStatus.php:199
 #, php-format
 msgid "%s's backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:178
+#: modules/backuppc/backuppc/hostStatus.php:202
 msgid "Summary"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:182
+#: modules/backuppc/backuppc/hostStatus.php:206
 msgid "Configuration"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:183
+#: modules/backuppc/backuppc/hostStatus.php:207
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:184
+#: modules/backuppc/backuppc/hostStatus.php:208
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr ""
@@ -648,59 +665,64 @@ msgstr ""
 msgid "Your file is being prepared, please wait."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:49
+#: modules/backuppc/backuppc/hostSummary.php:94
 msgid "Action requested successfully"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:58
+#: modules/backuppc/backuppc/hostSummary.php:114
 msgid "Backup is not set for this computer."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:63
+#: modules/backuppc/backuppc/hostSummary.php:130
 msgid "Configure"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:68
+#: modules/backuppc/backuppc/hostSummary.php:135
+msgid ""
+"notify warning : There is no backup server assigned for the computer entity."
+msgstr ""
+
+#: modules/backuppc/backuppc/hostSummary.php:146
 msgid "There is no backup server assigned for the computer entity."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:95
+#: modules/backuppc/backuppc/hostSummary.php:184
 msgid "Current state: "
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:110
+#: modules/backuppc/backuppc/hostSummary.php:210
 msgid "Start Full Backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:112
+#: modules/backuppc/backuppc/hostSummary.php:212
 msgid "Sart Incr Backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:113
+#: modules/backuppc/backuppc/hostSummary.php:213
 msgid "Stop Backup"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:149
+#: modules/backuppc/backuppc/hostSummary.php:249
 msgid "Backup time"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:150
+#: modules/backuppc/backuppc/hostSummary.php:250
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
-#: modules/backuppc/backuppc/hostSummary.php:151
+#: modules/backuppc/backuppc/hostSummary.php:251
 msgid "Duration (min.)"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:152
+#: modules/backuppc/backuppc/hostSummary.php:252
 msgid "Errors"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:153
+#: modules/backuppc/backuppc/hostSummary.php:253
 msgid "File count (new)"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostSummary.php:154
+#: modules/backuppc/backuppc/hostSummary.php:254
 msgid "Backup size (new) [Mb]"
 msgstr ""
 
@@ -779,7 +801,7 @@ msgstr ""
 #: modules/backuppc/infoPackage.inc.php:33
 #: modules/backuppc/infoPackage.inc.php:38
 msgid "Backup"
-msgstr ""
+msgstr "Резервное копирование"
 
 #: modules/backuppc/infoPackage.inc.php:45
 msgid "Host backup status"
@@ -803,7 +825,7 @@ msgstr ""
 
 #: modules/backuppc/infoPackage.inc.php:70
 msgid "See pending packages"
-msgstr ""
+msgstr "Просмотреть ожидающие пакеты"
 
 #: modules/backuppc/infoPackage.inc.php:73
 msgid "Restore points"

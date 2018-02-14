@@ -38,7 +38,8 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
-                                                      callvncchangepermsbymaster
+                                                      callvncchangepermsbymaster, callInstallKey,\
+                                                      callremotefile, calllocalfile
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -176,6 +177,14 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
 
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
+
+#jfkjfk
+def getMachinefromjid(jid):
+    return XmppMasterDatabase().getMachinefromjid(jid)
+
+def getRelayServerfromjid(jid):
+    return XmppMasterDatabase().getRelayServerfromjid(jid)
+
 #jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':
@@ -197,6 +206,12 @@ def create_Qa_custom_command(login, osname, namecmd, customcmd, description ) :
 
 def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  ):
     return XmppMasterDatabase().updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  )
+
+def create_local_dir_transfert(pathroot, hostname):
+    dirmachine = os.path.join(pathroot, hostname)
+    if not os.path.exists(dirmachine):
+        os.makedirs(dirmachine, mode=0700)
+    return localfile(dirmachine)
 
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
@@ -355,6 +370,20 @@ def callInventoryinterface(uuid):
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
+def createdirectoryuser(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory, mode=0700)
+        return True
+    return False
+
+def callInstallKeyAM(jidAM,jidARS):
+    if jidARS != "" and jidAM != "":
+        callInstallKey(jidAM, jidARS)
+        return jidAM
+    else:
+        logging.getLogger().error("for machine %s : install key ARS %s"%(jidAM, jidARS) )
+        return "jid (AM or ARS) missing"
+
 def callrestart(uuid):
     jid = XmppMasterDatabase().getjidMachinefromuuid(uuid)
     if jid != "":
@@ -382,15 +411,44 @@ def callvncchangeperms(uuid, askpermission):
         logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
-def runXmppCommand(cmd,machine):
+def localfile(currentdir):
+    return calllocalfile(currentdir)
+
+def remotefile( currentdir, jidmachine):
+    return callremotefile(jidmachine, currentdir)
+
+def runXmppCommand(cmd, machine, information = ""):
     data = {
-	"action": "shellcommand",
-	"sessionid":name_random(8,"mcc_"),
-	"data" : {'cmd' : cmd},
-	"base64" :False
-    }
-    a=XmppSimpleCommand(machine, data , 70)
-    d = a.t2.join()
+                "action" : "cmd",
+                "sessionid" : name_random(8,"quick_"),
+                "data" : [machine, information] ,
+                "base64" : False
+        }
+    cmd = cmd.strip()
+    if cmd.startswith("pluging_"):
+        # call plugin master
+        lineplugingcalling = [x.strip() for x in cmd.split("@_@")]
+        plugingcalling = lineplugingcalling[0]
+        del lineplugingcalling[0]
+        action =  plugingcalling.strip().split("_")[1]
+        data ={
+                "action" : action,
+                "sessionid" : name_random(8,"quick_"),
+                "data" : [machine, information, lineplugingcalling] ,
+                "base64" : False
+        }
+        callXmppPlugin( action, data )
+        return {u'action': u'resultshellcommand', u'sessionid': u'mcc_221n4h6h', u'base64': False, u'data': {'result': 'call plugin : %s to machine : %s'%(action,machine ) }, u'ret': 0}
+    else:
+        data = {
+            "action": "shellcommand",
+            "sessionid":name_random(8,"mcc_"),
+            "data" : {'cmd' : cmd},
+            "base64" :False
+            }
+        a = XmppSimpleCommand(machine, data , 70)
+        d = a.t2.join()
+        print type(a.result)
     return a.result
 
 def runXmppScript(cmd,machine):

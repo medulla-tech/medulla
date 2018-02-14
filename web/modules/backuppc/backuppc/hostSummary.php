@@ -209,7 +209,7 @@ $hidden = new HiddenTpl("host");
 $f->add($hidden, array("value" => $uuid, "hide" => True));
 $f->addButton("startFullBackup", _T("Start Full Backup", 'backuppc'));
 if (!isset($nerverbackuped))
-    $f->addButton("startIncrBackup", _T("Sart Incr Backup", 'backuppc'));
+    $f->addButton("startIncrBackup", _T("Start Incr Backup", 'backuppc'));
 $f->addButton("stopBackup", _T("Stop Backup", 'backuppc'));
 $f->display();
 

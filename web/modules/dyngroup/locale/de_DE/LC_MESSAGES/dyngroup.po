@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: German (Germany) (https://www.transifex.com/siveo/teams/72118/de_DE/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -25,7 +25,7 @@ msgstr "%s's Details"
 
 #: modules/dyngroup/dyngroup/details.php:49
 msgid "Close"
-msgstr "Schließen"
+msgstr "Schlieen"
 
 #: modules/dyngroup/dyngroup/details.php:52
 msgid "Regenerate"
@@ -88,15 +88,15 @@ msgstr "Nicht"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:57
 msgid "Add shortcut"
-msgstr "Shortcut hinzufügen"
+msgstr "Shortcut hinzufgen"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:59
 msgid "Select the file you want to import"
-msgstr "Wählen Sie die gewünschte Datei zu importieren"
+msgstr "Whlen Sie die gewnschte Datei zu importieren"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:69
 msgid "Select what is inside the file"
-msgstr "Wählen Sie, was in der Datei ist"
+msgstr "Whlen Sie, was in der Datei ist"
 
 #: modules/dyngroup/dyngroup/update.php:30
 msgid "Update machines name cache in dyngroup"
@@ -131,16 +131,16 @@ msgstr "Stornieren"
 #: modules/dyngroup/dyngroup/tmpdisplay.php:31
 #, php-format
 msgid "Temporary result display for '%s'"
-msgstr "Temporäre Ergebnis-Anzeige für '%s'"
+msgstr "Temporre Ergebnis-Anzeige fr '%s'"
 
 #: modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: modules/dyngroup/infoPackage.inc.php:104
 msgid "Temporary result display"
-msgstr "Temporäre Ergebnisse anzeigen"
+msgstr "Temporre Ergebnisse anzeigen"
 
 #: modules/dyngroup/dyngroup/tmpdisplay.php:55
 msgid "back"
-msgstr "zurück"
+msgstr "zurck"
 
 #: modules/dyngroup/dyngroup/localSidebar.php:29
 msgid "Favourite groups"
@@ -152,15 +152,15 @@ msgstr "Alle Gruppen"
 
 #: modules/dyngroup/dyngroup/localSidebar.php:31
 msgid "Add a group"
-msgstr "Gruppe hinzufügen"
+msgstr "Gruppe hinzufgen"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:63
 msgid "Delete this group"
-msgstr "Diese Gruppe löschen"
+msgstr "Diese Gruppe lschen"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:65
 msgid "Delete this imaging group"
-msgstr "Diese Imaging-Gruppe löschen"
+msgstr "Diese Imaging-Gruppe lschen"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:69
 msgid "Quick action"
@@ -211,7 +211,7 @@ msgstr "Protokoll lesen"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:133
 msgid "Software deployment on this group"
-msgstr "Softwareverteilung über diese Gruppe"
+msgstr "Softwareverteilung ber diese Gruppe"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:136
 msgid "Update on this group"
@@ -251,7 +251,7 @@ msgstr "Alle Imaging Gruppen"
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:34
 msgid "Add an imaging group"
-msgstr "Eine Imaging Gruppe hinzufügen"
+msgstr "Eine Imaging Gruppe hinzufgen"
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:42
 msgid "Imaging group:"
@@ -277,7 +277,7 @@ msgstr "statische Gruppe bearbeiten"
 
 #: modules/dyngroup/dyngroup/creator.php:129
 msgid "Choose the module you want to query : "
-msgstr "Wählen Sie das Modul, das Sie abfragen möchten:"
+msgstr "Whlen Sie das Modul, das Sie abfragen mchten:"
 
 #: modules/dyngroup/dyngroup/creator.php:222
 msgid "Comparison operator : "
@@ -295,7 +295,7 @@ msgstr "Datum"
 #: modules/dyngroup/includes/autocomplete.php:29
 #: modules/dyngroup/includes/double.php:36
 msgid "Add"
-msgstr "Hinzufügen"
+msgstr "Hinzufgen"
 
 #: modules/dyngroup/dyngroup/creator.php:273
 #: modules/dyngroup/includes/autocomplete.php:31
@@ -373,7 +373,7 @@ msgstr "Ort"
 
 #: modules/dyngroup/dyngroup/creator.php:338
 msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr "Dritter Stock, Raum 401, Hauptquartiergebäude ... (benutzerdefiniert)"
+msgstr "Dritter Stock, Raum 401, Hauptquartiergebude ... (benutzerdefiniert)"
 
 #: modules/dyngroup/dyngroup/creator.php:339
 msgid "State"
@@ -387,7 +387,7 @@ msgstr ""
 
 #: modules/dyngroup/dyngroup/creator.php:341
 msgid "Entity"
-msgstr "Entität"
+msgstr "Entitt"
 
 #: modules/dyngroup/dyngroup/creator.php:342
 msgid "Organizational structure (automatic assignment)"
@@ -476,7 +476,7 @@ msgstr "speichern"
 #: modules/dyngroup/dyngroup/save.php:102
 #: modules/dyngroup/dyngroup/add_groups.php:237
 msgid "You must specify a group name"
-msgstr "Sie müssen einen Gruppennamen angeben"
+msgstr "Sie mssen einen Gruppennamen angeben"
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Specify a boolean operator between sub-requests"
@@ -484,12 +484,12 @@ msgstr "Geben Sie einen Booleschen Operator zwischen Sub-Zugriffe an"
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Check"
-msgstr "Überprüfen"
+msgstr "berprfen"
 
 #: modules/dyngroup/dyngroup/save.php:152
 #, php-format
 msgid "The boolean equation '%s' is not valid"
-msgstr "Die boolesche Gleichung '%s' ist nicht gültig"
+msgstr "Die boolesche Gleichung '%s' ist nicht gltig"
 
 #: modules/dyngroup/dyngroup/save.php:155
 #, php-format
@@ -497,12 +497,12 @@ msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
 msgstr ""
-"Die boolesche Gleichung '%s' ist nicht gültig. <br/> Nicht die gleiche "
-"Anzahl von Sub-Zugriffe"
+"Die boolesche Gleichung '%s' ist nicht gltig. <br/> Nicht die gleiche Anzahl"
+" von Sub-Zugriffe"
 
 #: modules/dyngroup/dyngroup/save.php:158
 msgid "The boolean equation is valid"
-msgstr "Die boolesche Gleichung ist gültig"
+msgstr "Die boolesche Gleichung ist gltig"
 
 #: modules/dyngroup/dyngroup/save.php:165
 msgid "Display content"
@@ -524,7 +524,7 @@ msgstr "Computers Liste wurde bei %d Computern abgeschnitten"
 
 #: modules/dyngroup/dyngroup/add_groups.php:149
 msgid "Group successfully modified"
-msgstr "Gruppe erfolgreich geändert"
+msgstr "Gruppe erfolgreich gendert"
 
 #: modules/dyngroup/dyngroup/add_groups.php:163
 msgid ""
@@ -538,8 +538,8 @@ msgid ""
 " group, because they have more than one ethernet card:"
 msgstr ""
 "Imaging-Gruppe modifiziert, aber einige Rechner wurden nicht zur "
-"existierenden Imaging-Gruppe hinzugefügt, da sie mehr als eine Ethernetkarte"
-" haben:"
+"existierenden Imaging-Gruppe hinzugefgt, da sie mehr als eine Ethernetkarte "
+"haben:"
 
 #: modules/dyngroup/dyngroup/add_groups.php:185
 msgid "Imaging group successfully modified"
@@ -547,13 +547,12 @@ msgstr "Imaginggruppe erfolgreich modifiziert"
 
 #: modules/dyngroup/dyngroup/add_groups.php:226
 msgid "Group failed to modify"
-msgstr "Gruppe nicht geändern"
+msgstr "Gruppe nicht gendern"
 
 #: modules/dyngroup/dyngroup/add_groups.php:229
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
-msgstr ""
-"Imaging-Gruppe konnte nicht modifizieren.</br>Kann nicht %s hinzufügen"
+msgstr "Imaging-Gruppe konnte nicht modifizieren.</br>Kann nicht %s hinzufgen"
 
 #: modules/dyngroup/dyngroup/add_groups.php:231
 msgid "Imaging group failed to modify"
@@ -561,7 +560,7 @@ msgstr "Imaging-Gruppe konnte nicht modifizieren"
 
 #: modules/dyngroup/dyngroup/add_groups.php:239
 msgid "You must specify an imaging group name"
-msgstr "Sie müssen einen Imaging-Gruppenname angeben"
+msgstr "Sie mssen einen Imaging-Gruppenname angeben"
 
 #: modules/dyngroup/dyngroup/add_groups.php:244
 #, php-format
@@ -570,7 +569,7 @@ msgstr "Eine Imaginggruppe mit dem Namen '%s' existiert bereits"
 
 #: modules/dyngroup/dyngroup/header.php:28
 msgid "Please choose the type of group you want to create"
-msgstr "Bitte wählen Sie die Art der zu erstellenden Gruppe"
+msgstr "Bitte whlen Sie die Art der zu erstellenden Gruppe"
 
 #: modules/dyngroup/dyngroup/tab.php:40
 msgid "Group creation"
@@ -602,11 +601,11 @@ msgstr "Imaging Server-Auswahl"
 
 #: modules/dyngroup/dyngroup/tab.php:102
 msgid "Select an imaging server for this group"
-msgstr "Wählen Sie einen Imaging-Server für diese Gruppe"
+msgstr "Whlen Sie einen Imaging-Server fr diese Gruppe"
 
 #: modules/dyngroup/dyngroup/groupshead.php:35
 msgid "Add a static group"
-msgstr "statische Gruppe hinzufügen"
+msgstr "statische Gruppe hinzufgen"
 
 #: modules/dyngroup/dyngroup/list.php:29
 msgid "Group list"
@@ -628,19 +627,19 @@ msgstr "Gruppe verteilen fehlerhaft"
 #: modules/dyngroup/dyngroup/delete_group.php:42
 #: modules/dyngroup/dyngroup/delete_group.php:44
 msgid "Delete imaging group"
-msgstr "Imaging-Gruppe löschen"
+msgstr "Imaging-Gruppe lschen"
 
 #: modules/dyngroup/dyngroup/delete_group.php:43
 #, php-format
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
 msgstr ""
-"Sind Sie sicher, dass Sie folgende Imaging-Gruppe löschen wollen "
+"Sind Sie sicher, dass Sie folgende Imaging-Gruppe lschen wollen "
 "<b>%s</b>?<br/>"
 
 #: modules/dyngroup/dyngroup/delete_group.php:48
 #: modules/dyngroup/dyngroup/delete_group.php:50
 msgid "Delete group"
-msgstr "Gruppe löschen"
+msgstr "Gruppe lschen"
 
 #: modules/dyngroup/dyngroup/delete_group.php:49
 #, php-format
@@ -648,7 +647,7 @@ msgid ""
 "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
 "other group)."
 msgstr ""
-"Sind Sie sicher, dass Sie Gruppe <b>%s</b> löschen wollen?<br/> (diese kann "
+"Sind Sie sicher, dass Sie Gruppe <b>%s</b> lschen wollen?<br/> (diese kann "
 "in einer anderen Gruppe verwendet sein)."
 
 #: modules/dyngroup/dyngroup/delete_group.php:64
@@ -659,12 +658,12 @@ msgstr ""
 #: modules/dyngroup/dyngroup/delete_group.php:92
 #, php-format
 msgid "Imaging group %s was successfully deleted"
-msgstr "Imaging-Gruppe %s wurde erfolgreich gelöscht"
+msgstr "Imaging-Gruppe %s wurde erfolgreich gelscht"
 
 #: modules/dyngroup/dyngroup/delete_group.php:95
 #, php-format
 msgid "Group %s was successfully deleted"
-msgstr "Gruppe %s wurde erfolgreich gelöscht"
+msgstr "Gruppe %s wurde erfolgreich gelscht"
 
 #: modules/dyngroup/infoPackage.inc.php:30
 msgid "Dyngroup"
@@ -699,7 +698,7 @@ msgstr "Computer Gruppen Erzeugung Unter Anforderung Editor"
 
 #: modules/dyngroup/infoPackage.inc.php:75
 msgid "Computers Group Creator Sub Request Delete"
-msgstr "Computer Gruppen Erzeugung Unter Anforderung löschen"
+msgstr "Computer Gruppen Erzeugung Unter Anforderung lschen"
 
 #: modules/dyngroup/infoPackage.inc.php:89
 #: modules/dyngroup/infoPackage.inc.php:113
@@ -712,7 +711,7 @@ msgstr "Computer Gruppen Unter Anforderung Editor"
 
 #: modules/dyngroup/infoPackage.inc.php:99
 msgid "Computers Group Sub Request Delete"
-msgstr "Computer Gruppen Unter Anforderung löschen"
+msgstr "Computer Gruppen Unter Anforderung lschen"
 
 #: modules/dyngroup/infoPackage.inc.php:119
 msgid "Display a groups of computers"
@@ -745,7 +744,7 @@ msgstr ""
 
 #: modules/dyngroup/infoPackage.inc.php:157
 msgid "Delete a group of computers"
-msgstr "Löschen eine Gruppe von Computern"
+msgstr "Lschen eine Gruppe von Computern"
 
 #: modules/dyngroup/infoPackage.inc.php:162
 msgid "Group of computers details"
@@ -773,7 +772,7 @@ msgstr "Bearbeiten"
 
 #: modules/dyngroup/includes/request.php:129
 msgid "Delete"
-msgstr "Löschen"
+msgstr "Lschen"
 
 #: modules/dyngroup/includes/request.php:177
 #, php-format
@@ -787,7 +786,7 @@ msgstr "%s) Suche %s %s %s in Modul %s"
 
 #: modules/dyngroup/includes/groups.inc.php:38
 msgid "All share entities"
-msgstr "Alle Verteilten Datensätze"
+msgstr "Alle Verteilten Datenstze"
 
 #: modules/dyngroup/includes/groups.inc.php:61
 msgid "Group share"
@@ -796,7 +795,7 @@ msgstr "Gruppe verteilen"
 #: modules/dyngroup/includes/groups.inc.php:85
 #: modules/dyngroup/includes/groups.inc.php:280
 msgid "Confirm"
-msgstr "Bestätigen"
+msgstr "Besttigen"
 
 #: modules/dyngroup/includes/groups.inc.php:120
 #: modules/dyngroup/includes/groups.inc.php:124
@@ -829,13 +828,13 @@ msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
 msgstr ""
-"<p>Diese Computer werden in diese Gruppe verschoben und ihre Bootmenüs "
+"<p>Diese Computer werden in diese Gruppe verschoben und ihre Bootmens "
 "<strong>werden neu geschrieben</strong></p>"
 
 #: modules/dyngroup/includes/groups.inc.php:268
 msgid "All related images to these computers will be <strong>DELETED</strong>"
 msgstr ""
-"Alle relevanten Abbilder für diese Rechner werden <strong>GELÖSCHT</strong>"
+"Alle relevanten Abbilder fr diese Rechner werden <strong>GELSCHT</strong>"
 
 #: modules/dyngroup/includes/dyngroup.php:461
 msgid "Failed to load some pkgs module"
@@ -847,7 +846,7 @@ msgstr "Fehler beim Laden einiger msc Module"
 
 #: modules/dyngroup/includes/autocomplete.php:44
 msgid "Add a value"
-msgstr "Wert hinzufügen"
+msgstr "Wert hinzufgen"
 
 #: modules/dyngroup/includes/double.php:51
 msgid "->"

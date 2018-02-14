@@ -61,12 +61,6 @@ endif
 		    --disable-wol \
 		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
 		    LDFLAGS="$(LDFLAGS)"
-	$(MAKE) -C services/3rd_party wol-src
-	cd services/3rd_party/wol-src/; \
-	./configure --host=$(DEB_HOST_GNU_TYPE) \
-		    --build=$(DEB_BUILD_GNU_TYPE) \
-		    CFLAGS="$(CFLAGS) $(CPPFLAGS)" \
-		    LDFLAGS="$(LDFLAGS)"
 
 build-arch:
 build-indep:
@@ -74,7 +68,6 @@ build: build-stamp
 build-stamp: config.status
 	dh_testdir
 	$(MAKE) 
-	$(MAKE) -C services/3rd_party pulse2-wol
 	touch build-stamp
 
 install: build
@@ -83,7 +76,6 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	$(MAKE) install DESTDIR=$(DESTDIR)
-	install -m 755 services/3rd_party/pulse2-wol $(DESTDIR)/usr/sbin/pulse2-wol	
 	# Already provided by MMC packages
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/__init__.py
 	rm -f $(DESTDIR)/usr/lib/python2.?/*-packages/mmc/plugins/__init__.py
@@ -91,7 +83,6 @@ install: build
 	mkdir -p $(DESTDIR)/usr/lib/systemd/system
 	cp $(CURDIR)/services/systemd/*.service $(DESTDIR)/usr/lib/systemd/system
 	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-scheduler.service
-	rm -fv $(DESTDIR)/usr/lib/systemd/system/pulse2-launchers.service
 	# Autotools won't listen to me...
 	rm -f $(DESTDIR)/var/lib/pulse2/clients/win32/generate-agent-pack.sh.in
 	# Useless files
@@ -99,7 +90,7 @@ install: build
 	rm -f $(DESTDIR)/usr/share/mmc/modules/inventory/includes/libchart/doc/DEJAVU_LICENSE
 	mkdir -p $(DESTDIR)/etc/apache2/conf-available/
 	cp $(CURDIR)/web/conf/apache/pulse.conf $(DESTDIR)/etc/apache2/conf-available/
-	rm -fv $(DESTDIR)/usr/share/mmc/modules/update/locale/.tx/config
+	mkdir -p $(DESTDIR)/var/lib/pulse2/file-transfer
 
 binary-indep: build install
 binary-arch: build install

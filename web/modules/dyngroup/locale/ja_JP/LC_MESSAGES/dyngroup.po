@@ -8,12 +8,12 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-11 09:22+0200\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -21,7 +21,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/details.php:30
 #, php-format
 msgid "%s's details"
-msgstr "%s の詳細"
+msgstr "%s "
 
 #: modules/dyngroup/dyngroup/details.php:49
 msgid "Close"
@@ -42,12 +42,12 @@ msgstr "表示"
 #: modules/dyngroup/dyngroup/display.php:60
 #, php-format
 msgid "Group '%s' content"
-msgstr "グループ '%s' の内容"
+msgstr " '%s' "
 
 #: modules/dyngroup/dyngroup/display.php:62
 #, php-format
 msgid "Imaging group '%s' content"
-msgstr "イメージンググループ '%s' の内容"
+msgstr " '%s' "
 
 #: modules/dyngroup/dyngroup/import_from_file.php:41
 #: modules/dyngroup/dyngroup/add_groups.php:190
@@ -59,7 +59,7 @@ msgstr "グループが作成されました"
 #: modules/dyngroup/dyngroup/add_groups.php:242
 #, php-format
 msgid "A group already exists with name '%s'"
-msgstr "'%s' の名前を持つグループはすでに存在しています"
+msgstr "'%s' "
 
 #: modules/dyngroup/dyngroup/import_from_file.php:51
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:101
@@ -105,7 +105,7 @@ msgstr "動的グループでのマシン名キャッシュの更新"
 #: modules/dyngroup/dyngroup/update.php:35
 #, php-format
 msgid "update machine cache : %s machines"
-msgstr "マシンキャッシュの更新 : %s マシン"
+msgstr " : %s "
 
 #: modules/dyngroup/dyngroup/remove_machine.php:48
 msgid "Remove a computer"
@@ -114,7 +114,7 @@ msgstr "コンピューターを削除"
 #: modules/dyngroup/dyngroup/remove_machine.php:54
 #, php-format
 msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr "コンピューター <b>%s</b> をグループ <b>%s</b> から削除することになります。"
+msgstr " <b>%s</b>  <b>%s</b> "
 
 #: modules/dyngroup/dyngroup/remove_machine.php:57
 msgid "Remove Computer"
@@ -131,7 +131,7 @@ msgstr "キャンセル"
 #: modules/dyngroup/dyngroup/tmpdisplay.php:31
 #, php-format
 msgid "Temporary result display for '%s'"
-msgstr "'%s' の一時的結果の表示"
+msgstr "'%s' "
 
 #: modules/dyngroup/dyngroup/tmpdisplay.php:33
 #: modules/dyngroup/infoPackage.inc.php:104
@@ -169,7 +169,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:85
 #, php-format
 msgid "result (%s)"
-msgstr "結果 (%s)"
+msgstr " (%s)"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:85
 #: modules/dyngroup/dyngroup/save.php:80
@@ -243,7 +243,7 @@ msgstr "イメージング管理"
 
 #: modules/dyngroup/dyngroup/ajaxListGroups.php:167
 msgid "Csv export"
-msgstr "CSV エクスポート"
+msgstr "CSV "
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:31
 msgid "All imaging groups"
@@ -255,11 +255,11 @@ msgstr "イメージンググループを追加"
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:42
 msgid "Imaging group:"
-msgstr "イメージンググループ:"
+msgstr ":"
 
 #: modules/dyngroup/dyngroup/localImagingSidebar.php:42
 msgid "Dynamic imaging group:"
-msgstr "動的イメージンググループ:"
+msgstr ":"
 
 #: modules/dyngroup/dyngroup/edithead.php:40
 msgid "Edit a dynamic group"
@@ -277,11 +277,11 @@ msgstr "静的グループを編集"
 
 #: modules/dyngroup/dyngroup/creator.php:129
 msgid "Choose the module you want to query : "
-msgstr "問い合わせをするモジュールを選択する : "
+msgstr " : "
 
 #: modules/dyngroup/dyngroup/creator.php:222
 msgid "Comparison operator : "
-msgstr "比較演算子 : "
+msgstr " : "
 
 #: modules/dyngroup/dyngroup/creator.php:235
 msgid "Date"
@@ -305,7 +305,7 @@ msgstr "変更"
 
 #: modules/dyngroup/dyngroup/creator.php:299
 msgid "The request is : "
-msgstr "このリクエスト : "
+msgstr " : "
 
 #: modules/dyngroup/dyngroup/creator.php:316
 msgid "Go to save step"
@@ -349,7 +349,7 @@ msgstr "システムタイプ"
 
 #: modules/dyngroup/dyngroup/creator.php:332
 msgid "Laptop, Desktop, Rack Mount Chassis ..."
-msgstr "ラップトップ、デスクトップ、ラックマウント筐体 ..."
+msgstr " ..."
 
 #: modules/dyngroup/dyngroup/creator.php:333
 msgid "System manufacturer"
@@ -357,7 +357,7 @@ msgstr "システムメーカー"
 
 #: modules/dyngroup/dyngroup/creator.php:334
 msgid "Dell, HP, Apple ..."
-msgstr "Dell、HP、Apple ..."
+msgstr "DellHPApple ..."
 
 #: modules/dyngroup/dyngroup/creator.php:335
 msgid "System model"
@@ -365,7 +365,7 @@ msgstr "システムモデル"
 
 #: modules/dyngroup/dyngroup/creator.php:336
 msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
-msgstr "Latitude E6420、ProLiant DL120、MacBookAir5,2 ..."
+msgstr "Latitude E6420ProLiant DL120MacBookAir5,2 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:337
 msgid "Location"
@@ -373,7 +373,7 @@ msgstr "場所"
 
 #: modules/dyngroup/dyngroup/creator.php:338
 msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr "3 階、401 号室、本社 ... (ユーザー定義)"
+msgstr "3 401  ... ()"
 
 #: modules/dyngroup/dyngroup/creator.php:339
 msgid "State"
@@ -381,7 +381,7 @@ msgstr "状態"
 
 #: modules/dyngroup/dyngroup/creator.php:340
 msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
-msgstr "生産中、メンテナンス中、廃棄 ... (ユーザー定義)"
+msgstr " ... ()"
 
 #: modules/dyngroup/dyngroup/creator.php:341
 msgid "Entity"
@@ -389,7 +389,7 @@ msgstr "エンティティ"
 
 #: modules/dyngroup/dyngroup/creator.php:342
 msgid "Organizational structure (automatic assignment)"
-msgstr "組織構造 (自動割り当て)"
+msgstr " ()"
 
 #: modules/dyngroup/dyngroup/creator.php:343
 msgid "Software"
@@ -401,7 +401,7 @@ msgstr "オペレーティングシステム"
 
 #: modules/dyngroup/dyngroup/creator.php:345
 msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
-msgstr "Microsoft Windows 7、Debian GNU/Linux 7.1 ..."
+msgstr "Microsoft Windows 7Debian GNU/Linux 7.1 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:346
 msgid "Installed software"
@@ -409,15 +409,15 @@ msgstr "インストールされたソフトウェア"
 
 #: modules/dyngroup/dyngroup/creator.php:347
 msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
-msgstr "Mozilla Firefox、LibreOffice、Microsoft Office 2003 ..."
+msgstr "Mozilla FirefoxLibreOfficeMicrosoft Office 2003 ..."
 
 #: modules/dyngroup/dyngroup/creator.php:348
 msgid "Installed software (specific version)"
-msgstr "インストールされたソフトウェア (具体的なバージョン)"
+msgstr " ()"
 
 #: modules/dyngroup/dyngroup/creator.php:349
 msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
-msgstr "2 ステップクエリー: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
+msgstr "2 : Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
 
 #: modules/dyngroup/dyngroup/save_detail.php:28
 msgid "Request saver"
@@ -426,17 +426,17 @@ msgstr "リクエストセーバー"
 #: modules/dyngroup/dyngroup/save_detail.php:42
 #, php-format
 msgid "This request has been saved as %s (id=%s)"
-msgstr "このリクエストは、 %s(id=%s) として保存されました"
+msgstr " %s(id=%s) "
 
 #: modules/dyngroup/dyngroup/save_detail.php:44
 #, php-format
 msgid "This result has been saved as %s (id=%s)"
-msgstr "この 結果は、 %s(id=%s) として保存されました"
+msgstr "  %s(id=%s) "
 
 #: modules/dyngroup/dyngroup/save.php:30
 #, php-format
 msgid "Request saver (%s)"
-msgstr "リクエストセーバー (%s)"
+msgstr " (%s)"
 
 #: modules/dyngroup/dyngroup/save.php:30
 msgid "group"
@@ -448,7 +448,7 @@ msgstr "プロファイル"
 
 #: modules/dyngroup/dyngroup/save.php:78
 msgid "Name :"
-msgstr "名前 :"
+msgstr " :"
 
 #: modules/dyngroup/dyngroup/save.php:80
 msgid "save as"
@@ -476,7 +476,7 @@ msgstr "グループ名を指定する必要があります"
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Specify a boolean operator between sub-requests"
-msgstr "サブリクエスト間の Boolean 演算子を指定してください"
+msgstr " Boolean "
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Check"
@@ -485,18 +485,18 @@ msgstr "確認"
 #: modules/dyngroup/dyngroup/save.php:152
 #, php-format
 msgid "The boolean equation '%s' is not valid"
-msgstr "Boolean 式 '%s' が不正です"
+msgstr "Boolean  '%s' "
 
 #: modules/dyngroup/dyngroup/save.php:155
 #, php-format
 msgid ""
 "The boolean equation '%s' is not valid.<br/>Not the same number of sub-"
 "requests"
-msgstr "Boolean 式 '%s' が不正です。<br/>サブリクエストの番号が同じではありません"
+msgstr "Boolean  '%s' <br/>"
 
 #: modules/dyngroup/dyngroup/save.php:158
 msgid "The boolean equation is valid"
-msgstr "Boolean 式は有効です"
+msgstr "Boolean "
 
 #: modules/dyngroup/dyngroup/save.php:165
 msgid "Display content"
@@ -514,7 +514,7 @@ msgstr ""
 #: modules/dyngroup/dyngroup/add_groups.php:260
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr "コンピューター一覧が、%d 台のコンピューターでトランケートされました。"
+msgstr "%d "
 
 #: modules/dyngroup/dyngroup/add_groups.php:149
 msgid "Group successfully modified"
@@ -530,8 +530,7 @@ msgstr ""
 msgid ""
 "Imaging group modified, but some machines were not added to existing imaging"
 " group, because they have more than one ethernet card:"
-msgstr ""
-"イメージンググループが変更されましたが、何台かのマシンは複数のイーサネットカードを有しているため、既存のイメージンググループに追加できませんでした:"
+msgstr ":"
 
 #: modules/dyngroup/dyngroup/add_groups.php:185
 msgid "Imaging group successfully modified"
@@ -544,7 +543,7 @@ msgstr "グループの変更に失敗しました"
 #: modules/dyngroup/dyngroup/add_groups.php:229
 #, php-format
 msgid "Imaging group failed to modify.<br/>Can't add %s"
-msgstr "イメージンググループの変更に失敗しました。<br/> %sを追加できません。"
+msgstr "<br/> %s"
 
 #: modules/dyngroup/dyngroup/add_groups.php:231
 msgid "Imaging group failed to modify"
@@ -557,7 +556,7 @@ msgstr "グループ名を指定する必要があります"
 #: modules/dyngroup/dyngroup/add_groups.php:244
 #, php-format
 msgid "An imaging group already exists with name '%s'"
-msgstr "'%s' の名前を持つイメージンググループはすでに存在しています"
+msgstr "'%s' "
 
 #: modules/dyngroup/dyngroup/header.php:28
 msgid "Please choose the type of group you want to create"
@@ -606,7 +605,7 @@ msgstr "グループ一覧"
 #: modules/dyngroup/dyngroup/edit_share.php:41
 #, php-format
 msgid "Share group '%s' with"
-msgstr "グループ '%s' を共有"
+msgstr " '%s' "
 
 #: modules/dyngroup/dyngroup/edit_share.php:81
 msgid "Group successfully shared"
@@ -624,7 +623,7 @@ msgstr "イメージンググループを削除"
 #: modules/dyngroup/dyngroup/delete_group.php:43
 #, php-format
 msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr "本当にイメージンググループ <b>%s</b> を削除しますか？<br/>"
+msgstr " <b>%s</b> <br/>"
 
 #: modules/dyngroup/dyngroup/delete_group.php:48
 #: modules/dyngroup/dyngroup/delete_group.php:50
@@ -636,7 +635,7 @@ msgstr "グループを削除"
 msgid ""
 "Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
 "other group)."
-msgstr "本当にグループ <b>%s</b> を削除しますか？<br/> (他のグループで使用されている可能性があります)。"
+msgstr " <b>%s</b> <br/> ()"
 
 #: modules/dyngroup/dyngroup/delete_group.php:64
 msgid ""
@@ -646,12 +645,12 @@ msgstr ""
 #: modules/dyngroup/dyngroup/delete_group.php:92
 #, php-format
 msgid "Imaging group %s was successfully deleted"
-msgstr "イメージンググループ <b>%s</b> が削除されました"
+msgstr " <b>%s</b> "
 
 #: modules/dyngroup/dyngroup/delete_group.php:95
 #, php-format
 msgid "Group %s was successfully deleted"
-msgstr "グループ <b>%s</b> が削除されました"
+msgstr " <b>%s</b> "
 
 #: modules/dyngroup/infoPackage.inc.php:30
 msgid "Dyngroup"
@@ -711,7 +710,7 @@ msgstr "コンピューターのグループを共有"
 
 #: modules/dyngroup/infoPackage.inc.php:129
 msgid "Second page of result/request group creator"
-msgstr "結果/リクエストグループクリエイターの 2 番目のページ"
+msgstr "/ 2 "
 
 #: modules/dyngroup/infoPackage.inc.php:134
 msgid "Save a group of computers"
@@ -744,7 +743,7 @@ msgstr "コンピューターグループからコンピューターを削除"
 
 #: modules/dyngroup/infoPackage.inc.php:182
 msgid "Csv's export"
-msgstr "CSV のエクスポート"
+msgstr "CSV "
 
 #: modules/dyngroup/infoPackage.inc.php:187
 msgid "Update machine cache"
@@ -765,12 +764,12 @@ msgstr "削除"
 #: modules/dyngroup/includes/request.php:177
 #, php-format
 msgid "%s) Search %s %s (%s) in module %s"
-msgstr "%s) モジュール %s 内での %s %s の検索 (%s)"
+msgstr "%s)  %s  %s %s  (%s)"
 
 #: modules/dyngroup/includes/request.php:179
 #, php-format
 msgid "%s) Search %s %s %s in module %s"
-msgstr "%s) モジュール %s 内での %s %s %s の検索"
+msgstr "%s)  %s  %s %s %s "
 
 #: modules/dyngroup/includes/groups.inc.php:38
 msgid "All share entities"
@@ -801,7 +800,7 @@ msgstr "以下に掲げられたコンピューターは、すでに別のイメ
 #: modules/dyngroup/includes/groups.inc.php:245
 #, php-format
 msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
-msgstr "<li>%sは <a href=\"%s\">%s</a> の一部です</li>"
+msgstr "<li>%s <a href=\"%s\">%s</a> </li>"
 
 #: modules/dyngroup/includes/groups.inc.php:257
 msgid "Computers listed below are already stand-alone registered in imaging."
@@ -811,11 +810,11 @@ msgstr "以下に掲げられたコンピューターは、すでにイメージ
 msgid ""
 "<p>These computers will move to this group and their bootmenus <strong>will "
 "be rewritten</strong></p>"
-msgstr "<p>これらのコンピューターはこのグループに移動します。ブートメニューは再書き込みされます</strong></p>"
+msgstr "<p></strong></p>"
 
 #: modules/dyngroup/includes/groups.inc.php:268
 msgid "All related images to these computers will be <strong>DELETED</strong>"
-msgstr "これらのコンピューターへの関連する全イメージは、<strong>削除されます</strong>"
+msgstr "<strong></strong>"
 
 #: modules/dyngroup/includes/dyngroup.php:461
 msgid "Failed to load some pkgs module"
