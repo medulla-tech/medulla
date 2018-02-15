@@ -44,7 +44,7 @@ msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:77
 msgid "Product Updates installation (ajax)"
-msgstr ""
+msgstr "产品更新安装 (ajax)"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -157,12 +157,12 @@ msgstr "软体部署"
 #: modules/pulse2/update/viewProductUpdates.php:25
 #: modules/pulse2/update/viewProductUpdates.php:51
 msgid "Available updates"
-msgstr ""
+msgstr "可用更新"
 
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: modules/pulse2/update/installProductUpdates.php:41
 msgid "Installing updates ..."
-msgstr ""
+msgstr "正在安装更新..."

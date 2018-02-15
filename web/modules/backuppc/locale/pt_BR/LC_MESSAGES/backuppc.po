@@ -584,7 +584,7 @@ msgstr "Restaurar arquivos"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "Host"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"

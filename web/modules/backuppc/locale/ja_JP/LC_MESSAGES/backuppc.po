@@ -580,7 +580,7 @@ msgstr "ファイルのリストア"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "ホスト"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"

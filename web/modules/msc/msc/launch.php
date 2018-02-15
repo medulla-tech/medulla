@@ -147,10 +147,12 @@ function start_a_command($proxy = array()) {
             $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
             $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
             $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
+            $limit_rate_ko = (quick_get('limit_rate_ko')) ? quick_get('limit_rate_ko') : 0;
+
             if ($exec_date != "" && $exec_date == $start_date){
                 $exec_date = '';
             }
-            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
+            xmlrpc_addlogincommand($_SESSION['login'], $id, '', '', '', $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired, $limit_rate_ko);
 
             header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                 'uuid' => $uuid,
@@ -210,7 +212,7 @@ function start_a_command($proxy = array()) {
                 $command_id = add_command_api($pid, NULL, $params, $p_api, $mode, $deploy_group_id, $ordered_proxies, $cmd_type);
                 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
                     $countmachine = getRestrictedComputersListLen( array('gid' => $deploy_group_id));
-                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0);
+                    xmlrpc_addlogincommand($_SESSION['login'], $command_id, $deploy_group_id ,$countmachine, '', '', '', 0, 0, 0);
                 }
 
                 if (!$active) {
@@ -264,14 +266,23 @@ function start_a_command($proxy = array()) {
                 $parameterspacquage = (quick_get('parameterspacquage')) ? quick_get('parameterspacquage') : '';
                 $rebootrequired = (quick_get('rebootrequired')) ? quick_get('rebootrequired') : 0;
                 $shutdownrequired = (quick_get('shutdownrequired')) ? quick_get('shutdownrequired') : 0;
-
+                $limit_rate_ko = (quick_get('limit_rate_ko')) ? quick_get('limit_rate_ko') : 0;
                 $exec_date    = (quick_get('exec_date')) ? quick_get('exec_date') : '';
                 if ($exec_date != "" && $exec_date == $start_date){
                     $exec_date = '';
                 }
                 $instructions_nb_machine_for_exec    = (quick_get('instructions_nb_machine_for_exec')) ? quick_get('instructions_nb_machine_for_exec') : '';
 
-                xmlrpc_addlogincommand($_SESSION['login'], $id, $gid, $countmachine, $instructions_nb_machine_for_exec, $exec_date, $parameterspacquage, $rebootrequired, $shutdownrequired);
+                xmlrpc_addlogincommand( $_SESSION['login'],
+                                        $id,
+                                        $gid,
+                                        $countmachine,
+                                        $instructions_nb_machine_for_exec,
+                                        $exec_date,
+                                        $parameterspacquage,
+                                        $rebootrequired,
+                                        $shutdownrequired,
+                                        $limit_rate_ko);
 
                 header("Location: " . urlStrRedirect("xmppmaster/xmppmaster/viewlogs", array('tab' => $tab,
                                                                                     'uuid' => $uuid,
@@ -620,6 +631,11 @@ if (isset($_GET['badvanced']) and !isset($_POST['bconfirm'])) {
             ), $deployment_values
         );
         if (isExpertMode()){
+            $bandwidth = new IntegerTpl("limit_rate_ko");
+            $bandwidth->setAttributCustom('min = 1  max = 100');
+            $f->add(
+                    new TrFormElement(_T("bandwidth throttling (ko)",'pkgs'), $bandwidth), array_merge(array("value" => ''), array('placeholder' => _T('<in ko>', 'pkgs')))
+            );
             $f->add(
                     new TrFormElement(
                         _T('Dynamic parameters Packages', 'msc'), new InputTpl('parameterspacquage')

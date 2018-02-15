@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Japanese (Japan) (https://www.transifex.com/siveo/teams/72118/ja_JP/)\n"
@@ -626,7 +626,7 @@ msgstr ""
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr " %d "
 
 #: modules/imaging/imaging/addimage.php:49
 #: modules/imaging/imaging/addimage.php:165
@@ -1088,11 +1088,11 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
-msgstr ""
+msgstr "ファイル名"
 
 #: modules/imaging/manage/sysprepList.php:86
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/imaging/manage/sysprepList.php:90
 msgid "Display sysprep file"
@@ -1270,7 +1270,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:534
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
-msgstr ""
+msgstr "コンピューター名"
 
 #: modules/imaging/manage/ajaxFormWin7.php:449
 #: modules/imaging/manage/ajaxFormWin8.php:524
@@ -1462,7 +1462,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin8.php:720
 #: modules/imaging/manage/ajaxFormWin10.php:729
 msgid "Domain"
-msgstr ""
+msgstr "ドメイン"
 
 #: modules/imaging/manage/ajaxFormWin7.php:650
 #: modules/imaging/manage/ajaxFormWin8.php:725
@@ -1500,7 +1500,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "パスワード"
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1534,7 +1534,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:803
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
-msgstr ""
+msgstr "グループ"
 
 #: modules/imaging/manage/ajaxFormWin7.php:733
 #: modules/imaging/manage/ajaxFormWin8.php:814
@@ -1605,7 +1605,7 @@ msgstr "統計"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr ""
+msgstr "エンティティ"
 
 #: modules/imaging/manage/ajaxStatus.php:145
 msgid "client(s) registered"
@@ -1780,7 +1780,7 @@ msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
-msgstr ""
+msgstr "進行中"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
@@ -2080,7 +2080,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
-msgstr ""
+msgstr "パッケージソースを選択してください"
 
 #: modules/imaging/manage/master_delete.php:38
 #, php-format
@@ -2653,7 +2653,7 @@ msgstr " UUID "
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
-msgstr ""
+msgstr "ファイル"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "available"
@@ -2729,7 +2729,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "ユーザー"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -2763,22 +2763,22 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
 msgid "Yes"
-msgstr ""
+msgstr "はい"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
 msgid "No"
-msgstr ""
+msgstr "いいえ"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
 msgid "Enable"
-msgstr ""
+msgstr "有効"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
 msgid "Disabled"
-msgstr ""
+msgstr "無効"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
 msgid ""
@@ -3015,7 +3015,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "ホーム"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"
@@ -3031,7 +3031,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1559
 msgid "Other"
-msgstr ""
+msgstr "その他"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1561
 msgid "Specifies neither a home or work network"

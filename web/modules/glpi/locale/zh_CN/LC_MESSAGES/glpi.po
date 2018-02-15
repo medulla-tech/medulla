@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -52,7 +52,7 @@ msgstr ""
 
 #: modules/glpi/infoPackage.inc.php:85
 msgid "Entities"
-msgstr ""
+msgstr "实体"
 
 #: modules/glpi/infoPackage.inc.php:89 modules/glpi/infoPackage.inc.php:102
 msgid "Entities (ajax)"
@@ -157,7 +157,7 @@ msgstr ""
 
 #: modules/glpi/glpi/addEntityRule.php:67
 msgid "Active"
-msgstr ""
+msgstr "作用中"
 
 #: modules/glpi/glpi/addEntityRule.php:72
 #: modules/glpi/glpi/ajaxViewPart.php:212
@@ -245,7 +245,7 @@ msgstr ""
 #: modules/glpi/glpi/addEntityRule.php:138
 #: modules/glpi/includes/publicFunc.php:142
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: modules/glpi/glpi/addEntityRule.php:149
 msgid "Criterion"
@@ -296,7 +296,7 @@ msgstr " %d "
 #: modules/glpi/glpi/ajaxEntityList.php:51
 #: modules/glpi/glpi/ajaxEntityRules.php:51
 msgid "No entry found"
-msgstr ""
+msgstr "找不到任何项目"
 
 #: modules/glpi/glpi/ajaxLocationList.php:66
 msgid "Location name"
@@ -687,7 +687,7 @@ msgstr "网路"
 
 #: modules/glpi/glpi/tabs.php:82
 msgid "Software"
-msgstr ""
+msgstr "软体"
 
 #: modules/glpi/glpi/tabs.php:83
 msgid "Administrative"
@@ -704,11 +704,11 @@ msgstr "防病毒程式"
 
 #: modules/glpi/glpi/tabs.php:86
 msgid "Registry"
-msgstr ""
+msgstr "登录"
 
 #: modules/glpi/glpi/tabs.php:100
 msgid "Get XLS Report"
-msgstr ""
+msgstr "取得 XLS 报告"
 
 #: modules/glpi/glpi/createStaticGroup.php:30
 #, php-format

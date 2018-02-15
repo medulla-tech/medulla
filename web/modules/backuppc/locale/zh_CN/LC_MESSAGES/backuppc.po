@@ -580,7 +580,7 @@ msgstr "还原档案"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "主机"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"

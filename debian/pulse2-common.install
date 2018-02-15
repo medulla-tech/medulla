@@ -19,4 +19,5 @@ var/lib/pulse2/clients/style.css
 var/lib/pulse2/clients/HEADER.html
 usr/sbin/pulse2-debug
 usr/sbin/pulse2-dbupdate
-/usr/sbin/pulse2-collect-info
+usr/sbin/pulse2-collect-info
+var/lib/pulse2/file-transfer

@@ -1,3 +1,7 @@
+Pulse 2 4.3
+=============
+
+
 Pulse 2 4.2
 =============
 * [FEATURE] Quick action to install ARS SSH key to Machines
@@ -8,9 +12,14 @@ Pulse 2 4.2
 * [FEATURE] Differentiate packages created in expert mode
 * [FEATURE] Remove unused launcher service
 * [FEATURE] Add the ability to display registry keys in the computers view
+* [FEATURE] Download remote files from machines using XMPP
+* [FEATURE] Allow to call a plugin from a quick action
 * [BUGFIX] Standardize the size of dependencies boxes in package modification
 * [BUGFIX] Fix the bug that deletes all packages if an empty package is created
 * [BUGFIX] Fix download of files containing spaces
+* [BUGFIX] Remove update module
+* [BUGFIX] Fix user detection if no user logged in
+* [BUGFIX] Update translations
 
 Pulse 2 4.1
 =============
@@ -31,7 +40,7 @@ Pulse 2 4.0
  * [FEATURE] Add glpi 9.1 Support
  * [FEATURE] Add a dashboard widget to follow backups
  * [FEATURE] Add a dashboard widget to know the number of machines (total,
- online, offline) 
+ online, offline)
  * [BUGFIX]  Fix Antivirus detection with latest glpi
  * [BUGFIX]  Fix user creation with latest glpi
  * [BUGFIX]  Fix port to php7
@@ -76,8 +85,8 @@ Pulse 2 3.6.0
  * [BUGFIX]  Fix mmc webpage layout ( issue #5 )
  * [BUGFIX]  Associate inventory to a package ( issue #92 )
 
-Pulse 2 3.3.0 
-============= 
+Pulse 2 3.3.0
+=============
  * [BUGFIX]  Allow to disable backuppc
  * [BUGFIX]  Enhance systemd support in pulse2-setup
  * [FEATURE] Add Multicast support

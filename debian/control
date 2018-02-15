@@ -38,6 +38,16 @@ Description: Pulse 2 common files (doc)
  .
  This package contains Pulse 2 common files like documentation.
 
+Package: pulse2-tests
+Architecture: all
+Section: python
+Depends: ${python:Depends}, ${misc:Depends}, p7zip-full, python-configobj, curl, nsis, dnsutils, python-psutil (>= 0.6.1), rpm (>= 4.8)
+Description: Pulse 2 regression tests
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package contains Pulse 2 common files like documentation.
+
 Package: python-pulse2-common-database-dyngroup
 Architecture: all
 Section: python

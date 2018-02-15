@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "移除"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:110
 msgid "Active"
-msgstr ""
+msgstr "作用中"
 
 #: modules/inventory/inventory/addEntityRule.php:113
 msgid "selection from this item"
@@ -801,7 +801,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxEntityList.php:51
 #: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
-msgstr ""
+msgstr "找不到任何項目"
 
 #: modules/inventory/inventory/ajaxEntityList.php:56
 msgid "Entity name"
@@ -928,7 +928,7 @@ msgstr "歷史記錄"
 
 #: modules/inventory/inventory/tabs.php:117
 msgid "Get XLS Report"
-msgstr ""
+msgstr "取得 XLS 報告"
 
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -1398,7 +1398,7 @@ msgstr "清查日期"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
-msgstr ""
+msgstr "實體"
 
 #: modules/inventory/inventory/localComputersSidebar.php:28
 msgid "Add an entity"

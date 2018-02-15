@@ -256,29 +256,29 @@ msgstr "Diferenas entre dois inventrios"
 
 #: modules/inventory/infoPackage.inc.php:210
 msgid "Entities (ajax)"
-msgstr ""
+msgstr "Entidades (ajax)"
 
 #: modules/inventory/infoPackage.inc.php:215
 msgid "Entity rules (ajax)"
-msgstr ""
+msgstr "Regras das entidades (ajax)"
 
 #: modules/inventory/infoPackage.inc.php:221
 msgid "Change entity rule order (up)"
-msgstr ""
+msgstr "Modificar ordem da regra de entidade (para cima)"
 
 #: modules/inventory/infoPackage.inc.php:226
 msgid "Change entity rule order (down)"
-msgstr ""
+msgstr "Modificar ordem da regra de entidade (para baixo)"
 
 #: modules/inventory/includes/publicFunc.php:57
 #: modules/inventory/includes/publicFunc.php:90
 msgid "Entity right"
-msgstr ""
+msgstr "Permisses da entidade"
 
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "Excluir"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -286,7 +286,7 @@ msgstr ""
 
 #: modules/inventory/includes/publicFunc.php:95
 msgid "Add entity right"
-msgstr ""
+msgstr "Adicionar permisses a entidade"
 
 #: modules/inventory/includes/publicFunc.php:95
 msgid "Add entity right for user"
@@ -333,11 +333,11 @@ msgstr "Ultima data do inventario"
 
 #: modules/inventory/inventory/deleteEntityRule.php:30
 msgid "The entity rule has been deleted successfully."
-msgstr ""
+msgstr "A entidade da regra foi removida com sucesso."
 
 #: modules/inventory/inventory/deleteEntityRule.php:33
 msgid "Delete this rule?"
-msgstr ""
+msgstr "Remover esta regra?"
 
 #: modules/inventory/inventory/pci.php:27
 #: modules/inventory/inventory/i18n_labels.php:115
@@ -346,7 +346,7 @@ msgstr "PCI"
 
 #: modules/inventory/inventory/addEntityRule.php:64
 msgid "The entity rule has been added successfully."
-msgstr ""
+msgstr "A regra da entidade foi adicionada com sucesso."
 
 #: modules/inventory/inventory/addEntityRule.php:103
 msgid "Add rule"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:110
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #: modules/inventory/inventory/addEntityRule.php:113
 msgid "selection from this item"
@@ -378,7 +378,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:124
 msgid "Aggregator"
-msgstr ""
+msgstr "Agregador"
 
 #: modules/inventory/inventory/addEntityRule.php:131
 msgid "Match"
@@ -442,7 +442,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:146
 msgid "matches (regex)"
-msgstr ""
+msgstr "combina (regex)"
 
 #: modules/inventory/inventory/addEntityRule.php:147
 msgid "equal"
@@ -454,7 +454,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:149
 msgid "contains"
-msgstr ""
+msgstr "contm"
 
 #: modules/inventory/inventory/addEntityRule.php:150
 msgid "not contains"
@@ -466,7 +466,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:152
 msgid "finishes by"
-msgstr ""
+msgstr "finaliza com"
 
 #: modules/inventory/inventory/addEntityRule.php:157
 msgid "entities list"
@@ -482,11 +482,11 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:194
 msgid "Criterion"
-msgstr ""
+msgstr "Critrio"
 
 #: modules/inventory/inventory/addEntityRule.php:200
 msgid "Add criterion"
-msgstr ""
+msgstr "Adicionar critrio"
 
 #: modules/inventory/inventory/graphs.php:47
 msgid "back"
@@ -798,16 +798,16 @@ msgstr ""
 
 #: modules/inventory/inventory/EditEntity.php:49
 msgid "Edit entity"
-msgstr ""
+msgstr "Editar entidade"
 
 #: modules/inventory/inventory/ajaxEntityList.php:51
 #: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
-msgstr ""
+msgstr "Nenhuma ocorrência encontrada"
 
 #: modules/inventory/inventory/ajaxEntityList.php:56
 msgid "Entity name"
-msgstr ""
+msgstr "Nome da entidade"
 
 #: modules/inventory/inventory/ajaxEntityList.php:63
 #: modules/inventory/inventory/ajaxEntityList.php:64
@@ -816,11 +816,11 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntity.php:42
 msgid "Add entity"
-msgstr ""
+msgstr "Adicionar entidade."
 
 #: modules/inventory/inventory/addEntity.php:64
 msgid "Parent entity"
-msgstr ""
+msgstr "Hierarquia da entidade"
 
 #: modules/inventory/inventory/ajaxIncoming.php:78
 msgid "Computer name"
@@ -901,11 +901,11 @@ msgstr "Inventrio de %s"
 #: modules/inventory/inventory/entityRules.php:28
 #: modules/inventory/inventory/localComputersSidebar.php:29
 msgid "Entity rules"
-msgstr ""
+msgstr "Regras das entidades"
 
 #: modules/inventory/inventory/entityRules.php:35
 msgid "All rules"
-msgstr ""
+msgstr "Todas as regas"
 
 #: modules/inventory/inventory/tabs.php:63
 #: modules/inventory/inventory/tabs.php:71
@@ -1402,7 +1402,7 @@ msgstr "Data do inventrio"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
-msgstr ""
+msgstr "Entidades"
 
 #: modules/inventory/inventory/localComputersSidebar.php:28
 msgid "Add an entity"
@@ -1410,7 +1410,7 @@ msgstr ""
 
 #: modules/inventory/inventory/localComputersSidebar.php:30
 msgid "Add entity rule"
-msgstr ""
+msgstr "Adicionar regra da entidade"
 
 #: modules/inventory/inventory/body.php:40
 msgid "Bios list"
@@ -1474,11 +1474,11 @@ msgstr "Lista de Placas de Vdeo"
 
 #: modules/inventory/inventory/entityList.php:27
 msgid "Entity list"
-msgstr ""
+msgstr "Lista de entidade"
 
 #: modules/inventory/inventory/entityList.php:33
 msgid "All entities"
-msgstr ""
+msgstr "Todas as entidades"
 
 #: modules/inventory/inventory/ajaxEntityRules.php:63
 msgid "Rule"
@@ -1510,16 +1510,16 @@ msgstr ""
 
 #: modules/inventory/inventory/ajaxEntityRules.php:72
 msgid "Edit rule"
-msgstr ""
+msgstr "Editar regra"
 
 #: modules/inventory/inventory/ajaxEntityRules.php:73
 msgid "Move rule up"
-msgstr ""
+msgstr "Mover regra para cima"
 
 #: modules/inventory/inventory/ajaxEntityRules.php:74
 msgid "Move rule down"
-msgstr ""
+msgstr "Mover regra para baixo"
 
 #: modules/inventory/inventory/ajaxEntityRules.php:75
 msgid "Delete rule"
-msgstr ""
+msgstr "Remover regra"

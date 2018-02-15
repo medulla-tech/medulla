@@ -78,6 +78,14 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
         self.jidchatroomcommand="command@%s"%self.get('chatroom', 'server')
         self.passwordconnexionmuc=self.get('chatroom', 'password')
 
+        #######configuration browserfile#######
+        self.defaultdir     = os.path.join("/","var","lib","pulse2", "file-transfer")
+        self.rootfilesystem = os.path.join("/","var","lib","pulse2","file-transfer")
+        if self.has_option("browserfile", "defaultdir"):
+            self.defaultdir = self.get('browserfile', 'defaultdir')
+        if self.has_option("bowserfile", "rootfilesystem"):
+            self.rootfilesystem = self.get('browserfile', 'rootfilesystem')
+            
         ###################Chatroom for dynamic configuration of agents#######################
         # Dynamic configuration information
         self.confjidchatroom = "%s@%s"%(self.get('configuration_server', 'confmuc_chatroom'),self.get('chatroom', 'server'))
@@ -143,6 +151,7 @@ class xmppMasterConfig(PluginConfig, XmppMasterDatabaseConfig):
                         setattr(self, keyparameter,valueparameter)
                 else:
                     logging.getLogger().error("Parameter File Plugin %s : missing"%namefile)
+
 
 
     def check(self):

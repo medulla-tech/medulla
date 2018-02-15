@@ -121,7 +121,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:135
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: modules/pkgs/pkgs/add.php:31
 msgid "Add package"
@@ -230,7 +230,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/add.php:236 modules/pkgs/pkgs/edit.php:379
 msgid "Operating System"
-msgstr ""
+msgstr "Betriebssystem"
 
 #: modules/pkgs/pkgs/add.php:255 modules/pkgs/pkgs/edit.php:409
 msgid "Transfer method"
@@ -331,7 +331,7 @@ msgstr ""
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:51
 msgid "Downloading"
-msgstr ""
+msgstr "Ldt herunter"
 
 #: modules/pkgs/pkgs/ajaxAppstreamActivatedPackageList.php:55
 msgid "Ready to use"
@@ -344,7 +344,7 @@ msgstr ""
 #: modules/pkgs/pkgs/createGroupLicence.php:64
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "Rechnerliste wurde bei %d Rechnern abgeschnitten"
 
 #: modules/pkgs/pkgs/edit.php:37
 msgid "Edit package"

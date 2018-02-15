@@ -278,7 +278,7 @@ msgstr ""
 #: modules/inventory/includes/publicFunc.php:83
 #: modules/inventory/inventory/addEntityRule.php:180
 msgid "Remove"
-msgstr ""
+msgstr "削除"
 
 #: modules/inventory/includes/publicFunc.php:83
 msgid "Remove entity for user"
@@ -354,7 +354,7 @@ msgstr ""
 
 #: modules/inventory/inventory/addEntityRule.php:110
 msgid "Active"
-msgstr ""
+msgstr "アクティブ"
 
 #: modules/inventory/inventory/addEntityRule.php:113
 msgid "selection from this item"
@@ -801,7 +801,7 @@ msgstr ""
 #: modules/inventory/inventory/ajaxEntityList.php:51
 #: modules/inventory/inventory/ajaxEntityRules.php:52
 msgid "No entry found"
-msgstr ""
+msgstr "登録が見つかりませんでした"
 
 #: modules/inventory/inventory/ajaxEntityList.php:56
 msgid "Entity name"
@@ -928,7 +928,7 @@ msgstr "履歴"
 
 #: modules/inventory/inventory/tabs.php:117
 msgid "Get XLS Report"
-msgstr ""
+msgstr "XLS レポート取得"
 
 #: modules/inventory/inventory/infos.php:33
 msgid "Additionnal informations"
@@ -1398,7 +1398,7 @@ msgstr "在庫日"
 
 #: modules/inventory/inventory/localComputersSidebar.php:27
 msgid "Entities"
-msgstr ""
+msgstr "エンティティ"
 
 #: modules/inventory/inventory/localComputersSidebar.php:28
 msgid "Add an entity"

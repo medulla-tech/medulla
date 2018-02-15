@@ -23,56 +23,6 @@
 # file pluginsmaster/plugin_downloadfile.py
 # this plugin can be called from quick action
 
-# example command in Quick action 
-# pluging_downloadfile@_@srcFile@_@destFile
-# pluging_downloadfile@_@/tmp/testdede.txt@_@/tmp/testdede.txt
-
-# example imput struct from quickaction
-#{
-    #"action": "downloadfile", 
-    #"sessionid": "quick_f027tahx", 
-    #"base64": false, 
-    #"data": [
-        #"mach56-25@pulse/machine25pulse", 
-        #[
-            #{
-                #"customcmd": "pluging_downloadfile@_@/tmp/testdede.txt@_@/tmp/testdede.txt", 
-                #"namecmd": "testdoxnload", 
-                #"description": "", 
-                #"objectUUID": "UUID39", 
-                #"Machine": "mach56-25@pulse/machine25pulse", 
-                #"command": "pluging_downloadfile@_@/tmp/testdede.txt@_@/tmp/testdede.txt", 
-                #"user": "root", 
-                #"os": "linux", 
-                #"bvalid": "Confirm", 
-                #"result": ""
-            #}, 
-            #{
-                #"customcmd": "pluging_downloadfile@_@/tmp/testdede.txt@_@/tmp/testdede.txt", 
-                #"namecmd": "testdoxnload", 
-                #"cn": "machine25pulse", 
-                #"module": "xmppmaster", 
-                #"type": "VirtualBox", 
-                #"user": "root", 
-                #"presencemachinexmpp": "1", 
-                #"objectUUID": "UUID39", 
-                #"entity": "HQ", 
-                #"vnctype": "guacamole", 
-                #"submod": "xmppmaster", 
-                #"location": "", 
-                #"owner": "root", 
-                #"os": "linux", 
-                #"action": "ActionQuickconsole", 
-                #"description": "download"
-            #}
-        #], 
-        #[
-            #"/tmp/testdede.txt", 
-            #"/tmp/testdede.txt"
-        #]
-    #]
-#}
-
 import base64
 import json
 import os,sys
@@ -88,7 +38,7 @@ import ConfigParser
 from pulse2.database.xmppmaster import XmppMasterDatabase
 #### "CONF" : "/etc/mmc/plugin/masterplugin_teledial.ini"
 ####
-plugin = { "VERSION" : "1.0", "NAME" : "downloadfile", "TYPE" : "master", "REQUEST" : "quick action possible"}
+plugin = { "VERSION" : "1.1", "NAME" : "downloadfile", "TYPE" : "master"}
 
 
 def create_path(type ="windows", host="", ipordomain="", path=""):
@@ -125,7 +75,6 @@ def scpfile(scr, dest):
                     "%s %s"%(scr, dest)
     return cmdpre
 
-
 def isconf():
     if 'CONF' in plugin and plugin['CONF'] is not None and len(plugin['CONF']) > 0:
         return True
@@ -141,13 +90,34 @@ def createnamefile(user, prefixe ="", suffixe=""):
     now = datetime.datetime.now()
     return "%s_%s_%s%s"%(prefixe, user, str(now.isoformat()), suffixe)
 
-
 def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     logging.getLogger().debug(plugin)
+    print json.dumps(data[0], indent = 4)
+    transpxmpp = True
+    if 'taillefile' in data[0]:
+        ###determine si fichier est transportable dans un message xmppmaster
+        if "Mo" in data[0]['taillefile']:
+            transpxmpp = False
+            print "Mo"
+        else:
+            if "ko" in data[0]['taillefile']:
+                data[0]['taillefile'] = float(data[0]['taillefile'][:-2]) * 1024
+            else:
+                data[0]['taillefile'] = float(data[0]['taillefile'])
+            if data[0]['taillefile'] > 256000 :
+                transpxmpp = False
+
+    #if transpxmpp:
+        #la taille du fichier permet de faire le transfert dans un message xmpp pas encore implemente
+
     if 'dest' in data and 'src' in data and 'jidmachine' in data:
         jidmachine = data['jidmachine']
         dest = data['dest']
         scr = data['src']
+    elif 'dest' in data[0] and 'src' in data[0] and 'jidmachine' in data[0]:
+        jidmachine = data[0]['jidmachine']
+        dest = data[0]['dest']
+        scr = data[0]['src']
     else:
         params = data['data'][2]
         dest = params[1]
@@ -155,6 +125,9 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
         jidmachine = data['data'][0]
     Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
     relayserver = XmppMasterDatabase().getMachinefromjid(Machineinfo['groupdeploy'])
+    relayserinfo = XmppMasterDatabase().getRelayServerfromjid(Machineinfo['groupdeploy'])
+
+    print json.dumps(relayserinfo, indent = 4)
     datasend = {
                     'session_id' : sessionid,
                     'action' : "downloadfile",
@@ -164,9 +137,15 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                                 'jidmachine'        : jidmachine,
                                 'host'              : Machineinfo['uuid_inventorymachine'],# item host is uuid glpi machine
                                 'ipars'             : relayserver['ip_xmpp'],
+                                'ipserverars'       : relayserinfo['ipserver'],
+                                'iparspublic'       : relayserver['ippublic'],
+                                'package_server_ip' : relayserinfo['package_server_ip'],
                                 'ipmachine'         : Machineinfo['ip_xmpp'],
+                                'ipmachinepublic'   : Machineinfo['ippublic'],
                                 'ipmaster'          : str(xmppobject.config.Server),
-                                'osmachine'         : Machineinfo['platform']
+                                'osmachine'         : Machineinfo['platform'],
+                                'jidmachine'        : jidmachine,
+                                'hostname'          : Machineinfo['hostname']
                     }
     }
 
@@ -174,7 +153,7 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
     try:
         if datasend['data']['ipars'] != str(xmppobject.config.Server):
             cmd = scpfile("root@%s:/root/.ssh/id_rsa.pub"%(datasend['data']['ipars']) , "/tmp/id_rsa.pub")
-            #print cmd
+            print cmd
             z = simplecommand(cmd)
             #print z['result']
             #print z['code']
@@ -188,27 +167,13 @@ def action( xmppobject, action, sessionid, data, message, ret, dataobj):
                 if not dede in authorized_key :
                     logging.getLogger().debug("Add key %s"%datasend['data']['jidmachine'])
                     file_put_content("/root/.ssh/authorized_keysold","\n" + dede ,mode="a")
-                    #print authorized_key
-
+                    print authorized_key
 
         #send message to relayserver for get file on machine
         #to ARS
         xmppobject.send_message( mto = Machineinfo['groupdeploy'],
                                  mbody = json.dumps(datasend),
                                  mtype = 'chat')
-
-        ##xmppobject.xmpplog( "Teledial to machine %s"%(dataplugin[1][1]['cn']),
-                            ##type = 'QuickAction',
-                            ##sessionname = sessionid,
-                            ##priority =-1,
-                            ##action = 'telediag',
-                            ##who = dataplugin[1][1]['user'],
-                            ##how = "",
-                            ##why = xmppobject.boundjid.bare,
-                            ##module = "QuickAction | Notify | Creation",
-                            ##date = None ,
-                            ##fromuser = dataplugin[1][1]['user'],
-                            ##touser = "Master")
 
     except Exception as e:
         logging.getLogger().error("Error in plugin %s : %s"%(plugin['NAME'], str(e)))

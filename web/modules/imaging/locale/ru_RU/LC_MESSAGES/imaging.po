@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Russian (Russia) (https://www.transifex.com/siveo/teams/72118/ru_RU/)\n"
@@ -319,12 +319,12 @@ msgstr ""
 #: modules/imaging/imaging/showtarget.php:127
 #: modules/imaging/manage/service_show_used.php:196
 msgid "Select all"
-msgstr ""
+msgstr "Выделить все"
 
 #: modules/imaging/imaging/showtarget.php:129
 #: modules/imaging/manage/service_show_used.php:198
 msgid "Unselect all"
-msgstr ""
+msgstr "Снять выделение"
 
 #: modules/imaging/imaging/showtarget.php:130
 #: modules/imaging/imaging/images_delete.php:72
@@ -624,7 +624,7 @@ msgstr ""
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr "     %d  "
 
 #: modules/imaging/imaging/addimage.php:49
 #: modules/imaging/imaging/addimage.php:165
@@ -1086,7 +1086,7 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
-msgstr ""
+msgstr "Имя файла"
 
 #: modules/imaging/manage/sysprepList.php:86
 msgid "OS"
@@ -1268,7 +1268,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:534
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
-msgstr ""
+msgstr "Имя компьютера"
 
 #: modules/imaging/manage/ajaxFormWin7.php:449
 #: modules/imaging/manage/ajaxFormWin8.php:524
@@ -1498,7 +1498,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "Пароль"
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1532,7 +1532,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:803
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
 #: modules/imaging/manage/ajaxFormWin7.php:733
 #: modules/imaging/manage/ajaxFormWin8.php:814
@@ -1579,7 +1579,7 @@ msgstr "Дублировать"
 
 #: modules/imaging/manage/ajaxStatus.php:33
 msgid "Status"
-msgstr ""
+msgstr "Состояние"
 
 #: modules/imaging/manage/ajaxStatus.php:118
 msgid "Space available on server"
@@ -2332,31 +2332,31 @@ msgstr ""
 
 #: modules/imaging/infoPackage.inc.php:293
 msgid "Delete a group of computers"
-msgstr ""
+msgstr "Удалить группу компьютеров"
 
 #: modules/imaging/infoPackage.inc.php:297
 msgid "Computers Group Editor"
-msgstr ""
+msgstr "Computers Group Editor"
 
 #: modules/imaging/infoPackage.inc.php:301
 msgid "Share a group of computers"
-msgstr ""
+msgstr "Общий доступ к группе компьютеров"
 
 #: modules/imaging/infoPackage.inc.php:307
 msgid "Secure control on a group of computers"
-msgstr ""
+msgstr "Безопасное управление группой компьютеров"
 
 #: modules/imaging/infoPackage.inc.php:311
 msgid "MSC launch tab for a group"
-msgstr ""
+msgstr "  MSC  "
 
 #: modules/imaging/infoPackage.inc.php:314
 msgid "MSC bundle tab for a group"
-msgstr ""
+msgstr "   MSC  "
 
 #: modules/imaging/infoPackage.inc.php:317
 msgid "MSC logs tab for a group"
-msgstr ""
+msgstr "  MSC  "
 
 #: modules/imaging/infoPackage.inc.php:320
 msgid "MSC history tab for a group"
@@ -2727,7 +2727,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "Пользователи"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -2761,13 +2761,13 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
 msgid "Enable"
@@ -3013,7 +3013,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "Главная"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"

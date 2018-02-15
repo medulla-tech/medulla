@@ -182,6 +182,9 @@ def getPresenceuuid(uuid):
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)
 
+def getRelayServerfromjid(jid):
+    return XmppMasterDatabase().getRelayServerfromjid(jid)
+
 #jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':
@@ -203,6 +206,12 @@ def create_Qa_custom_command(login, osname, namecmd, customcmd, description ) :
 
 def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  ):
     return XmppMasterDatabase().updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  )
+
+def create_local_dir_transfert(pathroot, hostname):
+    dirmachine = os.path.join(pathroot, hostname)
+    if not os.path.exists(dirmachine):
+        os.makedirs(dirmachine, mode=0700)
+    return localfile(dirmachine)
 
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
@@ -236,7 +245,8 @@ def addlogincommand(login,
                     instructions_datetime_for_exec,
                     parameterspackage,
                     rebootrequired,
-                    shutdownrequired):
+                    shutdownrequired,
+                    limit_rate_ko):
     return XmppMasterDatabase().addlogincommand(login, 
                                                 commandid,
                                                 grpid,
@@ -245,7 +255,8 @@ def addlogincommand(login,
                                                 instructions_datetime_for_exec,
                                                 parameterspackage,
                                                 rebootrequired,
-                                                shutdownrequired)
+                                                shutdownrequired,
+                                                limit_rate_ko)
 
 def loginbycommand(commandid):
     return XmppMasterDatabase().loginbycommand(commandid)
@@ -361,6 +372,12 @@ def callInventoryinterface(uuid):
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
+def createdirectoryuser(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory, mode=0700)
+        return True
+    return False
+
 def callInstallKeyAM(jidAM,jidARS):
     if jidARS != "" and jidAM != "":
         callInstallKey(jidAM, jidARS)
@@ -396,11 +413,11 @@ def callvncchangeperms(uuid, askpermission):
         logging.getLogger().error("callvncchangepermsbymaster for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
 
-def remotefile( currentdir, jidmachine):
-    return callremotefile(jidmachine, currentdir)
-
 def localfile(currentdir):
     return calllocalfile(currentdir)
+
+def remotefile( currentdir, jidmachine):
+    return callremotefile(jidmachine, currentdir)
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {

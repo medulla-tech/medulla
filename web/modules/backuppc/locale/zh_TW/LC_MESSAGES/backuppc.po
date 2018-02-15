@@ -580,7 +580,7 @@ msgstr "還原檔案"
 
 #: modules/backuppc/backuppc/restorePopup.php:26
 msgid "Host"
-msgstr ""
+msgstr "主機"
 
 #: modules/backuppc/backuppc/restorePopup.php:35
 msgid "Destination Folder"

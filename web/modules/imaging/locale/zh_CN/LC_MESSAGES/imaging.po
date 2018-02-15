@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-01-15 22:19+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/zh_CN/)\n"
@@ -624,7 +624,7 @@ msgstr ""
 #: modules/imaging/imaging/creategroupcustonmenuimaging.php:77
 #, php-format
 msgid "Computers list has been truncated at %d computers"
-msgstr ""
+msgstr " %d "
 
 #: modules/imaging/imaging/addimage.php:49
 #: modules/imaging/imaging/addimage.php:165
@@ -1086,11 +1086,11 @@ msgstr ""
 
 #: modules/imaging/manage/sysprepList.php:83
 msgid "File name"
-msgstr ""
+msgstr "档案名称"
 
 #: modules/imaging/manage/sysprepList.php:86
 msgid "OS"
-msgstr ""
+msgstr "OS"
 
 #: modules/imaging/manage/sysprepList.php:90
 msgid "Display sysprep file"
@@ -1268,7 +1268,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:534
 #: modules/imaging/manage/ajaxFormWin81.php:617
 msgid "Computer Name"
-msgstr ""
+msgstr "电脑名称"
 
 #: modules/imaging/manage/ajaxFormWin7.php:449
 #: modules/imaging/manage/ajaxFormWin8.php:524
@@ -1460,7 +1460,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin8.php:720
 #: modules/imaging/manage/ajaxFormWin10.php:729
 msgid "Domain"
-msgstr ""
+msgstr "网域"
 
 #: modules/imaging/manage/ajaxFormWin7.php:650
 #: modules/imaging/manage/ajaxFormWin8.php:725
@@ -1498,7 +1498,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:761
 #: modules/imaging/manage/ajaxFormWin81.php:933
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: modules/imaging/manage/ajaxFormWin7.php:693
 #: modules/imaging/manage/ajaxFormWin8.php:768
@@ -1532,7 +1532,7 @@ msgstr ""
 #: modules/imaging/manage/ajaxFormWin10.php:803
 #: modules/imaging/manage/ajaxFormWin81.php:719
 msgid "Group"
-msgstr ""
+msgstr "群组"
 
 #: modules/imaging/manage/ajaxFormWin7.php:733
 #: modules/imaging/manage/ajaxFormWin8.php:814
@@ -1603,7 +1603,7 @@ msgstr "统计"
 
 #: modules/imaging/manage/ajaxStatus.php:139
 msgid "Entity"
-msgstr ""
+msgstr "实体"
 
 #: modules/imaging/manage/ajaxStatus.php:145
 msgid "client(s) registered"
@@ -1778,7 +1778,7 @@ msgstr ""
 
 #: modules/imaging/manage/synchromaster.php:122
 msgid "In progress"
-msgstr ""
+msgstr "进行中"
 
 #: modules/imaging/manage/synchromaster.php:135
 msgid "Copy of master complete"
@@ -2078,7 +2078,7 @@ msgstr ""
 
 #: modules/imaging/manage/unattended.php:126
 msgid "Choose package source"
-msgstr ""
+msgstr "选择封装来源"
 
 #: modules/imaging/manage/master_delete.php:38
 #, php-format
@@ -2651,7 +2651,7 @@ msgstr " UUID"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:49
 msgid "File"
-msgstr ""
+msgstr "档案"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:50
 msgid "available"
@@ -2727,7 +2727,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1381
 msgid "Users"
-msgstr ""
+msgstr "使用者"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1400
 msgid "Never check for updates"
@@ -2761,22 +2761,22 @@ msgstr ""
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1472
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1496
 msgid "Yes"
-msgstr ""
+msgstr "是"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1413
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1476
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1500
 msgid "No"
-msgstr ""
+msgstr "否"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1428
 msgid "Enable"
-msgstr ""
+msgstr "启用"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1429
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1443
 msgid "Disabled"
-msgstr ""
+msgstr "已停用"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1433
 msgid ""
@@ -3013,7 +3013,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1551
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1553
 msgid "Specifies a private home network"
@@ -3029,7 +3029,7 @@ msgstr ""
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1559
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 #: modules/imaging/includes/data_Windows_Answer_File_Generator.inc.php:1561
 msgid "Specifies neither a home or work network"

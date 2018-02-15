@@ -482,7 +482,8 @@ class XmppMasterDatabase(DatabaseHelper):
                            classutil='private',
                            urlguacamole ="",
                            groupdeploy ="",
-                           objkeypublic = None):
+                           objkeypublic = None,
+                           ippublic = None):
         try:
             new_machine = Machines()
             new_machine.jid = jid
@@ -490,6 +491,7 @@ class XmppMasterDatabase(DatabaseHelper):
             new_machine.hostname = hostname
             new_machine.archi = archi
             new_machine.uuid_inventorymachine = uuid_inventorymachine
+            new_machine.ippublic = ippublic
             new_machine.ip_xmpp = ip_xmpp
             new_machine.subnetxmpp = subnetxmpp
             new_machine.macaddress = macaddress
@@ -624,6 +626,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 obj['exec'] = False
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
+            obj['limit_rate_ko'] = result.bandwidth
             try:
                 params = str(result.parameters_deploy)
                 if params == '':
@@ -863,12 +866,14 @@ class XmppMasterDatabase(DatabaseHelper):
                         instructions_datetime_for_exec,
                         parameterspackage,
                         rebootrequired,
-                        shutdownrequired):
+                        shutdownrequired,
+                        bandwidth):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
             new_logincommand.command = commandid
             new_logincommand.count_deploy_progress = 0
+            new_logincommand.bandwidth = int(bandwidth)
             if grpid != "":
                 new_logincommand.grpid = grpid
             if instructions_datetime_for_exec != "":
@@ -2298,6 +2303,7 @@ class XmppMasterDatabase(DatabaseHelper):
                         "hostname" : machine.hostname,
                         "uuid_inventorymachine" : machine.uuid_inventorymachine,
                         "ip_xmpp" : machine.ip_xmpp, 
+                        "ippublic" : machine.ippublic, 
                         "macaddress" : machine.macaddress, 
                         "subnetxmpp" : machine.subnetxmpp, 
                         "agenttype" : machine.agenttype, 
@@ -2306,6 +2312,37 @@ class XmppMasterDatabase(DatabaseHelper):
                         "urlguacamole" : machine.urlguacamole, 
                         "picklekeypublic" : machine.picklekeypublic}
         return result
+
+    @DatabaseHelper._sessionm
+    def getRelayServerfromjid(self, session, jid):
+        relayserver = session.query(RelayServer).filter(RelayServer.jid == jid)
+        relayserver = relayserver.first()
+        session.commit()
+        session.flush()
+        try:
+            result = {  'id' :  relayserver.id,
+                        'urlguacamole': relayserver.urlguacamole,
+                        'subnet' : relayserver.subnet,
+                        'nameserver' : relayserver.nameserver,
+                        'ipserver' : relayserver.ipserver,
+                        'ipconnection' : relayserver.ipconnection,
+                        'port' : relayserver.port,
+                        'portconnection' : relayserver.portconnection,
+                        'mask' : relayserver.mask,
+                        'jid' : relayserver.jid,
+                        'longitude' : relayserver.longitude,
+                        'latitude' : relayserver.latitude,
+                        'enabled' : relayserver.enabled,
+                        'classutil' : relayserver.classutil,
+                        'groupdeploy' : relayserver.groupdeploy,
+                        'package_server_ip' : relayserver.package_server_ip,
+                        'package_server_port' : relayserver.package_server_port,
+                        'moderelayserver' : relayserver.moderelayserver
+            }
+        except Exception:
+            result = {}
+        return result
+
 
     @DatabaseHelper._sessionm
     def getRelayServerForMachineUuid(self, session, uuid):

@@ -191,6 +191,8 @@ nobase_dist_contrib_DATA = dyngroup/sql/clean-db.sql \
 	xmppmaster/sql/schema-008.sql \
 	xmppmaster/sql/schema-009.sql \
 	xmppmaster/sql/schema-010.sql \
+	xmppmaster/sql/schema-011.sql \
+	xmppmaster/sql/schema-012.sql \
 	kiosk/sql/schema-001.sql \
 	monit/pulse2 \
 	samba/smb.conf \

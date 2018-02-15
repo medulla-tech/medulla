@@ -221,7 +221,7 @@ msgstr "Start"
 #: modules/msc/logs/ajaxConsultLogsFilter.php:57
 #: modules/msc/msc/ajaxLogsFilter.php:105
 msgid "Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:58
 #: modules/msc/logs/ajaxLogsFilter.php:60
@@ -2105,7 +2105,7 @@ msgstr "Laufend"
 
 #: modules/msc/includes/widgets.inc.php:401
 msgid "Create a group"
-msgstr ""
+msgstr "Eine Gruppe erstellen"
 
 #: modules/msc/includes/utilities.php:32
 msgid "Bytes"

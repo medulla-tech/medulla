@@ -233,12 +233,19 @@ class XmppSimpleCommand:
         return self.result
 
 
-
 class MUCBot(sleekxmpp.ClientXMPP):
     def __init__(self, conf): #jid, password, room, nick):
         self.config = conf
         self.session = session()
         self.domaindefault = "pulse"
+        ###clear conf compte.
+        logger.debug( 'clear muc conf compte')
+        cmd = "for i in  $(ejabberdctl registered_users pulse | grep '^conf' ); do echo $i; ejabberdctl unregister $i pulse; done"
+        try:
+            a = simplecommandstr(cmd)
+            logger.debug(a['result'])
+        except Exception as e:
+            pass
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
         #self.queue_read_event_from_command = Queue()
@@ -254,7 +261,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler  = manage_scheduler(self)
-        self.xmppbrowsingpath = xmppbrowsing()
+        self.xmppbrowsingpath = xmppbrowsing(defaultdir =  self.config.defaultdir, rootfilesystem = self.config.rootfilesystem)
         # dictionary used for deploy
         self.machineWakeOnLan = {}
         self.machineDeploy = {}
@@ -1476,6 +1483,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     country_name = str(data['localisationifo']['country_name'])
                     city = str(data['localisationifo']['city'])
                 try:
+                    #assignment of the user system, if user absent.
+                    if 'users' in data['information'] and len (data['information']['users']) == 0:
+                        data['information']['users'] = "system"
+                    
                     if 'users' in data['information'] and len (data['information']['users']) > 0:
                         logger.debug("** addition user %s in base"%data['information']['users'][0])
                         logger.info("add user : %s for machine : %s country_name : %s"%(data['information']['users'][0],
@@ -1540,6 +1551,11 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                            mtype = 'chat')
                 logger.debug("** Add machine in base")
                 # Add machine
+                ippublic = None
+                if "ippublic" in data:
+                    ippublic = data['ippublic']
+                if ippublic == None:
+                    ippublic = data['xmppip']
                 idmachine = XmppMasterDatabase().addPresenceMachine(data['from'],
                                                             data['platform'],
                                                             data['information']['info']['hostname'],
@@ -1552,7 +1568,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
                                                             classutil=data['classutil'],
                                                             urlguacamole =data['baseurlguacamole'],
                                                             groupdeploy =data['deployment'],
-                                                            objkeypublic= publickeybase64
+                                                            objkeypublic= publickeybase64,
+                                                            ippublic = ippublic
                                                             )
                 if idmachine != -1:
                     if useradd != -1:

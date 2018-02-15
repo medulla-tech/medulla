@@ -35,6 +35,7 @@ import base64
 from importlib import import_module
 import threading
 import socket
+import urllib
 sys.path.append(os.path.join(os.path.dirname(os.path.realpath(__file__)),"..", "pluginsmaster"))
 
 if sys.platform.startswith('win'):
@@ -600,18 +601,57 @@ def pluginmastersessionaction( sessionaction, timeminute = 10 ):
     return decorator
 
 
-def searchippublic(site = 1):
+def searchippublic(site=1):
     if site == 1:
         try:
             page = urllib.urlopen("http://ifconfig.co/json").read()
             objip = json.loads(page)
-            return objip['ip']
-        except:
+            if is_valid_ipv4(objip['ip']):
+                return objip['ip']
+            else:
+                return searchippublic(2)
+        except BaseException:
             return searchippublic(2)
-    else:
-        page = urllib.urlopen("http://www.monip.org/").read()
-        ip = page.split("IP : ")[1].split("<br>")[0]
-        return ip
+    elif site == 2:
+        try:
+            page = urllib.urlopen("http://www.monip.org/").read()
+            ip = page.split("IP : ")[1].split("<br>")[0]
+            if is_valid_ipv4(ip):
+                return ip
+            else:
+                return searchippublic(3)
+        except Exception:
+            return searchippublic(3)
+    elif site == 3:
+        try:
+            ip =   urllib.urlopen("http://ip.42.pl/raw").read()
+            if is_valid_ipv4(ip):
+                return ip
+            else:
+                return searchippublic(4)
+        except Exception:
+            searchippublic(4)
+    elif site == 4:
+        return find_ip()
+    return None
+
+def find_ip():
+    candidates =[]
+    for test_ip in ['192.0.2.0',"192.51.100.0","203.0.113.0"]:
+        try:
+            s=socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect((test_ip,80))
+            ip_adrss = s.getsockname()[0]
+            if ip_adrss in candidates:
+                return ip_adrss
+            candidates.append(ip_adrss)
+        except Exception:
+            pass
+        finally:
+            s.close()
+    if len(candidates) >=1:
+        return candidates[0]
+    return None
 
 class shellcommandtimeout(object):
     def __init__(self, cmd, timeout=15):

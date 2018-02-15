@@ -58,6 +58,7 @@ unset($submod);
 $submod = new SubModule("update");
 $submod->setImg('modules/xmppmaster/img/navbar/xmppmaster');
 $submod->setDescription(_T("update", "pulse2"));
+$submod->setVisibility(False);
 // $submod->setDefaultPage("xmppmaster/update/viewProductUpdates.php");
 
 
