@@ -244,7 +244,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         try:
             a = simplecommandstr(cmd)
             logger.debug(a['result'])
-        Exception as e:
+        except Exception as e:
             pass
         # The queues. These objects are like shared lists
         # The command processes use this queue to notify an event to the event manager
