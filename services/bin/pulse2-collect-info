@@ -1,10 +1,8 @@
 #!/bin/bash
 #
-# (c) 2007-2014 Mandriva, http://www.mandriva.com/
+# (c) 20118 Siveo, http://www.siveo.net
 #
-# $Id: pulse2-ping 24 2008-02-08 16:36:01Z nrueff $
-#
-# This file is part of Pulse 2, http://pulse2.mandriva.org
+# This file is part of Pulse 2
 #
 # Pulse 2 is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +19,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-# This script collects necessary info for helpdesk support
-
 ARCHIVE_PATH=$1
 
 PULSE2_COLLECT_INFO_DIR="/tmp/pulse2-collect-info"
@@ -37,18 +33,32 @@ cd $PULSE2_COLLECT_INFO_DIR
 if [ "$(ls -A $DIR)" ]; then
     rm -rf *
 fi
-
 # several info placed in text files
-lsb_release -a  >> os-info
-dpkg -l | egrep '(mmc|pulse2)' > packages
+[ -x /usr/bin/lsb_release ] && lsb_release -a  > os-info || cat /etc/redhat-release > os-info
+[ -x /usr/bin/dpkg ] && /usr/bin/dpkg -l | egrep '(mmc|pulse2)' > packages || /usr/bin/rpm -qa | egrep '(mmc|pulse2)' > packages
+[ -x /usr/sbin/apache2 ] && ln -s /var/log/apache2 apache2 || ln -s /var/log/httpd httpd
+[ -x /etc/init.d/tomcat8 ] && ln -s /var/log/tomcat8 tomcat8 || ln -s /var/log/tomcat tomcat
 
-cp /etc/pulse-licensing/installation_id .
+ln -s /etc/mmc mmc-conf
+ln -s /etc/pulse-xmpp-agent pulse-xmpp-agent
+ln -s /var/lib/pulse2/clients/config config-agent
+ln -s /var/log/ejabberd ejabberd
+ln -s /var/log/mmc mmc-log
+ln -s /var/log/pulse xmpp-agent
 
-ln -s /etc/mmc etc 
-ln -s /var/log/mmc log 
+name="isc-dhcp-server tftpd-hpa guacd"
 
-7z -mx=9 -m0=lzma -l a $ARCHIVE_PATH os-info installation_id packages etc log
+for serv in $name
+do
+        systemctl is-active --quiet $serv.service
+        if [ $? == 0 ]; then
+                journalctl -u $serv.service > $serv.log
+        fi
+done
+
+7za -mx=9 -m0=lzma -l a $ARCHIVE_PATH *
 
 rm -rf $PULSE2_COLLECT_INFO_DIR
 
 chmod 644 $ARCHIVE_PATH
+
