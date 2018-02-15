@@ -53,7 +53,7 @@ class UpdatePanel extends Panel {
                 echo '<p><strong>'.$mgr.'</strong></p>';
             }
 	    else{
-                $mgr = _T('Updates available.', 'dashboard');
+                $mgr = _T('updates available.', 'dashboard');
                 echo '<p><strong>'.$mgr.'</strong></p>';
 
                 print <<<EOS
