@@ -40,10 +40,26 @@ $submod->setPriority(-10);
 
 
 
-$page = new Page("index", _T('kiosk status', 'kiosk'));
+$page = new Page("index", _T('Profile List', 'kiosk'));
 $page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
 $submod->addPage($page);
 
+$page = new Page("add", _T('Add Profile', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/add.php");//, array("expert" => True)
+$submod->addPage($page);
+
+$page = new Page("ajaxAddProfile");
+$page->setFile("modules/imaging/manage/ajaxAddProfile.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
+$page = new Page("editProfile", _T('Edit Profile', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/editProfile.php");//, array("expert" => True)
+$submod->addPage($page);
+
+$page = new Page("delete", _T('Delete profile', 'kiosk'));
+$page->setFile("modules/kiosk/kiosk/index.php");//, array("expert" => True)
+$submod->addPage($page);
 
 $mod->addSubmod($submod);
 

@@ -35,6 +35,7 @@ import logging
 import json
 import time
 
+
 class KioskDatabase(DatabaseHelper):
     """
     Singleton Class to query the xmppmaster database.
@@ -67,7 +68,6 @@ class KioskDatabase(DatabaseHelper):
         re = [x.Number for x in result]
         #logging.getLogger().debug("xmppmaster database connected (version:%s)"%(re[0]))
         return True
-
 
     def initMappers(self):
         """

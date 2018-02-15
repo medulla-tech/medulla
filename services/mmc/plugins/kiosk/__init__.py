@@ -27,7 +27,7 @@ Plugin to manage the interface with Kiosk
 import logging
 
 from mmc.plugins.kiosk.config import KioskConfig
-#from mmc.plugins.kiosk import kiosk
+# from mmc.plugins.kiosk import kiosk
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 from mmc.plugins.base import ComputerI
 from mmc.plugins.base.computers import ComputerManager
@@ -50,6 +50,7 @@ logger = logging.getLogger()
 def getApiVersion():
     return APIVERSION
 
+
 def activate():
     """
     Read the plugin configuration, initialize it, and run some tests to ensure
@@ -58,8 +59,8 @@ def activate():
     logger = logging.getLogger()
     config = KioskConfig("kiosk")
 
-    ## Registering KioskComputers in ComputerManager
-    #ComputerManager().register('kiosk', KioskComputers)
+    # Registering KioskComputers in ComputerManager
+    # ComputerManager().register('kiosk', KioskComputers)
 
     if config.disable:
         logger.warning("Plugin kiosk: disabled by configuration.")
@@ -69,3 +70,11 @@ def activate():
         logger.warning("Plugin kiosk: an error occurred during the database initialization")
         return False
     return True
+
+
+def get_profiles_list():
+    return KioskDatabase().get_profiles_list()
+
+
+def get_profiles_name_list():
+    return KioskDatabase().get_profiles_name_list()

@@ -27,14 +27,26 @@ require_once("modules/pulse2/includes/utilities.php");
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
 
-$p = new PageGenerator(_T("List of profils"));
+$p = new PageGenerator(_T("List of profils",'kiosk'));
 $p->setSideMenu($sidemenu);
 $p->display();
 
+$profiles = xmlrpc_get_profiles_list();
 
-$n = new OptimizedListInfos(xmlrpc_get_profiles_name_list(), _T("Profile Name", "pkgs"));
+$profiles_name = [];
+$profiles_date = [];
+$profiles_status = [];
+
+
+foreach($profiles as $element)
+{
+    $profiles_name[] = $element['name'];
+    $profiles_status[] = ($element['active'] == 1) ? _T("Active","kiosk") : _T("Inactive","kiosk");
+}
+
+$n = new OptimizedListInfos($profiles_name, _T("Profile Name", "kiosk"));
 $n->disableFirstColumnActionLink();
-$n->addExtraInfo($desc, _T("Associated packages", "pkgs"));
+$n->addExtraInfo($profiles_status, _T("Profile Status", "kiosk"));
 
 // parameters are :
 // - label
@@ -43,10 +55,14 @@ $n->addExtraInfo($desc, _T("Associated packages", "pkgs"));
 // - profile get parameter
 // - module
 // - submodule
-$n->addActionItem(new ActionPopupItem(_T("Associate Packages"), "edit", "list", "profile", "kiosk", "kiosk"));
-$n->addActionItem(new ActionPopupItem(_T("Associate Users"), "edit", "users", "profile", "kiosk", "kiosk"));
-$n->addActionItem(new ActionPopupItem(_T("Edit Profil"), "edit", "edit", "profile", "kiosk", "kiosk"));
-$n->addActionItem(new ActionPopupItem(_T("Delete Profil"), "delete", "delete", "profile", "kiosk", "kiosk"));
+$action_editPackage = new ActionItem(_T("Associate Packages", 'kiosk'),"editPackages","list","profile","kiosk", "kiosk");
+$action_editUsers = new ActionItem(_T("Associate Users", 'kiosk'),"editUsers","users","profile","kiosk", "kiosk");
+$action_editProfiles = new ActionItem(_T("Edit Profil",'kiosk'), "editProfile", "edit", "profile", "kiosk", "kiosk");
+$action_deleteProfil = new ActionItem(_T("Delete Profil",'kiosk'), "delete", "delete", "profile", "kiosk", "kiosk");
+$n->addActionItem($action_editPackage);
+$n->addActionItem($action_editUsers);
+$n->addActionItem($action_editProfiles);
+$n->addActionItem($action_deleteProfil);
 $n->setNavBar(new AjaxNavBar($count, $filter1));
 
 $n->display();
