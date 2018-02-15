@@ -39,9 +39,8 @@ class ComputersOnlinePanel extends Panel {
 
         $machines_offline = $total_machines - $machines_online;
         echo 'Total machines : '.$total_machines.'<br/>';
-        echo '<span style="color:green">Machines online : '.$machines_online.'</span><a href="'.$urlRedirect.'&machines=online"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-        echo '<span style="color:red">Machines offline : '.$machines_offline.'</span><a href="'.$urlRedirect.'&machines=offline"><img title="Create a group" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
-
+        echo '<span style="color:green">'._T("Machines online : ","dashboard").$machines_online.'</span><a href="'.$urlRedirect.'&machines=online"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
+        echo '<span style="color:red">'._T("Machines offline : ","dashboard").$machines_offline.'</span><a href="'.$urlRedirect.'&machines=offline"><img title="'._T("Create a group","dashboard").'" style="height: 10px; padding-left: 3px;" src="img/machines/icn_machinesList.gif" /></a><br/>';
     }
 }
 ?>
