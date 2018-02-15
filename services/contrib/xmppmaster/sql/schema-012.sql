@@ -59,7 +59,8 @@ DELIMITER ;
 
 -- ici le system scheduler de mysql.
 -- system event scheduler mysql enable
-SET GLOBAL event_scheduler = 1 ;
+-- demande super privilege
+-- SET GLOBAL event_scheduler = 1 ;
 
 -- see status system event scheduler mysql
 -- SHOW GLOBAL VARIABLES LIKE 'event_scheduler';
