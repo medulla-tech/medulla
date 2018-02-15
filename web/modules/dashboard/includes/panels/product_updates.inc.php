@@ -40,17 +40,21 @@ class UpdatePanel extends Panel {
         if ($updates === FALSE){
 
         // Update error occured
-	printf('<center style="color:red;font-weight:bold">%s</center>', _T('An error occured while fetching updates'));
-	}
-	else{
-            $view_updates_text = _T('View updates', 'update');
-            $install_updates_text = _T('Install updates', 'update');
-
+        $msg = _T('An error occured while fetching updates', "dashboard");
+        echo '<center style="color:red;font-weight:bold">'.$msg.'</center>';
+    }
+    else{
+            $view_updates_text = _T('View updates', 'dashboard');
+            $install_updates_text = _T('Install updates', 'dashboard');
             print '<center>';
-            if ($update_count == 0)
-                printf('<p><strong>%s</strong></p>', _T('No updates available.', 'update'));
-            else{
-                printf('<p><strong>%d %s</strong></p>', $update_count, _T('updates available.', 'update'));
+	    if ($update_count == 0)
+            {
+                $mgr = _T('No updates available.', 'dashboard');
+                echo '<p><strong>'.$mgr.'</strong></p>';
+            }
+	    else{
+                $mgr = _T('Updates available.', 'dashboard');
+                echo '<p><strong>'.$mgr.'</strong></p>';
 
                 print <<<EOS
                 <a title="View updates" class="btnSecondary"
