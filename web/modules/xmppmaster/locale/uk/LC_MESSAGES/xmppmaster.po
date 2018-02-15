@@ -49,7 +49,7 @@ msgstr "MAC-адреса"
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:132
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:132
 msgid "File manager"
-msgstr ""
+msgstr "Керування файлами"
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:287
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:304
@@ -123,11 +123,11 @@ msgstr "Останні завдання усіх користувачів"
 #: modules/xmppmaster/xmppmaster/editqa.php:63
 #, php-format
 msgid "Edit Custom Quick action : %s"
-msgstr ""
+msgstr "Змінити нетипову швидку дію: %s"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:65
 msgid "Create Custom Quick action"
-msgstr ""
+msgstr "Створити нетипову швидку дію"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:78
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:88
@@ -149,7 +149,7 @@ msgstr "Опис команди"
 #: modules/xmppmaster/xmppmaster/removeqa.php:35
 #, php-format
 msgid "Delete this Quick Action :%s"
-msgstr ""
+msgstr "Вилучити цю швидку дію: %s"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:26
 #: modules/xmppmaster/infoPackage.inc.php:54
@@ -161,15 +161,15 @@ msgstr "Консоль XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:29
 msgid "XMPP Wake on LAN"
-msgstr ""
+msgstr "Пробудження мережею XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:33
 msgid "XMPP Custom Quick Action"
-msgstr ""
+msgstr "Нетипова швидка дія XMPP"
 
 #: modules/xmppmaster/xmppmaster/localSidebar.php:36
 msgid "XMPP File manager"
-msgstr ""
+msgstr "Керування файлами XMPP"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:84
 msgid "Custom command name"
@@ -181,7 +181,7 @@ msgstr "Опис"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:95
 msgid "Edit a Quick Action"
-msgstr ""
+msgstr "Змінити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/ajaxFiltercustom.php:96
 msgid "Delete a Quick Action"
@@ -206,7 +206,7 @@ msgstr "Назва комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/ActionQuickconsole.php:64
 msgid "Send custom command to"
-msgstr ""
+msgstr "Надіслати нетипову команду до"
 
 #: modules/xmppmaster/xmppmaster/logs/logbymachine.php:45
 msgid "Computer deploy"
@@ -214,7 +214,7 @@ msgstr "Розгортання комп'ютера"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:39
 msgid "Deployment [ group"
-msgstr ""
+msgstr "Розгортання [група"
 
 #: modules/xmppmaster/xmppmaster/logs/viewgrouplogs.in.php:161
 msgid "Stop Deployment"
@@ -222,19 +222,19 @@ msgstr "Припинити розгортання"
 
 #: modules/xmppmaster/xmppmaster/logs/viewmachinelogs.php:26
 msgid "Deployment [machine "
-msgstr ""
+msgstr "Розгортання [машина "
 
 #: modules/xmppmaster/xmppmaster/logs/logbygrpmachine.php:45
 msgid "Computer deploy group"
-msgstr ""
+msgstr "Група розгортання комп'ютерів"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:51
 msgid "Current tasks (last 24 hours)"
-msgstr ""
+msgstr "Поточні завдання (останні 24 години)"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:58
 msgid "Past tasks (last 3 months)"
-msgstr ""
+msgstr "Минулі завдання (останні 3 місяці)"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:185
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:87
@@ -252,7 +252,7 @@ msgstr "Стан"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:36
 msgid "Planned tasks"
-msgstr ""
+msgstr "Заплановані завдання"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
@@ -261,11 +261,11 @@ msgstr "Вилучити розгорнуте"
 #: modules/xmppmaster/xmppmaster/customQA.php:38
 #, php-format
 msgid "Quick action list for user %s"
-msgstr ""
+msgstr "Список швидких дій для користувача %s"
 
 #: modules/xmppmaster/xmppmaster/customQA.php:45
 msgid "Create new Quick Action"
-msgstr ""
+msgstr "Створити швидку дію"
 
 #: modules/xmppmaster/infoPackage.inc.php:32
 msgid "xmppmaster"
@@ -281,44 +281,44 @@ msgstr "Стан xmppmaster"
 
 #: modules/xmppmaster/infoPackage.inc.php:45
 msgid "XMPP All users tasks"
-msgstr ""
+msgstr "Завдання усіх користувачів XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:48
 msgid "XMPP All users past task"
-msgstr ""
+msgstr "Минулі завдання усіх користувачів XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:51
 msgid "XMPP My Past tasks"
-msgstr ""
+msgstr "Ваші минулі завдання XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:60
 msgid "XMPP files managers"
-msgstr ""
+msgstr "Засоби керування файлами XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:68
 msgid "Edit Custon Quick Action"
-msgstr ""
+msgstr "Змінити нетипову швидку дію"
 
 #: modules/xmppmaster/infoPackage.inc.php:71
 msgid "delete Custon Quick Action"
-msgstr ""
+msgstr "Вилучити нетипову швидку дію"
 
 #: modules/xmppmaster/infoPackage.inc.php:75
 msgid "Delete Custon Quick Action"
-msgstr ""
+msgstr "Вилучити нетипову швидку дію"
 
 #: modules/xmppmaster/infoPackage.inc.php:80
 msgid "XMPP logs"
-msgstr ""
+msgstr "Журнал XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:83
 msgid "XMPP logs grp"
-msgstr ""
+msgstr "Група журналів XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:89
 #: modules/xmppmaster/infoPackage.inc.php:93
 msgid "XMPP browser file"
-msgstr ""
+msgstr "Файл навігатора XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:99
 msgid "Wake on LAN"
@@ -326,43 +326,43 @@ msgstr "Пробудження з LAN"
 
 #: modules/xmppmaster/infoPackage.inc.php:137
 msgid "action deploy quick"
-msgstr ""
+msgstr "дія з швидкого розгортання"
 
 #: modules/xmppmaster/infoPackage.inc.php:142
 msgid "quick action deploy group"
-msgstr ""
+msgstr "група розгортання швидкої дії"
 
 #: modules/xmppmaster/infoPackage.inc.php:148
 msgid "quick action Wol"
-msgstr ""
+msgstr "швидка дія із пробудження мережею"
 
 #: modules/xmppmaster/infoPackage.inc.php:153
 msgid "quick action Inventory"
-msgstr ""
+msgstr "швидка дія з обліку"
 
 #: modules/xmppmaster/infoPackage.inc.php:159
 msgid "quick action Restart"
-msgstr ""
+msgstr "швидка дія з перезапуску"
 
 #: modules/xmppmaster/infoPackage.inc.php:164
 msgid "quick action shutdown"
-msgstr ""
+msgstr "швидка дія з вимикання"
 
 #: modules/xmppmaster/infoPackage.inc.php:169
 msgid "quick action change vnc settings"
-msgstr ""
+msgstr "швидка дія зі зміни параметрів vnc"
 
 #: modules/xmppmaster/infoPackage.inc.php:174
 msgid "quick action Install key"
-msgstr ""
+msgstr "швидка дія зі встановлення ключа"
 
 #: modules/xmppmaster/infoPackage.inc.php:181
 msgid "quick action reversessh for guacamole"
-msgstr ""
+msgstr "швидка дія reversessh для guacamole"
 
 #: modules/xmppmaster/infoPackage.inc.php:187
 msgid "Audit deployment"
-msgstr ""
+msgstr "Аудит розгортання"
 
 #: modules/xmppmaster/infoPackage.inc.php:192
 #: modules/xmppmaster/infoPackage.inc.php:197
@@ -375,7 +375,7 @@ msgstr "Список усіх груп комп'ютерів"
 
 #: modules/xmppmaster/infoPackage.inc.php:207
 msgid "ajax view grp deploy"
-msgstr ""
+msgstr "перегляд ajax розгортання групи"
 
 #: modules/xmppmaster/infoPackage.inc.php:212
 msgid "List computers deploy"

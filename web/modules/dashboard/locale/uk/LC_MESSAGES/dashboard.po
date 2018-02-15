@@ -127,15 +127,15 @@ msgstr "Резервне копіювання машин"
 
 #: modules/dashboard/includes/panels/backup.inc.php:39
 msgid "Total machines: "
-msgstr ""
+msgstr "Загалом машин:"
 
 #: modules/dashboard/includes/panels/backup.inc.php:40
 msgid "Backup configured: "
-msgstr ""
+msgstr "Налаштовано рез. копіювання:"
 
 #: modules/dashboard/includes/panels/backup.inc.php:41
 msgid "Backup not configured: "
-msgstr ""
+msgstr "Не налаштовано рез. копіювання:"
 
 #: modules/dashboard/includes/panels/product_updates.inc.php:30
 msgid "Pulse Updates"
