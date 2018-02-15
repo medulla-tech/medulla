@@ -626,6 +626,7 @@ class XmppMasterDatabase(DatabaseHelper):
                 obj['exec'] = False
             obj['rebootrequired'] = result.rebootrequired
             obj['shutdownrequired'] = result.shutdownrequired
+            obj['limit_rate_ko'] = result.bandwidth
             try:
                 params = str(result.parameters_deploy)
                 if params == '':
@@ -865,12 +866,14 @@ class XmppMasterDatabase(DatabaseHelper):
                         instructions_datetime_for_exec,
                         parameterspackage,
                         rebootrequired,
-                        shutdownrequired):
+                        shutdownrequired,
+                        bandwidth):
         try:
             new_logincommand = Has_login_command()
             new_logincommand.login = login
             new_logincommand.command = commandid
             new_logincommand.count_deploy_progress = 0
+            new_logincommand.bandwidth = int(bandwidth)
             if grpid != "":
                 new_logincommand.grpid = grpid
             if instructions_datetime_for_exec != "":
