@@ -26,7 +26,7 @@ START TRANSACTION;
 
 DROP TABLE IF EXISTS `xmppmaster`.`historylogs` ;
 
-CREATE TABLE IF NOT EXISTS xmppmaster`.`historylogs` (
+CREATE TABLE IF NOT EXISTS `xmppmaster`.`historylogs` (
   `id` int(10),
   `date` timestamp,
   `type` varchar(6),
