@@ -791,7 +791,7 @@ cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
 
-mkdir %buildroot%_sysconfdir/httpd/conf.d/
+mkdir -p %buildroot%_sysconfdir/httpd/conf.d/
 cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/httpd/conf.d/
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
