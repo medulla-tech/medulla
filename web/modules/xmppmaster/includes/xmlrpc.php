@@ -133,7 +133,8 @@ function xmlrpc_addlogincommand($login,
                                 $instructions_datetime_for_exec = '',
                                 $parameterspackage = '',
                                 $rebootrequired = 0,
-                                $shutdownrequired = 0
+                                $shutdownrequired = 0,
+                                $limit_rate_ko = 0
                                 ) {
 
     if($rebootrequired != "0"){
@@ -155,9 +156,9 @@ function xmlrpc_addlogincommand($login,
                                                         $instructions_datetime_for_exec,
                                                         $parameterspackage,
                                                         $rebootrequired,
-                                                        $shutdownrequired));
+                                                        $shutdownrequired,
+                                                        $limit_rate_ko));
 }
-
 
 function xmlrpc_loginbycommand($commandid){
     return xmlCall("xmppmaster.loginbycommand", array( $commandid));
