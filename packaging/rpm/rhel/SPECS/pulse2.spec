@@ -417,6 +417,7 @@ This package contains the guacamole plugin for the MMC agent.
 %files -n python-mmc-guacamole
 %attr(0640,root,root) %config(noreplace) %{_sysconfdir}/mmc/plugins/guacamole.ini
 %python2_sitelib/mmc/plugins/guacamole
+%_datadir/mmc/modules/guacamole/locale
 
 #--------------------------------------------------------------------
 
@@ -505,6 +506,9 @@ This package contains Pulse 2 common files like documentation.
 #FIXME: Move on the correct package later
 # Does not belong to here, lefover file.
 %exclude %_sysconfdir/mmc/pulse2/atftpd/pcre.conf
+
+# Split later in its own rpm
+%python2_sitelib/pulse2/tests/test_utils.py
 
 #--------------------------------------------------------------------
 
@@ -791,12 +795,11 @@ cp %{SOURCE2} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE3} %buildroot%_prefix/lib/systemd/system
 cp %{SOURCE4} %buildroot%_prefix/lib/systemd/system
 
-mkdir %buildroot%_sysconfdir/httpd/conf.d/
+mkdir -p %buildroot%_sysconfdir/httpd/conf.d/
 cp -fv %buildroot%_datadir/mmc/conf/apache/pulse.conf %buildroot%_sysconfdir/httpd/conf.d/
 
 mkdir -p %buildroot%_var/lib/pulse2/file-transfer
 
 # Cleanup
 find '%{buildroot}' -name '*.pyc' -o -name '*.pyo' -delete
-
 
