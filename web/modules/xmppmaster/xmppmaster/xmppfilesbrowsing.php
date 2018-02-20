@@ -114,6 +114,106 @@ ul.leftfile, ul.rightfile {
 .marge {
     margin-bottom:20px;
 }
+ li.folder a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.folderg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.console a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.consoleg a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quick a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guaca a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guacag a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quickg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
 
 </style>
 
@@ -132,6 +232,14 @@ $tab = explode("/",$machine);
 $p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
+
+require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+require_once("modules/dyngroup/includes/utilities.php");
+include_once('modules/pulse2/includes/menu_actionaudit.php');
+echo "<br><br><br>";
+
+
+
 // creation repertoire namemachine si non existe.
 // et recuperation pathcurent pour cette machine eg /var/lib/pulse2/transfertfiles/machine25pulse
 $filecurentdir = xmlrpc_create_local_dir_transfert(xmlrpc_localfilesystem("")['path_abs_current'], $ma['hostname']);
