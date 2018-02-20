@@ -33,7 +33,20 @@ echo '
 <script type="text/javascript" src="jsframework/lib/raphael/g.line-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/g.bar-min.js"></script>
 <script type="text/javascript" src="jsframework/lib/raphael/utilities.js"></script>';
-
+?>
+<style>
+    li.groupshare a {
+        padding: 3px 0px 5px 20px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/dyngroup/img/share.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+    }
+</style>
+<?php
 $nbdeploy = 0;
 $group = getPGobject($gid, true);
 $p = new PageGenerator(_T("Deployment [ group",'xmppmaster')." ". $group->getName()."]");
