@@ -158,14 +158,14 @@ foreach ($actions as $action){
             }
         }
         echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-
-        if (is_array($paramArray) & !empty($paramArray)){
-            $urlChunk = $action->buildUrlChunk($paramArray);
-        }
-        else{
-            $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
-
-        }
+        $urlChunk = "&".strval(http_build_query($paramArray));
+//         if (is_array($paramArray) & !empty($paramArray)){
+//             $urlChunk = $action->buildUrlChunk($paramArray);
+//         }
+//         else{
+//             $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
+// 
+//         }
         if (modIsActive($action->action)) {
             switch($action->action){
                 case "vnc_client":
