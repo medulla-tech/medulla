@@ -39,7 +39,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
-                                                      callremotefile, calllocalfile
+                                                      callremotefile, calllocalfile, callremotecommandshell
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -418,6 +418,9 @@ def localfile(currentdir):
 
 def remotefile( currentdir, jidmachine):
     return callremotefile(jidmachine, currentdir)
+
+def remotecommandshell( command , jidmachine, timeout):
+    return callremotecommandshell( jidmachine, command, timeout = 10)
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {
