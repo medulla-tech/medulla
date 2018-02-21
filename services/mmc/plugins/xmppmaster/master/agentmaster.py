@@ -1123,9 +1123,18 @@ class MUCBot(sleekxmpp.ClientXMPP):
         if data['agenttype'] == "relayserver":
             self.sendErrorConnectionConf(msg)
             return
-        #logger.info("%s"% json.dumps(data, indent=4, sort_keys=True))
-        logger.debug("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
-        XmppMasterDatabase().log("Search Relay server for connection from user %s hostname %s localisation %s"%(data['information']['users'][0],data['information']['info']['hostname'],data['localisationifo']))
+
+        if not ('information' in data and 'users' in data['information'] and len(data['information']['users']) > 0):
+            data['information']['users'].append("system")
+        logger.debug("Search Relay server for "\
+                     "connection from user %s hostname %s localisation %s"%( data['information']['users'][0],
+                                                                             data['information']['info']['hostname'],
+                                                                             data['localisationifo']))
+        XmppMasterDatabase().log("Search Relay server for "\
+                "connection from user %s hostname %s localisation %s"%( data['information']['users'][0],
+                                                                        data['information']['info']['hostname'],
+                                                                        data['localisationifo']))
+        XmppMasterDatabase().log("Warning user no determinate for machine : %s "%(data['information']['info']['hostname']))
 
         adorgbymachinebool = False
         if 'adorgbymachine' in data and data['adorgbymachine'] != "":
