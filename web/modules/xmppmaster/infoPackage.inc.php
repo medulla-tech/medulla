@@ -129,6 +129,10 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfileslocalne.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("xmppremotecmd");
+$page->setFile("modules/xmppmaster/xmppmaster/xmppremotecmdshell.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
 
 // $tab = new Tab("tablaunch", _T("MSC launch tab for a machine", "msc"));
 //     $page->addTab($tab);
