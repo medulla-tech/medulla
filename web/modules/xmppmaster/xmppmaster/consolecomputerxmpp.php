@@ -1,6 +1,6 @@
 <?php
 /*
- * (c) 2016 Siveo, http://www.siveo.net
+ * (c) 2016-2018 Siveo, http://www.siveo.net
  *
  * $Id$
  *
@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file : consolecomputerxmpp.php
  */
 ?>
 <style type='text/css'>
@@ -30,87 +31,62 @@ textarea {
 }
 </style>
 
-
 <?
-require("modules/base/computers/localSidebar.php");
-require("graph/navbar.inc.php");
-require_once("modules/xmppmaster/includes/xmlrpc.php");
-$uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
-$machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    require("modules/base/computers/localSidebar.php");
+    require("graph/navbar.inc.php");
+    require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-$tab = explode("/",$machine);
+    $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
+    $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
+    $command = isset($_POST['command']) ? $_POST['command'] : "";
+    $tab = explode("/",$machine);
 
-$p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
-$p->setSideMenu($sidemenu);
-$p->display();
-
-
- if (   isset($_POST['bvalid']) &&
-        isset($_POST['command']) &&
-        isset($_POST['Machine']) &&
-        trim($_POST['Machine'])!= "" &&
-        trim($_POST['command'])!= ""
-        ){
-        $_POST['result']='';
-        $result = xmlrpc_runXmppCommand(trim($_POST['command']),trim($_POST['Machine']));
- }else
- {
-    $result="";
- }
- 
-if ( $uuid != ""){
-  
-        $f = new ValidatingForm();
-        $f->push(new Table());
-
-        $f->add(new HiddenTpl('Machine'), array("value" => $machine, "hide" => True));
-
-        $e=new InputTpl('command');
-        $f->add(
-            new TrFormElement(_T("Shell command", "xmppmaster"), $e)
-        );
-        if ( isset($_POST['result'])){
-            $f->add(
-                        new TrFormElement("<br>",  new SpanElement(_T("Command result", "xmppmaster")." : ". trim($_POST['command'])))
-                    );
-        }
-
-        $f->pop();
-        if ( isset($_POST['result'])){
-            $ear = new TextareaTpl('result');
-            $ear->setCols(190);
-            if (array_key_exists('result', $result['data'])) {
-                $f->add(
-                    new TrFormElement
-                    (
-                        "",
-                        $ear
-                    ),
-                    array("value" => htmlspecialchars($result['data']['result']))
-                );
-            }
-            else{
-                $f->add(
-                        new TrFormElement
-                        (
-                            "",
-                            $ear
-                        ),
-                        array("value" => htmlspecialchars($result['data']['msg']))
-                    );
-            }
-        }
-
-        $f->push(new Table());
-        if ($result['ret'] != 0){
-            $result['ret']=' <font color="red">'.$result['ret'].'</font>';
-        }
-
-        $f->add(
-                    new TrFormElement("",  new SpanElement(_T("Code Return : ", "xmppmaster").$result['ret']))
-                );
-                $f->addValidateButton("bvalid");
-        $f->pop();
-        $f->display();
-    }
+    $p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
+    $p->setSideMenu($sidemenu);
+    $p->display();
+    echo "Natif os :" . xmlrpc_getMachinefromjid($machine)['platform'];
 ?>
+
+<form method="post" id="Form">
+    <table cellspacing="0">
+    <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
+        <tr>
+            <td class="label" width="40%" style = "text-align: right;">Natif Shell command</td>
+            <td>
+                <span id="container_input_command">
+                <input value="<? echo $_POST['command']; ?>" name="command" id="command" type="text" size="23"  value="" placeholder=""  data-regexp="/.+/" autocomplete="off" /></span>
+            </td>
+        </tr>
+
+        <tr>
+            <td class="label" width="40%" style = "text-align: right;"><br></td>
+            <td><span>Command result : </span><span><? echo $_POST['command']; ?></span></td>
+        </tr>
+        <tr>
+            <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
+            <td><span id="codereturn"></span></td>
+        </tr>
+    </table>
+    <textarea rows="15" id="resultat" spellcheck="false" style="height: 400px;background:black;color:white;FONT-SIZE : 15px;font-family: 'Courier New', Courier, monospace;"></textarea>
+
+    <!--<button class="btn btn-small">submit</button>-->
+</form>
+
+
+<script type="text/javascript">
+    jQuery( document ).ready(function() {
+        if (jQuery( "#command" ).val() != ""){
+            jQuery.get( "modules/xmppmaster/xmppmaster/xmppremotecmdshell.php",
+                    {
+                        "command" : jQuery( "#command" ).val(),
+                        "machine" : jQuery( "#machine" ).val()
+                    },
+                    function( data ) {
+                        jQuery( "#resultat" ).text( data['result'] );
+                        jQuery( "#codereturn" ).text( data['codereturn'] );
+                    });
+        }
+    });
+
+</script>
+
