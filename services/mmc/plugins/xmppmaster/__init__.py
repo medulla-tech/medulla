@@ -178,14 +178,12 @@ def getLogxmpp(start_date, end_date, typelog, action, module, user, how, who, wh
 def getPresenceuuid(uuid):
     return XmppMasterDatabase().getPresenceuuid(uuid)
 
-#jfkjfk
 def getMachinefromjid(jid):
     return XmppMasterDatabase().getMachinefromjid(jid)
 
 def getRelayServerfromjid(jid):
     return XmppMasterDatabase().getRelayServerfromjid(jid)
 
-#jfkjfk
 def getlistcommandforuserbyos(login, osname = None , min = None, max = None, filt = None):
     if osname == '':
         osname = None

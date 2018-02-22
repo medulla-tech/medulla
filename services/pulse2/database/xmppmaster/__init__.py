@@ -346,7 +346,6 @@ class XmppMasterDatabase(DatabaseHelper):
             return -1
 
 
-#jfkjfk
     @DatabaseHelper._sessionm
     def getlistcommandforuserbyos( self,
                                    session,
