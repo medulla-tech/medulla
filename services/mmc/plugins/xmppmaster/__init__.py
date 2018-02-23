@@ -210,7 +210,8 @@ def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description 
 def create_local_dir_transfert(pathroot, hostname):
     dirmachine = os.path.join(pathroot, hostname)
     if not os.path.exists(dirmachine):
-        os.makedirs(dirmachine, mode=0777)
+        os.makedirs(dirmachine)
+        os.chmod(dirmachine, 0o777)
     return localfile(dirmachine)
 
 def getGuacamoleRelayServerMachineUuid(uuid):
@@ -374,7 +375,8 @@ def callInventoryinterface(uuid):
 
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
-        os.makedirs(directory, mode=0700)
+        os.makedirs(directory)
+        os.chmod(directory, 0o700)
         return True
     return False
 
