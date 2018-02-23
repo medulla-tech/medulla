@@ -244,6 +244,14 @@ function xmlrpc_runXmppCommand($command, $machine, $postinfo){
     return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
 }
 
+function xmlrpc_remotecommandshellpluging($command, $machine, $uiduniq){
+    return xmlCall("xmppmaster.runXmppCommand", array($command, $machine, $postinfo));
+}
+
+function xmlrpc_getcontentfile($path, $delete = false){
+    return xmlCall("xmppmaster.getcontentfile", array($path, $delete));
+}
+
 function xmlrpc_runXmppScript($command, $machine){
     return xmlCall("xmppmaster.runXmppScript", array($command, $machine));
 }
