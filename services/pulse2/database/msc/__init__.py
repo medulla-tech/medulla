@@ -468,6 +468,7 @@ class MscDatabase(DatabaseHelper):
         return result
 
     def updategroup(self, group):
+        #jfkjfk
         session = create_session()
         join = self.commands_on_host.join(self.commands).join(self.target).join(self.commands_on_host_phase)
         q = session.query(CommandsOnHost, Commands, Target, CommandsOnHostPhase)
