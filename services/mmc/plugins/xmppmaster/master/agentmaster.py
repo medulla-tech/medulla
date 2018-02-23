@@ -264,13 +264,6 @@ class MUCBot(sleekxmpp.ClientXMPP):
         sleekxmpp.ClientXMPP.__init__(self,  conf.jidagent, conf.passwordconnection)
 
         self.manage_scheduler  = manage_scheduler(self)
-        if not os.path.isdir(self.config.rootfilesystem):
-            cmd ="mkdir -p %s ; chmod 777 %s"%(self.config.rootfilesystem, self.config.rootfilesystem)
-            logger.debug("creation directory for transfert : %s"%self.config.rootfilesystem)
-            a = simplecommandstr(cmd)
-            if a['code'] != 0:
-                logger.error("Creation directory %s"%self.config.rootfilesystem)
-                pass
         self.xmppbrowsingpath = xmppbrowsing(defaultdir =  self.config.defaultdir, rootfilesystem = self.config.rootfilesystem)
         # dictionary used for deploy
         self.machineWakeOnLan = {}
