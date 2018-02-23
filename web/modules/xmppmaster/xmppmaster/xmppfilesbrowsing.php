@@ -53,7 +53,7 @@ body{
 
 .download{
     display : none;
-    background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;
+    /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
     cursor:pointer;
     border: none;
 }
@@ -307,7 +307,7 @@ echo '</script>';
         user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
-        jQuery("#download").hide(200)
+        //jQuery("#download").hide(200)
         local();
         remote();
     });
@@ -395,7 +395,7 @@ echo '</script>';
                         },
                         function() {
             // REMOTE
-            jQuery("ul.rightdir > li").click(function() {
+            jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
                 fileremote = false;
                 filenameremote = "";
                 var dirsel = jQuery(this).text();
@@ -405,6 +405,30 @@ echo '</script>';
                 remote(dirsel);
                 jQuery('#dirremote').text(jQuery(this).text());
             });
+            
+            jQuery("span.but").click(function() {
+                if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
+                    var source = jQuery('input[name=path_abs_current_remote]').val();
+                }
+                else{
+                    var source = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).parent("li").find(':nth-child(1)').text();
+                }
+                timetmp = user + "-" + datetimenow();
+                var responce_user = confirm("<?php echo _T("Copy Remote directory", 'xmppmaster'); ?> : " +
+                                                 source +
+                                                "\nto\n " + "<?php echo _T("Local directory : ", 'xmppmaster'); ?> : " +
+                                                jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/");
+                if (responce_user == true) {
+                        jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
+                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  jQuery(this).parent("li").find(':nth-child(1)').text(),
+                                directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
+                                "jidmachine" : jid }, function( data ) {
+                                jQuery("#messageaction").text(data);
+                        });
+                    }
+            });
+
             jQuery(".download").click(function() {
                 if (fileremote){
                     // fichier pas repertoire.
