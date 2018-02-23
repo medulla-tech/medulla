@@ -421,6 +421,15 @@ def localfile(currentdir):
 def remotefile( currentdir, jidmachine):
     return callremotefile(jidmachine, currentdir)
 
+def getcontentfile(pathfile, deletefile):
+    if os.path.isfile(pathfile):
+        data = file_get_contents(pathfile)
+        if deletefile == True:
+            os.remove(pathfile)
+        return data
+    else:
+        return False
+
 def remotecommandshell( command , jidmachine, timeout):
     return callremotecommandshell( jidmachine, command, timeout = 10)
 
