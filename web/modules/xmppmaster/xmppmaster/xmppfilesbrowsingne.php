@@ -42,6 +42,7 @@ body{
 #global{
   width:100%;
   height:700px;
+ 
 }
 #droite, #gauche {
     display: inline-block;
@@ -49,6 +50,7 @@ body{
     border-width:1px;
     border-style:dotted;
     border-color:black;
+    margin-left  : 25px;
 }
 
 .fileshow {
@@ -61,7 +63,7 @@ body{
 }
  
 #droite {
-    width: 49%;
+    width: 90%;
     height:90%;
 }
 
@@ -88,8 +90,8 @@ body{
     color: blue;
 }
 .download{
-    display : none;
-    background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;
+    /*display : none*/;
+    /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
     cursor:pointer;
     border: none;
 }
@@ -270,8 +272,8 @@ echo '</script>';
 <br>
 <div id="global">
 
-    <div id="gauche">
-            <div id="fileshowlocal" class="fileshow">
+  <!--<div id="gauche">
+            <div id="fileshowlocal" class="fileshow">-->
                 <?php
                 printf ('
                 <form>
@@ -279,9 +281,9 @@ echo '</script>';
                     <input id ="parentdirlocal" type="hidden" name="parentdirlocal" value="%s">
                 </form>' ,$curentdir, $filecurentdir['parentdir']);
                 ?>
-            </div>
+            <!--</div>-->
        <div class ="piedbrowser"><h2></h2></div>
-    </div>
+ <!--   </div>-->
 
    <div id="droite">
         <div id ="fileshowremote" class="fileshow">
@@ -309,7 +311,9 @@ echo '</script>';
         jid = "<?php echo $ma['jid']; ?>";
         user = "<?php echo $_SESSION['login']; ?>";
         nameremotepath = "";
-        jQuery("#download").hide(200)
+        init = 1;
+        
+//         jQuery("#download").hide(200)
         local();
         remote();
     });
@@ -375,10 +379,10 @@ echo '</script>';
                         },
                         function() {
             // REMOTE
-            jQuery("ul.rightdir > li").click(function() {
+            jQuery("ul.rightdir > li").find(':nth-child(1)').click(function() {
                 fileremote = false;
                 filenameremote = "";
-                jQuery("#download").hide(200)
+                //jQuery("#download").hide(200)
                 var dirsel = jQuery(this).text();
                 if (typeof dirsel == 'undefined'){
                     var dirsel = "";
@@ -386,6 +390,32 @@ echo '</script>';
                 remote(dirsel);
                 jQuery('#dirremote').text(jQuery(this).text());
             });
+
+        jQuery("span.but").click(function() {
+                if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
+                    var source = jQuery('input[name=path_abs_current_remote]').val();
+                }
+                else{
+                    var source = jQuery('input[name=path_abs_current_remote]').val() + seperator + jQuery(this).parent("li").find(':nth-child(1)').text();
+                }
+                //jQuery(this).text();
+                //alert(jjQuery(this).parent("li").find(':nth-child(1)').text());
+                timetmp = user + "-" + datetimenow();
+                var responce_user = confirm("<?php echo _T("Copy Remote directory", 'xmppmaster'); ?> : " +
+                                                 source +
+                                                "\nto\n " + "<?php echo _T("Local directory : ", 'xmppmaster'); ?> : " +
+                                                jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/");
+                if (responce_user == true) {
+                        jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
+                                dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
+                                src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  jQuery(this).parent("li").find(':nth-child(1)').text(),
+                                directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
+                                "jidmachine" : jid }, function( data ) {
+                                jQuery("#messageaction").text(data);
+                        });
+                    }
+        });
+
             jQuery(".download").click(function() {
                 if (fileremote){
                     // fichier pas repertoire.
@@ -406,14 +436,23 @@ echo '</script>';
                     }
                 }
             });
+            if (init == 1){
+                jQuery(".rightfile LI").each(function(){ 
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).find(':nth-child(2)').hide();
+                });
+            }
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){ 
                     jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
-                    jQuery(this).find(':nth-child(2)').hide()
+                    jQuery(this).find(':nth-child(2)').hide();
                 });
                 jQuery(this).css({ 'color' : 'blue', 'font-weight' : 'bold'});
+                
+                //alert(jQuery(this).find(':nth-child(2)').text())
+                
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();

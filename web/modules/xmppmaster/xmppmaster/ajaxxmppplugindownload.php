@@ -39,5 +39,5 @@ xmlrpc_createdirectoryuser($directory);
 xmlrpc_CallXmppPluginmmc("downloadfile",Array($_GET));
 // message a ecrire
 // dest, src, jidmachine
-echo "copy File from $dest to $src on machine $jidmachine";
+echo "copy File from $src to $dest on machine $jidmachine";
 ?>

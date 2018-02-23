@@ -33,6 +33,7 @@ require_once("../../../includes/session.inc.php");
 
 extract($_POST);
 
+
 function sizefile($tailleoctet){
     $tailleko = $tailleoctet/1024;
     $taillemo = $tailleoctet/(1024*1024);
@@ -48,6 +49,7 @@ function sizefile($tailleoctet){
         }
     }
 }
+
 
 if (!isset($path_abs_current_remote) || $path_abs_current_remote == ""){
     $lifdirstr = xmlrpc_remotefilesystem("", $machine);
@@ -73,7 +75,6 @@ else{
     }
 }
 
-
 $lifdir = json_decode($lifdirstr, true);
 $lifdir = $lifdir['data'];
 
@@ -85,23 +86,33 @@ printf ('
 echo "<h2> Current Dir : <span  id='remotecurrrent'>".$lifdir['path_abs_current'] ."</span></h2>";
 echo'
     <ul class="rightdir">';
-        echo "<li>.</li>";
+        echo "<li>
+            <span class='dir'>.</span>
+            <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+        </li>";
         if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
-            echo "<li>..</li>";
+            echo "<li>
+                      <span class='dir'>..</span>
+                      <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                  </li>";
         }
         foreach($lifdir['list_dirs_current'] as $namedir){
-            echo "<li>".$namedir."</li>";
+            echo "<li>
+                      <span class='dir'>".$namedir."</span>
+                      <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                 </li>";
         }
         echo'
     </ul>
     ';
+    
+    //<input class='download' type='button' name='Dowload' value='.. . ..' title='Download file ".$namefile[0] ."'>
     echo '
     <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
             echo "<li><span>".$namefile[0]."</span>
-                    </span><input class='download' type='button' name='Dowload' value='.. . ..' title='Download file ".$namefile[0] ."'></span>
-                    <span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span>
-                </li>";
+            <span><img  class='download' style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+            <span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span></li>";
         }
       echo '
     </ul>
