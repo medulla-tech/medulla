@@ -32,7 +32,7 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
 
-from master.lib.utils import name_random, simplecommand
+from master.lib.utils import name_random
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
@@ -207,33 +207,12 @@ def create_Qa_custom_command(login, osname, namecmd, customcmd, description ) :
 def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  ):
     return XmppMasterDatabase().updateName_Qa_custom_command(login, osname, namecmd, customcmd, description  )
 
-def createdirectoryuser(directory):
-    if not os.path.exists(directory):
-        cmd = "mkdir -p '%s'; chmod 777 '%s'; chown www-data:www-data '%s'"%(directory, directory, directory)
-        obj=simplecommand(cmd)
-        if int(obj['code']) != 0:
-            logging.getLogger().error("Creation directory %s"%directory )
-            pass
-        else:
-            logging.getLogger().debug("Creation directory %s"%directory )
-            return True
-        #os.makedirs(directory, mode=0700)
-    return False
-
 def create_local_dir_transfert(pathroot, hostname):
     dirmachine = os.path.join(pathroot, hostname)
     if not os.path.exists(dirmachine):
-        cmd = "mkdir -p '%s'; chmod 777 '%s'; chown www-data:www-data '%s'"%(dirmachine, dirmachine, dirmachine)
-        obj=simplecommand(cmd)
-        if int(obj['code']) != 0:
-            logging.getLogger().error("Creation directory %s"%dirmachine )
-            pass
-        else:
-            logging.getLogger().debug("Creation directory %s"%dirmachine )
-        ##os.makedirs(dirmachine, mode=0777)
+        os.makedirs(dirmachine, mode=0777)
     return localfile(dirmachine)
 
-    #####chown www-data:www-data machine25pulse/
 def getGuacamoleRelayServerMachineUuid(uuid):
     return XmppMasterDatabase().getGuacamoleRelayServerMachineUuid(uuid)
 
@@ -392,6 +371,12 @@ def callInventoryinterface(uuid):
     else:
         logging.getLogger().error("for machine %s : jid xmpp missing"%uuid )
         return "jid missing"
+
+def createdirectoryuser(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory, mode=0700)
+        return True
+    return False
 
 def callInstallKeyAM(jidAM,jidARS):
     if jidARS != "" and jidAM != "":
