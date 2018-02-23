@@ -19,26 +19,33 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ * file : xmppmaster/xmppremotecmdshell.php
  */
 ?>
 <?php
-header('Content-type: application/json');
+    extract($_GET);
+
+    header('Content-type: application/json');
 
     require_once("../includes/xmlrpc.php");
     require_once("../../../includes/config.inc.php");
     require_once("../../../includes/i18n.inc.php");
     require_once("../../../includes/acl.inc.php");
     require_once("../../../includes/session.inc.php");
-    extract($_GET);
     $returndata = array();
     $arraytrim = array();
-    $result1 = xmlrpc_remotecommandshell( $command, $machine, 60);
-    $rr = json_decode ($result1, True);
-    foreach($rr['result'] as $line){
-        $arraytrim[] = trim("$line","\n\r" );
+    $re = xmlrpc_getcontentfile("/tmp/".$uidunique, true);
+    if ($re != false){
+        $rr = json_decode ($re, True);
+        foreach($rr['result'] as $line){
+            $arraytrim[] = trim("$line","\n\r" );
+        }
+        $returndata['result'] = implode("\n", $arraytrim);
+        $returndata['codereturn'] = $rr['code'];
+        $returndata['stop'] = true;
+        echo json_encode($returndata, True);
     }
-    $returndata['result'] = implode("\n", $arraytrim);
-    $returndata['codereturn'] =$rr['codereturn'];
-    $returndata['cmd'] = $rr['cmd'];
-    echo json_encode($returndata);
+    else{
+        $returndata['stop'] = false;
+    }
 ?>

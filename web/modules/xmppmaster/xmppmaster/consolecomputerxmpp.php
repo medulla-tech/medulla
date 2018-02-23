@@ -40,18 +40,35 @@ textarea {
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
     $command = isset($_POST['command']) ? $_POST['command'] : "";
     $tab = explode("/",$machine);
-
+    $uiduniq = uniqid ("shellcommande");
     $p = new PageGenerator(_T("Console", 'xmppmaster')." $tab[1]");
     $p->setSideMenu($sidemenu);
     $p->display();
     echo "Natif os :" . xmlrpc_getMachinefromjid($machine)['platform'];
+
+    if (
+        isset($_POST['command']) &&
+        isset($_POST['Machine']) &&
+        trim($_POST['Machine'])!= "" &&
+        trim($_POST['command'])!= ""
+        ){
+            $_POST['result']='';
+            $tabdata = array(
+                                "command" => $command,
+                                "machine" => $machine,
+                                "uidunique" => $uiduniq
+            );
+            xmlrpc_runXmppCommand("plugin_asynchromeremoteshell", $machine, array($tabdata));
+            $recherche = true;
+        }
+
 ?>
 
 <form method="post" id="Form">
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Natif Shell command</td>
+            <td class="label" width="40%" style = "text-align: right;">Natif Shell command []</td>
             <td>
                 <span id="container_input_command">
                 <input value="<? echo $_POST['command']; ?>" name="command" id="command" type="text" size="23"  value="" placeholder=""  data-regexp="/.+/" autocomplete="off" /></span>
@@ -60,33 +77,61 @@ textarea {
 
         <tr>
             <td class="label" width="40%" style = "text-align: right;"><br></td>
-            <td><span>Command result : </span><span><? echo $_POST['command']; ?></span></td>
+            <td><img id="imagewait" src="graph/ajax_loading.gif" alt="" /><span>Command result : </span><span><? echo $_POST['command']; ?></span></td>
         </tr>
         <tr>
             <td class="label" width="40%" style = "text-align: right;">Error Code :</td>
             <td><span id="codereturn"></span></td>
         </tr>
     </table>
-    <textarea rows="15" id="resultat" spellcheck="false" style="height: 400px;background:black;color:white;FONT-SIZE : 15px;font-family: 'Courier New', Courier, monospace;"></textarea>
-
+    <textarea rows="15"
+              id="resultat" 
+              spellcheck="false" 
+              style = "height : 400px;
+                       background : black;
+                       color : white;
+                       FONT-SIZE : 15px;
+                       font-family : 'Courier New', Courier, monospace;
+                       border:10px solid ;
+                       padding : 15px;
+                       border-width:1px;
+                       border-radius: 25px;
+                       border-color:#FFFF00;
+                       box-shadow: 6px 6px 0px #6E6E6E;"
+    ></textarea>
+    
+    
     <!--<button class="btn btn-small">submit</button>-->
 </form>
-
-
 <script type="text/javascript">
     jQuery( document ).ready(function() {
-        if (jQuery( "#command" ).val() != ""){
-            jQuery.get( "modules/xmppmaster/xmppmaster/xmppremotecmdshell.php",
-                    {
+
+    jQuery( "#imagewait" ).hide();
+    calldata = function() {
+        jQuery.get( "modules/xmppmaster/xmppmaster/xmppremotecmdshell.php",{
                         "command" : jQuery( "#command" ).val(),
-                        "machine" : jQuery( "#machine" ).val()
+                        "machine" : jQuery( "#machine" ).val(),
+                        "uidunique" : "<? echo $uiduniq; ?>"
                     },
                     function( data ) {
-                        jQuery( "#resultat" ).text( data['result'] );
-                        jQuery( "#codereturn" ).text( data['codereturn'] );
+                        if(data['stop'] == true){
+                            jQuery( "#resultat" ).text( data['result'] );
+                            jQuery( "#codereturn" ).text( data['codereturn'] );
+                            jQuery( "#imagewait" ).hide();
+                        }else
+                        {
+                            setTimeout(calldata, 5000)
+                        }
                     });
-        }
+}
+<?php
+    if ($recherche == true){
+        echo "var uniqid = \"".$uiduniq."\";";
+        echo "var recherche = true;";
+        echo "var x = setTimeout(calldata, 2000);";
+        echo 'jQuery( "#imagewait" ).show();';
+    }
+?>
     });
-
 </script>
 
