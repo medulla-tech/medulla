@@ -29,12 +29,122 @@ textarea {
     margin:auto;   /* exemple pour centrer */
     display:block; /* pour effectivement centrer ! */
 }
-</style>
+.shadow
+{
+  -moz-box-shadow: 4px 4px 10px #888;  
+  -webkit-box-shadow: 4px 4px 10px #888;  
+  box-shadow:4px 4px 6px #888;
+}
+ 
+ li.folder a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
 
+li.folderg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/folder.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.console a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.consoleg a {
+        padding: 3px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/console.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quick a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guaca a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+}
+
+li.guacag a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/guaca.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+li.quickg a {
+        padding: 0px 0px  5px 22px;
+        margin: 0 0px 0 0px;
+        background-image: url("modules/base/graph/computers/quick.png");
+        background-repeat: no-repeat;
+        background-position: left top;
+        line-height: 18px;
+        text-decoration: none;
+        color: #FFF;
+        filter: grayscale(50%);
+        -webkit-filter: grayscale(50%);
+        -moz-filter: grayscale(50%);
+        opacity:0.5;
+}
+</style>
 <?
     require("modules/base/computers/localSidebar.php");
     require("graph/navbar.inc.php");
     require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+    require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
+    require_once("modules/dyngroup/includes/utilities.php");
+    include_once('modules/pulse2/includes/menu_actionaudit.php');
 
     $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
     $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
@@ -68,10 +178,19 @@ textarea {
     <table cellspacing="0">
     <input  type="hidden" id="machine" value="<? echo $machine; ?>" name="Machine"/>
         <tr>
-            <td class="label" width="40%" style = "text-align: right;">Natif Shell command []</td>
+            <td class="label" width="40%" style = "text-align: right;">Natif Shell command</td>
             <td>
                 <span id="container_input_command">
-                <input value="<? echo $_POST['command']; ?>" name="command" id="command" type="text" size="23"  value="" placeholder=""  data-regexp="/.+/" autocomplete="off" /></span>
+                    <input value="<? echo $_POST['command']; ?>" 
+                        name="command" 
+                        id="command" 
+                        type="text" 
+                        size="23"  
+                        placeholder=""
+                        data-regexp="/.+/" 
+                        autocomplete="off" 
+                        title="<? echo _T("return key to start your order", 'xmppmaster');  ?>"/>
+                </span>
             </td>
         </tr>
 
@@ -99,8 +218,7 @@ textarea {
                        border-color:#FFFF00;
                        box-shadow: 6px 6px 0px #6E6E6E;"
     ></textarea>
-    
-    
+    <!-- si on veut un boutton submit-->
     <!--<button class="btn btn-small">submit</button>-->
 </form>
 <script type="text/javascript">
@@ -120,7 +238,7 @@ textarea {
                             jQuery( "#imagewait" ).hide();
                         }else
                         {
-                            setTimeout(calldata, 5000)
+                            setTimeout(calldata, 2500)
                         }
                     });
 }
