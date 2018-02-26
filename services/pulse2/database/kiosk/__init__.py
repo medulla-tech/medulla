@@ -97,7 +97,13 @@ class KioskDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_profiles_list(self, session):
+        """
+        Return a list of all the existing profiles.
+        The list contains all the elements of the profile.
 
+            Returns:
+                A list of all the founded entities.
+        """
         ret = session.query(Profiles).all()
         lines = []
         for row in ret:
@@ -107,9 +113,37 @@ class KioskDatabase(DatabaseHelper):
 
     @DatabaseHelper._sessionm
     def get_profiles_name_list(self, session):
+        """
+        Return a list of all the existing profiles.
+        The list is a shortcut of the method get_profiles_list.
 
+        Returns:
+            A list of the names for all the founded entities.
+        """
         ret = session.query(Profiles.name).all()
         lines = []
         for row in ret:
             lines.append(row[0])
         return lines
+
+
+    @DatabaseHelper._sessionm
+    def delete_profile(self, session, name):
+        """
+        Delete the named profile from the table profiles.
+        This method delete the profiles which have the specified name.
+
+        Args:
+            name: the name of the profile
+
+        Returns:
+            Boolean True if success, else False
+        """
+        try:
+            ret = session.query(Profiles).filter(Profiles.name == name).delete()
+            session.commit()
+            session.flush()
+            return True
+
+        except Exception, e:
+            return False

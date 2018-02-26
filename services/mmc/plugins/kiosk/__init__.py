@@ -78,3 +78,6 @@ def get_profiles_list():
 
 def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
+
+def delete_profile(name):
+    return KioskDatabase().delete_profile(name)
