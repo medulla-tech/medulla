@@ -21,6 +21,9 @@
  * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+
 if (in_array("xmppmaster", $_SESSION["supportModList"])) {
     require_once("modules/xmppmaster/includes/xmlrpc.php");
 }
@@ -36,51 +39,35 @@ if (isset($_GET['action']))
 
     $presencemachinexmpp = xmlrpc_getPresenceuuid( $_SESSION['objectUUID']);
 
-    if (in_array("guacamole", $_SESSION["supportModList"])) {
+//     if (in_array("guacamole", $_SESSION["supportModList"])) {
         $element = "guacamole";
-    }
-    else{
-        try {
-            if (web_def_use_no_vnc()==1){
-                $element="novnc";
-            }
-            else{
-                $element="appletjava";
-            }
-        }catch (Exception $e) {
-            $element="novnc";
-        }
-    }
+//     }
+//     else{
+//         try {
+//             if (web_def_use_no_vnc()==1){
+//                 $element="novnc";
+//             }
+//             else{
+//                 $element="appletjava";
+//             }
+//         }catch (Exception $e) {
+//             $element="novnc";
+//         }
+//     }
 $paramArray = array('cn' => $_SESSION['cn'], 'objectUUID' => $_SESSION['objectUUID'],'vnctype' => $element, "presencemachinexmpp" => $presencemachinexmpp);
 
 $inventAction = new ActionItem(_T("Inventory", "pulse2"),"invtabs","inventory","inventory", "base", "computers");
-$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
+//$extticketAction = new ActionItem(_("extTicket issue"), "extticketcreate", "extticket", "computer", "base", "computers");
 $backupAction = new ActionItem(_("Backup status"),"hostStatus","backuppc","backuppc", "backuppc", "backuppc");
-
 $imgAction = new ActionItem(_T("Imaging management", "pulse2"),"imgtabs","imaging","computer", "base", "computers");
-
-
-if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-    $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
-}
-else{
-    $vncClientAction = new ActionItem(_T("Remote control", "pulse2"), "vnc_client", "vncclient", "computer", "base", "computers");
-}
-
-if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-
-    $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp = new ActionPopupItem(_("Quick action"), "deployquick", "quick", "computer", "xmppmaster", "xmppmaster");
     $DeployQuickxmpp->setWidth(600);
-
-
-
     if ($presencemachinexmpp != 1) {
-        $logAction = new EmptyActionItem1(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
         $mscAction = new EmptyActionItem1(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
     }
     else{
-        $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
+        $inventconsole = new ActionItem(_("xmppconsole"),"consolecomputerxmpp","console","computers", "xmppmaster", "xmppmaster");
+        $vncClientAction = new ActionPopupItem(_("Remote control"), "vnc_client", "guaca", "computer", "base", "computers");
         $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
         if (isExpertMode()){
             $inventxmppbrowsing = new ActionItem(_("files browsing"),"xmppfilesbrowsing","folder","computers", "xmppmaster", "xmppmaster");
@@ -88,28 +75,10 @@ if (in_array("xmppmaster", $_SESSION["supportModList"])) {
             $inventxmppbrowsing   = new ActionItem(_("files browsing"),"xmppfilesbrowsingne","folder","computers", "xmppmaster", "xmppmaster");
         }
     }
-}
-else{
-    $logAction = new ActionItem(_T("Read log", "pulse2"),"msctabs","logfile","computer", "base", "computers", "tablogs");
-    $mscAction = new ActionItem(_T("Software deployment", "pulse2"),"msctabs","install","computer", "base", "computers");
-}
 
 
+        $actions = array($inventAction, $backupAction, $vncClientAction, $mscAction, $imgAction,$inventxmppbrowsing,$inventconsole, $DeployQuickxmpp);
 
-if (in_array("xmppmaster", $_SESSION["supportModList"]) && isset($_GET['cmd_id']) ) {
-    $actions = array();
-}
-else{
-    if (in_array("xmppmaster", $_SESSION["supportModList"])){
-        $actions = array($inventAction, $extticketAction, $backupAction,
-                            $vncClientAction, $logAction, $mscAction,
-                            $imgAction,$inventxmppbrowsing,$inventconsole,
-                            $DeployQuickxmpp);
-    }
-    else{
-        $actions = array($inventAction, $extticketAction, $backupAction, $vncClientAction, $logAction, $mscAction, $imgAction);
-    }
-}
 
 /*
  * This function return True if action param is in enabled pulse modules
@@ -150,51 +119,52 @@ function modIsActive($action) {
     return False;
 }
 echo "<ul class='action'>";
-foreach ($actions as $action){
+foreach ($actions as $actionmodule){
         if (is_array($paramArray)) {
-            $paramArray['mod'] = $action->mod;
-            if ($action->action == "vnc_client") {
+            $paramArray['mod'] = $actionmodule->mod;
+            if ($actionmodule->action == "vnc_client") {
                 $paramArray['establishproxy'] = "yes";
             }
         }
-        echo "<li class=\"".$action->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
-        $urlChunk = "&".strval(http_build_query($paramArray));
+        echo "<li class=\"".$actionmodule->classCss."\" style=\"list-style-type: none; border: none; float:left; \" >";
+
 //         if (is_array($paramArray) & !empty($paramArray)){
-//             $urlChunk = $action->buildUrlChunk($paramArray);
+//             //$urlChunk = $actionmodule->buildUrlChunk($paramArray);
 //         }
 //         else{
-//             $urlChunk = "&amp;" . $action->paramString."=" . rawurlencode($paramArray);
-// 
+//             $urlChunk = "&amp;" . $actionmodule->paramString."=" . rawurlencode($paramArray);
 //         }
-        if (modIsActive($action->action)) {
-            switch($action->action){
+        $urlChunk = "&".strval(http_build_query($paramArray));
+
+        if (modIsActive($actionmodule->action)) {
+            switch($actionmodule->action){
                 case "vnc_client":
                     if ($presencemachinexmpp == 1){
                         if (in_array("xmppmaster", $_SESSION["supportModList"])) {
-                            echo '<a title="' . $action->desc . '" onclick="PopupWindow(event, \'' . urlStr($action->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
+                            echo '<a title="' . $actionmodule->desc . '" onclick="PopupWindow(event, \'' . urlStr($actionmodule->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
                         }
                         else{
-                            echo "<a title=\"".$action->desc.
+                            echo "<a title=\"".$actionmodule->desc.
                                 "\" onclick=\"window.open('" .
-                                urlStr($action->path) .
+                                urlStr($actionmodule->path) .
                                 $urlChunk .
                                 "','mywin','left=20,top=20,width=300,height=150,toolbar=1,resizable=0');\">&nbsp;</a>";
                         }
                     }
                     break;
                 case "deployquick" :
-                    echo '<a title="' . $action->desc . '" onclick="PopupWindow(event, \'' . urlStr($action->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
+                    echo '<a title="' . $actionmodule->desc . '" onclick="PopupWindow(event, \'' . urlStr($actionmodule->path) . $urlChunk . '\'); return false;" href="#">&nbsp;</a>';
                     break;
 
                 case "consolecomputerxmpp":
                     if ($presencemachinexmpp == 1){
-                        $url =  $action->path;
-                        echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                        $url =  $actionmodule->path;
+                        echo "<a title=\"".$actionmodule->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
                     }
                     break;
                 default:
-                    $url = (in_array('glpi', $_SESSION['supportModList']) && $action->path == 'base/computers/invtabs') ? 'base/computers/glpitabs' : $action->path;
-                    echo "<a title=\"".$action->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
+                    $url = (in_array('glpi', $_SESSION['supportModList']) && $actionmodule->path == 'base/computers/invtabs') ? 'base/computers/glpitabs' : $actionmodule->path;
+                    echo "<a title=\"".$actionmodule->desc."\" href=\"" . urlStr($url) . $urlChunk . "\">&nbsp;</a>";
                     break;
             }
         }

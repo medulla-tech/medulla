@@ -39,7 +39,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
-                                                      callremotefile, calllocalfile
+                                                      callremotefile, calllocalfile, callremotecommandshell
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -210,7 +210,8 @@ def updateName_Qa_custom_command(login, osname, namecmd, customcmd, description 
 def create_local_dir_transfert(pathroot, hostname):
     dirmachine = os.path.join(pathroot, hostname)
     if not os.path.exists(dirmachine):
-        os.makedirs(dirmachine, mode=0700)
+        os.makedirs(dirmachine)
+        os.chmod(dirmachine, 0o777)
     return localfile(dirmachine)
 
 def getGuacamoleRelayServerMachineUuid(uuid):
@@ -374,7 +375,8 @@ def callInventoryinterface(uuid):
 
 def createdirectoryuser(directory):
     if not os.path.exists(directory):
-        os.makedirs(directory, mode=0700)
+        os.makedirs(directory)
+        os.chmod(directory, 0o700)
         return True
     return False
 
@@ -418,6 +420,18 @@ def localfile(currentdir):
 
 def remotefile( currentdir, jidmachine):
     return callremotefile(jidmachine, currentdir)
+
+def getcontentfile(pathfile, deletefile):
+    if os.path.isfile(pathfile):
+        data = file_get_contents(pathfile)
+        if deletefile == True:
+            os.remove(pathfile)
+        return data
+    else:
+        return False
+
+def remotecommandshell( command , jidmachine, timeout):
+    return callremotecommandshell( jidmachine, command, timeout = 10)
 
 def runXmppCommand(cmd, machine, information = ""):
     data = {
