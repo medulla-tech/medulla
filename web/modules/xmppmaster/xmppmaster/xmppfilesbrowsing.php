@@ -52,7 +52,7 @@ body{
 }
 
 .download{
-    display : none;
+    /*display : none;*/
     /*background: url('modules/xmppmaster/graph/img/browserdownload.png') no-repeat;*/
     cursor:pointer;
     border: none;
@@ -307,7 +307,7 @@ echo '</script>';
         user = "<?php echo $_SESSION['login']; ?>";
         jid = "<?php echo $ma['jid']; ?>";
         nameremotepath = "";
-        //jQuery("#download").hide(200)
+        init = 1;
         local();
         remote();
     });
@@ -361,12 +361,6 @@ echo '</script>';
                 local(dirsel);
                 jQuery('#dirlocal').text(jQuery(this).text());
             });
-            // on ne peut pas selectionner un fichier juste le repertoire de copie.
-            // le fichier dest aura le meme nom que le fichier scr 
-            // jQuery("ul.leftfile > li").click(function() {
-            // recupere file en local
-            // alert(jQuery(this).text());
-            // });
         });
     }
 
@@ -405,7 +399,7 @@ echo '</script>';
                 remote(dirsel);
                 jQuery('#dirremote').text(jQuery(this).text());
             });
-            
+
             jQuery("span.but").click(function() {
                 if (jQuery(this).parent("li").find(':nth-child(1)').text() == "."){
                     var source = jQuery('input[name=path_abs_current_remote]').val();
@@ -425,6 +419,7 @@ echo '</script>';
                                 directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                 "jidmachine" : jid }, function( data ) {
                                 jQuery("#messageaction").text(data);
+                                return false;
                         });
                     }
             });
@@ -432,7 +427,6 @@ echo '</script>';
             jQuery(".download").click(function() {
                 if (fileremote){
                     // fichier pas repertoire.
-                    // alert(jQuery('input[name=path_abs_current_remote]').val());
                     var responce_user = confirm("<?php echo _T("Copy Remote File", 'xmppmaster'); ?> : " +
                                                 jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote+
                                                 "\nto\n " + "<?php echo _T("Local File : ", 'xmppmaster'); ?> : "+
@@ -449,14 +443,20 @@ echo '</script>';
                     }
                 }
             });
+            if (init == 1){
+                jQuery(".rightfile LI").each(function(){ 
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).find(':nth-child(2)').hide();
+                });
+            }
             jQuery("ul.rightfile > li").click(function() {
                 //  recupere file en remote
                 fileremote = true;
                 jQuery(".rightfile LI").each(function(){ 
-                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal'});
+                    jQuery(this).css({'color': 'black', 'font-weight' : 'normal','background-color' : 'white',});
                     jQuery(this).find(':nth-child(2)').hide()
                 });
-                jQuery(this).css({ 'color' : 'blue', 'font-weight' : 'bold'});
+                jQuery(this).css({ 'color' : 'blue', 'background-color' : 'lightblue', 'font-weight' : 'bold'});
                 jQuery(this).find(':nth-child(2)').show()
                 filenameremote = jQuery(this).find(':first').text();
                 taillefile = jQuery(this).find(':last').text();

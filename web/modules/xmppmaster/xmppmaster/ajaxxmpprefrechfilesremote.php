@@ -87,18 +87,18 @@ echo'
     <ul class="rightdir">';
         echo "<li>
             <span class='dir'>.</span>
-            <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+            <span class='but'><img style='padding-left : 20px; float : right;' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
         </li>";
         if ( $lifdir['path_abs_current'] != $lifdir['rootfilesystem']){
             echo "<li>
                       <span class='dir'>..</span>
-                      <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                      <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                   </li>";
         }
         foreach($lifdir['list_dirs_current'] as $namedir){
             echo "<li>
                       <span class='dir'>".$namedir."</span>
-                      <span class='but'><img style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
+                      <span class='but'><img style='padding-left : 20px; float : right;'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                  </li>";
         }
         echo'
@@ -107,9 +107,10 @@ echo'
     echo '
     <ul class="rightfile">';
         foreach($lifdir['list_files_current'] as $namefile){
-            echo "<li><span>".$namefile[0]."</span>
-                    </span><img  class='download' style='padding-left : 20px'src='modules/xmppmaster/graph/img/browserdownload.png'></span>
-                    <span style='float:right;position : relative; top : 7px;'>".sizefile($namefile[1])."</span>
+            echo "<li>
+                    <span style='position : relative; top : -4px;'>".$namefile[0]."</span>
+                    <span style='position : relative; top : -4px;'>[ ".sizefile($namefile[1])."] </span>
+                    <span><img  class='download' style='padding-left : 20px;float : right;' src='modules/xmppmaster/graph/img/browserdownload.png'></span>
                 </li>";
         }
       echo '
