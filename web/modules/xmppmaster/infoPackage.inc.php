@@ -65,14 +65,14 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxFiltercustom.php");
 $page->setOptions(array("visible"=>False, "AJAX" =>True));
 $submod->addPage($page);
 
-$page = new Page("editqa", _T('Edit Custon Quick Action', 'xmppmaster'));
+$page = new Page("editqa", _T('Edit Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
-$page = new Page("", _T('delete Custon Quick Action', 'xmppmaster'));
+$page = new Page("", _T('delete Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
 
-$page = new Page("deleteqa",_T("Delete Custon Quick Action", 'pkgs'));
+$page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
 $page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
 $submod->addPage($page);
 
