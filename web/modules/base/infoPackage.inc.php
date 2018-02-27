@@ -127,7 +127,7 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $submod->setDefaultPage("base/logview/index");
     $submod->setPriority(1001);
 
-    $page = new Page("index",_("logs all module"));
+    $page = new Page("index",_("logs all modules"));
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
     $submod->addPage($page);
 
