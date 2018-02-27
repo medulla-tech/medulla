@@ -2,57 +2,55 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 22:19+0100\n"
+"POT-Creation-Date: 2018-02-27 14:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: modules/dyngroup/dyngroup/details.php:30
 #, php-format
 msgid "%s's details"
 msgstr "Подробиці щодо %s"
 
-#: modules/dyngroup/dyngroup/details.php:49
-msgid "Close"
-msgstr "Закрити"
-
-#: modules/dyngroup/dyngroup/details.php:52
-msgid "Regenerate"
-msgstr "Повторно створити"
-
-#: modules/dyngroup/dyngroup/details.php:55
-msgid "Hide"
-msgstr "Сховати"
-
-#: modules/dyngroup/dyngroup/details.php:57
-msgid "Show"
-msgstr "Показати"
-
-#: modules/dyngroup/dyngroup/display.php:60
+#: modules/dyngroup/includes/request.php:179
 #, php-format
-msgid "Group '%s' content"
-msgstr "Вміст групи «%s»"
+msgid "%s) Search %s %s %s in module %s"
+msgstr "%s) Шукати %s %s (%s) у модулі %s"
 
-#: modules/dyngroup/dyngroup/display.php:62
+#: modules/dyngroup/includes/request.php:177
 #, php-format
-msgid "Imaging group '%s' content"
-msgstr "Вміст групи образів «%s»"
+msgid "%s) Search %s %s (%s) in module %s"
+msgstr "%s) Шукати %s %s (%s) у модулі %s"
 
-#: modules/dyngroup/dyngroup/import_from_file.php:41
-#: modules/dyngroup/dyngroup/add_groups.php:190
-msgid "Group successfully created"
-msgstr "Групу успішно створено"
+#: modules/dyngroup/includes/double.php:51
+msgid "->"
+msgstr "->"
+
+#: modules/dyngroup/includes/groups.inc.php:245
+#, php-format
+msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
+msgstr "<li>%s є частиною <a href=\"%s\">%s</a></li>"
+
+#: modules/dyngroup/includes/groups.inc.php:267
+#, fuzzy
+msgid ""
+"<p>These computers will be moved to this group and their bootmenus "
+"<strong>will be rewritten</strong></p>"
+msgstr ""
+"<p>Ці комп'ютери буде пересунуто до цієї групи, а їхні меню завантаження "
+"<strong>буде перезаписано</strong></p>"
 
 #: modules/dyngroup/dyngroup/import_from_file.php:45
 #: modules/dyngroup/dyngroup/save.php:98
@@ -60,232 +58,6 @@ msgstr "Групу успішно створено"
 #, php-format
 msgid "A group already exists with name '%s'"
 msgstr "Група з назвою «%s» вже існує"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:51
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:101
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
-#: modules/dyngroup/includes/groups.inc.php:118
-#: modules/dyngroup/includes/groups.inc.php:122
-msgid "Group name"
-msgstr "Назва групи"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
-#: modules/dyngroup/dyngroup/creator.php:276
-#: modules/dyngroup/dyngroup/creator.php:282
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:167
-msgid "Yes"
-msgstr "Так"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:54
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
-#: modules/dyngroup/dyngroup/creator.php:277
-#: modules/dyngroup/dyngroup/save.php:84
-#: modules/dyngroup/includes/groups.inc.php:168
-msgid "No"
-msgstr "Ні"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:57
-msgid "Add shortcut"
-msgstr "Додати скорочення"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:59
-msgid "Select the file you want to import"
-msgstr "Виберіть файл, який ви хочете імпортувати"
-
-#: modules/dyngroup/dyngroup/import_from_file.php:69
-msgid "Select what is inside the file"
-msgstr "Виберіть вміст файла"
-
-#: modules/dyngroup/dyngroup/update.php:30
-msgid "Update machines name cache in dyngroup"
-msgstr "Оновити кеш назв машин у dyngroup"
-
-#: modules/dyngroup/dyngroup/update.php:35
-#, php-format
-msgid "update machine cache : %s machines"
-msgstr "Оновлення кешу машин: %s машин"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:48
-msgid "Remove a computer"
-msgstr "Вилучити комп'ютер"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:54
-#, php-format
-msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
-msgstr "Ви вилучите комп'ютер <b>%s</b> з групи <b>%s</b>."
-
-#: modules/dyngroup/dyngroup/remove_machine.php:57
-msgid "Remove Computer"
-msgstr "Вилучити комп'ютер"
-
-#: modules/dyngroup/dyngroup/remove_machine.php:58
-#: modules/dyngroup/dyngroup/delete_group.php:67
-#: modules/dyngroup/dyngroup/delete_group.php:111
-#: modules/dyngroup/includes/groups.inc.php:86
-#: modules/dyngroup/includes/groups.inc.php:281
-msgid "Cancel"
-msgstr "Скасувати"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:31
-#, php-format
-msgid "Temporary result display for '%s'"
-msgstr "Показ тимчасового результату для «%s»"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:33
-#: modules/dyngroup/infoPackage.inc.php:104
-msgid "Temporary result display"
-msgstr "Показ тимчасового результату"
-
-#: modules/dyngroup/dyngroup/tmpdisplay.php:55
-msgid "back"
-msgstr "назад"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:29
-msgid "Favourite groups"
-msgstr "Вибрані групи"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:30
-msgid "All groups"
-msgstr "Усі групи"
-
-#: modules/dyngroup/dyngroup/localSidebar.php:31
-msgid "Add a group"
-msgstr "Додати групу"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:63
-msgid "Delete this group"
-msgstr "Вилучити цю групу"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
-msgid "Delete this imaging group"
-msgstr "Вилучити цю групу образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
-msgid "Quick action"
-msgstr "Швидка дія"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
-#, php-format
-msgid "result (%s)"
-msgstr "результат (%s)"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "query"
-msgstr "запит"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
-msgid "static group"
-msgstr "статична група"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
-msgid "Type"
-msgstr "Тип"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:115
-msgid "Favourite"
-msgstr "Вибране"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
-msgid "Display this group's content"
-msgstr "Показати вміст цієї групи"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:121
-msgid "Inventory on this group"
-msgstr "Облік щодо цієї групи"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:126
-msgid "Edit this group"
-msgstr "Редагувати цю групу"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
-msgid "Share this group"
-msgstr "Поділитися цією групою"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
-msgid "Read log"
-msgstr "Читати журнал"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:133
-msgid "Software deployment on this group"
-msgstr "Розгортання програмного забезпечення у цій групі"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
-msgid "Update on this group"
-msgstr "Оновлення цієї групи"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
-msgid "Display this imaging group's content"
-msgstr "Показати вміст цієї групи образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:141
-msgid "Inventory on this imaging group"
-msgstr "Облік щодо цієї групи образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:146
-msgid "Edit this imaging group"
-msgstr "Редагувати цю групу образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:147
-msgid "Share this imaging group"
-msgstr "Поділитися цією групою образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:152
-msgid "Software deployment on this imaging group"
-msgstr "Розгортання програмного забезпечення на цій групі образів"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
-msgid "Imaging management"
-msgstr "Керування образами"
-
-#: modules/dyngroup/dyngroup/ajaxListGroups.php:167
-msgid "Csv export"
-msgstr "Експортування у форматі CSV"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
-msgid "All imaging groups"
-msgstr "Усі групи образів"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
-msgid "Add an imaging group"
-msgstr "Додати групу образів"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Imaging group:"
-msgstr "Група образів:"
-
-#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
-msgid "Dynamic imaging group:"
-msgstr "Динамічна група образів:"
-
-#: modules/dyngroup/dyngroup/edithead.php:40
-msgid "Edit a dynamic group"
-msgstr "Редагувати динамічну групу"
-
-#: modules/dyngroup/dyngroup/edithead.php:43
-#: modules/dyngroup/dyngroup/edithead.php:54
-msgid "Edit an imaging group"
-msgstr "Редагувати групу образів"
-
-#: modules/dyngroup/dyngroup/edithead.php:52
-#: modules/dyngroup/dyngroup/groupshead.php:37
-msgid "Edit a static group"
-msgstr "Редагувати статичну групу"
-
-#: modules/dyngroup/dyngroup/creator.php:129
-msgid "Choose the module you want to query : "
-msgstr "Виберіть модуля, опитування якого слід виконати: "
-
-#: modules/dyngroup/dyngroup/creator.php:222
-msgid "Comparison operator : "
-msgstr "Оператор порівняння: "
-
-#: modules/dyngroup/dyngroup/creator.php:235
-msgid "Date"
-msgstr "Дата"
 
 #: modules/dyngroup/dyngroup/creator.php:238
 #: modules/dyngroup/dyngroup/creator.php:247
@@ -297,31 +69,182 @@ msgstr "Дата"
 msgid "Add"
 msgstr "Додати"
 
-#: modules/dyngroup/dyngroup/creator.php:273
-#: modules/dyngroup/includes/autocomplete.php:31
-#: modules/dyngroup/includes/double.php:39
-msgid "Modify"
-msgstr "Змінити"
+#: modules/dyngroup/dyngroup/localSidebar.php:31
+msgid "Add a group"
+msgstr "Додати групу"
 
-#: modules/dyngroup/dyngroup/creator.php:299
-msgid "The request is : "
-msgstr "Запит: "
+#: modules/dyngroup/dyngroup/groupshead.php:35
+msgid "Add a static group"
+msgstr "Додати статичну групу"
 
-#: modules/dyngroup/dyngroup/creator.php:316
-msgid "Go to save step"
-msgstr "Перейти до кроку зберігання"
+#: modules/dyngroup/includes/autocomplete.php:44
+msgid "Add a value"
+msgstr "Додати значення"
 
-#: modules/dyngroup/dyngroup/creator.php:323
-msgid "Identification"
-msgstr "Ідентифікація"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:34
+msgid "Add an imaging group"
+msgstr "Додати групу образів"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:57
+msgid "Add shortcut"
+msgstr "Додати скорочення"
+
+#: modules/dyngroup/dyngroup/localSidebar.php:30
+msgid "All groups"
+msgstr "Усі групи"
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:31
+msgid "All imaging groups"
+msgstr "Усі групи образів"
+
+#: modules/dyngroup/includes/groups.inc.php:178
+msgid "All machines"
+msgstr "Усі машини"
+
+#: modules/dyngroup/includes/groups.inc.php:268
+msgid "All related images to these computers will be <strong>DELETED</strong>"
+msgstr ""
+"Усі пов'язані із цими комп'ютерами образи буде <strong>ВИЛУЧЕНО</strong>"
+
+#: modules/dyngroup/includes/groups.inc.php:38
+msgid "All share entities"
+msgstr "Усі спільні записи"
+
+#: modules/dyngroup/dyngroup/add_groups.php:244
+#, php-format
+msgid "An imaging group already exists with name '%s'"
+msgstr "Група образів із назвою «%s» вже існує"
+
+#: modules/dyngroup/dyngroup/delete_group.php:49
+#, php-format
+msgid ""
+"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
+"other group)."
+msgstr ""
+"Ви впевнені, що хочете вилучити групу <b>%s</b>?<br/> (її може бути "
+"використано у іншій групі)."
+
+#: modules/dyngroup/dyngroup/delete_group.php:43
+#, php-format
+msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
+msgstr "Ви впевнені, що хочете вилучити групу образів <b>%s</b>?<br/>"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:58
+#: modules/dyngroup/dyngroup/delete_group.php:67
+#: modules/dyngroup/dyngroup/delete_group.php:111
+#: modules/dyngroup/includes/groups.inc.php:86
+#: modules/dyngroup/includes/groups.inc.php:281
+msgid "Cancel"
+msgstr "Скасувати"
+
+#: modules/dyngroup/dyngroup/save.php:146
+msgid "Check"
+msgstr "Перевірка"
+
+#: modules/dyngroup/dyngroup/creator.php:129
+msgid "Choose the module you want to query : "
+msgstr "Виберіть модуля, опитування якого слід виконати: "
+
+#: modules/dyngroup/dyngroup/details.php:49
+msgid "Close"
+msgstr "Закрити"
+
+#: modules/dyngroup/dyngroup/creator.php:222
+msgid "Comparison operator : "
+msgstr "Оператор порівняння: "
 
 #: modules/dyngroup/dyngroup/creator.php:324
 msgid "Computer name"
 msgstr "Назва комп'ютера"
 
-#: modules/dyngroup/dyngroup/creator.php:325
-msgid "Hostname of the computer"
-msgstr "Назва вузла комп'ютера"
+#: modules/dyngroup/infoPackage.inc.php:48
+#: modules/dyngroup/infoPackage.inc.php:109
+msgid "Computers Group Creator"
+msgstr "Засіб створення груп комп'ютерів"
+
+#: modules/dyngroup/infoPackage.inc.php:75
+msgid "Computers Group Creator Sub Request Delete"
+msgstr "Вилучення підзапитів засобу створення груп комп'ютерів"
+
+#: modules/dyngroup/infoPackage.inc.php:61
+msgid "Computers Group Creator Sub Request Editor"
+msgstr "Редактор підзапитів засобу створення груп комп'ютерів"
+
+#: modules/dyngroup/infoPackage.inc.php:89
+#: modules/dyngroup/infoPackage.inc.php:113
+msgid "Computers Group Editor"
+msgstr "Редактор груп комп'ютерів"
+
+#: modules/dyngroup/infoPackage.inc.php:99
+msgid "Computers Group Sub Request Delete"
+msgstr "Вилучення підзапитів щодо груп комп'ютерів"
+
+#: modules/dyngroup/infoPackage.inc.php:94
+msgid "Computers Group Sub Request Editor"
+msgstr "Редактор підзапитів щодо груп ком'ютерів"
+
+#: modules/dyngroup/dyngroup/add_groups.php:70
+#: modules/dyngroup/dyngroup/add_groups.php:260
+#, php-format
+msgid "Computers list has been truncated at %d computers"
+msgstr "Список комп'ютерів обрізано до %d записів"
+
+#: modules/dyngroup/includes/groups.inc.php:242
+msgid "Computers listed below are already part of another imaging group."
+msgstr "Показані нижче комп'ютери вже є частиною іншої групи образів."
+
+#: modules/dyngroup/includes/groups.inc.php:257
+msgid "Computers listed below are already stand-alone registered in imaging."
+msgstr ""
+"Комп'ютери із наведеного нижче списку вже індивідуально зареєстровано у "
+"системі образів."
+
+#: modules/dyngroup/includes/groups.inc.php:85
+#: modules/dyngroup/includes/groups.inc.php:280
+msgid "Confirm"
+msgstr "Підтвердити"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:167
+msgid "Csv export"
+msgstr "Експортування у форматі CSV"
+
+#: modules/dyngroup/infoPackage.inc.php:182
+msgid "Csv's export"
+msgstr "Експортування до CSV"
+
+#: modules/dyngroup/dyngroup/creator.php:235
+msgid "Date"
+msgstr "Дата"
+
+#: modules/dyngroup/includes/request.php:129
+msgid "Delete"
+msgstr "Вилучити"
+
+#: modules/dyngroup/infoPackage.inc.php:157
+msgid "Delete a group of computers"
+msgstr "Вилучити групу комп'ютерів"
+
+#: modules/dyngroup/dyngroup/delete_group.php:48
+#: modules/dyngroup/dyngroup/delete_group.php:50
+msgid "Delete group"
+msgstr "Вилучити групу"
+
+#: modules/dyngroup/dyngroup/delete_group.php:42
+#: modules/dyngroup/dyngroup/delete_group.php:44
+msgid "Delete imaging group"
+msgstr "Вилучити групу образів"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:63
+msgid "Delete this group"
+msgstr "Вилучити цю групу"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:65
+msgid "Delete this imaging group"
+msgstr "Вилучити цю групу образів"
+
+#: modules/dyngroup/dyngroup/creator.php:334
+msgid "Dell, HP, Apple ..."
+msgstr "Dell, HP, Apple ..."
 
 #: modules/dyngroup/dyngroup/creator.php:326
 msgid "Description"
@@ -331,133 +254,269 @@ msgstr "Опис"
 msgid "Description of the computer"
 msgstr "Опис комп'ютера"
 
-#: modules/dyngroup/dyngroup/creator.php:328
-msgid "Inventory number"
-msgstr "Обліковий номер"
+#: modules/dyngroup/infoPackage.inc.php:139
+msgid "Detailed page of save a group of computers"
+msgstr "Сторінка докладних даних щодо збереження групи комп'ютерів"
 
-#: modules/dyngroup/dyngroup/creator.php:329
-msgid "Your internal inventory number"
-msgstr "Ваш внутрішній інвентарний номер"
+#: modules/dyngroup/infoPackage.inc.php:119
+msgid "Display a groups of computers"
+msgstr "Показати групу комп'ютерів"
 
-#: modules/dyngroup/dyngroup/creator.php:330
-msgid "Hardware"
-msgstr "Обладнання"
+#: modules/dyngroup/dyngroup/save.php:165
+msgid "Display content"
+msgstr "Показати вміст"
 
-#: modules/dyngroup/dyngroup/creator.php:331
-msgid "System type"
-msgstr "Тип системи"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:119
+msgid "Display this group's content"
+msgstr "Показати вміст цієї групи"
 
-#: modules/dyngroup/dyngroup/creator.php:332
-msgid "Laptop, Desktop, Rack Mount Chassis ..."
-msgstr "Ноутбук, Робоча станція, Секція у стійці..."
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:139
+msgid "Display this imaging group's content"
+msgstr "Показати вміст цієї групи образів"
 
-#: modules/dyngroup/dyngroup/creator.php:333
-msgid "System manufacturer"
-msgstr "Виробник системи"
+#: modules/dyngroup/dyngroup/tab.php:41
+msgid "Dynamic group creation"
+msgstr "Створення динамічної групи"
 
-#: modules/dyngroup/dyngroup/creator.php:334
-msgid "Dell, HP, Apple ..."
-msgstr "Dell, HP, Apple ..."
+#: modules/dyngroup/infoPackage.inc.php:51
+#: modules/dyngroup/infoPackage.inc.php:65
+#: modules/dyngroup/infoPackage.inc.php:79
+msgid "Dynamic group creation's tab"
+msgstr "Вкладка створення динамічних груп"
 
-#: modules/dyngroup/dyngroup/creator.php:335
-msgid "System model"
-msgstr "Модель системи"
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Dynamic imaging group:"
+msgstr "Динамічна група образів:"
 
-#: modules/dyngroup/dyngroup/creator.php:336
-msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
-msgstr "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+#: modules/dyngroup/infoPackage.inc.php:30
+msgid "Dyngroup"
+msgstr "Динамічна група"
 
-#: modules/dyngroup/dyngroup/creator.php:337
-msgid "Location"
-msgstr "Адреса"
+#: modules/dyngroup/includes/request.php:128
+msgid "Edit"
+msgstr "Змінити"
 
-#: modules/dyngroup/dyngroup/creator.php:338
-msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
-msgstr ""
-"Третій поверх, Кімната 401, Головний офіс... (визначається користувачем)"
+#: modules/dyngroup/dyngroup/edithead.php:40
+msgid "Edit a dynamic group"
+msgstr "Редагувати динамічну групу"
 
-#: modules/dyngroup/dyngroup/creator.php:339
-msgid "State"
-msgstr "Стан"
+#: modules/dyngroup/dyngroup/edithead.php:52
+#: modules/dyngroup/dyngroup/groupshead.php:37
+msgid "Edit a static group"
+msgstr "Редагувати статичну групу"
 
-#: modules/dyngroup/dyngroup/creator.php:340
-msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
-msgstr "Робочий, На обслуговуванні, Списаний... (визначається користувачем)"
+#: modules/dyngroup/dyngroup/edithead.php:43
+#: modules/dyngroup/dyngroup/edithead.php:54
+msgid "Edit an imaging group"
+msgstr "Редагувати групу образів"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:126
+msgid "Edit this group"
+msgstr "Редагувати цю групу"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:146
+msgid "Edit this imaging group"
+msgstr "Редагувати цю групу образів"
 
 #: modules/dyngroup/dyngroup/creator.php:341
 msgid "Entity"
 msgstr "Запис"
 
-#: modules/dyngroup/dyngroup/creator.php:342
-msgid "Organizational structure (automatic assignment)"
-msgstr "Організаційна структура (автоматичне призначення)"
+#: modules/dyngroup/includes/dyngroup.php:468
+msgid "Failed to load some msc module"
+msgstr "Не вдалося завантажити якийсь із модулів msc"
 
-#: modules/dyngroup/dyngroup/creator.php:343
-msgid "Software"
-msgstr "Програмне забезпечення"
+#: modules/dyngroup/includes/dyngroup.php:461
+msgid "Failed to load some pkgs module"
+msgstr "Не вдалося завантажити якийсь із модулів pkgs"
 
-#: modules/dyngroup/dyngroup/creator.php:344
-msgid "Operating system"
-msgstr "Операційна система"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:115
+msgid "Favourite"
+msgstr "Вибране"
 
-#: modules/dyngroup/dyngroup/creator.php:345
-msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
-msgstr "Microsoft Windows 7, Debian GNU/Linux 7.1..."
+#: modules/dyngroup/dyngroup/listFavourite.php:29
+msgid "Favourite group list"
+msgstr "Список вибраних груп"
+
+#: modules/dyngroup/dyngroup/localSidebar.php:29
+msgid "Favourite groups"
+msgstr "Вибрані групи"
+
+#: modules/dyngroup/dyngroup/creator.php:316
+msgid "Go to save step"
+msgstr "Перейти до кроку зберігання"
+
+#: modules/dyngroup/dyngroup/delete_group.php:95
+#, php-format
+msgid "Group %s was successfully deleted"
+msgstr "Групу %s було успішно вилучено"
+
+#: modules/dyngroup/dyngroup/display.php:60
+#, php-format
+msgid "Group '%s' content"
+msgstr "Вміст групи «%s»"
+
+#: modules/dyngroup/dyngroup/tab.php:40
+msgid "Group creation"
+msgstr "Створення групи"
+
+#: modules/dyngroup/dyngroup/add_groups.php:226
+msgid "Group failed to modify"
+msgstr "Не вдалося змінити групу"
+
+#: modules/dyngroup/dyngroup/edit_share.php:89
+msgid "Group failed to share"
+msgstr "Не вдалося оприлюднити групу"
+
+#: modules/dyngroup/dyngroup/list.php:29
+msgid "Group list"
+msgstr "Список груп"
+
+#: modules/dyngroup/includes/groups.inc.php:120
+#: modules/dyngroup/includes/groups.inc.php:124
+msgid "Group members"
+msgstr "Члени групи"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:51
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:101
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:103
+#: modules/dyngroup/includes/groups.inc.php:118
+#: modules/dyngroup/includes/groups.inc.php:122
+msgid "Group name"
+msgstr "Назва групи"
+
+#: modules/dyngroup/infoPackage.inc.php:162
+msgid "Group of computers details"
+msgstr "Група даних щодо комп'ютерів"
+
+#: modules/dyngroup/includes/groups.inc.php:61
+msgid "Group share"
+msgstr "Спільні групи"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:41
+#: modules/dyngroup/dyngroup/add_groups.php:190
+msgid "Group successfully created"
+msgstr "Групу успішно створено"
+
+#: modules/dyngroup/dyngroup/add_groups.php:149
+msgid "Group successfully modified"
+msgstr "Групу успішно змінено"
+
+#: modules/dyngroup/dyngroup/edit_share.php:81
+msgid "Group successfully shared"
+msgstr "Групу успішно оприлюднено"
+
+#: modules/dyngroup/dyngroup/creator.php:330
+msgid "Hardware"
+msgstr "Обладнання"
+
+#: modules/dyngroup/dyngroup/details.php:55
+msgid "Hide"
+msgstr "Сховати"
+
+#: modules/dyngroup/dyngroup/creator.php:325
+msgid "Hostname of the computer"
+msgstr "Назва вузла комп'ютера"
+
+#: modules/dyngroup/dyngroup/creator.php:323
+msgid "Identification"
+msgstr "Ідентифікація"
+
+#: modules/dyngroup/dyngroup/delete_group.php:92
+#, php-format
+msgid "Imaging group %s was successfully deleted"
+msgstr "Групу образів %s успішно вилучено"
+
+#: modules/dyngroup/dyngroup/display.php:62
+#, php-format
+msgid "Imaging group '%s' content"
+msgstr "Вміст групи образів «%s»"
+
+#: modules/dyngroup/dyngroup/tab.php:61
+msgid "Imaging group creation"
+msgstr "Створення групи образів"
+
+#: modules/dyngroup/dyngroup/add_groups.php:231
+msgid "Imaging group failed to modify"
+msgstr "Не вдалося додати групу образів"
+
+#: modules/dyngroup/dyngroup/add_groups.php:229
+#, php-format
+msgid "Imaging group failed to modify.<br/>Can't add %s"
+msgstr "Не вдалося змінити групу.<br/>Не вдалося додати %s"
+
+#: modules/dyngroup/dyngroup/add_groups.php:177
+msgid ""
+"Imaging group modified, but some machines were not added to existing imaging "
+"group, because they have more than one ethernet card:"
+msgstr ""
+"Групу образів змінено, але деякі з машин не було додано до наявної групи "
+"образів, оскільки на них встановлено декілька карток ethernet:"
+
+#: modules/dyngroup/dyngroup/add_groups.php:185
+msgid "Imaging group successfully modified"
+msgstr "Групу образів успішно змінено"
+
+#: modules/dyngroup/dyngroup/localImagingSidebar.php:42
+msgid "Imaging group:"
+msgstr "Група образів:"
+
+#: modules/dyngroup/dyngroup/list_profiles.php:30
+msgid "Imaging groups"
+msgstr "Групи образів"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:156
+msgid "Imaging management"
+msgstr "Керування образами"
+
+#: modules/dyngroup/dyngroup/tab.php:81
+msgid "Imaging server selection"
+msgstr "Вибір сервера образів"
+
+#: modules/dyngroup/dyngroup/creator.php:340
+msgid "In Production, Under Maintenance, Decommissioned ... (user defined)"
+msgstr "Робочий, На обслуговуванні, Списаний... (визначається користувачем)"
 
 #: modules/dyngroup/dyngroup/creator.php:346
 msgid "Installed software"
 msgstr "Встановлене програмне забезпечення"
 
-#: modules/dyngroup/dyngroup/creator.php:347
-msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
-msgstr "Mozilla Firefox, LibreOffice, Microsoft Office 2003..."
-
 #: modules/dyngroup/dyngroup/creator.php:348
 msgid "Installed software (specific version)"
 msgstr "Встановлене програмне забезпечення (певна версія)"
 
-#: modules/dyngroup/dyngroup/creator.php:349
-msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
-msgstr "Двокроковий запит: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4..."
+#: modules/dyngroup/dyngroup/creator.php:328
+msgid "Inventory number"
+msgstr "Обліковий номер"
 
-#: modules/dyngroup/dyngroup/save_detail.php:28
-msgid "Request saver"
-msgstr "Засіб збереження запитів"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:121
+msgid "Inventory on this group"
+msgstr "Облік щодо цієї групи"
 
-#: modules/dyngroup/dyngroup/save_detail.php:42
-#, php-format
-msgid "This request has been saved as %s (id=%s)"
-msgstr "Цей запит було збережено як %s (id=%s)"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:141
+msgid "Inventory on this imaging group"
+msgstr "Облік щодо цієї групи образів"
 
-#: modules/dyngroup/dyngroup/save_detail.php:44
-#, php-format
-msgid "This result has been saved as %s (id=%s)"
-msgstr "Цей результат було збережено як %s (id=%s)"
+#: modules/dyngroup/dyngroup/creator.php:332
+msgid "Laptop, Desktop, Rack Mount Chassis ..."
+msgstr "Ноутбук, Робоча станція, Секція у стійці..."
 
-#: modules/dyngroup/dyngroup/save.php:30
-#, php-format
-msgid "Request saver (%s)"
-msgstr "Засіб збереження запитів (%s)"
+#: modules/dyngroup/dyngroup/creator.php:336
+msgid "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
+msgstr "Latitude E6420, ProLiant DL120, MacBookAir5,2 ..."
 
-#: modules/dyngroup/dyngroup/save.php:30
-msgid "group"
-msgstr "група"
+#: modules/dyngroup/infoPackage.inc.php:144
+#: modules/dyngroup/infoPackage.inc.php:152
+msgid "List all groups of computers"
+msgstr "Список усіх груп комп'ютерів"
 
-#: modules/dyngroup/dyngroup/save.php:30
-msgid "profile"
-msgstr "профіль"
+#: modules/dyngroup/infoPackage.inc.php:148
+msgid "List favourite groups"
+msgstr "Список вибраних груп"
 
-#: modules/dyngroup/dyngroup/save.php:78
-msgid "Name :"
-msgstr "Назва:"
-
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "save as"
-msgstr "зберегти як"
-
-#: modules/dyngroup/dyngroup/save.php:80
-msgid "result"
-msgstr "результат"
+#: modules/dyngroup/dyngroup/creator.php:337
+msgid "Location"
+msgstr "Адреса"
 
 #: modules/dyngroup/dyngroup/save.php:84
 #: modules/dyngroup/includes/groups.inc.php:119
@@ -465,23 +524,192 @@ msgstr "результат"
 msgid "Make favourite"
 msgstr "Зробити вибраним"
 
+#: modules/dyngroup/dyngroup/creator.php:345
+msgid "Microsoft Windows 7, Debian GNU/Linux 7.1 ..."
+msgstr "Microsoft Windows 7, Debian GNU/Linux 7.1..."
+
+#: modules/dyngroup/dyngroup/creator.php:273
+#: modules/dyngroup/includes/autocomplete.php:31
+#: modules/dyngroup/includes/double.php:39
+msgid "Modify"
+msgstr "Змінити"
+
+#: modules/dyngroup/dyngroup/creator.php:347
+msgid "Mozilla Firefox, LibreOffice, Microsoft Office 2003 ..."
+msgstr "Mozilla Firefox, LibreOffice, Microsoft Office 2003..."
+
+#: modules/dyngroup/dyngroup/save.php:78
+msgid "Name :"
+msgstr "Назва:"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+#: modules/dyngroup/dyngroup/creator.php:277
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/includes/groups.inc.php:168
+msgid "No"
+msgstr "Ні"
+
+#: modules/dyngroup/dyngroup/creator.php:344
+msgid "Operating system"
+msgstr "Операційна система"
+
+#: modules/dyngroup/dyngroup/creator.php:342
+msgid "Organizational structure (automatic assignment)"
+msgstr "Організаційна структура (автоматичне призначення)"
+
+#: modules/dyngroup/dyngroup/header.php:28
+msgid "Please choose the type of group you want to create"
+msgstr "Будь ласка, виберіть тип групи, яку ви хочете створити"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:69
+msgid "Quick action"
+msgstr "Швидка дія"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:131
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:150
+msgid "Read log"
+msgstr "Читати журнал"
+
+#: modules/dyngroup/dyngroup/details.php:52
+msgid "Regenerate"
+msgstr "Повторно створити"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:57
+msgid "Remove Computer"
+msgstr "Вилучити комп'ютер"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:48
+msgid "Remove a computer"
+msgstr "Вилучити комп'ютер"
+
+#: modules/dyngroup/infoPackage.inc.php:167
+msgid "Remove a computer from a computers group"
+msgstr "Вилучити комп'ютер із групи комп'ютерів"
+
+#: modules/dyngroup/dyngroup/save_detail.php:28
+msgid "Request saver"
+msgstr "Засіб збереження запитів"
+
+#: modules/dyngroup/dyngroup/save.php:30
+#, php-format
+msgid "Request saver (%s)"
+msgstr "Засіб збереження запитів (%s)"
+
 #: modules/dyngroup/dyngroup/save.php:94
 msgid "Save"
 msgstr "Зберегти"
 
-#: modules/dyngroup/dyngroup/save.php:100
-#: modules/dyngroup/dyngroup/save.php:102
-#: modules/dyngroup/dyngroup/add_groups.php:237
-msgid "You must specify a group name"
-msgstr "Вам слід вказати назву групи"
+#: modules/dyngroup/infoPackage.inc.php:134
+msgid "Save a group of computers"
+msgstr "Зберегти групу комп'ютерів"
+
+#: modules/dyngroup/includes/request.php:125
+msgid "Search part"
+msgstr "Частина пошуку"
+
+#: modules/dyngroup/infoPackage.inc.php:129
+msgid "Second page of result/request group creator"
+msgstr "Друга сторінка засобу створення запитів або результатів"
+
+#: modules/dyngroup/dyngroup/tab.php:102
+msgid "Select an imaging server for this group"
+msgstr "Виберіть сервер образів для цієї групи"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:59
+msgid "Select the file you want to import"
+msgstr "Виберіть файл, який ви хочете імпортувати"
+
+#: modules/dyngroup/dyngroup/import_from_file.php:69
+msgid "Select what is inside the file"
+msgstr "Виберіть вміст файла"
+
+#: modules/dyngroup/infoPackage.inc.php:124
+msgid "Share a group of computers"
+msgstr "Поділитися групою комп'ютерів"
+
+#: modules/dyngroup/dyngroup/edit_share.php:41
+#, php-format
+msgid "Share group '%s' with"
+msgstr "Спільно використовувати групу «%s» з"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:127
+msgid "Share this group"
+msgstr "Поділитися цією групою"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:147
+msgid "Share this imaging group"
+msgstr "Поділитися цією групою образів"
+
+#: modules/dyngroup/dyngroup/details.php:57
+msgid "Show"
+msgstr "Показати"
+
+#: modules/dyngroup/dyngroup/creator.php:343
+msgid "Software"
+msgstr "Програмне забезпечення"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:133
+msgid "Software deployment on this group"
+msgstr "Розгортання програмного забезпечення у цій групі"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:152
+msgid "Software deployment on this imaging group"
+msgstr "Розгортання програмного забезпечення на цій групі образів"
 
 #: modules/dyngroup/dyngroup/save.php:146
 msgid "Specify a boolean operator between sub-requests"
 msgstr "Вкажіть логічний оператор між двома частинами запиту"
 
-#: modules/dyngroup/dyngroup/save.php:146
-msgid "Check"
-msgstr "Перевірка"
+#: modules/dyngroup/dyngroup/creator.php:339
+msgid "State"
+msgstr "Стан"
+
+#: modules/dyngroup/dyngroup/tab.php:42
+msgid "Static group creation"
+msgstr "Створення статичної групи"
+
+#: modules/dyngroup/dyngroup/tab.php:43
+msgid "Static group creation from import"
+msgstr "Створення статичної групи на основі імпорту"
+
+#: modules/dyngroup/infoPackage.inc.php:57
+#: modules/dyngroup/infoPackage.inc.php:71
+#: modules/dyngroup/infoPackage.inc.php:85
+msgid "Static group creation from import's tab"
+msgstr "Вкладка створення статичних груп на основі імпорту"
+
+#: modules/dyngroup/infoPackage.inc.php:54
+#: modules/dyngroup/infoPackage.inc.php:68
+#: modules/dyngroup/infoPackage.inc.php:82
+msgid "Static group creation's tab"
+msgstr "Вкладка створення статичних груп"
+
+#: modules/dyngroup/dyngroup/tab.php:78
+msgid "Static imaging group"
+msgstr "Статична група образів"
+
+#: modules/dyngroup/dyngroup/creator.php:333
+msgid "System manufacturer"
+msgstr "Виробник системи"
+
+#: modules/dyngroup/dyngroup/creator.php:335
+msgid "System model"
+msgstr "Модель системи"
+
+#: modules/dyngroup/dyngroup/creator.php:331
+msgid "System type"
+msgstr "Тип системи"
+
+#: modules/dyngroup/dyngroup/tmpdisplay.php:33
+#: modules/dyngroup/infoPackage.inc.php:104
+msgid "Temporary result display"
+msgstr "Показ тимчасового результату"
+
+#: modules/dyngroup/dyngroup/tmpdisplay.php:31
+#, php-format
+msgid "Temporary result display for '%s'"
+msgstr "Показ тимчасового результату для «%s»"
 
 #: modules/dyngroup/dyngroup/save.php:152
 #, php-format
@@ -499,28 +727,6 @@ msgstr "Булеве рівняння «%s» є некоректним.<br/>Рі
 msgid "The boolean equation is valid"
 msgstr "Булеве рівняння є коректним"
 
-#: modules/dyngroup/dyngroup/save.php:165
-msgid "Display content"
-msgstr "Показати вміст"
-
-#: modules/dyngroup/dyngroup/list_profiles.php:30
-msgid "Imaging groups"
-msgstr "Групи образів"
-
-#: modules/dyngroup/dyngroup/listFavourite.php:29
-msgid "Favourite group list"
-msgstr "Список вибраних груп"
-
-#: modules/dyngroup/dyngroup/add_groups.php:70
-#: modules/dyngroup/dyngroup/add_groups.php:260
-#, php-format
-msgid "Computers list has been truncated at %d computers"
-msgstr "Список комп'ютерів обрізано до %d записів"
-
-#: modules/dyngroup/dyngroup/add_groups.php:149
-msgid "Group successfully modified"
-msgstr "Групу успішно змінено"
-
 #: modules/dyngroup/dyngroup/add_groups.php:163
 msgid ""
 "The bootmenus cannot be generated as a multicast deployment is currently "
@@ -529,319 +735,114 @@ msgstr ""
 "Не вдалося створити меню завантаження, оскільки зараз виконується "
 "трансляційне розгортання."
 
-#: modules/dyngroup/dyngroup/add_groups.php:177
-msgid ""
-"Imaging group modified, but some machines were not added to existing imaging"
-" group, because they have more than one ethernet card:"
-msgstr ""
-"Групу образів змінено, але деякі з машин не було додано до наявної групи "
-"образів, оскільки на них встановлено декілька карток ethernet:"
-
-#: modules/dyngroup/dyngroup/add_groups.php:185
-msgid "Imaging group successfully modified"
-msgstr "Групу образів успішно змінено"
-
-#: modules/dyngroup/dyngroup/add_groups.php:226
-msgid "Group failed to modify"
-msgstr "Не вдалося змінити групу"
-
-#: modules/dyngroup/dyngroup/add_groups.php:229
-#, php-format
-msgid "Imaging group failed to modify.<br/>Can't add %s"
-msgstr "Не вдалося змінити групу.<br/>Не вдалося додати %s"
-
-#: modules/dyngroup/dyngroup/add_groups.php:231
-msgid "Imaging group failed to modify"
-msgstr "Не вдалося додати групу образів"
-
-#: modules/dyngroup/dyngroup/add_groups.php:239
-msgid "You must specify an imaging group name"
-msgstr "Вам слід вказати назву групу образів"
-
-#: modules/dyngroup/dyngroup/add_groups.php:244
-#, php-format
-msgid "An imaging group already exists with name '%s'"
-msgstr "Група образів із назвою «%s» вже існує"
-
-#: modules/dyngroup/dyngroup/header.php:28
-msgid "Please choose the type of group you want to create"
-msgstr "Будь ласка, виберіть тип групи, яку ви хочете створити"
-
-#: modules/dyngroup/dyngroup/tab.php:40
-msgid "Group creation"
-msgstr "Створення групи"
-
-#: modules/dyngroup/dyngroup/tab.php:41
-msgid "Dynamic group creation"
-msgstr "Створення динамічної групи"
-
-#: modules/dyngroup/dyngroup/tab.php:42
-msgid "Static group creation"
-msgstr "Створення статичної групи"
-
-#: modules/dyngroup/dyngroup/tab.php:43
-msgid "Static group creation from import"
-msgstr "Створення статичної групи на основі імпорту"
-
-#: modules/dyngroup/dyngroup/tab.php:61
-msgid "Imaging group creation"
-msgstr "Створення групи образів"
-
-#: modules/dyngroup/dyngroup/tab.php:78
-msgid "Static imaging group"
-msgstr "Статична група образів"
-
-#: modules/dyngroup/dyngroup/tab.php:81
-msgid "Imaging server selection"
-msgstr "Вибір сервера образів"
-
-#: modules/dyngroup/dyngroup/tab.php:102
-msgid "Select an imaging server for this group"
-msgstr "Виберіть сервер образів для цієї групи"
-
-#: modules/dyngroup/dyngroup/groupshead.php:35
-msgid "Add a static group"
-msgstr "Додати статичну групу"
-
-#: modules/dyngroup/dyngroup/list.php:29
-msgid "Group list"
-msgstr "Список груп"
-
-#: modules/dyngroup/dyngroup/edit_share.php:41
-#, php-format
-msgid "Share group '%s' with"
-msgstr "Спільно використовувати групу «%s» з"
-
-#: modules/dyngroup/dyngroup/edit_share.php:81
-msgid "Group successfully shared"
-msgstr "Групу успішно оприлюднено"
-
-#: modules/dyngroup/dyngroup/edit_share.php:89
-msgid "Group failed to share"
-msgstr "Не вдалося оприлюднити групу"
-
-#: modules/dyngroup/dyngroup/delete_group.php:42
-#: modules/dyngroup/dyngroup/delete_group.php:44
-msgid "Delete imaging group"
-msgstr "Вилучити групу образів"
-
-#: modules/dyngroup/dyngroup/delete_group.php:43
-#, php-format
-msgid "Are you sure you want to delete imaging group <b>%s</b>?<br/>"
-msgstr "Ви впевнені, що хочете вилучити групу образів <b>%s</b>?<br/>"
-
-#: modules/dyngroup/dyngroup/delete_group.php:48
-#: modules/dyngroup/dyngroup/delete_group.php:50
-msgid "Delete group"
-msgstr "Вилучити групу"
-
-#: modules/dyngroup/dyngroup/delete_group.php:49
-#, php-format
-msgid ""
-"Are you sure you want to delete group <b>%s</b>?<br/> (it can be used in an "
-"other group)."
-msgstr ""
-"Ви впевнені, що хочете вилучити групу <b>%s</b>?<br/> (її може бути "
-"використано у іншій групі)."
-
 #: modules/dyngroup/dyngroup/delete_group.php:64
 msgid ""
 "The group cannot be deleted as a multicast deployment is currently running."
 msgstr ""
-"Групу не можна вилучити, оскільки зараз виконується трансляційне "
-"розгортання."
+"Групу не можна вилучити, оскільки зараз виконується трансляційне розгортання."
 
-#: modules/dyngroup/dyngroup/delete_group.php:92
+#: modules/dyngroup/dyngroup/creator.php:299
+msgid "The request is : "
+msgstr "Запит: "
+
+#: modules/dyngroup/dyngroup/creator.php:338
+msgid "Third Floor, Room 401, Headquarters building ... (user defined)"
+msgstr ""
+"Третій поверх, Кімната 401, Головний офіс... (визначається користувачем)"
+
+#: modules/dyngroup/dyngroup/save_detail.php:42
 #, php-format
-msgid "Imaging group %s was successfully deleted"
-msgstr "Групу образів %s успішно вилучено"
+msgid "This request has been saved as %s (id=%s)"
+msgstr "Цей запит було збережено як %s (id=%s)"
 
-#: modules/dyngroup/dyngroup/delete_group.php:95
+#: modules/dyngroup/dyngroup/save_detail.php:44
 #, php-format
-msgid "Group %s was successfully deleted"
-msgstr "Групу %s було успішно вилучено"
+msgid "This result has been saved as %s (id=%s)"
+msgstr "Цей результат було збережено як %s (id=%s)"
 
-#: modules/dyngroup/infoPackage.inc.php:30
-msgid "Dyngroup"
-msgstr "Динамічна група"
+#: modules/dyngroup/dyngroup/creator.php:349
+msgid "Two-step query: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4 ..."
+msgstr "Двокроковий запит: Mozilla Firefox -> 23.0.1, LibreOffice -> 4.0.4..."
 
-#: modules/dyngroup/infoPackage.inc.php:48
-#: modules/dyngroup/infoPackage.inc.php:109
-msgid "Computers Group Creator"
-msgstr "Засіб створення груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:51
-#: modules/dyngroup/infoPackage.inc.php:65
-#: modules/dyngroup/infoPackage.inc.php:79
-msgid "Dynamic group creation's tab"
-msgstr "Вкладка створення динамічних груп"
-
-#: modules/dyngroup/infoPackage.inc.php:54
-#: modules/dyngroup/infoPackage.inc.php:68
-#: modules/dyngroup/infoPackage.inc.php:82
-msgid "Static group creation's tab"
-msgstr "Вкладка створення статичних груп"
-
-#: modules/dyngroup/infoPackage.inc.php:57
-#: modules/dyngroup/infoPackage.inc.php:71
-#: modules/dyngroup/infoPackage.inc.php:85
-msgid "Static group creation from import's tab"
-msgstr "Вкладка створення статичних груп на основі імпорту"
-
-#: modules/dyngroup/infoPackage.inc.php:61
-msgid "Computers Group Creator Sub Request Editor"
-msgstr "Редактор підзапитів засобу створення груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:75
-msgid "Computers Group Creator Sub Request Delete"
-msgstr "Вилучення підзапитів засобу створення груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:89
-#: modules/dyngroup/infoPackage.inc.php:113
-msgid "Computers Group Editor"
-msgstr "Редактор груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:94
-msgid "Computers Group Sub Request Editor"
-msgstr "Редактор підзапитів щодо груп ком'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:99
-msgid "Computers Group Sub Request Delete"
-msgstr "Вилучення підзапитів щодо груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:119
-msgid "Display a groups of computers"
-msgstr "Показати групу комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:124
-msgid "Share a group of computers"
-msgstr "Поділитися групою комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:129
-msgid "Second page of result/request group creator"
-msgstr "Друга сторінка засобу створення запитів або результатів"
-
-#: modules/dyngroup/infoPackage.inc.php:134
-msgid "Save a group of computers"
-msgstr "Зберегти групу комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:139
-msgid "Detailed page of save a group of computers"
-msgstr "Сторінка докладних даних щодо збереження групи комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:144
-#: modules/dyngroup/infoPackage.inc.php:152
-msgid "List all groups of computers"
-msgstr "Список усіх груп комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:148
-msgid "List favourite groups"
-msgstr "Список вибраних груп"
-
-#: modules/dyngroup/infoPackage.inc.php:157
-msgid "Delete a group of computers"
-msgstr "Вилучити групу комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:162
-msgid "Group of computers details"
-msgstr "Група даних щодо комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:167
-msgid "Remove a computer from a computers group"
-msgstr "Вилучити комп'ютер із групи комп'ютерів"
-
-#: modules/dyngroup/infoPackage.inc.php:182
-msgid "Csv's export"
-msgstr "Експортування до CSV"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:113
+msgid "Type"
+msgstr "Тип"
 
 #: modules/dyngroup/infoPackage.inc.php:187
 msgid "Update machine cache"
 msgstr "Оновити кеш машин"
 
-#: modules/dyngroup/includes/request.php:125
-msgid "Search part"
-msgstr "Частина пошуку"
+#: modules/dyngroup/dyngroup/update.php:30
+msgid "Update machines name cache in dyngroup"
+msgstr "Оновити кеш назв машин у dyngroup"
 
-#: modules/dyngroup/includes/request.php:128
-msgid "Edit"
-msgstr "Змінити"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:136
+msgid "Update on this group"
+msgstr "Оновлення цієї групи"
 
-#: modules/dyngroup/includes/request.php:129
-msgid "Delete"
-msgstr "Вилучити"
+#: modules/dyngroup/dyngroup/import_from_file.php:54
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:89
+#: modules/dyngroup/dyngroup/creator.php:276
+#: modules/dyngroup/dyngroup/creator.php:282
+#: modules/dyngroup/dyngroup/save.php:84
+#: modules/dyngroup/includes/groups.inc.php:167
+msgid "Yes"
+msgstr "Так"
 
-#: modules/dyngroup/includes/request.php:177
+#: modules/dyngroup/dyngroup/save.php:100
+#: modules/dyngroup/dyngroup/save.php:102
+#: modules/dyngroup/dyngroup/add_groups.php:237
+msgid "You must specify a group name"
+msgstr "Вам слід вказати назву групи"
+
+#: modules/dyngroup/dyngroup/add_groups.php:239
+msgid "You must specify an imaging group name"
+msgstr "Вам слід вказати назву групу образів"
+
+#: modules/dyngroup/dyngroup/remove_machine.php:54
 #, php-format
-msgid "%s) Search %s %s (%s) in module %s"
-msgstr "%s) Шукати %s %s (%s) у модулі %s"
+msgid "You will remove computer <b>%s</b> from group <b>%s</b>."
+msgstr "Ви вилучите комп'ютер <b>%s</b> з групи <b>%s</b>."
 
-#: modules/dyngroup/includes/request.php:179
+#: modules/dyngroup/dyngroup/creator.php:329
+msgid "Your internal inventory number"
+msgstr "Ваш внутрішній інвентарний номер"
+
+#: modules/dyngroup/dyngroup/tmpdisplay.php:55
+msgid "back"
+msgstr "назад"
+
+#: modules/dyngroup/dyngroup/save.php:30
+msgid "group"
+msgstr "група"
+
+#: modules/dyngroup/dyngroup/save.php:30
+msgid "profile"
+msgstr "профіль"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
+#: modules/dyngroup/dyngroup/save.php:80
+msgid "query"
+msgstr "запит"
+
+#: modules/dyngroup/dyngroup/save.php:80
+msgid "result"
+msgstr "результат"
+
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:85
 #, php-format
-msgid "%s) Search %s %s %s in module %s"
-msgstr "%s) Шукати %s %s (%s) у модулі %s"
+msgid "result (%s)"
+msgstr "результат (%s)"
 
-#: modules/dyngroup/includes/groups.inc.php:38
-msgid "All share entities"
-msgstr "Усі спільні записи"
+#: modules/dyngroup/dyngroup/save.php:80
+msgid "save as"
+msgstr "зберегти як"
 
-#: modules/dyngroup/includes/groups.inc.php:61
-msgid "Group share"
-msgstr "Спільні групи"
+#: modules/dyngroup/dyngroup/ajaxListGroups.php:87
+msgid "static group"
+msgstr "статична група"
 
-#: modules/dyngroup/includes/groups.inc.php:85
-#: modules/dyngroup/includes/groups.inc.php:280
-msgid "Confirm"
-msgstr "Підтвердити"
-
-#: modules/dyngroup/includes/groups.inc.php:120
-#: modules/dyngroup/includes/groups.inc.php:124
-msgid "Group members"
-msgstr "Члени групи"
-
-#: modules/dyngroup/includes/groups.inc.php:178
-msgid "All machines"
-msgstr "Усі машини"
-
-#: modules/dyngroup/includes/groups.inc.php:242
-msgid "Computers listed below are already part of another imaging group."
-msgstr "Показані нижче комп'ютери вже є частиною іншої групи образів."
-
-#: modules/dyngroup/includes/groups.inc.php:245
+#: modules/dyngroup/dyngroup/update.php:35
 #, php-format
-msgid "<li>%s is part of <a href=\"%s\">%s</a></li>"
-msgstr "<li>%s є частиною <a href=\"%s\">%s</a></li>"
-
-#: modules/dyngroup/includes/groups.inc.php:257
-msgid "Computers listed below are already stand-alone registered in imaging."
-msgstr ""
-"Комп'ютери із наведеного нижче списку вже індивідуально зареєстровано у "
-"системі образів."
-
-#: modules/dyngroup/includes/groups.inc.php:267
-msgid ""
-"<p>These computers will move to this group and their bootmenus <strong>will "
-"be rewritten</strong></p>"
-msgstr ""
-"<p>Ці комп'ютери буде пересунуто до цієї групи, а їхні меню завантаження "
-"<strong>буде перезаписано</strong></p>"
-
-#: modules/dyngroup/includes/groups.inc.php:268
-msgid "All related images to these computers will be <strong>DELETED</strong>"
-msgstr ""
-"Усі пов'язані із цими комп'ютерами образи буде <strong>ВИЛУЧЕНО</strong>"
-
-#: modules/dyngroup/includes/dyngroup.php:461
-msgid "Failed to load some pkgs module"
-msgstr "Не вдалося завантажити якийсь із модулів pkgs"
-
-#: modules/dyngroup/includes/dyngroup.php:468
-msgid "Failed to load some msc module"
-msgstr "Не вдалося завантажити якийсь із модулів msc"
-
-#: modules/dyngroup/includes/autocomplete.php:44
-msgid "Add a value"
-msgstr "Додати значення"
-
-#: modules/dyngroup/includes/double.php:51
-msgid "->"
-msgstr "->"
+msgid "update machine cache : %s machines"
+msgstr "Оновлення кешу машин: %s машин"

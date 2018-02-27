@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-02-27 14:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,7 @@ msgid "Invalid My Credentials, please verify your username/password."
 msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:70
-msgid "Your My credentials have been set successfuly."
+msgid "Your My credentials have been set successfully."
 msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:86
