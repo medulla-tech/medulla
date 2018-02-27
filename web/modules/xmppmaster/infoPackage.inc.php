@@ -93,6 +93,9 @@ $submod->addPage($page);
 $page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("remoteeditorconfiguration", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$submod->addPage($page);
+
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
 $submod->addPage($page);
 
