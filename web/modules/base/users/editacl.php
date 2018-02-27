@@ -225,7 +225,7 @@ function createRedirectAclTemplate($module_name, $acl, $acltab, $form) {
                     $form->add(new TrAclFormElement(_($descArray[$key][$subkey][$actionkey]),  new CheckboxTpl("acl[".$key."][".$subkey."][".$actionkey."][right]"),$rowNum,array("value" => "")));
                 }
             } else {
-                print _("Warning no desc found in infoPackage.inc.php :").$actionkey;
+                print _("Warning: no desc found in infoPackage.inc.php :").$actionkey;
             }
             $rowNum++;
             if (isset($tabAclArray[$key][$subkey][$actionkey])) {
