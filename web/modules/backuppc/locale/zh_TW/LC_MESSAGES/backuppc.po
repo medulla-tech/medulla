@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:06+0100\n"
+"POT-Creation-Date: 2018-02-27 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/siveo/teams/72118/"
@@ -616,7 +616,7 @@ msgstr "開始完整備份"
 
 #: modules/backuppc/backuppc/hostSummary.php:212
 #, fuzzy
-msgid "Start Incr Backup"
+msgid "Start an incremental backup"
 msgstr "開始增量備份"
 
 #: modules/backuppc/backuppc/ajaxBackupStatus.php:99
