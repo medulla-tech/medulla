@@ -8,13 +8,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-14 09:58+0100\n"
+"POT-Creation-Date: 2018-02-27 12:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: modules/ppolicy/default/index.php:31
@@ -103,14 +103,14 @@ msgstr ""
 
 #: modules/ppolicy/default/warnuser.php:35
 msgid ""
-"Warning you have been logged using grace login mode. Please change your "
+"Warning: you have been logged using grace login mode. Please change your "
 "password as soon as possible using the password change page, else your "
 "account will be locked."
 msgstr ""
 
 #: modules/ppolicy/default/warnuser.php:40
 msgid ""
-"Warning your password has been reset by an administrator. Your LDAP account "
+"Warning: your password has been reset by an administrator. Your LDAP account "
 "is restricted. Please change your password as soon as possible using the "
 "password change page."
 msgstr ""
