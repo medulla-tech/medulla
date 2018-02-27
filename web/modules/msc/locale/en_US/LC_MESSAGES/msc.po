@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-02-27 14:06+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -288,6 +288,10 @@ msgstr ""
 msgid "<i>whole day</i>"
 msgstr ""
 
+#: modules/msc/msc/launch.php:637
+msgid "<in ko>"
+msgstr ""
+
 #: modules/msc/msc/download_file.php:42
 msgid "A file is already being downloaded."
 msgstr ""
@@ -460,7 +464,7 @@ msgstr ""
 msgid "Cancel bundle creation"
 msgstr ""
 
-#: modules/msc/msc/launch.php:657
+#: modules/msc/msc/launch.php:673
 msgid "Choix install Mode"
 msgstr ""
 
@@ -504,7 +508,7 @@ msgstr ""
 msgid "Command expiry date"
 msgstr ""
 
-#: modules/msc/msc/launch.php:504 modules/msc/msc/launch.php:553
+#: modules/msc/msc/launch.php:515 modules/msc/msc/launch.php:564
 #: modules/msc/includes/command_history.php:34
 #: modules/msc/includes/command_history.php:180
 msgid "Command name"
@@ -572,7 +576,7 @@ msgstr ""
 msgid "Convergence"
 msgstr ""
 
-#: modules/msc/msc/launch.php:572
+#: modules/msc/msc/launch.php:583
 msgid "Convergence is active"
 msgstr ""
 
@@ -580,7 +584,7 @@ msgstr ""
 msgid "Convergence on "
 msgstr ""
 
-#: modules/msc/msc/launch.php:710 modules/msc/includes/bundle_widgets.php:373
+#: modules/msc/msc/launch.php:726 modules/msc/includes/bundle_widgets.php:373
 msgid "Copy Mode"
 msgstr ""
 
@@ -630,7 +634,7 @@ msgstr ""
 msgid "Delay between two connections"
 msgstr ""
 
-#: modules/msc/msc/launch.php:640
+#: modules/msc/msc/launch.php:656
 msgid "Delay install"
 msgstr ""
 
@@ -663,7 +667,7 @@ msgstr ""
 msgid "Delete file"
 msgstr ""
 
-#: modules/msc/msc/launch.php:528 modules/msc/includes/bundle_widgets.php:352
+#: modules/msc/msc/launch.php:539 modules/msc/includes/bundle_widgets.php:352
 msgid "Delete files after a successful execution"
 msgstr ""
 
@@ -690,12 +694,12 @@ msgid ""
 "\">View group</a>"
 msgstr ""
 
-#: modules/msc/msc/launch.php:714 modules/msc/includes/bundle_widgets.php:378
+#: modules/msc/msc/launch.php:730 modules/msc/includes/bundle_widgets.php:378
 msgid "Deploy using a local proxy"
 msgstr ""
 
 #: modules/msc/logs/ajaxConsultLogsFilter.php:226
-#: modules/msc/msc/launch.php:619 modules/msc/includes/command_history.php:38
+#: modules/msc/msc/launch.php:630 modules/msc/includes/command_history.php:38
 #: modules/msc/includes/bundle_widgets.php:363
 msgid "Deployment interval"
 msgstr ""
@@ -717,7 +721,7 @@ msgstr ""
 msgid "Direct launch"
 msgstr ""
 
-#: modules/msc/msc/launch.php:534
+#: modules/msc/msc/launch.php:545
 msgid "Do an inventory after a successful execution"
 msgstr ""
 
@@ -743,7 +747,7 @@ msgstr ""
 msgid "Downloading"
 msgstr ""
 
-#: modules/msc/msc/launch.php:625
+#: modules/msc/msc/launch.php:641
 msgid "Dynamic parameters Packages"
 msgstr ""
 
@@ -776,7 +780,7 @@ msgid ""
 "connectivity, and that the secure agent is installed on this host."
 msgstr ""
 
-#: modules/msc/msc/launch.php:609
+#: modules/msc/msc/launch.php:620
 msgid "Example for lunch and night (24h format): 12-14,20-8"
 msgstr ""
 
@@ -872,7 +876,7 @@ msgstr ""
 msgid "Group"
 msgstr ""
 
-#: modules/msc/msc/launch.php:438
+#: modules/msc/msc/launch.php:449
 #, php-format
 msgid "Group Advanced launch : action \"%s\" on \"%s\""
 msgstr ""
@@ -885,7 +889,7 @@ msgstr ""
 msgid "Halt Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:546
+#: modules/msc/msc/launch.php:557
 msgid "Halt client"
 msgstr ""
 
@@ -1064,7 +1068,7 @@ msgstr ""
 msgid "Machine"
 msgstr ""
 
-#: modules/msc/msc/launch.php:695 modules/msc/includes/bundle_widgets.php:364
+#: modules/msc/msc/launch.php:711 modules/msc/includes/bundle_widgets.php:364
 msgid "Max bandwidth (kbits/s)"
 msgstr ""
 
@@ -1140,7 +1144,7 @@ msgstr ""
 msgid "Not reachable"
 msgstr ""
 
-#: modules/msc/msc/launch.php:645
+#: modules/msc/msc/launch.php:661
 msgid "Number of machines"
 msgstr ""
 
@@ -1259,7 +1263,7 @@ msgid "Play a command"
 msgstr ""
 
 #: modules/msc/msc/vnc_client_java.php:75
-msgid "Please close this windows when you are done."
+msgid "Please close this window when you are done."
 msgstr ""
 
 #: modules/msc/msc/download_file_remove.php:32
@@ -1280,7 +1284,7 @@ msgstr ""
 msgid "Possible actions"
 msgstr ""
 
-#: modules/msc/msc/launch.php:738
+#: modules/msc/msc/launch.php:754
 msgid "Probe status"
 msgstr ""
 
@@ -1307,7 +1311,7 @@ msgstr ""
 
 #: modules/msc/includes/widgets.inc.php:27
 #, php-format
-msgid "Quick action path %s don't exists"
+msgid "Quick action path %s doesn't exist"
 msgstr ""
 
 #: modules/msc/msc/local_proxy.php:68
@@ -1327,7 +1331,7 @@ msgstr ""
 msgid "Reboot Failed: %percent% (%d packages)"
 msgstr ""
 
-#: modules/msc/msc/launch.php:540
+#: modules/msc/msc/launch.php:551
 msgid "Reboot client"
 msgstr ""
 
@@ -1343,7 +1347,7 @@ msgstr ""
 msgid "Reboot in progress"
 msgstr ""
 
-#: modules/msc/msc/launch.php:630
+#: modules/msc/msc/launch.php:646
 msgid "Reboot required"
 msgstr ""
 
@@ -1405,7 +1409,7 @@ msgstr ""
 msgid "Scheduler"
 msgstr ""
 
-#: modules/msc/msc/launch.php:510
+#: modules/msc/msc/launch.php:521
 msgid "Script parameters"
 msgstr ""
 
@@ -1481,11 +1485,11 @@ msgstr ""
 msgid "Shutdown"
 msgstr ""
 
-#: modules/msc/msc/launch.php:635
+#: modules/msc/msc/launch.php:651
 msgid "Shutdown required"
 msgstr ""
 
-#: modules/msc/msc/launch.php:424
+#: modules/msc/msc/launch.php:435
 #, php-format
 msgid "Single advanced launch : action \"%s\" on \"%s\""
 msgstr ""
@@ -1508,7 +1512,7 @@ msgstr ""
 msgid "Single, server mode"
 msgstr ""
 
-#: modules/msc/msc/launch.php:435
+#: modules/msc/msc/launch.php:446
 #, php-format
 msgid "Software Convergence: action \"%s\" on \"%s\""
 msgstr ""
@@ -1530,7 +1534,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#: modules/msc/msc/launch.php:516 modules/msc/includes/command_history.php:189
+#: modules/msc/msc/launch.php:527 modules/msc/includes/command_history.php:189
 msgid "Start \"Wake On Lan\" query if connection fails"
 msgstr ""
 
@@ -1571,7 +1575,7 @@ msgstr ""
 msgid "Start inventory agent"
 msgstr ""
 
-#: modules/msc/msc/launch.php:522
+#: modules/msc/msc/launch.php:533
 msgid "Start script"
 msgstr ""
 
@@ -1579,7 +1583,7 @@ msgstr ""
 msgid "Start the script"
 msgstr ""
 
-#: modules/msc/msc/launch.php:664
+#: modules/msc/msc/launch.php:680
 msgid "Startup to run the package in the deployment time range"
 msgstr ""
 
@@ -1670,11 +1674,11 @@ msgstr ""
 msgid "Target platform is %s"
 msgstr ""
 
-#: modules/msc/msc/launch.php:472 modules/msc/msc/launch.php:586
+#: modules/msc/msc/launch.php:483 modules/msc/msc/launch.php:597
 msgid "The command must start after"
 msgstr ""
 
-#: modules/msc/msc/launch.php:484 modules/msc/msc/launch.php:595
+#: modules/msc/msc/launch.php:495 modules/msc/msc/launch.php:606
 msgid "The command must stop before"
 msgstr ""
 
@@ -1861,6 +1865,10 @@ msgstr ""
 msgid "awake"
 msgstr ""
 
+#: modules/msc/msc/launch.php:637
+msgid "bandwidth throttling (ko)"
+msgstr ""
+
 #: modules/msc/includes/command_history.php:553
 msgid "bit/s"
 msgstr ""
@@ -2010,7 +2018,7 @@ msgstr ""
 msgid "logs list"
 msgstr ""
 
-#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:311
+#: modules/msc/msc/launch.php:124 modules/msc/msc/launch.php:322
 msgid "never"
 msgstr ""
 
@@ -2019,7 +2027,7 @@ msgstr ""
 msgid "next attempt"
 msgstr ""
 
-#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:308
+#: modules/msc/msc/launch.php:122 modules/msc/msc/launch.php:319
 msgid "now"
 msgstr ""
 
@@ -2035,11 +2043,11 @@ msgstr ""
 msgid "over_time"
 msgstr ""
 
-#: modules/msc/msc/launch.php:707 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:723 modules/msc/includes/bundle_widgets.php:370
 msgid "push"
 msgstr ""
 
-#: modules/msc/msc/launch.php:707 modules/msc/includes/bundle_widgets.php:370
+#: modules/msc/msc/launch.php:723 modules/msc/includes/bundle_widgets.php:370
 msgid "push / pull"
 msgstr ""
 
@@ -2075,7 +2083,7 @@ msgstr ""
 msgid "through SSH tunnel"
 msgstr ""
 
-#: modules/msc/msc/launch.php:645 modules/msc/msc/launch.php:651
+#: modules/msc/msc/launch.php:661 modules/msc/msc/launch.php:667
 msgid "time"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 22:19+0100\n"
+"POT-Creation-Date: 2018-02-27 14:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1041,8 +1041,8 @@ msgstr ""
 #: modules/imaging/manage/master_add.php:68
 #, php-format
 msgid ""
-"Boot menu generation Succes for package server: %s<br /><br />Check /var/log/"
-"mmc/pulse2-package-server.log"
+"Boot menu generation Success for package server: %s<br /><br />Check /var/"
+"log/mmc/pulse2-package-server.log"
 msgstr ""
 
 #: modules/imaging/manage/master_add.php:71
@@ -1156,7 +1156,7 @@ msgid "<strong>%s</strong> script %s"
 msgstr ""
 
 #: modules/imaging/manage/postinstall_edit.php:92
-msgid "Notify Succes : "
+msgid "Notify Success : "
 msgstr ""
 
 #: modules/imaging/manage/postinstall_edit.php:108
@@ -1917,7 +1917,8 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxLogs.php:51
 #: modules/imaging/manage/ajaxLogs.php:67
-msgid "Status unknow"
+#: modules/imaging/includes/logs.inc.php:33
+msgid "Status unknown"
 msgstr ""
 
 #: modules/imaging/manage/ajaxLogs.php:52
@@ -2414,7 +2415,7 @@ msgid "The nomenclature is missing."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:37
-msgid "This imaging server don't exists."
+msgid "This imaging server doesn't exists."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:38
@@ -2422,7 +2423,7 @@ msgid "This entity already exists."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:39
-msgid "You asked for an unexisting menu item."
+msgid "You asked for an inexistent menu item."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:40
@@ -2498,10 +2499,6 @@ msgstr ""
 
 #: modules/imaging/includes/post_install_script.php:88
 msgid "This value is already used."
-msgstr ""
-
-#: modules/imaging/includes/logs.inc.php:33
-msgid "Status unknown"
 msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:45
@@ -2581,7 +2578,7 @@ msgid "Booted"
 msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:70
-msgid "Choosen Menu Entry"
+msgid "Chosen Menu Entry"
 msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:71
@@ -3456,7 +3453,7 @@ msgstr ""
 
 #: modules/imaging/includes/xmlrpc.inc.php:293
 #, php-format
-msgid "Boot menu generation Succes for Package Server on location %s"
+msgid "Boot menu generation Success for Package Server on location %s"
 msgstr ""
 
 #: modules/imaging/includes/xmlrpc.inc.php:306
