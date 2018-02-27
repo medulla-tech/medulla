@@ -44,7 +44,7 @@ $errItem->setMsg(_("MMC Agent can't contact your LDAP server"));
 $errItem->setAdvice(_("Solve the problem by:
                         <ul>
                             <li>Verify your LDAP server is correctly configured in /etc/mmc/plugins/base/ini </li>
-                            <li>Verify you LDAP server is up</li>
+                            <li>Verify your LDAP server is up</li>
                         </ul>"));
 
 $errObj->add($errItem);
