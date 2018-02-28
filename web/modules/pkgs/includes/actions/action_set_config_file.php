@@ -21,7 +21,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         <table id="tableToggle">
         <?php
 
-        $dataval = (isset($set)) ? $set : "add@__@agentconf.ini@__@global@__@langue@__@fr";
+        $dataval = (isset($set)) ? $set : "add@__@agentconf.ini@__@global@__@log_level@__@INFO";
 
         echo'
            <tr class="toggleable">
@@ -38,9 +38,9 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                 </td>
                 <td width="25%">
                 <input title="eg:
-    add@__@agentconf.ini@__@global@__@langue@__@fr
+    add@__@agentconf.ini@__@global@__@log_level@__@INFO
     or
-    supp@__@agentconf.ini@__@global@__@langue"
+    supp@__@agentconf.ini@__@global@__@log_level"
                 type="text" name="set" value="'.$dataval.'"/>'
                 ;
                 echo'
