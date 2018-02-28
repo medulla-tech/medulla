@@ -296,7 +296,7 @@ echo '</script>';
     </div>
 </div>
 
-<div id="dialog-confirm-download-directory" title="Transfert Directory">
+<div id="dialog-confirm-download-directory" title="Transfer Folder">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg">
@@ -304,7 +304,7 @@ echo '</script>';
     </span>
   </div>
 </div>
-<div id="dialog-confirm-download-file" title="Transfert File">
+<div id="dialog-confirm-download-file" title="Transfer File">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
         <span id="dialogmsg1">
@@ -426,13 +426,12 @@ echo '</script>';
                 }
                 timetmp = user + "-" + datetimenow();
                 msg="<p><b>" +
-                        "<?php echo _T("Download", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote directory", 'xmppmaster'); ?>"+
+                        "<?php echo _T("Copy remote folder", 'xmppmaster'); ?>"+
                     "</p>"+
                     "<p style=' margin-left: 60px;' >" + source + "</p>"+
-                    "<p style=' margin-left: 15px;'>to</p>"+
-                    "<p style=' margin-left: 30px;'>" +
-                    "<?php echo _T("Local directory : ", 'xmppmaster'); ?> " +
-                    "</p>" +
+                    "<p>"+
+                    "<?php echo _T("to local folder", 'xmppmaster'); ?>" +
+                    "</p>"+
                     "<p style=' margin-left: 60px;'>"+
                         jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp +"/"+
                     "</p>"
@@ -478,14 +477,13 @@ echo '</script>';
 
             jQuery(".download").click(function() {
                 msg="<p><b>" +
-                    "<?php echo _T("Download", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote file", 'xmppmaster'); ?>"+
+                    "<?php echo _T("Copy remote file", 'xmppmaster'); ?>"+
                         "</p>"+
-                        "<p style=' margin-left: 60px;' >" + 
-                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote + 
+                        "<p style=' margin-left: 60px;' >" +
+                            jQuery('input[name=path_abs_current_remote]').val() + seperator + filenameremote +
                         "</p>"+
-                        "<p style=' margin-left: 15px;'>to</p>"+
-                        "<p style=' margin-left: 30px;'>" +
-                        "<?php echo _T("Local File : ", 'xmppmaster'); ?> : " +
+                        "<p>"+
+                        "<?php echo _T("to local File", 'xmppmaster'); ?>" +
                         "</p>" +
                         "<p style=' margin-left: 60px;'>"+
                             jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp + "/" + filenamelocal+
