@@ -48,7 +48,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         echo '
         <td></td><td></td>
             </tr>
-//         </table>';
+      </table>';
         ?>
 
     </div>
