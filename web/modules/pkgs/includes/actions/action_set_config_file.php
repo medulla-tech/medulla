@@ -40,7 +40,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
                 <input title="eg:
     add@__@agentconf.ini@__@global@__@log_level@__@INFO
     or
-    supp@__@agentconf.ini@__@global@__@log_level"
+    del@__@agentconf.ini@__@global@__@log_level"
                 type="text" name="set" value="'.$dataval.'"/>'
                 ;
                 echo'
@@ -48,7 +48,7 @@ $idclass =  "#".$tableToggle.' tr.'.$toggleable;
         echo '
         <td></td><td></td>
             </tr>
-        </table>';
+//         </table>';
         ?>
 
     </div>
