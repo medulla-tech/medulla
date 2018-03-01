@@ -4166,6 +4166,7 @@ class Glpi91(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
+            session.flush()
 
         # Adding rule actions
 
@@ -4188,6 +4189,8 @@ class Glpi91(DyngroupDatabaseHelper):
             session.add(action)
 
         session.commit()
+        session.flush()
+
         return True
 
 
@@ -4227,6 +4230,7 @@ class Glpi91(DyngroupDatabaseHelper):
             session.commit()
             rule.ranking = previous_ranking
             session.commit()
+            session.flush()
 
         return True
 
@@ -4246,6 +4250,7 @@ class Glpi91(DyngroupDatabaseHelper):
             session.commit()
             rule.ranking = next_ranking
             session.commit()
+            session.flush()
 
         return True
 
@@ -4280,6 +4285,7 @@ class Glpi91(DyngroupDatabaseHelper):
             cr.pattern = rule_data['patterns'][i]
             session.add(cr)
             session.commit()
+            session.flush()
 
         # Adding rule actions
 
@@ -4302,6 +4308,7 @@ class Glpi91(DyngroupDatabaseHelper):
             session.add(action)
 
         session.commit()
+        session.flush()
         return True
 
     @DatabaseHelper._session
