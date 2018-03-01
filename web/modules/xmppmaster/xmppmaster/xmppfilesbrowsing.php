@@ -466,11 +466,7 @@ echo '</script>';
                 }
                 timetmp = user + "-" + datetimenow();
                 msg="<p><b>" +
-<<<<<<< 218ec119324d92a4d183bba0739b16817196884f
-                        "<?php echo _T("Copy remote folder", 'xmppmaster'); ?>"+
-=======
-                        "<?php echo _T("Download", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote directory", "xmppmaster"); ?>"+
->>>>>>> dialog box notufy request
+                        "<?php echo _T("Copy", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote Folder", "xmppmaster"); ?>"+
                     "</p>"+
                     "<p style=' margin-left: 60px;' >" + source + "</p>"+
                     "<p>"+
@@ -499,7 +495,7 @@ echo '</script>';
                                     src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  jQuery(this).parent("li").find(':nth-child(1)').text(),
                                     directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                     "jidmachine" : jid }, function( data ) {
-                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The directory copy has been requested successfully", "xmppmaster"); ?>');
+                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The folder copy has been requested successfully", "xmppmaster"); ?>');
                                         confirmation_information(data);
                                         //jQuery("#messageaction").html(data); //action message afficher en haut de page
                                 });

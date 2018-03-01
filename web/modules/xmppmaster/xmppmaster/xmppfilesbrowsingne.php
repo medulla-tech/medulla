@@ -497,7 +497,7 @@ echo '</script>';
                                     directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                     "jidmachine" : jid }, function( data ) {
                                         //appel boit de dialog action bien prise en compte
-                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The directory copy has been requested successfully", "xmppmaster"); ?>');
+                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The folder copy has been requested successfully", "xmppmaster"); ?>');
                                         confirmation_information(data);
                                         //jQuery("#messageaction").html(data); //action message afficher en haut de page
                                 });
@@ -518,8 +518,6 @@ echo '</script>';
                     });
                 } );
             });
-
-
 
             jQuery(".download").click(function() {
                 msg="<p>" +
