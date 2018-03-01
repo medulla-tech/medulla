@@ -1,4 +1,4 @@
-VERSION = "4.2"
+VERSION = "4.3"
 APIVERSION = "0:0:0"
 REVISION = ""
 
