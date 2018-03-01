@@ -1455,6 +1455,7 @@ class Glpi91(DyngroupDatabaseHelper):
             ret = None
         else:
             ret = qentities.name
+        session.close()
         return ret
 
     def getUserLocations(self, user):
@@ -4478,6 +4479,8 @@ class Glpi91(DyngroupDatabaseHelper):
             if contents_id:
                 # Update database
                 session.query(RegContents).filter_by(id=contents_id).update({'value': str(value)})
+                session.commit()
+                session.flush()
                 return True
         except AttributeError:
             # Insert in database
