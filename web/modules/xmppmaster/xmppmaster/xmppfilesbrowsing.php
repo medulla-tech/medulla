@@ -296,6 +296,7 @@ echo '</script>';
     </div>
 </div>
 
+
 <div id="dialog-confirm-download-directory" title="Transfer Folder">
   <div>
     <span style="float:left; margin:12px 12px 20px 0;">
@@ -313,6 +314,17 @@ echo '</script>';
   </div>
 </div>
 
+<!-- dialog box  Notify file-->
+<div id="dialog-notification-download-file" >
+  <div>
+    <span style="float:left; padding:12px 12px 20px 0; background-color: #d9edf7; width: 95%; height:100%;">
+        <span id="dialogmsg2">
+        </span>
+    </span>
+  </div>
+</div>
+
+
 <script type="text/javascript">
     jQuery( document ).ready(function() {
         fileremote = false;
@@ -328,6 +340,34 @@ echo '</script>';
         local();
         remote();
     });
+
+    function confirmation_information(data) {
+        setTimeout(function() { affichedata(data); }, 2000); 
+    }
+
+    function affichedata(data){
+                jQuery("#dialogmsg2").html(data);
+                jQuery( function() {
+                    jQuery( "#dialog-notification-download-file" ).dialog({
+                        resizable: false,
+                        height: "auto",
+                        width: 600,
+                        modal: true,
+                        buttons: [
+                            {
+                                id: "my-buttoncancel2",
+                                text: "ok",
+                                'class':'btnPrimary',
+                                style:"color:#FFFFFF;background-color: #000000;",
+                                click:function() {
+                                    jQuery( this ).dialog( "close" );
+                                    window.location.href = "/mmc/main.php?module=base&submod=computers&action=index";
+                                }
+                            }
+                        ]
+                        });
+                } );
+    }
 
     function datetimenow(){
         var newdate = new Date();
@@ -426,7 +466,11 @@ echo '</script>';
                 }
                 timetmp = user + "-" + datetimenow();
                 msg="<p><b>" +
+<<<<<<< 218ec119324d92a4d183bba0739b16817196884f
                         "<?php echo _T("Copy remote folder", 'xmppmaster'); ?>"+
+=======
+                        "<?php echo _T("Download", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("Remote directory", "xmppmaster"); ?>"+
+>>>>>>> dialog box notufy request
                     "</p>"+
                     "<p style=' margin-left: 60px;' >" + source + "</p>"+
                     "<p>"+
@@ -441,7 +485,7 @@ echo '</script>';
                     jQuery( "#dialog-confirm-download-directory" ).dialog({
                     resizable: false,
                     height: "auto",
-                    width: 800,
+                    width: 600,
                     modal: true,
                     buttons: [
                         {
@@ -455,7 +499,9 @@ echo '</script>';
                                     src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  jQuery(this).parent("li").find(':nth-child(1)').text(),
                                     directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                     "jidmachine" : jid }, function( data ) {
-                                        jQuery("#messageaction").text(data);
+                                        jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The directory copy has been requested successfully", "xmppmaster"); ?>');
+                                        confirmation_information(data);
+                                        //jQuery("#messageaction").html(data); //action message afficher en haut de page
                                 });
                                 jQuery( this ).dialog( "close" );
                             }
@@ -470,7 +516,6 @@ echo '</script>';
                             }
                         }
                     ]
-
                     });
                 });
             });
@@ -493,7 +538,7 @@ echo '</script>';
                     jQuery( "#dialog-confirm-download-file" ).dialog({
                         resizable: false,
                         height: "auto",
-                        width: 800,
+                        width: 600,
                         modal: true,
                         buttons: [
                             {
@@ -507,7 +552,9 @@ echo '</script>';
                                             src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  filenameremote,
                                             directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                             "jidmachine" : jid }, function( data ) {
-                                                jQuery("#messageaction").text(data);
+                                                jQuery('#dialog-notification-download-file').attr('title', '<?php echo _T("The file copy has been requested successfully", "xmppmaster"); ?>');
+                                                confirmation_information(data);
+                                                //jQuery("#messageaction").html(data); //action message afficher en haut de page
                                     });
                                     jQuery( this ).dialog( "close" );
                                 }
