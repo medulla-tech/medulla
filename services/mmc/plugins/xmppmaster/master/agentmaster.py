@@ -118,6 +118,9 @@ def callvncchangepermsbymaster(to, askpermission):
 def callremotefile( jidmachine, currentdir=""):
     return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefile", "data": currentdir }, 4)
 
+def calllistremotefileedit(jidmachine):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "listremotefileedit", "data": "" }, 6)
+
 def callremotecommandshell( jidmachine, command="", timeout = 10):
     return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotecommandshell", "data": command, "timeout" : timeout }, timeout)
 
@@ -1813,7 +1816,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     mydata = dataobj['data']
                 if not dataobj.has_key('sessionid'):
                     dataobj['sessionid'] = "absent"
-                try:
+                if not 'ret' in dataobj:
+                    dataobj['ret'] = 0
+                try: 
                     logging.debug("Calling plugin %s from  %s"%( dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']

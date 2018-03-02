@@ -39,7 +39,8 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
-                                                      callremotefile, calllocalfile, callremotecommandshell
+                                                      callremotefile, calllocalfile, callremotecommandshell,\
+                                                      listremotefileedit
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -420,6 +421,12 @@ def localfile(currentdir):
 
 def remotefile( currentdir, jidmachine):
     return callremotefile(jidmachine, currentdir)
+
+def listremotefileedit(jidmachine):
+    aa = calllistremotefileedit(jidmachine)
+    objout = json.loads(aa)
+    print objout['data']['result']
+    return objout['data']['result']
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):
