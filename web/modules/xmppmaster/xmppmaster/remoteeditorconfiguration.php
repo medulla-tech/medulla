@@ -216,27 +216,43 @@ li.quickg a {
 }
 
 </style>
-
 <?
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-
-print_r($_GET);
-print_r($_POST);
+// echo "<pre><br>";
+// print_r($_GET);
+// echo "<br>";
+// print_r($_POST);
+// echo "<br>";
+// echo "kkkkkkkkkkkk";
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
+/*
+print_r($machine);
+echo "<br>";
+echo "pppppppppppppppp";
+print_r($ma['jid']);
+echo "pppppppppppppppp";
+echo "<br>";
+echo "</pre>";
+*/
 
 $tab = explode("/",$machine);
-$p = new PageGenerator(_T("File manager", 'xmppmaster')." on ". $ma['hostname']);
+$p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
+
+$result = xmlrpc_listremotefileedit($ma['jid']);
 
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
 echo "<br><br><br>";
-
+echo "<pre>";
+echo "list fichier de conf";
+print_r($result);
+echo "</pre>";
 
 ?>
