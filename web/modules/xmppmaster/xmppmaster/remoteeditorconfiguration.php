@@ -220,24 +220,9 @@ li.quickg a {
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
-// echo "<pre><br>";
-// print_r($_GET);
-// echo "<br>";
-// print_r($_POST);
-// echo "<br>";
-// echo "kkkkkkkkkkkk";
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
-/*
-print_r($machine);
-echo "<br>";
-echo "pppppppppppppppp";
-print_r($ma['jid']);
-echo "pppppppppppppppp";
-echo "<br>";
-echo "</pre>";
-*/
 
 $tab = explode("/",$machine);
 $p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']);
