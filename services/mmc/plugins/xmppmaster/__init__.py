@@ -40,7 +40,7 @@ from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmpp
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
                                                       callremotefile, calllocalfile, callremotecommandshell,\
-                                                      listremotefileedit
+                                                      calllistremotefileedit
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
