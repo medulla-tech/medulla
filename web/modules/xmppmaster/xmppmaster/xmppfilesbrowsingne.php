@@ -493,7 +493,7 @@ echo '</script>';
                             click:function() {
                                 jQuery.get( "modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php",  {
                                     dest : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp+"/",
-                                    src : jQuery('input[name=path_abs_current_remote]').val() + seperator +  jQuery(this).parent("li").find(':nth-child(1)').text(),
+                                    src  : source,
                                     directory : jQuery('input[name=path_abs_current_local]').val() + "/" + timetmp,
                                     "jidmachine" : jid }, function( data ) {
                                         //appel boit de dialog action bien prise en compte
