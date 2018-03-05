@@ -98,6 +98,6 @@ Description: Generate reports within MMC framework
 
 Package: mmc-web-xmppmaster
 Architecture: all
-Depends: ${misc:Depends}, mmc-web-base (= ${source:Version})
+Depends: ${misc:Depends}, mmc-web-base (= ${source:Version}), ajax-php-file-manager
 Description: Xmpp mmc module
 
