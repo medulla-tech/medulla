@@ -2159,7 +2159,7 @@ class XmppMasterDatabase(DatabaseHelper):
                  FROM
                     xmppmaster.machines
                  WHERE
-                    agenttype='machine';"""
+                    agenttype='machine' and uuid_inventorymachine IS NOT NULL;"""
 
         presencelist = session.execute(sql)
         session.commit()
@@ -2168,9 +2168,6 @@ class XmppMasterDatabase(DatabaseHelper):
             a=[]
             for t in presencelist:
                 a.append({'jid':t[0],'type': t[1], 'hostname':t[2], 'uuid_inventorymachine':t[3]})
-                logging.getLogger().debug("t %s"%t)
-            #a = {"jid": x, for x, y ,z in presencelist}
-            logging.getLogger().debug("a %s"%a)
             return a
         except:
             return -1
