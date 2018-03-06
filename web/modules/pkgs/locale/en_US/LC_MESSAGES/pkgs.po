@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-03-06 14:26+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -490,7 +490,7 @@ msgid "Your Account credentials are active"
 msgstr ""
 
 #: modules/pkgs/pkgs/appstreamSettings.php:70
-msgid "Your My credentials have been set successfuly."
+msgid "Your My credentials have been set successfully."
 msgstr ""
 
 #: modules/pkgs/includes/panels/appstream.inc.php:38

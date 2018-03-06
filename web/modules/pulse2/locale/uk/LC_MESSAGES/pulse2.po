@@ -2,49 +2,44 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-03-06 14:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: uk\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
-msgstr "Pulse2"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr "Усі ваші записи"
+
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr "Доступні оновлення"
+
+#: modules/pulse2/includes/menu_actionaudit.php:61
+#: modules/pulse2/includes/menu_action.php:58
+msgid "Backup status"
+msgstr "Стан резервного копіювання"
 
 #: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Список комп'ютерів"
 
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr "Вибір розташування у редагуванні комп'ютера"
-
-#: modules/pulse2/infoPackage.inc.php:60
-msgid "update"
-msgstr "оновлення"
-
-#: modules/pulse2/infoPackage.inc.php:65
-msgid "viewProductUpdates"
-msgstr "viewProductUpdates"
-
-#: modules/pulse2/infoPackage.inc.php:71
-msgid "install Product Updates"
-msgstr "Встановити оновлення продукту"
-
-#: modules/pulse2/infoPackage.inc.php:77
-msgid "Product Updates installation (ajax)"
-msgstr "Встановлення оновлень продукту (ajax)"
+#: modules/pulse2/includes/menu_group_action.php:97
+msgid "Csv export"
+msgstr "Експорт до CSV"
 
 #: modules/pulse2/includes/menu_group_action.php:47
 msgid "Delete this group"
@@ -58,111 +53,132 @@ msgstr "Вилучити цей профіль"
 msgid "Display this group's content"
 msgstr "Показати вміст цієї групи"
 
-#: modules/pulse2/includes/menu_group_action.php:53
-msgid "Edit this group"
-msgstr "Редагувати цю групу"
-
-#: modules/pulse2/includes/menu_group_action.php:54
-msgid "Share this group"
-msgstr "Поділитися цією групою"
-
-#: modules/pulse2/includes/menu_group_action.php:56
-#: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:79
-#: modules/pulse2/includes/menu_action.php:83
-#: modules/pulse2/includes/menu_action.php:88
-msgid "Read log"
-msgstr "Читати журнал"
-
-#: modules/pulse2/includes/menu_group_action.php:57
-msgid "Software deployment on this group"
-msgstr "Розгортання програмного забезпечення у цій групі"
-
-#: modules/pulse2/includes/menu_group_action.php:60
-msgid "Update on this group"
-msgstr "Оновлення цієї групи"
-
-#: modules/pulse2/includes/menu_group_action.php:64
-msgid "Inventory on this profile"
-msgstr "Облік на цьому профілі"
-
 #: modules/pulse2/includes/menu_group_action.php:68
 msgid "Display this imaging group's content"
 msgstr "Показати вміст цієї групи образів"
+
+#: modules/pulse2/includes/menu_group_action.php:53
+msgid "Edit this group"
+msgstr "Редагувати цю групу"
 
 #: modules/pulse2/includes/menu_group_action.php:70
 msgid "Edit this imaging group"
 msgstr "Редагувати цю групу образів"
 
-#: modules/pulse2/includes/menu_group_action.php:71
-msgid "Share this imaging group"
-msgstr "Поділитися цією групою образів"
+#: modules/pulse2/includes/menu_group_action.php:84
+msgid "Group Quick action"
+msgstr "Групова швидка дія"
 
-#: modules/pulse2/includes/menu_group_action.php:74
-msgid "Software deployment on this imaging group"
-msgstr "Розгортання програмного забезпечення на цій групі образів"
-
+#: modules/pulse2/includes/menu_actionaudit.php:62
 #: modules/pulse2/includes/menu_group_action.php:78
 #: modules/pulse2/includes/menu_action.php:60
 msgid "Imaging management"
 msgstr "Керування образами"
 
-#: modules/pulse2/includes/menu_group_action.php:84
-msgid "Group Quick action"
-msgstr "Групова швидка дія"
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr "Встановлюємо оновлення…"
 
-#: modules/pulse2/includes/menu_group_action.php:97
-msgid "Csv export"
-msgstr "Експорт до CSV"
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr "Кореневий запис"
-
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr "Усі ваші записи"
-
+#: modules/pulse2/includes/menu_actionaudit.php:59
 #: modules/pulse2/includes/menu_action.php:56
 msgid "Inventory"
 msgstr "Облік"
 
-#: modules/pulse2/includes/menu_action.php:57
-msgid "extTicket issue"
-msgstr "Вада extTicket"
+#: modules/pulse2/includes/menu_group_action.php:64
+msgid "Inventory on this profile"
+msgstr "Облік на цьому профілі"
 
-#: modules/pulse2/includes/menu_action.php:58
-msgid "Backup status"
-msgstr "Стан резервного копіювання"
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr "Вибір розташування у редагуванні комп'ютера"
 
+#: modules/pulse2/infoPackage.inc.php:78
+msgid "Product Updates installation (ajax)"
+msgstr "Встановлення оновлень продукту (ajax)"
+
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr "Pulse2"
+
+#: modules/pulse2/includes/menu_actionaudit.php:63
+#: modules/pulse2/includes/menu_action.php:73
+msgid "Quick action"
+msgstr "Швидка дія"
+
+#: modules/pulse2/includes/menu_group_action.php:56
+#: modules/pulse2/includes/menu_group_action.php:73
+#: modules/pulse2/includes/menu_action.php:79
+#: modules/pulse2/includes/menu_action.php:83
+#: modules/pulse2/includes/menu_action.php:93
+msgid "Read log"
+msgstr "Читати журнал"
+
+#: modules/pulse2/includes/menu_actionaudit.php:70
 #: modules/pulse2/includes/menu_action.php:64
 #: modules/pulse2/includes/menu_action.php:67
 msgid "Remote control"
 msgstr "Дистанційне керування"
 
-#: modules/pulse2/includes/menu_action.php:72
-msgid "xmppconsole"
-msgstr "xmppconsole"
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr "Кореневий запис"
 
-#: modules/pulse2/includes/menu_action.php:73
-msgid "Quick action"
-msgstr "Швидка дія"
+#: modules/pulse2/includes/menu_group_action.php:54
+msgid "Share this group"
+msgstr "Поділитися цією групою"
 
+#: modules/pulse2/includes/menu_group_action.php:71
+msgid "Share this imaging group"
+msgstr "Поділитися цією групою образів"
+
+#: modules/pulse2/includes/menu_actionaudit.php:66
+#: modules/pulse2/includes/menu_actionaudit.php:71
 #: modules/pulse2/includes/menu_action.php:80
 #: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:89
+#: modules/pulse2/includes/menu_action.php:94
 msgid "Software deployment"
 msgstr "Розгортання програмного забезпечення"
 
-#: modules/pulse2/update/viewProductUpdates.php:25
-#: modules/pulse2/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr "Доступні оновлення"
+#: modules/pulse2/includes/menu_group_action.php:57
+msgid "Software deployment on this group"
+msgstr "Розгортання програмного забезпечення у цій групі"
+
+#: modules/pulse2/includes/menu_group_action.php:74
+msgid "Software deployment on this imaging group"
+msgstr "Розгортання програмного забезпечення на цій групі образів"
 
 #: modules/pulse2/update/viewProductUpdates.php:38
 msgid "Update"
 msgstr "Оновити"
 
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
-msgstr "Встановлюємо оновлення…"
+#: modules/pulse2/includes/menu_group_action.php:60
+msgid "Update on this group"
+msgstr "Оновлення цієї групи"
+
+#: modules/pulse2/includes/menu_action.php:57
+msgid "extTicket issue"
+msgstr "Вада extTicket"
+
+#: modules/pulse2/includes/menu_actionaudit.php:73
+#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_action.php:86
+#: modules/pulse2/includes/menu_action.php:88
+msgid "files browsing"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:72
+msgid "install Product Updates"
+msgstr "Встановити оновлення продукту"
+
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr "оновлення"
+
+#: modules/pulse2/infoPackage.inc.php:66
+msgid "viewProductUpdates"
+msgstr "viewProductUpdates"
+
+#: modules/pulse2/includes/menu_actionaudit.php:69
+#: modules/pulse2/includes/menu_action.php:72
+msgid "xmppconsole"
+msgstr "xmppconsole"

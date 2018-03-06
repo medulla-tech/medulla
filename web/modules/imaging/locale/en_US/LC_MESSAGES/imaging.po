@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pulse 2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-03-06 14:26+0100\n"
 "PO-Revision-Date: 2016-06-01 17:32+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -320,14 +320,14 @@ msgstr ""
 
 #: modules/imaging/includes/xmlrpc.inc.php:293
 #, php-format
-msgid "Boot menu generation Succes for Package Server on location %s"
+msgid "Boot menu generation Success for Package Server on location %s"
 msgstr ""
 
 #: modules/imaging/manage/master_add.php:68
 #, php-format
 msgid ""
-"Boot menu generation Succes for package server: %s<br /><br />Check /var/log/"
-"mmc/pulse2-package-server.log"
+"Boot menu generation Success for package server: %s<br /><br />Check /var/"
+"log/mmc/pulse2-package-server.log"
 msgstr ""
 
 #: modules/imaging/imaging/showtarget.php:78
@@ -465,7 +465,7 @@ msgid "Choose the MAC address you want to use"
 msgstr ""
 
 #: modules/imaging/includes/logs.inc.php:70
-msgid "Choosen Menu Entry"
+msgid "Chosen Menu Entry"
 msgstr ""
 
 #: modules/imaging/manage/ajaxFormWin7.php:619
@@ -1921,7 +1921,7 @@ msgid "Notify Error : script deleted"
 msgstr ""
 
 #: modules/imaging/manage/postinstall_edit.php:92
-msgid "Notify Succes : "
+msgid "Notify Success : "
 msgstr ""
 
 #: modules/imaging/manage/postinstall_create_boot_service.php:39
@@ -2796,9 +2796,6 @@ msgstr ""
 
 #: modules/imaging/manage/ajaxLogs.php:51
 #: modules/imaging/manage/ajaxLogs.php:67
-msgid "Status unknow"
-msgstr ""
-
 #: modules/imaging/includes/logs.inc.php:33
 msgid "Status unknown"
 msgstr ""
@@ -3035,7 +3032,7 @@ msgid "This image already exists."
 msgstr ""
 
 #: modules/imaging/includes/includes.php:37
-msgid "This imaging server don't exists."
+msgid "This imaging server doesn't exists."
 msgstr ""
 
 #: modules/imaging/manage/master_iso.php:52
@@ -3271,7 +3268,7 @@ msgid ""
 msgstr ""
 
 #: modules/imaging/includes/includes.php:39
-msgid "You asked for an unexisting menu item."
+msgid "You asked for an inexistent menu item."
 msgstr ""
 
 #: modules/imaging/imaging/configure.php:515

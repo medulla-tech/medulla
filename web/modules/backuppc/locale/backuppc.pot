@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-03-06 14:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -552,7 +552,7 @@ msgid "Incremental backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/advScripts.php:40
-#: modules/backuppc/backuppc/hostStatus.php:185
+#: modules/backuppc/backuppc/hostStatus.php:288
 msgid "Configuration saved"
 msgstr ""
 
@@ -600,49 +600,49 @@ msgstr ""
 msgid "View restore points"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:45
+#: modules/backuppc/backuppc/hostStatus.php:148
 msgid "Notify Error : Backup configuration Computer"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:59
-#: modules/backuppc/backuppc/hostStatus.php:174
+#: modules/backuppc/backuppc/hostStatus.php:162
+#: modules/backuppc/backuppc/hostStatus.php:277
 msgid "Notify Computer :"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:59
+#: modules/backuppc/backuppc/hostStatus.php:162
 msgid "has been added to backup system successfully."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:70
+#: modules/backuppc/backuppc/hostStatus.php:173
 #, php-format
 msgid ""
 "Computer %s has been added to backup system successfully.<br />You can now "
 "configure its filesets and scheduling."
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:174
+#: modules/backuppc/backuppc/hostStatus.php:277
 msgid "Save configure host "
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:199
+#: modules/backuppc/backuppc/hostStatus.php:302
 #, php-format
 msgid "%s's backup status"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:202
+#: modules/backuppc/backuppc/hostStatus.php:305
 msgid "Summary"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:206
+#: modules/backuppc/backuppc/hostStatus.php:309
 msgid "Configuration"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:207
+#: modules/backuppc/backuppc/hostStatus.php:310
 #: modules/backuppc/infoPackage.inc.php:54
 msgid "Advanced scripts"
 msgstr ""
 
-#: modules/backuppc/backuppc/hostStatus.php:208
+#: modules/backuppc/backuppc/hostStatus.php:311
 #: modules/backuppc/infoPackage.inc.php:57
 msgid "File search"
 msgstr ""
@@ -693,7 +693,7 @@ msgid "Start Full Backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:212
-msgid "Sart Incr Backup"
+msgid "Start Incr Backup"
 msgstr ""
 
 #: modules/backuppc/backuppc/hostSummary.php:213

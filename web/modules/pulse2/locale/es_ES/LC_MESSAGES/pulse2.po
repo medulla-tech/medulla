@@ -2,48 +2,43 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-15 17:33+0100\n"
+"POT-Creation-Date: 2018-03-06 14:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
-"Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/es_ES/)\n"
+"Language-Team: Spanish (Spain) (https://www.transifex.com/siveo/teams/72118/"
+"es_ES/)\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: modules/pulse2/infoPackage.inc.php:34
-msgid "Pulse2"
+#: modules/pulse2/includes/utilities.php:86
+msgid "All my entities"
+msgstr ""
+
+#: modules/pulse2/update/viewProductUpdates.php:25
+#: modules/pulse2/update/viewProductUpdates.php:51
+msgid "Available updates"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:61
+#: modules/pulse2/includes/menu_action.php:58
+msgid "Backup status"
 msgstr ""
 
 #: modules/pulse2/infoPackage.inc.php:45
 msgid "Computers list"
 msgstr "Lista de equipos"
 
-#: modules/pulse2/infoPackage.inc.php:50
-msgid "Location selection in computer edit"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:60
-msgid "update"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:65
-msgid "viewProductUpdates"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:71
-msgid "install Product Updates"
-msgstr ""
-
-#: modules/pulse2/infoPackage.inc.php:77
-msgid "Product Updates installation (ajax)"
+#: modules/pulse2/includes/menu_group_action.php:97
+msgid "Csv export"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:47
@@ -58,111 +53,132 @@ msgstr ""
 msgid "Display this group's content"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:53
-msgid "Edit this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:54
-msgid "Share this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:56
-#: modules/pulse2/includes/menu_group_action.php:73
-#: modules/pulse2/includes/menu_action.php:79
-#: modules/pulse2/includes/menu_action.php:83
-#: modules/pulse2/includes/menu_action.php:88
-msgid "Read log"
-msgstr "Leer bitácora"
-
-#: modules/pulse2/includes/menu_group_action.php:57
-msgid "Software deployment on this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:60
-msgid "Update on this group"
-msgstr ""
-
-#: modules/pulse2/includes/menu_group_action.php:64
-msgid "Inventory on this profile"
-msgstr ""
-
 #: modules/pulse2/includes/menu_group_action.php:68
 msgid "Display this imaging group's content"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:53
+msgid "Edit this group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:70
 msgid "Edit this imaging group"
 msgstr ""
 
+#: modules/pulse2/includes/menu_group_action.php:84
+msgid "Group Quick action"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:62
+#: modules/pulse2/includes/menu_group_action.php:78
+#: modules/pulse2/includes/menu_action.php:60
+msgid "Imaging management"
+msgstr "Gestión de imagenes"
+
+#: modules/pulse2/update/installProductUpdates.php:41
+msgid "Installing updates ..."
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:59
+#: modules/pulse2/includes/menu_action.php:56
+msgid "Inventory"
+msgstr "Inventario"
+
+#: modules/pulse2/includes/menu_group_action.php:64
+msgid "Inventory on this profile"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:50
+msgid "Location selection in computer edit"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:78
+msgid "Product Updates installation (ajax)"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:34
+msgid "Pulse2"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:63
+#: modules/pulse2/includes/menu_action.php:73
+msgid "Quick action"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:56
+#: modules/pulse2/includes/menu_group_action.php:73
+#: modules/pulse2/includes/menu_action.php:79
+#: modules/pulse2/includes/menu_action.php:83
+#: modules/pulse2/includes/menu_action.php:93
+msgid "Read log"
+msgstr "Leer bitácora"
+
+#: modules/pulse2/includes/menu_actionaudit.php:70
+#: modules/pulse2/includes/menu_action.php:64
+#: modules/pulse2/includes/menu_action.php:67
+msgid "Remote control"
+msgstr "Control remoto"
+
+#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
+msgid "Root entity"
+msgstr ""
+
+#: modules/pulse2/includes/menu_group_action.php:54
+msgid "Share this group"
+msgstr ""
+
 #: modules/pulse2/includes/menu_group_action.php:71
 msgid "Share this imaging group"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:66
+#: modules/pulse2/includes/menu_actionaudit.php:71
+#: modules/pulse2/includes/menu_action.php:80
+#: modules/pulse2/includes/menu_action.php:84
+#: modules/pulse2/includes/menu_action.php:94
+msgid "Software deployment"
+msgstr "Despliegue de software"
+
+#: modules/pulse2/includes/menu_group_action.php:57
+msgid "Software deployment on this group"
 msgstr ""
 
 #: modules/pulse2/includes/menu_group_action.php:74
 msgid "Software deployment on this imaging group"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:78
-#: modules/pulse2/includes/menu_action.php:60
-msgid "Imaging management"
-msgstr "Gestión de imagenes"
-
-#: modules/pulse2/includes/menu_group_action.php:84
-msgid "Group Quick action"
+#: modules/pulse2/update/viewProductUpdates.php:38
+msgid "Update"
 msgstr ""
 
-#: modules/pulse2/includes/menu_group_action.php:97
-msgid "Csv export"
+#: modules/pulse2/includes/menu_group_action.php:60
+msgid "Update on this group"
 msgstr ""
-
-#: modules/pulse2/includes/locations_xmlrpc.inc.php:31
-msgid "Root entity"
-msgstr ""
-
-#: modules/pulse2/includes/utilities.php:86
-msgid "All my entities"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:56
-msgid "Inventory"
-msgstr "Inventario"
 
 #: modules/pulse2/includes/menu_action.php:57
 msgid "extTicket issue"
 msgstr ""
 
-#: modules/pulse2/includes/menu_action.php:58
-msgid "Backup status"
+#: modules/pulse2/includes/menu_actionaudit.php:73
+#: modules/pulse2/includes/menu_actionaudit.php:75
+#: modules/pulse2/includes/menu_action.php:86
+#: modules/pulse2/includes/menu_action.php:88
+msgid "files browsing"
 msgstr ""
 
-#: modules/pulse2/includes/menu_action.php:64
-#: modules/pulse2/includes/menu_action.php:67
-msgid "Remote control"
-msgstr "Control remoto"
+#: modules/pulse2/infoPackage.inc.php:72
+msgid "install Product Updates"
+msgstr ""
 
+#: modules/pulse2/infoPackage.inc.php:60
+msgid "update"
+msgstr ""
+
+#: modules/pulse2/infoPackage.inc.php:66
+msgid "viewProductUpdates"
+msgstr ""
+
+#: modules/pulse2/includes/menu_actionaudit.php:69
 #: modules/pulse2/includes/menu_action.php:72
 msgid "xmppconsole"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:73
-msgid "Quick action"
-msgstr ""
-
-#: modules/pulse2/includes/menu_action.php:80
-#: modules/pulse2/includes/menu_action.php:84
-#: modules/pulse2/includes/menu_action.php:89
-msgid "Software deployment"
-msgstr "Despliegue de software"
-
-#: modules/pulse2/update/viewProductUpdates.php:25
-#: modules/pulse2/update/viewProductUpdates.php:51
-msgid "Available updates"
-msgstr ""
-
-#: modules/pulse2/update/viewProductUpdates.php:38
-msgid "Update"
-msgstr ""
-
-#: modules/pulse2/update/installProductUpdates.php:41
-msgid "Installing updates ..."
 msgstr ""
