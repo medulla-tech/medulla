@@ -57,9 +57,9 @@ $param = array(
 
     $f = new ValidatingForm(array());
     echo "<br><br>";
-    $f->add(new HiddenTpl("editcreate"), array("value" => "editfileconf", "hide" => True));
-    $f->addButton("bcreate", _T("Create file configuration", "xmppmaster"));
-    $f->display();
+//     $f->add(new HiddenTpl("editcreate"), array("value" => "editfileconf", "hide" => True));
+//     $f->addButton("bcreate", _T("Create file configuration", "xmppmaster"));
+//     $f->display();
 $ajax->display();
 $ajax->displayDivToUpdate();
 
