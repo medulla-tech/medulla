@@ -107,6 +107,11 @@ $page->setFile("modules/xmppmaster/xmppmaster/ajaxdeploylog.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));
 $submod->addPage($page);
 
+$page = new Page("remoteaction");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php");
+$page->setOptions(array("AJAX" => True, "visible" => False));
+$submod->addPage($page);
+
 $page = new Page("xmpprefrechfilesremote");
 $page->setFile("modules/xmppmaster/xmppmaster/ajaxxmpprefrechfilesremote.php");
 $page->setOptions(array("AJAX" => True, "visible" => False));

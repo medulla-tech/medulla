@@ -24,7 +24,7 @@
 ?>
 <style type='text/css'>
 textarea {
-    width:50% ;
+    width:90% ;
     height:150px;
     margin:auto;
     display:block; 
@@ -220,6 +220,8 @@ li.quickg a {
 require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
+
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
@@ -229,15 +231,136 @@ $p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $m
 $p->setSideMenu($sidemenu);
 $p->display();
 
-$result = xmlrpc_listremotefileedit($ma['jid']);
-
 require_once("modules/pulse2/includes/utilities.php"); # for quickGet method
 require_once("modules/dyngroup/includes/utilities.php");
 include_once('modules/pulse2/includes/menu_actionaudit.php');
-echo "<br><br><br>";
-echo "<pre>";
-echo "list fichier de conf";
-print_r($result);
-echo "</pre>";
 
+    $result = xmlrpc_remotefileeditaction($ma['jid'], array('action' => 'listconfigfile'));
+    if ($result['numerror'] != 0){
+        echo "fin de script php sur error boite de dialog todo";
+    }
+    //print_r($result['result']);
 ?>
+
+<form method="post" id="Form">
+    <table cellspacing="0">
+        <tr>
+            <td class="label" width="40%" style = "text-align: right;">
+                Select a config file
+            </td>
+            <td>
+                <select name="namefileconf" id="namefileconf">
+                    <?php
+                        foreach($result['result']  as $dd){
+                            printf ('<option value="%s" >%s</option>', $dd, $dd );
+                        }
+                    ?>
+                </select>
+            </td>
+        </tr>
+        </table>
+    <textarea rows="15"
+              id="resultat" 
+              spellcheck="false" 
+              style = "height : 460px;
+                       background : black;
+                       color : white;
+                       FONT-SIZE : 15px;
+                       font-family : 'Courier New', Courier, monospace;
+                       border:10px solid ;
+                       padding : 15px;
+                       border-width:1px;
+                       border-radius: 25px;
+                       border-color:#FFFF00;
+                       box-shadow: 6px 6px 0px #6E6E6E;"
+    ></textarea>
+    <br>
+    <button style="color:#FFFFFF;background-color: #000000;" id="savefile" class="btn btn-small">save file</button>
+</form>
+        <!-- dialog box Transfert directory -->
+        <div id="dialog-confirm-save-conf" title="Confirm Saving Configuration">
+            <div>
+                <span style="float:left; margin:12px 12px 20px 0;">
+                    <span id="dialogmsg">
+                    </span>
+                </span>
+            </div>
+        </div>
+
+<script type="text/javascript">
+    function save(){
+        jQuery.post( "modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php",
+                    {
+                        "file" : jQuery('#namefileconf option:selected').text(),
+                        "action" : 'save',
+                        "machine" : "<? echo $ma['jid']; ?>",
+                        'content' : jQuery('#resultat').val()
+                    },
+                    function(data) {
+                        //jQuery('#resultat').val(data['result']);
+                        document.location.href="main.php?module=base&submod=computers&action=index";
+                    });
+    }
+    function loadconffile(param){
+        //valeurselect = jQuery('#namefileconf option:selected').text()
+        jQuery.post( "modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php",
+            {
+                "file" : param,
+                "action" : 'loadfile',
+                "machine" : "<? echo $ma['jid']; ?>"
+            },
+            function(data) {
+                jQuery('#resultat').text(data['result']);
+            });
+    }
+
+    jQuery( '#namefileconf').change(function() {
+        loadconffile(jQuery('#namefileconf option:selected').text());
+    });
+
+    jQuery( "#savefile" ).click(function(event) {
+        event.preventDefault();
+        msg="<p><b>" +
+                "<?php echo _T("Save Configuration", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("File :", 'xmppmaster'); ?>"+
+            "</p>"+
+            "<p style=' margin-left: 60px;' >" + jQuery('#namefileconf').val() + "</p>"
+        jQuery("#dialogmsg").html(msg);
+
+        jQuery( function() {
+            jQuery( "#dialog-confirm-save-conf" ).dialog({
+            resizable: false,
+            height: "auto",
+            width: 600,
+            modal: true,
+            buttons: [
+                {
+                    id: "my-button",
+                    text: "Confirm",
+                    'class':'btnPrimary',
+                    style:"color:#FFFFFF;background-color: #000000;",
+                    click:function() {
+                        save();
+                        jQuery( this ).dialog( "close" );
+                    }
+                },
+                {
+                    id: "my-buttoncancel",
+                    text: "Cancel",
+                    'class':'btnPrimary',
+                    style:"color:#FFFFFF;background-color: #000000;",
+                    click:function() {
+                        jQuery( this ).dialog( "close" );
+                    }
+                }
+            ]
+            });
+        } );
+    });
+
+    jQuery( document ).ready(function() {
+        var md5 = "";
+        var modification = false;
+        loadconffile(jQuery('#namefileconf option:selected').text());
+    });
+
+</script>

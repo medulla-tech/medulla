@@ -61,6 +61,10 @@ function xmlrpc_listremotefileedit($jidmachine){
     return xmlCall("xmppmaster.listremotefileedit", array($jidmachine));
 }
 
+function xmlrpc_remotefileeditaction($jidmachine, $data=array()){
+    return xmlCall("xmppmaster.remotefileeditaction", array($jidmachine, $data));
+}
+
 function xmlrpc_localfilesystem($currentdir){
     return xmlCall("xmppmaster.localfile", array($currentdir));
 }
