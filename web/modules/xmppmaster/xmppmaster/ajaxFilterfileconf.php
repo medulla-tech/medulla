@@ -63,7 +63,7 @@ a.info:hover span{
 
         $result = xmlrpc_remotefileeditaction($ma['jid'], array('action' => 'listconfigfile'));
 
-        print_r($result['result'] );
+       
         $count = count($result['result']);
 
         $param = array(
