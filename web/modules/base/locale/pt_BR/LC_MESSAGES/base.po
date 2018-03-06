@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 13:58+0100\n"
+"POT-Creation-Date: 2018-03-06 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/siveo/"
@@ -233,7 +233,7 @@ msgstr "Cópia(backup) de um diretório home de usuário"
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr "O backup da pasta do usuário <b>%s</b> foi iniciado em segundo plano."
 
-#: modules/base/includes/computers_list.inc.php:360
+#: modules/base/includes/computers_list.inc.php:369
 msgid "Backup status"
 msgstr "Status do Backup"
 
@@ -399,7 +399,7 @@ msgstr "Computadores"
 msgid "Computers : "
 msgstr "Computadores :"
 
-#: modules/base/includes/computers_list.inc.php:343
+#: modules/base/includes/computers_list.inc.php:352
 msgid "Computers list"
 msgstr "Lista de computadores"
 
@@ -505,7 +505,7 @@ msgstr "Remover um usuário"
 msgid "Delete all user's files"
 msgstr "Remover todos os arquivos do usuário"
 
-#: modules/base/includes/computers_list.inc.php:397
+#: modules/base/includes/computers_list.inc.php:407
 msgid "Delete computer"
 msgstr "Remover computador"
 
@@ -561,7 +561,7 @@ msgstr "Você quer que o backup seja feito ?"
 msgid "Download ACL string"
 msgstr "Baixar string ACL"
 
-#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:128
 msgid "Download file"
 msgstr "Baixar arquivo"
 
@@ -597,6 +597,11 @@ msgstr "Editar um usuário"
 #: modules/base/infoPackage.inc.php:321
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
+
+#: modules/base/includes/computers_list.inc.php:115
+#: modules/base/includes/computers_list.inc.php:116
+msgid "Edit configs files"
+msgstr ""
 
 #: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47
 msgid "Edit group"
@@ -841,7 +846,7 @@ msgstr ""
 msgid "Imaging Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:122
+#: modules/base/includes/computers_list.inc.php:127
 msgid "Imaging management"
 msgstr "gerenciamento das imagens"
 
@@ -1268,7 +1273,7 @@ msgstr ""
 msgid "Quick Actions Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:128
+#: modules/base/includes/computers_list.inc.php:133
 msgid "Quick action"
 msgstr ""
 
@@ -1292,13 +1297,13 @@ msgstr "Usuários Registrados"
 msgid "Remote Desktop Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:118
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/base/includes/computers_list.inc.php:131
+#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:125
+#: modules/base/includes/computers_list.inc.php:136
 msgid "Remote control"
 msgstr "Controle remoto"
 
-#: modules/base/includes/computers_list.inc.php:400
+#: modules/base/includes/computers_list.inc.php:410
 msgid "Remove machine from group"
 msgstr "Remover máquina de grupo"
 
@@ -1389,7 +1394,7 @@ msgstr "Setar valores para todos os botões:&nbsp;&nbsp;"
 msgid "Shortcuts"
 msgstr "Atalhos"
 
-#: modules/base/includes/computers_list.inc.php:126
+#: modules/base/includes/computers_list.inc.php:131
 msgid "Show Profile"
 msgstr "Mostrar Perfil"
 
@@ -2000,15 +2005,15 @@ msgstr ""
 msgid "expert mode"
 msgstr "modo avançado"
 
-#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:129
 #: modules/base/users/ajaxFilter.php:85
 msgid "extTicket issue"
 msgstr "questo extTicket"
 
 #: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:115
-#: modules/base/includes/computers_list.inc.php:116
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/base/includes/computers_list.inc.php:121
 msgid "files browsing"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 13:58+0100\n"
+"POT-Creation-Date: 2018-03-06 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -33,7 +33,7 @@ msgstr "Усі завдання користувачів"
 msgid "Audit"
 msgstr "Аудит"
 
-#: modules/xmppmaster/infoPackage.inc.php:191
+#: modules/xmppmaster/infoPackage.inc.php:194
 msgid "Audit deployment"
 msgstr "Аудит розгортання"
 
@@ -70,15 +70,19 @@ msgstr "Консоль"
 msgid "Console Agent Relay Server"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:424
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:430
-msgid "Copy Remote File"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:469
+msgid "Copy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:524
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:521
+#, fuzzy
+msgid "Copy remote file"
 msgstr "Копіювати віддалений файл"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:406
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:411
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:470
 #, fuzzy
-msgid "Copy Remote directory"
+msgid "Copy remote folder"
 msgstr "Копіювати віддалений файл"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:65
@@ -135,6 +139,10 @@ msgstr "Розгортання [машина "
 msgid "Description"
 msgstr "Опис"
 
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
+msgid "Download File"
+msgstr ""
+
 #: modules/xmppmaster/infoPackage.inc.php:68
 #, fuzzy
 msgid "Edit Custom Quick Action"
@@ -149,41 +157,42 @@ msgstr "Змінити нетипову швидку дію: %s"
 msgid "Edit a Quick Action"
 msgstr "Змінити швидку дію"
 
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:228
+msgid "Edition File configuration"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:235
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:232
 msgid "File manager"
 msgstr "Керування файлами"
 
-#: modules/xmppmaster/infoPackage.inc.php:206
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:44
+msgid "From"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:209
 msgid "List all groups of computers"
 msgstr "Список усіх груп комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:226
+#: modules/xmppmaster/infoPackage.inc.php:229
 msgid "List computer deploy"
 msgstr "Список розгортання комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:216
+#: modules/xmppmaster/infoPackage.inc.php:219
 msgid "List computers deploy"
 msgstr "Список розгортання комп'ютерів"
 
-#: modules/xmppmaster/infoPackage.inc.php:221
+#: modules/xmppmaster/infoPackage.inc.php:224
 msgid "List computers deploy by group"
 msgstr "Список розгортання комп'ютерів за групами"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:426
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:432
-msgid "Local File : "
-msgstr "Локальний файл: "
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:408
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:413
-#, fuzzy
-msgid "Local directory : "
-msgstr "Локальний файл: "
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:41
 msgid "Mac address"
 msgstr "MAC-адреса"
+
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
+msgid "Machine"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/index.php:38
 msgid "My Tasks ["
@@ -225,6 +234,11 @@ msgstr "Заплановані завдання"
 msgid "Quick action list for user %s"
 msgstr "Список швидких дій для користувача %s"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:469
+#, fuzzy
+msgid "Remote Folder"
+msgstr "Копіювати віддалений файл"
+
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:88
 msgid "Select a machine"
 msgstr "Виберіть машину"
@@ -265,6 +279,20 @@ msgstr "Припинити розгортання"
 msgid "Target"
 msgstr "Призначення"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:554
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:551
+msgid "The file copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:500
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:498
+msgid "The folder copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:46
+msgid "To"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
@@ -276,7 +304,7 @@ msgstr "Користувач"
 msgid "Wake On Lan"
 msgstr "Пробудження з LAN"
 
-#: modules/xmppmaster/infoPackage.inc.php:99
+#: modules/xmppmaster/infoPackage.inc.php:102
 msgid "Wake on LAN"
 msgstr "Пробудження з LAN"
 
@@ -292,7 +320,7 @@ msgstr "Завдання усіх користувачів XMPP"
 #: modules/xmppmaster/infoPackage.inc.php:54
 #: modules/xmppmaster/infoPackage.inc.php:57
 #: modules/xmppmaster/infoPackage.inc.php:86
-#: modules/xmppmaster/infoPackage.inc.php:96
+#: modules/xmppmaster/infoPackage.inc.php:99
 msgid "XMPP Console"
 msgstr "Консоль XMPP"
 
@@ -300,8 +328,9 @@ msgstr "Консоль XMPP"
 msgid "XMPP Custom Quick Action"
 msgstr "Нетипова швидка дія XMPP"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:36
-msgid "XMPP File manager"
+#: modules/xmppmaster/xmppmaster/localSidebar.php:38
+#, fuzzy
+msgid "XMPP File Manager"
 msgstr "Керування файлами XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:51
@@ -321,8 +350,8 @@ msgstr "Файл навігатора XMPP"
 msgid "XMPP files managers"
 msgstr "Засоби керування файлами XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:196
-#: modules/xmppmaster/infoPackage.inc.php:201
+#: modules/xmppmaster/infoPackage.inc.php:199
+#: modules/xmppmaster/infoPackage.inc.php:204
 msgid "XMPP log"
 msgstr "Журнал XMPP"
 
@@ -334,11 +363,15 @@ msgstr "Журнал XMPP"
 msgid "XMPP logs grp"
 msgstr "Група журналів XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:141
+#: modules/xmppmaster/infoPackage.inc.php:96
+msgid "XMPP remote edit configuration file"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:144
 msgid "action deploy quick"
 msgstr "дія з швидкого розгортання"
 
-#: modules/xmppmaster/infoPackage.inc.php:211
+#: modules/xmppmaster/infoPackage.inc.php:214
 msgid "ajax view grp deploy"
 msgstr "перегляд ajax розгортання групи"
 
@@ -353,41 +386,52 @@ msgstr "Вилучити нетипову швидку дію"
 msgid "detaildeploy"
 msgstr "докладне розгортання"
 
-#: modules/xmppmaster/infoPackage.inc.php:178
+#: modules/xmppmaster/infoPackage.inc.php:181
 msgid "quick action Install key"
 msgstr "швидка дія зі встановлення ключа"
 
-#: modules/xmppmaster/infoPackage.inc.php:157
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "quick action Inventory"
 msgstr "швидка дія з обліку"
 
-#: modules/xmppmaster/infoPackage.inc.php:163
+#: modules/xmppmaster/infoPackage.inc.php:166
 msgid "quick action Restart"
 msgstr "швидка дія з перезапуску"
 
-#: modules/xmppmaster/infoPackage.inc.php:152
+#: modules/xmppmaster/infoPackage.inc.php:155
 msgid "quick action Wol"
 msgstr "швидка дія із пробудження мережею"
 
-#: modules/xmppmaster/infoPackage.inc.php:173
+#: modules/xmppmaster/infoPackage.inc.php:176
 msgid "quick action change vnc settings"
 msgstr "швидка дія зі зміни параметрів vnc"
 
-#: modules/xmppmaster/infoPackage.inc.php:146
+#: modules/xmppmaster/infoPackage.inc.php:149
 msgid "quick action deploy group"
 msgstr "група розгортання швидкої дії"
 
-#: modules/xmppmaster/infoPackage.inc.php:185
+#: modules/xmppmaster/infoPackage.inc.php:188
 msgid "quick action reversessh for guacamole"
 msgstr "швидка дія reversessh для guacamole"
 
-#: modules/xmppmaster/infoPackage.inc.php:168
+#: modules/xmppmaster/infoPackage.inc.php:171
 msgid "quick action shutdown"
 msgstr "швидка дія з вимикання"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:192
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
 msgid "return key to start your order"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:530
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:527
+#, fuzzy
+msgid "to local File"
+msgstr "Локальний файл: "
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:474
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:473
+msgid "to local folder"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:32
@@ -403,6 +447,14 @@ msgstr "Стан xmppmaster"
 
 #~ msgid "Command result"
 #~ msgstr "Результат команди"
+
+#, fuzzy
+#~ msgid "Copy Remote directory"
+#~ msgstr "Копіювати віддалений файл"
+
+#, fuzzy
+#~ msgid "Local directory : "
+#~ msgstr "Локальний файл: "
 
 #~ msgid "Shell command"
 #~ msgstr "Команда оболонки"

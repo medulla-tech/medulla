@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 13:58+0100\n"
+"POT-Creation-Date: 2018-03-06 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/"
@@ -33,7 +33,7 @@ msgstr "Les tâches de tous les utilisateurs"
 msgid "Audit"
 msgstr "Audit"
 
-#: modules/xmppmaster/infoPackage.inc.php:191
+#: modules/xmppmaster/infoPackage.inc.php:194
 msgid "Audit deployment"
 msgstr "Audit déploiement"
 
@@ -70,15 +70,19 @@ msgstr "Console"
 msgid "Console Agent Relay Server"
 msgstr ""
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:424
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:430
-msgid "Copy Remote File"
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:469
+msgid "Copy"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:524
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:521
+#, fuzzy
+msgid "Copy remote file"
 msgstr "copie fichier distant"
 
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:406
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:411
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:470
 #, fuzzy
-msgid "Copy Remote directory"
+msgid "Copy remote folder"
 msgstr "copie fichier distant"
 
 #: modules/xmppmaster/xmppmaster/editqa.php:65
@@ -135,6 +139,10 @@ msgstr "Déploiement [machine "
 msgid "Description"
 msgstr "Description"
 
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:43
+msgid "Download File"
+msgstr ""
+
 #: modules/xmppmaster/infoPackage.inc.php:68
 #, fuzzy
 msgid "Edit Custom Quick Action"
@@ -149,41 +157,42 @@ msgstr "Modifier une Action Rapide Personnalisée : %s"
 msgid "Edit a Quick Action"
 msgstr "Editer une Action Rapide "
 
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:228
+msgid "Edition File configuration"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:235
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:232
 msgid "File manager"
 msgstr "Gestionnaire de fichiers"
 
-#: modules/xmppmaster/infoPackage.inc.php:206
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:44
+msgid "From"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:209
 msgid "List all groups of computers"
 msgstr "Liste tous les groupes d'ordinateurs"
 
-#: modules/xmppmaster/infoPackage.inc.php:226
+#: modules/xmppmaster/infoPackage.inc.php:229
 msgid "List computer deploy"
 msgstr "Liste des ordinateurs deployé "
 
-#: modules/xmppmaster/infoPackage.inc.php:216
+#: modules/xmppmaster/infoPackage.inc.php:219
 msgid "List computers deploy"
 msgstr "Liste ordinateurs déployé"
 
-#: modules/xmppmaster/infoPackage.inc.php:221
+#: modules/xmppmaster/infoPackage.inc.php:224
 msgid "List computers deploy by group"
 msgstr "Liste des ordinateurs déployés par groupe"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:426
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:432
-msgid "Local File : "
-msgstr "Fichier Local :"
-
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:408
-#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:413
-#, fuzzy
-msgid "Local directory : "
-msgstr "Fichier Local :"
 
 #: modules/xmppmaster/xmppmaster/wakeonlan.php:41
 msgid "Mac address"
 msgstr "Adresse mac"
+
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:42
+msgid "Machine"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/index.php:38
 msgid "My Tasks ["
@@ -225,6 +234,11 @@ msgstr "Tâches planifiées"
 msgid "Quick action list for user %s"
 msgstr "Liste des Actions Rapides pour l'utilisateur %s"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:469
+#, fuzzy
+msgid "Remote Folder"
+msgstr "copie fichier distant"
+
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:88
 msgid "Select a machine"
 msgstr "Sélectionné une machine"
@@ -265,6 +279,20 @@ msgstr "Arrêt Déploiement "
 msgid "Target"
 msgstr "Cible"
 
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:554
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:551
+msgid "The file copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:500
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:498
+msgid "The folder copy has been requested successfully"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/ajaxxmppplugindownload.php:46
+msgid "To"
+msgstr ""
+
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:97
 #: modules/xmppmaster/xmppmaster/ajaxlogsgrpxmpp.php:85
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmpp.php:188
@@ -276,7 +304,7 @@ msgstr "Utilisateur"
 msgid "Wake On Lan"
 msgstr "Réveil réseau"
 
-#: modules/xmppmaster/infoPackage.inc.php:99
+#: modules/xmppmaster/infoPackage.inc.php:102
 msgid "Wake on LAN"
 msgstr "Réveil réseau"
 
@@ -292,7 +320,7 @@ msgstr "XMPP toutes les taches utilisateurs"
 #: modules/xmppmaster/infoPackage.inc.php:54
 #: modules/xmppmaster/infoPackage.inc.php:57
 #: modules/xmppmaster/infoPackage.inc.php:86
-#: modules/xmppmaster/infoPackage.inc.php:96
+#: modules/xmppmaster/infoPackage.inc.php:99
 msgid "XMPP Console"
 msgstr "Console XMPP"
 
@@ -300,8 +328,9 @@ msgstr "Console XMPP"
 msgid "XMPP Custom Quick Action"
 msgstr "XMPP Action Rapide Personnalisée"
 
-#: modules/xmppmaster/xmppmaster/localSidebar.php:36
-msgid "XMPP File manager"
+#: modules/xmppmaster/xmppmaster/localSidebar.php:38
+#, fuzzy
+msgid "XMPP File Manager"
 msgstr "Gestionnaire de fichiers XMPP"
 
 #: modules/xmppmaster/infoPackage.inc.php:51
@@ -321,8 +350,8 @@ msgstr "Explorateur de fichiers XMPP"
 msgid "XMPP files managers"
 msgstr "Gestionnaire de fichiers XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:196
-#: modules/xmppmaster/infoPackage.inc.php:201
+#: modules/xmppmaster/infoPackage.inc.php:199
+#: modules/xmppmaster/infoPackage.inc.php:204
 msgid "XMPP log"
 msgstr "Journaux XMPP"
 
@@ -334,11 +363,15 @@ msgstr "Journaux XMPP"
 msgid "XMPP logs grp"
 msgstr "Groupe Journaux XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:141
+#: modules/xmppmaster/infoPackage.inc.php:96
+msgid "XMPP remote edit configuration file"
+msgstr ""
+
+#: modules/xmppmaster/infoPackage.inc.php:144
 msgid "action deploy quick"
 msgstr "action déployer rapidement"
 
-#: modules/xmppmaster/infoPackage.inc.php:211
+#: modules/xmppmaster/infoPackage.inc.php:214
 msgid "ajax view grp deploy"
 msgstr "groupe de vue ajax déployé"
 
@@ -353,41 +386,52 @@ msgstr "Supprimer Action Rapide Personnalisée"
 msgid "detaildeploy"
 msgstr "Détail du déploiment"
 
-#: modules/xmppmaster/infoPackage.inc.php:178
+#: modules/xmppmaster/infoPackage.inc.php:181
 msgid "quick action Install key"
 msgstr "action rapide install clé"
 
-#: modules/xmppmaster/infoPackage.inc.php:157
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "quick action Inventory"
 msgstr "action rapide inventaire"
 
-#: modules/xmppmaster/infoPackage.inc.php:163
+#: modules/xmppmaster/infoPackage.inc.php:166
 msgid "quick action Restart"
 msgstr "action rapide redémarrer"
 
-#: modules/xmppmaster/infoPackage.inc.php:152
+#: modules/xmppmaster/infoPackage.inc.php:155
 msgid "quick action Wol"
 msgstr "action rapide WOL"
 
-#: modules/xmppmaster/infoPackage.inc.php:173
+#: modules/xmppmaster/infoPackage.inc.php:176
 msgid "quick action change vnc settings"
 msgstr "action rapide changer les paramètres vnc "
 
-#: modules/xmppmaster/infoPackage.inc.php:146
+#: modules/xmppmaster/infoPackage.inc.php:149
 msgid "quick action deploy group"
 msgstr "action déployer rapidement sur un groupe"
 
-#: modules/xmppmaster/infoPackage.inc.php:185
+#: modules/xmppmaster/infoPackage.inc.php:188
 msgid "quick action reversessh for guacamole"
 msgstr "action rapide tunnel ssh Guacamole"
 
-#: modules/xmppmaster/infoPackage.inc.php:168
+#: modules/xmppmaster/infoPackage.inc.php:171
 msgid "quick action shutdown"
 msgstr "action rapide arrêter"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:192
 #: modules/xmppmaster/xmppmaster/consolexmpp.php:108
 msgid "return key to start your order"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:530
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:527
+#, fuzzy
+msgid "to local File"
+msgstr "Fichier Local :"
+
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:474
+#: modules/xmppmaster/xmppmaster/xmppfilesbrowsing.php:473
+msgid "to local folder"
 msgstr ""
 
 #: modules/xmppmaster/infoPackage.inc.php:32
@@ -403,6 +447,14 @@ msgstr "Etat xmppmaster"
 
 #~ msgid "Command result"
 #~ msgstr "Résultat de la commande"
+
+#, fuzzy
+#~ msgid "Copy Remote directory"
+#~ msgstr "copie fichier distant"
+
+#, fuzzy
+#~ msgid "Local directory : "
+#~ msgstr "Fichier Local :"
 
 #~ msgid "Shell command"
 #~ msgstr "Commande Shell"

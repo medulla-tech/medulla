@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 13:58+0100\n"
+"POT-Creation-Date: 2018-03-06 14:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Norwegian Bokmål (Norway) (https://www.transifex.com/siveo/"
@@ -219,7 +219,7 @@ msgstr ""
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:360
+#: modules/base/includes/computers_list.inc.php:369
 msgid "Backup status"
 msgstr ""
 
@@ -381,7 +381,7 @@ msgstr ""
 msgid "Computers : "
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:343
+#: modules/base/includes/computers_list.inc.php:352
 msgid "Computers list"
 msgstr ""
 
@@ -487,7 +487,7 @@ msgstr "Slett en bruker"
 msgid "Delete all user's files"
 msgstr "Slett alle filene til brukeren"
 
-#: modules/base/includes/computers_list.inc.php:397
+#: modules/base/includes/computers_list.inc.php:407
 msgid "Delete computer"
 msgstr ""
 
@@ -543,7 +543,7 @@ msgstr ""
 msgid "Download ACL string"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:128
 msgid "Download file"
 msgstr ""
 
@@ -579,6 +579,11 @@ msgstr "Rediger en bruker"
 #: modules/base/infoPackage.inc.php:321
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
+
+#: modules/base/includes/computers_list.inc.php:115
+#: modules/base/includes/computers_list.inc.php:116
+msgid "Edit configs files"
+msgstr ""
 
 #: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47
 msgid "Edit group"
@@ -814,7 +819,7 @@ msgstr ""
 msgid "Imaging Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:122
+#: modules/base/includes/computers_list.inc.php:127
 msgid "Imaging management"
 msgstr ""
 
@@ -1229,7 +1234,7 @@ msgstr ""
 msgid "Quick Actions Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:128
+#: modules/base/includes/computers_list.inc.php:133
 msgid "Quick action"
 msgstr ""
 
@@ -1253,13 +1258,13 @@ msgstr ""
 msgid "Remote Desktop Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:118
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/base/includes/computers_list.inc.php:131
+#: modules/base/includes/computers_list.inc.php:123
+#: modules/base/includes/computers_list.inc.php:125
+#: modules/base/includes/computers_list.inc.php:136
 msgid "Remote control"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:400
+#: modules/base/includes/computers_list.inc.php:410
 msgid "Remove machine from group"
 msgstr ""
 
@@ -1348,7 +1353,7 @@ msgstr ""
 msgid "Shortcuts"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:126
+#: modules/base/includes/computers_list.inc.php:131
 msgid "Show Profile"
 msgstr ""
 
@@ -1931,15 +1936,15 @@ msgstr ""
 msgid "expert mode"
 msgstr "ekspert modus"
 
-#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:129
 #: modules/base/users/ajaxFilter.php:85
 msgid "extTicket issue"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:115
-#: modules/base/includes/computers_list.inc.php:116
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/base/includes/computers_list.inc.php:121
 msgid "files browsing"
 msgstr ""
 
