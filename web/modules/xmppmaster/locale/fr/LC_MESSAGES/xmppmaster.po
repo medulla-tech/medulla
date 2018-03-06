@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:08+0100\n"
+"POT-Creation-Date: 2018-03-06 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Stephane Pointu <spointu@gmail.com>, 2018\n"
 "Language-Team: French (France) (https://www.transifex.com/siveo/teams/72118/"
@@ -33,7 +33,7 @@ msgstr "Les tâches de tous les utilisateurs"
 msgid "Audit"
 msgstr "Audit"
 
-#: modules/xmppmaster/infoPackage.inc.php:194
+#: modules/xmppmaster/infoPackage.inc.php:199
 msgid "Audit deployment"
 msgstr "Audit déploiement"
 
@@ -157,8 +157,12 @@ msgstr "Modifier une Action Rapide Personnalisée : %s"
 msgid "Edit a Quick Action"
 msgstr "Editer une Action Rapide "
 
-#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:228
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
 msgid "Edition File configuration"
+msgstr ""
+
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:324
+msgid "File :"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/xmppfilesbrowsingne.php:235
@@ -170,19 +174,19 @@ msgstr "Gestionnaire de fichiers"
 msgid "From"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:209
+#: modules/xmppmaster/infoPackage.inc.php:214
 msgid "List all groups of computers"
 msgstr "Liste tous les groupes d'ordinateurs"
 
-#: modules/xmppmaster/infoPackage.inc.php:229
+#: modules/xmppmaster/infoPackage.inc.php:234
 msgid "List computer deploy"
 msgstr "Liste des ordinateurs deployé "
 
-#: modules/xmppmaster/infoPackage.inc.php:219
+#: modules/xmppmaster/infoPackage.inc.php:224
 msgid "List computers deploy"
 msgstr "Liste ordinateurs déployé"
 
-#: modules/xmppmaster/infoPackage.inc.php:224
+#: modules/xmppmaster/infoPackage.inc.php:229
 msgid "List computers deploy by group"
 msgstr "Liste des ordinateurs déployés par groupe"
 
@@ -238,6 +242,10 @@ msgstr "Liste des Actions Rapides pour l'utilisateur %s"
 #, fuzzy
 msgid "Remote Folder"
 msgstr "copie fichier distant"
+
+#: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:324
+msgid "Save Configuration"
+msgstr ""
 
 #: modules/xmppmaster/xmppmaster/deployxmpp.php:88
 msgid "Select a machine"
@@ -350,8 +358,8 @@ msgstr "Explorateur de fichiers XMPP"
 msgid "XMPP files managers"
 msgstr "Gestionnaire de fichiers XMPP"
 
-#: modules/xmppmaster/infoPackage.inc.php:199
 #: modules/xmppmaster/infoPackage.inc.php:204
+#: modules/xmppmaster/infoPackage.inc.php:209
 msgid "XMPP log"
 msgstr "Journaux XMPP"
 
@@ -367,11 +375,11 @@ msgstr "Groupe Journaux XMPP"
 msgid "XMPP remote edit configuration file"
 msgstr ""
 
-#: modules/xmppmaster/infoPackage.inc.php:144
+#: modules/xmppmaster/infoPackage.inc.php:149
 msgid "action deploy quick"
 msgstr "action déployer rapidement"
 
-#: modules/xmppmaster/infoPackage.inc.php:214
+#: modules/xmppmaster/infoPackage.inc.php:219
 msgid "ajax view grp deploy"
 msgstr "groupe de vue ajax déployé"
 
@@ -386,35 +394,35 @@ msgstr "Supprimer Action Rapide Personnalisée"
 msgid "detaildeploy"
 msgstr "Détail du déploiment"
 
-#: modules/xmppmaster/infoPackage.inc.php:181
+#: modules/xmppmaster/infoPackage.inc.php:186
 msgid "quick action Install key"
 msgstr "action rapide install clé"
 
-#: modules/xmppmaster/infoPackage.inc.php:160
+#: modules/xmppmaster/infoPackage.inc.php:165
 msgid "quick action Inventory"
 msgstr "action rapide inventaire"
 
-#: modules/xmppmaster/infoPackage.inc.php:166
+#: modules/xmppmaster/infoPackage.inc.php:171
 msgid "quick action Restart"
 msgstr "action rapide redémarrer"
 
-#: modules/xmppmaster/infoPackage.inc.php:155
+#: modules/xmppmaster/infoPackage.inc.php:160
 msgid "quick action Wol"
 msgstr "action rapide WOL"
 
-#: modules/xmppmaster/infoPackage.inc.php:176
+#: modules/xmppmaster/infoPackage.inc.php:181
 msgid "quick action change vnc settings"
 msgstr "action rapide changer les paramètres vnc "
 
-#: modules/xmppmaster/infoPackage.inc.php:149
+#: modules/xmppmaster/infoPackage.inc.php:154
 msgid "quick action deploy group"
 msgstr "action déployer rapidement sur un groupe"
 
-#: modules/xmppmaster/infoPackage.inc.php:188
+#: modules/xmppmaster/infoPackage.inc.php:193
 msgid "quick action reversessh for guacamole"
 msgstr "action rapide tunnel ssh Guacamole"
 
-#: modules/xmppmaster/infoPackage.inc.php:171
+#: modules/xmppmaster/infoPackage.inc.php:176
 msgid "quick action shutdown"
 msgstr "action rapide arrêter"
 
