@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:48+0100\n"
+"POT-Creation-Date: 2018-03-06 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2017\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/"
@@ -18,13 +18,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/viewFileVersions.php:47
-#: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:242
-msgid "%A, %B %e %Y"
-msgstr "%A, %B %e %Y"
 
 #: modules/backuppc/backuppc/hostStatus.php:302
 #, php-format
@@ -843,3 +836,6 @@ msgstr "在"
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "至"
+
+#~ msgid "%A, %B %e %Y"
+#~ msgstr "%A, %B %e %Y"
