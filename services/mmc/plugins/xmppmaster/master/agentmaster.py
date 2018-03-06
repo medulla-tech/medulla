@@ -115,8 +115,15 @@ def callshutdownbymaster(to, time, msg):
 def callvncchangepermsbymaster(to, askpermission):
   return ObjectXmpp().callvncchangepermsbymaster( to, askpermission)
 
+##################### call synchrone iq##########################
 def callremotefile( jidmachine, currentdir=""):
     return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefile", "data": currentdir }, 4)
+
+def calllistremotefileedit(jidmachine):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "listremotefileedit", "data": "" }, 6)
+
+def callremotefileeditaction(jidmachine, data):
+    return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotefileeditaction", "data": data }, 6)
 
 def callremotecommandshell( jidmachine, command="", timeout = 10):
     return ObjectXmpp().iqsendpulse( jidmachine, { "action" : "remotecommandshell", "data": command, "timeout" : timeout }, timeout)
@@ -126,7 +133,7 @@ def calllocalfile(currentdir=""):
 
 def callInstallKey( jidAM, jidARS):
     return ObjectXmpp().callInstallKey( jidAM, jidARS)
-
+##################################################################
 
 class XmppCommandDiffered:
     """
@@ -1813,7 +1820,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                     mydata = dataobj['data']
                 if not dataobj.has_key('sessionid'):
                     dataobj['sessionid'] = "absent"
-                try:
+                if not 'ret' in dataobj:
+                    dataobj['ret'] = 0
+                try: 
                     logging.debug("Calling plugin %s from  %s"%( dataobj['action'], msg['from']))
                     msg['body'] = dataobj
                     del dataobj['data']

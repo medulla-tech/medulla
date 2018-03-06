@@ -32,14 +32,15 @@ import json
 from pulse2.database.xmppmaster import XmppMasterDatabase
 from mmc.plugins.msc.database import MscDatabase
 
-from master.lib.utils import name_random
+from master.lib.utils import name_random, simplecommand, file_get_contents
 from  xmppmaster import *
 from mmc.plugins.xmppmaster.master.agentmaster import XmppSimpleCommand, getXmppConfiguration,\
                                                       callXmppFunction, ObjectXmpp, callXmppPlugin,\
                                                       callInventory, callrestartbymaster,\
                                                       callshutdownbymaster, send_message_json,\
                                                       callvncchangepermsbymaster, callInstallKey,\
-                                                      callremotefile, calllocalfile, callremotecommandshell
+                                                      callremotefile, calllocalfile, callremotecommandshell,\
+                                                      calllistremotefileedit, callremotefileeditaction
 VERSION = "1.0.0"
 APIVERSION = "4:1:3"
 
@@ -420,6 +421,17 @@ def localfile(currentdir):
 
 def remotefile( currentdir, jidmachine):
     return callremotefile(jidmachine, currentdir)
+
+def listremotefileedit(jidmachine):
+    aa = calllistremotefileedit(jidmachine)
+    objout = json.loads(aa)
+    print objout['data']['result']
+    return objout['data']['result']
+
+def remotefileeditaction(jidmachine, data):
+    resultjsonstr = callremotefileeditaction(jidmachine, data)
+    objout = json.loads(resultjsonstr)
+    return objout['data']
 
 def getcontentfile(pathfile, deletefile):
     if os.path.isfile(pathfile):

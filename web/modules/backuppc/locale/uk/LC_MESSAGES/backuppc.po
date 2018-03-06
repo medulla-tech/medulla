@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-02-27 14:48+0100\n"
+"POT-Creation-Date: 2018-03-06 14:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2018\n"
 "Language-Team: Ukrainian (https://www.transifex.com/siveo/teams/72118/uk/)\n"
@@ -18,13 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
-#: modules/backuppc/backuppc/ajaxDownloadsTable.php:72
-#: modules/backuppc/backuppc/viewFileVersions.php:47
-#: modules/backuppc/backuppc/BrowseBackups.php:56
-#: modules/backuppc/backuppc/hostSummary.php:242
-msgid "%A, %B %e %Y"
-msgstr "%A, %B %e %Y"
 
 #: modules/backuppc/backuppc/hostStatus.php:302
 #, php-format
@@ -854,6 +847,9 @@ msgstr "у"
 #: modules/backuppc/backuppc/edit.php:211
 msgid "to"
 msgstr "до"
+
+#~ msgid "%A, %B %e %Y"
+#~ msgstr "%A, %B %e %Y"
 
 #, fuzzy
 #~ msgid "Start Incr Backup"
