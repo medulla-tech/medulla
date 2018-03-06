@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with MMC; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
- *  file xmppmaster/remoteeditorconfigurationlist.php
+ *  file xmppmaster/remoteeditorconfiguration.php
  */
 ?>
 <style type='text/css'>
@@ -221,13 +221,13 @@ require("modules/base/computers/localSidebar.php");
 require("graph/navbar.inc.php");
 require_once("modules/xmppmaster/includes/xmlrpc.php");
 
-extract($_GET);
+
 $uuid  = isset($_GET['objectUUID']) ? $_GET['objectUUID'] : ( isset($_POST['objectUUID']) ? $_POST['objectUUID'] : "");
 $machine  = isset($_POST['Machine']) ? $_POST['Machine'] : xmlrpc_getjidMachinefromuuid( $uuid );
 $ma = xmlrpc_getMachinefromjid($machine);
 
-
-$p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']." : File [".$name.']' );
+$tab = explode("/",$machine);
+$p = new PageGenerator(_T("Edition File configuration", 'xmppmaster')." on ". $ma['hostname']);
 $p->setSideMenu($sidemenu);
 $p->display();
 
@@ -240,23 +240,22 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
         echo "fin de script php sur error boite de dialog todo";
     }
     //print_r($result['result']);
-
 ?>
 
 <form method="post" id="Form">
     <table cellspacing="0">
         <tr>
             <td class="label" width="40%" style = "text-align: right;">
-                <!--Select a config file-->
+                Select a config file
             </td>
             <td>
-               <!-- <select name="namefileconf" id="namefileconf">
+                <select name="namefileconf" id="namefileconf">
                     <?php
                         foreach($result['result']  as $dd){
                             printf ('<option value="%s" >%s</option>', $dd, $dd );
                         }
                     ?>
-                </select>-->
+                </select>
             </td>
         </tr>
         </table>
@@ -276,24 +275,23 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
                        box-shadow: 6px 6px 0px #6E6E6E;"
     ></textarea>
     <br>
-
     <button style="color:#FFFFFF;background-color: #000000;" id="savefile" class="btn btn-small">save file</button>
 </form>
-    <!-- dialog box Transfert directory -->
-    <div id="dialog-confirm-save-conf" title="Confirm Saving Configuration">
-        <div>
-            <span style="float:left; margin:12px 12px 20px 0;">
-                <span id="dialogmsg">
+        <!-- dialog box Transfert directory -->
+        <div id="dialog-confirm-save-conf" title="Confirm Saving Configuration">
+            <div>
+                <span style="float:left; margin:12px 12px 20px 0;">
+                    <span id="dialogmsg">
+                    </span>
                 </span>
-            </span>
+            </div>
         </div>
-    </div>
 
 <script type="text/javascript">
     function save(){
         jQuery.post( "modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php",
                     {
-                        "file" : "<? echo $name; ?>",
+                        "file" : jQuery('#namefileconf option:selected').text(),
                         "action" : 'save',
                         "machine" : "<? echo $ma['jid']; ?>",
                         'content' : jQuery('#resultat').val()
@@ -307,25 +305,25 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
         //valeurselect = jQuery('#namefileconf option:selected').text()
         jQuery.post( "modules/xmppmaster/xmppmaster/ajaxxmppremoteaction.php",
             {
-                "file"      :    param,
-                "action"    : 'loadfile',
-                "machine"   : "<? echo $ma['jid']; ?>"
+                "file" : param,
+                "action" : 'loadfile',
+                "machine" : "<? echo $ma['jid']; ?>"
             },
             function(data) {
                 jQuery('#resultat').text(data['result']);
             });
     }
 
-//     jQuery( '#namefileconf').change(function() {
-//         loadconffile(jQuery('#namefileconf option:selected').text());
-//     });
+    jQuery( '#namefileconf').change(function() {
+        loadconffile(jQuery('#namefileconf option:selected').text());
+    });
 
     jQuery( "#savefile" ).click(function(event) {
         event.preventDefault();
         msg="<p><b>" +
                 "<?php echo _T("Save Configuration", 'xmppmaster')."</p></b><p style=' margin-left: 30px;' >"._T("File :", 'xmppmaster'); ?>"+
             "</p>"+
-            "<p style=' margin-left: 60px;' >" + "<? echo $name; ?>" + "</p>"
+            "<p style=' margin-left: 60px;' >" + jQuery('#namefileconf').val() + "</p>"
         jQuery("#dialogmsg").html(msg);
 
         jQuery( function() {
@@ -362,69 +360,7 @@ include_once('modules/pulse2/includes/menu_actionaudit.php');
     jQuery( document ).ready(function() {
         var md5 = "";
         var modification = false;
-        
-        loadconffile("<? echo $name; ?>");
+        loadconffile(jQuery('#namefileconf option:selected').text());
     });
 
-//"result" : "error create file : name file missing", "error" : True , 'numerror' : 129
 </script>
-    
-<?php
-// echo "<br><br><br>";
-// echo "<pre>";
-//     echo "Nombre de fichiers de configuration trouver " . count($result)."fichier<br>";
-//     echo "list fichier de configuration<br>";
-//     print_r($result);
-// echo "</pre>";
-// 
-// echo "<pre>";
-//     echo "<br>load file configuration $result[0]<br>";
-//     $data = array('action' => 'loadfile', 'file' => $result[0]);
-//     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-//     print_r($result);
-// echo "</pre>";
-// 
-// #create file configuration
-// echo "<pre>";
-//     echo "creation file de configuration dede.ini<br>";
-//     $data = array('action' => 'create', 'file' => 'dede.ini', 'content' => "il fait beau");
-//     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-//     print_r($result);
-// echo "</pre>";
-// 
-// $result = xmlrpc_listremotefileedit($ma['jid']);
-// echo "<pre>";
-//     echo "Nombre de fichiers de configuration trouver maintenant " . count($result)."fichier<br>";
-//     echo "list fichier de configuration<br>";
-//     print_r($result);
-// echo "</pre>";
-// 
-// echo "<pre>";
-//     echo "<br>load file configuration dede.ini<br>";
-//     $data = array('action' => 'loadfile', 'file' => 'dede.ini');
-//     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-//     print_r($result);
-// echo "</pre>";
-// 
-// echo "<pre>";
-//     echo "<br>save file configuration dede.ini<br>";
-//     $data = array('action' => 'save', 'file' => 'dede.ini', 'content' => "non il pleut");
-//     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-//     print_r($result);
-// echo "</pre>";
-// 
-// echo "<pre>";
-//     echo "<br>nouveau contenue de dede.ini<br>";
-//     $data = array('action' => 'loadfile', 'file' => 'dede.ini');
-//     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-//     print_r($result);
-// echo "</pre>";
-// 
-// // echo "<pre>";
-// //     echo "<br>list config file <br>";
-// //     $data = array('action' => 'listconfigfile');
-// //     $result = xmlrpc_remotefileeditaction($ma['jid'], $data);
-// //     print_r($result);
-// // echo "</pre>";
-
-?>

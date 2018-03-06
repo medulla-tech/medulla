@@ -71,6 +71,10 @@ $submod->addPage($page);
 $page = new Page("", _T('delete Custom Quick Action', 'xmppmaster'));
 $submod->addPage($page);
 
+$page = new Page("ajaxFilterfileconf");
+$page->setFile("modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php");
+$page->setOptions(array("visible"=>False, "AJAX" =>True));
+$submod->addPage($page);
 
 $page = new Page("deleteqa",_T("Delete Custom Quick Action", 'pkgs'));
 $page->setFile("modules/xmppmaster/xmppmaster/removeqa.php", array("noHeader"=>True,"visible"=>False));
@@ -94,6 +98,13 @@ $page = new Page("xmppfilesbrowsingne", _T('XMPP browser file', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("remoteeditorconfiguration", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$submod->addPage($page);
+
+
+$page = new Page("remoteeditorconfigurationlist", _T('XMPP remote edit configuration file', 'xmppmaster'));
+$submod->addPage($page);
+
+$page = new Page("listfichierconf", _T('XMPP list config files', 'xmppmaster'));
 $submod->addPage($page);
 
 $page = new Page("ActionQuickconsole", _T('XMPP Console', 'xmppmaster'));
