@@ -172,8 +172,6 @@ function encodeurl(){
                     "|" + jQuery('#criteriasearch1 option:selected').val() +
                     "|" + jQuery('#criteriasearch2 option:selected').val() +
                     "|" + jQuery('#criteriasearch3 option:selected').val();
-                    //+
-                    //"|" + jQuery('#criteriasearch4 option:selected').val();
 
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
@@ -212,7 +210,6 @@ function encodeurl(){
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
 
@@ -362,19 +359,6 @@ $modules3->setElementsVal($typecritereval);
                 <th style="width: 12%;">date</th>
                 <th style="width: 7%;">user</th>
                 <th style="width: 7%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-        -->
                 <th>text</th>
             </tr>
         </thead>

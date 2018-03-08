@@ -187,7 +187,6 @@ class SelectItemlabeltitle extends SelectItem {
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
     function searchlogs(url){
@@ -274,19 +273,6 @@ $modules->setElementsVal($typecritereval);
                 <th style="width: 12%;">date</th>
                 <th style="width: 8%;">user</th>
                 <th style="width: 6%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th>
-                <th style="width: 6%;">sessionname</th>
-        -->
                 <th>text</th>
             </tr>
         </thead>

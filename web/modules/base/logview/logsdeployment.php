@@ -188,7 +188,6 @@ function xwwwfurlenc(srcjson){
     jQuery(function(){
         jQuery("p").click(function(){
             searchlogs( encodeurl());
-        //jQuery('#tablelog').DataTable().ajax.reload(null, false).draw();
         });
     });
 
@@ -211,28 +210,12 @@ function searchlogs(url){
                             .load();
     }
 
-//     setInterval( function () {
-//         searchlogs( encodeurl());
-//     }, 30000 );
-
-
     jQuery(function(){
         searchlogs("modules/base/logview/ajax_Data_Logs.php?start_date=&end_date=&type=&action=&module=<?php echo $filterlogs; ?>%7CNone&user=&how=&who=&why=&headercolumn=<?php echo $headercolumn; ?>")
     });
     </script>
 
 <?php
-// { extend: 'pdf',
-//             className: 'btn btn-primary',
-//             text: 'Save current page',
-//             exportOptions: {
-//                 modifier: {
-//                     page: 'current'
-//                 }
-//             }
-//         }
-
-
 
 $typecritere  =        array(
                                         _('Deployment Transfert'),
@@ -312,17 +295,6 @@ $modules2->setElementsVal($typecritereval);
                 <th style="width: 8%;">date</th>
                 <th style="width: 8%;">user</th>
                 <th style="width: 6%;">who</th>
-         <!--
-                <th style="width: 6%;">type</th>
-                <th style="width: 6%;">action</th>
-                <th style="width: 6%;">module</th>
-
-                <th style="width: 6%;">how</th>
-
-                <th style="width: 6%;">why</th>
-
-                <th style="width: 6%;">priority</th>
-                <th style="width: 6%;">touser</th> -->
                 <th style="width: 6%;">sessionname</th>
 
                 <th>text</th>
