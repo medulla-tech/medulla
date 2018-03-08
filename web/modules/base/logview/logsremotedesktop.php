@@ -238,7 +238,7 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "critere search");
+$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
