@@ -292,12 +292,12 @@ $modules2->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 8%;">date</th>
-                <th style="width: 8%;">user</th>
-                <th style="width: 6%;">who</th>
-                <th style="width: 6%;">sessionname</th>
+                <th style="width: 8%;"><?php echo _('date'); ?></th>
+                <th style="width: 8%;"><?php echo _('user'); ?></th>
+                <th style="width: 6%;"><?php echo _('who'); ?></th>
+                <th style="width: 6%;"><?php echo _('sessionname'); ?></th>
 
-                <th>text</th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 

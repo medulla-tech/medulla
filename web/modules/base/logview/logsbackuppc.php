@@ -303,10 +303,10 @@ $modules2->setElementsVal($typecritereval);
 <table id="tablelog" width="100%" border="1" cellspacing="0" cellpadding="1" class="listinfos">
         <thead>
             <tr>
-                <th style="width: 12%;">date</th>
-                <th style="width: 7%;">user</th>
-                <th style="width: 7%;">who</th>
-                <th>text</th>
+                <th style="width: 12%;"><?php echo _('date'); ?></th>
+                <th style="width: 7%;"><?php echo _('user'); ?></th>
+                <th style="width: 7%;"><?php echo _('who'); ?></th>
+                <th><?php echo _('text'); ?></th>
             </tr>
         </thead>
 
