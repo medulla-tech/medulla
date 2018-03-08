@@ -149,7 +149,7 @@ class SelectItemlabeltitle extends SelectItem {
     var filterlogs = <?php echo "'$filterlogs'";?>;
 
     function encodeurl(){
-        var critere = filterlogs + "|" + jQuery('#criterionssearch option:selected').val()+ "|" + jQuery('#criterionsdetail option:selected').val();
+        var critere = filterlogs + "|" + jQuery('#criteriasearch option:selected').val()+ "|" + jQuery('#criteriadetail option:selected').val();
         uri = "modules/base/logview/ajax_Data_Logs.php"
         //QuickAction
         var param = {
@@ -238,7 +238,7 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'), "search criteria");
+$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);

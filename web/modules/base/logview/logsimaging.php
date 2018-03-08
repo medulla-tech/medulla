@@ -168,12 +168,12 @@ var filterlogs = <?php echo "'$filterlogs'";?>;
 
 function encodeurl(){
     var critere = filterlogs +
-                    "|" + jQuery('#criterionssearch option:selected').val() +
-                    "|" + jQuery('#criterionssearch1 option:selected').val() +
-                    "|" + jQuery('#criterionssearch2 option:selected').val() +
-                    "|" + jQuery('#criterionssearch3 option:selected').val();
+                    "|" + jQuery('#criteriasearch option:selected').val() +
+                    "|" + jQuery('#criteriasearch1 option:selected').val() +
+                    "|" + jQuery('#criteriasearch2 option:selected').val() +
+                    "|" + jQuery('#criteriasearch3 option:selected').val();
                     //+
-                    //"|" + jQuery('#criterionssearch4 option:selected').val();
+                    //"|" + jQuery('#criteriasearch4 option:selected').val();
 
     uri = "modules/base/logview/ajax_Data_Logs.php"
     //QuickAction
@@ -308,27 +308,27 @@ $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
-$modules = new SelectItemlabeltitle("criterionssearch", "criterions", "search criteria");
+$modules = new SelectItemlabeltitle("criteriasearch", "criteria", "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modules1 = new SelectItemlabeltitle("criterionssearch1", "criterions", "search criteria");
+$modules1 = new SelectItemlabeltitle("criteriasearch1", "criteria", "search criteria");
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criterionssearch2", "criterions", "search criteria");
+$modules2 = new SelectItemlabeltitle("criteriasearch2", "criteria", "search criteria");
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
 
-$modules3 = new SelectItemlabeltitle("criterionssearch3", "criterions", "search criteria");
+$modules3 = new SelectItemlabeltitle("criteriasearch3", "criteria", "search criteria");
 $modules3->setElements($typecritere);
 $modules3->setSelected("None");
 $modules3->setElementsVal($typecritereval);
 
-// $modules4 = new SelectItemlabeltitle("criterionssearch4", "criterions", "search criteria");
+// $modules4 = new SelectItemlabeltitle("criteriasearch4", "criteria", "search criteria");
 // $modules4->setElements($typecritere);
 // $modules4->setSelected("None");
 // $modules4->setElementsVal($typecritereval);
