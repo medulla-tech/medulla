@@ -120,7 +120,7 @@ if (has_audit_working()) {
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
 //  if (isLogViewEnabled()) {
     $submod = new SubModule("logview");
-    $submod->setDescription(_("History"));
+    $submod->setDescription(_("History", "logview"));
     //$submod = new ExpertSubModule("logview", _("History"));
     $submod->setVisibility(True);
     $submod->setImg('modules/base/graph/navbar/logview');
