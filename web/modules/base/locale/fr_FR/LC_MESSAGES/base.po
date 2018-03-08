@@ -936,7 +936,7 @@ msgstr "Partitions sur le disque"
 
 #: modules/base/infoPackage.inc.php:123
 msgid "History"
-msgstr ""
+msgstr "Journaux"
 
 #: graph/navbar.inc.php:106 modules/base/main/default.php:89
 #: modules/base/infoPackage.inc.php:44
