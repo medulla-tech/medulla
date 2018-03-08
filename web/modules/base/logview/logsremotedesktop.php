@@ -197,10 +197,10 @@ class SelectItemlabeltitle extends SelectItem {
                                 "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                                 "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                                 buttons: [
-                                { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-                                { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-                                { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-                                { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+                                { extend: 'copy', className: 'btn btn-primary', text: _('Copy to clipboard', logs),},
+                                { extend: 'csv', className: 'btn btn-primary',  text: _('Save to csv file', logs) },
+                                { extend: 'excel', className: 'btn btn-primary',  text: _('Save to Excel file', logs) },
+                                { extend: 'print', className: 'btn btn-primary',  text: _('Print logs', logs)  }
                                 ]
                             } )
                             .ajax.url(
@@ -224,10 +224,10 @@ Remote_desktop | Reverse SSH stop | Remote desktop control request | ARS
 */
 
 $typecritere  =        array(
-                                        _T('Remote desktop service','logs'),
-                                        _T('Remote desktop control request','logs'),
-                                        _T('Reverse SSH','logs'),
-                                        _T('no criteria selected','logs'));
+                                        _('Remote desktop service'),
+                                        _('Remote desktop control request'),
+                                        _('Reverse SSH'),
+                                        _('no criteria selected'));
 
 $typecritereval  =        array(
                                         'Service',
@@ -238,7 +238,7 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
+$modules = new SelectItemlabeltitle("criteriasearch", _('criteria'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
@@ -247,8 +247,6 @@ $modules->setElementsVal($typecritereval);
 <style>
 
 .inline { display : inline; }
-
-}
 
 </style>
 

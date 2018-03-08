@@ -130,7 +130,7 @@ class SelectItemlabeltitle extends SelectItem {
 }
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_T("All Logs",'logs'));
+    $p = new PageGenerator(_("All Logs"));
     $p->setSideMenu($sidemenu);
     $p->display();
     $filterlogs = "";
@@ -192,10 +192,10 @@ jQuery(function(){
                             "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                             "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                             buttons: [
-                            { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-                            { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-                            { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-                            { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+                            { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard'); ?>},
+                            { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file'); ?> },
+                            { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file'); ?> },
+                            { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs'); ?> }
                             ]
                         } )
                             .ajax.url(
@@ -213,13 +213,13 @@ jQuery(function(){
 <?php
 
 $typemodule  =        array(
-                                        _T('deployment','logs'),
-                                        _T('quickaction','logs'),
-                                        _T('imaging','logs'),
-                                        _T('backup','logs'),
-                                        _T('inventory','logs'),
-                                        _T('Packaging','logs'),
-                                        _T('None','logs'));
+                                        _('deployment'),
+                                        _('quickaction'),
+                                        _('imaging'),
+                                        _('backup'),
+                                        _('inventory'),
+                                        _('Packaging'),
+                                        _('None'));
 
 $typemoduleval =        array(
                                         'deployment',
@@ -231,76 +231,76 @@ $typemoduleval =        array(
                                         'None');
                                         
 $typecritere  =        array(
-                                        _T('Backup configuration','logs'),
-                                        _T('Full backup requested','logs'),
-                                        _T('Incremental backup requested','logs'),
-                                        _T('Reverse SSH start','logs'),
-                                        _T('Reverse SSH stop','logs'),
-                                        _T('Restore requested','logs'),
-                                        _T('Manual','logs'),
-                                        _T('Planned','logs'),
-                                        _T('Restore','logs'),
-                                        _T('User','logs'),
-                                        _T('BackupPC','logs'),
+                                        _('Backup configuration'),
+                                        _('Full backup requested'),
+                                        _('Incremental backup requested'),
+                                        _('Reverse SSH start'),
+                                        _('Reverse SSH stop'),
+                                        _('Restore requested'),
+                                        _('Manual'),
+                                        _('Planned'),
+                                        _('Restore'),
+                                        _('User'),
+                                        _('BackupPC'),
                                         'Agent Relay Server',
-                                        _T('Deployment Transfert','logs'),
-                                        _T('Deployment Execution','logs'),
-                                        _T('Deployment Download','logs'),
-                                        _T('Deployment Notify','logs'),
-                                        _T('Deployment Error','logs'),
-                                        _T('Deployment Terminate','logs'),
-                                        _T('WOL sent','logs'),
-                                        _T('Menu change','logs'),
-                                        _T('Post-imaging Script Creation','logs'),
-                                        _T('Master Creation','logs'),
-                                        _T('Master Edition','logs'),
-                                        _T('Master Deletion','logs'),
-                                        _T('Master Deployment Multicast','logs'),
-                                        _T('Backup Image creation','logs'),
-                                        _T('Image Deployment','logs'),
-                                        _T('WOL','logs'),
-                                        _T('Image Deletion','logs'),
+                                        _('Deployment Transfert'),
+                                        _('Deployment Execution'),
+                                        _('Deployment Download'),
+                                        _('Deployment Notify'),
+                                        _('Deployment Error'),
+                                        _('Deployment Terminate'),
+                                        _('WOL sent'),
+                                        _('Menu change'),
+                                        _('Post-imaging Script Creation'),
+                                        _('Master Creation'),
+                                        _('Master Edition'),
+                                        _('Master Deletion'),
+                                        _('Master Deployment Multicast'),
+                                        _('Backup Image creation'),
+                                        _('Image Deployment'),
+                                        _('WOL'),
+                                        _('Image Deletion'),
                                         'Master',
-                                        _T('Menu'),
-                                        _T('Server'),
-                                        _T('Manual'),
-                                        _T('Multicast'),
-                                        _T('Start'),
-                                        _T('Postinstall'),
-                                        _T('Configuration'),
-                                        _T('Clone'),
+                                        _('Menu'),
+                                        _('Server'),
+                                        _('Manual'),
+                                        _('Multicast'),
+                                        _('Start'),
+                                        _('Postinstall'),
+                                        _('Configuration'),
+                                        _('Clone'),
                                         'Iso',
                                         'Add',
-                                        _T('Edit'),
-                                        _T('Group'),
-                                        _T('Delete'),
-                                        _T('Service'),
-                                        _T('Image'),
-                                        _T('Quick Action'),
-                                        _T('Inventory reception','logs'),
-                                        _T('Inventory requested','logs'),
-                                        _T('Inventory Deployment','logs'),
-                                        _T('Inventory Planned','logs'),
-                                        _T('Inventory Quick Action','logs'),
-                                        _T('Inventory User','logs'),
-                                        _T('Inventory Machine','logs'),
-                                        _T('Inventory Master','logs'),
-                                        _T('Inventory New machine','logs'),
-                                        _T('Package creation','logs'),
-                                        _T('Package edition','logs'),
-                                        _T('Package deletion','logs'),
-                                        _T('User','logs'),
-                                        _T('Package','logs'),
-                                        _T('Files','logs'),
-                                        _T('List','logs'),
-                                        _T('Manual','logs'),
-                                        _T('Remove','logs'),
-                                        _T('Delete','logs'),
-                                        _T('Remote desktop service','logs'),
-                                        _T('Remote desktop control request','logs'),
-                                        _T('Reverse SSH','logs'),
-                                        _T('no criteria selected','logs'),
-                                        _T('no criteria selected','logs'));
+                                        _('Edit'),
+                                        _('Group'),
+                                        _('Delete'),
+                                        _('Service'),
+                                        _('Image'),
+                                        _('Quick Action'),
+                                        _('Inventory reception'),
+                                        _('Inventory requested'),
+                                        _('Inventory Deployment'),
+                                        _('Inventory Planned'),
+                                        _('Inventory Quick Action'),
+                                        _('Inventory User'),
+                                        _('Inventory Machine'),
+                                        _('Inventory Master'),
+                                        _('Inventory New machine'),
+                                        _('Package creation'),
+                                        _('Package edition'),
+                                        _('Package deletion'),
+                                        _('User'),
+                                        _('Package'),
+                                        _('Files'),
+                                        _('List'),
+                                        _('Manual'),
+                                        _('Remove'),
+                                        _('Delete'),
+                                        _('Remote desktop service'),
+                                        _('Remote desktop control request'),
+                                        _('Reverse SSH'),
+                                        _('no criteria selected'),
+                                        _('no criteria selected'));
 
 $typecritereval  =        array(
                                         'Backup configuration',
@@ -377,17 +377,17 @@ $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
-$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'),  _T('search criteria','logs'));
+$modules = new SelectItemlabeltitle("criteriasearch", _('criteria'),  _('search criteria'));
 $modules->setElements($typemodule);
 $modules->setSelected("None");
 $modules->setElementsVal($typemoduleval);
 
-$modules1 = new SelectItemlabeltitle("criteriasearch1", _T('criteria','logs'), _T('search criteria','logs'));
+$modules1 = new SelectItemlabeltitle("criteriasearch1", _('criteria'), _('search criteria'));
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criteriasearch2", _T('criteria','logs'), _T('search criteria','logs'));
+$modules2 = new SelectItemlabeltitle("criteriasearch2", _('criteria'), _('search criteria'));
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);

@@ -207,10 +207,10 @@ class SelectItemlabeltitle extends SelectItem {
         "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
         "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
         buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-        { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-        { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs)},
-        { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+        { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard'); ?>},
+        { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file'); ?> },
+        { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file'); ?>},
+        { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs'); ?>}
         ]
     } )
                             .ajax.url(
@@ -227,16 +227,16 @@ class SelectItemlabeltitle extends SelectItem {
 <?php
 
 $typecritere  =        array(
-                                        _T('Inventory reception','logs'),
-                                        _T('Inventory requested','logs'),
-                                        _T('Inventory Deployment','logs'),
-                                        _T('Inventory Planned','logs'),
-                                        _T('Inventory Quick Action','logs'),
-                                        _T('Inventory User','logs'),
-                                        _T('Inventory Machine','logs'),
-                                        _T('Inventory Master','logs'),
-                                        _T('Inventory New machine','logs'),
-                                        _T('no criteria selected','logs'));
+                                        _('Inventory reception'),
+                                        _('Inventory requested'),
+                                        _('Inventory Deployment'),
+                                        _('Inventory Planned'),
+                                        _('Inventory Quick Action'),
+                                        _('Inventory User'),
+                                        _('Inventory Machine'),
+                                        _('Inventory Master'),
+                                        _('Inventory New machine'),
+                                        _('no criteria selected'));
 
 $typecritereval  =        array(
                                         'reception',
@@ -255,17 +255,17 @@ $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
 
-$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), _T('search criteria','logs'));
+$modules = new SelectItemlabeltitle("criteriasearch", _('criteria'), _('search criteria'));
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modules1 = new SelectItemlabeltitle("criteriasearch1", _T('criteria','logs'),  _T('search criteria','logs'));
+$modules1 = new SelectItemlabeltitle("criteriasearch1", _('criteria'),  _('search criteria'));
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criteriasearch2", _T('criteria','logs'),  _T('search criteria','logs'));
+$modules2 = new SelectItemlabeltitle("criteriasearch2", _('criteria'),  _('search criteria'));
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
