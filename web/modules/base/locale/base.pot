@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-08 16:02+0100\n"
+"POT-Creation-Date: 2018-03-08 16:26+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -211,6 +211,46 @@ msgstr ""
 #: modules/base/logview/logsinventory.php:262
 #: modules/base/logview/logsinventory.php:267
 msgid "search criteria"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:306 modules/base/logview/index.php:424
+#: modules/base/logview/logspackaging.php:303
+#: modules/base/logview/logsdeployment.php:295
+#: modules/base/logview/logsquickaction.php:293
+#: modules/base/logview/logsremotedesktop.php:273
+#: modules/base/logview/logsinventory.php:304
+#: modules/base/logview/logsimaging.php:359
+msgid "date"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:307 modules/base/logview/index.php:425
+#: modules/base/logview/logspackaging.php:304
+#: modules/base/logview/logsdeployment.php:296
+#: modules/base/logview/logsquickaction.php:294
+#: modules/base/logview/logsremotedesktop.php:274
+#: modules/base/logview/logsinventory.php:305
+#: modules/base/logview/logsimaging.php:360
+msgid "user"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:308 modules/base/logview/index.php:426
+#: modules/base/logview/logspackaging.php:305
+#: modules/base/logview/logsdeployment.php:297
+#: modules/base/logview/logsquickaction.php:295
+#: modules/base/logview/logsremotedesktop.php:275
+#: modules/base/logview/logsinventory.php:306
+#: modules/base/logview/logsimaging.php:361
+msgid "who"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:309 modules/base/logview/index.php:427
+#: modules/base/logview/logspackaging.php:306
+#: modules/base/logview/logsdeployment.php:300
+#: modules/base/logview/logsquickaction.php:296
+#: modules/base/logview/logsremotedesktop.php:276
+#: modules/base/logview/logsinventory.php:307
+#: modules/base/logview/logsimaging.php:362
+msgid "text"
 msgstr ""
 
 #: modules/base/logview/index.php:133
@@ -507,6 +547,10 @@ msgstr ""
 
 #: modules/base/logview/logsdeployment.php:136
 msgid "Deployment Logs"
+msgstr ""
+
+#: modules/base/logview/logsdeployment.php:298
+msgid "sessionname"
 msgstr ""
 
 #: modules/base/logview/logsquickaction.php:140
