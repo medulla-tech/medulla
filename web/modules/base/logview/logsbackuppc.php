@@ -142,7 +142,7 @@ class SelectItemlabeltitle extends SelectItem {
 }
 
 // ------------------------------------------------------------------------------------------------
-    $p = new PageGenerator(_("Backup Logs",'logs'));
+    $p = new PageGenerator(_T("Backup Logs",'logs'));
     $p->setSideMenu($sidemenu);
     $p->display();
     $filterlogs = "Backup";
@@ -205,10 +205,10 @@ jQuery(function(){
                             "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                             "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                             buttons: [
-                            { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard', logs); ?> },
-                            { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file', logs); ?> },
-                            { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file', logs); ?> },
-                            { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs', logs); ?>  }
+                            { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
+                            { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
+                            { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
+                            { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
                             ]
                         } )
                             .ajax.url(
@@ -226,19 +226,19 @@ jQuery(function(){
 <?php
 
 $typecritere  =        array(
-                                        _('Backup configuration','logs'),
-                                        _('Full backup requested','logs'),
-                                        _('Incremental backup requested','logs'),
-                                        _('Reverse SSH start','logs'),
-                                        _('Reverse SSH stop','logs'),
-                                        _('Restore requested','logs'),
-                                        _('Manual','logs'),
-                                        _('Planned','logs'),
-                                        _('Restore','logs'),
-                                        _('User','logs'),
-                                        _('BackupPC','logs'),
+                                        _T('Backup configuration','logs'),
+                                        _T('Full backup requested','logs'),
+                                        _T('Incremental backup requested','logs'),
+                                        _T('Reverse SSH start','logs'),
+                                        _T('Reverse SSH stop','logs'),
+                                        _T('Restore requested','logs'),
+                                        _T('Manual','logs'),
+                                        _T('Planned','logs'),
+                                        _T('Restore','logs'),
+                                        _T('User','logs'),
+                                        _T('BackupPC','logs'),
                                         'Agent Relay Server',
-                                        _('no criteria selected','logs'));
+                                        _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
                                         'Backup configuration',
@@ -259,17 +259,17 @@ $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
 
-$modules = new SelectItemlabeltitle("criterionssearch", _('criterions','logs'),  _T('critere search','logs'));
+$modules = new SelectItemlabeltitle("criterionssearch", _T('criterions','logs'),  _T('critere search','logs'));
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
-$modules1 = new SelectItemlabeltitle("criterionssearch1", _('criterions','logs'), _T('critere search','logs'));
+$modules1 = new SelectItemlabeltitle("criterionssearch1", _T('criterions','logs'), _T('critere search','logs'));
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
-$modules2 = new SelectItemlabeltitle("criterionssearch2", _('criterions','logs'), _T('critere search','logs'));
+$modules2 = new SelectItemlabeltitle("criterionssearch2", _T('criterions','logs'), _T('critere search','logs'));
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);

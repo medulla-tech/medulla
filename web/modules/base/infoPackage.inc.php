@@ -63,40 +63,40 @@ if (has_audit_working()) {
     $submod->setDefaultPage("base/audit/indexall");
     $submod->setPriority(1000);
 
-    $page = new Page("indexall",_("All modules", "base"));
+    $page = new Page("indexall",_T("All modules", "base"));
     $page->setFile("modules/base/audit/indexall.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
 
-    $page = new Page("indexbase",_("Users and Groups", "base"));
+    $page = new Page("indexbase",_T("Users and Groups", "base"));
     $page->setFile("modules/base/audit/indexbase.php", array("AJAX" =>False,"visible"=>True));
     $submod->addPage($page);
 
     if(in_array("samba", $_SESSION["modulesList"])) {
-        $page = new Page("indexsamba",_("Samba", "base"));
+        $page = new Page("indexsamba",_T("Samba", "base"));
         $page->setFile("modules/base/audit/indexsamba.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
     if(in_array("mail", $_SESSION["modulesList"])) {
-        $page = new Page("indexmail",_("Mail", "base"));
+        $page = new Page("indexmail",_T("Mail", "base"));
         $page->setFile("modules/base/audit/indexmail.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
     if(in_array("network", $_SESSION["modulesList"])) {
-        $page = new Page("indexnetwork",_("Network", "base"));
+        $page = new Page("indexnetwork",_T("Network", "base"));
         $page->setFile("modules/base/audit/indexnetwork.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
     if(in_array("sshlpk", $_SESSION["modulesList"])) {
-        $page = new Page("indexsshlpk",_("SSH public keys", "base"));
+        $page = new Page("indexsshlpk",_T("SSH public keys", "base"));
         $page->setFile("modules/base/audit/indexsshlpk.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
 
     if(in_array("proxy", $_SESSION["modulesList"])) {
-        $page = new Page("indexproxy",_("Proxy", "base"));
+        $page = new Page("indexproxy",_T("Proxy", "base"));
         $page->setFile("modules/base/audit/indexproxy.php", array("AJAX" =>False,"visible"=>True));
         $submod->addPage($page);
     }
@@ -120,7 +120,7 @@ if (has_audit_working()) {
 if(in_array("xmppmaster", $_SESSION["modulesList"])) {
 //  if (isLogViewEnabled()) {
     $submod = new SubModule("logview");
-    $submod->setDescription(_("History", "logview"));
+    $submod->setDescription(_T("History", "logview"));
     //$submod = new ExpertSubModule("logview", _("History"));
     $submod->setVisibility(True);
     $submod->setImg('modules/base/graph/navbar/logview');
@@ -131,31 +131,31 @@ if(in_array("xmppmaster", $_SESSION["modulesList"])) {
     $page->setFile("modules/base/logview/index.php", array("expert" => True));
     $submod->addPage($page);
 
-    $page = new Page("logsinventory",_("logs inventory","base"));
+    $page = new Page("logsinventory",_T("logs inventory","base"));
     $page->setFile("modules/base/logview/logsinventory.php");
     $submod->addPage($page);
 
-    $page = new Page("logsbackuppc",_("logs backuppc","base"));
+    $page = new Page("logsbackuppc",_T("logs backuppc","base"));
     $page->setFile("modules/base/logview/logsbackuppc.php");
     $submod->addPage($page);
 
-    $page = new Page("logsdeployment",_("logs deployment","base"));
+    $page = new Page("logsdeployment",_T("logs deployment","base"));
     $page->setFile("modules/base/logview/logsdeployment.php");
     $submod->addPage($page);
 
-    $page = new Page("logsquickaction",_("logs quickaction","base"));
+    $page = new Page("logsquickaction",_T("logs quickaction","base"));
     $page->setFile("modules/base/logview/logsquickaction.php");
     $submod->addPage($page);
 
-    $page = new Page("logspackaging",_("logs packaging","base"));
+    $page = new Page("logspackaging",_T("logs packaging","base"));
     $page->setFile("modules/base/logview/logspackaging.php");
     $submod->addPage($page);
 
-    $page = new Page("logsremotedesktop",_("logs remote desktop","base"));
+    $page = new Page("logsremotedesktop",_T("logs remote desktop","base"));
     $page->setFile("modules/base/logview/logsremotedesktop.php");
     $submod->addPage($page);
 
-    $page = new Page("logsimaging",_("logs Imaging","base"));
+    $page = new Page("logsimaging",_T("logs Imaging","base"));
     $page->setFile("modules/base/logview/logsimaging.php");
     $submod->addPage($page);
 
@@ -333,32 +333,32 @@ if (hasComputerManagerWorking()) {
     $submod->addPage($page);
 
     if (in_array("inventory", $_SESSION["modulesList"])) {
-        $page = new Page("entityList", _('Entities', 'inventory'));
+        $page = new Page("entityList", _T('Entities', 'inventory'));
         $page->setFile("modules/inventory/inventory/entityList.php");
         $submod->addPage($page);
 
-        $page = new Page("entityRules", _('Entity rules', 'inventory'));
+        $page = new Page("entityRules", _T('Entity rules', 'inventory'));
         $page->setFile("modules/inventory/inventory/entityRules.php");
         $submod->addPage($page);
         
-        $page = new Page("addEntity", _('Add entity', 'inventory'));
+        $page = new Page("addEntity", _T('Add entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/addEntity.php");
         $submod->addPage($page);
 
-        $page = new Page("addEntityRule", _('Add entity rule', 'inventory'));
+        $page = new Page("addEntityRule", _T('Add entity rule', 'inventory'));
         $page->setFile("modules/inventory/inventory/addEntityRule.php");
         $submod->addPage($page);
 
-        $page = new Page("deleteEntityRule", _("Delete entity rule", "inventory"));
+        $page = new Page("deleteEntityRule", _T("Delete entity rule", "inventory"));
         $page->setFile("modules/inventory/inventory/deleteEntityRule.php");
         $page->setOptions(array("visible" => False, "noHeader" => True));
         $submod->addPage($page);
 
-        $page = new Page("EditEntity", _('Edit Entity', 'inventory'));
+        $page = new Page("EditEntity", _T('Edit Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/EditEntity.php");
         $submod->addPage($page);
         
-        $page = new Page("deleteEntity", _('Delete Entity', 'inventory'));
+        $page = new Page("deleteEntity", _T('Delete Entity', 'inventory'));
         $page->setFile("modules/inventory/inventory/deleteEntity.php");
         $submod->addPage($page);
     }

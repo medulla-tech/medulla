@@ -130,7 +130,7 @@ $n->setParamInfo($logparams);
 $n->disableFirstColumnActionLink();
 $n->setTableHeaderPadding(1);
 $n->addActionItem(new ActionItem(_("View details"),"logview","display","logid"));
-$n->setName(_("Logs", "base"));
+$n->setName(_T("Logs", "base"));
 $n->display();
 
 ?>

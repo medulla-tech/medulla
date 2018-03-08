@@ -117,7 +117,7 @@ $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
 $errItem = new ErrorHandlingItem(": Phone number is already taken");
-$errItem->setMsg(_("This phone number is already used."));
+$errItem->setMsg(_T("This phone number is already used."));
 $errItem->setTraceBackDisplay(False);
 $errObj->add($errItem);
 
