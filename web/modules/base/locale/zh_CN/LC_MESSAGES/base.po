@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-06 14:08+0100\n"
+"POT-Creation-Date: 2018-03-08 11:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Nicolas Lécureuil <neoclust@mageia.org>, 2018\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/siveo/teams/72118/"
@@ -145,6 +145,15 @@ msgstr "新增一个使用者"
 msgid "Add computer"
 msgstr "新增电脑"
 
+#: modules/base/infoPackage.inc.php:344
+#, fuzzy
+msgid "Add entity"
+msgstr "选择实体"
+
+#: modules/base/infoPackage.inc.php:348
+msgid "Add entity rule"
+msgstr ""
+
 #: modules/base/groups/edit.php:58 modules/base/includes/auditCodes.php:32
 msgid "Add group"
 msgstr "新增群组"
@@ -183,6 +192,7 @@ msgid "All groups"
 msgstr "全部群组"
 
 #: modules/base/audit/localSidebar.php:28 modules/base/audit/indexall.php:33
+#: modules/base/infoPackage.inc.php:66
 msgid "All modules"
 msgstr "所有模组"
 
@@ -222,6 +232,15 @@ msgstr "背景作业"
 msgid "Backup"
 msgstr "备份"
 
+#: modules/base/logview/index.php:259 modules/base/logview/logsimaging.php:253
+msgid "Backup Image creation"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:145
+#, fuzzy
+msgid "Backup Logs"
+msgstr "备份使用者"
+
 #: modules/base/users/backup.php:38
 msgid "Backup a user's folder"
 msgstr "备份使用者的资料夹"
@@ -230,12 +249,17 @@ msgstr "备份使用者的资料夹"
 msgid "Backup a user's home directory"
 msgstr "备份使用者的主目录"
 
+#: modules/base/logview/logsbackuppc.php:229 modules/base/logview/index.php:234
+#, fuzzy
+msgid "Backup configuration"
+msgstr "设定"
+
 #: modules/base/users/backup.php:54
 #, php-format
 msgid "Backup of <b>%s</b> user's folder has been launched in background."
 msgstr "<b>%s</b> 使用者资料夹的备份已在背景启动。"
 
-#: modules/base/includes/computers_list.inc.php:369
+#: modules/base/includes/computers_list.inc.php:373
 msgid "Backup status"
 msgstr "备份状态"
 
@@ -246,6 +270,11 @@ msgstr "备份使用者"
 #: modules/base/infoPackage.inc.php:244
 msgid "Backup user files"
 msgstr "备份使用者档案"
+
+#: modules/base/logview/logsbackuppc.php:239 modules/base/logview/index.php:244
+#, fuzzy
+msgid "BackupPC"
+msgstr "备份"
 
 #: modules/base/audit/ajaxLogFilter.php:49
 #: modules/base/includes/AjaxFilterLog.inc.php:325
@@ -332,6 +361,10 @@ msgstr "用户端主机名称"
 msgid "Clients Update"
 msgstr ""
 
+#: modules/base/logview/index.php:271 modules/base/logview/logsimaging.php:265
+msgid "Clone"
+msgstr ""
+
 #: graph/header.inc.php:251 includes/PageGenerator.php:2256
 #: includes/FormGenerator.php:642
 msgid "Close"
@@ -398,9 +431,14 @@ msgstr "电脑"
 msgid "Computers : "
 msgstr "电脑："
 
-#: modules/base/includes/computers_list.inc.php:352
+#: modules/base/includes/computers_list.inc.php:356
 msgid "Computers list"
 msgstr "电脑清单"
+
+#: modules/base/logview/index.php:270 modules/base/logview/logsimaging.php:264
+#, fuzzy
+msgid "Configuration"
+msgstr "设定"
 
 #: modules/base/groups/members.php:188 modules/base/groups/edit.php:117
 #: includes/PageGenerator.php:2634 includes/PageGenerator.php:2703
@@ -424,6 +462,16 @@ msgstr "连线"
 #: modules/base/logview/ajax_showlog.php:69
 msgid "Connection"
 msgstr "连线"
+
+#: modules/base/logview/logsbackuppc.php:208 modules/base/logview/index.php:195
+#: modules/base/logview/logspackaging.php:206
+#: modules/base/logview/logsdeployment.php:202
+#: modules/base/logview/logsquickaction.php:201
+#: modules/base/logview/logsremotedesktop.php:200
+#: modules/base/logview/logsinventory.php:210
+#: modules/base/logview/logsimaging.php:226
+msgid "Copy to clipboard"
+msgstr ""
 
 #: modules/base/groups/edit.php:114
 msgid "Create"
@@ -482,11 +530,19 @@ msgstr "从所有群组删除使用者"
 msgid "Del user from group"
 msgstr "从群组删除使用者"
 
+#: modules/base/logview/index.php:276 modules/base/logview/index.php:298
+#: modules/base/logview/logspackaging.php:236
+#: modules/base/logview/logsimaging.php:270
 #: modules/base/groups/ajaxFilter.php:48 modules/base/views/index.tpl.php:92
 #: modules/base/users/ajaxFilter.php:88 modules/ppolicy/default/delete.php:45
 #: includes/FormGenerator.php:1157
 msgid "Delete"
 msgstr "删除"
+
+#: modules/base/infoPackage.inc.php:361
+#, fuzzy
+msgid "Delete Entity"
+msgstr "选择实体"
 
 #: modules/base/infoPackage.inc.php:325
 msgid "Delete a computer"
@@ -504,13 +560,18 @@ msgstr "删除一个使用者"
 msgid "Delete all user's files"
 msgstr "删除所有使用者的档案"
 
-#: modules/base/includes/computers_list.inc.php:407
+#: modules/base/includes/computers_list.inc.php:411
 msgid "Delete computer"
 msgstr "删除电脑"
 
 #: modules/xmppmaster/xmppmaster/ajaxstatusxmppscheduler.php:52
 msgid "Delete deploy"
 msgstr ""
+
+#: modules/base/infoPackage.inc.php:352
+#, fuzzy
+msgid "Delete entity rule"
+msgstr "选择实体"
 
 #: modules/base/groups/delete.php:54 modules/base/groups/delete.php:65
 msgid "Delete group"
@@ -528,8 +589,38 @@ msgstr "删除此电脑"
 msgid "Delete user"
 msgstr "删除使用者"
 
+#: modules/base/logview/index.php:248
+#: modules/base/logview/logsdeployment.php:240
+msgid "Deployment Download"
+msgstr ""
+
+#: modules/base/logview/index.php:250
+#: modules/base/logview/logsdeployment.php:242
+msgid "Deployment Error"
+msgstr ""
+
+#: modules/base/logview/index.php:247
+#: modules/base/logview/logsdeployment.php:239
+msgid "Deployment Execution"
+msgstr ""
+
 #: modules/base/logview/logsdeployment.php:136
 msgid "Deployment Logs"
+msgstr ""
+
+#: modules/base/logview/index.php:249
+#: modules/base/logview/logsdeployment.php:241
+msgid "Deployment Notify"
+msgstr ""
+
+#: modules/base/logview/index.php:251
+#: modules/base/logview/logsdeployment.php:243
+msgid "Deployment Terminate"
+msgstr ""
+
+#: modules/base/logview/index.php:246
+#: modules/base/logview/logsdeployment.php:238
+msgid "Deployment Transfert"
 msgstr ""
 
 #: modules/base/groups/edit.php:102 modules/base/computers/edit.php:89
@@ -560,7 +651,7 @@ msgstr "您要进行备份吗？"
 msgid "Download ACL string"
 msgstr "下载 ACL 字串"
 
-#: modules/base/includes/computers_list.inc.php:128
+#: modules/base/includes/computers_list.inc.php:132
 msgid "Download file"
 msgstr "下载档案"
 
@@ -568,6 +659,7 @@ msgstr "下载档案"
 msgid "Download inventory of one machine"
 msgstr ""
 
+#: modules/base/logview/index.php:274 modules/base/logview/logsimaging.php:268
 #: modules/base/views/index.tpl.php:89 modules/base/users/ajaxFilter.php:83
 msgid "Edit"
 msgstr "编辑"
@@ -580,6 +672,10 @@ msgstr "编辑使用者 %s 的 ACL"
 #: modules/base/infoPackage.inc.php:220
 msgid "Edit ACL permissions on a user"
 msgstr "编辑一个使用者的 ACL 权限"
+
+#: modules/base/infoPackage.inc.php:357
+msgid "Edit Entity"
+msgstr ""
 
 #: modules/base/computers/edit.php:52
 msgid "Edit a computer"
@@ -597,8 +693,9 @@ msgstr "编辑一个使用者"
 msgid "Edit computer"
 msgstr "23a2941f0c1e85bfc0babfb726d85288_tr"
 
-#: modules/base/includes/computers_list.inc.php:115
-#: modules/base/includes/computers_list.inc.php:116
+#: modules/base/includes/computers_list.inc.php:118
+#: modules/base/includes/computers_list.inc.php:120
+#: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
 msgid "Edit configs files"
 msgstr ""
 
@@ -634,6 +731,14 @@ msgstr "启用／停用使用者帐户"
 #: modules/base/includes/AjaxFilterLog.inc.php:326
 msgid "End date"
 msgstr "结束日期"
+
+#: modules/base/infoPackage.inc.php:336
+msgid "Entities"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:340
+msgid "Entity rules"
+msgstr ""
 
 #: includes/commonErrorHandling.php:53
 msgid "Error during authentication process"
@@ -691,6 +796,11 @@ msgstr "传真号码"
 msgid "February"
 msgstr "二月"
 
+#: modules/base/logview/index.php:294
+#: modules/base/logview/logspackaging.php:232
+msgid "Files"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:364
 msgid "First name"
 msgstr "名字"
@@ -715,6 +825,10 @@ msgstr "无法送出表格。输入错误以红色醒目提示。"
 msgid "Friday"
 msgstr "星期五"
 
+#: modules/base/logview/logsbackuppc.php:230 modules/base/logview/index.php:235
+msgid "Full backup requested"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:531
 msgid "GID"
 msgstr "GID"
@@ -735,6 +849,7 @@ msgstr "全域视图"
 msgid "Go to page"
 msgstr "移至页面"
 
+#: modules/base/logview/index.php:275 modules/base/logview/logsimaging.php:269
 #: modules/base/includes/auditCodes.php:47
 msgid "Group"
 msgstr "群组"
@@ -802,6 +917,10 @@ msgstr "群组管理"
 msgid "Hard drive partitions"
 msgstr "硬碟机磁碟分割"
 
+#: modules/base/infoPackage.inc.php:123
+msgid "History"
+msgstr ""
+
 #: graph/navbar.inc.php:106 modules/base/main/default.php:89
 #: modules/base/infoPackage.inc.php:44
 msgid "Home"
@@ -835,13 +954,31 @@ msgid ""
 "application"
 msgstr "如果此片语没有变化，则您的浏览器不受 MMC 应用程式支援"
 
+#: modules/base/logview/index.php:278 modules/base/logview/logsimaging.php:272
+msgid "Image"
+msgstr ""
+
+#: modules/base/logview/index.php:262 modules/base/logview/logsimaging.php:256
+#, fuzzy
+msgid "Image Deletion"
+msgstr "切换选取范围"
+
+#: modules/base/logview/index.php:260 modules/base/logview/logsimaging.php:254
+#, fuzzy
+msgid "Image Deployment"
+msgstr "软体部署"
+
 #: modules/base/logview/logsimaging.php:158
 msgid "Imaging Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:131
 msgid "Imaging management"
 msgstr "影像管理"
+
+#: modules/base/logview/logsbackuppc.php:231 modules/base/logview/index.php:236
+msgid "Incremental backup requested"
+msgstr ""
 
 #: modules/base/computers/edit.php:44
 msgid "Invalid computer name."
@@ -859,9 +996,64 @@ msgstr "无效的登入"
 msgid "Inventory"
 msgstr "清查"
 
+#: modules/base/logview/index.php:282
+#: modules/base/logview/logsinventory.php:232
+#, fuzzy
+msgid "Inventory Deployment"
+msgstr "清查"
+
 #: modules/base/logview/logsinventory.php:145
 msgid "Inventory Logs"
 msgstr ""
+
+#: modules/base/logview/index.php:286
+#: modules/base/logview/logsinventory.php:236
+#, fuzzy
+msgid "Inventory Machine"
+msgstr "清查"
+
+#: modules/base/logview/index.php:287
+#: modules/base/logview/logsinventory.php:237
+#, fuzzy
+msgid "Inventory Master"
+msgstr "清查"
+
+#: modules/base/logview/index.php:288
+#: modules/base/logview/logsinventory.php:238
+#, fuzzy
+msgid "Inventory New machine"
+msgstr "清查"
+
+#: modules/base/logview/index.php:283
+#: modules/base/logview/logsinventory.php:233
+#, fuzzy
+msgid "Inventory Planned"
+msgstr "清查"
+
+#: modules/base/logview/index.php:284
+#: modules/base/logview/logsinventory.php:234
+msgid "Inventory Quick Action"
+msgstr ""
+
+#: modules/base/logview/index.php:285
+#: modules/base/logview/logsinventory.php:235
+#, fuzzy
+msgid "Inventory User"
+msgstr "清查"
+
+#: modules/base/logview/index.php:280
+#: modules/base/logview/logsquickaction.php:224
+#: modules/base/logview/logsinventory.php:230
+#, fuzzy
+msgid "Inventory reception"
+msgstr "清查"
+
+#: modules/base/logview/index.php:281
+#: modules/base/logview/logsquickaction.php:223
+#: modules/base/logview/logsinventory.php:231
+#, fuzzy
+msgid "Inventory requested"
+msgstr "清查"
 
 #: includes/FormGenerator.php:619
 msgid "January"
@@ -903,6 +1095,8 @@ msgstr "启动备份"
 msgid "License and support information"
 msgstr ""
 
+#: modules/base/logview/index.php:295
+#: modules/base/logview/logspackaging.php:233
 #: modules/base/groups/localSidebar.php:28
 msgid "List"
 msgstr "清单"
@@ -945,6 +1139,11 @@ msgstr "登入壳层"
 msgid "Logout"
 msgstr "登出"
 
+#: modules/base/audit/ajaxLogFilter.php:133
+#, fuzzy
+msgid "Logs"
+msgstr "MMC 记录档"
+
 #: includes/commonErrorHandling.php:43
 msgid "MMC Agent can't contact your LDAP server"
 msgstr "MMC 代理程式无法连络您的 LDAP 伺服器"
@@ -983,7 +1182,7 @@ msgid "MMC rights"
 msgstr "MMC 权限"
 
 #: modules/base/audit/localSidebar.php:38 modules/base/audit/indexmail.php:31
-#: modules/base/users/ajaxFilter.php:80
+#: modules/base/infoPackage.inc.php:81 modules/base/users/ajaxFilter.php:80
 msgid "Mail"
 msgstr "邮件"
 
@@ -991,9 +1190,34 @@ msgstr "邮件"
 msgid "Mail address"
 msgstr "邮件位址"
 
+#: modules/base/logview/logsbackuppc.php:235 modules/base/logview/index.php:240
+#: modules/base/logview/index.php:266 modules/base/logview/index.php:296
+#: modules/base/logview/logspackaging.php:234
+#: modules/base/logview/logsquickaction.php:227
+#: modules/base/logview/logsimaging.php:260
+#, fuzzy
+msgid "Manual"
+msgstr "一月"
+
 #: includes/FormGenerator.php:619
 msgid "March"
 msgstr "三月"
+
+#: modules/base/logview/index.php:255 modules/base/logview/logsimaging.php:249
+msgid "Master Creation"
+msgstr ""
+
+#: modules/base/logview/index.php:257 modules/base/logview/logsimaging.php:251
+msgid "Master Deletion"
+msgstr ""
+
+#: modules/base/logview/index.php:258 modules/base/logview/logsimaging.php:252
+msgid "Master Deployment Multicast"
+msgstr ""
+
+#: modules/base/logview/index.php:256 modules/base/logview/logsimaging.php:250
+msgid "Master Edition"
+msgstr ""
 
 #: includes/FormGenerator.php:620
 msgid "May"
@@ -1006,6 +1230,14 @@ msgstr "媒体大小"
 #: modules/base/status/index.php:116
 msgid "Memory"
 msgstr "记忆体"
+
+#: modules/base/logview/index.php:264 modules/base/logview/logsimaging.php:258
+msgid "Menu"
+msgstr ""
+
+#: modules/base/logview/index.php:253 modules/base/logview/logsimaging.php:247
+msgid "Menu change"
+msgstr ""
 
 #: includes/FormGenerator.php:490
 msgid "Min.: "
@@ -1039,12 +1271,16 @@ msgstr "月："
 msgid "Move user home"
 msgstr "移动使用者首页"
 
+#: modules/base/logview/index.php:267 modules/base/logview/logsimaging.php:261
+msgid "Multicast"
+msgstr ""
+
 #: modules/base/views/index.tpl.php:84 modules/base/users/ajaxFilter.php:79
 msgid "Name"
 msgstr "名称"
 
 #: modules/base/audit/indexnetwork.php:31
-#: modules/base/audit/localSidebar.php:46
+#: modules/base/audit/localSidebar.php:46 modules/base/infoPackage.inc.php:87
 msgid "Network"
 msgstr "网路"
 
@@ -1070,6 +1306,11 @@ msgstr "无可用项目"
 #: includes/bgps_view.php:64
 msgid "No job."
 msgstr "无作业。"
+
+#: modules/base/logview/index.php:222
+#: modules/base/logview/logsquickaction.php:229
+msgid "None"
+msgstr ""
 
 #: includes/FormGenerator.php:621
 msgid "November"
@@ -1103,6 +1344,33 @@ msgstr "作业"
 #: modules/base/includes/auditCodes.php:49
 msgid "Organizational unit"
 msgstr "组织单位"
+
+#: modules/base/logview/index.php:293
+#: modules/base/logview/logspackaging.php:231
+msgid "Package"
+msgstr ""
+
+#: modules/base/logview/index.php:289
+#: modules/base/logview/logspackaging.php:227
+#, fuzzy
+msgid "Package creation"
+msgstr "分页"
+
+#: modules/base/logview/index.php:291
+#: modules/base/logview/logspackaging.php:229
+#, fuzzy
+msgid "Package deletion"
+msgstr "切换选取范围"
+
+#: modules/base/logview/index.php:290
+#: modules/base/logview/logspackaging.php:228
+#, fuzzy
+msgid "Package edition"
+msgstr "分页"
+
+#: modules/base/logview/index.php:221
+msgid "Packaging"
+msgstr ""
 
 #: modules/base/logview/logspackaging.php:141
 msgid "Packaging Logs"
@@ -1156,6 +1424,10 @@ msgstr "电话："
 #: modules/base/includes/publicFunc.php:354
 msgid "Photo"
 msgstr "相片"
+
+#: modules/base/logview/logsbackuppc.php:236 modules/base/logview/index.php:241
+msgid "Planned"
+msgstr ""
 
 #: modules/base/includes/errorHandling.php:29
 msgid ""
@@ -1214,6 +1486,14 @@ msgstr ""
 msgid "Plugin"
 msgstr "外挂程式"
 
+#: modules/base/logview/index.php:254 modules/base/logview/logsimaging.php:248
+msgid "Post-imaging Script Creation"
+msgstr ""
+
+#: modules/base/logview/index.php:269 modules/base/logview/logsimaging.php:263
+msgid "Postinstall"
+msgstr ""
+
 #: modules/base/includes/publicFunc.php:412
 msgid "Preferred language"
 msgstr "偏好的语言"
@@ -1235,6 +1515,16 @@ msgstr "上一步"
 msgid "Primary group"
 msgstr "主要群组"
 
+#: modules/base/logview/logsbackuppc.php:211 modules/base/logview/index.php:198
+#: modules/base/logview/logspackaging.php:209
+#: modules/base/logview/logsdeployment.php:205
+#: modules/base/logview/logsquickaction.php:204
+#: modules/base/logview/logsremotedesktop.php:203
+#: modules/base/logview/logsinventory.php:213
+#: modules/base/logview/logsimaging.php:229
+msgid "Print logs"
+msgstr ""
+
 #: modules/base/status/support.php:50
 msgid "Product name"
 msgstr "产品名称"
@@ -1247,7 +1537,7 @@ msgstr "产品名称"
 msgid "Product vendor mail"
 msgstr "产品厂商邮件"
 
-#: modules/base/audit/localSidebar.php:42
+#: modules/base/audit/localSidebar.php:42 modules/base/infoPackage.inc.php:99
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -1259,17 +1549,26 @@ msgstr "Proxy 稽核"
 msgid "Pulse Updates"
 msgstr ""
 
+#: modules/base/logview/index.php:279 modules/base/logview/logsimaging.php:273
+#, fuzzy
+msgid "Quick Action"
+msgstr "动作"
+
 #: modules/base/logview/logsquickaction.php:140
 msgid "Quick Actions Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:133
+#: modules/base/includes/computers_list.inc.php:137
 msgid "Quick action"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:105
 msgid "Read log"
 msgstr "读取记录"
+
+#: modules/base/logview/logsquickaction.php:226
+msgid "Reboot sent"
+msgstr ""
 
 #: modules/base/includes/AjaxFilterLog.inc.php:366
 msgid "Refresh"
@@ -1287,13 +1586,36 @@ msgstr "登记的使用者"
 msgid "Remote Desktop Logs"
 msgstr ""
 
-#: modules/base/includes/computers_list.inc.php:123
-#: modules/base/includes/computers_list.inc.php:125
-#: modules/base/includes/computers_list.inc.php:136
+#: modules/base/includes/computers_list.inc.php:127
+#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:140
 msgid "Remote control"
 msgstr "远端控制"
 
-#: modules/base/includes/computers_list.inc.php:410
+#: modules/base/logview/index.php:300
+#: modules/base/logview/logsremotedesktop.php:228
+#, fuzzy
+msgid "Remote desktop control request"
+msgstr "远端控制"
+
+#: modules/base/logview/index.php:299
+#: modules/base/logview/logsremotedesktop.php:227
+#, fuzzy
+msgid "Remote desktop service"
+msgstr ""
+"Pluralized Translations\n"
+"\n"
+"\n"
+"one: 重新启动服务？\n"
+"\n"
+"other: 重新启动服务？"
+
+#: modules/base/logview/index.php:297
+#: modules/base/logview/logspackaging.php:235
+msgid "Remove"
+msgstr ""
+
+#: modules/base/includes/computers_list.inc.php:414
 msgid "Remove machine from group"
 msgstr "从群组移除电脑"
 
@@ -1316,6 +1638,14 @@ msgstr[0] ""
 "\n"
 "other: 重新启动服务？"
 
+#: modules/base/logview/logsbackuppc.php:237 modules/base/logview/index.php:242
+msgid "Restore"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:234 modules/base/logview/index.php:239
+msgid "Restore requested"
+msgstr ""
+
 #: modules/base/audit/ajaxLogFilter.php:128
 msgid "Result"
 msgstr "结果"
@@ -1323,6 +1653,20 @@ msgstr "结果"
 #: modules/base/users/passwd.php:74 modules/base/users/resetpasswd.php:59
 msgid "Return"
 msgstr "返回"
+
+#: modules/base/logview/index.php:301
+#: modules/base/logview/logsremotedesktop.php:229
+msgid "Reverse SSH"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:232 modules/base/logview/index.php:237
+#, fuzzy
+msgid "Reverse SSH start"
+msgstr "伺服器状态"
+
+#: modules/base/logview/logsbackuppc.php:233 modules/base/logview/index.php:238
+msgid "Reverse SSH stop"
+msgstr ""
 
 #: modules/base/main/favorites.php:4
 msgid "Root user cannot have favorites"
@@ -1332,13 +1676,39 @@ msgstr "根使用者不能有我的最爱"
 msgid "SSH public key audit"
 msgstr "SSH 公开金钥稽核"
 
+#: modules/base/infoPackage.inc.php:93
+#, fuzzy
+msgid "SSH public keys"
+msgstr "SSH 公开金钥稽核"
+
 #: modules/base/audit/localSidebar.php:34 modules/base/audit/indexsamba.php:31
+#: modules/base/infoPackage.inc.php:75
 msgid "Samba"
 msgstr "Samba"
 
 #: includes/FormGenerator.php:632
 msgid "Saturday"
 msgstr "星期六"
+
+#: modules/base/logview/logsbackuppc.php:210 modules/base/logview/index.php:197
+#: modules/base/logview/logspackaging.php:208
+#: modules/base/logview/logsdeployment.php:204
+#: modules/base/logview/logsquickaction.php:203
+#: modules/base/logview/logsremotedesktop.php:202
+#: modules/base/logview/logsinventory.php:212
+#: modules/base/logview/logsimaging.php:228
+msgid "Save to Excel file"
+msgstr ""
+
+#: modules/base/logview/logsbackuppc.php:209 modules/base/logview/index.php:196
+#: modules/base/logview/logspackaging.php:207
+#: modules/base/logview/logsdeployment.php:203
+#: modules/base/logview/logsquickaction.php:202
+#: modules/base/logview/logsremotedesktop.php:201
+#: modules/base/logview/logsinventory.php:211
+#: modules/base/logview/logsimaging.php:227
+msgid "Save to csv file"
+msgstr ""
 
 #: modules/base/audit/list.php:39
 msgid "Search action"
@@ -1365,6 +1735,7 @@ msgstr "选择实体"
 msgid "September"
 msgstr "九月"
 
+#: modules/base/logview/index.php:265 modules/base/logview/logsimaging.php:259
 #: index.php:197
 msgid "Server"
 msgstr "伺服器"
@@ -1372,6 +1743,11 @@ msgstr "伺服器"
 #: modules/base/status/index.php:206
 msgid "Server status"
 msgstr "伺服器状态"
+
+#: modules/base/logview/index.php:277 modules/base/logview/logsimaging.php:271
+#, fuzzy
+msgid "Service"
+msgstr "伺服器"
 
 #: modules/base/includes/errorHandling.php:48
 msgid ""
@@ -1387,13 +1763,17 @@ msgstr "设定所有选项按钮的值：&nbsp;&nbsp;"
 msgid "Shortcuts"
 msgstr "捷径"
 
-#: modules/base/includes/computers_list.inc.php:131
+#: modules/base/includes/computers_list.inc.php:135
 msgid "Show Profile"
 msgstr "显示设定档"
 
 #: includes/ErrorHandling.php:77
 msgid "Show complete trackback"
 msgstr "显示完整引用"
+
+#: modules/base/logview/logsquickaction.php:225
+msgid "Shutdown sent"
+msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:103
 #: modules/base/includes/computers_list.inc.php:106
@@ -1436,6 +1816,10 @@ msgid ""
 "Some users can't be removed from this group because this group is their "
 "primary group."
 msgstr "部分使用者不能从此群组移除，因为此群组是其主要群组。"
+
+#: modules/base/logview/index.php:268 modules/base/logview/logsimaging.php:262
+msgid "Start"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:169
 msgid "Status"
@@ -1632,6 +2016,11 @@ msgstr "此项目似乎不在索引中"
 msgid "This operation will last according to the amount of data to backup."
 msgstr "此作业将依据要备份的资料量而持续。"
 
+#: modules/base/includes/errorHandling.php:120
+#, fuzzy
+msgid "This phone number is already used."
+msgstr "电脑名称已被占用。"
+
 #: includes/commonErrorHandling.php:65
 msgid ""
 "This problem can appear if:\n"
@@ -1697,6 +2086,10 @@ msgstr "存留时间："
 msgid "Uptime: "
 msgstr "存留时间："
 
+#: modules/base/logview/logsbackuppc.php:238 modules/base/logview/index.php:243
+#: modules/base/logview/index.php:292
+#: modules/base/logview/logspackaging.php:230
+#: modules/base/logview/logsquickaction.php:228
 #: modules/base/audit/indexbase.php:30 modules/base/audit/ajaxLogFilter.php:121
 #: modules/base/audit/indexall.php:30 modules/base/includes/auditCodes.php:45
 msgid "User"
@@ -1821,7 +2214,7 @@ msgstr "使用者"
 msgid "Users : "
 msgstr "使用者："
 
-#: modules/base/audit/localSidebar.php:30
+#: modules/base/audit/localSidebar.php:30 modules/base/infoPackage.inc.php:70
 msgid "Users and Groups"
 msgstr "使用者和群组"
 
@@ -1864,6 +2257,16 @@ msgstr "警告：登记的电脑数目已超过您的授权。"
 #: modules/base/status/support.php:38
 msgid "WARNING: The number of registered users is exceeding your license."
 msgstr "警告：登记的使用者数目已超过您的授权。"
+
+#: modules/base/logview/index.php:261 modules/base/logview/logsimaging.php:255
+msgid "WOL"
+msgstr ""
+
+#: modules/base/logview/index.php:252
+#: modules/base/logview/logsdeployment.php:244
+#: modules/base/logview/logsquickaction.php:222
+msgid "WOL sent"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:502
 msgid "Warning: an existing directory may belong to another user !"
@@ -1945,6 +2348,11 @@ msgstr "将关闭您的工作阶段"
 msgid "agent: version"
 msgstr "代理程式：版本"
 
+#: modules/base/logview/index.php:219
+#, fuzzy
+msgid "backup"
+msgstr "备份"
+
 #: modules/base/includes/auditCodes.php:50
 msgid "base"
 msgstr "基础"
@@ -1957,9 +2365,35 @@ msgstr ""
 msgid "computers"
 msgstr "电脑"
 
+#: modules/base/logview/index.php:380 modules/base/logview/index.php:385
+#: modules/base/logview/index.php:390
+#, fuzzy
+msgid "critere search"
+msgstr "登记的使用者"
+
+#: modules/base/logview/logsbackuppc.php:262
+#: modules/base/logview/logsbackuppc.php:267
+#: modules/base/logview/logsbackuppc.php:272 modules/base/logview/index.php:380
+#: modules/base/logview/index.php:385 modules/base/logview/index.php:390
+#: modules/base/logview/logsdeployment.php:261
+#: modules/base/logview/logsdeployment.php:267
+#: modules/base/logview/logsdeployment.php:274
+#: modules/base/logview/logsremotedesktop.php:241
+#: modules/base/logview/logsinventory.php:258
+#: modules/base/logview/logsinventory.php:263
+#: modules/base/logview/logsinventory.php:268
+#, fuzzy
+msgid "criterions"
+msgstr "动作"
+
 #: modules/base/status/index.php:104
 msgid "day"
 msgstr "日"
+
+#: modules/base/logview/index.php:216
+#, fuzzy
+msgid "deployment"
+msgstr "软体部署"
 
 #: modules/base/includes/computers_list.inc.php:102
 #: modules/xmppmaster/xmppmaster/ajaxlogsxmpp.php:50
@@ -1972,15 +2406,15 @@ msgstr ""
 msgid "expert mode"
 msgstr "专业模式"
 
-#: modules/base/includes/computers_list.inc.php:129
+#: modules/base/includes/computers_list.inc.php:133
 #: modules/base/users/ajaxFilter.php:85
 msgid "extTicket issue"
 msgstr ""
 
 #: modules/base/includes/computers_list.inc.php:111
 #: modules/base/includes/computers_list.inc.php:112
-#: modules/base/includes/computers_list.inc.php:120
-#: modules/base/includes/computers_list.inc.php:121
+#: modules/base/includes/computers_list.inc.php:124
+#: modules/base/includes/computers_list.inc.php:125
 msgid "files browsing"
 msgstr ""
 
@@ -1996,14 +2430,54 @@ msgstr "隐藏"
 msgid "hour"
 msgstr "时"
 
+#: modules/base/logview/index.php:218
+msgid "imaging"
+msgstr ""
+
+#: modules/base/logview/index.php:220
+#, fuzzy
+msgid "inventory"
+msgstr "清查"
+
 #: graph/navbar.inc.php:81
 msgid "logout"
 msgstr "登出"
+
+#: modules/base/infoPackage.inc.php:158
+msgid "logs Imaging"
+msgstr ""
 
 #: modules/base/infoPackage.inc.php:130
 #, fuzzy
 msgid "logs all modules"
 msgstr "所有模组"
+
+#: modules/base/infoPackage.inc.php:138
+msgid "logs backuppc"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:142
+#, fuzzy
+msgid "logs deployment"
+msgstr "软体部署"
+
+#: modules/base/infoPackage.inc.php:134
+#, fuzzy
+msgid "logs inventory"
+msgstr "清查"
+
+#: modules/base/infoPackage.inc.php:150
+msgid "logs packaging"
+msgstr ""
+
+#: modules/base/infoPackage.inc.php:146
+#, fuzzy
+msgid "logs quickaction"
+msgstr "已记录的动作"
+
+#: modules/base/infoPackage.inc.php:154
+msgid "logs remote desktop"
+msgstr ""
 
 #: modules/base/includes/publicFunc.php:80
 msgid "medium"
@@ -2017,6 +2491,16 @@ msgstr "分"
 msgid "no"
 msgstr "否"
 
+#: modules/base/logview/logsbackuppc.php:241 modules/base/logview/index.php:302
+#: modules/base/logview/index.php:303
+#: modules/base/logview/logspackaging.php:237
+#: modules/base/logview/logsdeployment.php:245
+#: modules/base/logview/logsremotedesktop.php:230
+#: modules/base/logview/logsinventory.php:239
+#: modules/base/logview/logsimaging.php:274
+msgid "no criteria selected"
+msgstr ""
+
 #: modules/base/includes/AjaxFilterLog.inc.php:168
 #: modules/base/includes/AjaxFilterLog.inc.php:172
 #: includes/FormGenerator.php:562 includes/FormGenerator.php:568
@@ -2026,6 +2510,11 @@ msgstr "或 <a href='#'"
 #: includes/PageGenerator.php:573 includes/PageGenerator.php:805
 msgid "page"
 msgstr "页码"
+
+#: modules/base/logview/index.php:217
+#, fuzzy
+msgid "quickaction"
+msgstr "位置"
 
 #: modules/base/users/editacl.php:176 modules/base/users/editacl.php:181
 msgid "read only"

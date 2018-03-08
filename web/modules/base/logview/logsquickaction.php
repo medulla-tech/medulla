@@ -198,10 +198,10 @@ class SelectItemlabeltitle extends SelectItem {
                                 "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                                 "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                                 buttons: [
-                                { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-                                { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-                                { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-                                { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+                                { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard', logs); ?>},
+                                { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file', logs); ?> },
+                                { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file', logs); ?> },
+                                { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs', logs); ?>  }
                                 ]
                             } )
                             .ajax.url(
@@ -219,14 +219,14 @@ class SelectItemlabeltitle extends SelectItem {
 <?php
 
 $typecritere  =        array(
-                                        _T('WOL sent','logs'),
-                                        _T('Inventory requested','logs'),
-                                        _T('Inventory reception','logs'),
-                                        _T('Shutdown sent','logs'),
-                                        _T('Reboot sent','logs'),
-                                        _T('Manual','logs'),
-                                        _T('User','logs'),
-                                        _T('None','logs'));
+                                        _('WOL sent','logs'),
+                                        _('Inventory requested','logs'),
+                                        _('Inventory reception','logs'),
+                                        _('Shutdown sent','logs'),
+                                        _('Reboot sent','logs'),
+                                        _('Manual','logs'),
+                                        _('User','logs'),
+                                        _('None','logs'));
 
 $typecritereval  =        array(
                                         'WOL',

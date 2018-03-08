@@ -223,10 +223,10 @@ function encodeurl(){
         "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
         "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
         buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-        { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-        { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-        { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+        { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard', logs); ?>},
+        { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file', logs); ?> },
+        { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file', logs); ?> },
+        { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs', logs); ?>  }
         ]
     } )
                             .ajax.url(
@@ -244,34 +244,34 @@ function encodeurl(){
 
 
 $typecritere  =        array(
-                                        _T('Menu change','logs'),
-                                        _T('Post-imaging Script Creation','logs'),
-                                        _T('Master Creation','logs'),
-                                        _T('Master Edition','logs'),
-                                        _T('Master Deletion','logs'),
-                                        _T('Master Deployment Multicast','logs'),
-                                        _T('Backup Image creation','logs'),
-                                        _T('Image Deployment','logs'),
-                                        _T('WOL','logs'),
-                                        _T('Image Deletion','logs'),
+                                        _('Menu change','logs'),
+                                        _('Post-imaging Script Creation','logs'),
+                                        _('Master Creation','logs'),
+                                        _('Master Edition','logs'),
+                                        _('Master Deletion','logs'),
+                                        _('Master Deployment Multicast','logs'),
+                                        _('Backup Image creation','logs'),
+                                        _('Image Deployment','logs'),
+                                        _('WOL','logs'),
+                                        _('Image Deletion','logs'),
                                         'Master',
-                                        _T('Menu'),
-                                        _T('Server'),
-                                        _T('Manual'),
-                                        _T('Multicast'),
-                                        _T('Start'),
-                                        _T('Postinstall'),
-                                        _T('Configuration'),
-                                        _T('Clone'),
+                                        _('Menu'),
+                                        _('Server'),
+                                        _('Manual'),
+                                        _('Multicast'),
+                                        _('Start'),
+                                        _('Postinstall'),
+                                        _('Configuration'),
+                                        _('Clone'),
                                         'Iso',
                                         'Add',
-                                        _T('Edit'),
-                                        _T('Group'),
-                                        _T('Delete'),
-                                        _T('Service'),
-                                        _T('Image'),
-                                        _T('Quick Action'),
-                                        _T('no criteria selected','logs'));
+                                        _('Edit'),
+                                        _('Group'),
+                                        _('Delete'),
+                                        _('Service'),
+                                        _('Image'),
+                                        _('Quick Action'),
+                                        _('no criteria selected','logs'));
 
 $typecritereval  =        array(
                                         'Menu',

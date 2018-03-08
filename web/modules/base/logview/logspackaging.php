@@ -203,10 +203,10 @@ class SelectItemlabeltitle extends SelectItem {
                                     "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                                     "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',                                    
                                     buttons: [
-                                    { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-                                    { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-                                    { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-                                    { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+                                    { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard', logs); ?>},
+                                    { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file', logs); ?> },
+                                    { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file', logs); ?> },
+                                    { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs', logs); ?>  }
                                     ]
                                 } )
                             .ajax.url(
@@ -224,17 +224,17 @@ class SelectItemlabeltitle extends SelectItem {
 
 
 $typecritere  =        array(
-                                        _T('Package creation','logs'),
-                                        _T('Package edition','logs'),
-                                        _T('Package deletion','logs'),
-                                        _T('User','logs'),
-                                        _T('Package','logs'),
-                                        _T('Files','logs'),
-                                        _T('List','logs'),
-                                        _T('Manual','logs'),
-                                        _T('Remove','logs'),
-                                        _T('Delete','logs'),
-                                        _T('no criteria selected','logs'));
+                                        _('Package creation','logs'),
+                                        _('Package edition','logs'),
+                                        _('Package deletion','logs'),
+                                        _('User','logs'),
+                                        _('Package','logs'),
+                                        _('Files','logs'),
+                                        _('List','logs'),
+                                        _('Manual','logs'),
+                                        _('Remove','logs'),
+                                        _('Delete','logs'),
+                                        _('no criteria selected','logs'));
 
 $typecritereval  =        array(
                                         'creation',
