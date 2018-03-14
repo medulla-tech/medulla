@@ -1109,6 +1109,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
             # Verify msg from chatroom master for subscription
             if data['action'] == 'connectionconf' :
                 """ Check machine information from agent """
+
+                if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
+                    data['adorgbymachine'] = json.loads(base64.b64decode(data['adorgbymachine']))
+                if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
+                    data['adorgbyuser'] = json.loads(base64.b64decode(data['adorgbyuser']))
+
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
                 if data['ippublic'] is not None and data['ippublic'] != "":
