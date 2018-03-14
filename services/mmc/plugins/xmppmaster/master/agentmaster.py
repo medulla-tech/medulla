@@ -1111,9 +1111,9 @@ class MUCBot(sleekxmpp.ClientXMPP):
                 """ Check machine information from agent """
 
                 if data['adorgbymachine'] is not None and data['adorgbymachine'] != "":
-                    data['adorgbymachine'] = json.loads(base64.b64decode(data['adorgbymachine']))
+                    data['adorgbymachine'] = base64.b64decode(data['adorgbymachine'])
                 if data['adorgbyuser'] is not None and data['adorgbyuser'] != "":
-                    data['adorgbyuser'] = json.loads(base64.b64decode(data['adorgbyuser']))
+                    data['adorgbyuser'] = base64.b64decode(data['adorgbyuser'])
 
                 info = json.loads(base64.b64decode(data['completedatamachine']))
                 data['information'] = info
