@@ -427,4 +427,11 @@ Description: Pulse 2 MMC agent plugins
  .
  This package will install all the Pulse 2 MMC agent interface plugins.
 
-
+Package: mmc-web-kiosk
+Architecture: all
+Depends: ${misc:Depends}, pulse2-common(= ${binary:Version}), mmc-web-base (>= 3.1.1-1)
+Description: Pulse 2 GLPI computer group plugin for MMC web interface
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins
