@@ -435,3 +435,14 @@ Description: Pulse 2 GLPI computer group plugin for MMC web interface
  organizations.
  .
  This package will install all the Pulse 2 MMC agent interface plugins
+
+Package: python-mmc-kiosk
+Architecture: all
+Section: python
+Depends: ${misc:Depends}, ${python:Depends}, pulse2-common(= ${binary:Version}), python-mmc-base (>= 3.1.1-1)
+iDescription: Pulse 2 MMC agent plugins
+ Pulse 2 is Open Source computer system management for medium and large
+ organizations.
+ .
+ This package will install all the Pulse 2 MMC agent interface plugins.
+
