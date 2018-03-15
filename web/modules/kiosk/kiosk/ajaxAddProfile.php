@@ -19,4 +19,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+require_once("../includes/xmlrpc.php");
+require_once("../../pkgs/includes/xmlrpc.php");
+require_once("../../../includes/config.inc.php");
+require_once("../../../includes/session.inc.php");
+require_once("../../../includes/PageGenerator.php");
+require_once("../../../includes/acl.inc.php");
+
+if(isset($_POST['name'], $_POST['active']))
+{
+	echo rename_profile($_POST['name']);
+	// Add the profile to the database
+	$result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
+	// Get it's id
+	echo 'ID = '.$result;
+	//insert all the packages when id_profile = what we got
+}
+else
+	echo "false";
+
+/*
+ * $_POST is an array which contains :
+ * - (str) name : Profile name
+ */
+
+
+function rename_profile($name)
+{
+	//strips some special characters
+	$name = str_replace(['@', '#', '&', '"', "'", '(', '§', '!', ')', '-', '\[', '\]', '\{', '\}', '°', '/', '|', '\\', '<', '>'], '_', $_POST['name']);
+	$name = strtolower($name);
+
+	while(in_array($name, xmlrpc_get_profiles_name_list()))
+	{
+		// If the profile already exists, then the profile is renamed.
+		$name .= '-';
+	}
+	return $name;
+}
 ?>

@@ -35,11 +35,10 @@ class KioskDBObj(DBObj):
     id = Column(Integer, primary_key=True)
 
 
-
-class version(Base):
+class Profiles(Base, KioskDBObj):
     # ====== Table name =========================
-    __tablename__ = 'version'
+    __tablename__ = 'profiles'
     # ====== Fields =============================
-    # Here we define columns for the table version.
-    # Notice that each column is also a normal Python instance attribute.
-    Number = Column(TINYINT(4), nullable=False, default=1)
+    name = Column(String(50))
+    active = Column(TINYINT)
+    creation_date = Column(DateTime)
