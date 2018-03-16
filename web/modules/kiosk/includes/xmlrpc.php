@@ -25,11 +25,25 @@
 
 
 function xmlrpc_get_profiles_list(){
+    // Return all the detail of all profiles.
     return xmlCall("kiosk.get_profiles_list", array());
 }
 
-// Used by kiosk/kiosk/index.php
+// Used by kiosk/kiosk/ajaxAddProfile.php
 function xmlrpc_get_profiles_name_list(){
+    // Return the simplified list of the profiles
     return xmlCall("kiosk.get_profiles_name_list", array());
+}
+
+
+function xmlrpc_create_profile($name, $active){
+    // Insert $name into profile table with the $active status.
+    // If success return the id of the new profile.
+    return xmlCall("kiosk.create_profile", [$name, $active]);
+}
+
+function xmlrpc_delete_profile($name){
+    // Cascading delete $name form the table of profiles.
+    return xmlCall("kiosk.delete_profile", [$name]);
 }
 ?>

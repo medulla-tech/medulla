@@ -15,8 +15,39 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with MMC.  If not, see <http://www.gnu.org/licenses/>.
+ * along with MMC; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+class ValidateButtonTpl extends HtmlElement {
+    var $class = '';
+    var $cssClass = 'btn btn-small';
 
+    function ValidateButtonTpl($id, $value, $class='', $infobulle='', $params = array()) {
+        $this->id = $id;
+        $this->value = $value;
+        $this->class = $class;
+        $this->infobulle = $infobulle;
+        $this->params = $params;
+        $this->style='';
+    }
+
+    function setstyle($sty){
+        $this->style=$sty;
+    }
+
+    function setClass($class) {
+        $this->cssClass = $class;
+    }
+
+    function display($arrParam = array()) {
+        if (isset($this->id,$this->value))
+            printf('<input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
+                $this->id,$this->id,
+                $this->infobulle,
+                $this->value,
+                $this->cssClass,
+                $this->class);
+    }
+}
 ?>

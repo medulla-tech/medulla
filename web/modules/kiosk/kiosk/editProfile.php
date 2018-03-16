@@ -1,5 +1,7 @@
+<?php
 /**
  * (c) 2016 Siveo, http://siveo.net
+ * $Id$
  *
  * This file is part of Management Console (MMC).
  *
@@ -19,27 +21,17 @@
  */
 
 
-<style type="text/css"><!--
+require("modules/kiosk/graph/index.css");
+require_once("modules/kiosk/includes/xmlrpc.php");
+require_once("modules/pulse2/includes/utilities.php");
+require("graph/navbar.inc.php");
+require("modules/kiosk/kiosk/localSidebar.php");
 
-li.list a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/kiosk/graph/img/list.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
+$p = new PageGenerator(_T("List of profils",'kiosk'));
+$p->setSideMenu($sidemenu);
+$p->display();
 
-}
 
-li.users a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/kiosk/graph/img/users.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
+echo "Edit on process";
 
-}
---> </style>
+?>

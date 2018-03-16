@@ -19,27 +19,27 @@
  */
 
 
-<style type="text/css"><!--
+jQuery("#bvalid").click(function() {
+    if(jQuery("#name").val() == "")
+    {
+        jQuery("#name").focus();
+    }
+    else
+        sendForm();
+});
 
-li.list a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/kiosk/graph/img/list.png");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
+function sendForm(){
+    var url = "modules/kiosk/kiosk/ajaxAddProfile.php";
 
+    // Create json which contains all the needed infos
+    var datas = {};
+    datas['name'] = jQuery("#name").val();
+    datas['active'] = jQuery("#status").val();
+    datas['packages'] = generate_json();
+    // Send the infos to ajaxAddProfile.php
+    jQuery.post(url, datas, function(result){
+
+        // the datas printed in ajaxAddProfile.php are stored in result
+        alert(result);
+    });
 }
-
-li.users a {
-    padding: 3px 0px 5px 20px;
-    margin: 0 0px 0 0px;
-    background-image: url("modules/kiosk/graph/img/users.gif");
-    background-repeat: no-repeat;
-    line-height: 18px;
-    text-decoration: none;
-    color: #FFF;
-
-}
---> </style>

@@ -126,6 +126,30 @@ class KioskDatabase(DatabaseHelper):
             lines.append(row[0])
         return lines
 
+    @DatabaseHelper._sessionm
+    def create_profile(self, session, name, active):
+
+        import time
+        now = time.strftime('%Y-%m-%d %H:%M:%S')
+
+        profile = Profiles(name=name, active=int(active), creation_date=now)
+        # sql = "INSERT INTO profiles VALUES(NULL,"+name+","+active+");"
+        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s', '%s', '%s');""" % ('NULL', name, active, now)
+
+        session.execute(sql)
+        session.commit()
+        session.flush()
+
+        result = session.query(Profiles.id).filter(Profiles.name == name)
+        result = result.first()
+        id = 0
+        for row in result:
+            id = str(row)
+
+        session.commit()
+        session.flush()
+
+        return id
 
     @DatabaseHelper._sessionm
     def delete_profile(self, session, name):
@@ -137,7 +161,7 @@ class KioskDatabase(DatabaseHelper):
             name: the name of the profile
 
         Returns:
-            Boolean True if success, else False
+            Boolean: True if success, else False
         """
         try:
             ret = session.query(Profiles).filter(Profiles.name == name).delete()

@@ -25,12 +25,14 @@
 Plugin to manage the interface with Kiosk
 """
 import logging
+import json
 
 from mmc.plugins.kiosk.config import KioskConfig
-# from mmc.plugins.kiosk import kiosk
 from pulse2.version import getVersion, getRevision # pyflakes.ignore
 from mmc.plugins.base import ComputerI
 from mmc.plugins.base.computers import ComputerManager
+from mmc.plugins.xmppmaster.master.lib.utils import name_random
+import base64
 
 # Database
 from pulse2.database.kiosk import KioskDatabase
@@ -79,5 +81,35 @@ def get_profiles_list():
 def get_profiles_name_list():
     return KioskDatabase().get_profiles_name_list()
 
+
+def create_profile(name, active):
+    return KioskDatabase().create_profile(name, active)
+
+
 def delete_profile(name):
     return KioskDatabase().delete_profile(name)
+
+
+"""
+TODO : this function will be used to interact with xmpp
+def callkioskdetectionad(xmppobject, data):
+
+    Machineinfo = XmppMasterDatabase().getMachinefromjid(jidmachine)
+    info = json.loads(base64.b64decode(data['completedatamachine']))
+    
+    datasend = {
+                    'action' : 'kiosk',
+                    'sessionid' : name_random(6, "kiosk_send_lists_package_profil"),
+                    'data' : {  'subaction' : 'send_lists_package_profil',
+                                'subdata' : {
+                                    'bidonlist' : ['titi', 'kkkk', 'neoclust', 'dede', 'kno', 'jfk']
+                                }
+                    },
+                    'ret' : 0,
+                    'base64' : False
+    }
+    xmppobject.send_message( mto=data['from'],
+                             mbody=json.dumps(datasend),
+                             mtype='chat')
+    return
+"""

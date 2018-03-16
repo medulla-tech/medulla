@@ -27,42 +27,11 @@ require("modules/kiosk/graph/packages.css");
 //Import the functions and classes needed
 require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/pkgs/includes/xmlrpc.php");
+require_once("modules/kiosk/includes/html.inc.php");
 require_once("modules/imaging/includes/class_form.php");
 
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
-
-class ValidateButtonTpl extends HtmlElement {
-    var $class = '';
-    var $cssClass = 'btn btn-small';
-
-    function ValidateButtonTpl($id, $value, $class='', $infobulle='', $params = array()) {
-        $this->id = $id;
-        $this->value = $value;
-        $this->class = $class;
-        $this->infobulle = $infobulle;
-        $this->params = $params;
-        $this->style='';
-    }
-
-    function setstyle($sty){
-        $this->style=$sty;
-    }
-
-    function setClass($class) {
-        $this->cssClass = $class;
-    }
-
-    function display($arrParam = array()) {
-        if (isset($this->id,$this->value))
-            printf('<input id="%s" title="%s" type="button" value="%s" class="%s %s" />',
-                $this->id,$this->id,
-                $this->infobulle,
-                $this->value,
-                $this->cssClass,
-                $this->class);
-    }
-}
 
 
 $p = new PageGenerator(_T("Add New Profile",'kiosk'));
@@ -72,6 +41,10 @@ $p->display();
 $f = new ValidatingForm(array("id" => "profile-form"));
 
     $f->push(new Table());
+
+
+    $f->add(new SpanElement('',"packages"));
+
     // -------
     // Add an input for the profile name
     // -------
@@ -107,7 +80,7 @@ $f = new ValidatingForm(array("id" => "profile-form"));
         $available_packages[$package['name']] = $package['uuid'];
     }
 
-    // Generate the list of packages in the hidden list. This is the process by default when adding new profile
+    // Generate the list of packages in the available list. This is the process by default when adding new profile
     foreach($available_packages as $package_name=>$package_uuid){
         $available_packages_str .= '<li data-draggable="item" data-uuid="'.$package_uuid.'">'.$package_name.'</li>';
     }
@@ -115,8 +88,8 @@ $f = new ValidatingForm(array("id" => "profile-form"));
     $f->add(new SpanElement('<div style="display:inline-flex; width:100%" id="packages">
         <!-- Source : https://www.sitepoint.com/accessible-drag-drop/ -->
         <div style="width:100%">
-            <h1>'._T("Hidden packages","kiosk").'</h1>
-            <ol data-draggable="target" id="hidden-packages">'.$available_packages_str.'</ol>
+            <h1>'._T("Available packages","kiosk").'</h1>
+            <ol data-draggable="target" id="available-packages">'.$available_packages_str.'</ol>
         </div>
     
         <div style="width:100%">
@@ -142,29 +115,11 @@ $f = new ValidatingForm(array("id" => "profile-form"));
 $f->pop(); // end of form
 
 $f->display(); // display the form
-
 ?>
 
 
 <script src="modules/kiosk/graph/js/packages.js">
-    //jQuery("#msg_bvalid").hide();
+    // Manage drag&drop for the packages boxes
+    // Generate a json with the packages
 </script>
-
-<script>
-    jQuery( "#bvalid").click(function() {
-        /*if(jQuery('#Location').val()=="" || jQuery('#Location').val()==".xml"){
-            jQuery('#Location').focus()
-        }
-        else if (jQuery('#PasswordAdmin').val()==""){
-            jQuery('#PasswordAdmin').focus()
-        }*/
-            sendForm();
-    });
-
-    function sendForm(){
-        var url = "modules/kiosk/kiosk/ajaxAddProfile.php";
-        var success = alert("yes");
-
-        jQuery.post(url, generate_json());
-    }
-</script>
+<script src="modules/kiosk/graph/js/add_validate.js"></script>

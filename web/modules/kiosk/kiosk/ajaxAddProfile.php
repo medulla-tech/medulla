@@ -28,33 +28,39 @@ require_once("../../../includes/acl.inc.php");
 
 if(isset($_POST['name'], $_POST['active']))
 {
-	echo rename_profile($_POST['name']);
-	// Add the profile to the database
-	$result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
-	// Get it's id
-	echo 'ID = '.$result;
-	//insert all the packages when id_profile = what we got
+    echo rename_profile($_POST['name']);
+    // Add the profile to the database
+    $result = xmlrpc_create_profile($_POST['name'], $_POST['active']);
+    // Get it's id
+     echo 'Id = '.$result;
+    // Insert all the package when id_profile = what we got
 }
 else
-	echo "false";
+    echo "false";
+
 
 /*
  * $_POST is an array which contains :
- * - (str) name : Profile name
+ * - (str) name : ProfileName
+ * -
  */
+//xmlrpc_create_profile($_POST);
+
 
 
 function rename_profile($name)
 {
-	//strips some special characters
-	$name = str_replace(['@', '#', '&', '"', "'", '(', '§', '!', ')', '-', '\[', '\]', '\{', '\}', '°', '/', '|', '\\', '<', '>'], '_', $_POST['name']);
-	$name = strtolower($name);
+    // strips some special characters
+    $name = str_replace(['@', '#', '&', '"', "'", '(', '§', '!', ')', '-', '\[', '\]', '\{', '\}', '°', '/', '|', '\\', '<', '>'], '_', $_POST['name']);
+    //turns the name to lowercase
+    $name = strtolower($name);
 
-	while(in_array($name, xmlrpc_get_profiles_name_list()))
-	{
-		// If the profile already exists, then the profile is renamed.
-		$name .= '-';
-	}
-	return $name;
+    while(in_array($name, xmlrpc_get_profiles_name_list()))
+    {
+        // if the profile already exists, then the profile is renamed.
+        $name .= '_';
+    }
+    return $name;
+
 }
 ?>

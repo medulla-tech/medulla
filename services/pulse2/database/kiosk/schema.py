@@ -39,6 +39,8 @@ class Profiles(Base, KioskDBObj):
     # ====== Table name =========================
     __tablename__ = 'profiles'
     # ====== Fields =============================
+    # Here we define columns for the table version.
+    # Notice that each column is also a normal Python instance attribute.
     name = Column(String(50))
     active = Column(TINYINT)
     creation_date = Column(DateTime)

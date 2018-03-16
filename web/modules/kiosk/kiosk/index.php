@@ -1,7 +1,6 @@
 <?php
 /**
  * (c) 2016 Siveo, http://siveo.net
- * $Id$
  *
  * This file is part of Management Console (MMC).
  *
@@ -26,6 +25,14 @@ require_once("modules/kiosk/includes/xmlrpc.php");
 require_once("modules/pulse2/includes/utilities.php");
 require("graph/navbar.inc.php");
 require("modules/kiosk/kiosk/localSidebar.php");
+
+
+if(isset($_GET['action'],$_GET['profile']) && $_GET['action'] == "delete")
+{
+    xmlrpc_delete_profile($_GET['profile']);
+    //TODO : Add notification when the profile is deleted
+}
+
 
 $p = new PageGenerator(_T("List of profils",'kiosk'));
 $p->setSideMenu($sidemenu);
