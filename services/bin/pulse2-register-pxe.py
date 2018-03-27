@@ -466,9 +466,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
             #try:
             logging.getLogger().info("parse inventory %s",name)
             try:
-                com='zcat %s'%name
-                file_content1 =  os.popen(com).read()
-                file_content=parsejsoninventory(str(name),file_content1)
+                with open(name, 'r') as content_file:
+                    file_content=content_file.read().replace('\n', '')
                 m = re.search('<REQUEST>.*<\/REQUEST>', file_content)
                 file_content = str(m.group(0))
                 try:
@@ -508,7 +507,7 @@ class watchInventory:
         self.notifier.stop()
 
 if __name__ == '__main__':
-    logging.getLogger().info("Star pulse2-register-pxe.py")
+    logging.getLogger().info("Start pulse2-register-pxe.py")
     inifile = mmcconfdir + "/pulse2/package-server/package-server.ini"
     pidfile="/var/run/pulse2-register-pxe.pid"
     cp = None
