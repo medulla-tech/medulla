@@ -62,6 +62,10 @@ from mmc.plugins.dyngroup.config import DGConfig
 from distutils.version import LooseVersion, StrictVersion
 from mmc.plugins.xmppmaster.config import xmppMasterConfig
 
+from pulse2.database.xmppmaster import XmppMasterDatabase
+
+from mmc.agent import PluginManager
+
 class Glpi91(DyngroupDatabaseHelper):
     """
     Singleton Class to query the glpi database in version > 0.80.
@@ -545,7 +549,13 @@ class Glpi91(DyngroupDatabaseHelper):
         """
         if session == None:
             session = create_session()
-        query = count and session.query(func.count(Machine.id)) or session.query(Machine)
+        listid = []
+        if filt and "computerpresence" in filt:
+            if PluginManager().isEnabled("xmppmaster"):
+                d = XmppMasterDatabase().getlistPresenceMachineid()
+                listid = [x.replace("UUID", "") for x in d]
+        query = (count and session.query(func.count(Machine.id))) or session.query(Machine)
+
         if filt:
             # filtering on query
             join_query = self.machine
@@ -662,6 +672,12 @@ class Glpi91(DyngroupDatabaseHelper):
             else:
                 query = query.select_from(join_query).filter(query_filter)
             query = query.filter(self.machine.c.is_deleted == 0).filter(self.machine.c.is_template == 0)
+            if PluginManager().isEnabled("xmppmaster") and len(listid) != 0:
+                    if filt and "computerpresence" in filt:
+                        if filt['computerpresence'] == "presence":
+                            query = query.filter(Machine.id.in_(listid))
+                        else:
+                            query = query.filter(Machine.id.notin_(listid))
             query = self.__filter_on(query)
             query = self.__filter_on_entity(query, ctx)
 
@@ -799,6 +815,7 @@ class Glpi91(DyngroupDatabaseHelper):
 
         if count: query = query.scalar()
         return query
+
 
     def __getId(self, obj):
         if type(obj) == dict:

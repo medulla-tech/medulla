@@ -2153,6 +2153,26 @@ class XmppMasterDatabase(DatabaseHelper):
             return []
 
     @DatabaseHelper._sessionm
+    def getlistPresenceMachineid(self, session, format=False):
+        sql = """SELECT
+                    uuid_inventorymachine
+                 FROM
+                    xmppmaster.machines
+                 WHERE
+                    agenttype = 'machine' and uuid_inventorymachine IS NOT NULL;"""
+
+        presencelist = session.execute(sql)
+        session.commit()
+        session.flush()
+        try:
+            a=[]
+            for t in presencelist:
+                a.append(t[0])
+            return a
+        except:
+            return a
+
+    @DatabaseHelper._sessionm
     def getListPresenceMachine(self, session):
         sql = """SELECT
                     jid, agenttype, hostname, uuid_inventorymachine
