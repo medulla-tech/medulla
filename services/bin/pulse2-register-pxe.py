@@ -462,8 +462,6 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
         if os.path.isfile(str(name)):
             file_content=""
-            file_content1=""
-            #try:
             logging.getLogger().info("parse inventory %s",name)
             try:
                 with open(name, 'r') as content_file:
