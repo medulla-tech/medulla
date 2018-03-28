@@ -52,8 +52,8 @@ if ($response['data']) {
     {
         $params[] = array('host'=>$_GET['host'], 'backupnum'=>$backups[$i]);
         preg_match("#.+ (.+)#",$bk_time[$i],$result);
-        $time = time() - floatval($ages[$i])*24*60*60; 
-        $times[] = strftime("%A, %B %e %Y"),$time).' - '.$result[1] ;
+        $time = time() - floatval($ages[$i])*24*60*60;
+        $times[] = strftime("%A, %B %e %Y",$time).' - '.$result[1] ;
     }
 
     $n = new OptimizedListInfos($times, _T("Backup#", "backuppc"));
@@ -80,4 +80,3 @@ include("modules/backuppc/backuppc/ajaxDownloadsTable.php");
 <style>
     .noborder { border:0px solid blue; }
 </style>
-

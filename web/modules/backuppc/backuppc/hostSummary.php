@@ -239,7 +239,7 @@ if ($response['data']) {
         $params[] = array('host' => $uuid, 'backupnum' => $backup_nums[$i], 'cn' => $_GET['cn']);
         preg_match("#.+ (.+)#", $start_dates[$i], $result);
         $time = time() - floatval($ages[$i]) * 24 * 60 * 60;
-        $times[] = strftime("%A, %B %e %Y"), $time) . ' - ' . $result[1];
+        $times[] = strftime("%A, %B %e %Y", $time) . ' - ' . $result[1];
         $durations[$i] = max(1, intval($durations[$i]));
         $total_file_count[$i] .= ' (' . $new_file_count[$i] . ')';
         $total_file_size[$i] = intval($total_file_size[$i]) . ' (' . intval($new_file_size[$i]) . ')';
