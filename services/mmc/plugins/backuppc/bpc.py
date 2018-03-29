@@ -624,6 +624,8 @@ def get_host_rsync_path(uuid):
             return 'C:\\Windows\\SysWOW64\\rsync.exe'
         else:
             return 'C:\\Windows\\System32\\rsync.exe'
+    elif 'macOS'.lower() in machine['os'].lower():
+        return 'rsync'
     else:
         return '/usr/bin/rsync'
 
