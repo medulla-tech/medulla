@@ -71,13 +71,13 @@ if (!$gid) { // TODO !!
                 <select name="namepresence" id="idpresence">
                     <option value="all_computer" ';
                     if ($computerpresence == "all_computer") echo "selected";
-                    echo '>all computers</option>
+                    echo '>All computers</option>
                     <option value="presence" ';
                     if ($computerpresence == "presence") echo "selected";
-                    echo '>computers presents</option>
+                    echo '>Online computers</option>
                     <option value="no_presence" ';
                     if ($computerpresence == "no_presence") echo "selected";
-                    echo '>computer not presents</option>
+                    echo '>Offine computers</option>
                 </select>';
         }
     } else {
@@ -157,4 +157,3 @@ li.remove_machine a {
         color: #FFF;
 }
 </style>
-
