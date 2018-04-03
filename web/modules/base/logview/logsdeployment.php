@@ -198,10 +198,10 @@ function searchlogs(url){
         "iDisplayLength": <?php echo $maxperpage; ?>,
         "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
         buttons: [
-        { extend: 'copy', className: 'btn btn-primary', text: <?php echo _('Copy to clipboard') ?>},
-        { extend: 'csv', className: 'btn btn-primary',  text: <?php echo _('Save to csv file') ?> },
-        { extend: 'excel', className: 'btn btn-primary',  text: <?php echo _('Save to Excel file') ?> },
-        { extend: 'print', className: 'btn btn-primary',  text: <?php echo _('Print logs') ?>  }
+        { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
+        { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
+        { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
+        { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
         ]
     } )
                             .ajax.url(
@@ -218,14 +218,14 @@ function searchlogs(url){
 <?php
 
 $typecritere  =        array(
-                                        _('Deployment Transfert'),
-                                        _('Deployment Execution'),
-                                        _('Deployment Download'),
-                                        _('Deployment Notify'),
-                                        _('Deployment Error'),
-                                        _('Deployment Terminate'),
-                                        _('WOL sent'),
-                                        _('no criteria selected'));
+                                        _T('Deployment Transfert','logs'),
+                                        _T('Deployment Execution','logs'),
+                                        _T('Deployment Download','logs'),
+                                        _T('Deployment Notify','logs'),
+                                        _T('Deployment Error','logs'),
+                                        _T('Deployment Terminate','logs'),
+                                        _T('WOL sent','logs'),
+                                        _T('no criteria selected','logs'));
 
 $typecritereval  =        array(
                                         'Transfert',
@@ -241,20 +241,20 @@ $typecritereval  =        array(
 $start_date =   new DateTimeTplnew('start_date', "Start Date");
 $end_date   =   new DateTimeTplnew('end_date', "End Date");
 
-$modules = new SelectItemlabeltitle("criteriasearch", _('criteria'), "search criteria");
+$modules = new SelectItemlabeltitle("criteriasearch", _T('criteria','logs'), "search criteria");
 $modules->setElements($typecritere);
 $modules->setSelected("None");
 $modules->setElementsVal($typecritereval);
 
 
-$modules1 = new SelectItemlabeltitle("criteriasearch1", _('criteria'), "search criteria1");
+$modules1 = new SelectItemlabeltitle("criteriasearch1", _T('criteria','logs'), "search criteria1");
 $modules1->setElements($typecritere);
 $modules1->setSelected("None");
 $modules1->setElementsVal($typecritereval);
 
 
 
-$modules2 = new SelectItemlabeltitle("criteriasearch2", _('criteria'), "search criteria2");
+$modules2 = new SelectItemlabeltitle("criteriasearch2", _T('criteria','logs'), "search criteria2");
 $modules2->setElements($typecritere);
 $modules2->setSelected("None");
 $modules2->setElementsVal($typecritereval);
@@ -264,6 +264,8 @@ $modules2->setElementsVal($typecritereval);
 <style>
 
 .inline { display : inline; }
+
+}
 
 </style>
 <?php
