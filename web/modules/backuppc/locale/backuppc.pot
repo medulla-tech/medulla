@@ -745,11 +745,11 @@ msgid "Linux (Whole drive)"
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:135
-msgid "OS X (User files)"
+msgid "macOS (User files)"
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:136
-msgid "OS X (Whole drive)"
+msgid "macOS (Whole drive)"
 msgstr ""
 
 #: modules/backuppc/backuppc/ViewProfiles.php:137
