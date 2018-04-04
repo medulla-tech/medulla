@@ -39,7 +39,7 @@ class os_repartitionPanel extends Panel {
         // Declare OS classes
         $osClasses = array(
 	    'other',
-        'macOS',
+            'macOS',
 	    'Mageia 5',
 	    'Mageia 6',
             'Windows 10',
@@ -52,7 +52,7 @@ class os_repartitionPanel extends Panel {
 
         $osLabels = array(
 	    _T('Other', 'glpi'),
-        'macOS',
+            'macOS',
 	    'Mageia 5',
 	    'Mageia 6',
             'Windows 10',
