@@ -39,6 +39,7 @@ class os_repartitionPanel extends Panel {
         // Declare OS classes
         $osClasses = array(
 	    'other',
+        'macOS',
 	    'Mageia 5',
 	    'Mageia 6',
             'Windows 10',
@@ -51,6 +52,7 @@ class os_repartitionPanel extends Panel {
 
         $osLabels = array(
 	    _T('Other', 'glpi'),
+        'macOS',
 	    'Mageia 5',
 	    'Mageia 6',
             'Windows 10',
@@ -68,6 +70,7 @@ class os_repartitionPanel extends Panel {
 
         $links = array(
 	    "$urlRedirect&os=other", // Static group links
+	    "$urlRedirect&os=macOS",
 	    "$urlRedirect&os=Mageia 5",
 	    "$urlRedirect&os=Mageia 6",
             "$urlRedirect&os=Windows 10",
