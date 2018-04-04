@@ -148,7 +148,7 @@ foreach ($packages as $p) {
         $size[] = prettyOctetDisplay($p['size']);
 
         if(!isExpertMode()) {
-            $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']));
+            $params[] = array('p_api' => $_GET['location'], 'pid' => base64_encode($p['id']), 'packageUuid' => $p['id']);
             if ($p['metagenerator'] == 'manual') {
                 $editActions[] = $emptyAction;
                 $delActions[] = $delAction;
