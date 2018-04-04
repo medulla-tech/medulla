@@ -44,3 +44,18 @@ class Profiles(Base, KioskDBObj):
     name = Column(String(50))
     active = Column(TINYINT)
     creation_date = Column(DateTime)
+
+
+class Packages(Base, KioskDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'package'
+    # ====== Fields =============================
+    # Here we define columns for the table version.
+    # Notice that each column is also a normal Python instance attribute.
+    name = Column(String(45))
+    version_package = Column(String(45))
+    software = Column(String(45))
+    description = Column(String(200), nullable=True)
+    version_software = Column(String(45))
+    package_uuid = Column(String(45), unique=True)
+    os = Column(String(45))
