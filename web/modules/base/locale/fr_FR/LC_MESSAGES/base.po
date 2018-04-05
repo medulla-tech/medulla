@@ -665,7 +665,7 @@ msgstr ""
 #: modules/base/includes/computers_list.inc.php:118
 #: modules/base/includes/computers_list.inc.php:120
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
-msgid "Edit configs files"
+msgid "Edit config files"
 msgstr ""
 
 #: modules/base/groups/edit.php:63 modules/base/groups/ajaxFilter.php:47

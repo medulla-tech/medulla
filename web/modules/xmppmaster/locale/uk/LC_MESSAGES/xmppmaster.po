@@ -62,7 +62,7 @@ msgid "Computer deploy group"
 msgstr "Група розгортання комп'ютерів"
 
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:96
-msgid "Conf File name"
+msgid "Config file"
 msgstr "Назва файла налаштувань"
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:154
@@ -158,13 +158,13 @@ msgid "Edit a Quick Action"
 msgstr "Змінити швидку дію"
 
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
-msgid "Edit configs files"
+msgid "Edit config files"
 msgstr "Редагувати файли налаштувань"
 
 #: modules/xmppmaster/xmppmaster/listfichierconf.php:54
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
-msgid "Edition File configuration"
+msgid "Edit config file"
 msgstr "Налаштування файла редакцій"
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:324

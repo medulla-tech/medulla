@@ -64,7 +64,7 @@ msgid "Computer deploy group"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:96
-msgid "Conf File name"
+msgid "Config file"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/consolecomputerxmpp.php:154
@@ -160,13 +160,13 @@ msgid "Edit a Quick Action"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/ajaxFilterfileconf.php:83
-msgid "Edit configs files"
+msgid "Edit config files"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/listfichierconf.php:54
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:230
 #: modules/xmppmaster/xmppmaster/remoteeditorconfiguration.php:230
-msgid "Edition File configuration"
+msgid "Edit config file"
 msgstr ""
 
 #: modules/xmppmaster/xmppmaster/remoteeditorconfigurationlist.php:324
