@@ -26,10 +26,12 @@ kiosk database handler
 from sqlalchemy import create_engine, MetaData, select, func, and_, desc, or_, distinct
 from sqlalchemy.orm import sessionmaker; Session = sessionmaker()
 from sqlalchemy.exc import DBAPIError
+from sqlalchemy import update
 from datetime import date, datetime, timedelta
 # PULSE2 modules
 from mmc.database.database_helper import DatabaseHelper
-from pulse2.database.kiosk.schema import Profiles
+from mmc.plugins.pkgs import get_xmpp_package, xmpp_packages_list
+from pulse2.database.kiosk.schema import Profiles, Packages, Profile_has_package
 # Imported last
 import logging
 import json
@@ -126,30 +128,90 @@ class KioskDatabase(DatabaseHelper):
             lines.append(row[0])
         return lines
 
+
     @DatabaseHelper._sessionm
-    def create_profile(self, session, name, active):
+    def create_profile(self, session, name, active, packages):
+        # refresh the packages in the database
+        self.refresh_package_list()
 
         import time
         now = time.strftime('%Y-%m-%d %H:%M:%S')
 
-        profile = Profiles(name=name, active=int(active), creation_date=now)
-        # sql = "INSERT INTO profiles VALUES(NULL,"+name+","+active+");"
-        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s', '%s', '%s');""" % ('NULL', name, active, now)
+        sql = """INSERT INTO `kiosk`.`profiles` VALUES('%s','%s', '%s', '%s');""" % ('0', name, active, now)
 
         session.execute(sql)
         session.commit()
         session.flush()
 
+        # Search the id of the profile and save it into the variable id
         result = session.query(Profiles.id).filter(Profiles.name == name)
         result = result.first()
         id = 0
         for row in result:
             id = str(row)
 
-        session.commit()
-        session.flush()
+        session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
 
+        # The profile is now created, but the packages are not linked to it nor added into database.
+        # If the package list is not empty, then firstly we get the status and the uuid for each packages
+        if len(packages) > 0 :
+            for status in packages.keys():
+                for uuid in packages[status]:
+
+                    # get the package id and link it with the profile
+                    result = session.query(Packages.id).filter(Packages.package_uuid == uuid)
+                    result = result.first()
+                    id_package = 0
+                    for row in result:
+                        id_package = str(row)
+
+                    profile = Profile_has_package()
+                    profile.profil_id = id
+                    profile.package_id = id_package
+                    profile.package_status = status
+
+                    session.add(profile)
+                    session.commit()
+                    session.flush()
         return id
+
+    @DatabaseHelper._sessionm
+    def refresh_package_list(self, session):
+        package_list = xmpp_packages_list()
+
+        for ref_pkg in package_list:
+            result = session.query(Packages.id).filter(Packages.package_uuid == ref_pkg['uuid']).all()
+
+            # Create a Package object to interact with the database
+            package = get_xmpp_package(ref_pkg['uuid'])
+            os = json.loads(package).keys()[1]
+
+            # Prepare a package object for the transaction with the database
+            pkg = Packages()
+            pkg.name = ref_pkg['name']
+            pkg.version_package = ref_pkg['version']
+            pkg.software = ref_pkg['software']
+            pkg.description = ref_pkg['description']
+            pkg.version_software = 0
+            pkg.package_uuid = ref_pkg['uuid']
+            pkg.os = os
+
+            # If the package is not registered into database, it is added. Else it is updated
+            if len(result) == 0:
+                session.add(pkg)
+                session.commit()
+                session.flush()
+            else:
+                sql = """UPDATE `package` set name='%s', version_package='%s', software='%s',\
+                description='%s', package_uuid='%s', os='%s' WHERE package_uuid='%s';""" % (
+                    ref_pkg['name'], ref_pkg['version'], ref_pkg['software'], ref_pkg['description'], ref_pkg['uuid'], os, ref_pkg['uuid'])
+
+                session.execute(sql)
+                session.commit()
+                session.flush()
+
+        # Now we need to verify if all the registered packages are still existing into the server
+        # TODO
 
     @DatabaseHelper._sessionm
     def delete_profile(self, session, name):
@@ -164,10 +226,33 @@ class KioskDatabase(DatabaseHelper):
             Boolean: True if success, else False
         """
         try:
-            ret = session.query(Profiles).filter(Profiles.name == name).delete()
+            result = session.query(Profiles.id).filter(Profiles.name == name)
+            result = result.first()
+            id = 0
+            for row in result:
+                id = str(row)
+
+            ret = session.query(Profile_has_package).filter(Profile_has_package.profil_id == id).delete()
+
+            ret2 = session.query(Profiles).filter(Profiles.name == name).delete()
             session.commit()
             session.flush()
             return True
 
         except Exception, e:
             return False
+
+    @DatabaseHelper._sessionm
+    def get_profile(self, session, name):
+        """
+        Return the information of the specified profile. It include also it's packages
+            Params:
+                name = (str) the name of the profile
+            Returns:
+                A list of all the founded entities.
+        """
+        ret = session.query(Profiles).all()
+        lines = []
+        for row in ret:
+            lines.append(row.toDict())
+        return lines

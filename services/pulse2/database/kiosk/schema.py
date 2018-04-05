@@ -19,7 +19,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime,Text, LargeBinary
+from sqlalchemy import Column, String, Integer, Boolean, ForeignKey, DateTime,Text, LargeBinary, Enum
 from sqlalchemy.dialects.mysql import  TINYINT
 from sqlalchemy.ext.declarative import declarative_base
 from mmc.database.database_helper import DBObj
@@ -59,3 +59,12 @@ class Packages(Base, KioskDBObj):
     version_software = Column(String(45))
     package_uuid = Column(String(45), unique=True)
     os = Column(String(45))
+
+
+class Profile_has_package(Base, KioskDBObj):
+    # ====== Table name =========================
+    __tablename__ = 'package_has_profil'
+    # ====== Fields =============================
+    package_id = Column(Integer, nullable=False)
+    profil_id = Column(Integer, nullable=False)
+    package_status = Column(Enum('allowed','restricted'))
