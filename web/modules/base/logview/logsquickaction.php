@@ -71,7 +71,7 @@ Why: Groupe ou machine
 <?php
     require("graph/navbar.inc.php");
     require("localSidebar.inc.php");
- 
+
 global $conf;
 $maxperpage = $conf["global"]["maxperpage"];
 if ($maxperpage >= 100){
@@ -198,10 +198,10 @@ class SelectItemlabeltitle extends SelectItem {
                                 "lengthMenu" : [[10 ,20 ,30 ,40 ,50 ,75 ,100 ], [10, 20, 30, 40, 50 ,75 ,100 ]],
                                 "dom": '<"top"lfi>rt<"bottom"Bp><"clear">',
                                 buttons: [
-                                { extend: 'copy', className: 'btn btn-primary', text: _T('Copy to clipboard', logs),},
-                                { extend: 'csv', className: 'btn btn-primary',  text: _T('Save to csv file', logs) },
-                                { extend: 'excel', className: 'btn btn-primary',  text: _T('Save to Excel file', logs) },
-                                { extend: 'print', className: 'btn btn-primary',  text: _T('Print logs', logs)  }
+                                { extend: 'copy', className: 'btn btn-primary', text: 'Copy to clipboard' },
+                                { extend: 'csv', className: 'btn btn-primary',  text: 'Save to csv file' },
+                                { extend: 'excel', className: 'btn btn-primary',  text: 'Save to Excel file' },
+                                { extend: 'print', className: 'btn btn-primary',  text: 'Print logs' }
                                 ]
                             } )
                             .ajax.url(
